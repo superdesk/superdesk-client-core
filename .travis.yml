@@ -1,0 +1,17 @@
+language: node_js
+node_js: node
+
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.cache/bower
+        - $HOME/.npm
+
+install:
+    - npm install
+    - npm install -g bower grunt-cli
+    - bower install
+
+script:
+    - grunt ci:travis
