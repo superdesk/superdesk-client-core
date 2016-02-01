@@ -377,7 +377,7 @@ angular.module('superdesk.workspace.tasks', [])
 
 .config(['superdeskProvider', function(superdesk) {
 
-    superdesk.xactivity('/workspace/tasks', {
+    superdesk.activity('/workspace/tasks', {
         label: gettext('Workspace'),
         controller: TasksController,
         templateUrl: 'scripts/superdesk-dashboard/workspace-tasks/views/workspace-tasks.html',
@@ -386,7 +386,7 @@ angular.module('superdesk.workspace.tasks', [])
         filters: [{action: 'view', type: 'task'}]
     });
 
-    superdesk.xactivity('pick.task', {
+    superdesk.activity('pick.task', {
         label: gettext('Pick task'),
         icon: 'pick',
         controller: ['data', 'superdesk',
