@@ -1,3 +1,8 @@
+'use strict';
+
+var path = require('path');
+var core = path.dirname(path.dirname(__dirname));
+
 module.exports = {
     options: {
         livereload: '<%= livereloadPort %>'
@@ -5,8 +10,8 @@ module.exports = {
     less: {
         tasks: ['style'],
         files: [
-            '<%= coreDir %>/assets/styles/{,*/}*.less',
-            '<%= coreDir %>/apps/**/*.less',
+            path.join(core, 'styles/{,*/}*.less'),
+            path.join(core, 'scripts/**/*.less'),
             '<%= appDir %>/**/*.less'
         ]
     },
@@ -14,7 +19,7 @@ module.exports = {
         options: {livereload: true},
         tasks: [],
         files: [
-            '<%= coreDir %>/apps/superdesk*/**/*.js',
+            path.join(core, 'scripts/**/*.js'),
             '<%= appDir %>/**/*.js'
         ]
     },
@@ -22,7 +27,7 @@ module.exports = {
         options: {livereload: true},
         tasks: [],
         files: [
-            '<%= coreDir %>/apps/superdesk*/views/*.html',
+            path.join(core, 'scripts/**/*.html'),
             '<%= appDir %>/templates/**/*.html'
         ]
     },
