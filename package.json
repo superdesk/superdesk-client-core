@@ -36,6 +36,7 @@
     "grunt-open": "0.2.3",
     "grunt-template": "0.2.3",
     "grunt-usemin": "3.1.1",
+    "jasmine-core": "^2.4.1",
     "karma": "^0.13.9",
     "karma-chrome-launcher": "^0.2.0",
     "karma-coverage": "^0.5.0",
