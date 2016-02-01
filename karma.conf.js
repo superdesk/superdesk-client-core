@@ -9,9 +9,7 @@ module.exports = function(config) {
         ],
 
         preprocessors: {
-            '**/*.html': ['ng-html2js'],
-            '**/superdesk/**/*.js': [],
-            '**/superdesk-*/**/*.js': []
+            '**/*.html': ['ng-html2js']
         },
 
         // list of files / patterns to load in the browser
@@ -45,7 +43,7 @@ module.exports = function(config) {
         ],
 
         ngHtml2JsPreprocessor: {
-            stripPrefix: 'node_modules/superdesk-core/',
+            stripPrefix: __dirname,
             moduleName: 'superdesk.templates-cache'
         },
 

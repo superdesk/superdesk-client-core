@@ -1,22 +1,29 @@
 
+var path = require('path');
+var root = path.dirname(path.dirname(__dirname));
+
 module.exports = {
+    options: {configFile: path.join(root, '.eslintrc')},
     app: {
         src: [
             '<%= appDir %>/*.js',
-            '<%= coreDir %>/apps/**/*.js'
+            path.join(root, 'scripts/**/*.js')
         ],
         envs: ['browser', 'amd']
     },
     specs: {
-        src: ['<%= specDir %>', '<%= appDir %>/**/*spec.js'],
+        src: [
+            path.join(root, 'spec/**/*.js'),
+            path.join(root, 'scripts/**/*[Ss]pec.js')
+        ],
         envs: ['node', 'jasmine']
     },
     tasks: {
-        src: '<%= tasksDir %>',
+        src: path.join(root, 'tasks/**/*.js'),
         envs: ['node']
     },
     root: {
-        src: '*.js',
+        src: path.join(root, '*.js'),
         envs: ['node']
     }
 };

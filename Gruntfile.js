@@ -39,6 +39,7 @@ module.exports = function(grunt) {
     grunt.registerTask('ci', ['test', 'hint']);
     grunt.registerTask('ci:travis', ['karma:travis', 'hint']);
     grunt.registerTask('bamboo', ['karma:bamboo']);
+    grunt.registerTask('lint', ['hint']);
 
     grunt.registerTask('docs', [
         'clean',

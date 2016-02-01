@@ -1,4 +1,7 @@
 
+var path = require('path');
+var root = path.dirname(path.dirname(__dirname));
+
 var files = [];
 files.push.apply(files, require('./files').scripts);
 
@@ -7,7 +10,7 @@ files.push(['!**/google-tracking.js']);
 files.push(['!**/piwik-tracking.js']);
 
 module.exports = {
-    options: {config: '.jscs.json'},
+    options: {config: path.join(root, '.jscs.json')},
     all: {src: files},
     docs: {src: ['<%= appDir %>/docs/**/*.js']}
 };
