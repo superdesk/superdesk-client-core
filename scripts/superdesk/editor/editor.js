@@ -781,7 +781,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                             scope.node.innerHTML.trim() === '<p><br></p>') {
                         scope.node.innerHTML = '';
                     }
-
                     editor.commitScope(scope);
                 }
 
