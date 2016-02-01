@@ -39,6 +39,10 @@
             return this;
         };
 
+        this.xactivity = function(id) {
+            console.info('skipping activity', id);
+        };
+
         /**
          * Register an activity.
          *

@@ -135,7 +135,6 @@
         'superdesk.dashboard.widgets',
         'superdesk.dashboard.grid',
         'superdesk.dashboard.world-clock',
-        'superdesk.workspace.tasks',
         'superdesk.itemList',
         'superdesk.legal_archive',
         'superdesk.workspace'

@@ -45,7 +45,7 @@
 
         $scope.privileges = privileges.privileges;
 
-        $scope.views = ['content', 'tasks', 'users', 'sluglines'];
+        $scope.views = ['content', 'users', 'sluglines'];
 
         $scope.view = $scope.views[0];
 
