@@ -1670,6 +1670,32 @@ describe('authoring container directive', function() {
         expect(iscope.authoring.item).toBe(lockedItem);
         expect(iscope.authoring.action).toBe('correct');
     }));
+
+    describe('authoring embed directive', function() {
+        beforeEach(inject(function($templateCache) {
+            $templateCache.put('scripts/superdesk-authoring/views/authoring.html', '<div></div>');
+        }));
+
+        it('applies kill template',
+                inject(function(authoringWorkspace, $rootScope, api, $compile, $q) {
+            authoringWorkspace.kill(item);
+            $rootScope.$digest();
+            $rootScope.$digest();
+            expect(iscope.authoring.item).toBe(lockedItem);
+            expect(iscope.authoring.action).toBe('kill');
+
+            spyOn(api, 'save').and.returnValue($q.when({}));
+
+            var elemEmbed = $compile('<div sd-authoring-embedded data-item="authoring.item"' +
+                ' data-action="authoring.action"></div>')(iscope);
+            iscope.$digest();
+            var iscopeEmbed = elemEmbed.isolateScope();
+            expect(iscopeEmbed.action).toBe('kill');
+            expect(api.save).
+                toHaveBeenCalledWith('content_templates_apply', {}, {template_name: 'kill', item: {_id: 'foo'}}, {});
+        }));
+    });
+
 });
 
 describe('authoring themes', function () {

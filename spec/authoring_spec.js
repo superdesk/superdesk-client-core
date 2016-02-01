@@ -356,31 +356,39 @@ describe('authoring', function() {
         monitoring.filterAction('text');
         monitoring.actionOnItem('Kill item', 4, 0);
 
-        // Body
+        // Body:
+        // undo without editing body text
+        ctrlKey('z');
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
+
+        // now edit body text
         authoring.writeText('Edit kill notice body text:');
         expect(authoring.getBodyText())
             .toBe('Edit kill notice body text:This is kill template. Slugged item5 slugline one/two.');
 
-        //undo edited body text
+        // undo edited body text
         ctrlKey('z');
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
 
-        //undo one more time and expect body text not to be the original body text.
+        // undo one more time and expect body text not to be the original body text.
         ctrlKey('z');
         expect(authoring.getBodyText()).not.toBe('item5 text');
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
 
-        // Headline
-        expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
-        authoring.writeTextToHeadline('Edit kill headline:');
-        expect(authoring.getHeadlineText()).toBe('Edit kill headline:KILL NOTICE');
-
-        //undo edited headline text
+        // Headline:
+        // undo without editing headline text
         ctrlKey('z');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
 
-        //undo one more time and expect headline text not to be the original headline text.
+        // now edit headline text
+        authoring.writeTextToHeadline('Edit kill headline:');
+        expect(authoring.getHeadlineText()).toBe('Edit kill headline:KILL NOTICE');
+
+        // undo edited headline text
+        ctrlKey('z');
+        expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
+
+        // undo one more time and expect headline text not to be the original headline text.
         ctrlKey('z');
         expect(authoring.getHeadlineText()).not.toBe('item5');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
