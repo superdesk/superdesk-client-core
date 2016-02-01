@@ -1,11 +1,30 @@
 {
   "name": "superdesk-core",
-  "version": "0.0.14",
+  "version": "0.1.0",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/superdesk/superdesk-client-core"
+    "url": "https://github.com/superdesk/superdesk-client-core.git"
   },
+  "contributors": [
+    "Adrian Magdas",
+    "Andrew Marwood",
+    "Gabriel Nistor",
+    "Holman Romero",
+    "Ioan Pocol",
+    "Kuna Siva",
+    "Mayur Dhamanwala",
+    "Mihai Nistor",
+    "Mugur Rus",
+    "Nikola Nikolic",
+    "Ozan Ozbek",
+    "Peter Lamut",
+    "Petr Jasek",
+    "Sava Tatic",
+    "Syed Junaid",
+    "Tolga Akin",
+    "Yauhen 'actionless' Kirylau"
+  ],
   "dependencies": {
     "btoa": "1.1.2",
     "request": "2.61.0",
