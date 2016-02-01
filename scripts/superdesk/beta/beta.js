@@ -37,7 +37,7 @@
                         return $q.when(false);
                     });
                 } else {
-                    return $q.when($rootScope.beta);
+                    return $q.resolve($rootScope.beta);
                 }
             };
         }])

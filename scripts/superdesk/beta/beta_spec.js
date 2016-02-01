@@ -8,11 +8,13 @@
         it('can filter out sd-beta from html when beta is off',
         inject(function(betaService, $rootScope, $http, $httpBackend) {
             $rootScope.beta = false;
+            var isBeta = null;
             betaService.isBeta().then(function(_beta) {
-                expect(_beta).toBe(false);
+                isBeta = _beta;
             });
 
             $rootScope.$digest();
+            expect(isBeta).toBe(false);
 
             var template = '<div>normal</div><div sd-beta>beta</div>',
                 data;

@@ -49,7 +49,7 @@ describe('master_desk', function() {
         expect(element(by.className('modal-content')).isDisplayed()).toBe(true);
     });
 
-    it('show tasks view', function() {
+    xit('show tasks view', function() {
         masterDesks.switchToTab('tasks');
         expect(masterDesks.getTask(1, 0, 0).element(by.className('content-item__text')).getText())
                 .toContain('item3 slugline');
@@ -61,13 +61,13 @@ describe('master_desk', function() {
                 .toContain('item6 slugline');
     });
 
-    it('tasks view - show desk', function() {
+    xit('tasks view - show desk', function() {
         masterDesks.switchToTab('tasks');
         masterDesks.goToDesk(0);
         expect(browser.getCurrentUrl()).toContain('#/workspace');
     });
 
-    it('tasks view - edit desk', function() {
+    xit('tasks view - edit desk', function() {
         masterDesks.switchToTab('tasks');
         masterDesks.editDesk(0);
         browser.sleep(200);

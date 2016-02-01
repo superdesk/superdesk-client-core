@@ -11,8 +11,8 @@
  (function() {
     'use strict';
 
-    DeskListController.$inject = ['$scope', 'desks', 'superdesk', 'privileges', 'tasks', 'api'];
-    function DeskListController($scope, desks, superdesk, privileges, tasks, api) {
+    DeskListController.$inject = ['$scope', 'desks', 'superdesk', 'privileges', 'tasks', 'api', 'betaService'];
+    function DeskListController($scope, desks, superdesk, privileges, tasks, api, beta) {
 
         var userDesks;
 
@@ -45,9 +45,17 @@
 
         $scope.privileges = privileges.privileges;
 
-        $scope.views = ['content', 'tasks', 'users', 'sluglines'];
+        beta.isBeta().then(function(isBeta) {
+            var views = ['content', 'users', 'sluglines'];
+            if (isBeta) {
+                views = ['content', 'tasks', 'users', 'sluglines'];
+            }
 
-        $scope.view = $scope.views[0];
+            $scope.$applyAsync(function() {
+                $scope.views = views;
+                $scope.view = $scope.views[0];
+            });
+        });
 
         $scope.setView = function(view) {
             $scope.view = view;
