@@ -11,8 +11,8 @@
 (function() {
     'use strict';
 
-    DictionaryService.$inject = ['api', 'urls', 'session', '$upload', '$q'];
-    function DictionaryService(api, urls, session, $upload, $q) {
+    DictionaryService.$inject = ['api', 'urls', 'session', 'Upload', '$q'];
+    function DictionaryService(api, urls, session, Upload, $q) {
         this.dictionaries = null;
         this.currDictionary = null;
 
@@ -68,7 +68,7 @@
                 if (hasId) {
                     uploadURL += '/' + dictionary._id;
                 }
-                return $upload.upload({
+                return Upload.upload({
                     url: uploadURL,
                     method: method,
                     data: sendData,

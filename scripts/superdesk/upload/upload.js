@@ -60,7 +60,7 @@
     }
 
     angular.module('superdesk.upload', [
-        'angularFileUpload',
+        'ngFileUpload',
         'superdesk.imageFactory',
         'superdesk.upload.crop',
         'superdesk.upload.imagecrop',

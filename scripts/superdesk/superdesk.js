@@ -5,7 +5,7 @@
         'ngRoute',
         'ngResource',
         'ui.bootstrap',
-        'angularFileUpload',
+        'ngFileUpload',
         'superdesk.activity',
         'superdesk.analytics',
         'superdesk.api',
