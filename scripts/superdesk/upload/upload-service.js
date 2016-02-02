@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('superdesk.upload.upload', []).service('upload', ['$q', '$upload', function ($q, $upload) {
+    angular.module('superdesk.upload.upload', []).service('upload', ['$q', 'Upload', function ($q, Upload) {
         /**
          * Start upload
          *
@@ -10,7 +10,7 @@
          */
         this.start = function(config) {
             config.isUpload = true;
-            return $upload.upload(config);
+            return Upload.upload(config);
         };
 
         /**
@@ -20,7 +20,7 @@
          * @returns {Promise}
          */
         this.restart = function(config) {
-            return $upload.http(config);
+            return Upload.http(config);
         };
 
         /**

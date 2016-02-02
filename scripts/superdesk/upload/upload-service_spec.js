@@ -14,18 +14,18 @@ describe('upload service', function() {
         }]);
     }));
 
-    it('can start uploading', inject(function(upload, $upload) {
+    it('can start uploading', inject(function(upload, Upload) {
         var config = {url: 'test', method: 'POST', data: 'test'};
-        spyOn($upload, 'upload').and.callThrough();
+        spyOn(Upload, 'upload').and.callThrough();
         upload.start(config);
-        expect($upload.upload).toHaveBeenCalledWith(config);
+        expect(Upload.upload).toHaveBeenCalledWith(config);
     }));
 
-    it('can restart uploading', inject(function(upload, $upload) {
+    it('can restart uploading', inject(function(upload, Upload) {
         var config = {};
-        spyOn($upload, 'http');
+        spyOn(Upload, 'http');
         upload.restart(config);
-        expect($upload.http).toHaveBeenCalledWith(config);
+        expect(Upload.http).toHaveBeenCalledWith(config);
     }));
 
     it('should know that config after calling start is an upload', inject(function(upload) {

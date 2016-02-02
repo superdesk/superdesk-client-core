@@ -334,8 +334,8 @@
                         url: url,
                         data: {media: item.file},
                         headers: api.archive.getHeaders()
-                    })
-                    .then(function(response) {
+                    });
+                    item.upload.then(function(response) {
                         if (response.data._issues) {
                             return handleError(response);
                         }
