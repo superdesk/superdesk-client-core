@@ -245,7 +245,8 @@
      *
      * it's a directive so that it can be put together with authoring into some container directive
      */
-    function MonitoringViewDirective() {
+    MonitoringViewDirective.$inject = ['$rootScope'];
+    function MonitoringViewDirective($rootScope) {
         return {
             templateUrl: 'scripts/superdesk-monitoring/views/monitoring-view.html',
             controller: 'Monitoring',
@@ -253,6 +254,23 @@
             scope: {
                 type: '=',
                 state: '='
+            },
+            link: function(scope, elem) {
+                var containerElem = elem.find('.content-list');
+                containerElem.on('scroll', handleContainerScroll);
+
+                function handleContainerScroll() {
+                    if ($rootScope.itemToogle) {
+                        scope.$applyAsync(function() {
+                            $rootScope.itemToogle(false);
+                            $rootScope.itemToogle = null;
+                        });
+                    }
+                }
+
+                scope.$on('$destroy', function() {
+                    containerElem.off('scroll');
+                });
             }
         };
     }
@@ -264,9 +282,9 @@
     }
 
     MonitoringGroupDirective.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk',
-        'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi', 'archiveService'];
+        'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi', 'archiveService', '$rootScope'];
     function MonitoringGroupDirective(cards, api, authoringWorkspace, $timeout, superdesk, activityService,
-            workflowService, keyboardManager, desks, search, multi, archiveService) {
+            workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope) {
 
         var ITEM_HEIGHT = 57,
             ITEMS_COUNT = 5,
@@ -617,6 +635,11 @@
                 }
 
                 function handleScroll(event) {
+                    if ($rootScope.itemToogle) {
+                        $rootScope.itemToogle(false);
+                        $rootScope.itemToogle = null;
+                    }
+
                     $timeout.cancel(updateTimeout);
                     updateTimeout = $timeout(renderScroll, 100, false);
                 }
@@ -784,6 +807,8 @@
                         // After close, return focus to parent of selected element
                         angular.element('.media-text.selected').parents('li').focus();
                         angular.element('.dropdown-noarrow.open').removeClass('open');
+                    } else {
+                        $rootScope.itemToogle = scope.toggleActions;
                     }
                 };
 

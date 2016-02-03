@@ -656,9 +656,11 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                 keyboardManager.bind('ctrl+shift+d', render);
 
                 ngModel.$render = function () {
-                    editorElem = elem.find('.editor-type-html');
-                    editorElem.empty();
-                    editorElem.html(ngModel.$viewValue || '');
+                    if (!scope.history || scope.history.getIndex() === -1) {
+                        editorElem = elem.find('.editor-type-html');
+                        editorElem.empty();
+                        editorElem.html(ngModel.$viewValue || '');
+                    }
 
                     if (!scope.rendered) {
                         var editorOptions = angular.extend({}, editorConfig, scope.config || {});
@@ -734,6 +736,12 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                         render(null, null, true);
                         scope.rendered = true;
                     }
+
+                    // In case of Kill action, don't undo back to initial value (i.e: original article text) - [ref: SD-3917]
+                    // Set initial value to kill template text at the beginning of history.
+                    if (scope.$parent.action === 'kill' && scope.history.getIndex() === -1) {
+                        scope.history.setInitialValue(scope.model.$viewValue);
+                    }
                 };
 
                 function cancelTimeout() {
@@ -769,12 +777,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                 }
 
                 function updateModel() {
-                    // In case of Kill action, don't undo back to initial value (i.e: original article text) - [ref: SD-3917]
-                    // Set initial value to kill template text at the beginning of history.
-                    if (scope.$parent.action === 'kill' && scope.history.getIndex() === -1) {
-                        scope.history.setInitialValue(scope.model.$viewValue);
-                    }
-
                     if (scope.node.innerHTML.trim() === '<br>' ||
                             scope.node.innerHTML.trim() === '<p><br></p>') {
                         scope.node.innerHTML = '';
