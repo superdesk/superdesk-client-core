@@ -775,6 +775,11 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                         scope.history.setInitialValue(scope.model.$viewValue);
                     }
 
+                    if (scope.node.innerHTML.trim() === '<br>' ||
+                            scope.node.innerHTML.trim() === '<p><br></p>') {
+                        scope.node.innerHTML = '';
+                    }
+
                     editor.commitScope(scope);
                 }
 
