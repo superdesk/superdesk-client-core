@@ -295,24 +295,24 @@ body, html {
 		}
 	}
 
-	//labels
-	.field label {
-		.text-normal();
-		background: rgba(0, 0, 0, 0.4);
-		.border-radius(2px);
-		color: #fff;
-		display: inline-block;
-		padding: 1px 8px 0;
-		font-size: 11px;
-		line-height: 16px;
-		height: 15px;
-		.transition(all ease 0.2s);
-		opacity: 0;
-		text-transform: uppercase;
-		font-style: normal;
-		letter-spacing: 0.1em;
+        //labels
+        .field label {
+            .text-normal();
+            background: rgba(0, 0, 0, 0.4);
+            .border-radius(2px);
+            color: #fff;
+            display: inline-block;
+            padding: 1px 8px 0;
+            font-size: 11px;
+            line-height: 16px;
+            height: 15px;
+            .transition(all ease 0.2s);
+            opacity: 0;
+            text-transform: uppercase;
+            font-style: normal;
+            letter-spacing: 0.1em;
 
-	}
+        }
 
 	// inputs
 	.text-editor {
@@ -328,41 +328,42 @@ body, html {
 		}
 	}
 
-	.field.body {
-		.text-editor {
-			min-height: 300px;
-		}
-	}
+        .field.body {
+            .text-editor {
+                min-height: 300px;
+            }
+        }
 
-	.text-editor, .headline, .abstract, input, select {
-		border-color: transparent !important;
-		background-color: transparent !important;
-	}
+        .text-editor, .headline, .abstract, input, select {
+            border-color: transparent !important;
+            background-color: transparent !important;
+        }
 
-    select {
-      -moz-appearance: none;
-      -webkit-appearance: none;
-    }
+        select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+        }
 
-	.text-editor:hover, .headline:hover, .abstract:hover, input:hover, select:hover {
-		border-color: rgba(150, 150, 150, 0.25) !important;
-	}
+        .text-editor:hover, .headline:hover, .abstract:hover, input:hover, select:hover {
+            border-color: rgba(150, 150, 150, 0.25) !important;
+            cursor: text;
+        }
 
-    select:hover {
-      -moz-appearance: menulist-button;
-      -webkit-appearance: menulist-button;
-    }
+        select:hover {
+            -moz-appearance: menulist-button;
+            -webkit-appearance: menulist-button;
+        }
 
-	.text-editor:focus, .headline:focus, .abstract:focus, input:focus, select:focus {
-		.box-shadow(none) !important;
-		border-color: rgba(94, 169, 200, 0.4) !important;
-	}
+        .text-editor:focus, .headline:focus, .abstract:focus, input:focus, select:focus {
+            .box-shadow(none) !important;
+            border-color: rgba(94, 169, 200, 0.4) !important;
+        }
 
-	&.preview {
-		.text-editor {
-			border-color: #fff !important;
-		}
-	}
+        &.preview {
+            .text-editor {
+                border-color: #fff !important;
+            }
+        }
 
 
 	// character and word counting
@@ -433,6 +434,17 @@ body, html {
 		font-size: 16px;
 		.keyword;
 		text-transform: none;
+                &::-webkit-input-placeholder {
+                    color: #ccc;
+                }
+                &::-moz-placeholder {
+                    color: #ccc;
+                    opacity: 1;
+                }
+                &:focus {
+                    &::-webkit-input-placeholder { color:transparent; }
+                    &::-moz-placeholder { color:transparent; }
+                }
 	}
 
 	.text-editor {
