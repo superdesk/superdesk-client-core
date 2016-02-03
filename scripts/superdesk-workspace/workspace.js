@@ -296,7 +296,7 @@
                         scope.wsList = _workspaces;
                         scope.workspaceType = activeWorkspace.type;
                         if (activeWorkspace.type === 'desk') {
-                            scope.selected = _.find(scope.desks, {_id: activeWorkspace.id});
+                            scope.selected = _.find(scope.desks, {_id: activeWorkspace.id}) || desks.getCurrentDesk();
                         } else if (activeWorkspace.type === 'workspace') {
                             scope.selected = _.find(scope.wsList, {_id: activeWorkspace.id});
                         } else {

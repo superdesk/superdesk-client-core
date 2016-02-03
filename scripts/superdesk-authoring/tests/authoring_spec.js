@@ -132,6 +132,23 @@ describe('authoring', function() {
         expect($scope.item._autosave).toBeNull();
     }));
 
+    it('can close item after save work confirm', inject(function($rootScope, $q, $location, authoring, reloadService) {
+        startAuthoring({headline: 'test'}, 'edit');
+        $location.search('item', 'foo');
+        $location.search('action', 'edit');
+        $rootScope.$digest();
+
+        spyOn(authoring, 'saveWorkConfirmation').and.returnValue($q.when());
+        spyOn(reloadService, 'forceReload');
+
+        $rootScope.$broadcast('savework', 'test');
+        $rootScope.$digest();
+
+        expect($location.search().item).toBe(undefined);
+        expect($location.search().action).toBe(undefined);
+        expect(reloadService.forceReload).toHaveBeenCalled();
+    }));
+
     /**
      * Start authoring ctrl for given item.
      *

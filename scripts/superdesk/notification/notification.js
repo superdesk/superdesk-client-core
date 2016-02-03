@@ -165,9 +165,13 @@
                 if (superdeskFlags.flags.authoring) {
                     _this.broadcast(gettext(result.message));
                 } else {
-                    $window.location.reload(true);
+                    this.forceReload();
                 }
             }
+        };
+
+        this.forceReload = function() {
+            return $window.location.reload(true);
         };
 
         this.broadcast = function(msg) {
