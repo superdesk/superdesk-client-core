@@ -904,13 +904,13 @@
         'macros',
         '$timeout',
         '$q',
-        '$window',
         'modal',
         'archiveService',
-        'confirm'
+        'confirm',
+        'reloadService'
     ];
     function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
-            privileges, content, $location, referrer, macros, $timeout, $q, $window, modal, archiveService, confirm) {
+            privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService) {
         return {
             link: function($scope, elem, attrs) {
                 var _closing;
@@ -1316,11 +1316,12 @@
                     var changeMsg = msg;
                     authoring.saveWorkConfirmation($scope.origItem, $scope.item, $scope.dirty, changeMsg)
                     .then(function(res) {
+                        // after saving work make sure this item won't be open again
                         desks.setCurrentDeskId(null);
+                        $location.search('item', null);
+                        $location.search('action', null);
                     })
-                    ['finally'](function() {
-                        $window.location.reload(true);
-                    });
+                    ['finally'](reloadService.forceReload);
                 });
                 $scope.$on('item:lock', function(_e, data) {
                     if ($scope.item._id === data.item && !_closing &&
@@ -2318,7 +2319,8 @@
             'superdesk.authoring.packages',
             'superdesk.authoring.find-replace',
             'superdesk.authoring.macros',
-            'superdesk.desks'
+            'superdesk.desks',
+            'superdesk.notification'
         ])
 
         .service('authoring', AuthoringService)
