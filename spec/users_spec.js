@@ -1,5 +1,6 @@
 
 var authoring = require('./helpers/authoring'),
+    monitoring = require('./helpers/monitoring'),
     openUrl = require('./helpers/utils').open,
     post = require('./helpers/fixtures').post,
     userPrefs = require('./helpers/user_prefs'),
@@ -223,6 +224,43 @@ describe('users', function() {
                 expect(catListItems.get(1).getText()).toEqual('Finance');
             }
         );
+
+        it('should filter and navigate filtered list via keyboard action in the ' +
+           'Authoring metadata based on the user\'s preferred categories settings',
+            function () {
+                userPrefs.btnCheckNone.click();  // uncheck all categories
+
+                // select the Entertainment and Finance categories
+                userPrefs.categoryCheckboxes.get(3).click();  // Entertainment
+                userPrefs.categoryCheckboxes.get(4).click();  // Finance
+
+                userPrefs.btnSave.click();  // save changes
+
+                // navigate to Workspace and create a new article
+                monitoring.openMonitoring();
+                authoring.navbarMenuBtn.click();
+                authoring.newPlainArticleLink.click();
+
+                browser.sleep(100);
+                //Open subject metadata dropdown field
+                authoring.getCategoryMetadataDropdownOpened();
+                browser.sleep(100); //wait a bit
+
+                var cat = element(by.id('category-setting'));
+                var catListItems = cat.all(by.repeater('term in activeTree'));
+                expect(catListItems.count()).toBe(2);
+                expect(catListItems.get(0).getText()).toEqual('Entertainment');
+                expect(catListItems.get(1).getText()).toEqual('Finance');
+
+                // now type some search term and check if down arrow navigates to filtered list
+                browser.actions().sendKeys('fin').perform();
+                browser.sleep(100);
+                browser.actions().sendKeys(protractor.Key.DOWN).perform();
+                browser.sleep(100);
+                expect(browser.driver.switchTo().activeElement().getText()).toEqual('Finance');
+            }
+        );
+        //
     });
 
     describe('editing user privileges:', function () {

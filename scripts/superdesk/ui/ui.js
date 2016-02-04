@@ -444,11 +444,23 @@
                                 }
 
                                 if (inputField.is(':focus') || categoryButton.is(':focus')) {
-                                    buttonList[0].focus();
+                                    if (_.isEmpty(inputField.val())) {
+                                        var mainList = elem.find('.main-list').children('ul').find('li > button');
+                                        if (mainList[0] !== undefined) {
+                                            mainList[0].focus();
+                                        }
+                                    } else {
+                                        var buttonSet = elem.find('button:not([disabled]):not(.dropdown-toggle)');
+                                        if (buttonSet !== undefined) {
+                                            buttonSet[0].focus();
+                                        }
+                                    }
                                 } else if (nextElem.length > 0) {
                                     nextElem.focus();
                                 } else {
-                                    buttonList[0].focus();
+                                    if (buttonList[0] !== undefined) {
+                                        buttonList[0].focus();
+                                    }
                                 }
                             }, keyboardOptions);
 

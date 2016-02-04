@@ -352,8 +352,8 @@ function MetadataWordsListEditingDirective($timeout) {
  * @param {String} unique - specify the name of the field, in list item which is unique (qcode, value...)
  *
  */
-MetadataListEditingDirective.$inject = ['metadata', '$filter'];
-function MetadataListEditingDirective(metadata, $filter) {
+MetadataListEditingDirective.$inject = ['metadata', '$filter', '$timeout'];
+function MetadataListEditingDirective(metadata, $filter, $timeout) {
     return {
         scope: {
             item: '=',
@@ -457,8 +457,10 @@ function MetadataListEditingDirective(metadata, $filter) {
                         scope.activeTree = _.without(scope.activeTree, term);
                     }
 
-                    scope.postprocessing();
-                    scope.change({item: scope.item});
+                    $timeout(function() {
+                        scope.postprocessing();
+                        scope.change({item: scope.item});
+                    }, 50);
 
                     //retain focus and initialise activeTree on same dropdown control after selection.
                     _.defer (function() {
@@ -469,6 +471,7 @@ function MetadataListEditingDirective(metadata, $filter) {
                             scope.activeTree = scope.tree[null];
                         } else {
                             scope.terms = _.clone(scope.activeTree) || [];
+                            scope.allSelected = (scope.item[scope.field].length === scope.list.length) ? true : false;
                         }
                     });
                 }
@@ -490,10 +493,12 @@ function MetadataListEditingDirective(metadata, $filter) {
                     scope.terms.push(term);
                     scope.activeTree.push(term);
                     scope.activeTree = $filter('sortByName')(scope.activeTree);
+                    scope.allSelected = false;
                 }
 
                 scope.terms = $filter('sortByName')(scope.terms);
                 scope.change({item: scope.item});
+                elem.find('.dropdown-toggle').focus(); // retain focus
             };
         }
     };

@@ -426,6 +426,11 @@ function Authoring() {
         return subject.all(by.className('dropdown-toggle')).click();
     };
 
+    this.getCategoryMetadataDropdownOpened = function() {
+        var category = element(by.className('authoring-header__detailed')).all(by.css('[data-field="anpa_category"]'));
+        return category.all(by.className('dropdown-toggle')).click();
+    };
+
     this.getNextLevelSelectedCategory = function() {
         var subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
         return subject.all(by.className('levelup')).all(by.css('[ng-click="selectTerm(activeTerm)"]'));
