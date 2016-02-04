@@ -168,6 +168,11 @@ function Highlights() {
         element(by.buttonText('OK')).click();
     };
 
+    this.saveTextHighlightsConfirm = function() {
+        browser.sleep(500);
+        element(by.buttonText('Save')).click();
+    };
+
     this.multiMarkHighlight = function(name) {
         var elem = element(by.css('[class="multi-action-bar ng-scope"]'));
         elem.element(by.className('big-icon-marked-star')).click();

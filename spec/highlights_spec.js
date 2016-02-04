@@ -212,6 +212,12 @@ describe('highlights', function() {
             monitoring.turnOffWorkingStage(0);
             expect(monitoring.getTextItem(5, 0)).toBe('Highlight two');
             expect(monitoring.getTextItem(5, 1)).toBe('Highlight two');
+
+            //close generated content item
+            authoring.close();
+            highlights.saveTextHighlightsConfirm();
+            expect(monitoring.getTextItem(5, 0)).toBe('Highlight two');
+            expect(monitoring.getTextItem(5, 1)).toBe('Highlight two');
         });
     });
 });

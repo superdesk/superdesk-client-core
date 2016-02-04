@@ -239,6 +239,19 @@
         this.close = function closeAuthoring(diff, orig, isDirty, closeItem) {
             var promise = $q.when();
             if (this.isEditable(diff)) {
+                //content item just created and no change -> it will be deleted
+                if (!isDirty && orig.state === 'draft' && orig._current_version === 1) {
+
+                    promise = confirm.confirmClose()
+                        .then(angular.bind(this, function save() {
+                            //force a fake change
+                            diff.body_html = (diff.body_html || orig.body_html || '') + ' ';
+                            return this.save(orig, diff);
+                        }), function() { // ignore saving
+                            return $q.when('ignore');
+                        });
+                }
+
                 if (isDirty) {
                     if (!_.contains(['published', 'corrected'], orig.state)) {
                         promise = confirm.confirm()
@@ -740,6 +753,19 @@
         };
 
         /**
+         * In case the item version has just been created the user is asked if wants to save the document.
+         */
+        this.confirmClose = function confirm() {
+            return modal.confirm(
+                gettext('Do you want to save newly created content item?'),
+                gettext('Save content item?'),
+                gettext('Save'),
+                gettext('Ignore'),
+                gettext('Cancel')
+            );
+        };
+
+        /**
          * In case $scope is dirty ask user if he want's to save changes and publish.
          */
         this.confirmPublish = function confirmPublish(action) {
@@ -1041,7 +1067,6 @@
                 function _exportHighlight(_id) {
                     api.generate_highlights.save({}, {'package': _id})
                     .then(authoringWorkspace.edit, function(response) {
-                        console.log('response export: ', response);
                         if (response.status === 403) {
                             _forceExportHighlight(_id);
                         } else {
