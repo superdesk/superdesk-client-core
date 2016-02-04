@@ -308,6 +308,12 @@ describe('authoring', function() {
         browser.actions().sendKeys(protractor.Key.LEFT).perform();
         browser.sleep(200);
         expect(browser.driver.switchTo().activeElement().getText()).toEqual('arts, culture and entertainment');
+
+        // now type some search term an check if down arrow navigates the search list
+        browser.actions().sendKeys('cri').perform();
+        browser.sleep(200);
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+        expect(browser.driver.switchTo().activeElement().getText()).toEqual('crime, law and justice');
     });
 
     it('disable multi-edit option when action is kill', function() {
