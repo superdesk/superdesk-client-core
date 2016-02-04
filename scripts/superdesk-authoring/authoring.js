@@ -1041,8 +1041,23 @@
                 function _exportHighlight(_id) {
                     api.generate_highlights.save({}, {'package': _id})
                     .then(authoringWorkspace.edit, function(response) {
-                        notify.error(gettext('Error creating highlight.'));
+                        console.log('response export: ', response);
+                        if (response.status === 403) {
+                            _forceExportHighlight(_id);
+                        } else {
+                            notify.error(gettext('Error creating highlight.'));
+                        }
                     });
+                }
+
+                function _forceExportHighlight(_id) {
+                    modal.confirm(gettext('There are itemd locked or not published. Do you want to continue?'))
+                        .then(function() {
+                            api.generate_highlights.save({}, {'package': _id, 'export': true})
+                            .then(authoringWorkspace.edit, function(response) {
+                                notify.error(gettext('Error creating highlight.'));
+                            });
+                        });
                 }
 
                 /**

@@ -204,6 +204,8 @@ describe('highlights', function() {
             //export highlight
             authoring.save();
             highlights.exportHighlights();
+            //not all items are published so confirm export modal is showed
+            highlights.exportHighlightsConfirm();
 
             //check that the new highlight package and generated list are on personal
             workspace.showList('Monitoring');
