@@ -73,8 +73,19 @@
         });
     }
 
-    StageItemListDirective.$inject = ['search', 'api', 'superdesk', 'desks', 'cards', '$timeout', '$q', '$location', '$anchorScroll'];
-    function StageItemListDirective(search, api, superdesk, desks, cards, $timeout, $q, $location, $anchorScroll) {
+    StageItemListDirective.$inject = [
+        'search',
+        'api',
+        'superdesk',
+        'desks',
+        'cards',
+        '$timeout',
+        '$q',
+        '$location',
+        '$anchorScroll',
+        'activityService'
+    ];
+    function StageItemListDirective(search, api, superdesk, desks, cards, $timeout, $q, $location, $anchorScroll, activityService) {
         return {
             templateUrl: 'scripts/superdesk-desks/views/stage-item-list.html',
             scope: {
@@ -107,10 +118,21 @@
                     superdesk.intent('preview', 'item', item);
                 };
 
-                scope.edit = function(item) {
-                    superdesk.intent('edit', 'item', item).then(null, function() {
-                        superdesk.intent('view', 'item', item);
-                    });
+                scope.edit = function (item) {
+                    if (item._type === 'ingest') {
+                        var activity = superdesk.findActivities({action: 'list', type: 'ingest'}, item)[0];
+                        activityService.start(activity, {data: {item: item}}).then(function (item) {
+                            initEdit(item);
+                        });
+                    } else {
+                        initEdit(item);
+                    }
+
+                    function initEdit(item) {
+                        superdesk.intent('edit', 'item', item).then(null, function () {
+                            superdesk.intent('view', 'item', item);
+                        });
+                    }
                 };
 
                 function getProvider() {
