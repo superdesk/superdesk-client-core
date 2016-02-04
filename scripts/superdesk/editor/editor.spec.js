@@ -45,16 +45,19 @@ describe('text editor', function() {
 
     it('can findreplace', inject(function(editor, spellcheck, $q, $rootScope, $timeout) {
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
-        var scope = createScope('test foo and foo', $rootScope);
+        var scope = createScope('test $foo and $foo', $rootScope);
         editor.registerScope(scope);
 
-        editor.setSettings({findreplace: {needle: 'foo'}});
+        var diff = {};
+        diff.bar = '';
+        diff.$foo = '';
+        editor.setSettings({findreplace: {diff: diff}});
         editor.render();
         $timeout.flush();
 
         $rootScope.$digest();
-        var foo = '<span class="sdfindreplace sdhilite">foo</span>';
-        var fooActive = '<span class="sdfindreplace sdhilite sdactive">foo</span>';
+        var foo = '<span class="sdfindreplace sdhilite">$foo</span>';
+        var fooActive = '<span class="sdfindreplace sdhilite sdactive">$foo</span>';
         expect(scope.node.innerHTML).toBe('test ' + foo + ' and ' + foo);
 
         editor.selectNext();
@@ -69,11 +72,13 @@ describe('text editor', function() {
         editor.replace('test');
         expect(scope.node.innerHTML).toBe('test test and ' + foo);
 
-        editor.setSettings({findreplace: {needle: 'test'}});
+        diff = {};
+        diff.test = '';
+        editor.setSettings({findreplace: {diff: diff}});
         editor.render();
         $timeout.flush();
         editor.replaceAll('bar');
-        expect(scope.node.innerHTML).toBe('bar bar and foo');
+        expect(scope.node.innerHTML).toBe('bar bar and $foo');
 
         editor.setSettings({findreplace: null});
         editor.render();

@@ -12,6 +12,18 @@
 'use strict';
 
 /**
+ * Escape given string for reg exp
+ *
+ * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+ *
+ * @param {string} string
+ * @return {string}
+ */
+function escapeRegExp(string){
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
  * Generate click event on given target node
  *
  * @param {Node} target
@@ -156,6 +168,7 @@ function HistoryStack(initialValue) {
 EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q'];
 function EditorService(spellcheck, $rootScope, $timeout, $q) {
     this.settings = {spellcheck: true};
+    window.editor = this;
 
     this.KEY_CODES = Object.freeze({
         Y: 'Y'.charCodeAt(0),
@@ -302,30 +315,35 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      */
     function getFindReplaceTokens(node) {
         var tokens = [];
-        var needle = self.settings.findreplace.needle || null;
-
-        if (!needle) {
+        var diff = self.settings.findreplace.diff || {};
+        var diffPattern = Object.keys(diff).map(escapeRegExp).join('|');
+        if (!diffPattern) {
             return tokens;
         }
 
         var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
-        var currentOffset = 0;
-        var index, text;
+        var pattern = '(^|\\s|\\W)(' + diffPattern + ')($|\\s|\\W)';
+        var flags = self.settings.findreplace.caseSensitive ? 'm' : 'im';
+        var re = new RegExp(pattern, flags);
+        var nodeOffset = 0;
+        var text, match, offset;
         while (tree.nextNode()) {
             text = tree.currentNode.textContent;
-            while ((index = self.settings.findreplace.caseSensitive ?
-                    text.indexOf(needle) :
-                    text.toLowerCase().indexOf(needle.toLowerCase())) > -1) {
+            while ((match = text.match(re)) != null) {
+                nodeOffset += match[1].length; // skip white space before word
+
                 tokens.push({
-                    word: text.substr(index, needle.length),
-                    index: currentOffset + index
+                    word: match[2],
+                    index: nodeOffset + match.index,
+                    title: diff[match[2]] || ''
                 });
 
-                text = text.substr(index + needle.length);
-                currentOffset += index + needle.length;
+                offset = match.index + match[1].length + match[2].length + match[3].length;
+                text = text.substr(offset);
+                nodeOffset += offset - match[1].length; // match[1] already there
             }
 
-            currentOffset += text.length;
+            nodeOffset += text.length;
         }
 
         return tokens;
@@ -388,6 +406,9 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
         var span = document.createElement('span');
         span.classList.add(className);
         span.classList.add(HILITE_CLASS);
+        if (token.title) {
+            span.title = token.title;
+        }
         replace.splitText(end.offset - start.offset);
         span.textContent = replace.textContent;
         replace.parentNode.replaceChild(span, replace);
@@ -440,6 +461,21 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
             replaceNodes(nodes, text, scope);
             self.commitScope(scope);
         });
+    };
+
+    /**
+     * Get active node text
+     *
+     * @return {string}
+     */
+    this.getActiveText = function() {
+        var active;
+        scopes.forEach(function(scope) {
+            var nodes = scope.node.getElementsByClassName(ACTIVE_CLASS);
+            active = nodes.length ? nodes[0] : active;
+        });
+
+        return active ? active.textContent : null;
     };
 
     /**

@@ -2,8 +2,11 @@
 
 'use strict';
 
-MacrosService.$inject = ['api', 'autosave', 'notify'];
-function MacrosService(api, autosave, notify) {
+MacrosService.$inject = ['api', 'autosave', 'notify', 'editor'];
+function MacrosService(api, autosave, notify, editor) {
+
+    var self = this;
+
     this.get = function() {
         return api.query('macros')
             .then(angular.bind(this, function(macros) {
@@ -40,10 +43,15 @@ function MacrosService(api, autosave, notify) {
             item: _.omit(item), // get all the properties as shallow copy
             commit: !!commit
         }).then(function(res) {
-            angular.extend(item, res.item);
-            if (!commit) {
-                autosave.save(item);
+            if (res.diff) {
+                self.diff = res.diff;
+            } else {
+                angular.extend(item, res.item);
+                if (!commit) {
+                    autosave.save(item);
+                }
             }
+
             return item;
         }, function(err) {
             if (angular.isDefined(err.data._message)) {
@@ -70,10 +78,57 @@ function MacrosController($scope, macros, desks) {
     };
 }
 
+MacrosReplaceController.$inject = ['$scope', 'macros', 'editor'];
+function MacrosReplaceController($scope, macros, editor) {
+    var self = this;
+
+    $scope.$watch(function() {
+        return macros.diff;
+    }, function(diff) {
+        self.diff = diff;
+        if (diff) {
+            editor.setSettings({findreplace: {diff: diff}});
+            editor.render();
+            self.next();
+        } else {
+            editor.setSettings({findreplace: null});
+            editor.render();
+        }
+    });
+
+    this.next = function() {
+        editor.selectNext();
+        self.preview = getCurrentReplace();
+    };
+
+    this.prev = function() {
+        editor.selectPrev();
+        self.preview = getCurrentReplace();
+    };
+
+    this.replace = function() {
+        var to = getCurrentReplace();
+        if (to) {
+            editor.replace(to);
+            editor.selectNext();
+        }
+    };
+
+    this.close = function() {
+        macros.diff = null;
+    };
+
+    function getCurrentReplace() {
+        var from = editor.getActiveText();
+        return macros.diff[from] || null;
+    }
+}
+
 angular.module('superdesk.authoring.macros', [])
 
     .service('macros', MacrosService)
     .controller('Macros', MacrosController)
+    .controller('MacrosReplace', MacrosReplaceController)
 
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider

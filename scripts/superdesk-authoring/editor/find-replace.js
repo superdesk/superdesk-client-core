@@ -55,15 +55,20 @@ function FindReplaceDirective($timeout, $rootScope, editor) {
                 var input = document.getElementById('find-replace-what');
                 var selectionStart = input.selectionStart;
                 var selectionEnd = input.selectionEnd;
-
-                editor.setSettings({findreplace: {needle: needle, caseSensitive: scope.caseSensitive}});
+                editor.setSettings({findreplace: {diff: getDiff(), caseSensitive: scope.caseSensitive}});
                 editor.render();
                 editor.selectNext();
                 input.setSelectionRange(selectionStart, selectionEnd);
             });
 
+            function getDiff() {
+                var diff = {};
+                diff[scope.from || ''] = scope.to || '';
+                return diff;
+            }
+
             scope.$watch('caseSensitive', function (caseSensitive) {
-                editor.setSettings({findreplace: {needle: scope.from, caseSensitive: caseSensitive}});
+                editor.setSettings({findreplace: {diff: getDiff(), caseSensitive: caseSensitive}});
                 editor.render();
                 editor.selectNext();
             });
