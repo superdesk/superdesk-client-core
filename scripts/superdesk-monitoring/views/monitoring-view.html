@@ -83,7 +83,7 @@
 
         </div>
         <div class="preview-layout monitoring-preview-layout">
-            <div class="content-list" ng-if="!aggregate.loading">
+            <div class="content-list" ng-show="!aggregate.loading">
                 <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                     <div ng-repeat="group in aggregate.groups track by group._id"
                          sd-monitoring-group data-group="group"  data-num-items="group.max_items"
