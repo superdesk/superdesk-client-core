@@ -33,6 +33,14 @@
                 </article>
             </div>
         </div>
+
+        <div id="macros-diff" ng-show="macrosReplace.diff" ng-controller="MacrosReplace as macrosReplace">
+          <span ng-show="macrosReplace.preview"><em>{{ macrosReplace.preview }}</em></span>
+          <button class="replace-btn" ng-click="macrosReplace.replace()">replace</button>
+          <button class="prev-btn" ng-click="macrosReplace.prev()">prev</button>
+          <button class="next-btn" ng-click="macrosReplace.next()">next</button>
+          <button class="done-btn" ng-click="macrosReplace.close()">done</button>
+        </div>
     </section>
 
     <div sd-send-item

@@ -11,16 +11,19 @@
 
 'use strict';
 
-FindReplaceDirective.$inject = ['$timeout', '$rootScope', 'editor'];
+FindReplaceDirective.$inject = ['$timeout', '$rootScope', 'editor', 'macros'];
 /**
  * using directive here so that it can return focus
  */
-function FindReplaceDirective($timeout, $rootScope, editor) {
+function FindReplaceDirective($timeout, $rootScope, editor, macros) {
     return {
         link: function(scope, elem) {
             scope.to = '';
             scope.from = '';
             scope.caseSensitive = true;
+
+            // stop macros find/replace
+            macros.diff = null;
 
             /**
              * Highlight next matching string

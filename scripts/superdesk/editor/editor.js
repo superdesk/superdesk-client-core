@@ -304,6 +304,17 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     }
 
     /**
+     * Function for sorting array of strings from longest to shortest
+     *
+     * @param {string} a
+     * @param {string} b
+     * @return {number}
+     */
+    function reverseLengthSort(a, b) {
+        return b.length - a.length;
+    }
+
+    /**
      * Find all matches for current find&replace needle in given node
      *
      * Each match is {word: {string}, offset: {number}} in given node,
@@ -316,31 +327,29 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     function getFindReplaceTokens(node) {
         var tokens = [];
         var diff = self.settings.findreplace.diff || {};
-        var diffPattern = Object.keys(diff).map(escapeRegExp).join('|');
-        if (!diffPattern) {
+        var pattern = Object.keys(diff).sort(reverseLengthSort).map(escapeRegExp).join('|');
+        if (!pattern) {
             return tokens;
         }
 
-        var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
-        var pattern = '(^|\\s|\\W)(' + diffPattern + ')($|\\s|\\W)';
         var flags = self.settings.findreplace.caseSensitive ? 'm' : 'im';
         var re = new RegExp(pattern, flags);
         var nodeOffset = 0;
         var text, match, offset;
+
+        var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
         while (tree.nextNode()) {
             text = tree.currentNode.textContent;
             while ((match = text.match(re)) != null) {
-                nodeOffset += match[1].length; // skip white space before word
-
                 tokens.push({
-                    word: match[2],
+                    word: match[0],
                     index: nodeOffset + match.index,
-                    title: diff[match[2]] || ''
+                    title: diff[match[0]] || ''
                 });
 
-                offset = match.index + match[1].length + match[2].length + match[3].length;
+                offset = match.index + match[0].length;
                 text = text.substr(offset);
-                nodeOffset += offset - match[1].length; // match[1] already there
+                nodeOffset += offset;
             }
 
             nodeOffset += text.length;
