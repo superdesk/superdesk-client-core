@@ -98,7 +98,14 @@ function Authoring() {
     };
 
     this.publish = function() {
+        browser.wait(function() {
+            return this.sendToButton.isDisplayed();
+        }.bind(this), 1000);
         this.sendToButton.click();
+
+        browser.wait(function() {
+            return this.publish_button.isDisplayed();
+        }.bind(this), 1000);
         return this.publish_button.click();
     };
 

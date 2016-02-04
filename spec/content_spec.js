@@ -182,7 +182,7 @@ describe('content', function() {
         browser.sleep(500);
 
         expect(content.getItemType('composite').isDisplayed()).toBe(true);
-        expect(content.getWidgets().count()).toBe(6);
+        expect(content.getWidgets().count()).toBe(5);
 
         element(by.id('closeAuthoringBtn')).click();
     });
