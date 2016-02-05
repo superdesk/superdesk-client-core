@@ -961,25 +961,6 @@
                 $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
                 $scope.origItem.sign_off = $scope.origItem.sign_off || $scope.origItem.version_creator;
 
-                if ($scope.action === 'kill') {
-                    // kill template is applied on the item.
-                    var fields = _.union(_.keys(CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated']);
-                    var item = {
-                        template_name: 'kill', item: _.pick($scope.origItem, fields)
-                    };
-
-                    api.save('content_templates_apply', {}, item, {}).then(function(result) {
-                        item = _.pick(result, _.keys(CONTENT_FIELDS_DEFAULTS));
-                        _.each(item, function(value, key) {
-                            if (!_.isEmpty(value)) {
-                                $scope.item[key] = value;
-                            }
-                        });
-                    }, function(err) {
-                        notify.error(gettext('Failed to apply kill template to the item.'));
-                    });
-                }
-
                 $scope.$watch('item.flags', function(newValue, oldValue) {
                     if (newValue !== oldValue) {
                         $scope.item.flags = _.clone($scope.origItem.flags);
@@ -2545,13 +2526,36 @@
         };
     }
 
-    AuthoringEmbeddedDirective.$inject = [];
-    function AuthoringEmbeddedDirective() {
+    AuthoringEmbeddedDirective.$inject = ['api', 'notify', 'gettext'];
+    function AuthoringEmbeddedDirective(api, notify, gettext) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/authoring.html',
             scope: {
-                origItem: '=item',
+                item: '=',
                 action: '='
+            },
+            link: function (scope) {
+                if (scope.action === 'kill') {
+                    // kill template is applied on the item.
+                    var fields = _.union(_.keys(CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated']);
+                    var item = {
+                        template_name: 'kill', item: _.pick(scope.item, fields)
+                    };
+
+                    api.save('content_templates_apply', {}, item, {}).then(function(result) {
+                        item = _.pick(result, _.keys(CONTENT_FIELDS_DEFAULTS));
+                        scope.origItem = angular.extend({}, scope.item);
+                        _.each(item, function(value, key) {
+                            if (!_.isEmpty(value)) {
+                                scope.origItem[key] = value;
+                            }
+                        });
+                    }, function(err) {
+                        notify.error(gettext('Failed to apply kill template to the item.'));
+                    });
+                } else {
+                    scope.origItem = scope.item;
+                }
             }
         };
     }
