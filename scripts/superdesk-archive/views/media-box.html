@@ -1,5 +1,5 @@
 <div id="{{ :: item._id }}"
-    class="media-box media-{{ :: item.type}}"
+    class="media-box media-{{ :: item.type}} media-box--state-{{ :: item.state}}"
     ng-class="{selected: item._id === selected._id, archived: item.archived || item.created, locked: lock.isLocked}"
     sd-mouse-hover="focused"
     ng-include="itemTemplate"></div>
