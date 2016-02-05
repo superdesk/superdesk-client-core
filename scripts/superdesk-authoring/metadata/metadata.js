@@ -458,9 +458,11 @@ function MetadataListEditingDirective(metadata, $filter, $timeout) {
                     }
 
                     $timeout(function() {
-                        scope.postprocessing();
-                        scope.change({item: scope.item});
-                    }, 50);
+                        scope.$applyAsync(function () {
+                            scope.postprocessing();
+                            scope.change({item: scope.item});
+                        });
+                    }, 50, false);
 
                     //retain focus and initialise activeTree on same dropdown control after selection.
                     _.defer (function() {
@@ -471,7 +473,7 @@ function MetadataListEditingDirective(metadata, $filter, $timeout) {
                             scope.activeTree = scope.tree[null];
                         } else {
                             scope.terms = _.clone(scope.activeTree) || [];
-                            scope.allSelected = (scope.item[scope.field].length === scope.list.length) ? true : false;
+                            scope.allSelected = scope.item[scope.field].length === scope.list.length;
                         }
                     });
                 }
