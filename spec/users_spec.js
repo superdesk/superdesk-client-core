@@ -225,7 +225,7 @@ describe('users', function() {
             }
         );
 
-        it('should filter/navigate list via keyboard action in the ' +
+        it('should filter/navigate list via keyboard actions in the ' +
            'Authoring metadata based on the user\'s preferred categories settings',
             function () {
                 userPrefs.btnCheckNone.click();  // uncheck all categories
