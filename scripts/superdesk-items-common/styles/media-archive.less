@@ -579,7 +579,7 @@
 	.media-box {
 		position: relative;
 		background: #fff;
-		border-bottom: 1px solid #ebebeb;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 		border-right: 2px solid #fff;
 		padding-left: 3px;
 		&:hover {
@@ -731,7 +731,7 @@
 				white-space: nowrap;
 			}
 			.highlights-box {
-                                margin-top: -2px;
+        margin-top: -2px;
 				margin-right: 5px;
 			}
 			.item-heading {
@@ -812,14 +812,26 @@
 		}
 		.state-border {
 			position: absolute;
-			width: 3px;
+			width: 4px;
 			left: 0;
 			top:0;
 			bottom: 0;
-			background: #bbb;
+			background: rgba(0, 0, 0, 0);
 		}
 		&.locked .state-border {
-			background: #e51c23;
+			background: @state-border--locked;
+		}
+		&.media-box--state-published, &.media-box--state-corrected {
+			background: @item-background-published;
+			.state-border {
+				background: @state-border--published;
+			}
+		}
+		&.media-box--state-killed {
+			background: @item-background-killed;
+			.state-border {
+				background: @state-border--killed;
+			}
 		}
 
 	}

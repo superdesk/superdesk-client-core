@@ -2,7 +2,7 @@
   <label translate>Headline</label>
     <span sd-character-count data-item="item.headline" data-html="true" data-limit="limits.headline"></span>
     <div id="title" class="headline"
-        sd-text-editor 
+        sd-text-editor
         data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item)}"
         data-language="item.language"
         ng-model="item.headline"
@@ -51,6 +51,7 @@
              data-item="item"
              data-fieldprefix="dateline"
              data-field="located"
+             placeholder="Add location"
              data-postprocessing="updateDateline(item, city)"
              data-change="autosave(item)">
         </div>
@@ -60,13 +61,16 @@
                     ng-options="monthName for (monthName, monthValue) in monthNames"
                     ng-disabled="!item.dateline.located || !_editable"
                     ng-change="resetNumberOfDays(true, datelineMonth)"
+                    placeholder="Choose month"
                     ng-model="datelineMonth">
                 <option value=""></option>
             </select>
+
             <select id="datelineDay"
                     ng-options="day for day in daysInMonth"
                     ng-disabled="!item.dateline.located || !_editable"
                     ng-change="modifyDatelineDate(datelineDay)"
+                    placeholder="Choose day"
                     ng-model="datelineDay">
                 <option value=""></option>
             </select>
@@ -77,7 +81,7 @@
 <div class="field body" ng-if="!isMediaType">
   <label translate>Body</label>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
-    <div id="bodyhtml" 
+    <div id="bodyhtml"
          sd-text-editor
          data-config="{disableEditing: isPublished(item)}"
          ng-model="item.body_html"
