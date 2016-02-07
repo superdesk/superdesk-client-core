@@ -2326,6 +2326,8 @@
         };
     }
 
+    angular.module('superdesk.authoring.autosave', []).service('autosave', AutosaveService);
+
     angular.module('superdesk.authoring', [
             'superdesk.menu',
             'superdesk.editor',
@@ -2340,12 +2342,12 @@
             'superdesk.authoring.packages',
             'superdesk.authoring.find-replace',
             'superdesk.authoring.macros',
+            'superdesk.authoring.autosave',
             'superdesk.desks',
             'superdesk.notification'
         ])
 
         .service('authoring', AuthoringService)
-        .service('autosave', AutosaveService)
         .service('confirm', ConfirmDirtyService)
         .service('lock', LockService)
         .service('authThemes', AuthoringThemesService)

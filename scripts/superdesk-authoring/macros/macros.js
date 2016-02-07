@@ -40,7 +40,7 @@ function MacrosService(api, autosave, notify, editor) {
     function triggerMacro(macro, item, commit) {
         return api.save('macros', {
             macro: macro.name,
-            item: _.omit(item), // get all the properties as shallow copy
+            item: angular.extend({}, item), // get all the properties as shallow copy
             commit: !!commit
         }).then(function(res) {
             if (res.diff) {
@@ -90,6 +90,7 @@ function MacrosReplaceDirective(macros, editor) {
             }, function(diff) {
                 scope.diff = diff;
                 if (diff) {
+                    scope.noMatch = Object.keys(diff || {}).length;
                     editor.setSettings({findreplace: {diff: diff}});
                     editor.render();
                     scope.next();
@@ -129,7 +130,13 @@ function MacrosReplaceDirective(macros, editor) {
     };
 }
 
-angular.module('superdesk.authoring.macros', [])
+angular.module('superdesk.authoring.macros', [
+    'superdesk.api',
+    'superdesk.notify',
+    'superdesk.editor',
+    'superdesk.authoring.widgets',
+    'superdesk.authoring.autosave'
+])
 
     .service('macros', MacrosService)
     .controller('Macros', MacrosController)

@@ -1,7 +1,10 @@
 <div id="macros-diff" ng-show="diff">
+    <span ng-show="!preview"><em translate>No matches found.</em></span>
+    <button ng-show="!preview" class="done-btn" ng-click="close()" translate>OK</button>
+
     <span ng-show="preview"><em>{{ preview }}</em></span>
-    <button class="replace-btn" ng-click="replace()" translate>replace</button>
-    <button class="prev-btn" ng-click="prev()" translate>prev</button>
-    <button class="next-btn" ng-click="next()" translate>next</button>
-    <button class="done-btn" ng-click="close()" translate>done</button>
+    <button ng-show="preview" class="replace-btn" ng-click="replace()" translate>replace</button>
+    <button ng-show="preview" class="prev-btn" ng-click="prev()" translate>prev</button>
+    <button ng-show="preview" class="next-btn" ng-click="next()" translate>next</button>
+    <button ng-show="preview" class="done-btn" ng-click="close()" translate>done</button>
 </div>
