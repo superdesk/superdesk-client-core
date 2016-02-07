@@ -30,6 +30,9 @@ function Authoring() {
     this.setCategoryBtn = element(by.id('category-setting'))
         .element(by.tagName('button'));
 
+    this.getCategoryListItems = element(by.id('category-setting'))
+        .all(by.repeater('term in activeTree'));
+
     this.sendItemContainer = element(by.id('send-item-container'));
     this.linkToMasterButton = element(by.id('preview-master'));
 

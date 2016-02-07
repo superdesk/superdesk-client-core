@@ -217,8 +217,7 @@ describe('users', function() {
                 // categories are offered
                 authoring.setCategoryBtn.click();
 
-                var cat = element(by.id('category-setting'));
-                var catListItems = cat.all(by.repeater('term in activeTree'));
+                var catListItems = authoring.getCategoryListItems;
                 expect(catListItems.count()).toBe(2);
                 expect(catListItems.get(0).getText()).toEqual('Entertainment');
                 expect(catListItems.get(1).getText()).toEqual('Finance');
@@ -246,8 +245,7 @@ describe('users', function() {
                 authoring.getCategoryMetadataDropdownOpened();
                 browser.sleep(100); //wait a bit
 
-                var cat = element(by.id('category-setting'));
-                var catListItems = cat.all(by.repeater('term in activeTree'));
+                var catListItems = authoring.getCategoryListItems;
                 expect(catListItems.count()).toBe(2);
                 expect(catListItems.get(0).getText()).toEqual('Entertainment');
                 expect(catListItems.get(1).getText()).toEqual('Finance');
