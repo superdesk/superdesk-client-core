@@ -145,22 +145,34 @@
                     self.groups.push({_id: currentDesk._id + ':output', type: 'deskOutput', header: currentDesk.name});
                 }
             }
-            initSpikeGroups();
+            initSpikeGroups(settings.type === 'desk');
             updateFileTypeCriteria();
             self.search(self.searchQuery);
         }
 
         /**
          * Init the spike desks based on already initialized groups
+         *
+         * for desk workspace only show current desk spiked items
+         *
+         * @param {boolean} isDesk
          */
-        function initSpikeGroups() {
+        function initSpikeGroups(isDesk) {
             var spikeDesks = {};
             if (self.spikeGroups.length > 0) {
                 self.spikeGroups.length = 0;
             }
+
+            if (isDesk) {
+                var desk = desks.getCurrentDesk();
+                self.spikeGroups = [{_id: desk._id, type: 'spike'}];
+                return;
+            }
+
             if (self.groups.length === 0) {
                 return;
             }
+
             _.each(self.groups, function(item, index) {
                 if (item.type === 'stage') {
                     var stage = self.stageLookup[item._id];
@@ -169,6 +181,7 @@
                     spikeDesks.personal = {_id: 'personal', name: 'personal'};
                 }
             });
+
             _.each(spikeDesks, function(item) {
                 if (item._id === 'personal') {
                     self.spikeGroups.push({_id: item._id, type: 'spike-personal', header: item.name});
