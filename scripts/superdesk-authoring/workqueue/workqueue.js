@@ -22,7 +22,7 @@ function WorkqueueService(session, api) {
     this.fetch = function() {
         return session.getIdentity()
             .then(angular.bind(this, function(identity) {
-                return api.query('archive', {source: {filter: {term: {lock_user: identity._id}}}})
+                return api.query('workqueue', {source: {filter: {term: {lock_user: identity._id}}}})
                     .then(angular.bind(this, function(res) {
                         this.items = null;
                         this.items = res._items || [];
