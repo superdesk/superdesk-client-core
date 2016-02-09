@@ -32,7 +32,8 @@
         embargo: null,
         renditions: null,
         body_footer: null,
-        company_codes: []
+        company_codes: [],
+        schedule_settings: null
     });
 
     var DEFAULT_ACTIONS = Object.freeze({

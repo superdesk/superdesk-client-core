@@ -1215,6 +1215,13 @@
             var merge_str = date_str + ' ' + time_str;
             return moment(merge_str, 'YYYY-MM-DD HH:mm:ss').utc();
         };
+
+        this.mergeDateTimeWithoutUtc = function(date, time) {
+            var date_str = moment(date).format('YYYY-MM-DD');
+            var time_str = moment(time, 'HH:mm:ss').add(moment().utcOffset(), 'minute').format('HH:mm:ss');
+            var merge_str = date_str + ' ' + time_str;
+            return moment.utc(merge_str, 'YYYY-MM-DD HH:mm:ss');
+        };
     }
 
     WeekdayPickerDirective.$inject = ['weekdays'];

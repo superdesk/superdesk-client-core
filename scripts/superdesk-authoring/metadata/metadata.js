@@ -99,13 +99,20 @@ function MetadataCtrl(
         setPublishScheduleDate(newValue, oldValue);
     });
 
+    $scope.$watch('item.time_zone', function(newValue, oldValue) {
+        setPublishScheduleDate(newValue, oldValue);
+    });
+
     function setPublishScheduleDate(newValue, oldValue) {
         if (newValue !== oldValue) {
             if ($scope.item.publish_schedule_date && $scope.item.publish_schedule_time) {
-                $scope.item.publish_schedule = datetimeHelper.mergeDateTime($scope.item.publish_schedule_date,
-                    $scope.item.publish_schedule_time).format();
+                $scope.item.schedule_settings = {};
+                $scope.item.publish_schedule = datetimeHelper.mergeDateTimeWithoutUtc($scope.item.publish_schedule_date, 
+                    $scope.item.publish_schedule_time);
+                $scope.item.schedule_settings['time_zone'] = $scope.item.time_zone;
             } else {
                 $scope.item.publish_schedule = null;
+                $scope.item.schedule_settings = null;
             }
 
             $scope.autosave($scope.item);
@@ -153,6 +160,11 @@ function MetadataCtrl(
             var publishSchedule = new Date(Date.parse($scope.item.publish_schedule));
             $scope.item.publish_schedule_date = $filter('formatDateTimeString')(publishSchedule, 'MM/DD/YYYY');
             $scope.item.publish_schedule_time = $filter('formatDateTimeString')(publishSchedule, 'HH:mm:ss');
+
+        }
+
+        if ($scope.item.schedule_settings) {
+            $scope.item.time_zone = $scope.item.schedule_settings.time_zone;
         }
     }
 
