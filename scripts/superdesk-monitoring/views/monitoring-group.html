@@ -1,5 +1,5 @@
 <div class="stage">
-    <div sd-monitoring-group-header ng-if="group.header && group.type != 'spike' && group.singleViewType == null"></div>
+    <div sd-monitoring-group-header ng-if="group.header && group.singleViewType == null"></div>
     <div class="stage-content group" ng-class="{limited: limited}" tabindex="0">
         <ul class="inline-content-items compact-view list-view" ng-class="{'list-without-items' : total === 0}">
             <li ng-if="loading && items.length"><i class="spinner-alt"></i></li>

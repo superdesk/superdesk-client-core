@@ -519,11 +519,13 @@
             var lockedByMe = !lock.isLocked(current_item);
             action.view = !lockedByMe;
 
-            var isBroadcast = (angular.isDefined(current_item.genre) && current_item.genre.length > 0 &&
-                               _.contains(['text', 'preformatted'], current_item.type) &&
-                               current_item.genre.some(function(genre) {
-                                   return genre.name === 'Broadcast Script';
-                               }));
+            var isBroadcast = current_item.genre && current_item.genre.length > 0 &&
+                              _.contains(['text', 'preformatted'], current_item.type) &&
+                              current_item.genre.some(nameIsBroadcast);
+
+            function nameIsBroadcast(genre) {
+                return genre.name === 'Broadcast Script';
+            }
 
             // new take should be on the text item that are closed or last take but not killed and doesn't have embargo.
             action.new_take = !is_read_only_state && current_item.type === 'text' &&
