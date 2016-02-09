@@ -30,6 +30,9 @@ function Authoring() {
     this.setCategoryBtn = element(by.id('category-setting'))
         .element(by.tagName('button'));
 
+    this.getCategoryListItems = element(by.id('category-setting'))
+        .all(by.repeater('term in activeTree'));
+
     this.sendItemContainer = element(by.id('send-item-container'));
     this.linkToMasterButton = element(by.id('preview-master'));
 
@@ -424,6 +427,11 @@ function Authoring() {
     this.getSubjectMetadataDropdownOpened = function() {
         var subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
         return subject.all(by.className('dropdown-toggle')).click();
+    };
+
+    this.getCategoryMetadataDropdownOpened = function() {
+        var category = element(by.className('authoring-header__detailed')).all(by.css('[data-field="anpa_category"]'));
+        return category.all(by.className('dropdown-toggle')).click();
     };
 
     this.getNextLevelSelectedCategory = function() {

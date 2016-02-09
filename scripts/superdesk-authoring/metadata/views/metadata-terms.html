@@ -6,13 +6,14 @@
     </div>
 </div>
 
-<div class="dropdown dropright dropdown-bigger dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position>
+<div class="dropdown dropright dropdown-bigger dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position
+    tooltip="{{ allSelected ? 'All items selected' : 'Select item'  | translate }}" tooltip-placement= "left">
     <button class="dropdown-toggle" dropdown-toggle ng-disabled="disabled" ng-if="header && !disabled">
         <i class="icon-white icon-plus-large"></i>
     </button>
     <ul class="dropdown-menu nested-menu pull-right">
         <li ng-show="!activeTerm && header">
-            <ul sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" always-visible="header" data-disabled="disabled">
+            <ul sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" always-visible="header" data-disabled="disabled || allSelected">
                 <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]" ng-if="!activeTree.length || activeList"><button>{{ :: t.name }}</button></li>
             </ul>
         </li>
@@ -23,7 +24,7 @@
                 <b class="category-hover">{{ :: "Choose entire category" | translate }}</b>
             </button>
         </li>
-        <li class="main-list" ng-if="activeTree.length && !activeList && header" ng-class="{active: activeTerm}">
+        <li class="main-list" ng-if="activeTree.length && !activeList && header" ng-class="{active: activeTerm}" ng-hide="allSelected">
             <ul sd-shadow>
                 <li ng-repeat="term in activeTree track by term[uniqueField]">
                     <button ng-if="tree[term.qcode]" class="nested-toggle" ng-click="openTree(term, $event)">{{ :: term.name }} <i class="icon-chevron-right-thin submenu-icon"></i></button>
