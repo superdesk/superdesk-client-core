@@ -1390,30 +1390,50 @@
          *   panel, allowing users to set various system preferences for
          *   themselves.
          */
-        .directive('sdUserPrivileges', ['api', 'gettext', 'notify', 'userList', function(api, gettext, notify, userList) {
+        .directive('sdUserPrivileges', ['api', 'gettext', 'notify', 'userList', '$q',
+            function(api, gettext, notify, userList, $q) {
             return {
                 scope: {
                     user: '='
                 },
                 templateUrl: 'scripts/superdesk-users/views/user-privileges.html',
                 link: function(scope) {
-                    userList.getUser(scope.user._id, true).then(function(u) {
-                        scope.user = u;
-                    });
 
-                    api('privileges').query().
-                    then(function(result) {
-                        scope.privileges = result._items;
-                    });
+                    getUser()
+                        .then(getPrivileges)
+                        .then(getUserRole);
 
-                    api('roles').getById(scope.user.role).then(function(role) {
-                        scope.role = role;
-                    }, function(error) {
-                        console.log(error);
-                    });
+                    function getUser() {
+                        return userList.getUser(scope.user._id, true).then(function(u) {
+                            scope.user = u;
+                            // the last user privileges that were saved on the server
+                            scope.origPrivileges = angular.copy(scope.user.privileges);
+                        }, function(error) {
+                            notify.error(gettext('User not found.'));
+                            console.log(error);
+                            return $q.reject(error);
+                        });
+                    }
 
-                    // the last user privileges that were saved on the server
-                    scope.origPrivileges = angular.copy(scope.user.privileges);
+                    function getPrivileges() {
+                        api('privileges').query().then(function(result) {
+                            scope.privileges = result._items;
+                        }, function(error) {
+                            notify.error(gettext('Privileges not found.'));
+                            console.log(error);
+                            return $q.reject(error);
+                        });
+                    }
+
+                    function getUserRole() {
+                        api('roles').getById(scope.user.role).then(function(role) {
+                            scope.role = role;
+                        }, function(error) {
+                            notify.error(gettext('User role not found.'));
+                            console.log(error);
+                            return $q.reject(error);
+                        });
+                    }
 
                     /**
                     * Saves selected user privileges on the server and marks

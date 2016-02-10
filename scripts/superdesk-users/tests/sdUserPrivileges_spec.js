@@ -52,7 +52,7 @@ describe('sdUserPrivileges directive', function() {
                         .and.returnValue(getByIdDeferred.promise)
         };
 
-        spyOn(userList, 'getUser').and.returnValue($q.when({_id: 1}));
+        spyOn(userList, 'getUser').and.returnValue($q.when({_id: 1, role: '€d1t0r'}));
     }));
 
     /**
@@ -147,11 +147,6 @@ describe('sdUserPrivileges directive', function() {
             expect(console.log).toHaveBeenCalledWith('Server error');
         });
 
-        it('stores the original list of user privileges', function () {
-            expect(isoScope.origPrivileges).toEqual(
-                [{name: 'foo'}, {name: 'bar'}]
-            );
-        });
     });
 
     describe('scope\'s save() method', function () {
