@@ -11,16 +11,19 @@
 
 'use strict';
 
-FindReplaceDirective.$inject = ['$timeout', '$rootScope', 'editor'];
+FindReplaceDirective.$inject = ['$timeout', '$rootScope', 'editor', 'macros'];
 /**
  * using directive here so that it can return focus
  */
-function FindReplaceDirective($timeout, $rootScope, editor) {
+function FindReplaceDirective($timeout, $rootScope, editor, macros) {
     return {
         link: function(scope, elem) {
             scope.to = '';
             scope.from = '';
             scope.caseSensitive = true;
+
+            // stop macros find/replace
+            macros.diff = null;
 
             /**
              * Highlight next matching string
@@ -55,15 +58,20 @@ function FindReplaceDirective($timeout, $rootScope, editor) {
                 var input = document.getElementById('find-replace-what');
                 var selectionStart = input.selectionStart;
                 var selectionEnd = input.selectionEnd;
-
-                editor.setSettings({findreplace: {needle: needle, caseSensitive: scope.caseSensitive}});
+                editor.setSettings({findreplace: {diff: getDiff(), caseSensitive: scope.caseSensitive}});
                 editor.render();
                 editor.selectNext();
                 input.setSelectionRange(selectionStart, selectionEnd);
             });
 
+            function getDiff() {
+                var diff = {};
+                diff[scope.from || ''] = scope.to || '';
+                return diff;
+            }
+
             scope.$watch('caseSensitive', function (caseSensitive) {
-                editor.setSettings({findreplace: {needle: scope.from, caseSensitive: caseSensitive}});
+                editor.setSettings({findreplace: {diff: getDiff(), caseSensitive: caseSensitive}});
                 editor.render();
                 editor.selectNext();
             });

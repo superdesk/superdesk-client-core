@@ -2,8 +2,11 @@
 
 'use strict';
 
-MacrosService.$inject = ['api', 'autosave', 'notify'];
-function MacrosService(api, autosave, notify) {
+MacrosService.$inject = ['api', 'autosave', 'notify', 'editor'];
+function MacrosService(api, autosave, notify, editor) {
+
+    var self = this;
+
     this.get = function() {
         return api.query('macros')
             .then(angular.bind(this, function(macros) {
@@ -37,13 +40,18 @@ function MacrosService(api, autosave, notify) {
     function triggerMacro(macro, item, commit) {
         return api.save('macros', {
             macro: macro.name,
-            item: _.omit(item), // get all the properties as shallow copy
+            item: angular.extend({}, item), // get all the properties as shallow copy
             commit: !!commit
         }).then(function(res) {
-            angular.extend(item, res.item);
-            if (!commit) {
-                autosave.save(item);
+            if (res.diff) {
+                self.diff = res.diff;
+            } else {
+                angular.extend(item, res.item);
+                if (!commit) {
+                    autosave.save(item);
+                }
             }
+
             return item;
         }, function(err) {
             if (angular.isDefined(err.data._message)) {
@@ -70,10 +78,69 @@ function MacrosController($scope, macros, desks) {
     };
 }
 
-angular.module('superdesk.authoring.macros', [])
+MacrosReplaceDirective.$inject = ['macros', 'editor'];
+function MacrosReplaceDirective(macros, editor) {
+    return {
+        scope: true,
+        templateUrl: 'scripts/superdesk-authoring/macros/views/macros-replace.html',
+        link: function(scope) {
+
+            scope.$watch(function() {
+                return macros.diff;
+            }, function(diff) {
+                scope.diff = diff;
+                if (diff) {
+                    scope.noMatch = Object.keys(diff || {}).length;
+                    editor.setSettings({findreplace: {diff: diff}});
+                    editor.render();
+                    scope.next();
+                } else {
+                    editor.setSettings({findreplace: null});
+                    editor.render();
+                }
+            });
+
+            scope.next = function() {
+                editor.selectNext();
+                scope.preview = getCurrentReplace();
+            };
+
+            scope.prev = function() {
+                editor.selectPrev();
+                scope.preview = getCurrentReplace();
+            };
+
+            scope.replace = function() {
+                var to = getCurrentReplace();
+                if (to) {
+                    editor.replace(to);
+                    editor.selectNext();
+                }
+            };
+
+            scope.close = function() {
+                macros.diff = null;
+            };
+
+            function getCurrentReplace() {
+                var from = editor.getActiveText();
+                return macros.diff[from] || null;
+            }
+        }
+    };
+}
+
+angular.module('superdesk.authoring.macros', [
+    'superdesk.api',
+    'superdesk.notify',
+    'superdesk.editor',
+    'superdesk.authoring.widgets',
+    'superdesk.authoring.autosave'
+])
 
     .service('macros', MacrosService)
     .controller('Macros', MacrosController)
+    .directive('sdMacrosReplace', MacrosReplaceDirective)
 
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
