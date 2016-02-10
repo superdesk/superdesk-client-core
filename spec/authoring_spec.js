@@ -139,9 +139,9 @@ describe('authoring', function() {
         monitoring.filterAction('composite');
         monitoring.actionOnItem('Open', 4, 0);
         authoring.showHistory();
-        expect(authoring.getHistoryItems().count()).toBe(2);
-        expect(authoring.getHistoryItem(1).getText()).toMatch(/Published by.*/);
-        var transmissionDetails = authoring.showTransmissionDetails(1);
+        expect(authoring.getHistoryItems().count()).toBe(1);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Published by.*/);
+        var transmissionDetails = authoring.showTransmissionDetails(0);
         expect(transmissionDetails.count()).toBe(1);
         transmissionDetails.get(0).click();
         expect(element(by.className('modal-body')).getText()).toMatch(/Kids Helpline*/);
