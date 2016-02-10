@@ -2,9 +2,7 @@
     <div class="content-container">
 
         <div class="composite-nav" ng-if="item.type === 'composite'">
-           <div class="top">
-               <span><i class="filetype-icon-large-composite"></i> {{ 'Package preview' | translate }}</span>
-           </div>
+          <i class="filetype-icon-large-composite"></i> <span>{{ 'Package preview' | translate }}</span>
         </div>
 
         <div class="state-label state-{{item.state}}" ng-class="{state_embargo: item.embargo}">{{item.state | removeLodash}}</div>

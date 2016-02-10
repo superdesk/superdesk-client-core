@@ -52,9 +52,8 @@
       </header>
 
         <div class="composite-nav" ng-if="selected.preview.type === 'composite'">
-           <div class="top">
-               <span><i class="filetype-icon-large-composite"></i> {{ selected.preview.slugline }}</span>
-           </div>
+          <i class="filetype-icon-large-composite"></i>
+          <p class="title preview-headline" ng-if="selected.preview.headline" ng-class="{condensed: !lock}">{{ selected.preview.headline }}</p>
         </div>
 
         <div ng-hide="hideActions()" class="action-menu">
@@ -66,7 +65,7 @@
         <div class="rewrite" ng-if="selected.preview.rewrite_id">{{ :: 'This story has been rewritten by: ' | translate }}<a ng-click="previewRewriteStory()"
             class="open-item"><i class="icon-external"></i></a></div>
 
-        <p class="title preview-headline" ng-if="selected.preview.headline" ng-class="{condensed: !lock}">{{ selected.preview.headline }}</p>
+
 
         <p class="nav-space" ng-if="!selected.preview.headline && !lock"></p>
 

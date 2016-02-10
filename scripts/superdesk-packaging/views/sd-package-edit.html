@@ -1,17 +1,5 @@
 <header class="package-header">
     <div class="inputs">
-        <div class="field" ng-class="{'limit-error': item.slugline.length > limits.slugline}">
-            <label translate>Slugline</label>
-            <span sd-character-count data-item="item.slugline" data-limit="limits.slugline"></span>
-            <input type="text"
-                class="keyword"
-                id="slugline"
-                ng-model="item.slugline"
-                ng-change="autosave(item)"
-                ng-if="_editable"
-                ng-trim="false">
-            <div class="keyword" ng-if="!_editable">{{item.slugline}}</div>
-        </div>
         <div class="field" ng-class="{'limit-error': item.headline.length > limits.headline}">
             <label translate>Headline</label>
             <span sd-character-count data-item="item.headline" data-limit="limits.headline"></span>
