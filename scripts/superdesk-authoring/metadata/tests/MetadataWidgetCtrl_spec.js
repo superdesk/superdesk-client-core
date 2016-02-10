@@ -339,3 +339,104 @@ describe('metadata list editing directive', function() {
         expect(iScope.terms.length).toBe(10);
     }));
 });
+
+describe('dateline dropdown', function() {
+    var $rootScope,
+        $compile,
+        cities;
+
+    cities = [
+        {
+            alt_name: '',
+            city: 'Katoomba',
+            city_code: 'Katoomba',
+            state: 'New South Wales',
+            state_code: 'NSW',
+            tz: 'Australia/Sydney',
+            dateline: 'city',
+            country: 'Australia',
+            country_code: 'AU'
+        },
+        {
+            alt_name: '',
+            city: 'Sydney',
+            city_code: 'Sydney',
+            state: 'New South Wales',
+            state_code: 'NSW',
+            tz: 'Australia/Sydney',
+            dateline: 'city',
+            country: 'Australia',
+            country_code: 'AU'
+        }
+    ];
+
+    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(module('superdesk.authoring.metadata'));
+
+    beforeEach(inject(function (_$rootScope_, _$compile_) {
+        $rootScope = _$rootScope_;
+        $compile = _$compile_;
+    }));
+
+    function compileDirective(html, scopeValues) {
+        var scope = $rootScope.$new();
+        angular.extend(scope, scopeValues);
+        return $compile(html)(scope);
+    }
+
+    it('select city within the list', inject(function() {
+        var elmHtml = '<div sd-meta-locators class="dateline-city" ng-disabled="!_editable" ' +
+                      'data-item="item" data-list="cities" data-fieldprefix="dateline" ' +
+                      'data-field="located"></div>';
+
+        var iScope;
+        var scopeValues = {
+            item: {
+                dateline: {
+                    located: {
+
+                    }
+                }
+            },
+            _editable: true,
+            cities: cities
+        };
+
+        var elm = compileDirective(elmHtml, scopeValues);
+        $rootScope.$digest();
+        iScope = elm.isolateScope();
+        iScope.$digest();
+        iScope.searchLocator('Sydney');
+        expect(iScope.selectedTerm).toBe('Sydney');
+        iScope.selectLocator(cities[1]);
+        expect(iScope.item.dateline.located.city).toBe('Sydney');
+    }));
+
+    it('select city not within the list', inject(function() {
+        var elmHtml = '<div sd-meta-locators class="dateline-city" ng-disabled="!_editable" ' +
+                      'data-item="item" data-list="cities" data-fieldprefix="dateline" ' +
+                      'data-field="located"></div>';
+
+        var iScope;
+        var scopeValues = {
+            item: {
+                dateline: {
+                    located: {
+
+                    }
+                }
+            },
+            _editable: true,
+            cities: cities
+        };
+
+        var elm = compileDirective(elmHtml, scopeValues);
+        $rootScope.$digest();
+        iScope = elm.isolateScope();
+        iScope.$digest();
+        iScope.searchLocator('Foobar');
+        expect(iScope.selectedTerm).toBe('Foobar');
+        iScope.selectLocator();
+        expect(iScope.item.dateline.located.city).toBe('Foobar');
+    }));
+});
