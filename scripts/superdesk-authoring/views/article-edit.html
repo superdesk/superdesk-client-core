@@ -35,7 +35,10 @@
          ng-model="item.byline"
          ng-change="autosave(item)"
          ng-if="_editable"
-         placeholder="Add text here">
+         placeholder="Add text here"
+         sd-focus-element
+         data-append-element=".field"
+         data-append-class="active">
   <div ng-if="!_editable">{{item.byline}}</div>
 </div>
 
@@ -53,7 +56,11 @@
              data-field="located"
              placeholder="Add location"
              data-postprocessing="updateDateline(item, city)"
-             data-change="autosave(item)">
+             data-change="autosave(item)"
+             sd-focus-element
+             data-element="input"
+             data-append-element=".field"
+             data-append-class="active">
         </div>
 
         <div class="dateline-date">
@@ -100,7 +107,10 @@
         ng-model="item.description"
         ng-change="autosave(item)"
         ng-if="_editable"
-        ng-trim="false"></textarea>
+        ng-trim="false"
+        sd-focus-element
+        data-append-element=".field"
+        data-append-class="active"></textarea>
   <div class="abstract" ng-if="!_editable">{{item.description}}</div>
 </div>
 
