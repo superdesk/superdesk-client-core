@@ -1707,7 +1707,7 @@
                                         'ul',
                                         {
                                             className: 'dropdown dropdown-menu more-activity-menu open',
-                                            style: {top: '66%', left: -160, display: this.state.open ? 'block' : 'none', minWidth: 200}
+                                            style: {top: '66%', left: -150, display: this.state.open ? 'block' : 'none', minWidth: 200}
                                         },
                                         menu
                                     )
