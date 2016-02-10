@@ -355,7 +355,7 @@ describe('monitoring', function() {
         expect(monitoring.getSpikedItems().count()).toBe(0);
     });
 
-    it('updates personal on single item spike-unspike', function() {
+    it('updates personal on single item spike', function() {
         monitoring.showMonitoringSettings();
         monitoring.toggleDesk(0);
         monitoring.togglePersonal();
@@ -366,10 +366,6 @@ describe('monitoring', function() {
         expect(monitoring.getGroupItems(0).count()).toBe(2);
         monitoring.actionOnItem('Spike', 0, 0);
         expect(monitoring.getGroupItems(0).count()).toBe(1);
-        monitoring.showSpiked();
-        expect(monitoring.getSpikedTextItem(0)).toBe('item1');
-        monitoring.unspikeItem(0);
-        expect(monitoring.getSpikedItems().count()).toBe(0);
     });
 
     it('updates item group on multiple item spike-unspike', function() {
@@ -384,6 +380,7 @@ describe('monitoring', function() {
         monitoring.unspikeMultipleItems();
         expect(monitoring.getSpikedItems().count()).toBe(0);
     });
+
     it('can show/hide monitoring list', function() {
         monitoring.openAction(2, 0);
         monitoring.showHideList();
