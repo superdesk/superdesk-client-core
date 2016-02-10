@@ -531,8 +531,8 @@
          * A directive that generates the sidebar containing search results
          * filters (so-called "aggregations" in Elastic's terms).
          */
-        .directive('sdSearchFacets', ['$location', 'desks', 'privileges', 'tags', 'asset',
-            function($location, desks, privileges, tags, asset) {
+        .directive('sdSearchFacets', ['$location', 'desks', 'privileges', 'tags', 'asset', 'metadata',
+            function($location, desks, privileges, tags, asset, metadata) {
             desks.initialize();
             return {
                 require: '^sdSearchContainer',
@@ -562,6 +562,7 @@
 
                     scope.resetEditingSearch = function() {
                         scope.editingSearch = false;
+                        metadata.removeSubjectTerm(null);
                     };
 
                     var initAggregations = function () {
@@ -813,7 +814,9 @@
                                 params.q = params.q.replace('subject.qcode:(' + qcode + ')', '').trim();
                                 $location.search('q', params.q || null);
 
-                                metadata.removeSubjectTerm(elementName);
+                                if (metadata.subjectScope != null) {
+                                    metadata.removeSubjectTerm(elementName);
+                                }
                             } else {
                                 params.q = params.q.replace(param, '').trim();
                                 $location.search('q', params.q || null);
@@ -1989,7 +1992,11 @@
 
                         var listComponent = ReactDOM.render(itemList, elem[0]);
 
-                        $document.on('keydown', listComponent.handleKey);
+                        $document.on('keydown', function(evt) {
+                            if (evt.target.className.match('-view list-view') != null) {
+                                listComponent.handleKey(evt);
+                            }
+                        });
                         scope.$on('$destroy', function() {
                             $document.off('keydown', listComponent.handleKey);
                         });
@@ -2131,7 +2138,7 @@
                     scope.clear = function() {
                         scope.resetEditingSearch();
                         scope.edit = null;
-                        $location.url('/search');
+                        $location.url($location.path());
                     };
 
                     /**

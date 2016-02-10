@@ -70,6 +70,35 @@ describe('search', function() {
         expect(element.all(by.repeater('item in items._items')).count()).toBe(0);
     });
 
+    it('can navigate/filter subject field and search by selected subject term', function () {
+        expect(globalSearch.getItems().count()).toBe(14);
+
+        globalSearch.openFilterPanel();
+        globalSearch.openToggleBox('Parameters');
+
+        globalSearch.toggleSubjectMetadata(); // opens subject drop-down
+        browser.sleep(100);
+
+        browser.actions().sendKeys('archa').perform();
+        expect(globalSearch.getSubjectFilteredTerm(0)).toBe('archaeology');
+
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+        browser.actions().sendKeys(protractor.Key.ENTER).perform(); // selects subject term
+
+        // expect selected term in filter pane
+        expect(globalSearch.getSelectedSubjectsInFilter().count()).toBe(1);
+        // expect selected term in tag list, at top of search list
+        expect(globalSearch.getSelectedTags().count()).toBe(1);
+
+        // expect some search result returned
+        expect(globalSearch.getItems().count()).toBeGreaterThan(0);
+
+        // now preview first item on search list and expect item contains selected subject
+        globalSearch.itemClick(0);
+        monitoring.tabAction('metadata');
+        expect(globalSearch.getItemSubjectContains()).toContain('archaeology');
+    });
+
     it('can search by priority field', function () {
         globalSearch.openFilterPanel();
         expect(globalSearch.getItems().count()).toBe(14);

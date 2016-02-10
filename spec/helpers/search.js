@@ -11,6 +11,7 @@ function GlobalSearch() {
     this.archivedRepo = element(by.id('archived-collection'));
     this.goButton = element(by.buttonText('Go'));
     this.searchInput = element(by.id('search-input'));
+    this.subject = element.all(by.css('.dropdown-terms')).first();
 
     /**
      * Open dashboard for current selected desk/custom workspace.
@@ -121,6 +122,62 @@ function GlobalSearch() {
         .then(function(elem) {
             elem.click();
         });
+    };
+
+    /**
+     * Perform the toggle operation on toggle-box of
+     * given 'title'
+     *
+     * @param {string} title
+     */
+    this.openToggleBox = function(title) {
+        element(by.css('[data-title="' + title + '"]'))
+        .all(by.css('[ng-click="toggleModule()"]')).first().click();
+    };
+
+    /**
+     * Opens Subject metadata dropdown
+     */
+    this.toggleSubjectMetadata = function () {
+        this.subject.element(by.css('.dropdown-toggle')).click();
+    };
+
+    /**
+     * Gets the term on given 'index' from the
+     * filtered metadata subject list
+     *
+     * @param {number} index
+     * @return {string}
+     */
+    this.getSubjectFilteredTerm = function(index) {
+        return this.subject.all(by.repeater('t in terms track by t[uniqueField]')).get(index).getText();
+    };
+
+    /**
+     * Get Item's subjects from metadata tab in preview pane
+     *
+     * @return {string}
+     */
+    this.getItemSubjectContains = function() {
+        return element.all(by.css('[ng-if="item.subject && item.subject.length > 0"]')).first().getText();
+    };
+
+    /**
+     * Get list of selected subjects found in filter pane
+     *
+     * @return {promise} list of elements
+     */
+    this.getSelectedSubjectsInFilter = function () {
+        return element.all(by.repeater('t in item[field]'));
+    };
+
+    /**
+     * Get list of selected parameter tags appears on list after applied search
+     *
+     * @return {promise} list of elements
+     */
+    this.getSelectedTags = function () {
+        return element.all(by.repeater('parameter in tags.selectedParameters'));
     };
 
     /**
