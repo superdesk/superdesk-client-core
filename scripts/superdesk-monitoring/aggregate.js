@@ -58,6 +58,7 @@
                     initGroups(settings);
                     setupCards();
                     this.loading = false;
+                    this.settings = settings;
                 }));
         }));
 
@@ -202,6 +203,7 @@
                 .then(function(settings) {
                     initGroups(settings);
                     setupCards();
+                    self.settings = settings;
                 });
         }
 
@@ -387,7 +389,8 @@
                 groups: '=',
                 editGroups: '=',
                 onclose: '&',
-                widget: '='
+                widget: '=',
+                settings: '='
             },
             link: function(scope, elem) {
 
