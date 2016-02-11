@@ -466,7 +466,9 @@ function MetadataListEditingDirective(metadata, $filter, $timeout) {
 
                     //retain focus and initialise activeTree on same dropdown control after selection.
                     _.defer (function() {
-                        elem.find('.dropdown-toggle').focus();
+                        if (!_.isEmpty(elem.find('.dropdown-toggle'))) {
+                            elem.find('.dropdown-toggle').focus();
+                        }
                         if (reloadList) {
                             scope.activeTerm = null;
                             scope.searchTerms(null);
@@ -640,6 +642,10 @@ function MetadataService(api, $q) {
             tempItem[self.subjectScope.field] = filteredArray;
 
             _.extend(self.subjectScope.item, tempItem);
+
+            if (term == null) { // clear subject scope
+                self.subjectScope.item.subject.length = 0;
+            }
 
             self.subjectScope.change({item: self.subjectScope.item});
         },
