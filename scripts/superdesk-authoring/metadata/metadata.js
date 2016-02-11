@@ -570,7 +570,7 @@ function MetadataLocatorsDirective($timeout) {
                     var previousLocator = scope.fieldprefix ? scope.item[scope.fieldprefix][scope.field] :
                                             scope.item[scope.field];
 
-                    if (scope.selectedTerm === previousLocator.city) {
+                    if (previousLocator && scope.selectedTerm === previousLocator.city) {
                         locator = previousLocator;
                     } else {
                         locator = {'city': scope.selectedTerm, 'city_code': scope.selectedTerm, 'tz': 'UTC',
