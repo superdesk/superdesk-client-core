@@ -7,6 +7,7 @@ module.exports = function(grunt) {
         var server = grunt.option('server') || process.env.SUPERDESK_URL || url;
         var ws = grunt.option('ws') || process.env.SUPERDESK_WS_URL || 'ws://localhost:5100';
         var disableEditorToolbar = grunt.option('disableEditorToolbar');
+        var defaultTimezone = grunt.option('defaultTimezone');
 
         if (forceUrl) {
             server = url;
@@ -24,7 +25,8 @@ module.exports = function(grunt) {
                     id: process.env.TRACKING_ID || ''
                 }
             },
-            editor: {disableEditorToolbar: disableEditorToolbar}
+            editor: {disableEditorToolbar: disableEditorToolbar},
+            defaultTimezone: defaultTimezone
         };
 
         return {data: {

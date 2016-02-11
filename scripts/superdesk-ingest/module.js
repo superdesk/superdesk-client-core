@@ -1093,6 +1093,24 @@
         };
     }
 
+    /**
+     * @memberof superdesk.ingest
+     * @ngdoc directive
+     * @name sdIngestRoutingSchedule
+     * @description
+     *   Creates the Schedule section (tab) of the routing rule edit form.
+     */
+    IngestRoutingSchedule.$inject = ['tzdata'];
+    function IngestRoutingSchedule(tzdata) {
+        return {
+            scope: {
+                rule: '='  // the routing rule whose schedule is being edited
+            },
+            templateUrl: 'scripts/superdesk-ingest/views/settings/ingest-routing-schedule.html',
+            link: function (scope, element, attrs) {}
+        };
+    }
+
     function SortRulesDirectives() {
         return {
             link:function(scope, element) {
@@ -1335,6 +1353,7 @@
         .directive('sdIngestRoutingGeneral', IngestRoutingGeneral)
         .directive('sdIngestRoutingFilter', IngestRoutingFilter)
         .directive('sdIngestRoutingAction', IngestRoutingAction)
+        .directive('sdIngestRoutingSchedule', IngestRoutingSchedule)
         .directive('sdPieChartDashboard', PieChartDashboardDirective)
         .directive('sdSortrules', SortRulesDirectives)
         .directive('sdUserIngestDashboardDropDown', IngestUserDashboardDropDown)

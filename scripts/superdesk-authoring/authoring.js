@@ -1810,6 +1810,14 @@
                 };
 
                 /**
+                 * Returns true if timezone needs to be displayed, false otherwise.
+                 */
+                scope.showTimezone = function() {
+                    return (scope.item.publish_schedule || scope.item.embargo) &&
+                        (scope.showPublishSchedule() || scope.showEmbargo());
+                };
+
+                /**
                  * Returns true if Embargo needs to be displayed, false otherwise.
                  */
                 scope.showEmbargo = function() {

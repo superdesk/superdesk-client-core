@@ -110,7 +110,4 @@ describe('ingest', function() {
             });
         });
     });
-
-    
-
 });

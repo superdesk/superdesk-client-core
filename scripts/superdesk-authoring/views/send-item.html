@@ -32,7 +32,7 @@
                 </li>
             </ul>
         </div>
-        <div sd-toggle-box id="embargoTimestamp" ng-if="mode === 'authoring' && showEmbargo()" data-title="Embargo" data-open="false" data-style="dark">
+        <div sd-toggle-box id="embargoTimestamp" ng-if="mode === 'authoring' && showEmbargo()" data-title="Embargo" data-open="true" data-style="dark">
             <label class="label--lite" translate>Embargo</label>
             <ul class="btn-list">
                 <li class="datepicker-input--dark">
@@ -44,7 +44,7 @@
             </ul>
         </div>
         
-        <div sd-toggle-box id="publishScheduleTimestamp" ng-if="mode === 'authoring' && showPublishSchedule()" data-title="Publishing Schedule" data-open="false" data-style="dark">
+        <div sd-toggle-box id="publishScheduleTimestamp" ng-if="mode === 'authoring' && showPublishSchedule()" data-title="Publishing Schedule" data-open="true" data-style="dark">
             <label class="label--lite" translate>Publish Schedule</label>
             <ul class="btn-list">
                 <li class="datepicker-input--dark">
@@ -56,13 +56,8 @@
             </ul>
         </div>
 
-		<div sd-toggle-box id="timzoneTimestamp" ng-if="mode === 'authoring' && (showPublishSchedule() || showEmbargo())" data-title="Timezone" data-open="false" data-style="dark">
-            <label class="label--lite" translate>Timezone</label>
-            <ul class="btn-list">
-                <li class="timepicker-input--dark">
-                    <div sd-timezone data-timezone="item.time_zone"></div>
-                </li>
-            </ul>
+		<div sd-toggle-box id="timzoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="dark">
+            <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
         </div>
         
     </div>

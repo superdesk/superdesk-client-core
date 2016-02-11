@@ -276,8 +276,6 @@ describe('superdesk ui', function() {
             isoScope;  // the directive's isolate scope
 
         beforeEach(module('superdesk.ingest'));
-        beforeEach(module('superdesk.templates-cache'));
-
         beforeEach(module(function($provide) {
             var childDirectives = [
                 'sdWeekdayPicker', 'sdTimepickerAlt', 'sdTypeahead'
@@ -307,7 +305,7 @@ describe('superdesk ui', function() {
             var element,
                 html = '<div sd-timezone data-timezone="timezone"></div>',
                 scope;
-            
+
             getTzDataDeferred = $q.defer();
             fakeTzData.$promise = getTzDataDeferred.promise;
 
@@ -354,6 +352,38 @@ describe('superdesk ui', function() {
                 ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar']
             );
         });
+
+        it('applies the default timezone', inject(function ($compile, $rootScope, config) {
+            var serverTzData = {
+                zones: {
+                    'Europe/Rome': ['1 - CET'],
+                    'Australia/Sydney': ['10 ADN EST']
+                },
+                links: {
+                    'Foo/Bar': []
+                }
+            };
+            fakeTzData.zones = serverTzData.zones;
+            fakeTzData.links = serverTzData.links;
+            fakeTzData.getTzNames = function () {
+                return ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
+            };
+
+            isoScope.timeZones = [];
+            delete isoScope.timezone;
+            config.defaultTimezone = 'Europe/Rome';
+
+            getTzDataDeferred.resolve(serverTzData);
+            isoScope.$digest();
+
+            expect(isoScope.timeZones).toEqual(
+                ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar']
+            );
+
+            isoScope.$digest();
+
+            expect(isoScope.timezone).toEqual('Europe/Rome');
+        }));
 
         describe('scope\'s searchTimeZones() method', function () {
             it('sets the time zone search term to the given term ',
@@ -407,7 +437,7 @@ describe('superdesk ui', function() {
             it('clears the time zone', function () {
                 isoScope.timezone = 'foo';
                 isoScope.clearSelectedTimeZone();
-                expect(isoScope.timezone).not.toBeDefined(); 
+                expect(isoScope.timezone).not.toBeDefined();
             });
         });
     });

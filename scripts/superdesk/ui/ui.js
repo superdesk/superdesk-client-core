@@ -860,11 +860,11 @@
         };
     }
 
-    TimezoneDirective.$inject = ['tzdata']
-    function TimezoneDirective(tzdata) {
+    TimezoneDirective.$inject = ['tzdata', 'config'];
+    function TimezoneDirective(tzdata, config) {
         return {
             templateUrl: 'scripts/superdesk/ui/views/sd-timezone.html',
-            scope : {
+            scope: {
                 timezone: '='
             },
             link: function(scope) {
@@ -877,6 +877,9 @@
 
                 tzdata.$promise.then(function () {
                     scope.timeZones = tzdata.getTzNames();
+                    if (!scope.timezone && config.defaultTimezone) {
+                        scope.selectTimeZone(config.defaultTimezone);
+                    }
                 });
 
                 /**
@@ -906,7 +909,7 @@
                     );
                 };
 
-                 /**
+                /**
                  * Sets the time zone of the routing rule's schedule and resets
                  * the current time zone search term.
                  *
