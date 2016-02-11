@@ -984,15 +984,40 @@
                         return elem.scrollTop + elem.offsetHeight + 300 >= elem.scrollHeight;
                     }
 
-                    /*
-                     * Function for fetching total items and filling scope for the first time.
+                    var nextUpdate;
+                    var shouldUpdate;
+
+                    /**
+                     * Schedule an update if it's not there yet
                      */
                     function queryItems() {
+                        shouldUpdate = true;
+                        if (!nextUpdate) {
+                            nextUpdate = $timeout(update, 1000, false);
+                        }
+                    }
+
+                    /**
+                     * Trigger update. In case it got another notification after running query
+                     * schedule next update.
+                     */
+                    function update() {
+                        shouldUpdate = false;
+                        _queryItems().then(function() {
+                            nextUpdate = shouldUpdate ? $timeout(update, 1000, false) : null;
+                        });
+                    }
+
+                    /**
+                     * Function for fetching total items and filling scope for the first time.
+                     */
+                    function _queryItems() {
                         criteria = search.query($location.search()).getCriteria(true);
                         criteria.source.size = 50;
                         criteria.source.from = 0;
                         scope.total = null;
                         scope.items = null;
+                        criteria.aggregations = 1;
                         if (!scope.previewingBroadcast) {
                             scope.preview(null);
                         }
@@ -1042,6 +1067,7 @@
                             criteria = search.query($location.search()).getCriteria(true);
                             criteria.source.from = 0;
                             criteria.source.size = 50;
+                            criteria.aggregations = 1;
                             api.query(getProvider(criteria), criteria).then(setScopeItems);
                             oldQuery = query;
                         }
@@ -1086,8 +1112,6 @@
                         $location.search('_id', item ? item._id : null);
                     };
 
-                    queryItems();
-
                     scope.openLightbox = function openLightbox() {
                         scope.selected.view = scope.selected.preview;
                     };
@@ -1129,6 +1153,9 @@
                     scope.uuid = function(item) {
                         return search.generateTrackByIdentifier(item);
                     };
+
+                    // init
+                    _queryItems();
                 }
             };
         }])
