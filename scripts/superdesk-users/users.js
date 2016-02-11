@@ -1416,7 +1416,7 @@
                     }
 
                     function getPrivileges() {
-                        api('privileges').query().then(function(result) {
+                        return api('privileges').query().then(function(result) {
                             scope.privileges = result._items;
                         }, function(error) {
                             notify.error(gettext('Privileges not found.'));
@@ -1426,7 +1426,7 @@
                     }
 
                     function getUserRole() {
-                        api('roles').getById(scope.user.role).then(function(role) {
+                        return api('roles').getById(scope.user.role).then(function(role) {
                             scope.role = role;
                         }, function(error) {
                             notify.error(gettext('User role not found.'));
