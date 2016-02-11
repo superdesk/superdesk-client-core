@@ -176,9 +176,8 @@ function Monitoring() {
     };
 
     this.getPreviewTitle = function() {
-        return element(by.css('.content-container'))
-        .element(by.binding('selected.preview.headline'))
-        .getText();
+        var headline = element(by.css('.content-container')).element(by.binding('selected.preview.headline'));
+        return headline.getText();
     };
 
     this.setOrder = function(field, switchDir) {
