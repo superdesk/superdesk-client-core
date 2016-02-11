@@ -29,8 +29,19 @@ describe('highlights', function() {
             highlights.add();
             highlights.setName('Highlight one');
             highlights.save();
+            expect(highlights.errorUniquenessElement().isDisplayed()).toBeTruthy();
             highlights.cancel();
             expect(highlights.getRow('Highlight one').count()).toBe(1);
+
+            //display limit error on exceeding character limit(i.e: 40) in highlight name field
+            highlights.add();
+            highlights.setName('Highlights greater than Fourty characters'); // 41 characters
+            expect(highlights.errorLimitsElement().isDisplayed()).toBeTruthy();
+            expect(highlights.btnSave.isEnabled()).toBe(false);
+            highlights.setName('Highlights less than Fourty characters'); // 38 characters
+            expect(highlights.errorLimitsElement().isDisplayed()).toBeFalsy();
+            expect(highlights.btnSave.isEnabled()).toBe(true);
+            highlights.cancel();
 
             //add highlights configuration with no desk
             highlights.add();
