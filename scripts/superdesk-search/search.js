@@ -842,7 +842,6 @@
             'packages',
             'asset',
             '$timeout',
-            '$interval',
             'api',
             'search',
             'session',
@@ -861,7 +860,6 @@
             packages,
             asset,
             $timeout,
-            $interval,
             api,
             search,
             session,
@@ -986,29 +984,34 @@
                         return elem.scrollTop + elem.offsetHeight + 300 >= elem.scrollHeight;
                     }
 
-                    var shouldUpdate = false;
+                    var nextUpdate;
+                    var shouldUpdate;
 
                     /**
-                     * Set flag that there should be an update
+                     * Schedule an update if it's not there yet
                      */
                     function queryItems() {
                         shouldUpdate = true;
+                        if (!nextUpdate) {
+                            nextUpdate = $timeout(update, 1000, false);
+                        }
                     }
 
                     /**
-                     * Check every 5s if there was an update required and refresh if so
+                     * Trigger update. In case it got another notification after running query
+                     * schedule next update.
                      */
-                    $interval(function() {
-                        if (shouldQuery && !scope.rendering) {
-                            _queryItems();
-                        }
-                    }, 5000, 0, false);
+                    function update() {
+                        shouldUpdate = false;
+                        _queryItems().then(function() {
+                            nextUpdate = shouldUpdate ? $timeout(update, 1000, false) : null;
+                        });
+                    }
 
                     /**
                      * Function for fetching total items and filling scope for the first time.
                      */
                     function _queryItems() {
-                        shouldQuery = false;
                         criteria = search.query($location.search()).getCriteria(true);
                         criteria.source.size = 50;
                         criteria.source.from = 0;
