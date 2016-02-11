@@ -32,7 +32,7 @@ describe('workqueue', function() {
 
         expect(items.length).toBe(1);
         expect(items).toBe(workqueue.items);
-        expect(api.query).toHaveBeenCalledWith('archive', {source: {filter: {term: {lock_user: USER_ID}}}});
+        expect(api.query).toHaveBeenCalledWith('workqueue', {source: {filter: {term: {lock_user: USER_ID}}}});
         expect(session.getIdentity).toHaveBeenCalled();
     }));
 
