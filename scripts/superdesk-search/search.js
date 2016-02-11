@@ -1921,7 +1921,7 @@
                                 });
                             }, 100, false);
                             this.setState({
-                                selected: item._id
+                                selected: item ? item._id : null
                             });
                         },
 
@@ -2019,8 +2019,8 @@
 
                         var listComponent = ReactDOM.render(itemList, elem[0]);
 
-                        $document.on('keydown', function(evt) {
-                            listComponent.handleKey(evt);
+                        $document.on('keydown', function(event) {
+                            listComponent.handleKey(event);
                         });
 
                         scope.$on('$destroy', function() {
