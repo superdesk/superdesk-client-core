@@ -755,6 +755,7 @@
                 return;
             }
             $scope.loading = true;
+            criteria.aggregations = 1;
             resource.query(criteria).then(function(items) {
                 $scope.loading = false;
                 $scope.items = items;

@@ -842,6 +842,7 @@
             'packages',
             'asset',
             '$timeout',
+            '$interval',
             'api',
             'search',
             'session',
@@ -860,6 +861,7 @@
             packages,
             asset,
             $timeout,
+            $interval,
             api,
             search,
             session,
@@ -984,15 +986,35 @@
                         return elem.scrollTop + elem.offsetHeight + 300 >= elem.scrollHeight;
                     }
 
-                    /*
-                     * Function for fetching total items and filling scope for the first time.
+                    var shouldUpdate = false;
+
+                    /**
+                     * Set flag that there should be an update
                      */
                     function queryItems() {
+                        shouldUpdate = true;
+                    }
+
+                    /**
+                     * Check every 5s if there was an update required and refresh if so
+                     */
+                    $interval(function() {
+                        if (shouldQuery && !scope.rendering) {
+                            _queryItems();
+                        }
+                    }, 5000, 0, false);
+
+                    /**
+                     * Function for fetching total items and filling scope for the first time.
+                     */
+                    function _queryItems() {
+                        shouldQuery = false;
                         criteria = search.query($location.search()).getCriteria(true);
                         criteria.source.size = 50;
                         criteria.source.from = 0;
                         scope.total = null;
                         scope.items = null;
+                        criteria.aggregations = 1;
                         if (!scope.previewingBroadcast) {
                             scope.preview(null);
                         }
@@ -1042,6 +1064,7 @@
                             criteria = search.query($location.search()).getCriteria(true);
                             criteria.source.from = 0;
                             criteria.source.size = 50;
+                            criteria.aggregations = 1;
                             api.query(getProvider(criteria), criteria).then(setScopeItems);
                             oldQuery = query;
                         }
@@ -1086,8 +1109,6 @@
                         $location.search('_id', item ? item._id : null);
                     };
 
-                    queryItems();
-
                     scope.openLightbox = function openLightbox() {
                         scope.selected.view = scope.selected.preview;
                     };
@@ -1129,6 +1150,9 @@
                     scope.uuid = function(item) {
                         return search.generateTrackByIdentifier(item);
                     };
+
+                    // init
+                    _queryItems();
                 }
             };
         }])

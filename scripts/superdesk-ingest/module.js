@@ -202,7 +202,8 @@
 
         this.fetchItems = function(criteria) {
             $scope.loading = true;
-            api.ingest.query(criteria).then(function(items) {
+            criteria.aggregations = 1;
+            api.query('ingest', criteria).then(function(items) {
                 $scope.items = items;
             })
             ['finally'](function() {
