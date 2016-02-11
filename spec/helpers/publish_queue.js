@@ -41,7 +41,7 @@ function PublishQueue() {
     };
 
     this.getCompositeItemHeadline = function(index) {
-        return element.all(by.className('item-headline')).get(index).getText();
+        return element.all(by.className('package-item__item-headline')).get(index).getText();
     };
 
     this.getOpenedItemHeadline = function() {

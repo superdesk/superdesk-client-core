@@ -4,6 +4,7 @@ var workspace = require('./helpers/workspace'),
     content = require('./helpers/content'),
     authoring = require('./helpers/authoring'),
     legalArchive = require('./helpers/legal_archive');
+var hover = require('./helpers/utils').hover;
 
 describe('legal_archive', function() {
     it('can display Legal Archive option in hamburger menu', function () {
@@ -61,7 +62,8 @@ describe('legal_archive', function() {
         content.actionOnItem('Open', 'package1 in legal archive');
 
         element.all(by.repeater('child in item.childData')).then(function (itemsInPackage) {
-            itemsInPackage[0].element(by.className('open-item')).click();
+            hover(itemsInPackage[0]);
+            itemsInPackage[0].element(by.className('package-item__open-item')).click();
             assertAuthoringTopbarAndItemState();
         });
     });

@@ -2020,10 +2020,9 @@
                         var listComponent = ReactDOM.render(itemList, elem[0]);
 
                         $document.on('keydown', function(evt) {
-                            if (evt.target.className.match('-view list-view') != null) {
-                                listComponent.handleKey(evt);
-                            }
+                            listComponent.handleKey(evt);
                         });
+
                         scope.$on('$destroy', function() {
                             $document.off('keydown', listComponent.handleKey);
                         });
