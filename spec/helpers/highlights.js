@@ -2,6 +2,7 @@
 'use strict';
 
 var openUrl = require('./utils').open;
+var wait = require('./utils').wait;
 
 module.exports = new Highlights();
 
@@ -164,8 +165,9 @@ function Highlights() {
     };
 
     this.exportHighlightsConfirm = function() {
-        browser.sleep(500);
-        element(by.buttonText('OK')).click();
+        var btn = element(by.className('modal-footer')).element(by.buttonText('OK'));
+        wait(btn, 500);
+        btn.click();
     };
 
     this.saveTextHighlightsConfirm = function() {

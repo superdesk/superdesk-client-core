@@ -2,6 +2,7 @@
 'use strict';
 
 var openUrl = require('./utils').open;
+var waitFor = require('./utils').wait;
 module.exports = new Monitoring();
 
 function Monitoring() {
@@ -242,7 +243,9 @@ function Monitoring() {
     this.selectGivenItem = function(item) {
         var itemTypeIcon = item.element(by.css('.type-icon'));
         browser.actions().mouseMove(itemTypeIcon).perform();
-        return item.element(by.model('item.selected')).click();
+        var checkbox = item.element(by.model('item.selected'));
+        waitFor(checkbox, 500);
+        return checkbox.click();
     };
 
     this.spikeMultipleItems = function() {

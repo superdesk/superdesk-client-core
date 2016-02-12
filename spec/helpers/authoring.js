@@ -227,22 +227,18 @@ function Authoring() {
     };
 
     this.moveToGroup = function(srcGroup, scrItem, dstGroup, dstItem) {
-        var src = this.getGroupItem(srcGroup, scrItem).element(by.css('[class="info"]'));
-        var dst = this.getGroupItem(dstGroup, dstItem).element(by.css('[class="info"]'));
-        return src.waitReady().then(function() {
-            browser.actions()
-                .mouseMove(src, {x: 0, y: 0})
-                .mouseDown()
-                .perform()
-                .then(function() {
-                    dst.waitReady().then(function () {
-                        browser.actions()
-                            .mouseMove(dst, {x: 0, y: 0})
-                            .mouseUp()
-                            .perform();
-                    });
-                });
-        });
+        var src = this.getGroupItem(srcGroup, scrItem).element(by.className('package-item'));
+        var dst = this.getGroupItem(dstGroup, dstItem).element(by.className('package-item'));
+        return browser.actions()
+            .mouseMove(src, {x: 5, y: 5})
+            .mouseDown()
+            .perform()
+            .then(function() {
+                browser.actions()
+                    .mouseMove(dst, {x: 10, y: -3})
+                    .mouseUp()
+                    .perform();
+            });
     };
 
     this.selectSearchItem = function(item) {

@@ -630,6 +630,10 @@ function MetadataService(api, $q) {
             });
         },
         removeSubjectTerm: function(term) {
+            if (!this.subjectScope) {
+                return;
+            }
+
             var self = this,
                 tempItem = {},
                 subjectCodesArray = self.subjectScope.item[self.subjectScope.field],

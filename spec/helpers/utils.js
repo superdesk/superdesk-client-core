@@ -12,6 +12,8 @@ module.exports.ctrlKey = ctrlKey;
 module.exports.ctrlShiftKey = ctrlShiftKey;
 module.exports.altKey = altKey;
 module.exports.assertToastMsg = assertToastMsg;
+module.exports.wait = wait;
+module.exports.hover = hover;
 
 // construct url from uri and base url
 exports.constructUrl = function(base, uri) {
@@ -225,4 +227,26 @@ function assertToastMsg(type, msg) {
     expect(toast.getText()).toContain(msg);
     browser.sleep(500);
     browser.ignoreSynchronization = false;
+}
+
+/**
+ * Wait for element to be displayed
+ *
+ * @param {Element} elem
+ * @param {number} time
+ * @return {Promise}
+ */
+function wait(elem, time) {
+    return browser.wait(function() {
+        return elem.isDisplayed();
+    }, time || 500);
+}
+
+/**
+ * Move mouse over given elem
+ *
+ * @param {Element} elem
+ */
+function hover(elem) {
+    browser.actions().mouseMove(elem, {x: 3, y: 3}).perform();
 }

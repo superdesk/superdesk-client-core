@@ -396,19 +396,27 @@
         };
     }
 
-    DropdownFocus.$inject = ['keyboardManager'];
-    function DropdownFocus(keyboardManager) {
+    DropdownFocus.$inject = [];
+    function DropdownFocus() {
+        var Keys = Object.freeze({
+            left: 37,
+            up: 38,
+            right: 39,
+            down: 40,
+            enter: 13
+        });
+
         return {
             require: 'dropdown',
             link: function (scope, elem, attrs, dropdown) {
                 scope.$watch(dropdown.isOpen, function(isOpen) {
                     if (isOpen) {
                         _.defer(function() {
-                            var keyboardOptions = {inputDisabled: false},
-                                inputField = elem.find('input[type="text"]'),
-                                buttonList = elem.find('button:not([disabled]):not(.dropdown-toggle)');
+                            var inputField = elem.find('input[type="text"]');
+                            var buttonList = elem.find('button:not([disabled]):not(.dropdown-toggle)');
+                            var handlers = {};
 
-                            /*
+                            /**
                              * If input field exist, put focus on it,
                              * otherwise put it on first button in list
                              */
@@ -418,9 +426,18 @@
                                 buttonList[0].focus();
                             }
 
-                            keyboardManager.push('up', function () {
+                            elem.tabindex = ''; // make parent element receive keyboard events
+                            elem.on('keydown', function(event) {
+                                if (handlers[event.keyCode] && !event.ctrlKey && !event.metaKey) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    handlers[event.keyCode]();
+                                }
+                            });
+
+                            handlers[Keys.up] = function handleUp() {
                                 var prevElem = elem.find('button:focus').parent('li').prev().children('button'),
-                                        categoryButton = elem.find('.levelup button');
+                                    categoryButton = elem.find('.levelup button');
 
                                 if (prevElem.length > 0) {
                                     prevElem.focus();
@@ -428,11 +445,11 @@
                                     inputField.focus();
                                     categoryButton.focus();
                                 }
-                            }, keyboardOptions);
+                            };
 
-                            keyboardManager.push('down', function () {
+                            handlers[Keys.down] = function handleDown() {
                                 var nextElem = elem.find('button:focus').parent('li').next().children('button'),
-                                        categoryButton = elem.find('.levelup button');
+                                    categoryButton = elem.find('.levelup button');
 
                                 /*
                                  * If category button exist, update button list with new values,
@@ -462,21 +479,19 @@
                                         buttonList[0].focus();
                                     }
                                 }
-                            }, keyboardOptions);
+                            };
 
-                            keyboardManager.push('left', function () {
+                            handlers[Keys.left] = function handleLeft() {
                                 elem.find('.backlink').click();
-                            });
-                            keyboardManager.push('right', function () {
+                            };
+
+                            handlers[Keys.right] = function handleRight() {
                                 var selectedElem = elem.find('button:focus').parent('li');
                                 selectedElem.find('.nested-toggle').click();
-                            });
+                            };
                         });
                     } else if (isOpen === false) { // Exclusively false, prevent executing if it is undefined
-                        keyboardManager.pop('up');
-                        keyboardManager.pop('down');
-                        keyboardManager.pop('left');
-                        keyboardManager.pop('right');
+                        elem.off('keydown');
                     }
                 });
             }
