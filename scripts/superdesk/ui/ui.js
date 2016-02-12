@@ -1319,6 +1319,38 @@
         };
     }
 
+    /*
+     * Focus directive is used for adding class
+     * to closest elementon focus and removing it on blur
+     *
+     * Usage:
+     * <div sd-focus-element data-element='input' data-append-element='.field' data-append-class='active'></div>
+     *
+     */
+    focusElement.$inject = [];
+    function focusElement() {
+        return {
+            link: function (scope, elem) {
+                var dataElement = elem.attr('data-element'),
+                    dataAppendElement = elem.attr('data-append-element'),
+                    dataClass = elem.attr('data-append-class'),
+                    element = elem;
+
+                if (dataElement) {
+                    element = elem.find(dataElement);
+                }
+
+                element.on('focus', function () {
+                    element.closest(dataAppendElement).addClass(dataClass);
+                });
+
+                element.on('blur', function () {
+                    element.closest(dataAppendElement).removeClass(dataClass);
+                });
+            }
+        };
+    }
+
     return angular.module('superdesk.ui', [
         'superdesk.dashboard.world-clock',
         'superdesk.ui.autoheight'
@@ -1348,5 +1380,6 @@
         .directive('sdWeekdayPicker', WeekdayPickerDirective)
         .directive('sdSplitterWidget', splitterWidget)
         .directive('sdMouseHover', MouseHoverDirective)
-        .directive('sdMediaQuery', mediaQuery);
+        .directive('sdMediaQuery', mediaQuery)
+        .directive('sdFocusElement', focusElement);
 })();

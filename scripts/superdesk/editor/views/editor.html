@@ -3,7 +3,10 @@
     <div class="text-editor editor-type-html"
         placeholder="Add text here"
         ng-show="type=='text' || !type"
-        spellcheck="false">
+        spellcheck="false"
+        sd-focus-element
+        data-append-element=".field"
+        data-append-class="active">
     </div>
 
     <button class="dropdown-toggle hide" dropdown-toggle></button>
