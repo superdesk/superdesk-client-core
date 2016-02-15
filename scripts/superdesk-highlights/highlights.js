@@ -341,12 +341,18 @@
 
         $scope.configEdit = {};
         $scope.modalActive = false;
-        $scope.limits = 45;
+
+        var limits = {
+            group: 45,
+            highlight: 40
+        };
+
+        $scope.limits = limits;
 
         var _config;
 
         $scope.edit = function(config) {
-            $scope.message = null;
+            clearErrorMessages();
             $scope.modalActive = true;
             $scope.configEdit = _.create(config);
             $scope.assignedDesks = deskList(config.desks);
@@ -387,13 +393,12 @@
 
             function errorMessage(response) {
                 if (response.data && response.data._issues && response.data._issues.name && response.data._issues.name.unique) {
-                    $scope.message = gettext(
-                        'Highlight configuration with the same name already exists.'
-                    );
+                    $scope._errorUniqueness = true;
                 } else {
                     $scope.message = gettext('There was a problem while saving highlights configuration');
                 }
             }
+
         };
 
         $scope.remove = function(config) {
@@ -451,6 +456,7 @@
         $scope.cancelGroup = function() {
             $scope.editingGroup = null;
             $scope.selectedGroup = null;
+            $scope._errorGroupLimits = null;
         };
 
         $scope.saveGroup = function() {
@@ -463,11 +469,26 @@
         };
 
         $scope.handleGroupEdit = function($event) {
-            $scope._errorLimits = null;
+            $scope._errorGroupLimits = null;
             if ($scope.editingGroup && $scope.editingGroup.name) {
-                $scope._errorLimits = $scope.editingGroup.name.length > $scope.limits ? true : null;
+                $scope._errorGroupLimits = $scope.editingGroup.name.length > $scope.limits.group ? true : null;
             }
         };
+
+        $scope.handleEdit = function($event) {
+            clearErrorMessages();
+            if ($scope.configEdit.name != null) {
+                $scope._errorLimits = $scope.configEdit.name.length > $scope.limits.highlight ? true : null;
+            }
+        };
+
+        function clearErrorMessages() {
+            if ($scope._errorUniqueness || $scope._errorLimits) {
+                $scope._errorUniqueness = null;
+                $scope._errorLimits = null;
+            }
+            $scope.message = null;
+        }
     }
 
     var app = angular.module('superdesk.highlights', [
@@ -496,7 +517,6 @@
             require: '^sdHighlightsConfig',
             templateUrl: 'scripts/superdesk-highlights/views/highlights_config_modal.html',
             link: function(scope, elem, attrs, ctrl) {
-
             }
         };
     })

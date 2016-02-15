@@ -3,15 +3,17 @@
 	<div class="modal-header">
 		<a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
 		<h3 ng-show="!configEdit._id" translate>Create highlight configuration</h3>
-		<h3 ng-show="configEdit._id" translate>Edit highlight configuration</h3>
+		<h3 ng-show="configEdit._id" translate>Edit "{{configEdit.name}}" highlight</h3>
 	</div>
-
 	<div class="modal-body">
 		<form name="highlightForm">
 			<fieldset>
+				<span class="pull-right" sd-character-count data-item="configEdit.name" data-limit="limits.highlight"></span>
 				<div class="field">
-					<label translate>Configuration name</label>
-					<input type="text" class="fullwidth-input" ng-model="configEdit.name" required>
+					<label translate>Configuration name</label>	
+					<input type="text" class="fullwidth-input" ng-model="configEdit.name"  ng-keyup="handleEdit($event);" required>
+					<p ng-show="_errorLimits" translate>Character limit exceeded, highlight can not be created/updated.</p>
+					<span ng-show="_errorUniqueness"><span translate>Highlight with name</span> "{{ configEdit.name }}" <span translate>already exists</span>.</span>
 				</div>
 				<div class="field">
                     <label translate>Template</label>
@@ -59,7 +61,7 @@
 
                                     <h6 ng-if="!isActiveGroup(group)">{{ group }}</h6>
 
-									<span ng-if="isActiveGroup(group)" sd-character-count data-item="editingGroup.name" data-limit="limits"></span>
+									<span ng-if="isActiveGroup(group)" sd-character-count data-item="editingGroup.name" data-limit="limits.group"></span>
                                     <span>
                                         <input type="text" ng-if="isActiveGroup(group)" id="edit-group" ng-model="editingGroup.name" ng-keyup="handleGroupEdit($event);" />
                                     </span>
@@ -75,7 +77,7 @@
 
                             </li>
 
-                            <span ng-if="editingGroup && !editingGroup.id" sd-character-count data-item="editingGroup.name" data-limit="limits"></span>
+                            <span ng-if="editingGroup && !editingGroup.id" sd-character-count data-item="editingGroup.name" data-limit="limits.group"></span>
                             <div class="editable" ng-show="editingGroup && !editingGroup.id">
                                 <span>
                                     <input type="text" id="insert-group" ng-model="editingGroup.name" ng-keyup="handleGroupEdit($event);" />
@@ -83,18 +85,17 @@
                             </div>
                             <div ng-if="editingGroup">
                                 <button class="btn" ng-click="cancelGroup()" translate>Cancel</button>
-                                <button class="btn btn-primary" ng-click="saveGroup()" ng-disabled="_errorLimits" translate>Save</button>
+                                <button class="btn btn-primary" ng-click="saveGroup()" ng-disabled="_errorGroupLimits" translate>Save</button>
                             </div>
-                            <p ng-show="_errorLimits" translate>Character limit exceeded, group can not be created/updated.</p>
+                            <p ng-show="_errorGroupLimits" translate>Character limit exceeded, group can not be created/updated.</p>
                         </ul>
                     </div>
 			</fieldset>
 			<p ng-if="message">{{ message }}</p>
 		</form>
 	</div>
-
 	<div class="modal-footer">
 	  	<button class="btn" ng-click="cancel()" translate>Cancel</button>
-	  	<button class="btn btn-primary" ng-click="save()" ng-disabled="!highlightForm.$valid || editingGroup" translate>Save</button>
+	  	<button class="btn btn-primary" ng-click="save()" ng-disabled="!highlightForm.$valid || editingGroup || _errorLimits" translate>Save</button>
 	</div>
 </div>

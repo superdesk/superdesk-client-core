@@ -39,6 +39,17 @@
 			text-transform: none !important;
 		}
 	}
+
+    .modal-body {
+        .char-count {
+            font-size: 11px;
+            font-style: italic;
+            &.error {
+                .text-semibold();
+                color: #D33C30;
+            }
+        }
+    }
 }
 
 .highlights-title {

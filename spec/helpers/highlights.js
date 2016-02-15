@@ -11,6 +11,7 @@ function Highlights() {
     this.name = element(by.model('configEdit.name'));
     this.desks = element.all(by.repeater('desk in assignedDesks'));
     this.groups = element.all(by.repeater('group in configEdit.groups'));
+    this.btnSave = element(by.css('[ng-click="save()"]'));
 
     this.get = function() {
         openUrl('/#/settings/highlights');
@@ -135,7 +136,7 @@ function Highlights() {
     };
 
     this.save = function() {
-        element(by.css('[ng-click="save()"]')).click();
+        this.btnSave.click();
     };
 
     this.cancel = function() {
@@ -148,6 +149,14 @@ function Highlights() {
                 return text;
             });
         });
+    };
+
+    this.errorUniquenessElement = function() {
+        return element.all(by.css('[ng-show="_errorUniqueness"]'));
+    };
+
+    this.errorLimitsElement = function() {
+        return element.all(by.css('[ng-show="_errorLimits"]')).first();
     };
 
     this.selectHighlight = function(elem, name) {
