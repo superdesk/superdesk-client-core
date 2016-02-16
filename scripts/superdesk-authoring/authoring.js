@@ -32,7 +32,8 @@
         embargo: null,
         renditions: null,
         body_footer: null,
-        company_codes: []
+        company_codes: [],
+        schedule_settings: null
     });
 
     var DEFAULT_ACTIONS = Object.freeze({
@@ -1806,6 +1807,14 @@
                         scope.item.type !== 'composite' && !scope.item.embargo_date && !scope.item.embargo_time &&
                         !authoring.isTakeItem(scope.item) &&
                         ['published', 'killed', 'corrected'].indexOf(scope.item.state) === -1;
+                };
+
+                /**
+                 * Returns true if timezone needs to be displayed, false otherwise.
+                 */
+                scope.showTimezone = function() {
+                    return (scope.item.publish_schedule || scope.item.embargo) &&
+                        (scope.showPublishSchedule() || scope.showEmbargo());
                 };
 
                 /**

@@ -126,6 +126,11 @@
             <dd sd-reldate-complex ng-model="item.publish_schedule"></dd>
         </dl>
 
+        <dl ng-if="item.schedule_settings">
+            <dt translate>Time Zone</dt>
+            <dd>{{ item.schedule_settings.time_zone }}</dd>
+        </dl>
+
         <dl ng-if="item.targeted_for">
             <dt translate>Targeted For</dt>
             <dd>{{item.targeted_for | mergeTargets}}</dd>

@@ -44,7 +44,7 @@
             </ul>
         </div>
         
-        <div sd-toggle-box id="publishScheduleTimestamp" ng-if="mode === 'authoring' && showPublishSchedule()" data-title="Publishing" data-open="true" data-style="dark">
+        <div sd-toggle-box id="publishScheduleTimestamp" ng-if="mode === 'authoring' && showPublishSchedule()" data-title="Publishing Schedule" data-open="true" data-style="dark">
             <label class="label--lite" translate>Publish Schedule</label>
             <ul class="btn-list">
                 <li class="datepicker-input--dark">
@@ -54,6 +54,10 @@
                     <div sd-timepicker ng-model="item.publish_schedule_time" ng-disabled="!_editable"></div>
                 </li>
             </ul>
+        </div>
+
+		<div sd-toggle-box id="timzoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="dark">
+            <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
         </div>
         
     </div>

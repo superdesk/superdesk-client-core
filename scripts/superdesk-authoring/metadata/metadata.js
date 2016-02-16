@@ -99,11 +99,30 @@ function MetadataCtrl(
         setPublishScheduleDate(newValue, oldValue);
     });
 
+    $scope.$watch('item.time_zone', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+            $scope.item.schedule_settings = {};
+
+            if (!$scope.item.time_zone) {
+                $scope.item.schedule_settings.time_zone = null;
+            } else {
+                $scope.item.schedule_settings.time_zone = $scope.item.time_zone;
+            }
+
+            setPublishScheduleDate(newValue, oldValue);
+            setEmbargoTS(newValue, oldValue);
+
+            if (!$scope.item.publish_schedule && !$scope.item.embargo) {
+                $scope.item.schedule_settings = null;
+            }
+        }
+    });
+
     function setPublishScheduleDate(newValue, oldValue) {
         if (newValue !== oldValue) {
             if ($scope.item.publish_schedule_date && $scope.item.publish_schedule_time) {
-                $scope.item.publish_schedule = datetimeHelper.mergeDateTime($scope.item.publish_schedule_date,
-                    $scope.item.publish_schedule_time).format();
+                $scope.item.publish_schedule = datetimeHelper.mergeDateTimeWithoutUtc($scope.item.publish_schedule_date,
+                    $scope.item.publish_schedule_time);
             } else {
                 $scope.item.publish_schedule = null;
             }
@@ -127,8 +146,8 @@ function MetadataCtrl(
     function setEmbargoTS(newValue, oldValue) {
         if (newValue !== oldValue) {
             if ($scope.item.embargo_date && $scope.item.embargo_time) {
-                $scope.item.embargo = datetimeHelper.mergeDateTime(
-                    $scope.item.embargo_date, $scope.item.embargo_time).format();
+                $scope.item.embargo = datetimeHelper.mergeDateTimeWithoutUtc(
+                    $scope.item.embargo_date, $scope.item.embargo_time);
             } else {
                 $scope.item.embargo = null;
             }
@@ -153,6 +172,11 @@ function MetadataCtrl(
             var publishSchedule = new Date(Date.parse($scope.item.publish_schedule));
             $scope.item.publish_schedule_date = $filter('formatDateTimeString')(publishSchedule, 'MM/DD/YYYY');
             $scope.item.publish_schedule_time = $filter('formatDateTimeString')(publishSchedule, 'HH:mm:ss');
+
+        }
+
+        if ($scope.item.schedule_settings) {
+            $scope.item.time_zone = $scope.item.schedule_settings.time_zone;
         }
     }
 
