@@ -141,7 +141,9 @@
                 scope.markItem = function(highlight) {
                     angular.forEach(multi.getItems(), function(item) {
                         item.multiSelect = true;
-                        highlightsService.markItem(highlight._id, item._id);
+                        if (!_.includes(item.highlights, highlight._id)) {
+                            highlightsService.markItem(highlight._id, item._id);
+                        }
                     });
                     multi.reset();
                 };

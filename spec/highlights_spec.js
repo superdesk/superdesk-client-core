@@ -190,6 +190,16 @@ describe('highlights', function() {
             monitoring.checkMarkedForHighlight('Highlight two', 2, 1);
             monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
 
+            //Highlighting two items out of which first is already highlighted should retain it's highlight mark
+            monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
+            //now multi select this already highlighted item(2, 2) and other item(2, 3) for highlight
+            monitoring.selectItem(2, 2);
+            monitoring.selectItem(2, 3);
+            highlights.multiMarkHighlight('Highlight two');
+            //now check if previously highlighted item(2,2) still retains it's marked highlight
+            monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
+            monitoring.checkMarkedForHighlight('Highlight two', 2, 3);
+
             //create the highlight and add a item to it
             highlights.createHighlightsPackage('Highlight two');
             workspace.actionOnItemSubmenu('Add to current', 'one', 3);
