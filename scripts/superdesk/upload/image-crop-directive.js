@@ -38,7 +38,7 @@
             link: function(scope, elem) {
 
                 var bounds, boundx, boundy;
-                var rwidth, rheight;
+                var rwidth = 300, rheight;
                 var minimumSize, updateTimeout;
                 var cropSelect = [];
 
@@ -61,13 +61,7 @@
 
                 // To adjust preview box as per aspect ratio.
                 if (scope.aspectRatio) {
-                    if (scope.aspectRatio.toFixed(2) === '1.33') {  // 4/3 ratio
-                        rwidth = 300; rheight = 225;
-                    } else if (scope.aspectRatio.toFixed(2) === '1.78') {   // 16/9 ratio
-                        rwidth = 300; rheight = 169;
-                    } else {
-                        rwidth = 300; rheight = 300;
-                    }
+                    rheight = rwidth / scope.aspectRatio;
                 } else {
                     notify.error(gettext('sdImageCrop: attribute "aspect-ratio" is mandatory'));
                     throw new Error('sdImageCrop: attribute "aspect-ratio" is mandatory');

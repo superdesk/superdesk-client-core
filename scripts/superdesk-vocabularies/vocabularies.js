@@ -94,7 +94,20 @@
          */
         $scope.save = function() {
             $scope._errorUniqueness = false;
-            api.save('vocabularies', $scope.vocabulary).then(onSuccess, onError);
+            $scope.errorMessage = null;
+
+            if ($scope.vocabulary._id === 'crop_sizes') {
+                var activeItems = _.filter($scope.vocabulary.items, function(o) { return o.is_active; });
+                _.each(_.union(_.map(activeItems, 'width'), _.map(activeItems, 'height')), function (item) {
+                    if (parseInt(item) < 200) {
+                        $scope.errorMessage = gettext('Minimum height and Width should be greater or equal than 200');
+                    }
+                });
+            }
+
+            if ($scope.errorMessage == null) {
+                api.save('vocabularies', $scope.vocabulary).then(onSuccess, onError);
+            }
             // discard metadata cache:
             metadata.loaded = null;
             metadata.initialize();

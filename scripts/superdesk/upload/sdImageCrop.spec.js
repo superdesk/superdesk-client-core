@@ -97,6 +97,34 @@ describe('Image Crop', function() {
                 expect(retObj[0].boxHeight).toBe(600);
             }));
 
+            it('executes with validation passed for new aspect-ratio(21:9)', inject(function($compile) {
+                scope.boxWidth = 1050;
+                scope.boxHeight = 450; //21:9
+                scope.minimumSize = [scope.boxWidth, scope.boxHeight];
+                scope.$digest();
+
+                $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
+                ' data-aspect-ratio="21/9" data-minimum-size="minimumSize" data-box-width="boxWidth"' +
+                ' data-box-height="boxHeight"></div>')(scope);
+
+                isoScope = $elm.isolateScope();
+                isoScope.src = newUrl;
+                isoScope.$digest();
+
+                expect(typeof fakeImg.onload).toEqual('function');
+
+                scope.$parent.preview = {};
+
+                var handler = fakeImg.onload;
+                handler.apply(fakeImg);
+                expect(mySpy.calls.count()).toEqual(1);
+
+                var retObj = mySpy.calls.argsFor(0);
+                expect(retObj[0].aspectRatio).toBe(21 / 9);
+                expect(retObj[0].boxWidth).toBe(1050);
+                expect(retObj[0].boxHeight).toBe(450);
+            }));
+
             it('executes with validation failed', inject(function($compile) {
                 var fn = function() {
                     fakeImg.width = 800;
