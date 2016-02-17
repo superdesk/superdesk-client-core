@@ -2282,8 +2282,7 @@
                  * proper decimal format required by jCrop.
                  */
                 scope.evalAspectRatio = function(ar) {
-                    var parts = ar.split('-').map(_.partial(parseInt, _, 10));
-                    var result = parts[0] / parts[1];
+                    var result = ar.width / ar.height;
 
                     if (isNaN(result) || !isFinite(result)) {
                         scope.errorMessage = 'Error: Given Aspect ratio was not valid, using default: ' + DEFAULT_ASPECT_RATIO;
@@ -2298,7 +2297,7 @@
                     var ar = {};
                     scope.item.cropsizes = scope.metadata.crop_sizes;
                     _.forEach(scope.item.cropsizes, function(cropsizes) {
-                        ar = {aspectRatio: scope.evalAspectRatio(cropsizes.name)};
+                        ar = {aspectRatio: scope.evalAspectRatio(cropsizes)};
                         _.extend(_.filter(scope.item.cropsizes, {name: cropsizes.name})[0], ar);
                     });
 

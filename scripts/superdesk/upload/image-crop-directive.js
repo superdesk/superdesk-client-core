@@ -51,12 +51,27 @@
                 function getCropSelect(cropImage) {
                     cropSelect.length = 0;
 
-                    cropSelect.push(cropImage.CropLeft);
-                    cropSelect.push(cropImage.CropTop);
-                    cropSelect.push(cropImage.CropRight);
-                    cropSelect.push(cropImage.CropBottom);
+                    if (validateAspectRatio(cropImage)) {
+                        cropSelect.push(cropImage.CropLeft);
+                        cropSelect.push(cropImage.CropTop);
+                        cropSelect.push(cropImage.CropRight);
+                        cropSelect.push(cropImage.CropBottom);
+                    } else {
+                        cropSelect = [0, 0, scope.boxWidth, scope.boxHeight]; // initialise
+                    }
 
                     return cropSelect;
+                }
+
+                function validateAspectRatio(cropImage) {
+                    // validate aspect ratio to check if it is still remained valid?
+                    var cropSelectWidth, cropSelectHeight, cropSelectAspectRatio;
+
+                    cropSelectWidth = cropImage.CropRight - cropImage.CropLeft;
+                    cropSelectHeight = cropImage.CropBottom - cropImage.CropTop;
+                    cropSelectAspectRatio = cropSelectWidth / cropSelectHeight;
+
+                    return cropSelectAspectRatio === scope.aspectRatio;
                 }
 
                 // To adjust preview box as per aspect ratio.

@@ -18,8 +18,8 @@ describe('Image Crop', function() {
                 return fakeImg;
             });
 
-            scope.boxWidth = 800;
-            scope.boxHeight = 600;
+            scope.boxWidth = 640;
+            scope.boxHeight = 480;
             scope.src = url;
             scope.minimumSize = [800, 600];
             $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
@@ -75,7 +75,7 @@ describe('Image Crop', function() {
                 });
             }));
 
-            it('executes with validation passed', inject(function() {
+            it('executes with validation passed for default aspect-ratio(4:3)', inject(function() {
                 scope.minimumSize = [scope.boxWidth, scope.boxHeight];
                 scope.$digest();
 
@@ -93,14 +93,14 @@ describe('Image Crop', function() {
 
                 var retObj = mySpy.calls.argsFor(0);
                 expect(retObj[0].aspectRatio).toBe(4 / 3);
-                expect(retObj[0].boxWidth).toBe(800);
-                expect(retObj[0].boxHeight).toBe(600);
+                expect(retObj[0].boxWidth).toBe(640);
+                expect(retObj[0].boxHeight).toBe(480);
             }));
 
             it('executes with validation passed for new aspect-ratio(21:9)', inject(function($compile) {
-                scope.boxWidth = 1050;
-                scope.boxHeight = 450; //21:9
-                scope.minimumSize = [scope.boxWidth, scope.boxHeight];
+                var cropSizeWidth = 1050;
+                var cropSizeHieight = 450;
+                scope.minimumSize = [cropSizeWidth, cropSizeHieight];
                 scope.$digest();
 
                 $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
@@ -121,8 +121,9 @@ describe('Image Crop', function() {
 
                 var retObj = mySpy.calls.argsFor(0);
                 expect(retObj[0].aspectRatio).toBe(21 / 9);
-                expect(retObj[0].boxWidth).toBe(1050);
-                expect(retObj[0].boxHeight).toBe(450);
+                expect(retObj[0].boxWidth).toBe(640);
+                expect(retObj[0].boxHeight).toBe(480);
+                expect(retObj[0].minSize).toBe(scope.minimumSize);
             }));
 
             it('executes with validation failed', inject(function($compile) {
