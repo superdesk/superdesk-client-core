@@ -184,8 +184,8 @@ function MetadataCtrl(
     resolvePublishScheduleAndEmbargoTS();
 }
 
-MetadropdownFocusDirective.$inject = ['$timeout', 'keyboardManager'];
-function MetadropdownFocusDirective($timeout, keyboardManager) {
+MetadropdownFocusDirective.$inject = ['keyboardManager'];
+function MetadropdownFocusDirective(keyboardManager) {
     return {
         require: 'dropdown',
         link: function(scope, elem, attrs, dropdown) {
@@ -235,8 +235,8 @@ function MetadropdownFocusDirective($timeout, keyboardManager) {
     };
 }
 
-MetadataDropdownDirective.$inject = ['$timeout', '$filter', 'keyboardManager'];
-function MetadataDropdownDirective($timeout, $filter, keyboardManager) {
+MetadataDropdownDirective.$inject = ['$filter', 'keyboardManager'];
+function MetadataDropdownDirective($filter, keyboardManager) {
     return {
         scope: {
             list: '=',
@@ -267,7 +267,7 @@ function MetadataDropdownDirective($timeout, $filter, keyboardManager) {
                 });
             };
 
-            $timeout(function() {
+            scope.$applyAsync(function() {
                 if (scope.list) {
                     if (scope.field === 'place') {
                         scope.places = _.groupBy(scope.list, 'group');
@@ -280,8 +280,8 @@ function MetadataDropdownDirective($timeout, $filter, keyboardManager) {
     };
 }
 
-MetadataWordsListEditingDirective.$inject = ['$timeout'];
-function MetadataWordsListEditingDirective($timeout) {
+MetadataWordsListEditingDirective.$inject = [];
+function MetadataWordsListEditingDirective() {
     return {
         scope: {
             item: '=',
@@ -296,7 +296,7 @@ function MetadataWordsListEditingDirective($timeout) {
             scope.words = [];
             scope.selectedTerm = '';
 
-            $timeout(function() {
+            scope.$applyAsync(function() {
                 element.find('input, select').addClass('line-input');
 
                 if (scope.list) {
@@ -532,8 +532,8 @@ function MetadataListEditingDirective(metadata, $filter, $timeout) {
     };
 }
 
-MetadataLocatorsDirective.$inject = ['$timeout'];
-function MetadataLocatorsDirective($timeout) {
+MetadataLocatorsDirective.$inject = [];
+function MetadataLocatorsDirective() {
     return {
         scope: {
             item: '=',
@@ -550,7 +550,7 @@ function MetadataLocatorsDirective($timeout) {
         link: function(scope, element) {
             scope.selectedTerm = '';
 
-            $timeout(function() {
+            scope.$applyAsync(function() {
                 if (scope.item) {
                     if (scope.fieldprefix && scope.item[scope.fieldprefix] && scope.item[scope.fieldprefix][scope.field]) {
                         scope.selectedTerm = scope.item[scope.fieldprefix][scope.field].city;
@@ -560,9 +560,14 @@ function MetadataLocatorsDirective($timeout) {
                 }
 
                 if (scope.list) {
-                    scope.locators = scope.list;
+                    setLocators(scope.list);
                 }
             });
+
+            function setLocators(list) {
+                scope.locators = list.slice(0, 20);
+                scope.total = list.length;
+            }
 
             /**
              * sdTypeahead directive invokes this method and is responsible for searching located object(s) where the
@@ -572,11 +577,11 @@ function MetadataLocatorsDirective($timeout) {
              */
             scope.searchLocator = function(locator_to_find) {
                 if (!locator_to_find) {
-                    scope.locators = scope.list;
+                    setLocators(scope.list);
                 } else {
-                    scope.locators = _.filter(scope.list, function(t) {
+                    setLocators(_.filter(scope.list, function(t) {
                         return ((t.city.toLowerCase().indexOf(locator_to_find.toLowerCase()) !== -1));
-                    });
+                    }));
                 }
 
                 scope.selectedTerm = locator_to_find;
