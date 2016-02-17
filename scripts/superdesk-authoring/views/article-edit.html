@@ -69,7 +69,10 @@
                     ng-disabled="!item.dateline.located || !_editable"
                     ng-change="resetNumberOfDays(true, datelineMonth)"
                     placeholder="Choose month"
-                    ng-model="datelineMonth">
+                    ng-model="datelineMonth"
+                    sd-focus-element
+                    data-append-element=".field"
+                    data-append-class="active">
                 <option value=""></option>
             </select>
 
@@ -78,7 +81,10 @@
                     ng-disabled="!item.dateline.located || !_editable"
                     ng-change="modifyDatelineDate(datelineDay)"
                     placeholder="Choose day"
-                    ng-model="datelineDay">
+                    ng-model="datelineDay"
+                    sd-focus-element
+                    data-append-element=".field"
+                    data-append-class="active">
                 <option value=""></option>
             </select>
         </div>
@@ -116,17 +122,32 @@
 
 <div class="field" ng-if="metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !item.package_type">
     <label translate>Helplines/Contact Information</label>
-    <select id="helplines" ng-model="item.body_footer_value" ng-disabled="!_editable"
-            ng-options="f.name for f in metadata.footers track by f.name" ng-change="addHelplineToFooter()">
+    <select id="helplines"
+            ng-model="item.body_footer_value"
+            ng-disabled="!_editable"
+            ng-options="f.name for f in metadata.footers track by f.name"
+            ng-change="addHelplineToFooter()"
+            sd-focus-element
+            data-append-element=".field"
+            data-append-class="active">
         <option value=""></option>
     </select>
 </div>
 
 <div class="field" ng-if="item.body_footer">
     <label translate>Footer</label>
-    <div id="body_footer" class="body" sd-text-editor
-        data-config="{disableToolbar: true, disableEditing: isPublished(item)}" data-language="item.language"
-        ng-model="item.body_footer" ng-change="autosave(item)" ng-if="_editable" ng-trim="false"></div>
+    <div id="body_footer" class="body"
+        sd-text-editor
+        data-config="{disableToolbar: true, disableEditing: isPublished(item)}"
+        data-language="item.language"
+        ng-model="item.body_footer"
+        ng-change="autosave(item)"
+        ng-if="_editable"
+        ng-trim="false"
+        sd-focus-element
+        data-append-element=".field"
+        data-append-class="active">
+    </div>
     <div id="body_footer_preview" class="abstract" ng-if="!_editable"  sd-html-preview="item.body_footer"></div>
 </div>
 
