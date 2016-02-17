@@ -1062,7 +1062,7 @@
                 }
 
                 function _forceExportHighlight(_id) {
-                    modal.confirm(gettext('There are itemd locked or not published. Do you want to continue?'))
+                    modal.confirm(gettext('There are items locked or not published. Do you want to continue?'))
                         .then(function() {
                             api.generate_highlights.save({}, {'package': _id, 'export': true})
                             .then(authoringWorkspace.edit, function(response) {
