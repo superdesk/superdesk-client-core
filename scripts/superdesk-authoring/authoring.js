@@ -2163,7 +2163,6 @@
         return {
             templateUrl: 'scripts/superdesk-authoring/views/article-edit.html',
             link: function(scope, elem) {
-                var DEFAULT_ASPECT_RATIO = 4 / 3;
                 scope.limits = authoring.limits;
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
@@ -2277,30 +2276,8 @@
                     }
                 };
 
-                /**
-                 * Function to evaluate aspect ratio attribute in advance to provide in
-                 * proper decimal format required by jCrop.
-                 */
-                scope.evalAspectRatio = function(ar) {
-                    var parts = ar.split('-').map(_.partial(parseInt, _, 10));
-                    var result = parts[0] / parts[1];
-
-                    if (isNaN(result) || !isFinite(result)) {
-                        scope.errorMessage = 'Error: Given Aspect ratio was not valid, using default: ' + DEFAULT_ASPECT_RATIO;
-                        return DEFAULT_ASPECT_RATIO;
-                    } else {
-                        scope.errorMessage = null;
-                        return result;
-                    }
-                };
-
                 scope.applyCrop = function() {
-                    var ar = {};
                     scope.item.cropsizes = scope.metadata.crop_sizes;
-                    _.forEach(scope.item.cropsizes, function(cropsizes) {
-                        ar = {aspectRatio: scope.evalAspectRatio(cropsizes.name)};
-                        _.extend(_.filter(scope.item.cropsizes, {name: cropsizes.name})[0], ar);
-                    });
 
                     superdesk.intent('edit', 'crop',  scope.item).then(function(data) {
                         if (!mainEditScope.dirty) {
