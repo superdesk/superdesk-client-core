@@ -21,21 +21,22 @@ describe('Image Crop', function() {
             scope.boxWidth = 640;
             scope.boxHeight = 480;
             scope.src = url;
-            scope.minimumSize = [800, 600];
+            scope.rendition = {height: 600, name: '4-3', width: 800};
+
             $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
-                ' data-aspect-ratio="4/3" data-minimum-size="minimumSize" data-box-width="boxWidth"' +
+                ' data-rendition="rendition" data-box-width="boxWidth"' +
                 ' data-box-height="boxHeight"></div>')(scope);
         }));
 
-        it('should be ok with given aspect-ratio', inject(function($compile) {
-            $compile('<div sd-image-crop data-aspect-ratio="4/3"></div>')(scope);
+        it('should be ok with given rendition', inject(function($compile) {
+            $compile('<div sd-image-crop data-rendition="rendition"></div>')(scope);
         }));
 
-        it('should fail when aspect-ratio missing', inject(function($compile) {
+        it('should fail when rendition missing', inject(function($compile) {
             var fn = function() {
                 $compile('<div sd-image-crop></div>')(scope);
             };
-            expect(fn).toThrow(new Error('sdImageCrop: attribute "aspect-ratio" is mandatory'));
+            expect(fn).toThrow(new Error('sdImageCrop: attribute "rendition" is mandatory'));
         }));
 
         it('invokes watch', inject(function() {
@@ -76,7 +77,6 @@ describe('Image Crop', function() {
             }));
 
             it('executes with validation passed for default aspect-ratio(4:3)', inject(function() {
-                scope.minimumSize = [scope.boxWidth, scope.boxHeight];
                 scope.$digest();
 
                 isoScope = $elm.isolateScope();
@@ -95,16 +95,15 @@ describe('Image Crop', function() {
                 expect(retObj[0].aspectRatio).toBe(4 / 3);
                 expect(retObj[0].boxWidth).toBe(640);
                 expect(retObj[0].boxHeight).toBe(480);
+                expect(retObj[0].minSize).toEqual([800, 600]);
             }));
 
             it('executes with validation passed for new aspect-ratio(21:9)', inject(function($compile) {
-                var cropSizeWidth = 1050;
-                var cropSizeHieight = 450;
-                scope.minimumSize = [cropSizeWidth, cropSizeHieight];
+                scope.rendition = {height: 450, name: '21-9', width: 1050};
                 scope.$digest();
 
                 $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
-                ' data-aspect-ratio="21/9" data-minimum-size="minimumSize" data-box-width="boxWidth"' +
+                ' data-rendition="rendition" data-box-width="boxWidth"' +
                 ' data-box-height="boxHeight"></div>')(scope);
 
                 isoScope = $elm.isolateScope();
@@ -123,7 +122,7 @@ describe('Image Crop', function() {
                 expect(retObj[0].aspectRatio).toBe(21 / 9);
                 expect(retObj[0].boxWidth).toBe(640);
                 expect(retObj[0].boxHeight).toBe(480);
-                expect(retObj[0].minSize).toBe(scope.minimumSize);
+                expect(retObj[0].minSize).toEqual([scope.rendition.width, scope.rendition.height]);
             }));
 
             it('executes with validation failed', inject(function($compile) {
@@ -145,7 +144,7 @@ describe('Image Crop', function() {
                     expect(mySpy.calls.count()).toEqual(1);
                 };
                 expect(fn).toThrow(new Error('sdImageCrop: Sorry, but image must be at least ' +
-                    scope.minimumSize[0] + 'x' + scope.minimumSize[1]));
+                    scope.rendition.width + 'x' + scope.rendition.height));
             }));
         });
     });

@@ -9,8 +9,7 @@
      * Example Usage:
      * <div sd-image-crop data-src="data.renditions.original.href" data-show-Min-Size-Error="true"
      *  data-cords="preview.cords" data-box-width="800" data-box-height="600"
-     *  data-aspect-ratio="4/3" data-minimum-size="[800, 600]"
-     *  data-crop-select="[0, 0, 800, 600]">
+     *  data-rendition="rendition" data-crop-select="[0, 0, 800, 600]">
      * </div>
      *
      * @data-cords attribute used to provide updated crop coordinates in preview.cords
@@ -30,8 +29,7 @@
                 cords: '=',
                 boxWidth: '=',
                 boxHeight: '=',
-                aspectRatio: '=',
-                minimumSize: '=',
+                rendition: '=',
                 cropSelect: '=',
                 showMinSizeError: '='
             },
@@ -39,10 +37,20 @@
 
                 var bounds, boundx, boundy;
                 var rwidth = 300, rheight;
-                var minimumSize, updateTimeout;
+                var minimumSize, updateTimeout, aspectRatio;
                 var cropSelect = [];
 
-                minimumSize = scope.minimumSize ? scope.minimumSize : [200, 200];
+                aspectRatio = scope.rendition ? scope.rendition.width / scope.rendition.height : null;
+
+                // To adjust preview box as per aspect ratio.
+                if (aspectRatio) {
+                    rheight = rwidth / aspectRatio;
+                } else {
+                    notify.error(gettext('sdImageCrop: attribute "rendition" is mandatory'));
+                    throw new Error('sdImageCrop: attribute "rendition" is mandatory');
+                }
+
+                minimumSize = scope.rendition ? [scope.rendition.width, scope.rendition.height] : [200, 200];
                 cropSelect = scope.cropSelect ? getCropSelect(scope.cropSelect) : [0, 0, scope.boxWidth, scope.boxHeight];
 
                 /**
@@ -71,15 +79,7 @@
                     cropSelectHeight = cropImage.CropBottom - cropImage.CropTop;
                     cropSelectAspectRatio = cropSelectWidth / cropSelectHeight;
 
-                    return cropSelectAspectRatio === scope.aspectRatio;
-                }
-
-                // To adjust preview box as per aspect ratio.
-                if (scope.aspectRatio) {
-                    rheight = rwidth / scope.aspectRatio;
-                } else {
-                    notify.error(gettext('sdImageCrop: attribute "aspect-ratio" is mandatory'));
-                    throw new Error('sdImageCrop: attribute "aspect-ratio" is mandatory');
+                    return cropSelectAspectRatio.toFixed(1) === aspectRatio.toFixed(1);
                 }
 
                 /**
@@ -145,7 +145,7 @@
                         }
                         elem.append(img);
                         $(img).Jcrop({
-                            aspectRatio: scope.aspectRatio,
+                            aspectRatio: aspectRatio,
                             minSize: minimumSize,
                             trueSize: size,
                             boxWidth: scope.boxWidth,
