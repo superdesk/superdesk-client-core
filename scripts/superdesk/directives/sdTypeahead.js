@@ -22,7 +22,7 @@
          * @scope {Function} select - callback for select item aciton
          *
          */
-        directive('sdTypeahead', ['$timeout', function($timeout) {
+        directive('sdTypeahead', ['$timeout', 'Keys', function($timeout, Keys) {
             return {
                 restrict: 'A',
                 transclude: true,
@@ -38,7 +38,6 @@
                     blur: '&'
                 },
                 controller: ['$scope', function($scope) {
-                    $scope.items = [];
                     $scope.hide = true;
 
                     this.activate = function(item) {
@@ -72,7 +71,7 @@
                     };
 
                     $scope.isVisible = function() {
-                        return !$scope.hide && ($scope.focused || $scope.mousedOver) && ($scope.items.length > 0);
+                        return !$scope.hide && ($scope.focused || $scope.mousedOver) && ($scope.items && $scope.items.length > 0);
                     };
 
                     $scope.query = function() {
@@ -108,30 +107,48 @@
                     });
 
                     $input.bind('keyup', function(e) {
-                        if (e.keyCode === 13) {
+                        if (e.keyCode === Keys.enter) {
                             scope.$apply(function() { controller.selectActive(); });
                         }
 
-                        if (e.keyCode === 27) {
+                        if (e.keyCode === Keys.escape) {
                             scope.$apply(function() { scope.hide = true; });
                         }
                     });
 
                     $input.bind('keydown', function(e) {
-                        if (e.keyCode === 13 || e.keyCode === 27) {
+                        if (e.keyCode === Keys.enter || e.keyCode === Keys.escape) {
                             e.preventDefault();
                         }
 
-                        if (e.keyCode === 40) {
+                        if (e.keyCode === Keys.down) {
                             e.preventDefault();
-                            scope.$apply(function() { controller.activateNextItem(); });
+                            e.stopPropagation();
+                            scope.$apply(function() {
+                                controller.activateNextItem();
+                                scrollToActive();
+                            });
                         }
 
-                        if (e.keyCode === 38) {
+                        if (e.keyCode === Keys.up) {
                             e.preventDefault();
-                            scope.$apply(function() { controller.activatePreviousItem(); });
+                            e.stopPropagation();
+                            scope.$apply(function() {
+                                controller.activatePreviousItem();
+                                scrollToActive();
+                            });
                         }
                     });
+
+                    function scrollToActive() {
+                        $timeout(function() {
+                            var list = element.find('.item-list')[0];
+                            var active = element.find('.active')[0];
+                            if (list && active) {
+                                list.scrollTop = Math.max(0, active.offsetTop - 2 * active.clientHeight);
+                            }
+                        }, 10, false); // requires a timeout to scroll once the active item gets its class
+                    }
 
                     scope.$watch('focused', function(focused) {
                         if (focused) {

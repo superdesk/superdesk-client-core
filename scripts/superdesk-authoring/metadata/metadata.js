@@ -75,7 +75,7 @@ function MetadataCtrl(
             userPrefs;
 
         all = metadata.values.categories || [];
-        userPrefs = prefs['categories:preferred'].selected || {};
+        userPrefs = prefs['categories:preferred'].selected;
 
         // gather article's existing category codes
         itemCategories = $scope.item.anpa_category || [];
@@ -85,7 +85,7 @@ function MetadataCtrl(
         });
 
         filtered = _.filter(all, function (cat) {
-            return userPrefs[cat.qcode] && !assigned[cat.qcode];
+            return !assigned[cat.qcode] && (userPrefs == null || userPrefs[cat.qcode]);
         });
 
         $scope.availableCategories = _.sortBy(filtered, 'name');
@@ -549,6 +549,7 @@ function MetadataLocatorsDirective() {
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-locators.html',
         link: function(scope, element) {
             scope.selectedTerm = '';
+            scope.locators = [];
 
             scope.$applyAsync(function() {
                 if (scope.item) {
@@ -565,7 +566,7 @@ function MetadataLocatorsDirective() {
             });
 
             function setLocators(list) {
-                scope.locators = list.slice(0, 20);
+                scope.locators = list.slice(0, 10);
                 scope.total = list.length;
             }
 

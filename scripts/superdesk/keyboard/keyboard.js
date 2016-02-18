@@ -3,6 +3,15 @@
 
     return angular.module('superdesk.keyboard', ['gettext'])
 
+    .constant('Keys', Object.freeze({
+        left: 37,
+        up: 38,
+        right: 39,
+        down: 40,
+        enter: 13,
+        escape: 27
+    }))
+
     // unbind all keyboard shortcuts when switching route
     .run(['$rootScope', 'keyboardManager', function($rootScope, kb) {
 
