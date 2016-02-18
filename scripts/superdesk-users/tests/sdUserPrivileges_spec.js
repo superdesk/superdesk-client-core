@@ -52,7 +52,8 @@ describe('sdUserPrivileges directive', function() {
                         .and.returnValue(getByIdDeferred.promise)
         };
 
-        spyOn(userList, 'getUser').and.returnValue($q.when({_id: 1}));
+        var user = {_id: 1, role: '€d1t0r', privileges: [{name: 'foo'}, {name: 'bar'}]};
+        spyOn(userList, 'getUser').and.returnValue($q.when(user));
     }));
 
     /**
@@ -129,29 +130,23 @@ describe('sdUserPrivileges directive', function() {
                 ]
             };
 
-            expect(fakeEndpoints.roles.getById).toHaveBeenCalledWith('€d1t0r');
-
-            isoScope.role = {};
+            queryDeferred.resolve(serverResponse);
             getByIdDeferred.resolve(serverResponse);
+            isoScope.role = {};
             isoScope.$digest();
-
+            expect(fakeEndpoints.roles.getById).toHaveBeenCalledWith('€d1t0r');
             expect(isoScope.role).toEqual(serverResponse);
         });
 
         it('logs an error if fetching the user\'s role fails', function () {
             spyOn(console, 'log');
 
-            getByIdDeferred.reject('Server error');
+            queryDeferred.reject('Server error');
             isoScope.$digest();
 
             expect(console.log).toHaveBeenCalledWith('Server error');
         });
 
-        it('stores the original list of user privileges', function () {
-            expect(isoScope.origPrivileges).toEqual(
-                [{name: 'foo'}, {name: 'bar'}]
-            );
-        });
     });
 
     describe('scope\'s save() method', function () {
