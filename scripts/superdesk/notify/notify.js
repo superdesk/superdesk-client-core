@@ -2,7 +2,7 @@
     'use strict';
 
     return angular.module('superdesk.notify', ['superdesk.translate'])
-        .service('notify', ['$rootScope', '$timeout', 'gettext', function ($rootScope, $timeout, gettext) {
+        .service('notify', ['$timeout', 'gettext', function ($timeout, gettext) {
             function NotifyService() {
 
                 var ttls = {
