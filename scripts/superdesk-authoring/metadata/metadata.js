@@ -100,7 +100,7 @@ function MetadataCtrl(
     });
 
     $scope.$watch('item.time_zone', function(newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if ((newValue || oldValue) && (newValue !== oldValue)) {
             $scope.item.schedule_settings = {};
 
             if (!$scope.item.time_zone) {
