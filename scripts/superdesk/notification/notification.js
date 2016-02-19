@@ -13,9 +13,9 @@
     WebSocketProxy.$inject = ['$rootScope', 'config', '$interval', 'session', 'SESSION_EVENTS'];
     function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) {
 
-        var ws = null;
+        var ws = null, notified;
         var connectTimer = -1;
-        var TIMEOUT = 5500;
+        var TIMEOUT = 5000;
 
         var ReloadEvents = [
             'user_disabled',
@@ -71,10 +71,15 @@
             ws.onopen = function(event) {
                 $interval.cancel(connectTimer);
                 $rootScope.$broadcast('connected');
+                notified = null;
             };
 
             ws.onclose = function(event) {
-                $rootScope.$broadcast('disconnected');
+                if (!notified) {
+                    $rootScope.$broadcast('disconnected');
+                    notified = true;
+                }
+
                 $interval.cancel(connectTimer);
                 connectTimer = $interval(function() {
                     if (ws && session.sessionId) {
@@ -96,21 +101,21 @@
      */
     NotifyConnectionService.$inject = ['$rootScope', 'notify', 'gettext', '$timeout', 'session'];
     function NotifyConnectionService($rootScope, notify, gettext, $timeout, session) {
-        var successTimeout, alertTimeout;
+        var successTimeout;
         var _this = this;
         _this.message = null;
 
         $rootScope.$on('disconnected', function(event) {
-            _this.message = 'Disconnected to Notification Server, attempting to reconnect ...';
-            $timeout.cancel(alertTimeout);
-            alertTimeout = $timeout(function() {
-                notify.error(gettext(_this.message));
-            }, 100);
+            _this.message = 'Disconnected to Notification Server!';
+            $rootScope.$applyAsync(function () {
+                notify.warning(gettext(_this.message));
+            });
         });
         $rootScope.$on('connected', function(event) {
             _this.message = 'Connected to Notification Server!';
             $timeout.cancel(successTimeout);
             successTimeout = $timeout(function() {
+                notify.stopWarning();   // stops disconnection warning, once connected.
                 notify.success(gettext(_this.message));
             }, 100);
         });
