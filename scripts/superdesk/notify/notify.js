@@ -2,7 +2,7 @@
     'use strict';
 
     return angular.module('superdesk.notify', ['superdesk.translate'])
-        .service('notify', ['$timeout', 'gettext', function ($timeout, gettext) {
+        .service('notify', ['$rootScope', '$timeout', 'gettext', function ($rootScope, $timeout, gettext) {
             function NotifyService() {
 
                 var ttls = {
@@ -32,7 +32,7 @@
                     }
                 };
 
-                angular.forEach(['info', 'success', 'error'], function(type) {
+                angular.forEach(['info', 'success', 'error', 'warning'], function(type) {
                     var self = this;
                     this[type] = function(text, ttl) {
                         self.addMessage(type, text, ttl);
@@ -44,6 +44,10 @@
                 };
 
                 this.stopSaving = function() {
+                    this.pop();
+                };
+
+                this.stopWarning = function() {
                     this.pop();
                 };
             }
