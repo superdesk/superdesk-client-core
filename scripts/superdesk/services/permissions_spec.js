@@ -7,7 +7,7 @@ describe('PermissionsService', function() {
     beforeEach(module('superdesk.services.permissions'));
 
     beforeEach(module(function($provide) {
-        $provide.value('config', {server: {url: 'http://localhost'}});
+        $provide.constant('config', {server: {url: 'http://localhost'}});
     }));
 
     var rootScope, httpBackend, permissionsService;

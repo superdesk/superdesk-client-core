@@ -14,12 +14,9 @@ beforeEach(module('superdesk.services.storage'));
  */
 angular.module('superdesk.preferences', []);
 angular.module('superdesk.mocks', [])
-    .provider('config', function() {
-        var config = {server: {url: 'http://test'}};
-        angular.extend(this, config);
-        this.$get = function() {
-            return config;
-        };
+    .constant('config', {
+        server: {url: null},
+        editor: {}
     })
     .service('features', function() {})
     .service('preferencesService', function($q) {

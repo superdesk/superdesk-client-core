@@ -3,6 +3,10 @@
         <div>
             <i class="filetype-icon-{{ :: item.type }}" title="{{ :: 'Article Type' | translate }}"></i>
         </div>
+        <div ng-if="item.profile">
+            <label translate>PROFILE</label>
+            <div class="data">{{ :: item.profile }}</div>
+        </div> 
         <div ng-if="item.type === 'text'">
             <label class="word-count"><b>{{ item.word_count || 0 }}</b> <span translate translate-n="item.word_count" translate-plural="WORDS">WORD</span></label>
         </div>
@@ -28,8 +32,7 @@
     </div>
 
     <div class="authoring-header__detailed">
-        <div class="item-wrapper">
-
+        <div class="item-wrapper" ng-if="schema.slugline">
                 <label translate>SLUGLINE</label>
                 <input type="text"
                        sd-autofocus
@@ -43,7 +46,7 @@
         </div>
 
         <div class="item-wrapper">
-            <div class="item">
+            <div class="item" ng-if="schema.genre">
                 <label translate>GENRE</label>
                 <div sd-meta-dropdown
                      class="data"
@@ -54,7 +57,7 @@
                      data-change="autosave(item)">
                 </div>
             </div>
-            <div class="item">
+            <div class="item" ng-if="schema.anpa_take_key">
                 <label translate>TAKEKEY</label>
                 <input type="text"
                        class="line-input"
@@ -67,7 +70,7 @@
         </div>
 
         <div class="item-wrapper">
-            <div class="item" ng-if="metadata.locators">
+            <div class="item" ng-if="metadata.locators && schema.place">
                 <label translate>PLACE</label>
                 <div sd-meta-dropdown
                      class="data"
@@ -79,7 +82,7 @@
                 </div>
             </div>
             <div class="item">
-                <div class="item">
+                <div class="item" ng-if="schema.priority">
                     <label translate>PRIORITY</label>
                     <div sd-meta-dropdown
                          data-item="item"
@@ -92,7 +95,7 @@
                     </div>
                 </div>
 
-                <div class="item">
+                <div class="item" ng-if="schema.urgency">
                     <label translate>NEWS VALUE</label>
                     <div sd-meta-dropdown
                          data-item="item"
@@ -122,7 +125,7 @@
             </div>
         </div>
 
-        <div class="item-wrapper" ng-if="metadata.subjectcodes">
+        <div class="item-wrapper" ng-if="metadata.subjectcodes && schema.subject">
             <label translate>SUBJECT</label>
             <div id="subjects"
                  sd-meta-terms
@@ -136,6 +139,20 @@
                  data-change="autosave(item)"
                  data-reload-list="true">
             </div>
+        </div>
+
+        <div class="item-wrapper" ng-repeat="cv in cvs track by cv._id">
+            <label>{{ cv.display_name }}</label>
+            <div sd-meta-terms
+                class="data"
+                data-item="item"
+                data-field="subject"
+                data-unique="qcode"
+                data-list="cv.items"
+                data-cv="cv"
+                ng-disabled="!_editable"
+                data-header="true"
+                data-change="autosave(item)"></div>
         </div>
 
         <div class="item-wrapper" ng-if="shouldDisplayCompanyCodes()">
@@ -153,7 +170,7 @@
             </div>
         </div>
 
-        <div class="item-wrapper">
+        <div class="item-wrapper" ng-if="schema.ednote">
             <label translate>ED. NOTE</label>
             <textarea class="line-input ed-note" ng-model="item.ednote" ng-disabled="!_editable" ng-change="autosave(item)"></textarea>
         </div>

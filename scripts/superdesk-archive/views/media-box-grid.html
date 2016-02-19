@@ -32,8 +32,8 @@
 
     <div class="media-info">
         <h5>
-            <span ng-if="item.slugline">{{ :: item.slugline }}</span>
-            <span ng-if="!item.slugline">{{ :: item.type | translate }}</span>
+            <span ng-if="item.headline">{{ item.headline }}</span>
+            <span ng-if="!item.headline">{{ :: item.type | translate }}</span>
         </h5>
 
         <dl>
@@ -60,8 +60,7 @@
 
     <span class="broadcast-status" tooltip="{{item.broadcast.status}}" ng-if="item.broadcast.status">!</span>
 
-    <div class="state-label state-{{ item.state }}" ng-if="item.state" ng-class="{state_embargo: item.embargo}">{{ item.state | removeLodash }}</div>
-</div>
+    <div sd-item-state data-state=item.state data-embargo=item.embargo></div>
 
     <div ng-if="focused" class="item-right toolbox" sd-item-actions-menu data-item="item" data-active="focused"></div>
 

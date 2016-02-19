@@ -1,5 +1,10 @@
-(function() {
+(function(_) {
     'use strict';
+
+    return angular.module('superdesk.upload.imagecrop', [
+        'superdesk.translate'
+    ])
+
     /**
      * sd-image-crop based on Jcrop tool and provides Image crop functionality for
      * provided Aspect ratio and other attributes.
@@ -7,127 +12,80 @@
      * refer to http://deepliquid.com/content/Jcrop_Manual.html
      *
      * Example Usage:
-     * <div sd-image-crop data-src="data.renditions.original.href" data-show-Min-Size-Error="true"
-     *  data-cords="preview.cords" data-box-width="800" data-box-height="600"
-     *  data-rendition="rendition" data-crop-select="[0, 0, 800, 600]">
+     * <div sd-image-crop
+     *  data-src="data.renditions.viewImage.href"
+     *  data-show-Min-Size-Error="true"
+     *  data-crop-init="{}"
+     *  data-box-width="800"
+     *  data-box-height="600"
+     *  data-rendition="{width: 800, height: 600}"
+     *  data-crop-data="{CropLeft: 0, CropTop: 0, CropRight: 800, CropBottom: 600}">
      * </div>
      *
      * @data-cords attribute used to provide updated crop coordinates in preview.cords
      * scope.preview should be define on container page so that the coordiates can be used
      * to pass in api that is serving for saving the crop.
      */
-    angular.module('superdesk.upload.imagecrop', ['superdesk.notify'])
-    .directive('sdImageCrop', [
-        'notify',
-        'gettext',
-        '$timeout',
-        'imageFactory',
-    function(notify, gettext, $timeout, imageFactory) {
+     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', function(gettext, $interpolate, imageFactory) {
         return {
             scope: {
                 src: '=',
-                cords: '=',
+                cropInit: '=',
+                cropData: '=',
+                onChange: '&',
+                original: '=',
+                rendition: '=',
                 boxWidth: '=',
                 boxHeight: '=',
-                rendition: '=',
-                cropSelect: '=',
                 showMinSizeError: '='
             },
             link: function(scope, elem) {
 
-                var bounds, boundx, boundy;
-                var rwidth = 300, rheight;
-                var minimumSize, updateTimeout, aspectRatio;
-                var cropSelect = [];
-
-                aspectRatio = scope.rendition ? scope.rendition.width / scope.rendition.height : null;
-
-                // To adjust preview box as per aspect ratio.
-                if (aspectRatio) {
-                    rheight = rwidth / aspectRatio;
-                } else {
-                    notify.error(gettext('sdImageCrop: attribute "rendition" is mandatory'));
-                    throw new Error('sdImageCrop: attribute "rendition" is mandatory');
-                }
-
-                minimumSize = scope.rendition ? [scope.rendition.width, scope.rendition.height] : [200, 200];
-                cropSelect = scope.cropSelect ? getCropSelect(scope.cropSelect) : [0, 0, scope.boxWidth, scope.boxHeight];
-
                 /**
-                * Push value in clockwise sequence from Left, Top, Right then Bottom (L-T-R-B).
-                */
-                function getCropSelect(cropImage) {
-                    cropSelect.length = 0;
-
-                    if (validateAspectRatio(cropImage)) {
-                        cropSelect.push(cropImage.CropLeft);
-                        cropSelect.push(cropImage.CropTop);
-                        cropSelect.push(cropImage.CropRight);
-                        cropSelect.push(cropImage.CropBottom);
-                    } else {
-                        cropSelect = [0, 0, scope.boxWidth, scope.boxHeight]; // initialise
-                    }
-
-                    return cropSelect;
-                }
-
-                function validateAspectRatio(cropImage) {
-                    // validate aspect ratio to check if it is still remained valid?
-                    var cropSelectWidth, cropSelectHeight, cropSelectAspectRatio;
-
-                    cropSelectWidth = cropImage.CropRight - cropImage.CropLeft;
-                    cropSelectHeight = cropImage.CropBottom - cropImage.CropTop;
-                    cropSelectAspectRatio = cropSelectWidth / cropSelectHeight;
-
-                    return cropSelectAspectRatio.toFixed(1) === aspectRatio.toFixed(1);
-                }
-
-                /**
-                 * Invoked on Jcrops' onChange event to call updateScope(c) with coordinates
-                */
-                var updateFunc = function(c) {
-                    cancelTimeout(c);
-                    updateTimeout = $timeout(updateScope(c), 300, false);
-                };
-
-                function cancelTimeout(event) {
-                    $timeout.cancel(updateTimeout);
-                }
-
-                /**
-                 * Updates crop coordinates scope and invokes showPreview function for crop preview.
-                */
-                function updateScope(c) {
-                    scope.$apply(function() {
-                        scope.cords = c;
-                        var rx = rwidth / scope.cords.w;
-                        var ry = rheight / scope.cords.h;
-                        showPreview('.preview-target-1', rx, ry, boundx, boundy, scope.cords.x, scope.cords.y);
-                    });
-                }
-
-                /**
-                 * Applies the css to display selected crop in preview box,
-                 * respective to the selected aspect ratio
+                 * Updates crop coordinates scope
+                 *
+                 * @param {Array} cords
                  */
-                function showPreview(e, rx, ry, boundx, boundy, cordx, cordy) {
-                    $(e).css({
-                        width: Math.round(rx * boundx) + 'px',
-                        height: Math.round(ry * boundy) + 'px',
-                        marginLeft: '-' + Math.round(rx * cordx) + 'px',
-                        marginTop: '-' + Math.round(ry * cordy) + 'px'
-                    });
+                function updateScope(cords) {
+                    var nextData = formatCoordinates(cords);
+                    var prevData = scope.cropData || scope.cropInit;
+                    if (!angular.equals(nextData, prevData)) {
+                        scope.$apply(function() {
+                            scope.cropData = nextData;
+                            scope.onChange({cropData: nextData});
+                        });
+                    }
                 }
 
-                function validateConstraints(imgObj) {
-                    if (imgObj.width < minimumSize[0] || imgObj.height < minimumSize[1]) {
-                        scope.$apply(function() {
-                            notify.pop();
-                            notify.error(gettext('Sorry, but image must be at least ' + minimumSize[0] + 'x' + minimumSize[1]));
-                            scope.src = null;
-                            scope.$parent.preview.progress = null;
-                            throw new Error('sdImageCrop: Sorry, but image must be at least ' + minimumSize[0] + 'x' + minimumSize[1]);
-                        });
+                /**
+                 * Format jCrop coordinates into superdesk crop specs
+                 *
+                 * @param {Object} cords jCrop coordinates
+                 * @return {Object} superdesk crop specs
+                 */
+                function formatCoordinates(cords) {
+                    return {
+                        CropLeft: Math.round(Math.min(cords.x, cords.x2)),
+                        CropRight: Math.round(Math.max(cords.x, cords.x2)),
+                        CropTop: Math.round(Math.min(cords.y, cords.y2)),
+                        CropBottom: Math.round(Math.max(cords.y, cords.y2))
+                    };
+                }
+
+                /**
+                 * Parse superdesk crop specs into jCrop coordinates
+                 *
+                 * @param {Object} cropImage
+                 * @return {Array} [x0, y0, x1, y1]
+                 */
+                function parseCoordinates(cropImage) {
+                    if (cropImage != null && cropImage.CropLeft != null) {
+                        return [
+                            cropImage.CropLeft,
+                            cropImage.CropTop,
+                            cropImage.CropRight,
+                            cropImage.CropBottom
+                        ];
                     }
                 }
 
@@ -136,34 +94,73 @@
                     if (!src) {
                         return;
                     }
+
                     var img = imageFactory.makeInstance();
                     img.onload = function() {
-                        scope.$parent.preview.progress = true;
-                        var size = [this.width, this.height];
-                        if (scope.showMinSizeError) {
-                            validateConstraints(this);
+                        var cropSelect = parseCoordinates(scope.cropInit) || getDefaultCoordinates(scope.original, scope.rendition);
+
+                        if (scope.showMinSizeError && !validateConstraints(scope.original, scope.rendition)) {
+                            return;
                         }
+
                         elem.append(img);
                         $(img).Jcrop({
-                            aspectRatio: aspectRatio,
-                            minSize: minimumSize,
-                            trueSize: size,
+                            aspectRatio: scope.rendition.width ? scope.rendition.width / scope.rendition.height : null,
+                            minSize: [scope.rendition.width, scope.rendition.height],
+                            trueSize: [scope.original.width, scope.original.height],
                             boxWidth: scope.boxWidth,
                             boxHeight: scope.boxHeight,
                             setSelect: cropSelect,
                             allowSelect: false,
                             addClass: 'jcrop-dark',
-                            onChange: updateFunc
-                        }, function() {
-                            bounds = this.getBounds();
-                            boundx = bounds[0];
-                            boundy = bounds[1];
-                            updateFunc(scope.cords);
+                            onSelect: updateScope
                         });
                     };
+
                     img.src = src;
                 });
+
+                function validateConstraints(img, rendition) {
+                    if (img.width < rendition.width || img.height < rendition.height) {
+                        scope.$apply(function() {
+                            var text = $interpolate(
+                                gettext('Sorry, but image must be at least {{ r.width }}x{{ r.height }},' +
+                                        ' (it is {{ img.width }}x{{ img.height }}).')
+                            )({
+                                r: rendition,
+                                img: img
+                            });
+
+                            elem.append('<p class="error">' + text);
+                        });
+
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                /**
+                 * Get the largest part of image matching required specs.
+                 *
+                 * @param {Object} img
+                 * @param {Object} rendition
+                 * @return {Array} [x0, y0, x1, y1]
+                 */
+                function getDefaultCoordinates(img, rendition) {
+                    if (!rendition.width || !rendition.height) {
+                        return [0, 0, img.width, img.height];
+                    }
+
+                    var ratio = Math.min(img.width / rendition.width, img.height / rendition.height);
+                    var width = Math.floor(ratio * rendition.width);
+                    var height = Math.floor(ratio * rendition.height);
+                    var x0 = Math.floor((img.width - width) / 2);
+                    var y0 = Math.floor((img.height - height) / 2);
+                    return [x0, y0, x0 + width, y0 + height];
+                }
             }
         };
-    }]);
+    }])
+    ;
 })();
