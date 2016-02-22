@@ -249,4 +249,34 @@ describe('search', function() {
         globalSearch.actionOnItem('Edit', 2);
         expect(previewPane.isPresent()).toBe(false);    // avoids retaining already opened preview
     });
+
+    it('can avoid opening item\'s preview (stops event propagation) on keyboard operations from text editor',
+        function() {
+        expect(globalSearch.getItems().count()).toBe(14);
+
+        var previewPane = element(by.id('item-preview'));
+        expect(previewPane.isPresent()).toBe(false);
+
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+        expect(previewPane.isPresent()).toBe(true); // DOWN arrow key selects an item and opens preview pane
+
+        // now proceed to perform keyboard operation on text editor
+        globalSearch.actionOnItem('Edit', 2);
+        expect(authoring.getBodyText()).toBe('item5 text');
+
+        authoring.focusBodyHTMLElement();
+
+        browser.actions().sendKeys(protractor.Key.ENTER).perform();
+
+        browser.actions().sendKeys('additional text').perform();
+        expect(previewPane.isPresent()).toBe(false);    // ENTER key avoided for opening preview
+
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+        expect(authoring.getBodyText()).toContain('additional text');
+        expect(previewPane.isPresent()).toBe(false);    // DOWN arrow key avoided for opening preview
+
+        browser.actions().sendKeys(protractor.Key.UP).perform();
+        expect(previewPane.isPresent()).toBe(false);    // UP arrow key avoided for opening preview
+    });
+
 });

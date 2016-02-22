@@ -322,6 +322,10 @@ function Authoring() {
         return bodyHtml.getText();
     };
 
+    this.focusBodyHTMLElement = function() {
+        bodyHtml.click();
+    };
+
     this.getHeadlineText = function() {
         return headline.getText();
     };

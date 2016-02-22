@@ -718,10 +718,10 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                         scope.medium = new window.MediumEditor(scope.node, editorOptions);
 
                         editorElem.on('keydown', function(event) {
+                            event.stopPropagation();
                             if (editor.shouldIgnore(event)) {
                                 return;
                             }
-
                             cancelTimeout();
                         });
 
