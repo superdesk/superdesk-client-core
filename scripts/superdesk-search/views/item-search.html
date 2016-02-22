@@ -120,7 +120,7 @@
                 {{:: 'Description' | translate}}
             </label>
             <div class="control">
-                <input type="text" id="search-description" ng-model="meta.description">
+                <input type="text" id="search-description" ng-model="meta.description_text">
             </div>
         </div>
             <div class="field">
@@ -131,7 +131,21 @@
                 <input type="text" id="search-aapkeyword" ng-model="meta.aapkeyword">
             </div>
         </div>       
-    </fieldset>    
+    </fieldset>
+    <fieldset ng-show="repo.search === 'paimg'">      
+        <div class="field">
+            <label for="search-headline" translate>Headline</label>
+            <div class="control">
+                <input type="text" id="search-headline" ng-model="meta.headline">
+            </div>
+        </div>       
+        <div class="field">
+            <label for="search-slugline" translate>Slugline(keywords)</label>
+            <div class="control">
+                <input type="text" id="search-slugline" ng-model="meta.slugline">
+            </div>
+        </div>
+    </fieldset>
 </form>
 <div class="actions">
     <button class="btn btn-info pull-right" ng-click="search()" ng-disabled="!isSearchEnabled()" translate>Go</button>

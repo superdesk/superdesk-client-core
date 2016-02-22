@@ -2744,6 +2744,11 @@
          * Item sort component
          */
         .directive('sdItemSortbar', ['search', 'asset', '$location', function sortBarDirective(search, asset, $location) {
+            var repos = {
+                'aapmm': true,
+                'paimg': true
+            };
+
             return {
                 scope: {},
                 templateUrl: asset.templateUrl('superdesk-search/views/item-sortbar.html'),
@@ -2756,7 +2761,7 @@
 
                     scope.canSort = function() {
                         var criteria = search.query($location.search()).getCriteria(true);
-                        return !(angular.isDefined(criteria.repo) && criteria.repo === 'aapmm');
+                        return !(angular.isDefined(criteria.repo) && repos[criteria.repo]);
                     };
 
                     scope.sort = function sort(field) {

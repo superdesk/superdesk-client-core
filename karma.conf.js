@@ -31,6 +31,9 @@ module.exports = function(config) {
             'bower_components/rangy/rangy-core.js',
             'bower_components/rangy/rangy-selectionsaverestore.js',
 
+            'bower_components/angular-embed/dist/angular-embed.js',
+            'bower_components/angular-contenteditable/angular-contenteditable.js',
+
             'bower_components/momentjs/moment.js',
             'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
             'bower_components/langmap/language-mapping-list.js',

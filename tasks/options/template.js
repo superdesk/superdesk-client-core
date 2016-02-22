@@ -16,6 +16,7 @@ module.exports = function(grunt) {
         var config = {
             raven: {dsn: process.env.SUPERDESK_RAVEN_DSN || ''},
             server: {url: server, ws: ws},
+            iframely: {key: process.env.IFRAMELY_KEY || ''},
             analytics: {
                 piwik: {
                     url: process.env.PIWIK_URL || '',

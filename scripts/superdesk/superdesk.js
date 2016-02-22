@@ -11,7 +11,6 @@
         'superdesk.api',
         'superdesk.auth',
         'superdesk.services.beta',
-        'superdesk.config',
         'superdesk.datetime',
         'superdesk.elastic',
         'superdesk.error',
@@ -44,7 +43,8 @@
         'superdesk.dragdrop.directives',
         'superdesk.typeahead.directives',
         'superdesk.slider.directives',
-        'superdesk.directives.searchList'
+        'superdesk.directives.searchList',
+        'superdesk.config'
     ];
 
     angular.module('superdesk.loading', [])
@@ -87,7 +87,12 @@
                 }
                 return false;
             }
+        }])
+
+        .run(['$rootScope', 'config', function($rootScope, config) {
+            $rootScope.config = config || {};
         }]);
 
+    angular.module('superdesk.config', []);
     angular.module('superdesk', modules);
 })();

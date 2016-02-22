@@ -4,11 +4,12 @@
 
     describe('auth interceptor', function() {
 
-        beforeEach(module('superdesk.api'));
-        beforeEach(module('superdesk.auth'));
-        beforeEach(module('superdesk.session'));
-        beforeEach(module('superdesk.menu'));
-        beforeEach(module('superdesk.authoring'));
+        beforeEach(module('superdesk.auth.interceptor'));
+
+        beforeEach(module(function($provide) {
+            $provide.constant('lodash', _);
+            $provide.constant('config', {server: {url: 'http://localhost:5000'}});
+        }));
 
         it('should intercept 401 response, run auth and resend request',
         inject(function($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) {

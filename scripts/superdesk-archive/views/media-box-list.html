@@ -1,6 +1,7 @@
 <div id="{{ :: item._id }}" class="media-box media-{{ :: item.type}} media-box--state-{{ :: item.state}}"
     sd-media-box
     sd-mouse-hover="focused"
+    sd-draggable-item
     ng-class="{
         locked: lock.isLocked,
         selected: item._id === selected._id,
@@ -36,9 +37,8 @@
             <time sd-datetime data-date="item.versioncreated"></time>
         </div>
         <div class="line">
-            <div class="state-label state-{{item.state}}" ng-class="{state_embargo: item.embargo}"
-                 ng-hide="!item.state || (viewType !== undefined && viewType !== null && viewType !== 'deskOutput' && viewType !== 'highlights')"
-                 >{{item.state | removeLodash}}</div>
+            <div sd-item-state data-state=item.state data-embargo=item.embargo ng-hide="viewType !== undefined && viewType !== null && viewType !== 'deskOutput'"></div>
+            <div class="label label--{{ :: item.profile }}" ng-if="item.profile">{{ :: item.profile }}</div>
             <div class="takekey" ng-if="item.anpa_take_key">{{ item.anpa_take_key }}</div>
             <span class="signal" ng-if="item.signal">{{ item.signal }}</span>
             <span class="broadcast-status" tooltip="{{item.broadcast.status}}" ng-if="item.broadcast.status">!</span>

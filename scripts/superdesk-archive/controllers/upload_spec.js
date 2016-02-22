@@ -66,7 +66,7 @@ describe('Upload controller', function() {
         // mandatory fields
         scope.items[0].meta.headline = 'headline text';
         scope.items[0].meta.slugline = 'slugline text';
-        scope.items[0].meta.description = 'description';
+        scope.items[0].meta.description_text = 'description';
 
         scope.save();
         $rootScope.$digest();
@@ -139,7 +139,7 @@ describe('Upload controller', function() {
         // mandatory fields
         scope.items[0].meta.headline = 'headline text';
         scope.items[0].meta.slugline = 'slugline text';
-        scope.items[0].meta.description = 'description';
+        scope.items[0].meta.description_text = 'description';
 
         scope.failed = true;
         scope.tryAgain();
