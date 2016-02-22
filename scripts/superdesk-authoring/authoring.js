@@ -2316,7 +2316,6 @@
 
     angular.module('superdesk.authoring', [
             'superdesk.menu',
-            'superdesk.editor',
             'superdesk.activity',
             'superdesk.authoring.widgets',
             'superdesk.authoring.metadata',

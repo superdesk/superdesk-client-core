@@ -11,6 +11,7 @@ describe('authoring', function() {
         $provide.constant('lodash', _);
     }));
 
+    beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.preferences'));
     beforeEach(module('superdesk.archive'));
     beforeEach(module('superdesk.authoring'));
@@ -1720,6 +1721,7 @@ describe('authoring themes', function () {
 });
 
 describe('send item directive', function() {
+    beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.preferences'));
     beforeEach(module('superdesk.authoring'));
     beforeEach(module('superdesk.templates-cache'));
