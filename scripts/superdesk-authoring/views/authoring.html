@@ -13,7 +13,20 @@
                 </div>
 
                 <div class="authoring-sticky__theme-controls pull-right">
-                    <button class="proofread-toggle btn"
+                   <div class="preview-modal-control" ng-if="$root.config.features.preview">
+                        <div sd-full-preview ng-if="fullPreview"
+                            data-item="item"
+                            data-close-action="closeFullPreview"></div>
+                        <a class="toggle preview-toggle btn"
+                            ng-if="item.type === 'text'"
+                            title="{{:: 'Preview' | translate}}"
+                            ng-click="openFullPreview($event)"
+                            ng-href="{{fullPreviewUrl}}">
+                            <i class="icon-eye-open"></i>
+                        </a>
+                    </div>
+
+                    <button class="proofread-toggle toggle btn"
                             ng-class="{active: proofread}"
                             ng-click="proofread = !proofread"
                             title="{{:: 'Toggle theme' | translate}}">

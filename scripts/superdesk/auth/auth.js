@@ -4,8 +4,8 @@
     /**
      * Expire session on 401 server response
      */
-    AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', '$rootScope'];
-    function AuthExpiredInterceptor(session, $q, $injector, $rootScope) {
+    AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', '$rootScope', 'config', 'lodash'];
+    function AuthExpiredInterceptor(session, $q, $injector, $rootScope, config, _) {
 
         function handleAuthExpired(response) {
             session.expire();
@@ -19,16 +19,14 @@
 
         return {
             response: function(response) {
-                if (response.status === 401) {
+                if (_.startsWith(response.config.url, config.server.url) && response.status === 401) {
                     return handleAuthExpired(response);
                 }
 
                 return response;
             },
             responseError: function(response) {
-
-                if (response.status === 401) {
-
+                if (_.startsWith(response.config.url, config.server.url) && response.status === 401) {
                     if (!(((response.data || {})._issues || {}).credentials)) {
                         return handleAuthExpired(response);
                     }
@@ -38,6 +36,9 @@
             }
         };
     }
+
+    angular.module('superdesk.auth.interceptor', ['superdesk.api', 'superdesk.session'])
+        .service('AuthExpiredInterceptor', AuthExpiredInterceptor);
 
     ResetPassworController.$inject = ['$scope', '$location', 'api', 'notify', 'gettext'];
     function ResetPassworController($scope, $location, api, notify, gettext) {
@@ -103,11 +104,12 @@
         'superdesk.activity',
         'superdesk.session',
         'superdesk.asset',
+        'superdesk.config',
         'superdesk.auth.auth',
         'superdesk.auth.basic',
-        'superdesk.auth.login'
+        'superdesk.auth.login',
+        'superdesk.auth.interceptor'
         ])
-        .service('AuthExpiredInterceptor', AuthExpiredInterceptor)
         .config(['$httpProvider', 'superdeskProvider', 'assetProvider', function($httpProvider, superdesk, asset) {
             $httpProvider.interceptors.push('AuthExpiredInterceptor');
 

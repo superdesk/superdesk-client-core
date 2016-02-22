@@ -1,0 +1,13 @@
+<div class="editor" ng-show="vm.editable">
+    <textarea ng-model="vm.embedCode" class="editor--embed"></textarea>
+    <a class="btn btn-default btn-small" ng-click="vm.cancel(); vm.toggleEdition()" translate>Cancel</a>
+    <a class="btn btn-default btn-small" ng-click="vm.save(); vm.toggleEdition()" translate>Save</a>
+</div>
+<div class="preview" ng-show="!vm.editable">
+    <div class="preview--embed"></div>
+    <a class="btn btn-default btn-small" ng-click="vm.toggleEdition()" translate>Edit the code</a>
+</div>
+<div class="editor--caption">
+    <div translate>Caption</div>
+    <div ng-model="vm.model.caption" contenteditable="true" ng-change="vm.onBlockChange();"></div>
+</div>

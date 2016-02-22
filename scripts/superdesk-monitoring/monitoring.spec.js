@@ -2,6 +2,7 @@ describe('monitoring', function() {
     'use strict';
 
     beforeEach(module('superdesk.monitoring'));
+    beforeEach(module('superdesk.mocks'));
 
     it('can preview an item', inject(function($controller, $rootScope) {
         var scope = $rootScope.$new(),
