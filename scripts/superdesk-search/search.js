@@ -1178,6 +1178,7 @@
             'multi',
             'desks',
             'familyService',
+            'Keys',
         function(
             $location,
             $document,
@@ -1195,7 +1196,8 @@
             activityService,
             multi,
             desks,
-            familyService
+            familyService,
+            Keys
         ) {
             return {
                 controllerAs: 'listController',
@@ -1888,14 +1890,6 @@
                                 React.createElement.apply(null, contents)
                             );
                         }
-                    });
-
-                    var Keys = Object.freeze({
-                        left: 37,
-                        up: 38,
-                        right: 39,
-                        down: 40,
-                        enter: 13
                     });
 
                     /**

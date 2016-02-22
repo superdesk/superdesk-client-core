@@ -396,16 +396,8 @@
         };
     }
 
-    DropdownFocus.$inject = [];
-    function DropdownFocus() {
-        var Keys = Object.freeze({
-            left: 37,
-            up: 38,
-            right: 39,
-            down: 40,
-            enter: 13
-        });
-
+    DropdownFocus.$inject = ['Keys'];
+    function DropdownFocus(Keys) {
         return {
             require: 'dropdown',
             link: function (scope, elem, attrs, dropdown) {
@@ -468,7 +460,7 @@
                                         }
                                     } else {
                                         var buttonSet = elem.find('button:not([disabled]):not(.dropdown-toggle)');
-                                        if (buttonSet !== undefined) {
+                                        if (buttonSet[0] !== undefined) {
                                             buttonSet[0].focus();
                                         }
                                     }
