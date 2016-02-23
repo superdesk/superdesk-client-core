@@ -153,7 +153,7 @@ function SpellcheckMenuController(editor, $rootScope) {
     }
 }
 
-angular.module('superdesk.editor.spellcheck', ['superdesk.dictionaries', 'superdesk.editor'])
+angular.module('superdesk.editor.spellcheck', ['superdesk.dictionaries'])
     .service('spellcheck', SpellcheckService)
     .controller('SpellcheckMenu', SpellcheckMenuController)
     ;

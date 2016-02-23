@@ -21,22 +21,13 @@ describe('Image Crop', function() {
             scope.boxWidth = 640;
             scope.boxHeight = 480;
             scope.src = url;
-            scope.rendition = {height: 600, name: '4-3', width: 800};
-
+            scope.rendition = {width: 800, height: 600};
+            scope.original = {width: 900, height: 600};
+            scope.cropData = {};
             $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
+                ' data-original="original" ' +
                 ' data-rendition="rendition" data-box-width="boxWidth"' +
-                ' data-box-height="boxHeight"></div>')(scope);
-        }));
-
-        it('should be ok with given rendition', inject(function($compile) {
-            $compile('<div sd-image-crop data-rendition="rendition"></div>')(scope);
-        }));
-
-        it('should fail when rendition missing', inject(function($compile) {
-            var fn = function() {
-                $compile('<div sd-image-crop></div>')(scope);
-            };
-            expect(fn).toThrow(new Error('sdImageCrop: attribute "rendition" is mandatory'));
+                ' data-box-height="boxHeight" crop-data="cropData"></div>')(scope);
         }));
 
         it('invokes watch', inject(function() {
@@ -85,8 +76,6 @@ describe('Image Crop', function() {
 
                 expect(typeof fakeImg.onload).toEqual('function');
 
-                scope.$parent.preview = {};
-
                 var handler = fakeImg.onload;
                 handler.apply(fakeImg);
                 expect(mySpy.calls.count()).toEqual(1);
@@ -96,15 +85,13 @@ describe('Image Crop', function() {
                 expect(retObj[0].boxWidth).toBe(640);
                 expect(retObj[0].boxHeight).toBe(480);
                 expect(retObj[0].minSize).toEqual([800, 600]);
+                expect(retObj[0].trueSize).toEqual([900, 600]);
+                expect(retObj[0].setSelect).toEqual([50, 0, 850, 600]);
             }));
 
-            it('executes with validation passed for new aspect-ratio(21:9)', inject(function($compile) {
-                scope.rendition = {height: 450, name: '21-9', width: 1050};
+            it('executes with validation failed', inject(function($compile) {
+                scope.original.width = 500;
                 scope.$digest();
-
-                $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
-                ' data-rendition="rendition" data-box-width="boxWidth"' +
-                ' data-box-height="boxHeight"></div>')(scope);
 
                 isoScope = $elm.isolateScope();
                 isoScope.src = newUrl;
@@ -112,39 +99,12 @@ describe('Image Crop', function() {
 
                 expect(typeof fakeImg.onload).toEqual('function');
 
-                scope.$parent.preview = {};
-
                 var handler = fakeImg.onload;
                 handler.apply(fakeImg);
-                expect(mySpy.calls.count()).toEqual(1);
-
-                var retObj = mySpy.calls.argsFor(0);
-                expect(retObj[0].aspectRatio).toBe(21 / 9);
-                expect(retObj[0].boxWidth).toBe(640);
-                expect(retObj[0].boxHeight).toBe(480);
-                expect(retObj[0].minSize).toEqual([scope.rendition.width, scope.rendition.height]);
-            }));
-
-            it('executes with validation failed', inject(function($compile) {
-                var fn = function() {
-                    fakeImg.width = 800;
-                    fakeImg.height = 500;
-                    scope.$digest();
-
-                    isoScope = $elm.isolateScope();
-                    isoScope.src = newUrl;
-                    isoScope.$digest();
-
-                    expect(typeof fakeImg.onload).toEqual('function');
-
-                    scope.$parent.preview = {};
-
-                    var handler = fakeImg.onload;
-                    handler.apply(fakeImg);
-                    expect(mySpy.calls.count()).toEqual(1);
-                };
-                expect(fn).toThrow(new Error('sdImageCrop: Sorry, but image must be at least ' +
-                    scope.rendition.width + 'x' + scope.rendition.height));
+                expect(mySpy.calls.count()).toEqual(0);
+                expect($elm.text())
+                    .toBe('Sorry, but image must be at least ' + scope.rendition.width + 'x' + scope.rendition.height +
+                          ', (it is 500x600).');
             }));
         });
     });

@@ -72,6 +72,15 @@
                 }
             };
         }])
+        .directive('sdItemState', function() {
+            return {
+                templateUrl: 'scripts/superdesk-archive/views/item-state.html',
+                scope: {
+                    'state': '=',
+                    'embargo': '='
+                }
+            };
+        })
         .directive('sdInlineMeta', function() {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/inline-meta.html',
@@ -319,14 +328,9 @@
                 template: '{{ name }}',
                 link: function(scope) {
                     scope.$watch('item', renderIngest);
-
-                    scope.name = '';
+                    scope.name = scope.item.source;
 
                     function renderIngest() {
-                        if (!scope.item.ingest_provider && 'source' in scope.item) {
-                            scope.name = scope.item.source;
-                        }
-
                         ingestSources.initialize().then(function() {
                             if (scope.item.ingest_provider && scope.item.ingest_provider in ingestSources.providersLookup) {
                                 scope.name = ingestSources.providersLookup[scope.item.ingest_provider].name;
@@ -432,6 +436,21 @@
                 }
             };
         }])
+        .directive('sdDraggableItem', function() {
+            return {
+                link: function(scope, elem) {
+                    if (scope.item) {
+                        elem.attr('draggable', true);
+                        // set item data on event
+                        elem.on('dragstart', function(event) {
+                            var dt = event.originalEvent.dataTransfer;
+                            dt.setData('application/superdesk.item.' + scope.item.type, angular.toJson(scope.item));
+                            dt.effectAllowed = 'link';
+                        });
+                    }
+                }
+            };
+        })
         .directive('sdItemCrops', ['metadata', function(metadata) {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/item-crops.html',

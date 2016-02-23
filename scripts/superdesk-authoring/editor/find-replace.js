@@ -84,7 +84,7 @@ function FindReplaceDirective($timeout, $rootScope, editor, macros) {
     };
 }
 
-angular.module('superdesk.authoring.find-replace', ['superdesk.editor', 'superdesk.authoring.widgets'])
+angular.module('superdesk.authoring.find-replace', ['superdesk.authoring.widgets'])
     .directive('sdFindReplace', FindReplaceDirective)
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider

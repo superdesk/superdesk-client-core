@@ -91,10 +91,10 @@ body, html {
             background-color: @grayLighter;
         }
     }
-    .proofread-toggle {
+
+    .toggle {
         position: absolute;
-        top: 9px;
-        right: 52px;
+        top: 12px;
         color: #666;
         height: 22px;
         padding: 4px 6px;
@@ -116,6 +116,14 @@ body, html {
             .box-shadow(inset 0 2px 0 rgba(55, 55, 55, 0.1));
             background-color: rgba(152, 152, 152, 0.3);
         }
+    }
+
+    .preview-toggle {
+        right: 90px;
+    }
+
+    .proofread-toggle {
+        right: 52px;
     }
 
     .theme-select {
@@ -251,7 +259,7 @@ body, html {
 	border: 1px solid #cacaca;
 	border-width:0 1px;
 	position:relative;
-	z-index:1;
+    z-index: 1;
 	padding: @main-article-padding;
 	margin:0 auto;
 	min-height:100%;
@@ -460,6 +468,8 @@ body, html {
 		p:last-child {
 			margin-bottom: 0 !important;
 		}
+        h2 {font-size: 1.5em;}
+        h3 {font-size: 1.25em;}
 	}
 
 	#body_footer {

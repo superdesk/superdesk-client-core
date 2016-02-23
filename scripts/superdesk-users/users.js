@@ -631,7 +631,6 @@
 
     return angular.module('superdesk.users', [
         'superdesk.activity',
-        'superdesk.config',
         'superdesk.asset'
     ])
 

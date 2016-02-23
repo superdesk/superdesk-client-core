@@ -76,6 +76,13 @@
             </div>
         </div>
 
+        <div class="field" ng-if="template.template_type !== 'kill'">
+          <label for="template-profile" translate>Template Profile</label>
+          <div class="control">
+            <input id="template-profile" ng-model="template.profile">
+          </div>
+        </div>
+
         <div class="field" ng-if="template.template_type !== 'kill' && template.is_public">
           <label for="template-desk" translate>Desk</label>
           <div class="control">
