@@ -322,7 +322,11 @@ function Authoring() {
         return bodyHtml.getText();
     };
 
-    this.focusBodyHTMLElement = function() {
+    this.getBodyInnerHtml = function() {
+        return bodyHtml.getInnerHtml();
+    };
+
+    this.focusBodyHtmlElement = function() {
         bodyHtml.click();
     };
 

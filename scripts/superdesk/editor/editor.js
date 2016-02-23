@@ -197,6 +197,14 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
         224: 1 // meta in firefox
     });
 
+    this.EDITING = Object.freeze({
+        13: 1, // enter
+        45: 1, // insert
+        17: 1, // delete
+        8: 1, // backspace
+        32: 1 // space
+    });
+
     /**
      * Test if given keyboard event should be ignored as it's not changing content.
      *
@@ -206,6 +214,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     this.shouldIgnore = function (event) {
         // ignore arrows
         if (self.ARROWS[event.keyCode]) {
+            event.stopPropagation();
             return true;
         }
 
@@ -216,6 +225,12 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
 
         // ignore shift + ctrl/meta + something
         if (event.shiftKey && (event.ctrlKey || event.metaKey)) {
+            return true;
+        }
+
+        // ignore editing keys
+        if (self.EDITING[event.keyCode]) {
+            event.stopPropagation();
             return true;
         }
 
@@ -718,7 +733,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                         scope.medium = new window.MediumEditor(scope.node, editorOptions);
 
                         editorElem.on('keydown', function(event) {
-                            event.stopPropagation();
                             if (editor.shouldIgnore(event)) {
                                 return;
                             }
