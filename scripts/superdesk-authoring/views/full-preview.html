@@ -39,7 +39,7 @@
             </div>
             <div class="headline">{{item.headline}}</div>
             <div ng-repeat="association in item.associations" class="association">
-                <img src="{{association.renditions.viewImage.href}}">
+                <img ng-src="{{association.renditions.viewImage.href}}">
             </div>
             <div class="byline">{{item.byline}}</div>
             <div sd-html-preview="item.body_html" class="body"></div>
