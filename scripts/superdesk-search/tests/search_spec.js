@@ -146,6 +146,19 @@ describe('sdSearchFacets directive', function () {
      * Mock some of the dependencies of the parent directives.
      */
     beforeEach(module(function ($provide) {
+        $provide.constant('config', {
+            model: {
+                timeformat: 'HH:mm:ss',
+                dateformat: 'DD/MM/YYYY'
+            },
+            view: {
+                timeformat: 'HH:mm',
+                dateformat: 'MM/DD/YYYY'
+            },
+            defaultTimezone: 'Europe/London',
+            server: {url: undefined}
+        });
+
         fakeApi = {
             ingestProviders: {
                 query: jasmine.createSpy()
@@ -206,6 +219,7 @@ describe('sdSearchFacets directive', function () {
     }));
 
     describe('reacting to changes in the item list', function () {
+
         beforeEach(function () {
             isoScope.items = {
                 _aggregations: {

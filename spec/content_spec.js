@@ -4,7 +4,8 @@
 var openUrl = require('./helpers/utils').open,
     workspace = require('./helpers/pages').workspace,
     content = require('./helpers/content'),
-    authoring = require('./helpers/authoring');
+    authoring = require('./helpers/authoring'),
+    testMoment = require('../bower_components/moment/moment');
 
 describe('content', function() {
 
@@ -33,11 +34,12 @@ describe('content', function() {
     }
 
     function setEmbargo() {
-        var embargoTS = new Date();
-        embargoTS.setDate(embargoTS.getDate() + 2);
-        var embargoDate = embargoTS.getDate() + '/' + (embargoTS.getMonth() + 1) + '/' +
-            embargoTS.getFullYear();
-        var embargoTime = embargoTS.toTimeString().slice(0, 8);
+        var now = testMoment();
+        //choose time with date not in a valid month number.
+        var embargoTS = now.set('year', now.year() + 1).set('month', 9).set('date', 22);
+        //default view time format in config
+        var embargoDate = embargoTS.format('MM/DD/YYYY');
+        var embargoTime = embargoTS.format('HH:mm');
 
         element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
         element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
@@ -202,7 +204,7 @@ describe('content', function() {
         content.closePreview();
     });
 
-    it('can enable/disable send and continue based on emabrgo', function() {
+    it('can enable/disable send and continue based on embargo', function() {
         // Initial steps before proceeding, to get initial state of send buttons.
         workspace.editItem('item3', 'SPORTS');
         authoring.sendTo('Sports Desk', 'Incoming Stage');

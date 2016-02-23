@@ -4,11 +4,11 @@
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', '$filter', 'privileges', 'datetimeHelper',
-    'preferencesService', 'archiveService'
+    'preferencesService', 'archiveService', 'config', 'moment'
 ];
 function MetadataCtrl(
-    $scope, desks, metadata, $filter,
-    privileges, datetimeHelper, preferencesService, archiveService) {
+    $scope, desks, metadata, $filter, privileges, datetimeHelper,
+    preferencesService, archiveService, config, moment) {
 
     desks.initialize()
     .then(function() {
@@ -121,8 +121,11 @@ function MetadataCtrl(
     function setPublishScheduleDate(newValue, oldValue) {
         if ((newValue || oldValue) && (newValue !== oldValue)) {
             if ($scope.item.publish_schedule_date && $scope.item.publish_schedule_time) {
-                $scope.item.publish_schedule = datetimeHelper.mergeDateTimeWithoutUtc($scope.item.publish_schedule_date,
-                    $scope.item.publish_schedule_time);
+                $scope.item.publish_schedule = datetimeHelper.mergeDateTime(
+                    $scope.item.publish_schedule_date,
+                    $scope.item.publish_schedule_time,
+                    $scope.item.time_zone
+                );
             } else {
                 $scope.item.publish_schedule = null;
             }
@@ -132,6 +135,12 @@ function MetadataCtrl(
     }
 
     $scope.$watch('item.embargo_date', function(newValue, oldValue) {
+        //set embargo time default on initial date selection
+        if (newValue && oldValue === undefined) {
+            $scope.item.embargo_time = moment('00:01', 'HH:mm')
+                .format(config.model.timeformat);
+        }
+
         setEmbargoTS(newValue, oldValue);
     });
 
@@ -146,8 +155,11 @@ function MetadataCtrl(
     function setEmbargoTS(newValue, oldValue) {
         if ((newValue || oldValue) && (newValue !== oldValue)) {
             if ($scope.item.embargo_date && $scope.item.embargo_time) {
-                $scope.item.embargo = datetimeHelper.mergeDateTimeWithoutUtc(
-                    $scope.item.embargo_date, $scope.item.embargo_time);
+                $scope.item.embargo = datetimeHelper.mergeDateTime(
+                    $scope.item.embargo_date,
+                    $scope.item.embargo_time,
+                    $scope.item.time_zone
+                );
             } else {
                 $scope.item.embargo = null;
             }
@@ -162,21 +174,22 @@ function MetadataCtrl(
      * the appropriate field.
      */
     function resolvePublishScheduleAndEmbargoTS() {
-        if ($scope.item.embargo) {
-            var embargoTS = new Date(Date.parse($scope.item.embargo));
-            $scope.item.embargo_date = $filter('formatDateTimeString')(embargoTS, 'MM/DD/YYYY');
-            $scope.item.embargo_time = $filter('formatDateTimeString')(embargoTS, 'HH:mm:ss');
-        }
-
-        if ($scope.item.publish_schedule) {
-            var publishSchedule = new Date(Date.parse($scope.item.publish_schedule));
-            $scope.item.publish_schedule_date = $filter('formatDateTimeString')(publishSchedule, 'MM/DD/YYYY');
-            $scope.item.publish_schedule_time = $filter('formatDateTimeString')(publishSchedule, 'HH:mm:ss');
-
-        }
+        var info;
 
         if ($scope.item.schedule_settings) {
             $scope.item.time_zone = $scope.item.schedule_settings.time_zone;
+        }
+
+        if ($scope.item.embargo) {
+            info = datetimeHelper.splitDateTime($scope.item.embargo, $scope.item.time_zone);
+            $scope.item.embargo_date = info.date;
+            $scope.item.embargo_time = info.time;
+        }
+
+        if ($scope.item.publish_schedule) {
+            info = datetimeHelper.splitDateTime($scope.item.publish_schedule, $scope.item.time_zone);
+            $scope.item.publish_schedule_date = info.date;
+            $scope.item.publish_schedule_time = info.time;
         }
     }
 

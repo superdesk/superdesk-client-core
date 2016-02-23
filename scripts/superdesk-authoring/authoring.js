@@ -2354,7 +2354,8 @@
             'superdesk.authoring.autosave',
             'superdesk.desks',
             'superdesk.notification',
-            'contenteditable'
+            'contenteditable',
+            'superdesk.config'
         ])
 
         .service('authoring', AuthoringService)

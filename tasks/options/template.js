@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         var server = grunt.option('server') || process.env.SUPERDESK_URL || url;
         var ws = grunt.option('ws') || process.env.SUPERDESK_WS_URL || 'ws://localhost:5100';
         var disableEditorToolbar = grunt.option('disableEditorToolbar');
-        var defaultTimezone = grunt.option('defaultTimezone');
+        var defaultTimezone = grunt.option('defaultTimezone') || 'Europe/London';
 
         if (forceUrl) {
             server = url;
@@ -27,7 +27,18 @@ module.exports = function(grunt) {
                 }
             },
             editor: {disableEditorToolbar: disableEditorToolbar},
-            defaultTimezone: defaultTimezone
+            defaultTimezone: defaultTimezone,
+            //these are angular model formats, should be consistent throughout the application
+            model: {
+                dateformat: 'DD/MM/YYYY',
+                timeformat: 'HH:mm:ss'
+            },
+            //view formats for datepickers/timepickers.
+            //KEEP DEFAULTS DIFFERENT FROM MODEL (for testing purposes)
+            view: {
+                dateformat: process.env.VIEW_DATE_FORMAT || 'MM/DD/YYYY',
+                timeformat: process.env.VIEW_TIME_FORMAT || 'HH:mm'
+            }
         };
 
         return {data: {
