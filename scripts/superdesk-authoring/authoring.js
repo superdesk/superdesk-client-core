@@ -2329,7 +2329,8 @@
             'superdesk.authoring.macros',
             'superdesk.authoring.autosave',
             'superdesk.desks',
-            'superdesk.notification'
+            'superdesk.notification',
+            'contenteditable'
         ])
 
         .service('authoring', AuthoringService)
