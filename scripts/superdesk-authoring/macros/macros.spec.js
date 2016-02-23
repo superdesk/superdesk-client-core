@@ -2,6 +2,7 @@
 
 describe('macros', function() {
     beforeEach(module('superdesk.authoring.macros'));
+    beforeEach(module('superdesk.editor'));
 
     it('can trigger macro with diff', inject(function(macros, api, $q, $rootScope) {
         var diff = {foo: 'bar'};

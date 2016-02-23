@@ -8,7 +8,7 @@ describe('DataService', function() {
     });
 
     beforeEach(module(function($provide) {
-        $provide.value('config', {server: {url: 'http://localhost'}});
+        $provide.constant('config', {server: {url: 'http://localhost'}});
     }));
 
     var DataAdapter, httpBackend;

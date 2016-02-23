@@ -261,7 +261,7 @@ describe('metadata list editing directive', function() {
         var elm = compileDirective(elmHtml, scopeValues);
         $rootScope.$digest();
         iScope = elm.isolateScope();
-        expect(iScope.terms.length).toBe(10);
+        expect(iScope.terms.length).toBe(8);
         expect(iScope.activeTree.length).toBe(2);
         expect(iScope.uniqueField).toBe('qcode');
     }));
@@ -306,10 +306,10 @@ describe('metadata list editing directive', function() {
         $rootScope.$digest();
         iScope = elm.isolateScope();
         expect(iScope.item[iScope.field].length).toBe(2);
-        expect(iScope.terms.length).toBe(10);
+        expect(iScope.terms.length).toBe(8);
         iScope.selectTerm(iScope.terms[0]);
         expect(iScope.item[iScope.field].length).toBe(3);
-        expect(iScope.terms.length).toBe(10);
+        expect(iScope.terms.length).toBe(8);
         expect(iScope.activeTree.length).toBe(2);
     }));
 
@@ -336,7 +336,7 @@ describe('metadata list editing directive', function() {
         iScope.openTree({'name': 'test', 'qcode': '111'}, event);
         expect(iScope.item[iScope.field].length).toBe(2);
         expect(iScope.activeTree.length).toBe(3);
-        expect(iScope.terms.length).toBe(10);
+        expect(iScope.terms.length).toBe(8);
     }));
 });
 

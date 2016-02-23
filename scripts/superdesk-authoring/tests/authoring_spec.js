@@ -7,6 +7,11 @@ describe('authoring', function() {
     var USER = 'user:1';
     var ITEM = {guid: GUID};
 
+    beforeEach(module(function($provide) {
+        $provide.constant('lodash', _);
+    }));
+
+    beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.preferences'));
     beforeEach(module('superdesk.archive'));
     beforeEach(module('superdesk.authoring'));
@@ -349,54 +354,8 @@ describe('cropImage', function() {
     beforeEach(module('superdesk.mocks'));
     beforeEach(module('superdesk.templates-cache'));
 
-    function startCropping() {
-        var $scope;
-
-        inject(function($rootScope, $controller, superdesk, gettext, notify, modal) {
-            $scope = $rootScope.$new();
-            $controller(superdesk.activity('edit.crop').controller, {
-                $scope: $scope,
-                'gettext': gettext,
-                'notify': notify,
-                'modal': modal
-            });
-        });
-
-        return $scope;
-    }
-
-    it('can record crop coordinates for cropped image',
-    inject(function($rootScope, $q, gettext, notify, modal, $injector, superdesk) {
-        $rootScope.locals = {data: {}};
-        var $scope = startCropping();
-
-        $scope.data = {
-            isDirty: false,
-            cropsizes: {0: {name: '4-3'}},
-            cropData: {}
-        };
-
-        expect($scope.preview[$scope.data.cropsizes[0].name]).toBe(undefined); //   expect loading indicator
-
-        $scope.preview = {
-            '4-3': {
-                cords: {x: 0, x2: 800, y: 0, y2: 600, w: 800, h: 600}
-            }
-        };
-
-        expect($scope.preview[$scope.data.cropsizes[0].name].cords).not.toBe(undefined); // expect Image loaded
-
-        var toMatch = {'CropLeft': 0, 'CropRight': 800, 'CropTop': 0, 'CropBottom': 600};
-
-        $scope.resolve = jasmine.createSpy('resolve');
-        $scope.done();
-        $rootScope.$digest();
-
-        expect($scope.data.cropData['4-3']).toEqual(toMatch);
-    }));
-
     it('can change button label for apply/edit crop',
-    inject(function($rootScope, $compile, $q, metadata, config) {
+    inject(function($rootScope, $compile, $q, metadata) {
         var metaInit = $q.defer();
 
         metadata.values = {
@@ -409,10 +368,6 @@ describe('cropImage', function() {
 
         var elem = $compile('<div sd-article-edit></div>')($rootScope.$new());
         var scope = elem.scope();
-
-        config.editor = {
-            disableEditorToolbar: true
-        };
 
         scope.item = {
             type: 'picture',
@@ -1766,6 +1721,7 @@ describe('authoring themes', function () {
 });
 
 describe('send item directive', function() {
+    beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.preferences'));
     beforeEach(module('superdesk.authoring'));
     beforeEach(module('superdesk.templates-cache'));
