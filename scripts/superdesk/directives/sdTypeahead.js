@@ -35,7 +35,8 @@
                     term: '=',
                     alwaysVisible: '=',
                     disabled: '=',
-                    blur: '&'
+                    blur: '&',
+                    placeholder: '@'
                 },
                 controller: ['$scope', function($scope) {
                     $scope.hide = true;
