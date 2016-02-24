@@ -296,9 +296,7 @@
                     }
                 }
 
-                var LIMIT = 10;
                 words.sort();
-                words.splice(LIMIT, words.length - LIMIT);
                 $scope.words = words;
             }
         };
@@ -323,6 +321,7 @@
     }
 
     var app = angular.module('superdesk.dictionaries', [
+        'vs-repeat',
         'superdesk.activity',
         'superdesk.upload'
     ]);
