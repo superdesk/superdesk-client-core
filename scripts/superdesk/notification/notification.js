@@ -101,21 +101,17 @@
         _this.message = null;
 
         $rootScope.$on('disconnected', function(event) {
-            if (!notify.disconnectionNotified) {
-                _this.message = 'Disconnected to Notification Server!';
-                $rootScope.$applyAsync(function () {
-                    notify.warning(gettext(_this.message), null, 'disconnection');
-                    notify.disconnectionNotified = true;
-                });
-            }
+            _this.message = gettext('Disconnected to Notification Server!');
+            $rootScope.$applyAsync(function () {
+                notify.warning(_this.message);
+            });
         });
 
         $rootScope.$on('connected', function(event) {
-            _this.message = 'Connected to Notification Server!';
+            _this.message = gettext('Connected to Notification Server!');
             $rootScope.$applyAsync(function () {
                 notify.stopWarning();   // stops disconnection warning, once connected.
-                notify.success(gettext(_this.message));
-                notify.disconnectionNotified = null;    // reset notification flag
+                notify.success(_this.message);
             });
         });
 
