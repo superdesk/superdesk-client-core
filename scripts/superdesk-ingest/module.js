@@ -57,7 +57,8 @@
         {value: 'anpa1312', name: 'ANPA Parser'},
         {value: 'iptc7901', name: 'IPTC 7901 Parser'},
         {value: 'dpa_iptc7901', name: 'DPA IPTC 7901 Parser'},
-        {value: 'zczc', name: 'ZCZC Parser'}
+        {value: 'zczc', name: 'ZCZC Parser'},
+        {value: 'ap_anpa1312', name: 'AP ANPA parser'}
     ]);
 
     var PROVIDER_DASHBOARD_DEFAULTS = {
