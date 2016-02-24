@@ -79,16 +79,22 @@ describe('Notify Connection Service', function() {
         });
     });
 
-    it('can show disconnection message when websocket disconnected', inject(function(notifyConnectionService) {
+    it('can show disconnection message when websocket disconnected', inject(function(notifyConnectionService, notify) {
+        notify.disconnectionNotified = null;
         msg = 'Disconnected to Notification Server!';
         rootScope.$broadcast('disconnected');
+        rootScope.$digest();
         expect(notifyConnectionService.message).toEqual(msg);
+        expect(notify.disconnectionNotified).toBe(true);
     }));
 
-    it('can show success message when websocket connected', inject(function(notifyConnectionService) {
+    it('can show success message when websocket connected', inject(function(notifyConnectionService, notify) {
+        notify.disconnectionNotified = true;
         msg = 'Connected to Notification Server!';
         rootScope.$broadcast('connected');
+        rootScope.$digest();
         expect(notifyConnectionService.message).toEqual(msg);
+        expect(notify.disconnectionNotified).toBe(null);
     }));
 
 });
