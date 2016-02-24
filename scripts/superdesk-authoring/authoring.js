@@ -2303,6 +2303,7 @@
 
                     if (scope.item.body_footer_value) {
                         scope.item.body_footer = scope.item.body_footer + scope.item.body_footer_value.value;
+                        mainEditScope.dirty = true;
                         autosave.save(scope.item);
                     }
 
