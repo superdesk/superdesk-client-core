@@ -123,24 +123,10 @@ describe('text editor', function() {
     }));
 
     it('can check if keyboard event is important or not', inject(function(editor) {
-
-        var eventObj = _.create({stopPropagation: function() {}});
-
-        eventObj = _.extend(eventObj, {keyCode: 16});
-        expect(editor.shouldIgnore(eventObj)).toBe(true);
-
-        eventObj = _.extend(eventObj, {keyCode: 39});
-        expect(editor.shouldIgnore(eventObj)).toBe(true);
-
-        eventObj = _.extend(eventObj, {keyCode: 13});
-        expect(editor.shouldIgnore(eventObj)).toBe(true);
-
-        eventObj = _.extend(eventObj, {keyCode: 65});
-        expect(editor.shouldIgnore(eventObj)).toBe(false);
-
-        eventObj = _.extend(eventObj, {shiftKey: true, ctrlKey: true, keyCode: 65});
-        expect(editor.shouldIgnore(eventObj)).toBe(true);
-
+        expect(editor.shouldIgnore({keyCode: 16})).toBe(true);
+        expect(editor.shouldIgnore({keyCode: 39})).toBe(true);
+        expect(editor.shouldIgnore({shiftKey: true, ctrlKey: true, keyCode: 65})).toBe(true);
+        expect(editor.shouldIgnore({keyCode: 65})).toBe(false);
     }));
 
     it('can observe and apply disableEditorToolbar configuration option',

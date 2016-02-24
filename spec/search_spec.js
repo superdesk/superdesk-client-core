@@ -278,7 +278,7 @@ describe('search', function() {
         expect(previewPane.isPresent()).toBe(false);    // UP arrow key avoided for opening preview
 
         // it should not effect global keyboard shortcuts (e.g: 'ctrl+d', 'ctrl+shift+d')
-        // testing 'ctrl+shift+d' shortcut that triggers spell checker when not set to automatic
+        // now test 'ctrl+shift+d' shortcut that triggers spell checker when not set to automatic
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
         authoring.toggleAutoSpellCheck();
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
@@ -294,7 +294,7 @@ describe('search', function() {
         expect(authoring.getBodyText()).toContain('Testhilite');
         expect(authoring.getBodyInnerHtml()).toContain('sderror sdhilite');
 
-        // testing 'ctrl+0' shortcut that triggers story search dialog box
+        // now test 'ctrl+0' shortcut that triggers story search dialog box
         browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, '0')).perform();
         browser.sleep(200);
         var storyNameEl = element(by.model('meta.unique_name'));
