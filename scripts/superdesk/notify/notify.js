@@ -15,8 +15,6 @@
 
                 this.messages = [];
 
-                //this.disconnectionNotified = null;
-
                 this.pop = function() {
                     return this.messages.pop();
                 };
@@ -52,10 +50,6 @@
                 };
 
                 this.stopSaving = function() {
-                    this.pop();
-                };
-
-                this.stopWarning = function() {
                     this.pop();
                 };
             }
