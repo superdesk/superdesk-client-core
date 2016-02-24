@@ -110,7 +110,7 @@
         $rootScope.$on('connected', function(event) {
             _this.message = gettext('Connected to Notification Server!');
             $rootScope.$applyAsync(function () {
-                notify.stopWarning();   // stops disconnection warning, once connected.
+                notify.pop();   // removes disconnection warning, once connected.
                 notify.success(_this.message);
             });
         });
