@@ -15,20 +15,24 @@
 
                 this.messages = [];
 
-                this.disconnectionNotified = null;
+                //this.disconnectionNotified = null;
 
                 this.pop = function() {
                     return this.messages.pop();
                 };
 
-                this.addMessage = function(type, text, ttl, context) {
+                this.addMessage = function(type, text, ttl) {
                     var self = this;
 
                     if (ttl == null) {
                         ttl = ttls[type];
                     }
 
-                    this.messages.push({type: type, msg: text, context: context});
+                    // add message, only if it's not already exist
+                    if (_.find(this.messages, _.matches({msg: text})) === undefined) {
+                        this.messages.push({type: type, msg: text});
+                    }
+
                     if (ttl) {
                         $timeout(function() {
                             self.pop();
@@ -38,8 +42,8 @@
 
                 angular.forEach(messageTypes, function(type) {
                     var self = this;
-                    this[type] = function(text, ttl, context) {
-                        self.addMessage(type, text, ttl, context);
+                    this[type] = function(text, ttl) {
+                        self.addMessage(type, text, ttl);
                     };
                 }, this);
 
@@ -64,12 +68,6 @@
                 templateUrl: 'scripts/superdesk/notify/views/notify.html',
                 link: function (scope, element, items) {
                     scope.messages = notify.messages;
-                    scope.removeMessage = function(index, msg) {
-                        scope.messages.splice(index, 1);
-                        if (msg.type === 'warning' && msg.context === 'disconnection') {
-                            notify.disconnectionNotified = null;
-                        }
-                    };
                 }
             };
         }]);
