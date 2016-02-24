@@ -11,20 +11,24 @@
                     error: 5000
                 };
 
+                var messageTypes = ['info', 'success', 'error', 'warning'];
+
                 this.messages = [];
+
+                this.disconnectionNotified = null;
 
                 this.pop = function() {
                     return this.messages.pop();
                 };
 
-                this.addMessage = function(type, text, ttl) {
+                this.addMessage = function(type, text, ttl, context) {
                     var self = this;
 
                     if (ttl == null) {
                         ttl = ttls[type];
                     }
 
-                    this.messages.push({type: type, msg: text});
+                    this.messages.push({type: type, msg: text, context: context});
                     if (ttl) {
                         $timeout(function() {
                             self.pop();
@@ -32,10 +36,10 @@
                     }
                 };
 
-                angular.forEach(['info', 'success', 'error', 'warning'], function(type) {
+                angular.forEach(messageTypes, function(type) {
                     var self = this;
-                    this[type] = function(text, ttl) {
-                        self.addMessage(type, text, ttl);
+                    this[type] = function(text, ttl, context) {
+                        self.addMessage(type, text, ttl, context);
                     };
                 }, this);
 
@@ -54,12 +58,18 @@
 
             return new NotifyService();
         }])
-        .directive('sdNotify', ['notify', function (notify) {
+        .directive('sdNotify', ['notify', '$rootScope', function (notify, $rootScope) {
             return {
                 scope: true,
                 templateUrl: 'scripts/superdesk/notify/views/notify.html',
                 link: function (scope, element, items) {
                     scope.messages = notify.messages;
+                    scope.removeMessage = function(index, msg) {
+                        scope.messages.splice(index, 1);
+                        if (msg.type === 'warning' && msg.context === 'disconnection') {
+                            notify.disconnectionNotified = null;
+                        }
+                    };
                 }
             };
         }]);

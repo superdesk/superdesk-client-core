@@ -13,7 +13,7 @@
     WebSocketProxy.$inject = ['$rootScope', 'config', '$interval', 'session', 'SESSION_EVENTS'];
     function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) {
 
-        var ws = null, notified;
+        var ws = null;
         var connectTimer = -1;
         var TIMEOUT = 5000;
 
@@ -71,14 +71,10 @@
             ws.onopen = function(event) {
                 $interval.cancel(connectTimer);
                 $rootScope.$broadcast('connected');
-                notified = null;
             };
 
             ws.onclose = function(event) {
-                if (!notified) {
-                    $rootScope.$broadcast('disconnected');
-                    notified = true;
-                }
+                $rootScope.$broadcast('disconnected');
 
                 $interval.cancel(connectTimer);
                 connectTimer = $interval(function() {
@@ -101,23 +97,26 @@
      */
     NotifyConnectionService.$inject = ['$rootScope', 'notify', 'gettext', '$timeout', 'session'];
     function NotifyConnectionService($rootScope, notify, gettext, $timeout, session) {
-        var successTimeout;
         var _this = this;
         _this.message = null;
 
         $rootScope.$on('disconnected', function(event) {
-            _this.message = 'Disconnected to Notification Server!';
-            $rootScope.$applyAsync(function () {
-                notify.warning(gettext(_this.message));
-            });
+            if (!notify.disconnectionNotified) {
+                _this.message = 'Disconnected to Notification Server!';
+                $rootScope.$applyAsync(function () {
+                    notify.warning(gettext(_this.message), null, 'disconnection');
+                    notify.disconnectionNotified = true;
+                });
+            }
         });
+
         $rootScope.$on('connected', function(event) {
             _this.message = 'Connected to Notification Server!';
-            $timeout.cancel(successTimeout);
-            successTimeout = $timeout(function() {
+            $rootScope.$applyAsync(function () {
                 notify.stopWarning();   // stops disconnection warning, once connected.
                 notify.success(gettext(_this.message));
-            }, 100);
+                notify.disconnectionNotified = null;    // reset notification flag
+            });
         });
 
         $rootScope.$on('vocabularies:updated', function(event, data) {
