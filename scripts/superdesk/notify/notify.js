@@ -11,6 +11,8 @@
                     error: 5000
                 };
 
+                var messageTypes = ['info', 'success', 'error', 'warning'];
+
                 this.messages = [];
 
                 this.pop = function() {
@@ -24,7 +26,11 @@
                         ttl = ttls[type];
                     }
 
-                    this.messages.push({type: type, msg: text});
+                    // add message, only if it's not already exist
+                    if (_.find(this.messages, _.matches({msg: text})) === undefined) {
+                        this.messages.push({type: type, msg: text});
+                    }
+
                     if (ttl) {
                         $timeout(function() {
                             self.pop();
@@ -32,7 +38,7 @@
                     }
                 };
 
-                angular.forEach(['info', 'success', 'error'], function(type) {
+                angular.forEach(messageTypes, function(type) {
                     var self = this;
                     this[type] = function(text, ttl) {
                         self.addMessage(type, text, ttl);
@@ -50,7 +56,7 @@
 
             return new NotifyService();
         }])
-        .directive('sdNotify', ['notify', function (notify) {
+        .directive('sdNotify', ['notify', '$rootScope', function (notify, $rootScope) {
             return {
                 scope: true,
                 templateUrl: 'scripts/superdesk/notify/views/notify.html',

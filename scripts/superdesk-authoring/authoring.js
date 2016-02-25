@@ -1943,7 +1943,9 @@
 
                 function runMacro(item, macro) {
                     if (macro) {
-                        return macros.call(macro, item, true);
+                        return macros.call(macro, item, true).then(function(res) {
+                            return angular.extend(item, res);
+                        });
                     }
 
                     return $q.when(item);
@@ -2299,6 +2301,7 @@
 
                     if (scope.item.body_footer_value) {
                         scope.item.body_footer = scope.item.body_footer + scope.item.body_footer_value.value;
+                        mainEditScope.dirty = true;
                         autosave.save(scope.item);
                     }
 
