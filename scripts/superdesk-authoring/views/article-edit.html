@@ -103,7 +103,7 @@
 <div class="field body" ng-if="!isMediaType && schema.body_html">
   <label translate>Body</label>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
-    <span ng-if="schema.body_html.maxlength" sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></span> 
+    <span ng-if="schema.body_html.maxlength" sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></span>
     <div id="bodyhtml"
          sd-text-editor
          data-config="{disableEditing: isPublished(item), multiBlockEdition: true}"
@@ -131,7 +131,7 @@
   <div class="abstract" ng-if="!_editable">{{item.description_text}}</div>
 </div>
 
-<div class="field" ng-if="metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !item.package_type">
+<div class="field" ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !item.package_type">
     <label translate>Helplines/Contact Information</label>
     <select id="helplines"
             ng-model="item.body_footer_value"

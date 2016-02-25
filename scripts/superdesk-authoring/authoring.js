@@ -74,7 +74,8 @@
         priority: {},
         urgency: {},
         subject: {},
-        ednote: {}
+        ednote: {},
+        footer: {}
     });
 
     /**
