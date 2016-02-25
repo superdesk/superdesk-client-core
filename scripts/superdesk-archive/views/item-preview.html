@@ -4,9 +4,11 @@
         <div class="composite-nav" ng-if="item.type === 'composite'">
           <i class="filetype-icon-large-composite"></i> <span>{{ 'Package preview' | translate }}</span>
         </div>
-
-        <div class="state-label state-{{item.state}}" ng-class="{state_embargo: item.embargo}">{{item.state | removeLodash}}</div>
-        <div class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</div>
+        <div class="preview-state__row">
+            <span class="state-label state-{{item.state}}" ng-class="{state_embargo: item.embargo}">{{item.state | removeLodash}}</span>
+            <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
+            <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
+        </div>
 
         <p class="title" ng-if="item.headline">{{ item.headline }}</p>
 

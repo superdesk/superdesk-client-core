@@ -35,11 +35,11 @@
 					<input class="line-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
 				</div>
 			</li>
-			<li class="terms-box">
+			<li class="terms-box" ng-if="!$root.config.features.alchemy">
 				<label translate>Keywords</label>
 				<div sd-meta-words-list data-item="item" data-field="keywords" data-change="autosave(item)" data-header="_editable" data-list="metadata.keywords" data-disabled="!_editable"></div>
 			</li>
-			<li class="terms-box">
+			<li class="terms-box" ng-if="$root.config.features.alchemy">
 				<label translate>Tags</label>
 				<div sd-meta-tags data-item="item" data-field="keywords" data-source-field="body_html" data-change="autosave(item)" data-disabled="!_editable">
 			</li>
@@ -70,8 +70,10 @@
 			</li>
 			<li>
 				<label translate>State</label>
-				<div class="data">
-					<div class="state-label state-{{item.state}}" ng-class="{state_embargo: item.embargo}">{{item.state | removeLodash}}</div>
+				<div class="preview-state__row">
+					<span class="state-label state-{{item.state}}" ng-class="{state_embargo: item.embargo}">{{item.state | removeLodash}}</span>
+					<span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
+                	<span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
 				</div>
 			</li>
 			<li class="terms-box">

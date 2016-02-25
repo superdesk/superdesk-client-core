@@ -14,7 +14,8 @@
     var app = angular.module('superdesk.searchProviders', ['superdesk.activity']);
 
     app.value('providerTypes', {
-        aapmm: 'AAP Multimedia'
+        aapmm: 'AAP Multimedia',
+        paimg: 'PA Images'
     });
 
     SearchProviderService.$inject = ['providerTypes'];
