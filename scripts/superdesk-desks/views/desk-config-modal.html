@@ -40,7 +40,7 @@
                             <div class="field desk-type">
                                 <label translate>Desk Type</label>
                                 <select id="deskType" ng-model="desk.edit.desk_type"
-                                        ng-options="deskType.value as deskType.name for deskType in deskTypes"
+                                        ng-options="type.qcode as type.name for type in deskTypes"
                                         required>
                                     <option value=""></option>
                                 </select>
