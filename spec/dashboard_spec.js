@@ -94,4 +94,27 @@ describe('dashboard', function() {
 
         expect(dashboard.getTextItem(0, 5, 1)).toBe('item6');
     });
+
+    it('can display \'not for publication\' state in monitoring widget for such item', function() {
+        monitoring.openMonitoring();
+        monitoring.turnOffWorkingStage(0);
+
+        expect(monitoring.getTextItem(2, 2)).toBe('item6');
+
+        monitoring.actionOnItem('Edit', 2, 2);
+        authoring.showInfo();
+        authoring.toggleNotForPublication();
+        authoring.save();
+        browser.sleep(300);
+
+        dashboard.openDashboard();
+        dashboard.showDashboardSettings();
+        dashboard.addWidget(1);  // the monitoring widget
+        dashboard.doneAction();
+
+        expect(dashboard.getTextItem(0, 3, 0)).toBe('item6');
+
+        dashboard.getItem(0, 3, 0).click(); // click item to preview
+        expect(dashboard.getStateLabel('not-for-publication').isDisplayed()).toBe(true);
+    });
 });
