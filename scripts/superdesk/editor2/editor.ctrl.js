@@ -12,7 +12,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element) {
             caption: attrs && attrs.caption || undefined,
             blockType: attrs && attrs.blockType || 'text',
             embedType: attrs && attrs.embedType || undefined,
-            association: attrs && attrs.association || {},
+            association: attrs && attrs.association || undefined,
             lowerAddEmbedIsExtented: undefined,
             showAndFocusLowerAddAnEmbedBox: function() {
                 this.lowerAddEmbedIsExtented = true;
@@ -106,19 +106,27 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element) {
         if (block !== undefined && block.body.trim() !== '') {
             blocks.push(block);
         }
-        // extract body and caption from embed block
+        // Complete embeds with metadata (from association datadata or html)
         blocks.forEach(function(block) {
             if (block.blockType === 'embed') {
-                var original_body = angular.element(angular.copy(block.body));
-                if (original_body.get(0).nodeName === 'FIGURE') {
-                    block.body = '';
-                    original_body.contents().toArray().forEach(function(element) {
-                        if (element.nodeName === 'FIGCAPTION') {
-                            block.caption = element.innerHTML;
-                        } else {
-                            block.body += element.outerHTML || element.nodeValue || '';
-                        }
-                    });
+                // for images that come from Superdesk, we use the association
+                if (block.association && block.embedType === 'Image') {
+                    block.caption = block.association.description_text;
+                    var url = block.association.renditions.viewImage.href;
+                    block.body = '<img alt="' + (_.escape(block.caption) || '') + '" src="' + url + '">';
+                } else {
+                    // extract body and caption from embed block html
+                    var original_body = angular.element(angular.copy(block.body));
+                    if (original_body.get(0).nodeName === 'FIGURE') {
+                        block.body = '';
+                        original_body.contents().toArray().forEach(function(element) {
+                            if (element.nodeName === 'FIGCAPTION') {
+                                block.caption = element.innerHTML;
+                            } else {
+                                block.body += element.outerHTML || element.nodeValue || '';
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -178,6 +186,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element) {
             return new_body;
         },
         commitChanges: function() {
+            // initialize associations if doesn't exist
             if (typeof vm.associations !== 'object') {
                 vm.associations = {};
             }
@@ -187,8 +196,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element) {
                     delete vm.associations[key];
                 }
             });
-            // update associations
+            // update associations with the ones stored in blocks
             angular.extend(vm.associations, vm.getAssociations());
+            // save model with latest state of blocks
             vm.model.$setViewValue(vm.serializeBlock());
         },
         /**
@@ -197,8 +207,13 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element) {
         getAssociations: function() {
             var association = {};
             vm.blocks.forEach(function(block) {
-                if (block.embedType === 'Image') {
-                    association['_embedded_' + vm.generateBlockId(block)] = angular.copy(block.association);
+                // we keep the association only for Superdesk images
+                if (block.association && block.embedType === 'Image') {
+                    var assoc = angular.copy(block.association);
+                    // update the association metadata with the caption (may have been updated by user in sdTextEditorBlockEmbed)
+                    assoc.description_text = block.caption;
+                    // add the association
+                    association['_embedded_' + vm.generateBlockId(block)] = assoc;
                 }
             });
             return association;
