@@ -339,7 +339,7 @@ function MetaTagsDirective(api) {
 
             scope.refresh = function() {
                 scope.refreshing = true;
-                var body = scope.item[scope.sourceField]
+                var body = (scope.item[scope.sourceField] || '')
                     .replace(/<br[^>]*>/gi, '&nbsp;')
                     .replace(/<\/?[^>]+>/gi, '').trim()
                     .replace(/&nbsp;/g, ' ');
