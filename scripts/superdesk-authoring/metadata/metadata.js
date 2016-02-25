@@ -567,7 +567,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             scope.selectTerm = function(term) {
                 if (term) {
                     // Only select terms that are not already selected
-                    if (!_.find(scope.item[scope.field], function(i) {return i.qcode === term.qcode;})) {
+                    if (!_.find(scope.item[scope.field], function(i) {return i[scope.uniqueField] === term[scope.uniqueField];})) {
                         //instead of simple push, extend the item[field] in order to trigger dirty $watch
                         var t = [];
 
