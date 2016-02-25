@@ -125,9 +125,16 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout'];
-function EditorService(spellcheck, $rootScope, $timeout) {
+EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q'];
+function EditorService(spellcheck, $rootScope, $timeout, $q) {
     this.settings = {spellcheck: true};
+
+    /**
+     * mock spellcheck integration
+     */
+    this.countErrors = function() {
+        return $q.when(0);
+    };
 
     this.KEY_CODES = Object.freeze({
         Y: 'Y'.charCodeAt(0),
