@@ -557,11 +557,12 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     }
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope'];
-function SdTextEditorBlockEmbedController($timeout, $element, $scope) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'lodash'];
+function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, _) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
+        caption: undefined,  // defined below
         editable: false,
         toggleEdition: function() {
             vm.editable = !vm.editable;
@@ -569,8 +570,7 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope) {
         updateEmbedPreview: function() {
             angular.element($element).find('.preview--embed').html(vm.model.body);
         },
-        // in edition
-        save: function() {
+        saveEmbedCode: function() {
             // update the block's model
             angular.extend(vm.model, {
                 body: vm.embedCode
@@ -581,11 +581,53 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope) {
         },
         cancel: function() {
             vm.embedCode = vm.model.body;
+        },
+        saveCaption: function(caption) {
+            // if block is a superdesk image (with association), we update the description_text
+            if (vm.model.association) {
+                vm.model.association.description_text = caption;
+            }
+            // update the caption in the model
+            vm.model.caption = caption;
+            // update the caption in the view
+            vm.caption = caption;
+            // on change callback
+            vm.onBlockChange();
+        },
+        editPicture: function(picture) {
+            // only for SD images (with association)
+            if (!vm.model.association) {
+                return false;
+            }
+            superdesk.intent('edit', 'crop', {item: picture, renditions: [{name: 'embed'}], showMetadataEditor: true})
+            .then(function(cropData) {
+                // return the cropped image
+                api.save('picture_crop', {item: picture, crop: cropData.embed})
+                .then(function(image) {
+                    var url = image.href;
+                    // update association
+                    vm.model.association.renditions.embed = {
+                        href: url,
+                        width: image.width,
+                        height: image.height,
+                        media: image._id,
+                        mimetype: image.item.mimetype
+                    };
+                    // update block
+                    vm.model.body = '<img alt="' + _.escape(vm.model.caption) + '" src="' + url + '">';
+                    vm.updateEmbedPreview();
+                    // update caption
+                    vm.saveCaption(vm.model.association.description_text);
+                });
+            });
         }
     });
     $timeout(function() {
         vm.updateEmbedPreview();
-        vm.embedCode = vm.model.body;
+        angular.extend(vm, {
+            embedCode: vm.model.body,
+            caption: vm.model.caption
+        });
     });
 }
 

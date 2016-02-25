@@ -112,7 +112,13 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element) {
                 // for images that come from Superdesk, we use the association
                 if (block.association && block.embedType === 'Image') {
                     block.caption = block.association.description_text;
-                    var url = block.association.renditions.viewImage.href;
+                    var url;
+                    // prefers "embed" for image url, otherwise "viewImage"
+                    if (block.association.renditions.embed) {
+                        url = block.association.renditions.embed.href;
+                    } else {
+                        url = block.association.renditions.viewImage.href;
+                    }
                     block.body = '<img alt="' + (_.escape(block.caption) || '') + '" src="' + url + '">';
                 } else {
                     // extract body and caption from embed block html
@@ -209,11 +215,8 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element) {
             vm.blocks.forEach(function(block) {
                 // we keep the association only for Superdesk images
                 if (block.association && block.embedType === 'Image') {
-                    var assoc = angular.copy(block.association);
-                    // update the association metadata with the caption (may have been updated by user in sdTextEditorBlockEmbed)
-                    assoc.description_text = block.caption;
                     // add the association
-                    association['_embedded_' + vm.generateBlockId(block)] = assoc;
+                    association['_embedded_' + vm.generateBlockId(block)] = angular.copy(block.association);
                 }
             });
             return association;

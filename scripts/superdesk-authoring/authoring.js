@@ -859,12 +859,25 @@
         $scope.data = $scope.locals.data;
         $scope.data.cropData = {};
         $scope.data.isDirty = false;
+        // should show the metadata form in the view
+        $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
+        // initialize metadata from `item`
+        if ($scope.data.showMetadataEditor) {
+            $scope.data.metadata = {};
+            ['headline', 'description_text', 'slugline', 'byline'].forEach(function(key) {
+                $scope.data.metadata[key] = $scope.data.item[key];
+            });
+        }
 
         /*
         * Records the coordinates for each crop sizes available and
         * notify the user and then resolve the activity.
         */
         $scope.done = function() {
+            if ($scope.data.showMetadataEditor) {
+                // update metadata in `item`
+                angular.extend($scope.data.item, $scope.data.metadata);
+            }
             notify.success(gettext('Crop changes have been recorded'));
             $scope.resolve($scope.data.cropData);
         };
@@ -2872,7 +2885,7 @@
                 renditions.get();
 
                 scope.edit = function(item) {
-                    superdesk.intent('edit', 'crop', {item: item, renditions: renditions.renditions})
+                    superdesk.intent('edit', 'crop', {item: item, renditions: renditions.renditions, showMetadataEditor: true})
                         .then(function(crops) {
                             var renditions = angular.extend({}, item.renditions || {});
                             angular.forEach(crops, function(crop, renditionName) {
