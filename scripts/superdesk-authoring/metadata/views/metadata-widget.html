@@ -70,8 +70,10 @@
 			</li>
 			<li>
 				<label translate>State</label>
-				<div class="data">
-					<div class="state-label state-{{item.state}}" ng-class="{state_embargo: item.embargo}">{{item.state | removeLodash}}</div>
+				<div class="preview-state__row">
+					<span class="state-label state-{{item.state}}" ng-class="{state_embargo: item.embargo}">{{item.state | removeLodash}}</span>
+					<span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
+                	<span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
 				</div>
 			</li>
 			<li class="terms-box">

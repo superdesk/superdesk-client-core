@@ -80,14 +80,16 @@ describe('Notify Connection Service', function() {
     });
 
     it('can show disconnection message when websocket disconnected', inject(function(notifyConnectionService) {
-        msg = 'Disconnected to Notification Server, attempting to reconnect ...';
+        msg = 'Disconnected to Notification Server!';
         rootScope.$broadcast('disconnected');
+        rootScope.$digest();
         expect(notifyConnectionService.message).toEqual(msg);
     }));
 
     it('can show success message when websocket connected', inject(function(notifyConnectionService) {
         msg = 'Connected to Notification Server!';
         rootScope.$broadcast('connected');
+        rootScope.$digest();
         expect(notifyConnectionService.message).toEqual(msg);
     }));
 

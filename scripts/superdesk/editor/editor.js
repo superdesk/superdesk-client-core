@@ -473,6 +473,15 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     };
 
     /**
+     * Returns the cleaned node text
+     *
+     * @return {string}
+     */
+    this.getNodeText = function(scope) {
+        return clean(scope.node).innerHTML;
+    };
+
+    /**
      * Get active node text
      *
      * @return {string}
@@ -693,6 +702,12 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
 
                 ngModel.$viewChangeListeners.push(changeListener);
 
+                scope.$watch('model.$viewValue', function(newValue, oldValue) {
+                    if (newValue !== editor.getNodeText(scope)) {
+                        ngModel.$render(true);
+                    }
+                }, true);
+
                 var ctrlOperations = {};
                 ctrlOperations[editor.KEY_CODES.Z] = doUndo;
                 ctrlOperations[editor.KEY_CODES.Y] = doRedo;
@@ -700,8 +715,8 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                 scope.$on('spellcheck:run', render);
                 keyboardManager.bind('ctrl+shift+d', render);
 
-                ngModel.$render = function () {
-                    if (!scope.history || scope.history.getIndex() === -1) {
+                ngModel.$render = function (force) {
+                    if (!scope.history || scope.history.getIndex() === -1 || force) {
                         editorElem = elem.find('.editor-type-html');
                         editorElem.empty();
                         editorElem.html(ngModel.$viewValue || '');

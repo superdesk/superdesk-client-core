@@ -112,7 +112,7 @@ function Authoring() {
         return this.save_publish_button.click();
     };
 
-    this.publish = function() {
+    this.publish = function(skipConfirm) {
         browser.wait(function() {
             return this.sendToButton.isDisplayed();
         }.bind(this), 1000);
@@ -121,7 +121,17 @@ function Authoring() {
         browser.wait(function() {
             return this.publish_button.isDisplayed();
         }.bind(this), 1000);
-        return this.publish_button.click();
+
+        this.publish_button.click();
+
+        if (!skipConfirm) {
+            var modal = element(by.className('modal-dialog'));
+            modal.isPresent().then(function(click) {
+                if (click) {
+                    modal.element(by.className('btn-primary')).click();
+                }
+            });
+        }
     };
 
     this.correct = function() {
@@ -163,6 +173,10 @@ function Authoring() {
 
     this.showInfo = function() {
         return element(by.id('Info')).click();
+    };
+
+    this.toggleNotForPublication = function() {
+        element(by.model('item.flags.marked_for_not_publication')).click();
     };
 
     this.showPackages = function() {

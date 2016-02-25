@@ -119,7 +119,7 @@ function MetadataCtrl(
     });
 
     function setPublishScheduleDate(newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if ((newValue || oldValue) && (newValue !== oldValue)) {
             if ($scope.item.publish_schedule_date && $scope.item.publish_schedule_time) {
                 $scope.item.publish_schedule = datetimeHelper.mergeDateTimeWithoutUtc($scope.item.publish_schedule_date,
                     $scope.item.publish_schedule_time);
@@ -144,7 +144,7 @@ function MetadataCtrl(
      * values of both Embargo Date and Embargo Time to form Timestamp.
      */
     function setEmbargoTS(newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if ((newValue || oldValue) && (newValue !== oldValue)) {
             if ($scope.item.embargo_date && $scope.item.embargo_time) {
                 $scope.item.embargo = datetimeHelper.mergeDateTimeWithoutUtc(
                     $scope.item.embargo_date, $scope.item.embargo_time);
@@ -565,7 +565,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             scope.selectTerm = function(term) {
                 if (term) {
                     // Only select terms that are not already selected
-                    if (!_.find(scope.item[scope.field], function(i) {return i.qcode === term.qcode;})) {
+                    if (!_.find(scope.item[scope.field], function(i) {return i[scope.uniqueField] === term[scope.uniqueField];})) {
                         //instead of simple push, extend the item[field] in order to trigger dirty $watch
                         var t = _.clone(scope.item[scope.field]) || [];
                         t.push(angular.extend({}, term, {
@@ -754,8 +754,12 @@ function MetadataService(api, $q) {
                     self.values[vocabulary._id] = vocabulary.items;
                 });
                 self.cvs = result._items;
-                self.values.targeted_for = _.sortBy(_.union(self.values.geographical_restrictions, self.values.subscriber_types),
-                    function(target) { return target.value.toLowerCase() === 'all' ? '' : target.name; });
+                self.values.targeted_for = _.sortBy(
+                    _.union(self.values.geographical_restrictions, self.values.subscriber_types),
+                    function(target) {
+                        return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
+                    }
+                );
             });
         },
         fetchSubjectcodes: function(code) {

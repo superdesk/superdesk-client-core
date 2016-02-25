@@ -15,7 +15,7 @@
 
         var ws = null;
         var connectTimer = -1;
-        var TIMEOUT = 5500;
+        var TIMEOUT = 5000;
 
         var ReloadEvents = [
             'user_disabled',
@@ -75,6 +75,7 @@
 
             ws.onclose = function(event) {
                 $rootScope.$broadcast('disconnected');
+
                 $interval.cancel(connectTimer);
                 connectTimer = $interval(function() {
                     if (ws && session.sessionId) {
@@ -96,23 +97,22 @@
      */
     NotifyConnectionService.$inject = ['$rootScope', 'notify', 'gettext', '$timeout', 'session'];
     function NotifyConnectionService($rootScope, notify, gettext, $timeout, session) {
-        var successTimeout, alertTimeout;
         var _this = this;
         _this.message = null;
 
         $rootScope.$on('disconnected', function(event) {
-            _this.message = 'Disconnected to Notification Server, attempting to reconnect ...';
-            $timeout.cancel(alertTimeout);
-            alertTimeout = $timeout(function() {
-                notify.error(gettext(_this.message));
-            }, 100);
+            _this.message = gettext('Disconnected to Notification Server!');
+            $rootScope.$applyAsync(function () {
+                notify.warning(_this.message);
+            });
         });
+
         $rootScope.$on('connected', function(event) {
-            _this.message = 'Connected to Notification Server!';
-            $timeout.cancel(successTimeout);
-            successTimeout = $timeout(function() {
-                notify.success(gettext(_this.message));
-            }, 100);
+            _this.message = gettext('Connected to Notification Server!');
+            $rootScope.$applyAsync(function () {
+                notify.pop();   // removes disconnection warning, once connected.
+                notify.success(_this.message);
+            });
         });
 
         $rootScope.$on('vocabularies:updated', function(event, data) {
