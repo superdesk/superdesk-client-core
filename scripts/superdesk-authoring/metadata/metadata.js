@@ -119,7 +119,7 @@ function MetadataCtrl(
     });
 
     function setPublishScheduleDate(newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if ((newValue || oldValue) && (newValue !== oldValue)) {
             if ($scope.item.publish_schedule_date && $scope.item.publish_schedule_time) {
                 $scope.item.publish_schedule = datetimeHelper.mergeDateTimeWithoutUtc($scope.item.publish_schedule_date,
                     $scope.item.publish_schedule_time);
@@ -144,7 +144,7 @@ function MetadataCtrl(
      * values of both Embargo Date and Embargo Time to form Timestamp.
      */
     function setEmbargoTS(newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if ((newValue || oldValue) && (newValue !== oldValue)) {
             if ($scope.item.embargo_date && $scope.item.embargo_time) {
                 $scope.item.embargo = datetimeHelper.mergeDateTimeWithoutUtc(
                     $scope.item.embargo_date, $scope.item.embargo_time);
@@ -245,15 +245,16 @@ function MetaDropdownDirective($filter, keyboardManager) {
             field: '@',
             icon: '@',
             label: '@',
-            change: '&'
+            change: '&',
+            key: '@'
         },
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
             scope.select = function(item) {
                 var o = {};
 
-                if (angular.isDefined(item)) {
-                    o[scope.field] = (scope.field === 'place' || scope.field === 'genre') ? [item] : item.value;
+                if (item) {
+                    o[scope.field] = scope.key ? item[scope.key] : [item];
                 } else {
                     o[scope.field] = null;
                 }
@@ -339,7 +340,7 @@ function MetaTagsDirective(api) {
 
             scope.refresh = function() {
                 scope.refreshing = true;
-                var body = scope.item[scope.sourceField]
+                var body = (scope.item[scope.sourceField] || '')
                     .replace(/<br[^>]*>/gi, '&nbsp;')
                     .replace(/<\/?[^>]+>/gi, '').trim()
                     .replace(/&nbsp;/g, ' ');
@@ -462,6 +463,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
         scope: {
             item: '=',
             field: '@',
+            dependent: '@',
             disabled: '=ngDisabled',
             list: '=',
             unique: '=',
@@ -503,8 +505,8 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             });
 
             scope.$watch('item[field]', function(selected) {
+                scope.terms = filterSelected(scope.list);
                 if (scope.cv) { // filter out items from current cv
-                    scope.terms = filterSelected(scope.list);
                     scope.selectedItems = _.filter(selected, function(term) {
                         return term.scheme === scope.cv._id;
                     });
@@ -565,20 +567,51 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             scope.selectTerm = function(term) {
                 if (term) {
                     // Only select terms that are not already selected
-                    if (!_.find(scope.item[scope.field], function(i) {return i.qcode === term.qcode;})) {
+                    if (!_.find(scope.item[scope.field], function(i) {return i[scope.uniqueField] === term[scope.uniqueField];})) {
                         //instead of simple push, extend the item[field] in order to trigger dirty $watch
-                        var t = _.clone(scope.item[scope.field]) || [];
+                        var t = [];
+
+                        if (!term.single_value) {
+                            t = _.clone(scope.item[scope.field]) || [];
+                        }
+
+                        if (scope.cv && scope.cv.single_value) {
+                            t = _.filter(t, function(term) {
+                                return term.scheme !== scope.cv._id;
+                            });
+                        }
+
+                        //build object
+                        var o = {};
+
+                        // dependent is set only for category
+                        if (scope.dependent) {
+                            if (term.single_value) {
+                                // if only single selection supported -> reset all selected values on dependent CVs
+                                o[scope.dependent] = [];
+                            } else {
+                                //delete if already selected a service with single value
+                                _.forEach(scope.item[scope.field], function(service) {
+                                    if (service.single_value) {
+                                        o[scope.dependent] = [];
+                                        t = [];
+                                    }
+                                });
+                            }
+                        }
+
                         t.push(angular.extend({}, term, {
                             scheme: scope.cv ? scope.cv._id : null
                         }));
 
-                        //build object
-                        var o = {};
                         o[scope.field] = t;
                         _.extend(scope.item, o);
                     }
 
+                    scope.activeTerm = '';
                     scope.selectedTerm = '';
+                    scope.searchTerms();
+                    scope.activeTree = scope.tree[null];
 
                     if (!reloadList) {
                         // Remove the selected term from the terms
@@ -620,6 +653,10 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 }
 
                 tempItem[scope.field] = filteredArray;
+                if (scope.dependent && term.single_value) {
+                    tempItem[scope.dependent] = [];
+                }
+
                 _.extend(scope.item, tempItem);
 
                 if (!reloadList) {
@@ -754,8 +791,12 @@ function MetadataService(api, $q) {
                     self.values[vocabulary._id] = vocabulary.items;
                 });
                 self.cvs = result._items;
-                self.values.targeted_for = _.sortBy(_.union(self.values.geographical_restrictions, self.values.subscriber_types),
-                    function(target) { return target.value.toLowerCase() === 'all' ? '' : target.name; });
+                self.values.targeted_for = _.sortBy(
+                    _.union(self.values.geographical_restrictions, self.values.subscriber_types),
+                    function(target) {
+                        return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
+                    }
+                );
             });
         },
         fetchSubjectcodes: function(code) {

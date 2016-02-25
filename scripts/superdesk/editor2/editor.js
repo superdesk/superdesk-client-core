@@ -125,9 +125,16 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout'];
-function EditorService(spellcheck, $rootScope, $timeout) {
+EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q'];
+function EditorService(spellcheck, $rootScope, $timeout, $q) {
     this.settings = {spellcheck: true};
+
+    /**
+     * mock spellcheck integration
+     */
+    this.countErrors = function() {
+        return $q.when(0);
+    };
 
     this.KEY_CODES = Object.freeze({
         Y: 'Y'.charCodeAt(0),
@@ -925,10 +932,11 @@ angular.module('superdesk.editor2', [
                                 });
                             }
                         });
-                        editorConfig.toolbar.buttons.push('embed', 'picture');
+                        editorConfig.toolbar.buttons.push('embed', 'picture', 'table');
                         editorConfig.extensions = {
                             'embed': new EmbedButton(),
-                            'upload': new PictureButton()
+                            'upload': new PictureButton(),
+                            'table': new window.MediumEditorTable()
                         };
                     }
                     // FIXME: create unwanted cursor moves

@@ -898,6 +898,8 @@
 
                     var expiryfield = attrs.expiryfield;
                     scope.ContentExpiry = {
+                        Expire: true,
+                        Days: 0,
                         Hours: 0,
                         Minutes: 0,
                         Header: 'Content Expiry'
@@ -915,8 +917,12 @@
                         scope.item[expiryfield] = getTotalExpiryMinutes(scope.ContentExpiry);
                     }, true);
 
+                    function getExpiryDays(inputMin) {
+                        return Math.floor(inputMin / (60 * 24));
+                    }
+
                     function getExpiryHours(inputMin) {
-                        return Math.floor(inputMin / 60);
+                        return Math.floor((inputMin / 60) % 24);
                     }
 
                     function getExpiryMinutes(inputMin) {
@@ -924,19 +930,29 @@
                     }
 
                     function getTotalExpiryMinutes(contentExpiry) {
-                        return (contentExpiry.Hours * 60) + contentExpiry.Minutes;
+                        if (contentExpiry.Expire) {
+                            return (contentExpiry.Days * 24 * 60) + (contentExpiry.Hours * 60) + contentExpiry.Minutes;
+                        } else {
+                            return -1;
+                        }
                     }
 
                     var setContentExpiry = function(item) {
 
                         scope.ContentExpiry.Header = scope.header;
+                        scope.ContentExpiry.Expire = true;
+                        scope.ContentExpiry.Days = 0;
+                        scope.ContentExpiry.Hours = 0;
+                        scope.ContentExpiry.Minutes = 0;
 
                         if (item && item[expiryfield] != null) {
-                            scope.ContentExpiry.Hours = getExpiryHours(item[expiryfield]);
-                            scope.ContentExpiry.Minutes = getExpiryMinutes(item[expiryfield]);
-                        } else {
-                            scope.ContentExpiry.Hours = 0;
-                            scope.ContentExpiry.Minutes = 0;
+                            if (item[expiryfield] < 0) {
+                                scope.ContentExpiry.Expire = false;
+                            } else {
+                                scope.ContentExpiry.Days = getExpiryDays(item[expiryfield]);
+                                scope.ContentExpiry.Hours = getExpiryHours(item[expiryfield]);
+                                scope.ContentExpiry.Minutes = getExpiryMinutes(item[expiryfield]);
+                            }
                         }
                     };
                 }
