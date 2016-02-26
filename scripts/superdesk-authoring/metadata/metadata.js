@@ -245,15 +245,16 @@ function MetaDropdownDirective($filter, keyboardManager) {
             field: '@',
             icon: '@',
             label: '@',
-            change: '&'
+            change: '&',
+            key: '@'
         },
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
             scope.select = function(item) {
                 var o = {};
 
-                if (angular.isDefined(item)) {
-                    o[scope.field] = (scope.field === 'place' || scope.field === 'genre') ? [item] : item.value;
+                if (item) {
+                    o[scope.field] = scope.key ? item[scope.key] : [item];
                 } else {
                     o[scope.field] = null;
                 }
