@@ -101,13 +101,13 @@
 		height: @nav-height;
 		float: left;
 	}
-
         .dropdown {
             position: relative;
             float: left;
             &.navbtn, button {
                 .box-shadow(none);
-                border-right: none;
+                border: none;
+								width: auto;
                 .name {
                     display: block;
                     float: left;
@@ -147,7 +147,7 @@
             }
             .dropdown-menu {
                 min-width: 295px;
-                max-height: 350px;
+                max-height: 550px;
                 overflow: auto;
                 margin: 0;
                 padding: 0;
@@ -158,7 +158,7 @@
                     padding: 5px 15px;
                     margin-top: 9px;
                     border-top: 1px solid #ebebeb;
-                    &:first-of-type { 
+                    &:first-of-type {
                         margin-top: 0;
                         border-top: 0;
                     }

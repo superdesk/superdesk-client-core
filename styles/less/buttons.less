@@ -9,6 +9,7 @@
 @btnSuccessColor: #53a93f;
 @btnDangerColor : #c83929;
 @btnInverseColor : #141414;
+@btnCustomColor : #666;
 
 
 //mixin
@@ -84,6 +85,10 @@
 }
 .btn-inverse {
     .buttonStates(@btnInverseColor, @white);
+}
+.btn-custom {
+    .buttonStates(@btnCustomColor, @white);
+    white-space: nowrap;
 }
 
 .btn-light {
@@ -192,20 +197,27 @@ input[type="submit"].btn {
 
 // Sub-Navigation buttons
 // --------------------------------------------------
+.subnav {
+    .button-stack .btn {
+        padding: 8px 20px;
+        height: 28px;
+    }
+}
 
 .navbtn {
     float: left;
-    padding: 0 14px;
+    padding: 0 10px;
     width: auto;
     background: transparent;
     color:#333;
     height: @subnav-height;
+    width:48px;
     display: block;
     text-align: center;
     line-height:@subnav-height;
     text-decoration: none !important;
     border:0;
-    border-right: 1px solid rgba(0,0,0,0.1);
+    border-left: 1px solid rgba(0,0,0,0.1);
     box-sizing: border-box;
     &.navbtn-info {
         background: @sd-blue;
@@ -217,7 +229,7 @@ input[type="submit"].btn {
     }
 
     &:hover {
-        background: #e0e0e0;
+        background: rgba(255,255,255,0.5);
         &.navbtn-info {
             background:  lighten(@sd-blue, 5%);
         }
@@ -226,23 +238,7 @@ input[type="submit"].btn {
     i {
         vertical-align: middle;
     }
-    .title {
-        text-transform: uppercase;
-    }
 
-    i + .title {
-        margin-left: 10px;
-    }
-    &.navbtn-hover {
-        .title {
-            display: none;
-        }
-        &:hover {
-            .title {
-                display: inline;
-            }
-        }
-    }
     &.disabled {
         background: #e1e1e1;
         &:hover {
@@ -266,13 +262,6 @@ input[type="submit"].btn {
         }
         span + i {
             margin-left: 10px;
-        }
-    }
-    &.strict {
-        width: 48px;
-        [class^="big-icon-"], [class*=" big-icon-"] {
-            margin-left: -4px !important;
-            margin-top: -2px;
         }
     }
     &.sd-create-btn, .sd-create-btn {
@@ -320,68 +309,87 @@ input[type="submit"].btn {
             }
         }
     }
-
-
     a {
         display: block !important;
         height: 25px !important;
         line-height: 25px !important;
     }
+    &--with-text {
+      width:auto;
+      transition: all 0.2s;
+      .title {
+          text-transform: uppercase;
+      }
 
-    &.toggle-list {
-        .box-sizing(border-box);
-        padding: 14px 7px 14px 17px;
-        border: 0;
-        ul {
-            .clearfix();
-            text-align: left;
-            margin-top: -10px;
+      i + .title {
+          margin-left: 10px;
+      }
+      &.navbtn-hover {
+          .title {
+              display: none;
+          }
+          &:hover {
+              .title {
+                  display: inline;
+              }
+          }
+      }
+    }
+}
 
-            li {
-                float: left;
-                .border-box();
-                margin: 7px 0 0 0 !important;
-                padding-right: 10px;
-                a {
-                    display: block;
-                    .border-radius(2px);
-                    .box-sizing(border-box);
-                    padding: 0 10px;
-                    color: #4f4f4f;
-                    text-decoration: none;
-                    text-transform: uppercase;
-                    font-size: 11px;
-                    background: #fff !important;
-                    border: 1px solid #d7d7d7;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    &:hover {
-                        background: @white
-                    }
-                    b {
-                        margin-left: 5px;
-                        font-size: 14px;
-                        color: #949494;
-                        .text-light();
-                    }
+.toggle-list {
+    .box-sizing(border-box);
+    padding: 14px 7px 14px 17px;
+    border: 0;
+    ul {
+        .clearfix();
+        text-align: left;
+        margin-top: -10px;
+
+        li {
+            float: left;
+            .border-box();
+            margin: 7px 0 0 0 !important;
+            padding-right: 10px;
+            a {
+                display: block;
+                .border-radius(2px);
+                .box-sizing(border-box);
+                padding: 0 10px;
+                color: #4f4f4f;
+                text-decoration: none;
+                text-transform: uppercase;
+                font-size: 11px;
+                background: #fff !important;
+                border: 1px solid #d7d7d7;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                &:hover {
+                    background: @white
                 }
-                &.active a {
+                b {
+                    margin-left: 5px;
+                    font-size: 14px;
+                    color: #949494;
+                    .text-light();
+                }
+            }
+            &.active a {
+                background: #505050 !important;
+                border-color: #505050 !important;
+                border-top: 0 !important;
+                color: #fff !important;
+                .box-shadow(inset 0 2px 0px darken(#505050, 10%)) !important;
+                &:hover {
                     background: #505050 !important;
-                    border-color: #505050 !important;
-                    border-top: 0 !important;
-                    color: #fff !important;
-                    .box-shadow(inset 0 2px 0px darken(#505050, 10%)) !important;
-                    &:hover {
-                        background: #505050 !important;
-                    }
                 }
             }
         }
+    }
 
-        &:hover {
-            background: none;
-        }
+    &:hover {
+        background: none;
     }
 }
 
