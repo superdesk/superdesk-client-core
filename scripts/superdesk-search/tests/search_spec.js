@@ -75,11 +75,11 @@ describe('search service', function() {
         search.setSort('urgency');
         $rootScope.$digest();
         expect($location.search().sort).toBe('urgency:desc');
-        expect(search.getSort()).toEqual({label: 'News Value', field: 'urgency', dir: 'desc'});
+        expect(search.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'desc'});
 
         search.toggleSortDir();
         $rootScope.$digest();
-        expect(search.getSort()).toEqual({label: 'News Value', field: 'urgency', dir: 'asc'});
+        expect(search.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'asc'});
     }));
 
     it('can be watched for changes', inject(function(search, $rootScope) {
