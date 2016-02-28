@@ -91,33 +91,33 @@
                    data-change="autosave(item)">
               </div>
             </div>
-          </div>
-          <div class="authoring-header__item">
-            <label class="authoring-header__item-label" translate>PRIORITY</label>
-            <div class="authoring-header__input-holder">
-              <div sd-meta-dropdown
-                   data-item="item"
-                   data-field="priority"
-                   data-list="metadata.priority"
-                   data-icon="priority-label priority-label-"
-                   data-label="Priority"
-                   ng-disabled="!_editable"
-                   data-change="autosave(item)">
-              </div>
-            </div>
-          </div>
-          <div class="authoring-header__item">
-            <label class="authoring-header__item-label" translate>NEWS VALUE</label>
-            <div class="authoring-header__input-holder">
-              <div sd-meta-dropdown
-                   data-item="item"
-                   data-field="urgency"
-                   data-list="metadata.urgency"
-                   data-icon="urgency-label urgency-label-"
-                   data-label="Urgency"
-                   ng-disabled="!_editable"
-                   data-change="autosave(item)">
-              </div>
+
+            <div class="item">
+                <div class="item" ng-if="schema.priority">
+                    <label translate>PRIORITY</label>
+                    <div sd-meta-dropdown
+                         data-item="item"
+                         data-field="priority"
+                         data-list="metadata.priority"
+                         data-icon="priority-label priority-label-"
+                         data-label="Priority"
+                         ng-disabled="!_editable"
+                         data-change="autosave(item)">
+                    </div>
+                </div>
+                <div class="item" ng-if="schema.urgency">
+                    <label translate>URGENCY</label>
+                    <div sd-meta-dropdown
+                         data-item="item"
+                         data-field="urgency"
+                         data-list="metadata.urgency"
+                         data-icon="urgency-label urgency-label-"
+                         data-label="Urgency"
+                         ng-disabled="!_editable"
+                         data-change="autosave(item)"
+                         data-key="qcode">
+                    </div>
+                </div>
             </div>
           </div>
         </div>
