@@ -1,6 +1,6 @@
 <div class="term-editor data visible" ng-if="!header">
     <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" data-disabled="disabled">
-        <ul ng-if="activeTerm">
+        <ul ng-if="activeTerm || activeList">
             <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">{{ :: t.name }}</li>
         </ul>
     </div>
