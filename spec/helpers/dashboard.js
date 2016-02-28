@@ -175,4 +175,12 @@ function Dashboard() {
     this.doSearch = function(widget, searchText) {
         this.getSearchTextBox(widget).sendKeys(searchText);
     };
+
+    /**
+     * @param {string} name of state as compound with state-label(e.g: class="state-label not-for-publication")
+     * @return {ElementFinder} first matching element
+     */
+    this.getStateLabel = function(name) {
+        return element.all(by.css('.' + name)).first();
+    };
 }
