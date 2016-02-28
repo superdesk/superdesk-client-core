@@ -175,6 +175,10 @@ function Authoring() {
         return element(by.id('Info')).click();
     };
 
+    this.toggleNotForPublication = function() {
+        element(by.model('item.flags.marked_for_not_publication')).click();
+    };
+
     this.showPackages = function() {
         return element(by.id('Packages')).click();
     };
