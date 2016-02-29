@@ -39,10 +39,10 @@
                             </div>
                             <div class="field desk-type">
                                 <label translate>Desk Type</label>
-                                <select id="deskType" ng-model="desk.edit.desk_type"
-                                        ng-options="type.qcode as type.name for type in deskTypes"
-                                        required>
+                                <select id="deskType" ng-model="desk.edit.desk_type" required>
                                     <option value=""></option>
+                                    <option id="{{type.value}}" ng-repeat="type in deskTypes" value="{{type.value}}" ng-selected="desk.edit.desk_type === type.value"
+                                    >{{ type.name }}</option>
                                 </select>
                             </div>
                             <div class="field">

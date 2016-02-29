@@ -2215,7 +2215,6 @@
 
                 metadata.initialize().then(function() {
                     scope.metadata = metadata.values;
-                    console.log('metadata: ', metadata);
 
                     if (scope.item.type === 'picture') {
                         scope.item.hasCrops = false;
