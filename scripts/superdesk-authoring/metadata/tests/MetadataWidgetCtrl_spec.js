@@ -171,7 +171,7 @@ describe('metadata list editing directive', function() {
             iScope.selectTerm(category);
         });
         expect(iScope.terms.length).toBe(0);
-        expect(iScope.activeTree.length).toBe(0);
+        expect(iScope.activeTree.length).toBe(3);
         expect(iScope.item[iScope.field].length).toBe(6);
     }));
 
@@ -309,7 +309,7 @@ describe('metadata list editing directive', function() {
         expect(iScope.terms.length).toBe(8);
         iScope.selectTerm(iScope.terms[0]);
         expect(iScope.item[iScope.field].length).toBe(3);
-        expect(iScope.terms.length).toBe(8);
+        expect(iScope.terms.length).toBe(7);
         expect(iScope.activeTree.length).toBe(2);
     }));
 
