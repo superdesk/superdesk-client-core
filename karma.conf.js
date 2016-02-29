@@ -33,6 +33,7 @@ module.exports = function(config) {
 
             'bower_components/angular-embed/dist/angular-embed.js',
             'bower_components/angular-contenteditable/angular-contenteditable.js',
+            'bower_components/angular-vs-repeat/src/angular-vs-repeat.js',
 
             'bower_components/momentjs/moment.js',
             'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
