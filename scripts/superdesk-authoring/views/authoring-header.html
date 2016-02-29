@@ -172,6 +172,20 @@
                 data-change="autosave(item)"></div>
         </div>
 
+        <div class="item-wrapper" ng-repeat="cv in cvs track by cv._id">
+            <label>{{ cv.display_name }}</label>
+            <div sd-meta-terms
+                class="data"
+                data-item="item"
+                data-field="subject"
+                data-unique="qcode"
+                data-list="cv.terms"
+                data-cv="cv"
+                ng-disabled="!_editable"
+                data-header="true"
+                data-change="autosave(item)"></div>
+        </div>
+
         <div class="authoring-header__row" ng-if="shouldDisplayCompanyCodes()">
           <div class="authoring-header__item">
             <label class="authoring-header__item-label" translate>COMPANY</label>
