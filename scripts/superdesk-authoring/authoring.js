@@ -2215,6 +2215,7 @@
 
                 metadata.initialize().then(function() {
                     scope.metadata = metadata.values;
+                    console.log('metadata: ', metadata);
 
                     if (scope.item.type === 'picture') {
                         scope.item.hasCrops = false;
@@ -2675,9 +2676,15 @@
                             var cvService = cv.service || {};
                             var match = false;
 
-                            qcodes.forEach(function(qcode) {
-                                match = match || cvService[qcode];
-                            });
+                            if (cvService.all) {
+                                match = true;
+                                cv.terms = filterByService(cv.items, qcodes);
+                            } else {
+                                qcodes.forEach(function(qcode) {
+                                    match = match || cvService[qcode];
+                                });
+                                cv.terms = cv.items;
+                            }
 
                             if (match) {
                                 cvs.push(cv);
@@ -2687,6 +2694,20 @@
                         scope.cvs = _.sortBy(cvs, 'priority');
                     });
                 });
+
+                function filterByService(items, qcodes) {
+                    return _.filter(items, function(item) {
+                        var match = false;
+                        if (item.service) {
+                            qcodes.forEach(function(qcode) {
+                                match = match || item.service[qcode];
+                            });
+                        } else {
+                            match = true;
+                        }
+                        return match;
+                    });
+                }
             }
         };
     }
