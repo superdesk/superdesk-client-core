@@ -94,5 +94,6 @@
         }]);
 
     angular.module('superdesk.config', []);
+    angular.module('superdesk.templates-cache', []);
     angular.module('superdesk', modules);
 })();
