@@ -40,6 +40,7 @@
                 showMinSizeError: '='
             },
             link: function(scope, elem) {
+                var img;
 
                 /**
                  * Updates crop coordinates scope
@@ -50,10 +51,8 @@
                     var nextData = formatCoordinates(cords);
                     var prevData = scope.cropData || scope.cropInit;
                     if (!angular.equals(nextData, prevData)) {
-                        scope.$apply(function() {
-                            scope.cropData = nextData;
-                            scope.onChange({cropData: nextData});
-                        });
+                        scope.cropData = nextData;
+                        scope.onChange({cropData: nextData});
                     }
                 }
 
@@ -90,19 +89,31 @@
                 }
 
                 scope.$watch('src', function(src) {
-                    elem.empty();
-                    if (!src) {
+                    if (!src || (scope.showMinSizeError && !validateConstraints(scope.original, scope.rendition))) {
                         return;
                     }
 
-                    var img = imageFactory.makeInstance();
+                    var cropSelect = parseCoordinates(scope.cropInit) || getDefaultCoordinates(scope.original, scope.rendition);
+
+                    refreshImage(src, cropSelect);
+                });
+
+                scope.$watch('cropData', function() {
+                    if (scope.cropData) {
+                        refreshImage(img.src, [
+                            scope.cropData.CropLeft,
+                            scope.cropData.CropTop,
+                            scope.cropData.CropRight - scope.cropData.CropLeft,
+                            scope.cropData.CropBottom - scope.cropData.Top
+                        ]);
+                    }
+                });
+
+                function refreshImage(src, setSelect) {
+                    elem.empty();
+
+                    img = imageFactory.makeInstance();
                     img.onload = function() {
-                        var cropSelect = parseCoordinates(scope.cropInit) || getDefaultCoordinates(scope.original, scope.rendition);
-
-                        if (scope.showMinSizeError && !validateConstraints(scope.original, scope.rendition)) {
-                            return;
-                        }
-
                         elem.append(img);
                         $(img).Jcrop({
                             aspectRatio: scope.rendition.width ? scope.rendition.width / scope.rendition.height : null,
@@ -110,7 +121,7 @@
                             trueSize: [scope.original.width, scope.original.height],
                             boxWidth: scope.boxWidth,
                             boxHeight: scope.boxHeight,
-                            setSelect: cropSelect,
+                            setSelect: setSelect,
                             allowSelect: false,
                             addClass: 'jcrop-dark',
                             onSelect: updateScope
@@ -118,7 +129,7 @@
                     };
 
                     img.src = src;
-                });
+                }
 
                 function validateConstraints(img, rendition) {
                     if (img.width < rendition.width || img.height < rendition.height) {
@@ -162,5 +173,66 @@
             }
         };
     }])
-    ;
+    .directive('sdImagePoint', [function() {
+        return {
+            scope: {
+                src: '=',
+                point: '=',
+                onChange: '&'
+            },
+            link: function(scope, elem) {
+                var img;
+                var pointElem;
+
+                elem.css({'position': 'relative'});
+
+                scope.$watch('src', function(src) {
+                    refreshImage(src);
+                });
+
+                scope.$watch('point', function() {
+                    if (img && pointElem) {
+                        drawPoint();
+                    }
+                }, true);
+
+                function refreshImage(src) {
+                    elem.empty();
+
+                    img = new Image();
+                    img.onload = function() {
+                        angular.element(img).css({
+                            'position': 'absolute',
+                            'left': 0,
+                            'top': 0
+                        });
+                        elem.append(img);
+                    };
+                    img.addEventListener('click', function(event) {
+                        scope.point.x = Math.round(event.offsetX * 100 / img.width) / 100;
+                        scope.point.y = Math.round(event.offsetY * 100 / img.height) / 100;
+                        scope.onChange();
+                        scope.$apply();
+                    });
+                    img.src = src;
+
+                    pointElem = angular.element('<i class="icon-plus-small"></i>');
+                    elem.append(pointElem);
+                    pointElem.css({
+                        'position': 'absolute',
+                        'z-index': 10000
+                    });
+
+                    drawPoint();
+                }
+
+                function drawPoint() {
+                    pointElem.css({
+                        left: (scope.point.x * img.width) - 8,
+                        top: (scope.point.y * img.height) - 8
+                    });
+                }
+            }
+        };
+    }]);
 })();
