@@ -2476,7 +2476,7 @@
                 .activity('edit.crop', {
                     label: gettext('EDIT CROP'),
                     modal: true,
-                    cssClass: 'upload-avatar modal-static modal-responsive',
+                    cssClass: 'edit-image modal-responsive',
                     controller: ChangeImageController,
                     templateUrl: 'scripts/superdesk-authoring/views/change-image.html',
                     filters: [{action: 'edit', type: 'crop'}]
