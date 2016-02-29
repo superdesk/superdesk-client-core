@@ -46,7 +46,7 @@
         </div>
 
         <div class="item-wrapper">
-            <div class="item" ng-if="schema.genre">
+            <div class="item" ng-if="schema.genre && !metadata.genre_service">
                 <label translate>GENRE</label>
                 <div sd-meta-dropdown
                      class="data"
@@ -117,6 +117,7 @@
                  ng-disabled="!_editable"
                  data-item="item"
                  data-field="anpa_category"
+                 data-dependent="subject"
                  data-unique="qcode"
                  data-list="availableCategories"
                  data-header="true"
@@ -125,7 +126,7 @@
             </div>
         </div>
 
-        <div class="item-wrapper" ng-if="metadata.subjectcodes && schema.subject">
+        <div class="item-wrapper" ng-if="metadata.subjectcodes && schema.subject && !metadata.subjects">
             <label translate>SUBJECT</label>
             <div id="subjects"
                  sd-meta-terms
@@ -148,7 +149,7 @@
                 data-item="item"
                 data-field="subject"
                 data-unique="qcode"
-                data-list="cv.items"
+                data-list="cv.terms"
                 data-cv="cv"
                 ng-disabled="!_editable"
                 data-header="true"
