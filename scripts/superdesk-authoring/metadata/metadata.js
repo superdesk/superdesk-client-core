@@ -20,7 +20,8 @@ function MetadataCtrl(
         $scope.metadata = metadata.values;
         return preferencesService.get();
     })
-    .then(setAvailableCategories);
+    .then(setAvailableCategories)
+    .then(setAvailableCompanyCodes);
 
     $scope.processGenre = function() {
         $scope.item.genre = _.map($scope.item.genre, function(g) {
@@ -89,6 +90,34 @@ function MetadataCtrl(
         });
 
         $scope.availableCategories = _.sortBy(filtered, 'name');
+    }
+
+    /**
+    * Builds a list of company_codes available for selection in scope. Used by
+    * the "company_codes" menu in the Authoring metadata section.
+    *
+    * @function setAvailableCompanyCodes
+    */
+    function setAvailableCompanyCodes() {
+        var all,        // all available company codes
+            assigned = {},   // company codes already assigned to the article
+            filtered,
+            itemCompanyCodes;  // existing company codes assigned to the article
+
+        all = metadata.values.company_codes || [];
+
+        // gather article's existing company codes
+        itemCompanyCodes = $scope.item.company_codes || [];
+
+        itemCompanyCodes.forEach(function (companyCode) {
+            assigned[companyCode.qcode] = true;
+        });
+
+        filtered = _.filter(all, function (companyCode) {
+            return !assigned[companyCode.qcode];
+        });
+
+        $scope.availableCompanyCodes = _.sortBy(filtered, 'name');
     }
 
     $scope.$watch('item.publish_schedule_date', function(newValue, oldValue) {
@@ -376,8 +405,8 @@ function MetadataWordsListEditingDirective() {
  * @param {String} unique - specify the name of the field, in list item which is unique (qcode, value...)
  *
  */
-MetadataListEditingDirective.$inject = ['metadata', '$filter', '$timeout'];
-function MetadataListEditingDirective(metadata, $filter, $timeout) {
+MetadataListEditingDirective.$inject = ['metadata', '$filter', '$timeout', '$http'];
+function MetadataListEditingDirective(metadata, $filter, $timeout, $http) {
     return {
         scope: {
             item: '=',
@@ -470,23 +499,29 @@ function MetadataListEditingDirective(metadata, $filter, $timeout) {
                         //build object
                         var o = {};
                         o[scope.field] = t;
-                        _.extend(scope.item, o);
                     }
 
-                    scope.selectedTerm = '';
+                    // wait for pending request before applying change (e.g: while autosaving)
+                    var waitForPendingRequests = function() {
+                        if ($http.pendingRequests.length > 0) {
+                            $timeout(waitForPendingRequests, false);
+                        } else {
+                            scope.$applyAsync(function () {
+                                _.extend(scope.item, o);
 
-                    if (!reloadList) {
-                        // Remove the selected term from the terms
-                        scope.terms = _.without(scope.terms, term);
-                        scope.activeTree = _.without(scope.activeTree, term);
-                    }
+                                scope.selectedTerm = '';
+                                if (!reloadList) {
+                                    // Remove the selected term from the terms
+                                    scope.terms = _.without(scope.terms, term);
+                                    scope.activeTree = _.without(scope.activeTree, term);
+                                }
 
-                    $timeout(function() {
-                        scope.$applyAsync(function () {
-                            scope.postprocessing();
-                            scope.change({item: scope.item});
-                        });
-                    }, 50, false);
+                                scope.postprocessing();
+                                scope.change({item: scope.item});
+                            });
+                        }
+                    };
+                    $timeout(waitForPendingRequests, false);
 
                     //retain focus and initialise activeTree on same dropdown control after selection.
                     _.defer (function() {
@@ -515,19 +550,42 @@ function MetadataListEditingDirective(metadata, $filter, $timeout) {
                 }
 
                 tempItem[scope.field] = filteredArray;
-                _.extend(scope.item, tempItem);
 
-                if (!reloadList) {
-                    scope.terms.push(term);
-                    scope.activeTree.push(term);
-                    scope.activeTree = $filter('sortByName')(scope.activeTree);
-                    scope.allSelected = false;
-                }
+                // wait for pending request before applying change (e.g: while autosaving)
+                var waitForPendingRequests = function() {
+                    if ($http.pendingRequests.length > 0) {
+                        $timeout(waitForPendingRequests, false);
+                    } else {
+                        scope.$applyAsync(function () {
+                            _.extend(scope.item, tempItem);
+                            if (!reloadList) {
+                                if (!termExists(scope.terms, term)) {
+                                    scope.terms.push(term);
+                                }
+                                if (!termExists(scope.activeTree, term)) {
+                                    scope.activeTree.push(term);
+                                }
+                                scope.activeTree = $filter('sortByName')(scope.activeTree);
+                                scope.allSelected = false;
+                            }
 
-                scope.terms = $filter('sortByName')(scope.terms);
-                scope.change({item: scope.item});
-                elem.find('.dropdown-toggle').focus(); // retain focus
+                            scope.terms = $filter('sortByName')(scope.terms);
+                            scope.change({item: scope.item});
+                            elem.find('.dropdown-toggle').focus(); // retain focus
+                        });
+                    }
+                };
+                $timeout(waitForPendingRequests, false);
             };
+
+            /**
+             * Returns existance of term in a list on the basis of unique field (e.g: qcode).
+             */
+            function termExists(list, term) {
+                var objToMatch  = {};
+                objToMatch[scope.uniqueField] = term[scope.uniqueField];
+                return _.find(list, _.matches(objToMatch)) === undefined ? false : true;
+            }
         }
     };
 }
