@@ -92,7 +92,7 @@
                 }
             };
         })
-        .directive('sdMediaPreview', ['api', '$rootScope', 'desks', function(api, $rootScope, desks) {
+        .directive('sdMediaPreview', ['api', '$rootScope', 'desks', 'superdesk', function(api, $rootScope, desks, superdesk) {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/preview.html',
                 link: function(scope) {
@@ -101,6 +101,11 @@
                             $rootScope.$broadcast('broadcast:preview', {'item': item});
                         });
                     };
+
+                    scope.preview = function(item) {
+                        superdesk.intent('preview', 'item', item);
+                    };
+
                     desks.initialize().then(function() {
                         scope.userLookup = desks.userLookup;
                     });
