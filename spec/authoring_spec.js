@@ -282,7 +282,7 @@ describe('authoring', function() {
         ctrlShiftKey(protractor.Key.END);
         ctrlKey('x');
         authoring.save();
-        authoring.publish();
+        authoring.publish(true);
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 
