@@ -869,6 +869,12 @@
             });
         }
 
+        $scope.selectedRendition = null;
+
+        $scope.selectRendition = function(rendition) {
+            $scope.selectedRendition = rendition || null;
+        };
+
         /*
         * Records the coordinates for each crop sizes available and
         * notify the user and then resolve the activity.
@@ -2887,7 +2893,15 @@
                 renditions.get();
 
                 scope.edit = function(item) {
-                    superdesk.intent('edit', 'crop', {item: item, renditions: renditions.renditions, showMetadataEditor: true})
+                    scope.item.associations.poi = scope.item.associations.poi || {
+                        x: 0.5, y: 0.5
+                    };
+                    superdesk.intent('edit', 'crop', {
+                        item: item,
+                        renditions: renditions.renditions,
+                        poi: scope.item.associations.poi,
+                        showMetadataEditor: true
+                    })
                         .then(function(crops) {
                             var renditions = angular.extend({}, item.renditions || {});
                             angular.forEach(crops, function(crop, renditionName) {
