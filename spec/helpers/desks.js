@@ -194,7 +194,7 @@ function Desks() {
      * @param {string} deskType name
      **/
     this.setDeskType = function(deskType) {
-        element(by.model('desk.edit.desk_type')).$('[value="string:' + deskType + '"]').click();
+        element(by.model('desk.edit.desk_type')).$('[value="' + deskType + '"]').click();
     };
 
     /**

@@ -64,7 +64,7 @@ describe('fetch', function() {
         expect(content.count()).toBe(3);
     });
 
-    xit('can not Fetch-and-Open if selected desk as a non-member', function() {
+    it('can not Fetch-and-Open if selected desk as a non-member', function() {
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
 

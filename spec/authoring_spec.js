@@ -276,15 +276,14 @@ describe('authoring', function() {
         expect(authoring.kill_button.isDisplayed()).toBe(true);
     });
 
-    xit('Emptied body text fails to validate', function() {
+    it('Emptied body text fails to validate', function() {
         expect(monitoring.getTextItem(1, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 1, 0);
         authoring.writeText('');
         ctrlShiftKey(protractor.Key.END);
         ctrlKey('x');
         authoring.save();
-        authoring.publish();
-        //TODO: check why empty body can be saved
+        authoring.publish(true);
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 
