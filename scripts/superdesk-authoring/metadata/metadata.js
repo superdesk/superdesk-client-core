@@ -119,7 +119,7 @@ function MetadataCtrl(
     });
 
     function setPublishScheduleDate(newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if ((newValue || oldValue) && (newValue !== oldValue)) {
             if ($scope.item.publish_schedule_date && $scope.item.publish_schedule_time) {
                 $scope.item.publish_schedule = datetimeHelper.mergeDateTimeWithoutUtc($scope.item.publish_schedule_date,
                     $scope.item.publish_schedule_time);
@@ -144,7 +144,7 @@ function MetadataCtrl(
      * values of both Embargo Date and Embargo Time to form Timestamp.
      */
     function setEmbargoTS(newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if ((newValue || oldValue) && (newValue !== oldValue)) {
             if ($scope.item.embargo_date && $scope.item.embargo_time) {
                 $scope.item.embargo = datetimeHelper.mergeDateTimeWithoutUtc(
                     $scope.item.embargo_date, $scope.item.embargo_time);

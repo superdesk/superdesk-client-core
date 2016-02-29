@@ -40,19 +40,13 @@ function MacrosService(api, autosave, notify, editor) {
     function triggerMacro(macro, item, commit) {
         return api.save('macros', {
             macro: macro.name,
-            item: angular.extend({}, item), // get all the properties as shallow copy
+            item: item, // get all the properties as shallow copy
             commit: !!commit
         }).then(function(res) {
             if (res.diff) {
                 self.diff = res.diff;
-            } else {
-                angular.extend(item, res.item);
-                if (!commit) {
-                    autosave.save(item);
-                }
             }
-
-            return item;
+            return res.item;
         }, function(err) {
             if (angular.isDefined(err.data._message)) {
                 notify.error(gettext('Error: ' + err.data._message));
@@ -61,8 +55,8 @@ function MacrosService(api, autosave, notify, editor) {
     }
 }
 
-MacrosController.$inject = ['$scope', 'macros', 'desks'];
-function MacrosController($scope, macros, desks) {
+MacrosController.$inject = ['$scope', 'macros', 'desks', 'autosave'];
+function MacrosController($scope, macros, desks, autosave) {
     macros.get().then(function() {
         var currentDeskId = desks.getCurrentDeskId();
         if (currentDeskId !== null) {
@@ -74,7 +68,11 @@ function MacrosController($scope, macros, desks) {
         }
     });
     $scope.call = function(macro) {
-        return macros.call(macro, $scope.item);
+        var item = _.extend({}, $scope.origItem, $scope.item);
+        return macros.call(macro, item).then(function(res) {
+            angular.extend($scope.item, res);
+            autosave.save($scope.item);
+        });
     };
 }
 
