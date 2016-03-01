@@ -62,11 +62,9 @@
 
 .subnav__authoring-topbar {
   height: 30px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  max-width: 55%;
+  max-width: 100%;
   flex-grow: 1;
+  flex-shrink: 1;
   .stage {
     font-size: 10px;
     .text-light();
@@ -76,6 +74,10 @@
     border: 0;
     background-color: transparent;
     text-transform: uppercase;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
     b {
       color: @grayDark;
       .text-semibold();
@@ -83,6 +85,13 @@
   }
   &.has-highlights {
     overflow: visible;
+  }
+}
+.compact {
+  .subnav__authoring-topbar {
+    .stage {
+      max-width: 132px;
+    }
   }
 }
 .subnav--authoring {
@@ -93,10 +102,12 @@
 .subnav__stretch-bar {
   display: flex;
   flex-grow: 1;
+  flex-shrink: 1;
   margin: 0 16px;
 }
 .subnav__button-stack {
   position: relative;
+  max-width: 100%;
   & > .btn {
     padding: 8px 20px;
     height: 28px;
@@ -104,6 +115,11 @@
   &--square-buttons {
     height:48px;
     margin: -10px -20px -10px 16px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-grow: 0;
+    flex-shrink: 1;
+    max-width: 100%;
   }
   &--custom-buttons {
     margin: -10px auto;
@@ -112,6 +128,7 @@
     border-width: 0 1px;
     box-sizing: border-box;
     display: flex;
+    max-width: 100%;
     .btn {
       flex-grow: 0;
       margin:0 4px;
@@ -468,16 +485,17 @@
   }
 	li button {
 		width: 300px !important;
-		padding-right: 20px !important;
+		padding-right: 30px !important;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		position: relative;
+    border-radius: 0;
 		i {
 			position: absolute;
 			right: -5px;
 			top: 9px;
 		}
-		&.disabled {
+		&.disabled, &.disabled:hover {
 			background: #f0f0f0;
 			i {
 				.opacity(20);
