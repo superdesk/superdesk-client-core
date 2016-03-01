@@ -64,14 +64,20 @@ describe('metadata list editing directive', function() {
     var $rootScope,
         $compile,
         itemCategories,
+        itemCompanyCodes,
         subjects,
         itemSubjects,
-        availableCategories;
+        availableCategories,
+        availableCompanyCodes;
 
     itemCategories = [{'name': 'National', 'qcode': 'a'}, {'name': 'Sports', 'qcode': 's'}];
     availableCategories = [{'name': 'International', 'qcode': 'i'},
                 {'name': 'Domestic Sport', 'qcode': 't'}, {'name': 'Motor Racing', 'qcode': 'm'},
                 {'name': 'Horse Racing', 'qcode': 'r'}];
+    itemCompanyCodes = [{'name': '1-PAGE LIMITED', 'qcode': '1PG'}, {'name': '1300 SMILES LIMITED', 'qcode': 'ONT'}];
+    availableCompanyCodes = [{'name': '1ST AVAILABLE LTD', 'qcode': '1ST'},
+                {'name': '360 CAPITAL GROUP', 'qcode': 'TGP'}, {'name': '360 CAPITAL INDUSTRIAL FUND', 'qcode': 'TIX'},
+                {'name': '360 CAPITAL OFFICE FUND', 'qcode': 'TOF'}];
     subjects = [{'name': 'a', 'qcode': '123'},
         {'name': 'b', 'qcode': '456', 'parent': '123'},
         {'name': 'c', 'qcode': '789', 'parent': '123'},
@@ -101,6 +107,29 @@ describe('metadata list editing directive', function() {
         return $compile(html)(scope);
     }
 
+    it('combined list contains available company_codes and assigned terms', inject(function() {
+        var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
+                      'data-item="item" data-field="company_codes" data-unique="qcode" ' +
+                      'data-list="availableCompanyCodes" data-header="true" data-reload-list="false"></div>';
+
+        var iScope;
+        var scopeValues = {
+            item: {
+                company_codes: itemCompanyCodes
+            },
+            _editable: true,
+            availableCompanyCodes: availableCompanyCodes
+        };
+
+        var elm = compileDirective(elmHtml, scopeValues);
+        $rootScope.$digest();
+        iScope = elm.isolateScope();
+        expect(iScope.terms.length).toBe(4);
+        expect(iScope.activeTree.length).toBe(4);
+        expect(iScope.uniqueField).toBe('qcode');
+        expect(iScope.combinedList.length).toBe(6);
+    }));
+
     it('combined list all categories and terms contains only available category', inject(function() {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
@@ -124,7 +153,7 @@ describe('metadata list editing directive', function() {
         expect(iScope.combinedList.length).toBe(6);
     }));
 
-    it('select a metadata term', inject(function() {
+    it('select a metadata term', inject(function($timeout) {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
                       'data-list="availableCategories" data-header="true" data-reload-list="false"></div>';
@@ -142,12 +171,13 @@ describe('metadata list editing directive', function() {
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.selectTerm(availableCategories[0]);
+        $timeout.flush();
         expect(iScope.terms.length).toBe(3);
         expect(iScope.activeTree.length).toBe(3);
         expect(iScope.combinedList.length).toBe(6);
     }));
 
-    it('select all metadata terms', inject(function() {
+    it('select all metadata terms', inject(function($timeout) {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
                       'data-list="availableCategories" data-header="true" data-reload-list="false"></div>';
@@ -169,6 +199,7 @@ describe('metadata list editing directive', function() {
         expect(iScope.activeTree.length).toBe(4);
         _.each(availableCategories, function(category) {
             iScope.selectTerm(category);
+            $timeout.flush();
         });
         expect(iScope.terms.length).toBe(0);
         expect(iScope.activeTree.length).toBe(0);
@@ -221,7 +252,7 @@ describe('metadata list editing directive', function() {
         expect(iScope.combinedList.length).toBe(4);
     }));
 
-    it('remove a metadata term', inject(function() {
+    it('remove a metadata term', inject(function($timeout) {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
                       'data-list="availableCategories" data-header="true" data-reload-list="false"></div>';
@@ -239,6 +270,7 @@ describe('metadata list editing directive', function() {
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.removeTerm(iScope.item[iScope.field][0]);
+        $timeout.flush();
         expect(iScope.terms.length).toBe(5);
         expect(iScope.activeTree.length).toBe(5);
         expect(iScope.combinedList.length).toBe(6);
@@ -288,7 +320,7 @@ describe('metadata list editing directive', function() {
         expect(iScope.activeTree.length).toBe(2);
     }));
 
-    it('select metadata term from tree type metadata dropdown', inject(function() {
+    it('select metadata term from tree type metadata dropdown', inject(function($timeout) {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="subjects" data-unique="qcode" ' +
                       'data-list="subjects" data-header="true" data-reload-list="true"></div>';
@@ -308,6 +340,7 @@ describe('metadata list editing directive', function() {
         expect(iScope.item[iScope.field].length).toBe(2);
         expect(iScope.terms.length).toBe(10);
         iScope.selectTerm(iScope.terms[0]);
+        $timeout.flush();
         expect(iScope.item[iScope.field].length).toBe(3);
         expect(iScope.terms.length).toBe(10);
         expect(iScope.activeTree.length).toBe(2);
