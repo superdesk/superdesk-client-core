@@ -506,8 +506,8 @@
         };
     }
 
-    PackageItemPreviewDirective.$inject = ['api', 'lock', 'superdesk', 'authoring'];
-    function PackageItemPreviewDirective(api, lock, superdesk, authoring) {
+    PackageItemPreviewDirective.$inject = ['api', 'lock', 'superdesk'];
+    function PackageItemPreviewDirective(api, lock, superdesk) {
         return {
             templateUrl: 'scripts/superdesk-packaging/views/sd-package-item-preview.html',
             link: function(scope) {
@@ -536,7 +536,8 @@
                     .then(function(result) {
                         scope.data = result;
                         scope.isLocked = lock.isLocked(scope.data);
-                        scope.isPublished = authoring.isPublished(scope.data);
+                        scope.isPublished = _.contains(['published', 'corrected'], scope.data.state);
+                        scope.isKilled =  scope.data.state === 'killed';
                     }, function(response) {
                         scope.error = true;
                     });
