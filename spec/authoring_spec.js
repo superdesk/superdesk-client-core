@@ -135,6 +135,7 @@ describe('authoring', function() {
         authoring.addHelpline('Children');
         expect(authoring.getBodyFooter()).toMatch(/Kids Helpline*/);
         expect(authoring.save_button.isEnabled()).toBe(true);
+        authoring.save();
         authoring.publish();
         monitoring.filterAction('composite');
         monitoring.actionOnItem('Open', 4, 0);
@@ -331,6 +332,7 @@ describe('authoring', function() {
         authoring.addHelpline('Suicide');
         expect(authoring.getBodyFooter()).toMatch(/Readers seeking support and information about suicide*/);
         expect(authoring.save_button.isEnabled()).toBe(true);
+        authoring.save();
         authoring.publish();
         monitoring.filterAction('text');
         monitoring.actionOnItem('Open', 4, 0);
