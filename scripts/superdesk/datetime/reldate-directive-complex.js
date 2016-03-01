@@ -17,16 +17,26 @@
         var DISPLAY_DAY_FORMAT = 'dddd, ';
         var DISPLAY_TODAY_FORMAT = '[Today], ';
         return {
+            scope: {
+                useutc: '='
+            },
             require: 'ngModel',
             template: '<time datetime="{{ datetime }}">' +
                 '<span>{{ rday }}{{ rdate }}</span></time>',
             replate: true,
             link: function(scope, element, attrs, ngModel) {
+
+                if (angular.isUndefined(scope.useutc)) {
+                    scope.useutc = true;
+                }
+
                 ngModel.$render = function() {
                     var date = moment.utc(ngModel.$viewValue);
                     scope.datetime = date.toISOString();
 
-                    date.local(); // switch to local time zone
+                    if (scope.useutc) {
+                        date.local(); // switch to local time zone
+                    }
 
                     if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)){
                         scope.rday = date.format(DISPLAY_TODAY_FORMAT);
