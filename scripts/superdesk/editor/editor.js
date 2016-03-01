@@ -673,8 +673,8 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
 
     .service('editor', EditorService)
 
-    .directive('sdTextEditor', ['editor', 'spellcheck', '$timeout', 'config', 'keyboardManager',
-    function (editor, spellcheck, $timeout, config, keyboardManager) {
+    .directive('sdTextEditor', ['editor', 'spellcheck', '$timeout', 'config', 'keyboardManager', 'Keys',
+    function (editor, spellcheck, $timeout, config, keyboardManager, Keys) {
 
         var disableToolbar = config.editor.disableEditorToolbar || false;
 
@@ -691,7 +691,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
             require: 'ngModel',
             templateUrl: 'scripts/superdesk/editor/views/editor.html',
             link: function(scope, elem, attrs, ngModel) {
-
                 scope.model = ngModel;
 
                 var TYPING_CLASS = 'typing';
@@ -733,10 +732,14 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                         scope.medium = new window.MediumEditor(scope.node, editorOptions);
 
                         editorElem.on('keydown', function(event) {
+
+                            if (_.includes(Keys, event.keyCode)) {
+                                event.stopPropagation();
+                            }
+
                             if (editor.shouldIgnore(event)) {
                                 return;
                             }
-
                             cancelTimeout();
                         });
 

@@ -326,6 +326,14 @@ function Authoring() {
         return bodyHtml.getText();
     };
 
+    this.getBodyInnerHtml = function() {
+        return bodyHtml.getInnerHtml();
+    };
+
+    this.focusBodyHtmlElement = function() {
+        bodyHtml.click();
+    };
+
     this.getHeadlineText = function() {
         return headline.getText();
     };
