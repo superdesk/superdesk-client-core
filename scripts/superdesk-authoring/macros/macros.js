@@ -40,7 +40,7 @@ function MacrosService(api, autosave, notify, editor) {
     function triggerMacro(macro, item, commit) {
         return api.save('macros', {
             macro: macro.name,
-            item: item, // get all the properties as shallow copy
+            item: item,
             commit: !!commit
         }).then(function(res) {
             if (res.diff) {
