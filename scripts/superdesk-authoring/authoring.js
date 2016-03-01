@@ -1963,7 +1963,9 @@
 
                 function runMacro(item, macro) {
                     if (macro) {
-                        return macros.call(macro, item, true);
+                        return macros.call(macro, item, true).then(function(res) {
+                            return angular.extend(item, res);
+                        });
                     }
 
                     return $q.when(item);
