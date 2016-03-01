@@ -473,6 +473,15 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     };
 
     /**
+     * Returns the cleaned node text
+     *
+     * @return {string}
+     */
+    this.getNodeText = function(scope) {
+        return clean(scope.node).innerHTML;
+    };
+
+    /**
      * Get active node text
      *
      * @return {string}
@@ -664,8 +673,8 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
 
     .service('editor', EditorService)
 
-    .directive('sdTextEditor', ['editor', 'spellcheck', '$timeout', 'config', 'keyboardManager',
-    function (editor, spellcheck, $timeout, config, keyboardManager) {
+    .directive('sdTextEditor', ['editor', 'spellcheck', '$timeout', 'config', 'keyboardManager', 'Keys',
+    function (editor, spellcheck, $timeout, config, keyboardManager, Keys) {
 
         var disableToolbar = config.editor.disableEditorToolbar || false;
 
@@ -682,7 +691,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
             require: 'ngModel',
             templateUrl: 'scripts/superdesk/editor/views/editor.html',
             link: function(scope, elem, attrs, ngModel) {
-
                 scope.model = ngModel;
 
                 var TYPING_CLASS = 'typing';
@@ -693,6 +701,12 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
 
                 ngModel.$viewChangeListeners.push(changeListener);
 
+                scope.$watch('model.$viewValue', function(newValue, oldValue) {
+                    if (newValue !== editor.getNodeText(scope)) {
+                        ngModel.$render(true);
+                    }
+                }, true);
+
                 var ctrlOperations = {};
                 ctrlOperations[editor.KEY_CODES.Z] = doUndo;
                 ctrlOperations[editor.KEY_CODES.Y] = doRedo;
@@ -700,8 +714,8 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                 scope.$on('spellcheck:run', render);
                 keyboardManager.bind('ctrl+shift+d', render);
 
-                ngModel.$render = function () {
-                    if (!scope.history || scope.history.getIndex() === -1) {
+                ngModel.$render = function (force) {
+                    if (!scope.history || scope.history.getIndex() === -1 || force) {
                         editorElem = elem.find('.editor-type-html');
                         editorElem.empty();
                         editorElem.html(ngModel.$viewValue || '');
@@ -718,10 +732,14 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                         scope.medium = new window.MediumEditor(scope.node, editorOptions);
 
                         editorElem.on('keydown', function(event) {
+
+                            if (_.includes(Keys, event.keyCode)) {
+                                event.stopPropagation();
+                            }
+
                             if (editor.shouldIgnore(event)) {
                                 return;
                             }
-
                             cancelTimeout();
                         });
 

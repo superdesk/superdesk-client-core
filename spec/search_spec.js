@@ -249,4 +249,56 @@ describe('search', function() {
         globalSearch.actionOnItem('Edit', 2);
         expect(previewPane.isPresent()).toBe(false);    // avoids retaining already opened preview
     });
+
+    it('can avoid opening item\'s preview (stops event propagation) on keyboard operations from text editor',
+        function() {
+        expect(globalSearch.getItems().count()).toBe(14);
+
+        var previewPane = element(by.id('item-preview'));
+        expect(previewPane.isPresent()).toBe(false);
+
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+        expect(previewPane.isPresent()).toBe(true); // DOWN arrow key selects an item and opens preview pane
+
+        // now proceed to perform keyboard operation on text editor
+        globalSearch.actionOnItem('Edit', 2);
+        expect(authoring.getBodyText()).toBe('item5 text');
+
+        authoring.focusBodyHtmlElement();
+
+        browser.actions().sendKeys(protractor.Key.ENTER).perform();
+        browser.actions().sendKeys('additional text').perform();
+        expect(previewPane.isPresent()).toBe(false);    // ENTER key avoided for opening preview
+
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+        expect(authoring.getBodyText()).toContain('additional text');
+        expect(previewPane.isPresent()).toBe(false);    // DOWN arrow key avoided for opening preview
+
+        browser.actions().sendKeys(protractor.Key.UP).perform();
+        expect(previewPane.isPresent()).toBe(false);    // UP arrow key avoided for opening preview
+
+        // it should not effect global keyboard shortcuts (e.g: 'ctrl+d', 'ctrl+shift+d')
+        // now test 'ctrl+shift+d' shortcut that triggers spell checker when not set to automatic
+        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
+        authoring.toggleAutoSpellCheck();
+        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
+
+        authoring.focusBodyHtmlElement();
+        browser.actions().sendKeys(protractor.Key.ENTER).perform();
+        browser.actions().sendKeys('Testhilite').perform();
+        expect(authoring.getBodyText()).toContain('Testhilite');
+        expect(authoring.getBodyInnerHtml()).not.toContain('sderror sdhilite');
+
+        // trigger spell checker via keyboard operation
+        browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, protractor.Key.SHIFT, 'd')).perform();
+        expect(authoring.getBodyText()).toContain('Testhilite');
+        expect(authoring.getBodyInnerHtml()).toContain('sderror sdhilite');
+
+        // now test 'ctrl+0' shortcut that triggers story search dialog box
+        browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, '0')).perform();
+        browser.sleep(200);
+        var storyNameEl = element(by.model('meta.unique_name'));
+        expect(storyNameEl.isDisplayed()).toBe(true);
+    });
+
 });
