@@ -710,7 +710,9 @@
         return {
             scope: {
                 tt: '=ngModel',
-                disabled: '=ngDisabled'
+                disabled: '=ngDisabled',
+                useutc: '='
+
             },
             templateUrl: 'scripts/superdesk/ui/views/sd-timepicker.html',
             link: function(scope) {
@@ -721,11 +723,12 @@
     TimepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper'];
     function TimepickerInnerDirective($compile, $document, popupService, datetimeHelper) {
         var popupTpl = '<div sd-timepicker-popup ' +
-            'data-open="open" data-time="time" data-select="timeSelection({time: time})" data-keydown="keydown(e)">' +
+            'data-open="open" data-time="time" data-useutc="useutc" data-select="timeSelection({time: time})" data-keydown="keydown(e)">' +
             '</div>';
         return {
             scope: {
-                open: '=opened'
+                open: '=opened',
+                useutc: '='
             },
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
@@ -735,9 +738,17 @@
                     DOWN_ARROW = 40;
                 var popup = angular.element(popupTpl);
 
+                if (angular.isUndefined(scope.useutc)) {
+                    scope.useutc = true;
+                }
+
                 function viewFormat(time) {
                     //convert from utc time to local time
-                    return moment(time, TIME_FORMAT).add(moment().utcOffset(), 'minutes').format(TIME_FORMAT);
+                    if (scope.useutc) {
+                        return moment(time, TIME_FORMAT).add(moment().utcOffset(), 'minutes').format(TIME_FORMAT);
+                    } else {
+                        return moment(time, TIME_FORMAT).format(TIME_FORMAT);
+                    }
                 }
 
                 ctrl.$parsers.unshift(function parseDate(viewValue) {
@@ -935,7 +946,8 @@
                 open: '=',
                 select: '&',
                 keydown: '&',
-                time: '='
+                time: '=',
+                useutc: '='
             },
             link: function(scope, element) {
 
@@ -948,6 +960,10 @@
                         element.find(POPUP).focus();
                     }, 0 , false);
                 };
+
+                if (angular.isUndefined(scope.useutc)) {
+                    scope.useutc = true;
+                }
 
                 scope.$on('timepicker.focus', focusElement);
 
@@ -962,8 +978,14 @@
                 scope.$watch('time', function(newVal, oldVal) {
                     var local;
                     if (newVal) {
-                        //convert from utc to local
-                        local = moment(newVal, TIME_FORMAT).add(moment().utcOffset(), 'minutes');
+                        if (scope.useutc) {
+                            //convert from utc to local
+                            local = moment(newVal, TIME_FORMAT).add(moment().utcOffset(), 'minutes');
+                        } else {
+                            //convert from utc to local
+                            local = moment(newVal, TIME_FORMAT);
+                        }
+
                     } else {
                         local = moment();
                     }
@@ -973,15 +995,22 @@
                 });
 
                 scope.submit = function(offset) {
-                    var local, utc_time;
+                    var local, time;
+
                     if (offset) {
                         local = moment().add(offset, 'minutes').format(TIME_FORMAT);
                     } else {
                         local = scope.hour + ':' + scope.minute + ':' + scope.second;
                     }
-                    //convert from local to utc
-                    utc_time = moment(local, TIME_FORMAT).utc().format(TIME_FORMAT);
-                    scope.select({time: utc_time});
+
+                    if (scope.useutc) {
+                        //convert from local to utc
+                        time = moment(local, TIME_FORMAT).utc().format(TIME_FORMAT);
+                    } else {
+                        time = moment(local, TIME_FORMAT).format(TIME_FORMAT);
+                    }
+
+                    scope.select({time: time});
                 };
 
                 scope.cancel =  function() {
@@ -1213,7 +1242,7 @@
 
         this.mergeDateTimeWithoutUtc = function(date, time) {
             var date_str = moment(date).format('YYYY-MM-DD');
-            var time_str = moment(time, 'HH:mm:ss').add(moment().utcOffset(), 'minute').format('HH:mm:ss');
+            var time_str = moment(time, 'HH:mm:ss').format('HH:mm:ss');
             var merge_str = date_str + ' ' + time_str;
             return moment.utc(merge_str, 'YYYY-MM-DD HH:mm:ss');
         };
