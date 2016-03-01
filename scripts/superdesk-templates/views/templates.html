@@ -119,7 +119,7 @@
 
         <div class="field" ng-if="template.schedule.is_active && template.template_type !== 'kill'">
           <label translate>At</label>
-          <span sd-timepicker-alt data-model="template.schedule.create_at"></span>
+          <span sd-timepicker ng-model="template.schedule.create_at"></span>
           <div sd-timezone data-timezone="template.schedule.time_zone"></div>
         </div>
       </div>
