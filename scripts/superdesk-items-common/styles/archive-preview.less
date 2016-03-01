@@ -291,6 +291,39 @@
 				div {
 					margin-top: 20px;
 				}
+				figure {
+					position: relative;
+					&:hover {
+						.preview-overlay {
+							opacity: 1;
+							transition: opacity 0.2s;
+							cursor: pointer;
+						}
+					}
+				}
+				.preview-overlay {
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					right: 0;
+					left: 0;
+					background-color: rgba(0,0,0,0.7);
+					margin-top: 0;
+					opacity: 0;
+					transition: opacity 0.2s;
+					i {
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						margin-top: -16px;
+						margin-left: -16px;
+						color: rgba(255,255,255,0.9);
+						width: 32px;
+						height: 32px;
+						font-size: 32px;
+						line-height: 32px;
+					}
+				}
 			}
 			video, audio {
 				width: 100%;
@@ -1018,7 +1051,9 @@
 
 		}
 	}
-
+	.preview-overlay {
+		display: none;
+	}
 
 }
 
