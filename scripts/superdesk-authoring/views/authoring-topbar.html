@@ -33,11 +33,25 @@
     </div>
 
     <div class="subnav__stretch-bar">
-      <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-show="_editable">
-        <button class="btn btn-custom"><span class="btn__text" translate>To Desk</span><span class="btn__text--short">T D</span></button>
-        <button class="btn btn-custom"><span class="btn__text" translate>Publish</span><span class="btn__text--short">P</span></button>
-        <button class="btn btn-custom"><span class="btn__text" translate>Publish & Continue</span><span class="btn__text--short">P & C</span></button>
-      </div>
+      <!-- <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-show="_editable">
+        <button class="btn btn-custom"
+                title="{{ :: 'To Desk' | translate }}">
+                <span class="btn__text" translate>To Desk</span>
+                <span class="btn__text--short">T D</span>
+        </button>
+        <button class="btn btn-custom"
+                type="submit"
+                ng-click="_publish()"
+                title="{{ :: 'Publish' | translate }}">
+                <span class="btn__text" translate>Publish</span>
+                <span class="btn__text--short">P</span>
+        </button>
+        <button class="btn btn-custom"
+                title="{{ :: 'Publish and Continue' | translate }}">
+                <span class="btn__text" translate>Publish &amp; Continue</span>
+                <span class="btn__text--short">P &amp; C</span>
+        </button>
+      </div> -->
     </div>
     <div class="subnav__button-stack subnav__button-stack--default" sd-media-query min-width="180">
       <button id="Edit" class="btn btn-medium" ng-if="item._type !== 'legal_archive'"
