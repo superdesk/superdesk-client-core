@@ -38,6 +38,14 @@
                         </span>
                     </label>
                 </div>
+                <div class="field">
+                    <label class="right">
+                        {{:: 'Is Default' | translate }}
+                        <span tooltip="{{ provider.is_default ? 'Default' : ''  | translate }}" tooltip-placement="right">
+                            <span sd-check ng-model="provider.is_default"></span>
+                        </span>
+                    </label>
+                </div>
 
                 <div class="field">
                     <label for="provider-type" translate>Provider Type</label>

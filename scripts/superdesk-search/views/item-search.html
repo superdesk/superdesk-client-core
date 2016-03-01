@@ -1,7 +1,7 @@
 <form>
     <fieldset ng-if="context">
         <label> 
-            <input type="radio" value="local" ng-model="repo.search"> 
+            <input type="radio" value="local" ng-checked="repo.search == 'local'">
             In Superdesk
         </label>
         <div class="superdeskRepos" ng-show="repo.search == 'local'">
@@ -12,8 +12,8 @@
         </div>
         <div ng-repeat="provider in providers">
             <label>
-                <input type="radio" ng-value="provider.search_provider" ng-model="repo.search">
-                {{:: searchProviderTypes[provider.search_provider]}}
+                <input type="radio" ng-value="provider.search_provider" ng-checked="isDefault(provider)">
+                {{:: provider.source}}
             </label>
         </div>
     </fieldset>
