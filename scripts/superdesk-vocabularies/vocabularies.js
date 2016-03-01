@@ -73,7 +73,7 @@
         }
 
         function onSuccess(result) {
-            notify.success(gettext('Vocabulary saved succesfully'));
+            notify.success(gettext('Vocabulary saved successfully'));
             closeVocabulary();
             return result;
         }
