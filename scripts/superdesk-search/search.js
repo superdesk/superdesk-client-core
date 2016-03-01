@@ -2167,7 +2167,7 @@
                     scope.save = function(editSearch) {
 
                         function onSuccess() {
-                            notify.success(gettext('Saved search is saved successfully'));
+                            notify.success(gettext('Search was saved successfully'));
                             scope.cancel();
                             scope.sTab = false;
                             scope.edit = null;
@@ -2178,7 +2178,7 @@
                             if (angular.isDefined(error.data._message)) {
                                 notify.error(error.data._message);
                             } else {
-                                notify.error(gettext('Error. Saved search could not be saved.'));
+                                notify.error(gettext('Error. Search could not be saved.'));
                             }
                         }
 
