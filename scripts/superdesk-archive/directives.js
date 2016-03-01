@@ -1,6 +1,24 @@
 (function() {
     'use strict';
 
+    /**
+     * Service to handle item dragging
+     */
+    function DragItemService() {
+
+        /**
+         * Start dragging an item - add item data to event
+         *
+         * @param {Event} event
+         * @param {Object} item
+         */
+        this.start = function(event, item) {
+            var dt = event.dataTransfer || event.originalEvent.dataTransfer;
+            dt.setData('application/superdesk.item.' + item.type, angular.toJson(item));
+            dt.effectAllowed = 'link';
+        };
+    }
+
     return angular.module('superdesk.archive.directives', [
         'superdesk.filters',
         'superdesk.authoring',
@@ -441,21 +459,24 @@
                 }
             };
         }])
-        .directive('sdDraggableItem', function() {
+        .directive('sdDraggableItem', ['dragitem', function(dragitem) {
             return {
                 link: function(scope, elem) {
                     if (scope.item) {
                         elem.attr('draggable', true);
+
                         // set item data on event
                         elem.on('dragstart', function(event) {
-                            var dt = event.originalEvent.dataTransfer;
-                            dt.setData('application/superdesk.item.' + scope.item.type, angular.toJson(scope.item));
-                            dt.effectAllowed = 'link';
+                            dragitem.start(event, scope.item);
+                        });
+
+                        scope.$on('$destroy', function() {
+                            elem.off('dragstart');
                         });
                     }
                 }
             };
-        })
+        }])
         .directive('sdItemCrops', ['metadata', function(metadata) {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/item-crops.html',
@@ -787,5 +808,6 @@
                     return deskList;
                 });
             };
-        }]);
+        }])
+        .service('dragitem', DragItemService);
 })();
