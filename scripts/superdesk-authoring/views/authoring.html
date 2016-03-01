@@ -13,21 +13,38 @@
                 </div>
 
                 <div class="authoring-sticky__theme-controls pull-right">
-                    <button class="proofread-toggle btn"
-                            ng-class="{active: proofread}"
-                            ng-click="proofread = !proofread"
-                            title="{{:: 'Toggle theme' | translate}}">
+                   <div class="preview-modal-control" ng-if="$root.config.features.preview">
+                        <div sd-full-preview ng-if="fullPreview"
+                            data-item="item"
+                            data-close-action="closeFullPreview"></div>
+                        <a class="toggle preview-toggle btn"
+                            ng-if="item.type === 'text'"
+                            title="{{:: 'Preview' | translate}}"
+                            ng-click="openFullPreview($event)"
+                            ng-href="{{fullPreviewUrl}}">
+                            <i class="icon-eye-open"></i>
+                        </a>
+                    </div>
+
+                    <button class="proofread-toggle toggle btn"
+                        ng-class="{active: proofread}"
+                        ng-click="proofread = !proofread"
+                        title="{{:: 'Toggle theme' | translate}}">
                         <i class="icon-adjust"></i>
                     </button>
-                    <span sd-theme-select ng-if="proofread" data-key="proofreadTheme"></span>
-                    <span sd-theme-select ng-if="!proofread" data-key="theme"></span>
+                    <span sd-theme-select
+                        ng-if="proofread"
+                        data-key="proofreadTheme"></span>
+                    <span sd-theme-select
+                        ng-if="!proofread"
+                        data-key="theme"></span>
                 </div>
             </div>
 
             <div class="page-content-container" ng-click="views.send = false">
                 <header sd-authoring-header class="authoring-header" ng-class="{active: !toggleHeader}"></header>
 
-                <article class="theme-container " ng-class="{preview: !_editable}">
+                <article class="main-article theme-container " ng-class="{preview: !_editable}">
                     <div ng-if="item.type !== 'composite'" class="fieldset" sd-article-edit></div>
                     <div ng-if="item.type === 'composite'" sd-package-edit></div>
                 </article>

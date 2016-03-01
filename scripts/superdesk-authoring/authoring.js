@@ -22,7 +22,7 @@
         language: null,
         unique_name: '',
         keywords: [],
-        description: null,
+        description_text: null,
         sign_off: null,
         publish_schedule: null,
         flags: null,
@@ -31,6 +31,7 @@
         targeted_for: [],
         embargo: null,
         renditions: null,
+        associations: null,
         body_footer: null,
         company_codes: [],
         schedule_settings: null
@@ -56,6 +57,25 @@
         send: false,
         create_broadcast: false,
         add_to_current: false
+    });
+
+    var DEFAULT_SCHEMA = Object.freeze({
+        slugline: {maxlength: 24},
+        headline: {maxlength: 64},
+        abstract: {maxlength: 160},
+        body_html: {},
+        byline: {},
+        located: {},
+        sign_off: {},
+        genre: {},
+        anpa_category: {},
+        anpa_take_key: {},
+        place: {},
+        priority: {},
+        urgency: {},
+        subject: {},
+        ednote: {},
+        footer: {}
     });
 
     /**
@@ -837,48 +857,16 @@
     ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q'];
     function ChangeImageController($scope, gettext, notify, modal, $q) {
         $scope.data = $scope.locals.data;
-        $scope.preview = {};
-        $scope.origPreview = {};
         $scope.data.cropData = {};
         $scope.data.isDirty = false;
-
-        $scope.$watch('preview', function(newValue, oldValue) {
-            if (newValue === oldValue) {
-                $scope.origPreview = $scope.preview;
-                return;
-            }
-
-            // During the initialisation of jcrop the preview object keeps changing and
-            // new keys are being added to it. We want to ignore those changes and only
-            // respond to those  that are actually caused by the changed crop coordinates.
-            if (Object.keys(newValue).length === Object.keys(oldValue).length) {
-                $scope.data.isDirty = true;
-                return;
-            }
-        }, true);
-
-        /*
-        * Gets the crop coordinates, which was set in preview object during the onChange
-        * event of jcrop
-        */
-        function getCropCoordinates(cropName) {
-            var coordinates = {};
-            var cropPoints  = $scope.preview[cropName];
-            coordinates.CropLeft = Math.round(Math.min(cropPoints.cords.x, cropPoints.cords.x2));
-            coordinates.CropRight = Math.round(Math.max(cropPoints.cords.x, cropPoints.cords.x2));
-            coordinates.CropTop = Math.round(Math.min(cropPoints.cords.y, cropPoints.cords.y2));
-            coordinates.CropBottom = Math.round(Math.max(cropPoints.cords.y, cropPoints.cords.y2));
-
-            return coordinates;
-        }
-
-        /*
-        * Serves for holding the crop coordinates
-        */
-        function recordCrops(cropName) {
-            var obj = {};
-            obj[cropName] = getCropCoordinates(cropName);
-            _.extend($scope.data.cropData, obj);
+        // should show the metadata form in the view
+        $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
+        // initialize metadata from `item`
+        if ($scope.data.showMetadataEditor) {
+            $scope.data.metadata = {};
+            ['headline', 'description_text', 'slugline', 'byline'].forEach(function(key) {
+                $scope.data.metadata[key] = $scope.data.item[key];
+            });
         }
 
         /*
@@ -886,20 +874,19 @@
         * notify the user and then resolve the activity.
         */
         $scope.done = function() {
-            _.forEach($scope.data.cropsizes, function(cropsize) {
-                recordCrops(cropsize.name);
-            });
+            if ($scope.data.showMetadataEditor) {
+                // update metadata in `item`
+                angular.extend($scope.data.item, $scope.data.metadata);
+            }
             notify.success(gettext('Crop changes have been recorded'));
-            $scope.resolve($scope.data);
+            $scope.resolve($scope.data.cropData);
         };
 
         $scope.close = function() {
             if ($scope.data.isDirty) {
                 modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
                 .then(function() { // Ok = continue w/o saving
-                    $scope.data.isDirty = false;
-                    $scope.preview = $scope.origPreview;
-                    $scope.resolve($scope.data);
+                    return $scope.reject();
                 });
             } else {
                 $scope.reject();
@@ -975,6 +962,8 @@
                     }
                 }, true);
 
+                $scope.fullPreview = false;
+                $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
                 $scope.proofread = false;
                 $scope.referrerUrl = referrer.getReferrerUrl();
 
@@ -1033,6 +1022,17 @@
                             notify.error(gettext('Error. Item not updated.'));
                         }
                     });
+                };
+
+                $scope.openFullPreview = function($event) {
+                    if ($event.button === 0 && !$event.ctrlKey) {
+                        $event.preventDefault();
+                        $scope.fullPreview = true;
+                    }
+                };
+
+                $scope.closeFullPreview = function() {
+                    $scope.fullPreview = false;
                 };
 
                 /**
@@ -1463,9 +1463,17 @@
         };
     }
 
+    /**
+    * Clean the given html by removing tags and embeds, in order to count words and characters later
+    */
     var cleanHtml = function(data) {
-        return data.replace(/<br[^>]*>/gi, '&nbsp;').replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
-            .replace(/<\/?[^>]+>/gi, '').trim().replace(/&nbsp;/g, ' ');
+        return data
+        // remove embeds by using the comments around them. Embeds don't matter for word counters
+        .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
+        .replace(/<br[^>]*>/gi, '&nbsp;')
+        .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
+        .replace(/<\/?[^>]+>/gi, '').trim()
+        .replace(/&nbsp;/g, ' ');
     };
 
     CharacterCount.$inject = [];
@@ -1500,11 +1508,9 @@
             link: function wordCountLink(scope, elem, attrs) {
                 scope.html = scope.html || false;
                 scope.numWords = 0;
-
                 scope.$watch('item', function() {
                     var input = scope.item || '';
                     input = scope.html ? cleanHtml(input) : input;
-
                     scope.numWords = _.compact(input.split(/\s+/)).length || 0;
                 });
             }
@@ -2160,14 +2166,17 @@
         };
     }
 
-    ArticleEditDirective.$inject = ['autosave', 'authoring', 'metadata', '$filter', 'superdesk'];
-    function ArticleEditDirective(autosave, authoring, metadata, $filter, superdesk) {
+    ArticleEditDirective.$inject = ['autosave', 'authoring', 'metadata', '$filter', 'superdesk', 'content', 'renditions'];
+    function ArticleEditDirective(autosave, authoring, metadata, $filter, superdesk, content, renditions) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/article-edit.html',
             link: function(scope, elem) {
                 scope.limits = authoring.limits;
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
+                scope.contentType = null;
+                scope.schema = angular.extend({}, DEFAULT_SCHEMA);
+
                 var mainEditScope = scope.$parent.$parent;
 
                 /* Start: Dateline related properties */
@@ -2192,6 +2201,14 @@
                                 scope.resetNumberOfDays(false);
                             }
                             _.extend(item, updates);
+
+                            if (item.profile) {
+                                content.getType(item.profile)
+                                    .then(function(type) {
+                                        scope.contentType = type;
+                                        scope.schema = type.schema || DEFAULT_SCHEMA;
+                                    });
+                            }
                         }
                     }
                 });
@@ -2279,16 +2296,15 @@
                 };
 
                 scope.applyCrop = function() {
-                    scope.item.cropsizes = scope.metadata.crop_sizes;
-
-                    superdesk.intent('edit', 'crop',  scope.item).then(function(data) {
-                        if (!mainEditScope.dirty) {
-                            mainEditScope.dirty = data.isDirty;
-                        }
-                        var orig = _.create(data.renditions);
-                        var diff = data.cropData;
-                        scope.item.renditions = _.merge(orig, diff);
-                    });
+                    superdesk.intent('edit', 'crop', {item: scope.item, renditions: scope.metadata.crop_sizes})
+                        .then(function(data) {
+                            var renditions = _.create(scope.item.renditions || {});
+                            angular.forEach(data, function(crop, rendition) {
+                                mainEditScope.dirty = true;
+                                renditions[rendition] = angular.extend({}, renditions[rendition] || {}, crop);
+                            });
+                            scope.item.renditions = renditions;
+                        });
                 };
 
                 /**
@@ -2323,7 +2339,6 @@
 
     angular.module('superdesk.authoring', [
             'superdesk.menu',
-            'superdesk.editor',
             'superdesk.activity',
             'superdesk.authoring.widgets',
             'superdesk.authoring.metadata',
@@ -2337,7 +2352,8 @@
             'superdesk.authoring.macros',
             'superdesk.authoring.autosave',
             'superdesk.desks',
-            'superdesk.notification'
+            'superdesk.notification',
+            'contenteditable'
         ])
 
         .service('authoring', AuthoringService)
@@ -2345,6 +2361,7 @@
         .service('lock', LockService)
         .service('authThemes', AuthoringThemesService)
         .service('authoringWorkspace', AuthoringWorkspaceService)
+        .service('renditions', RenditionsService)
 
         .directive('sdDashboardCard', DashboardCard)
         .directive('sdSendItem', SendItem)
@@ -2357,6 +2374,8 @@
         .directive('sdAuthoringContainer', AuthoringContainerDirective)
         .directive('sdAuthoringEmbedded', AuthoringEmbeddedDirective)
         .directive('sdAuthoringHeader', AuthoringHeaderDirective)
+        .directive('sdItemAssociation', ItemAssociationDirective)
+        .directive('sdFullPreview', FullPreviewDirective)
 
         .config(['superdeskProvider', function(superdesk) {
             superdesk
@@ -2455,6 +2474,19 @@
                     controller: ChangeImageController,
                     templateUrl: 'scripts/superdesk-authoring/views/change-image.html',
                     filters: [{action: 'edit', type: 'crop'}]
+                })
+                .activity('preview', {
+                    href: '/preview/:_id',
+                    when: '/preview/:_id',
+                    template: '<div sd-full-preview data-item="item"></div>',
+                    controller: ['$scope', 'item', function ($scope, item) {
+                        $scope.item = item;
+                    }],
+                    resolve: {
+                        item: ['$route', 'api', function($route, api) {
+                            return api.find('archive', $route.current.params._id);
+                        }]
+                    }
                 });
         }])
         .config(['apiProvider', function(apiProvider) {
@@ -2555,12 +2587,14 @@
         };
     }
 
-    AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata'];
-    function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata) {
+    AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata', 'content', 'lodash'];
+    function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content, lodash) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/authoring-header.html',
             require: '^sdAuthoringWidgets',
             link: function (scope, elem, attrs, WidgetsManagerCtrl) {
+                scope.contentType = null;
+                scope.schema = angular.extend({}, DEFAULT_SCHEMA);
 
                 /**
                  * Returns true if the Company Codes field should be displayed, false otherwise.
@@ -2621,8 +2655,37 @@
                                 $rootScope.$broadcast('broadcast:preview', {'item': item});
                             });
                         };
+
+                        if (item.profile) {
+                            content.getType(item.profile)
+                                .then(function(type) {
+                                    scope.contentType = type;
+                                    scope.schema = type.schema || DEFAULT_SCHEMA;
+                                });
+                        }
                     }
 
+                });
+
+                metadata.initialize().then(function() {
+                    scope.$watch('item.anpa_category', function(services) {
+                        var qcodes = lodash.pluck(services, 'qcode');
+                        var cvs = [];
+                        metadata.cvs.forEach(function(cv) {
+                            var cvService = cv.service || {};
+                            var match = false;
+
+                            qcodes.forEach(function(qcode) {
+                                match = match || cvService[qcode];
+                            });
+
+                            if (match) {
+                                cvs.push(cv);
+                            }
+                        });
+
+                        scope.cvs = _.sortBy(cvs, 'priority');
+                    });
                 });
             }
         };
@@ -2763,4 +2826,123 @@
 
         init();
     }
+
+    ItemAssociationDirective.$inject = ['superdesk', 'renditions'];
+    function ItemAssociationDirective(superdesk, renditions) {
+        return {
+            scope: {
+                rel: '=',
+                item: '=',
+                editable: '=',
+                onchange: '&'
+            },
+            templateUrl: 'scripts/superdesk-authoring/views/item-association.html',
+            link: function(scope, elem) {
+
+                var PICTURE_TYPE = 'application/superdesk.item.picture';
+
+                /**
+                 * Get superdesk item from event
+                 *
+                 * @param {Event} event
+                 * @param {string} dataType
+                 * @return {Object}
+                 */
+                function getItem(event, dataType) {
+                    return angular.fromJson(event.originalEvent.dataTransfer.getData(dataType));
+                }
+
+                // it should prevent default as long as this is valid image
+                elem.on('dragover', function(event) {
+                    if (scope.editable && PICTURE_TYPE === event.originalEvent.dataTransfer.types[0]) {
+                        event.preventDefault();
+                    }
+                });
+
+                // update item associations on drop
+                elem.on('drop', function(event) {
+                    event.preventDefault();
+                    var item = getItem(event, PICTURE_TYPE);
+                    scope.edit(item);
+                });
+
+                function updateItemAssociation(updated) {
+                    var data = {};
+                    data[scope.rel] = updated;
+
+                    scope.item.associations = angular.extend(
+                        {},
+                        scope.item.associations,
+                        data
+                    );
+
+                    return data;
+                }
+
+                // init associated item for preview
+                scope.$watch('item.associations[rel]', function(related) {
+                    scope.related = related;
+                });
+
+                renditions.get();
+
+                scope.edit = function(item) {
+                    superdesk.intent('edit', 'crop', {item: item, renditions: renditions.renditions, showMetadataEditor: true})
+                        .then(function(crops) {
+                            var renditions = angular.extend({}, item.renditions || {});
+                            angular.forEach(crops, function(crop, renditionName) {
+                                renditions[renditionName] = angular.extend(
+                                    {},
+                                    renditions[renditionName] || {},
+                                    crop
+                                );
+                            });
+
+                            var updated = angular.extend({}, item, {renditions: renditions});
+                            var data = updateItemAssociation(updated);
+                            scope.onchange({item: scope.item, data: data});
+                        });
+                };
+
+                scope.remove = function(item) {
+                    var data = updateItemAssociation(null);
+                    scope.onchange({item: scope.item, data: data});
+                };
+
+                scope.upload = function() {
+                    if (scope.editable) {
+                        superdesk.intent('upload', 'media').then(function(images) {
+                            if (images) {
+                                var data = updateItemAssociation(images[0]);
+                                scope.onchange({item: scope.item, data: data});
+                            }
+                        });
+                    }
+                };
+            }
+        };
+    }
+
+    RenditionsService.$inject = ['metadata'];
+    function RenditionsService(metadata) {
+        var self = this;
+        this.get = function() {
+            return metadata.initialize().then(function() {
+                self.renditions = metadata.values.crop_sizes;
+                return self.renditions;
+            });
+        };
+    }
+
+    FullPreviewDirective.$inject = ['api'];
+    function FullPreviewDirective(api) {
+        return {
+            scope: {
+                item: '=',
+                closeAction: '='
+            },
+            templateUrl: 'scripts/superdesk-authoring/views/full-preview.html'
+        };
+    }
+
 })();

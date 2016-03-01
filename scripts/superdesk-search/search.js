@@ -13,7 +13,7 @@
         var sortOptions = [
             {field: 'versioncreated', label: gettext('Updated')},
             {field: 'firstcreated', label: gettext('Created')},
-            {field: 'urgency', label: gettext('News Value')},
+            {field: 'urgency', label: gettext('Urgency')},
             {field: 'anpa_category.name', label: gettext('Category')},
             {field: 'slugline.phrase', label: gettext('Slugline')},
             {field: 'priority', label: gettext('Priority')},
@@ -519,7 +519,7 @@
         .filter('FacetLabels', function() {
             return function(input) {
                 if (input.toUpperCase() === 'URGENCY') {
-                    return 'News Value';
+                    return 'Urgency';
                 } else {
                     return input;
                 }
@@ -1179,6 +1179,7 @@
             'desks',
             'familyService',
             'Keys',
+            'dragitem',
         function(
             $location,
             $document,
@@ -1197,7 +1198,8 @@
             multi,
             desks,
             familyService,
-            Keys
+            Keys,
+            dragitem
         ) {
             return {
                 controllerAs: 'listController',
@@ -1822,6 +1824,10 @@
                             this.setState({hover: false});
                         },
 
+                        onDragStart: function(event) {
+                            dragitem.start(event, this.props.item);
+                        },
+
                         render: function() {
                             var item = this.props.item;
                             var broadcast = item.broadcast || {};
@@ -1885,7 +1891,9 @@
                                     className: classNames('list-item-view', {active: this.props.flags.selected}),
                                     onMouseEnter: this.setHoverState,
                                     onMouseLeave: this.unsetHoverState,
-                                    onClick: this.select
+                                    onDragStart: this.onDragStart,
+                                    onClick: this.select,
+                                    draggable: true
                                 },
                                 React.createElement.apply(null, contents)
                             );
@@ -2744,6 +2752,11 @@
          * Item sort component
          */
         .directive('sdItemSortbar', ['search', 'asset', '$location', function sortBarDirective(search, asset, $location) {
+            var repos = {
+                'aapmm': true,
+                'paimg': true
+            };
+
             return {
                 scope: {},
                 templateUrl: asset.templateUrl('superdesk-search/views/item-sortbar.html'),
@@ -2756,7 +2769,7 @@
 
                     scope.canSort = function() {
                         var criteria = search.query($location.search()).getCriteria(true);
-                        return !(angular.isDefined(criteria.repo) && criteria.repo === 'aapmm');
+                        return !(angular.isDefined(criteria.repo) && repos[criteria.repo]);
                     };
 
                     scope.sort = function sort(field) {

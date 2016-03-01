@@ -31,7 +31,7 @@
               <span class="inline-label">takekey:</span><span class="takekey">{{selected.preview.anpa_take_key}}</span>
             </div>
             <div class="preview-header__flex-row">
-              <span class="state-label state-{{selected.preview.state}}" ng-class="{state_embargo: item.embargo}">{{selected.preview.state | removeLodash}}</span>
+              <span sd-item-state data-state=selected.preview.state data-embargo=item.embargo></span>
               <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
               <span class="state-label legal" ng-if="selected.preview.flags.marked_for_legal" translate>Legal</span>
             </div>
@@ -80,7 +80,10 @@
             <div ng-if="selected.preview.type == 'picture'" class="picture-preview">
                 <div>
                     <span translate>Original</span>
-                    <div sd-item-rendition data-item="selected.preview" data-rendition="viewImage"></div>
+                    <div sd-item-rendition data-item="selected.preview" data-rendition="viewImage" ng-click="preview(item);"></div>
+                    <p class="nav-space" ng-if="
+                      selected.preview.headline !== selected.preview.description_text &&
+                      selected.preview.description_text">{{selected.preview.description_text}}</p> 
                 </div>
                 <div sd-item-crops data-item="selected.preview"></div>
             </div>

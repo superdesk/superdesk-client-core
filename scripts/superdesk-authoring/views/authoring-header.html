@@ -3,6 +3,10 @@
         <div>
             <i class="filetype-icon-{{ :: item.type }}" title="{{ :: 'Article Type' | translate }}"></i>
         </div>
+        <div ng-if="item.profile">
+            <label translate>PROFILE</label>
+            <div class="data">{{ :: item.profile }}</div>
+        </div> 
         <div ng-if="item.type === 'text'">
             <label class="word-count"><b>{{ item.word_count || 0 }}</b> <span translate translate-n="item.word_count" translate-plural="WORDS">WORD</span></label>
         </div>
@@ -29,7 +33,7 @@
     </div>
 
     <div class="authoring-header__detailed" sd-media-query min-width="550">
-        <div class="authoring-header__row">
+        <div class="authoring-header__row" ng-if="schema.slugline">
           <div class="authoring-header__item">
             <label class="authoring-header__item-label" translate>SLUGLINE</label>
             <div class="authoring-header__input-holder">
@@ -46,7 +50,7 @@
         </div>
 
         <div class="authoring-header__row authoring-header__row--2">
-            <div class="authoring-header__item">
+            <div class="authoring-header__item" ng-if="schema.genre">
               <label class="authoring-header__item-label" translate>GENRE</label>
               <div class="authoring-header__input-holder">
                 <div sd-meta-dropdown
@@ -59,7 +63,8 @@
                 </div>
               </div>
             </div>
-            <div class="authoring-header__item">
+
+            <div class="authoring-header__item" ng-if="schema.anpa_take_key">
               <label class="authoring-header__item-label" translate>TAKEKEY</label>
               <div class="authoring-header__input-holder">
                 <input type="text"
@@ -74,7 +79,7 @@
         </div>
 
         <div class="authoring-header__row authoring-header__row--2-1-1">
-          <div class="authoring-header__item" ng-if="metadata.locators">
+          <div class="authoring-header__item" ng-if="metadata.locators && schema.place">
             <label class="authoring-header__item-label" translate>PLACE</label>
             <div class="authoring-header__input-holder">
               <div sd-meta-dropdown
@@ -87,7 +92,7 @@
               </div>
             </div>
           </div>
-          <div class="authoring-header__item">
+          <div class="authoring-header__item" ng-if="schema.priority">
             <label class="authoring-header__item-label" translate>PRIORITY</label>
             <div class="authoring-header__input-holder">
               <div sd-meta-dropdown
@@ -101,8 +106,8 @@
               </div>
             </div>
           </div>
-          <div class="authoring-header__item">
-            <label class="authoring-header__item-label" translate>NEWS VALUE</label>
+          <div class="authoring-header__item" ng-if="schema.urgency">
+            <label class="authoring-header__item-label" translate>URGENCY</label>
             <div class="authoring-header__input-holder">
               <div sd-meta-dropdown
                    data-item="item"
@@ -117,7 +122,7 @@
           </div>
         </div>
 
-        <div class="authoring-header__row" ng-if="metadata.categories" id="category-setting">
+        <div class="authoring-header__row" ng-if="metadata.categories && schema.anpa_category" id="category-setting">
           <div class="authoring-header__item">
             <label class="authoring-header__item-label" translate>CATEGORY</label>
             <div sd-meta-terms
@@ -134,7 +139,7 @@
           </div>
         </div>
 
-        <div class="authoring-header__row" ng-if="metadata.subjectcodes">
+        <div class="authoring-header__row" ng-if="metadata.subjectcodes && schema.subject">
           <div class="authoring-header__item">
             <label class="authoring-header__item-label" translate>SUBJECT</label>
             <div id="subjects"
@@ -151,6 +156,24 @@
             </div>
           </div>
         </div>
+
+        <div class="authoring-header__row" ng-repeat="cv in cvs track by cv._id">
+          <div class="authoring-header__item">
+            <label>{{ cv.display_name }}</label>
+            <div sd-meta-terms
+                class="data"
+                data-item="item"
+                data-field="subject"
+                data-unique="qcode"
+                data-list="cv.items"
+                data-cv="cv"
+                ng-disabled="!_editable"
+                data-header="true"
+                data-change="autosave(item)">
+            </div>
+          </div>
+        </div>
+        
 
         <div class="authoring-header__row" ng-if="shouldDisplayCompanyCodes()">
           <div class="authoring-header__item">
@@ -169,7 +192,7 @@
           </div>
         </div>
 
-        <div class="authoring-header__row">
+        <div class="authoring-header__row" ng-if="schema.ednote">
           <div class="authoring-header__item">
             <label class="authoring-header__item-label" translate>ED. NOTE</label>
             <div class="authoring-header__input-holder">

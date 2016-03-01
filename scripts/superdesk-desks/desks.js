@@ -472,7 +472,8 @@
         $scope.openDesk = function(step, desk) {
             $scope.modalActive = true;
             $scope.step.current = step;
-            $scope.desk.edit = desk;
+            $scope.desk.edit = desk || {};
+            $scope.desk.edit.desk_metadata = $scope.desk.edit.desk_metadata || {};
         };
 
         $scope.cancel = function() {
@@ -856,7 +857,7 @@
                 controller: DeskConfigController
             };
         })
-        .directive('sdDeskConfigModal', function() {
+        .directive('sdDeskConfigModal', ['metadata', function(metadata) {
             return {
                 scope: {
                     modalActive: '=active',
@@ -868,9 +869,12 @@
                 require: '^sdDeskConfig',
                 templateUrl: 'scripts/superdesk-desks/views/desk-config-modal.html',
                 link: function(scope, elem, attrs, ctrl) {
+                    metadata.initialize().then(function() {
+                        scope.metadata = metadata.values;
+                    });
                 }
             };
-        })
+        }])
         .directive('sdFocusElement', [function() {
             return {
                 link: function(scope, elem, attrs) {
@@ -974,6 +978,7 @@
 
                     scope.edit = function(desk) {
                         scope.desk.edit = _.create(desk);
+                        scope.desk.edit.desk_metadata = desk.desk_metadata || {};
                     };
 
                     /**

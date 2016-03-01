@@ -1,6 +1,24 @@
 (function() {
     'use strict';
 
+    /**
+     * Service to handle item dragging
+     */
+    function DragItemService() {
+
+        /**
+         * Start dragging an item - add item data to event
+         *
+         * @param {Event} event
+         * @param {Object} item
+         */
+        this.start = function(event, item) {
+            var dt = event.dataTransfer || event.originalEvent.dataTransfer;
+            dt.setData('application/superdesk.item.' + item.type, angular.toJson(item));
+            dt.effectAllowed = 'link';
+        };
+    }
+
     return angular.module('superdesk.archive.directives', [
         'superdesk.filters',
         'superdesk.authoring',
@@ -72,6 +90,15 @@
                 }
             };
         }])
+        .directive('sdItemState', function() {
+            return {
+                templateUrl: 'scripts/superdesk-archive/views/item-state.html',
+                scope: {
+                    'state': '=',
+                    'embargo': '='
+                }
+            };
+        })
         .directive('sdInlineMeta', function() {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/inline-meta.html',
@@ -83,7 +110,7 @@
                 }
             };
         })
-        .directive('sdMediaPreview', ['api', '$rootScope', 'desks', function(api, $rootScope, desks) {
+        .directive('sdMediaPreview', ['api', '$rootScope', 'desks', 'superdesk', function(api, $rootScope, desks, superdesk) {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/preview.html',
                 link: function(scope) {
@@ -92,6 +119,11 @@
                             $rootScope.$broadcast('broadcast:preview', {'item': item});
                         });
                     };
+
+                    scope.preview = function(item) {
+                        superdesk.intent('preview', 'item', item);
+                    };
+
                     desks.initialize().then(function() {
                         scope.userLookup = desks.userLookup;
                     });
@@ -319,14 +351,9 @@
                 template: '{{ name }}',
                 link: function(scope) {
                     scope.$watch('item', renderIngest);
-
-                    scope.name = '';
+                    scope.name = scope.item.source;
 
                     function renderIngest() {
-                        if (!scope.item.ingest_provider && 'source' in scope.item) {
-                            scope.name = scope.item.source;
-                        }
-
                         ingestSources.initialize().then(function() {
                             if (scope.item.ingest_provider && scope.item.ingest_provider in ingestSources.providersLookup) {
                                 scope.name = ingestSources.providersLookup[scope.item.ingest_provider].name;
@@ -429,6 +456,24 @@
                     scope.getType = function(item) {
                         return archiveService.getType(item);
                     };
+                }
+            };
+        }])
+        .directive('sdDraggableItem', ['dragitem', function(dragitem) {
+            return {
+                link: function(scope, elem) {
+                    if (scope.item) {
+                        elem.attr('draggable', true);
+
+                        // set item data on event
+                        elem.on('dragstart', function(event) {
+                            dragitem.start(event, scope.item);
+                        });
+
+                        scope.$on('$destroy', function() {
+                            elem.off('dragstart');
+                        });
+                    }
                 }
             };
         }])
@@ -763,5 +808,6 @@
                     return deskList;
                 });
             };
-        }]);
+        }])
+        .service('dragitem', DragItemService);
 })();

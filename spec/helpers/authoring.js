@@ -10,6 +10,8 @@ function Authoring() {
     this.correct_button = element(by.buttonText('correct'));
     this.kill_button = element(by.buttonText('kill'));
     this.close_button = element(by.buttonText('CLOSE'));
+    this.ignore_button = element(by.buttonText('Ignore'));
+    this.save_publish_button = element(by.buttonText('Save and publish'));
     this.save_button = element(by.buttonText('SAVE'));
     this.edit_button = element(by.id('Edit'));
     this.edit_correct_button = element(by.buttonText('Edit and Correct'));
@@ -61,7 +63,9 @@ function Authoring() {
     };
 
     this.confirmSendTo = function() {
-        element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
+        if (element(by.className('modal-content')).length) {
+            element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
+        }
     };
 
     this.sendToSidebarOpened = function(desk, stage) {
@@ -100,7 +104,15 @@ function Authoring() {
         return this.close_button.click();
     };
 
-    this.publish = function() {
+    this.ignore = function() {
+        return this.ignore_button.click();
+    };
+
+    this.savePublish = function() {
+        return this.save_publish_button.click();
+    };
+
+    this.publish = function(skipConfirm) {
         browser.wait(function() {
             return this.sendToButton.isDisplayed();
         }.bind(this), 1000);
@@ -109,7 +121,17 @@ function Authoring() {
         browser.wait(function() {
             return this.publish_button.isDisplayed();
         }.bind(this), 1000);
-        return this.publish_button.click();
+
+        this.publish_button.click();
+
+        if (!skipConfirm) {
+            var modal = element(by.className('modal-dialog'));
+            modal.isPresent().then(function(click) {
+                if (click) {
+                    modal.element(by.className('btn-primary')).click();
+                }
+            });
+        }
     };
 
     this.correct = function() {

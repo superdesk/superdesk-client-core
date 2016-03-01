@@ -20,6 +20,7 @@ describe('spellcheck', function() {
         LANG = 'en-US',
         errors = [];
 
+    beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.editor.spellcheck'));
 
     beforeEach(inject(function(dictionaries, spellcheck, $q) {

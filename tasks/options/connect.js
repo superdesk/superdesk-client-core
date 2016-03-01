@@ -14,16 +14,25 @@ module.exports = function(grunt) {
                 base: base,
                 middleware: function(connect, options, middlewares) {
                     middlewares.unshift(mockTemplates);
+                    middlewares.unshift(nocacheHeaders);
                     return middlewares;
 
                     // avoid 404 in dev server for templates
                     function mockTemplates(req, res, next) {
-                        if (req.url === '/templates-cache.js') {
-                            // return empty cache module
-                            return res.end('angular.module(\'superdesk.templates-cache\', []);');
+                        if (req.url.includes('templates-cache.js')) {
+                            // return empty
+                            return res.end('');
                         } else {
                             return next();
                         }
+                    }
+
+                    // tell browser not to cache files
+                    function nocacheHeaders(req, res, next) {
+                        res.setHeader(
+                            'Cache-Control',
+                            'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+                        next();
                     }
                 }
             }

@@ -4,6 +4,7 @@
 describe('superdesk.workspace.content', function() {
 
     beforeEach(module('superdesk.mocks'));
+    beforeEach(module('superdesk.desks'));
     beforeEach(module('superdesk.templates-cache'));
     beforeEach(module('superdesk.workspace.content'));
 
@@ -34,7 +35,7 @@ describe('superdesk.workspace.content', function() {
             content.createPackageItem().then(done);
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {headline: '', slugline: '',
-                description: '', type: 'composite',
+                description_text: '', type: 'composite',
                 groups: [{role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
                 {refs: [], id: 'main', role: 'grpRole:main'}], version: 0,
                 task: {desk: '1', stage: '2', user: '1'}});
@@ -52,7 +53,7 @@ describe('superdesk.workspace.content', function() {
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {
                 headline: '', slugline: '',
-                description: '',
+                description_text: '',
                 state: 'draft',
                 type: 'composite',
                 version: 0,
@@ -89,6 +90,41 @@ describe('superdesk.workspace.content', function() {
                 template: 'template1',
                 type: 'text',
                 version: 0
+            });
+        }));
+
+        it('can fetch content types', inject(function(api, content, $rootScope, $q) {
+            var types = [{_id: 'foo'}];
+            spyOn(api, 'query').and.returnValue($q.when({_items: types}));
+            var success = jasmine.createSpy('ok');
+            content.getTypes().then(success);
+            $rootScope.$digest();
+            expect(api.query).toHaveBeenCalledWith('content_types', {where: {enabled: true}});
+            expect(success).toHaveBeenCalledWith(types);
+            expect(content.types).toBe(types);
+        }));
+
+        it('can get content type', inject(function(api, content, $rootScope, $q) {
+            var type = {_id: 'foo'};
+            spyOn(api, 'find').and.returnValue($q.when(type));
+            var success = jasmine.createSpy('ok');
+            content.getType('foo').then(success);
+            $rootScope.$digest();
+            expect(api.find).toHaveBeenCalledWith('content_types', 'foo');
+            expect(success).toHaveBeenCalledWith(type);
+        }));
+
+        it('can create item using content type', inject(function(api, content, desks, session) {
+            var type = {_id: 'test'};
+            var success = jasmine.createSpy('ok');
+            spyOn(desks, 'getCurrentDesk').and.returnValue({_id: 'sports', working_stage: 'inbox'});
+            session.identity = {_id: 'foo'};
+            content.createItemFromContentType(type).then(success);
+            expect(api.save).toHaveBeenCalledWith('archive', {
+                profile: type._id,
+                type: 'text',
+                version: 0,
+                task: {desk: 'sports', stage: 'inbox', user: 'foo'}
             });
         }));
     });
