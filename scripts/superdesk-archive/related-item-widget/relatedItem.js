@@ -16,8 +16,8 @@
             });
         }])
         .controller('relatedItemController',
-        ['$scope', 'api', 'BaseWidgetController', '$location', 'notify', 'superdesk', '$q',
-        function ($scope, api, BaseWidgetController, $location, notify, superdesk, $q) {
+        ['$scope', 'api', 'BaseWidgetController', '$location', 'notify', 'superdesk', '$q', 'authoringWorkspace', 'authoring', 'privileges',
+        function ($scope, api, BaseWidgetController, $location, notify, superdesk, $q, authoringWorkspace, authoring, privileges) {
             $scope.type = 'archiveWidget';
             $scope.itemListOptions = {
                 endpoint: 'search',
@@ -39,7 +39,7 @@
             };
             $scope.actions = {
                 apply: {
-                    title: 'Associate',
+                    title: 'Associate metadata',
                     method: function(item) {
                         /*TODOs:
                         1) Overwrite Destination code
@@ -56,12 +56,49 @@
                         $scope.options.item.slugline = item.slugline;
                         $scope.options.item.related_to = item._id;
                         api.save('archive', $scope.origItem, $scope.options.item).then(function(_item) {
-                            notify.success(gettext('item updated.'));
+                            notify.success(gettext('item metadata associated.'));
                             return item;
                         });
                     },
                     'class': 'open',
-                    icon: 'icon-expand'
+                    icon: 'icon-expand',
+                    condition: function(item) {
+                        return true;
+                    }
+                },
+                update: {
+                    title: 'Associate as update',
+                    method: function(item) {
+
+                        api.save('archive_rewrite', {},
+                            {'update': angular.extend({}, $scope.origItem, $scope.item)},
+                            item)
+                        .then(function(new_item) {
+                                    notify.success(gettext('Story is associated as update.'));
+                                    authoringWorkspace.edit(new_item._id);
+                                }, function(response) {
+                                    if (angular.isDefined(response.data._message)) {
+                                        notify.error(gettext('Failed to associate update: ' + response.data._message));
+                                    } else {
+                                        notify.error(gettext('There is an error. Failed to associate update.'));
+                                    }
+                                });
+                    },
+                    'class': 'open',
+                    icon: 'icon-expand',
+                    condition: function(item) {
+                        var userHasPermission = privileges.userHasPrivileges({rewrite: 1});
+
+                        var canBeRewrite = !authoring.isPublished() &&
+                        _.contains(['text', 'preformatted'], $scope.item.type) &&
+                        !$scope.item.rewrite_of &&
+                        authoring.itemActions($scope.item).new_take &&
+                        (!$scope.item.broadcast || !$scope.item.broadcast.master_id);
+
+                        var canBeRewritten = authoring.itemActions(item).re_write;
+
+                        return canBeRewritten && canBeRewrite && userHasPermission;
+                    }
                 },
                 open: {
                     title: 'Open',
@@ -71,7 +108,10 @@
                         });
                     },
                     'class': 'open',
-                    icon: 'icon-external'
+                    icon: 'icon-external',
+                    condition: function(item) {
+                        return true;
+                    }
                 }
             };
             BaseWidgetController.call(this, $scope);
