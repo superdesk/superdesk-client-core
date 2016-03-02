@@ -26,7 +26,7 @@
      * scope.preview should be define on container page so that the coordiates can be used
      * to pass in api that is serving for saving the crop.
      */
-     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', function(gettext, $interpolate, imageFactory) {
+     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', '$timeout', function(gettext, $interpolate, imageFactory, $timeout) {
         return {
             scope: {
                 src: '=',
@@ -51,8 +51,8 @@
                     var nextData = formatCoordinates(cords);
                     var prevData = scope.cropData || scope.cropInit;
                     if (!angular.equals(nextData, prevData)) {
-                        scope.cropData = nextData;
-                        scope.onChange({cropData: nextData});
+                        angular.extend(scope.cropData, nextData);
+                        scope.onChange({renditionName: scope.rendition.name, cropData: nextData});
                     }
                 }
 
@@ -99,14 +99,43 @@
                 });
 
                 scope.$watch('cropData', function() {
-                    if (scope.cropData) {
+                    if (scope.cropData && scope.cropData.CropBottom) {
                         refreshImage(img.src, [
                             scope.cropData.CropLeft,
                             scope.cropData.CropTop,
                             scope.cropData.CropRight - scope.cropData.CropLeft,
-                            scope.cropData.CropBottom - scope.cropData.Top
+                            scope.cropData.CropBottom - scope.cropData.CropTop
                         ]);
                     }
+                }, true);
+
+                scope.$on('poiUpdate', function(e, point) {
+                    var center = {
+                        x: point.x * scope.original.width,
+                        y: point.y * scope.original.height
+                    };
+                    var width = scope.cropData.CropRight - scope.cropData.CropLeft;
+                    var height = scope.cropData.CropBottom - scope.cropData.CropTop;
+                    var crop = {
+                        CropLeft: center.x - width / 2,
+                        CropTop: center.y - height / 2,
+                        CropRight: center.x + width / 2,
+                        CropBottom: center.y + height / 2
+                    };
+                    /*
+                    if (crop.CropLeft < 0) {
+                        crop.CropRight = crop.CropRight - crop.CropLeft;
+                        crop.CropLeft = 0;
+                    } else if (crop.CropRight > scope.original.width) {
+                        crop.CropLeft = crop.CropLeft - crop.CropRight - scope.original.width;
+                        crop.CropRight = scope.original.width;
+                    }
+                    */
+
+                    for (var i in crop) {
+                        crop[i] = Math.round(crop[i]);
+                    }
+                    angular.extend(scope.cropData, crop);
                 });
 
                 function refreshImage(src, setSelect) {
@@ -173,7 +202,7 @@
             }
         };
     }])
-    .directive('sdImagePoint', [function() {
+    .directive('sdImagePoint', ['$rootScope', function($rootScope) {
         return {
             scope: {
                 src: '=',
@@ -215,8 +244,10 @@
                     img.addEventListener('click', function(event) {
                         scope.point.x = Math.round(event.offsetX * 100 / img.width) / 100;
                         scope.point.y = Math.round(event.offsetY * 100 / img.height) / 100;
+                        //console.log(scope.point);
                         scope.onChange();
                         scope.$apply();
+                        $rootScope.$broadcast('poiUpdate', scope.point);
                     });
                     img.src = src;
 
@@ -226,6 +257,7 @@
                         'position': 'absolute',
                         'z-index': 10000
                     });
+                    /*
                     crossLeftTop = angular.element('<div class="poi__cross-left-top"></div>');
                     elem.append(crossLeftTop); 
                     crossLeftBottom = angular.element('<div class="poi__cross-left-bottom"></div>');
@@ -233,7 +265,8 @@
                     crossRightTop = angular.element('<div class="poi__cross-right-top"></div>');
                     elem.append(crossRightTop); 
                     crossRightBottom = angular.element('<div class="poi__cross-right-bottom"></div>');
-                    elem.append(crossRightBottom);                    
+                    elem.append(crossRightBottom);
+                    */
 
                     drawPoint();
                 }
@@ -243,6 +276,7 @@
                         left: (scope.point.x * img.width) - 20,
                         top: (scope.point.y * img.height) - 20
                     });
+                    /*
                     crossLeftTop.css({
                         width: (scope.point.x * img.width),
                         height: (scope.point.y * img.height) - 20
@@ -263,6 +297,7 @@
                         left: (scope.point.x * img.width),
                         top: (scope.point.y * img.height) + 22
                     });
+                    */
                 }
             }
         };

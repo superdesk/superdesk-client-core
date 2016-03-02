@@ -859,6 +859,9 @@
     function ChangeImageController($scope, gettext, notify, modal, $q) {
         $scope.data = $scope.locals.data;
         $scope.data.cropData = {};
+        $scope.data.renditions.forEach(function(rendition) {
+            $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
+        });
         $scope.data.isDirty = false;
         // should show the metadata form in the view
         $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
@@ -873,7 +876,11 @@
         $scope.selectedRendition = null;
 
         $scope.selectRendition = function(rendition) {
-            $scope.selectedRendition = rendition || null;
+            if (!rendition) {
+                $scope.selectedRendition = null;
+            } else if ($scope.selectedRendition === null || $scope.selectedRendition.name !== rendition.name) {
+                $scope.selectedRendition = rendition;
+            }
         };
 
         /*
@@ -886,7 +893,7 @@
                 angular.extend($scope.data.item, $scope.data.metadata);
             }
             notify.success(gettext('Crop changes have been recorded'));
-            $scope.resolve($scope.data.cropData);
+            $scope.resolve({cropData: $scope.data.cropData, poi: $scope.data.poi});
         };
 
         $scope.close = function() {
@@ -898,6 +905,12 @@
             } else {
                 $scope.reject();
             }
+        };
+
+        $scope.onChange = function(renditionName, cropData) {
+            $scope.data.cropData[renditionName] = angular.extend({}, cropData);
+            $scope.data.isDirty = true;
+            $scope.$apply();
         };
     }
 
@@ -2303,10 +2316,11 @@
                 };
 
                 scope.applyCrop = function() {
-                    superdesk.intent('edit', 'crop', {item: scope.item, renditions: scope.metadata.crop_sizes})
-                        .then(function(data) {
+                    var poi = {x: 0.5, y: 0.5};
+                    superdesk.intent('edit', 'crop', {item: scope.item, renditions: scope.metadata.crop_sizes, poi: scope.item.poi || poi})
+                        .then(function(result) {
                             var renditions = _.create(scope.item.renditions || {});
-                            angular.forEach(data, function(crop, rendition) {
+                            angular.forEach(result.cropData, function(crop, rendition) {
                                 mainEditScope.dirty = true;
                                 renditions[rendition] = angular.extend({}, renditions[rendition] || {}, crop);
                             });
@@ -2914,18 +2928,16 @@
                 renditions.get();
 
                 scope.edit = function(item) {
-                    scope.item.associations.poi = scope.item.associations.poi || {
-                        x: 0.5, y: 0.5
-                    };
+                    var poi = {x: 0.5, y: 0.5};
                     superdesk.intent('edit', 'crop', {
                         item: item,
                         renditions: renditions.renditions,
-                        poi: scope.item.associations.poi,
+                        poi: item.poi || poi,
                         showMetadataEditor: true
                     })
-                        .then(function(crops) {
+                        .then(function(result) {
                             var renditions = angular.extend({}, item.renditions || {});
-                            angular.forEach(crops, function(crop, renditionName) {
+                            angular.forEach(result.cropData, function(crop, renditionName) {
                                 renditions[renditionName] = angular.extend(
                                     {},
                                     renditions[renditionName] || {},
@@ -2935,6 +2947,7 @@
 
                             var updated = angular.extend({}, item, {renditions: renditions});
                             var data = updateItemAssociation(updated);
+                            data[scope.rel].poi = result.poi;
                             scope.onchange({item: scope.item, data: data});
                         });
                 };
