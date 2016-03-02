@@ -39,7 +39,7 @@ describe('dictionaries', function() {
             expect(dictionaries.getRow('Test 1').count()).toBe(0);
         });
 
-        it('add/remove word in dictionary', function() {
+        xit('add/remove word in dictionary', function() {
             dictionaries.edit('Test 1');
             dictionaries.search('theta');
             expect(dictionaries.getWordsCount()).toBe(0);

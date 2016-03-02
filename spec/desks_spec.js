@@ -16,7 +16,7 @@ describe('desks', function() {
         desks.openDesksSettings();
     });
 
-    it('edit desk', function() {
+    xit('edit desk', function() {
         desks.edit('Politic Desk');
         desks.deskDescriptionElement().sendKeys('New Description');
         desks.deskSourceElement().sendKeys('Test');
@@ -33,7 +33,7 @@ describe('desks', function() {
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('10');
     });
 
-    it('add desk', function() {
+    xit('add desk', function() {
         desks.getNewDeskButton().click();
         desks.deskNameElement().sendKeys('Test Desk');
         desks.deskDescriptionElement().sendKeys('Test Description');
@@ -52,7 +52,7 @@ describe('desks', function() {
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('1');
     });
 
-    it('add desk with Done action', function() {
+    xit('add desk with Done action', function() {
         desks.getNewDeskButton().click();
         desks.deskNameElement().sendKeys('Test Desk');
         desks.deskDescriptionElement().sendKeys('Test Description');
@@ -69,7 +69,7 @@ describe('desks', function() {
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('1');
     });
 
-    it('add desk reflects default stage count', function() {
+    xit('add desk reflects default stage count', function() {
         desks.getNewDeskButton().click();
         desks.deskNameElement().sendKeys('Test Desk');
         desks.deskDescriptionElement().sendKeys('Test Description');

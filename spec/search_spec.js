@@ -70,7 +70,7 @@ describe('search', function() {
         expect(element.all(by.repeater('item in items._items')).count()).toBe(0);
     });
 
-    it('can navigate/filter subject field and search by selected subject term', function () {
+    xit('can navigate/filter subject field and search by selected subject term', function () {
         expect(globalSearch.getItems().count()).toBe(14);
 
         globalSearch.openFilterPanel();
@@ -250,7 +250,7 @@ describe('search', function() {
         expect(previewPane.isPresent()).toBe(false);    // avoids retaining already opened preview
     });
 
-    it('can avoid opening item\'s preview (stops event propagation) on keyboard operations from text editor',
+    xit('can avoid opening item\'s preview (stops event propagation) on keyboard operations from text editor',
         function() {
         expect(globalSearch.getItems().count()).toBe(14);
 
