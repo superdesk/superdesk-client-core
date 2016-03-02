@@ -464,6 +464,7 @@
   border-top: 0;
   border-bottom: 0;
   background-color: @white;
+  z-index: 3;
   .transition(all .5s);
 
   .authoring-sticky__detailed {
@@ -976,15 +977,10 @@
 }
 
 .preview-modal-control { // toggle for preview dialog
-    position: relative;
-    width: auto;
-    max-width: 900px;
-    margin: 0 auto;
-    z-index: 4;
     .btn {
         position: absolute;
         top: 12px;
-        right: 90px;
+        right: 80px;
         z-index: 100;
         background-color: transparent;
         height: 22px;
@@ -995,7 +991,7 @@
             .box-shadow(none);
         }
         [class^="icon-"], .btn [class*=" icon-"] {
-            margin: 0;
+            margin: 3px 0 0;
         }
     }
 }
