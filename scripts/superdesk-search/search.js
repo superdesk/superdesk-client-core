@@ -1362,7 +1362,7 @@
                             info.push(React.createElement(
                                 'div',
                                 {key: 3, className: 'state-label not-for-publication'},
-                                gettext('Not for publication')
+                                gettext('Not For Publication')
                             ));
                         }
 
@@ -1612,7 +1612,7 @@
                                     null,
                                 flags.marked_for_not_publication ?
                                     React.createElement('div', {className: 'state-label not-for-publication'},
-                                        gettext('Not for Publication')) :
+                                        gettext('Not For Publication')) :
                                     null,
                                 flags.marked_for_legal ?
                                     React.createElement('div', {className: 'state-label legal'}, gettext('Legal')) :

@@ -18,7 +18,7 @@
         </li>
         <li ng-repeat="highlight in highlights track by highlight._id" title="{{ :: highlight.name }}">
             {{ :: highlight.name }}
-            <button class="btn btn-mini" ng-click="unmarkHighlight(highlight._id)" translate>REMOVE</button>
+            <button class="btn btn-mini uppercase" ng-click="unmarkHighlight(highlight._id)" translate>Remove</button>
         </li>
         <li class="none" ng-show="highlights.length === 0" translate>None</li>
     </ul>
