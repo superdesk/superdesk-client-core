@@ -1,7 +1,7 @@
 <form>
     <fieldset ng-if="context">
-        <label> 
-            <input type="radio" value="local" ng-model="repo.search"> 
+        <label>
+            <input type="radio" value="local" ng-model="repo.search">
             In Superdesk
         </label>
         <div class="superdeskRepos" ng-show="repo.search == 'local'">
@@ -106,7 +106,7 @@
         </div>
 
     </fieldset>
-    <fieldset ng-show="repo.search === 'aapmm'">      
+    <fieldset ng-show="repo.search === 'aapmm'">
         <div class="field">
             <label for="search-slugline">
                 {{:: 'Slugline' | translate}}
@@ -114,7 +114,7 @@
             <div class="control">
                 <input type="text" id="search-slugline" ng-model="meta.slugline">
             </div>
-        </div>       
+        </div>
         <div class="field">
             <label for="search-decsription">
                 {{:: 'Description' | translate}}
@@ -130,19 +130,13 @@
             <div class="control">
                 <input type="text" id="search-aapkeyword" ng-model="meta.aapkeyword">
             </div>
-        </div>       
+        </div>
     </fieldset>
-    <fieldset ng-show="repo.search === 'paimg'">      
+    <fieldset ng-show="repo.search === 'paimg'">
         <div class="field">
-            <label for="search-headline" translate>Headline</label>
+            <label for="search-text" translate>Search</label>
             <div class="control">
-                <input type="text" id="search-headline" ng-model="meta.headline">
-            </div>
-        </div>       
-        <div class="field">
-            <label for="search-slugline" translate>Slugline(keywords)</label>
-            <div class="control">
-                <input type="text" id="search-slugline" ng-model="meta.slugline">
+                <input type="text" id="search-text" ng-model="meta.text">
             </div>
         </div>
     </fieldset>
