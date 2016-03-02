@@ -1351,7 +1351,7 @@
                         info.push(React.createElement(
                             'h5',
                             {key: 1},
-                            item.slugline || item.type
+                            item.headline || item.type
                         ));
 
                         info.push(React.createElement(
