@@ -772,7 +772,7 @@
                     privileges: {users: 1}
                 })
                 .activity('/users/:_id', {
-                    label: gettext('Users profile'),
+                    label: gettext('Users Profile'),
                     priority: 100,
                     controller: 'UserEditController',
                     templateUrl: asset.templateUrl('superdesk-users/views/edit.html'),
@@ -997,7 +997,7 @@
 
                     scope.save = function() {
                         scope.error = null;
-                        notify.info(gettext('saving..'));
+                        notify.info(gettext('Saving...'));
                         return usersService.save(scope.origUser, scope.user)
                         .then(function(response) {
                             scope.origUser = response;
