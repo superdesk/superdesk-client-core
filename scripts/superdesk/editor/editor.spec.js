@@ -58,12 +58,15 @@ describe('text editor', function() {
         $rootScope.$digest();
         var foo = '<span class="sdfindreplace sdhilite">$foo</span>';
         var fooActive = '<span class="sdfindreplace sdhilite sdactive">$foo</span>';
-        expect(scope.node.innerHTML).toBe('test ' + foo + ' and ' + foo);
+        expect(scope.node.innerHTML).toBe('test ' + fooActive + ' and ' + foo);
+
+        editor.selectNext();
+        expect(scope.node.innerHTML).toBe('test ' + foo + ' and ' + fooActive);
 
         editor.selectNext();
         expect(scope.node.innerHTML).toBe('test ' + fooActive + ' and ' + foo);
 
-        editor.selectNext();
+        editor.selectPrev();
         expect(scope.node.innerHTML).toBe('test ' + foo + ' and ' + fooActive);
 
         editor.selectPrev();
