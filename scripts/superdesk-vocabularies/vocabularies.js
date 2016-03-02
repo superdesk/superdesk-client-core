@@ -100,7 +100,7 @@
                 var activeItems = _.filter($scope.vocabulary.items, function(o) { return o.is_active; });
                 _.each(_.union(_.map(activeItems, 'width'), _.map(activeItems, 'height')), function (item) {
                     if (parseInt(item) < 200) {
-                        $scope.errorMessage = gettext('Minimum height and Width should be greater or equal than 200');
+                        $scope.errorMessage = gettext('Minimum height and width should be greater than or equal to 200');
                     }
                 });
             }

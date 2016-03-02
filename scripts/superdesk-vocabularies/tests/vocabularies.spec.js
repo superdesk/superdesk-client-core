@@ -89,7 +89,7 @@ describe('vocabularies', function() {
                 scope.save();
 
                 $rootScope.$digest();
-                expect(scope.errorMessage).toBe('Minimum height and Width should be greater or equal than 200');
+                expect(scope.errorMessage).toBe('Minimum height and Width should be greater than or equal to 200');
                 expect(api.save).not.toHaveBeenCalled();
                 expect(metadata.initialize).toHaveBeenCalled();
             }));
