@@ -599,10 +599,20 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
             if (!vm.model.association) {
                 return false;
             }
-            superdesk.intent('edit', 'crop', {item: picture, renditions: [{name: 'embed'}], showMetadataEditor: true})
-            .then(function(cropData) {
+            var poi = {x: 0.5, y: 0.5};
+            superdesk.intent('edit', 'crop', {
+                item: picture,
+                renditions: [{
+                    name: 'embed',
+                    width: picture.renditions.viewImage.width,
+                    height: picture.renditions.viewImage.height
+                }],
+                poi: picture.poi || poi,
+                showMetadataEditor: true
+            })
+            .then(function(result) {
                 // return the cropped image
-                api.save('picture_crop', {item: picture, crop: cropData.embed})
+                api.save('picture_crop', {item: picture, crop: result.cropData.embed})
                 .then(function(image) {
                     var url = image.href;
                     // update association
@@ -677,15 +687,24 @@ angular.module('superdesk.editor2', [
                 .on('drop', function(event) {
                     event.preventDefault();
                     var item = angular.fromJson(event.originalEvent.dataTransfer.getData(PICTURE_TYPE));
-                    superdesk.intent('edit', 'crop', {item: item, renditions: [{name: 'embed'}]})
-                        .then(function(cropData) {
-                            return api.save('picture_crop', {item: item, crop: cropData.embed});
-                        })
-                        .then(function(image) {
-                            ctrl.createBlockFromSdPicture(image);
-                        }).finally(function() {
-                            element.removeClass('drag-active');
-                        });
+                    var poi = {x: 0.5, y: 0.5};
+                    superdesk.intent('edit', 'crop', {
+                        item: item,
+                        renditions: [{
+                            name: 'embed',
+                            width: item.renditions.viewImage.width,
+                            height: item.renditions.viewImage.height
+                        }],
+                        poi: item.poi || poi
+                    })
+                    .then(function(result) {
+                        return api.save('picture_crop', {item: item, crop: result.cropData.embed});
+                    })
+                    .then(function(image) {
+                        ctrl.createBlockFromSdPicture(image);
+                    }).finally(function() {
+                        element.removeClass('drag-active');
+                    });
                 })
                 .on('dragover', function(event) {
                     if (event.originalEvent.dataTransfer.types[0] === PICTURE_TYPE) {
