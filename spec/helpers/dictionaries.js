@@ -97,10 +97,10 @@ function Dictionaries() {
     };
 
     this.getWordsCount = function () {
-        return element.all(by.repeater('word in words')).count();
+        return element.all(by.repeater('word in $vs_collection')).count();
     };
 
     this.removeWord = function(index) {
-        return element.all(by.repeater('word in words')).get(index || 0).element(by.css('button')).click();
+        return element.all(by.repeater('word in $vs_collection')).get(index || 0).element(by.css('button')).click();
     };
 }

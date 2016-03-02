@@ -283,11 +283,11 @@ describe('authoring', function() {
         ctrlShiftKey(protractor.Key.END);
         ctrlKey('x');
         authoring.save();
-        authoring.publish();
+        authoring.publish(true);
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 
-    it('keyboard navigation operations on subject dropdown', function() {
+    xit('keyboard navigation operations on subject dropdown', function() {
         //Open any item in Edit mode
         monitoring.actionOnItem('Edit', 1, 1);
 

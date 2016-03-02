@@ -28,7 +28,7 @@ describe('desks', function() {
         desks.edit('Politic Desk');
         expect(desks.deskDescriptionElement().getAttribute('value')).toEqual('New Description');
         expect(desks.deskSourceElement().getAttribute('value')).toEqual('Test');
-        expect(desks.getDeskType().getAttribute('value')).toEqual('string:production');
+        expect(desks.getDeskType().getAttribute('value')).toEqual('production');
         expect(desks.getDeskContentExpiryHours().getAttribute('value')).toEqual('1');
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('10');
     });
@@ -47,7 +47,7 @@ describe('desks', function() {
         expect(desks.deskNameElement().getAttribute('value')).toEqual('Test Desk');
         expect(desks.deskDescriptionElement().getAttribute('value')).toEqual('Test Description');
         expect(desks.deskSourceElement().getAttribute('value')).toEqual('Test Source');
-        expect(desks.getDeskType().getAttribute('value')).toEqual('string:authoring');
+        expect(desks.getDeskType().getAttribute('value')).toEqual('authoring');
         expect(desks.getDeskContentExpiryHours().getAttribute('value')).toEqual('10');
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('1');
     });
@@ -64,7 +64,7 @@ describe('desks', function() {
         expect(desks.deskNameElement().getAttribute('value')).toEqual('Test Desk');
         expect(desks.deskDescriptionElement().getAttribute('value')).toEqual('Test Description');
         expect(desks.deskSourceElement().getAttribute('value')).toEqual('Test Source');
-        expect(desks.getDeskType().getAttribute('value')).toEqual('string:authoring');
+        expect(desks.getDeskType().getAttribute('value')).toEqual('authoring');
         expect(desks.getDeskContentExpiryHours().getAttribute('value')).toEqual('10');
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('1');
     });

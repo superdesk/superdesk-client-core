@@ -50,7 +50,7 @@
         </div>
 
         <div class="authoring-header__row authoring-header__row--2">
-            <div class="authoring-header__item" ng-if="schema.genre">
+            <div class="authoring-header__item" ng-if="schema.genre && !metadata.genre_service">
               <label class="authoring-header__item-label" translate>GENRE</label>
               <div class="authoring-header__input-holder">
                 <div sd-meta-dropdown
@@ -130,6 +130,7 @@
                  ng-disabled="!_editable"
                  data-item="item"
                  data-field="anpa_category"
+                 data-dependent="subject"
                  data-unique="qcode"
                  data-list="availableCategories"
                  data-header="true"
@@ -139,7 +140,7 @@
           </div>
         </div>
 
-        <div class="authoring-header__row" ng-if="metadata.subjectcodes && schema.subject">
+        <div class="authoring-header__row" ng-if="metadata.subjectcodes && schema.subject && !metadata.subjects">
           <div class="authoring-header__item">
             <label class="authoring-header__item-label" translate>SUBJECT</label>
             <div id="subjects"
@@ -165,7 +166,7 @@
                 data-item="item"
                 data-field="subject"
                 data-unique="qcode"
-                data-list="cv.items"
+                data-list="cv.terms"
                 data-cv="cv"
                 ng-disabled="!_editable"
                 data-header="true"
