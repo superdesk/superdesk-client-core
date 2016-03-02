@@ -585,6 +585,27 @@ edit image modal
 		> div {
 			margin-bottom: 20px;
 		}
+		label {
+			font-size: 11px;
+			text-transform: uppercase;
+			color: @grayLight;
+		}
+		input {
+			// border-color: rgba(0, 0, 0, 0.1) !important;
+		 //    border-width: 0 0 1px 0 !important;
+		 //    border-radius: 0px !important;
+		 //    font-size: 13px;
+		 //    margin-left: -6px;
+		 //    background-color: transparent;
+		 //    color: #000 !important;
+		 //    box-sizing: border-box;
+		 //    margin-top: 0;
+		 //    transition: 0.3s;
+		 //    &:focus {
+		 //    	box-shadow: 0 1px 0 0 @sd-blue !important;
+   //  			border-color: @sd-blue !important;
+		 //    }
+		}
 	}
 }
 .crop-area {
@@ -641,5 +662,42 @@ edit image modal
 		.modal-body {
 			overflow-y: hidden !important;
 		}
+	}
+}
+.poi {
+	&__image {
+		&:hover {
+			cursor: crosshair;
+		}
+	}
+	&__cursor {
+		width: 40px;
+		height: 40px;
+		.border-radius(50%);
+		border: 2px solid rgba(255,255,255,0.7);
+	}
+	&__cross-left-top {
+		border-right: 2px solid rgba(255,255,255,0.7);
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 10000;
+	}
+	&__cross-left-bottom {
+		border-top: 2px solid rgba(255,255,255,0.7);
+		position: absolute;
+		left: 0;
+		z-index: 10000;
+	}
+	&__cross-right-bottom {
+		border-left: 2px solid rgba(255,255,255,0.7);
+		position: absolute;
+		z-index: 10000;
+	}
+	&__cross-right-top {
+		border-bottom: 2px solid rgba(255,255,255,0.7);
+		position: absolute;
+		z-index: 10000;
+		top: 0;
 	}
 }
