@@ -45,6 +45,7 @@
                      ng-change="autosave(item)"
                      ng-disabled="!_editable"
                      ng-trim="false">
+              <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
             </div>
           </div>
         </div>

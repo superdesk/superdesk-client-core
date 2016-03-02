@@ -720,9 +720,19 @@
   text-overflow: ellipsis;
 }
 .authoring-header__input-holder {
-  padding: 0;
-  margin: 0;
-  flex-grow: 1;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+    .char-count {
+        font-size: 11px;
+        font-style: italic;
+        color: @sd-text-label;
+        float: right;
+        &.error {
+            color: @red;
+        }
+    }
 }
 
 // --- various layout options ---
