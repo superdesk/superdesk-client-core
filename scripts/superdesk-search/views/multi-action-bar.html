@@ -32,7 +32,7 @@
         <button class="navbtn strict" ng-click="action.unspikeItems()" title="{{ :: 'Unspike' | translate }}" ng-if="state === 'spiked'">
             <i class="big-icon-unspike"></i>
         </button>
-        <button id="send-to-btn" class="navbtn strict" title="{{ :: 'Send to' | translate }}" ng-click="action.sendAs()">
+        <button id="send-to-btn" class="navbtn strict" title="{{ :: 'Send to' | translate }}" ng-if="state !== 'spiked'" ng-click="action.sendAs()">
             <i class="svg-icon-sendto"></i>
         </button>
 	</div>
