@@ -557,7 +557,7 @@
                     }],
                     filters: [{action: 'list', type: 'archive'}],
                     keyboardShortcut: 'ctrl+b',
-                    privileges: {archive: 1},
+                    privileges: {archive_broadcast: 1},
                     condition: function(item) {
                         return (item.lock_user === null || angular.isUndefined(item.lock_user));
                     },
@@ -627,7 +627,7 @@
                     icon: 'edit-line',
                     filters: [{action: 'list', type: 'archive'}],
                     group: 'corrections',
-                    privileges: {archive: 1},
+                    privileges: {rewrite: 1},
                     condition: function(item) {
                         return (item.lock_user === null || angular.isUndefined(item.lock_user));
                     },
