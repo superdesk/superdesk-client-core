@@ -1164,6 +1164,7 @@
             '$location',
             '$document',
             '$timeout',
+            '$injector',
             'packages',
             'asset',
             'api',
@@ -1184,6 +1185,7 @@
             $location,
             $document,
             $timeout,
+            $injector,
             packages,
             asset,
             api,
@@ -1218,7 +1220,9 @@
                             result._items.forEach(function(item) {
                                 self.highlightsById[item._id] = item;
                             });
-                        })
+                        }),
+                        // populates cache for mark for highlights activity dropdown
+                        deskHighlights: highlightsService.get(desks.getCurrentDeskId())
                     });
                 }],
                 link: function(scope, elem) {
@@ -1767,22 +1771,64 @@
                             // Stop event propagation so that click on item action
                             // won't select that item for preview/authoring.
                             event.stopPropagation();
-
                             activityService.start(this.props.activity, {data: {item: this.props.item}});
+                        },
+
+                        getInitialState: function() {
+                            return {open: false};
+                        },
+
+                        onMouseOver: function() {
+                            if (!this.state.open) {
+                                this.setState({open: true});
+                            }
+                        },
+
+                        onMouseOut: function() {
+                            if (this.state.open) {
+                                this.setState({open: false});
+                            }
                         },
 
                         render: function() {
                             var activity = this.props.activity;
-                            return React.createElement(
-                                'li',
-                                null,
-                                React.createElement(
-                                    'a',
-                                    {title: gettext(activity.label), onClick: this.run},
-                                    React.createElement('i', {className: 'icon-' + activity.icon}),
-                                    React.createElement('span', {style: {display: 'inline'}}, gettext(activity.label))
-                                )
-                            );
+                            if (activity.dropdown) {
+                                return React.createElement(
+                                    'li',
+                                    null,
+                                    React.createElement(
+                                        'div',
+                                        {
+                                            className: 'dropdown dropdown-noarrow' + (this.state.open ? ' open' : ''),
+                                            onMouseOver: this.onMouseOver,
+                                            onMouseOut: this.onMOuseOut
+                                        },
+                                        React.createElement(
+                                            'a',
+                                            {className: 'dropdown-toggle', title: activity.label},
+                                            activity.icon ? React.createElement('i', {className: 'icon-' + activity.icon}, '') : null,
+                                            activity.label,
+                                            React.createElement('i', {className: 'icon-chevron-right-thin submenu-icon'})
+                                        ),
+                                        React.createElement(
+                                            'ul',
+                                            {className: 'dropdown-menu right-submenu'},
+                                            $injector.invoke(activity.dropdown, activity, {item: this.props.item})
+                                        )
+                                    )
+                                );
+                            } else {
+                                return React.createElement(
+                                    'li',
+                                    null,
+                                    React.createElement(
+                                        'a',
+                                        {title: gettext(activity.label), onClick: this.run},
+                                        React.createElement('i', {className: 'icon-' + activity.icon}),
+                                        React.createElement('span', {style: {display: 'inline'}}, gettext(activity.label))
+                                    )
+                                );
+                            }
                         }
                     });
 
@@ -2079,6 +2125,22 @@
                                 lock_session: data.lock_session,
                                 lock_time: data.lock_time
                             });
+                        });
+
+                        scope.$on('item:highlight', function(_e, data) {
+                            var item = listComponent.state.itemsById[data.item_id];
+                            if (item) {
+                                var highlights = item.highlights || [];
+                                if (data.marked) {
+                                    highlights = highlights.concat([data.highlight_id]);
+                                } else {
+                                    highlights = highlights.filter(function(highlight) {
+                                        return highlight !== data.highlight_id;
+                                    });
+                                }
+
+                                listComponent.updateItem(data.item_id, {highlights: highlights});
+                            }
                         });
 
                         scope.$on('item:unlock', function(_e, data) {
