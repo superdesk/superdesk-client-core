@@ -62,6 +62,20 @@ function Authoring() {
         this.sendToSidebarOpened(desk, stage);
     };
 
+    /**
+     * function to set embargo date and time inside sendTo panel
+     */
+    this.setEmbargo = function() {
+        var embargoTS = new Date();
+        embargoTS.setDate(embargoTS.getDate() + 2);
+        var embargoDate = embargoTS.getDate() + '/' + (embargoTS.getMonth() + 1) + '/' +
+        embargoTS.getFullYear();
+        var embargoTime = embargoTS.toTimeString().slice(0, 8);
+
+        element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
+        element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
+    };
+
     this.confirmSendTo = function() {
         if (element(by.className('modal-content')).length) {
             element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();

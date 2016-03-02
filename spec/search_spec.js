@@ -301,4 +301,20 @@ describe('search', function() {
         expect(storyNameEl.isDisplayed()).toBe(true);
     });
 
+    it('can display embargo item when set', function() {
+        expect(globalSearch.getItems().count()).toBe(14);
+
+        globalSearch.actionOnItem('Edit', 2);
+
+        authoring.sendToButton.click();
+        authoring.setEmbargo();
+        authoring.sendToButton.click();
+        authoring.save();
+        authoring.publish();
+        expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
+        expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
+        // expect embargo title to contains 'at', of formatted embargo date string from $filter(formatRelativeDate)
+        // (e.g: Thursday, 3. March at 10:35)
+        expect(globalSearch.getItem(0).element(by.className('state_embargo')).getAttribute('title')).toContain('at');
+    });
 });

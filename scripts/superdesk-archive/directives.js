@@ -384,12 +384,17 @@
                 templateUrl: 'scripts/superdesk-archive/views/media-box-list.html'
             };
         })
-        .directive('sdMediaBox', ['$location', 'lock', 'multi', 'archiveService', function($location, lock, multi, archiveService) {
+        .directive('sdMediaBox', ['$location', 'lock', 'multi', 'archiveService', '$filter',
+            function($location, lock, multi, archiveService, $filter) {
             return {
                 restrict: 'A',
                 link: function(scope, element, attrs) {
                     scope.lock = {
                         isLocked: scope.item && (lock.isLocked(scope.item) || lock.isLockedByMe(scope.item))
+                    };
+
+                    scope.embargoTS = function(embargo) {
+                        return $filter('formatRelativeDate')(embargo);
                     };
 
                     scope.$on('item:lock', function(_e, data) {

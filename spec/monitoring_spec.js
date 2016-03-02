@@ -575,4 +575,22 @@ describe('monitoring', function() {
         monitoring.actionOnItem('Edit', 2, 2);
         expect(previewPane.isPresent()).toBe(false);
     });
+
+    it('can display embargo label when set for published item', function() {
+        monitoring.turnOffWorkingStage(0);
+        monitoring.actionOnItem('Edit', 1, 0);
+        authoring.sendToButton.click();
+        authoring.setEmbargo();
+        authoring.sendToButton.click();
+        authoring.save();
+        authoring.publish();
+
+        // filter published text item
+        monitoring.filterAction('text');
+        expect(monitoring.getItem(4, 0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
+        expect(monitoring.getItem(4, 0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
+        // expect embargo title to contains 'at', of formatted embargo date string from $filter(formatRelativeDate)
+        // (e.g: Thursday, 3. March at 10:35)
+        expect(monitoring.getItem(4, 0).element(by.className('state_embargo')).getAttribute('title')).toContain('at');
+    });
 });

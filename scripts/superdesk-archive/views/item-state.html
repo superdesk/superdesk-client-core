@@ -1,1 +1,1 @@
-<span class="state-label state-{{state}}" ng-class="{state_embargo: embargo}">{{embargo ? 'embargoed' : state|removeLodash}}</span>
+<span class="state-label state-{{state}}" ng-class="{state_embargo: embargo}" title="{{:: embargo ? embargoTS(item.embargo) : null}}">{{embargo ? 'embargoed' : state|removeLodash}}</span>

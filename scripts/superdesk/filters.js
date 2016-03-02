@@ -78,6 +78,34 @@
                 return angular.isDefined(format_string) ? moment_timestamp.format(format_string) : moment_timestamp.format();
             };
         }])
+        .filter('formatRelativeDate', [function() {
+            return function(input, format_string) {
+                var COMPARE_FORMAT = 'YYYY-M-D';
+                var DISPLAY_DATE_FORMAT = 'D. MMMM YYYY [at] HH:mm';
+                var DISPLAY_CDATE_FORMAT = 'D. MMMM [at] HH:mm';
+                var DISPLAY_DAY_FORMAT = 'dddd, ';
+                var DISPLAY_TODAY_FORMAT = '[Today], ';
+                var rday, rdate;
+
+                var date = moment.utc(input);
+
+                date.local(); // switch to local time zone
+
+                if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)){
+                    rday = date.format(DISPLAY_TODAY_FORMAT);
+                } else {
+                    rday = date.format(DISPLAY_DAY_FORMAT);
+                }
+
+                if (moment().format('YYYY') === date.format('YYYY')){
+                    rdate = date.format(DISPLAY_CDATE_FORMAT);
+                } else {
+                    rdate = date.format(DISPLAY_DATE_FORMAT);
+                }
+
+                return angular.isDefined(format_string) ? moment.utc(input).format(format_string) : rday + rdate;
+            };
+        }])
         .filter('dateTimeString', ['$filter', function($filter) {
             return function(input) {
                 if (input !== null) {
