@@ -183,6 +183,10 @@
             link: function(scope, elem) {
                 var img;
                 var pointElem;
+                var crossLeftTop;
+                var crossRightTop;
+                var crossLeftBottom;
+                var crossRightBottom;
 
                 elem.css({'position': 'relative'});
 
@@ -216,20 +220,48 @@
                     });
                     img.src = src;
 
-                    pointElem = angular.element('<i class="icon-plus-small"></i>');
+                    pointElem = angular.element('<div class="poi__cursor"></div>');
                     elem.append(pointElem);
                     pointElem.css({
                         'position': 'absolute',
                         'z-index': 10000
                     });
+                    crossLeftTop = angular.element('<div class="poi__cross-left-top"></div>');
+                    elem.append(crossLeftTop); 
+                    crossLeftBottom = angular.element('<div class="poi__cross-left-bottom"></div>');
+                    elem.append(crossLeftBottom); 
+                    crossRightTop = angular.element('<div class="poi__cross-right-top"></div>');
+                    elem.append(crossRightTop); 
+                    crossRightBottom = angular.element('<div class="poi__cross-right-bottom"></div>');
+                    elem.append(crossRightBottom);                    
 
                     drawPoint();
                 }
 
                 function drawPoint() {
                     pointElem.css({
-                        left: (scope.point.x * img.width) - 8,
-                        top: (scope.point.y * img.height) - 8
+                        left: (scope.point.x * img.width) - 20,
+                        top: (scope.point.y * img.height) - 20
+                    });
+                    crossLeftTop.css({
+                        width: (scope.point.x * img.width),
+                        height: (scope.point.y * img.height) - 20
+                    });
+                    crossLeftBottom.css({
+                        width: (scope.point.x * img.width) - 20,
+                        height: ((1 - scope.point.y) * img.height),
+                        top: (scope.point.y * img.height)
+                    });
+                    crossRightTop.css({
+                        width: ((1 - scope.point.x) * img.width),
+                        height: (scope.point.y * img.height),
+                        left: (scope.point.x * img.width) + 22
+                    });
+                    crossRightBottom.css({
+                        width: ((1 - scope.point.x) * img.width),
+                        height: ((1 - scope.point.y) * img.height) - 22,
+                        left: (scope.point.x * img.width),
+                        top: (scope.point.y * img.height) + 22
                     });
                 }
             }

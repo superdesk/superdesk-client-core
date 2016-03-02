@@ -8,16 +8,20 @@
         <div class="change-image__metadata" ng-if="data.showMetadataEditor">
             <div class="change-image__metadata__header">Metadata</div>
             <div>
-                <input type="text" placeholder="Add a headline *" ng-model="data.metadata.headline" ng-change="data.isDirty = true">
+                <label>Headline *</label>
+                <input type="text" ng-model="data.metadata.headline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <input type="text" placeholder="Add a description *" ng-model="data.metadata.description_text" ng-change="data.isDirty = true">
+                <label>Description *</label>
+                <input type="text" ng-model="data.metadata.description_text" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <input type="text" placeholder="Add a slugline *" ng-model="data.metadata.slugline" ng-change="data.isDirty = true">
+                <label>Slugline *</label>
+                <input type="text" ng-model="data.metadata.slugline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <input type="text" placeholder="Add author / photographer" ng-model="data.metadata.byline" ng-change="data.isDirty = true">
+                <label>Author / photographer</label> 
+                <input type="text" ng-model="data.metadata.byline" ng-change="data.isDirty = true" class="line-input">
             </div>
         </div>
         <div id="dynBoxId2" class="preview">
@@ -40,7 +44,8 @@
                     <div sd-image-point
                         data-src="data.item.renditions.viewImage.href"
                         data-point="data.poi"
-                        data-on-change="data.isDirty = true">
+                        data-on-change="data.isDirty = true"
+                        class="poi__image">
                     </div>
                 </div>
             </div>
