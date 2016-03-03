@@ -78,6 +78,7 @@ function Authoring() {
 
     this.confirmSendTo = function() {
         if (element(by.className('modal-content')).length) {
+            browser.sleep(3000);
             element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
         }
     };

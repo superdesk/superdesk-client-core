@@ -310,7 +310,7 @@ describe('search', function() {
         authoring.setEmbargo();
         authoring.sendToButton.click();
         authoring.save();
-        authoring.publish();
+        authoring.close();
         expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
         expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
         // expect embargo title to contains 'at', of formatted embargo date string from $filter(formatRelativeDate)

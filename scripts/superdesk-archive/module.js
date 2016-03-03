@@ -695,9 +695,9 @@
 
     angular.module('superdesk.archive').controller('ArchiveListController', [
         '$scope', '$injector', '$location', '$q', '$timeout', 'superdesk',
-        'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi', '$filter',
+        'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi',
     function ($scope, $injector, $location, $q, $timeout, superdesk, session, api, desks, content,
-        StagesCtrl, notify, multi, $filter) {
+        StagesCtrl, notify, multi) {
 
         var resource,
             self = this;
@@ -844,9 +844,5 @@
             }
             oldQuery = query;
         });
-
-        $scope.embargoTS = function embargoTS(embargo) {
-            return $filter('formatRelativeDate')(embargo);
-        };
     }]);
 })();

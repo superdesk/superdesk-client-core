@@ -90,15 +90,20 @@
                 }
             };
         }])
-        .directive('sdItemState', function() {
+        .directive('sdItemState', ['$filter', function($filter) {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/item-state.html',
                 scope: {
                     'state': '=',
                     'embargo': '='
+                },
+                link: function(scope) {
+                    scope.embargoTS = function() {
+                        return $filter('formatRelativeDate')(scope.embargo);
+                    };
                 }
             };
-        })
+        }])
         .directive('sdInlineMeta', function() {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/inline-meta.html',
@@ -384,17 +389,13 @@
                 templateUrl: 'scripts/superdesk-archive/views/media-box-list.html'
             };
         })
-        .directive('sdMediaBox', ['$location', 'lock', 'multi', 'archiveService', '$filter',
-            function($location, lock, multi, archiveService, $filter) {
+        .directive('sdMediaBox', ['$location', 'lock', 'multi', 'archiveService',
+            function($location, lock, multi, archiveService) {
             return {
                 restrict: 'A',
                 link: function(scope, element, attrs) {
                     scope.lock = {
                         isLocked: scope.item && (lock.isLocked(scope.item) || lock.isLockedByMe(scope.item))
-                    };
-
-                    scope.embargoTS = function(embargo) {
-                        return $filter('formatRelativeDate')(embargo);
                     };
 
                     scope.$on('item:lock', function(_e, data) {
