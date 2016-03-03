@@ -1,4 +1,4 @@
-<div class="package-item item {{ :: data.type }}" ng-class="{locked: isLocked, published: isPublished}">
+<div class="package-item item {{ :: data.type }}" ng-class="{locked: isLocked, published: isPublished, killed: isKilled}">
   <div class="package-item__drag-handle"></div>
   <figure class="package-item__icon-holder" ng-if="data.type === 'composite' || data.type === 'text'">
     <i class="filetype-icon-large-{{ :: data.type }}"></i>

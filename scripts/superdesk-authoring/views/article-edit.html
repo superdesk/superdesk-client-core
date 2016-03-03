@@ -21,9 +21,13 @@
     data-onchange="autosave(item)"></div>
 </div>
 
-<div class="field" class="abstract" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract">
+<div class="field abstract" ng-class="{'limit-error': item.abstract.length > limits.abstract}" ng-if="schema.abstract">
   <label translate>Abstract</label>
-    <span ng-if="schema.abstract.maxlength" sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></span>
+    <span ng-if="schema.abstract.maxlength"
+          sd-character-count
+          data-item="item.abstract"
+          data-html="true"
+          data-limit="schema.abstract.maxlength"></span>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
         sd-text-editor

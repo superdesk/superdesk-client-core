@@ -536,7 +536,8 @@
                     .then(function(result) {
                         scope.data = result;
                         scope.isLocked = lock.isLocked(scope.data);
-                        scope.isPublished = scope.data.state === 'published';
+                        scope.isPublished = _.contains(['published', 'corrected'], scope.data.state);
+                        scope.isKilled =  scope.data.state === 'killed';
                     }, function(response) {
                         scope.error = true;
                     });
