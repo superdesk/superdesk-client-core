@@ -16,6 +16,12 @@ function BaseListController($scope, $location, superdesk, api, search, desks, pr
         $scope.selected.view = null;
     };
 
+    $scope.fetchNext = function(from) {
+        var criteria = self.getQuery();
+        criteria.from = from;
+        self.fetchItems({source: criteria}, true);
+    };
+
     $scope.$on('$routeUpdate', function(e, data) {
         if (!$location.search()._id) {
             $scope.selected.preview = null;

@@ -42,6 +42,10 @@ module.exports = function(config) {
             'bower_components/d3/d3.js',
             'bower_components/jcrop/js/jquery.Jcrop.js',
 
+            'bower_components/react/react.js',
+            'bower_components/react/react-dom.js',
+            'bower_components/classnames/index.js',
+
             path.join(__dirname, 'scripts/**/*.js'),
             path.join(__dirname, 'scripts/**/*.html')
         ],

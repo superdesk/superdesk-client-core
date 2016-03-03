@@ -188,8 +188,8 @@
         return service;
     }
 
-    IngestListController.$inject = ['$scope', '$injector', '$location', 'api', '$rootScope'];
-    function IngestListController($scope, $injector, $location, api, $rootScope) {
+    IngestListController.$inject = ['$scope', '$injector', '$location', 'api', '$rootScope', 'search'];
+    function IngestListController($scope, $injector, $location, api, $rootScope, search) {
         $injector.invoke(BaseListController, this, {$scope: $scope});
 
         $scope.type = 'ingest';
@@ -201,11 +201,11 @@
         $scope.api = api.ingest;
         $rootScope.currentModule = 'ingest';
 
-        this.fetchItems = function(criteria) {
+        this.fetchItems = function(criteria, next) {
             $scope.loading = true;
             criteria.aggregations = 1;
             api.query('ingest', criteria).then(function(items) {
-                $scope.items = items;
+                $scope.items = search.mergeItems(items, $scope.items, next);
             })
             ['finally'](function() {
                 $scope.loading = false;

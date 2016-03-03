@@ -695,9 +695,9 @@
 
     angular.module('superdesk.archive').controller('ArchiveListController', [
         '$scope', '$injector', '$location', '$q', '$timeout', 'superdesk',
-        'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi',
+        'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi', 'search',
     function ($scope, $injector, $location, $q, $timeout, superdesk, session, api, desks, content,
-        StagesCtrl, notify, multi) {
+        StagesCtrl, notify, multi, search) {
 
         var resource,
             self = this;
@@ -750,7 +750,7 @@
             multi.reset();
         };
 
-        this.fetchItems = function fetchItems(criteria) {
+        this.fetchItems = function fetchItems(criteria, next) {
             if (resource == null) {
                 return;
             }
@@ -758,7 +758,7 @@
             criteria.aggregations = 1;
             resource.query(criteria).then(function(items) {
                 $scope.loading = false;
-                $scope.items = items;
+                $scope.items = search.mergeItems(items, $scope.items, next);
             }, function() {
                 $scope.loading = false;
             });

@@ -319,6 +319,25 @@
         this.generateTrackByIdentifier = function (item) {
             return (item.state === 'ingested') ? item._id : item._id + ':' + item._current_version;
         };
+
+        this.mergeItems = function(newItems, oldItems, append) {
+            if (!oldItems || !append) {
+                return newItems;
+            } else {
+                return angular.extend({}, newItems, {_items: _.filter(oldItems._items.concat(newItems._items), duplicate)});
+            }
+        };
+
+        /**
+         * identify duplicate items
+         *
+         * @param {object} a
+         * @param {object} b
+         * @return {boolean}
+         */
+        function duplicate(a, b) {
+            return a._id === b._id;
+        }
     }
 
     TagService.$inject = ['$location', 'desks', 'userList', 'metadata'];
@@ -874,7 +893,7 @@
             desks,
             familyService
         ) { // uff - should it use injector instead?
-            var update = {
+            var preferencesUpdate = {
                 'archive:view': {
                     'allowed': [
                         'mgrid',
@@ -900,14 +919,11 @@
 
                     scope.previewingBroadcast = false;
 
-                    var updateTimeout,
-                        criteria = search.query($location.search()).getCriteria(true),
-                        list = elem.find('.shadow-list-holder'),
+                    var criteria = search.query($location.search()).getCriteria(true),
                         oldQuery = _.omit($location.search(), '_id');
 
                     scope.flags = controller.flags;
                     scope.selected = scope.selected || {};
-                    scope.rendering = false;
 
                     scope.repo = {
                         ingest: true, archive: true,
@@ -921,17 +937,17 @@
                     scope.$on('item:unspike', queryItems);
                     scope.$on('item:duplicate', queryItems);
                     scope.$on('content:expired', queryItems);
+
                     scope.$on('broadcast:preview', function(event, args) {
                         scope.previewingBroadcast = true;
                         scope.preview(args.item);
                     });
+
                     scope.$on('broadcast:created', function(event, args) {
                         scope.previewingBroadcast = true;
                         queryItems();
                         scope.preview(args.item);
                     });
-
-                    list.on('scroll', handleScroll);
 
                     scope.$watch('selected', function(newVal, oldVal) {
                         if (!newVal && scope.previewingBroadcast) {
@@ -947,43 +963,10 @@
                         }
                     }, true);
 
-                    /*
-                     * Function for creating small delay,
-                     * before activating render function
-                     */
-                    function handleScroll($event) {
-                        if (scope.rendering) {
-                            $event.preventDefault();
-                            return;
-                        }
-
-                        $timeout.cancel(updateTimeout);
-                        updateTimeout = $timeout(renderIfNeeded, 100, false);
-                    }
-
-                    /**
-                     * Trigger render in case user scrolls to the very end of list
-                     */
-                    function renderIfNeeded() {
-                        if (!scope.items) {
-                            return; // automatic scroll after removing items
-                        }
-
-                        if (isListEnd(list[0]) && !scope.rendering) {
-                            scope.rendering = true;
-                            render(null, true);
-                        }
-                    }
-
-                    /**
-                     * Check if we reached end of the list elem
-                     *
-                     * @param {Element} elem
-                     * @return {Boolean}
-                     */
-                    function isListEnd(elem) {
-                        return elem.scrollTop + elem.offsetHeight + 300 >= elem.scrollHeight;
-                    }
+                    // public api - called by list when needed
+                    scope.fetchNext = function() {
+                        render(null, true);
+                    };
 
                     var nextUpdate;
                     var shouldUpdate;
@@ -1074,20 +1057,7 @@
                         }
 
                         function setScopeItems(items) {
-                            if (!scope.items) { // initial set of items
-                                scope.items = items;
-                            } else if (next) { // adding new items to list
-                                var prevItems = scope.items._items;
-                                scope.items = angular.extend(items, {
-                                    _items: prevItems.concat(items._items)
-                                });
-                            } else { // replacing items with new ones, but keep old objects if not changed
-                                scope.items = items;
-                            }
-
-                            scope.$applyAsync(function() { // next digest will render
-                                scope.rendering = false;
-                            });
+                            scope.items = search.mergeItems(items, scope.items, next);
                         }
                     }
 
@@ -1139,8 +1109,8 @@
 
                     function setView(view) {
                         scope.view = view || 'mgrid';
-                        update['archive:view'].view = view || 'mgrid';
-                        preferencesService.update(update, 'archive:view');
+                        preferencesUpdate['archive:view'].view = view || 'mgrid';
+                        preferencesService.update(preferencesUpdate, 'archive:view');
                     }
 
                     function toggleView() {

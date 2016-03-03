@@ -173,20 +173,6 @@ describe('monitoring', function() {
             expect(api.query).toHaveBeenCalled();
         }));
 
-        it('can generate unique track by id', inject(function($rootScope, $compile) {
-            var scope = $rootScope.$new(),
-                $elm = $compile('<div sd-monitoring-view></div>')(scope);
-            scope.$digest();
-
-            var sdGroupElement = $elm.find('#group'),
-                iScope = sdGroupElement.isolateScope(),
-                item = {state: 'ingested', _id: '123', '_current_version': 'dddd'};
-
-            expect(iScope.generateTrackByIdentifier(item)).toBe('123');
-            item = {state: 'foo', _id: 'test', _current_version: '123'};
-            expect(iScope.generateTrackByIdentifier(item)).toBe('test:123');
-        }));
-
         it('can edit non spiked item', inject(function($controller, $rootScope, $compile, authoringWorkspace) {
             var scope = $rootScope.$new(),
                 $elm = $compile('<div sd-monitoring-view></div>')(scope);

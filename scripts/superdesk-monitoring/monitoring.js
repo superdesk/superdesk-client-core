@@ -288,7 +288,6 @@
 
         var ITEM_HEIGHT = 57,
             ITEMS_COUNT = 5,
-            BUFFER = 8,
             UP = -1,
             DOWN = 1,
             ENTER_KEY = 13,
@@ -318,12 +317,11 @@
                 scope.cachePreviousItems = [];
                 scope.limited = (monitoring.singleGroup || scope.group.type === 'highlights') ? false : true;
 
-                /**
-                  * Generates Identifier to be used by track by expression.
-                  */
-                scope.generateTrackByIdentifier = function(item) {
-                    return search.generateTrackByIdentifier(item);
-                };
+                scope.style = {};
+                if (scope.limited) {
+                    scope.style.maxHeight = scope.group.max_items ? scope.group.max_items * ITEM_HEIGHT : null;
+                }
+
                 scope.edit = edit;
                 scope.select = select;
                 scope.preview = preview;
@@ -470,14 +468,10 @@
                     queryTimeout = $timeout(queryItems, 50, false);
                 }
 
-                var list = elem[0].getElementsByClassName('stage-content')[0],
-                    listContent = elem[0].getElementsByClassName('inline-content-items')[0],
-                    scrollElem = elem.find('.stage-content').first();
-
+                var scrollElem = elem.find('.stage-content').first();
                 scrollElem.on('keydown', handleKey);
-                scrollElem.on('scroll', handleScroll);
                 scope.$on('$destroy', function() {
-                    scrollElem.off();
+                    scrollElem.off('keydown');
                 });
 
                 var criteria,
@@ -522,8 +516,8 @@
 
                 function queryItems() {
                     criteria = cards.criteria(scope.group, null, monitoring.queryParam);
-                    criteria.source.size = 0; // we only need to get total num of items
-                    scope.total = null;
+                    criteria.source.from = 0;
+                    criteria.source.size = 25;
 
                     if (desks.changeDesk) {
                         desks.changeDesk = false;
@@ -534,39 +528,19 @@
                     return apiquery().then(function(items) {
                         monitoring.totalItems = items._meta.total;
                         scope.total = items._meta.total;
-                        scope.$applyAsync(render);
+                        scope.items = merge(items);
                     });
                 }
 
-                function render() {
-                    var top = scrollElem[0].scrollTop,
-                        start = Math.floor(top / ITEM_HEIGHT),
-                        from = Math.max(0, start - BUFFER),
-                        itemsCount = scope.numItems || ITEMS_COUNT,
-                        to = Math.min(scope.total, start + itemsCount + BUFFER);
-
-                    if (parseInt(list.style.height, 10) !== Math.min(itemsCount, scope.total) * ITEM_HEIGHT) {
-                        list.style.height = (Math.min(itemsCount, scope.total) * ITEM_HEIGHT) + 'px';
-                    }
-
-                    criteria.source.from = from;
-                    criteria.source.size = to - from;
-
-                    var lookup = multi.getIds();    //Ids of selected items
+                function render(next) {
+                    var lookup = multi.getIds(); // Ids of selected items
                     return apiquery().then(function(items) {
-                        scope.$on('multi:reset', function(event, args) {
-                            lookup = null;
-                            _.merge(items._items, args);
-                        });
-
                         scope.$applyAsync(function() {
                             if (scope.total !== items._meta.total) {
                                 scope.total = items._meta.total;
-                                list.style.height = (scope.total * ITEM_HEIGHT) + 'px';
                             }
 
-                            listContent.style.paddingTop = (from * ITEM_HEIGHT) + 'px';
-                            scope.items = merge(items._items);
+                            scope.items = merge(items, next);
 
                             if (lookup != null) {
                                 _.filter(items._items, function(item) {
@@ -581,6 +555,11 @@
                         });
                     });
                 }
+
+                scope.fetchNext = function(from) {
+                    criteria.source.from = from;
+                    render(true);
+                };
 
                 /**
                  * Request the data on search or archive endpoints
@@ -608,40 +587,19 @@
                     render();
                 }
 
-                function renderScroll() {
-                    scope.loading = true;
-                    return render()
-                        .then(function(result) {
-                            scope.loading = false;
-                            return result;
-                        });
-                }
-
                 function viewSingleGroup(group, type) {
                     monitoring.viewSingleGroup(group, type);
                 }
 
-                function merge(newItems) {
-                    var next = [],
-                        olditems = scope.items || [];
-                    angular.forEach(newItems, function(item) {
-                        var filter = (item.state === 'ingested') ?
-                                        {_id: item._id} : {_id: item._id, _current_version: item._current_version};
-                        var old = _.find(olditems, filter);
-                        next.push(old ? angular.extend(old, item) : item);
-                    });
-
-                    return next;
-                }
-
-                function handleScroll(event) {
-                    if ($rootScope.itemToogle) {
-                        $rootScope.itemToogle(false);
-                        $rootScope.itemToogle = null;
+                function merge(items, next) {
+                    if (next && scope.items) {
+                        var prevItems = scope.items._items;
+                        return angular.extend(items, {
+                            _items: prevItems.concat(items._items)
+                        });
+                    } else {
+                        return items;
                     }
-
-                    $timeout.cancel(updateTimeout);
-                    updateTimeout = $timeout(renderScroll, 100, false);
                 }
 
                 function handleKey(event) {
@@ -651,7 +609,6 @@
                         event.stopPropagation();
                         $timeout.cancel(updateTimeout);
                         move(MOVES[code], event);
-                        handleScroll(); // make sure we scroll after moving
                     } else if (code === ENTER_KEY) {
                         scope.$applyAsync(function() {
                             edit(scope.selected);

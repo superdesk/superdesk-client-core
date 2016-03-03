@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('superdesk.search.react', [])
+    angular.module('superdesk.search.react', ['superdesk.highlights'])
         .directive('sdItemsList', [
             '$location',
             '$document',
@@ -591,33 +591,40 @@
                         toggle: function(event) {
                             this.stopEvent(event);
                             this.setState({open: !this.state.open}, function() {
+                                ReactDOM.unmountComponentAtNode(menuHolderElem);
                                 if (this.state.open) {
-                                    console.time('render');
+                                    // first render it somewhere not visible
                                     var menuComponent = ReactDOM.render(this.renderMenu({top: 0, left: -500}), menuHolderElem);
+
+                                    // get its size
                                     var menuElem = ReactDOM.findDOMNode(menuComponent);
+                                    var mainElem = document.getElementById('main-container');
                                     var menuRect = menuElem.getBoundingClientRect();
                                     var width = menuRect.width;
                                     var height = menuRect.height;
 
+                                    // get button position
                                     var iconRect = ReactDOM.findDOMNode(this)
                                         .getElementsByClassName('icon-dots-vertical')[0]
                                         .getBoundingClientRect();
+
+                                    // compute menu position
                                     var top = iconRect.top + iconRect.height;
                                     var left = iconRect.left + iconRect.width - width;
 
-                                    // menu goes off the view on right side
-                                    if (left + width + 5 > menuHolderElem.clientWidth) {
+                                    // menu goes off on the right side
+                                    if (left + width + 5 > mainElem.clientWidth) {
                                         left -= width;
                                         left += iconRect.width;
                                     }
 
-                                    // menu is too far on left size
+                                    // menu goes off on the left side
                                     if (left - 48 < 0) { // 48 is left bar width
                                         left = iconRect.left;
                                     }
 
-                                    // menu is out on the bottom side
-                                    if (top + height + 5 > menuHolderElem.clientHeight) {
+                                    // menu goest out on the bottom side
+                                    if (top + height + 35 > mainElem.clientHeight) { // 30 is bottom bar
                                         top -= height;
                                         top -= iconRect.height;
                                         top -= 16; // menu margin
@@ -625,10 +632,6 @@
 
                                     menuElem.style.left = left.toFixed() + 'px';
                                     menuElem.style.top = top.toFixed() + 'px';
-
-                                    console.timeEnd('render');
-                                } else {
-                                    ReactDOM.unmountComponentAtNode(menuHolderElem);
                                 }
                             });
                         },
@@ -1042,13 +1045,20 @@
                                 });
                             }.bind(this);
 
+                            var isEmpty = !this.state.itemsList.length;
                             return React.createElement(
                                 'ul',
                                 {
-                                    className: this.state.view + '-view list-view',
+                                    className: classNames(
+                                        'list-view',
+                                        this.state.view + '-view',
+                                        {'list-without-items': isEmpty}
+                                    ),
                                     tabIndex: '0'
                                 },
-                                this.state.itemsList.map(createItem)
+                                isEmpty ?
+                                    React.createElement('li', {}, gettext('There are currently no items')) :
+                                    this.state.itemsList.map(createItem)
                             );
                         }
                     });
@@ -1106,6 +1116,8 @@
                                 itemsList: itemsList,
                                 itemsById: itemsById,
                                 view: scope.view
+                            }, function() {
+                                scope.rendering = false;
                             });
                         });
 
@@ -1158,6 +1170,53 @@
 
                             listComponent.setState({itemsById: itemsById});
                         });
+
+                        elem.on('scroll', handleScroll);
+
+                        scope.$on('$destroy', function() {
+                            elem.off('scroll');
+                        });
+
+                        var updateTimeout;
+
+                        /**
+                         * Function for creating small delay,
+                         * before activating render function
+                         */
+                        function handleScroll($event) {
+                            if (scope.rendering) { // ignore
+                                $event.preventDefault();
+                                return;
+                            }
+
+                            listComponent.closeActionsMenu();
+                            $timeout.cancel(updateTimeout);
+                            updateTimeout = $timeout(renderIfNeeded, 100, false);
+                        }
+
+                        /**
+                         * Trigger render in case user scrolls to the very end of list
+                         */
+                        function renderIfNeeded() {
+                            if (!scope.items) {
+                                return; // automatic scroll after removing items
+                            }
+
+                            if (isListEnd(elem[0]) && !scope.rendering) {
+                                scope.rendering = true;
+                                scope.fetchNext(listComponent.state.itemsList.length);
+                            }
+                        }
+
+                        /**
+                         * Check if we reached end of the list elem
+                         *
+                         * @param {Element} elem
+                         * @return {Boolean}
+                         */
+                        function isListEnd(elem) {
+                            return elem.scrollTop + elem.offsetHeight + 200 >= elem.scrollHeight;
+                        }
                     });
                 }
             };
