@@ -300,9 +300,9 @@
                     img = new Image();
                     img.onload = function() {
                         angular.element(img).css({
-                            'position': 'absolute',
-                            'left': 0,
-                            'top': 0
+                            // 'position': 'absolute',
+                            // 'left': 0,
+                            // 'top': 0
                         });
                         elem.append(img);
                     };
