@@ -65,6 +65,7 @@
         abstract: {maxlength: 160},
         body_html: {},
         byline: {},
+        dateline: {},
         located: {},
         sign_off: {},
         genre: {},
