@@ -97,7 +97,7 @@
                                 <td class="align-right">{{queue_item.state}}</td>
                                 <td class="align-right">{{queue_item.error_message}}</td>
                                 <td class="align-right">
-                                    <button class="btn btn-small" ng-if="queue_item.state === 'success' || queue_item.state === 'error'" ng-click="scheduleToSend(queue_item)">{{ :: 'Resend' | translate}}</button>
+                                    <button class="btn btn-small" ng-if="queue_item.state === 'success' || queue_item.state === 'failed'" ng-click="scheduleToSend(queue_item)">{{ :: 'Resend' | translate}}</button>
                                 </td>
                             </tr>
                         </tbody>
