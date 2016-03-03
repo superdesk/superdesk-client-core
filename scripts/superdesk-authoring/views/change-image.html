@@ -56,7 +56,13 @@
                 <div class="crop-area thumbnails">
                     <ul>
                         <li ng-click="selectRendition()" ng-class="{active: selectedRendition === null}">
-                            <img src="{{data.item.renditions.viewImage.href}}">
+                            <!--img src="{{data.item.renditions.viewImage.href}}"-->
+                            <div sd-image-point
+                                data-src="data.item.renditions.viewImage.href"
+                                data-point="data.poi"
+                                data-on-change="data.isDirty = true"
+                                class="poi__image">
+                            </div>
                             <label class="field-label" translate>Original</label>
                         </li>
                         <li ng-repeat="rendition in data.renditions track by rendition.name" ng-click="selectRendition(rendition)" ng-class="{active: rendition === selectedRendition}">
