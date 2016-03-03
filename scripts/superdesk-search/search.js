@@ -2022,7 +2022,10 @@
                         var listComponent = ReactDOM.render(itemList, elem[0]);
 
                         $document.on('keydown', function(event) {
-                            listComponent.handleKey(event);
+                            // perform the action only if the key has been triggered inside the element
+                            if (elem.get(0).contains(event.target)) {
+                                listComponent.handleKey(event);
+                            }
                         });
 
                         scope.$on('$destroy', function() {
