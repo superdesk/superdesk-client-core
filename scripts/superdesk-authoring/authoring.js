@@ -2868,8 +2868,8 @@
         init();
     }
 
-    ItemAssociationDirective.$inject = ['superdesk', 'renditions'];
-    function ItemAssociationDirective(superdesk, renditions) {
+    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout'];
+    function ItemAssociationDirective(superdesk, renditions, $timeout) {
         return {
             scope: {
                 rel: '=',
@@ -2959,10 +2959,12 @@
 
                 scope.upload = function() {
                     if (scope.editable) {
-                        superdesk.intent('upload', 'media').then(function(images) {
+                        superdesk.intent('upload', 'media', {uniqueUpload: true}).then(function(images) {
+                            // open the view to edit the PoI and the cropping areas
                             if (images) {
-                                var data = updateItemAssociation(images[0]);
-                                scope.onchange({item: scope.item, data: data});
+                                $timeout(function() {
+                                    scope.edit(images[0]);
+                                }, 0, false);
                             }
                         });
                     }
