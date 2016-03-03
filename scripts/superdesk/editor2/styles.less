@@ -27,6 +27,16 @@
     &--selected {
         border: 1px solid #5EA9C8;
     }
+    // hide text field on mouse out when empty if not alone
+    &--not-alone-and-empty {
+        .text-editor {
+            opacity: 0;
+            .transition(opacity .25s);
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
     &__container {
         position: relative;
         .text-editor {

@@ -1012,6 +1012,11 @@ angular.module('superdesk.editor2', [
                     scope.medium.subscribe('hideToolbar', function() {
                         editorElem.removeClass('toolbar-visible');
                     });
+                    // update the toolbar, bc it can be displayed at the
+                    // wrong place if offset of block has changed
+                    editorElem.on('focus', function() {
+                        scope.medium.getExtensionByName('toolbar').positionStaticToolbar();
+                    });
                     scope.$on('spellcheck:run', render);
                     scope.$on('key:ctrl:shift:s', render);
                     function cancelTimeout(event) {
