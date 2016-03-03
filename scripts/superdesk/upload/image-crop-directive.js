@@ -277,10 +277,10 @@
             link: function(scope, elem) {
                 var img;
                 var pointElem;
-                var crossLeftTop;
-                var crossRightTop;
-                var crossLeftBottom;
-                var crossRightBottom;
+                var crossLeft;
+                var crossTop;
+                var crossBottom;
+                var crossRight;
 
                 elem.css({'position': 'relative'});
 
@@ -300,9 +300,9 @@
                     img = new Image();
                     img.onload = function() {
                         angular.element(img).css({
-                            'position': 'absolute',
-                            'left': 0,
-                            'top': 0
+                            // 'position': 'absolute',
+                            // 'left': 0,
+                            // 'top': 0
                         });
                         elem.append(img);
                     };
@@ -322,16 +322,15 @@
                         'position': 'absolute',
                         'z-index': 10000
                     });
-                    /*
-                    crossLeftTop = angular.element('<div class="poi__cross-left-top"></div>');
-                    elem.append(crossLeftTop); 
-                    crossLeftBottom = angular.element('<div class="poi__cross-left-bottom"></div>');
-                    elem.append(crossLeftBottom); 
-                    crossRightTop = angular.element('<div class="poi__cross-right-top"></div>');
-                    elem.append(crossRightTop); 
-                    crossRightBottom = angular.element('<div class="poi__cross-right-bottom"></div>');
-                    elem.append(crossRightBottom);
-                    */
+                    
+                    crossLeft = angular.element('<div class="poi__cross-left"></div>');
+                    elem.append(crossLeft);
+                    crossRight = angular.element('<div class="poi__cross-right"></div>');
+                    elem.append(crossRight); 
+                    crossTop = angular.element('<div class="poi__cross-top"></div>');
+                    elem.append(crossTop);
+                    crossBottom = angular.element('<div class="poi__cross-bottom"></div>');
+                    elem.append(crossBottom);                      
 
                     drawPoint();
                 }
@@ -340,29 +339,25 @@
                     pointElem.css({
                         left: (scope.point.x * img.width) - 20,
                         top: (scope.point.y * img.height) - 20
-                    });
-                    /*
-                    crossLeftTop.css({
-                        width: (scope.point.x * img.width),
-                        height: (scope.point.y * img.height) - 20
-                    });
-                    crossLeftBottom.css({
+                    });                   
+                    crossLeft.css({
                         width: (scope.point.x * img.width) - 20,
-                        height: ((1 - scope.point.y) * img.height),
                         top: (scope.point.y * img.height)
                     });
-                    crossRightTop.css({
-                        width: ((1 - scope.point.x) * img.width),
-                        height: (scope.point.y * img.height),
-                        left: (scope.point.x * img.width) + 22
+                    crossRight.css({
+                        width: ((1 - scope.point.x) * img.width) - 24,
+                        top: (scope.point.y * img.height),
+                        left: (scope.point.x * img.width) + 24
                     });
-                    crossRightBottom.css({
-                        width: ((1 - scope.point.x) * img.width),
-                        height: ((1 - scope.point.y) * img.height) - 22,
-                        left: (scope.point.x * img.width),
-                        top: (scope.point.y * img.height) + 22
+                    crossBottom.css({
+                        height: ((1 - scope.point.y) * img.height) - 24,
+                        top: (scope.point.y * img.height) + 24,
+                        left: (scope.point.x * img.width) + 1
                     });
-                    */
+                    crossTop.css({
+                        height: (scope.point.y * img.height) - 20,
+                        left: (scope.point.x * img.width) + 1
+                    });
                 }
             }
         };
