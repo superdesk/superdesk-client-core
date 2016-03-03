@@ -501,7 +501,8 @@
                 link: function(scope, elem) {
                     scope.$watch('item.renditions[rendition].href', function(href) {
                         var figure = elem.find('figure'),
-                            oldImg = figure.find('img').css('opacity', 0.5);
+                            oldImg = figure.find('img').css('opacity', 0.5),
+                            previewHover = '<div class="preview-overlay"><i class="icon-fullscreen"></i></div>';
                         if (href) {
                             var img = new Image();
                             img.onload = function() {
@@ -509,6 +510,7 @@
                                     oldImg.replaceWith(img);
                                 } else {
                                     figure.html(img);
+                                    figure.append(previewHover);
                                 }
                                 _calcRatio();
                             };
