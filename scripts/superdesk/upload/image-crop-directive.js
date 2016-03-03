@@ -5,6 +5,73 @@
         'superdesk.translate'
     ])
 
+    .directive('sdImageCropView', [function() {
+        return {
+            scope: {
+                src: '=',
+                cropData: '=',
+                original: '='
+            },
+            link: function(scope, elem) {
+                var img;
+                var darkBox = angular.element('<div></div>');
+                var lightBox = angular.element('<div></div>');
+
+                $(elem).css({
+                    'position': 'relative'
+                });
+
+                scope.$watch('src', function() {
+                    img = new Image();
+                    img.onload = function() {
+                        elem.empty();
+
+                        $(img).css({
+                            'position': 'absolute',
+                            'top': 0,
+                            'left': 0,
+                            'z-index': 1000
+                        });
+
+                        darkBox.css({
+                            'background': 'rgba(0, 0, 0, 0.4)',
+                            'width': img.width,
+                            'height': img.height,
+                            'position': 'absolute',
+                            'top': 0,
+                            'left': 0,
+                            'z-index': 1100
+                        });
+
+                        elem.append(img);
+                        elem.append(darkBox);
+                        elem.append(lightBox);
+
+                        updateLightBox();
+                    };
+                    img.src = scope.src;
+                });
+
+                scope.$watch('cropData', updateLightBox);
+
+                function updateLightBox() {
+                    if (img && scope.original && scope.cropData) {
+                        var ratio = img.height / scope.original.height;
+                        lightBox.css({
+                            'background': 'rgba(255, 255, 255, 0.4)',
+                            'position': 'absolute',
+                            'top': scope.cropData.CropTop * ratio,
+                            'left': scope.cropData.CropLeft * ratio,
+                            'width': (scope.cropData.CropRight - scope.cropData.CropLeft) * ratio,
+                            'height': (scope.cropData.CropBottom - scope.cropData.CropTop) * ratio,
+                            'z-index': 1200
+                        });
+                    }
+                }
+            }
+        };
+    }])
+
     /**
      * sd-image-crop based on Jcrop tool and provides Image crop functionality for
      * provided Aspect ratio and other attributes.
