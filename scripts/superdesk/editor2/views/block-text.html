@@ -1,11 +1,12 @@
 <div class="dropdown" dropdown>
+    <sd-add-content ng-if="config.multiBlockEdition" class="text-editor__add-content"></sd-add-content>
     <pre class="text-editor editor-type-text"
         ng-show="type=='preformatted'"
         spellcheck="false">
     </pre>
     <!-- Placeholder text is temporary, ideally it should come from content type -->
     <div class="text-editor editor-type-html"
-        placeholder="Add text here"
+        placeholder="{{ ::'Add content here' | translate }}"
         ng-show="type=='text' || !type"
         spellcheck="false">
     </div>

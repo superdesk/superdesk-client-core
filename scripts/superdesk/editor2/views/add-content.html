@@ -1,0 +1,15 @@
+<div class="add-content" ng-class="{'add-content--expanded': vm.expanded}">
+    <button class="add-content__plus-btn dropdown-toggle sd-create-btn"
+            ng-click="$event.preventDefault(); vm.toogleExpand()">
+        <i class="svg-icon-plus"></i>
+        <span class="circle"></span>
+    </button>
+    <div class="add-content__actions" ng-show="vm.expanded">
+        <span ng-click="vm.triggerAction('addEmbed')"  tooltip="{{ :: 'add an embed' | translate }}" tooltip-placement="bottom">
+            <i class="icon-calendar-list"></i>
+        </span>
+        <span ng-click="vm.triggerAction('addPicture')" tooltip="{{ :: 'add a picture' | translate }}" tooltip-placement="bottom">
+            <i class="icon-photo"></i>
+        </span>
+    </div>
+</div>
