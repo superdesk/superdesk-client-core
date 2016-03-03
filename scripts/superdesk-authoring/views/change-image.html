@@ -38,17 +38,11 @@
                 <div class="crop-area selected" ng-show="selectedRendition">
                     <div ng-repeat="rendition in data.renditions track by rendition.name" ng-show="selectedRendition.name === rendition.name">
                         <label class="field-label">{{selectedRendition.name}}</label>
-                        <div sd-image-crop
-                            data-show-Min-Size-Error="true"
-                            data-box-width="1200"
-                            data-box-height="800"
+                        <div sd-image-crop-view
                             data-src="data.item.renditions.viewImage.href"
                             data-original="data.item.renditions.original"
-                            data-rendition="rendition"
-                            data-crop-init="data.item.renditions[rendition.name]"
                             data-crop-data="data.cropData[rendition.name]"
-                            data-on-change="onChange(renditionName, cropData)">
-                        </div>
+                        ></div>
                     </div>
                 </div>
             </div>
@@ -56,7 +50,6 @@
                 <div class="crop-area thumbnails">
                     <ul>
                         <li ng-click="selectRendition()" ng-class="{active: selectedRendition === null}">
-                            <!--img src="{{data.item.renditions.viewImage.href}}"-->
                             <div sd-image-point
                                 data-src="data.item.renditions.viewImage.href"
                                 data-point="data.poi"
@@ -66,8 +59,7 @@
                             <label class="field-label" translate>Original</label>
                         </li>
                         <li ng-repeat="rendition in data.renditions track by rendition.name" ng-click="selectRendition(rendition)" ng-class="{active: rendition === selectedRendition}">
-                            <img src="{{data.item.renditions.viewImage.href}}">
-                            <!--div sd-image-crop
+                            <div sd-image-crop
                                 data-show-Min-Size-Error="true"
                                 data-box-width="600"
                                 data-box-height="400"
@@ -76,8 +68,8 @@
                                 data-rendition="rendition"
                                 data-crop-init="data.item.renditions[rendition.name]"
                                 data-crop-data="data.cropData[rendition.name]"
-                                data-on-change="data.isDirty = true">
-                            </div-->
+                                data-on-change="onChange(renditionName, cropData)">
+                            </div>
 
                             <label class="field-label">{{ rendition.name }}</label>
                         </li>
