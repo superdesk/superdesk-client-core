@@ -66,7 +66,7 @@
             $scope.setPasswordError = null;
             api.resetPassword.create({token: $scope.token, password: $scope.password})
             .then(function(result) {
-                notify.success(gettext('Password is changed. You can login using your new password.'));
+                notify.success(gettext('Password was changed. You can login using your new password.'));
                 $location.path('/').search({});
             }, function(rejection) {
                 $scope.setPasswordError = rejection.status;
