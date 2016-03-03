@@ -620,12 +620,16 @@ edit image modal
 				.box-shadow(0 1px 0 #d6d6d6);
 				.border-radius(2px);
 				img {
-					width: 100%;
+					max-width: 100%;
+					max-height: 100px;
 				}
 				&.active {
 					border: 1px solid #b3b3b3;
 					background-color: white;
 					.box-shadow(0 1px 0 #b3b3b3);
+				}
+				label {
+					color: #808080;
 				}
 			}
 		}
@@ -659,29 +663,36 @@ edit image modal
 		height: 40px;
 		.border-radius(50%);
 		border: 2px solid rgba(255,255,255,0.7);
+		.transition(all .3s);
 	}
-	&__cross-left-top {
-		border-right: 2px solid rgba(255,255,255,0.7);
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 10000;
-	}
-	&__cross-left-bottom {
-		border-top: 2px solid rgba(255,255,255,0.7);
+	&__cross-left {
+		height: 2px;
+		background-color: rgba(255,255,255,0.7);
 		position: absolute;
 		left: 0;
 		z-index: 10000;
+		.transition(all .3s);
 	}
-	&__cross-right-bottom {
-		border-left: 2px solid rgba(255,255,255,0.7);
+	&__cross-right {
+		height: 2px;
+		background-color: rgba(255,255,255,0.7);
 		position: absolute;
 		z-index: 10000;
+		.transition(all .3s);
 	}
-	&__cross-right-top {
-		border-bottom: 2px solid rgba(255,255,255,0.7);
+	&__cross-top {
+		width: 2px;
+		background-color: rgba(255,255,255,0.7);
 		position: absolute;
 		z-index: 10000;
 		top: 0;
+		.transition(all .3s);
+	}
+	&__cross-bottom {
+		width: 2px;
+		background-color: rgba(255,255,255,0.7);
+		position: absolute;
+		z-index: 10000;
+		.transition(all .3s);
 	}
 }
