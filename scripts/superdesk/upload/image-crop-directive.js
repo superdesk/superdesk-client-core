@@ -162,17 +162,15 @@
 
                 function validateConstraints(img, rendition) {
                     if (img.width < rendition.width || img.height < rendition.height) {
-                        scope.$apply(function() {
-                            var text = $interpolate(
-                                gettext('Sorry, but image must be at least {{ r.width }}x{{ r.height }},' +
-                                        ' (it is {{ img.width }}x{{ img.height }}).')
-                            )({
-                                r: rendition,
-                                img: img
-                            });
-
-                            elem.append('<p class="error">' + text);
+                        var text = $interpolate(
+                            gettext('Sorry, but image must be at least {{ r.width }}x{{ r.height }},' +
+                                    ' (it is {{ img.width }}x{{ img.height }}).')
+                        )({
+                            r: rendition,
+                            img: img
                         });
+
+                        elem.append('<p class="error">' + text);
 
                         return false;
                     }
