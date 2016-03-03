@@ -430,7 +430,9 @@ function Authoring() {
     };
 
     this.actionOpenRelatedItem = function(item) {
+        browser.sleep(300);
         element.all(by.css('[ng-click="actions.open.method(selected)"]')).get(1).click();
+        browser.sleep(300);
     };
 
     this.getHeaderSluglineText = function() {
