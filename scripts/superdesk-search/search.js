@@ -2728,7 +2728,7 @@
                                         q = (scope.query ? scope.query + ' ' + addItemSubjectName : addItemSubjectName);
 
                                     $location.search('q', q);
-                                } else {
+                                } else if (item.subject.length < subjectCodes.length) {
                                     /* Removing subject codes from filter */
                                     var params = $location.search();
                                     if (params.q) {
@@ -2737,6 +2737,7 @@
                                                 var removeItemSubjectName = 'subject.qcode:(' + subjectCodes[j].qcode + ')';
                                                 params.q = params.q.replace(removeItemSubjectName, '').trim();
                                                 $location.search('q', params.q || null);
+                                                return;
                                             }
                                         }
                                     }
