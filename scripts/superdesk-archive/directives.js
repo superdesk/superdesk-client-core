@@ -90,20 +90,15 @@
                 }
             };
         }])
-        .directive('sdItemState', ['$filter', function($filter) {
+        .directive('sdItemState', function() {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/item-state.html',
                 scope: {
                     'state': '=',
                     'embargo': '='
-                },
-                link: function(scope) {
-                    scope.embargoTS = function() {
-                        return $filter('formatRelativeDate')(scope.embargo);
-                    };
                 }
             };
-        }])
+        })
         .directive('sdInlineMeta', function() {
             return {
                 templateUrl: 'scripts/superdesk-archive/views/inline-meta.html',

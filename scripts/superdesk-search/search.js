@@ -1180,7 +1180,6 @@
             'familyService',
             'Keys',
             'dragitem',
-            '$filter',
         function(
             $location,
             $document,
@@ -1200,8 +1199,7 @@
             desks,
             familyService,
             Keys,
-            dragitem,
-            $filter
+            dragitem
         ) {
             return {
                 controllerAs: 'listController',
@@ -1606,8 +1604,7 @@
                             React.createElement('div', {className: 'line'},
                                 React.createElement('div', {className: 'state-label state-' + item.state}, item.state),
                                 item.embargo ?
-                                    React.createElement('div', {className: 'state-label state_embargo',
-                                    title: $filter('formatRelativeDate')(item.embargo)}, gettext('embargo')) :
+                                    React.createElement('div', {className: 'state-label state_embargo'}, gettext('embargo')) :
                                     null,
                                 item.anpa_take_key ?
                                     React.createElement('div', {className: 'takekey'}, item.anpa_take_key) :
