@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('superdesk.search.list', [])
+    angular.module('superdesk.search.react', [])
         .directive('sdItemsList', [
             '$location',
             '$document',
@@ -378,6 +378,10 @@
                             this.closeTimeout = null;
                         },
 
+                        stopClick: function(event) {
+                            event.stopPropagation();
+                        },
+
                         render: function() {
                             var item = this.props.item.archive_item || this.props.item;
                             var highlights = item.highlights || [];
@@ -386,7 +390,8 @@
                                 {
                                     className: 'highlights-box',
                                     onMouseEnter: this.open,
-                                    onMouseLeave: this.close
+                                    onMouseLeave: this.close,
+                                    onClick: this.stopClick
                                 },
                                 highlights.length ? React.createElement(
                                     'div',

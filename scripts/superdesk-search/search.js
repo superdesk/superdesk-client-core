@@ -512,7 +512,7 @@
         'superdesk.activity',
         'superdesk.list',
         'superdesk.keyboard',
-        'superdesk.search.list'
+        'superdesk.search.react'
     ])
         .service('search', SearchService)
         .service('tags', TagService)
