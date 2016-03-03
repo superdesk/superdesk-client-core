@@ -70,6 +70,8 @@
                     });
                 }],
                 link: function(scope, elem) {
+                    var menuHolderElem = document.getElementById('react-placeholder');
+
                     /**
                      * Test if an item has thumbnail
                      *
@@ -587,8 +589,48 @@
 
                     var ActionsMenu = React.createClass({
                         toggle: function(event) {
-                            this.setState({open: !this.state.open});
                             this.stopEvent(event);
+                            this.setState({open: !this.state.open}, function() {
+                                if (this.state.open) {
+                                    console.time('render');
+                                    var menuComponent = ReactDOM.render(this.renderMenu({top: 0, left: -500}), menuHolderElem);
+                                    var menuElem = ReactDOM.findDOMNode(menuComponent);
+                                    var menuRect = menuElem.getBoundingClientRect();
+                                    var width = menuRect.width;
+                                    var height = menuRect.height;
+
+                                    var iconRect = ReactDOM.findDOMNode(this)
+                                        .getElementsByClassName('icon-dots-vertical')[0]
+                                        .getBoundingClientRect();
+                                    var top = iconRect.top + iconRect.height;
+                                    var left = iconRect.left + iconRect.width - width;
+
+                                    // menu goes off the view on right side
+                                    if (left + width + 5 > menuHolderElem.clientWidth) {
+                                        left -= width;
+                                        left += iconRect.width;
+                                    }
+
+                                    // menu is too far on left size
+                                    if (left - 48 < 0) { // 48 is left bar width
+                                        left = iconRect.left;
+                                    }
+
+                                    // menu is out on the bottom side
+                                    if (top + height + 5 > menuHolderElem.clientHeight) {
+                                        top -= height;
+                                        top -= iconRect.height;
+                                        top -= 16; // menu margin
+                                    }
+
+                                    menuElem.style.left = left.toFixed() + 'px';
+                                    menuElem.style.top = top.toFixed() + 'px';
+
+                                    console.timeEnd('render');
+                                } else {
+                                    ReactDOM.unmountComponentAtNode(menuHolderElem);
+                                }
+                            });
                         },
 
                         stopEvent: function(event) {
@@ -625,7 +667,7 @@
                             {_id: 'corrections', label: gettext('Corrections')}
                         ],
 
-                        render: function() {
+                        renderMenu: function(pos) {
                             var menu = [];
                             var item = this.props.item;
 
@@ -637,28 +679,38 @@
                                 });
                             }.bind(this);
 
-                            if (this.state.open) {
-                                var actions = this.getActions();
-                                this.groups.map(function(group) {
-                                    if (actions[group._id]) {
-                                        menu.push(
-                                            React.createElement(ActionsMenu.Label, {
-                                                label: group.label,
-                                                key: 'group-label-' + group._id
-                                            }),
-                                            React.createElement(ActionsMenu.Divider, {
-                                                key: 'group-divider-' + group._id
-                                            })
-                                        );
+                            var actions = this.getActions();
+                            this.groups.map(function(group) {
+                                if (actions[group._id]) {
+                                    menu.push(
+                                        React.createElement(ActionsMenu.Label, {
+                                            label: group.label,
+                                            key: 'group-label-' + group._id
+                                        }),
+                                        React.createElement(ActionsMenu.Divider, {
+                                            key: 'group-divider-' + group._id
+                                        })
+                                    );
 
-                                        menu.push.apply(menu, actions[group._id].map(createAction));
-                                    }
-                                });
-                            }
+                                    menu.push.apply(menu, actions[group._id].map(createAction));
+                                }
+                            });
 
+                            return React.createElement(
+                                'ul',
+                                {
+                                    className: 'dropdown dropdown-menu more-activity-menu open',
+                                    style: {top: pos.top, left: pos.left, display: 'block', minWidth: 200}
+                                },
+                                menu
+                            );
+                        },
+
+                        render: function() {
                             return React.createElement(
                                 'div',
                                 {className: 'item-right toolbox'},
+
                                 React.createElement(
                                     'div',
                                     {className: 'item-actions-menu dropdown-big open'},
@@ -670,14 +722,6 @@
                                             onDblClick: this.stopEvent
                                         },
                                         React.createElement('i', {className: 'icon-dots-vertical'})
-                                    ),
-                                    React.createElement(
-                                        'ul',
-                                        {
-                                            className: 'dropdown dropdown-menu more-activity-menu open',
-                                            style: {top: '66%', left: -150, display: this.state.open ? 'block' : 'none', minWidth: 200}
-                                        },
-                                        menu
                                     )
                                 )
                             );
@@ -969,6 +1013,18 @@
                             ReactDOM.findDOMNode(this).focus();
                         },
 
+                        closeActionsMenu: function() {
+                            ReactDOM.unmountComponentAtNode(menuHolderElem);
+                        },
+
+                        componentWillUnmount: function() {
+                            this.closeActionsMenu();
+                        },
+
+                        componentWillUpdate: function() {
+                            this.closeActionsMenu();
+                        },
+
                         render: function render() {
                             var createItem = function createItem(itemId) {
                                 var item = this.state.itemsById[itemId];
@@ -1012,6 +1068,7 @@
 
                         scope.$on('$destroy', function() {
                             $document.off('keydown', listComponent.handleKey);
+                            ReactDOM.unmountComponentAtNode(elem[0]);
                         });
 
                         /**
