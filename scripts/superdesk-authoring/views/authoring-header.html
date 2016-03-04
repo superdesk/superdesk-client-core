@@ -21,6 +21,10 @@
             <label translate>RELATED</label>
             <div class="data"><a href="" ng-click="activateWidget()">{{relatedItems._items.length}}</a></div>
         </div>
+        <div ng-if="item.correction_sequence">
+            <label translate>UPDATE</label>
+            <div class="data">{{item.correction_sequence}}</div>
+        </div>
         <div>
             <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
             <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
