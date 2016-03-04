@@ -257,9 +257,8 @@ describe('authoring', function() {
 
         authoring.openRelatedItem(); // opens related item widget
         expect(authoring.getRelatedItemBySlugline(0).getText()).toBe('item9 slugline');
-        authoring.getRelatedItemBySlugline(0).click();
 
-        authoring.actionOpenRelatedItem(); // Open item
+        authoring.actionOpenRelatedItem(0); // Open item
         expect(authoring.getHeaderSluglineText()).toBe('item9 slugline');
     });
 
