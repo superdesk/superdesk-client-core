@@ -20,8 +20,20 @@
                 <input type="text" ng-model="data.metadata.slugline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <label>{{'Author / photographer'|translate}}</label> 
+                <label>{{'Author / photographer'|translate}}</label>
                 <input type="text" ng-model="data.metadata.byline" ng-change="data.isDirty = true" class="line-input">
+            </div>
+            <div>
+                <select ng-model="data.metadata.usageterms">
+                    <option translate value="">---Assing Rights---</option> <!-- not selected / blank option -->
+                    <option translate value="single-usage">Single Usage</option>
+                    <option translate value="time-restricted">Time Restricted</option>
+                    <option translate value="indefinite-usage">Indefinite Usage</option>
+                </select>
+            </div>
+            <div>
+                <label>{{'Add details on rights'|translate}}</label>
+                <input type="text" ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" class="line-input">
             </div>
         </div>
         <div id="dynBoxId2" class="preview">
