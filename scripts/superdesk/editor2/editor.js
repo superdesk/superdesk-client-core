@@ -974,10 +974,11 @@ angular.module('superdesk.editor2', [
                                 });
                             }
                         });
-                        editorConfig.toolbar.buttons.push('embed', 'picture');
+                        editorConfig.toolbar.buttons.push('embed', 'picture', 'table');
                         editorConfig.extensions = {
                             'embed': new EmbedButton(),
-                            'upload': new PictureButton()
+                            'upload': new PictureButton(),
+                            'table': new window.MediumEditorTable()
                         };
                     }
                     // FIXME: create unwanted cursor moves

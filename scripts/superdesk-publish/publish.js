@@ -134,7 +134,7 @@
         $scope.showCancelBtn = false;
         $scope.queueSearch = false;
         $scope.selected = {};
-        $scope.publish_queue_statuses = ['pending', 'in-progress', 'success', 'error'];
+        $scope.publish_queue_statuses = ['pending', 'in-progress', 'success', 'error', 'retrying', 'failed'];
         $scope.pageSize = 25;
         $scope.page = 1;
 
@@ -287,7 +287,7 @@
             }
 
             var idx = _.findIndex($scope.selectedQueueItems, function(item) {
-                return item.state === 'pending' || item.state === 'in-progress' || item.state === 'canceled';
+                return _.contains(['pending', 'in-progress', 'canceled', 'retrying'], item.state);
             });
 
             if (idx === -1) {
@@ -296,7 +296,7 @@
             } else {
                 idx = _.findIndex($scope.selectedQueueItems, function(item) {
                     return item.state === 'success' || item.state === 'in-progress' || item.state === 'canceled' ||
-                        item.state === 'error';
+                        item.state === 'error' || item.state === 'retrying';
                 });
 
                 if (idx === -1) {

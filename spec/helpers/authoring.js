@@ -430,7 +430,9 @@ function Authoring() {
     };
 
     this.actionOpenRelatedItem = function(item) {
-        element.all(by.css('[ng-click="actions.open.method(selected)"]')).get(1).click();
+        var relItem = element.all(by.repeater('item in processedItems')).get(item);
+        relItem.element(by.className('icon-dots-vertical')).click();
+        relItem.element(by.id('Open')).click();
     };
 
     this.getHeaderSluglineText = function() {

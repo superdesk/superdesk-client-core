@@ -255,7 +255,9 @@ function MetaDropdownDirective($filter, keyboardManager) {
 
                 if (item) {
                     // this is added as two vocabulary definition are different.
-                    scope.key = _.has(item, 'qcode') ? 'qcode': 'value';
+                    if (scope.key) {
+                        scope.key = _.has(item, 'qcode') ? 'qcode': 'value';
+                    }
                     o[scope.field] = scope.key ? item[scope.key] : [item];
                 } else {
                     o[scope.field] = null;

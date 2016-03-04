@@ -23,7 +23,7 @@
                         <div class="dropdown-menu pull-right">
                             <ul>
                                  <li ng-repeat="action in actions">
-                                    <button ng-if="action.condition(item)" ng-click="action.method(item)">{{ :: action.title | translate }}</button>
+                                    <button id="{{action.title}}" ng-if="action.condition(item)" ng-click="action.method(item)">{{ :: action.title | translate }}</button>
                                 </li>
                             </ul>
                         </div>

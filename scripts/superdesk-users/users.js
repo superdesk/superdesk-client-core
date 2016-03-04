@@ -971,11 +971,19 @@
                         scope.roles = result._items;
                     });
                     //get available translation languages
+                    var noBaseLanguage = true;
                     scope.languages = _.map(gettextCatalog.strings, function(translation, lang) {
+                        if (lang === gettextCatalog.baseLanguage) {
+                            noBaseLanguage = false;
+                        }
                         return {'code': lang, 'nativeName': langmap[lang].nativeName};
                     });
-                    scope.languages.unshift(
-                        {'code': gettextCatalog.baseLanguage, 'nativeName': langmap[gettextCatalog.baseLanguage].nativeName});
+
+                    //add baseLanguage if needed
+                    if (noBaseLanguage) {
+                        scope.languages.unshift(
+                            {'code': gettextCatalog.baseLanguage, 'nativeName': langmap[gettextCatalog.baseLanguage].nativeName});
+                    }
 
                     scope.cancel = function() {
                         resetUser(scope.origUser);
