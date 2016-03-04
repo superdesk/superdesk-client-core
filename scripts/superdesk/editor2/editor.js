@@ -602,11 +602,38 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
             var poi = {x: 0.5, y: 0.5};
             superdesk.intent('edit', 'crop', {
                 item: picture,
-                renditions: [{
-                    name: 'embed',
-                    width: picture.renditions.viewImage.width,
-                    height: picture.renditions.viewImage.height
-                }],
+                renditions: [
+                    {
+                        name: 'original',
+                        width: picture.renditions.viewImage.width,
+                        height: picture.renditions.viewImage.height
+                    },
+                    {
+                        name: 'thumbnail',
+                        width: 300,
+                        height: 300
+                    },
+                    {
+                        name: 'preview-3-2',
+                        width: 1440,
+                        height: 960
+                    },
+                    {
+                        name: 'preview-4-3',
+                        width: 1440,
+                        height: 1080
+                    },
+                    {
+                        name: 'wide-720',
+                        width: 1280,
+                        height: 720
+                    },
+                    {
+                        name: 'wide-1080',
+                        width: 1920,
+                        height: 1080
+                    }
+                ],
                 poi: picture.poi || poi,
                 showMetadataEditor: true
             })
