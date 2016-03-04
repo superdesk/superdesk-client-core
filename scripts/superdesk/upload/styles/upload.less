@@ -575,7 +575,7 @@ edit image modal
 		position: absolute;
 		top: 0;
 		right: 0;
-		bottom: 185px;
+		bottom: 225px;
 		width: 335px;
 		overflow-y: auto;
 		background-color: #f0f0f0;
@@ -600,19 +600,19 @@ edit image modal
 		bottom: 0;
 		right: 0;
 		left: 0;
-		height: 205px;
-		overflow-y: auto;
+		height: 225px;
+		overflow: auto;
 		background-color: #dedede;
 		border-top: 1px solid #d5d5d5;
-		padding: 20px 13px;
+		padding: 20px 13px 12px 13px;
 		.box-sizing(border-box);
 		ul {
 			li {
 				float: left;
-				margin: 0 7px;
-				width: 200px;
-				max-width: 200px;
-				height: 162px;
+				margin: 0 7px 14px 7px;
+				width: 225px;
+				max-width: 225px;
+				height: 177px;
 				padding: 12px;
 				background-color: #f0f0f0;
 				border: 1px solid #d6d6d6;
@@ -620,7 +620,8 @@ edit image modal
 				.box-shadow(0 1px 0 #d6d6d6);
 				.border-radius(2px);
 				img {
-					width: 100%;
+					max-width: 200px;
+                	max-height: 132px;
 				}
 				&.active {
 					border: 1px solid #b3b3b3;
@@ -639,8 +640,8 @@ edit image modal
 	top: 0;
 	left: 0;
 	right: 335px;
-	bottom: 185px;
-	overflow-y: auto;
+	bottom: 225px;
+	overflow: auto;
 	padding: 20px;
 	.box-sizing(border-box);
 }
@@ -653,7 +654,7 @@ edit image modal
 }
 .poi {
 	&__image {
-		&:hover {
+		img:hover {
 			cursor: crosshair;
 		}
 	}
