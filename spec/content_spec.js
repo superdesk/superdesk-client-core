@@ -43,7 +43,7 @@ describe('content', function() {
         element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
     }
 
-    it('can navigate with keyboard', function() {
+    xit('can navigate with keyboard', function() {
         pressKey(protractor.Key.UP);
         expect(selectedHeadline()).toBe('item1');
 
