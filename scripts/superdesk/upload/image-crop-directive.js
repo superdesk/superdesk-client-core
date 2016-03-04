@@ -337,25 +337,25 @@
 
                 function drawPoint() {
                     pointElem.css({
-                        left: (scope.point.x * img.width) - 20,
-                        top: (scope.point.y * img.height) - 20
+                        left: (scope.point.x * img.width) - 15,
+                        top: (scope.point.y * img.height) - 15
                     });                   
                     crossLeft.css({
-                        width: (scope.point.x * img.width) - 20,
+                        width: (scope.point.x * img.width) - 15,
                         top: (scope.point.y * img.height)
                     });
                     crossRight.css({
-                        width: ((1 - scope.point.x) * img.width) - 24,
+                        width: ((1 - scope.point.x) * img.width) - 19,
                         top: (scope.point.y * img.height),
-                        left: (scope.point.x * img.width) + 24
+                        left: (scope.point.x * img.width) + 19
                     });
                     crossBottom.css({
-                        height: ((1 - scope.point.y) * img.height) - 24,
-                        top: (scope.point.y * img.height) + 24,
+                        height: ((1 - scope.point.y) * img.height) - 19,
+                        top: (scope.point.y * img.height) + 19,
                         left: (scope.point.x * img.width) + 1
                     });
                     crossTop.css({
-                        height: (scope.point.y * img.height) - 20,
+                        height: (scope.point.y * img.height) - 15,
                         left: (scope.point.x * img.width) + 1
                     });
                 }
