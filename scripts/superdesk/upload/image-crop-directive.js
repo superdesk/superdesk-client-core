@@ -14,8 +14,7 @@
             },
             link: function(scope, elem) {
                 var img;
-                var darkBox = angular.element('<div></div>');
-                var lightBox = angular.element('<div></div>');
+                var cropBox = angular.element('<div class="crop-box"></div>');
 
                 $(elem).css({
                     'position': 'relative'
@@ -33,38 +32,30 @@
                             'z-index': 1000
                         });
 
-                        darkBox.css({
-                            'background': 'rgba(0, 0, 0, 0.4)',
-                            'width': img.width,
-                            'height': img.height,
-                            'position': 'absolute',
-                            'top': 0,
-                            'left': 0,
-                            'z-index': 1100
-                        });
-
                         elem.append(img);
-                        elem.append(darkBox);
-                        elem.append(lightBox);
+                        elem.append(cropBox);
 
-                        updateLightBox();
+                        updateCropBox();
                     };
                     img.src = scope.src;
                 });
 
-                scope.$watch('cropData', updateLightBox);
+                scope.$watch('cropData', updateCropBox);
 
-                function updateLightBox() {
+                function updateCropBox() {
                     if (img && scope.original && scope.cropData) {
                         var ratio = img.height / scope.original.height;
-                        lightBox.css({
-                            'background': 'rgba(255, 255, 255, 0.4)',
-                            'position': 'absolute',
-                            'top': scope.cropData.CropTop * ratio,
-                            'left': scope.cropData.CropLeft * ratio,
-                            'width': (scope.cropData.CropRight - scope.cropData.CropLeft) * ratio,
-                            'height': (scope.cropData.CropBottom - scope.cropData.CropTop) * ratio,
-                            'z-index': 1200
+                        var cTop = scope.cropData.CropTop * ratio;
+                        var cLeft = scope.cropData.CropLeft * ratio;
+                        var cBottom = img.height - scope.cropData.CropBottom * ratio;
+                        var cRight = img.width - scope.cropData.CropRight * ratio;
+                        cropBox.css({                         
+                            'width': img.width,
+                            'height': img.height,
+                            'border-top-width': cTop + 'px',
+                            'border-left-width': cLeft + 'px',
+                            'border-bottom-width': cBottom + 'px',
+                            'border-right-width': cRight + 'px'                            
                         });
                     }
                 }
@@ -305,8 +296,10 @@
                             // 'top': 0
                         });
                         elem.append(img);
+                        drawPoint();
                     };
                     img.addEventListener('click', function(event) {
+                        elem.addClass('transition-on');
                         scope.point.x = Math.round(event.offsetX * 100 / img.width) / 100;
                         scope.point.y = Math.round(event.offsetY * 100 / img.height) / 100;
                         //console.log(scope.point);
@@ -332,7 +325,6 @@
                     crossBottom = angular.element('<div class="poi__cross-bottom"></div>');
                     elem.append(crossBottom);                      
 
-                    drawPoint();
                 }
 
                 function drawPoint() {

@@ -663,7 +663,6 @@ edit image modal
 		height: 30px;
 		.border-radius(50%);
 		border: 2px solid rgba(255,255,255,0.7);
-		.transition(all .3s);
 	}
 	&__cross-left {
 		height: 2px;
@@ -671,14 +670,12 @@ edit image modal
 		position: absolute;
 		left: 0;
 		z-index: 10000;
-		.transition(all .3s);
 	}
 	&__cross-right {
 		height: 2px;
 		background-color: rgba(255,255,255,0.7);
 		position: absolute;
 		z-index: 10000;
-		.transition(all .3s);
 	}
 	&__cross-top {
 		width: 2px;
@@ -686,13 +683,32 @@ edit image modal
 		position: absolute;
 		z-index: 10000;
 		top: 0;
-		.transition(all .3s);
 	}
 	&__cross-bottom {
 		width: 2px;
 		background-color: rgba(255,255,255,0.7);
 		position: absolute;
 		z-index: 10000;
-		.transition(all .3s);
 	}
+}
+.transition-on {
+	.poi {
+		&__cursor,
+		&__cross-left,
+		&__cross-right,
+		&__cross-top,
+		&__cross-bottom {
+			.transition(all .3s);
+		}
+	}
+}
+.crop-box {
+	background: transparent;
+	position: absolute;
+    top: 0;
+    left: 0;
+    border-color: rgba(0,0,0,.5);
+    border-style: solid;
+    box-sizing: border-box;
+    z-index: 1200;
 }
