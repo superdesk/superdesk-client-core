@@ -301,4 +301,17 @@ describe('search', function() {
         expect(storyNameEl.isDisplayed()).toBe(true);
     });
 
+    it('can display embargo item when set', function() {
+        expect(globalSearch.getItems().count()).toBe(14);
+
+        globalSearch.actionOnItem('Edit', 2);
+
+        authoring.sendToButton.click();
+        authoring.setEmbargo();
+        authoring.sendToButton.click();
+        authoring.save();
+        authoring.close();
+        expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
+        expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
+    });
 });

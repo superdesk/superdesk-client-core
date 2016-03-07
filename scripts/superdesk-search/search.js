@@ -1603,6 +1603,9 @@
                             ),
                             React.createElement('div', {className: 'line'},
                                 React.createElement('div', {className: 'state-label state-' + item.state}, item.state),
+                                item.embargo ?
+                                    React.createElement('div', {className: 'state-label state_embargo'}, gettext('embargo')) :
+                                    null,
                                 item.anpa_take_key ?
                                     React.createElement('div', {className: 'takekey'}, item.anpa_take_key) :
                                     null,
