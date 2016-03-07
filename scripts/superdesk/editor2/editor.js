@@ -561,8 +561,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _) {
     };
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'renditions', 'editor'];
-function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, renditions, editor) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'renditions', 'editor', '$q'];
+function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, renditions, editor, $q) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
@@ -612,20 +612,36 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
                     showMetadataEditor: true
                 })
                 .then(function(result) {
-                    // return the cropped image
-                    api.save('picture_crop', {item: picture, crop: result.cropData.embed})
-                    .then(function(image) {
-                        var url = image.href;
-                        // update association
-                        vm.model.association.renditions.embed = {
-                            href: url,
-                            width: image.width,
-                            height: image.height,
-                            media: image._id,
-                            mimetype: image.item.mimetype
-                        };
+                    var rendtionsToMake = [];
+                    var savingImagePromises = [];
+                    angular.forEach(result.cropData, function(croppingData, renditionName) {
+                        // if croppingData are defined
+                        if (angular.isDefined(croppingData.CropLeft)) {
+                            rendtionsToMake.push(renditionName);
+                        }
+                    });
+                    // perform the request to make the cropped image
+                    angular.forEach(rendtionsToMake, function(renditionName) {
+                        savingImagePromises.push(
+                            api.save('picture_crop', {item: picture, crop: result.cropData[renditionName]})
+                        );
+                    });
+                    // return the cropped images
+                    $q.all(savingImagePromises)
+                    .then(function(images) {
+                        images.forEach(function(image, index) {
+                            var url = image.href;
+                            // update association
+                            vm.model.association.renditions[rendtionsToMake[index]] = {
+                                href: url,
+                                width: image.width,
+                                height: image.height,
+                                media: image._id,
+                                mimetype: image.item.mimetype
+                            };
+                        });
                         // update block
-                        vm.model.body = editor.generateImageTag(url, null, vm.model.caption);
+                        vm.model.body = editor.generateImageTag(images[0].href, null, vm.model.caption);
                         vm.updateEmbedPreview();
                         // update caption
                         vm.saveCaption(vm.model.association.description_text);
