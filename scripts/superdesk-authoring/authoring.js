@@ -1180,7 +1180,7 @@
                 function validate(orig, item) {
                     $scope.error = {};
                     angular.forEach(_.extend(orig, item), function (value, key) {
-                        if (value && value !== '' && value !== null) {
+                        if (value) {
                             if (typeof value === 'object' && !value.length) {
                                 $scope.error[key] = true;
                             } else {

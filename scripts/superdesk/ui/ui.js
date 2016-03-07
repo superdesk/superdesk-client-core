@@ -1437,8 +1437,7 @@
             restrict: 'A',
             link: function (scope, elem, attrs, ctrl) {
                 var invalidText = '<span class="sd-invalid-text">' + gettext('This field is required') + '</span>';
-
-                scope.$watch(attrs.ngRequired, function (required) {
+                scope.$watch(attrs.required, function (required) {
                     if (!required) {
                         return;
                     }
