@@ -286,15 +286,7 @@
     function MonitoringGroupDirective(cards, api, authoringWorkspace, $timeout, superdesk, activityService,
             workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope) {
 
-        var ITEM_HEIGHT = 57,
-            ITEMS_COUNT = 5,
-            UP = -1,
-            DOWN = 1,
-            ENTER_KEY = 13,
-            MOVES = {
-                38: UP,
-                40: DOWN
-            };
+        var ITEM_HEIGHT = 57;
 
         return {
             templateUrl: 'scripts/superdesk-monitoring/views/monitoring-group.html',
@@ -468,15 +460,7 @@
                     queryTimeout = $timeout(queryItems, 50, false);
                 }
 
-                var scrollElem = elem.find('.stage-content').first();
-                scrollElem.on('keydown', handleKey);
-                scope.$on('$destroy', function() {
-                    scrollElem.off('keydown');
-                });
-
-                var criteria,
-                    updateTimeout,
-                    moveTimeout;
+                var criteria;
 
                 function edit(item, lock) {
                     if (item.state !== 'spiked'){
@@ -506,7 +490,6 @@
                     scope.selected = item;
                     monitoring.selectedGroup = scope.group;
                     monitoring.preview(item);
-
                     bindActionKeyShortcuts(item);
                 }
 
@@ -600,60 +583,6 @@
                     } else {
                         return items;
                     }
-                }
-
-                function handleKey(event) {
-                    var code = event.keyCode || event.which;
-                    if (MOVES[code]) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        $timeout.cancel(updateTimeout);
-                        move(MOVES[code], event);
-                    } else if (code === ENTER_KEY) {
-                        scope.$applyAsync(function() {
-                            edit(scope.selected);
-                        });
-                    }
-                }
-
-                function clickItem(item, event) {
-                    scope.select(item);
-                    if (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        event.stopImmediatePropagation();
-                    }
-                }
-
-                function move(diff, event) {
-                    var index = _.findIndex(scope.items, scope.selected),
-                        itemsCount = scope.numItems || ITEMS_COUNT,
-                        nextItem,
-                        nextIndex;
-
-                    if (index === -1) {
-                        nextItem = scope.items[0];
-                    } else {
-                        nextIndex = Math.max(0, Math.min(scope.items.length - 1, index + diff));
-                        nextItem = scope.items[nextIndex];
-
-                        $timeout.cancel(moveTimeout);
-                        moveTimeout = $timeout(function() {
-                            var top = scrollElem[0].scrollTop,
-                                topItemIndex = Math.ceil(top / ITEM_HEIGHT),
-                                bottomItemIndex = Math.floor((top + scrollElem[0].clientHeight) / ITEM_HEIGHT),
-                                nextItemIndex = nextIndex + criteria.source.from;
-                            if (nextItemIndex < topItemIndex) {
-                                scrollElem[0].scrollTop = Math.max(0, nextItemIndex * ITEM_HEIGHT);
-                            } else if (nextItemIndex >= bottomItemIndex) {
-                                scrollElem[0].scrollTop = (nextItemIndex - itemsCount + 1) * ITEM_HEIGHT;
-                            }
-                        }, 50, false);
-                    }
-
-                    scope.$apply(function() {
-                        clickItem(scope.items[nextIndex], event);
-                    });
                 }
             }
         };

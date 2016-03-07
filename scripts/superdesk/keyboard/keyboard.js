@@ -27,16 +27,30 @@
     /**
      * Broadcast key:char events cought on body
      */
-    .run(['$rootScope', '$document', function KeyEventBroadcast($rootScope, $document) {
+    .run(['$rootScope', '$document', 'Keys', function KeyEventBroadcast($rootScope, $document, Keys) {
+        var ignoreNodes = {
+            'INPUT': true,
+            'TEXTAREA': true,
+            'BUTTON': true
+        };
+
         $document.on('keydown', function(e) {
             var ctrlKey = e.ctrlKey || e.metaKey,
                 shiftKey = e.shiftKey,
                 isGlobal = ctrlKey && shiftKey;
-            if (e.target === document.body || isGlobal) { // $document.body is empty when testing
+            if (isGlobal || !ignoreNodes[e.target.nodeName]) { // $document.body is empty when testing
                 var character = String.fromCharCode(e.which).toLowerCase(),
                     modifier = '';
                 modifier += ctrlKey ? 'ctrl:' : '';
                 modifier += shiftKey ? 'shift:' : '';
+
+                // also handle arrows, enter/escape, etc.
+                angular.forEach(Object.keys(Keys), function(key) {
+                    if (e.which === Keys[key]) {
+                        character = key;
+                    }
+                });
+
                 $rootScope.$broadcast('key:' + modifier + character, e);
             }
         });

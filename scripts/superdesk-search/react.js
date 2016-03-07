@@ -1,12 +1,73 @@
 (function() {
     'use strict';
 
+    /**
+     * Monitoring state - keeps information required to render lists.
+     */
+    MonitoringState.$inject = ['$q', '$rootScope', 'ingestSources', 'desks', 'highlightsService'];
+    function MonitoringState($q, $rootScope, ingestSources, desks, highlightsService) {
+        this.init = init;
+        this.state = {};
+        this.setState = setState;
+
+        // reset state on every page change
+        $rootScope.$on('$routeChangeSuccess', reset);
+
+        var self = this;
+        var ready;
+
+        /**
+         * Update state
+         *
+         * @param {Object} updates
+         */
+        function setState(updates) {
+            self.state = angular.extend({}, self.state, updates);
+        }
+
+        /**
+         * Reset monitoring state
+         */
+        function reset() {
+            self.state = {};
+            ready = null;
+        }
+
+        /**
+         * Init state for react rendering
+         */
+        function init() {
+            if (!ready) {
+                ready = $q.all({
+                    ingestProvidersById: ingestSources.initialize().then(function() {
+                        setState({ingestProvidersById: ingestSources.providersLookup});
+                    }),
+                    desksById: desks.initialize().then(function() {
+                        setState({desksById: desks.deskLookup});
+                    }),
+                    highlightsById: highlightsService.get().then(function(result) {
+                        var highlightsById = {};
+                        result._items.forEach(function(item) {
+                            highlightsById[item._id] = item;
+                        });
+                        setState({highlightsById: highlightsById});
+                    }),
+                    // populates cache for mark for highlights activity dropdown
+                    deskHighlights: highlightsService.get(desks.getCurrentDeskId())
+                });
+            }
+
+            return ready;
+        }
+    }
+
     angular.module('superdesk.search.react', ['superdesk.highlights'])
+        .service('monitoringState', MonitoringState)
         .directive('sdItemsList', [
             '$location',
-            '$document',
             '$timeout',
             '$injector',
+            '$filter',
             'packages',
             'asset',
             'api',
@@ -24,11 +85,12 @@
             'Keys',
             'dragitem',
             'highlightsService',
+            'monitoringState',
         function(
             $location,
-            $document,
             $timeout,
             $injector,
+            $filter,
             packages,
             asset,
             api,
@@ -45,32 +107,17 @@
             familyService,
             Keys,
             dragitem,
-            highlightsService
+            highlightsService,
+            monitoringState
         ) {
             return {
-                controllerAs: 'listController',
-                controller: ['$q', 'ingestSources', 'desks', 'highlightsService',
-                function($q, ingestSources, desks, highlightsService) {
-                    var self = this;
-                    self.ready = $q.all({
-                        ingestProvidersById: ingestSources.initialize().then(function() {
-                            self.ingestProvidersById = ingestSources.providersLookup;
-                        }),
-                        desksById: desks.initialize().then(function() {
-                            self.desksById = desks.deskLookup;
-                        }),
-                        highlightsById: highlightsService.get().then(function(result) {
-                            self.highlightsById = {};
-                            result._items.forEach(function(item) {
-                                self.highlightsById[item._id] = item;
-                            });
-                        }),
-                        // populates cache for mark for highlights activity dropdown
-                        deskHighlights: highlightsService.get(desks.getCurrentDeskId())
-                    });
-                }],
                 link: function(scope, elem) {
                     var menuHolderElem = document.getElementById('react-placeholder');
+
+                    var groupId = scope.$id;
+                    if (!monitoringState.state.activeGroup) {
+                        monitoringState.setState({activeGroup: groupId});
+                    }
 
                     /**
                      * Test if an item has thumbnail
@@ -519,6 +566,19 @@
                         }
                     });
 
+                    var ItemState = function(props) {
+                        var item = props.item;
+                        return React.createElement(
+                            'div',
+                            {className: classNames(
+                                'state-label',
+                                'state-' + item.state,
+                                {state_embargo: item.embargo}
+                            )},
+                            item.embargo ? gettext('embargoed') : $filter('removeLodash')(item.state)
+                        );
+                    };
+
                     var ListItemInfo = function(props) {
                         var item = props.item;
                         var flags = item.flags || {};
@@ -538,7 +598,10 @@
                                 React.createElement('time', {}, moment(item.versioncreated).fromNow())
                             ),
                             React.createElement('div', {className: 'line'},
-                                React.createElement('div', {className: 'state-label state-' + item.state}, item.state),
+                                React.createElement(ItemState, {item: item}),
+                                item.profile ?
+                                    React.createElement('div', {className: 'label label--' + item.profile}, item.profile) :
+                                    null,
                                 item.anpa_take_key ?
                                     React.createElement('div', {className: 'takekey'}, item.anpa_take_key) :
                                     null,
@@ -722,7 +785,7 @@
                                         {
                                             className: 'more-activity-toggle condensed dropdown-toggle',
                                             onClick: this.toggle,
-                                            onDblClick: this.stopEvent
+                                            onDoubleClick: this.stopEvent
                                         },
                                         React.createElement('i', {className: 'icon-dots-vertical'})
                                     )
@@ -842,6 +905,10 @@
                             this.props.onSelect(this.props.item);
                         },
 
+                        edit: function() {
+                            this.props.onEdit(this.props.item);
+                        },
+
                         getInitialState: function() {
                             return {hover: false};
                         },
@@ -924,7 +991,9 @@
                                     onMouseLeave: this.unsetHoverState,
                                     onDragStart: this.onDragStart,
                                     onClick: this.select,
-                                    draggable: true
+                                    onDoubleClick: this.edit,
+                                    draggable: true,
+                                    tabIndex: '0'
                                 },
                                 React.createElement.apply(null, contents)
                             );
@@ -943,19 +1012,39 @@
                             var itemsById = angular.extend({}, this.state.itemsById);
                             itemsById[item._id] = angular.extend({}, item, {selected: selected});
                             this.setState({itemsById: itemsById});
-                            multi.toggle(itemsById[item._id]);
+                            scope.$applyAsync(function() {
+                                multi.toggle(itemsById[item._id]);
+                            });
                         },
 
                         select: function(item) {
+                            this.setSelectedItem(item);
                             $timeout.cancel(this.updateTimeout);
                             this.updateTimeout = $timeout(function() {
-                                scope.$apply(function() {
-                                    scope.preview(item);
-                                });
+                                if (item && scope.preview) {
+                                    scope.$apply(function() {
+                                        scope.preview(item);
+                                    });
+                                }
                             }, 100, false);
-                            this.setState({
-                                selected: item ? item._id : null
-                            });
+                        },
+
+                        edit: function(item) {
+                            this.setSelectedItem(item);
+                            if (item && scope.edit) {
+                                scope.$apply(function() {
+                                    scope.edit(item);
+                                });
+                            }
+                        },
+
+                        setSelectedItem: function(item) {
+                            this.setState({selected: item ? item._id : null});
+                        },
+
+                        getSelectedItem: function() {
+                            var selected = this.state.selected;
+                            return this.state.itemsById[selected];
                         },
 
                         updateItem: function(itemId, changes) {
@@ -967,12 +1056,11 @@
                             }
                         },
 
-                        getSelectedItem: function() {
-                            var selected = this.state.selected;
-                            return this.state.itemsById[selected];
-                        },
-
                         handleKey: function(event) {
+                            if (monitoringState.state.activeGroup !== groupId) {
+                                return; // ignore keyboard in non-active groups
+                            }
+
                             var diff;
 
                             switch (event.keyCode) {
@@ -988,7 +1076,7 @@
 
                                 case Keys.enter:
                                     if (this.state.selected) {
-                                        this.select(this.getSelectedItem());
+                                        this.edit(this.getSelectedItem());
                                     }
 
                                     event.stopPropagation();
@@ -1037,6 +1125,7 @@
                                     item: item,
                                     view: this.state.view,
                                     flags: {selected: this.state.selected === item._id},
+                                    onEdit: this.edit,
                                     onSelect: this.select,
                                     onMultiSelect: this.multiSelect,
                                     ingestProvider: this.props.ingestProvidersById[item.ingest_provider] || null,
@@ -1063,23 +1152,9 @@
                         }
                     });
 
-                    scope.listController.ready.then(function() { // we can init
-                        var itemList = React.createElement(ItemList, {
-                            desksById: scope.listController.desksById,
-                            highlightsById: scope.listController.highlightsById,
-                            ingestProvidersById: scope.listController.ingestProvidersById
-                        });
-
+                    monitoringState.init().then(function() {
+                        var itemList = React.createElement(ItemList, monitoringState.state);
                         var listComponent = ReactDOM.render(itemList, elem[0]);
-
-                        $document.on('keydown', function(event) {
-                            listComponent.handleKey(event);
-                        });
-
-                        scope.$on('$destroy', function() {
-                            $document.off('keydown', listComponent.handleKey);
-                            ReactDOM.unmountComponentAtNode(elem[0]);
-                        });
 
                         /**
                          * Test if item a equals to item b
@@ -1172,7 +1247,6 @@
                         });
 
                         elem.on('scroll', handleScroll);
-
                         scope.$on('$destroy', function() {
                             elem.off('scroll');
                         });
@@ -1217,6 +1291,18 @@
                         function isListEnd(elem) {
                             return elem.scrollTop + elem.offsetHeight + 200 >= elem.scrollHeight;
                         }
+
+                        // handle default events
+                        angular.forEach(Object.keys(Keys), function(key) {
+                            scope.$on('key:' + key, function($event, event) {
+                                listComponent.handleKey(event);
+                            });
+                        });
+
+                        // remove react elem on destroy
+                        scope.$on('$destroy', function() {
+                            ReactDOM.unmountComponentAtNode(elem[0]);
+                        });
                     });
                 }
             };
