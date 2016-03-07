@@ -981,7 +981,7 @@ angular.module('superdesk.editor2', [
                         };
                         if (angular.isDefined(window.MediumEditorTable)) {
                             editorConfig.toolbar.buttons.push('table');
-                            editorConfig.extension.table = new window.MediumEditorTable();
+                            editorConfig.extensions.table = new window.MediumEditorTable();
                         }
                     }
                     // FIXME: create unwanted cursor moves
