@@ -966,10 +966,11 @@
         'modal',
         'archiveService',
         'confirm',
-        'reloadService'
+        'reloadService',
+        '$sce'
     ];
     function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
-            privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService) {
+            privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $sce) {
         return {
             link: function($scope, elem, attrs) {
                 var _closing;
@@ -1043,8 +1044,13 @@
                         $scope.origItem = res;
                         $scope.dirty = false;
                         $scope.item = _.create($scope.origItem);
+
                         if (res.cropData) {
                             $scope.item.hasCrops = true;
+                        }
+
+                        if (res.highlight) {
+                            _previewHighlight(res._id);
                         }
 
                         notify.success(gettext('Item updated.'));
@@ -1110,6 +1116,19 @@
                                 notify.error(gettext('Error creating highlight.'));
                             });
                         });
+                }
+
+                function _previewHighlight(_id) {
+                    api.generate_highlights.save({}, {'package': _id, 'preview': true})
+                    .then(function(response) {
+                        $scope.highlight_preview = $sce.trustAsHtml(response.body_html);
+                    }, function(data) {
+                        $scope.highlight_preview = data.message;
+                    });
+                }
+
+                if ($scope.origItem.highlight) {
+                    _previewHighlight($scope.origItem._id);
                 }
 
                 /**

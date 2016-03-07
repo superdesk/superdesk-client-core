@@ -14,5 +14,16 @@
 				<li class="fake clearfix"><div></div></li>	
 			</ul>
 		</li>
+		<li ng-if="highlight">
+			<div class="group-info">
+				<h6>Highlight Preview</h6>
+			</div>
+			<ul id="highlight-preview" class="package-edit-items clearfix">
+				<li class="sort-item clearfix">
+					<div class="preview-container" ng-bind-html="highlight_preview"></div>
+				</li>
+				<li class="fake clearfix"><div></div></li>	
+			</ul>
+		</li>
 	</ul>
 </div>
