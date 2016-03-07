@@ -868,7 +868,7 @@
         // initialize metadata from `item`
         if ($scope.data.showMetadataEditor) {
             $scope.data.metadata = {};
-            ['headline', 'description_text', 'slugline', 'byline'].forEach(function(key) {
+            ['headline', 'description_text', 'slugline', 'byline', 'usageterms', 'copyrightnotice'].forEach(function(key) {
                 $scope.data.metadata[key] = $scope.data.item[key];
             });
         }

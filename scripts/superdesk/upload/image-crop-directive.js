@@ -49,13 +49,13 @@
                         var cLeft = scope.cropData.CropLeft * ratio;
                         var cBottom = img.height - scope.cropData.CropBottom * ratio;
                         var cRight = img.width - scope.cropData.CropRight * ratio;
-                        cropBox.css({                         
+                        cropBox.css({
                             'width': img.width,
                             'height': img.height,
                             'border-top-width': cTop + 'px',
                             'border-left-width': cLeft + 'px',
                             'border-bottom-width': cBottom + 'px',
-                            'border-right-width': cRight + 'px'                            
+                            'border-right-width': cRight + 'px'
                         });
                     }
                 }
@@ -84,7 +84,8 @@
      * scope.preview should be define on container page so that the coordiates can be used
      * to pass in api that is serving for saving the crop.
      */
-     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', '$timeout', function(gettext, $interpolate, imageFactory, $timeout) {
+     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', '$timeout',
+     function(gettext, $interpolate, imageFactory, $timeout) {
         return {
             scope: {
                 src: '=',
@@ -149,12 +150,7 @@
                 }
 
                 scope.$watch('src', function(src) {
-                    if (!src || (scope.showMinSizeError && !validateConstraints(scope.original, scope.rendition))) {
-                        return;
-                    }
-
                     var cropSelect = parseCoordinates(scope.cropInit) || getDefaultCoordinates(scope.original, scope.rendition);
-
                     refreshImage(src, cropSelect);
                 });
 
@@ -199,6 +195,9 @@
 
                     img = imageFactory.makeInstance();
                     img.onload = function() {
+                        if (!src || (scope.showMinSizeError && !validateConstraints(scope.original, scope.rendition))) {
+                            return;
+                        }
                         elem.append(img);
                         $(img).Jcrop({
                             aspectRatio: scope.rendition.width ? scope.rendition.width / scope.rendition.height : null,
@@ -309,15 +308,15 @@
                         'position': 'absolute',
                         'z-index': 10000
                     });
-                    
+
                     crossLeft = angular.element('<div class="poi__cross-left"></div>');
                     elem.append(crossLeft);
                     crossRight = angular.element('<div class="poi__cross-right"></div>');
-                    elem.append(crossRight); 
+                    elem.append(crossRight);
                     crossTop = angular.element('<div class="poi__cross-top"></div>');
                     elem.append(crossTop);
                     crossBottom = angular.element('<div class="poi__cross-bottom"></div>');
-                    elem.append(crossBottom);                      
+                    elem.append(crossBottom);
 
                 }
 
@@ -325,7 +324,7 @@
                     pointElem.css({
                         left: (scope.point.x * img.width) - 15,
                         top: (scope.point.y * img.height) - 15
-                    });                   
+                    });
                     crossLeft.css({
                         width: (scope.point.x * img.width) - 15,
                         top: (scope.point.y * img.height)
