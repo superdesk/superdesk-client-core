@@ -98,7 +98,7 @@
                 showMinSizeError: '='
             },
             link: function(scope, elem) {
-                var img, cropData;
+                var img, cropData, jcropApi, selectionWidth, selectionHeight;
 
                 /**
                  * Updates crop coordinates scope
@@ -107,6 +107,8 @@
                  */
                 function updateScope(cords) {
                     var nextData = formatCoordinates(cords);
+                    selectionWidth = nextData.CropRight - nextData.CropLeft;
+                    selectionHeight = nextData.CropBottom - nextData.CropTop;
                     var prevData = cropData || scope.cropInit;
                     if (!angular.equals(nextData, prevData)) {
                         angular.extend(scope.cropData, nextData);
@@ -175,34 +177,21 @@
                         x: point.x * scope.original.width,
                         y: point.y * scope.original.height
                     };
-                    var width = cropData.CropRight - cropData.CropLeft;
-                    var height = cropData.CropBottom - cropData.CropTop;
-                    var crop = {
-                        CropLeft: center.x - width / 2,
-                        CropTop: center.y - height / 2,
-                        CropRight: center.x + width / 2,
-                        CropBottom: center.y + height / 2
-                    };
-                    /*
-                    if (crop.CropLeft < 0) {
-                        crop.CropRight = crop.CropRight - crop.CropLeft;
-                        crop.CropLeft = 0;
-                    } else if (crop.CropRight > scope.original.width) {
-                        crop.CropLeft = crop.CropLeft - crop.CropRight - scope.original.width;
-                        crop.CropRight = scope.original.width;
-                    }
-                    */
 
-                    for (var i in crop) {
-                        crop[i] = Math.round(crop[i]);
-                    }
+                    var crop = {
+                        CropLeft: Math.round(center.x - selectionWidth / 2),
+                        CropTop: Math.round(center.y - selectionHeight / 2),
+                        CropRight: Math.round(center.x + selectionWidth / 2),
+                        CropBottom: Math.round(center.y + selectionHeight / 2)
+                    };
                     angular.extend(cropData, crop);
-                    refreshImage(img.src, [
+                    var setSelect = [
                         cropData.CropLeft,
                         cropData.CropTop,
-                        cropData.CropRight - cropData.CropLeft,
-                        cropData.CropBottom - cropData.CropTop
-                    ]);
+                        cropData.CropRight,
+                        cropData.CropBottom
+                    ];
+                    refreshImage(img.src, setSelect);
                 });
 
                 function refreshImage(src, setSelect) {
@@ -221,6 +210,8 @@
                             allowSelect: false,
                             addClass: 'jcrop-dark',
                             onSelect: updateScope
+                        }, function() {
+                            jcropApi = this;
                         });
                     };
 
@@ -299,11 +290,6 @@
 
                     img = new Image();
                     img.onload = function() {
-                        angular.element(img).css({
-                            // 'position': 'absolute',
-                            // 'left': 0,
-                            // 'top': 0
-                        });
                         elem.append(img);
                         drawPoint();
                     };
@@ -311,7 +297,6 @@
                         elem.addClass('transition-on');
                         scope.point.x = Math.round(event.offsetX * 100 / img.width) / 100;
                         scope.point.y = Math.round(event.offsetY * 100 / img.height) / 100;
-                        //console.log(scope.point);
                         scope.onChange();
                         scope.$apply();
                         $rootScope.$broadcast('poiUpdate', scope.point);
