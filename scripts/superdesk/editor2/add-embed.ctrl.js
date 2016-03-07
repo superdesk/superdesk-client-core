@@ -3,8 +3,8 @@
 
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
-SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash', 'EMBED_PROVIDERS', '$scope'];
-function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PROVIDERS, $scope) {
+SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash', 'EMBED_PROVIDERS', '$scope', 'editor'];
+function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PROVIDERS, $scope, editor) {
     var vm = this;
     angular.extend(vm, {
         editorCtrl: undefined,  // defined in link method
@@ -22,8 +22,7 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
          * @return {string} html
          */
         pictureToHtml: function(url, description) {
-            var html = '<img alt="' + (_.escape(description) || '') + '" src="' + url + '">\n';
-            return html;
+            return editor.generateImageTag(url, null, description);
         },
         /**
          * Return html code to represent an embedded link

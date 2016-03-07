@@ -125,8 +125,8 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q'];
-function EditorService(spellcheck, $rootScope, $timeout, $q) {
+EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash'];
+function EditorService(spellcheck, $rootScope, $timeout, $q, _) {
     this.settings = {spellcheck: true};
 
     /**
@@ -555,10 +555,14 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
             scope.model.$setViewValue(val);
         }
     }
+
+    this.generateImageTag = function(url, renditions, caption) {
+        return '<img alt="' + _.escape(caption || '') + '" src="' + url + '">';
+    };
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'lodash', 'renditions'];
-function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, _, renditions) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'renditions', 'editor'];
+function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, renditions, editor) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
@@ -621,7 +625,7 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
                             mimetype: image.item.mimetype
                         };
                         // update block
-                        vm.model.body = '<img alt="' + _.escape(vm.model.caption) + '" src="' + url + '">';
+                        vm.model.body = editor.generateImageTag(url, null, vm.model.caption);
                         vm.updateEmbedPreview();
                         // update caption
                         vm.saveCaption(vm.model.association.description_text);
@@ -976,8 +980,7 @@ angular.module('superdesk.editor2', [
                                         sdTextEditor.insertNewBlock(indexWhereToAddBlock, {
                                             blockType: 'embed',
                                             embedType: 'Image',
-                                            body: '<img alt="' + (image.description_text || '') + '" src="' +
-                                                image.renditions.viewImage.href + '"/>\n',
+                                            body: editor.generateImageTag(image.renditions.viewImage.href, null, image.description_text),
                                             caption: image.description_text,
                                             association: image
                                         }, true);

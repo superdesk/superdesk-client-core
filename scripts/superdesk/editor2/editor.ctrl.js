@@ -3,8 +3,8 @@
 
 angular.module('superdesk.editor2.ctrl', []).controller('SdTextEditorController', SdTextEditorController);
 
-SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element'];
-function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element) {
+SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element', 'editor'];
+function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) {
     var vm = this;
     function Block(attrs) {
         angular.extend(this, {
@@ -119,7 +119,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element) {
                     } else {
                         url = block.association.renditions.viewImage.href;
                     }
-                    block.body = '<img alt="' + (_.escape(block.caption) || '') + '" src="' + url + '">';
+                    block.body = editor.generateImageTag(url, null, block.caption);
                 } else {
                     // extract body and caption from embed block html
                     var original_body = angular.element(angular.copy(block.body));
