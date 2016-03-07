@@ -39,7 +39,7 @@
     <div class="authoring-header__detailed" sd-media-query min-width="550">
         <div class="authoring-header__row" ng-if="schema.slugline">
           <div class="authoring-header__item" sd-validation-error="error.slugline" data-required="schema.slugline.required">
-            <label class="authoring-header__item-label" translate>SLUGLINE</label>
+            <label class="authoring-header__item-label uppercase" translate>Slugline</label>
             <div class="authoring-header__input-holder">
               <input type="text"
                      sd-autofocus
@@ -131,7 +131,7 @@
 
         <div class="authoring-header__row" ng-if="metadata.categories && schema.anpa_category" id="category-setting">
           <div class="authoring-header__item" sd-validation-error="error.anpa_category" data-required="schema.anpa_category.required">
-            <label class="authoring-header__item-label" translate>CATEGORY</label>
+            <label class="authoring-header__item-label uppercase" translate>Category</label>
             <div sd-meta-terms
                  class="data"
                  ng-disabled="!_editable"

@@ -817,7 +817,7 @@
 
         this.confirmSaveWork = function confirmSavework(msg) {
             return modal.confirm(
-                $interpolate(gettext('Configuration has changed, ' + msg + '. Would you like to save story to your workspace?'))
+                $interpolate(gettext('Configuration has changed. {{ message }} Would you like to save the story to your workspace?'))
                 ({message: msg})
             );
         };
@@ -1041,7 +1041,7 @@
                  */
                 $scope.exportHighlight = function(item) {
                     if ($scope.save_enabled()) {
-                        modal.confirm(gettext('You have unsaved changes, do you want to continue.'))
+                        modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
                             .then(function() {
                                 _exportHighlight(item._id);
                             }

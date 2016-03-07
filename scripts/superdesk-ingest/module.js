@@ -721,7 +721,7 @@
                             if (angular.isDefined(response.data._message)) {
                                 notify.error(gettext('Error: ' + response.data._message));
                             } else {
-                                notify.error(gettext('There is an error. Rule set cannot be deleted.'));
+                                notify.error(gettext('There was an error. Rule set cannot be deleted.'));
                             }
                         });
                     });
@@ -838,7 +838,7 @@
                             if (angular.isDefined(response.data._message)) {
                                 notify.error(gettext('Error: ' + response.data._message));
                             } else {
-                                notify.error(gettext('There is an error. Routing scheme cannot be deleted.'));
+                                notify.error(gettext('There was an error. Routing scheme cannot be deleted.'));
                             }
                         });
                     });

@@ -1364,7 +1364,7 @@
                             info.push(React.createElement(
                                 'div',
                                 {key: 3, className: 'state-label not-for-publication'},
-                                gettext('Not for publication')
+                                gettext('Not For Publication')
                             ));
                         }
 
@@ -1617,7 +1617,7 @@
                                     null,
                                 flags.marked_for_not_publication ?
                                     React.createElement('div', {className: 'state-label not-for-publication'},
-                                        gettext('Not for Publication')) :
+                                        gettext('Not For Publication')) :
                                     null,
                                 flags.marked_for_legal ?
                                     React.createElement('div', {className: 'state-label legal'}, gettext('Legal')) :
@@ -2181,7 +2181,7 @@
                     scope.save = function(editSearch) {
 
                         function onSuccess() {
-                            notify.success(gettext('Saved search is saved successfully'));
+                            notify.success(gettext('Search was saved successfully'));
                             scope.cancel();
                             scope.sTab = false;
                             scope.edit = null;
@@ -2192,7 +2192,7 @@
                             if (angular.isDefined(error.data._message)) {
                                 notify.error(error.data._message);
                             } else {
-                                notify.error(gettext('Error. Saved search could not be saved.'));
+                                notify.error(gettext('Error. Search could not be saved.'));
                             }
                         }
 
