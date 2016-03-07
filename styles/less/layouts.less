@@ -6,6 +6,8 @@
 // Body reset
 // ----------
 
+@import 'animation.less';
+
 body {
 	margin: 0;
 	font-family: @baseFontFamily;
@@ -370,8 +372,7 @@ a:hover {
 .slide-pane {
     position: absolute;
     top: 1px; bottom: 0;
-    right: -@slide-pane-width;
-
+    //right: -@slide-pane-width;
     width: @slide-pane-width;
     background-color: @white;
     z-index: @zindexSlidePane;
@@ -381,12 +382,17 @@ a:hover {
         top: @nav-height * 2;
         bottom: 30px;
     }
-    &.open { right: 0; }
+    &.open {
+			right: 0;
+			animation: slideInFromRight 0.2s ease-out;
+			box-shadow: -2px 3px 6px 0px rgba(0, 0, 0, 0.25);
+		}
 
     > .slide-pane__header {
         height: @nav-height;
         border-bottom: 1px solid #424242;
         padding: 0 20px;
+				background-color: #2c2c2c;
         h3 {
             font-size: 20px;
             line-height: @nav-height;
@@ -544,14 +550,13 @@ a:hover {
 	top:0;
 	bottom:0;
 	background: @tabpane-background;
-	border-color:@tabpane-border;
-	border-style: solid;
+	//border-color:@tabpane-border;
+	//border-style: solid;
 	z-index:15;
 	.box-sizing(border-box);
 	.transition( all 0.3s ease);
 	&.left-tabpane {
 		left:-@tabpane-width;
-		border-width: 0 3px 0 0;
 		.box-shadow(2px 0px 8px 0px rgba(50,50,50,.35));
 
 		&.open-tabpane {
@@ -560,7 +565,6 @@ a:hover {
 	}
 	&.right-tabpane {
 		right:-@tabpane-width;
-		border-width: 0 0 0 3px;
 		.box-shadow(-2px 0px 8px 0px rgba(40,50,50,.35));
 		&.open-tabpane {
 		 	right:@tablist-width;
