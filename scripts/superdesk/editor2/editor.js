@@ -974,12 +974,15 @@ angular.module('superdesk.editor2', [
                                 });
                             }
                         });
-                        editorConfig.toolbar.buttons.push('embed', 'picture', 'table');
+                        editorConfig.toolbar.buttons.push('embed', 'picture');
                         editorConfig.extensions = {
                             'embed': new EmbedButton(),
-                            'upload': new PictureButton(),
-                            'table': new window.MediumEditorTable()
+                            'upload': new PictureButton()
                         };
+                        if (angular.isDefined(window.MediumEditorTable)) {
+                            editorConfig.toolbar.buttons.push('table');
+                            editorConfig.extension.table = new window.MediumEditorTable();
+                        }
                     }
                     // FIXME: create unwanted cursor moves
                     // spellcheck.setLanguage(scope.language);
