@@ -11,6 +11,21 @@ describe('MetadataWidgetCtrl controller', function () {
     beforeEach(module('superdesk.filters'));
     beforeEach(module('superdesk.authoring.metadata'));
 
+    beforeEach(module(function($provide) {
+        $provide.constant('config', {
+            model: {
+                timeformat: 'HH:mm:ss',
+                dateformat: 'DD/MM/YYYY'
+            },
+            view: {
+                timeformat: 'HH:mm',
+                dateformat: 'MM/DD/YYYY'
+            },
+            defaultTimezone: 'Europe/London',
+            server: {url: undefined}
+        });
+    }));
+
     beforeEach(inject(function (
         $rootScope, $controller, $q, _metadata_, preferencesService
     ) {
@@ -28,7 +43,7 @@ describe('MetadataWidgetCtrl controller', function () {
     }));
 
     it('can resolve schedule datetime', function() {
-        expect(scope.item.publish_schedule_date).toBe('08/01/2015');
+        expect(scope.item.publish_schedule_date).toBe('01/08/2015');
         expect(scope.item.publish_schedule_time).toBe('15:12:34');
     });
 

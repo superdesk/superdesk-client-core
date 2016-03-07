@@ -525,10 +525,9 @@
         return {
             transclude: true,
             templateUrl: 'scripts/superdesk/ui/views/datepicker-wrapper.html',
-            link:function (scope, element) {
+            link: function (scope, element) {
                 element.bind('click', function(event) {
                     event.preventDefault();
-                    event.stopPropagation();
                 });
             }
         };
@@ -537,16 +536,9 @@
     /**
      * Datepicker directive
      *
-     * Expects: UTC string or UTC time object
-     * Returns: UTC string if input is valid or NULL if it's not
-     *
      * Usage:
      * <div sd-datepicker ng-model="date"></div>
      *
-     * More improvements TODO:
-     *     > accept min and max date
-     *     > date format as parameter
-     *     > keep time not reseting it
      */
 
     function DatepickerDirective() {
@@ -559,8 +551,8 @@
         };
     }
 
-    DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper'];
-    function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper) {
+    DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', 'config'];
+    function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper, config) {
         var popupTpl =
         '<div sd-datepicker-wrapper ng-model="date" ng-change="dateSelection()">' +
             '<div datepicker format-day="d" show-weeks="false"></div>' +
@@ -573,37 +565,28 @@
             },
             link: function (scope, element, attrs, ctrl) {
 
-                var VIEW_FORMAT = 'DD/MM/YYYY',
-                    ESC = 27,
-                    DOWN_ARROW = 40;
-
+                var VIEW_DATE_FORMAT = config.view.dateformat;
+                var MODEL_DATE_FORMAT = config.model.dateformat;
+                var ESC = 27;
+                var DOWN_ARROW = 40;
                 var popup = angular.element(popupTpl);
 
                 ctrl.$parsers.unshift(function parseDate(viewValue) {
-
                     if (!viewValue) {
                         ctrl.$setValidity('date', true);
                         return null;
+                    } else if (viewValue.dpdate) {
+                        //from datepicker
+                        ctrl.$setValidity('date', true);
+                        return moment(viewValue.dpdate).format(MODEL_DATE_FORMAT);
+                    } else if (datetimeHelper.isValidDate(viewValue, VIEW_DATE_FORMAT)) {
+                        //date was typed in
+                        ctrl.$setValidity('date', true);
+                        return moment(viewValue, VIEW_DATE_FORMAT).format(MODEL_DATE_FORMAT);
                     } else {
-                        if (viewValue.dpdate) {
-                            ctrl.$setValidity('date', true);
-                            return moment.utc(viewValue.dpdate).format();
-                        } else {
-                            if (datetimeHelper.isValidDate(viewValue)) {
-                                if (moment(viewValue, VIEW_FORMAT).isValid()) {
-                                    ctrl.$setValidity('date', true);
-                                    return moment(viewValue, VIEW_FORMAT).utc().format();
-                                } else {
-                                    //value cannot be converted
-                                    ctrl.$setValidity('date', false);
-                                    return null;
-                                }
-                            } else {
-                                //input is not valid
-                                ctrl.$setValidity('date', false);
-                                return null;
-                            }
-                        }
+                        //input is not valid
+                        ctrl.$setValidity('date', false);
+                        return null;
                     }
                 });
 
@@ -612,7 +595,10 @@
                         //if one of predefined dates is selected (today, tomorrow...)
                         scope.date = dt;
                     }
-                    ctrl.$setViewValue({dpdate: scope.date, viewdate: moment(scope.date).format(VIEW_FORMAT)});
+                    ctrl.$setViewValue({
+                        dpdate: scope.date,
+                        viewdate: moment(scope.date).format(VIEW_DATE_FORMAT)
+                    });
                     ctrl.$render();
                     scope.close();
                 };
@@ -630,15 +616,13 @@
 
                 //handle model changes
                 ctrl.$formatters.unshift(function dateFormatter(modelValue) {
-
                     var dpdate,
                         viewdate = 'Invalid Date';
 
                     if (modelValue) {
-                        if (moment(modelValue).isValid()) {
-                            //formatter pass fine
-                            dpdate = moment.utc(modelValue).toDate();
-                            viewdate = moment(modelValue).format(VIEW_FORMAT);
+                        if (datetimeHelper.isValidDate(modelValue, MODEL_DATE_FORMAT)) {
+                            dpdate = moment(modelValue, MODEL_DATE_FORMAT).toDate();
+                            viewdate = moment(modelValue, MODEL_DATE_FORMAT).format(VIEW_DATE_FORMAT);
                         }
                     } else {
                         viewdate = '';
@@ -650,42 +634,25 @@
                     };
                 });
 
-                var closeOnClick = function(event) {
-                    var trigBtn = element.parent().find('button');
-                    var trigIcn = trigBtn.find('i');
-                    if (scope.open && event.target !== trigBtn[0] && event.target !== trigIcn[0]) {
-                        scope.$apply(function() {
-                            scope.open = false;
-                        });
-                    }
-                };
-
                 scope.$watch('open', function(value) {
                     if (value) {
                         $popupWrapper.offset(popupService.position(260, 270, element));
                         scope.$broadcast('datepicker.focus');
-                        $document.bind('click', closeOnClick);
-                    } else {
-                        $document.unbind('click', closeOnClick);
                     }
                 });
-
-                var keydown = function(e) {
-                    scope.keydown(e);
-                };
-                element.bind('keydown', keydown);
 
                 scope.keydown = function(evt) {
                     if (evt.which === ESC) {
                         evt.preventDefault();
-                        evt.stopPropagation();
                         scope.close();
-                    } else {
-                        if (evt.which === DOWN_ARROW && !scope.open) {
+                    } else if (evt.which === DOWN_ARROW && !scope.open) {
+                        scope.$apply(function () {
                             scope.open = true;
-                        }
+                        });
                     }
                 };
+
+                element.bind('keydown', scope.keydown);
 
                 scope.close = function() {
                     scope.open = false;
@@ -698,10 +665,8 @@
 
                 scope.$on('$destroy', function() {
                     $popupWrapper.remove();
-                    element.unbind('keydown', keydown);
-                    $document.unbind('click', closeOnClick);
+                    element.unbind('keydown', scope.keydown);
                 });
-
             }
         };
     }
@@ -712,14 +677,12 @@
                 tt: '=ngModel',
                 disabled: '=ngDisabled'
             },
-            templateUrl: 'scripts/superdesk/ui/views/sd-timepicker.html',
-            link: function(scope) {
-            }
+            templateUrl: 'scripts/superdesk/ui/views/sd-timepicker.html'
         };
     }
 
-    TimepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper'];
-    function TimepickerInnerDirective($compile, $document, popupService, datetimeHelper) {
+    TimepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', 'config'];
+    function TimepickerInnerDirective($compile, $document, popupService, datetimeHelper, config) {
         var popupTpl = '<div sd-timepicker-popup ' +
             'data-open="open" data-time="time" data-select="timeSelection({time: time})" data-keydown="keydown(e)">' +
             '</div>';
@@ -730,36 +693,33 @@
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
 
-                var TIME_FORMAT = 'HH:mm:ss',
-                    ESC = 27,
-                    DOWN_ARROW = 40;
+                var MODEL_TIME_FORMAT = config.model.timeformat;
+                var VIEW_TIME_FORMAT = config.view.timeformat || MODEL_TIME_FORMAT;
+                var ESC = 27;
+                var DOWN_ARROW = 40;
                 var popup = angular.element(popupTpl);
 
-                function viewFormat(time) {
-                    //convert from utc time to local time
-                    return moment(time, TIME_FORMAT).add(moment().utcOffset(), 'minutes').format(TIME_FORMAT);
+                function viewFormat(modelTime) {
+                    return moment(modelTime, MODEL_TIME_FORMAT).format(VIEW_TIME_FORMAT);
                 }
 
                 ctrl.$parsers.unshift(function parseDate(viewValue) {
                     if (!viewValue) {
                         ctrl.$setValidity('time', true);
                         return null;
+                    } else if (viewValue.tptime) {
+                        //time selected from picker
+                        ctrl.$setValidity('time', true);
+                        return viewValue.tptime;
+                    } else if (datetimeHelper.isValidTime(viewValue, VIEW_TIME_FORMAT)) {
+                        //time written in
+                        ctrl.$setValidity('time', true);
+                        scope.time = moment(viewValue, VIEW_TIME_FORMAT).format(MODEL_TIME_FORMAT);
+                        return scope.time;
                     } else {
-                        if (viewValue.tptime) {
-                            ctrl.$setValidity('time', true);
-                            return viewValue.tptime;
-                        } else {
-                            //value validation
-                            if (datetimeHelper.isValidTime(viewValue)) {
-                                ctrl.$setValidity('time', true);
-                                scope.time = moment(viewValue, TIME_FORMAT).utc().format(TIME_FORMAT);
-                                return scope.time;
-                            } else {
-                                //regex not passing
-                                ctrl.$setValidity('time', false);
-                                return null;
-                            }
-                        }
+                        //regex not passing
+                        ctrl.$setValidity('time', false);
+                        return null;
                     }
                 });
 
@@ -784,7 +744,7 @@
                         viewtime = 'Invalid Time';
 
                     if (modelValue) {
-                        if (datetimeHelper.isValidTime(modelValue)) {
+                        if (datetimeHelper.isValidTime(modelValue, MODEL_TIME_FORMAT)) {
                             //formatter pass fine
                             tptime = modelValue;
                             viewtime =  viewFormat(modelValue);
@@ -803,38 +763,21 @@
                     if (value) {
                         $popupWrapper.offset(popupService.position(200, 310, element));
                         scope.$broadcast('timepicker.focus');
-                        $document.bind('click', closeOnClick);
-                    } else {
-                        $document.unbind('click', closeOnClick);
                     }
                 });
-
-                var closeOnClick = function(event) {
-                    var trigBtn = element.parent().find('button');
-                    var trigIcn = trigBtn.find('i');
-                    if (scope.open && event.target !== trigBtn[0] && event.target !== trigIcn[0]) {
-                        scope.$apply(function() {
-                            scope.open = false;
-                        });
-                    }
-                };
-
-                var keydown = function(e) {
-                    scope.keydown(e);
-                };
-                element.bind('keydown', keydown);
 
                 scope.keydown = function(evt) {
                     if (evt.which === ESC) {
                         evt.preventDefault();
-                        evt.stopPropagation();
                         scope.close();
-                    } else {
-                        if (evt.which === DOWN_ARROW && !scope.open) {
+                    } else if (evt.which === DOWN_ARROW && !scope.open) {
+                        scope.$apply(function () {
                             scope.open = true;
-                        }
+                        });
                     }
                 };
+
+                element.bind('keydown', scope.keydown);
 
                 scope.close = function() {
                     scope.open = false;
@@ -847,6 +790,7 @@
 
                 scope.$on('$destroy', function() {
                     $popupWrapper.remove();
+                    element.unbind('keydown', scope.keydown);
                 });
             }
         };
@@ -927,8 +871,8 @@
         };
     }
 
-    TimepickerPopupDirective.$inject = ['$timeout'];
-    function TimepickerPopupDirective($timeout) {
+    TimepickerPopupDirective.$inject = ['$timeout', 'config'];
+    function TimepickerPopupDirective($timeout, config) {
         return {
             templateUrl: 'scripts/superdesk/ui/views/sd-timepicker-popup.html',
             scope: {
@@ -939,7 +883,7 @@
             },
             link: function(scope, element) {
 
-                var TIME_FORMAT = 'HH:mm:ss';
+                var MODEL_TIME_FORMAT = config.model.timeformat;
 
                 var POPUP = '.timepicker-popup';
 
@@ -953,7 +897,6 @@
 
                 element.bind('click', function(event) {
                     event.preventDefault();
-                    event.stopPropagation();
                 });
 
                 scope.hours = _.range(24);
@@ -962,198 +905,30 @@
                 scope.$watch('time', function(newVal, oldVal) {
                     var local;
                     if (newVal) {
-                        //convert from utc to local
-                        local = moment(newVal, TIME_FORMAT).add(moment().utcOffset(), 'minutes');
+                        local = moment(newVal, MODEL_TIME_FORMAT);
                     } else {
                         local = moment();
                     }
                     scope.hour = local.hour();
-                    scope.minute = local.minute() - local.minute() % 5 + 5;
+                    scope.minute = local.minute() - local.minute() % 5;
                     scope.second = local.second();
                 });
 
                 scope.submit = function(offset) {
-                    var local, utc_time;
+                    var local, time;
                     if (offset) {
-                        local = moment().add(offset, 'minutes').format(TIME_FORMAT);
+                        local = moment().add(offset, 'minutes').format(MODEL_TIME_FORMAT);
                     } else {
                         local = scope.hour + ':' + scope.minute + ':' + scope.second;
                     }
                     //convert from local to utc
-                    utc_time = moment(local, TIME_FORMAT).utc().format(TIME_FORMAT);
-                    scope.select({time: utc_time});
+                    time = moment(local, MODEL_TIME_FORMAT).format(MODEL_TIME_FORMAT);
+                    scope.select({time: time});
                 };
 
                 scope.cancel =  function() {
                     scope.select();
                 };
-            }
-        };
-    }
-
-    /**
-     * @memberof superdesk.ui
-     * @ngdoc directive
-     * @name sdTimepickerAlt
-     * @description
-     *   Timepicker directive saving utc time to model by defualt, and
-     *   rendering local time.
-     *
-     *   Optionally, saving the UTC time to the model can be disabled by
-     *   setting the no-utc-convert="true" attribute on the directive's DOM
-     *   element. If this option is set, local time will be stored in the model
-     *   (i.e. as picked by the user in the UI).
-     *
-     *   NOTE: the no-utc-convert attribute is only evaluated once, in the
-     *   directive linking phase. Subsequent changes of the attribute value
-     *   have no effect.
-     */
-    TimepickerAltDirective.$inject = ['tzdata'];
-    function TimepickerAltDirective(tzdata) {
-        var STEP = 5;
-
-        function range(min, max, step) {
-            step = step || 1;
-            var items = [];
-            for (var i = min; i <= max; i = i + step) {
-                items.push(i);
-            }
-            return items;
-        }
-
-        return {
-            scope: {
-                model: '=',
-                noUtcConvert: '@'
-            },
-            templateUrl: 'scripts/superdesk/ui/views/sd-timepicker-alt.html',
-            link: function(scope) {
-
-                var d = new Date(),
-                    hours,
-                    minutes,
-                    utcConvert;
-
-                scope.$watch('model', function() {
-                    init();
-                    update();
-                });
-
-                function init() {
-                    d = new Date();
-                    utcConvert = (scope.noUtcConvert || '').toLowerCase() !== 'true';
-                    scope.open = false;
-                    scope.hoursRange = range(0, 23);
-                    scope.minutesRange = range(0, 59, STEP);
-
-                    tzdata.$promise.then(function () {
-                        scope.timeZones = tzdata.getTzNames();
-                    });
-
-                    if (scope.model) {
-                        hours = scope.model.substr(0, 2);
-                        minutes = scope.model.substr(2, 2);
-
-                        if (utcConvert) {
-                            d.setUTCHours(hours);
-                            d.setUTCMinutes(minutes);
-                        } else {
-                            d.setHours(hours);
-                            d.setMinutes(minutes);
-                        }
-                    } else {
-                        d.setHours(0);
-                        d.setMinutes(0);
-                    }
-
-                    // whether or not the model actually has a value
-                    scope.hasValue = !!scope.model;
-                }
-
-                init();
-
-                /**
-                 * Set local hours
-                 *
-                 * @param {int} hours
-                 */
-                scope.setHours = function(hours) {
-                    d.setHours(hours);
-                    scope.hasValue = true;
-                    update();
-                };
-
-                /**
-                 * Set local minutes
-                 *
-                 * @param {int} minutes
-                 */
-                scope.setMinutes = function(minutes) {
-                    d.setMinutes(minutes);
-                    scope.hasValue = true;
-                    update();
-                };
-
-                /**
-                 * Toggle time picker on/off
-                 */
-                scope.toggle = function() {
-                    scope.open = !scope.open;
-                };
-
-                /**
-                 * Clears the model value (marking it as "no value selected").
-                 *
-                 * @method clearValue
-                 */
-                scope.clearValue = function () {
-                    d.setHours(0);
-                    d.setMinutes(0);
-                    scope.hasValue = false;
-                    update();
-                };
-
-                update();
-
-                /**
-                 * Update scope using local time and model using utc time
-                 */
-                function update() {
-                    if (scope.hasValue) {
-                        scope.hours = d.getHours();
-                        scope.minutes = d.getMinutes();
-                        scope.model = utcConvert ? utc() : noUtcTime(d);
-                    } else {
-                        scope.hours = 0;
-                        scope.minutes = 0;
-                        scope.model = '';
-                    }
-                }
-
-                /**
-                 * Get utc time for model
-                 *
-                 * @return {string} utc time in format `HHMM`
-                 */
-                function utc() {
-                    var hours = d.getUTCHours().toString();
-                    var minutes = d.getUTCMinutes().toString();
-                    return ('00' + hours).slice(-2) + ('00' + minutes).slice(-2);
-                }
-
-                /**
-                 * Returns the '%H%M' time string (i.e. double-digit hour and
-                 * minute parts) from the given Date object using local time.
-                 *
-                 * @function noUtcTime
-                 * @param {Date} d
-                 * @return {string}
-                 */
-                function noUtcTime(d) {
-                    var hours = ('00' + d.getHours()).slice(-2),
-                        minutes = ('00' + d.getMinutes()).slice(-2);
-                    return hours + minutes;
-                }
             }
         };
     }
@@ -1167,55 +942,38 @@
         };
     }
 
-    DateTimeHelperService.$inject = [];
-    function DateTimeHelperService() {
+    DateTimeHelperService.$inject = ['moment', 'config'];
+    function DateTimeHelperService(moment, config) {
 
-        this.isValidTime = function(value) {
-            //checking if the given value is a time in a format 'hh:mm:ss'
-            var colonCount = 0;
-            var hh, mm, ss;
+        /*
+        * @param timestring 2016-03-01T04:45:00+0000
+        * @param timezone Europe/London
+        */
+        this.splitDateTime = function(timestring, timezone) {
+            var momentTS = moment.tz(timestring, timezone);
 
-            for (var i = 0; i < value.length; i++) {
-                var ch = value.substring(i, i + 1);
-                if (((ch < '0') || (ch > '9')) && (ch !== ':')) {
-                    return false;
-                }
-                if (ch === ':') { colonCount++; }
-            }
-
-            if (colonCount !== 2) {return false;}
-
-            hh = value.substring(0, value.indexOf(':'));
-            if (hh.length !== 2 || (parseFloat(hh) < 0) || (parseFloat(hh) > 23)) {return false;}
-
-            mm = value.substring(value.indexOf(':') + 1, value.lastIndexOf(':'));
-            if (mm.length !== 2 || (parseFloat(mm) < 0) || (parseFloat(mm) > 59)) {return false;}
-
-            ss = value.substring(value.lastIndexOf(':') + 1, value.length);
-            if (ss.length !== 2 || (parseFloat(ss) < 0) || (parseFloat(ss) > 59)) {return false;}
-
-            return true;
+            return {
+                'date': momentTS.format(config.model.dateformat),
+                'time': momentTS.format(config.model.timeformat)
+            };
         };
 
-        this.isValidDate = function(value) {
-            //checking if the given value is a date in a format '31/01/2000'
-            var pattern = /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/(19\d{2}|[2-9]\d{3})$/;
-            var regex = new RegExp(pattern);
-            return regex.test(value);
+        this.isValidTime = function(value, format) {
+            var timeFormat = format || config.model.timeformat;
+            return moment(value, timeFormat, true).isValid();
         };
 
-        this.mergeDateTime = function(date, time) {
-            var date_str = moment(date).format('YYYY-MM-DD');
-            var time_str = moment(time, 'HH:mm:ss').add(moment().utcOffset(), 'minute').format('HH:mm:ss');
+        this.isValidDate = function(value, format) {
+            var dateFormat = format || config.model.dateformat;
+            return moment(value, dateFormat, true).isValid();
+        };
+
+        this.mergeDateTime = function(date_str, time_str, timezone) {
+            var tz = timezone || config.defaultTimezone;
             var merge_str = date_str + ' ' + time_str;
-            return moment(merge_str, 'YYYY-MM-DD HH:mm:ss').utc();
-        };
+            var formatter = config.model.dateformat + ' ' + config.model.timeformat;
 
-        this.mergeDateTimeWithoutUtc = function(date, time) {
-            var date_str = moment(date).format('YYYY-MM-DD');
-            var time_str = moment(time, 'HH:mm:ss').add(moment().utcOffset(), 'minute').format('HH:mm:ss');
-            var merge_str = date_str + ' ' + time_str;
-            return moment.utc(merge_str, 'YYYY-MM-DD HH:mm:ss');
+            return moment.tz(merge_str, formatter, tz);
         };
     }
 
@@ -1483,7 +1241,6 @@
         .directive('sdTimepickerInner', TimepickerInnerDirective)
         .directive('sdTimepickerPopup', TimepickerPopupDirective)
         .directive('sdTimepicker', TimepickerDirective)
-        .directive('sdTimepickerAlt', TimepickerAltDirective)
         .service('popupService', PopupService)
         .service('datetimeHelper', DateTimeHelperService)
         .filter('leadingZero', LeadingZeroFilter)
