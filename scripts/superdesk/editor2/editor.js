@@ -557,8 +557,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     }
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'lodash'];
-function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, _) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'lodash', 'renditions'];
+function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, _, renditions) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
@@ -600,61 +600,32 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
                 return false;
             }
             var poi = {x: 0.5, y: 0.5};
-            superdesk.intent('edit', 'crop', {
-                item: picture,
-                renditions: [
-                    {
-                        name: 'original',
-                        width: picture.renditions.viewImage.width,
-                        height: picture.renditions.viewImage.height
-                    },
-                    {
-                        name: 'thumbnail',
-                        width: 300,
-                        height: 300
-                    },
-                    {
-                        name: 'preview-3-2',
-                        width: 1440,
-                        height: 960
-                    },
-                    {
-                        name: 'preview-4-3',
-                        width: 1440,
-                        height: 1080
-                    },
-                    {
-                        name: 'wide-720',
-                        width: 1280,
-                        height: 720
-                    },
-                    {
-                        name: 'wide-1080',
-                        width: 1920,
-                        height: 1080
-                    }
-                ],
-                poi: picture.poi || poi,
-                showMetadataEditor: true
-            })
-            .then(function(result) {
-                // return the cropped image
-                api.save('picture_crop', {item: picture, crop: result.cropData.embed})
-                .then(function(image) {
-                    var url = image.href;
-                    // update association
-                    vm.model.association.renditions.embed = {
-                        href: url,
-                        width: image.width,
-                        height: image.height,
-                        media: image._id,
-                        mimetype: image.item.mimetype
-                    };
-                    // update block
-                    vm.model.body = '<img alt="' + _.escape(vm.model.caption) + '" src="' + url + '">';
-                    vm.updateEmbedPreview();
-                    // update caption
-                    vm.saveCaption(vm.model.association.description_text);
+            renditions.get().then(function(renditions) {
+                superdesk.intent('edit', 'crop', {
+                    item: picture,
+                    renditions: renditions,
+                    poi: picture.poi || poi,
+                    showMetadataEditor: true
+                })
+                .then(function(result) {
+                    // return the cropped image
+                    api.save('picture_crop', {item: picture, crop: result.cropData.embed})
+                    .then(function(image) {
+                        var url = image.href;
+                        // update association
+                        vm.model.association.renditions.embed = {
+                            href: url,
+                            width: image.width,
+                            height: image.height,
+                            media: image._id,
+                            mimetype: image.item.mimetype
+                        };
+                        // update block
+                        vm.model.body = '<img alt="' + _.escape(vm.model.caption) + '" src="' + url + '">';
+                        vm.updateEmbedPreview();
+                        // update caption
+                        vm.saveCaption(vm.model.association.description_text);
+                    });
                 });
             });
         }
