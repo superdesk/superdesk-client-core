@@ -98,7 +98,7 @@
                 showMinSizeError: '='
             },
             link: function(scope, elem) {
-                var img;
+                var img, cropData;
 
                 /**
                  * Updates crop coordinates scope
@@ -107,7 +107,7 @@
                  */
                 function updateScope(cords) {
                     var nextData = formatCoordinates(cords);
-                    var prevData = scope.cropData || scope.cropInit;
+                    var prevData = cropData || scope.cropInit;
                     if (!angular.equals(nextData, prevData)) {
                         angular.extend(scope.cropData, nextData);
                         scope.onChange({renditionName: scope.rendition.name, cropData: nextData});
@@ -157,23 +157,26 @@
                 });
 
                 scope.$watch('cropData', function() {
-                    if (scope.cropData && scope.cropData.CropBottom) {
-                        refreshImage(img.src, [
-                            scope.cropData.CropLeft,
-                            scope.cropData.CropTop,
-                            scope.cropData.CropRight - scope.cropData.CropLeft,
-                            scope.cropData.CropBottom - scope.cropData.CropTop
-                        ]);
+                    if (!cropData) {
+                        cropData = scope.cropData;
+                        if (cropData && cropData.CropBottom) {
+                            refreshImage(img.src, [
+                                cropData.CropLeft,
+                                cropData.CropTop,
+                                cropData.CropRight - cropData.CropLeft,
+                                cropData.CropBottom - cropData.CropTop
+                            ]);
+                        }
                     }
-                }, true);
+                });
 
                 scope.$on('poiUpdate', function(e, point) {
                     var center = {
                         x: point.x * scope.original.width,
                         y: point.y * scope.original.height
                     };
-                    var width = scope.cropData.CropRight - scope.cropData.CropLeft;
-                    var height = scope.cropData.CropBottom - scope.cropData.CropTop;
+                    var width = cropData.CropRight - cropData.CropLeft;
+                    var height = cropData.CropBottom - cropData.CropTop;
                     var crop = {
                         CropLeft: center.x - width / 2,
                         CropTop: center.y - height / 2,
@@ -193,7 +196,13 @@
                     for (var i in crop) {
                         crop[i] = Math.round(crop[i]);
                     }
-                    angular.extend(scope.cropData, crop);
+                    angular.extend(cropData, crop);
+                    refreshImage(img.src, [
+                        cropData.CropLeft,
+                        cropData.CropTop,
+                        cropData.CropRight - cropData.CropLeft,
+                        cropData.CropBottom - cropData.CropTop
+                    ]);
                 });
 
                 function refreshImage(src, setSelect) {
