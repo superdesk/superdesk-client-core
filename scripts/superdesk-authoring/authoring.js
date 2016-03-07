@@ -1142,6 +1142,7 @@
 
                 function publishItem(orig, item) {
                     var action = $scope.action === 'edit' ? 'publish' : $scope.action;
+                    validate(orig, item);
                     authoring.publish(orig, item, action)
                     .then(function(response) {
                         if (response) {
@@ -1172,6 +1173,21 @@
                             }
                         } else {
                             notify.error(gettext('Unknown Error: Item not published.'));
+                        }
+                    });
+                }
+
+                function validate(orig, item) {
+                    $scope.error = {};
+                    angular.forEach(_.extend(orig, item), function (value, key) {
+                        if (value) {
+                            if (typeof value === 'object' && !value.length) {
+                                $scope.error[key] = true;
+                            } else {
+                                $scope.error[key] = false;
+                            }
+                        } else {
+                            $scope.error[key] = true;
                         }
                     });
                 }

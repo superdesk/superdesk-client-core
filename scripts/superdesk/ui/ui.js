@@ -1425,6 +1425,44 @@
         };
     }
 
+    /*
+     * Required fields directive
+     *
+     * Usage:
+     * <input type='text' sd-validation-error='error.field' ng-required='schema.field.required' />
+     */
+    validationDirective.$inject = ['gettext'];
+    function validationDirective(gettext) {
+        return {
+            restrict: 'A',
+            link: function (scope, elem, attrs, ctrl) {
+                var invalidText = '<span class="sd-invalid-text">' + gettext('This field is required') + '</span>';
+                scope.$watch(attrs.required, function (required) {
+                    if (!required) {
+                        return;
+                    }
+
+                    elem.addClass('sd-validate');
+                    if (elem.hasClass('field')) {
+                        elem.find('label').after('<span class="sd-required">' + gettext('Required') + '</span>');
+                    } else if (elem.find('.authoring-header__input-holder').length) {
+                        elem.find('.authoring-header__input-holder').append(invalidText);
+                    } else {
+                        elem.append(invalidText);
+                    }
+                });
+
+                scope.$watch(attrs.sdValidationError, function (isError) {
+                    if (isError === true) {
+                        elem.addClass('sd-invalid').removeClass('sd-valid');
+                    } else if (isError === false) {
+                        elem.removeClass('sd-invalid').addClass('sd-valid');
+                    }
+                });
+            }
+        };
+    }
+
     return angular.module('superdesk.ui', [
         'superdesk.dashboard.world-clock',
         'superdesk.ui.autoheight'
@@ -1456,5 +1494,6 @@
         .directive('sdSplitterWidget', splitterWidget)
         .directive('sdMouseHover', MouseHoverDirective)
         .directive('sdMediaQuery', mediaQuery)
-        .directive('sdFocusElement', focusElement);
+        .directive('sdFocusElement', focusElement)
+        .directive('sdValidationError', validationDirective);
 })();

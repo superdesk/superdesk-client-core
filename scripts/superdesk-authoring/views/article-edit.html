@@ -1,4 +1,4 @@
-<div class="field" ng-class="{'limit-error': item.headline.length > limits.headline}">
+<div class="field" ng-class="{'limit-error': item.headline.length > limits.headline}" sd-validation-error="error.headline" data-required="schema.headline.required">
   <label translate>Headline</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
@@ -12,7 +12,7 @@
   <div class="headline" ng-if="!_editable">{{item.headline}}</div>
 </div>
 
-<div ng-if="schema.feature_image" class="field featured-image">
+<div ng-if="schema.feature_image" sd-validation-error="error.feature_image" data-required="schema.feature_image.required" class="field featured-image">
   <label translate>Featured Image</label>
   <div sd-item-association
     data-item="item"
@@ -21,7 +21,7 @@
     data-onchange="autosave(item)"></div>
 </div>
 
-<div class="field abstract" ng-class="{'limit-error': item.abstract.length > limits.abstract}" ng-if="schema.abstract">
+<div class="field abstract" sd-validation-error="error.abstract" data-required="schema.abstract.required" ng-class="{'limit-error': item.abstract.length > limits.abstract}" ng-if="schema.abstract">
   <label translate>Abstract</label>
     <span ng-if="schema.abstract.maxlength"
           sd-character-count
@@ -40,7 +40,7 @@
   <div class="abstract" ng-if="!_editable">{{item.abstract}}</div>
 </div>
 
-<div class="field" ng-if="item._type !== 'archived' && schema.byline">
+<div class="field" ng-if="item._type !== 'archived' && schema.byline" sd-validation-error="error.byline" data-required="schema.byline.required">
   <label translate>By</label>
    <!-- Placeholder text is temporary, ideally it should come from content type -->
   <input type="text"
@@ -58,7 +58,7 @@
 
 <!--This article-edit view is used by templates as well.
     ng-if is used to hide dateline for the template create/edit screen.-->
-<div class="field" ng-if="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline">
+<div class="field" ng-if="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" sd-validation-error="error.located" data-required="schema.dateline.required">
     <label translate>Dateline</label>
     <div class="dateline">
         <div sd-meta-locators
@@ -105,7 +105,7 @@
     </div>
 </div>
 
-<div class="field body" ng-if="!isMediaType && schema.body_html">
+<div class="field body" ng-if="!isMediaType && schema.body_html" sd-validation-error="error.body_html" data-required="schema.body_html.required">
   <label translate>Body</label>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <span ng-if="schema.body_html.maxlength" sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></span>
@@ -122,7 +122,7 @@
     <div class="text-editor" sd-html-preview="item.body_html" ng-if="!_editable"></div>
 </div>
 
-<div ng-if="isMediaType" class="field abstract">
+<div ng-if="isMediaType" class="field abstract" sd-validation-error="error.description_text">
   <label translate>Description</label>
   <textarea class="abstract"
         sd-auto-height
@@ -136,7 +136,10 @@
   <div class="abstract" ng-if="!_editable">{{item.description_text}}</div>
 </div>
 
-<div class="field" ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !item.package_type">
+<div class="field"
+     ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !item.package_type"
+     sd-validation-error="error.body_footer_value"
+     data-required="schema.footer.required">
     <label translate>Helplines/Contact Information</label>
     <select id="helplines"
             ng-model="item.body_footer_value"
@@ -150,7 +153,7 @@
     </select>
 </div>
 
-<div class="field" ng-if="item.body_footer">
+<div class="field" ng-if="item.body_footer" sd-validation-error="error.body_footer">
     <label translate>Footer</label>
     <div id="body_footer" class="body"
         sd-text-editor
