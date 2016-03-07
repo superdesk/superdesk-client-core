@@ -72,6 +72,15 @@
         };
 
         /**
+         * If view showed as desk settings set the current desk
+         *
+         *@param {object} desk
+         */
+        this.setSettingsDesk = function(desk) {
+            this.settingsDesk = desk;
+        };
+
+        /**
          * Read the setting for current selected workspace(desk or custom workspace)
          * If the view is showed in a widget, read the settings from widget configuration
          * If the current selected workspace is a desk the settings are read from desk
@@ -93,6 +102,11 @@
                     });
                     return {'type': 'desk', 'groups': groups};
                 });
+            } else if (self.settings != null && self.settings.desk) {
+                return workspaces.getActiveId()
+                    .then(function(activeWorkspace) {
+                        return deskMonitoringConfig(self.settings.desk);
+                    });
             } else {
                 return workspaces.getActiveId()
                     .then(function(activeWorkspace) {
@@ -115,6 +129,21 @@
             }
         };
 
+        /*else if (self.settings != null && self.settings.desk) {
+                return workspaces.getActiveId()
+                    .then(function(activeWorkspace) {
+                        return deskMonitoringConfig(self.settings.desk);
+                    });
+            } */
+
+        function deskMonitoringConfig(objDesk) {
+            var desk = self.deskLookup[objDesk._id];
+            if (desk && desk.monitoring_settings) {
+                return {'type': 'desk', 'groups': desk.monitoring_settings};
+            }
+            return {'type': 'desk', 'groups': []};
+        }
+
         /**
          * Init groups by filter out from groups stages or saved searches that
          * are not available(deleted or no right on them for stages only) and return all
@@ -134,7 +163,7 @@
                     }
                     self.groups.push(item);
                 });
-            } else if (settings && settings.groups.length === 0 && settings.type === 'desk') {
+            } else if (settings && settings.groups.length === 0 && settings.type === 'desk' && settings.desk == null) {
                 _.each(self.stageLookup, function(item) {
                     if (item.desk === desks.getCurrentDeskId()) {
                         self.groups.push({_id: item._id, type: 'stage', header: item.name});
@@ -307,7 +336,7 @@
         /**
          * For edit monitoring settings add desk groups to the list
          */
-        this.edit = function() {
+        this.edit = function(desk) {
             this.editGroups = {};
             _.each(this.groups, function(item, index) {
                 self.editGroups[item._id] = {
@@ -336,6 +365,8 @@
                 }
             });
             this.modalActive = true;
+            console.log('this.editGroups', this.editGroups);
+            console.log('self.editGroups', self.editGroups);
         };
 
         /**
