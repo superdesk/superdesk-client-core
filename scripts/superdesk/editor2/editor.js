@@ -600,7 +600,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
         });
     };
 
-    this.editAndUpdatePicture = function(picture) {
+    this.editCropAndRenderImage = function(picture) {
         var poi = {x: 0.5, y: 0.5};
         return renditionsService.get().then(function(renditions) {
             return superdesk.intent('edit', 'crop', {
@@ -689,7 +689,7 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
             if (!vm.model.association) {
                 return false;
             }
-            editor.editAndUpdatePicture(picture).then(function(picture) {
+            editor.editCropAndRenderImage(picture).then(function(picture) {
                 // update block
                 vm.model.association = picture;
                 editor.generateImageTag(picture).then(function(img) {
@@ -756,7 +756,7 @@ angular.module('superdesk.editor2', [
                 .on('drop', function(event) {
                     event.preventDefault();
                     var item = angular.fromJson(event.originalEvent.dataTransfer.getData(PICTURE_TYPE));
-                    editor.editAndUpdatePicture(item).then(function(picture) {
+                    editor.editCropAndRenderImage(item).then(function(picture) {
                         ctrl.createBlockFromSdPicture(picture);
                     }).finally(function() {
                         element.removeClass('drag-active');
