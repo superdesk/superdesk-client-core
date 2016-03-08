@@ -26,7 +26,8 @@ function Authoring() {
     this.sendAndContinueBtn = element(by.buttonText('send and continue'));
     this.sendBtn = element(by.buttonText('send'));
 
-    this.multieditOption = element(by.css('.big-icon-multiedit'));
+    this.moreActionsButton = element(by.id('more-actions'));
+
     this.multieditButton = element(by.id('multiedit'));
 
     this.setCategoryBtn = element(by.id('category-setting'))

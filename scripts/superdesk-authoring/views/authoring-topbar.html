@@ -33,7 +33,7 @@
     </div>
 
     <div class="subnav__stretch-bar">
-      <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-show="_editable">
+      <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-show="_editable && itemActions.save && action === 'edit'">
         <button class="btn btn-custom"
                 ng-click="sendToNextStage()"
                 title="{{ :: 'To Desk' | translate }}">
@@ -76,14 +76,14 @@
         ng-click="openAction('kill')"
         translate>Edit and Kill</button>
 
-      <button class="btn btn--close" id="closeAuthoringBtn" ng-click="close()" translate title="{{ :: 'Close' | translate }}"><span class="btn__text">CLOSE</span><i class="icon-close-small btn__text--alt-icon"></i></button>
+      <button class="btn btn--close" id="closeAuthoringBtn" ng-click="close()" translate title="{{ :: 'Close' | translate }}"><span class="btn__text">Close</span><i class="icon-close-small btn__text--alt-icon"></i></button>
 
       <button class="btn btn-info" type="submit"
         ng-click="saveTopbar(item)"
         ng-show="_editable"
         ng-if = "itemActions.save && action === 'edit'"
         ng-disabled="!save_enabled() || saveDisabled"
-        translate>SAVE</button>
+        translate>Save</button>
 
       <button id="export" class="btn btn-info"
         ng-click="exportHighlight(item)"
@@ -100,19 +100,10 @@
             <i class="big-icon-minimize"></i>
         </button>
 
-        <div ng-if="item._type !== 'legal_archive' && itemActions.multi_edit && !item._locked"
-           class="navbtn dropdown multiedit-dropdown"
-           title="{{ :: 'Multiedit' | translate }}" dropdown>
-          <button id="multiedit" class="dropdown-toggle" ng-disabled="action === 'kill'" dropdown-toggle>
-              <i class="big-icon-multiedit"></i>
-          </button>
-          <div class="dropdown-menu pull-right" sd-multiedit-dropdown></div>
-        </div>
-
         <div id="authoring-extra-dropdown"
              ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight"
              class="navbtn dropdown pull-left strict" dropdown>
-            <button class="dropdown-toggle" title="{{ :: 'More actions' | translate }}" dropdown-toggle>
+            <button id="more-actions" class="dropdown-toggle" title="{{ :: 'More actions' | translate }}" dropdown-toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
             <div class="dropdown-menu pull-right">
@@ -124,7 +115,7 @@
                   </li>
                 </ul>
 
-                <ul ng-if="item.task.desk && itemActions.mark_item">
+                <ul id="multiedit" ng-if="item.task.desk && itemActions.mark_item">
                   <li>
                     <div class="dropdown highlights-toggle" dropdown>
                       <button class="dropdown-toggle" dropdown-toggle>

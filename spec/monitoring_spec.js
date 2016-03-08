@@ -565,11 +565,6 @@ describe('monitoring', function() {
         monitoring.filterAction('text');
         monitoring.actionOnItem('Correct item', 4, 0);
 
-        //press multiEdit button to open publish item in multiEdit
-        authoring.multieditOption.click();
-        element(by.buttonText('Ok')).click();
-        expect(element(by.className('state-label')).getText()).toEqual('PUBLISHED');
-
         var btnSave = element(by.css('[ng-click="save(item, articleEdit)"]'));
         expect(btnSave.isDisplayed()).toBeFalsy();  // Save button hidden for publish item
 
