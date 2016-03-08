@@ -222,6 +222,7 @@
                     delete $scope.template._datelinedate;
                     delete $scope.template.hasCrops;
                     $scope.template.data.headline = $scope.template.data.headline.replace(/&nbsp;/g, '').trim();
+                    $scope.template.data.body_html = $scope.template.data.body_html.replace(/&nbsp;/g, '').trim();
                     var template = $scope.template;
                     // certain field are not required for kill template
                     if (template && template.template_type === 'kill') {
