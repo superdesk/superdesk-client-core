@@ -703,6 +703,7 @@ angular.module('superdesk.editor2', [
         'superdesk.editor2.ctrl',
         'superdesk.editor2.embed',
         'superdesk.editor.spellcheck',
+        'superdesk.authoring',
         'angular-embed'
     ])
     .service('editor', EditorService)
