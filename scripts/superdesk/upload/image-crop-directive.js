@@ -174,6 +174,19 @@
                         y: point.y * scope.original.height
                     };
 
+                    if (center.x < selectionWidth / 2) {
+                        center.x = selectionWidth / 2;
+                    }
+                    if (center.y < selectionHeight / 2) {
+                        center.y = selectionHeight / 2;
+                    }
+                    if (center.x > scope.original.width - selectionWidth / 2) {
+                        center.x = scope.original.width - selectionWidth / 2;
+                    }
+                    if (center.y > scope.original.height - selectionHeight / 2) {
+                        center.y = scope.original.height - selectionHeight / 2;
+                    }
+
                     var crop = {
                         CropLeft: Math.round(center.x - selectionWidth / 2),
                         CropTop: Math.round(center.y - selectionHeight / 2),
