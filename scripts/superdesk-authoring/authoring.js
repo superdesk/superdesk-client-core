@@ -2935,21 +2935,20 @@
                         poi: item.poi || poi,
                         showMetadataEditor: true
                     })
-                        .then(function(result) {
-                            var renditions = angular.extend({}, item.renditions || {});
-                            angular.forEach(result.cropData, function(crop, renditionName) {
-                                renditions[renditionName] = angular.extend(
-                                    {},
-                                    renditions[renditionName] || {},
-                                    crop
-                                );
-                            });
-
-                            var updated = angular.extend({}, item, {renditions: renditions});
-                            var data = updateItemAssociation(updated);
-                            data[scope.rel].poi = result.poi;
-                            scope.onchange({item: scope.item, data: data});
+                    .then(function(result) {
+                        var renditions = angular.extend({}, item.renditions || {});
+                        angular.forEach(result.cropData, function(crop, renditionName) {
+                            renditions[renditionName] = angular.extend(
+                                {},
+                                renditions[renditionName] || {},
+                                crop
+                            );
                         });
+                        var updated = angular.extend({}, item, {renditions: renditions});
+                        var data = updateItemAssociation(updated);
+                        data[scope.rel].poi = result.poi;
+                        scope.onchange({item: scope.item, data: data});
+                    });
                 };
 
                 scope.remove = function(item) {

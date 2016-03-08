@@ -609,15 +609,11 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
         toggleEdition: function() {
             vm.editable = !vm.editable;
         },
-        updateEmbedPreview: function() {
-            angular.element($element).find('.preview--embed').html(vm.model.body);
-        },
         saveEmbedCode: function() {
             // update the block's model
             angular.extend(vm.model, {
                 body: vm.embedCode
             });
-            vm.updateEmbedPreview();
             // on change callback
             vm.onBlockChange();
         },
@@ -650,16 +646,16 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
                     showMetadataEditor: true
                 })
                 .then(function(result) {
-                    var rendtionsToMake = [];
+                    var renditionNames = [];
                     var savingImagePromises = [];
                     angular.forEach(result.cropData, function(croppingData, renditionName) {
                         // if croppingData are defined
                         if (angular.isDefined(croppingData.CropLeft)) {
-                            rendtionsToMake.push(renditionName);
+                            renditionNames.push(renditionName);
                         }
                     });
-                    // perform the request to make the cropped image
-                    angular.forEach(rendtionsToMake, function(renditionName) {
+                    // perform the request to make the cropped images
+                    angular.forEach(renditionNames, function(renditionName) {
                         savingImagePromises.push(
                             api.save('picture_crop', {item: picture, crop: result.cropData[renditionName]})
                         );
@@ -667,21 +663,26 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
                     // return the cropped images
                     $q.all(savingImagePromises)
                     .then(function(images) {
+                        // save created images in "association" property
                         images.forEach(function(image, index) {
                             var url = image.href;
                             // update association
-                            vm.model.association.renditions[rendtionsToMake[index]] = {
-                                href: url,
-                                width: image.width,
-                                height: image.height,
-                                media: image._id,
-                                mimetype: image.item.mimetype
-                            };
+                            vm.model.association.poi = result.poi;
+                            // update association renditions
+                            vm.model.association.renditions[renditionNames[index]] = angular.extend(
+                                {
+                                    href: url,
+                                    width: image.width,
+                                    height: image.height,
+                                    media: image._id,
+                                    mimetype: image.item.mimetype
+                                },
+                                image.crop
+                            );
                         });
                         // update block
                         editor.generateImageTag(vm.model.association).then(function(img) {
                             vm.model.body = img;
-                            vm.updateEmbedPreview();
                         });
                         // update caption
                         vm.saveCaption(vm.model.association.description_text);
@@ -691,7 +692,6 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
         }
     });
     $timeout(function() {
-        vm.updateEmbedPreview();
         angular.extend(vm, {
             embedCode: vm.model.body,
             caption: vm.model.caption
