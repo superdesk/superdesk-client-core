@@ -9,10 +9,10 @@ function Authoring() {
     this.publish_button = element(by.buttonText('publish'));
     this.correct_button = element(by.buttonText('correct'));
     this.kill_button = element(by.buttonText('kill'));
-    this.close_button = element(by.buttonText('CLOSE'));
+    this.close_button = element(by.buttonText('Close'));
     this.ignore_button = element(by.buttonText('Ignore'));
     this.save_publish_button = element(by.buttonText('Save and publish'));
-    this.save_button = element(by.buttonText('SAVE'));
+    this.save_button = element(by.buttonText('Save'));
     this.edit_button = element(by.id('Edit'));
     this.edit_correct_button = element(by.buttonText('Edit and Correct'));
     this.edit_kill_button = element(by.buttonText('Edit and Kill'));
