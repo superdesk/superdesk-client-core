@@ -4,8 +4,7 @@
 var openUrl = require('./helpers/utils').open,
     workspace = require('./helpers/pages').workspace,
     content = require('./helpers/content'),
-    authoring = require('./helpers/authoring'),
-    testMoment = require('../bower_components/moment/moment');
+    authoring = require('./helpers/authoring');
 
 describe('content', function() {
 
@@ -34,12 +33,11 @@ describe('content', function() {
     }
 
     function setEmbargo() {
-        var now = testMoment();
+        var now = new Date();
         //choose time with date not in a valid month number.
-        var embargoTS = now.set('year', now.year() + 1).set('month', 9).set('date', 22);
         //default view time format in config
-        var embargoDate = embargoTS.format('MM/DD/YYYY');
-        var embargoTime = embargoTS.format('HH:mm');
+        var embargoDate = '09/22/' + (now.getFullYear() + 1);
+        var embargoTime = now.getHours() + ':' + now.getMinutes();
 
         element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
         element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
