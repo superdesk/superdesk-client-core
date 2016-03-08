@@ -908,9 +908,10 @@
         };
 
         $scope.onChange = function(renditionName, cropData) {
-            $scope.data.cropData[renditionName] = angular.extend({}, cropData);
-            $scope.data.isDirty = true;
-            $scope.$apply();
+            $scope.$apply(function() {
+                $scope.data.cropData[renditionName] = angular.extend({}, cropData);
+                $scope.data.isDirty = true;
+            });
         };
     }
 
