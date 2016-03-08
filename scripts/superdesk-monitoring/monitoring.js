@@ -516,7 +516,6 @@
                 }
 
                 function render(next) {
-                    var lookup = multi.getIds(); // Ids of selected items
                     return apiquery().then(function(items) {
                         scope.$applyAsync(function() {
                             if (scope.total !== items._meta.total) {
@@ -524,17 +523,6 @@
                             }
 
                             scope.items = merge(items, next);
-
-                            if (lookup != null) {
-                                _.filter(items._items, function(item) {
-                                    _.find(lookup, function(selectedId) {
-                                        if (selectedId === item._id) {
-                                            item.selected = true;
-                                        }
-                                        return selectedId === item._id;
-                                    });
-                                });
-                            }
                         });
                     });
                 }

@@ -56,7 +56,6 @@
                 item.selected = false;
                 ids.push(item._id);
             });
-            $rootScope.$broadcast('multi:reset', items);
             items = [];
             this.count = 0;
             $rootScope.$broadcast('multi:reset', {ids: ids}); // let react know

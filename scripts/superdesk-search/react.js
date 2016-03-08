@@ -1056,7 +1056,7 @@
                         },
 
                         setSelectedItem: function(item) {
-                            this.setState({selected: item ? item._id : null});
+                            this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
                         },
 
                         getSelectedItem: function() {
@@ -1273,15 +1273,21 @@
                         });
 
                         scope.$on('multi:reset', function(e, data) {
-                            var itemsById = angular.extend({}, listComponent.state.itemsById);
                             var ids = data.ids || [];
-                            ids.forEach(function(id) {
-                                itemsById[id] = angular.extend({}, itemsById[id], {
-                                    selected: false
+                            var shouldUpdate = false;
+                            var itemsById = angular.extend({}, listComponent.state.itemsById);
+                            _.forOwn(itemsById, function(value, key) {
+                                ids.forEach(function(id) {
+                                    if (_.startsWith(key, id)) {
+                                        shouldUpdate = true;
+                                        itemsById[key] = angular.extend({}, value, {selected: null});
+                                    }
                                 });
                             });
 
-                            listComponent.setState({itemsById: itemsById});
+                            if (shouldUpdate) {
+                                listComponent.setState({itemsById: itemsById});
+                            }
                         });
 
                         elem.on('scroll', handleScroll);
