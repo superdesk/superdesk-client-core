@@ -384,7 +384,8 @@
                 templateUrl: 'scripts/superdesk-archive/views/media-box-list.html'
             };
         })
-        .directive('sdMediaBox', ['$location', 'lock', 'multi', 'archiveService', function($location, lock, multi, archiveService) {
+        .directive('sdMediaBox', ['$location', 'lock', 'multi', 'archiveService',
+            function($location, lock, multi, archiveService) {
             return {
                 restrict: 'A',
                 link: function(scope, element, attrs) {

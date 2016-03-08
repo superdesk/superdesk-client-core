@@ -647,7 +647,7 @@
                                     if (angular.isDefined(response.data._message)) {
                                         notify.error(gettext('Failed to generate update: ' + response.data._message));
                                     } else {
-                                        notify.error(gettext('There is an error. Failed to generate update.'));
+                                        notify.error(gettext('There was an error. Failed to generate update.'));
                                     }
                                 });
                         }]

@@ -687,7 +687,6 @@
   flex-grow: 1;
   padding: 0 10px;
   min-height: 24px;
-
     label {
         display: inline-block;
         min-width: 75px;
@@ -701,6 +700,29 @@
     input.slugline {
         color: @sd-keyword;
         font-weight: 500;
+    }
+
+    .sd-invalid-text {
+        float: right;
+        margin-bottom: -16px;
+    }
+
+    .char-count {
+        font-size: 11px;
+        font-style: italic;
+        color: @sd-text-label;
+        float: right;
+        margin-bottom: -16px;
+        margin-left: 5px;
+        &.error {
+            color: @red;
+        }
+    }
+
+    [sd-meta-terms] + .sd-invalid-text {
+        position: absolute;
+        left: 120px;
+        margin-top: 3px;
     }
 }
 
@@ -719,20 +741,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .authoring-header__input-holder {
     position: relative;
     padding: 0;
     margin: 0;
     flex-grow: 1;
-    .char-count {
-        font-size: 11px;
-        font-style: italic;
-        color: @sd-text-label;
-        float: right;
-        &.error {
-            color: @red;
-        }
-    }
 }
 
 // --- various layout options ---

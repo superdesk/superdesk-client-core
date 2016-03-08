@@ -537,8 +537,10 @@
                 return action;
             }
 
+            var digital_package = (angular.isDefined(current_item.package_type) &&
+                                current_item.package_type === 'takes');
             var is_read_only_state = _.contains(['spiked', 'scheduled', 'killed'], current_item.state) ||
-            (angular.isDefined(current_item.package_type) && current_item.package_type === 'takes');
+                                    digital_package;
 
             var lockedByMe = !lock.isLocked(current_item);
             action.view = !lockedByMe;
@@ -561,14 +563,13 @@
             // item is published state - corrected, published, scheduled, killed
             if (self.isPublished(current_item)) {
                 //if not the last published version
-                if ((angular.isDefined(item.archive_item) &&
-                    item._current_version !== item.archive_item._current_version) ||
-                    (this._versionToFetch && this._versionToFetch !== item._current_version)) {
+                if (angular.isDefined(item.archive_item) &&
+                    item._current_version !== item.archive_item._current_version) {
                     return angular.extend({}, DEFAULT_ACTIONS);
                 }
 
                 action.view = true;
-                if (current_item.state === 'scheduled') {
+                if (current_item.state === 'scheduled' && !digital_package) {
                     action.deschedule = true;
                 } else if (current_item.state === 'published' || current_item.state === 'corrected') {
                     action.kill = user_privileges.kill && lockedByMe && !is_read_only_state;
@@ -642,14 +643,6 @@
             }
 
             return action;
-        };
-
-        /**
-         * Sometimes the fetched version and user selected version are different. Use this method to set the version
-         * selected by user. This happens when user selects "Open" action.
-         */
-        this.setItemVersion = function(version) {
-            this._versionToFetch = version;
         };
 
         /**
@@ -817,7 +810,7 @@
 
         this.confirmSaveWork = function confirmSavework(msg) {
             return modal.confirm(
-                $interpolate(gettext('Configuration has changed, ' + msg + '. Would you like to save story to your workspace?'))
+                $interpolate(gettext('Configuration has changed. {{ message }} Would you like to save the story to your workspace?'))
                 ({message: msg})
             );
         };
@@ -1041,7 +1034,7 @@
                  */
                 $scope.exportHighlight = function(item) {
                     if ($scope.save_enabled()) {
-                        modal.confirm(gettext('You have unsaved changes, do you want to continue.'))
+                        modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
                             .then(function() {
                                 _exportHighlight(item._id);
                             }
@@ -1142,6 +1135,7 @@
 
                 function publishItem(orig, item) {
                     var action = $scope.action === 'edit' ? 'publish' : $scope.action;
+                    validate(orig, item);
                     authoring.publish(orig, item, action)
                     .then(function(response) {
                         if (response) {
@@ -1172,6 +1166,21 @@
                             }
                         } else {
                             notify.error(gettext('Unknown Error: Item not published.'));
+                        }
+                    });
+                }
+
+                function validate(orig, item) {
+                    $scope.error = {};
+                    angular.forEach(_.extend(orig, item), function (value, key) {
+                        if (value) {
+                            if (typeof value === 'object' && !value.length) {
+                                $scope.error[key] = true;
+                            } else {
+                                $scope.error[key] = false;
+                            }
+                        } else {
+                            $scope.error[key] = true;
                         }
                     });
                 }
@@ -2354,7 +2363,8 @@
             'superdesk.authoring.autosave',
             'superdesk.desks',
             'superdesk.notification',
-            'contenteditable'
+            'contenteditable',
+            'superdesk.config'
         ])
 
         .service('authoring', AuthoringService)
@@ -2740,7 +2750,6 @@
          * @param {Object} item
          */
         this.view = function(item) {
-            authoring.setItemVersion(item._current_version);
             self.edit(item, 'view');
         };
 

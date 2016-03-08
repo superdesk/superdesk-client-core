@@ -215,7 +215,7 @@
         function onSuccess(result) {
             $scope.closeDictionary();
             $scope.fetchDictionaries();
-            notify.success(gettext('Dictionary saved succesfully'));
+            notify.success(gettext('Dictionary saved successfully'));
             $scope.progress = null;
             return result;
         }

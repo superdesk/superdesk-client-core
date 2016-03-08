@@ -261,7 +261,7 @@
                             info.push(React.createElement(
                                 'div',
                                 {key: 3, className: 'state-label not-for-publication'},
-                                gettext('Not for publication')
+                                gettext('Not For publication')
                             ));
                         }
 
@@ -569,13 +569,18 @@
                     var ItemState = function(props) {
                         var item = props.item;
                         return React.createElement(
-                            'div',
-                            {className: classNames(
-                                'state-label',
-                                'state-' + item.state,
-                                {state_embargo: item.embargo}
-                            )},
-                            item.embargo ? gettext('embargoed') : $filter('removeLodash')(item.state)
+                            'span',
+                            {},
+                            React.createElement(
+                                'span',
+                                {className: 'state-label state-' + item.state},
+                                $filter('removeLodash')(item.state)
+                            ),
+                            item.embargo ? React.createElement(
+                                'span',
+                                {className: 'state-label state_embargo'},
+                                gettext('embargo')
+                            ) : null
                         );
                     };
 
@@ -613,7 +618,7 @@
                                     null,
                                 flags.marked_for_not_publication ?
                                     React.createElement('div', {className: 'state-label not-for-publication'},
-                                        gettext('Not for Publication')) :
+                                        gettext('Not For Publication')) :
                                     null,
                                 flags.marked_for_legal ?
                                     React.createElement('div', {className: 'state-label legal'}, gettext('Legal')) :
@@ -1009,11 +1014,12 @@
                         },
 
                         multiSelect: function(item, selected) {
+                            var itemId = search.generateTrackByIdentifier(item);
                             var itemsById = angular.extend({}, this.state.itemsById);
-                            itemsById[item._id] = angular.extend({}, item, {selected: selected});
+                            itemsById[itemId] = angular.extend({}, item, {selected: selected});
                             this.setState({itemsById: itemsById});
                             scope.$applyAsync(function() {
-                                multi.toggle(itemsById[item._id]);
+                                multi.toggle(itemsById[itemId]);
                             });
                         },
 
@@ -1027,6 +1033,17 @@
                                     });
                                 }
                             }, 100, false);
+                        },
+
+                        updateAllItems: function(itemId, changes) {
+                            var itemsById = angular.extend({}, this.state.itemsById);
+                            _.forOwn(itemsById, function(value, key) {
+                                if (_.startsWith(key, itemId)) {
+                                    itemsById[key] = angular.extend({}, value, changes);
+                                }
+                            });
+
+                            this.setState({itemsById: itemsById});
                         },
 
                         edit: function(item) {
@@ -1121,10 +1138,10 @@
                                 var item = this.state.itemsById[itemId];
                                 var task = item.task || {desk: null};
                                 return React.createElement(Item, {
-                                    key: item._id,
+                                    key: itemId,
                                     item: item,
                                     view: this.state.view,
-                                    flags: {selected: this.state.selected === item._id},
+                                    flags: {selected: this.state.selected === itemId},
                                     onEdit: this.edit,
                                     onSelect: this.select,
                                     onMultiSelect: this.multiSelect,
@@ -1133,7 +1150,6 @@
                                     highlightsById: this.props.highlightsById
                                 });
                             }.bind(this);
-
                             var isEmpty = !this.state.itemsList.length;
                             return React.createElement(
                                 'ul',
@@ -1167,6 +1183,25 @@
                             return a._etag === b._etag && a._current_version === b._current_version;
                         }
 
+                        /**
+                         * Test if archive_item of a equals to archive_item of b
+                         *
+                         * @param {Object} a
+                         * @param {Object} b
+                         * @return {Boolean}
+                         */
+                        function isArchiveItemSameVersion(a, b) {
+                            if (!a.archive_item && !b.archive_item) {
+                                return true;
+                            }
+
+                            if (a.archive_item && b.archive_item) {
+                                return (a.archive_item._current_version === b.archive_item._current_version);
+                            }
+
+                            return false;
+                        }
+
                         scope.$watch('items', function(items) {
                             if (!items) {
                                 return;
@@ -1177,13 +1212,15 @@
                             var itemsById = angular.extend({}, listComponent.state.itemsById);
 
                             items._items.forEach(function(item) {
-                                if (!itemsById[item._id] || !isSameVersion(itemsById[item._id], item)) {
-                                    itemsById[item._id] = item;
+                                var itemId = search.generateTrackByIdentifier(item);
+                                var oldItem = itemsById[itemId] || null;
+                                if (!oldItem || !isSameVersion(oldItem, item) || !isArchiveItemSameVersion(oldItem, item)) {
+                                    itemsById[itemId] = item;
                                 }
 
-                                if (!currentItems[item._id]) { // filter out possible duplicates
-                                    currentItems[item._id] = true;
-                                    itemsList.push(item._id);
+                                if (!currentItems[itemId]) { // filter out possible duplicates
+                                    currentItems[itemId] = true;
+                                    itemsList.push(itemId);
                                 }
                             });
 
@@ -1203,10 +1240,19 @@
                         });
 
                         scope.$on('item:lock', function(_e, data) {
-                            listComponent.updateItem(data.item, {
+                            var itemId = search.getTrackByIdentifier(data.item, data.item_version);
+                            listComponent.updateItem(itemId, {
                                 lock_user: data.user,
                                 lock_session: data.lock_session,
                                 lock_time: data.lock_time
+                            });
+                        });
+
+                        scope.$on('item:unlock', function(_e, data) {
+                            listComponent.updateAllItems(data.item, {
+                                lock_user: null,
+                                lock_session: null,
+                                lock_time: null
                             });
                         });
 
@@ -1224,14 +1270,6 @@
 
                                 listComponent.updateItem(data.item_id, {highlights: highlights});
                             }
-                        });
-
-                        scope.$on('item:unlock', function(_e, data) {
-                            listComponent.updateItem(data.item, {
-                                lock_user: null,
-                                lock_session: null,
-                                lock_time: null
-                            });
                         });
 
                         scope.$on('multi:reset', function(e, data) {

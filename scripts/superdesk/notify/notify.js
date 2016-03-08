@@ -46,7 +46,7 @@
                 }, this);
 
                 this.startSaving = function() {
-                    this.info(gettext('Saving..'));
+                    this.info(gettext('Saving...'));
                 };
 
                 this.stopSaving = function() {

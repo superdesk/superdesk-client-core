@@ -721,7 +721,7 @@
                             if (angular.isDefined(response.data._message)) {
                                 notify.error(gettext('Error: ' + response.data._message));
                             } else {
-                                notify.error(gettext('There is an error. Rule set cannot be deleted.'));
+                                notify.error(gettext('There was an error. Rule set cannot be deleted.'));
                             }
                         });
                     });
@@ -838,7 +838,7 @@
                             if (angular.isDefined(response.data._message)) {
                                 notify.error(gettext('Error: ' + response.data._message));
                             } else {
-                                notify.error(gettext('There is an error. Routing scheme cannot be deleted.'));
+                                notify.error(gettext('There was an error. Routing scheme cannot be deleted.'));
                             }
                         });
                     });
@@ -864,8 +864,8 @@
                         },
                         schedule: {
                             day_of_week: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
-                            hour_of_day_from: '0000',
-                            hour_of_day_to: '2355'
+                            hour_of_day_from: '00:00:00',
+                            hour_of_day_to: '23:55:00'
                         }
                     };
                     scope.editScheme.rules.push(rule);

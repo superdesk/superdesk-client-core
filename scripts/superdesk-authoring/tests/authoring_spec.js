@@ -1440,6 +1440,88 @@ describe('authoring actions', function() {
                     'correct', 'kill', 'package_item', 'view', 'add_to_current']);
         }));
 
+    it('takes package is in published state.',
+        inject(function(privileges, desks, authoring, $q, $rootScope) {
+            var item = {
+                '_id': 'test',
+                'state': 'published',
+                'flags': {'marked_for_not_publication': false},
+                'type': 'composite',
+                'package_type': 'takes',
+                'task': {
+                    'desk': 'desk1'
+                },
+                'more_coming': false,
+                '_current_version': 1,
+                'genre': [
+                    {'name': 'Interview', 'value': 'Interview'}
+                ],
+                'archive_item': {
+                    '_id': 'test',
+                    'state': 'published',
+                    'flags': {'marked_for_not_publication': false},
+                    'type': 'composite',
+                    'package_type': 'takes',
+                    'task': {
+                        'desk': 'desk1'
+                    },
+                    'more_coming': false,
+                    '_current_version': 1,
+                    'genre': [
+                        {'name': 'Interview', 'value': 'Interview'}
+                    ]
+                }
+            };
+
+            var userPrivileges = {
+                'archive_broadcast': true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+            allowedActions(itemActions, ['view', 'add_to_current']);
+        }));
+
+    it('takes package is in scheduled state.',
+        inject(function(privileges, desks, authoring, $q, $rootScope) {
+            var item = {
+                '_id': 'test',
+                'state': 'scheduled',
+                'flags': {'marked_for_not_publication': false},
+                'type': 'composite',
+                'package_type': 'takes',
+                'task': {
+                    'desk': 'desk1'
+                },
+                'more_coming': false,
+                '_current_version': 1,
+                'genre': [],
+                'archive_item': {
+                    '_id': 'test',
+                    'state': 'scheduled',
+                    'flags': {'marked_for_not_publication': false},
+                    'type': 'composite',
+                    'package_type': 'takes',
+                    'task': {
+                        'desk': 'desk1'
+                    },
+                    'more_coming': false,
+                    '_current_version': 1,
+                    'genre': []
+                }
+            };
+
+            var userPrivileges = {
+                'archive_broadcast': true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+            allowedActions(itemActions, ['view']);
+        }));
+
     it('rewrite is not allowed if re-written item exists.',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {

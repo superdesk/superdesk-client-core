@@ -183,7 +183,7 @@
                             return result;
                         }, function(response) {
                             console.error(response);
-                            notify.error(gettext('User preference could not be saved...'));
+                            notify.error(gettext('User preferences could not be saved...'));
                             deferUpdate.reject(response);
                         }).finally(function() {
                             deferUpdate = null;

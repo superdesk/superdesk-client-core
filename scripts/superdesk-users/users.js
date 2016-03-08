@@ -557,7 +557,7 @@
                             if (angular.isDefined(response.data._message)) {
                                 notify.error(gettext('Error: ' + response.data._message));
                             } else {
-                                notify.error(gettext('There is an error. Role cannot be deleted.'));
+                                notify.error(gettext('There was an error. Role cannot be deleted.'));
                             }
                         });
                     });
@@ -771,7 +771,7 @@
                     privileges: {users: 1}
                 })
                 .activity('/users/:_id', {
-                    label: gettext('Users profile'),
+                    label: gettext('Users Profile'),
                     priority: 100,
                     controller: 'UserEditController',
                     templateUrl: asset.templateUrl('superdesk-users/views/edit.html'),
@@ -1004,7 +1004,7 @@
 
                     scope.save = function() {
                         scope.error = null;
-                        notify.info(gettext('saving..'));
+                        notify.info(gettext('Saving...'));
                         return usersService.save(scope.origUser, scope.user)
                         .then(function(response) {
                             scope.origUser = response;
@@ -1027,9 +1027,9 @@
                                 } else {
                                     $location.path('/users/');
                                 }
-                                notify.error(gettext('User is not found. It might be deleted.'));
+                                notify.error(gettext('User was not found. The account might have been deleted.'));
                             } else {
-                                var errorMessage = gettext('There was an error when saving user. ');
+                                var errorMessage = gettext('There was an error when saving the user account. ');
 
                                 if (response.data && response.data._issues) {
                                     if (angular.isDefined(response.data._issues['validator exception'])) {

@@ -272,7 +272,7 @@
                             if (angular.isDefined(response.data._message)) {
                                 notify.error(gettext('Error: ' + response.data._message));
                             } else {
-                                notify.error(gettext('There is an error. Template cannot be deleted.'));
+                                notify.error(gettext('There was an error. Template cannot be deleted.'));
                             }
                         })
                         .then(fetchTemplates);

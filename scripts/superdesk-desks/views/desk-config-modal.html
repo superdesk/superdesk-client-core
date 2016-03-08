@@ -41,7 +41,7 @@
                                 <label translate>Desk Type</label>
                                 <select id="deskType" ng-model="desk.edit.desk_type" required>
                                     <option value=""></option>
-                                    <option id="{{type.qcode || type.value}}" ng-repeat="type in deskTypes" value="{{type.qcode || type.value}}" ng-selected="desk.edit.desk_type === (type.qcode || type.value)"
+                                    <option id="{{type.qcode}}" ng-repeat="type in deskTypes" value="{{type.qcode}}" ng-selected="desk.edit.desk_type === type.qcode"
                                     >{{ type.name }}</option>
                                 </select>
                             </div>

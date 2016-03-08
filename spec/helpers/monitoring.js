@@ -592,5 +592,4 @@ function Monitoring() {
             this.saveSettings();
         }
     };
-
 }

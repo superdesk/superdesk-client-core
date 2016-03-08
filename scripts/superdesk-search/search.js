@@ -313,13 +313,35 @@
             return new Query(params);
         };
 
-        /*
+        /**
          * Generate Track By Identifier for search results.
+         *
+         * @param {Object} item
+         * @return {String}
          */
         this.generateTrackByIdentifier = function (item) {
-            return (item.state === 'ingested') ? item._id : item._id + ':' + item._current_version;
+            return this.getTrackByIdentifier(item._id, item.state !== 'ingested' ? item._current_version : null);
         };
 
+        /**
+         * Get unique id for an item
+         *
+         * @param {String} id
+         * @param {String} version
+         * @return {String}
+         */
+        this.getTrackByIdentifier = function (id, version) {
+            return version ? (id + ':' + version) : id;
+        };
+
+        /**
+         * Merge newItems list with oldItems list if any
+         *
+         * @param {Object} newItems
+         * @param {Object} oldItems
+         * @param {boolean} append
+         * @return {Object}
+         */
         this.mergeItems = function(newItems, oldItems, append) {
             if (!oldItems || !append) {
                 return newItems;
@@ -1201,7 +1223,7 @@
                     scope.save = function(editSearch) {
 
                         function onSuccess() {
-                            notify.success(gettext('Saved search is saved successfully'));
+                            notify.success(gettext('Search was saved successfully'));
                             scope.cancel();
                             scope.sTab = false;
                             scope.edit = null;
@@ -1212,7 +1234,7 @@
                             if (angular.isDefined(error.data._message)) {
                                 notify.error(error.data._message);
                             } else {
-                                notify.error(gettext('Error. Saved search could not be saved.'));
+                                notify.error(gettext('Error. Search could not be saved.'));
                             }
                         }
 

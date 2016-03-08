@@ -133,8 +133,9 @@
                     scope.highlights = result._items;
                     $timeout(function () {
                         var highlightDropdown = angular.element('.more-activity-menu.open .dropdown-noarrow');
-                        if (highlightDropdown.find('button').length > 0) {
-                            highlightDropdown.find('button:not([disabled])')[0].focus();
+                        var buttons = highlightDropdown.find('button:not([disabled])');
+                        if (buttons.length > 0) {
+                            buttons[0].focus();
                         }
                     });
                 });

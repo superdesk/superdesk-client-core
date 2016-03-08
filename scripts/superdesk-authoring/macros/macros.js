@@ -2,10 +2,8 @@
 
 'use strict';
 
-MacrosService.$inject = ['api', 'autosave', 'notify', 'editor'];
-function MacrosService(api, autosave, notify, editor) {
-
-    var self = this;
+MacrosService.$inject = ['api', 'notify'];
+function MacrosService(api, notify) {
 
     this.get = function() {
         return api.query('macros')
@@ -43,10 +41,7 @@ function MacrosService(api, autosave, notify, editor) {
             item: item,
             commit: !!commit
         }).then(function(res) {
-            if (res.diff) {
-                self.diff = res.diff;
-            }
-            return res.item;
+            return res;
         }, function(err) {
             if (angular.isDefined(err.data._message)) {
                 notify.error(gettext('Error: ' + err.data._message));
@@ -55,8 +50,8 @@ function MacrosService(api, autosave, notify, editor) {
     }
 }
 
-MacrosController.$inject = ['$scope', 'macros', 'desks', 'autosave'];
-function MacrosController($scope, macros, desks, autosave) {
+MacrosController.$inject = ['$scope', 'macros', 'desks', 'autosave', '$rootScope'];
+function MacrosController($scope, macros, desks, autosave, $rootScope) {
     macros.get().then(function() {
         var currentDeskId = desks.getCurrentDeskId();
         if (currentDeskId !== null) {
@@ -70,8 +65,12 @@ function MacrosController($scope, macros, desks, autosave) {
     $scope.call = function(macro) {
         var item = _.extend({}, $scope.origItem, $scope.item);
         return macros.call(macro, item).then(function(res) {
-            angular.extend($scope.item, res);
-            autosave.save($scope.item);
+            if (!res.diff) {
+                angular.extend($scope.item, res.item);
+                autosave.save($scope.item);
+            } else {
+                $rootScope.$broadcast('macro:diff', res.diff);
+            }
         });
     };
 }
@@ -82,11 +81,14 @@ function MacrosReplaceDirective(macros, editor) {
         scope: true,
         templateUrl: 'scripts/superdesk-authoring/macros/views/macros-replace.html',
         link: function(scope) {
+            scope.diff = null;
 
-            scope.$watch(function() {
-                return macros.diff;
-            }, function(diff) {
+            scope.$on('macro:diff', function(evt, diff) {
                 scope.diff = diff;
+                init(scope.diff);
+            });
+
+            function init(diff) {
                 if (diff) {
                     scope.noMatch = Object.keys(diff || {}).length;
                     editor.setSettings({findreplace: {diff: diff}});
@@ -96,7 +98,7 @@ function MacrosReplaceDirective(macros, editor) {
                     editor.setSettings({findreplace: null});
                     editor.render();
                 }
-            });
+            }
 
             scope.next = function() {
                 editor.selectNext();
@@ -114,16 +116,20 @@ function MacrosReplaceDirective(macros, editor) {
                     editor.replace(to);
                     editor.selectNext();
                 }
+                scope.preview = getCurrentReplace();
             };
 
             scope.close = function() {
-                macros.diff = null;
+                scope.diff = null;
+                init(scope.diff);
             };
 
             function getCurrentReplace() {
                 var from = editor.getActiveText();
-                return macros.diff[from] || null;
+                return scope.diff[from] || null;
             }
+
+            init(scope.diff);
         }
     };
 }

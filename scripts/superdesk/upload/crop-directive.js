@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('superdesk.upload.crop', [])
-    .directive('sdCrop', ['notify', 'gettext', function(notify, gettext) {
+    .directive('sdCrop', ['notify', 'gettext', '$interpolate', function(notify, gettext, $interpolate) {
         return {
             scope: {
                 src: '=',
@@ -37,8 +37,11 @@
                 scope.$watch('src', function(src) {
                     elem.empty();
                     if (scope.file && scope.maxFileSize && ((scope.file.size / 1048576) > parseInt(scope.maxFileSize, 10))) {
-                        notify.info(gettext('Image is bigger then ' + scope.maxFileSize + 'MB, upload file size may be limited!'));
+                        notify.info($interpolate(
+                            gettext('Image is bigger than {{ maxFileSize }}MB, upload file size may be limited!')
+                        )({maxFileSize: scope.maxFileSize}));
                     }
+
                     if (src) {
                         var img = new Image();
                         img.onload = function() {

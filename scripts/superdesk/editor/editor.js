@@ -301,6 +301,9 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     function renderFindreplace(node) {
         var tokens = getFindReplaceTokens(node);
         hilite(node, tokens, FINDREPLACE_CLASS);
+        if (self.settings.findreplace.diff) {
+            self.selectNext();
+        }
     }
 
     /**
