@@ -153,6 +153,8 @@ function IngestSettings() {
             sun: daysButonsBox.element(by.buttonText('Sunday'))
         },
 
+        timezoneLabel: element(by.id('timezone')),
+        timezoneDeleteBtn: $$('.icon-trash').get(0),
         timezoneInput: $('[term="tzSearchTerm"]').element(by.model('term')),
         timezoneList: $('.item-list').all(by.tagName('li'))
     };
