@@ -119,7 +119,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
                     } else {
                         url = block.association.renditions.viewImage.href;
                     }
-                    block.body = 'loading';
+                    block.body = '';
                     editor.generateImageTag(block.association).then(function(img) {
                         block.body = img;
                     });
