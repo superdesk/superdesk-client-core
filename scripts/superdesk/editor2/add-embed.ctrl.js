@@ -22,7 +22,7 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
          * @return {string} html
          */
         pictureToHtml: function(url, description) {
-            return editor.generateImageTag(url, null, description);
+            return editor.generateImageTag({url: url, caption: description});
         },
         /**
          * Return html code to represent an embedded link
@@ -52,16 +52,18 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                 embedCode = embedService.get(vm.input).then(function(data) {
                     var embed = data.html;
                     if (!angular.isDefined(embed)) {
-                        if (data.type === 'photo') {
-                            embed = vm.pictureToHtml(data.url, data.description);
-                        } else if (data.type === 'link') {
+                        if (data.type === 'link') {
                             embed = vm.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
+                        } else {
+                            embed = vm.pictureToHtml(data.url, data.description);
                         }
                     }
-                    return {
-                        body: embed,
-                        provider: data.provider_name || EMBED_PROVIDERS.custom
-                    };
+                    return $q.when(embed).then(function(embed) {
+                        return {
+                            body: embed,
+                            provider: data.provider_name || EMBED_PROVIDERS.custom
+                        };
+                    });
                 });
             // otherwise we use the content of the field directly
             } else {

@@ -125,8 +125,8 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash'];
-function EditorService(spellcheck, $rootScope, $timeout, $q, _) {
+EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions'];
+function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService) {
     this.settings = {spellcheck: true};
 
     /**
@@ -556,8 +556,46 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _) {
         }
     }
 
-    this.generateImageTag = function(url, renditions, caption) {
-        return '<img alt="' + _.escape(caption || '') + '" src="' + url + '">';
+    this.generateImageTag = function(data) {
+        var url = data.url, caption = data.caption;
+        var promiseFinished;
+        // if this is a SD archive, we use its properties
+        if (data._type === 'archive' || data.type === 'picture') {
+            // get expected renditions list
+            promiseFinished = renditionsService.get().then(function(renditionsList) {
+                // ]use the first rendtion as default
+                var firstRendition = data.renditions[renditionsList[0].name];
+                if (angular.isDefined(firstRendition)) {
+                    url = firstRendition.href;
+                } else {
+                    // use "viewImage" rendtion as fallback
+                    url = data.renditions.viewImage.href;
+                }
+                caption = data.description_text;
+                return renditionsList;
+            });
+        }
+        // when previous promise is finished, compose the html
+        return $q.when(promiseFinished, function(renditionsList) {
+            var html = ['<img',
+            ' src="' + url + '"',
+            ' alt="' + _.escape(caption || '') + '"'];
+            // add a `srcset` attribute if renditions are availables
+            // TODO: if renditions from renditionsService are not available For
+            // this picture, we should maybe use its own renditons
+            if (renditionsList && data.renditions) {
+                var renditionsHtml = [];
+                renditionsList.forEach(function(r) {
+                    var rendition = data.renditions[r.name];
+                    if (angular.isDefined(rendition)) {
+                        renditionsHtml.push(rendition.href + ' ' + rendition.width + 'w');
+                    }
+                });
+                html.push(' srcset="' + renditionsHtml.join(',\n') + '"');
+            }
+            html.push('/>');
+            return html.join('\n');
+        });
     };
 }
 
@@ -641,8 +679,10 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
                             };
                         });
                         // update block
-                        vm.model.body = editor.generateImageTag(images[0].href, null, vm.model.caption);
-                        vm.updateEmbedPreview();
+                        editor.generateImageTag(vm.model.association).then(function(img) {
+                            vm.model.body = img;
+                            vm.updateEmbedPreview();
+                        });
                         // update caption
                         vm.saveCaption(vm.model.association.description_text);
                     });
@@ -766,8 +806,8 @@ angular.module('superdesk.editor2', [
             controller: SdTextEditorBlockEmbedController
         };
     }])
-    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk',
-    function (editor, spellcheck, $timeout, superdesk) {
+    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q',
+    function (editor, spellcheck, $timeout, superdesk, $q) {
         var EDITOR_CONFIG = {
             toolbar: {
                 static: true,
@@ -992,15 +1032,19 @@ angular.module('superdesk.editor2', [
                                 updateModel();
                                 var indexWhereToAddBlock = sdTextEditor.getBlockPosition(scope.sdTextEditorBlockText) + 1;
                                 superdesk.intent('upload', 'media').then(function(images) {
-                                    images.forEach(function(image) {
-                                        sdTextEditor.insertNewBlock(indexWhereToAddBlock, {
-                                            blockType: 'embed',
-                                            embedType: 'Image',
-                                            body: editor.generateImageTag(image.renditions.viewImage.href, null, image.description_text),
-                                            caption: image.description_text,
-                                            association: image
-                                        }, true);
-                                        indexWhereToAddBlock++;
+                                    var promises = [];
+                                    images.forEach(function(image, index) {
+                                        promises.push(editor.generateImageTag(image).then(function(imgTag) {
+                                            sdTextEditor.insertNewBlock(indexWhereToAddBlock, {
+                                                blockType: 'embed',
+                                                embedType: 'Image',
+                                                body: imgTag,
+                                                caption: image.description_text,
+                                                association: image
+                                            }, true);
+                                            indexWhereToAddBlock++;
+                                        }));
+                                        return $q.all(promises);
                                     });
                                     // add new text block for the remaining text
                                 }).finally(function() {

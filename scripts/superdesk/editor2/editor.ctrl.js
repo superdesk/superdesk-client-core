@@ -119,7 +119,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
                     } else {
                         url = block.association.renditions.viewImage.href;
                     }
-                    block.body = editor.generateImageTag(url, null, block.caption);
+                    editor.generateImageTag(block.association).then(function(img) {
+                        block.body = img;
+                    });
                 } else {
                     // extract body and caption from embed block html
                     var original_body = angular.element(angular.copy(block.body));
