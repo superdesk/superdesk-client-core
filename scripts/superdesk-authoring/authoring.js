@@ -561,9 +561,8 @@
             // item is published state - corrected, published, scheduled, killed
             if (self.isPublished(current_item)) {
                 //if not the last published version
-                if ((angular.isDefined(item.archive_item) &&
-                    item._current_version !== item.archive_item._current_version) ||
-                    (this._versionToFetch && this._versionToFetch !== item._current_version)) {
+                if (angular.isDefined(item.archive_item) &&
+                    item._current_version !== item.archive_item._current_version) {
                     return angular.extend({}, DEFAULT_ACTIONS);
                 }
 
@@ -642,14 +641,6 @@
             }
 
             return action;
-        };
-
-        /**
-         * Sometimes the fetched version and user selected version are different. Use this method to set the version
-         * selected by user. This happens when user selects "Open" action.
-         */
-        this.setItemVersion = function(version) {
-            this._versionToFetch = version;
         };
 
         /**
@@ -2757,7 +2748,6 @@
          * @param {Object} item
          */
         this.view = function(item) {
-            authoring.setItemVersion(item._current_version);
             self.edit(item, 'view');
         };
 
