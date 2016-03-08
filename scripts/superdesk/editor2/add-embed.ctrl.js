@@ -15,16 +15,6 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
             vm.extended = angular.isDefined(close) ? !close : !vm.extended;
         },
         /**
-         * Return html code to represent an embedded picture
-         *
-         * @param {string} url
-         * @param {string} description
-         * @return {string} html
-         */
-        pictureToHtml: function(url, description) {
-            return editor.generateImageTag({url: url, caption: description});
-        },
-        /**
          * Return html code to represent an embedded link
          *
          * @param {string} url
@@ -55,7 +45,7 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                         if (data.type === 'link') {
                             embed = vm.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
                         } else {
-                            embed = vm.pictureToHtml(data.url, data.description);
+                            embed = editor.generateImageTag({url: data.url, caption: data.description});
                         }
                     }
                     return $q.when(embed).then(function(embed) {
@@ -104,12 +94,13 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
             });
         },
         createBlockFromSdPicture: function(img) {
-            var html = vm.pictureToHtml(img.href, img.item.description_text);
-            vm.createFigureBlock({
-                embedType: 'Image',
-                body: html,
-                caption: img.item.description_text,
-                association: img.item
+            editor.generateImageTag(img).then(function(imgTag) {
+                return vm.createFigureBlock({
+                    embedType: 'Image',
+                    body: imgTag,
+                    caption: img.description_text,
+                    association: img
+                });
             });
         }
     });

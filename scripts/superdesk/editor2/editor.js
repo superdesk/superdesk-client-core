@@ -125,8 +125,8 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions'];
-function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService) {
+EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions', 'superdesk', 'api'];
+function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService, superdesk, api) {
     this.settings = {spellcheck: true};
 
     /**
@@ -599,6 +599,56 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             return html.join('\n');
         });
     };
+
+    this.editAndUpdatePicture = function(picture) {
+        var poi = {x: 0.5, y: 0.5};
+        return renditionsService.get().then(function(renditions) {
+            return superdesk.intent('edit', 'crop', {
+                item: picture,
+                renditions: renditions,
+                poi: picture.poi || poi,
+                showMetadataEditor: true
+            })
+            .then(function(result) {
+                var renditionNames = [];
+                var savingImagePromises = [];
+                angular.forEach(result.cropData, function(croppingData, renditionName) {
+                    // if croppingData are defined
+                    if (angular.isDefined(croppingData.CropLeft)) {
+                        renditionNames.push(renditionName);
+                    }
+                });
+                // perform the request to make the cropped images
+                angular.forEach(renditionNames, function(renditionName) {
+                    savingImagePromises.push(
+                        api.save('picture_crop', {item: picture, crop: result.cropData[renditionName]})
+                    );
+                });
+                return $q.all(savingImagePromises)
+                // return the cropped images
+                .then(function(croppedImages) {
+                    // save created images in "association" property
+                    croppedImages.forEach(function(image, index) {
+                        var url = image.href;
+                        // update association
+                        picture.poi = result.poi;
+                        // update association renditions
+                        picture.renditions[renditionNames[index]] = angular.extend(
+                            {
+                                href: url,
+                                width: image.width,
+                                height: image.height,
+                                media: image._id,
+                                mimetype: image.item.mimetype
+                            },
+                            image.crop
+                        );
+                    });
+                    return picture;
+                });
+            });
+        });
+    };
 }
 
 SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'renditions', 'editor', '$q'];
@@ -639,57 +689,14 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
             if (!vm.model.association) {
                 return false;
             }
-            var poi = {x: 0.5, y: 0.5};
-            renditions.get().then(function(renditions) {
-                superdesk.intent('edit', 'crop', {
-                    item: picture,
-                    renditions: renditions,
-                    poi: picture.poi || poi,
-                    showMetadataEditor: true
-                })
-                .then(function(result) {
-                    var renditionNames = [];
-                    var savingImagePromises = [];
-                    angular.forEach(result.cropData, function(croppingData, renditionName) {
-                        // if croppingData are defined
-                        if (angular.isDefined(croppingData.CropLeft)) {
-                            renditionNames.push(renditionName);
-                        }
-                    });
-                    // perform the request to make the cropped images
-                    angular.forEach(renditionNames, function(renditionName) {
-                        savingImagePromises.push(
-                            api.save('picture_crop', {item: picture, crop: result.cropData[renditionName]})
-                        );
-                    });
-                    // return the cropped images
-                    $q.all(savingImagePromises)
-                    .then(function(images) {
-                        // save created images in "association" property
-                        images.forEach(function(image, index) {
-                            var url = image.href;
-                            // update association
-                            vm.model.association.poi = result.poi;
-                            // update association renditions
-                            vm.model.association.renditions[renditionNames[index]] = angular.extend(
-                                {
-                                    href: url,
-                                    width: image.width,
-                                    height: image.height,
-                                    media: image._id,
-                                    mimetype: image.item.mimetype
-                                },
-                                image.crop
-                            );
-                        });
-                        // update block
-                        editor.generateImageTag(vm.model.association).then(function(img) {
-                            vm.model.body = img;
-                        });
-                        // update caption
-                        vm.saveCaption(vm.model.association.description_text);
-                    });
+            editor.editAndUpdatePicture(picture).then(function(picture) {
+                // update block
+                vm.model.association = picture;
+                editor.generateImageTag(picture).then(function(img) {
+                    vm.model.body = img;
                 });
+                // update caption
+                vm.saveCaption(vm.model.association.description_text);
             });
         }
     });
@@ -738,7 +745,8 @@ angular.module('superdesk.editor2', [
             }
         };
     }])
-    .directive('sdTextEditorDropZone', ['superdesk', 'api', function (superdesk, api) {
+    .directive('sdTextEditorDropZone', ['editor',
+    function (editor) {
         return {
             scope: true,
             require: '^sdAddEmbed',
@@ -748,21 +756,8 @@ angular.module('superdesk.editor2', [
                 .on('drop', function(event) {
                     event.preventDefault();
                     var item = angular.fromJson(event.originalEvent.dataTransfer.getData(PICTURE_TYPE));
-                    var poi = {x: 0.5, y: 0.5};
-                    superdesk.intent('edit', 'crop', {
-                        item: item,
-                        renditions: [{
-                            name: 'embed',
-                            width: item.renditions.viewImage.width,
-                            height: item.renditions.viewImage.height
-                        }],
-                        poi: item.poi || poi
-                    })
-                    .then(function(result) {
-                        return api.save('picture_crop', {item: item, crop: result.cropData.embed});
-                    })
-                    .then(function(image) {
-                        ctrl.createBlockFromSdPicture(image);
+                    editor.editAndUpdatePicture(item).then(function(picture) {
+                        ctrl.createBlockFromSdPicture(picture);
                     }).finally(function() {
                         element.removeClass('drag-active');
                     });
