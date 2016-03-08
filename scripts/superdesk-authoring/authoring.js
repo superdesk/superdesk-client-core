@@ -537,8 +537,10 @@
                 return action;
             }
 
+            var digital_package = (angular.isDefined(current_item.package_type) &&
+                                current_item.package_type === 'takes');
             var is_read_only_state = _.contains(['spiked', 'scheduled', 'killed'], current_item.state) ||
-            (angular.isDefined(current_item.package_type) && current_item.package_type === 'takes');
+                                    digital_package;
 
             var lockedByMe = !lock.isLocked(current_item);
             action.view = !lockedByMe;
@@ -568,7 +570,7 @@
                 }
 
                 action.view = true;
-                if (current_item.state === 'scheduled') {
+                if (current_item.state === 'scheduled' && !digital_package) {
                     action.deschedule = true;
                 } else if (current_item.state === 'published' || current_item.state === 'corrected') {
                     action.kill = user_privileges.kill && lockedByMe && !is_read_only_state;
