@@ -267,10 +267,6 @@ function MetaDropdownDirective($filter, keyboardManager) {
                 var o = {};
 
                 if (item) {
-                    // this is added as two vocabulary definition are different.
-                    if (scope.key) {
-                        scope.key = _.has(item, 'qcode') ? 'qcode': 'value';
-                    }
                     o[scope.field] = scope.key ? item[scope.key] : [item];
                 } else {
                     o[scope.field] = null;
@@ -428,7 +424,7 @@ function MetaWordsListDirective() {
              * @param {Object} item selected word object
              */
             scope.select = function(item) {
-                var keyword = item ? item.value : scope.selectedTerm;
+                var keyword = item ? item.qcode : scope.selectedTerm;
                 var t = _.clone(scope.item[scope.field]) || [];
                 var index = _.findIndex(t, function (word) {
                     return word.toLowerCase() === keyword.toLowerCase();
