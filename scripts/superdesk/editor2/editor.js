@@ -588,7 +588,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
                 renditionsList.forEach(function(r) {
                     var rendition = data.renditions[r.name];
                     if (angular.isDefined(rendition)) {
-                        renditionsHtml.push(rendition.href + ' ' + rendition.width + 'w');
+                        renditionsHtml.push(rendition.href.replace('http://', '//') + ' ' + rendition.width + 'w');
                     }
                 });
                 if (renditionsHtml.length > 0) {
