@@ -369,11 +369,8 @@
                             if ((windowHeight - pos.top) < dropdownHeight) {
                                 if ((pos.top - 110) < dropdownHeight) {
                                     // Substracting 110 is for topmenu and submenu bar
-                                    css = {
-                                        top: '110px',
-                                        right: css.right + 30
-                                        // Addition 30 so the drodpown would not overlap icon
-                                    };
+                                    css.top = '110px';
+                                    css.right = css.right + 30;
                                 } else {
                                     css.top = pos.top - dropdownHeight - icon.outerHeight() - 15;
                                     // Subtracting 15 so the dropdown is not stick to the icon
@@ -387,7 +384,6 @@
                             if ((pos.left - 48) < dropdownWidth) {
                                 css.right -= dropdownWidth;
                             }
-
                             dropdown.dropdownMenu.css(css);
                         });
                     }
