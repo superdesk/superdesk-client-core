@@ -161,8 +161,8 @@
                             refreshImage(img.src, [
                                 cropData.CropLeft,
                                 cropData.CropTop,
-                                cropData.CropRight - cropData.CropLeft,
-                                cropData.CropBottom - cropData.CropTop
+                                cropData.CropRight,
+                                cropData.CropBottom
                             ]);
                         }
                     }
@@ -194,13 +194,12 @@
                         CropBottom: Math.round(center.y + selectionHeight / 2)
                     };
                     angular.extend(cropData, crop);
-                    var setSelect = [
+                    refreshImage(img.src, [
                         cropData.CropLeft,
                         cropData.CropTop,
                         cropData.CropRight,
                         cropData.CropBottom
-                    ];
-                    refreshImage(img.src, setSelect);
+                    ]);
                 });
 
                 function refreshImage(src, setSelect) {
