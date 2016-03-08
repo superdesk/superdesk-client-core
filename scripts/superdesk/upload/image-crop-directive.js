@@ -15,31 +15,25 @@
             link: function(scope, elem) {
                 var img;
                 var cropBox = angular.element('<div class="crop-box"></div>');
-
-                $(elem).css({
+                elem.css({
                     'position': 'relative'
                 });
-
                 scope.$watch('src', function() {
                     img = new Image();
                     img.onload = function() {
                         elem.empty();
-
                         $(img).css({
                             'position': 'absolute',
                             'top': 0,
                             'left': 0,
                             'z-index': 1000
                         });
-
                         elem.append(img);
                         elem.append(cropBox);
-
                         updateCropBox();
                     };
                     img.src = scope.src;
                 });
-
                 scope.$watch('cropData', updateCropBox);
 
                 function updateCropBox() {
@@ -305,11 +299,12 @@
                         drawPoint();
                     };
                     img.addEventListener('click', function(event) {
-                        elem.addClass('transition-on');
-                        scope.point.x = Math.round(event.offsetX * 100 / img.width) / 100;
-                        scope.point.y = Math.round(event.offsetY * 100 / img.height) / 100;
-                        scope.onChange();
-                        scope.$apply();
+                        scope.$apply(function() {
+                            elem.addClass('transition-on');
+                            scope.point.x = Math.round(event.offsetX * 100 / img.width) / 100;
+                            scope.point.y = Math.round(event.offsetY * 100 / img.height) / 100;
+                            scope.onChange();
+                        });
                         $rootScope.$broadcast('poiUpdate', scope.point);
                     });
                     img.src = src;
