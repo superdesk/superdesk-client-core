@@ -18,7 +18,7 @@
     <div ng-hide=":: data.headline || data.slugline || data.description_text" translate>Blank headline received</div>
   </div>
 
-  <a ng-if="data.guid && !error"
+  <a ng-if="data.guid && !error && !no_open"
     ng-click="open(data)"
     title="{{ :: 'Open item' | translate }}"
     class="package-item__open-item"><i class="icon-external"></i></a>
