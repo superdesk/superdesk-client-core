@@ -540,7 +540,8 @@
             label: gettext('Mark for highlight'),
             priority: 30,
             icon: 'star',
-            dropdown: ['item', 'highlightsService', 'desks', 'gettext', function(item, highlightsService, desks, gettext) {
+            dropdown: ['item', 'className', 'highlightsService', 'desks', 'gettext',
+            function(item, className, highlightsService, desks, gettext) {
                 var highlights = highlightsService.getSync(desks.getCurrentDeskId()) || {_items: []};
 
                 var HighlightBtn = React.createClass({
@@ -571,14 +572,21 @@
                     );
                 };
 
-                return highlights._items.length ? highlights._items.map(createHighlightItem) : React.createElement(
-                    'li',
-                    {},
-                    React.createElement(
-                        'button',
-                        {disabled: true},
-                        gettext('No available highlights')
-                    )
+                var noHighlights = function() {
+                    return React.createElement(
+                        'li',
+                        {},
+                        React.createElement(
+                            'button',
+                            {disabled: true},
+                            gettext('No available highlights'))
+                    );
+                };
+
+                return React.createElement(
+                    'ul',
+                    {className: className},
+                    highlights._items.length ? highlights._items.map(createHighlightItem) : React.createElement(noHighlights)
                 );
             }],
             keyboardShortcut: 'ctrl+shift+d',

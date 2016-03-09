@@ -180,8 +180,9 @@ function Highlights() {
     };
 
     this.saveTextHighlightsConfirm = function() {
-        browser.sleep(500);
-        element(by.buttonText('Save')).click();
+        var btn = element(by.className('modal-content')).element(by.buttonText('Save'));
+        wait(btn, 500);
+        btn.click();
     };
 
     this.multiMarkHighlight = function(name) {

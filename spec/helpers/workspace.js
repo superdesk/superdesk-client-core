@@ -165,7 +165,7 @@ function Workspace() {
     this.actionOnItemSubmenu = function(action, submenu, item) {
         var menu = this.openItemMenu(item);
         browser.actions().mouseMove(menu.element(by.partialLinkText(action))).perform();
-        menu.element(by.css('[option="' + submenu + '"]')).click();
+        menu.element(by.partialButtonText(submenu)).click();
     };
 
     /**

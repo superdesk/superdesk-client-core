@@ -870,12 +870,10 @@
                                             activity.label,
                                             React.createElement('i', {className: 'icon-chevron-right-thin submenu-icon'})
                                         ),
-                                        this.state.open ?
-                                            React.createElement(
-                                                'ul',
-                                                {className: 'dropdown-menu right-submenu'},
-                                                $injector.invoke(activity.dropdown, activity, {item: this.props.item})
-                                            ) : null
+                                        this.state.open ? $injector.invoke(activity.dropdown, activity, {
+                                            item: this.props.item,
+                                            className: 'dropdown right-submenu'
+                                        }) : null
                                     )
                                 );
                             } else {

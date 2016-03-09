@@ -749,7 +749,60 @@
             .activity('addtopackage', {
                 label: gettext('Add to current'),
                 priority: 5,
-                dropdown: true,
+                dropdown: ['item', 'className', 'authoringWorkspace', 'packages', 'api', '$rootScope',
+                function(item, className, authoringWorkspace, packages, api, $rootScope) {
+                    var PackageGroup = React.createClass({
+                        select: function() {
+                            $rootScope.$broadcast('package:addItems', {items: [item], group: this.props.group});
+                        },
+                        render: function() {
+                            var group = this.props.group;
+                            return React.createElement(
+                                'li',
+                                {},
+                                React.createElement(
+                                    'button',
+                                    {dataOption: group, onClick: this.select},
+                                    React.createElement('i', {className: 'icon-plus'}),
+                                    group
+                                )
+                            );
+                        }
+                    });
+
+                    var PackageGroupList = React.createClass({
+                        getInitialState: function() {
+                            return {groups: []};
+                        },
+
+                        componentDidMount: function() {
+                            var pkg = this.props.package;
+                            if (pkg.highlight) {
+                                api.find('highlights', pkg.highlight)
+                                    .then(function(result) {
+                                        this.setState({groups: result.groups});
+                                    }.bind(this));
+                            } else {
+                                // set it here to avoid flickering
+                                this.setState({groups: packages.groupList});
+                            }
+                        },
+
+                        render: function() {
+                            var createGroup = function(group) {
+                                return React.createElement(PackageGroup, {group: group, key: 'group-' + group});
+                            };
+
+                            return React.createElement(
+                                'ul',
+                                {className: className},
+                                this.state.groups.length ? this.state.groups.map(createGroup) : null
+                            );
+                        }
+                    });
+
+                    return React.createElement(PackageGroupList, {item: item, package: authoringWorkspace.getItem()});
+                }],
                 icon: 'package-plus',
                 templateUrl: 'scripts/superdesk-packaging/views/add-to-package.html',
                 filters: [
