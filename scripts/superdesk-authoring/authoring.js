@@ -127,7 +127,8 @@
     function AutosaveService($q, $timeout, api) {
         var RESOURCE = 'archive_autosave',
             AUTOSAVE_TIMEOUT = 3000,
-            timeouts = {};
+            timeouts = {},
+            self = this;
 
         /**
          * Open an item
@@ -138,10 +139,20 @@
                 return $q.when(item);
             }
 
+            return self.get(item)
+                .then(function(result) {
+                    return result;
+                }, function(err) {
+                    return item;
+                });
+        };
+
+        /**
+         * Get the resource
+         */
+        this.get = function(item) {
             return api.find(RESOURCE, item._id).then(function(autosave) {
                 item._autosave = autosave;
-                return item;
-            }, function(err) {
                 return item;
             });
         };
@@ -756,6 +767,19 @@
                     $window.onbeforeunload = angular.noop;
                 });
             };
+        };
+
+        /**
+         * Called from workqueue in case of unsaved changes.
+         */
+        this.reopen = function () {
+            return modal.confirm(
+                gettext('There are some unsaved changes, re-open the article to save changes?'),
+                gettext('Save changes?'),
+                gettext('Re-Open'),
+                gettext('Ignore'),
+                gettext('Cancel')
+            );
         };
 
         /**
