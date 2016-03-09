@@ -187,7 +187,7 @@ describe('authoring', function() {
         element(by.cssContainingText('span', 'Body')).click();
         ctrlShiftKey('s');
         browser.wait(function() {
-            return element(by.buttonText('SAVE')).getAttribute('disabled');
+            return element(by.buttonText('Save')).getAttribute('disabled');
         }, 500);
         authoring.close();
         monitoring.actionOnItem('Edit', 1, 0);

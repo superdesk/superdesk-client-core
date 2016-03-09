@@ -237,7 +237,6 @@
             vm.singleGroup.singleViewType = null;
             vm.singleGroup = null;
         }
-
     }
 
     /**
@@ -245,8 +244,8 @@
      *
      * it's a directive so that it can be put together with authoring into some container directive
      */
-    MonitoringViewDirective.$inject = ['$rootScope'];
-    function MonitoringViewDirective($rootScope) {
+    MonitoringViewDirective.$inject = ['$rootScope', 'authoringWorkspace'];
+    function MonitoringViewDirective($rootScope, authoringWorkspace) {
         return {
             templateUrl: 'scripts/superdesk-monitoring/views/monitoring-view.html',
             controller: 'Monitoring',
@@ -270,6 +269,14 @@
 
                 scope.$on('$destroy', function() {
                     containerElem.off('scroll');
+                });
+
+                scope.$watch(function() {
+                    return authoringWorkspace.item;
+                }, function(item) {
+                    if (item) {
+                        scope.monitoring.closePreview();
+                    }
                 });
             }
         };
@@ -471,17 +478,13 @@
                             activityService.start(activity, {data: {item: item}})
                                 .then(function (item) {
                                     authoringWorkspace.edit(item, !lock);
-                                    monitoring.preview(null);
                                 });
                         } else if (item.type === 'composite' && item.package_type === 'takes') {
                             authoringWorkspace.view(item);
-                            monitoring.preview(null);
                         } else if (archiveService.isPublished(item)) {
                             authoringWorkspace.view(item);
-                            monitoring.preview(null);
                         } else {
-                            authoringWorkspace.edit(item, !lock);
-                            monitoring.preview(null);
+                            authoringWorkspace.edit(item);
                         }
                     }
                 }

@@ -313,13 +313,13 @@ describe('monitoring', function() {
     it('can open read only content', function() {
         monitoring.turnOffWorkingStage(0);
         monitoring.openAction(2, 0);
-        expect(authoring.save_button.isDisplayed()).toBe(true);
+        expect(authoring.save_button.isPresent()).toBeTruthy();
     });
 
     it('can start content upload', function() {
         monitoring.openCreateMenu();
         monitoring.startUpload();
-        expect(monitoring.uploadModal.isDisplayed()).toBe(true);
+        expect(monitoring.uploadModal.isDisplayed()).toBeTruthy();
     });
 
     it('show personal', function() {
@@ -401,11 +401,9 @@ describe('monitoring', function() {
         monitoring.nextReorder();
         monitoring.saveSettings();
 
-        monitoring.openAction(0, 3);
-        browser.sleep(500);
-
+        monitoring.openAction(0, 3); // creates new item
+        expect(monitoring.getTextItem(0, 3)).toBe('ingest1');
         expect(monitoring.getTextItem(0, 4)).toBe('ingest1');
-        expect(authoring.save_button.isDisplayed()).toBe(true);
     });
 
     it('can fetch as item', function () {
@@ -501,29 +499,30 @@ describe('monitoring', function() {
 
         //select first item
         monitoring.selectItem(0, 0);
-        expect(monitoring.getItem(0, 0).element(by.model('item.selected')).getAttribute('checked')).toBeTruthy();
+        monitoring.expectIsChecked(0, 0);
 
         //scroll down and select last item
         browser.executeScript('window.scrollTo(0,250);').then(function () {
             monitoring.selectItem(0, 8);
-            expect(monitoring.getItem(0, 8).element(by.model('item.selected')).getAttribute('checked')).toBeTruthy();
+            monitoring.expectIsChecked(0, 8);
         });
 
         //scroll up to top again to see if selection to first item is remembered?
         browser.executeScript('window.scrollTo(0,0);').then(function () {
-            expect(monitoring.getItem(0, 0).element(by.model('item.selected')).getAttribute('checked')).toBeTruthy();
+            monitoring.expectIsChecked(0, 0);
         });
 
         //scroll down again to see if selection to last item is remembered?
         browser.executeScript('window.scrollTo(0,250);').then(function () {
-            expect(monitoring.getItem(0, 8).element(by.model('item.selected')).getAttribute('checked')).toBeTruthy();
+            monitoring.expectIsChecked(0, 8);
         });
 
         expect(monitoring.getMultiSelectCount()).toBe('2 Items selected');
+
         //Now reset multi-selection
         monitoring.clickOnCancelButton();
-        expect(monitoring.getItem(0, 0).element(by.model('item.selected')).getAttribute('checked')).toBeFalsy();
-        expect(monitoring.getItem(0, 8).element(by.model('item.selected')).getAttribute('checked')).toBeFalsy();
+        monitoring.expectIsNotChecked(0, 0);
+        monitoring.expectIsNotChecked(0, 8);
     });
 
     it('can view published duplicated item in duplicate tab of non-published original item', function() {

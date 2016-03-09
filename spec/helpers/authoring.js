@@ -77,10 +77,11 @@ function Authoring() {
     };
 
     this.confirmSendTo = function() {
-        if (element(by.className('modal-content')).length) {
-            browser.sleep(3000);
-            element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
-        }
+        element.all(by.className('modal-content')).count().then(function(closeModal) {
+            if (closeModal) {
+                element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
+            }
+        });
     };
 
     this.sendToSidebarOpened = function(desk, stage) {
@@ -157,7 +158,7 @@ function Authoring() {
     this.save = function() {
         element(by.css('[ng-click="saveTopbar(item)"]')).click();
         return browser.wait(function() {
-            return element(by.buttonText('SAVE')).getAttribute('disabled');
+            return element(by.buttonText('Save')).getAttribute('disabled');
         });
     };
 

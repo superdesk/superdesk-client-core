@@ -1359,6 +1359,7 @@
                     })
                     ['finally'](reloadService.forceReload);
                 });
+
                 $scope.$on('item:lock', function(_e, data) {
                     if ($scope.item._id === data.item && !_closing &&
                         session.sessionId !== data.lock_session) {

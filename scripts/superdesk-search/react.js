@@ -114,6 +114,10 @@
                 link: function(scope, elem) {
                     var menuHolderElem = document.getElementById('react-placeholder');
 
+                    var closeActionsMenu = function() {
+                        ReactDOM.unmountComponentAtNode(menuHolderElem);
+                    };
+
                     var groupId = scope.$id;
                     if (!monitoringState.state.activeGroup) {
                         monitoringState.setState({activeGroup: groupId});
@@ -659,7 +663,7 @@
                         toggle: function(event) {
                             this.stopEvent(event);
                             this.setState({open: !this.state.open}, function() {
-                                ReactDOM.unmountComponentAtNode(menuHolderElem);
+                                closeActionsMenu();
                                 if (this.state.open) {
                                     // first render it somewhere not visible
                                     var menuComponent = ReactDOM.render(this.renderMenu({top: 0, left: -500}), menuHolderElem);
@@ -816,7 +820,10 @@
                             // Stop event propagation so that click on item action
                             // won't select that item for preview/authoring.
                             event.stopPropagation();
-                            activityService.start(this.props.activity, {data: {item: this.props.item}});
+                            scope.$apply(function() {
+                                activityService.start(this.props.activity, {data: {item: this.props.item}});
+                            }.bind(this));
+                            closeActionsMenu();
                         },
 
                         getInitialState: function() {
@@ -910,7 +917,7 @@
                             this.props.onSelect(this.props.item);
                         },
 
-                        edit: function() {
+                        edit: function(event) {
                             this.props.onEdit(this.props.item);
                         },
 
@@ -1035,6 +1042,16 @@
                             }, 100, false);
                         },
 
+                        edit: function(item) {
+                            this.setSelectedItem(item);
+                            $timeout.cancel(this.updateTimeout);
+                            if (item && scope.edit) {
+                                scope.$apply(function() {
+                                    scope.edit(item);
+                                });
+                            }
+                        },
+
                         updateAllItems: function(itemId, changes) {
                             var itemsById = angular.extend({}, this.state.itemsById);
                             _.forOwn(itemsById, function(value, key) {
@@ -1044,15 +1061,6 @@
                             });
 
                             this.setState({itemsById: itemsById});
-                        },
-
-                        edit: function(item) {
-                            this.setSelectedItem(item);
-                            if (item && scope.edit) {
-                                scope.$apply(function() {
-                                    scope.edit(item);
-                                });
-                            }
                         },
 
                         setSelectedItem: function(item) {
@@ -1121,9 +1129,7 @@
                             ReactDOM.findDOMNode(this).focus();
                         },
 
-                        closeActionsMenu: function() {
-                            ReactDOM.unmountComponentAtNode(menuHolderElem);
-                        },
+                        closeActionsMenu: closeActionsMenu,
 
                         componentWillUnmount: function() {
                             this.closeActionsMenu();
