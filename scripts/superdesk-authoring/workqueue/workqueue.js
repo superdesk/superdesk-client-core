@@ -54,9 +54,13 @@ WorkqueueCtrl.$inject = [
     'lock',
     '$location',
     'session',
-    'authoring'
+    'authoring',
+    'autosave',
+    'confirm',
+    'notify'
 ];
-function WorkqueueCtrl($scope, $route, workqueue, authoringWorkspace, multiEdit, superdesk, lock, $location, session, authoring) {
+function WorkqueueCtrl($scope, $route, workqueue, authoringWorkspace, multiEdit,
+                       superdesk, lock, $location, session, authoring, autosave, confirm, notify) {
 
     $scope.active = null;
     $scope.workqueue = workqueue;
@@ -110,8 +114,25 @@ function WorkqueueCtrl($scope, $route, workqueue, authoringWorkspace, multiEdit,
      * Closes item. If item is opened, close authoring workspace.
      * Updates multiedit items, if item is part of multiedit.
      * When closing last item that was in multiedit(no more items in multiedit), redirects to monitoring.
+     * if there autosave version then open dialog to prompt the user to save.
      */
     $scope.closeItem = function(item) {
+        autosave.get(item)
+            .then(function(result) {
+                return confirm.reopen();
+            })
+            .then(function(reopen) {
+                if ($scope.active._id !== item._id) {
+                    authoringWorkspace.edit(item);
+                } else {
+                    notify.success(gettext('Item already open.'));
+                }
+            }, function(err) {
+                _closeItem(item);
+            });
+    };
+
+    function _closeItem(item) {
         lock.unlock(item);
         if (authoringWorkspace.item && item._id === authoringWorkspace.item._id){
             authoringWorkspace.close(true);
@@ -121,7 +142,7 @@ function WorkqueueCtrl($scope, $route, workqueue, authoringWorkspace, multiEdit,
         if (multiEdit.items.length === 0){
             $scope.redirectOnCloseMulti();
         }
-    };
+    }
 
     $scope.openMulti = function() {
         $scope.isMultiedit = true;
