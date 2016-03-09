@@ -125,8 +125,8 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q'];
-function EditorService(spellcheck, $rootScope, $timeout, $q) {
+EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions', 'superdesk', 'api'];
+function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService, superdesk, api) {
     this.settings = {spellcheck: true};
 
     /**
@@ -555,10 +555,104 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
             scope.model.$setViewValue(val);
         }
     }
+
+    this.generateImageTag = function(data) {
+        var url = data.url, caption = data.caption;
+        var promiseFinished;
+        // if this is a SD archive, we use its properties
+        if (data._type === 'archive' || data.type === 'picture') {
+            // get expected renditions list
+            promiseFinished = renditionsService.get().then(function(renditionsList) {
+                // ]use the first rendtion as default
+                var firstRendition = data.renditions[renditionsList[0].name];
+                if (angular.isDefined(firstRendition)) {
+                    url = firstRendition.href;
+                } else {
+                    // use "viewImage" rendtion as fallback
+                    url = data.renditions.viewImage.href;
+                }
+                caption = data.description_text;
+                return renditionsList;
+            });
+        }
+        // when previous promise is finished, compose the html
+        return $q.when(promiseFinished, function(renditionsList) {
+            var html = ['<img',
+            ' src="' + url + '"',
+            ' alt="' + _.escape(caption || '') + '"'];
+            // add a `srcset` attribute if renditions are availables
+            // NOTE: if renditions from renditionsService are not available For
+            // this picture, we should maybe use its own renditons
+            if (renditionsList && data.renditions) {
+                var renditionsHtml = [];
+                renditionsList.forEach(function(r) {
+                    var rendition = data.renditions[r.name];
+                    if (angular.isDefined(rendition)) {
+                        renditionsHtml.push(rendition.href.replace('http://', '//') + ' ' + rendition.width + 'w');
+                    }
+                });
+                if (renditionsHtml.length > 0) {
+                    html.push(' srcset="' + renditionsHtml.join(',\n') + '"');
+                }
+            }
+            html.push('/>');
+            return html.join('\n');
+        });
+    };
+
+    this.editCropAndRenderImage = function(picture) {
+        var poi = {x: 0.5, y: 0.5};
+        return renditionsService.get().then(function(renditions) {
+            return superdesk.intent('edit', 'crop', {
+                item: picture,
+                renditions: renditions,
+                poi: picture.poi || poi,
+                showMetadataEditor: true
+            })
+            .then(function(result) {
+                var renditionNames = [];
+                var savingImagePromises = [];
+                angular.forEach(result.cropData, function(croppingData, renditionName) {
+                    // if croppingData are defined
+                    if (angular.isDefined(croppingData.CropLeft)) {
+                        renditionNames.push(renditionName);
+                    }
+                });
+                // perform the request to make the cropped images
+                angular.forEach(renditionNames, function(renditionName) {
+                    savingImagePromises.push(
+                        api.save('picture_crop', {item: picture, crop: result.cropData[renditionName]})
+                    );
+                });
+                return $q.all(savingImagePromises)
+                // return the cropped images
+                .then(function(croppedImages) {
+                    // save created images in "association" property
+                    croppedImages.forEach(function(image, index) {
+                        var url = image.href;
+                        // update association
+                        picture.poi = result.poi;
+                        // update association renditions
+                        picture.renditions[renditionNames[index]] = angular.extend(
+                            {
+                                href: url,
+                                width: image.width,
+                                height: image.height,
+                                media: image._id,
+                                mimetype: image.item.mimetype
+                            },
+                            image.crop
+                        );
+                    });
+                    return picture;
+                });
+            });
+        });
+    };
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'lodash'];
-function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, _) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'renditions', 'editor', '$q'];
+function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, renditions, editor, $q) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
@@ -567,15 +661,11 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
         toggleEdition: function() {
             vm.editable = !vm.editable;
         },
-        updateEmbedPreview: function() {
-            angular.element($element).find('.preview--embed').html(vm.model.body);
-        },
         saveEmbedCode: function() {
             // update the block's model
             angular.extend(vm.model, {
                 body: vm.embedCode
             });
-            vm.updateEmbedPreview();
             // on change callback
             vm.onBlockChange();
         },
@@ -599,31 +689,18 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
             if (!vm.model.association) {
                 return false;
             }
-            superdesk.intent('edit', 'crop', {item: picture, renditions: [{name: 'embed'}], showMetadataEditor: true})
-            .then(function(cropData) {
-                // return the cropped image
-                api.save('picture_crop', {item: picture, crop: cropData.embed})
-                .then(function(image) {
-                    var url = image.href;
-                    // update association
-                    vm.model.association.renditions.embed = {
-                        href: url,
-                        width: image.width,
-                        height: image.height,
-                        media: image._id,
-                        mimetype: image.item.mimetype
-                    };
-                    // update block
-                    vm.model.body = '<img alt="' + _.escape(vm.model.caption) + '" src="' + url + '">';
-                    vm.updateEmbedPreview();
-                    // update caption
-                    vm.saveCaption(vm.model.association.description_text);
+            editor.editCropAndRenderImage(picture).then(function(picture) {
+                // update block
+                vm.model.association = picture;
+                editor.generateImageTag(picture).then(function(img) {
+                    vm.model.body = img;
                 });
+                // update caption
+                vm.saveCaption(vm.model.association.description_text);
             });
         }
     });
     $timeout(function() {
-        vm.updateEmbedPreview();
         angular.extend(vm, {
             embedCode: vm.model.body,
             caption: vm.model.caption
@@ -635,6 +712,7 @@ angular.module('superdesk.editor2', [
         'superdesk.editor2.ctrl',
         'superdesk.editor2.embed',
         'superdesk.editor.spellcheck',
+        'superdesk.authoring',
         'angular-embed'
     ])
     .service('editor', EditorService)
@@ -667,7 +745,8 @@ angular.module('superdesk.editor2', [
             }
         };
     }])
-    .directive('sdTextEditorDropZone', ['superdesk', 'api', function (superdesk, api) {
+    .directive('sdTextEditorDropZone', ['editor',
+    function (editor) {
         return {
             scope: true,
             require: '^sdAddEmbed',
@@ -677,15 +756,11 @@ angular.module('superdesk.editor2', [
                 .on('drop', function(event) {
                     event.preventDefault();
                     var item = angular.fromJson(event.originalEvent.dataTransfer.getData(PICTURE_TYPE));
-                    superdesk.intent('edit', 'crop', {item: item, renditions: [{name: 'embed'}]})
-                        .then(function(cropData) {
-                            return api.save('picture_crop', {item: item, crop: cropData.embed});
-                        })
-                        .then(function(image) {
-                            ctrl.createBlockFromSdPicture(image);
-                        }).finally(function() {
-                            element.removeClass('drag-active');
-                        });
+                    editor.editCropAndRenderImage(item).then(function(picture) {
+                        ctrl.createBlockFromSdPicture(picture);
+                    }).finally(function() {
+                        element.removeClass('drag-active');
+                    });
                 })
                 .on('dragover', function(event) {
                     if (event.originalEvent.dataTransfer.types[0] === PICTURE_TYPE) {
@@ -729,8 +804,8 @@ angular.module('superdesk.editor2', [
             controller: SdTextEditorBlockEmbedController
         };
     }])
-    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk',
-    function (editor, spellcheck, $timeout, superdesk) {
+    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q',
+    function (editor, spellcheck, $timeout, superdesk, $q) {
         var EDITOR_CONFIG = {
             toolbar: {
                 static: true,
@@ -955,16 +1030,19 @@ angular.module('superdesk.editor2', [
                                 updateModel();
                                 var indexWhereToAddBlock = sdTextEditor.getBlockPosition(scope.sdTextEditorBlockText) + 1;
                                 superdesk.intent('upload', 'media').then(function(images) {
-                                    images.forEach(function(image) {
-                                        sdTextEditor.insertNewBlock(indexWhereToAddBlock, {
-                                            blockType: 'embed',
-                                            embedType: 'Image',
-                                            body: '<img alt="' + (image.description_text || '') + '" src="' +
-                                                image.renditions.viewImage.href + '"/>\n',
-                                            caption: image.description_text,
-                                            association: image
-                                        }, true);
-                                        indexWhereToAddBlock++;
+                                    var promises = [];
+                                    images.forEach(function(image, index) {
+                                        promises.push(editor.generateImageTag(image).then(function(imgTag) {
+                                            sdTextEditor.insertNewBlock(indexWhereToAddBlock, {
+                                                blockType: 'embed',
+                                                embedType: 'Image',
+                                                body: imgTag,
+                                                caption: image.description_text,
+                                                association: image
+                                            }, true);
+                                            indexWhereToAddBlock++;
+                                        }));
+                                        return $q.all(promises);
                                     });
                                     // add new text block for the remaining text
                                 }).finally(function() {

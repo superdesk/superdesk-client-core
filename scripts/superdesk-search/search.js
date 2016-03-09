@@ -2520,6 +2520,7 @@
                             scope.flags = false;
                             scope.meta = {};
                             scope.fields = {};
+                            scope.providers = [];
                             scope.searchProviderTypes = searchProviderService.getProviderTypes();
 
                             if (params.repo) {
@@ -2546,7 +2547,7 @@
                             }
 
                             if (load_data) {
-                                fetchProviders();
+                                fetchProviders(params);
                                 fetchUsers();
                                 fetchDesks();
                             } else {
@@ -2576,11 +2577,22 @@
                         /*
                          * Initialize the search providers
                          */
-                        function fetchProviders() {
+                        function fetchProviders(params) {
                             return api.search_providers.query({max_results: 200})
                                 .then(function(result) {
                                     scope.providers = $filter('sortByName')(result._items, 'search_provider');
+                                    setDefaultSearch(params);
                                 });
+                        }
+
+                        function setDefaultSearch(params) {
+                            if (scope.providers.length > 0 && (!params || !params.repo)) {
+                                scope.providers.forEach(function(provider, index, array) {
+                                    if (provider.is_default) {
+                                        scope.repo = {'search': provider.source};
+                                    }
+                                });
+                            }
                         }
 
                         /*
@@ -2709,6 +2721,10 @@
                         scope.isSearchEnabled = function() {
                             return scope.repo.search && (scope.repo.search !== 'local' ||
                                 (scope.repo.ingest || scope.repo.archive || scope.repo.published || scope.repo.archived));
+                        };
+
+                        scope.isDefault = function(provider) {
+                            return scope.repo && scope.repo.search && provider.source && scope.repo.search === provider.source;
                         };
 
                         function updateParam() {
