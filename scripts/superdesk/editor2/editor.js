@@ -581,7 +581,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             ' src="' + url + '"',
             ' alt="' + _.escape(caption || '') + '"'];
             // add a `srcset` attribute if renditions are availables
-            // TODO: if renditions from renditionsService are not available For
+            // NOTE: if renditions from renditionsService are not available For
             // this picture, we should maybe use its own renditons
             if (renditionsList && data.renditions) {
                 var renditionsHtml = [];

@@ -6,21 +6,21 @@
 <div class="modal-body">
     <section class="main">
         <div class="change-image__metadata" ng-if="data.showMetadataEditor">
-            <div class="change-image__metadata__header">Metadata</div>
+            <div class="change-image__metadata__header" translate>Metadata</div>
             <div>
-                <label>{{'Headline'|translate}} *</label>
+                <label translate>Headline *</label>
                 <input type="text" ng-model="data.metadata.headline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <label>{{'Description'|translate}} *</label>
+                <label translate>Description *</label>
                 <input type="text" ng-model="data.metadata.description_text" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <label>{{'Slugline'|translate}} *</label>
+                <label translate>Slugline *</label>
                 <input type="text" ng-model="data.metadata.slugline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <label>{{'Author / photographer'|translate}}</label>
+                <label translate>Author / photographer</label>
                 <input type="text" ng-model="data.metadata.byline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
@@ -32,7 +32,7 @@
                 </select>
             </div>
             <div>
-                <label>{{'Add details on rights'|translate}}</label>
+                <label translate>Add details on rights</label>
                 <input type="text" ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" class="line-input">
             </div>
         </div>
