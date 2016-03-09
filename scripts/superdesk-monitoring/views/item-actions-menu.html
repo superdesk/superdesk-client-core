@@ -27,5 +27,9 @@
         <li ng-if="actions.corrections" class="divider"></li>
         <li ng-if="actions.corrections"><div class="menu-label" translate>Corrections</div></li>
         <li ng-repeat="activity in actions.corrections" sd-activity-item></li>
+
+        <li ng-if="!actions.default && !actions.packaging && !actions.highlights && !actions.corrections">
+            <div class="info-block" translate>You don't have the privileges to perform any action</div>
+        </li>
     </ul>
 </div>
