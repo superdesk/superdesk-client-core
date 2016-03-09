@@ -135,17 +135,17 @@ describe('send', function() {
         monitoring.openMonitoring();
 
         monitoring.selectItem(2, 0);
-        expect(monitoring.getItem(2, 0).element(by.model('item.selected')).getAttribute('checked')).toBeTruthy();
+        monitoring.expectIsChecked(2, 0);
 
         monitoring.selectItem(2, 1);
-        expect(monitoring.getItem(2, 1).element(by.model('item.selected')).getAttribute('checked')).toBeTruthy();
+        monitoring.expectIsChecked(2, 1);
 
         monitoring.openSendMenu();
         authoring.sendTo('Sports Desk', 'Working Stage');
 
         //now continue to open new multi selected items' SendTo panel to see if last destination remembered?
         monitoring.selectItem(3, 0);
-        expect(monitoring.getItem(3, 0).element(by.model('item.selected')).getAttribute('checked')).toBeTruthy();
+        monitoring.expectIsChecked(3, 0);
 
         //open sendTo panel
         monitoring.openSendMenu();

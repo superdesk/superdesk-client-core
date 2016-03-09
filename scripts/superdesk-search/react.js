@@ -367,20 +367,22 @@
                         },
                         render: function() {
                             var highlights = this.props.highlights;
-                            var highlightsById = this.props.highlightsById;
+                            var highlightsById = this.props.highlightsById || {};
 
                             var createHighlight = function(id) {
                                 var highlight = highlightsById[id];
-                                return React.createElement(
-                                    'li',
-                                    {key: 'item-highlight-' + highlight._id},
-                                    highlight.name,
-                                    React.createElement(
-                                        'button',
-                                        {className: 'btn btn-mini', onClick: this.removeHighlight(highlight)},
-                                        gettext('REMOVE')
-                                    )
-                                );
+                                if (highlight) {
+                                    return React.createElement(
+                                        'li',
+                                        {key: 'item-highlight-' + highlight._id},
+                                        highlight.name,
+                                        React.createElement(
+                                            'button',
+                                            {className: 'btn btn-mini', onClick: this.removeHighlight(highlight)},
+                                            gettext('REMOVE')
+                                        )
+                                    );
+                                }
                             }.bind(this);
 
                             var items = [
@@ -1063,6 +1065,18 @@
                             this.setState({itemsById: itemsById});
                         },
 
+                        findItemByPrefix: function(prefix) {
+                            var item;
+
+                            _.forOwn(this.state.itemsById, function(val, key) {
+                                if (_.startsWith(key, prefix)) {
+                                    item = val;
+                                }
+                            });
+
+                            return item;
+                        },
+
                         setSelectedItem: function(item) {
                             this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
                         },
@@ -1263,8 +1277,9 @@
                         });
 
                         scope.$on('item:highlight', function(_e, data) {
-                            var item = listComponent.state.itemsById[data.item_id];
+                            var item = listComponent.findItemByPrefix(data.item_id);
                             if (item) {
+                                var itemId = search.generateTrackByIdentifier(item);
                                 var highlights = item.highlights || [];
                                 if (data.marked) {
                                     highlights = highlights.concat([data.highlight_id]);
@@ -1274,7 +1289,7 @@
                                     });
                                 }
 
-                                listComponent.updateItem(data.item_id, {highlights: highlights});
+                                listComponent.updateItem(itemId, {highlights: highlights});
                             }
                         });
 

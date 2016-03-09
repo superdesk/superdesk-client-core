@@ -238,7 +238,7 @@ function Monitoring() {
     this.actionOnItemSubmenu = function(action, submenu, group, item) {
         var menu = this.openItemMenu(group, item);
         browser.actions().mouseMove(menu.element(by.partialLinkText(action))).perform();
-        menu.element(by.css('[option="' + submenu + '"]')).click();
+        menu.element(by.partialButtonText(submenu)).click();
     };
 
     this.selectItem = function(group, item) {
@@ -522,11 +522,15 @@ function Monitoring() {
      */
     this.checkMarkedForHighlight = function(highlight, group, item) {
         var crtItem = this.getItem(group, item);
-        expect(crtItem.element(by.className('icon-star')).isDisplayed()).toBeTruthy();
-        browser.actions().mouseMove(crtItem.element(by.className('icon-star'))).perform();
-        element.all(by.css('.dropdown-menu.open li')).then(function (items) {
-            expect(items[1].getText()).toContain(highlight);
-        });
+        var star = crtItem.element(by.className('icon-star'));
+        waitFor(star);
+        browser.actions()
+            .mouseMove(star, {x: -5, y: -5})
+            .mouseMove(star)
+            .perform();
+        var highlightList = element(by.className('highlights-list-menu'));
+        waitFor(highlightList);
+        expect(highlightList.getText()).toContain(highlight);
     };
 
     /**

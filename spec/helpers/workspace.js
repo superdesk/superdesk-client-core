@@ -106,7 +106,7 @@ function Workspace() {
      * @return {promise} list of elements
      */
     this.getItems = function() {
-        return element.all(by.repeater('item in items'));
+        return element.all(by.className('media-box'));
     };
 
     /**
