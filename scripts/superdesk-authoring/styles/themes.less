@@ -250,6 +250,17 @@ body, html {
     }
 }
 
+[order="1"] {order:1}
+[order="2"] {order:2}
+[order="3"] {order:3}
+[order="4"] {order:4}
+[order="5"] {order:5}
+[order="6"] {order:6}
+[order="7"] {order:7}
+[order="8"] {order:8}
+[order="9"] {order:9}
+[order="10"] {order:10}
+
 .main-article {
 	width:auto;
 	background: @white;
@@ -262,6 +273,11 @@ body, html {
 	min-height:100%;
 	.box-sizing(border-box);
 	max-width: 900px;
+
+	.main-article__fieldset {
+		display:flex;
+		flex-direction: column;
+	}
 
 	.field {
 		margin-bottom: 20px;
