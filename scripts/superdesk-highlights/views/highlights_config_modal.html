@@ -44,52 +44,6 @@
 							ng-selected="configEdit.auto_insert === getHourVal(hour)"><span translate>Last</span> {{ hour }} <span translate>hours</span></option>
 					</select>
 				</div>
-                <div class="field">
-                	<label translate>Package groups</label>
-                    <button class="btn btn-info add"
-                        sd-focus-element data-target="#insert-group"
-                        ng-click="editGroup(''); selectedGroup = null"
-                        ng-disabled="editingGroup">
-                        <i class="icon-plus-small icon-white"></i>
-                        Add group
-                    </button>
-                    <div class="content">
-                        <ul class="pills-list pills-editable clearfix">
-
-                            <li ng-repeat="group in configEdit.groups"
-                               	ng-class="{editable: isActiveGroup(group)}">
-
-                                    <h6 ng-if="!isActiveGroup(group)">{{ group }}</h6>
-
-									<span ng-if="isActiveGroup(group)" sd-character-count data-item="editingGroup.name" data-limit="limits.group"></span>
-                                    <span>
-                                        <input type="text" ng-if="isActiveGroup(group)" id="edit-group" ng-model="editingGroup.name" ng-keyup="handleGroupEdit($event);" />
-                                    </span>
-
-                                    <div class="actions" ng-if="!editingGroup">
-                                        <button ng-click="editGroup(group)" sd-focus-element data-target="#edit-group">
-                                            <i class="icon-pencil" ></i>
-                                        </button>
-                                        <button ng-click="removeGroup(group)">
-                                            <i class="icon-trash"></i>
-                                        </button>
-                                    </div>
-
-                            </li>
-
-                            <span ng-if="editingGroup && !editingGroup.id" sd-character-count data-item="editingGroup.name" data-limit="limits.group"></span>
-                            <div class="editable" ng-show="editingGroup && !editingGroup.id">
-                                <span>
-                                    <input type="text" id="insert-group" ng-model="editingGroup.name" ng-keyup="handleGroupEdit($event);" />
-                                </span>
-                            </div>
-                            <div ng-if="editingGroup">
-                                <button class="btn" ng-click="cancelGroup()" translate>Cancel</button>
-                                <button class="btn btn-primary" ng-click="saveGroup()" ng-disabled="_errorGroupLimits" translate>Save</button>
-                            </div>
-                            <p ng-show="_errorGroupLimits" translate>Character limit exceeded, group can not be created/updated.</p>
-                        </ul>
-                    </div>
 			</fieldset>
 			<p ng-if="message">{{ message }}</p>
 		</form>

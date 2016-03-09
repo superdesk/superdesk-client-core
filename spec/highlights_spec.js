@@ -49,25 +49,6 @@ describe('highlights', function() {
             highlights.save();
             expect(highlights.getRow('highlight no desk').count()).toBe(1);
 
-            //add highlights configuration with no group
-            highlights.add();
-            highlights.setName('highlight no group');
-            highlights.save();
-            highlights.edit('highlight no group');
-            expect(highlights.groups.count()).toBe(1);
-            expect(highlights.getGroup('main').count()).toBe(1);
-            highlights.cancel();
-
-            //add highlights configuration with group first
-            highlights.add();
-            highlights.setName('highlight first group');
-            highlights.addGroup('first');
-            highlights.save();
-            highlights.edit('highlight first group');
-            expect(highlights.groups.count()).toBe(1);
-            expect(highlights.getGroup('first').count()).toBe(1);
-            highlights.cancel();
-
             //set default template for highlight configuration
             highlights.edit('highlight one');
             highlights.setTemplate('default');
@@ -99,52 +80,6 @@ describe('highlights', function() {
             highlights.save();
             highlights.edit('highlight three');
             highlights.expectDeskSelection('Politic Desk', false);
-            highlights.cancel();
-
-            //add a group to highlight configuration
-            highlights.edit('highlight three');
-            expect(highlights.groups.count()).toBe(1);
-            expect(highlights.getGroup('main').count()).toBe(1);
-            highlights.addGroup('last');
-            highlights.save();
-            highlights.edit('highlight three');
-            expect(highlights.groups.count()).toBe(2);
-            expect(highlights.getGroup('main').count()).toBe(1);
-            expect(highlights.getGroup('last').count()).toBe(1);
-            highlights.cancel();
-
-            //edit group from highlight configuration
-            highlights.edit('highlight four');
-            expect(highlights.groups.count()).toBe(1);
-            expect(highlights.getGroup('main').count()).toBe(1);
-            highlights.editGroup('main', 'first');
-            highlights.save();
-            highlights.edit('highlight four');
-            expect(highlights.groups.count()).toBe(1);
-            expect(highlights.getGroup('first').count()).toBe(1);
-            highlights.cancel();
-
-            //delete the single group from highlight configuration
-            highlights.edit('highlight four');
-            expect(highlights.groups.count()).toBe(1);
-            expect(highlights.getGroup('first').count()).toBe(1);
-            highlights.deleteGroup('first');
-            highlights.save();
-            highlights.edit('highlight four');
-            expect(highlights.groups.count()).toBe(1);
-            expect(highlights.getGroup('main').count()).toBe(1);
-            highlights.cancel();
-
-            //delete one group from highlight configuration
-            highlights.edit('highlight three');
-            expect(highlights.groups.count()).toBe(2);
-            expect(highlights.getGroup('main').count()).toBe(1);
-            expect(highlights.getGroup('last').count()).toBe(1);
-            highlights.deleteGroup('main');
-            highlights.save();
-            highlights.edit('highlight three');
-            expect(highlights.groups.count()).toBe(1);
-            expect(highlights.getGroup('last').count()).toBe(1);
             highlights.cancel();
 
             //delete highlight configuration'

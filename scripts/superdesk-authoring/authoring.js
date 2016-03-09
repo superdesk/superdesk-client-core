@@ -966,11 +966,10 @@
         'modal',
         'archiveService',
         'confirm',
-        'reloadService',
-        '$sce'
+        'reloadService'
     ];
     function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
-            privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $sce) {
+            privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService) {
         return {
             link: function($scope, elem, attrs) {
                 var _closing;
@@ -1121,7 +1120,7 @@
                 function _previewHighlight(_id) {
                     api.generate_highlights.save({}, {'package': _id, 'preview': true})
                     .then(function(response) {
-                        $scope.highlight_preview = $sce.trustAsHtml(response.body_html);
+                        $scope.highlight_preview = response.body_html;
                     }, function(data) {
                         $scope.highlight_preview = data.message;
                     });

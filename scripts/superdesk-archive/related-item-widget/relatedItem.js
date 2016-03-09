@@ -89,7 +89,7 @@
                     condition: function(item) {
                         var userHasPermission = privileges.userHasPrivileges({rewrite: 1});
 
-                        var canBeRewrite = !authoring.isPublished() &&
+                        var canBeRewrite = !authoring.isPublished($scope.item) &&
                         _.contains(['text', 'preformatted'], $scope.item.type) &&
                         !$scope.item.rewrite_of &&
                         authoring.itemActions($scope.item).new_take &&
