@@ -6,6 +6,10 @@
             <dd>{{ item.slugline }}</dd>
         </dl>
         <dl>
+            <dt ng-if="item.usageterms" translate>Usage Terms</dt>
+            <dd>{{ item.usageterms }}</dd>
+        </dl>
+        <dl>
             <dt translate>Urgency</dt>
             <dd>{{ item.urgency }}</dd>
         </dl>
