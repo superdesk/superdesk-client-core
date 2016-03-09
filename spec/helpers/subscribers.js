@@ -35,7 +35,13 @@ function Subscribers() {
     };
 
     this.setType = function(type) {
-        element(by.css('#subType option[value="string:' + type + '"]')).click();
+        element(by.id('subType')).all(by.tagName('option')).filter(function(elem, index) {
+            return elem.getText().then(function(text) {
+                return text.toLowerCase().startsWith(type.toLowerCase());
+            });
+        }).then(function(options) {
+            options[0].click();
+        });
     };
 
     this.cancel = function() {
