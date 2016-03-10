@@ -170,7 +170,6 @@ describe('search', function() {
         authoring.writeTextToAbstract('This is Abstract');
         authoring.save();
         authoring.sendTo('Politic Desk');
-        authoring.confirmSendTo();
         monitoring.switchToDesk('POLITIC DESK');
         expect(monitoring.getTextItem(1, 0)).toBe('From-Sports-To-Politics');
 
