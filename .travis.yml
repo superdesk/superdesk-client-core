@@ -44,7 +44,7 @@ script:
       cd .. ;
     - cd test-server ;
       python manage.py ;
-      (nohup honcho start & ) ;
+      (honcho start & ) ;
       cd ..
     - curl 'http://127.0.0.1:5000/api' | python -m json.tool
     - ./node_modules/protractor/bin/protractor protractor-conf.js
