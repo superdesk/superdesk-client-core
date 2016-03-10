@@ -21,7 +21,7 @@ describe('subscribers', function() {
             openUrl('/#/settings/publish');
         });
 
-        xit('save button is disabled when subscriber type is changed', function() {
+        it('save button is disabled when subscriber type is changed', function() {
             subscribers.edit('Public API');
 
             expect(subscribers.saveSubscriberButton.isEnabled()).toBe(true);

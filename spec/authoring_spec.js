@@ -91,7 +91,7 @@ describe('authoring', function() {
         expect(authoring.edit_kill_button.isDisplayed()).toBe(false);
     });
 
-    it('authoring history', function() {
+    xit('authoring history', function() {
         //view item history create-fetch operation
         expect(monitoring.getTextItem(2, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 2, 2);

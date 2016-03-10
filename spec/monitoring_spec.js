@@ -35,8 +35,6 @@ describe('monitoring', function() {
         workspace.selectDesk('Sports Desk');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.sendTo('Politic Desk', 'two');
-        //Spell check confirmation modal save action
-        authoring.confirmSendTo();
         expect(monitoring.getTextItem(5, 0)).toBe('item3');
     });
 
