@@ -4,6 +4,7 @@
     <div id="title" class="headline"
         sd-text-editor
         data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item)}"
+        data-editorformat="schema.headline.editor"
         data-language="item.language"
         ng-model="item.headline"
         ng-change="autosave(item)"
@@ -32,6 +33,7 @@
     <div id="abstract" class="abstract"
         sd-text-editor
         data-config="{disableToolbar: true, disableEditing: isPublished(item)}"
+        data-editorformat="schema.abstract.editor"
         data-language="item.language"
         ng-model="item.abstract"
         ng-change="autosave(item)"
@@ -112,6 +114,7 @@
     <div id="bodyhtml"
          sd-text-editor
          data-config="{disableEditing: isPublished(item), multiBlockEdition: true}"
+         data-editorformat="schema.body_html.editor"
          ng-model="item.body_html"
          ng-if="_editable"
          ng-change="autosave(item)"
