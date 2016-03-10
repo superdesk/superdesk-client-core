@@ -40,10 +40,10 @@ script:
     - grunt build --server='http://127.0.0.1:5000/api' --ws='ws://127.0.0.1:5100' ;
       cd dist ;
       while [ ! -f index.html ]; do sleep .5; done ;
-        (nohup python3 -m http.server 9000 & );
+        (nohup python -m http.server 9000 & );
       cd .. ;
-    - cd test-server && python3 manage.py && (nohup honcho start & ) && cd ..
-    - curl 'http://127.0.0.1:5000/api' | python3 -m json.tool
+    - cd test-server && python manage.py && (honcho start & ) && cd ..
+    - curl 'http://127.0.0.1:5000/api' | python -m json.tool
     - ./node_modules/protractor/bin/protractor protractor-conf.js
         --stackTrace --verbose
         --baseUrl 'http://127.0.0.1:9000'
