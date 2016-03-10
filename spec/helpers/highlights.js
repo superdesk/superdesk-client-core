@@ -180,7 +180,7 @@ function Highlights() {
     };
 
     this.saveTextHighlightsConfirm = function() {
-        var btn = element(by.className('modal-content')).element(by.buttonText('Save'));
+        var btn = element(by.className('modal-footer')).element(by.buttonText('Save'));
         wait(btn, 500);
         btn.click();
     };

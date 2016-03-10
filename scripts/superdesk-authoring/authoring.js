@@ -127,7 +127,8 @@
     function AutosaveService($q, $timeout, api) {
         var RESOURCE = 'archive_autosave',
             AUTOSAVE_TIMEOUT = 3000,
-            timeouts = {};
+            timeouts = {},
+            self = this;
 
         /**
          * Open an item
@@ -138,10 +139,20 @@
                 return $q.when(item);
             }
 
+            return self.get(item)
+                .then(function(result) {
+                    return result;
+                }, function(err) {
+                    return item;
+                });
+        };
+
+        /**
+         * Get the resource
+         */
+        this.get = function(item) {
             return api.find(RESOURCE, item._id).then(function(autosave) {
                 item._autosave = autosave;
-                return item;
-            }, function(err) {
                 return item;
             });
         };
@@ -759,6 +770,19 @@
         };
 
         /**
+         * Called from workqueue in case of unsaved changes.
+         */
+        this.reopen = function () {
+            return modal.confirm(
+                gettext('There are some unsaved changes, re-open the article to save changes?'),
+                gettext('Save changes?'),
+                gettext('Re-Open'),
+                gettext('Ignore'),
+                gettext('Cancel')
+            );
+        };
+
+        /**
          * In case $scope is dirty ask user if he want's to loose his changes.
          */
         this.confirm = function confirm() {
@@ -852,16 +876,29 @@
     function ChangeImageController($scope, gettext, notify, modal, $q) {
         $scope.data = $scope.locals.data;
         $scope.data.cropData = {};
+        $scope.data.renditions.forEach(function(rendition) {
+            $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
+        });
         $scope.data.isDirty = false;
         // should show the metadata form in the view
         $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
         // initialize metadata from `item`
         if ($scope.data.showMetadataEditor) {
             $scope.data.metadata = {};
-            ['headline', 'description_text', 'slugline', 'byline'].forEach(function(key) {
+            ['headline', 'description_text', 'slugline', 'byline', 'usageterms', 'copyrightnotice'].forEach(function(key) {
                 $scope.data.metadata[key] = $scope.data.item[key];
             });
         }
+
+        $scope.selectedRendition = null;
+
+        $scope.selectRendition = function(rendition) {
+            if (!rendition) {
+                $scope.selectedRendition = null;
+            } else if ($scope.selectedRendition === null || $scope.selectedRendition.name !== rendition.name) {
+                $scope.selectedRendition = rendition;
+            }
+        };
 
         /*
         * Records the coordinates for each crop sizes available and
@@ -873,7 +910,7 @@
                 angular.extend($scope.data.item, $scope.data.metadata);
             }
             notify.success(gettext('Crop changes have been recorded'));
-            $scope.resolve($scope.data.cropData);
+            $scope.resolve({cropData: $scope.data.cropData, poi: $scope.data.poi});
         };
 
         $scope.close = function() {
@@ -885,6 +922,13 @@
             } else {
                 $scope.reject();
             }
+        };
+
+        $scope.onChange = function(renditionName, cropData) {
+            $scope.$apply(function() {
+                $scope.data.cropData[renditionName] = angular.extend({}, cropData);
+                $scope.data.isDirty = true;
+            });
         };
     }
 
@@ -2307,10 +2351,11 @@
                 };
 
                 scope.applyCrop = function() {
-                    superdesk.intent('edit', 'crop', {item: scope.item, renditions: scope.metadata.crop_sizes})
-                        .then(function(data) {
+                    var poi = {x: 0.5, y: 0.5};
+                    superdesk.intent('edit', 'crop', {item: scope.item, renditions: scope.metadata.crop_sizes, poi: scope.item.poi || poi})
+                        .then(function(result) {
                             var renditions = _.create(scope.item.renditions || {});
-                            angular.forEach(data, function(crop, rendition) {
+                            angular.forEach(result.cropData, function(crop, rendition) {
                                 mainEditScope.dirty = true;
                                 renditions[rendition] = angular.extend({}, renditions[rendition] || {}, crop);
                             });
@@ -2482,7 +2527,7 @@
                 .activity('edit.crop', {
                     label: gettext('EDIT CROP'),
                     modal: true,
-                    cssClass: 'upload-avatar modal-static modal-responsive',
+                    cssClass: 'edit-image modal-responsive',
                     controller: ChangeImageController,
                     templateUrl: 'scripts/superdesk-authoring/views/change-image.html',
                     filters: [{action: 'edit', type: 'crop'}]
@@ -2858,8 +2903,8 @@
         init();
     }
 
-    ItemAssociationDirective.$inject = ['superdesk', 'renditions'];
-    function ItemAssociationDirective(superdesk, renditions) {
+    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout'];
+    function ItemAssociationDirective(superdesk, renditions, $timeout) {
         return {
             scope: {
                 rel: '=',
@@ -2918,21 +2963,27 @@
                 renditions.get();
 
                 scope.edit = function(item) {
-                    superdesk.intent('edit', 'crop', {item: item, renditions: renditions.renditions, showMetadataEditor: true})
-                        .then(function(crops) {
-                            var renditions = angular.extend({}, item.renditions || {});
-                            angular.forEach(crops, function(crop, renditionName) {
-                                renditions[renditionName] = angular.extend(
-                                    {},
-                                    renditions[renditionName] || {},
-                                    crop
-                                );
-                            });
-
-                            var updated = angular.extend({}, item, {renditions: renditions});
-                            var data = updateItemAssociation(updated);
-                            scope.onchange({item: scope.item, data: data});
+                    var poi = {x: 0.5, y: 0.5};
+                    superdesk.intent('edit', 'crop', {
+                        item: item,
+                        renditions: renditions.renditions,
+                        poi: item.poi || poi,
+                        showMetadataEditor: true
+                    })
+                    .then(function(result) {
+                        var renditions = angular.extend({}, item.renditions || {});
+                        angular.forEach(result.cropData, function(crop, renditionName) {
+                            renditions[renditionName] = angular.extend(
+                                {},
+                                renditions[renditionName] || {},
+                                crop
+                            );
                         });
+                        var updated = angular.extend({}, item, {renditions: renditions});
+                        var data = updateItemAssociation(updated);
+                        data[scope.rel].poi = result.poi;
+                        scope.onchange({item: scope.item, data: data});
+                    });
                 };
 
                 scope.remove = function(item) {
@@ -2942,10 +2993,12 @@
 
                 scope.upload = function() {
                     if (scope.editable) {
-                        superdesk.intent('upload', 'media').then(function(images) {
+                        superdesk.intent('upload', 'media', {uniqueUpload: true}).then(function(images) {
+                            // open the view to edit the PoI and the cropping areas
                             if (images) {
-                                var data = updateItemAssociation(images[0]);
-                                scope.onchange({item: scope.item, data: data});
+                                $timeout(function() {
+                                    scope.edit(images[0]);
+                                }, 0, false);
                             }
                         });
                     }

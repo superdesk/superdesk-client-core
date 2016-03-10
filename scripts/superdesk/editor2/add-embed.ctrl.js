@@ -3,8 +3,8 @@
 
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
-SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash', 'EMBED_PROVIDERS', '$scope'];
-function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PROVIDERS, $scope) {
+SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash', 'EMBED_PROVIDERS', '$scope', 'editor'];
+function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PROVIDERS, $scope, editor) {
     var vm = this;
     angular.extend(vm, {
         editorCtrl: undefined,  // defined in link method
@@ -13,17 +13,6 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
         toggle: function(close) {
             // use parameter or toggle
             vm.extended = angular.isDefined(close) ? !close : !vm.extended;
-        },
-        /**
-         * Return html code to represent an embedded picture
-         *
-         * @param {string} url
-         * @param {string} description
-         * @return {string} html
-         */
-        pictureToHtml: function(url, description) {
-            var html = '<img alt="' + (_.escape(description) || '') + '" src="' + url + '">\n';
-            return html;
         },
         /**
          * Return html code to represent an embedded link
@@ -53,16 +42,18 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                 embedCode = embedService.get(vm.input).then(function(data) {
                     var embed = data.html;
                     if (!angular.isDefined(embed)) {
-                        if (data.type === 'photo') {
-                            embed = vm.pictureToHtml(data.url, data.description);
-                        } else if (data.type === 'link') {
+                        if (data.type === 'link') {
                             embed = vm.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
+                        } else {
+                            embed = editor.generateImageTag({url: data.url, caption: data.description});
                         }
                     }
-                    return {
-                        body: embed,
-                        provider: data.provider_name || EMBED_PROVIDERS.custom
-                    };
+                    return $q.when(embed).then(function(embed) {
+                        return {
+                            body: embed,
+                            provider: data.provider_name || EMBED_PROVIDERS.custom
+                        };
+                    });
                 });
             // otherwise we use the content of the field directly
             } else {
@@ -103,12 +94,13 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
             });
         },
         createBlockFromSdPicture: function(img) {
-            var html = vm.pictureToHtml(img.href, img.item.description_text);
-            vm.createFigureBlock({
-                embedType: 'Image',
-                body: html,
-                caption: img.item.description_text,
-                association: img.item
+            editor.generateImageTag(img).then(function(imgTag) {
+                return vm.createFigureBlock({
+                    embedType: 'Image',
+                    body: imgTag,
+                    caption: img.description_text,
+                    association: img
+                });
             });
         }
     });

@@ -564,3 +564,151 @@ media uploader
 		}
 	}
 }
+
+/*
+======================================
+edit image modal
+======================================
+*/
+.change-image {
+	&__metadata {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 225px;
+		width: 335px;
+		overflow-y: auto;
+		background-color: #f0f0f0;
+		border-left: 1px solid #dfdfdf;
+		.box-sizing(border-box);
+		padding: 15px;
+		> div {
+			margin-bottom: 20px;
+		}
+		label {
+			font-size: 11px;
+			text-transform: uppercase;
+			color: @grayLight;
+		}
+	}
+}
+.crop-area {
+	&.selected {
+	}
+	&.thumbnails {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		height: 225px;
+		overflow: auto;
+		background-color: #dedede;
+		border-top: 1px solid #d5d5d5;
+		padding: 20px 13px 12px 13px;
+		.box-sizing(border-box);
+		ul {
+			li {
+				float: left;
+				margin: 0 7px 14px 7px;
+				width: 225px;
+				max-width: 225px;
+				height: 177px;
+				padding: 12px;
+				background-color: #f0f0f0;
+				border: 1px solid #d6d6d6;
+				.box-sizing(border-box);
+				.box-shadow(0 1px 0 #d6d6d6);
+				.border-radius(2px);
+				img {
+					max-width: 200px;
+                	max-height: 132px;
+				}
+				&.active {
+					border: 1px solid #b3b3b3;
+					background-color: white;
+					.box-shadow(0 1px 0 #b3b3b3);
+				}
+				label {
+					color: #808080;
+				}
+			}
+		}
+	}
+}
+.selected-area {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 335px;
+	bottom: 225px;
+	overflow: auto;
+	padding: 20px;
+	.box-sizing(border-box);
+}
+.edit-image {
+	.modal-content {
+		.modal-body {
+			overflow-y: hidden !important;
+		}
+	}
+}
+.poi {
+	&__image {
+		img:hover {
+			cursor: crosshair;
+		}
+	}
+	&__cursor {
+		width: 30px;
+		height: 30px;
+		.border-radius(50%);
+		border: 2px solid rgba(255,255,255,0.7);
+	}
+	&__cross-left {
+		height: 2px;
+		background-color: rgba(255,255,255,0.7);
+		position: absolute;
+		left: 0;
+		z-index: 10000;
+	}
+	&__cross-right {
+		height: 2px;
+		background-color: rgba(255,255,255,0.7);
+		position: absolute;
+		z-index: 10000;
+	}
+	&__cross-top {
+		width: 2px;
+		background-color: rgba(255,255,255,0.7);
+		position: absolute;
+		z-index: 10000;
+		top: 0;
+	}
+	&__cross-bottom {
+		width: 2px;
+		background-color: rgba(255,255,255,0.7);
+		position: absolute;
+		z-index: 10000;
+	}
+}
+.transition-on {
+	.poi {
+		&__cursor,
+		&__cross-left,
+		&__cross-right,
+		&__cross-top,
+		&__cross-bottom {
+			.transition(all .3s);
+		}
+	}
+}
+.crop-box {
+	background: transparent;
+	position: absolute;
+    top: 0;
+    left: 0;
+    border-color: rgba(0,0,0,.5);
+    border-style: solid;
+    box-sizing: border-box;
+    z-index: 1200;
+}

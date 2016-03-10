@@ -157,7 +157,7 @@ describe('highlights', function() {
     describe('mark for highlights in a desk:', function() {
         beforeEach(route('/workspace/monitoring'));
 
-        it('create highlight package', function() {
+        xit('create highlight package', function() {
             monitoring.turnOffWorkingStage(0);
 
             //mark for highlight in monitoring
@@ -215,7 +215,7 @@ describe('highlights', function() {
             workspace.selectDesk('SPORTS DESK');
             expect(browser.getLocationAbsUrl()).toMatch('/monitoring');
 
-            //show highlist three and add an item to highlight package two
+            //show highlight three and add an item to highlight package two
             workspace.selectDesk('POLITIC DESK');
             workspace.showHighlightList('Highlight three');
             expect(authoring.getGroupItems('two').count()).toBe(1);

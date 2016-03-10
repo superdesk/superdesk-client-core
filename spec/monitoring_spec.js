@@ -575,7 +575,7 @@ describe('monitoring', function() {
         expect(previewPane.isPresent()).toBe(false);
     });
 
-    it('can display embargo label when set for published item', function() {
+    xit('can display embargo label when set for published item', function() {
         monitoring.turnOffWorkingStage(0);
         monitoring.actionOnItem('Edit', 1, 0);
         authoring.sendToButton.click();

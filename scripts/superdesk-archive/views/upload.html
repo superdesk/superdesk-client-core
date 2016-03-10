@@ -10,7 +10,8 @@
         <div class="upload-manual">
             <div class="or-label" translate>or</div>
             <label class="btn" for="images-input">{{ 'Select them from folder' | translate }}</label>
-            <input id="images-input" type="file" ngf-select="addFiles($files)" multiple class="hide">
+            <input ng-if="uniqueUpload" id="images-input" type="file" ngf-select="addFiles($files)" class="hide">
+            <input ng-if="!uniqueUpload" id="images-input" type="file" ngf-select="addFiles($files)" multiple class="hide">
         </div>
     </div>
 	<div class="upload-error" ng-show="failed">
@@ -19,7 +20,7 @@
     <div class="upload-edit" ng-show="items.length" ng-class="{compact: dragshow, error: failed}">
         <div class="upload-error" ng-if="errorMessage">
             <span class="action"><span translate>Error</span>: {{ :: errorMessage | translate}}</span>
-        </div>        
+        </div>
         <ul class="upload-thumbs">
             <li ng-repeat="item in items">
                 <div class="thumb" sd-image-preview="item.url" data-file="item.file">
@@ -36,19 +37,30 @@
                         <div class="bar" style="width:{{ item.progress }}%"></div>
                     </div>
 
-                    <div class="row"><input type="text" placeholder="Add a headline *" ng-model="item.meta.headline"></div>
+                    <div class="row"><input type="text" placeholder="{{ :: 'Add a headline' | translate }} *" ng-model="item.meta.headline"></div>
                     <div class="other-info">
-                        <div class="row"><input type="text" placeholder="Add a description *" ng-model="item.meta.description_text"></div>
-                        <div class="row"><input type="text" placeholder="Add a slugline *" ng-model="item.meta.slugline"></div>
-                        <div class="row"><input type="text" placeholder="Add author / photographer" ng-model="item.meta.byline"></div>
+                        <div class="row"><input type="text" placeholder="{{ :: 'Add a description' | translate }} *" ng-model="item.meta.description_text"></div>
+                        <div class="row"><input type="text" placeholder="{{ :: 'Add a slugline' | translate }} *" ng-model="item.meta.slugline"></div>
+                        <div class="row"><input type="text" placeholder="{{ :: 'Add author / photographer' | translate }}" ng-model="item.meta.byline"></div>
+                        <div class="row">
+                            <select ng-model="item.meta.usageterms">
+                                <option translate value="">---Assing Rights---</option> <!-- not selected / blank option -->
+                                <option translate value="single-usage">Single Usage</option>
+                                <option translate value="time-restricted">Time Restricted</option>
+                                <option translate value="indefinite-usage">Indefinite Usage</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <input type="text" placeholder="Add details on rights" ng-model="item.meta.copyrightnotice">
+                        </div>
                     </div>
-                    
+
                 </div>
             </li>
         </ul>
     </div>
 
-    <div class="optional-drag-holder" ng-class="{open: dragshow}" ng-show="items.length" >
+    <div class="optional-drag-holder" ng-class="{open: dragshow}" ng-show="items.length && !uniqueUpload">
         <div class="optional-drag" ng-click="dragshow = !dragshow">
             <i class="icon-chevron-up-thin" ng-show="!dragshow"></i>
             <i class="icon-chevron-down-thin" ng-show="dragshow"></i>

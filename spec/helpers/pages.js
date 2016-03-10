@@ -5,7 +5,7 @@ exports.logout = logout;
 exports.workspace = require('./workspace');
 exports.content = require('./content');
 exports.authoring = require('./authoring');
-exports.ingestProvider = new IngestProvider();
+exports.searchProvider = new SearchProvider();
 exports.ingestDashboard = new IngestDashboard();
 exports.ingestSettings = new IngestSettings();
 
@@ -33,7 +33,54 @@ function LoginModal() {
     };
 }
 
-function IngestProvider() {}
+function SearchProvider() {
+    var self = this;
+    this.checkbox = element(by.model('provider.is_default'));
+    this.addSourceButton = element(by.css('[ng-click="edit()"]'));
+
+    this.addProvider = function(providerType, source, isDefault) {
+        self.openAddProvider();
+        self.selectProviderType(providerType);
+        self.setProviderSource(source);
+        self.setIsDefault(isDefault);
+        self.saveProvider();
+    };
+
+    this.editProvider = function(index) {
+        var providerElement = element.all(by.repeater('provider in providers')).get(index);
+        browser.actions().mouseMove(providerElement).perform();
+        providerElement.element(by.css('[ng-click="edit(provider)"]')).click();
+    };
+
+    this.closeEditNoSave = function() {
+        element.all(by.css('[ng-click="cancel()"]')).first().click();
+    };
+
+    this.openAddProvider = function() {
+        return self.addSourceButton.click();
+    };
+
+    this.selectProviderType = function(providerType) {
+        element(by.model('provider.search_provider')).click();
+        return element(by.cssContainingText('option', providerType)).click();
+    };
+
+    this.setProviderSource = function(source) {
+        element(by.model('provider.source')).sendKeys(source);
+    };
+
+    this.saveProvider = function() {
+        element(by.css('[ng-click="save()"]')).click();
+    };
+
+    this.setIsDefault = function(isDefault) {
+        self.checkbox.isSelected().then(function(selected) {
+            if (selected && !isDefault || !selected && isDefault) {
+                self.checkbox.click();
+            }
+        });
+    };
+}
 
 function IngestDashboard() {
     var self = this;
@@ -153,6 +200,8 @@ function IngestSettings() {
             sun: daysButonsBox.element(by.buttonText('Sunday'))
         },
 
+        timezoneLabel: element(by.id('timezone')),
+        timezoneDeleteBtn: $$('.icon-trash').get(0),
         timezoneInput: $('[term="tzSearchTerm"]').element(by.model('term')),
         timezoneList: $('.item-list').all(by.tagName('li'))
     };

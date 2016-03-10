@@ -154,6 +154,15 @@
 // Embed previews
 .block__container .preview--embed,
 .add-embed__body .preview {
+    &--loading {
+        min-height: 100px;
+        &:before {
+            content: '';
+            top: 40px;
+            position: relative;
+            .spinner-alt;
+        }
+    }
     text-align: center;
     margin: 10px 0;
     .instagram-media {

@@ -556,12 +556,12 @@
                  * The $scope.formats variable is used to display format field in destination. The new value is changed.
                  */
                 $scope.changeFormats = function(newSubscriberType) {
-                    var formats = _.result(_.find($scope.subTypes, {value: newSubscriberType}), 'formats');
+                    var formats = _.result(_.find($scope.subTypes, {qcode: newSubscriberType}), 'formats');
 
                     if ($scope.destinations.length > 0 && $scope.subscriberType !== '' &&
                         $scope.subscriberType !== newSubscriberType) {
 
-                        var oldFormats = _.result(_.find($scope.subTypes, {value: $scope.subscriberType}), 'formats');
+                        var oldFormats = _.result(_.find($scope.subTypes, {qcode: $scope.subscriberType}), 'formats');
                         if (!_.isEqual(oldFormats, formats)) {
                             notify.error(gettext('Error: Please re-assign new format for each destination as the changed ' +
                                 'subscriber type has formats which are not supported by existing destination(s).'));

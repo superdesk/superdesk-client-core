@@ -303,9 +303,7 @@ describe('search', function() {
 
     it('can display embargo item when set', function() {
         expect(globalSearch.getItems().count()).toBe(14);
-
-        globalSearch.actionOnItem('Edit', 2);
-
+        globalSearch.actionOnItem('Edit', 4);
         authoring.sendToButton.click();
         authoring.setEmbargo();
         authoring.sendToButton.click();

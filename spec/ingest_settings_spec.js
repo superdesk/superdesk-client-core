@@ -96,6 +96,8 @@ describe('ingest_settings', function() {
         ruleSettings.daysButtons.sun.click();
 
         // pick the time zone
+        ruleSettings.timezoneLabel.click();
+        ruleSettings.timezoneDeleteBtn.click();
         ruleSettings.timezoneInput.sendKeys('Asia/Singapore');
         tzOption = ruleSettings.timezoneList.get(0);
         browser.driver.wait(protractor.until.elementIsVisible(tzOption), 3000);
