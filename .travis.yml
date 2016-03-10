@@ -45,7 +45,7 @@ script:
     - cd test-server ;
       nohup python manage.py ;
       (nohup honcho start & ) ;
-      sleep 2
+      sleep 2 ;
       cd ..
     - ./node_modules/protractor/bin/protractor protractor-conf.js
         --stackTrace --verbose
