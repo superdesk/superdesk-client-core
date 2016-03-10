@@ -66,11 +66,8 @@ function Authoring() {
      * function to set embargo date and time inside sendTo panel
      */
     this.setEmbargo = function() {
-        var embargoTS = new Date();
-        embargoTS.setDate(embargoTS.getDate() + 2);
-        var embargoDate = ('0' + embargoTS.getDate()).slice(-2) + '/' +
-            ('0' + (embargoTS.getMonth() + 1)).slice(-2) + '/' + embargoTS.getFullYear();
-        var embargoTime = embargoTS.toTimeString().slice(0, 5);
+        var embargoDate = '09/25/' + ((new Date()).getFullYear() + 1);
+        var embargoTime = '00:00';
 
         element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
         element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
