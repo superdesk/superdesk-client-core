@@ -219,7 +219,6 @@ describe('authoring', function() {
         expect(element(by.className('content-item-preview')).isDisplayed()).toBe(true);
         expect(monitoring.getPreviewTitle()).toBe('item5');
         monitoring.closePreview();
-
         authoring.linkToMasterButton.click();
         expect(monitoring.getPreviewTitle()).toBe('item5');
         authoring.close();

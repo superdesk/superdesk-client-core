@@ -27,7 +27,6 @@ describe('subscribers', function() {
             expect(subscribers.saveSubscriberButton.isEnabled()).toBe(true);
             subscribers.setType('wire');
             expect(subscribers.saveSubscriberButton.isEnabled()).toBe(false);
-
             subscribers.cancel();
         });
     });

@@ -68,16 +68,16 @@ function Authoring() {
     this.setEmbargo = function() {
         var embargoTS = new Date();
         embargoTS.setDate(embargoTS.getDate() + 2);
-        var embargoDate = embargoTS.getDate() + '/' + (embargoTS.getMonth() + 1) + '/' +
-        embargoTS.getFullYear();
-        var embargoTime = embargoTS.toTimeString().slice(0, 8);
+        var embargoDate = ('0' + embargoTS.getDate()).slice(-2) + '/' +
+            ('0' + (embargoTS.getMonth() + 1)).slice(-2) + '/' + embargoTS.getFullYear();
+        var embargoTime = embargoTS.toTimeString().slice(0, 5);
 
         element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
         element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
     };
 
     this.confirmSendTo = function() {
-        if (element(by.className('modal-content')).length) {
+        if (element(by.className('modal-content')).isDisplayed()) {
             browser.sleep(3000);
             element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
         }
