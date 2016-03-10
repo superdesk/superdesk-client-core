@@ -14,7 +14,7 @@ describe('saved_search', function() {
         openUrl('/#/search').then(globalSearch.setListView());
     });
 
-    it('can save a private search', function() {
+    xit('can save a private search', function() {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openFilterPanel();
         expect(globalSearch.getItems().count()).toBe(14);
