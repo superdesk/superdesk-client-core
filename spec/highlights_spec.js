@@ -157,7 +157,7 @@ describe('highlights', function() {
     describe('mark for highlights in a desk:', function() {
         beforeEach(route('/workspace/monitoring'));
 
-        it('create highlight package', function() {
+        xit('create highlight package', function() {
             monitoring.turnOffWorkingStage(0);
 
             //mark for highlight in monitoring

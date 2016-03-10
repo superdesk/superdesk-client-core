@@ -301,7 +301,7 @@ describe('search', function() {
         expect(storyNameEl.isDisplayed()).toBe(true);
     });
 
-    it('can display embargo item when set', function() {
+    xit('can display embargo item when set', function() {
         expect(globalSearch.getItems().count()).toBe(14);
 
         globalSearch.actionOnItem('Edit', 2);

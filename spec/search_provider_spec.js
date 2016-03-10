@@ -9,7 +9,7 @@ describe('search_provider', function() {
         openUrl('/#/settings/searchProviders').then(done);
     });
 
-    it('Add Search Provider', function() {
+    xit('Add Search Provider', function() {
         // create default search provider
         searchProvider.addProvider('AAP Multimedia', 'AAP Multimedia', true);
 
