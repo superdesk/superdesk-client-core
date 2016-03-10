@@ -16,8 +16,13 @@ function Workspace() {
         return nav('workspace/ingest');
     }
 
+    function openPersonal() {
+        return nav('workspace/personal');
+    }
+
     this.open = this.openContent = openContent;
     this.openIngest = openIngest;
+    this.openPersonal = openPersonal;
 
     this.getDesk = function(name) {
         var desks = element.all(by.repeater('desk in userDesks'));

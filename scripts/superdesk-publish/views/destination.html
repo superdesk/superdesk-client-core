@@ -9,7 +9,7 @@
             <label for="destination-format" translate>Format</label>
             <select id="destination-format" class="input" required ng-model="destination.format">
                 <option value=""></option>
-                <option value="{{format.value}}" ng-selected="format.value === destination.format" ng-repeat="format in $parent.formats track by format.value">{{:: format.name | translate}}</option>
+                <option value="{{format.qcode}}" ng-selected="format.qcode === destination.format" ng-repeat="format in $parent.formats track by format.qcode">{{:: format.name | translate}}</option>
             </select>
         </div>
 

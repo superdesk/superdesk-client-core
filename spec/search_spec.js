@@ -301,11 +301,9 @@ describe('search', function() {
         expect(storyNameEl.isDisplayed()).toBe(true);
     });
 
-    xit('can display embargo item when set', function() {
+    it('can display embargo item when set', function() {
         expect(globalSearch.getItems().count()).toBe(14);
-
-        globalSearch.actionOnItem('Edit', 2);
-
+        globalSearch.actionOnItem('Edit', 4);
         authoring.sendToButton.click();
         authoring.setEmbargo();
         authoring.sendToButton.click();

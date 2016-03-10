@@ -39,7 +39,7 @@ describe('send', function() {
         expect(element(by.className('modal-content')).isDisplayed()).toBe(true);
     });
 
-    xit('can submit item to a desk although there are spelling mistakes', function () {
+    it('can submit item to a desk although there are spelling mistakes', function () {
         workspace.open();
         workspace.editItem(1);
         authoring.writeText('mispeled word');
@@ -85,8 +85,8 @@ describe('send', function() {
         expect(monitoring.getGroups().count()).toBe(6);
     });
 
-    xit('can confirm before submitting unsaved item to a desk', function () {
-        workspace.open();
+    it('can confirm before submitting unsaved item to a desk', function () {
+        workspace.openPersonal();
         workspace.editItem(1);
 
         //Skip spell check
