@@ -789,21 +789,37 @@
             return {
                 scope: {},
                 templateUrl: asset.templateUrl('superdesk-search/views/search-tags.html'),
-                link: function(scope, elem) {
+                link: function(scope) {
 
-                    tags.initSelectedFacets().then(function(currentTags) {
-                        scope.tags = currentTags;
-                    });
+                    scope.$watch(function getSearchParams() {
+                        return _.omit($location.search(), ['_id', 'item', 'action']);
+                    }, function(newValue, oldValue) {
+                        if (newValue !== oldValue) {
+                            reloadTags();
+                        }
+                    }, true);
+
+                    function init() {
+                        metadata
+                            .fetchSubjectcodes()
+                            .then(function () {
+                                scope.subjectcodes = metadata.values.subjectcodes;
+                            });
+
+                        reloadTags();
+                    }
+
+                    function reloadTags() {
+                        tags.initSelectedFacets().then(function(currentTags) {
+                            scope.tags = currentTags;
+                        });
+                    }
+
+                    init();
 
                     scope.removeFilter = function(type, key) {
                         tags.removeFacet(type, key);
                     };
-
-                    metadata
-                        .fetchSubjectcodes()
-                        .then(function () {
-                            scope.subjectcodes = metadata.values.subjectcodes;
-                        });
 
                     scope.removeParameter = function(param) {
                         var params = $location.search();
@@ -1035,6 +1051,7 @@
                                 render(items);
                             });
                         });
+
                     }
 
                     /*

@@ -518,6 +518,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             });
 
             scope.$watch('item[field]', function(selected) {
+                if (!selected) { return; }
                 scope.terms = filterSelected(scope.list);
                 if (scope.cv) { // filter out items from current cv
                     scope.selectedItems = _.filter(selected, function(term) {
