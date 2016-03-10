@@ -37,7 +37,7 @@ install:
 
 script:
     - grunt ci:travis
-    - grunt build
+    - grunt build --server='http://127.0.0.1:5000/api' --ws='ws://127.0.0.1:5100'
     - cd test-server && (nohup honcho start & ) && cd ..
     - cd dist && (nohup python3 -m http.server 9090 & ) && cd ..
     - ./node_modules/protractor/bin/protractor protractor-conf.js
