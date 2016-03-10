@@ -4,6 +4,18 @@ sudo: false
 
 python: 3.4
 
+services:
+    - mongodb
+    - elasticsearch
+    - redis-server
+
+addons:
+  apt:
+    sources:
+    - mongodb-3.0-precise
+    packages:
+    - mongodb-org-server
+
 cache:
     directories:
         - $HOME/.cache/bower
@@ -13,6 +25,8 @@ cache:
 before_install:
     - npm install -g bower grunt-cli
     - export DISPLAY=:99.0 && /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x24
+    - wget -N --no-verbose 'https://storage.googleapis.com/chromium-browser-continuous/Linux_x64/353893/chrome-linux.zip' && unzip chrome-linux.zip &&
+      export CHROME_BIN=`pwd`/chrome-linux/chrome && $CHROME_BIN --version ;
 
 install:
     - npm install
