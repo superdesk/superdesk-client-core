@@ -27,7 +27,7 @@ before_install:
     - npm install -g bower grunt-cli
     - export DISPLAY=:99.0 && /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x24
     - wget -N --no-verbose 'https://storage.googleapis.com/chromium-browser-continuous/Linux_x64/353893/chrome-linux.zip' && unzip chrome-linux.zip &&
-      export CHROME_BIN=`pwd`/chrome-linux/chrome && $CHROME_BIN --version ;
+        export CHROME_BIN=`pwd`/chrome-linux/chrome && $CHROME_BIN --version ;
 
 install:
     - npm install
@@ -39,5 +39,11 @@ script:
     - grunt ci:travis
     - grunt build --server='http://127.0.0.1:5000/api' --ws='ws://127.0.0.1:5100'
     - cd test-server && (nohup honcho start & ) && cd ..
-    - cd dist && (nohup python3 -m http.server 9090 & ) && cd ..
+    - cd dist && (nohup python3 -m http.server 9000 & ) && cd ..
+    - curl 'http://127.0.0.1:5000/api' | python3 -m json.tool
     - ./node_modules/protractor/bin/protractor protractor-conf.js
+        --stackTrace --verbose
+        --baseUrl 'http://127.0.0.1:9000'
+        --params.baseBackendUrl 'http://127.0.0.1:5000/api'
+        --params.username 'admin'
+        --params.password 'admin'
