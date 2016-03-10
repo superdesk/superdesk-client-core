@@ -1,8 +1,11 @@
 
 SUPERDESK_TESTING = True 
 
-SUPERDESK_URL = 'http://127.0.0.1:5000/api'
-SUPERDESK_CLIENT_URL = 'http://127.0.0.1:9090'
+SERVER_NAME = '127.0.0.1:5000'
+URL_PROTOCOL = 'http'
+URL_PREFIX = 'api'
+
+CLIENT_URL = 'http://127.0.0.1:9090'
 
 REDIS_URL = 'redis://localhost:6379/2'
 
