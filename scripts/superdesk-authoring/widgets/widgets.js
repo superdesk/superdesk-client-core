@@ -40,14 +40,23 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             return !!widget.display[display];
         });
 
-        /*
-         * Navigate throw right tab widgets with keyboard combination
-         * Combination: Ctrl + {{widget number}}
-         */
-        angular.forEach(_.sortBy($scope.widgets, 'order'), function (widget, index) {
-            keyboardManager.bind('ctrl+' + (index + 1), function () {
+        function bindKeyShortcutToWidget(shortcut, widget) {
+            keyboardManager.bind(shortcut, function () {
                 $scope.activate(widget);
             }, {inputDisabled: false});
+        }
+
+        /*
+         * Navigate throw right tab widgets with keyboard combination
+         * Combination: Ctrl + {{widget number}} and custom keys from `keyboardShortcut` property
+         */
+        angular.forEach(_.sortBy($scope.widgets, 'order'), function (widget, index) {
+            // binding ctrl + {{widget number}}
+            bindKeyShortcutToWidget('ctrl+' + (index + 1), widget);
+            // binding keys from `widget.keyboardShortcut` property
+            if (angular.isDefined(widget.keyboardShortcut)) {
+                bindKeyShortcutToWidget(widget.keyboardShortcut, widget);
+            }
             if ($location.search()[widget._id]) {
                 $scope.activate(widget);
             }
