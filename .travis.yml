@@ -2,7 +2,8 @@ language: python
 
 sudo: false
 
-python: 3.4
+python:
+    - 3.4
 
 services:
     - mongodb
@@ -38,7 +39,7 @@ install:
 script:
     - grunt ci:travis
     - grunt build --server='http://127.0.0.1:5000/api' --ws='ws://127.0.0.1:5100'
-    - cd test-server && (nohup honcho start & ) && cd ..
+    - cd test-server && (honcho start & ) && cd ..
     - cd dist && (nohup python3 -m http.server 9000 & ) && cd ..
     - curl 'http://127.0.0.1:5000/api' | python3 -m json.tool
     - ./node_modules/protractor/bin/protractor protractor-conf.js
