@@ -138,7 +138,9 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
 
     this.KEY_CODES = Object.freeze({
         Y: 'Y'.charCodeAt(0),
-        Z: 'Z'.charCodeAt(0)
+        Z: 'Z'.charCodeAt(0),
+        UP: 38,
+        DOWN: 40
     });
 
     this.ARROWS = Object.freeze({
@@ -169,11 +171,6 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @return {boolen}
      */
     this.shouldIgnore = function (event) {
-        // ignore arrows
-        if (self.ARROWS[event.keyCode]) {
-            return true;
-        }
-
         // ignore meta keys (ctrl, shift or meta only)
         if (self.META[event.keyCode]) {
             return true;
@@ -1101,13 +1098,25 @@ angular.module('superdesk.editor2', [
                         scope.node.classList.add(TYPING_CLASS);
                     }
 
+                    function changeSelectedParagraph(direction) {
+                        var selectedParagraph = angular.element(scope.medium.getSelectedParentElement());
+                        var paragraphToBeSelected = selectedParagraph[direction > 0 ? 'next' : 'prev']('p');
+                        if (paragraphToBeSelected.length > 0) {
+                            scope.medium.selectElement(paragraphToBeSelected.get(0));
+                        }
+                    }
+
                     var ctrlOperations = {};
                     ctrlOperations[editor.KEY_CODES.Z] = doUndo;
                     ctrlOperations[editor.KEY_CODES.Y] = doRedo;
-
+                    ctrlOperations[editor.KEY_CODES.UP] = changeSelectedParagraph.bind(null, -1);
+                    ctrlOperations[editor.KEY_CODES.DOWN] = changeSelectedParagraph.bind(null, 1);
                     editorElem.on('keydown', function(event) {
                         if (editor.shouldIgnore(event)) {
                             return;
+                        }
+                        if (event.ctrlKey && ctrlOperations[event.keyCode]) {
+                            event.preventDefault();
                         }
                         cancelTimeout(event);
                     });
@@ -1116,11 +1125,12 @@ angular.module('superdesk.editor2', [
                         if (editor.shouldIgnore(event)) {
                             return;
                         }
-                        cancelTimeout(event);
+                        // prevent default behaviour for ctrl operation
                         if (event.ctrlKey && ctrlOperations[event.keyCode]) {
                             ctrlOperations[event.keyCode]();
                             return;
                         }
+                        cancelTimeout(event);
                         updateTimeout = $timeout(updateModel, 800, false);
                     });
 
