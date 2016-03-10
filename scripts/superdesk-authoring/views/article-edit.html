@@ -1,14 +1,16 @@
 <div class="field" ng-class="{'limit-error': item.headline.length > limits.headline}" order="{{schema.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
   <label translate>Headline</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
-    <div id="title" class="headline"
-        sd-text-editor
-        data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item)}"
-        data-language="item.language"
-        ng-model="item.headline"
-        ng-change="autosave(item)"
-        ng-if="_editable"
-        ng-trim="false"></div>
+    <input type="text"
+         class="headline"
+         id="title"
+         ng-model="item.headline"
+         ng-change="autosave(item)"
+         ng-if="_editable"
+         placeholder="Add text here"
+         sd-focus-element
+         data-append-element=".field"
+         data-append-class="active">
   <div class="headline" ng-if="!_editable">{{item.headline}}</div>
 </div>
 
