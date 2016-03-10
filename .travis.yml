@@ -23,6 +23,7 @@ cache:
         - $HOME/.pip
 
 before_install:
+    - npm config set loglevel warn 
     - npm install -g bower grunt-cli
     - export DISPLAY=:99.0 && /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x24
     - wget -N --no-verbose 'https://storage.googleapis.com/chromium-browser-continuous/Linux_x64/353893/chrome-linux.zip' && unzip chrome-linux.zip &&
@@ -30,13 +31,13 @@ before_install:
 
 install:
     - npm install
-    - bower install
-    - cd test-server && pip install -r requirements.txt && cd ..
+    - bower install --quiet
+    - cd test-server && pip install -q -r requirements.txt && cd ..
     - ./node_modules/.bin/webdriver-manager update
 
 script:
     - grunt ci:travis
     - grunt build
     - cd test-server && (nohup honcho start & ) && cd ..
-    - cd dist && (nohup python3 -m http.server 9000 & ) && cd ..
+    - cd dist && (nohup python3 -m http.server 9090 & ) && cd ..
     - ./node_modules/protractor/bin/protractor protractor-conf.js
