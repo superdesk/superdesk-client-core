@@ -31,17 +31,14 @@
 
         desks.initialize()
         .then(angular.bind(this, function() {
-            return desks.fetchCurrentUserDesks()
-                .then(angular.bind(this, function (deskList) {
-                    this.desks = deskList._items;
-                    this.deskLookup = desks.deskLookup;
-                    this.deskStages = desks.deskStages;
-                    _.each(this.desks, function(desk) {
-                        _.each(self.deskStages[desk._id], function(stage) {
-                            self.stageLookup[stage._id] = stage;
-                        });
-                    });
-                }));
+            this.desks = desks.deskLookup;
+            this.deskLookup = desks.deskLookup;
+            this.deskStages = desks.deskStages;
+            _.each(this.desks, function(desk) {
+                _.each(self.deskStages[desk._id], function(stage) {
+                    self.stageLookup[stage._id] = stage;
+                });
+            });
         }))
         .then(angular.bind(this, function() {
             return api.query('all_saved_searches', {'max_results': 200})
@@ -72,15 +69,6 @@
         };
 
         /**
-         * If view showed as desk settings set the current desk
-         *
-         *@param {object} desk
-         */
-        this.setSettingsDesk = function(desk) {
-            this.settingsDesk = desk;
-        };
-
-        /**
          * Read the setting for current selected workspace(desk or custom workspace)
          * If the view is showed in a widget, read the settings from widget configuration
          * If the current selected workspace is a desk the settings are read from desk
@@ -102,15 +90,12 @@
                     });
                     return {'type': 'desk', 'groups': groups};
                 });
-            } else if (self.settings != null && self.settings.desk) {
-                return workspaces.getActiveId()
-                    .then(function(activeWorkspace) {
-                        return deskMonitoringConfig(self.settings.desk);
-                    });
             } else {
                 return workspaces.getActiveId()
                     .then(function(activeWorkspace) {
-                        if (activeWorkspace.type === 'workspace') {
+                        if (self.settings != null && self.settings.desk) {
+                            return deskMonitoringConfig(self.settings.desk);
+                        } else if (activeWorkspace.type === 'workspace') {
                             return preferencesService.get(PREFERENCES_KEY)
                                 .then(function(preference) {
                                     if (preference && preference[activeWorkspace.id] && preference[activeWorkspace.id].groups) {
@@ -129,19 +114,12 @@
             }
         };
 
-        /*else if (self.settings != null && self.settings.desk) {
-                return workspaces.getActiveId()
-                    .then(function(activeWorkspace) {
-                        return deskMonitoringConfig(self.settings.desk);
-                    });
-            } */
-
         function deskMonitoringConfig(objDesk) {
             var desk = self.deskLookup[objDesk._id];
             if (desk && desk.monitoring_settings) {
-                return {'type': 'desk', 'groups': desk.monitoring_settings};
+                return {'type': 'desk', 'groups': desk.monitoring_settings, 'desk': objDesk};
             }
-            return {'type': 'desk', 'groups': []};
+            return {'type': 'desk', 'groups': [], 'desk': objDesk};
         }
 
         /**
@@ -173,6 +151,17 @@
                 var currentDesk = desks.getCurrentDesk();
                 if (currentDesk) {
                     self.groups.push({_id: currentDesk._id + ':output', type: 'deskOutput', header: currentDesk.name});
+                }
+            } else if (settings && settings.groups.length === 0 && settings.desk != null) {
+                _.each(self.stageLookup, function(item) {
+                    if (item.desk === settings.desk._id) {
+                        self.groups.push({_id: item._id, type: 'stage', header: item.name});
+                    }
+                });
+
+                var editingDesk = settings.desk;
+                if (editingDesk) {
+                    self.groups.push({_id: editingDesk._id + ':output', type: 'deskOutput', header: editingDesk.name});
                 }
             }
             initSpikeGroups(settings.type === 'desk');
@@ -336,37 +325,38 @@
         /**
          * For edit monitoring settings add desk groups to the list
          */
-        this.edit = function(desk) {
+        this.edit = function() {
             this.editGroups = {};
-            _.each(this.groups, function(item, index) {
-                self.editGroups[item._id] = {
-                    _id: item._id,
-                    selected: true,
-                    type: item.type,
-                    max_items: item.max_items || defaultMaxItems,
-                    order: index
-                };
-                if (item.type === 'stage') {
-                    var stage = self.stageLookup[item._id];
-                    self.editGroups[stage.desk] = {
-                        _id: stage._id,
-                        selected: true,
-                        type: 'desk',
-                        order: 0
-                    };
-                } else if (item.type === 'deskOutput') {
-                    var desk_id = item._id.substring(0, item._id.indexOf(':'));
-                    self.editGroups[desk_id] = {
+            var _groups = this.groups;
+            this.refreshGroups().then(function() {
+                _.each(_groups, function(item, index) {
+                    self.editGroups[item._id] = {
                         _id: item._id,
                         selected: true,
-                        type: 'desk',
-                        order: 0
+                        type: item.type,
+                        max_items: item.max_items || defaultMaxItems,
+                        order: index
                     };
-                }
+                    if (item.type === 'stage') {
+                        var stage = self.stageLookup[item._id];
+                        self.editGroups[stage.desk] = {
+                            _id: stage._id,
+                            selected: true,
+                            type: 'desk',
+                            order: 0
+                        };
+                    } else if (item.type === 'deskOutput') {
+                        var desk_id = item._id.substring(0, item._id.indexOf(':'));
+                        self.editGroups[desk_id] = {
+                            _id: item._id,
+                            selected: true,
+                            type: 'desk',
+                            order: 0
+                        };
+                    }
+                });
             });
             this.modalActive = true;
-            console.log('this.editGroups', this.editGroups);
-            console.log('self.editGroups', self.editGroups);
         };
 
         /**
@@ -640,6 +630,11 @@
                                 scope.onclose();
                             });
                         });
+                    } else if (scope.settings && scope.settings.desk) {
+                        desks.save(scope.deskLookup[scope.settings.desk._id], {monitoring_settings: groups})
+                        .then(function() {
+                            WizardHandler.wizard('aggregatesettings').finish();
+                        });
                     } else {
                         workspaces.getActiveId()
                         .then(function(activeWorkspace) {
@@ -656,7 +651,7 @@
                                         WizardHandler.wizard('aggregatesettings').finish();
                                     });
                                 });
-                            } else if (activeWorkspace.type === 'desk'){
+                            } else if (activeWorkspace.type === 'desk') {
                                 desks.save(scope.deskLookup[activeWorkspace.id], {monitoring_settings: groups})
                                 .then(function() {
                                     WizardHandler.wizard('aggregatesettings').finish();

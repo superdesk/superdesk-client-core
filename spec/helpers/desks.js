@@ -2,7 +2,6 @@
 'use strict';
 
 var openUrl = require('./utils').open;
-
 module.exports = new Desks();
 
 function Desks() {
@@ -72,6 +71,25 @@ function Desks() {
             rows[0].click();
             rows[0].element(by.className('icon-dots-vertical')).click();
             rows[0].element(by.className('icon-pencil')).click();
+            browser.sleep(500);
+        });
+    };
+
+    /**
+     * Starts the monitoring settings for named desk from desks settings list
+     * @param {string} name of desk
+     **/
+    this.showMonitoringSettings = function(name) {
+        this.getRow(name).then(function(rows) {
+            rows[0].click();
+            rows[0].element(by.className('icon-dots-vertical')).click();
+            rows[0].element(by.className('icon-settings')).click();
+
+            browser.wait(function() {
+                return element.all(by.css('.aggregate-widget-config')).isDisplayed();
+            });
+            element.all(by.css('[ng-click="goTo(step)"]')).first().click();
+
             browser.sleep(500);
         });
     };

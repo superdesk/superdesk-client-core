@@ -475,11 +475,11 @@
             $scope.desk.edit = desk || {};
             $scope.desk.edit.desk_metadata = $scope.desk.edit.desk_metadata || {};
         };
+
         $scope.agg = $controller('AggregateCtrl', {$scope: $scope});
         $scope.openMonitoringSettings = function(desk) {
-            console.log('editing desk...', desk);
             $scope.agg.settings.desk = desk;
-            $scope.agg.edit(desk);
+            $scope.agg.edit();
         };
 
         $scope.cancel = function() {
