@@ -1,4 +1,4 @@
-<div class="field" ng-class="{'limit-error': item.headline.length > limits.headline}" sd-validation-error="error.headline" data-required="schema.headline.required">
+<div class="field" ng-class="{'limit-error': item.headline.length > limits.headline}" order="{{schema.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
   <label translate>Headline</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
@@ -21,7 +21,7 @@
     data-onchange="autosave(item)"></div>
 </div>
 
-<div class="field abstract" sd-validation-error="error.abstract" data-required="schema.abstract.required" ng-class="{'limit-error': item.abstract.length > limits.abstract}" ng-if="schema.abstract">
+<div class="field abstract" ng-class="{'limit-error': item.abstract.length > limits.abstract}" ng-if="schema.abstract" order="{{schema.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
   <label translate>Abstract</label>
     <span ng-if="schema.abstract.maxlength"
           sd-character-count
@@ -40,7 +40,7 @@
   <div class="abstract" ng-if="!_editable">{{item.abstract}}</div>
 </div>
 
-<div class="field" ng-if="item._type !== 'archived' && schema.byline" sd-validation-error="error.byline" data-required="schema.byline.required">
+<div class="field" ng-if="item._type !== 'archived' && schema.byline" order="{{schema.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
   <label translate>By</label>
    <!-- Placeholder text is temporary, ideally it should come from content type -->
   <input type="text"
@@ -58,7 +58,7 @@
 
 <!--This article-edit view is used by templates as well.
     ng-if is used to hide dateline for the template create/edit screen.-->
-<div class="field" ng-if="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" sd-validation-error="error.located" data-required="schema.dateline.required">
+<div class="field" ng-if="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" order="{{schema.dateline.order}}" sd-validation-error="error.located" data-required="schema.dateline.required">
     <label translate>Dateline</label>
     <div class="dateline">
         <div sd-meta-locators
@@ -105,7 +105,7 @@
     </div>
 </div>
 
-<div class="field body" ng-if="!isMediaType && schema.body_html" sd-validation-error="error.body_html" data-required="schema.body_html.required">
+<div class="field body" ng-if="!isMediaType && schema.body_html" order="{{schema.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required">
   <label translate>Body</label>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <span ng-if="schema.body_html.maxlength" sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></span>
@@ -122,55 +122,7 @@
     <div class="text-editor" sd-html-preview="item.body_html" ng-if="!_editable"></div>
 </div>
 
-<div ng-if="isMediaType" class="field abstract" sd-validation-error="error.description_text">
-  <label translate>Description</label>
-  <textarea class="abstract"
-        sd-auto-height
-        ng-model="item.description_text"
-        ng-change="autosave(item)"
-        ng-if="_editable"
-        ng-trim="false"
-        sd-focus-element
-        data-append-element=".field"
-        data-append-class="active"></textarea>
-  <div class="abstract" ng-if="!_editable">{{item.description_text}}</div>
-</div>
-
-<div class="field"
-     ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !item.package_type"
-     sd-validation-error="error.body_footer_value"
-     data-required="schema.footer.required">
-    <label translate>Helplines/Contact Information</label>
-    <select id="helplines"
-            ng-model="item.body_footer_value"
-            ng-disabled="!_editable"
-            ng-options="f.name for f in metadata.footers track by f.name"
-            ng-change="addHelplineToFooter()"
-            sd-focus-element
-            data-append-element=".field"
-            data-append-class="active">
-        <option value=""></option>
-    </select>
-</div>
-
-<div class="field" ng-if="item.body_footer" sd-validation-error="error.body_footer">
-    <label translate>Footer</label>
-    <div id="body_footer" class="body"
-        sd-text-editor
-        data-config="{disableToolbar: true, disableEditing: isPublished(item)}"
-        data-language="item.language"
-        ng-model="item.body_footer"
-        ng-change="autosave(item)"
-        ng-if="_editable"
-        ng-trim="false"
-        sd-focus-element
-        data-append-element=".field"
-        data-append-class="active">
-    </div>
-    <div id="body_footer_preview" class="abstract" ng-if="!_editable"  sd-html-preview="item.body_footer"></div>
-</div>
-
-<div class="field" ng-if="isMediaType">
+<div class="field" ng-if="isMediaType" order="{{schema.media.order}}">
 
   <div ng-if="item.type == 'picture'" class="full-preview" sd-ratio-calc>
       <div>
@@ -193,12 +145,61 @@
   </div>
 </div>
 
+<div ng-if="isMediaType" class="field abstract" order="{{schema.media_description.order}}" sd-validation-error="error.description_text">
+  <label translate>Description</label>
+  <textarea class="abstract"
+        sd-auto-height
+        ng-model="item.description_text"
+        ng-change="autosave(item)"
+        ng-if="_editable"
+        ng-trim="false"
+        sd-focus-element
+        data-append-element=".field"
+        data-append-class="active"></textarea>
+  <div class="abstract" ng-if="!_editable">{{item.description_text}}</div>
+</div>
+
+<div class="field"
+     ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !item.package_type"
+     sd-validation-error="error.body_footer_value"
+     data-required="schema.footer.required"
+     order="{{schema.footer.order}}">
+    <label translate>Helplines/Contact Information</label>
+    <select id="helplines"
+            ng-model="item.body_footer_value"
+            ng-disabled="!_editable"
+            ng-options="f.name for f in metadata.footers track by f.name"
+            ng-change="addHelplineToFooter()"
+            sd-focus-element
+            data-append-element=".field"
+            data-append-class="active">
+        <option value=""></option>
+    </select>
+</div>
+
+<div class="field" ng-if="item.body_footer" order="{{schema.body_footer.order}}" sd-validation-error="error.body_footer">
+    <label translate>Footer</label>
+    <div id="body_footer" class="body"
+        sd-text-editor
+        data-config="{disableToolbar: true, disableEditing: isPublished(item)}"
+        data-language="item.language"
+        ng-model="item.body_footer"
+        ng-change="autosave(item)"
+        ng-if="_editable"
+        ng-trim="false"
+        sd-focus-element
+        data-append-element=".field"
+        data-append-class="active">
+    </div>
+    <div id="body_footer_preview" class="abstract" ng-if="!_editable"  sd-html-preview="item.body_footer"></div>
+</div>
+
 <div class="composite-preview" ng-if="item.type === 'composite'">
   <div sd-package-items-edit ng-model="item.groups" ng-if="_editable"></div>
   <div sd-package data-item="item" class="composite-preview" ng-if="!_editable"></div>
 </div>
 
-<div class="field pull-left" ng-if="item.sign_off && schema.sign_off">
+<div class="field pull-left" ng-if="item.sign_off && schema.sign_off" order="{{schema.sign_off.order}}">
     <label translate>Sign-Off</label>
     <div>{{item.sign_off}}</div>
 </div>
