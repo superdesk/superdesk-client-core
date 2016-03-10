@@ -1,6 +1,6 @@
 
 module.exports = {
-    target: {
+    options: {
         files: {
             '<%= distDir %>/styles/css/docs.css': ['<%= tmpDir %>/docs/styles/*.css']
         }
