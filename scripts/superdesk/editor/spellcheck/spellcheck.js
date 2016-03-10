@@ -93,7 +93,7 @@ function SpellcheckService($q, api, dictionaries) {
             while (tree.nextNode()) {
                 while ((match = regexp.exec(tree.currentNode.textContent)) != null) {
                     var word = match[0];
-                    if (isNaN(word) && !dict.content[word.toLowerCase()]) {
+                    if (isNaN(word) && !dict.content[word]) {
                         errors.push({
                             word: word,
                             index: currentOffset + match.index
