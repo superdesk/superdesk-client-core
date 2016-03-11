@@ -24,8 +24,6 @@ describe('send', function() {
         workspace.open();
         workspace.editItem(1);
         authoring.sendTo('Sports Desk');
-        // modal for the incorrect spelling.
-        authoring.confirmSendTo();
         workspace.switchToDesk('SPORTS DESK');
         waitForItems(3);
         expect(getItemState(0)).toBe('SUBMITTED');
@@ -44,9 +42,6 @@ describe('send', function() {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
-
-        //Spell check confirmation modal save action
-        authoring.confirmSendTo();
 
         //Unsaved item confirmation modal save action
         authoring.confirmSendTo();
@@ -99,9 +94,6 @@ describe('send', function() {
         //Spell check confirmation modal save action
         authoring.confirmSendTo();
 
-        //Unsaved item confirmation modal save action
-        authoring.confirmSendTo();
-
         workspace.switchToDesk('SPORTS DESK');
         waitForItems(3);
         expect(getItemState(0)).toBe('SUBMITTED');
@@ -114,8 +106,6 @@ describe('send', function() {
         monitoring.showHideList();
 
         authoring.sendTo('Politic Desk');
-        //Spell check confirmation modal save action
-        authoring.confirmSendTo();
 
         expect(monitoring.getGroups().count()).toBe(6);
 

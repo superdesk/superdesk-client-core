@@ -61,13 +61,13 @@
 
     var DEFAULT_SCHEMA = Object.freeze({
         slugline: {maxlength: 24},
-        headline: {maxlength: 64},
-        abstract: {maxlength: 160},
-        body_html: {},
-        byline: {},
-        dateline: {},
+        headline: {maxlength: 64, order: 1},
+        abstract: {maxlength: 160, order: 2},
+        body_html: {order: 5},
+        byline: {order: 3},
+        dateline: {order: 4},
         located: {},
-        sign_off: {},
+        sign_off: {order: 8},
         genre: {},
         anpa_category: {},
         anpa_take_key: {},
@@ -76,7 +76,10 @@
         urgency: {},
         subject: {},
         ednote: {},
-        footer: {}
+        footer: {order: 6},
+        body_footer: {order: 7},
+        media: {order: 5},
+        media_description: {order: 6}
     });
 
     /**

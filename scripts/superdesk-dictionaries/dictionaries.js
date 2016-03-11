@@ -275,14 +275,15 @@
         };
 
         function isPrefix(prefix, word) {
-            return word.length >= prefix.length && word.substr(0, prefix.length) === prefix;
+            return word.length >= prefix.length && word.substr(0, prefix.length).toLowerCase() === prefix.toLowerCase();
         }
 
         $scope.filterWords = function filterWords(search) {
             $scope.words = [];
             $scope.isNew = !!search;
-            if (search && wordsTrie[search[0]]) {
-                var searchWords = wordsTrie[search[0]],
+            var key = search[0].toLowerCase();
+            if (search && (wordsTrie[key])) {
+                var searchWords = wordsTrie[key],
                     length = searchWords.length,
                     words = [],
                     word;
@@ -305,10 +306,11 @@
         $scope.wordsCount = 0;
 
         function addWordToTrie(word) {
-            if (wordsTrie.hasOwnProperty(word[0])) {
-                wordsTrie[word[0]].push(word);
+            var key = word[0].toLowerCase();
+            if (wordsTrie.hasOwnProperty(key)) {
+                wordsTrie[key].push(word);
             } else {
-                wordsTrie[word[0]] = [word];
+                wordsTrie[key] = [word];
             }
         }
 
