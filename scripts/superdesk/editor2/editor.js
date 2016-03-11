@@ -1112,7 +1112,15 @@ angular.module('superdesk.editor2', [
                         var selectedParagraph = angular.element(scope.medium.getSelectedParentElement());
                         var paragraphToBeSelected = selectedParagraph[direction > 0 ? 'next' : 'prev']('p');
                         if (paragraphToBeSelected.length > 0) {
+                            // select the paragraph
                             scope.medium.selectElement(paragraphToBeSelected.get(0));
+                            // scroll to the paragraph
+                            var $scrollableParent = $('.page-content-container');
+                            var offset = $scrollableParent.scrollTop();
+                            offset += paragraphToBeSelected.position().top;
+                            offset += paragraphToBeSelected.closest('.block__container').offset().top;
+                            offset -= 100; //  margin to prevent the top bar to hide the selected paragraph
+                            $scrollableParent.scrollTop(offset);
                         }
                     }
 
