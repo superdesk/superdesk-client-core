@@ -56,10 +56,14 @@ function Authoring() {
      *
      * @param {string} desk Desk name
      * @param {string} stage Stage name
+     * @param {boolean} skipConfirm
      */
-    this.sendTo = function(desk, stage) {
+    this.sendTo = function(desk, stage, skipConfirm) {
         this.sendToButton.click();
         this.sendToSidebarOpened(desk, stage);
+        if (!skipConfirm) {
+            this.confirmSendTo();
+        }
     };
 
     /**
