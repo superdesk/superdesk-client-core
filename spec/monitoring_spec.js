@@ -12,6 +12,7 @@ describe('monitoring', function() {
         monitoring.openMonitoring();
     });
 
+    // Opens Desk settings and configure Monitoring settings for the named desk 
     function setupDeskMonitoringSettings(name) {
         expect(workspace.getCurrentDesk()).toEqual(name.toUpperCase());
         desks.openDesksSettings();
