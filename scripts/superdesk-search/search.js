@@ -13,7 +13,7 @@
         var sortOptions = [
             {field: 'versioncreated', label: gettext('Updated')},
             {field: 'firstcreated', label: gettext('Created')},
-            {field: 'urgency', label: gettext('Urgency')},
+            {field: 'urgency', label: gettext('News Value')},
             {field: 'anpa_category.name', label: gettext('Category')},
             {field: 'slugline.phrase', label: gettext('Slugline')},
             {field: 'priority', label: gettext('Priority')},
@@ -527,7 +527,7 @@
         .filter('FacetLabels', function() {
             return function(input) {
                 if (input.toUpperCase() === 'URGENCY') {
-                    return 'Urgency';
+                    return gettext('News Value');
                 } else {
                     return input;
                 }

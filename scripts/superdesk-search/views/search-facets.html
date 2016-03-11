@@ -109,7 +109,7 @@
             </ul>
         </div>
 
-        <div sd-toggle-box data-title="{{:: 'Urgency' | FacetLabels }}" ng-hide="isEmpty('urgency')" data-open="true">
+        <div sd-toggle-box data-title="{{:: 'News Value' | FacetLabels }}" ng-hide="isEmpty('urgency')" data-open="true">
             <ul class="filter-box">
                 <li ng-repeat="(key,value) in aggregations.urgency" ng-click="toggleFilter('urgency', key)">
                     <span class="sd-checkbox" ng-checked="hasFilter('urgency',key)"></span>

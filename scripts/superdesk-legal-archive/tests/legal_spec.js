@@ -49,11 +49,11 @@ describe('legal archive service', function() {
         legal.setSort('urgency');
         $rootScope.$digest();
         expect($location.search().sort).toBe('urgency:desc');
-        expect(legal.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'desc'});
+        expect(legal.getSort()).toEqual({label: 'News Value', field: 'urgency', dir: 'desc'});
 
         legal.toggleSortDir();
         $rootScope.$digest();
-        expect(legal.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'asc'});
+        expect(legal.getSort()).toEqual({label: 'News Value', field: 'urgency', dir: 'asc'});
     }));
 
 });
