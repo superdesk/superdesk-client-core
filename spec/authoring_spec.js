@@ -68,7 +68,7 @@ describe('authoring', function() {
         expect(monitoring.getTextItem(1, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 1, 0);
         authoring.publish();
-        browser.pause();
+
         monitoring.filterAction('text');
         monitoring.actionOnItem('Kill item', 4, 0);
         authoring.sendToButton.click();
@@ -140,7 +140,7 @@ describe('authoring', function() {
         monitoring.actionOnItem('Edit', 2, 3);
         authoring.addHelpline('Children');
         expect(authoring.getBodyFooter()).toMatch(/Kids Helpline*/);
-        expect(authoring.save_button.isEnabled()).toBe(true);
+        expect(authoring.save_button.getAttribute('disabled')).toBe(null);
         authoring.save();
         authoring.publish();
         monitoring.filterAction('composite');
@@ -177,13 +177,12 @@ describe('authoring', function() {
         expect(monitoring.getTextItem(1, 0)).toBe('item5');
         monitoring.actionOnItem('Duplicate', 1, 0);
         monitoring.showSpiked();
-        //monitoring.showMonitoring();
-        //monitoring.turnOffWorkingStage(0);
+
         desks.openDesksSettings();
         desks.showMonitoringSettings('POLITIC DESK');
         monitoring.turnOffDeskWorkingStage(0);
         monitoring.openMonitoring();
-        //
+
         expect(monitoring.getTextItem(5, 1)).toBe('item5');
         monitoring.actionOnItem('Edit', 5, 1);
         authoring.showHistory();
@@ -261,12 +260,12 @@ describe('authoring', function() {
         authoring.publish(); // item9 published
 
         monitoring.actionOnItem('Duplicate', 4, {type: 'text'}); // duplicate item9 text published item
-        //monitoring.turnOffWorkingStage(0);
+
         desks.openDesksSettings();
         desks.showMonitoringSettings('POLITIC DESK');
         monitoring.turnOffDeskWorkingStage(0);
         monitoring.openMonitoring();
-        //
+
         expect(monitoring.getGroupItems(5).count()).toBe(1);
         monitoring.actionOnItem('Edit', 5, 0);
 
@@ -301,7 +300,7 @@ describe('authoring', function() {
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 
-    xit('keyboard navigation operations on subject dropdown', function() {
+    it('keyboard navigation operations on subject dropdown', function() {
         //Open any item in Edit mode
         monitoring.actionOnItem('Edit', 1, 1);
 
