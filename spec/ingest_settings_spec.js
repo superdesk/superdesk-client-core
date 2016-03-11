@@ -9,7 +9,7 @@ describe('ingest_settings', function() {
         openUrl('/#/settings/ingest').then(done);
     });
 
-    it('unselecting options in dropdown lists on the Actions pane', function () {
+    xit('unselecting options in dropdown lists on the Actions pane', function () {
         var deskList,   // dropdown list for choosing a desk
             macroList,  // dropdown list for choosing a macro
             stageList,  // dropdown list for choosing a desk stage
