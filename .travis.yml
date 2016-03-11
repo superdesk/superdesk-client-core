@@ -37,7 +37,7 @@ install:
 
 script:
     - grunt ci:travis
-    - grunt build --server='http://127.0.0.1:5000/api' --ws='ws://127.0.0.1:5100' ;
+    - grunt build ;
       cd dist ;
       while [ ! -f index.html ]; do sleep .5; done ;
         (nohup python -m http.server 9000 & );
@@ -49,7 +49,3 @@ script:
       cd ..
     - ./node_modules/protractor/bin/protractor protractor-conf.js
         --stackTrace --verbose
-        --baseUrl 'http://127.0.0.1:9000'
-        --params.baseBackendUrl 'http://127.0.0.1:5000/api'
-        --params.username 'admin'
-        --params.password 'admin'
