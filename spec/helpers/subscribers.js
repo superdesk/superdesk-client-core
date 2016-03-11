@@ -37,7 +37,7 @@ function Subscribers() {
     this.setType = function(type) {
         element(by.id('subType')).all(by.tagName('option')).filter(function(elem, index) {
             return elem.getText().then(function(text) {
-                return text.toLowerCase().startsWith(type.toLowerCase());
+                return text.toLowerCase().includes(type.toLowerCase());
             });
         }).then(function(options) {
             options[0].click();
