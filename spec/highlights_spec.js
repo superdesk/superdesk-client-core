@@ -13,7 +13,7 @@ describe('highlights', function() {
     describe('add highlights configuration:', function() {
         beforeEach(route('/settings/highlights'));
 
-      it('highlights management', function() {
+        it('highlights management', function() {
             //add highlights configuration with one desk
             highlights.add();
             highlights.setName('highlight new');
@@ -158,7 +158,7 @@ describe('highlights', function() {
     describe('mark for highlights in a desk:', function() {
         beforeEach(route('/workspace/monitoring'));
 
-      xit('create highlight package', function() {
+        xit('create highlight package', function() {
             // Setup Desk Monitoring Settings
             expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
             desks.openDesksSettings();
