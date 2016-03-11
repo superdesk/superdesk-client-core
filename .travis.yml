@@ -19,8 +19,8 @@ addons:
 cache:
     directories:
         - $HOME/.cache/bower
+        - $HOME/.cache/pip
         - $HOME/.npm
-        - $HOME/.pip
 
 before_install:
     - npm config set loglevel warn 
