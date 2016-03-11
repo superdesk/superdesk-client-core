@@ -294,8 +294,8 @@ function MetaDropdownDirective($filter, keyboardManager) {
     };
 }
 
-MetaTagsDirective.$inject = ['api'];
-function MetaTagsDirective(api) {
+MetaTagsDirective.$inject = ['api', '$timeout'];
+function MetaTagsDirective(api, $timeout) {
     var ENTER = 13;
     var ESC = 27;
 
@@ -309,6 +309,7 @@ function MetaTagsDirective(api) {
         },
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-tags.html',
         link: function(scope, element) {
+            var inputElem = element.find('input')[0];
             scope.adding = false;
             scope.refreshing = false;
             scope.newTag = null;
@@ -327,6 +328,14 @@ function MetaTagsDirective(api) {
                 scope.newTag = null;
                 scope.adding = false;
             };
+
+            scope.$watch('adding', function() {
+                if (scope.adding) {
+                    $timeout(function() {
+                        inputElem.focus();
+                    });
+                }
+            });
 
             scope.key = function($event) {
                 if ($event.keyCode === ENTER && !$event.shiftKey) {
