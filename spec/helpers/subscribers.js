@@ -34,10 +34,10 @@ function Subscribers() {
         });
     };
 
-    this.setType = function(type) {
+    this.setType = function(ingestType) {
         element(by.id('subType')).all(by.tagName('option')).filter(function(elem, index) {
-            return elem.getText().then(function(text) {
-                return text.toLowerCase().includes(type.toLowerCase());
+            return elem.getText().then(function(label) {
+                return label.toLowerCase().includes(ingestType.toLowerCase());
             });
         }).then(function(options) {
             options[0].click();
