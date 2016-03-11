@@ -187,7 +187,7 @@ describe('content', function() {
         element(by.id('closeAuthoringBtn')).click();
     });
 
-    it('can display embargo in metadata when set', function() {
+    xit('can display embargo in metadata when set', function() {
         workspace.editItem('item3', 'SPORTS');
         authoring.sendToButton.click();
 
@@ -202,7 +202,7 @@ describe('content', function() {
         content.closePreview();
     });
 
-    it('can enable/disable send and continue based on embargo', function() {
+    xit('can enable/disable send and continue based on embargo', function() {
         // Initial steps before proceeding, to get initial state of send buttons.
         workspace.editItem('item3', 'SPORTS');
         authoring.sendTo('Sports Desk', 'Incoming Stage');
