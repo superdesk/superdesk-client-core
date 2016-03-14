@@ -31,7 +31,7 @@ describe('monitoring', function() {
         expect(monitoring.getGroups().count()).toBe(6);
     });
 
-    it('can display the item in Desk Output when it\'s been submitted to a production desk', function () {
+    xit('can display the item in Desk Output when it\'s been submitted to a production desk', function () {
         workspace.selectDesk('Sports Desk');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.sendTo('Politic Desk', 'two');
