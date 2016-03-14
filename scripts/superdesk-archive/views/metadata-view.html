@@ -1,13 +1,9 @@
 <div class="metadata-view">
-    
+
     <div>
         <dl>
             <dt translate>Slugline</dt>
             <dd>{{ item.slugline }}</dd>
-        </dl>
-        <dl>
-            <dt ng-if="item.usageterms" translate>Usage Terms</dt>
-            <dd>{{ item.usageterms }}</dd>
         </dl>
         <dl>
             <dt translate>Urgency</dt>
@@ -25,7 +21,7 @@
             <dt translate>Keywords</dt>
             <dd>{{ item.keywords | mergeWords}}</dd>
         </dl>
-       
+
         <dl ng-if="item.original_source">
             <dt translate>Original source</dt>
             <dd>{{ item.original_source }}</dd>
@@ -161,7 +157,7 @@
             <dd ng-if="item.copyrightnotice">{{ item.copyrightnotice }}</dd>
         </dl>
         <dl>
-            <dt translate>Usageterms</dt>
+            <dt translate>Usage terms</dt>
             <dd ng-if="item.usageterms">{{ item.usageterms }}</dd>
         </dl>
     </div>
@@ -188,5 +184,5 @@
             <dt translate>Type</dt>
             <dd>{{ item.type }}</dd>
         </dl>
-    
+
 </div>
