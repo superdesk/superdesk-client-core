@@ -70,7 +70,7 @@ describe('users', function() {
                 .toBe('admin');
         });
 
-        xit('can disable user', function() {
+        it('can disable user', function() {
             var user = element.all(by.repeater('users')).first(),
                 activity = user.element(by.className('icon-trash'));
 
@@ -109,13 +109,8 @@ describe('users', function() {
                 }, 5000);
             }).then(function() {
                 browser.wait(function() {
-                    return element.all(by.repeater('users'))
-                        .count()
-                        .then(function(c) {
-                            if (c === 3) {
-                                return true;
-                            }
-                        });
+                    var elem = element.all(by.repeater('users')).first().element(by.className('disabled-label'));
+                    return elem.isDisplayed();
                 }, 5000);
             });
         });
