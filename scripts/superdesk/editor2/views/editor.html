@@ -6,12 +6,14 @@
 </a>
 <div ng-repeat="block in vm.blocks track by vm.generateBlockId(block)"
      class="block__container"
-     ng-class="{'block--selected': vm.blockToMoveIndex === $index}">
+     ng-class="{'block--selected': vm.blockToMoveIndex === $index,
+                'block--not-alone-and-empty': vm.blocks.length > 1 && (!block.body || block.body === '')}">
     <div class="block__actions" ng-if="vm.config.multiBlockEdition && !vm.reorderingMode">
         <div class="block__remove" ng-click="vm.removeBlock(block)">
             <i class="icon-close-small"></i>
         </div>
-        <div class="block__move" ng-click="vm.enableReorderingMode($index, $event)">
+        <div class="block__move" ng-click="vm.enableReorderingMode($index, $event)"
+             ng-if="vm.blocks.length > 1 && block.body && block.body !== ''">
             <i class="svg-icon-move"></i>
         </div>
     </div>
