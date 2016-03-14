@@ -726,7 +726,8 @@ angular.module('superdesk.editor2', [
     .constant('EMBED_PROVIDERS', { // see http://noembed.com/#supported-sites
         custom: 'Custom',
         twitter: 'Twitter',
-        youtube: 'YouTube'
+        youtube: 'YouTube',
+        vidible: 'Vidible'
     })
     .directive('sdAddEmbed', ['$timeout', function($timeout) {
         return {
