@@ -9,7 +9,7 @@ describe('desks_management', function () {
         desks.openDesksSettings();
     });
 
-    it('lists macros under the Macro tab for new desks', function () {
+    xit('lists macros under the Macro tab for new desks', function () {
         desks.newDeskBtn.click();
         desks.showTab('macros');
         expect(desks.listedMacros.count()).toBeGreaterThan(0);
