@@ -1326,6 +1326,9 @@
                                 return;
                             }
 
+                            // only scroll the list, not its parent
+                            $event.stopPropagation();
+
                             listComponent.closeActionsMenu();
                             $timeout.cancel(updateTimeout);
                             updateTimeout = $timeout(renderIfNeeded, 100, false);
