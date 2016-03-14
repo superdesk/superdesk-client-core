@@ -36,7 +36,6 @@ before_install:
     - wget -N --no-verbose 'https://storage.googleapis.com/chromium-browser-continuous/Linux_x64/353893/chrome-linux.zip' && unzip chrome-linux.zip &&
       export CHROME_BIN=`pwd`/chrome-linux/chrome && $CHROME_BIN --version ;
 
-
 install:
     - npm install
     - bower install --quiet
@@ -52,8 +51,7 @@ script:
       cd .. ;
     - cd test-server ;
       nohup python manage.py ;
-      (honcho start rest wamp & ) ;
-      (nohup honcho start work & ) ;
+      (nohup honcho start & ) ;
       sleep 5 ;
       cd ..;
     - if [ "${TARGET}" != "${TARGET/e2e_first/}" ]; then
