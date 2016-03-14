@@ -190,9 +190,9 @@ function Workspace() {
 
         // toggle to list view if possible
         var listViewBtn = element(by.className('view-select')).all(by.tagName('button')).get(1);
-        listViewBtn.isDisplayed().then(function(isDisplayed) {
+        return listViewBtn.isDisplayed().then(function(isDisplayed) {
             if (isDisplayed) {
-                listViewBtn.click();
+                return listViewBtn.click();
             }
         });
     };

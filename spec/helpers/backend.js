@@ -45,10 +45,12 @@ function backendRequest(params, callback) {
         if (!error) {
             console.log('response err', response.statusCode, body);
             console.log('request', params);
-            throw new Error('response err: ' + response.statusCode);
+        } else {
+            console.log('Request error=' + JSON.stringify(error) + ' params=' + JSON.stringify(params));
         }
 
-        throw new Error('Request error=' + JSON.stringify(error) + ' params=' + JSON.stringify(params));
+        // just fail
+        expect(true).toBe(false);
     }
 
     params.rejectUnauthorized = false;
