@@ -142,6 +142,7 @@ describe('content', function() {
         authoring.close();
 
         element.all(by.className('btn-warning')).first().click();
+        browser.sleep(200);
         expect(content.count()).toBe(2);
     });
 
