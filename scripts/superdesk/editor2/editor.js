@@ -138,7 +138,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
 
     this.KEY_CODES = Object.freeze({
         Y: 'Y'.charCodeAt(0),
-        Z: 'Z'.charCodeAt(0)
+        Z: 'Z'.charCodeAt(0),
+        UP: 38,
+        DOWN: 40,
+        F3: 114
     });
 
     this.ARROWS = Object.freeze({
@@ -169,11 +172,6 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @return {boolen}
      */
     this.shouldIgnore = function (event) {
-        // ignore arrows
-        if (self.ARROWS[event.keyCode]) {
-            return true;
-        }
-
         // ignore meta keys (ctrl, shift or meta only)
         if (self.META[event.keyCode]) {
             return true;
@@ -649,6 +647,15 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             });
         });
     };
+    this.getSelectedText = function() {
+        var text = '';
+        if (window.getSelection) {
+            text = window.getSelection().toString();
+        } else if (document.selection && document.selection.type !== 'Control') {
+            text = document.selection.createRange().text;
+        }
+        return text;
+    };
 }
 
 SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'renditions', 'editor', '$q'];
@@ -1101,29 +1108,70 @@ angular.module('superdesk.editor2', [
                         scope.node.classList.add(TYPING_CLASS);
                     }
 
-                    var ctrlOperations = {};
+                    function changeSelectedParagraph(direction) {
+                        var selectedParagraph = angular.element(scope.medium.getSelectedParentElement());
+                        var paragraphToBeSelected = selectedParagraph[direction > 0 ? 'next' : 'prev']('p');
+                        if (paragraphToBeSelected.length > 0) {
+                            // select the paragraph
+                            scope.medium.selectElement(paragraphToBeSelected.get(0));
+                            // scroll to the paragraph
+                            var $scrollableParent = $('.page-content-container');
+                            var offset = $scrollableParent.scrollTop();
+                            offset += paragraphToBeSelected.position().top;
+                            offset += paragraphToBeSelected.closest('.block__container').offset().top;
+                            offset -= 100; //  margin to prevent the top bar to hide the selected paragraph
+                            $scrollableParent.scrollTop(offset);
+                        }
+                    }
+
+                    function toggleCase() {
+                        var selectedText = editor.getSelectedText();
+                        if (selectedText.length > 0) {
+                            // looks the first character, and inverse the case of the all selection
+                            if (selectedText[0].toUpperCase() === selectedText[0]) {
+                                selectedText = selectedText.toLowerCase();
+                            } else {
+                                selectedText = selectedText.toUpperCase();
+                            }
+                            scope.medium.saveSelection();
+                            // replace the selected text
+                            scope.medium.cleanPaste(selectedText);
+                            scope.medium.restoreSelection();
+                        }
+                    }
+
+                    var ctrlOperations = {}, shiftOperations = {};
                     ctrlOperations[editor.KEY_CODES.Z] = doUndo;
                     ctrlOperations[editor.KEY_CODES.Y] = doRedo;
-
+                    ctrlOperations[editor.KEY_CODES.UP] = changeSelectedParagraph.bind(null, -1);
+                    ctrlOperations[editor.KEY_CODES.DOWN] = changeSelectedParagraph.bind(null, 1);
+                    shiftOperations[editor.KEY_CODES.F3] = toggleCase;
                     editorElem.on('keydown', function(event) {
                         if (editor.shouldIgnore(event)) {
                             return;
                         }
+                        // prevent default behaviour for ctrl or shift operations
+                        if ((event.ctrlKey && ctrlOperations[event.keyCode]) ||
+                            (event.shiftKey && shiftOperations[event.keyCode])) {
+                            event.preventDefault();
+                        }
                         cancelTimeout(event);
                     });
-
                     editorElem.on('keyup', function(event) {
                         if (editor.shouldIgnore(event)) {
                             return;
                         }
-                        cancelTimeout(event);
                         if (event.ctrlKey && ctrlOperations[event.keyCode]) {
                             ctrlOperations[event.keyCode]();
                             return;
                         }
+                        if (event.shiftKey && shiftOperations[event.keyCode]) {
+                            shiftOperations[event.keyCode]();
+                            return;
+                        }
+                        cancelTimeout(event);
                         updateTimeout = $timeout(updateModel, 800, false);
                     });
-
                     editorElem.on('contextmenu', function(event) {
                         if (editor.isErrorNode(event.target)) {
                             event.preventDefault();
@@ -1132,7 +1180,6 @@ angular.module('superdesk.editor2', [
                             if (elem.find('.dropdown.open').length) {
                                 click(toggle);
                             }
-
                             scope.suggestions = null;
                             spellcheck.suggest(event.target.textContent).then(function(suggestions) {
                                 scope.suggestions = suggestions;
@@ -1144,11 +1191,9 @@ angular.module('superdesk.editor2', [
                                     click(toggle);
                                 }, 0, false);
                             });
-
                             return false;
                         }
                     });
-
                     if (scope.type === 'preformatted') {
                         editorElem.on('keydown keyup click', function() {
                             scope.$apply(function() {
@@ -1156,13 +1201,11 @@ angular.module('superdesk.editor2', [
                             });
                         });
                     }
-
                     scope.$on('$destroy', function() {
                         scope.medium.destroy();
                         editorElem.off();
                         spellcheck.setLanguage(null);
                     });
-
                     scope.cursor = {};
                     render(null, null, true);
                 };
