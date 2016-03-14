@@ -88,6 +88,22 @@ describe('search service', function() {
         expect(criteria).not.toEqual(search.query({q: 'test'}).getCriteria());
     }));
 
+    it('can merge items', inject(function(search) {
+        var nextItems;
+
+        nextItems = search.mergeItems({_items: [{_id: 'foo'}]});
+        expect(nextItems._items.length).toBe(1);
+
+        nextItems = search.mergeItems({_items: [{_id: 'foo'}]}, {_items: [{_id: 'bar'}]});
+        expect(nextItems._items.length).toBe(1);
+        expect(nextItems._items[0]._id).toBe('foo');
+
+        nextItems = search.mergeItems({_items: [{_id: 'foo'}]}, {_items: [{_id: 'bar'}]}, true);
+        expect(nextItems._items.length).toBe(2);
+        expect(nextItems._items[0]._id).toBe('bar');
+        expect(nextItems._items[1]._id).toBe('foo');
+    }));
+
     describe('multi action bar directive', function() {
 
         var scope;

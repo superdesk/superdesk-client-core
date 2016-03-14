@@ -346,20 +346,10 @@
             if (!oldItems || !append) {
                 return newItems;
             } else {
-                return angular.extend({}, newItems, {_items: _.filter(oldItems._items.concat(newItems._items), duplicate)});
+                var nextItems = oldItems._items.concat(newItems._items);
+                return angular.extend({}, newItems, {_items: nextItems});
             }
         };
-
-        /**
-         * identify duplicate items
-         *
-         * @param {object} a
-         * @param {object} b
-         * @return {boolean}
-         */
-        function duplicate(a, b) {
-            return a._id === b._id;
-        }
     }
 
     TagService.$inject = ['$location', 'desks', 'userList', 'metadata'];
