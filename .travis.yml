@@ -50,7 +50,8 @@ script:
       cd .. ;
     - cd test-server ;
       nohup python manage.py ;
-      (honcho start & ) ;
+      (honcho start rest wamp & ) ;
+      (nohup honcho start work & ) ;
       sleep 5 ;
       cd ..;
     - if [ "${TARGET}" != "${TARGET/e2e_first/}" ]; then
