@@ -25,7 +25,7 @@ function backendRequest(params, callback) {
     }
 
     // how many times it will try to request before throwing error
-    var ttl = 3;
+    var ttl = 5;
 
     function responseHandler(error, response, body) {
         if (!error && !isErrorResponse(response)) {

@@ -37,7 +37,7 @@ function Subscribers() {
     this.setType = function(ingestType) {
         element(by.id('subType')).all(by.tagName('option')).filter(function(elem, index) {
             return elem.getText().then(function(label) {
-                return label.toLowerCase().includes(ingestType.toLowerCase());
+                return label.toLowerCase().indexOf(ingestType) > -1;
             });
         }).then(function(options) {
             options[0].click();

@@ -182,12 +182,19 @@ function Workspace() {
      */
     this.switchToDesk = function(desk) {
         this.selectDesk(desk);
-
         openContent();
 
-        return browser.wait(function() {
+        browser.wait(function() {
             return element(by.className('list-view')).isPresent();
         }, 300);
+
+        // toggle to list view if possible
+        var listViewBtn = element(by.className('view-select')).all(by.tagName('button')).get(1);
+        listViewBtn.isDisplayed().then(function(isDisplayed) {
+            if (isDisplayed) {
+                listViewBtn.click();
+            }
+        });
     };
 
     this.selectStage = function(stage) {

@@ -92,7 +92,7 @@ function Authoring() {
         dropdown.waitReady();
         dropdown.click();
         sidebar.element(by.buttonText(desk)).click();
-        if (stage !== undefined) {
+        if (stage) {
             sidebar.element(by.buttonText(stage)).click();
         }
         this.sendBtn.click();

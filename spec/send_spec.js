@@ -94,7 +94,7 @@ describe('send', function() {
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
 
         authoring.writeText('Text, that not saved yet');
-        authoring.sendTo('Sports Desk');
+        authoring.sendTo('Sports Desk', null, true);
 
         //Spell check confirmation modal save action
         authoring.confirmSendTo();
