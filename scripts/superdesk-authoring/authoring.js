@@ -3054,6 +3054,10 @@
                     }, 200, false);
                     return false;
                 };
+
+                scope.isEmbedded = function(associationName) {
+                    return associationName.charAt(0) === '_';
+                };
             }
         };
     }
