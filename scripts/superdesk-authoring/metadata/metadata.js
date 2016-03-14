@@ -333,7 +333,7 @@ function MetaTagsDirective(api, $timeout) {
                 if (scope.adding) {
                     $timeout(function() {
                         inputElem.focus();
-                    });
+                    }, 0, false);
                 }
             });
 
