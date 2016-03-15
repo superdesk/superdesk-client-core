@@ -373,16 +373,38 @@
             });
         };
 
+        var initFile = function(file, meta) {
+            var item = {
+                file: file,
+                meta: meta,
+                progress: 0
+            };
+
+            item.cssType = item.file.type.split('/')[0];
+            $scope.items.unshift(item);
+            $scope.enableSave = true;
+        };
+
         $scope.addFiles = function(files) {
             _.each(files, function(file) {
-                var item = {
-                    file: file,
-                    meta: {byline: $scope.currentUser.byline},  // initialize meta.byline from user profile
-                    progress: 0
-                };
-                item.cssType = item.file.type.split('/')[0];
-                $scope.items.unshift(item);
-                $scope.enableSave = true;
+                if (/^image/.test(file.type)) {
+                    EXIF.getData(file, function() {
+                        var fileMeta = this.iptcdata;
+
+                        $scope.$apply(function() {
+                            initFile(file, {
+                                byline: fileMeta.byline,
+                                headline: fileMeta.headline,
+                                description_text: fileMeta.caption,
+                                copyrightnotice: fileMeta.copyright
+                            });
+                        });
+                    });
+                } else {
+                    initFile(file, {
+                        byline: $scope.currentUser.byline // initialize meta.byline from user profile
+                    });
+                }
             });
         };
 
