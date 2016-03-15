@@ -92,13 +92,25 @@
         return angular.extend(dest, _.pick(src, _.keys(CONTENT_FIELDS_DEFAULTS)));
     }
 
+    var htmlRegex = /(<([^>]+)>)/ig;
+    function removeHtmlRaw(content) {
+        return stripHtmlRaw(content).replace(htmlRegex, '');
+    }
+
+    function stripHtmlRaw(content) {
+        if (content) {
+            var elem = document.createElement('div');
+            elem.innerHTML = content;
+            return elem.textContent;
+        }
+        return '';
+    }
+
     function stripHtml(item) {
         var fields = ['headline', 'abstract'];
         _.each(fields, function(key) {
             if (angular.isDefined(item[key])) {
-                var elem = document.createElement('div');
-                elem.innerHTML = item[key];
-                item[key] = elem.textContent;
+                item[key] = stripHtmlRaw(item[key]);
             }
         });
     }
@@ -2437,6 +2449,7 @@
         .directive('sdItemAssociation', ItemAssociationDirective)
         .directive('sdFullPreview', FullPreviewDirective)
         .filter('embeddedFilter', EmbeddedFilter)
+        .directive('sdRemoveTags', RemoveTagsDirective)
 
         .config(['superdeskProvider', function(superdesk) {
             superdesk
@@ -2918,7 +2931,6 @@
             },
             templateUrl: 'scripts/superdesk-authoring/views/item-association.html',
             link: function(scope, elem) {
-
                 var PICTURE_TYPE = 'application/superdesk.item.picture';
 
                 /**
@@ -3019,6 +3031,23 @@
                 self.renditions = metadata.values.crop_sizes;
                 return self.renditions;
             });
+        };
+    }
+
+    RemoveTagsDirective.$inject = [];
+    function RemoveTagsDirective() {
+        return {
+            require: 'ngModel',
+            scope: {
+                model: '=ngModel'
+            },
+            link: function(scope, elem, attr, ngModel) {
+                scope.$watch('model', function() {
+                    if (scope.model) {
+                        scope.model = removeHtmlRaw(scope.model);
+                    }
+                });
+            }
         };
     }
 

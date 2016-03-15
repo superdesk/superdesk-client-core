@@ -13,10 +13,10 @@
 </div>
 <div class="editor--caption">
     <div translate>Caption</div>
-    <div ng-model="vm.caption"
-         contenteditable="true"
-         strip-br="true"
-         ng-model-options="{debounce: 1000}"
-         ng-change="vm.saveCaption(vm.caption)">
-    </div>
+    <input sd-remove-tags
+        type="text"
+        ng-model="vm.caption"
+        ng-model-options="{debounce: 1000}"
+        ng-change="vm.saveCaption(vm.caption)"
+        class="image-caption">
 </div>
