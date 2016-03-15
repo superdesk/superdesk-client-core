@@ -2435,6 +2435,7 @@
         .directive('sdAuthoringHeader', AuthoringHeaderDirective)
         .directive('sdItemAssociation', ItemAssociationDirective)
         .directive('sdFullPreview', FullPreviewDirective)
+        .filter('embeddedFilter', EmbeddedFilter)
 
         .config(['superdeskProvider', function(superdesk) {
             superdesk
@@ -3054,11 +3055,19 @@
                     }, 200, false);
                     return false;
                 };
-
-                scope.isEmbedded = function(associationName) {
-                    return associationName.charAt(0) === '_';
-                };
             }
+        };
+    }
+
+    function EmbeddedFilter() {
+        return function(input) {
+            var output = {};
+            for (var i in input) {
+                if (i.charAt(0) !== '_') {
+                    output[i] = input[i];
+                }
+            }
+            return output;
         };
     }
 

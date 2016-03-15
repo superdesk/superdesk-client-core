@@ -59,7 +59,7 @@
             </div>
             <div class="headline">{{item.headline}}</div>
 
-            <div ng-repeat="(associationName, association) in item.associations" class="association" ng-if="!isEmbedded(associationName)">
+            <div ng-repeat="association in item.associations|embeddedFilter" class="association">
                 <img src="{{association.renditions.viewImage.href}}" ng-if="!hide_images">
                 <p><i class="icon-picture" ng-if="hide_images"></i>{{association.description_text}}</p>
             </div>
