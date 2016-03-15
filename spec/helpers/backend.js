@@ -49,8 +49,7 @@ function backendRequest(params, callback) {
             console.log('Request error=' + JSON.stringify(error) + ' params=' + JSON.stringify(params));
         }
 
-        // just fail
-        expect(true).toBe(false);
+        throw new Error('stop tests');
     }
 
     params.rejectUnauthorized = false;
