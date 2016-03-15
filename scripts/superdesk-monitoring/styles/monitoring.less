@@ -56,12 +56,13 @@
             }
 
             .stage-content {
+                max-height: 100%;
                 overflow-y: scroll;
                 box-shadow: @block-shadow-depth-2;
                 .compact-view, .mlist-view {
                     box-shadow: none;
                 }
-                .inline-content-items {
+                .list-view {
                     margin-bottom: 0;
                     &.list-without-items {
                         height: 38px !important;
@@ -73,14 +74,16 @@
                     }
                 }
             }
-            
+
             .single-group {
-                .stage-content {
-                    overflow: visible;
-                }
-                .inline-content-items {
-                    max-height: none !important;
-                    height: auto !important;
+                .stage {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    padding: 0;
+                    margin: 30px 18px 18px;
                 }
             }
 

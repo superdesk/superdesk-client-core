@@ -67,7 +67,12 @@ function Monitoring() {
      * @return {WebElement}
      */
     this.getItem = function(group, item) {
-        var all = this.getGroup(group).all(by.repeater('item in items'));
+        var all = this.getGroupItems(group);
+
+        browser.wait(function() {
+            return all.count();
+        }, 5000);
+
         if (item.type) {
             return all.filter(function(elem) {
                 return elem.all(by.className('filetype-icon-' + item.type)).count();
@@ -78,7 +83,7 @@ function Monitoring() {
     };
 
     this.getGroupItems = function(group) {
-        return this.getGroup(group).all(by.repeater('item in items'));
+        return this.getGroup(group).all(by.className('media-box'));
     };
 
     this.actionOnDeskSingleView = function() {
@@ -102,7 +107,7 @@ function Monitoring() {
     };
 
     this.getSingleViewItemCount = function() {
-        return element.all(by.repeater('item in items track by generateTrackByIdentifier(item)')).count();
+        return element.all(by.className('media-box')).count();
     };
 
     this.actionMonitoringHome = function() {
@@ -114,7 +119,11 @@ function Monitoring() {
     };
 
     this.getSpikedItems = function() {
-        return element.all(by.repeater('item in items'));
+        return this.getAllItems();
+    };
+
+    this.getAllItems = function() {
+        return element.all(by.className('media-box'));
     };
 
     /**
@@ -124,7 +133,7 @@ function Monitoring() {
      * @return {object}
      */
     this.getPersonalItem = function(index) {
-        return element.all(by.repeater('item in items')).get(index);
+        return this.getAllItems().get(index);
     };
 
     /**
@@ -134,7 +143,7 @@ function Monitoring() {
      * @return {string}
      */
     this.getPersonalItemText = function(index) {
-        return this.getPersonalItem(index).element(by.id('title')).getText();
+        return this.getPersonalItem(index).element(by.className('item-heading')).getText();
     };
 
     this.getSpikedItem = function(item) {
@@ -142,15 +151,15 @@ function Monitoring() {
     };
 
     this.getSpikedTextItem = function(index) {
-        return this.getSpikedItem(index).element(by.id('title')).getText();
+        return this.getSpikedItem(index).element(by.className('item-heading')).getText();
     };
 
     this.getTextItem = function(group, item) {
-        return this.getItem(group, item).element(by.id('title')).getText();
+        return this.getItem(group, item).element(by.className('item-heading')).getText();
     };
 
     this.getTextItemBySlugline = function(group, item) {
-        return this.getItem(group, item).element(by.binding('item.slugline')).getText();
+        return this.getItem(group, item).element(by.className('keyword')).getText();
     };
 
     this.searchAction = function(search) {
@@ -191,7 +200,7 @@ function Monitoring() {
 
     this.openAction = function(group, item) {
         browser.actions().doubleClick(
-                this.getItem(group, item)
+            this.getItem(group, item)
         ).perform();
     };
 
@@ -228,8 +237,14 @@ function Monitoring() {
      */
     this.actionOnItemSubmenu = function(action, submenu, group, item) {
         var menu = this.openItemMenu(group, item);
-        browser.actions().mouseMove(menu.element(by.partialLinkText(action))).perform();
-        menu.element(by.css('[option="' + submenu + '"]')).click();
+        var header = menu.element(by.partialLinkText(action));
+        var btn = menu.element(by.partialButtonText(submenu));
+        browser.actions()
+            .mouseMove(header, {x: -5, y: -5})
+            .mouseMove(header)
+            .perform();
+        waitFor(btn);
+        btn.click();
     };
 
     this.selectItem = function(group, item) {
@@ -243,7 +258,7 @@ function Monitoring() {
     this.selectGivenItem = function(item) {
         var itemTypeIcon = item.element(by.css('.type-icon'));
         browser.actions().mouseMove(itemTypeIcon).perform();
-        var checkbox = item.element(by.model('item.selected'));
+        var checkbox = item.element(by.className('sd-checkbox'));
         waitFor(checkbox, 500);
         return checkbox.click();
     };
@@ -266,9 +281,12 @@ function Monitoring() {
 
     this.openItemMenu = function(group, item) {
         var itemElem = this.getItem(group, item);
-        browser.actions().mouseMove(itemElem).perform();
+        browser.actions()
+            .mouseMove(itemElem, {x: -50, y: -50}) // first move out
+            .mouseMove(itemElem) // now it can mouseover for sure
+            .perform();
         var dotsElem = itemElem.element(by.className('icon-dots-vertical'));
-        expect(dotsElem.isDisplayed()).toBe(true);
+        waitFor(dotsElem, 500);
         dotsElem.click();
         return element(by.css('.dropdown-menu.open'));
     };
@@ -510,11 +528,15 @@ function Monitoring() {
      */
     this.checkMarkedForHighlight = function(highlight, group, item) {
         var crtItem = this.getItem(group, item);
-        expect(crtItem.element(by.className('icon-star')).isDisplayed()).toBeTruthy();
-        browser.actions().mouseMove(crtItem.element(by.className('icon-star'))).perform();
-        element.all(by.css('.dropdown-menu.open li')).then(function (items) {
-            expect(items[1].getText()).toContain(highlight);
-        });
+        var star = crtItem.element(by.className('icon-star'));
+        waitFor(star);
+        browser.actions()
+            .mouseMove(star, {x: -5, y: -5})
+            .mouseMove(star)
+            .perform();
+        var highlightList = element(by.className('highlights-list-menu'));
+        waitFor(highlightList);
+        expect(highlightList.getText()).toContain(highlight);
     };
 
     /**
@@ -591,5 +613,14 @@ function Monitoring() {
             this.nextReorder();
             this.saveSettings();
         }
+    };
+
+    this.expectIsChecked = function(group, item) {
+        return expect(this.getItem(group, item).element(by.className('sd-checkbox')).getAttribute('class'))
+            .toContain('checked');
+    };
+
+    this.expectIsNotChecked = function(group, item) {
+        return expect(this.getItem(group, item).element(by.className('sd-checkbox')).isPresent()).toBeFalsy();
     };
 }

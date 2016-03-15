@@ -6,4 +6,4 @@ dist
 .tmp
 test-server/env
 test-server/__pycache__
-/e2e-test-results/junitresults.xml
+e2e-test-results

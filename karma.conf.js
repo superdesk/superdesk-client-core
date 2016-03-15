@@ -14,6 +14,7 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
+            'bower_components/bind-polyfill/index.js',
             'bower_components/jquery/dist/jquery.js',
             'bower_components/lodash/lodash.js',
             'bower_components/bootstrap/dist/js/bootstrap.min.js',
@@ -41,6 +42,10 @@ module.exports = function(config) {
             'bower_components/angular-moment/angular-moment.js',
             'bower_components/d3/d3.js',
             'bower_components/jcrop/js/jquery.Jcrop.js',
+
+            'bower_components/react/react.js',
+            'bower_components/react/react-dom.js',
+            'bower_components/classnames/index.js',
 
             path.join(__dirname, 'scripts/**/*.js'),
             path.join(__dirname, 'scripts/**/*.html')

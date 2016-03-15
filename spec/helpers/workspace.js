@@ -111,7 +111,7 @@ function Workspace() {
      * @return {promise} list of elements
      */
     this.getItems = function() {
-        return element.all(by.repeater('item in items'));
+        return element.all(by.className('media-box'));
     };
 
     /**
@@ -170,7 +170,7 @@ function Workspace() {
     this.actionOnItemSubmenu = function(action, submenu, item) {
         var menu = this.openItemMenu(item);
         browser.actions().mouseMove(menu.element(by.partialLinkText(action))).perform();
-        menu.element(by.css('[option="' + submenu + '"]')).click();
+        menu.element(by.partialButtonText(submenu)).click();
     };
 
     /**
@@ -182,12 +182,19 @@ function Workspace() {
      */
     this.switchToDesk = function(desk) {
         this.selectDesk(desk);
-
         openContent();
 
-        return browser.wait(function() {
+        browser.wait(function() {
             return element(by.className('list-view')).isPresent();
         }, 300);
+
+        // toggle to list view if possible
+        var listViewBtn = element(by.className('view-select')).all(by.tagName('button')).get(1);
+        return listViewBtn.isDisplayed().then(function(isDisplayed) {
+            if (isDisplayed) {
+                return listViewBtn.click();
+            }
+        });
     };
 
     this.selectStage = function(stage) {

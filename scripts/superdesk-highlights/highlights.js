@@ -22,12 +22,22 @@
         var cache = $cacheFactory('highlightList');
 
         /**
+         * Get cached value for given key
+         *
+         * @param {string} key
+         * @return {Object}
+         */
+        service.getSync = function(key) {
+            return cache.get(key);
+        };
+
+        /**
          * Fetches and caches highlights, or returns from the cache.
          */
         service.get = function(desk) {
             var DEFAULT_CACHE_KEY = '_nodesk';
             var key = desk || DEFAULT_CACHE_KEY;
-            var value = cache.get(key);
+            var value = service.getSync(key);
 
             if (value) {
                 return $q.when(value);
@@ -530,7 +540,55 @@
             label: gettext('Mark for highlight'),
             priority: 30,
             icon: 'star',
-            dropdown: true,
+            dropdown: ['item', 'className', 'highlightsService', 'desks', 'gettext',
+            function(item, className, highlightsService, desks, gettext) {
+                var highlights = highlightsService.getSync(desks.getCurrentDeskId()) || {_items: []};
+
+                var HighlightBtn = React.createClass({
+                    markHighlight: function(event) {
+                        event.stopPropagation();
+                        highlightsService.markItem(this.props.highlight._id, this.props.item._id).then(function(res) {
+                            console.log('marked', res);
+                        });
+                    },
+                    render: function() {
+                        var item = this.props.item;
+                        var highlight = this.props.highlight;
+                        var isMarked = item.highlights && item.highlights.indexOf(highlight._id) >= 0;
+                        return React.createElement(
+                            'button',
+                            {disabled: isMarked, onClick: this.markHighlight},
+                            React.createElement('i', {className: 'icon-star'}),
+                            highlight.name
+                        );
+                    }
+                });
+
+                var createHighlightItem = function(highlight) {
+                    return React.createElement(
+                        'li',
+                        {key: 'highlight-' + highlight._id},
+                        React.createElement(HighlightBtn, {item: item, highlight: highlight})
+                    );
+                };
+
+                var noHighlights = function() {
+                    return React.createElement(
+                        'li',
+                        {},
+                        React.createElement(
+                            'button',
+                            {disabled: true},
+                            gettext('No available highlights'))
+                    );
+                };
+
+                return React.createElement(
+                    'ul',
+                    {className: className},
+                    highlights._items.length ? highlights._items.map(createHighlightItem) : React.createElement(noHighlights)
+                );
+            }],
             keyboardShortcut: 'ctrl+shift+d',
             templateUrl: 'scripts/superdesk-highlights/views/mark_highlights_dropdown.html',
             filters: [

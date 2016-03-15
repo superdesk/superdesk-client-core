@@ -56,10 +56,14 @@ function Authoring() {
      *
      * @param {string} desk Desk name
      * @param {string} stage Stage name
+     * @param {boolean} skipConfirm
      */
-    this.sendTo = function(desk, stage) {
+    this.sendTo = function(desk, stage, skipConfirm) {
         this.sendToButton.click();
         this.sendToSidebarOpened(desk, stage);
+        if (!skipConfirm) {
+            this.confirmSendTo();
+        }
     };
 
     /**
@@ -74,10 +78,11 @@ function Authoring() {
     };
 
     this.confirmSendTo = function() {
-        if (element(by.className('modal-content')).isDisplayed()) {
-            browser.sleep(3000);
-            element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
-        }
+        element.all(by.className('modal-content')).count().then(function(closeModal) {
+            if (closeModal) {
+                element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
+            }
+        });
     };
 
     this.sendToSidebarOpened = function(desk, stage) {
@@ -87,7 +92,7 @@ function Authoring() {
         dropdown.waitReady();
         dropdown.click();
         sidebar.element(by.buttonText(desk)).click();
-        if (stage !== undefined) {
+        if (stage) {
             sidebar.element(by.buttonText(stage)).click();
         }
         this.sendBtn.click();

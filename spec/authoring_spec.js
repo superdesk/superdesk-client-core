@@ -216,12 +216,7 @@ describe('authoring', function() {
         authoring.publish();
         monitoring.filterAction('text');
         monitoring.actionOnItem('Create Broadcast', 4, 0);
-        expect(element(by.className('content-item-preview')).isDisplayed()).toBe(true);
-        expect(monitoring.getPreviewTitle()).toBe('item5');
-        monitoring.closePreview();
-        authoring.linkToMasterButton.click();
-        expect(monitoring.getPreviewTitle()).toBe('item5');
-        authoring.close();
+        expect(authoring.getHeaderSluglineText()).toContain('item5');
     });
 
     it('toggle auto spellcheck and hold changes', function() {

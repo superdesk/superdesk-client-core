@@ -51,13 +51,13 @@ module.exports = function(grunt) {
                 base: base,
                 keepalive: true,
                 livereload: false,
-                port: 9090
+                port: 9000
             }
         },
         build: {
             options: {
                 base: ['<%= distDir %>'],
-                port: 9090,
+                port: 9000,
                 livereload: false,
                 keepalive: true
             }

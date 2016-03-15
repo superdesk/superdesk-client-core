@@ -17,15 +17,17 @@ services:
 addons:
   apt:
     sources:
-    - mongodb-3.0-precise
+        - mongodb-3.0-precise
+        - elasticsearch-1.7
     packages:
-    - mongodb-org-server
+        - mongodb-org-server
+        - elasticsearch
 
 cache:
     directories:
         - $HOME/.cache/bower
+        - $HOME/.cache/pip
         - $HOME/.npm
-        - $HOME/.pip
 
 before_install:
     - npm config set loglevel warn 
@@ -33,7 +35,6 @@ before_install:
     - export DISPLAY=:99.0 && /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x24
     - wget -N --no-verbose 'https://storage.googleapis.com/chromium-browser-continuous/Linux_x64/353893/chrome-linux.zip' && unzip chrome-linux.zip &&
       export CHROME_BIN=`pwd`/chrome-linux/chrome && $CHROME_BIN --version ;
-
 
 install:
     - npm install
@@ -43,7 +44,7 @@ install:
 
 script:
     - grunt ci:travis
-    - grunt build --server='http://127.0.0.1:5000/api' --ws='ws://127.0.0.1:5100' ;
+    - grunt build ;
       cd dist ;
       while [ ! -f index.html ]; do sleep .5; done ;
         (nohup python -m http.server 9000 & );
@@ -56,30 +57,18 @@ script:
     - if [ "${TARGET}" != "${TARGET/e2e_first/}" ]; then
         ./node_modules/.bin/protractor-flake --node-bin node --max-attempts=3 -- protractor-conf.js --suite=a
           --stackTrace --verbose
-          --baseUrl 'http://127.0.0.1:9000'
-          --params.baseBackendUrl 'http://127.0.0.1:5000/api'
-          --params.username 'admin'
-          --params.password 'admin'
           --capabilities.browserName "${TARGET/e2e_first_/}"
          ;
       fi
     - if [ "${TARGET}" != "${TARGET/e2e_second/}" ]; then
         ./node_modules/.bin/protractor-flake --node-bin node --max-attempts=3 -- protractor-conf.js --suite=b
           --stackTrace --verbose
-          --baseUrl 'http://127.0.0.1:9000'
-          --params.baseBackendUrl 'http://127.0.0.1:5000/api'
-          --params.username 'admin'
-          --params.password 'admin'
           --capabilities.browserName "${TARGET/e2e_second_/}"
          ;
       fi
     - if [ "${TARGET}" != "${TARGET/e2e_third/}" ]; then
         ./node_modules/.bin/protractor-flake --node-bin node --max-attempts=3 -- protractor-conf.js --suite=c
           --stackTrace --verbose
-          --baseUrl 'http://127.0.0.1:9000'
-          --params.baseBackendUrl 'http://127.0.0.1:5000/api'
-          --params.username 'admin'
-          --params.password 'admin'
           --capabilities.browserName "${TARGET/e2e_third_/}"
          ;
       fi
