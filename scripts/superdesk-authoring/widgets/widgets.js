@@ -97,8 +97,8 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
         }
     });
 }
-AuthoringWidgetsDir.$inject = ['desks'];
-function AuthoringWidgetsDir(desks) {
+AuthoringWidgetsDir.$inject = ['desks', 'commentsService'];
+function AuthoringWidgetsDir(desks, commentsService) {
     return {
         controller: WidgetsManagerCtrl,
         templateUrl: 'scripts/superdesk-authoring/widgets/views/authoring-widgets.html',
@@ -118,6 +118,21 @@ function AuthoringWidgetsDir(desks) {
                 }
             }
 
+            function reload() {
+                if (scope.item) {
+                    commentsService.fetch(scope.item._id).then(function() {
+                        scope.comments = commentsService.comments;
+                    });
+                }
+            }
+
+            scope.$on('item:comment', function(e, data) {
+                if (data.item === scope.item.guid) {
+                    reload();
+                }
+            });
+
+            reload();
         }
     };
 }

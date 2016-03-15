@@ -7,6 +7,7 @@
         <ul class="navigation-tabs">
             <li ng-repeat="widget in widgets | orderBy:'order'"
                 ng-class="{active: widget === active}">
+                <span id="unread-count" class="label label--info circle small" ng-show="widget._id == 'comments' && comments.length">{{ comments.length }}</span>
                 <button class="btn" type="submit"
                     ng-click="activate(widget)"
                     ng-disabled="isLocked(widget)"
