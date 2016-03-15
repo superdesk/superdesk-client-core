@@ -627,4 +627,19 @@ function Monitoring() {
     this.expectIsNotChecked = function(group, item) {
         return expect(this.getItem(group, item).element(by.className('sd-checkbox')).isPresent()).toBeFalsy();
     };
+
+    this.turnOffDeskWorkingStage = function(deskIndex, canCloseSettingsModal) {
+        this.toggleStage(deskIndex, 0);
+
+        if (typeof canCloseSettingsModal !== 'boolean') {
+            canCloseSettingsModal = true;
+        }
+
+        if (canCloseSettingsModal) {
+            this.nextStages();
+            this.nextSearches();
+            this.nextReorder();
+            this.saveSettings();
+        }
+    };
 }

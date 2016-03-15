@@ -29,6 +29,11 @@ function Workspace() {
         return desks.all(by.css('[option="' + name.toUpperCase() + '"]'));
     };
 
+    this.getCurrentDesk = function() {
+        var dropdownBtn = element(by.id('selected-desk'));
+        return dropdownBtn.element(by.css('[ng-if="selected.name"]')).getText();
+    };
+
     /**
      * Open a workspace of given name, can be both desk or custom
      *

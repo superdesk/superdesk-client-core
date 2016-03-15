@@ -4,7 +4,8 @@ var route = require('./helpers/utils').route,
     search = require('./helpers/search'),
     authoring = require('./helpers/authoring'),
     workspace = require('./helpers/workspace'),
-    highlights = require('./helpers/highlights');
+    highlights = require('./helpers/highlights'),
+    desks = require('./helpers/desks');
 
 describe('highlights', function() {
     'use strict';
@@ -93,7 +94,13 @@ describe('highlights', function() {
         beforeEach(route('/workspace/monitoring'));
 
         xit('create highlight package', function() {
-            monitoring.turnOffWorkingStage(0);
+            // Setup Desk Monitoring Settings
+            expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
+            desks.openDesksSettings();
+            desks.showMonitoringSettings('POLITIC DESK');
+            monitoring.turnOffDeskWorkingStage(0);
+
+            monitoring.openMonitoring();
 
             //mark for highlight in monitoring
             monitoring.actionOnItemSubmenu('Mark for highlight', 'Highlight two', 1, 0);
@@ -165,7 +172,12 @@ describe('highlights', function() {
 
             //check that the new highlight package and generated list are on personal
             workspace.showList('Monitoring');
-            monitoring.turnOffWorkingStage(0);
+
+            desks.openDesksSettings();
+            desks.showMonitoringSettings('POLITIC DESK');
+            monitoring.turnOffDeskWorkingStage(0);
+            monitoring.openMonitoring();
+
             expect(monitoring.getTextItem(5, 0)).toBe('Highlight two');
             expect(monitoring.getTextItem(5, 1)).toBe('Highlight two');
 

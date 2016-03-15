@@ -4,13 +4,18 @@ var monitoring = require('./helpers/monitoring'),
     authoring = require('./helpers/authoring'),
     ctrlKey = require('./helpers/utils').ctrlKey,
     ctrlShiftKey = require('./helpers/utils').ctrlShiftKey,
-    assertToastMsg = require('./helpers/utils').assertToastMsg;
+    assertToastMsg = require('./helpers/utils').assertToastMsg,
+    workspace = require('./helpers/workspace'),
+    desks = require('./helpers/desks');
 
 describe('authoring', function() {
 
     beforeEach(function() {
+        desks.openDesksSettings();
+        desks.showMonitoringSettings('POLITIC DESK');
+        monitoring.turnOffDeskWorkingStage(0);
         monitoring.openMonitoring();
-        monitoring.turnOffWorkingStage(0);
+        expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
     });
 
     it('authoring operations', function() {
@@ -63,6 +68,7 @@ describe('authoring', function() {
         expect(monitoring.getTextItem(1, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 1, 0);
         authoring.publish();
+
         monitoring.filterAction('text');
         monitoring.actionOnItem('Kill item', 4, 0);
         authoring.sendToButton.click();
@@ -134,7 +140,7 @@ describe('authoring', function() {
         monitoring.actionOnItem('Edit', 2, 3);
         authoring.addHelpline('Children');
         expect(authoring.getBodyFooter()).toMatch(/Kids Helpline*/);
-        expect(authoring.save_button.isEnabled()).toBe(true);
+        expect(authoring.save_button.getAttribute('disabled')).toBe(null);
         authoring.save();
         authoring.publish();
         monitoring.filterAction('composite');
@@ -171,8 +177,12 @@ describe('authoring', function() {
         expect(monitoring.getTextItem(1, 0)).toBe('item5');
         monitoring.actionOnItem('Duplicate', 1, 0);
         monitoring.showSpiked();
-        monitoring.showMonitoring();
-        monitoring.turnOffWorkingStage(0);
+
+        desks.openDesksSettings();
+        desks.showMonitoringSettings('POLITIC DESK');
+        monitoring.turnOffDeskWorkingStage(0);
+        monitoring.openMonitoring();
+
         expect(monitoring.getTextItem(5, 1)).toBe('item5');
         monitoring.actionOnItem('Edit', 5, 1);
         authoring.showHistory();
@@ -245,9 +255,14 @@ describe('authoring', function() {
         authoring.publish(); // item9 published
 
         monitoring.actionOnItem('Duplicate', 4, {type: 'text'}); // duplicate item9 text published item
-        monitoring.turnOffWorkingStage(0);
-        expect(monitoring.getGroupItems(5).count()).toBe(1);
-        monitoring.actionOnItem('Edit', 5, 0);
+
+        desks.openDesksSettings();
+        desks.showMonitoringSettings('POLITIC DESK');
+        monitoring.turnOffDeskWorkingStage(0);
+        monitoring.openMonitoring();
+
+        expect(monitoring.getGroupItems(6).count()).toBe(1);
+        monitoring.actionOnItem('Edit', 6, 0);
 
         authoring.openRelatedItem(); // opens related item widget
         expect(authoring.getRelatedItemBySlugline(0).getText()).toBe('item9 slugline');
