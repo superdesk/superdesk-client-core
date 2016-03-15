@@ -2223,8 +2223,9 @@
         };
     }
 
-    ArticleEditDirective.$inject = ['autosave', 'authoring', 'metadata', '$filter', 'superdesk', 'content', 'renditions'];
-    function ArticleEditDirective(autosave, authoring, metadata, $filter, superdesk, content, renditions) {
+    ArticleEditDirective.$inject = ['autosave', 'authoring', 'metadata', '$filter', 'superdesk', 'content',
+                                    'renditions', 'config'];
+    function ArticleEditDirective(autosave, authoring, metadata, $filter, superdesk, content, renditions, config) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/article-edit.html',
             link: function(scope, elem) {
@@ -2233,6 +2234,8 @@
                 scope.errorMessage = null;
                 scope.contentType = null;
                 scope.schema = angular.extend({}, DEFAULT_SCHEMA);
+                scope.canEditSignOff = config.user && config.user.sign_off_mapping ? true: false;
+                scope.editSignOff = false;
 
                 var mainEditScope = scope.$parent.$parent;
 
@@ -2327,6 +2330,22 @@
                         scope.daysInMonth = [];
                         scope.datelineDay = '';
                     }
+                };
+
+                /**
+                 * Modify the sign-off with the value from sign_off_mapping field from user
+                 */
+                scope.modifySingOff = function(user) {
+                    var signOffMapping = config.user.sign_off_mapping;
+                    scope.item.sign_off = user[signOffMapping];
+                    autosave.save(scope.item);
+                };
+
+                /**
+                 * Change the edit mode for Sign-Off input
+                 */
+                scope.changeSignOffEdit = function() {
+                    scope.editSignOff = !scope.editSignOff;
                 };
 
                 /**
