@@ -2335,7 +2335,7 @@
                 /**
                  * Modify the sign-off with the value from sign_off_mapping field from user
                  */
-                scope.modifySingOff = function(user) {
+                scope.modifySignOff = function(user) {
                     var signOffMapping = config.user.sign_off_mapping;
                     scope.item.sign_off = user[signOffMapping];
                     autosave.save(scope.item);
