@@ -414,13 +414,13 @@ function Monitoring() {
         var dst = this.getOrderItem(end);
         return src.waitReady().then(function() {
             browser.actions()
-                .mouseMove(src, {x: 0, y: 0})
+                .mouseMove(src)
                 .mouseDown()
                 .perform()
                 .then(function() {
                     dst.waitReady().then(function () {
                         browser.actions()
-                            .mouseMove(dst, {x: 5, y: 5})
+                            .mouseMove(dst)
                             .mouseUp()
                             .perform();
                     });
@@ -579,6 +579,21 @@ function Monitoring() {
 
     this.turnOffWorkingStage = function(deskIndex, canCloseSettingsModal) {
         this.showMonitoringSettings();
+        this.toggleStage(deskIndex, 0);
+
+        if (typeof canCloseSettingsModal !== 'boolean') {
+            canCloseSettingsModal = true;
+        }
+
+        if (canCloseSettingsModal) {
+            this.nextStages();
+            this.nextSearches();
+            this.nextReorder();
+            this.saveSettings();
+        }
+    };
+
+    this.turnOffDeskWorkingStage = function(deskIndex, canCloseSettingsModal) {
         this.toggleStage(deskIndex, 0);
 
         if (typeof canCloseSettingsModal !== 'boolean') {

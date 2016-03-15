@@ -455,8 +455,8 @@
         });
     }
 
-    DeskConfigController.$inject = ['$scope', 'gettext', 'notify', 'desks', 'WizardHandler', 'modal'];
-    function DeskConfigController ($scope, gettext, notify, desks, WizardHandler, modal) {
+    DeskConfigController.$inject = ['$scope', '$controller', 'gettext', 'notify', 'desks', 'WizardHandler', 'modal'];
+    function DeskConfigController ($scope, $controller, gettext, notify, desks, WizardHandler, modal) {
 
         //expecting $scope.desks to be defined
 
@@ -474,6 +474,12 @@
             $scope.step.current = step;
             $scope.desk.edit = desk || {};
             $scope.desk.edit.desk_metadata = $scope.desk.edit.desk_metadata || {};
+        };
+
+        $scope.agg = $controller('AggregateCtrl', {$scope: $scope});
+        $scope.openMonitoringSettings = function(desk) {
+            $scope.agg.settings.desk = desk;
+            $scope.agg.edit();
         };
 
         $scope.cancel = function() {

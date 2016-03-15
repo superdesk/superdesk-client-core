@@ -1,7 +1,6 @@
 <div class="modal-header">
     <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
-    <h3 translate>Monitoring settings</h3>
-    <div ng-show="settings.type == 'desk'" class="alert alert-warning" translate>Desk view settings are global, do not alter them without authority.</div>
+    <h3 translate>Monitoring settings <span ng-if="settings.desk" translate>for "{{settings.desk.name}}" Desk</span></h3>
 </div>
 <div class="modal-body aggregate-settings" sd-wizard data-name="aggregatesettings" data-current-step="step.current" data-finish="cancel()">
 

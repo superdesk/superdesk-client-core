@@ -22,6 +22,7 @@
                                     <li><div class="menu-label" translate>Actions</div></li>
                                     <li class="divider"></li>
                                     <li><button ng-click="openDesk('general', desk)" title="{{:: 'Edit desk'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                                    <li><button ng-click="openMonitoringSettings(desk)" title="{{:: 'Monitoring settings'| translate }}"><i class="icon-settings"></i>{{:: 'Monitoring settings'| translate}}</button></li>
                                     <li><button ng-click="remove(desk)" title="{{:: 'Remove desk'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                                 </ul>
                             </div>						
@@ -54,6 +55,19 @@
 
                 </div>
             </div>
+        </div>
+
+        <div sd-aggregate-settings
+            data-modal-active="agg.modalActive"
+            data-desks="agg.desks" 
+            data-desk-stages="agg.deskStages"
+            data-searches="agg.searches"
+            data-desk-lookup="agg.deskLookup" 
+            data-stage-lookup="agg.stageLookup"
+            data-search-lookup="agg.searchLookup"
+            data-groups="agg.groups"
+            data-edit-groups="agg.editGroups"
+            data-settings="agg.settings">
         </div>
 
         <div sd-desk-config-modal 

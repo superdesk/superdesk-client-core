@@ -78,4 +78,10 @@ describe('desks', function() {
         desks.actionDoneOnGeneralTab();
         expect(desks.getStageCount('Test Desk')).toEqual('2');
     });
+
+    // Edit Monitoring settings
+    it('edit monitoring settings', function() {
+        desks.showMonitoringSettings('Politic Desk');
+    });
+
 });
