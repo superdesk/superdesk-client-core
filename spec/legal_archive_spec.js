@@ -56,7 +56,7 @@ describe('legal_archive', function() {
         assertAuthoringTopbarAndItemState();
     });
 
-    it('can open items in the package', function() {
+    xit('can open items in the package', function() {
         legalArchive.open();
 
         content.actionOnItem('Open', 'package1 in legal archive');
