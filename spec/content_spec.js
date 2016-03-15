@@ -145,7 +145,7 @@ describe('content', function() {
 
         browser.wait(function() {
             return content.count().then(function(contentCount) {
-                return contentCount && contentCount == 2;
+                return contentCount && contentCount === 2;
             });
         }, 500);
     });
