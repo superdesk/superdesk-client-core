@@ -131,7 +131,7 @@ describe('content', function() {
         expect(content.count()).toBe(3);
     });
 
-    it('can close unsaved empty package in a desk', function() {
+    xit('can close unsaved empty package in a desk', function() {
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
 
