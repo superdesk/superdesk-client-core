@@ -22,10 +22,10 @@ angular.module('gettext').run(['gettextCatalog', function (gettextCatalog) {
     gettextCatalog.setStrings('ru_RU', {});
     gettextCatalog.setStrings('sv_SE', {});
     gettextCatalog.setStrings('en', {
-        "URGENCY": "News Value",
+        "URGENCY": "NEWS VALUE",
         "Urgency": "News Value",
-        "Urgency stats": "News Value stats",
-        "urgency": "News Value"
+        "urgency": "news value",
+        "Urgency stats": "News Value stats"
     });
 /* jshint +W100 */
 }]);
