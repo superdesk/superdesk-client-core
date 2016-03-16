@@ -1173,11 +1173,6 @@ angular.module('superdesk.editor2', [
                         cancelTimeout(event);
                         updateTimeout = $timeout(updateModel, 800, false);
                     });
-
-                    editorElem.on('paste', function(event) {
-                        updateIndent();
-                    });
-
                     editorElem.on('contextmenu', function(event) {
                         if (editor.isErrorNode(event.target)) {
                             event.preventDefault();
@@ -1213,7 +1208,6 @@ angular.module('superdesk.editor2', [
                         spellcheck.setLanguage(null);
                     });
                     scope.cursor = {};
-                    updateIndent();
                     render(null, null, true);
                 };
 
@@ -1255,18 +1249,12 @@ angular.module('superdesk.editor2', [
                 }
 
                 function updateModel() {
-                    updateIndent();
                     editor.commitScope(scope);
                 }
 
                 function changeListener() {
                     $timeout.cancel(renderTimeout);
                     renderTimeout = $timeout(render, 0, false);
-                }
-
-                function updateIndent() {
-                    editorElem.find('[style]:header').removeAttr('style');
-                    editorElem.find('p:first-of-type, p+p').attr('style', 'text-indent: 25px');
                 }
             }
         };
