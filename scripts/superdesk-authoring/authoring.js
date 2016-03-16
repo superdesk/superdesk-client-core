@@ -92,11 +92,6 @@
         return angular.extend(dest, _.pick(src, _.keys(CONTENT_FIELDS_DEFAULTS)));
     }
 
-    var htmlRegex = /(<([^>]+)>)/ig;
-    function removeHtmlRaw(content) {
-        return stripHtmlRaw(content).replace(htmlRegex, '');
-    }
-
     function stripHtmlRaw(content) {
         if (content) {
             var elem = document.createElement('div');
@@ -3036,6 +3031,7 @@
 
     RemoveTagsDirective.$inject = [];
     function RemoveTagsDirective() {
+        var htmlRegex = /(<([^>]+)>)/ig;
         return {
             require: 'ngModel',
             scope: {
@@ -3044,7 +3040,7 @@
             link: function(scope, elem, attr, ngModel) {
                 scope.$watch('model', function() {
                     if (scope.model) {
-                        scope.model = removeHtmlRaw(scope.model);
+                        scope.model = stripHtmlRaw(scope.model).replace(htmlRegex, '');
                     }
                 });
             }
