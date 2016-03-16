@@ -11,6 +11,7 @@ var monitoring = require('./helpers/monitoring'),
 describe('authoring', function() {
 
     beforeEach(function() {
+        // Opens desk settings, configure monitoring settings and returns to monitoring view
         desks.openDesksSettings();
         desks.showMonitoringSettings('POLITIC DESK');
         monitoring.turnOffDeskWorkingStage(0);
