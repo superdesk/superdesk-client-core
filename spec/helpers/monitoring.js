@@ -395,6 +395,10 @@ function Monitoring() {
         this.getDesk(desk).element(by.model('editGroups[desk._id + \':output\'].selected')).click();
     };
 
+    this.toggleScheduledDeskOutput = function(desk) {
+        this.getDesk(desk).element(by.model('editGroups[desk._id + \':scheduled\'].selected')).click();
+    };
+
     this.togglePersonal = function() {
         element(by.css('[ng-click="setPersonalInfo()"]')).click();
     };

@@ -29,6 +29,8 @@
         this.monitoringSearch = false;
         this.searchQuery = null;
 
+        this.isOutputType = desks.isOutputType;
+
         desks.initialize()
         .then(angular.bind(this, function() {
             return desks.fetchCurrentUserDesks()
@@ -144,6 +146,7 @@
                 var currentDesk = desks.getCurrentDesk();
                 if (currentDesk) {
                     self.groups.push({_id: currentDesk._id + ':output', type: 'deskOutput', header: currentDesk.name});
+                    self.groups.push({_id: currentDesk._id + ':scheduled', type: 'scheduledDeskOutput', header: currentDesk.name});
                 }
             }
             initSpikeGroups(settings.type === 'desk');
@@ -288,7 +291,7 @@
                     card.deskId = stage.desk;
                     card.header = desk.name;
                     card.subheader = stage.name;
-                } else if (card.type === 'deskOutput') {
+                } else if (desks.isOutputType(card.type)) {
                     var desk_id = card._id.substring(0, card._id.indexOf(':'));
                     card.header = self.deskLookup[desk_id].name;
                 } else if (card.type === 'search') {
@@ -325,7 +328,7 @@
                         type: 'desk',
                         order: 0
                     };
-                } else if (item.type === 'deskOutput') {
+                } else if (desks.isOutputType(item.type)) {
                     var desk_id = item._id.substring(0, item._id.indexOf(':'));
                     self.editGroups[desk_id] = {
                         _id: item._id,
@@ -456,6 +459,11 @@
                     if (deskOutput) {
                         deskOutput.selected = item.selected;
                     }
+
+                    var scheduledDeskOutput = scope.editGroups[_id + ':scheduled'];
+                    if (scheduledDeskOutput) {
+                        scheduledDeskOutput.selected = item.selected;
+                    }
                 };
 
                 scope.setStageInfo = function(_id) {
@@ -472,6 +480,16 @@
                     var item = scope.editGroups[_id];
                     item._id = _id;
                     item.type = 'deskOutput';
+                    item.max_items = defaultMaxItems;
+                    item.order = _.size(scope.editGroups);
+
+                    scope.editGroups[_id] = item;
+                };
+
+                scope.setScheduledDeskOutputInfo = function(_id) {
+                    var item = scope.editGroups[_id];
+                    item._id = _id;
+                    item.type = 'scheduledDeskOutput';
                     item.max_items = defaultMaxItems;
                     item.order = _.size(scope.editGroups);
 
@@ -559,7 +577,7 @@
                     });
 
                     _.each(values, function(item) {
-                        if (item.type === 'deskOutput') {
+                        if (desks.isOutputType(item.type)) {
                             var desk_id = item._id.substring(0, item._id.indexOf(':'));
                             item.name = desks.deskLookup[desk_id].name;
                         }

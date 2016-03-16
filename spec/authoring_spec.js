@@ -207,7 +207,7 @@ describe('authoring', function() {
         monitoring.showHideList();
 
         authoring.publish();
-        expect(monitoring.getGroups().count()).toBe(5);
+        expect(monitoring.getGroups().count()).toBe(6);
     });
 
     it('broadcast operation', function() {
@@ -238,7 +238,7 @@ describe('authoring', function() {
     });
 
     it('related item widget can open published item', function() {
-        expect(monitoring.getGroups().count()).toBe(5);
+        expect(monitoring.getGroups().count()).toBe(6);
         expect(monitoring.getTextItem(1, 1)).toBe('item9');
         expect(monitoring.getTextItemBySlugline(1, 1)).toBe('ITEM9 SLUGLINE');
         monitoring.actionOnItem('Edit', 1, 1);
@@ -246,8 +246,8 @@ describe('authoring', function() {
 
         monitoring.actionOnItem('Duplicate', 4, {type: 'text'}); // duplicate item9 text published item
         monitoring.turnOffWorkingStage(0);
-        expect(monitoring.getGroupItems(5).count()).toBe(1);
-        monitoring.actionOnItem('Edit', 5, 0);
+        expect(monitoring.getGroupItems(6).count()).toBe(1);
+        monitoring.actionOnItem('Edit', 6, 0);
 
         authoring.openRelatedItem(); // opens related item widget
         expect(authoring.getRelatedItemBySlugline(0).getText()).toBe('item9 slugline');
