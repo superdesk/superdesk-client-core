@@ -47,7 +47,7 @@
 
             return {
                 template: [
-                    '<div class="modal">',
+                    '<div class="modal" data-backdrop="static">',
                     '<div class="modal-dialog" ng-if="model"><div class="modal-content" ng-transclude></div></div>',
                     '</div>'].join(''),
                 transclude: true,

@@ -3,8 +3,8 @@
 
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
-SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash', 'EMBED_PROVIDERS', '$scope', 'editor'];
-function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PROVIDERS, $scope, editor) {
+SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash', 'EMBED_PROVIDERS', '$scope', 'editor', '$http'];
+function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PROVIDERS, $scope, editor, $http) {
     var vm = this;
     angular.extend(vm, {
         editorCtrl: undefined,  // defined in link method
@@ -36,16 +36,14 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
             return html.join('\n');
         },
         retrieveEmbed:function() {
-            // if it's an url, use embedService to retrieve the embed code
-            var embedCode;
-            if (_.startsWith(vm.input, 'http')) {
-                embedCode = embedService.get(vm.input).then(function(data) {
+            function retrieveEmbedFromUrl() {
+                return embedService.get(vm.input).then(function(data) {
                     var embed = data.html;
                     if (!angular.isDefined(embed)) {
                         if (data.type === 'link') {
                             embed = vm.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
                         } else {
-                            embed = editor.generateImageTag({url: data.url, caption: data.description});
+                            embed = editor.generateImageTag({url: data.url, altText: data.description});
                         }
                     }
                     return $q.when(embed).then(function(embed) {
@@ -55,21 +53,81 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                         };
                     });
                 });
-            // otherwise we use the content of the field directly
-            } else {
-                var embedType = EMBED_PROVIDERS.custom;
-                // try to guess the provider of the custom embed
-                if (vm.input.indexOf('twitter.com/widgets.js') > -1) {
-                    embedType = EMBED_PROVIDERS.twitter;
-                } else if (vm.input.indexOf('https://www.youtube.com') > -1){
-                    embedType = EMBED_PROVIDERS.youtube;
-                }
-                embedCode = $q.when({
+            }
+            function parseRawEmbedCode() {
+                var waitFor = [];
+                var embedBlock = {
                     body: vm.input,
-                    provider: embedType
+                    provider: EMBED_PROVIDERS.custom
+                };
+                var providersKnown = [
+                    {
+                        pattern: /twitter\.com\/widgets\.js/g,
+                        name: EMBED_PROVIDERS.twitter
+                    },
+                    {
+                        pattern: /www\.youtube\.com/g,
+                        name: EMBED_PROVIDERS.youtube
+                    },
+                    {
+                        pattern: /src="(.*vidible\.tv.*pid=.*.js)/g,
+                        name: EMBED_PROVIDERS.vidible,
+                        callback: function(match) {
+                            var url = 'https://' + match[1];
+                            // $http raise a Same Origin Policy error, so we use jquery here
+                            waitFor.push(
+                                $q(function(resolve, reject) {
+                                    $.ajax({
+                                        url: url,
+                                        type: 'GET',
+                                        dataType: 'text',
+                                        success: function(data) {
+                                            data = /({.*})/.exec(data)[1];
+                                            data = JSON.parse(data);
+                                            // set association
+                                            embedBlock.association = {
+                                                id: data.bid.id,
+                                                title: data.bid.videos[0].name,
+                                                thumbnail: data.bid.videos[0].thumbnail,
+                                                url: data.bid.videos[0].videoUrls[0],
+                                                // size: ,
+                                                // creationDate: ,
+                                                company: data.bid.videos[0].studioName,
+                                                duration: data.bid.videos[0].metadata.duration,
+                                            };
+                                            resolve(embedBlock);
+                                        }
+                                    });
+                                })
+                            );
+                        }
+                    }
+                ];
+                // try to guess the provider of the custom embed
+                for (var i = 0; i < providersKnown.length; i++) {
+                    var provider = providersKnown[i];
+                    var match = provider.pattern.exec(vm.input);
+                    if (match) {
+                        embedBlock.provider = provider.name;
+                        if (provider.callback) {
+                            provider.callback(match);
+                        }
+                        break;
+                    }
+                }
+                return $q.all(waitFor).then(function() {
+                    return embedBlock;
                 });
             }
-            return embedCode;
+            var embedCode;
+            // if it's an url, use embedService to retrieve the embed code
+            if (_.startsWith(vm.input, 'http')) {
+                embedCode = retrieveEmbedFromUrl(vm.input);
+            // otherwise we use the content of the field directly
+            } else {
+                embedCode = parseRawEmbedCode(vm.input);
+            }
+            return $q.when(embedCode);
         },
         updatePreview: function() {
             vm.previewLoading = true;
@@ -87,7 +145,8 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
             vm.retrieveEmbed().then(function(embed) {
                 vm.createFigureBlock({
                     embedType: embed.provider,
-                    body: embed.body
+                    body: embed.body,
+                    association: embed.association
                 });
                 // close the addEmbed form
                 vm.toggle(true);

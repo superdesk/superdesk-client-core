@@ -886,13 +886,7 @@
         // should show the metadata form in the view
         $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
         // initialize metadata from `item`
-        if ($scope.data.showMetadataEditor) {
-            $scope.data.metadata = {};
-            ['headline', 'description_text', 'slugline', 'byline', 'usageterms', 'copyrightnotice', 'copyrightholder'].forEach(function(key) {
-                $scope.data.metadata[key] = $scope.data.item[key];
-            });
-        }
-
+        $scope.data.metadata = angular.copy($scope.data.item);
         $scope.selectedRendition = null;
 
         $scope.selectRendition = function(rendition) {
@@ -2436,6 +2430,7 @@
         .directive('sdAuthoringHeader', AuthoringHeaderDirective)
         .directive('sdItemAssociation', ItemAssociationDirective)
         .directive('sdFullPreview', FullPreviewDirective)
+        .filter('embeddedFilter', EmbeddedFilter)
 
         .config(['superdeskProvider', function(superdesk) {
             superdesk
@@ -3056,6 +3051,18 @@
                     return false;
                 };
             }
+        };
+    }
+
+    function EmbeddedFilter() {
+        return function(input) {
+            var output = {};
+            for (var i in input) {
+                if (i.charAt(0) !== '_') {
+                    output[i] = input[i];
+                }
+            }
+            return output;
         };
     }
 
