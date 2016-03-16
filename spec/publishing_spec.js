@@ -37,15 +37,4 @@ describe('publishing', function() {
         publishQueue.searchAction(_uniqueName);
         expect(publishQueue.getItemCount()).toBe(1);
     });
-
-    it('can open item from inside the composite item', function() {
-        publishQueue.previewAction(0);
-        expect(publishQueue.getPreviewTitle()).toBe('item5');
-        var _compositeItemHeadline = publishQueue.getCompositeItemHeadline(0);
-        publishQueue.openCompositeItem('MAIN');
-        browser.sleep(500);
-        var _openedItemHeadline = publishQueue.getOpenedItemHeadline();
-        browser.sleep(100);
-        expect(_openedItemHeadline).toBe(_compositeItemHeadline);
-    });
 });
