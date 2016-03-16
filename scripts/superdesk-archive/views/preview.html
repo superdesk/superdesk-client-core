@@ -17,10 +17,10 @@
               <i class="filetype-icon-{{selected.preview.type }}" title="{{'Article Type' | translate }}"></i>
             </div>
             <div class="preview-header__flex-row">
-              <span ng-if="selected.preview.priority" class="priority-label priority-label--{{selected.preview.priority}}">{{selected.preview.priority}}</span>
+              <span ng-if="selected.preview.priority" class="priority-label priority-label--{{selected.preview.priority}}" title="{{:: 'Priority'| translate }}">{{selected.preview.priority}}</span>
             </div>
             <div class="preview-header__flex-row">
-              <span ng-if="selected.preview.urgency" class="urgency-label urgency-label--{{selected.preview.urgency}}">{{selected.preview.urgency}}</span>
+              <span ng-if="selected.preview.urgency" class="urgency-label urgency-label--{{selected.preview.urgency}}" title="{{:: 'Urgency'| translate }}">{{selected.preview.urgency}}</span>
             </div>
           </div>
           <div class="preview-header__main-block">
