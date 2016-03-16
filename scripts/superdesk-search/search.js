@@ -1672,12 +1672,22 @@
                             }
                         }
 
+                        function booleanToBinaryString(bool) {
+                            return Number(bool).toString();
+                        }
+
                         /*
                          * Get Query function build the query string
                          */
                         function getQuery() {
                             var metas = [];
+
                             angular.forEach(scope.meta, function(val, key) {
+                                //checkbox boolean values.
+                                if (typeof(val) === 'boolean') {
+                                    val = booleanToBinaryString(val);
+                                }
+
                                 val = val.replace(/[()]/g, '');
                                 if (key === '_all') {
                                     metas.push(val.join(' '));
