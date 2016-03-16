@@ -70,7 +70,7 @@
         subject: {order: 8, sdWidth: 'full'},
         company_codes: {order: 10, sdWidth: 'full'},
         ednote: {order: 11, sdWidth: 'full'},
-        headline: {maxlength: 64, order: 1, editor: ['underline','anchor']},
+        headline: {maxlength: 64, order: 1, editor: ['underline', 'anchor']},
         abstract: {maxlength: 160, order: 2, editor: ['bold', 'italic', 'underline', 'anchor']},
         body_html: {order: 5, editor: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'table']},
         byline: {order: 3},
