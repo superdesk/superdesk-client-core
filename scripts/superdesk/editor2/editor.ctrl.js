@@ -169,7 +169,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
                         if (block.blockType === 'embed') {
                             var blockName = block.embedType.trim();
                             // add an id to the image in order to retrieve it in `assocations` field
-                            if (block.embedType === 'Image') {
+                            if (block.association) {
                                 blockName += ' {id: "_embedded_' + vm.generateBlockId(block) + '"}';
                             }
                             new_body += [
@@ -217,7 +217,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
             var association = {};
             vm.blocks.forEach(function(block) {
                 // we keep the association only for Superdesk images
-                if (block.association && block.embedType === 'Image') {
+                if (block.association) {
                     // add the association
                     association['_embedded_' + vm.generateBlockId(block)] = angular.copy(block.association);
                 }
