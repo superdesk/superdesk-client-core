@@ -976,7 +976,10 @@
                         if (lang === gettextCatalog.baseLanguage) {
                             noBaseLanguage = false;
                         }
-                        return {'code': lang, 'nativeName': langmap[lang].nativeName};
+                        lang = lang.replace('_', '-');
+                        if (langmap[lang]) {
+                            return {'code': lang, 'nativeName': langmap[lang].nativeName};
+                        }
                     });
 
                     //add baseLanguage if needed
