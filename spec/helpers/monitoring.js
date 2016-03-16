@@ -436,13 +436,13 @@ function Monitoring() {
         var dst = this.getOrderItem(end);
         return src.waitReady().then(function() {
             browser.actions()
-                .mouseMove(src, {x: 0, y: 0})
+                .mouseMove(src)
                 .mouseDown()
                 .perform()
                 .then(function() {
                     dst.waitReady().then(function () {
                         browser.actions()
-                            .mouseMove(dst, {x: 5, y: 5})
+                            .mouseMove(dst)
                             .mouseUp()
                             .perform();
                     });
