@@ -11,8 +11,8 @@
 
     'use strict';
 
-    MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace'];
-    function MultieditService(storage, superdesk, authoringWorkspace) {
+    MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
+    function MultieditService(storage, superdesk, authoringWorkspace, referrer, $location) {
 
         //1. Service manages multiedit screen
         //2. Screen has it's boards, at least 2 of them
@@ -50,12 +50,14 @@
         this.exit = function(item) {
             this.items = [];
             this.updateItems();
+            $location.url(referrer.getReferrerUrl());
         };
 
         this.open = function () {
             if (authoringWorkspace.getState()) {
                 authoringWorkspace.close(true);
             }
+            referrer.setReferrerUrl($location.url());
             superdesk.intent('author', 'multiedit');
         };
 
@@ -89,8 +91,8 @@
         }
     }
 
-    MultieditController.$inject = ['$scope', 'multiEdit', '$location', 'lock', 'workqueue'];
-    function MultieditController($scope, multiEdit, $location, lock, workqueue) {
+    MultieditController.$inject = ['$scope', 'multiEdit', 'lock', 'workqueue'];
+    function MultieditController($scope, multiEdit, lock, workqueue) {
 
         $scope.$watch(function() {
             return multiEdit.items;
@@ -106,7 +108,6 @@
 
         $scope.closeMulti = function() {
             multiEdit.exit();
-            $location.url('/workspace/monitoring');
         };
     }
 
