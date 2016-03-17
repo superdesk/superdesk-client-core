@@ -64,7 +64,7 @@
                   </div>
                 </div>
 
-                <div sd-info-item>
+                <div sd-info-item ng-if="!hideSignOff">
                   <label for="sign_off" translate>Sign-Off</label>
                   <input type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern" required>
 

@@ -204,5 +204,11 @@
 
 <div class="field pull-left" ng-if="item.sign_off && schema.sign_off" order="{{schema.sign_off.order}}">
     <label translate>Sign-Off</label>
-    <div>{{item.sign_off}}</div>
+    <div>{{item.sign_off}}
+      <button class="btn btn-signOff" ng-click="changeSignOffEdit()" title="Unlock edit Sign-Off" ng-if="canEditSignOff && _editable">
+  		  <i class="icon-lock" ng-hide="editSignOff"></i>
+  		  <i class="icon-trash" ng-show="editSignOff"></i>
+  		</button>
+    </div>
+    <div ng-show="editSignOff" sd-user-select-list data-onchoose="modifySignOff(user)"></div>
 </div>

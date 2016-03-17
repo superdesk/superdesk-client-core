@@ -926,10 +926,11 @@
             };
         }])
 
-        .directive('sdUserEdit', ['api', 'gettext', 'notify', 'usersService', 'userList', 'session', 'lodash', 'langmap',
-            '$location', '$route', 'superdesk', 'features', 'asset', 'privileges', 'desks', 'keyboardManager', 'gettextCatalog',
+        .directive('sdUserEdit', ['api', 'gettext', 'notify', 'usersService', 'userList', 'session', 'lodash',
+                                  'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
+                                  'desks', 'keyboardManager', 'gettextCatalog', 'config',
         function(api, gettext, notify, usersService, userList, session, _, langmap, $location, $route, superdesk, features,
-                 asset, privileges, desks, keyboardManager, gettextCatalog) {
+                 asset, privileges, desks, keyboardManager, gettextCatalog, config) {
             return {
                 templateUrl: asset.templateUrl('superdesk-users/views/edit-form.html'),
                 scope: {
@@ -944,6 +945,7 @@
                     scope.usernamePattern = usersService.usernamePattern;
                     scope.phonePattern = usersService.phonePattern;
                     scope.signOffPattern = usersService.signOffPattern;
+                    scope.hideSignOff = config.user && config.user.sign_off_mapping ? true: false;
 
                     scope.dirty = false;
                     scope.errorMessage = null;
