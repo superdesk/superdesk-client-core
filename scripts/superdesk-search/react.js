@@ -61,7 +61,7 @@
         }
     }
 
-    angular.module('superdesk.search.react', ['superdesk.highlights'])
+    angular.module('superdesk.search.react', ['superdesk.highlights', 'superdesk.datetime'])
         .service('monitoringState', MonitoringState)
         .directive('sdItemsList', [
             '$location',
@@ -73,7 +73,7 @@
             'api',
             'search',
             'session',
-            'moment',
+            'datetime',
             'gettext',
             'superdesk',
             'workflowService',
@@ -96,7 +96,7 @@
             api,
             search,
             session,
-            moment,
+            datetime,
             gettext,
             superdesk,
             workflowService,
@@ -131,6 +131,17 @@
                     function hasThumbnail(item) {
                         return item.type === 'picture' && item.renditions.thumbnail;
                     }
+
+                    /**
+                     * Time element
+                     */
+                    var TimeElem = function(props) {
+                        return React.createElement(
+                            'time',
+                            {title: datetime.longFormat(props.date)},
+                            datetime.shortFormat(props.date)
+                        );
+                    };
 
                     /**
                      * Media Preview - renders item thumbnail
@@ -238,12 +249,12 @@
 
                         meta.push(
                             React.createElement('dt', {key: 3}, gettext('updated')),
-                            React.createElement('dd', {key: 4}, moment(item.versioncreated).fromNow())
+                            React.createElement('dd', {key: 4}, datetime.shortFormat(item.versioncreated))
                         );
 
                         if (item.is_spiked) {
                             meta.push(React.createElement('dt', {key: 5}, gettext('expires')));
-                            meta.push(React.createElement('dd', {key: 6}, moment(item.expiry).fromNow()));
+                            meta.push(React.createElement('dd', {key: 6}, datetime.shortFormat(item.expiry)));
                         }
 
                         var info = [];
@@ -606,7 +617,7 @@
                                 React.createElement('span', {className: 'item-heading'}, item.headline ?
                                     item.headline.substr(0, 90) :
                                     item.type),
-                                React.createElement('time', {}, moment(item.versioncreated).fromNow())
+                                React.createElement(TimeElem, {date: item.versioncreated})
                             ),
                             React.createElement('div', {className: 'line'},
                                 React.createElement(ItemState, {item: item}),
@@ -635,7 +646,7 @@
                                 React.createElement('span', {className: 'provider'}, provider.name),
                                 item.is_spiked ?
                                     React.createElement('div', {className: 'expires'},
-                                        gettext('expires') + ' ' + moment(item.expiry).fromNow()) :
+                                        gettext('expires') + ' ' + datetime.shortFormat(item.expiry)) :
                                     null,
                                 item.archived ? React.createElement(FetchedDesksInfo, {item: item}) : null,
                                 React.createElement(ItemContainer, {item: item, desk: props.desk})
