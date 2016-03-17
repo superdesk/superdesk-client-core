@@ -3061,8 +3061,8 @@
         };
     }
 
-    FullPreviewDirective.$inject = ['api', '$timeout'];
-    function FullPreviewDirective(api, $timeout) {
+    FullPreviewDirective.$inject = ['api', '$timeout', 'config'];
+    function FullPreviewDirective(api, $timeout, config) {
         return {
             scope: {
                 item: '=',
@@ -3071,6 +3071,8 @@
             templateUrl: 'scripts/superdesk-authoring/views/full-preview.html',
             link: function (scope, elem, attr, ctrl) {
                 scope.hide_images = true;
+
+                scope.filterKey = config.previewSubjectFilterKey || '';
 
                 scope.printPreview = function () {
                     angular.element('body').addClass('prepare-print');
