@@ -38,6 +38,7 @@
         </div>
         <div class="line">
             <div sd-item-state data-state=item.state data-embargo=item.embargo ng-hide="viewType !== undefined && viewType !== null && viewType !== 'deskOutput'"></div>
+            <div class="provider" ng-if="item.correction_sequence"><span translate>Update</span> {{ item.correction_sequence }}</div>
             <div class="label label--{{ :: item.profile }}" ng-if="item.profile">{{ :: item.profile }}</div>
             <div class="takekey" ng-if="item.anpa_take_key">{{ item.anpa_take_key }}</div>
             <span class="signal" ng-if="item.signal">{{ item.signal }}</span>
