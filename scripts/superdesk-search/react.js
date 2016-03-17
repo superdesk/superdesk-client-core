@@ -9,6 +9,7 @@
         this.init = init;
         this.state = {};
         this.setState = setState;
+        this.moveActiveGroup = moveActiveGroup;
 
         // reset state on every page change
         $rootScope.$on('$routeChangeSuccess', reset);
@@ -58,6 +59,23 @@
             }
 
             return ready;
+        }
+
+        /**
+         * Move active group up/down
+         *
+         * @param {Integer} diff
+         */
+        function moveActiveGroup(diff) {
+            var groups = self.state.groups;
+            var next = groups.indexOf(self.state.activeGroup) + diff;
+            if (next >= groups.length) {
+                next = 0;
+            } else if (next < 0) {
+                next = groups.length - 1;
+            }
+
+            setState({activeGroup: groups[next]});
         }
     }
 
@@ -112,16 +130,27 @@
         ) {
             return {
                 link: function(scope, elem) {
-                    var menuHolderElem = document.getElementById('react-placeholder');
+                    elem.attr('tabindex', 0);
 
+                    var menuHolderElem = document.getElementById('react-placeholder');
                     var closeActionsMenu = function() {
                         ReactDOM.unmountComponentAtNode(menuHolderElem);
                     };
 
                     var groupId = scope.$id;
-                    if (!monitoringState.state.activeGroup) {
-                        monitoringState.setState({activeGroup: groupId});
-                    }
+                    var groups = monitoringState.state.groups || [];
+                    monitoringState.setState({
+                        groups: groups.concat(scope.$id),
+                        activeGroup: monitoringState.state.activeGroup || groupId
+                    });
+
+                    scope.$watch(function() {
+                        return monitoringState.state.activeGroup;
+                    }, function(activeGroup) {
+                        if (activeGroup === groupId) {
+                            elem.focus();
+                        }
+                    });
 
                     /**
                      * Test if an item has thumbnail
@@ -1105,10 +1134,6 @@
                         },
 
                         handleKey: function(event) {
-                            if (monitoringState.state.activeGroup !== groupId) {
-                                return; // ignore keyboard in non-active groups
-                            }
-
                             var diff;
 
                             switch (event.keyCode) {
@@ -1129,6 +1154,16 @@
 
                                     event.stopPropagation();
                                     return;
+
+                                case Keys.pageup:
+                                case Keys.pagedown:
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    this.select(); // deselect active item
+                                    scope.$applyAsync(function() {
+                                        monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
+                                    });
+                                    return;
                             }
 
                             if (diff != null) {
@@ -1146,10 +1181,6 @@
                                     this.select(this.state.itemsById[this.state.itemsList[0]]);
                                 }
                             }
-                        },
-
-                        componentDidMount: function() {
-                            ReactDOM.findDOMNode(this).focus();
                         },
 
                         closeActionsMenu: closeActionsMenu,
@@ -1187,8 +1218,7 @@
                                         'list-view',
                                         this.state.view + '-view',
                                         {'list-without-items': isEmpty}
-                                    ),
-                                    tabIndex: '0'
+                                    )
                                 },
                                 isEmpty ?
                                     React.createElement('li', {}, gettext('There are currently no items')) :
@@ -1325,11 +1355,6 @@
                             }
                         });
 
-                        elem.on('scroll', handleScroll);
-                        scope.$on('$destroy', function() {
-                            elem.off('scroll');
-                        });
-
                         var updateTimeout;
 
                         /**
@@ -1374,15 +1399,12 @@
                             return elem.scrollTop + elem.offsetHeight + 200 >= elem.scrollHeight;
                         }
 
-                        // handle default events
-                        angular.forEach(Object.keys(Keys), function(key) {
-                            scope.$on('key:' + key, function($event, event) {
-                                listComponent.handleKey(event);
-                            });
-                        });
+                        elem.on('keydown', listComponent.handleKey);
+                        elem.on('scroll', handleScroll);
 
                         // remove react elem on destroy
                         scope.$on('$destroy', function() {
+                            elem.off();
                             ReactDOM.unmountComponentAtNode(elem[0]);
                         });
                     });

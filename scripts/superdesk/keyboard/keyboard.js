@@ -4,6 +4,8 @@
     return angular.module('superdesk.keyboard', ['gettext'])
 
     .constant('Keys', Object.freeze({
+        pageup: 33,
+        pagedown: 34,
         left: 37,
         up: 38,
         right: 39,
