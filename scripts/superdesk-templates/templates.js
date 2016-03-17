@@ -67,7 +67,7 @@
             {_id: 'highlights', label: gettext('Highlights')}
         ];
 
-        this.fetchTemplates = function fetchTemplates(page, pageSize, type, desk, user, keyword) {
+        this.fetchTemplates = function fetchTemplates(page, pageSize, type, desk, user, templateName) {
             var params = {
                 page: page || 1,
                 max_results: pageSize || PAGE_SIZE
@@ -79,8 +79,8 @@
                 criteria.template_type = type;
             }
 
-            if (keyword) {
-                criteria.template_name = {'$regex': keyword, '$options': '-i'};
+            if (templateName) {
+                criteria.template_name = {'$regex': templateName, '$options': '-i'};
             }
 
             if (user || desk) {
@@ -387,7 +387,7 @@
             },
             link: function(scope) {
                 scope.options = {
-                    keyword: null
+                    templateName: null
                 };
 
                 scope.close = function() {
@@ -404,7 +404,7 @@
                  */
                 function fetchTemplates() {
                     templates.fetchTemplates(scope.options.page, PAGE_SIZE, 'create',
-                        desks.getCurrentDeskId(), session.identity._id, scope.options.keyword)
+                        desks.getCurrentDeskId(), session.identity._id, scope.options.templateName)
                     .then(function(result) {
                         if (result._items.length === 0) {
                             notify.error(gettext('No Templates found.'));
@@ -423,7 +423,7 @@
                     });
                 }
 
-                scope.$watch('options.keyword', fetchTemplates);
+                scope.$watch('options.templateName', fetchTemplates);
             }
         };
     }
