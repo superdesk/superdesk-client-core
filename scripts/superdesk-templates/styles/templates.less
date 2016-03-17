@@ -1,5 +1,15 @@
 .template-card {
-	.card-box__content {
-		min-height: 120px; /* should be big enough to fit in dropdown menu */
-	}
+    .card-box__content {
+        min-height: 120px; /* should be big enough to fit in dropdown menu */
+    }
+}
+
+.template-header {
+    h3 span {
+        max-width: calc(~'100vw - 290px');
+        float: left;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        &:first-of-type { margin-right: 3px; }
+    }
 }
