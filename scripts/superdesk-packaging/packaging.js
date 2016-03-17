@@ -506,13 +506,14 @@
         };
     }
 
-    PackageItemPreviewDirective.$inject = ['api', 'lock', 'superdesk'];
-    function PackageItemPreviewDirective(api, lock, superdesk) {
+    PackageItemPreviewDirective.$inject = ['api', 'lock', 'superdesk', '$location'];
+    function PackageItemPreviewDirective(api, lock, superdesk, $location) {
         return {
             templateUrl: 'scripts/superdesk-packaging/views/sd-package-item-preview.html',
             link: function(scope) {
                 scope.data = null;
                 scope.error = null;
+                scope.no_open = null;
 
                 if (scope.item.location) {
                     var url = '';
@@ -541,6 +542,10 @@
                     }, function(response) {
                         scope.error = true;
                     });
+                }
+
+                if ($location.path() === '/publish_queue') {
+                    scope.no_open = true;
                 }
 
                 scope.$on('item:lock', function(_e, data) {
