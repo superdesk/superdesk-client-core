@@ -461,6 +461,22 @@ body, html {
     }
 	}
 
+    .image-caption {
+        font-size: 16px;
+        text-transform: none;
+    &::-webkit-input-placeholder {
+      color: #ccc;
+    }
+    &::-moz-placeholder {
+      color: #ccc;
+      opacity: 1;
+    }
+    &:focus {
+      &::-webkit-input-placeholder { color:transparent; }
+      &::-moz-placeholder { color:transparent; }
+    }
+    }
+
 	.text-editor {
 		//font-size: 16px;
 		//line-height: 150%;
