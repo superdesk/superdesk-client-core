@@ -35,7 +35,7 @@
                         <label translate>Topic</label>
                     </div>
                     <div class="preview-data">
-                        <span ng-repeat="topic in item.subject">
+                        <span ng-repeat="topic in item.subject|filter:filterKey">
                             {{topic.name}}
                         </span>
                     </div>

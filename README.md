@@ -36,3 +36,7 @@
 - `shortWeekFormat`: `'dddd, hh:mm'` - format for current week in item list
 - `shortDateFormat`: `'MM/DD'` - format for other days in item list
 - `longDateFormat`: `'LLL'` - format with full date and time
+
+##### Authoring
+
+- `previewSubjectFilterKey`: `null` - full preview in authoring displays only matching subjects
