@@ -92,57 +92,66 @@
                 max-height: calc(~"100vh - 180px") !important;
             }
         }
-
-        .content-item-preview {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: @sidepreview-width;
-            box-shadow: inset 2px 0 3px -1px #d8d8d8;
-            @media only screen and (max-width : 1430px) {
-                width: @sidepreview-width - 40;
-            }
-        }
-
-        &.with-preview {
-            .content-list {
-                right: @sidepreview-width;
-                @media only screen and (max-width : 1430px) {
-                    right: @sidepreview-width - 40;
-                }
-            }
-        }
     }
 }
 
-.authoring {
-    .main-section {
-        .content-item-preview {
-            @media only screen and (max-width : 1630px) {
-                width: @sidepreview-width - 40;
-            }
-            @media only screen and (max-width : 1430px) {
-                width: @sidepreview-width - 80;
-                right: -320px;
-            }
-        }
-        &.with-preview {
-            .content-list {
-                @media only screen and (max-width : 1630px) {
-                    right: @sidepreview-width - 40;
-                }
-                @media only screen and (max-width : 1430px) {
-                    right: 0;
-                }
-            }
-            .content-item-preview {
-                @media only screen and (max-width : 1430px) {
-                    box-shadow: inset 4px 0 8px -5px rgba(0,0,0,0.9), 0 1px 12px 2px rgba(0,0,0,0.3), 0 1px 2px 1px rgba(0,0,0,0.3);
-                }
-            }
-        }
+
+
+
+.workspace {
+  .main-section {
+    .content-item-preview {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: @sidepreview-width + 160;
+      box-shadow: inset 2px 0 3px -1px #d8d8d8;
+      @media only screen and (max-width : 1430px) {
+          width: @sidepreview-width - 40;
+      }
     }
+    &.with-preview {
+      .content-list {
+        right: @sidepreview-width + 160;
+        @media only screen and (max-width : 1430px) {
+            right: @sidepreview-width - 40;
+        }
+      }
+    }
+  }
+}
+
+
+.workspace.authoring {
+  .main-section {
+    .content-item-preview {
+      width: @sidepreview-width;
+      @media only screen and (max-width : 1630px) {
+        width: @sidepreview-width - 40;
+      }
+      @media only screen and (max-width : 1430px) {
+        width: @sidepreview-width - 80;
+        right: -324px;
+      }
+    }
+    &.with-preview {
+      .content-list {
+        right: @sidepreview-width;
+        @media only screen and (max-width : 1630px) {
+          right: @sidepreview-width - 40;
+        }
+        @media only screen and (max-width : 1430px) {
+          right: 0;
+        }
+      }
+      .content-item-preview {
+        @media only screen and (max-width : 1430px) {
+            box-shadow: inset 3px 0 6px -3px rgba(0,0,0,0.3), 0 1px 12px 2px rgba(0,0,0,0.3), 0 1px 2px 1px rgba(0,0,0,0.3);
+        }
+      }
+    }
+  }
 }
 
 .notification-label {
