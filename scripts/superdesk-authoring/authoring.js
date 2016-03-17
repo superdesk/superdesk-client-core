@@ -2226,9 +2226,32 @@
         };
     }
 
-    ArticleEditDirective.$inject = ['autosave', 'authoring', 'metadata', '$filter', 'superdesk', 'content',
-                                    'renditions', 'config'];
-    function ArticleEditDirective(autosave, authoring, metadata, $filter, superdesk, content, renditions, config) {
+    ArticleEditDirective.$inject = [
+        'autosave',
+        'authoring',
+        'metadata',
+        '$filter',
+        'superdesk',
+        'content',
+        'renditions',
+        'config',
+        'session',
+        'gettext',
+        '$interpolate'
+    ];
+    function ArticleEditDirective(
+        autosave,
+        authoring,
+        metadata,
+        $filter,
+        superdesk,
+        content,
+        renditions,
+        config,
+        session,
+        gettext,
+        $interpolate
+    ) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/article-edit.html',
             link: function(scope, elem) {
@@ -2241,6 +2264,7 @@
                 scope.editSignOff = false;
 
                 var mainEditScope = scope.$parent.$parent;
+                var autopopulateByline = config.features && config.features.autopopulateByline;
 
                 /* Start: Dateline related properties */
 
@@ -2251,9 +2275,9 @@
 
                 /* End: Dateline related properties */
 
-                /* Creates a copy of dateline object from item.__proto__.dateline */
                 scope.$watch('item', function(item) {
                     if (item) {
+                        /* Creates a copy of dateline object from item.__proto__.dateline */
                         if (item.dateline) {
                             var updates = {dateline: {}};
                             updates.dateline = _.pick(item.dateline, ['source', 'date', 'located', 'text']);
@@ -2272,6 +2296,9 @@
                                         scope.schema = type.schema || DEFAULT_SCHEMA;
                                     });
                             }
+                        }
+                        if (autopopulateByline && !item.byline) {
+                            item.byline = $interpolate(gettext('by {{ display_name }}'))({display_name: session.identity.display_name});
                         }
                     }
                 });
