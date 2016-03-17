@@ -2239,7 +2239,19 @@
         'gettext',
         '$interpolate'
     ];
-    function ArticleEditDirective(autosave, authoring, metadata, $filter, superdesk, content, renditions, config, session, gettext, $interpolate) {
+    function ArticleEditDirective(
+        autosave,
+        authoring,
+        metadata,
+        $filter,
+        superdesk,
+        content,
+        renditions,
+        config,
+        session,
+        gettext,
+        $interpolate
+    ) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/article-edit.html',
             link: function(scope, elem) {
