@@ -109,7 +109,7 @@
             </ul>
         </div>
 
-        <div sd-toggle-box data-title="{{:: 'Urgency' | FacetLabels }}" ng-hide="isEmpty('urgency')" data-open="true">
+        <div sd-toggle-box data-title="{{:: 'Urgency' | translate }}" ng-hide="isEmpty('urgency')" data-open="true">
             <ul class="filter-box">
                 <li ng-repeat="(key,value) in aggregations.urgency" ng-click="toggleFilter('urgency', key)">
                     <span class="sd-checkbox" ng-checked="hasFilter('urgency',key)"></span>
@@ -118,7 +118,7 @@
             </ul>
         </div>
 
-        <div sd-toggle-box data-title="{{:: 'Priority' | FacetLabels }}" ng-hide="isEmpty('priority')" data-open="true">
+        <div sd-toggle-box data-title="{{:: 'Priority' | translate }}" ng-hide="isEmpty('priority')" data-open="true">
             <ul class="filter-box">
                 <li ng-repeat="(key,value) in aggregations.priority" ng-click="toggleFilter('priority', key)">
                     <span class="sd-checkbox" ng-checked="hasFilter('priority',key)"></span>
@@ -127,7 +127,7 @@
             </ul>
         </div>
 
-        <div sd-toggle-box data-title="{{:: 'Flags' | FacetLabels }}" ng-hide="isEmpty('priority')" data-open="true">
+        <div sd-toggle-box data-title="{{:: 'Flags' | translate }}" ng-hide="isEmpty('priority')" data-open="true">
             <ul class="filter-box">
                 <li ng-click="toggleFilter('legal', 'true')">
                     <span class="sd-checkbox" ng-checked="hasFilter('legal', 'true')"></span>

@@ -1,7 +1,7 @@
 <ul>
     <li ng-repeat="(type,keys) in tags.selectedFacets">
         <div ng-repeat="key in keys">
-            <span>{{type| FacetLabels}}:</span>{{key}}<button ng-click="removeFilter(type, key)"><i class="icon-close-small icon-white"></i></button>
+            <span>{{type| translate}}:</span>{{key}}<button ng-click="removeFilter(type, key)"><i class="icon-close-small icon-white"></i></button>
         </div>
     </li>
     <li ng-repeat="parameter in tags.selectedParameters">

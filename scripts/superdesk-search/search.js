@@ -548,16 +548,6 @@
         .service('search', SearchService)
         .service('tags', TagService)
         .controller('MultiActionBar', MultiActionBarController)
-        .filter('FacetLabels', function() {
-            return function(input) {
-                if (input.toUpperCase() === 'URGENCY') {
-                    return 'Urgency';
-                } else {
-                    return input;
-                }
-
-            };
-        })
 
         /**
          * A directive that generates the sidebar containing search results
