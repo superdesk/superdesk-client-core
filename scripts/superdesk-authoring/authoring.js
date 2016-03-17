@@ -1838,6 +1838,7 @@
                 scope.showSendButtonAndDestination = function () {
                     if (scope.itemActions) {
                         return scope.mode === 'ingest' ||
+                                scope.mode === 'personal' ||
                                 scope.mode === 'monitoring' ||
                                 (scope.mode === 'authoring' && scope.isSendEnabled() && scope.itemActions.send);
                     }
