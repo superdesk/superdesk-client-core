@@ -374,7 +374,7 @@
                         var priority = props.priority || 3;
                         return React.createElement(
                             'span',
-                            {className: 'priority-label priority-label--' + priority},
+                            {className: 'priority-label priority-label--' + priority, title: gettext('Priority')},
                             priority
                         );
                     };
@@ -387,12 +387,12 @@
                             item.priority ?
                                 React.createElement(
                                     'span',
-                                    {className: 'priority-label priority-label--' + item.priority},
+                                    {className: 'priority-label priority-label--' + item.priority, title: gettext('Priority')},
                                     item.priority
                                 ) :
                                 React.createElement(
                                     'span',
-                                    {className: 'output-item-label label-' + item.urgency},
+                                    {className: 'output-item-label label-' + item.urgency , title: gettext('Urgency')},
                                     item.urgency
                                 )
                         );
@@ -687,7 +687,7 @@
                         var urgency = props.urgency || 3;
                         return React.createElement(
                             'span',
-                            {className: 'urgency-label urgency-label--' + urgency},
+                            {className: 'urgency-label urgency-label--' + urgency, title: gettext('Urgency')},
                             urgency
                         );
                     };
