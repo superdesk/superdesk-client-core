@@ -785,7 +785,7 @@ angular.module('superdesk.editor2', [
     }])
     .directive('sdTextEditor', ['$timeout', function ($timeout) {
         return {
-            scope: {type: '=', config: '=', language: '=', associations: '='},
+            scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '='},
             require: ['sdTextEditor', 'ngModel'],
             templateUrl: 'scripts/superdesk/editor2/views/editor.html',
             controllerAs: 'vm',
@@ -821,34 +821,7 @@ angular.module('superdesk.editor2', [
                 align: 'left',
                 sticky: true,
                 stickyTopOffset: 96, // header height
-                updateOnEmptySelection: true,
-                buttons: [
-                    // H1 and H2 buttons which actually produce
-                    // <h2> and <h3> tags respectively
-                    {
-                        name: 'h1',
-                        action: 'append-h2',
-                        aria: 'header type 1',
-                        tagNames: ['h2'],
-                        contentDefault: '<b>H1</b>',
-                        classList: ['custom-class-h1'],
-                        attrs: {
-                            'data-custom-attr': 'attr-value-h1'
-                        }
-                    },
-                    {
-                        name: 'h2',
-                        action: 'append-h3',
-                        aria: 'header type 2',
-                        tagNames: ['h3'],
-                        contentDefault: '<b>H2</b>',
-                        classList: ['custom-class-h2'],
-                        attrs: {
-                            'data-custom-attr': 'attr-value-h2'
-                        }
-                    },
-                    'bold', 'italic', 'underline', 'quote', 'anchor'
-                ]
+                updateOnEmptySelection: true
             },
             anchor: {
                 placeholderText: gettext('Paste or type a full link')
@@ -942,6 +915,48 @@ angular.module('superdesk.editor2', [
             }
         }
 
+        function setEditorFormatOptions(editorConfig, editorFormat, scope) {
+            _.each(editorFormat, function(format) {
+                switch (format) {
+                    case 'h1':
+                        editorConfig.toolbar.buttons.push({
+                            name: 'h1',
+                            action: 'append-h2',
+                            aria: 'header type 1',
+                            tagNames: ['h2'],
+                            contentDefault: '<b>H1</b>',
+                            classList: ['custom-class-h1'],
+                            attrs: {
+                                'data-custom-attr': 'attr-value-h1'
+                            }
+                        });
+                        break;
+                    case 'h2':
+                        editorConfig.toolbar.buttons.push({
+                            name: 'h2',
+                            action: 'append-h3',
+                            aria: 'header type 2',
+                            tagNames: ['h3'],
+                            contentDefault: '<b>H2</b>',
+                            classList: ['custom-class-h2'],
+                            attrs: {
+                                'data-custom-attr': 'attr-value-h2'
+                            }
+                        });
+                        break;
+                    case 'embed':
+                    case 'picture':
+                    case 'table':
+                        if (scope.config.multiBlockEdition) {
+                            editorConfig.toolbar.buttons.push(format);
+                        }
+                        break;
+                    default:
+                        editorConfig.toolbar.buttons.push(format);
+                }
+            });
+        }
+
         return {
             scope: {type: '=', config: '=', language: '=', sdTextEditorBlockText: '='},
             require: ['ngModel', '^sdTextEditor'],
@@ -957,7 +972,9 @@ angular.module('superdesk.editor2', [
                 ngModel.$viewChangeListeners.push(changeListener);
                 ngModel.$render = function() {
                     editor.registerScope(scope);
-                    var editorConfig = angular.extend({}, EDITOR_CONFIG, scope.config || {});
+                    var editorConfig = angular.merge({}, EDITOR_CONFIG, scope.config || {});
+                    editorConfig.toolbar.buttons = [];
+                    setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
                     // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
                     if (scope.config.multiBlockEdition) {
                         var EmbedButton = window.MediumEditor.extensions.button.extend({
@@ -1061,13 +1078,15 @@ angular.module('superdesk.editor2', [
                                 });
                             }
                         });
-                        editorConfig.toolbar.buttons.push('embed', 'picture');
-                        editorConfig.extensions = {
-                            'embed': new EmbedButton(),
-                            'upload': new PictureButton()
-                        };
-                        if (angular.isDefined(window.MediumEditorTable)) {
-                            editorConfig.toolbar.buttons.push('table');
+
+                        editorConfig.extensions = {};
+                        if (editorConfig.toolbar.buttons.indexOf('embed') !== -1) {
+                            editorConfig.extensions.embed = new EmbedButton();
+                        }
+                        if (editorConfig.toolbar.buttons.indexOf('picture') !== -1) {
+                            editorConfig.extensions.upload = new PictureButton();
+                        }
+                        if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
                             editorConfig.extensions.table = new window.MediumEditorTable();
                         }
                     }

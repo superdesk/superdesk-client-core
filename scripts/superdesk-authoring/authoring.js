@@ -61,9 +61,9 @@
 
     var DEFAULT_SCHEMA = Object.freeze({
         slugline: {maxlength: 24},
-        headline: {maxlength: 64, order: 1},
-        abstract: {maxlength: 160, order: 2},
-        body_html: {order: 5},
+        headline: {maxlength: 64, order: 1, editor: ['h1', 'h2', 'bold', 'italic', 'underline', 'quote', 'anchor']},
+        abstract: {maxlength: 160, order: 2, editor: ['h1', 'h2', 'bold', 'italic', 'underline', 'quote', 'anchor']},
+        body_html: {order: 5, editor: ['h1', 'h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'table']},
         byline: {order: 3},
         dateline: {order: 4},
         located: {},
