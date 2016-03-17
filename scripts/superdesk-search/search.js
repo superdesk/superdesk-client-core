@@ -123,14 +123,25 @@
 
             function buildFilters(params, query) {
 
-                if (params.beforefirstcreated || params.afterfirstcreated) {
-                    var range = {firstcreated: {}};
+                //created & modified date filters
+                if (params.beforefirstcreated || params.afterfirstcreated ||
+                    params.beforefirstmodified || params.afterfirstmodified) {
+                    var range = {firstcreated: {}, firstmodified: {}};
+
                     if (params.beforefirstcreated) {
                         range.firstcreated.lte = params.beforefirstcreated;
                     }
 
                     if (params.afterfirstcreated) {
                         range.firstcreated.gte = params.afterfirstcreated;
+                    }
+
+                    if (params.beforefirstmodified) {
+                        range.firstmodified.lte = params.beforefirstmodified;
+                    }
+
+                    if (params.afterfirstmodified) {
+                        range.firstmodified.gte = params.afterfirstmodified;
                     }
 
                     query.post_filter({range: range});
