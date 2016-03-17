@@ -16,12 +16,20 @@
                 <input type="text" ng-model="data.metadata.description_text" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
+                <label translate>Alt Text</label>
+                <input type="text" ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" class="line-input">
+            </div>
+            <div>
                 <label translate>Slugline *</label>
                 <input type="text" ng-model="data.metadata.slugline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
                 <label translate>Author / photographer</label>
                 <input type="text" ng-model="data.metadata.byline" ng-change="data.isDirty = true" class="line-input">
+            </div>
+            <div>
+                <label translate>The person or organisation claiming the intellectual property for the content</label>
+                <input type="text" ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
                 <select ng-model="data.metadata.usageterms">

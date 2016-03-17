@@ -555,7 +555,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     }
 
     this.generateImageTag = function(data) {
-        var url = data.url, caption = data.caption;
+        var url = data.url, altText = data.altText;
         var promiseFinished;
         // if this is a SD archive, we use its properties
         if (data._type === 'archive' || data.type === 'picture') {
@@ -566,10 +566,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
                 if (angular.isDefined(firstRendition)) {
                     url = firstRendition.href;
                 } else {
-                    // use "viewImage" rendtion as fallback
+                    // use "viewImage" rendition as fallback
                     url = data.renditions.viewImage.href;
                 }
-                caption = data.description_text;
+                // if a `alt_text` exists, otherwise we fill w/ `description_text`
+                altText = data.alt_text || data.description_text;
                 return renditionsList;
             });
         }
@@ -577,7 +578,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
         return $q.when(promiseFinished, function(renditionsList) {
             var html = ['<img',
             ' src="' + url + '"',
-            ' alt="' + _.escape(caption || '') + '"'];
+            ' alt="' + _.escape(altText || '') + '"'];
             // add a `srcset` attribute if renditions are availables
             // NOTE: if renditions from renditionsService are not available For
             // this picture, we should maybe use its own renditons

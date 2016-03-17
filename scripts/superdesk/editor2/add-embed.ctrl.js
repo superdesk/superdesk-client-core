@@ -43,7 +43,7 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                         if (data.type === 'link') {
                             embed = vm.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
                         } else {
-                            embed = editor.generateImageTag({url: data.url, caption: data.description});
+                            embed = editor.generateImageTag({url: data.url, altText: data.description});
                         }
                     }
                     return $q.when(embed).then(function(embed) {
