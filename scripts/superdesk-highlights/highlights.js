@@ -183,8 +183,8 @@
         };
     }
 
-    HighlightsTitleDirective.$inject = ['highlightsService', '$timeout'];
-    function HighlightsTitleDirective(highlightsService, $timeout) {
+    HighlightsTitleDirective.$inject = ['highlightsService', '$timeout', 'authoring'];
+    function HighlightsTitleDirective(highlightsService, $timeout, authoring) {
         return {
             scope: {
                 item: '=item'
@@ -200,6 +200,8 @@
                 scope.toggleClass = function (isOpen) {
                     scope.open = isOpen;
                 };
+
+                scope.hasMarkItemPrivilege = authoring.itemActions(scope.item).mark_item;
 
                 scope.$watch('item.highlights', function(items) {
                     if (items) {
@@ -369,14 +371,9 @@
             $scope.modalActive = true;
             $scope.configEdit = _.create(config);
             $scope.assignedDesks = deskList(config.desks);
-            $scope.editingGroup = null;
-            $scope.selectedGroup = null;
             _config = config;
             if (!$scope.configEdit.auto_insert) {
                 $scope.configEdit.auto_insert = 'now/d'; // today
-            }
-            if (!$scope.configEdit.groups) {
-                $scope.configEdit.groups = [];
             }
         };
 
@@ -387,11 +384,7 @@
         $scope.save = function() {
             var _new = !_config._id;
             $scope.configEdit.desks = assignedDesks();
-            if ($scope.configEdit.groups.length === 0) {
-                $scope.configEdit.groups = ['main'];
-            } else {
-                $scope.configEdit.groups = $scope.configEdit.groups.slice(0);
-            }
+            $scope.configEdit.groups = ['main'];
             api.highlights.save(_config, $scope.configEdit)
             .then(function(item) {
                 $scope.message = null;
@@ -448,45 +441,6 @@
                     return desk._id;
                 });
         }
-
-        $scope.isActiveGroup = function(group) {
-            return $scope.editingGroup && $scope.editingGroup.id &&
-                $scope.configEdit.groups[$scope.editingGroup.id - 1] === group;
-        };
-
-        $scope.editGroup = function(group) {
-            if (group !== '') {
-                $scope.editingGroup = {'name': group, 'id': $scope.configEdit.groups.indexOf(group) + 1};
-            } else {
-                $scope.editingGroup = {'name': '', 'id': 0};
-            }
-        };
-
-        $scope.removeGroup = function(group) {
-            $scope.configEdit.groups.splice($scope.configEdit.groups.indexOf(group), 1);
-        };
-
-        $scope.cancelGroup = function() {
-            $scope.editingGroup = null;
-            $scope.selectedGroup = null;
-            $scope._errorGroupLimits = null;
-        };
-
-        $scope.saveGroup = function() {
-            if ($scope.editingGroup.id === 0) {
-                $scope.configEdit.groups.push($scope.editingGroup.name);
-            } else if ($scope.editingGroup.id > 0) {
-                $scope.configEdit.groups[$scope.editingGroup.id - 1] = $scope.editingGroup.name;
-            }
-            $scope.cancelGroup();
-        };
-
-        $scope.handleGroupEdit = function($event) {
-            $scope._errorGroupLimits = null;
-            if ($scope.editingGroup && $scope.editingGroup.name) {
-                $scope._errorGroupLimits = $scope.editingGroup.name.length > $scope.limits.group ? true : null;
-            }
-        };
 
         $scope.handleEdit = function($event) {
             clearErrorMessages();
