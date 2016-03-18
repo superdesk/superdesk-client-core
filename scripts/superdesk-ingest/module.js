@@ -1472,8 +1472,8 @@
         });
     }]);
 
-    SendService.$inject = ['desks', 'api', '$q', 'notify', 'authoringWorkspace', 'multi'];
-    function SendService(desks, api, $q, notify, authoringWorkspace, multi) {
+    SendService.$inject = ['desks', 'api', '$q', 'notify', '$injector', 'multi'];
+    function SendService(desks, api, $q, notify, $injector, multi) {
         this.one = sendOne;
         this.all = sendAll;
 
@@ -1540,7 +1540,7 @@
                 return api.save('fetch', {}, data, item).then(function (archived) {
                     item.archived = archived._created;
                     if (config.open) {
-                        authoringWorkspace.edit(archived);
+                        $injector.get('authoringWorkspace').edit(archived);
                     }
                     return archived;
                 });
