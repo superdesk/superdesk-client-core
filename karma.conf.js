@@ -25,6 +25,7 @@ module.exports = function(config) {
             'bower_components/angular-gettext/dist/angular-gettext.js',
             'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
             'bower_components/ng-file-upload/ng-file-upload.js',
+            'bower_components/exif-js/exif.js',
 
             'bower_components/gridster/dist/jquery.gridster.with-extras.js',
             'bower_components/medium-editor/dist/js/medium-editor.js',
