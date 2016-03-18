@@ -367,9 +367,9 @@
                                     dropdownWidth = dropdown.dropdownMenu.outerWidth();
 
                             if ((windowHeight - pos.top) < dropdownHeight) {
-                                if ((pos.top - 110) < dropdownHeight) {
-                                    // Substracting 110 is for topmenu and submenu bar
-                                    css.top = '110px';
+                                if ((pos.top - 150) < dropdownHeight) {
+                                    // Substracting 150 is for topmenu and submenu bar
+                                    css.top = '150px';
                                     css.right = css.right + 30;
                                 } else {
                                     css.top = pos.top - dropdownHeight - icon.outerHeight() - 15;

@@ -21,7 +21,7 @@ describe('package', function() {
     it('reorder item on package', function() {
         monitoring.actionOnItem('Edit', 2, 0);
         monitoring.actionOnItemSubmenu('Add to current', 'main', 1, 0);
-        monitoring.actionOnItemSubmenu('Add to current', 'story', 2, 1);
+        monitoring.actionOnItemSubmenu('Add to current', 'story', 2, 2);
         authoring.moveToGroup('MAIN', 0, 'STORY', 0);
         expect(authoring.getGroupItems('MAIN').count()).toBe(0);
         expect(authoring.getGroupItems('STORY').count()).toBe(2);

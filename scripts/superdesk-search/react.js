@@ -715,13 +715,13 @@
                                 if (this.state.open) {
                                     // first render it somewhere not visible
                                     var menuComponent = ReactDOM.render(this.renderMenu({top: 0, left: -500}), menuHolderElem);
-
                                     // get its size
                                     var menuElem = ReactDOM.findDOMNode(menuComponent);
                                     var mainElem = document.getElementById('main-container');
                                     var menuRect = menuElem.getBoundingClientRect();
                                     var width = menuRect.width;
                                     var height = menuRect.height;
+                                    var ACTION_MENU_FROM_TOP = 150;
 
                                     // get button position
                                     var iconRect = ReactDOM.findDOMNode(this)
@@ -743,11 +743,12 @@
                                         left = iconRect.left;
                                     }
 
-                                    // menu goest out on the bottom side
+                                    // menu goes out on the bottom side
                                     if (top + height + 35 > mainElem.clientHeight) { // 30 is bottom bar
                                         top -= height;
                                         top -= iconRect.height;
                                         top -= 16; // menu margin
+                                        top = top < ACTION_MENU_FROM_TOP ? ACTION_MENU_FROM_TOP : top; // 150 = top-menu + search bar
                                     }
 
                                     menuElem.style.left = left.toFixed() + 'px';
