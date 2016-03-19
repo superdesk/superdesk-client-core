@@ -650,6 +650,9 @@
                             ),
                             React.createElement('div', {className: 'line'},
                                 React.createElement(ItemState, {item: item}),
+                                item.correction_sequence ?
+                                    React.createElement('div', {className: 'provider'}, gettext('Update') +
+                                        ' ' + item.correction_sequence) : null,
                                 item.profile ?
                                     React.createElement('div', {className: 'label label--' + item.profile}, item.profile) :
                                     null,
