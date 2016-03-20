@@ -90,8 +90,6 @@ function Desks() {
                 return element.all(by.css('.aggregate-widget-config')).isDisplayed();
             });
             element.all(by.css('[ng-click="goTo(step)"]')).first().click();
-
-            browser.sleep(500);
         });
     };
 
