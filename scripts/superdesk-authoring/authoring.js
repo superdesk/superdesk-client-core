@@ -890,6 +890,7 @@
         $scope.data.renditions.forEach(function(rendition) {
             $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
         });
+        var poiOrig = angular.extend({}, $scope.data.poi);
         $scope.data.isDirty = false;
         // should show the metadata form in the view
         $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
@@ -922,6 +923,7 @@
             if ($scope.data.isDirty) {
                 modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
                 .then(function() { // Ok = continue w/o saving
+                    angular.extend($scope.data.poi, poiOrig);
                     return $scope.reject();
                 });
             } else {
