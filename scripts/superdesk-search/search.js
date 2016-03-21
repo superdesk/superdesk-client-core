@@ -1517,6 +1517,16 @@
 
                         var input = elem.find('#search-input');
 
+                        var ENTER = 13;
+
+                        var inputField = elem.find('input[type="text"]');
+
+                        inputField.on('keydown', function(event) {
+                            if (event.keyCode === ENTER) {
+                                event.preventDefault();
+                            }
+                        });
+
                         /*
                          * init function to setup the directive initial state and called by $locationChangeSuccess event
                          * @param {boolean} load_data.
