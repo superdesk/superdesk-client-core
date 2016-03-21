@@ -87,7 +87,7 @@
                 <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                     <div ng-repeat="group in aggregate.groups track by group._id"
                          sd-monitoring-group data-group="group"  data-num-items="group.max_items"
-                         data-view-type="group.type === 'deskOutput' ? 'deskOutput' : 'monitoring'"></div>
+                         data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"></div>
                 </div>
                 <div ng-if="type === 'spike'">
                     <div ng-repeat="group in aggregate.spikeGroups track by group._id | orderBy: name"

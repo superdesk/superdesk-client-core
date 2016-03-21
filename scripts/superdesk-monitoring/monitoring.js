@@ -134,6 +134,14 @@
                 }
                 break;
 
+            case 'scheduledDeskOutput':
+                desk_id = card._id.substring(0, card._id.indexOf(':'));
+                query.filter({and: [
+                    {term: {'task.desk': desk_id}},
+                    {term: {state: 'scheduled'}}
+                ]});
+                break;
+
             default:
                 if (card.singleViewType != null && card.singleViewType === 'desk') {
                     query.filter({term: {'task.desk': card.deskId}});
@@ -154,7 +162,7 @@
             var criteria = {source: query.getCriteria()};
             if (card.type === 'search' && card.search && card.search.filter.query.repo) {
                 criteria.repo = card.search.filter.query.repo;
-            } else if (card.type === 'deskOutput' || card.type === 'highlights') {
+            } else if (desks.isPublishType(card.type)) {
                 criteria.repo = 'archive,published';
             }
 
@@ -177,7 +185,6 @@
                 return true;
             }
         }
-
     }
 
     MonitoringController.$inject = ['$location', 'desks'];
@@ -541,7 +548,7 @@
                  */
                 function apiquery() {
                     var provider = 'search';
-                    if (scope.group.type === 'search' || scope.group.type === 'deskOutput' || scope.group.type === 'highlights') {
+                    if (scope.group.type === 'search' || desks.isPublishType(scope.group.type)) {
                         if (criteria.repo && criteria.repo.indexOf(',') === -1) {
                             provider = criteria.repo;
                             if (!angular.isDefined(criteria.source.size)) {

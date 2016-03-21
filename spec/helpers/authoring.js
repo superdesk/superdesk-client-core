@@ -151,6 +151,34 @@ function Authoring() {
         }
     };
 
+    this.schedule = function(skipConfirm) {
+        browser.wait(function() {
+            return this.sendToButton.isDisplayed();
+        }.bind(this), 1000);
+        this.sendToButton.click();
+
+        browser.wait(function() {
+            return this.publish_button.isDisplayed();
+        }.bind(this), 1000);
+
+        var scheduleDate = '09/25/' + ((new Date()).getFullYear() + 1);
+        var scheduleTime = '00:00';
+
+        element(by.model('item.publish_schedule_date')).element(by.tagName('input')).sendKeys(scheduleDate);
+        element(by.model('item.publish_schedule_time')).element(by.tagName('input')).sendKeys(scheduleTime);
+
+        this.publish_button.click();
+
+        if (!skipConfirm) {
+            var modal = element(by.className('modal-dialog'));
+            modal.isPresent().then(function(click) {
+                if (click) {
+                    modal.element(by.className('btn-primary')).click();
+                }
+            });
+        }
+    };
+
     this.correct = function() {
         this.sendToButton.click();
         return this.correct_button.click();

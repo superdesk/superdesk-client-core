@@ -146,7 +146,7 @@
                 function getProvider() {
                     var provider = 'archive';
 
-                    if (scope.stage.type && (scope.stage.type === 'deskOutput' || scope.stage.type === 'search')) {
+                    if (scope.stage.type && (desks.isOutputType(scope.stage.type) || scope.stage.type === 'search')) {
                         provider = 'search';
                     }
 
@@ -835,6 +835,12 @@
                         if (item.task && item.task.desk) {
                             return this.deskLookup[item.task.desk] || null;
                         }
+                    },
+                    isOutputType: function(type) {
+                        return type === 'deskOutput' || type === 'scheduledDeskOutput';
+                    },
+                    isPublishType: function(type) {
+                        return type === 'deskOutput' || type === 'scheduledDeskOutput' || type === 'highlights';
                     }
                 };
 
