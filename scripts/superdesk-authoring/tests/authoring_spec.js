@@ -1578,8 +1578,12 @@ describe('authoring actions', function() {
 
 describe('authoring workspace', function() {
 
-    var item = {_id: 'foo'},
+    var item, lockedItem;
+
+    beforeEach(function() {
+        item = {_id: 'foo', type: 'text'};
         lockedItem = {_id: item._id, _editable: true};
+    });
 
     beforeEach(module('superdesk.authoring'));
 
@@ -1629,6 +1633,24 @@ describe('authoring workspace', function() {
         $rootScope.$digest();
         expect(authoringWorkspace.item).toBe(lockedItem);
         expect(authoringWorkspace.action).toBe('edit');
+    }));
+
+    it('can open an item for edit or readonly', inject(function(authoringWorkspace, authoring, send, $q, $rootScope) {
+        item.state = 'draft';
+        authoringWorkspace.open(item);
+        expect(authoring.open).toHaveBeenCalledWith(item._id, false, null);
+
+        item.state = 'published';
+        authoringWorkspace.open(item);
+        expect(authoring.open).toHaveBeenCalledWith(item._id, true, null);
+
+        var archived = {_id: 'bar'};
+        spyOn(send, 'one').and.returnValue($q.when(archived));
+        item._type = 'ingest';
+        authoringWorkspace.open(item);
+        expect(send.one).toHaveBeenCalledWith(item);
+        $rootScope.$digest();
+        expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null);
     }));
 
     describe('init', function() {
@@ -1940,6 +1962,7 @@ describe('send item directive', function() {
             spyOn(iscope, 'getLastDestination').and.returnValue($q.when({desk: '123', stage: '456'}));
 
             iscope.getLastDestination().then(function(prefs) {
+
                 iscope.destination_last = {
                     desk: prefs.desk,
                     stage: prefs.stage

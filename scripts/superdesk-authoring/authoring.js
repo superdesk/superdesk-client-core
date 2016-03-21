@@ -545,7 +545,7 @@
         * @param {Object} item : item
         */
         this.itemActions = function(item) {
-            var current_item = item && angular.isDefined(item.archive_item) ? item.archive_item : item;
+            var current_item = item && item.archive_item && item.archive_item.state ? item.archive_item : item;
             var user_privileges = privileges.privileges;
             var action = angular.extend({}, DEFAULT_ACTIONS);
 
@@ -2839,8 +2839,8 @@
         };
     }
 
-    AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock'];
-    function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock) {
+    AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send'];
+    function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send) {
         this.item = null;
         this.action = null;
         this.state = null;
@@ -2868,6 +2868,28 @@
          */
         this.view = function(item) {
             self.edit(item, 'view');
+        };
+
+        /**
+         * Open an item - if possible for edit, otherwise read only
+         *
+         * @param {Object} item
+         */
+        this.open = function(item) {
+            var _open = function (_item) {
+                var actions = authoring.itemActions(_item);
+                if (actions.edit) {
+                    this.edit(_item);
+                } else {
+                    this.view(_item);
+                }
+            }.bind(this);
+
+            if (item._type === 'ingest') {
+                send.one(item).then(_open);
+            } else {
+                _open(item);
+            }
         };
 
         /**

@@ -104,6 +104,7 @@
             'dragitem',
             'highlightsService',
             'monitoringState',
+            'authoringWorkspace',
         function(
             $location,
             $timeout,
@@ -126,7 +127,8 @@
             Keys,
             dragitem,
             highlightsService,
-            monitoringState
+            monitoringState,
+            authoringWorkspace
         ) {
             return {
                 link: function(scope, elem) {
@@ -1082,7 +1084,7 @@
                                         scope.preview(item);
                                     });
                                 }
-                            }, 100, false);
+                            }, 200, false);
                         },
 
                         edit: function(item) {
@@ -1091,6 +1093,10 @@
                             if (item && scope.edit) {
                                 scope.$apply(function() {
                                     scope.edit(item);
+                                });
+                            } else if (item) {
+                                scope.$apply(function() {
+                                    authoringWorkspace.open(item);
                                 });
                             }
                         },
