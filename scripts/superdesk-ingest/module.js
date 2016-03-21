@@ -799,8 +799,6 @@
 
                 scope.save = function() {
                     if (scope.rule) {
-                        // filterName was only needed to display it in the UI
-                        delete scope.rule.filterName;
 
                         if (scope.ruleIndex === -1) {
                             scope.editScheme.rules.push(scope.rule);
@@ -810,6 +808,12 @@
                     }
 
                     scope.editScheme.rules = _.reject(scope.editScheme.rules, {name: null});
+
+                    _.forEach(scope.editScheme.rules, function(r) {
+                        // filterName was only needed to display it in the UI
+                        delete r.filterName;
+                    });
+
                     var _new = scope.editScheme._id ? false : true;
                     api('routing_schemes').save(_orig, scope.editScheme)
                     .then(function() {
