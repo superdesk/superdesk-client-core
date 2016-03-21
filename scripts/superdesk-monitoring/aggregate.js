@@ -11,8 +11,10 @@
  (function() {
     'use strict';
 
-    AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage', 'gettext', 'multi'];
-    function AggregateCtrl($scope, api, desks, workspaces, preferencesService, storage, gettext, multi) {
+    AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage',
+                             'gettext', 'multi', 'config'];
+    function AggregateCtrl($scope, api, desks, workspaces, preferencesService, storage,
+            gettext, multi, config) {
         var PREFERENCES_KEY = 'agg:view';
         var defaultMaxItems = 10;
         var self = this;
@@ -146,7 +148,9 @@
                 var currentDesk = desks.getCurrentDesk();
                 if (currentDesk) {
                     self.groups.push({_id: currentDesk._id + ':output', type: 'deskOutput', header: currentDesk.name});
-                    self.groups.push({_id: currentDesk._id + ':scheduled', type: 'scheduledDeskOutput', header: currentDesk.name});
+                    if (config.monitoring && config.monitoring.scheduled) {
+                        self.groups.push({_id: currentDesk._id + ':scheduled', type: 'scheduledDeskOutput', header: currentDesk.name});
+                    }
                 }
             }
             initSpikeGroups(settings.type === 'desk');

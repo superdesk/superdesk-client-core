@@ -82,7 +82,7 @@ describe('send', function() {
         monitoring.showHideList();
 
         authoring.sendTo('Politic Desk');
-        expect(monitoring.getGroups().count()).toBe(7);
+        expect(monitoring.getGroups().count()).toBe(6);
     });
 
     it('can confirm before submitting unsaved item to a desk', function () {
@@ -118,7 +118,7 @@ describe('send', function() {
         //Spell check confirmation modal save action
         authoring.confirmSendTo();
 
-        expect(monitoring.getGroups().count()).toBe(7);
+        expect(monitoring.getGroups().count()).toBe(6);
 
         //now continue to open new item to see if its remembered?
         monitoring.openAction(4, 0);

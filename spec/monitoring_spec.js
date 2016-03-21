@@ -25,10 +25,10 @@ describe('monitoring', function() {
     });
 
     it('can configure desk output as default when user switches desks and show it on monitoring view', function() {
-        expect(monitoring.getGroups().count()).toBe(7);
+        expect(monitoring.getGroups().count()).toBe(6);
 
         workspace.selectDesk('Sports Desk');
-        expect(monitoring.getGroups().count()).toBe(7);
+        expect(monitoring.getGroups().count()).toBe(6);
     });
 
     it('can display the item in Desk Output when it\'s been submitted to a production desk', function () {
@@ -36,7 +36,6 @@ describe('monitoring', function() {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.sendTo('Politic Desk', 'two');
         expect(monitoring.getTextItem(5, 0)).toBe('item3');
-        expect(monitoring.getGroupItems(6).count()).toBe(0);
     });
 
     it('can display the item in Desk Output when it\'s published in a production desk', function() {
@@ -44,15 +43,13 @@ describe('monitoring', function() {
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.publish();
         expect(monitoring.getTextItem(5, 0)).toBe('item6');
-        expect(monitoring.getGroupItems(6).count()).toBe(0);
     });
 
-    it('can display the item in Desk Output and Scheduled Desk Output when it\'s scheduled for publish ', function() {
+    it('can display the item in Desk Output when it\'s scheduled for publish ', function() {
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.schedule();
         expect(monitoring.getTextItem(5, 0)).toBe('item6');
-        expect(monitoring.getTextItem(6, 0)).toBe('item6');
     });
 
     it('configure personal and show it on monitoring view', function() {
@@ -85,7 +82,6 @@ describe('monitoring', function() {
         monitoring.toggleStage(0, 2);
         monitoring.toggleStage(0, 4);
         monitoring.toggleDeskOutput(0);
-        monitoring.toggleScheduledDeskOutput(0);
         monitoring.nextStages();
         monitoring.toggleGlobalSearch(0);
         monitoring.nextSearches();
@@ -102,7 +98,6 @@ describe('monitoring', function() {
         monitoring.toggleStage(0, 2);
         monitoring.toggleStage(0, 4);
         monitoring.toggleDeskOutput(0);
-        monitoring.toggleScheduledDeskOutput(0);
         monitoring.nextStages();
         monitoring.toggleGlobalSearch(0);
         monitoring.nextSearches();
@@ -124,7 +119,6 @@ describe('monitoring', function() {
         monitoring.toggleStage(0, 2);
         monitoring.toggleStage(0, 4);
         monitoring.toggleDeskOutput(0);
-        monitoring.toggleScheduledDeskOutput(0);
         monitoring.nextStages();
         monitoring.toggleGlobalSearch(0);
         monitoring.toggleGlobalSearch(1);
@@ -148,7 +142,6 @@ describe('monitoring', function() {
         monitoring.toggleStage(0, 2);
         monitoring.toggleStage(0, 4);
         monitoring.toggleDeskOutput(0);
-        monitoring.toggleScheduledDeskOutput(0);
         monitoring.togglePersonal();
         monitoring.nextStages();
         monitoring.toggleGlobalSearch(0);
@@ -236,7 +229,7 @@ describe('monitoring', function() {
     });
 
     it('configure a stage and then delete the stage', function() {
-        expect(monitoring.getGroups().count()).toBe(7);
+        expect(monitoring.getGroups().count()).toBe(6);
 
         desks.openDesksSettings();
         desks.edit('Politic Desk');
@@ -246,7 +239,7 @@ describe('monitoring', function() {
         desks.save();
 
         monitoring.openMonitoring();
-        expect(monitoring.getGroups().count()).toBe(6);
+        expect(monitoring.getGroups().count()).toBe(5);
     });
 
     it('can search content', function() {
@@ -461,11 +454,10 @@ describe('monitoring', function() {
     });
 
     it('can display desk content in desk single view with their respective titles', function() {
-        expect(monitoring.getGroups().count()).toBe(7);
+        expect(monitoring.getGroups().count()).toBe(6);
         //exclude deskOutput and ScheduledDeskOutput
         monitoring.showMonitoringSettings();
         monitoring.toggleDeskOutput(0);
-        monitoring.toggleScheduledDeskOutput(0);
         monitoring.saveSettings();
         expect(monitoring.getGroups().count()).toBe(5);
 
@@ -498,7 +490,6 @@ describe('monitoring', function() {
         monitoring.toggleStage(0, 2);
         monitoring.toggleStage(0, 4);
         monitoring.toggleDeskOutput(0);
-        monitoring.toggleScheduledDeskOutput(0);
         monitoring.nextStages();
         monitoring.toggleGlobalSearch(2);
         monitoring.nextSearches();

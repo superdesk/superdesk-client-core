@@ -57,8 +57,8 @@
             });
     }
 
-    CardsService.$inject = ['api', 'search', 'session', 'desks'];
-    function CardsService(api, search, session, desks) {
+    CardsService.$inject = ['api', 'search', 'session', 'desks', 'config'];
+    function CardsService(api, search, session, desks, config) {
         this.criteria = getCriteria;
         this.shouldUpdate = shouldUpdate;
 
@@ -116,19 +116,23 @@
             case 'deskOutput':
                 var desk_id = card._id.substring(0, card._id.indexOf(':'));
                 var desk = desks.deskLookup ? desks.deskLookup[desk_id] : null;
+                var states = ['scheduled', 'published', 'corrected', 'killed'];
+                if (config.monitoring && config.monitoring.scheduled) {
+                    states = ['published', 'corrected', 'killed'];
+                }
                 if (desk) {
                     if (desk.desk_type === 'authoring') {
                         query.filter({or: [
                             {term: {'task.last_authoring_desk': desk_id}},
                             {and: [
                                 {term: {'task.desk': desk_id}},
-                                {terms: {state: ['scheduled', 'published', 'corrected', 'killed']}}
+                                {terms: {state: states}}
                             ]}
                         ]});
                     } else if (desk.desk_type === 'production') {
                         query.filter({and: [
                             {term: {'task.desk': desk_id}},
-                            {terms: {state: ['scheduled', 'published', 'corrected', 'killed']}}
+                            {terms: {state: states}}
                         ]});
                     }
                 }
