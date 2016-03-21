@@ -915,7 +915,7 @@
                                         ),
                                         this.state.open ? $injector.invoke(activity.dropdown, activity, {
                                             item: this.props.item,
-                                            className: 'dropdown right-submenu'
+                                            className: 'dropdown-menu right-submenu upward'
                                         }) : null
                                     )
                                 );
