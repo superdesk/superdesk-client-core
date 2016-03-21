@@ -1836,6 +1836,10 @@
                                 }
                             });
                         };
+
+                        scope.$on('$destroy', function() {
+                            inputField.off('keydown');
+                        });
                     }
                 };
             }
