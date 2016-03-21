@@ -2381,11 +2381,26 @@
                 };
 
                 /**
+                 * Return current signoff mapping
+                 */
+                scope.getSignOffMapping = function() {
+                    return config.user.sign_off_mapping;
+                };
+
+                /**
                  * Modify the sign-off with the value from sign_off_mapping field from user
                  */
                 scope.modifySignOff = function(user) {
                     var signOffMapping = config.user.sign_off_mapping;
                     scope.item.sign_off = user[signOffMapping];
+                    autosave.save(scope.item);
+                };
+
+                /**
+                 * Update the sign-off with current search value
+                 */
+                scope.searchSignOff = function(search) {
+                    scope.item.sign_off = search;
                     autosave.save(scope.item);
                 };
 
