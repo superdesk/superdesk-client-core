@@ -145,6 +145,14 @@ describe('templates', function() {
                 where: '{"_id":{"$in":["template2","template3"]}}'
             });
         }));
+
+        it('can save template', inject(function(api, templates, $q, $rootScope) {
+            spyOn(api, 'save').and.returnValue($q.when({}));
+            var orig = {};
+            var data = {hasCrops: 1};
+            templates.save(orig, data);
+            expect(api.save).toHaveBeenCalledWith('content_templates', orig, {data: {headline: '', 'body_html': ''}});
+        }));
     });
 
     describe('template select directive', function() {

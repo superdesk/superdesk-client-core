@@ -11,9 +11,6 @@
 (function() {
     'use strict';
 
-    var KILL_TEMPLATE_IGNORE_FIELDS = ['dateline', 'template_desk', 'template_stage',
-        'schedule', 'next_run', 'last_run'];
-
     TemplatesSettingsController.$inject = ['$scope'];
     function TemplatesSettingsController($scope) {
 
@@ -23,6 +20,9 @@
     function TemplatesService(api, $q, gettext, preferencesService) {
         var PAGE_SIZE = 10;
         var PREFERENCES_KEY = 'templates:recent';
+
+        var KILL_TEMPLATE_IGNORE_FIELDS = ['dateline', 'template_desk', 'template_stage',
+        'schedule', 'next_run', 'last_run'];
 
         this.TEMPLATE_METADATA = [
             'headline',
@@ -159,6 +159,31 @@
             return this.getRecentTemplateIds(deskId, limit)
                 .then(this.fetchTemplatesByIds);
         };
+
+        /**
+         * Save template
+         *
+         * @param {Object} orig
+         * @param {Object} updates
+         * @return {Promise}
+         */
+        this.save = function(orig, updates) {
+            var template = angular.extend({data: {}}, updates);
+            delete template._datelinedate;
+            delete template.hasCrops;
+            template.data.headline = trimSpaces(template.data.headline);
+            template.data.body_html = trimSpaces(template.data.body_html);
+            // certain field are not required for kill template
+            if (template && template.template_type === 'kill') {
+                template = _.omit(template, KILL_TEMPLATE_IGNORE_FIELDS);
+            }
+
+            return api.save('content_templates', orig, template);
+        };
+
+        function trimSpaces(value) {
+            return value ? value.replace(/&nbsp;/g, '').trim() : '';
+        }
     }
 
     TemplatesDirective.$inject = ['gettext', 'notify', 'api', 'templates', 'modal', 'desks', 'weekdays', '$filter'];
@@ -219,31 +244,21 @@
                 $scope.types = templates.types;
 
                 $scope.save = function() {
-                    delete $scope.template._datelinedate;
-                    delete $scope.template.hasCrops;
-                    $scope.template.data.headline = $scope.template.data.headline.replace(/&nbsp;/g, '').trim();
-                    $scope.template.data.body_html = $scope.template.data.body_html.replace(/&nbsp;/g, '').trim();
-                    var template = $scope.template;
-                    // certain field are not required for kill template
-                    if (template && template.template_type === 'kill') {
-                        template = _.omit($scope.template, KILL_TEMPLATE_IGNORE_FIELDS);
-                    }
-
-                    api.save('content_templates', $scope.origTemplate, template)
-                        .then(
-                            function() {
-                                notify.success(gettext('Template saved.'));
-                                $scope.cancel();
-                            },
-                            function(response) {
-                                if (angular.isDefined(response.data._issues) &&
-                                    angular.isDefined(response.data._issues['validator exception'])) {
-                                    notify.error(gettext('Error: ' + response.data._issues['validator exception']));
-                                } else {
-                                    notify.error(gettext('Error: Failed to save template.'));
-                                }
+                    templates.save($scope.origTemplate, $scope.template)
+                    .then(
+                        function() {
+                            notify.success(gettext('Template saved.'));
+                            $scope.cancel();
+                        },
+                        function(response) {
+                            if (angular.isDefined(response.data._issues) &&
+                                angular.isDefined(response.data._issues['validator exception'])) {
+                                notify.error(gettext('Error: ' + response.data._issues['validator exception']));
+                            } else {
+                                notify.error(gettext('Error: Failed to save template.'));
                             }
-                        ).then(fetchTemplates);
+                        }
+                    ).then(fetchTemplates);
                 };
 
                 $scope.edit = function(template) {
