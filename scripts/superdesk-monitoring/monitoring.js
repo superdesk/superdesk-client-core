@@ -122,13 +122,13 @@
                             {term: {'task.last_authoring_desk': desk_id}},
                             {and: [
                                 {term: {'task.desk': desk_id}},
-                                {terms: {state: ['scheduled', 'published', 'corrected', 'killed']}}
+                                {terms: {state: ['published', 'corrected', 'killed']}}
                             ]}
                         ]});
                     } else if (desk.desk_type === 'production') {
                         query.filter({and: [
                             {term: {'task.desk': desk_id}},
-                            {terms: {state: ['scheduled', 'published', 'corrected', 'killed']}}
+                            {terms: {state: ['published', 'corrected', 'killed']}}
                         ]});
                     }
                 }

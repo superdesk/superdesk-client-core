@@ -51,7 +51,7 @@ describe('monitoring', function() {
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.schedule();
-        expect(monitoring.getTextItem(5, 0)).toBe('item6');
+        expect(monitoring.getGroupItems(5).count()).toBe(0);
         expect(monitoring.getTextItem(6, 0)).toBe('item6');
     });
 
