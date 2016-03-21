@@ -91,8 +91,14 @@
             fetched: null,
             fetchProviders: function() {
                 var self = this;
-                return api.ingestProviders.query().then(function(result) {
-                    self.providers = result._items;
+                var providersPromise = $q.all([api.ingestProviders.query(), api.searchProviders.query()]);
+
+                return providersPromise.then(function(results) {
+                    self.providers = [];
+
+                    results.forEach(function(result) {
+                        self.providers = self.providers.concat(result._items);
+                    });
                 });
             },
             generateLookup: function() {
@@ -1464,6 +1470,12 @@
             type: 'http',
             backend: {
                 rel: 'ingest_providers'
+            }
+        });
+        apiProvider.api('searchProviders', {
+            type: 'http',
+            backend: {
+                rel: 'search_providers'
             }
         });
         apiProvider.api('activity', {
