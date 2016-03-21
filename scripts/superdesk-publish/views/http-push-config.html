@@ -1,4 +1,12 @@
 <div class="field">
+    <label class="right">
+        {{ :: 'Package individual items' | translate }}
+        <span tooltip="{{ destination.config.packaged ? 'Package individual items' : ''  | translate }}" tooltip-placement="right">
+            <span sd-check ng-model="destination.config.packaged"></span>
+        </span>
+    </label>
+</div>
+<div class="field">
     <label for="http_host" translate>Resource URL</label>
     <input type="text" id="http_host" placeholder="{{ :: 'Resource URL'|translate }}" ng-model="destination.config.resource_url" required ng-change="$parent.setConfig(destination)">
 </div>
