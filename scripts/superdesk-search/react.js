@@ -274,7 +274,8 @@
                         if (props.ingestProvider) {
                             meta.push(
                                 React.createElement('dt', {key: 1}, gettext('source')),
-                                React.createElement('dd', {key: 2, className: 'provider'}, props.ingestProvider.name)
+                                React.createElement('dd', {key: 2, className: 'provider'}, props.ingestProvider.name ||
+                                    props.ingestProvider.source)
                             );
                         }
 
