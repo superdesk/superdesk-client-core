@@ -209,7 +209,9 @@
       <i class="icon-trash" ng-show="editSignOff"></i>
     </button>
     <div ng-hide="editSignOff">{{item.sign_off}}</div>
-    <div ng-show="editSignOff" sd-user-select-list
+    <div ng-if="canEditSignOff && _editable"
+         ng-show="editSignOff"
+         sd-user-select-list
          data-onchoose="modifySignOff(user)"
          data-onsearch="searchSignOff(search)"
          data-display-user="{{ getSignOffMapping() }}"
