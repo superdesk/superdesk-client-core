@@ -1248,7 +1248,9 @@
             return {
                 scope: {
                     exclude: '=',
-                    onchoose: '&'
+                    onchoose: '&',
+                    onsearch: '&',
+                    displayUser: '@'
                 },
                 templateUrl: 'scripts/superdesk-desks/views/user-select.html',
                 link: function(scope, elem, attrs) {
@@ -1276,6 +1278,7 @@
                                 return _.findIndex(scope.exclude, {_id: item._id}) === -1;
                             });
                             scope.selected = null;
+                            scope.onsearch({search: scope.search});
                         });
                     };
                     var refresh = _.debounce(_refresh, 1000);
@@ -1334,6 +1337,14 @@
 
                     scope.select = function(user) {
                         scope.selected = user;
+                    };
+
+                    scope.getUserDisplay = function(user) {
+                        if (scope.displayUser) {
+                            return user[scope.displayUser];
+                        } else {
+                            return user.display_name;
+                        }
                     };
                 }
             };
