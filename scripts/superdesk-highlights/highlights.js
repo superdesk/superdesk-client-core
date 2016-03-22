@@ -315,8 +315,8 @@
         };
     }
 
-    CreateHighlightsButtonDirective.$inject = ['highlightsService', 'authoringWorkspace'];
-    function CreateHighlightsButtonDirective(highlightsService, authoringWorkspace) {
+    CreateHighlightsButtonDirective.$inject = ['highlightsService', 'authoringWorkspace', 'privileges'];
+    function CreateHighlightsButtonDirective(highlightsService, authoringWorkspace, privileges) {
         return {
             scope: {highlight_id: '=highlight'},
             templateUrl: 'scripts/superdesk-highlights/views/create_highlights_button_directive.html',
@@ -329,6 +329,8 @@
                         .then(highlightsService.createEmptyHighlight)
                         .then(authoringWorkspace.edit);
                 };
+
+                scope.hasMarkItemPrivilege = privileges.privileges.mark_for_highlights;
             }
         };
     }
