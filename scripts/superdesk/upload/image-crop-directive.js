@@ -189,6 +189,7 @@
                         CropBottom: Math.round(center.y + selectionHeight / 2)
                     };
                     angular.extend(cropData, crop);
+
                     refreshImage(img.src, [
                         cropData.CropLeft,
                         cropData.CropTop,
@@ -273,13 +274,34 @@
             },
             link: function(scope, elem) {
                 var img;
-                var pointElem;
-                var crossLeft;
-                var crossTop;
-                var crossBottom;
-                var crossRight;
+                var pointElem = angular.element('<div class="poi__cursor"></div>');
+                var crossLeft = angular.element('<div class="poi__cross-left"></div>');
+                var crossTop = angular.element('<div class="poi__cross-top"></div>');
+                var crossBottom = angular.element('<div class="poi__cross-bottom"></div>');
+                var crossRight = angular.element('<div class="poi__cross-right"></div>');
+                //use this to calculate mouse offsets.
+                var overlay = document.createElement('div');
+                //wrap content and contain overlay.
+                var container = angular.element('<div class="crop-container"></div>');
 
-                elem.css({'position': 'relative'});
+                pointElem.css({
+                    'position': 'absolute'
+                });
+
+                $(overlay).css({
+                    'position': 'absolute',
+                    'top': 0,
+                    'left': 0,
+                    'bottom': 0,
+                    'right': 0
+                });
+
+                container.css({
+                    'position': 'relative',
+                    'display': 'inline-block'
+                });
+
+                elem.append(container);
 
                 scope.$watch('src', function(src) {
                     refreshImage(src);
@@ -291,40 +313,61 @@
                     }
                 }, true);
 
+                scope.$on('$destroy', function () {
+                    overlay.onmousedown = null;
+                });
+
                 function refreshImage(src) {
-                    elem.empty();
+                    container.detach();
+                    container.empty();
 
                     img = new Image();
                     img.onload = function() {
-                        elem.append(img);
+                        //prepend for z-index purposes.
+                        container.prepend(img);
+                        container.append(overlay);
+                        elem.append(container);
                         drawPoint();
                     };
-                    img.addEventListener('click', function(event) {
+
+                    function updatePOI(offsetX, offsetY) {
                         scope.$apply(function() {
-                            elem.addClass('transition-on');
-                            scope.point.x = Math.round(event.offsetX * 100 / img.width) / 100;
-                            scope.point.y = Math.round(event.offsetY * 100 / img.height) / 100;
+                            scope.point.x = Math.round(offsetX * 100 / img.width) / 100;
+                            scope.point.y = Math.round(offsetY * 100 / img.height) / 100;
                             scope.onChange();
                         });
+                    }
+
+                    function leaveOverlay(e) {
+                        e.preventDefault();
+                        updatePOI(e.offsetX, e.offsetY);
                         $rootScope.$broadcast('poiUpdate', scope.point);
-                    });
+                        overlay.onmousemove = null;
+                        overlay.onmouseup = null;
+                        overlay.onmouseleave = null;
+                    }
+
+                    overlay.onmousedown = function(e) {
+                        e.preventDefault();
+                        updatePOI(e.offsetX, e.offsetY);
+                        $rootScope.$broadcast('poiUpdate', scope.point);
+
+                        overlay.onmousemove = function(e) {
+                            e.preventDefault();
+                            updatePOI(e.offsetX, e.offsetY);
+                        };
+
+                        overlay.onmouseup = leaveOverlay;
+                        overlay.onmouseleave = leaveOverlay;
+                    };
+
                     img.src = src;
 
-                    pointElem = angular.element('<div class="poi__cursor"></div>');
-                    elem.append(pointElem);
-                    pointElem.css({
-                        'position': 'absolute',
-                        'z-index': 10000
-                    });
-
-                    crossLeft = angular.element('<div class="poi__cross-left"></div>');
-                    elem.append(crossLeft);
-                    crossRight = angular.element('<div class="poi__cross-right"></div>');
-                    elem.append(crossRight);
-                    crossTop = angular.element('<div class="poi__cross-top"></div>');
-                    elem.append(crossTop);
-                    crossBottom = angular.element('<div class="poi__cross-bottom"></div>');
-                    elem.append(crossBottom);
+                    container.append(pointElem);
+                    container.append(crossLeft);
+                    container.append(crossRight);
+                    container.append(crossTop);
+                    container.append(crossBottom);
 
                 }
 
