@@ -408,3 +408,18 @@
 		border-right: @arrowWidth solid @color;
 	}
 }
+
+// Generates the flex order based on the custom 'order' attribute added for the fields in the authoring header and authoring content
+.generate-orders(20);
+.generate-orders(@n, @i: 1) when (@i =< @n) {
+    [order="@{i}"] {
+        order: @i;
+    }
+    .generate-orders(@n, (@i + 1));
+}
+
+// Defines the width of the items in the authoring header based on the custom 'sd-width' attribute
+[sd-width="full"] {flex-basis: 100%}
+[sd-width="half"] {flex-basis: 50%}
+[sd-width="third"] {flex-basis: 33%}
+[sd-width="quarter"] {flex-basis: 25%}
