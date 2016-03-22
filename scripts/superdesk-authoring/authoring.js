@@ -2385,7 +2385,10 @@
                  * Return current signoff mapping
                  */
                 scope.getSignOffMapping = function() {
-                    return config.user.sign_off_mapping;
+                    if (config.user && config.user.sign_off_mapping) {
+                        return config.user.sign_off_mapping;
+                    }
+                    return null;
                 };
 
                 /**
