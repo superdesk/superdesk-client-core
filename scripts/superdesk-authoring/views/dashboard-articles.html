@@ -1,21 +1,41 @@
-<div class="workqueue-list">
-	<ul class="card-list">
-		<li ng-repeat="article in workqueue.items track by article._id" sd-dashboard-card>
-	    <a ng-href="{{ $root.link('edit.text', article) }}">
-  			<div class="title" ng-show="article.headline">{{ article.headline }}</div>
-  			<div class="title" ng-show="!article.headline">{{ 'Untitled' | translate }}</div>
-          <div>
-            <div class="created" sd-reldate-complex ng-model="article.versioncreated"></div>
-            <div class="subInfo">
-              <div class="type-icon">
-                <i title = "{{article.type}}" class="filetype-icon-{{article.type}}"></i>
-              </div>
-              <div class="state-label state-{{article.state}}">{{article.state}}</div>
+<div sd-modal data-model="dashboardActive" class="modal-preview">
+    <div class="modal-header">
+        <h3 class="pull-left" translate>Currently working on</h3>
+        <div class="btn-group pull-right">
+            <button ng-click="closeDashboard()" title="{{'Close'|translate}}"><i class="icon-close-small"></i></button>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <div class="flex-grid box wrap-items small-2 medium-4 large-6">
+            <div class="flex-item card-box" ng-repeat="article in workqueue.items track by article._id">
+
+                <div class="card-box__header">
+                    <div class="card-box__heading">
+                        <span ng-show="article.headline">{{ article.headline}}</span>
+                        <span ng-show="!article.headline">{{ 'Untitled' | translate }}</span>                        
+                        <span class="close" ng-click="closeItem(article)"><i class="icon-close-small white"></i></span>
+                    </div>
+                </div>
+
+                <div class="card-box__content">
+                    <ul class="card-box__content-list">
+                        <li>
+                            <div class="created" sd-reldate-complex ng-model="article.versioncreated"></div>
+                            <div class="type-icon">
+                                <i title="{{article.type}}" class="filetype-icon-{{article.type}}"></i>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="state-label state-{{article.state}}">{{article.state}}</div>
+                        </li>
+                        <li>
+                            <span sd-item-container data-item="article" class="container"></span>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
-          </div>
-  			<span sd-item-container data-item="article" class="container"></span>
-	    </a>
-      <span class="close" ng-click="closeItem(article)"><i class="icon-close-small"></i></span>
-		</li>
-	</ul>
+        </div>
+    </div>
 </div>

@@ -46,11 +46,11 @@ function WorkqueueService(session, api) {
 
 WorkqueueCtrl.$inject = [
     '$scope',
+    '$rootScope',
     '$route',
     'workqueue',
     'authoringWorkspace',
     'multiEdit',
-    'superdesk',
     'lock',
     '$location',
     'session',
@@ -60,8 +60,8 @@ WorkqueueCtrl.$inject = [
     'notify',
     'referrer'
 ];
-function WorkqueueCtrl($scope, $route, workqueue, authoringWorkspace, multiEdit,
-                       superdesk, lock, $location, session, authoring, autosave, confirm, notify, referrer) {
+function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace, multiEdit,
+                       lock, $location, session, authoring, autosave, confirm, notify, referrer) {
 
     $scope.active = null;
     $scope.workqueue = workqueue;
@@ -108,7 +108,11 @@ function WorkqueueCtrl($scope, $route, workqueue, authoringWorkspace, multiEdit,
     }
 
     $scope.openDashboard = function() {
-        superdesk.intent('author', 'dashboard');
+        $scope.dashboardActive = true;
+    };
+
+    $scope.closeDashboard = function() {
+        $scope.dashboardActive = false;
     };
 
     /**
@@ -168,31 +172,35 @@ function WorkqueueCtrl($scope, $route, workqueue, authoringWorkspace, multiEdit,
             $location.url(referrer.getReferrerUrl());
         }
     };
+
+    /*
+     * Open article for edit
+     */
+    $scope.edit = function (item, event) {
+        if (!event.ctrlKey) {
+            $scope.active = item;
+            authoringWorkspace.edit(item);
+            $scope.redirectOnCloseMulti();
+            $scope.dashboardActive = false;
+
+            event.preventDefault();
+        }
+    };
+
+    /**
+     * Get relative path to article
+     */
+    $scope.link = function (item) {
+        if (item) {
+            return $rootScope.link('authoring', item);
+        }
+    };
 }
 
-WorkqueueListDirective.$inject = ['$rootScope', 'authoringWorkspace', '$location'];
-function WorkqueueListDirective($rootScope, authoringWorkspace, $location) {
+function WorkqueueListDirective() {
     return {
         templateUrl: 'scripts/superdesk-authoring/views/opened-articles.html',
-        controller: 'Workqueue',
-        scope: {},
-        link: function(scope) {
-            scope.edit = function(item, event) {
-                if (!event.ctrlKey) {
-                    scope.active = item;
-                    authoringWorkspace.edit(item);
-                    scope.redirectOnCloseMulti();
-
-                    event.preventDefault();
-                }
-            };
-
-            scope.link = function(item) {
-                if (item) {
-                    return $rootScope.link('authoring', item);
-                }
-            };
-        }
+        controller: 'Workqueue'
     };
 }
 
