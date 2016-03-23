@@ -89,11 +89,13 @@
         })
 
         // format datetime obj to time string
-        .filter('time', function timeFilterFactory() {
-            return function timeFilter(date) {
-                return moment(date).format('h:mm');
+        .filter('time', ['config', function timeFilterFactory(config) {
+            var TIME_FORMAT = config.view ? config.view.timeformat : 'h:mm';
+            return function timeFilter(time) {
+                var m = moment(time, 'HH:mm:ss');
+                return m.format(TIME_FORMAT);
             };
-        })
+        }])
 
         .constant('moment', moment)
 
