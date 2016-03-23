@@ -62,7 +62,7 @@ function Authoring() {
     this.sendTo = function(desk, stage, skipConfirm) {
         this.sendToButton.click();
         this.sendToSidebarOpened(desk, stage);
-        if (!skipConfirm) {
+        if (skipConfirm) {
             this.confirmSendTo();
         }
     };

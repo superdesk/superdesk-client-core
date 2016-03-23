@@ -40,7 +40,6 @@ describe('archived', function() {
         expect(authoring.edit_kill_button.isDisplayed()).toBe(false);
         expect(authoring.navbarMenuBtn.isPresent()).toBe(false);
         expect(authoring.sendToButton.isDisplayed()).toBe(false);
-        expect(authoring.multieditOption.isPresent()).toBe(false);
         authoring.showInfo();
         expect(authoring.isPublishedState()).toBe(true);
     });
