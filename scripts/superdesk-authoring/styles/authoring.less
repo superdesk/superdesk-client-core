@@ -1108,3 +1108,14 @@ feature-image {
         }
     }
 }
+
+.indent-article {
+    #bodyhtml, .text.body-text {
+        :header {
+            text-indent: 0;
+        }
+        p:first-of-type, p+p {
+            text-indent: 25px;
+        }
+    }
+}
