@@ -28,7 +28,7 @@
                 <span class="label-total">{{ monitoring.totalItems }}</span>
             </span>
             <span ng-if="monitoring.singleGroup.singleViewType === 'stage'">
-                {{ :: monitoring.singleGroup.header }} / {{ :: monitoring.singleGroup.subheader }} {{ :: monitoring.singleGroup.singleViewType}} 
+                {{ :: monitoring.singleGroup.header }} / {{ :: monitoring.singleGroup.subheader }} {{ :: monitoring.singleGroup.singleViewType}}
                 <span class="label-total">{{ monitoring.totalItems }}</span>
             </span>
             <span ng-if="monitoring.singleGroup && !monitoring.singleGroup.subheader">
@@ -47,12 +47,12 @@
 
             <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
                 <button class="dropdown-toggle sd-create-btn" dropdown-toggle></button>
-                <ul class="dropdown-menu pull-right" sd-content-create></ul> 
+                <ul class="dropdown-menu pull-right" sd-content-create></ul>
             </div>
-        </div>          
+        </div>
     </div>
 
-    <section class="main-section search-page-container" ng-class="monitoring.state">
+    <section class="main-section" ng-class="monitoring.state">
 
         <div sd-media-query min-width="450" class="subnav">
 
@@ -110,16 +110,16 @@
                  data-item="monitoring.previewItem"
                  data-close="monitoring.closePreview()"></div>
 
-            <div sd-send-item 
+            <div sd-send-item
                  data-mode="{{type}}"></div>
         </div>
-        
-	    <div sd-aggregate-settings 
+
+	    <div sd-aggregate-settings
 	         data-modal-active="aggregate.modalActive"
-	         data-desks="aggregate.desks" 
+	         data-desks="aggregate.desks"
 	         data-desk-stages="aggregate.deskStages"
 	         data-searches="aggregate.searches"
-	         data-desk-lookup="aggregate.deskLookup" 
+	         data-desk-lookup="aggregate.deskLookup"
 	         data-stage-lookup="aggregate.stageLookup"
 	         data-search-lookup="aggregate.searchLookup"
 	         data-groups="aggregate.groups"
@@ -129,5 +129,3 @@
 	    </div>
     </section>
 </div>
-
- 
