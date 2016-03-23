@@ -896,6 +896,12 @@
                             }
                         },
 
+                        closeMenu: function(event) {
+                            // called by the onclick event of the submenu dropdown to close actions menu.
+                            event.stopPropagation();
+                            closeActionsMenu();
+                        },
+
                         componentWillUnmount: function() {
                             $timeout.cancel(this.closeTimeout);
                             this.closeTimeout = null;
@@ -906,7 +912,7 @@
                             if (activity.dropdown) {
                                 return React.createElement(
                                     'li',
-                                    {onMouseEnter: this.open, onMouseLeave: this.close},
+                                    {onMouseEnter: this.open, onMouseLeave: this.close, onClick: this.closeMenu},
                                     React.createElement(
                                         'div',
                                         {className: 'dropdown dropdown-noarrow' + (this.state.open ? ' open' : '')},

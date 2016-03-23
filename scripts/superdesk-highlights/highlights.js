@@ -503,9 +503,7 @@
                 var HighlightBtn = React.createClass({
                     markHighlight: function(event) {
                         event.stopPropagation();
-                        highlightsService.markItem(this.props.highlight._id, this.props.item._id).then(function(res) {
-                            console.log('marked', res);
-                        });
+                        highlightsService.markItem(this.props.highlight._id, this.props.item._id);
                     },
                     render: function() {
                         var item = this.props.item;

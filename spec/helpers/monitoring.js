@@ -237,8 +237,12 @@ function Monitoring() {
      */
     this.actionOnItemSubmenu = function(action, submenu, group, item) {
         var menu = this.openItemMenu(group, item);
-        menu.element(by.partialLinkText(action)).click();
+        var header = menu.element(by.partialLinkText(action));
         var btn = menu.element(by.partialButtonText(submenu));
+        browser.actions()
+            .mouseMove(header, {x: -5, y: -5})
+            .mouseMove(header)
+            .perform();
         waitFor(btn);
         btn.click();
     };
