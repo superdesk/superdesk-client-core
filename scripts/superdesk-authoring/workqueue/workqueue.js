@@ -61,7 +61,8 @@ WorkqueueCtrl.$inject = [
     'referrer'
 ];
 function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace, multiEdit,
-                       lock, $location, session, authoring, autosave, confirm, notify, referrer) {
+                       lock, $location, session, authoring, autosave, confirm, notify) {
+fix(dashboard): Returned dashboard for opened articles
 
     $scope.active = null;
     $scope.workqueue = workqueue;
