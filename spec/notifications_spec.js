@@ -3,7 +3,6 @@
 
 var authoring = require('./helpers/authoring'),
     monitoring = require('./helpers/monitoring'),
-    workspace = require('./helpers/workspace'),
     desks = require('./helpers/desks');
 
 var Login = require('./helpers/pages').login;
@@ -12,16 +11,12 @@ var logout = require('./helpers/pages').logout;
 describe('notifications', function() {
 
     beforeEach(function() {
-        desks.openDesksSettings();
-        desks.showMonitoringSettings('POLITIC DESK');
-        monitoring.turnOffDeskWorkingStage(0);
         monitoring.openMonitoring();
-        expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
     });
 
     it('create a new user mention', function() {
-        expect(monitoring.getTextItem(1, 0)).toBe('item5');
-        monitoring.actionOnItem('Edit', 1, 0);
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
         authoring.showComments();
         authoring.writeTextToComment('@admin1 hello');
 
@@ -29,7 +24,7 @@ describe('notifications', function() {
 
         browser.wait(function() {
             return comments.count();
-        }, 500);
+        }, 2000);
 
         expect(comments.count()).toBe(1);
         expect(element(by.id('unread-count')).getText()).toBe('2');
@@ -45,7 +40,7 @@ describe('notifications', function() {
     });
 
     it('create a new desk mention', function() {
-        expect(monitoring.getTextItem(1, 0)).toBe('item5');
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
 
         desks.openDesksSettings();
         desks.showMonitoringSettings('POLITIC DESK');

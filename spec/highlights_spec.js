@@ -97,6 +97,7 @@ describe('highlights', function() {
             // Setup Desk Monitoring Settings
             expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
             desks.openDesksSettings();
+
             desks.showMonitoringSettings('POLITIC DESK');
             monitoring.turnOffDeskWorkingStage(0);
 

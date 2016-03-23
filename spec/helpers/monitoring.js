@@ -11,7 +11,7 @@ function Monitoring() {
     this.label = element(by.model('widget.configuration.label'));
 
     this.openMonitoring = function() {
-        openUrl('/#/workspace/monitoring');
+        return openUrl('/#/workspace/monitoring');
     };
 
     this.showMonitoring = function() {
@@ -68,10 +68,7 @@ function Monitoring() {
      */
     this.getItem = function(group, item) {
         var all = this.getGroupItems(group);
-
-        browser.wait(function() {
-            return all.count();
-        }, 5000);
+        waitFor(all, 7500);
 
         if (item.type) {
             return all.filter(function(elem) {
@@ -240,10 +237,10 @@ function Monitoring() {
         var header = menu.element(by.partialLinkText(action));
         var btn = menu.element(by.partialButtonText(submenu));
         browser.actions()
-            .mouseMove(header, {x: -5, y: -5})
+            .mouseMove(header, {x: -50, y: -50})
             .mouseMove(header)
             .perform();
-        waitFor(btn);
+        waitFor(btn, 1000);
         btn.click();
     };
 
@@ -286,7 +283,7 @@ function Monitoring() {
             .mouseMove(itemElem) // now it can mouseover for sure
             .perform();
         var dotsElem = itemElem.element(by.className('icon-dots-vertical'));
-        waitFor(dotsElem, 500);
+        waitFor(dotsElem, 1000);
         dotsElem.click();
         return element(by.css('.dropdown-menu.open'));
     };
@@ -344,7 +341,14 @@ function Monitoring() {
     };
 
     this.saveSettings = function() {
-        element(by.css('[ng-click="save()"]')).click();
+        var btn = element(by.css('[ng-click="save()"]'));
+        btn.click();
+        // wait for modal to be removed
+        browser.wait(function() {
+            return btn.isPresent().then(function(isPresent) {
+                return !isPresent;
+            });
+        }, 500);
     };
 
     /**
@@ -358,6 +362,7 @@ function Monitoring() {
     };
 
     this.getStage = function(desk, stage) {
+        browser.sleep(2000);
         return this.getDesk(desk).all(by.repeater('stage in deskStages[desk._id]')).get(stage);
     };
 

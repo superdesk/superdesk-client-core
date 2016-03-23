@@ -2,20 +2,14 @@
 
 var monitoring = require('./helpers/monitoring'),
     authoring = require('./helpers/authoring'),
-    publishQueue = require('./helpers/publish_queue'),
-    workspace = require('./helpers/workspace'),
-    desks = require('./helpers/desks');
+    publishQueue = require('./helpers/publish_queue');
 
 describe('publishing', function() {
     beforeEach(function() {
-        desks.openDesksSettings();
-        desks.showMonitoringSettings('POLITIC DESK');
-        monitoring.turnOffDeskWorkingStage(0);
         monitoring.openMonitoring();
-        expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
 
-        expect(monitoring.getTextItem(1, 0)).toBe('item5');
-        monitoring.actionOnItem('Edit', 1, 0);
+        expect(monitoring.getTextItem(2, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
         publishQueue.openPublishQueue();
     });
