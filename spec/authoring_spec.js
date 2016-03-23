@@ -316,7 +316,8 @@ describe('authoring', function() {
         authoring.publish();
         monitoring.filterAction('text');
         monitoring.actionOnItem('Kill item', 4, 0);
-        expect(authoring.multieditButton.isEnabled()).toBe(false);
+        authoring.moreActionsButton.click();
+        expect(authoring.multieditButton.isDisplayed()).toBe(false);
     });
 
     it('open publish item with footer text without <br> tag', function() {
