@@ -206,7 +206,7 @@
     <label translate>Sign-Off</label>
     <button class="btn btn-signOff" ng-click="changeSignOffEdit()" title="Unlock edit Sign-Off" ng-if="canEditSignOff && _editable">
       <i class="icon-lock" ng-hide="editSignOff"></i>
-      <i class="icon-trash" ng-show="editSignOff"></i>
+      <i class="icon-unlocked" ng-show="editSignOff"></i>
     </button>
     <div ng-hide="editSignOff">{{item.sign_off}}</div>
     <div ng-if="canEditSignOff && _editable"

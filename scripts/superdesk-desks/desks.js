@@ -1261,6 +1261,7 @@
                     scope.search = null;
                     scope.users = {};
                     scope.exclude = [];
+                    scope.refresh = true;
 
                     var _refresh = function() {
                         scope.users = {};
@@ -1278,15 +1279,18 @@
                                 return _.findIndex(scope.exclude, {_id: item._id}) === -1;
                             });
                             scope.selected = null;
-                            scope.onsearch({search: scope.search});
+                            if (scope.onsearch) {
+                                scope.onsearch({search: scope.search});
+                            }
                         });
                     };
                     var refresh = _.debounce(_refresh, 1000);
 
                     scope.$watch('search', function() {
-                        if (scope.search) {
+                        if (scope.search && scope.refresh) {
                             refresh();
                         }
+                        scope.refresh = true;
                     });
 
                     function getSelectedIndex() {
@@ -1332,7 +1336,13 @@
 
                     scope.choose = function(user) {
                         scope.onchoose({user: user});
-                        scope.search = null;
+                        if (scope.displayUser) {
+                            scope.refresh = false;
+                            scope.users = {};
+                            scope.search = user[scope.displayUser];
+                        } else {
+                            scope.search = null;
+                        }
                     };
 
                     scope.select = function(user) {
