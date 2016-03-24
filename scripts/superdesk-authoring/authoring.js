@@ -598,11 +598,6 @@
                     action.correct = user_privileges.correct && lockedByMe && !is_read_only_state;
                 }
 
-                action.re_write = _.contains(['published', 'corrected'], current_item.state) &&
-                    _.contains(['text'], current_item.type) &&
-                    !current_item.embargo && !current_item.rewritten_by && action.new_take &&
-                    (!current_item.broadcast || !current_item.broadcast.master_id);
-
             } else {
                 // production states i.e in_progress, routed, fetched, submitted.
 
@@ -625,6 +620,10 @@
                     (angular.isUndefined(current_item.takes) || current_item.takes.last_take === current_item._id);
                 action.send = current_item._current_version > 0 && user_privileges.move;
             }
+
+            action.re_write = !is_read_only_state && _.contains(['text'], current_item.type) &&
+                !current_item.embargo && !current_item.rewritten_by && action.new_take &&
+                (!current_item.broadcast || !current_item.broadcast.master_id);
 
             //mark item for highlights
             action.mark_item = (current_item.task && current_item.task.desk &&

@@ -557,7 +557,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['edit', 'save', 'copy', 'spike', 'multi_edit']);
+            allowedActions(itemActions, ['re_write', 'save', 'edit', 'copy', 'spike', 'multi_edit']);
         }));
 
     it('can perform actions if the item is located on the desk',
@@ -585,7 +585,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike',
+            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
                     'mark_item', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
         }));
 
@@ -614,7 +614,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike',
+            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
                     'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
         }));
 
@@ -643,7 +643,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike',
+            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
         }));
 
@@ -827,7 +827,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike',
+            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
 
             item = {
@@ -1109,7 +1109,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    'mark_item', 'package_item', 'multi_edit', 'publish']);
+                    'mark_item', 'package_item', 'multi_edit', 'publish', 're_write']);
         }));
 
     it('Cannot send item if the no move privileges',
@@ -1144,7 +1144,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    'mark_item', 'package_item', 'multi_edit', 'publish']);
+                    're_write', 'mark_item', 'package_item', 'multi_edit', 'publish']);
         }));
 
     it('Can send item if the version greater then zero',
@@ -1179,7 +1179,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    'mark_item', 'package_item', 'multi_edit', 'publish', 'send']);
+                    're_write', 'mark_item', 'package_item', 'multi_edit', 'publish', 'send']);
         }));
 
     it('Cannot do new take for embargo item.',
