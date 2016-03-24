@@ -26,7 +26,8 @@ function Authoring() {
     this.sendAndContinueBtn = element(by.buttonText('send and continue'));
     this.sendBtn = element(by.buttonText('send'));
 
-    this.multieditOption = element(by.css('.big-icon-multiedit'));
+    this.moreActionsButton = element(by.id('more-actions'));
+
     this.multieditButton = element(by.id('multiedit'));
 
     this.setCategoryBtn = element(by.id('category-setting'))
@@ -61,7 +62,7 @@ function Authoring() {
     this.sendTo = function(desk, stage, skipConfirm) {
         this.sendToButton.click();
         this.sendToSidebarOpened(desk, stage);
-        if (!skipConfirm) {
+        if (skipConfirm) {
             this.confirmSendTo();
         }
     };
