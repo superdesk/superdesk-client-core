@@ -886,7 +886,9 @@
     function ChangeImageController($scope, gettext, notify, modal, $q) {
         $scope.data = $scope.locals.data;
         $scope.data.cropData = {};
+        var sizes = {};
         $scope.data.renditions.forEach(function(rendition) {
+            sizes[rendition.name] = {width: rendition.width, height: rendition.height};
             $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
         });
         var poiOrig = angular.extend({}, $scope.data.poi);
@@ -932,7 +934,7 @@
 
         $scope.onChange = function(renditionName, cropData) {
             $scope.$apply(function() {
-                $scope.data.cropData[renditionName] = angular.extend({}, cropData);
+                $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
                 $scope.data.isDirty = true;
             });
         };
