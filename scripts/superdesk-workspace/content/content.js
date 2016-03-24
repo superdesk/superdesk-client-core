@@ -112,7 +112,9 @@
             var self = this;
             var where = {enabled: true};
             return api.query('content_types', {where: where}).then(function(result) {
-                self.types = result._items;
+                self.types = result._items.sort(function(a, b) {
+                    return b.priority - a.priority; // with higher priority goes up
+                });
                 return self.types;
             }, function(reason) {
                 self.types = [];

@@ -186,8 +186,8 @@
         }
     }
 
-    TemplatesDirective.$inject = ['gettext', 'notify', 'api', 'templates', 'modal', 'desks', 'weekdays', '$filter'];
-    function TemplatesDirective(gettext, notify, api, templates, modal, desks, weekdays, $filter) {
+    TemplatesDirective.$inject = ['gettext', 'notify', 'api', 'templates', 'modal', 'desks', 'weekdays', 'content', '$filter'];
+    function TemplatesDirective(gettext, notify, api, templates, modal, desks, weekdays, content, $filter) {
         return {
             templateUrl: 'scripts/superdesk-templates/views/templates.html',
             link: function ($scope) {
@@ -210,6 +210,10 @@
                     $scope.desks = desks.desks;
                 });
 
+                content.getTypes().then(function() {
+                    $scope.content_types = content.types;
+                });
+
                 /*
                  * Returns desk name
                  */
@@ -222,23 +226,6 @@
                  */
                 $scope.getTemplateStage = function getTemplateStage(template) {
                     return _.find(desks.stages._items , {_id: template.template_stage});
-                };
-
-                /*
-                 * Convert string to time object
-                 *
-                 * @param {String}{%M%S} time
-                 * @return {Object} d Returns time object
-                 */
-                $scope.getTime = function getTime(time) {
-                    if (time) {
-                        var d = new Date();
-
-                        d.setUTCHours(time.substr(0, 2));
-                        d.setUTCMinutes(time.substr(2, 2));
-
-                        return d;
-                    }
                 };
 
                 $scope.types = templates.types;

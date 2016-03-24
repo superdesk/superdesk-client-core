@@ -14,9 +14,8 @@
         });
 
         describe('time filter', function() {
-            it('can convert date into time str', inject(function($filter) {
-                var date = new Date(2010, 10, 10, 8, 5, 35);
-                expect($filter('time')(date)).toBe('8:05');
+            it('can convert model time into time str', inject(function($filter) {
+                expect($filter('time')('08:05:35')).toBe('8:05');
             }));
         });
 
