@@ -7,6 +7,21 @@ describe('content', function() {
     beforeEach(module('superdesk.mocks'));
     beforeEach(module('superdesk.archive'));
 
+    beforeEach(module(function($provide) {
+        $provide.constant('config', {
+            model: {
+                timeformat: 'HH:mm:ss',
+                dateformat: 'DD/MM/YYYY'
+            },
+            view: {
+                timeformat: 'HH:mm',
+                dateformat: 'MM/DD/YYYY'
+            },
+            defaultTimezone: 'Europe/London',
+            server: {url: undefined}
+        });
+    }));
+
     it('can spike items', inject(function(spike, api, $q) {
         spyOn(api, 'update').and.returnValue($q.when());
         spike.spike(item);
