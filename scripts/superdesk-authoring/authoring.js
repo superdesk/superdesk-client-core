@@ -2464,8 +2464,8 @@
                         scope.item.body_footer = '';
                     }
 
-                    if (scope.item.body_footer_value) {
-                        scope.item.body_footer = scope.item.body_footer + scope.item.body_footer_value.value;
+                    if (scope.extra.body_footer_value) {
+                        scope.item.body_footer = scope.item.body_footer + '\n<p>' + scope.extra.body_footer_value.value + '</p>';
                         mainEditScope.dirty = true;
                         autosave.save(scope.item);
                     }
@@ -2476,6 +2476,8 @@
                         ddlHelpline[0].options[0].selected = true;
                     });
                 };
+
+                scope.extra = {}; // placeholder for fields not part of item
             }
         };
     }

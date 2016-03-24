@@ -169,7 +169,7 @@
      order="{{schema.footer.order}}">
     <label translate>Helplines/Contact Information</label>
     <select id="helplines"
-            ng-model="item.body_footer_value"
+            ng-model="extra.body_footer_value"
             ng-disabled="!_editable"
             ng-options="f.name for f in metadata.footers track by f.name"
             ng-change="addHelplineToFooter()"
