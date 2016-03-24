@@ -57,10 +57,11 @@ WorkqueueCtrl.$inject = [
     'authoring',
     'autosave',
     'confirm',
-    'notify'
+    'notify',
+    'referrer'
 ];
 function WorkqueueCtrl($scope, $route, workqueue, authoringWorkspace, multiEdit,
-                       superdesk, lock, $location, session, authoring, autosave, confirm, notify) {
+                       superdesk, lock, $location, session, authoring, autosave, confirm, notify, referrer) {
 
     $scope.active = null;
     $scope.workqueue = workqueue;
@@ -164,7 +165,7 @@ function WorkqueueCtrl($scope, $route, workqueue, authoringWorkspace, multiEdit,
     $scope.redirectOnCloseMulti = function() {
         if (this.isMultiedit){
             this.isMultiedit = false;
-            $location.url('/workspace/monitoring');
+            $location.url(referrer.getReferrerUrl());
         }
     };
 }
