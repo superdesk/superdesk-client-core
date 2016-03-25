@@ -971,10 +971,11 @@
         'modal',
         'archiveService',
         'confirm',
-        'reloadService'
+        'reloadService',
+        '$rootScope'
     ];
     function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
-            privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService) {
+            privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope) {
         return {
             link: function($scope, elem, attrs) {
                 var _closing;
@@ -1206,12 +1207,11 @@
                 function publishItem(orig, item) {
                     var action = $scope.action === 'edit' ? 'publish' : $scope.action;
                     validate(orig, item);
-                    authoring.publish(orig, item, action)
+                    return authoring.publish(orig, item, action)
                     .then(function(response) {
                         if (response) {
                             if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
                                 if (angular.isDefined(response.data._issues['validator exception'])) {
-
                                     var errors = response.data._issues['validator exception'];
                                     var modified_errors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
                                     for (var i = 0; i < modified_errors.length; i++) {
@@ -1225,17 +1225,22 @@
                                             $scope.item = _.create($scope.origItem);
                                         });
                                     }
+
+                                    return false;
                                 }
                             } else if (response.status === 412) {
                                 notifyPreconditionFailed();
+                                return false;
                             } else {
                                 notify.success(gettext('Item published.'));
                                 $scope.item = response;
                                 $scope.dirty = false;
                                 authoringWorkspace.close(true);
+                                return true;
                             }
                         } else {
                             notify.error(gettext('Unknown Error: Item not published.'));
+                            return false;
                         }
                     });
                 }
@@ -1276,18 +1281,43 @@
 
                         if ($scope.dirty && message === 'publish') {
                             //confirmation only required for publish
-                            authoring.publishConfirmation($scope.origItem, $scope.item, $scope.dirty, message)
+                            return authoring.publishConfirmation($scope.origItem, $scope.item, $scope.dirty, message)
                             .then(function(res) {
                                 if (res) {
-                                    publishItem($scope.origItem, $scope.item);
+                                    return publishItem($scope.origItem, $scope.item);
                                 }
                             }, function(response) {
                                 notify.error(gettext('Error. Item not published.'));
+                                return false;
                             });
                         } else {
-                            publishItem($scope.origItem, $scope.item);
+                            return publishItem($scope.origItem, $scope.item);
                         }
                     }
+
+                    return false;
+                };
+
+                $scope.publishAndContinue = function() {
+                    $scope.publish().then(function(published) {
+                        if (published) {
+                            var itemDeskId = null;
+                            if ($scope.item.task && $scope.item.task.desk) {
+                                itemDeskId = $scope.item.task.desk;
+                            }
+
+                            return authoring.linkItem($scope.item, null, itemDeskId);
+                        }
+                    })
+                    .then(function (item) {
+                        if (item) {
+                            authoringWorkspace.close(false);
+                            notify.success(gettext('New take created.'));
+                            authoringWorkspace.edit(item);
+                        }
+                    }, function(err) {
+                        notify.error(gettext('Failed to publish and continue.'));
+                    });
                 };
 
                 $scope.deschedule = function() {
@@ -1403,6 +1433,18 @@
                     authoringWorkspace.addAutosave();
 
                     return autosavedItem;
+                };
+
+                $scope.sendToNextStage = function(item) {
+                    var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
+                    for (var i = 0; i < stageList.length; i++){
+                        if (stageList[i]._id === $scope.stage._id) {
+                            stageIndex = (i + 1 === stageList.length ? 0 : i + 1);
+                            break;
+                        }
+                    }
+
+                    $rootScope.$broadcast('item:nextStage', {'stage': stageList[stageIndex], 'itemId': $scope.item._id});
                 };
 
                 function refreshItem() {
@@ -1842,7 +1884,7 @@
                     return editor.countErrors()
                         .then(function(spellcheckErrors) {
                             if (scope.mode === 'authoring' && spellcheckErrors > 0) {
-                                confirm.confirmSpellcheck(spellcheckErrors)
+                                return confirm.confirmSpellcheck(spellcheckErrors)
                                         .then(angular.bind(this, function send() {
                                             return runSend(open);
                                         }), function (err) { // cancel
@@ -1853,6 +1895,19 @@
                             }
                         });
                 };
+
+                scope.$on('item:nextStage', function(_e, data) {
+                    if (scope.item && scope.item._id === data.itemId) {
+                        var oldStage = scope.selectedStage;
+                        scope.selectedStage = data.stage;
+
+                        scope.send().then(function(sent) {
+                            if (!sent) {
+                                scope.selectedStage = oldStage;
+                            }
+                        });
+                    }
+                });
 
                 /*
                  * Returns true if Destination field and Send button needs to be displayed, false otherwise.
@@ -2060,9 +2115,9 @@
                         deferred = $q.defer();
                     }
 
-                    runMacro(scope.item, macro)
+                    return runMacro(scope.item, macro)
                     .then(function(item) {
-                        api.find('tasks', scope.item._id)
+                        return api.find('tasks', scope.item._id)
                         .then(function(task) {
                             scope.task = task;
                             msg = sendAndContinue ? 'Send & Continue' : 'Send';
@@ -2086,9 +2141,11 @@
                             }
 
                             if (sendAndContinue) {
-                                return deferred.resolve();
+                                deferred.resolve();
+                                return deferred.promise;
                             } else {
                                 authoringWorkspace.close(true);
+                                return true;
                             }
                         }, function(err) {
                             if (err) {
@@ -2101,15 +2158,12 @@
                                 }
 
                                 if (sendAndContinue) {
-                                    return deferred.reject(err);
+                                    deferred.reject(err);
+                                    return deferred.promise;
                                 }
                             }
                         });
                     });
-
-                    if (sendAndContinue) {
-                        return deferred.promise;
-                    }
                 }
 
                 function updateLastDestination(deskId, stageId) {
@@ -2120,7 +2174,7 @@
 
                 function sendContent(deskId, stageId, macro, open) {
                     var finalItem;
-                    api.save('duplicate', {}, {desk: scope.item.task.desk}, scope.item)
+                    return api.save('duplicate', {}, {desk: scope.item.task.desk}, scope.item)
                     .then(function(item) {
                         return api.find('archive', item._id);
                     })
@@ -2328,7 +2382,7 @@
                 metadata.initialize().then(function() {
                     scope.metadata = metadata.values;
 
-                    if (scope.item.type === 'picture') {
+                    if (scope.item && scope.item.type === 'picture') {
                         scope.item.hasCrops = false;
                         scope.item.hasCrops = scope.metadata.crop_sizes.some(function (crop) {
                             return scope.item.renditions && scope.item.renditions[crop.name];

@@ -1049,7 +1049,7 @@
                     minWidth: 400,
                     start: function(e, ui) {
                         var container = ui.element.parent();
-                        workspace.resizable({maxWidth: container.width() - 588});
+                        workspace.resizable({maxWidth: container.width() - 730});
                     },
                     resize: function (e, ui) {
                         var container = ui.element.parent(),

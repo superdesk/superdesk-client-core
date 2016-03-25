@@ -112,7 +112,7 @@
 	.divider {
 		.nav-divider();
 	}
-        
+
 	// Links within the dropdown menu
 	button {
 		width: 100%;
@@ -134,7 +134,7 @@
 			padding: 6px 16px;
 			margin-bottom: 2px;
 			> i[class^="icon-"], i[class*=" icon-"] {
-				margin-right: 8px;
+				margin-right: 14px;
 				margin-top: -3px;
 				min-width: 19px;
 				vertical-align: middle;
@@ -298,8 +298,9 @@
 		font-size: 15px;
 		position: relative;
 		z-index: 2;
+		background: transparent;
 		&:hover {
-			background: #fff;
+			background: rgba(255,255,255,0);
 		}
 		&.condensed {
 			padding: 0 14px;
@@ -332,18 +333,17 @@
 		z-index: 2;
 		margin-top: -1px;
 		min-width: 200px;
-		box-shadow: 0px 1px 2px 1px #aaa;
+		box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.35);
 		padding: 10px 0;
 		&:before {
 			display: none;
 		}
 		li {
 			> a, > button, > span {
-				margin: 0 10px;
+				margin: 0;
 				min-width: 225px;
-				padding: 6px 10px;
+				padding: 6px 16px;
 				line-height: 19px;
-				.border-radius(3px);
 			}
 			> span {
 				display: block;
@@ -351,16 +351,15 @@
 					background: none;
 				}
 			}
-                        > .menu-label {
-                            min-width: 205px;
-                        }
+      > .menu-label {
+          min-width: 205px;
+      }
 			button {
-				width: auto;
 				&.full {
 					width: 100%;
-					margin: 5px 0 0 0;
+					margin: 0;
 					height: 41px;
-					padding: 10px 14px;
+					padding: 10px 10px;
 					border-top: 1px solid #e0e0e0;
 					.border-radius(0px);
 					i {
@@ -433,7 +432,7 @@
 // CLassic dropdown with no arrow
 // -------------------------------------------------
 .dropdown.dropdown-noarrow {
-    .dropdown-menu { 
+    .dropdown-menu {
         margin: 0;
         max-height: 250px;
         overflow: auto;
@@ -535,9 +534,9 @@
                     top: auto;
                     bottom: -10px;
                 }
-                button {
-                    min-width: 160px !important;
-                }
+                // button {
+                //     min-width: 160px !important;
+                // }
             }
             &:hover {
                 > .dropdown-menu {
@@ -546,6 +545,12 @@
             }
         }
     }
+}
+
+.dropdown-menu__footer {
+	padding: 10px;
+	margin-top: 6px;
+	border-top: 1px solid #e5e5e5;
 }
 
 // Dark dropdowns
