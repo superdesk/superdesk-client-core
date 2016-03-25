@@ -591,7 +591,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
                     }
                 });
                 if (renditionsHtml.length > 0) {
-                    html.push(' srcset="' + renditionsHtml.join(',\n') + '"');
+                    html.push(' srcset="' + renditionsHtml.join(', ') + '"');
                 }
             }
             html.push('/>');
