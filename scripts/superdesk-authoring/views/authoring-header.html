@@ -42,7 +42,7 @@
                sd-validation-error="error.slugline"
                data-required="schema.slugline.required"
                ng-if="schema.slugline"
-               sd-width="{{schema.slugline.sdWidth}}"
+               sd-width="{{editor.slugline.sdWidth}}"
                order="{{schema.slugline.order}}">
             <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
             <div class="authoring-header__input-holder">
@@ -62,7 +62,7 @@
                sd-validation-error="error.genre"
                data-required="schema.genre.required"
                ng-if="schema.genre && !metadata.genre_service"
-               sd-width="{{schema.genre.sdWidth}}"
+               sd-width="{{editor.genre.sdWidth}}"
                order="{{schema.genre.order}}">
             <label class="authoring-header__item-label" translate>GENRE</label>
             <div class="authoring-header__input-holder">
@@ -81,7 +81,7 @@
                sd-validation-error="error.anpa_take_key"
                data-required="schema.anpa_take_key.required"
                ng-if="schema.anpa_take_key"
-               sd-width="{{schema.anpa_take_key.sdWidth}}"
+               sd-width="{{editor.anpa_take_key.sdWidth}}"
                order="{{schema.anpa_take_key.order}}">
             <label class="authoring-header__item-label" translate>TAKEKEY</label>
             <div class="authoring-header__input-holder">
@@ -99,7 +99,7 @@
              sd-validation-error="error.place"
              data-required="schema.place.required"
              ng-if="metadata.locators && schema.place"
-             sd-width="{{schema.place.sdWidth}}"
+             sd-width="{{editor.place.sdWidth}}"
              order="{{schema.place.order}}">
           <label class="authoring-header__item-label" translate>PLACE</label>
           <div class="authoring-header__input-holder">
@@ -117,7 +117,7 @@
              sd-validation-error="error.priority"
              data-required="schema.priority.required"
              ng-if="schema.priority"
-             sd-width="{{schema.priority.sdWidth}}"
+             sd-width="{{editor.priority.sdWidth}}"
              order="{{schema.priority.order}}">
           <label class="authoring-header__item-label" translate>PRIORITY</label>
           <div class="authoring-header__input-holder">
@@ -137,7 +137,7 @@
              sd-validation-error="error.urgency"
              data-required="schema.urgency.required"
              ng-if="schema.urgency"
-             sd-width="{{schema.urgency.sdWidth}}"
+             sd-width="{{editor.urgency.sdWidth}}"
              order="{{schema.urgency.order}}">
           <label class="authoring-header__item-label" translate>URGENCY</label>
           <div class="authoring-header__input-holder">
@@ -158,7 +158,7 @@
              sd-validation-error="error.anpa_category"
              data-required="schema.anpa_category.required"
              ng-if="metadata.categories && schema.anpa_category"
-             sd-width="{{schema.anpa_category.sdWidth}}"
+             sd-width="{{editor.anpa_category.sdWidth}}"
              order="{{schema.anpa_category.order}}">
           <label class="authoring-header__item-label uppercase" translate>CATEGORY</label>
           <div sd-meta-terms
@@ -179,7 +179,7 @@
              sd-validation-error="error.subject"
              data-required="schema.subject.required"
              ng-if="metadata.subjectcodes && schema.subject && !metadata.subjects"
-             sd-width="{{schema.subject.sdWidth}}"
+             sd-width="{{editor.subject.sdWidth}}"
              order="{{schema.subject.order}}">
           <label class="authoring-header__item-label" translate>SUBJECT</label>
           <div id="subjects"
@@ -221,7 +221,7 @@
              sd-validation-error="error.company_codes"
              data-required="schema.company_codes.required"
              ng-if="shouldDisplayCompanyCodes()"
-             sd-width="{{schema.company_codes.sdWidth}}"
+             sd-width="{{editor.company_codes.sdWidth}}"
              order="{{schema.company_codes.order}}">
           <label class="authoring-header__item-label" translate>COMPANY</label>
           <div sd-meta-terms
@@ -241,7 +241,7 @@
              sd-validation-error="error.ednote"
              data-required="schema.ednote.required"
              ng-if="schema.ednote"
-             sd-width="{{schema.ednote.sdWidth}}"
+             sd-width="{{editor.ednote.sdWidth}}"
              order="{{schema.ednote.order}}">
           <label class="authoring-header__item-label" translate>ED. NOTE</label>
           <div class="authoring-header__input-holder">
