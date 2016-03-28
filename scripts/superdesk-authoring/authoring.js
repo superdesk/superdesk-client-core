@@ -59,8 +59,33 @@
         add_to_current: false
     });
 
+    // http://docs.python-cerberus.org/en/stable/usage.html
     var DEFAULT_SCHEMA = Object.freeze({
-        slugline: {maxlength: 24, order: 1, sdWidth: 'full'},
+        slugline: {maxlength: 24},
+        genre: {},
+        anpa_take_key: {},
+        place: {},
+        priority: {},
+        urgency: {},
+        anpa_category: {},
+        subject: {},
+        company_codes: {},
+        ednote: {},
+        headline: {maxlength: 64},
+        abstract: {maxlength: 160},
+        body_html: {},
+        byline: {},
+        dateline: {},
+        located: {},
+        sign_off: {},
+        footer: {},
+        body_footer: {},
+        media: {},
+        media_description: {}
+    });
+
+    var DEFAULT_EDITOR = Object.freeze({
+        slugline: {order: 1, sdWidth: 'full'},
         genre: {order: 2, sdWidth: 'half'},
         anpa_take_key: {order: 3, sdWidth: 'half'},
         place: {order: 4, sdWidth: 'half'},
@@ -70,9 +95,12 @@
         subject: {order: 8, sdWidth: 'full'},
         company_codes: {order: 10, sdWidth: 'full'},
         ednote: {order: 11, sdWidth: 'full'},
-        headline: {maxlength: 64, order: 1, editor: ['underline', 'anchor']},
-        abstract: {maxlength: 160, order: 2, editor: ['bold', 'italic', 'underline', 'anchor']},
-        body_html: {order: 5, editor: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'table']},
+        headline: {order: 1, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
+        abstract: {order: 2, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
+        body_html: {
+            order: 5,
+            formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'table', 'removeFormat']
+        },
         byline: {order: 3},
         dateline: {order: 4},
         located: {},
@@ -2336,6 +2364,7 @@
                 scope.errorMessage = null;
                 scope.contentType = null;
                 scope.schema = angular.extend({}, DEFAULT_SCHEMA);
+                scope.editor = angular.extend({}, DEFAULT_EDITOR);
                 scope.canEditSignOff = config.user && config.user.sign_off_mapping ? true: false;
                 scope.editSignOff = false;
 
@@ -2369,6 +2398,7 @@
                                 content.getType(item.profile)
                                     .then(function(type) {
                                         scope.contentType = type;
+                                        scope.editor = type.editor || DEFAULT_EDITOR;
                                         scope.schema = type.schema || DEFAULT_SCHEMA;
                                     });
                             }
@@ -2801,6 +2831,7 @@
             link: function (scope, elem, attrs, WidgetsManagerCtrl) {
                 scope.contentType = null;
                 scope.schema = angular.extend({}, DEFAULT_SCHEMA);
+                scope.editor = angular.extend({}, DEFAULT_EDITOR);
 
                 /**
                  * Returns true if the Company Codes field should be displayed, false otherwise.
@@ -2866,6 +2897,7 @@
                             content.getType(item.profile)
                                 .then(function(type) {
                                     scope.contentType = type;
+                                    scope.editor = type.editor || DEFAULT_EDITOR;
                                     scope.schema = type.schema || DEFAULT_SCHEMA;
                                 });
                         }
