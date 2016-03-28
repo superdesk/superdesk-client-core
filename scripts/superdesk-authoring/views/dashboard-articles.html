@@ -8,29 +8,25 @@
 
   <div class="modal-body">
     <div class="flex-grid box wrap-items small-2 medium-4 large-6">
-      <div class="flex-item card-box" ng-repeat="article in workqueue.items track by article._id" ng-click="edit(article, $event)" ng-href="{{ :: link(article) }}">
-        <div class="card-box__header">
-          <div class="card-box__heading">
-            <span ng-show="article.headline">{{ article.headline}}</span>
-            <span ng-show="!article.headline">{{ 'Untitled' | translate }}</span>
-            <span class="close" ng-click="closeItem(article)"><i class="icon-close-small white"></i></span>
-          </div>
+      <div class="flex-item card-box card-box--with-click card-box--flex" ng-repeat="article in workqueue.items track by article._id"  ng-class="{active: article === active}">
+        <a class="card-box__full-click" ng-click="edit(article, $event)" ng-href="{{ :: link(article) }}"></a>
+        <span class="close cardbox__close" ng-click="closeItem(article)"><i class="icon-close-small white"></i></span>
+        <div class="card-box__header card-box__header--padded-flex">
+            <i title="{{article.type}}" class="filetype-icon-{{article.type}} white"></i><time class="card-box__time-date card-box__time-date--reverse-color" sd-reldate-complex ng-model="article.versioncreated"></time>
         </div>
-        <div class="card-box__content">
-          <ul class="card-box__content-list">
-            <li>
-              <div class="created" sd-reldate-complex ng-model="article.versioncreated"></div>
-              <div class="type-icon">
-                <i title="{{article.type}}" class="filetype-icon-{{article.type}}"></i>
-              </div>
-            </li>
-            <li>
-              <div class="state-label state-{{article.state}}">{{article.state}}</div>
-            </li>
-            <li>
-              <span sd-item-container data-item="article" class="container"></span>
-            </li>
-          </ul>
+
+
+        <div class="card-box__article-header">
+
+          <h4 ng-show="article.headline">{{ article.headline}}</h4>
+          <h4 ng-show="!article.headline">{{ 'Untitled' | translate }}</h4>
+        </div>
+        <div class="card-box__content card-box__content--article">
+
+        </div>
+        <div class="card-box__footer card-box__footer--light">
+          <span class="state-label state-{{article.state}}">{{article.state}}</span>
+          <span sd-item-container data-item="article" class="container"></span>
         </div>
       </div>
     </div>
