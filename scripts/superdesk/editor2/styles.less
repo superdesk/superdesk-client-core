@@ -29,7 +29,7 @@
     }
     // hide text field on mouse out when empty if not alone
     &--not-alone-and-empty {
-        .text-editor {
+        .text-editor:not(.medium-editor-dragover) {
             opacity: 0;
             .transition(opacity .25s);
             &:focus, &:hover {
@@ -43,6 +43,10 @@
             padding: 0;
             // leave the space for the `add-embed` when the toolbar is shown
             margin-top: 20px;
+            &.medium-editor-dragover, & .medium-editor-dragover {
+                background: @sd-hover;
+                border: 2px dashed @sd-blue;
+            }
         }
         .preview--caption, .editor--caption {
             margin: 20px 0 0 0;
@@ -163,35 +167,6 @@
     }
 }
 .add-embed {
-    &__drop-zone {
-        height: 5px;
-        background-color: white;
-        border: 2px dashed white;
-        width: 100%;
-    }
-    &__plus {
-        display: block;
-        text-align: center;
-        position: relative;
-        cursor: pointer;
-        opacity: .4;
-        transition-duration: .25s;
-        transition-property: opacity;
-        &.drag-active {
-            opacity: 1;
-        }
-        .drag-active &, &.drag-active {
-            .add-embed__drop-zone {
-                height: 60px;
-                background-color: #F7F7F7;
-                border: 2px dashed #CFCFCF;
-            }
-        }
-         > i { // + icon
-            z-index: 1;
-            position: relative;
-         }
-    }
     &__body {
         margin: 10px 0;
         padding: 10px;

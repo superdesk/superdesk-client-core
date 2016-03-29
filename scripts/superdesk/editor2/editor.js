@@ -757,29 +757,40 @@ angular.module('superdesk.editor2', [
     }])
     .directive('sdTextEditorDropZone', ['editor',
     function (editor) {
+        var dragOverClass = 'medium-editor-dragover';
         return {
             scope: true,
-            require: '^sdAddEmbed',
+            require: '^sdTextEditorBlockText',
             link: function(scope, element, attrs, ctrl) {
                 var PICTURE_TYPE = 'application/superdesk.item.picture';
                 element
                 .on('drop', function(event) {
                     event.preventDefault();
                     var item = angular.fromJson(event.originalEvent.dataTransfer.getData(PICTURE_TYPE));
-                    editor.editCropAndRenderImage(item).then(function(picture) {
-                        ctrl.createBlockFromSdPicture(picture);
-                    }).finally(function() {
-                        element.removeClass('drag-active');
-                    });
-                })
-                .on('dragover', function(event) {
-                    if (event.originalEvent.dataTransfer.types[0] === PICTURE_TYPE) {
-                        event.preventDefault();
-                        element.addClass('drag-active');
+                    var paragraph = angular.element(event.target);
+                    paragraph.removeClass(dragOverClass);
+                    if (paragraph.text() === '') {
+                        // select paragraph element in order to know position
+                        ctrl.selectElement(paragraph.get(0));
+                        ctrl.insertPicture(item);
                     }
                 })
+                .on('dragover', function(event) {
+                    var paragraph = angular.element(event.target);
+                    if (event.originalEvent.dataTransfer.types[0] === PICTURE_TYPE) {
+                        // allow to overwite the drop binder (see above)
+                        event.preventDefault();
+                        // if dragged element is a picture and if the paragraph is empty, highlight the paragraph
+                        if (paragraph.text() === '') {
+                            return paragraph.addClass(dragOverClass);
+                        }
+                    }
+                    // otherwise, remove the style
+                    paragraph.removeClass(dragOverClass);
+                })
                 .on('dragleave', function(event) {
-                    element.removeClass('drag-active');
+                    var paragraph = angular.element(event.target);
+                    paragraph.removeClass(dragOverClass);
                 });
             }
         };
@@ -969,8 +980,12 @@ angular.module('superdesk.editor2', [
                 var ngModel = controllers[0];
                 var sdTextEditor = controllers[1];
                 scope.model = ngModel;
-                // give the block model to the controller
+                // give the block model and the editor controller to the text block controller
                 var vm = controllers[2];
+                angular.extend(vm, {
+                    block: scope.sdTextEditorBlockText,
+                    sdEditorCtrl: sdTextEditor
+                });
                 vm.block = scope.sdTextEditorBlockText;
                 var TYPING_CLASS = 'typing';
                 var editorElem;
@@ -984,7 +999,8 @@ angular.module('superdesk.editor2', [
                     setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
                     // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
                     if (scope.config.multiBlockEdition) {
-                        editorConfig.extensions = {};
+                        // this dummy imageDragging stop preventing drag & drop events
+                        editorConfig.extensions = {'imageDragging': {}};
                         if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
                             editorConfig.extensions.table = new window.MediumEditorTable();
                         }
@@ -1024,7 +1040,7 @@ angular.module('superdesk.editor2', [
                     });
                     scope.medium.subscribe('blur', function() {
                         // save latest know caret position
-                        scope.sdTextEditorBlockText.caretPosition = scope.medium.exportSelection();
+                        vm.savePosition();
                     });
                     // update the toolbar, bc it can be displayed at the
                     // wrong place if offset of block has changed
@@ -1187,10 +1203,19 @@ angular.module('superdesk.editor2', [
                 var vm = this;
                 angular.extend(vm, {
                     block: undefined, // provided in link method
+                    sdEditorCtrl: undefined, // provided in link method
+                    selectElement: function(element) {
+                        scope.medium.selectElement(element);
+                        // save position
+                        vm.savePosition();
+                    },
+                    savePosition: function() {
+                        vm.block.caretPosition = scope.medium.exportSelection();
+                    },
                     extractEndOfBlock: function() {
                         // it can happen that user lost the focus on the block when this fct in called
                         // so we restore the latest known position
-                        scope.medium.importSelection(scope.sdTextEditorBlockText.caretPosition);
+                        scope.medium.importSelection(vm.block.caretPosition);
                         // extract the text after the cursor
                         var remainingElementsContainer = document.createElement('div');
                         remainingElementsContainer.appendChild(extractBlockContentsFromCaret().cloneNode(true));
@@ -1204,6 +1229,28 @@ angular.module('superdesk.editor2', [
                     },
                     updateModel: function() {
                         editor.commitScope(scope);
+                    },
+                    insertPicture: function(picture) {
+                        // cut the text that is after the caret in the block and save it in order to add it after the embed later
+                        var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
+                        // save the blocks (with removed leading text)
+                        vm.updateModel();
+                        var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
+                        editor.generateImageTag(picture).then(function(imgTag) {
+                            vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                                blockType: 'embed',
+                                embedType: 'Image',
+                                body: imgTag,
+                                caption: picture.description_text,
+                                association: picture
+                            }, true);
+                            indexWhereToAddBlock++;
+                        }).then(function() {
+                            // add new text block for the remaining text
+                            vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                                body: textThatWasAfterCaret
+                            }, true);
+                        });
                     }
                 });
             }]
