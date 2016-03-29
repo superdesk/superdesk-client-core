@@ -102,7 +102,7 @@
         abstract: {order: 3, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
         body_html: {
             order: 6,
-            formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'table', 'removeFormat']
+            formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'removeFormat']
         },
         byline: {order: 4},
         dateline: {order: 5},

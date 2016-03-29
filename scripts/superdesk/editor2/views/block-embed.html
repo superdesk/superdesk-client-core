@@ -9,11 +9,12 @@
          ng-class="{'preview--embed--loading': ng-model.body === ''}"
          sd-html-preview="vm.model.body">
     </div>
-    <a class="btn btn-default btn-small" ng-click="vm.toggleEdition()" translate>Edit the code</a>
+    <!-- TODO: find a new design for that -->
+    <!-- <a class="btn btn-default btn-small" ng-click="vm.toggleEdition()" translate>Edit the code</a> -->
 </div>
 <div class="editor--caption">
-    <div translate>Caption</div>
     <input sd-remove-tags
+        placeholder="{{::'Caption'|translate}}"
         type="text"
         ng-model="vm.caption"
         ng-model-options="{debounce: 1000}"

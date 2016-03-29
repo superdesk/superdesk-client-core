@@ -27,15 +27,25 @@
     &--selected {
         border: 1px solid #5EA9C8;
     }
+    // hide text field on mouse out when empty if not alone
+    &--not-alone-and-empty {
+        .text-editor {
+            opacity: 0;
+            .transition(opacity .25s);
+            &:focus, &:hover {
+                opacity: 1;
+            }
+        }
+    }
     &__container {
         position: relative;
         .text-editor {
             padding: 0;
             // leave the space for the `add-embed` when the toolbar is shown
-            &.toolbar-visible {margin-top: 45px;}
+            margin-top: 20px;
         }
         .preview--caption, .editor--caption {
-            margin: 20px 0px;
+            margin: 20px 0 0 0;
         }
         .editor--caption [contenteditable] {
             border: 1px solid @sd-blue;
@@ -90,6 +100,64 @@
             padding: 10px 0;
             &:hover {
                 background-color: #F0F0F0;
+            }
+        }
+    }
+}
+.add-content { // (+) button
+    position: absolute;
+    z-index: 1;
+    // translate the button by its dimension
+    transform: translate(-48px, -12px);
+    -moz-transform: translate(-48px, -12px);
+    -wekit-transform: translate(-48px, -12px);
+    &--expanded {
+        .add-content__plus-btn {
+            opacity: 1;
+            i {transform: rotate(45deg);}
+        }
+        .add-content__actions span {
+            transform: scale(1);
+        }
+    }
+    &__plus-btn {
+        position: absolute;
+        opacity: .7;
+        &:hover {
+            opacity: 1;
+        }
+        i {
+            .transition(transform .25s);
+        }
+    }
+    &__actions {
+        position: relative;
+        top: 10px;
+        left: 50px;
+        &.ng-hide:not(.ng-hide-animate) {
+            display: block !important;
+            position: absolute;
+            pointer-events: none;
+            width: 200px; // ensure that inner inline-block is inlined
+        }
+        span {
+            display: inline-block;
+            transform: scale(0);
+            .transition(transform .25s);
+            &:nth-of-type(2) {
+                transition-delay: .1s;
+                -moz-transition-delay: .1s;
+                -webkit-transition-delay: .1s;
+            }
+            border-radius: 24px;
+            border: 2px solid @sd-blue;
+            padding: 5px 5px 0px;
+            background-color: @white;
+            i {color: @sd-blue;}
+            &:hover {
+                cursor: pointer;
+                background-color: @sd-blue;
+                i {color: @white;}
             }
         }
     }

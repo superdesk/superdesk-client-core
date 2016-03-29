@@ -719,6 +719,7 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
 angular.module('superdesk.editor2', [
         'superdesk.editor2.ctrl',
         'superdesk.editor2.embed',
+        'superdesk.editor2.content',
         'superdesk.editor.spellcheck',
         'superdesk.authoring',
         'angular-embed'
@@ -820,7 +821,7 @@ angular.module('superdesk.editor2', [
                 static: true,
                 align: 'left',
                 sticky: true,
-                stickyTopOffset: 96, // header height
+                stickyTopOffset: 134, // header height
                 updateOnEmptySelection: true
             },
             anchor: {
@@ -904,8 +905,13 @@ angular.module('superdesk.editor2', [
                     range.selectNodeContents(blockEl);
                     range.setStart(selRange.endContainer, selRange.endOffset);
                     var remaining = range.extractContents();
+                    var $blockEl = $(blockEl);
+                    // clear if empty of text
+                    if ($blockEl.text() === '') {
+                        $blockEl.html('');
+                    }
                     // remove empty last line
-                    $(blockEl).find('p:last').each(function() {
+                    $blockEl.find('p:last').each(function() {
                         if ($(this).text() === '') {
                             this.remove();
                         }
@@ -944,8 +950,6 @@ angular.module('superdesk.editor2', [
                             }
                         });
                         break;
-                    case 'embed':
-                    case 'picture':
                     case 'table':
                         if (scope.config.multiBlockEdition) {
                             editorConfig.toolbar.buttons.push(format);
@@ -959,12 +963,15 @@ angular.module('superdesk.editor2', [
 
         return {
             scope: {type: '=', config: '=', language: '=', sdTextEditorBlockText: '='},
-            require: ['ngModel', '^sdTextEditor'],
+            require: ['ngModel', '^sdTextEditor', 'sdTextEditorBlockText'],
             templateUrl: 'scripts/superdesk/editor2/views/block-text.html',
             link: function(scope, elem, attrs, controllers) {
                 var ngModel = controllers[0];
                 var sdTextEditor = controllers[1];
                 scope.model = ngModel;
+                // give the block model to the controller
+                var vm = controllers[2];
+                vm.block = scope.sdTextEditorBlockText;
                 var TYPING_CLASS = 'typing';
                 var editorElem;
                 var updateTimeout;
@@ -977,115 +984,7 @@ angular.module('superdesk.editor2', [
                     setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
                     // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
                     if (scope.config.multiBlockEdition) {
-                        var EmbedButton = window.MediumEditor.extensions.button.extend({
-                            name: 'embed',
-                            contentDefault: '<b>Embed</b>', // default innerHTML of the button
-                            init: function() {
-                                window.MediumEditor.extensions.form.prototype.init.apply(this, arguments);
-                                this.subscribe('editableKeydown', this.handleKeydown.bind(this));
-                            },
-                            isAlreadyApplied: function (node) {
-                                var textContent = angular.isDefined(node.textContent) ? node.textContent : node.innerText;
-                                return ['p', 'div'].indexOf(node.nodeName.toLowerCase()) > -1 && textContent === '';
-                            },
-                            isActive: function() {
-                                return !this.button.classList.contains('medium-editor-button-disabled');
-                            },
-                            setInactive: function() {
-                                this.button.classList.add('medium-editor-button-disabled');
-                            },
-                            setActive: function() {
-                                this.button.classList.remove('medium-editor-button-disabled');
-                            },
-                            extractEndOfBlock: function() {
-                                // save caret position
-                                scope.sdTextEditorBlockText.caretPosition = this.base.exportSelection();
-                                // extract the text after the cursor
-                                var remainingElementsContainer = document.createElement('div');
-                                remainingElementsContainer.appendChild(extractBlockContentsFromCaret().cloneNode(true));
-                                // remove the first line if empty
-                                $(remainingElementsContainer).find('p:first').each(function() {
-                                    if ($(this).text() === '') {
-                                        this.remove();
-                                    }
-                                });
-                                return remainingElementsContainer;
-                            },
-                            handleClick: function() {
-                                // does nothing if embed must be inactive
-                                if (!this.isActive()) {
-                                    return false;
-                                }
-                                var indexWhereToAddNewBlock = sdTextEditor.getBlockPosition(scope.sdTextEditorBlockText) + 1;
-                                var remainingText = this.extractEndOfBlock().innerHTML;
-                                // save the blocks (with removed leading text)
-                                updateModel();
-                                // add new text block for the remaining text
-                                sdTextEditor.insertNewBlock(indexWhereToAddNewBlock, {
-                                    body: remainingText
-                                }, true);
-                                // hide the toolbar
-                                this.base.getExtensionByName('toolbar').hideToolbarDefaultActions();
-                                // show the add-embed form
-                                scope.sdTextEditorBlockText.showAndFocusLowerAddAnEmbedBox();
-                            },
-                            // Called when user hits the defined shortcut (CTRL / COMMAND + e)
-                            handleKeydown: function(event) {
-                                if (window.MediumEditor.util.isKey(event, 'E'.charCodeAt(0)) &&
-                                    window.MediumEditor.util.isMetaCtrlKey(event) && !event.shiftKey) {
-                                    this.handleClick(event);
-                                    event.preventDefault();
-                                }
-                            }
-                        });
-                        var PictureButton = EmbedButton.extend({
-                            name: 'picture',
-                            contentDefault: '<b>Picture</b>', // default innerHTML of the button
-                            init: function() {
-                                window.MediumEditor.extensions.form.prototype.init.apply(this, arguments);
-                            },
-                            handleClick: function() {
-                                var self = this;
-                                // does nothing if inactive
-                                if (!self.isActive()) {
-                                    return false;
-                                }
-                                // extract text after cursor
-                                var textAfterCursor = self.extractEndOfBlock().innerHTML;
-                                // save the blocks (with removed leading text)
-                                updateModel();
-                                var indexWhereToAddBlock = sdTextEditor.getBlockPosition(scope.sdTextEditorBlockText) + 1;
-                                superdesk.intent('upload', 'media').then(function(images) {
-                                    var promises = [];
-                                    images.forEach(function(image, index) {
-                                        promises.push(editor.generateImageTag(image).then(function(imgTag) {
-                                            sdTextEditor.insertNewBlock(indexWhereToAddBlock, {
-                                                blockType: 'embed',
-                                                embedType: 'Image',
-                                                body: imgTag,
-                                                caption: image.description_text,
-                                                association: image
-                                            }, true);
-                                            indexWhereToAddBlock++;
-                                        }));
-                                        return $q.all(promises);
-                                    });
-                                    // add new text block for the remaining text
-                                }).finally(function() {
-                                    sdTextEditor.insertNewBlock(indexWhereToAddBlock, {
-                                        body: textAfterCursor
-                                    }, true);
-                                });
-                            }
-                        });
-
                         editorConfig.extensions = {};
-                        if (editorConfig.toolbar.buttons.indexOf('embed') !== -1) {
-                            editorConfig.extensions.embed = new EmbedButton();
-                        }
-                        if (editorConfig.toolbar.buttons.indexOf('picture') !== -1) {
-                            editorConfig.extensions.upload = new PictureButton();
-                        }
                         if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
                             editorConfig.extensions.table = new window.MediumEditorTable();
                         }
@@ -1110,17 +1009,27 @@ angular.module('superdesk.editor2', [
                         // clear the saved position
                         scope.sdTextEditorBlockText.caretPosition = undefined;
                     }
+                    // listen caret moves in order to show or hide the (+) button beside the caret
+                    function updateAddContentButton(e) {
+                        scope.$emit('sdAddContent::updateState', e, editorElem);
+                    }
+                    editorElem.on('mouseup', updateAddContentButton);
+                    ['editableInput', 'focus', 'blur', 'editableClick', 'editableKeyup'].forEach(function(eventName) {
+                        scope.medium.subscribe(eventName, updateAddContentButton);
+                    });
                     // listen updates by medium editor to update the model
                     scope.medium.subscribe('editableInput', function() {
                         cancelTimeout();
-                        updateTimeout = $timeout(updateModel, 800, false);
+                        updateTimeout = $timeout(vm.updateModel, 800, false);
                     });
-                    // Add or remove the class toolbar-visible to the editor depending of the toolbar state
-                    scope.medium.subscribe('showToolbar', function() {
-                        editorElem.addClass('toolbar-visible');
+                    scope.medium.subscribe('blur', function() {
+                        // save latest know caret position
+                        scope.sdTextEditorBlockText.caretPosition = scope.medium.exportSelection();
                     });
-                    scope.medium.subscribe('hideToolbar', function() {
-                        editorElem.removeClass('toolbar-visible');
+                    // update the toolbar, bc it can be displayed at the
+                    // wrong place if offset of block has changed
+                    scope.medium.subscribe('focus', function() {
+                        scope.medium.getExtensionByName('toolbar').positionStaticToolbar();
                     });
                     scope.$on('spellcheck:run', render);
                     scope.$on('key:ctrl:shift:s', render);
@@ -1191,7 +1100,7 @@ angular.module('superdesk.editor2', [
                             return;
                         }
                         cancelTimeout(event);
-                        updateTimeout = $timeout(updateModel, 800, false);
+                        updateTimeout = $timeout(vm.updateModel, 800, false);
                     });
 
                     editorElem.on('contextmenu', function(event) {
@@ -1269,15 +1178,35 @@ angular.module('superdesk.editor2', [
                     });
                 }
 
-                function updateModel() {
-                    editor.commitScope(scope);
-                }
-
                 function changeListener() {
                     $timeout.cancel(renderTimeout);
                     renderTimeout = $timeout(render, 0, false);
                 }
-            }
+            },
+            controller: ['$scope', 'editor', function(scope, editor) {
+                var vm = this;
+                angular.extend(vm, {
+                    block: undefined, // provided in link method
+                    extractEndOfBlock: function() {
+                        // it can happen that user lost the focus on the block when this fct in called
+                        // so we restore the latest known position
+                        scope.medium.importSelection(scope.sdTextEditorBlockText.caretPosition);
+                        // extract the text after the cursor
+                        var remainingElementsContainer = document.createElement('div');
+                        remainingElementsContainer.appendChild(extractBlockContentsFromCaret().cloneNode(true));
+                        // remove the first line if empty
+                        $(remainingElementsContainer).find('p:first').each(function() {
+                            if ($(this).text() === '') {
+                                this.remove();
+                            }
+                        });
+                        return remainingElementsContainer;
+                    },
+                    updateModel: function() {
+                        editor.commitScope(scope);
+                    }
+                });
+            }]
         };
     }])
     .run(['embedService', 'iframelyService', function(embedService, iframelyService) {
