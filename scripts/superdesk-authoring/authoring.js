@@ -35,7 +35,8 @@
         body_footer: null,
         company_codes: [],
         schedule_settings: null,
-        sms_message: null
+        sms_message: null,
+        poi: {}
     });
 
     var DEFAULT_ACTIONS = Object.freeze({
@@ -947,6 +948,7 @@
                 // update metadata in `item`
                 angular.extend($scope.data.item, $scope.data.metadata);
             }
+            $scope.data.item.poi = $scope.data.poi;
             notify.success(gettext('Crop changes have been recorded'));
             $scope.resolve({cropData: $scope.data.cropData, poi: $scope.data.poi});
         };
