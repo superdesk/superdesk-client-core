@@ -667,7 +667,7 @@ describe('monitoring', function() {
         monitoring.turnOffDeskWorkingStage(0);
 
         monitoring.openMonitoring();
-        monitoring.actionOnItem('Edit', 2, 0);
+        monitoring.actionOnItem('Edit', 1, 0);
         authoring.publish();
 
         //open published text item
