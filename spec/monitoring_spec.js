@@ -33,7 +33,7 @@ describe('monitoring', function() {
 
     it('can configure desk output as default when user switches desks and show it on monitoring view', function() {
         monitoring.openMonitoring();
-        expect(monitoring.getGroups().count()).toBe(7);
+        expect(monitoring.getGroups().count()).toBe(6);
 
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroups().count()).toBe(6);
@@ -109,7 +109,7 @@ describe('monitoring', function() {
         monitoring.openMonitoring();
 
         expect(monitoring.getTextItem(0, 2)).toBe('item6');
-        expect(monitoring.getTextItem(2, 0)).toBe('ingest1');
+        expect(monitoring.getTextItem(1, 0)).toBe('ingest1');
     });
 
     it('configure a stage and a saved search then unselect stage and show search on monitoring view',
@@ -136,7 +136,7 @@ describe('monitoring', function() {
 
         monitoring.openMonitoring();
 
-        expect(monitoring.getTextItem(1, 0)).toBe('ingest1');
+        expect(monitoring.getTextItem(0, 0)).toBe('ingest1');
     });
 
     it('configure stage and search and then reorder', function() {
@@ -285,7 +285,7 @@ describe('monitoring', function() {
 
     it('configure a stage and then delete the stage', function() {
         monitoring.openMonitoring();
-        expect(monitoring.getGroups().count()).toBe(7);
+        expect(monitoring.getGroups().count()).toBe(6);
 
         desks.openDesksSettings();
 
@@ -296,7 +296,7 @@ describe('monitoring', function() {
         desks.save();
 
         monitoring.openMonitoring();
-        expect(monitoring.getGroups().count()).toBe(6);
+        expect(monitoring.getGroups().count()).toBe(5);
     });
 
     it('can search content', function() {
@@ -560,7 +560,7 @@ describe('monitoring', function() {
     it('can display desk content in desk single view with their respective titles', function() {
         monitoring.openMonitoring();
         expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
-        expect(monitoring.getGroups().count()).toBe(7);
+        expect(monitoring.getGroups().count()).toBe(6);
         //exclude deskOutput and ScheduledDeskOutput
         setupDeskMonitoringSettings('POLITIC DESK');
         monitoring.toggleDeskOutput(0);
@@ -568,7 +568,7 @@ describe('monitoring', function() {
 
         monitoring.openMonitoring();
 
-        expect(monitoring.getGroups().count()).toBe(6);
+        expect(monitoring.getGroups().count()).toBe(5);
 
         //ensure each stage items counts
         expect(monitoring.getGroupItems(0).count()).toBe(0);
