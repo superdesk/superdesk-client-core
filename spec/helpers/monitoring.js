@@ -362,7 +362,6 @@ function Monitoring() {
     };
 
     this.getStage = function(desk, stage) {
-        browser.sleep(2000);
         return this.getDesk(desk).all(by.repeater('stage in deskStages[desk._id]')).get(stage);
     };
 

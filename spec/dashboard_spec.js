@@ -109,10 +109,10 @@ describe('dashboard', function() {
         dashboard.showDashboardSettings();
         dashboard.addWidget(1);  // the monitoring widget
         dashboard.doneAction();
-        browser.sleep(1000);
         expect(dashboard.getTextItem(0, 3, 0)).toBe('item6');
 
         dashboard.getItem(0, 3, 0).click(); // click item to preview
+        browser.sleep(100);
         expect(dashboard.getStateLabel('not-for-publication').isDisplayed()).toBe(true);
     });
 });
