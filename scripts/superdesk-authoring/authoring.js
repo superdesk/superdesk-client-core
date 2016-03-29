@@ -34,7 +34,8 @@
         associations: null,
         body_footer: null,
         company_codes: [],
-        schedule_settings: null
+        schedule_settings: null,
+        sms_message: null
     });
 
     var DEFAULT_ACTIONS = Object.freeze({
@@ -72,6 +73,7 @@
         company_codes: {},
         ednote: {},
         headline: {maxlength: 64},
+        sms: {maxlength: 160},
         abstract: {maxlength: 160},
         body_html: {},
         byline: {},
@@ -96,17 +98,18 @@
         company_codes: {order: 10, sdWidth: 'full'},
         ednote: {order: 11, sdWidth: 'full'},
         headline: {order: 1, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
-        abstract: {order: 2, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
+        sms: {order: 2},
+        abstract: {order: 3, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
         body_html: {
-            order: 5,
+            order: 6,
             formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'table', 'removeFormat']
         },
-        byline: {order: 3},
-        dateline: {order: 4},
+        byline: {order: 4},
+        dateline: {order: 5},
         located: {},
-        sign_off: {order: 8},
-        footer: {order: 6},
-        body_footer: {order: 7},
+        sign_off: {order: 9},
+        footer: {order: 7},
+        body_footer: {order: 8},
         media: {order: 5},
         media_description: {order: 6}
     });
@@ -1034,6 +1037,11 @@
                         $scope.item.flags = newValue;
                         $scope.origItem.flags = oldValue;
                         $scope.dirty = true;
+
+                        if (newValue.marked_for_sms && !oldValue.marked_for_sms &&
+                            !$scope.item.sms_message && $scope.item.headline) {
+                            $scope.item.sms_message = $scope.item.headline;
+                        }
                     }
                 }, true);
 

@@ -13,6 +13,31 @@
   <div class="headline" ng-if="!_editable">{{item.headline}}</div>
 </div>
 
+<div class="field" order="{{schema.sms.order}}">
+    <label ng-if="_editable" translate>SMS</label>
+    <div ng-if="_editable">
+        <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms"></span>
+    </div>
+    <label ng-if="!_editable">
+        <span class="state-label not-for-sms" ng-show="item.flags.marked_for_sms" translate>Don't Send Sms</span>
+        <span class="state-label for-sms" ng-show="!item.flags.marked_for_sms" translate>Send Sms</span>
+    </label>
+    <div ng-if="item.flags.marked_for_sms">
+        <label translate>SMS Message</label>
+        <input type="text"
+         class="byline"
+         id="byline"
+         ng-model="item.sms_message"
+         ng-change="autosave(item)"
+         ng-if="_editable"
+         placeholder="Add sms message here"
+         sd-focus-element
+         data-append-element=".field"
+         data-append-class="active">
+        <div ng-if="!_editable">{{item.sms_message}}</div>
+    </div>
+</div>
+
 <div ng-if="schema.feature_image" sd-validation-error="error.feature_image" data-required="schema.feature_image.required" class="field featured-image">
   <label translate>Featured Image</label>
   <div sd-item-association

@@ -71,6 +71,7 @@
                             <span class="keyword" ng-if="item.slugline">{{ item.slugline }}</span>
                             <span class="headline">{{item.headline || item.type}}</span>
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
+                            <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                         </div>
                     </div>
                     <div ng-if="options.mode === 'detailed'" class="item-block urgency-{{ item.urgency }}"
@@ -87,6 +88,7 @@
                                 <li>
                                     <div sd-item-state data-state=item.state data-embargo=item.embargo></div>
                                     <div ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</div>
+                                    <div ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</div>
                                 </li>
                             </ul>
 
