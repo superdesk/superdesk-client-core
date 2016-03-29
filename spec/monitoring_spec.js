@@ -547,21 +547,21 @@ describe('monitoring', function() {
         expect(authoring.getDuplicatedItemState(0)).toBe('PUBLISHED');
     });
 
-    it('can view published item as readonly when opened in multiEdit ', function() {
+    it('can view published item as readonly when opened', function() {
         monitoring.turnOffWorkingStage(0);
         monitoring.actionOnItem('Edit', 1, 0);
         authoring.publish();
 
         //open published text item
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Correct item', 4, 0);
+        monitoring.actionOnItem('Open', 4, 0);
 
         expect(authoring.save_button.isPresent()).toBe(false);  // Save button hidden for publish item
-        //TODO: to be fixed
-        // var textField = element(by.className('text-editor'));
+
+        var textField = element(by.className('text-editor'));
         // expect contenteditable=true attribute is missing/null for text-editor field,
         // hence editing is disabled for published item
-        // expect(textField.getAttribute('contenteditable')).toBe(null);
+        expect(textField.getAttribute('contenteditable')).toBe(null);
     });
 
     it('can close already opened preview on an item action', function() {
