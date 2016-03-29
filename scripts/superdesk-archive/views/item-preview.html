@@ -8,6 +8,7 @@
             <span sd-item-state data-state=item.state data-embargo=item.embargo></span>
             <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
             <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
+            <span class="state-label sms" ng-if="item.flags.marked_for_sms" translate>Sms</span>
         </div>
 
         <p class="title" ng-if="item.headline">{{ item.headline }}</p>

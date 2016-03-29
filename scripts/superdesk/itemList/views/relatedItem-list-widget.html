@@ -35,6 +35,7 @@
                             <span class="headline">{{item.headline || item.type}}</span>
                             <span class="takekey">{{item.anpa_take_key}}</span>
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
+                            <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                         </div>
                     </div>
                 </li>

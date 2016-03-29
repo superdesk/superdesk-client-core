@@ -127,11 +127,15 @@
             </ul>
         </div>
 
-        <div sd-toggle-box data-title="{{:: 'Flags' | translate }}" ng-hide="isEmpty('priority')" data-open="true">
+        <div sd-toggle-box data-title="{{:: 'Flags' | translate }}" ng-hide="isEmpty('legal') && isEmpty('sms')" data-open="true">
             <ul class="filter-box">
-                <li ng-click="toggleFilter('legal', 'true')">
+                <li ng-click="toggleFilter('legal', 'true')" ng-hide="isEmpty('legal')">
                     <span class="sd-checkbox" ng-checked="hasFilter('legal', 'true')"></span>
                     <span>{{:: 'Legal' | translate}} <i>{{:: aggregations.legal.count }}</i></span>
+                </li>
+                <li ng-click="toggleFilter('sms', 'true')" ng-hide="isEmpty('sms')">
+                    <span class="sd-checkbox" ng-checked="hasFilter('sms', 'true')"></span>
+                    <span>{{:: 'Sms' | translate}} <i>{{:: aggregations.sms.count }}</i></span>
                 </li>
             </ul>
         </div>

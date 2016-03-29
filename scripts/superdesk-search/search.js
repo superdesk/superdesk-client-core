@@ -213,6 +213,10 @@
                 if (params.legal) {
                     query.post_filter({terms: {'flags.marked_for_legal': JSON.parse(params.legal)}});
                 }
+
+                if (params.sms) {
+                    query.post_filter({terms: {'flags.marked_for_sms': JSON.parse(params.sms)}});
+                }
             }
 
             /**
@@ -387,7 +391,8 @@
             'desk': 1,
             'stage': 1,
             'genre': 1,
-            'legal': 1
+            'legal': 1,
+            'sms': 1
         };
 
         metadata
@@ -611,7 +616,8 @@
                             'urgency': {},
                             'priority': {},
                             'genre': {},
-                            'legal': {}
+                            'legal': {},
+                            'sms': {}
                         };
                     };
 
@@ -731,6 +737,14 @@
                                 _.forEach(scope.items._aggregations.legal.buckets, function(l) {
                                     if (l.key === 'T' && l.doc_count > 0) {
                                         scope.aggregations.legal = {count: l.doc_count};
+                                    }
+                                });
+                            }
+
+                            if (angular.isDefined(scope.items._aggregations.sms)) {
+                                _.forEach(scope.items._aggregations.sms.buckets, function(l) {
+                                    if (l.key === 'T' && l.doc_count > 0) {
+                                        scope.aggregations.sms = {count: l.doc_count};
                                     }
                                 });
                             }

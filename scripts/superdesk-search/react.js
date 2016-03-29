@@ -320,6 +320,14 @@
                             ));
                         }
 
+                        if (flags.marked_for_sms) {
+                            info.push(React.createElement(
+                                'div',
+                                {key: 4, className: 'state-label sms'},
+                                gettext('Sms')
+                            ));
+                        }
+
                         if (item.archived) {
                             info.push(React.createElement(
                                 'div',
@@ -674,6 +682,9 @@
                                     null,
                                 flags.marked_for_legal ?
                                     React.createElement('div', {className: 'state-label legal'}, gettext('Legal')) :
+                                    null,
+                                flags.marked_for_sms ?
+                                    React.createElement('div', {className: 'state-label sms'}, gettext('Sms')) :
                                     null,
                                 anpa.name ?
                                     React.createElement('div', {className: 'category'}, anpa.name) :
