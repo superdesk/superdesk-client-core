@@ -557,7 +557,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['re_write', 'save', 'edit', 'copy', 'spike', 'multi_edit']);
+            allowedActions(itemActions, ['save', 'edit', 'copy', 'spike', 'multi_edit']);
         }));
 
     it('can perform actions if the item is located on the desk',

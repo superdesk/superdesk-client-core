@@ -689,6 +689,7 @@
                 action.view = false;
                 action.package_item = false;
                 action.new_take = false;
+                action.re_write = false;
             }
 
             return action;
