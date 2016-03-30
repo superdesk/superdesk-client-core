@@ -80,10 +80,9 @@ describe('dashboard', function() {
 
     it('can display desk output in monitoring widget when an item gets published', function() {
         monitoring.openMonitoring();
-        monitoring.turnOffWorkingStage(0);
 
-        expect(monitoring.getTextItem(2, 2)).toBe('item6');
-        monitoring.actionOnItem('Edit', 2, 2);
+        expect(monitoring.getTextItem(3, 2)).toBe('item6');
+        monitoring.actionOnItem('Edit', 3, 2);
         authoring.publish();
         browser.sleep(300);
 
@@ -97,11 +96,10 @@ describe('dashboard', function() {
 
     it('can display \'not for publication\' state in monitoring widget for such item', function() {
         monitoring.openMonitoring();
-        monitoring.turnOffWorkingStage(0);
 
-        expect(monitoring.getTextItem(2, 2)).toBe('item6');
+        expect(monitoring.getTextItem(3, 2)).toBe('item6');
 
-        monitoring.actionOnItem('Edit', 2, 2);
+        monitoring.actionOnItem('Edit', 3, 2);
         authoring.showInfo();
         authoring.toggleNotForPublication();
         authoring.save();
@@ -111,10 +109,10 @@ describe('dashboard', function() {
         dashboard.showDashboardSettings();
         dashboard.addWidget(1);  // the monitoring widget
         dashboard.doneAction();
-
         expect(dashboard.getTextItem(0, 3, 0)).toBe('item6');
 
         dashboard.getItem(0, 3, 0).click(); // click item to preview
+        browser.sleep(100);
         expect(dashboard.getStateLabel('not-for-publication').isDisplayed()).toBe(true);
     });
 });

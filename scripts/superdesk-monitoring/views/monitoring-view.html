@@ -41,7 +41,7 @@
 
         <div class="button-stack right-stack">
             <div class="pull-left-10x" ng-if="type === 'highlights'" sd-create-highlights-button data-highlight="monitoring.queryParam.highlight"></div>
-            <button class="navbtn strict" ng-if="type === 'monitoring'" ng-click="aggregate.edit()">
+            <button class="navbtn strict" ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'" ng-click="aggregate.edit()">
                 <i class="icon-settings"></i>
             </button>
 
