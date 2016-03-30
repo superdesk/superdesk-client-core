@@ -1,0 +1,61 @@
+<div sd-modal data-model="modalActive" class="add-product-popup modal-large modal-static" >
+
+	<div class="modal-header">
+		<a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+		<h3 ng-show="!product.edit._id" translate>Add New Product</h3>
+		<h3 ng-show="product.edit._id" translate>Edit "{{product.edit.name}}" Product</h3>
+	</div>
+
+	<div class="modal-body">
+		<form name="editForm">
+            <fieldset>
+                <tabset>
+                    <tab heading="Product Details" class="TabContent">
+						<fieldset>
+							<div class="field">
+								<label for="product-name" translate>Product name</label>
+								<input id="product-name" type="text" class="fullwidth-input" ng-model="product.edit.name" required>
+							</div>
+							<div class="field">
+								<label translate>Product description</label>
+								<textarea class="fullwidth-input" ng-model="product.edit.description"></textarea>
+							</div>
+							<div class="field">
+								<label translate>Product codes</label>
+								<textarea class="fullwidth-input" ng-model="product.edit.codes"></textarea>
+							</div>
+							
+	                        <div class="field">
+	                            <label translate class="right">Content Filter</label>
+	                            <select class="input" ng-model="product.edit.content_filter.filter_id">
+	                                <option value=""></option>
+	                                <option value="{{filter._id}}" ng-selected="filter._id === product.edit.content_filter.filter_id" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
+	                            </select>
+	                        </div>
+
+	                        <div class="field" ng-if="product.edit.content_filter.filter_id">
+	                        	<pre>Filter Id: {{product.edit.content_filter.filter_id}}</pre>
+	                        	<pre>Filter Type: {{product.edit.content_filter.filter_type}}</pre>
+	                            <label translate>Publish Filter Type</label>
+	                            <label class="inline-label"><input type="radio" ng-model="product.edit.content_filter.filter_type" value="permitting"><span translate>Permitting</span></label>
+	                            <label class="inline-label"><input type="radio" ng-model="product.edit.content_filter.filter_type" value="blocking"><span translate>Blocking</span></label>
+	                        </div>
+
+						
+						</fieldset>
+				
+					</tab>
+					<tab heading="Subscribers" class="TabContent">
+					</tab>
+				</tabset>
+			</fieldset>
+			
+		</form>
+	</div>
+
+	<div class="modal-footer">
+	  	<button class="btn btn-default" ng-click="cancel()" translate>Cancel</button>
+	  	<button class="btn btn-primary" ng-click="save()" ng-disabled="editForm.$invalid" translate>Save</button>
+	</div>
+
+</div>
