@@ -198,11 +198,9 @@
         </div>
 
         <div class="authoring-header__row authoring-header__row--wrap"
-             sd-width="full"
-             order="9"
-             ng-if="cvs.lenght">
+             sd-width="full">
           <div class="authoring-header__item authoring-header__item--half"
-               ng-repeat="cv in cvs track by cv._id">
+               ng-repeat="cv in cvs track by cv._id" ng-if="cv.terms.length">
             <label>{{ cv.display_name }}</label>
             <div sd-meta-terms
                 class="data"
