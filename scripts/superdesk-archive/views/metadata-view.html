@@ -161,27 +161,31 @@
     </div>
 
     <dl>
-            <dt translate>State</dt>
-            <dd>
-                <div class="preview-header__row">
-                    <span sd-item-state data-state=item.state data-embargo=item.embargo></span>
-                    <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
-                    <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
-                    <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
-                </div>
-            </dd>
-        </dl>
-        <dl ng-if="item.guid">
-            <dt translate>GUID</dt>
-            <dd>{{ item.guid }}</dd>
-        </dl>
-        <dl ng-if="item.unique_name">
-            <dt translate>Unique ID</dt>
-            <dd>{{ item.unique_name }}</dd>
-        </dl>
-        <dl>
-            <dt translate>Type</dt>
-            <dd>{{ item.type }}</dd>
-        </dl>
+        <dt translate>State</dt>
+        <dd>
+            <div class="preview-header__row">
+                <span sd-item-state data-state=item.state data-embargo=item.embargo></span>
+                <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
+                <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
+                <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
+            </div>
+        </dd>
+    </dl>
+    <dl ng-if="item.guid">
+        <dt translate>GUID</dt>
+        <dd>{{ item.guid }}</dd>
+    </dl>
+    <dl ng-if="item.unique_name">
+        <dt translate>Unique ID</dt>
+        <dd>{{ item.unique_name }}</dd>
+    </dl>
+    <dl>
+        <dt translate>Type</dt>
+        <dd>{{ item.type }}</dd>
+    </dl>
+    <dl ng-if="item.renditions">
+        <dt translate>Dimensions</dt>
+        <dd>{{ item.renditions.original.width }} x {{ item.renditions.original.height }}</dd>
+    </dl>
 
 </div>
