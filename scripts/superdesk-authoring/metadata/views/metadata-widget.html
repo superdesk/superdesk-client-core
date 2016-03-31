@@ -19,7 +19,7 @@
 					<span class="state-label for-publication" ng-show="!item.flags.marked_for_not_publication" translate>For Publication</span>
 				</label>
 			</li>
-			
+
 			<li ng-if="_isInProductionStates">
 				<label ng-if="_editable" translate>Legal</label>
 				<span ng-if="_editable">
@@ -93,7 +93,7 @@
 					</div>
 				</div>
 			</li>
-			
+
 			<li ng-if="item.ingest_provider_sequence">
 				<label translate>Provider sequence</label>
 				<div class="data">{{item.ingest_provider_sequence}}</div>

@@ -19,11 +19,11 @@
         <div class="time" ng-show="item.last_opened && item.last_opened.opened_at">
             <span translate>since</span> {{item.last_opened.opened_at | dateTimeString | translate}}
         </div>
-    </div>    
+    </div>
 </div>
 <div ng-show="item.show_ingest_count" class="ingested-count">
     <div class="count">{{ingested_count}}</div>
-    <div class="text">items in last 24 hours.</div>    
+    <div class="text">items in last 24 hours.</div>
 </div>
 <div ng-show="item.show_time" class="update-time">
     <div ng-show="item.show_time">
@@ -36,7 +36,7 @@
     </div>
     <div ng-show="isIdle()" class="error">
         <em translate>Channel has gone strangely quiet.</em>
-    </div>               
+    </div>
 </div>
 <div sd-toggle-box data-title="{{ 'Log Messages' | translate }}" ng-if="item.show_log_messages">
     <ul>
@@ -56,7 +56,7 @@
             <li>
                 <div>
                     <span class="pull-right" sd-switch ng-model="item.show_status" ng-click="setUserPreferences()"></span>
-                    <label translate>Status</label> 
+                    <label translate>Status</label>
                 </div>
             </li>
             <li class="divider"></li>
@@ -64,18 +64,18 @@
                 <div>
                     <span class="pull-right" sd-switch ng-model="item.show_ingest_count" ng-click="setUserPreferences()"></span>
                     <label translate>Number of items</label>
-                    <span class="info" translate>in the last 24 hours.</span>  
+                    <span class="info" translate>in the last 24 hours.</span>
                 </div>
             </li>
-            <li class="divider"></li>            
+            <li class="divider"></li>
             <li>
                 <div>
                     <span class="pull-right" sd-switch ng-model="item.show_time" ng-click="setUserPreferences()"></span>
                     <label translate>Time</label>
-                    <span class="info" translate>last update and last item arrived.</span> 
+                    <span class="info" translate>last update and last item arrived.</span>
                 </div>
             </li>
-            <li class="divider"></li>            
+            <li class="divider"></li>
             <li>
                 <div>
                     <span class="pull-right" sd-switch ng-model="item.show_log_messages" ng-click="setUserPreferences()"></span>
@@ -87,7 +87,7 @@
                                     <input type="radio" name="{{item._id}}_messages" value="all" ng-model="item.log_messages" ng-change="filterLogMessages()">
                                     <span translate>Show all messages</span>
                                 </label>
-                            </div>    
+                            </div>
                         </li>
                         <li>
                             <div>
@@ -95,9 +95,9 @@
                                     <input type="radio" name="{{item._id}}_messages" value="error" ng-model="item.log_messages" ng-change="filterLogMessages()">
                                     <span translate>Show error messages</span>
                                 </label>
-                            </div>    
+                            </div>
                         </li>
-                    </ul>    
+                    </ul>
                 </div>
             </li>
             <li class="divider"></li>

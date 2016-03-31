@@ -1,5 +1,5 @@
 <div class="desk__header">
-	<div class="desk__name">{{ desk.name }} 
+	<div class="desk__name">{{ desk.name }}
 		<span class="desk__open" ng-if="isMemberOf(desk)" ng-click="openDeskView(desk, 'content')" title="{{ 'Open desk content' | translate}}"><i class="icon-external"></i></span>
 	</div>
 	<div class="desk__action dropdown" dropdown ng-if="privileges.desks">

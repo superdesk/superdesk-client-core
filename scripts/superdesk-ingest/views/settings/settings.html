@@ -11,8 +11,8 @@
             <li ng-class="{active: tab === 'routing'}" ng-show="showRouting">
                 <button ng-click="tab = 'routing'" translate>Routing</button>
             </li>
-        </ul>  
-        
+        </ul>
+
         <div class="content">
             <div ng-if="tab === 'sources'" sd-ingest-sources-content></div>
             <div ng-if="tab === 'rulesets'" sd-ingest-rules-content></div>

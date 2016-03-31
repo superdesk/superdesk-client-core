@@ -25,16 +25,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr 
+                            <tr
                             ng-class="{active: result_item === selectedItem, archived: result_item.archived || result_item.created,
-                            locked: lock.isLocked}" tabindex="1" ng-keyup="handleKeyEvent($event)" 
+                            locked: lock.isLocked}" tabindex="1" ng-keyup="handleKeyEvent($event)"
                             ng-repeat="result_item in testResult track by result_item._id" ng-click="preview(result_item);"
                             >
                                 <td><i class="filetype-icon-{{result_item.type}}" ng-hide="hover || item.selected"></i></td>
                                 <td><div class="state-label state-{{result_item.state}}">{{ :: result_item.state}}</div></td>
                                 <td>{{ :: result_item.unique_name}}</td>
                                 <td>{{ :: result_item.headline | limitTo: 60}}
-                                    <span sd-item-container data-item="result_item" title="{{ result_item.label }} {{ result_item.value }}" 
+                                    <span sd-item-container data-item="result_item" title="{{ result_item.label }} {{ result_item.value }}"
                                     class="container"></span>
                                 </td>
                                 <td>{{ :: result_item.slugline | limitTo: 40}}</td>
@@ -47,7 +47,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div> 
+            </div>
         </div>
         <div class="preview-pane content-item-preview" ng-show="selected.preview" ng-init="tab = 'content'">
         <header>

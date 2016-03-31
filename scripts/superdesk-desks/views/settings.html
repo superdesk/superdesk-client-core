@@ -25,7 +25,7 @@
                                     <li><button ng-click="openMonitoringSettings(desk)" title="{{:: 'Monitoring settings'| translate }}"><i class="icon-settings"></i>{{:: 'Monitoring settings'| translate}}</button></li>
                                     <li><button ng-click="remove(desk)" title="{{:: 'Remove desk'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                                 </ul>
-                            </div>						
+                            </div>
                             <div class="card-box__heading">{{ desk.name }}</div>
                         </div>
                         <div class="card-box__content">
@@ -49,7 +49,7 @@
                                     <h4>{{ :: 'Desk Type' | translate }}</h4>
                                     <span>{{ desk.desk_type }}</span>
                                 </li>
-                            </ul>							
+                            </ul>
                         </div>
                     </div>
 
@@ -59,10 +59,10 @@
 
         <div sd-aggregate-settings
             data-modal-active="agg.modalActive"
-            data-desks="agg.desks" 
+            data-desks="agg.desks"
             data-desk-stages="agg.deskStages"
             data-searches="agg.searches"
-            data-desk-lookup="agg.deskLookup" 
+            data-desk-lookup="agg.deskLookup"
             data-stage-lookup="agg.stageLookup"
             data-search-lookup="agg.searchLookup"
             data-groups="agg.groups"
@@ -70,10 +70,10 @@
             data-settings="agg.settings">
         </div>
 
-        <div sd-desk-config-modal 
-             data-active="modalActive" 
-             data-desk="desk" 
-             data-desks="desks" 
+        <div sd-desk-config-modal
+             data-active="modalActive"
+             data-desk="desk"
+             data-desks="desks"
              data-step="step"
              data-cancel="cancel()">
         </div>

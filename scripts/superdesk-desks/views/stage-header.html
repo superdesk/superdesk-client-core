@@ -1,7 +1,7 @@
 <div class="stage-header clearfix">
-    <button class="toggle" 
+    <button class="toggle"
             ng-if="agg.state.solo._id !== group._id"
-            ng-class="{closed: !agg.getExpandedState(group._id)}" 
+            ng-class="{closed: !agg.getExpandedState(group._id)}"
             ng-click="agg.switchExpandedState(group._id)">
         <i class="icon-chevron-down-thin"></i>
     </button>

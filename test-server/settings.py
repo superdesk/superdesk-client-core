@@ -1,5 +1,5 @@
 
-SUPERDESK_TESTING = True 
+SUPERDESK_TESTING = True
 
 SERVER_NAME = 'localhost:5000'
 URL_PROTOCOL = 'http'

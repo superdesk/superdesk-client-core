@@ -39,7 +39,7 @@ Views are put into views subfolder and referenced using `require.toUrl`:
 // upload-directive.js
 define(['require'], function(require) {
     'use strict';
-    
+
     return function() {
         return {
             templateUrl: require.toUrl('./views/upload-directive.html'),

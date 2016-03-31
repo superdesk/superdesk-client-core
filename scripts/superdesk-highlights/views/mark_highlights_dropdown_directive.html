@@ -1,5 +1,5 @@
 <ul>
-	<li ng-if="highlights.length" ng-repeat="h in highlights"> 
+	<li ng-if="highlights.length" ng-repeat="h in highlights">
 	    <button ng-disabled="isMarked(h)" option="{{ h.name }}" ng-click="markItem(h);">
                  <i class="icon-star"></i>{{ h.name }}
             </button>

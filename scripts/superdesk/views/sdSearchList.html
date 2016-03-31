@@ -12,13 +12,13 @@
                 <div ng-show="maxSelectedItems !== 1">
                     <label>
                         <span translate>Selected items</span>
-                        ({{selectedItems.length}} {{::'of'|translate}} 
+                        ({{selectedItems.length}} {{::'of'|translate}}
                         <span ng-show="maxSelectedItems">{{maxSelectedItems}}</span>
                         <span ng-hide="maxSelectedItems" translate>many</span>)
                     </label>
                 </div>
                 <div ng-show="maxSelectedItems === 1">
-                    <label translate>Selected item</label> 
+                    <label translate>Selected item</label>
                 </div>
                 <ul ng-show="selectedItems.length">
                     <li ng-repeat="item in selectedItems">
@@ -43,7 +43,7 @@
                      <input type="text" placeholder="{{ :: 'Search' | translate }}"
                         ng-model="keyword"
                         ng-model-options="{debounce: 500}">
-                </div>                     
+                </div>
                 <ul>
                     <li ng-repeat="item in items">
                         <button type="button" ng-click="selectItem(item)" ng-disabled="isSelected(item) || isDisabled(item) || selectedItems.length >= maxSelectedItems" class="select-button">{{item[labelKey]}}</button>

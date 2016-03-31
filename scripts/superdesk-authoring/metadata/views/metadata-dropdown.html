@@ -17,7 +17,7 @@
 
         <li ng-repeat="item in list" ng-click="select(item)" ng-if="field !== 'place'">
             <button ng-disabled="disabled">
-                <span ng-if="icon" class="{{icon}}-{{item.name}}">{{item.name}}</span> 
+                <span ng-if="icon" class="{{icon}}-{{item.name}}">{{item.name}}</span>
                 {{::item.name}}
             </button>
         </li>
