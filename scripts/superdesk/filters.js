@@ -78,6 +78,13 @@
                 return angular.isDefined(format_string) ? moment_timestamp.format(format_string) : moment_timestamp.format();
             };
         }])
+        .filter('formatLocalDateTimeString', [function() {
+            return function(input, format_string) {
+                var moment_timestamp = angular.isDefined(input)? moment(input).utc() : moment.utc();
+                return angular.isDefined(format_string) ? moment_timestamp.local().format(format_string) :
+                moment_timestamp.local().format();
+            };
+        }])
         .filter('dateTimeString', ['$filter', function($filter) {
             return function(input) {
                 if (input !== null) {
