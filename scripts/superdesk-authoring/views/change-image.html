@@ -11,11 +11,11 @@
         <div class="change-image__metadata" ng-if="data.showMetadataEditor">
             <div class="change-image__metadata__header" translate>Metadata</div>
             <div>
-                <label translate>Headline *</label>
+                <label translate>Title *</label>
                 <input type="text" ng-model="data.metadata.headline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <label translate>Description *</label>
+                <label translate>Caption *</label>
                 <input type="text" ng-model="data.metadata.description_text" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
@@ -23,27 +23,27 @@
                 <input type="text" ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <label translate>Slugline *</label>
+                <label translate>Keyword *</label>
                 <input type="text" ng-model="data.metadata.slugline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <label translate>Author / photographer</label>
+                <label translate>Credit</label>
                 <input type="text" ng-model="data.metadata.byline" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
-                <label translate>The person or organisation claiming the intellectual property for the content</label>
+                <label translate>Copyright holder</label>
                 <input type="text" ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" class="line-input">
             </div>
             <div>
                 <select ng-model="data.metadata.usageterms">
-                    <option translate value="">---Assing Rights---</option> <!-- not selected / blank option -->
+                    <option translate value="">---Assign Rights---</option> <!-- not selected / blank option -->
                     <option translate value="single-usage">Single Usage</option>
                     <option translate value="time-restricted">Time Restricted</option>
                     <option translate value="indefinite-usage">Indefinite Usage</option>
                 </select>
             </div>
             <div>
-                <label translate>Add details on rights</label>
+                <label translate>Copyright notice</label>
                 <input type="text" ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" class="line-input">
             </div>
         </div>
