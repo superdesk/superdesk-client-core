@@ -425,7 +425,7 @@ media uploader
 					overflow: hidden;
 					position: relative;
 					.holder {
-						height: 205px;
+						height: 200px;
 						background: #fff;
 						position: relative;
 						line-height: 205px;
@@ -473,8 +473,9 @@ media uploader
 				.info {
 					position: relative;
 					padding-top: 2px;
+					padding-bottom: 6px;
 					border-top: 1px solid #ebebeb;
-					border-bottom: 1px solid #c8c8c8;
+					border-bottom: 2px solid #c8c8c8;
 					.border-radius(0 0 3px 3px);
 					background: #fff;
 
@@ -485,12 +486,23 @@ media uploader
 
 					input[type="text"] {
 						border: 0 !important;
-						height: 34px !important;
+						height: 26px !important;
 						font-size: 13px;
-						width: 240px;
+						padding: 2px 6px 8px 6px;
+						border-bottom: 1px solid #ebebeb !important;
+						.border-radius(0) !important;
+						&:hover {
+							border-bottom: 1px solid #ccc !important;
+						}
 						&:focus {
 							.box-shadow(none) !important;
+							border-bottom: 1px solid @sd-blue !important;
 						}
+					}
+					label {
+						padding: 0 6px;
+						line-height: 14px;
+						color: #999;
 					}
 
 					.btn-mini {
@@ -506,9 +518,9 @@ media uploader
 					}
 
 					.row {
-						height: 34px;
-						line-height: 30px;
+						line-height: 18px;
 						position: relative;
+						padding: 3px 0;
 						&:hover {
 							.btn-mini {
 								display: block;
@@ -519,10 +531,8 @@ media uploader
 
 					.other-info {
 						z-index: 5;
-						border-bottom: 1px solid #c8c8c8;
 						background: #fff;
 						.row {
-							border-top: 1px solid #ebebeb;
 							&.shadow {
 								background: #f4f4f4;
 								border-top-width: 2px;
