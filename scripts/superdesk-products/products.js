@@ -126,6 +126,12 @@
                 function removeProduct() {
                     api.products.remove(product).then(function() {
                         notify.success(gettext('Product deleted.'), 3000);
+                    }, function(response) {
+                        if (angular.isDefined(response.data._message)) {
+                            notify.error(gettext('Error: ' + response.data._message));
+                        } else {
+                            notify.error(gettext('Error: Failed to delete product.'));
+                        }
                     });
                 }
             ).then($scope.cancel);
