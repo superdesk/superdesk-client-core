@@ -3,7 +3,7 @@
 <div tabindex="0">
 	<ul ng-if="items.length" class="inline-content-items">
 		<li ng-repeat="item in items track by generateTrackByIdentifier(item)" class="content-item"
-			ng-click="action({item: item})" 
+			ng-click="action({item: item})"
 			ng-class="{'content-item--locked': item.lock_user, shifted: allowed, active: item._id === selected._id}">
 			<div class="content-item__type"><i class="filetype-icon-{{item.type}}"></i></div>
 			<div class="content-item__urgency-field"><span class="urgency-label urgency-label--{{item.urgency}}" title="{{ :: 'Urgency' | translate }}">{{item.urgency}}</span></div>

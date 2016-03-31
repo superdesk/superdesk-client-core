@@ -5,7 +5,7 @@
 		        <button type="submit" class="btn btn-info pull-right" ng-disabled="itemEditForm.$invalid || !dirty" translate>Save</button>
 		        <button type="button" class="btn pull-right" ng-click="cancel()" ng-disabled="!dirty" translate>Cancel</button>
 		    </div>
-			
+
 			<textarea class="title" sd-auto-height ng-model="item.headline" placeholder="{{'Add title' | translate}}" required></textarea>
 			<textarea class="description" sd-auto-height ng-model="item.description_text" placeholder="{{'Add description' | translate}}"></textarea>
 		</form>
@@ -35,9 +35,9 @@
 					<div class="info">
 						<div sd-assignee-box data-desk-id="coverage.assigned_desk" data-hide-assignee="true"  data-user-id="coverage.assigned_user"></div>
 						<div class="assignee-name"><span ng-show="coverage.assigned_user">{{userLookup[coverage.assigned_user].display_name}}</span><span ng-hide="coverage.assigned_user" translate>Unassigned</span></div>
-						
+
 						<div sd-coverage-type></div>
-						
+
 						<div class="dropdown more-actions" dropdown>
 							<button class="dropdown-toggle" dropdown-toggle><i class="icon-dots"></i></button>
 							<ul class="dropdown-menu pull-right">

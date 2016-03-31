@@ -42,8 +42,8 @@
 
     <div sd-wizard-step data-title="{{ :: 'Saved Searches' | translate }}" data-code="searches">
         <div class="content">
-            <div class="legend"><span translate>Select global saved searches</span>  
-                <span sd-switch class="pull-right" ng-model="showGlobalSavedSearches" 
+            <div class="legend"><span translate>Select global saved searches</span>
+                <span sd-switch class="pull-right" ng-model="showGlobalSavedSearches"
                  title="{{'Show all saved searches' | translate}}"></span>
             </div>
             <div class="desk clearfix" ng-repeat="search in globalSavedSearches track by search._id | orderBy: 'name'" ng-if="showGlobalSavedSearches">
@@ -55,7 +55,7 @@
                     <div class="switch">
                         <span sd-switch  ng-model="editGroups[search._id].selected" ng-click="setSearchInfo(search._id)"></span>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -70,7 +70,7 @@
                     <div class="switch">
                         <span sd-switch  ng-model="editGroups[search._id].selected" ng-click="setSearchInfo(search._id)"></span>
                     </div>
-                    
+
                 </div>
             </div>
             <div ng-show="" class="legend" translate>Select saved searches for view</div>
@@ -94,7 +94,7 @@
                     <div class="group-title" ng-if="item.type === 'search'">
                         {{searchLookup[item._id].name}}
                     </div>
-                    <div class="group-title" ng-if="item.type === 'personal'" translate>Personal</div>  
+                    <div class="group-title" ng-if="item.type === 'personal'" translate>Personal</div>
                 </li>
             </ul>
         </div>

@@ -1,5 +1,5 @@
 <div class="desk__header">
-	<div class="desk__name">{{ desk.name }} 
+	<div class="desk__name">{{ desk.name }}
 		<span class="desk__open" ng-if="isMemberOf(desk)" ng-click="openDeskView(desk, 'task')" title="{{ 'Open desk content' | translate}}"><i class="icon-external"></i></span>
 	</div>
 	<div class="desk__action dropdown" dropdown ng-if="privileges.desks">
@@ -9,13 +9,13 @@
 		</ul>
 	</div>
 </div>
-<div class="desk__content">	
+<div class="desk__content">
 	<div class="item-group" ng-repeat="status in statuses">
 		<div class="item-group__header">
 			<div class="item-group__name item-group__name--{{status._id}}">{{status.name}}</div>
 			<span class="item-group__label">{{total}}</span>
 		</div>
-		<div class="item-group__content" sd-task-status-items 
+		<div class="item-group__content" sd-task-status-items
 			data-status="status._id"
 			data-desk="desk._id"
 			data-total="total"

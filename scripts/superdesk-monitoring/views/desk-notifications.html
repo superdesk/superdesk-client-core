@@ -1,4 +1,4 @@
-<div ng-if="notifications && default_incoming" id="deskNotifications" title="{{ :: 'Notifications' | translate }}"> 
+<div ng-if="notifications && default_incoming" id="deskNotifications" title="{{ :: 'Notifications' | translate }}">
     <button class="notification-label" dropdown-toggle>
         <span class="notification-count">{{ notificationCount }}</span>
     </button>
@@ -13,8 +13,8 @@
                 <a ng-if="!isRead(n)" class="acknowledge" href="" ng-click="acknowledge(n)" title="{{ :: 'Acknowledge' | translate }}"class="open-item"><i class="icon-external"></i></a>
             </div>
             <div class="location">
-                <span class="desk" id="title" title="{{:: deskLookup[n.item.task.desk].name }}">{{:: deskLookup[n.item.task.desk].name }}</span> / 
-                <span class="stage" id="title" title="{{:: stageLookup[n.item.task.stage].name }}">{{:: stageLookup[n.item.task.stage].name }}</span> 
+                <span class="desk" id="title" title="{{:: deskLookup[n.item.task.desk].name }}">{{:: deskLookup[n.item.task.desk].name }}</span> /
+                <span class="stage" id="title" title="{{:: stageLookup[n.item.task.stage].name }}">{{:: stageLookup[n.item.task.stage].name }}</span>
             </div>
             <div class="sender">
                  <span>{{:: n.user.display_name }}:</span><blockquote>{{:: n.data.comment }}</blockquote>

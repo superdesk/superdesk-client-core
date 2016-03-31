@@ -10,7 +10,7 @@
 			<fieldset>
 				<span class="pull-right" sd-character-count data-item="configEdit.name" data-limit="limits.highlight"></span>
 				<div class="field">
-					<label translate>Configuration name</label>	
+					<label translate>Configuration name</label>
 					<input type="text" class="fullwidth-input" ng-model="configEdit.name"  ng-keyup="handleEdit($event);" required>
 					<p ng-show="_errorLimits" translate>Character limit exceeded, highlight can not be created/updated.</p>
 					<span ng-show="_errorUniqueness"><span translate>Highlight with name</span> "{{ configEdit.name }}" <span translate>already exists</span>.</span>

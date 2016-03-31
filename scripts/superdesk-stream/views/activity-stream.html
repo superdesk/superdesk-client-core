@@ -15,7 +15,7 @@
                 <span ng-if="activity.name == 'notify'">
                    	<div class="activity-content">
                         <p><b>{{ :: activity.user.display_name || activity.user.username }}</b>
-    		                <span translate>commented on</span> <i><a ng-href="#/authoring/{{ :: activity.item.guid }}?_id={{ :: activity.item.guid }}&comments={{ :: activity.data.comment_id }}" title="{{ :: activity.item.headline }}">{{ :: activity.item.slugline || activity.item.headline }}</a></i>:<br>{{ :: activity.data.comment }}</p>		                        
+    		                <span translate>commented on</span> <i><a ng-href="#/authoring/{{ :: activity.item.guid }}?_id={{ :: activity.item.guid }}&comments={{ :: activity.data.comment_id }}" title="{{ :: activity.item.headline }}">{{ :: activity.item.slugline || activity.item.headline }}</a></i>:<br>{{ :: activity.data.comment }}</p>
                     </div>
                 	<div class="activity-date"><time sd-datetime date-date="activity._created"></time></div>
                 </span>

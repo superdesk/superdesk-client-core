@@ -37,7 +37,7 @@
             <time sd-datetime data-date="item.versioncreated"></time>
         </div>
         <div class="line">
-            <div sd-item-state data-state=item.state data-embargo=item.embargo 
+            <div sd-item-state data-state=item.state data-embargo=item.embargo
              ng-hide="viewType !== undefined && viewType !== null && viewType !== 'deskOutput' && viewType !== 'scheduledDeskOutput'"></div>
             <div class="provider" ng-if="item.correction_sequence"><span translate>Update</span> {{ item.correction_sequence }}</div>
             <div class="label label--{{ :: item.profile }}" ng-if="item.profile">{{ :: item.profile }}</div>
