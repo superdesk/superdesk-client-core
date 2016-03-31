@@ -23,7 +23,7 @@
         </div>
         <ul class="upload-thumbs">
             <li ng-repeat="item in items">
-                <div class="thumb" sd-image-preview="item.url" data-file="item.file">
+                <div class="thumb" sd-image-preview="item.url" data-file="item.file" data-width="item.width" data-height="item.height">
                     <div class="holder">
                         <i class="filetype-icon-large-{{item.cssType}}" ng-hide="item.url && item.cssType === 'image'"></i>
                         <img ng-src="{{ item.url }}" ng-if="item.cssType === 'image'"/>
@@ -69,6 +69,10 @@
                         <div class="row">
                             <label><span translate>Copyright notice</span></label>
                             <input type="text" ng-model="item.meta.copyrightnotice">
+                        </div>
+                        <div class="row" ng-if="item.cssType === 'image'">
+                            <label><span translate>Dimensions</span></label>
+                            <span>{{ item.width }} x {{ item.height }}</span>
                         </div>
                     </div>
 
