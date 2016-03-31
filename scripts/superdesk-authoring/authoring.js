@@ -2389,6 +2389,10 @@
                 scope.datelineMonth = '';
                 scope.datelineDay = '';
 
+                scope.preview = function(item) {
+                    superdesk.intent('preview', 'item', item);
+                };
+
                 /* End: Dateline related properties */
 
                 scope.$watch('item', function(item) {
