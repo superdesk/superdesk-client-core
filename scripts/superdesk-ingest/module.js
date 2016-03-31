@@ -482,6 +482,7 @@
                     $scope.provider.config = $scope.origProvider.config;
                     $scope.provider.critical_errors = $scope.origProvider.critical_errors;
                     $scope.provider._id = $scope.origProvider._id;
+                    $scope.provider.content_types = $scope.origProvider.content_types;
 
                     // init the lists of field aliases and non-selected fields
                     $scope.fieldAliases = [];
