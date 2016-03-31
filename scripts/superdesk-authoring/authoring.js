@@ -135,7 +135,7 @@
     }
 
     function stripHtml(item) {
-        var fields = ['headline', 'abstract'];
+        var fields = ['headline'];
         _.each(fields, function(key) {
             if (angular.isDefined(item[key])) {
                 item[key] = stripHtmlRaw(item[key]);
