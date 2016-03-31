@@ -156,9 +156,8 @@
   <div ng-if="item.type == 'picture'" class="full-preview" sd-ratio-calc>
       <div>
           <span translate>Original</span>
-          <div sd-item-rendition data-item="item" data-rendition="baseImage"></div>
+          <div sd-item-rendition data-item="item" data-rendition="baseImage" ng-click="preview(item);"></div>
       </div>
-      <div sd-item-crops data-item="item"></div>
       <button id="btnCrop" class="btn btn-medium pull-right" ng-click="applyCrop()" ng-if="metadata.crop_sizes">
         <span ng-if="!item.hasCrops" translate>APPLY CROPS</span>
         <span ng-if="item.hasCrops" translate>EDIT CROPS</span>
