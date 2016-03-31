@@ -10,7 +10,7 @@
 
     <div class="row-wrapper" sd-col-width>
         <div class="name">
-        	{{ user.display_name }}
+            {{ user.display_name }}
             <span class="disabled-label" ng-if="!user.is_enabled" translate>disabled</span>
             <span class="disabled-label" ng-if="user.is_enabled && !user.is_active" translate>inactive</span>
             <span class="disabled-label" ng-if="user.is_enabled && user.is_active && user.needs_activation" translate>pending</span>

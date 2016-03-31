@@ -3,7 +3,7 @@
         <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
         <span>/</span>
         <a href="" ng-click="viewSingleGroup(group, 'stage')">
-        	<span>{{ :: group.subheader }} </span> {{ :: group.type}}
+            <span>{{ :: group.subheader }} </span> {{ :: group.type}}
         </a>
     </span>
     <span class="stage-name" ng-if="group.header && !group.subheader && group.singleViewType == null">
@@ -13,8 +13,8 @@
     </span>
     <span class="label-total">{{ total || '0' }}</span>
     <div>
-	    <div ng-if="group.type === 'stage'" class="dropdown dropright dropdown-hover monitoring-dropdown"
-	         dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
-	    </div>
+        <div ng-if="group.type === 'stage'" class="dropdown dropright dropdown-hover monitoring-dropdown"
+             dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
+        </div>
     </div>
 </div>

@@ -3,11 +3,11 @@
     <label for="search-input" class="button search-icon"></label>
 
     <input id="search-input"
-    	type="text"
-    	placeholder="{{ 'Search'|translate }}"
-    	ng-keyup="searchOnEnter($event)"
-    	ng-model="query"
-    	tabindex="1"
+        type="text"
+        placeholder="{{ 'Search'|translate }}"
+        ng-keyup="searchOnEnter($event)"
+        ng-model="query"
+        tabindex="1"
         ng-focus="focused = true">
 
     <button class="search-cancel" ng-click="cancel();" ng-if="query">

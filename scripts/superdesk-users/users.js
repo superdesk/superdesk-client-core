@@ -1393,7 +1393,7 @@
             };
         }])
 
-		/**
+        /**
          * @memberof superdesk.users
          * @ngdoc directive
          * @name sdUserPrivileges

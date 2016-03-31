@@ -1,5 +1,5 @@
 <dl ng-if="desks.length">
-	<dt translate>fetched in</dt>
+    <dt translate>fetched in</dt>
     <dd ng-repeat="desk in desks track by desk.desk._id">
         <a ng-if="$first && desk.isUserDeskMember" ng-click="selectFetched(desk)">
             {{desk.desk.name.substring(0,10)}}{{desk.desk.name.length>10 ? '...' : ''}}  ({{desk.count}})</a>

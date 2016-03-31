@@ -1,10 +1,10 @@
 <label ng-if="preview && ContentExpiry.Expire">{{ContentExpiry.Header | translate}}
     {{ ContentExpiry.Days}} <span translate>hr</span>
-	{{ ContentExpiry.Hours}} <span translate>hr</span>
-	{{ ContentExpiry.Minutes}} <span translate>min</span>
+    {{ ContentExpiry.Hours}} <span translate>hr</span>
+    {{ ContentExpiry.Minutes}} <span translate>min</span>
 </label>
 <label ng-if="preview && !ContentExpiry.Expire">{{ContentExpiry.Header | translate}}
-	<label class="label globalread" translate> OFF </label>
+    <label class="label globalread" translate> OFF </label>
 </label>
 <div class="field" ng-if="!preview && ContentExpiry.Expire">
    <label class="right">

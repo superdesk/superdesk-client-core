@@ -31,16 +31,16 @@
                     <p><span class="keyword" ng-if="pitem.slugline">{{ pitem.slugline }}</span>{{pitem.headline || pitem.type}}</p>
                     <ul class="item-functions" ng-if="!itemInPackage(pitem) && !pitem.multi">
                     <li class="dropdown group-select" dropdown>
-					    <button title="Add to package" class="dropdown-toggle" dropdown-toggle>
-						    <i class="icon-package-plus"></i>
-					    </button>
-					    <ul class="dropdown-menu pull-right">
-				            <li ng-repeat="t in groupList">
+                        <button title="Add to package" class="dropdown-toggle" dropdown-toggle>
+                            <i class="icon-package-plus"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right">
+                            <li ng-repeat="t in groupList">
                                 <button option="{{ t | uppercase  }}" ng-click="addItemToGroup(t, pitem);">{{ t | uppercase  }}</button>
                             </li>
-					    </ul>
-					</li>
-				   </ul>
+                        </ul>
+                    </li>
+                   </ul>
                 </li>
             </ul>
         </div>

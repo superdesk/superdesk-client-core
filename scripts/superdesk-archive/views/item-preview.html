@@ -14,10 +14,10 @@
         <p class="title" ng-if="item.headline">{{ item.headline }}</p>
 
         <div class="core-content">
-    			<p ng-if="item.is_spiked" class="alert alert-warning expires">
+                <p ng-if="item.is_spiked" class="alert alert-warning expires">
               <span translate>expires</span>
               <time sd-datetime data-date="item.expiry"></time>
-    			</p>
+                </p>
             <div ng-if="item.type == 'picture'" class="picture-preview">
                 <div>
                     <span translate>Original</span>
