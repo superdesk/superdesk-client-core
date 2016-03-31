@@ -2800,8 +2800,8 @@
         };
     }
 
-    AuthoringEmbeddedDirective.$inject = ['api', 'notify', 'gettext'];
-    function AuthoringEmbeddedDirective(api, notify, gettext) {
+    AuthoringEmbeddedDirective.$inject = ['api', 'notify', 'gettext', '$filter', 'config'];
+    function AuthoringEmbeddedDirective(api, notify, gettext, $filter, config) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/authoring.html',
             scope: {
@@ -2828,6 +2828,12 @@
                         notify.error(gettext('Failed to apply kill template to the item.'));
                     });
                 } else {
+                    if (scope.action === 'correct') {
+                        scope.item.ednote = gettext('In the story "') + scope.item.slugline + gettext('" sent at: ')  +
+                        $filter('formatLocalDateTimeString')(scope.item.versioncreated, config.view.dateformat + ' ' +
+                            config.view.timeformat) +
+                        gettext('\r\n\r\nThis is a corrected repeat.');
+                    }
                     scope.origItem = scope.item;
                 }
             }
@@ -2941,6 +2947,15 @@
 
                         scope.cvs = _.sortBy(cvs, 'priority');
                     });
+                });
+
+                // If correction set focus to the ednote to encourage user to fill it in
+                _.defer (function() {
+                    if (scope.action === 'correct') {
+                        elem.find('#ednote').focus();
+                    } else {
+                        elem.find('#slugline').focus();
+                    }
                 });
 
                 function filterByService(items, qcodes) {

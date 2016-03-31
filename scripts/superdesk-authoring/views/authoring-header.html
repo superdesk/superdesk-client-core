@@ -48,7 +48,6 @@
             <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
             <div class="authoring-header__input-holder">
               <input type="text"
-                     sd-autofocus
                      class="line-input slugline"
                      id="slugline"
                      ng-model="item.slugline"
@@ -244,7 +243,7 @@
              order="{{schema.ednote.order}}">
           <label class="authoring-header__item-label" translate>ED. NOTE</label>
           <div class="authoring-header__input-holder">
-              <textarea class="line-input ed-note"
+              <textarea id="ednote" class="line-input ed-note"
                         ng-model="item.ednote"
                         ng-disabled="!_editable"
                         ng-change="autosave(item)">
