@@ -135,8 +135,8 @@
 
 <div class="field body" ng-if="!isMediaType && schema.body_html" order="{{editor.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required">
   <label translate>Body</label>
+    <span sd-character-count data-item="item.body_html" data-html="true"></span>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
-    <span ng-if="schema.body_html.maxlength" sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></span>
     <div id="bodyhtml"
          sd-text-editor
          data-config="{disableEditing: isPublished(item), multiBlockEdition: true}"

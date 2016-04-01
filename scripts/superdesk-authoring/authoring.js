@@ -1646,7 +1646,9 @@
                 limit: '=',
                 html: '@'
             },
-            template: '<span class="char-count" ng-class="{error: numChars > limit}" translate>{{numChars}}/{{ limit }} characters </span>',
+            template: '<span class="char-count" ng-class="{error: limit && numChars > limit}" translate> characters</span>' +
+                    '<span class="char-count" ng-class="{error: limit && numChars > limit}">{{numChars}}' +
+                    '<span ng-if="limit" ng-class="{error: limit && numChars > limit}">/{{ limit }}</span></span>',
             link: function characterCountLink(scope, elem, attrs) {
                 scope.html = scope.html || false;
                 scope.numChars = 0;
