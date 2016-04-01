@@ -38,8 +38,7 @@
     </div>
 </div>
 
-<div ng-if="schema.feature_image" sd-validation-error="error.feature_image" order="{{editor.feature_image.order}}"
-    data-required="schema.feature_image.required" class="field featured-image">
+<div ng-if="schema.feature_image" sd-validation-error="error.feature_image" data-required="schema.feature_image.required" class="field featured-image">
   <label translate>Featured Image</label>
   <div sd-item-association
     data-item="item"
@@ -77,7 +76,7 @@
          ng-model="item.byline"
          ng-change="autosave(item)"
          ng-if="_editable"
-         placeholder="Add text here"
+         placeholder="{{ 'Add text here' | translate }}"
          sd-focus-element
          data-append-element=".field"
          data-append-class="active">
@@ -156,8 +155,9 @@
   <div ng-if="item.type == 'picture'" class="full-preview" sd-ratio-calc>
       <div>
           <span translate>Original</span>
-          <div sd-item-rendition data-item="item" data-rendition="baseImage" ng-click="preview(item);"></div>
+          <div sd-item-rendition data-item="item" data-rendition="baseImage"></div>
       </div>
+      <div sd-item-crops data-item="item"></div>
       <button id="btnCrop" class="btn btn-medium pull-right" ng-click="applyCrop()" ng-if="metadata.crop_sizes">
         <span ng-if="!item.hasCrops" translate>APPLY CROPS</span>
         <span ng-if="item.hasCrops" translate>EDIT CROPS</span>

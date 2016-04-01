@@ -825,8 +825,8 @@ angular.module('superdesk.editor2', [
             controller: SdTextEditorBlockEmbedController
         };
     }])
-    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q',
-    function (editor, spellcheck, $timeout, superdesk, $q) {
+    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog',
+    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog) {
         var EDITOR_CONFIG = {
             toolbar: {
                 static: true,
@@ -939,9 +939,9 @@ angular.module('superdesk.editor2', [
                         editorConfig.toolbar.buttons.push({
                             name: 'h1',
                             action: 'append-h2',
-                            aria: 'header type 1',
+                            aria: gettextCatalog.getString('header type 1'),
                             tagNames: ['h2'],
-                            contentDefault: '<b>H1</b>',
+                            contentDefault: '<b>' + gettextCatalog.getString('H1') + '</b>',
                             classList: ['custom-class-h1'],
                             attrs: {
                                 'data-custom-attr': 'attr-value-h1'
@@ -952,13 +952,53 @@ angular.module('superdesk.editor2', [
                         editorConfig.toolbar.buttons.push({
                             name: 'h2',
                             action: 'append-h3',
-                            aria: 'header type 2',
+                            aria: gettextCatalog.getString('header type 2'),
                             tagNames: ['h3'],
-                            contentDefault: '<b>H2</b>',
+                            contentDefault: '<b>' + gettextCatalog.getString('H2') + '</b>',
                             classList: ['custom-class-h2'],
                             attrs: {
                                 'data-custom-attr': 'attr-value-h2'
                             }
+                        });
+                        break;
+                    case 'bold':
+                        editorConfig.toolbar.buttons.push({
+                            name: 'bold',
+                            action: 'bold',
+                            aria: gettextCatalog.getString('bold'),
+                            tagNames: ['b'],
+                            contentDefault: '<b>' + gettextCatalog.getString('B') + '</b>'
+                        });
+                        break;
+                    case 'underline':
+                        editorConfig.toolbar.buttons.push({
+                            name: 'underline',
+                            action: 'underline',
+                            aria: gettextCatalog.getString('underline'),
+                            tagNames: ['i']
+                        });
+                        break;
+                    case 'italic':
+                        editorConfig.toolbar.buttons.push({
+                            name: 'italic',
+                            action: 'italic',
+                            aria: gettextCatalog.getString('italic'),
+                            tagNames: ['i'],
+                            contentDefault: '<b>' + gettextCatalog.getString('I') + '</b>'
+                        });
+                        break;
+                    case 'anchor':
+                        editorConfig.toolbar.buttons.push({
+                            name: 'anchor',
+                            action: 'createLink',
+                            aria: gettextCatalog.getString('link')
+                        });
+                        break;
+                    case 'removeFormat':
+                        editorConfig.toolbar.buttons.push({
+                            name: 'removeFormat',
+                            action: 'removeFormat',
+                            aria: gettextCatalog.getString('remove formatting')
                         });
                         break;
                     case 'table':

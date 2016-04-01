@@ -51,7 +51,7 @@
                 ng-click="publishAndContinue()"
                 title="{{ :: 'Publish and Continue' | translate }}">
                 <span class="btn__text" translate>Publish &amp; Continue</span>
-                <span class="btn__text--short">P &amp; C</span>
+                <span class="btn__text--short" translate>P &amp; C</span>
         </button>
       </div>
     </div>
@@ -76,7 +76,7 @@
         ng-click="openAction('kill')"
         translate>Edit and Kill</button>
 
-      <button class="btn btn--close" id="closeAuthoringBtn" ng-click="close()" translate title="{{ :: 'Close' | translate }}"><span class="btn__text">Close</span><i class="icon-close-small btn__text--alt-icon"></i></button>
+      <button class="btn btn--close" id="closeAuthoringBtn" ng-click="close()" title="{{ :: 'Close' | translate }}"><span class="btn__text" translate>Close</span><i class="icon-close-small btn__text--alt-icon"></i></button>
 
       <button class="btn btn-info" type="submit"
         ng-click="saveTopbar(item)"

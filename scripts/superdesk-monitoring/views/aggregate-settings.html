@@ -24,10 +24,10 @@
                         <span sd-check ng-model="editGroups[stage._id].selected" ng-click="setStageInfo(stage._id)"></span> {{stage.name}}
                     </li>
                     <li>
-                        <span sd-check ng-model="editGroups[desk._id + ':scheduled'].selected" ng-click="setScheduledDeskOutputInfo(desk._id + ':scheduled')"></span> Output/Scheduled
+                        <span sd-check ng-model="editGroups[desk._id + ':scheduled'].selected" ng-click="setScheduledDeskOutputInfo(desk._id + ':scheduled')"></span> <span translate>Output/Scheduled</span>
                     </li>
                     <li>
-                        <span sd-check ng-model="editGroups[desk._id + ':output'].selected" ng-click="setDeskOutputInfo(desk._id + ':output')"></span> Output/Published
+                        <span sd-check ng-model="editGroups[desk._id + ':output'].selected" ng-click="setDeskOutputInfo(desk._id + ':output')"></span><span translate>Output/Published</span>
                     </li>
                 </ul>
             </div>
