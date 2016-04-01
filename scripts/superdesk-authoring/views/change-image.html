@@ -46,7 +46,7 @@
         <div id="dynBoxId2" class="preview">
             <div class="selected-area">
                 <div ng-hide="selectedRendition">
-                    <label class="field-label" translate>Original</label>
+                    <label class="field-label" translate>Original {{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}</label>
                     <div sd-image-point
                         data-src="data.item.renditions.viewImage.href"
                         data-point="data.poi"
