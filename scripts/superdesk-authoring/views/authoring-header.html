@@ -176,25 +176,6 @@
         </div>
 
         <div class="authoring-header__item"
-           ng-repeat="cv in cvs track by cv._id"
-           sd-width="{{editor.cvs.sdWidth}}"
-           order="{{editor.cvs.order}}"
-           ng-if="cv.terms.length">
-          <label>{{ cv.display_name }}</label>
-          <div sd-meta-terms
-              class="data"
-              data-item="item"
-              data-field="subject"
-              data-unique="qcode"
-              data-list="cv.terms"
-              data-cv="cv"
-              ng-disabled="!_editable"
-              data-header="true"
-              data-change="autosave(item)">
-          </div>
-        </div>
-
-        <div class="authoring-header__item"
              sd-validation-error="error.subject"
              data-required="schema.subject.required"
              ng-if="metadata.subjectcodes && schema.subject && !metadata.subjects"
@@ -212,6 +193,26 @@
                data-header="true"
                data-change="autosave(item)"
                data-reload-list="true">
+          </div>
+        </div>
+
+        <div class="authoring-header__item"
+            ng-repeat="cv in cvs track by cv._id"
+            data-required="schema[cv._id].required"
+            ng-if="cv.terms.length && schema[cv._id]"
+            sd-width="{{editor[cv._id].sdWidth}}"
+            order="{{editor[cv._id].order}}">
+          <label>{{ cv.display_name }}</label>
+          <div sd-meta-terms
+              class="data"
+              data-item="item"
+              data-field="subject"
+              data-unique="qcode"
+              data-list="cv.terms"
+              data-cv="cv"
+              ng-disabled="!_editable"
+              data-header="true"
+              data-change="autosave(item)">
           </div>
         </div>
 
