@@ -44,6 +44,10 @@
                         setProgress(30);
                     }
                 });
+
+                scope.$on('$destroy', function() {
+                    window.URL.revokeObjectURL(scope.sdImagePreview);
+                });
             }
         };
     }]);
