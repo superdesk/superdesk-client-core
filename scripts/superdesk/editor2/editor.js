@@ -966,7 +966,7 @@ angular.module('superdesk.editor2', [
                             name: 'bold',
                             action: 'bold',
                             aria: gettextCatalog.getString('bold'),
-                            tagNames: ['b'],
+                            tagNames: ['u'],
                             contentDefault: '<b>' + gettextCatalog.getString('B') + '</b>'
                         });
                         break;
