@@ -1618,7 +1618,7 @@ msgstr ""
 #: scripts/superdesk-users/users.js:458
 #: scripts/superdesk-users/users.js:460
 #: scripts/superdesk-users/users.js:558
-#: scripts/superdesk-vocabularies/vocabularies.js:86
+#: scripts/superdesk-vocabularies/vocabularies.js:84
 msgid "Error:"
 msgstr ""
 
@@ -1727,7 +1727,7 @@ msgstr ""
 msgid "Error. User Profile cannot be enabled."
 msgstr ""
 
-#: scripts/superdesk-vocabularies/vocabularies.js:89
+#: scripts/superdesk-vocabularies/vocabularies.js:87
 msgid "Error. Vocabulary not saved."
 msgstr ""
 
@@ -2682,7 +2682,7 @@ msgstr ""
 msgid "Minimum"
 msgstr ""
 
-#: scripts/superdesk-vocabularies/vocabularies.js:105
+#: scripts/superdesk-vocabularies/vocabularies.js:103
 msgid "Minimum height and width should be greater than or equal to 200"
 msgstr ""
 
@@ -5056,7 +5056,7 @@ msgstr ""
 msgid "View name"
 msgstr ""
 
-#: scripts/superdesk-vocabularies/vocabularies.js:152
+#: scripts/superdesk-vocabularies/vocabularies.js:150
 msgid "Vocabularies"
 msgstr ""
 
@@ -5068,7 +5068,7 @@ msgstr ""
 msgid "vocabulary has been updated. Please re-login to see updated vocabulary values"
 msgstr ""
 
-#: scripts/superdesk-vocabularies/vocabularies.js:78
+#: scripts/superdesk-vocabularies/vocabularies.js:76
 msgid "Vocabulary saved successfully"
 msgstr ""
 
