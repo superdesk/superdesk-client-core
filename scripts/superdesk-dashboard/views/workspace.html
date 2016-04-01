@@ -70,7 +70,7 @@
                         <ul class="widget-list">
                             <li ng-repeat="widget in dashboard.availableWidgets" ng-click="dashboard.selectWidget(widget)" ng-class="{selected: dashboard.isSelected(widget)}" class="widget {{ widget._id }}">
                                 <div class="thumbnail"><img ng-src="{{ :: widget.thumbnail }}"></div>
-                                <div class="title">{{ :: widget.label }}</div>
+                                <div class="title">{{ :: widget.label | translate}}</div>
                             </li>
                         </ul>
                     </div>

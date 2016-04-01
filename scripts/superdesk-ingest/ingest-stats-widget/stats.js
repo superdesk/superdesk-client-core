@@ -5,9 +5,9 @@
         .factory('colorSchemes', ['$resource', function($resource) {
             return $resource('scripts/superdesk-ingest/static-resources/color-schemes.json');
         }])
-        .config(['dashboardWidgetsProvider', function(dashboardWidgets) {
+        .config(['dashboardWidgetsProvider', 'gettext', function(dashboardWidgets, gettext) {
             dashboardWidgets.addWidget('ingest-stats', {
-                label: 'Ingest Stats',
+                label: gettext('Ingest Stats'),
                 multiple: true,
                 icon: 'signal',
                 max_sizex: 1,
