@@ -317,7 +317,7 @@
         $scope.enableSave = false;
         $scope.currentUser =  session.identity;
         $scope.uniqueUpload = $scope.locals && $scope.locals.data && $scope.locals.data.uniqueUpload === true;
-        var requiredFields = ['headline', 'description_text', 'slugline'];
+        var requiredFields = ['headline', 'description_text'];
 
         var uploadFile = function(item) {
             var handleError = function(reason) {
