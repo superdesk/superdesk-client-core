@@ -151,16 +151,6 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                 // close the addEmbed form
                 vm.toggle(true);
             });
-        },
-        createBlockFromSdPicture: function(img) {
-            editor.generateImageTag(img).then(function(imgTag) {
-                return vm.createFigureBlock({
-                    embedType: 'Image',
-                    body: imgTag,
-                    caption: img.description_text,
-                    association: img
-                });
-            });
         }
     });
 
