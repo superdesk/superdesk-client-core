@@ -24,7 +24,7 @@
         <label for="macro" translate>Macro</label>
         <select
             id="macro" name="macro"
-            ng-options="m.name as m.label for m in deskMacros"
+            ng-options="m.name as m.name for m in deskMacros"
             ng-model="macro">
             <option value=""></option>
         </select>

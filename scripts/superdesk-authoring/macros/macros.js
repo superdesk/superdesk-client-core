@@ -13,8 +13,8 @@ function MacrosService(api, notify) {
             }));
     };
 
-    this.getByDesk = function(desk) {
-        return api.query('macros', {'desk': desk})
+    this.getByDesk = function(desk, includeBackend) {
+        return api.query('macros', {'desk': desk, 'backend': !!includeBackend})
             .then(angular.bind(this, function(macros) {
                 this.macros = macros._items;
                 return this.macros;
