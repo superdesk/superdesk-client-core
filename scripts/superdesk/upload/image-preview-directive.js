@@ -7,7 +7,9 @@
             scope: {
                 file: '=',
                 sdImagePreview: '=',
-                progressWidth: '='
+                progressWidth: '=',
+                width: '=',
+                height: '='
             },
             link: function(scope, elem) {
 
@@ -22,6 +24,16 @@
                         scope.sdImagePreview = e.target.result;
                         setProgress(50);
                     });
+
+                    var img = document.createElement('img');
+
+                    img.onload = function () {
+                        scope.$apply(function() {
+                            scope.width = img.width;
+                            scope.height = img.height;
+                        });
+                    };
+                    img.src = e.target.result;
                 }
 
                 scope.$watch('file', function(file) {
