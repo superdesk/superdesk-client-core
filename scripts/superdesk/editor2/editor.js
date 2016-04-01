@@ -966,7 +966,7 @@ angular.module('superdesk.editor2', [
                             name: 'bold',
                             action: 'bold',
                             aria: gettextCatalog.getString('bold'),
-                            tagNames: ['u'],
+                            tagNames: ['b'],
                             contentDefault: '<b>' + gettextCatalog.getString('B') + '</b>'
                         });
                         break;
@@ -975,7 +975,7 @@ angular.module('superdesk.editor2', [
                             name: 'underline',
                             action: 'underline',
                             aria: gettextCatalog.getString('underline'),
-                            tagNames: ['i']
+                            tagNames: ['u']
                         });
                         break;
                     case 'italic':
