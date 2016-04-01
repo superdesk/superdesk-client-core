@@ -70,7 +70,7 @@ describe('sdDeskeditMacros directive', function() {
         scope = $element.scope();
         scope.$digest();
 
-        expect(macros.getByDesk).toHaveBeenCalledWith('Desk D');
+        expect(macros.getByDesk).toHaveBeenCalledWith('Desk D', true);
     });
 
     it('stores macro list in scope when desk macros data is fetched',

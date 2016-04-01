@@ -1081,8 +1081,8 @@
                     scope.statuses = tasks.statuses;
 
                     if (scope.desk.edit && scope.desk.edit._id) {
-                        macros.getByDesk(scope.desk.edit.name).then(function(macros) {
-                            scope.macros = macros;
+                        macros.getByDesk(scope.desk.edit.name, true).then(function(macros) {
+                            scope.macros = _.reject(macros, {action_type: 'interactive'});
                         });
                     }
 
@@ -1440,7 +1440,7 @@
             return {
                 link: function(scope) {
                     if (scope.desk && scope.desk.edit) {
-                        macros.getByDesk(scope.desk.edit.name).then(function(macros) {
+                        macros.getByDesk(scope.desk.edit.name, true).then(function(macros) {
                             scope.macros = macros;
                         });
                     } else {
@@ -1477,8 +1477,8 @@
                                 scope.deskStages = desks.deskStages;
                             });
                         } else if (scope.desk) {
-                            macros.getByDesk(desks.deskLookup[scope.desk].name).then(function(macros) {
-                                scope.deskMacros = macros;
+                            macros.getByDesk(desks.deskLookup[scope.desk].name, true).then(function(macros) {
+                                scope.deskMacros = _.filter(macros, {action_type: 'direct'});
                             });
 
                             if (_.findIndex(scope.deskStages[scope.desk], {_id: scope.stage}) === -1) {

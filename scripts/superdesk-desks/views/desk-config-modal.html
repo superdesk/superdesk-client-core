@@ -185,21 +185,21 @@
                                 <label>{{ :: 'Incoming Rule' | translate }}</label>
                                 <select ng-model="editStage.incoming_macro">
                                     <option value=""></option>
-                                    <option ng-repeat="macro in macros" ng-selected="editStage.incoming_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
+                                    <option ng-repeat="macro in macros" ng-selected="editStage.incoming_macro === macro.name" value="{{macro.name}}">{{macro.name}}</option>
                                 </select>
                             </div>
                             <div class="field">
                                 <label>{{ :: 'Moved onto stage Rule' | translate }}</label>
                                 <select ng-model="editStage.onstage_macro">
                                     <option value=""></option>
-                                    <option ng-repeat="macro in macros" ng-selected="editStage.onstage_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
+                                    <option ng-repeat="macro in macros" ng-selected="editStage.onstage_macro === macro.name" value="{{macro.name}}">{{macro.name}}</option>
                                 </select>
                             </div>
                             <div class="field">
                                 <label>{{ :: 'Outgoing Rule' | translate }}</label>
                                 <select ng-model="editStage.outgoing_macro">
                                     <option value=""></option>
-                                    <option ng-repeat="macro in macros" ng-selected="editStage.outgoing_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
+                                    <option ng-repeat="macro in macros" ng-selected="editStage.outgoing_macro === macro.name" value="{{macro.name}}">{{macro.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -236,17 +236,15 @@
             </div>
         </div>
         <div sd-wizard-step data-title="{{ 'Macros' | translate }}" data-code="macros">
-            <div sd-deskedit-macros>
-                <div sd-shadow>
-                    <ul class="pills-list">
-                        <li ng-repeat="macro in macros">
-                            <h6 class="pull-left">{{ macro.label }}</h6>
-                        </li>
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <button id="save" class="btn btn-primary" ng-click="save()" translate>Done</button>
-                </div>
+            <div class="content macros" sd-deskedit-macros>
+                <ul class="pills-list">
+                    <li ng-repeat="macro in macros">
+                        <h6 class="pull-left">{{:: macro.name }}</h6><span>[{{:: macro.access_type }}]<span><span>[{{:: macro.action_type }}]<span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer-relative">
+                <button id="save" class="btn btn-primary" ng-click="save()" translate>Done</button>
             </div>
         </div>
 
