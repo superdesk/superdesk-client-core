@@ -2133,7 +2133,7 @@
             var canPackage = true;
             multi.getItems().forEach(function(item) {
                 canPackage = canPackage && item._type !== 'archived' &&
-                    !_.contains(['ingested', 'spiked', 'killed'], item.state);
+                    !_.contains(['ingested', 'spiked', 'killed', 'draft'], item.state);
             });
             return canPackage;
         };
