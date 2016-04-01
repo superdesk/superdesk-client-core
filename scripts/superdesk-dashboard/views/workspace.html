@@ -1,8 +1,8 @@
 <div class="subnav">
-	<h3 class="page-nav-title"><span translate>Dashboard</span> {{ dashboard.current.name | translate}}</h3>
+    <h3 class="page-nav-title"><span translate>Dashboard</span> {{ dashboard.current.name | translate}}</h3>
 
-	<div class="button-stack right-stack">
-		<button class="navbtn navbtn--with-text" ng-click="dashboard.edit = true" ng-show="dashboard.widgets.length && !dashboard.edit">
+    <div class="button-stack right-stack">
+        <button class="navbtn navbtn--with-text" ng-click="dashboard.edit = true" ng-show="dashboard.widgets.length && !dashboard.edit">
             <i class="svg-icon-move"></i> <span class="title" translate>Rearrange widgets</span>
         </button>
 
@@ -67,7 +67,7 @@
                     <div class="nav-tabs">
                     </div>
                     <div class="modal-screen">
-                    	<ul class="widget-list">
+                        <ul class="widget-list">
                             <li ng-repeat="widget in dashboard.availableWidgets" ng-click="dashboard.selectWidget(widget)" ng-class="{selected: dashboard.isSelected(widget)}" class="widget {{ widget._id }}">
                                 <div class="thumbnail"><img ng-src="{{ :: widget.thumbnail }}"></div>
                                 <div class="title">{{ :: widget.label }}</div>
@@ -81,7 +81,7 @@
                         <button class="backlink" ng-click="dashboard.selectWidget()" translate>Back</button>
                     </div>
                     <div class="modal-screen widget-detail">
-                    	<div class="thumbnail-box {{ dashboard.selectedWidget._id }}">
+                        <div class="thumbnail-box {{ dashboard.selectedWidget._id }}">
                             <img ng-src="{{ :: dashboard.selectedWidget.thumbnail }}">
                         </div>
                         <div class="content-box">

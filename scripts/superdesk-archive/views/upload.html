@@ -14,9 +14,9 @@
             <input ng-if="!uniqueUpload" id="images-input" type="file" ngf-select="addFiles($files)" multiple class="hide">
         </div>
     </div>
-	<div class="upload-error" ng-show="failed">
-		<span translate>There are failed uploads.</span><span class="action" ng-click="tryAgain()" translate>Try again</span>
-	</div>
+    <div class="upload-error" ng-show="failed">
+        <span translate>There are failed uploads.</span><span class="action" ng-click="tryAgain()" translate>Try again</span>
+    </div>
     <div class="upload-edit" ng-show="items.length" ng-class="{compact: dragshow, error: failed}">
         <div class="upload-error" ng-if="errorMessage">
             <span class="action"><span translate>Error</span>: {{ :: errorMessage | translate}}</span>

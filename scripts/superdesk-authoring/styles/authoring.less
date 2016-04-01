@@ -11,33 +11,33 @@
 }
 
 .auth-screen {
-	position: absolute;
-	top: 0; right: 0; left: 0; bottom: 0;
-	.main-section {
-		.transition(all ease 0.3s);
-	}
+    position: absolute;
+    top: 0; right: 0; left: 0; bottom: 0;
+    .main-section {
+        .transition(all ease 0.3s);
+    }
 }
 
 .authoring-embedded {
-	position: absolute;
-	top: 0;
-	right: 0;
-	left: 0;
-	bottom: 0;
-
-	.embedded-auth-view {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		right: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
     left: 0;
-		box-sizing: border-box;
+    bottom: 0;
 
-		.sd-widget.comments .notification-list-box,
-		.sd-widget.versions .article-versions {
-			bottom: 0;
-		}
-	}
+    .embedded-auth-view {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+    left: 0;
+        box-sizing: border-box;
+
+        .sd-widget.comments .notification-list-box,
+        .sd-widget.versions .article-versions {
+            bottom: 0;
+        }
+    }
 
     .page-content-container {
         left:0;
@@ -227,46 +227,46 @@
 }
 
 .auto-save {
-	margin-right: 20px;
-	line-height: 28px;
-	.opacity(70);
-	i {
-		margin-top: -4px;
-	}
+    margin-right: 20px;
+    line-height: 28px;
+    .opacity(70);
+    i {
+        margin-top: -4px;
+    }
 }
 
 .page-content-container {
-	position: absolute;
-	top:0;
-	left: @tablist-width + @article-tabpane-padding;
-	right: @tablist-width + @article-tabpane-padding;
-	bottom: 30px;
-	overflow-y: auto;
+    position: absolute;
+    top:0;
+    left: @tablist-width + @article-tabpane-padding;
+    right: @tablist-width + @article-tabpane-padding;
+    bottom: 30px;
+    overflow-y: auto;
 }
 
 
 // Medium editor
 // -------------------------------------------------
 .medium-editor-toolbar-actions {
-	li button {
-		height: 30px !important;
-		min-width: 40px !important;
-		padding-top: 10px !important;
-	}
+    li button {
+        height: 30px !important;
+        min-width: 40px !important;
+        padding-top: 10px !important;
+    }
 }
 .medium-toolbar-arrow-under:after {
-	top: 40px !important;
+    top: 40px !important;
 }
 
 .text-editor-info {
-	font-size: 89%;
+    font-size: 89%;
 }
 
 .text-editor {
-	.sderror {
-		border-bottom: 1px dotted #cc0000;
-		background-color: rgba(204, 0, 0, 0.08);
-	}
+    .sderror {
+        border-bottom: 1px dotted #cc0000;
+        background-color: rgba(204, 0, 0, 0.08);
+    }
 
     .sdfindreplace {
         background-color: rgba(0, 0, 0, 0.08);
@@ -305,97 +305,97 @@
 // -------------------------------------------------
 
 .opened-articles {
-	position: fixed;
-	min-height: @authoring-opened-articles;
-	left: 0; right: 0;
+    position: fixed;
+    min-height: @authoring-opened-articles;
+    left: 0; right: 0;
     bottom: 0;
-	background: rgba(0,0,0,0.85);
-	z-index: @zindexFixedNavbar;
-	ul > li {
-		.border-box();
-		padding: 0 15px 0 15px;
-		max-width: 250px;
-		position: relative;
-		line-height: 30px;
-		.close {
-			color: #fff;
-			border: none;
-			background: none;
-			position: absolute;
-			right: 5px;
-			top: 5px;
-			padding: 0;
-		}
-		.title {
-			display: block;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			color: #8bcaf7;
-			font-size: 12px;
-			.text-light();
-			&:hover {
-				color: #fff;
-				text-decoration: none;
-				cursor: pointer;
-			}
-		}
-		&:active {
-			background: #444;
-		}
-		&.active {
-			background: darken(@sd-blue,10%) !important;
-			margin-top: -1px;
-			padding-top: 1px;
-			&:hover {
-				cursor: default;
-			}
-			.title {
-				color: #fff;
-			}
-		}
-	}
-	.list {
-		margin-left: 31px;
-		margin-right: 250px;
-		&.full-width {
-			margin-right: 0;
-		}
-		> li {
-			float: left;
-			border-right: 1px solid #333;
-		}
-	}
-	.multiedit-item {
-		float: right;
-		> li {
-			border-left: 1px solid #333;
-			width: 250px;
-		}
-	}
-	.quick-actions {
-		button {
-			background: none;
-			border: 0;
-			height: 30px;
-			line-height: 30px;
-			width: 30px;
-			text-align: center;
-			&:hover {
-				cursor: pointer;
-				background: @sd-blue;
-			}
-		}
-		i {
-			margin: -5px 0 0 0;
-		}
-	}
+    background: rgba(0,0,0,0.85);
+    z-index: @zindexFixedNavbar;
+    ul > li {
+        .border-box();
+        padding: 0 15px 0 15px;
+        max-width: 250px;
+        position: relative;
+        line-height: 30px;
+        .close {
+            color: #fff;
+            border: none;
+            background: none;
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            padding: 0;
+        }
+        .title {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #8bcaf7;
+            font-size: 12px;
+            .text-light();
+            &:hover {
+                color: #fff;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        }
+        &:active {
+            background: #444;
+        }
+        &.active {
+            background: darken(@sd-blue,10%) !important;
+            margin-top: -1px;
+            padding-top: 1px;
+            &:hover {
+                cursor: default;
+            }
+            .title {
+                color: #fff;
+            }
+        }
+    }
+    .list {
+        margin-left: 31px;
+        margin-right: 250px;
+        &.full-width {
+            margin-right: 0;
+        }
+        > li {
+            float: left;
+            border-right: 1px solid #333;
+        }
+    }
+    .multiedit-item {
+        float: right;
+        > li {
+            border-left: 1px solid #333;
+            width: 250px;
+        }
+    }
+    .quick-actions {
+        button {
+            background: none;
+            border: 0;
+            height: 30px;
+            line-height: 30px;
+            width: 30px;
+            text-align: center;
+            &:hover {
+                cursor: pointer;
+                background: @sd-blue;
+            }
+        }
+        i {
+            margin: -5px 0 0 0;
+        }
+    }
 }
 
 &.scratchpad-open {
-	.opened-articles {
-		bottom: @scratchpad-closed + @scratchpad-content-height;
-	}
+    .opened-articles {
+        bottom: @scratchpad-closed + @scratchpad-content-height;
+    }
 }
 
 
@@ -404,153 +404,153 @@
 // -------------------------------------------------
 
 .authoring-dashboard {
-	padding: 40px;
-	overflow: auto;
+    padding: 40px;
+    overflow: auto;
 
-	.card-list {
-		width: 0;
-		margin: 0 auto;
-	}
-	.card-list > li {
-		width: 140px;
-		height: 170px;
-		float: left;
-		margin: 10px;
-		padding: 15px 20px;
-		position: relative;
-		.title {
-			max-height: 135px;
-			overflow: hidden;
-			font-size: 14px;
-			line-height: 22px;
-			max-height: 110px;
-			overflow: hidden;
-			.text-semibold();
-		}
-		.created {
-			position: absolute;
-			bottom: 15px;
-			left: 20px;
-			color: #888;
-			font-size: 12px;
-			width: 80%;
-			height:14%;
-			float:left;
-		}
-		.text {
-			font-size: 12px;
-			color: @gray;
-			line-height: 18px;
-		}
-		.close {
-			position: absolute;
-			right: 7px;
-			top: 3px;
-		}
+    .card-list {
+        width: 0;
+        margin: 0 auto;
+    }
+    .card-list > li {
+        width: 140px;
+        height: 170px;
+        float: left;
+        margin: 10px;
+        padding: 15px 20px;
+        position: relative;
+        .title {
+            max-height: 135px;
+            overflow: hidden;
+            font-size: 14px;
+            line-height: 22px;
+            max-height: 110px;
+            overflow: hidden;
+            .text-semibold();
+        }
+        .created {
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            color: #888;
+            font-size: 12px;
+            width: 80%;
+            height:14%;
+            float:left;
+        }
+        .text {
+            font-size: 12px;
+            color: @gray;
+            line-height: 18px;
+        }
+        .close {
+            position: absolute;
+            right: 7px;
+            top: 3px;
+        }
         .type-icon {
-			position: relative;
-			bottom: 6px;
-			margin: 0;
-			float: left;
-		}
-		.state-label {
-			position: relative;
-			bottom: 1px;
-			margin: auto;
-			float: right;
-		}
-		.subInfo {
-			position: absolute;
-			right: 15px;
-			bottom: 1px;
-			float: right;
-		}
-		.container {
-			.text-semibold();
-			color: #216678;
-			margin-right: 20px;
-		}
-	}
+            position: relative;
+            bottom: 6px;
+            margin: 0;
+            float: left;
+        }
+        .state-label {
+            position: relative;
+            bottom: 1px;
+            margin: auto;
+            float: right;
+        }
+        .subInfo {
+            position: absolute;
+            right: 15px;
+            bottom: 1px;
+            float: right;
+        }
+        .container {
+            .text-semibold();
+            color: #216678;
+            margin-right: 20px;
+        }
+    }
 }
 
 // Multiedit dropdown
 // -------------------------------------------------
 
 .multiedit-menu {
-	max-height: 400px;
-	overflow-y: auto;
-	overflow-x: hidden;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
   li {
     margin-bottom: 4px;
   }
-	li button {
-		width: 300px !important;
-		padding-right: 30px !important;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		position: relative;
+    li button {
+        width: 300px !important;
+        padding-right: 30px !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
     border-radius: 0;
-		i {
-			position: absolute;
-			right: -5px;
-			top: 9px;
-		}
-		&.disabled, &.disabled:hover {
-			background: #f0f0f0;
-			i {
-				.opacity(20);
-			}
-		}
-	}
-	li .msg {
-		padding: 0 20px;
-	}
+        i {
+            position: absolute;
+            right: -5px;
+            top: 9px;
+        }
+        &.disabled, &.disabled:hover {
+            background: #f0f0f0;
+            i {
+                .opacity(20);
+            }
+        }
+    }
+    li .msg {
+        padding: 0 20px;
+    }
 }
 .multiedit-dropdown {
-	.dropdown-toggle {
-		width: 48px;
-		padding: 0 !important;
-	}
-	.dropdown-menu {
-		.fieldset {
-			border-top: 1px solid #dedede;
-			margin-top: 10px;
-			height: 32px;
-			padding: 10px 10px 0;
-			button {
-				width: 100px;
-			}
-		}
-	}
+    .dropdown-toggle {
+        width: 48px;
+        padding: 0 !important;
+    }
+    .dropdown-menu {
+        .fieldset {
+            border-top: 1px solid #dedede;
+            margin-top: 10px;
+            height: 32px;
+            padding: 10px 10px 0;
+            button {
+                width: 100px;
+            }
+        }
+    }
 }
 
 .terms-box {
-	position: relative;
-	.dropdown-menu.nested-menu {
-		width: 100%;
-	}
+    position: relative;
+    .dropdown-menu.nested-menu {
+        width: 100%;
+    }
 }
 
 .widget {
-	padding: 12px;
+    padding: 12px;
 
-	h3 {
-		margin-bottom: 0.5em;
-	}
+    h3 {
+        margin-bottom: 0.5em;
+    }
 
-	.link-list .btn {
-		display: block;
-		width: 100%;
-		margin-bottom: 10px;
-	}
+    .link-list .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
 }
 
 .modal-footer {
-	.pagination-box {
-		.page-info {
-			float: left;
-		}
-	}
+    .pagination-box {
+        .page-info {
+            float: left;
+        }
+    }
 }
 
 // Authoring Header
@@ -616,24 +616,24 @@
   z-index: 2;
   .box-sizing(border-box);
   .box-shadow(0px 1px 4px -1px rgba(0,0,0,0.25));
-	max-height: 0;
+    max-height: 0;
   //.transition(max-height 0.3s ease-in);
   > .authoring-header__holder {
     height: 0px;
-		opacity: 0;
+        opacity: 0;
     overflow: hidden;
-		//.transition(opacity 0.3s 0.4s);
-		.transition(opacity 0.4s 0.1s);
+        //.transition(opacity 0.3s 0.4s);
+        .transition(opacity 0.4s 0.1s);
   }
   &.active {
-		max-height: 800px;
-		//.transition(max-height 0.3s ease-in);
+        max-height: 800px;
+        //.transition(max-height 0.3s ease-in);
     > .authoring-header__holder {
       height: auto;
-			opacity: 1;
+            opacity: 1;
       overflow: visible;
-			//.transition(opacity 0.3s 0.4s);
-			.transition(opacity 0.4s 0.1s);
+            //.transition(opacity 0.3s 0.4s);
+            .transition(opacity 0.4s 0.1s);
     }
   }
   * {
@@ -1087,7 +1087,7 @@
     }
 
     .edit-photo {
-        display: none	;
+        display: none    ;
         color: #fff;
         text-transform: uppercase;
         font-size: 9px;
