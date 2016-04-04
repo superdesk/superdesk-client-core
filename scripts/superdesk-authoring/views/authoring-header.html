@@ -154,6 +154,27 @@
           </div>
         </div>
 
+        <div class="authoring-header__item"
+             sd-validation-error="error.ranking"
+             data-required="schema.ranking.required"
+             ng-if="schema.ranking"
+             sd-width="{{editor.ranking.sdWidth}}"
+             order="{{editor.ranking.order}}">
+          <label class="authoring-header__item-label" translate>RANKING</label>
+          <div class="authoring-header__input-holder">
+            <div sd-meta-dropdown
+                 data-item="item"
+                 data-field="ranking"
+                 data-list="metadata.ranking"
+                 data-icon="urgency-label urgency-label-"
+                 data-label= "{{ :: 'Ranking' | translate }}"
+                 ng-disabled="!_editable"
+                 data-key="qcode"
+                 data-change="autosave(item)">
+            </div>
+          </div>
+        </div>
+
         <div class="authoring-header__item" id="category-setting"
              sd-validation-error="error.anpa_category"
              data-required="schema.anpa_category.required"
