@@ -57,7 +57,7 @@
         <div sd-media-query min-width="450" class="subnav">
 
             <ul class="filter-type pull-left" ng-if="!elementState || elementState === 'comfort'">
-                <li ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType}}">
+                <li ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                     <a href="" ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
                     <i ng-if="fileType!='all'" class="filetype-icon-{{fileType}}"></i>
                 </li>

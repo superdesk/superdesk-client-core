@@ -3,7 +3,7 @@
         <i class="big-icon-marked-star"></i>
     </button>
     <ul class="dropdown-menu pull-left">
-        <li><div class="menu-label">Choose highlight list</div></li>
+        <li><div class="menu-label" translate>Choose highlight list</div></li>
         <li ng-if="hasHighlights" ng-repeat="h in highlights track by h._id">
             <button option="{{ :: h.name }}" ng-click="listHighlight(h);" title="{{ :: h.name }}">{{ :: h.name }}</button>
         </li>

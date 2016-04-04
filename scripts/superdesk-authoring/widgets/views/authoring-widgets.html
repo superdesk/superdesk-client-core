@@ -12,7 +12,7 @@
                     ng-click="activate(widget)"
                     ng-disabled="isLocked(widget)"
                     id="{{ :: widget.label }}"
-                    tooltip="{{ :: widget.label }}" tooltip-placement="left">
+                    tooltip="{{ :: widget.label | translate}}" tooltip-placement="left">
                     <i class="big-icon-{{ :: widget.icon }}"></i>
                 </button>
             </li>

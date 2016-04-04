@@ -105,6 +105,7 @@
             'highlightsService',
             'monitoringState',
             'authoringWorkspace',
+            'gettextCatalog',
         function(
             $location,
             $timeout,
@@ -128,7 +129,8 @@
             dragitem,
             highlightsService,
             monitoringState,
-            authoringWorkspace
+            authoringWorkspace,
+            gettextCatalog
         ) {
             return {
                 link: function(scope, elem) {
@@ -1279,7 +1281,7 @@
                                     )
                                 },
                                 isEmpty ?
-                                    React.createElement('li', {}, gettext('There are currently no items')) :
+                                    React.createElement('li', {}, gettextCatalog.getString('There are currently no items')) :
                                     this.state.itemsList.map(createItem)
                             );
                         }
