@@ -4,8 +4,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: scripts/superdesk-archive/views/upload.html:63
-#: scripts/superdesk-authoring/views/change-image.html:39
+#: scripts/superdesk-archive/views/upload.html:60
+#: scripts/superdesk-authoring/views/change-image.html:35
 msgid "---Assign Rights---"
 msgstr ""
 
@@ -141,7 +141,7 @@ msgstr ""
 msgid "Add items"
 msgstr ""
 
-#: scripts/superdesk-archive/views/upload.html:88
+#: scripts/superdesk-archive/views/upload.html:85
 msgid "Add more files"
 msgstr ""
 
@@ -554,7 +554,7 @@ msgid "Byline"
 msgstr ""
 
 #: scripts/superdesk-archive/views/archived-kill.html:13
-#: scripts/superdesk-archive/views/upload.html:97
+#: scripts/superdesk-archive/views/upload.html:94
 #: scripts/superdesk-authoring/authoring.js:824
 #: scripts/superdesk-authoring/authoring.js:837
 #: scripts/superdesk-authoring/authoring.js:850
@@ -562,7 +562,7 @@ msgstr ""
 #: scripts/superdesk-authoring/authoring.js:874
 #: scripts/superdesk-authoring/comments/views/comments-widget.html:23
 #: scripts/superdesk-authoring/multiedit/views/sd-multiedit-dropdown.html:15
-#: scripts/superdesk-authoring/views/change-image.html:107
+#: scripts/superdesk-authoring/views/change-image.html:103
 #: scripts/superdesk-content-filters/views/manage-filter-conditions.html:72
 #: scripts/superdesk-content-filters/views/manage-filters.html:110
 #: scripts/superdesk-dashboard/workspace-tasks/views/task-preview.html:12
@@ -663,6 +663,10 @@ msgstr ""
 msgid "Character limit exceeded, stage can not be created/updated."
 msgstr ""
 
+#: scripts/superdesk-authoring/authoring.js:1649
+msgid "characters"
+msgstr ""
+
 #: scripts/superdesk/views/sdselect.html:13
 msgid "Check all"
 msgstr ""
@@ -761,7 +765,7 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: scripts/superdesk-authoring/views/authoring-header.html:224
+#: scripts/superdesk-authoring/views/authoring-header.html:225
 msgid "COMPANY"
 msgstr ""
 
@@ -878,14 +882,14 @@ msgid "Copyright"
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:150
-#: scripts/superdesk-archive/views/upload.html:59
-#: scripts/superdesk-authoring/views/change-image.html:34
+#: scripts/superdesk-archive/views/upload.html:56
+#: scripts/superdesk-authoring/views/change-image.html:30
 msgid "Copyright holder"
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:154
-#: scripts/superdesk-archive/views/upload.html:70
-#: scripts/superdesk-authoring/views/change-image.html:46
+#: scripts/superdesk-archive/views/upload.html:67
+#: scripts/superdesk-authoring/views/change-image.html:42
 msgid "Copyright notice"
 msgstr ""
 
@@ -994,9 +998,9 @@ msgstr ""
 msgid "Creator"
 msgstr ""
 
-#: scripts/superdesk-archive/views/upload.html:56
+#: scripts/superdesk-archive/views/upload.html:53
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:68
-#: scripts/superdesk-authoring/views/change-image.html:30
+#: scripts/superdesk-authoring/views/change-image.html:26
 msgid "Credit"
 msgstr ""
 
@@ -1226,7 +1230,7 @@ msgid "Dictionary with name \"{{ dictionary.name }}\" already exists."
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:187
-#: scripts/superdesk-archive/views/upload.html:74
+#: scripts/superdesk-archive/views/upload.html:71
 msgid "Dimensions"
 msgstr ""
 
@@ -1334,7 +1338,7 @@ msgstr ""
 msgid "Ed. Note"
 msgstr ""
 
-#: scripts/superdesk-authoring/views/authoring-header.html:244
+#: scripts/superdesk-authoring/views/authoring-header.html:245
 msgid "ED. NOTE"
 msgstr ""
 
@@ -2248,8 +2252,8 @@ msgstr ""
 msgid "Incoming Stage"
 msgstr ""
 
-#: scripts/superdesk-archive/views/upload.html:66
-#: scripts/superdesk-authoring/views/change-image.html:42
+#: scripts/superdesk-archive/views/upload.html:63
+#: scripts/superdesk-authoring/views/change-image.html:38
 msgid "Indefinite Usage"
 msgstr ""
 
@@ -2412,13 +2416,8 @@ msgstr ""
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: scripts/superdesk-archive/views/upload.html:53
 #: scripts/superdesk-authoring/views/full-preview.html:45
 msgid "Keyword"
-msgstr ""
-
-#: scripts/superdesk-authoring/views/change-image.html:26
-msgid "Keyword *"
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:21
@@ -3082,9 +3081,12 @@ msgstr ""
 #: scripts/superdesk-archive/views/item-preview.html:23
 #: scripts/superdesk-archive/views/preview.html:83
 #: scripts/superdesk-authoring/views/article-edit.html:158
-#: scripts/superdesk-authoring/views/change-image.html:53
-#: scripts/superdesk-authoring/views/change-image.html:82
+#: scripts/superdesk-authoring/views/change-image.html:78
 msgid "Original"
+msgstr ""
+
+#: scripts/superdesk-authoring/views/change-image.html:49
+msgid "Original {{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}"
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:93
@@ -3783,7 +3785,7 @@ msgstr ""
 #: scripts/superdesk-authoring/authoring.js:848
 #: scripts/superdesk-authoring/multiedit/views/sd-multiedit-article.html:3
 #: scripts/superdesk-authoring/views/authoring-topbar.html:81
-#: scripts/superdesk-authoring/views/change-image.html:111
+#: scripts/superdesk-authoring/views/change-image.html:107
 #: scripts/superdesk-content-filters/views/manage-filter-conditions.html:73
 #: scripts/superdesk-content-filters/views/manage-filters.html:111
 #: scripts/superdesk-dashboard/views/configuration.html:9
@@ -4126,8 +4128,8 @@ msgstr ""
 msgid "since"
 msgstr ""
 
-#: scripts/superdesk-archive/views/upload.html:64
-#: scripts/superdesk-authoring/views/change-image.html:40
+#: scripts/superdesk-archive/views/upload.html:61
+#: scripts/superdesk-authoring/views/change-image.html:36
 msgid "Single Usage"
 msgstr ""
 
@@ -4680,8 +4682,8 @@ msgstr ""
 msgid "time is invalid!"
 msgstr ""
 
-#: scripts/superdesk-archive/views/upload.html:65
-#: scripts/superdesk-authoring/views/change-image.html:41
+#: scripts/superdesk-archive/views/upload.html:62
+#: scripts/superdesk-authoring/views/change-image.html:37
 msgid "Time Restricted"
 msgstr ""
 
