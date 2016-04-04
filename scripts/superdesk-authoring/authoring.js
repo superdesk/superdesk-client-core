@@ -1141,6 +1141,10 @@
                     }
                 };
 
+                $scope.canSaveTemplate = function() {
+                    return privileges.userHasPrivileges({content_templates: 1});
+                }
+
                 function _exportHighlight(_id) {
                     api.generate_highlights.save({}, {'package': _id})
                     .then(authoringWorkspace.edit, function(response) {
