@@ -154,6 +154,11 @@
           </div>
         </div>
 
+        <div class="authoring-header__item"
+             ng-if="editor.urgency_dummy"
+             sd-width="{{editor.urgency_dummy.sdWidth}}"
+             order="{{editor.urgency_dummy.order}}"></div>
+
         <div class="authoring-header__item" id="category-setting"
              sd-validation-error="error.anpa_category"
              data-required="schema.anpa_category.required"
