@@ -219,10 +219,10 @@
 
         <div class="authoring-header__item"
             ng-repeat="cv in cvs track by cv._id"
-            data-required="schema[cv._id].required"
-            ng-if="cv.terms.length && schema[cv._id]"
-            sd-width="{{editor[cv._id].sdWidth}}"
-            order="{{editor[cv._id].order}}">
+            data-required="schema[cv._id].required || cv.required"
+            ng-if="cv.terms.length"
+            sd-width="{{editor[cv._id].sdWidth || cv.sdWidth || 'half'}}"
+            order="{{editor[cv._id].order || cv.order}}">
           <label>{{ cv.display_name }}</label>
           <div sd-meta-terms
               class="data"
