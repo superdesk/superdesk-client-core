@@ -117,6 +117,7 @@
     }
 
     return angular.module('superdesk.datetime', [
+        'ngResource',
         'superdesk.datetime.absdate',
         'superdesk.datetime.groupdates',
         'superdesk.datetime.reldatecomplex',
@@ -154,9 +155,36 @@
             });
         }])
 
+        /**
+         *   A service that automatically fetches the time zone data from the
+         *   server upon instantiaton and stores it internally for future use,
+         *   avoiding the need to fetch it again every time when needed.
+         */
+        .factory('tzdata', ['$resource', function ($resource) {
+            var filename = 'scripts/superdesk-dashboard/world-clock/timezones-all.json',
+                    tzResource = $resource(filename);
+
+            /**
+             * Returns a sorted list of all time zone names. If time zone data
+             * has not yet been fetched from the server, an empty list is
+             * returned.
+             * To determine whether or not the data has been fetched yet, the
+             * $promise property should be examined.
+             *
+             * @method getTzNames
+             * @return {Array} a list of time zone names
+             */
+            tzResource.prototype.getTzNames = function () {
+                return _.union(
+                        _.keys(this.zones),
+                        _.keys(this.links)
+                        ).sort();
+            };
+
+            // return an array that will contain the fetched data when
+            // it arrives from the server
+            return tzResource.get();
+        }])
         .service('datetime', DateTimeService)
-        .service('datetimeHelper', DateTimeHelperService)
-
-        ;
-
+        .service('datetimeHelper', DateTimeHelperService);
 })();
