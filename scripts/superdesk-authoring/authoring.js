@@ -2959,9 +2959,7 @@
                             if (match) {
                                 cvs.push(cv);
                                 dynamicSchema[cv._id] = {
-                                    required: cv.required || false,
-                                    order: cv.order,
-                                    sdWidth: cv.sdWidth || 'half'
+                                    required: cv.required || false
                                 }
 
                                 dynamicEditor[cv._id] = {
