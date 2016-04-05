@@ -212,7 +212,6 @@
                     var diff = extendItem({_id: item._id}, item);
 
                     return api.save(RESOURCE, {}, diff).then(function(_autosave) {
-                        extendItem(item, _autosave);
                         var orig = Object.getPrototypeOf(item);
                         orig._autosave = _autosave;
                     });
