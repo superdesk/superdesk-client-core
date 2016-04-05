@@ -3144,8 +3144,8 @@
         init();
     }
 
-    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout'];
-    function ItemAssociationDirective(superdesk, renditions, $timeout) {
+    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', 'cropPicture'];
+    function ItemAssociationDirective(superdesk, renditions, $timeout, api, cropPicture) {
         return {
             scope: {
                 rel: '=',
@@ -3203,25 +3203,8 @@
                 renditions.get();
 
                 scope.edit = function(item) {
-                    var poi = {x: 0.5, y: 0.5};
-                    superdesk.intent('edit', 'crop', {
-                        item: item,
-                        renditions: renditions.renditions,
-                        poi: item.poi || poi,
-                        showMetadataEditor: true
-                    })
-                    .then(function(result) {
-                        var renditions = angular.extend({}, item.renditions || {});
-                        angular.forEach(result.cropData, function(crop, renditionName) {
-                            renditions[renditionName] = angular.extend(
-                                {},
-                                renditions[renditionName] || {},
-                                crop
-                            );
-                        });
-                        var updated = angular.extend({}, item, {renditions: renditions});
-                        var data = updateItemAssociation(updated);
-                        data[scope.rel].poi = result.poi;
+                    cropPicture.crop(item).then(function(updatedItem) {
+                        var data = updateItemAssociation(updatedItem);
                         scope.onchange({item: scope.item, data: data});
                     });
                 };

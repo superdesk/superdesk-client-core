@@ -125,8 +125,8 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions', 'superdesk', 'api'];
-function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService, superdesk, api) {
+EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions'];
+function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService) {
     this.settings = {spellcheck: true};
 
     /**
@@ -577,8 +577,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
         // when previous promise is finished, compose the html
         return $q.when(promiseFinished, function(renditionsList) {
             var html = ['<img',
-            ' src="' + url + '"',
-            ' alt="' + _.escape(altText || '') + '"'];
+            'src="' + url + '"',
+            'alt="' + _.escape(altText || '') + '"'];
             // add a `srcset` attribute if renditions are availables
             // NOTE: if renditions from renditionsService are not available For
             // this picture, we should maybe use its own renditons
@@ -591,63 +591,14 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
                     }
                 });
                 if (renditionsHtml.length > 0) {
-                    html.push(' srcset="' + renditionsHtml.join(', ') + '"');
+                    html.push('srcset="' + renditionsHtml.join(', ') + '"');
                 }
             }
             html.push('/>');
-            return html.join('\n');
+            return html.join(' ');
         });
     };
 
-    this.editCropAndRenderImage = function(picture) {
-        var poi = {x: 0.5, y: 0.5};
-        return renditionsService.get().then(function(renditions) {
-            return superdesk.intent('edit', 'crop', {
-                item: picture,
-                renditions: renditions,
-                poi: picture.poi || poi,
-                showMetadataEditor: true
-            })
-            .then(function(result) {
-                var renditionNames = [];
-                var savingImagePromises = [];
-                angular.forEach(result.cropData, function(croppingData, renditionName) {
-                    // if croppingData are defined
-                    if (angular.isDefined(croppingData.CropLeft)) {
-                        renditionNames.push(renditionName);
-                    }
-                });
-                // perform the request to make the cropped images
-                angular.forEach(renditionNames, function(renditionName) {
-                    savingImagePromises.push(
-                        api.save('picture_crop', {item: picture, crop: result.cropData[renditionName]})
-                    );
-                });
-                return $q.all(savingImagePromises)
-                // return the cropped images
-                .then(function(croppedImages) {
-                    // save created images in "association" property
-                    croppedImages.forEach(function(image, index) {
-                        var url = image.href;
-                        // update association
-                        picture.poi = result.poi;
-                        // update association renditions
-                        picture.renditions[renditionNames[index]] = angular.extend(
-                            {
-                                href: url,
-                                width: image.width,
-                                height: image.height,
-                                media: image._id,
-                                mimetype: image.item.mimetype
-                            },
-                            image.crop
-                        );
-                    });
-                    return picture;
-                });
-            });
-        });
-    };
     this.getSelectedText = function() {
         var text = '';
         if (window.getSelection) {
@@ -659,8 +610,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     };
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', '$element', '$scope', 'superdesk', 'api', 'renditions', 'editor', '$q'];
-function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk, api, renditions, editor, $q) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'cropPicture'];
+function SdTextEditorBlockEmbedController($timeout, editor, cropPicture) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
@@ -697,7 +648,7 @@ function SdTextEditorBlockEmbedController($timeout, $element, $scope, superdesk,
             if (!vm.model.association) {
                 return false;
             }
-            editor.editCropAndRenderImage(picture).then(function(picture) {
+            cropPicture.crop(picture).then(function(picture) {
                 // update block
                 vm.model.association = picture;
                 editor.generateImageTag(picture).then(function(img) {
