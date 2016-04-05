@@ -2073,8 +2073,8 @@
         }]);
 
     MultiActionBarController.$inject = ['$rootScope', 'multi', 'multiEdit', 'send',
-                                        'packages', 'superdesk', 'notify', 'spike', 'authoring'];
-    function MultiActionBarController($rootScope, multi, multiEdit, send, packages, superdesk, notify, spike, authoring) {
+                                        'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges'];
+    function MultiActionBarController($rootScope, multi, multiEdit, send, packages, superdesk, notify, spike, authoring, privileges) {
         this.send  = function() {
             return send.all(multi.getItems());
         };
@@ -2136,6 +2136,10 @@
                     !_.contains(['ingested', 'spiked', 'killed', 'draft'], item.state);
             });
             return canPackage;
+        };
+
+        this.canSendItems = function() {
+            return Boolean(privileges.userHasPrivileges({move: 1}));
         };
     }
 })();

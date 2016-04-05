@@ -35,6 +35,7 @@
     <div class="subnav__stretch-bar">
       <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-if="$root.config.features.customAuthoringTopbar" ng-show="_editable && itemActions.save && action === 'edit'">
         <button class="btn btn-custom"
+                ng-if="itemActions.send"
                 ng-click="sendToNextStage()"
                 title="{{ :: 'To Desk' | translate }}">
                 <span class="btn__text" translate>To Desk</span>
