@@ -36,7 +36,8 @@
                     alwaysVisible: '=',
                     disabled: '=',
                     blur: '&',
-                    placeholder: '@'
+                    placeholder: '@',
+                    tabindex: '='
                 },
                 controller: ['$scope', function($scope) {
                     $scope.hide = true;

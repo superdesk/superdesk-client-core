@@ -1085,7 +1085,7 @@ angular.module('superdesk.editor2', [
                     // update the toolbar, bc it can be displayed at the
                     // wrong place if offset of block has changed
                     scope.medium.subscribe('focus', function() {
-                        scope.medium.getExtensionByName('toolbar').positionStaticToolbar();
+                        scope.medium.getExtensionByName('toolbar').positionStaticToolbar(scope.medium.getFocusedElement());
                     });
                     scope.$on('spellcheck:run', render);
                     scope.$on('key:ctrl:shift:s', render);
