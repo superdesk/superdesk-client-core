@@ -107,7 +107,7 @@
                 <i class="icon-dots-vertical"></i>
             </button>
             <div class="dropdown-menu pull-right">
-                <ul ng-controller="TemplateMenu as templateMenu">
+                <ul ng-controller="TemplateMenu as templateMenu" ng-show="canSaveTemplate()">
                   <li>
                     <button type="button"
                         ng-click="templateMenu.create(item)"
