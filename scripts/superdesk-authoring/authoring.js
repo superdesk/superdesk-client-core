@@ -2729,7 +2729,7 @@
                 .activity('edit.crop', {
                     label: gettext('EDIT CROP'),
                     modal: true,
-                    cssClass: 'edit-image modal-responsive',
+                    cssClass: 'modal--fullscreen',
                     controller: ChangeImageController,
                     templateUrl: 'scripts/superdesk-authoring/views/change-image.html',
                     filters: [{action: 'edit', type: 'crop'}]
