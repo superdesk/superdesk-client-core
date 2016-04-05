@@ -2938,6 +2938,10 @@
                     scope.$watch('item.anpa_category', function(services) {
                         var qcodes = lodash.pluck(services, 'qcode');
                         var cvs = [];
+                        //add metadata as needed specific to the category.
+                        var dynamicSchema = {};
+                        var dynamicEditor = {};
+
                         metadata.cvs.forEach(function(cv) {
                             var cvService = cv.service || {};
                             var match = false;
@@ -2954,10 +2958,22 @@
 
                             if (match) {
                                 cvs.push(cv);
+                                dynamicSchema[cv._id] = {
+                                    required: cv.required || false,
+                                    order: cv.order,
+                                    sdWidth: cv.sdWidth || 'half'
+                                }
+
+                                dynamicEditor[cv._id] = {
+                                    order: cv.order,
+                                    sdWidth: cv.sdWidth || 'half'
+                                }
                             }
                         });
 
                         scope.cvs = _.sortBy(cvs, 'priority');
+                        scope.schema = angular.extend({}, scope.contentType.schema || DEFAULT_SCHEMA, dynamicSchema);
+                        scope.editor = angular.extend({}, scope.contentType.editor || DEFAULT_EDITOR, dynamicEditor);
                     });
                 });
 
