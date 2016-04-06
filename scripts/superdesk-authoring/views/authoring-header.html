@@ -181,7 +181,7 @@
              ng-if="metadata.categories && schema.anpa_category"
              sd-width="{{editor.anpa_category.sdWidth}}"
              order="{{editor.anpa_category.order}}">
-          <label class="authoring-header__item-label uppercase" translate>CATEGORY</label>
+          <label class="authoring-header__item-label uppercase" translate>SERVICE</label>
           <div sd-meta-terms
                class="data"
                ng-disabled="!_editable"
@@ -223,7 +223,7 @@
             ng-if="cv.terms.length && schema[cv._id]"
             sd-width="{{editor[cv._id].sdWidth}}"
             order="{{editor[cv._id].order}}">
-          <label>{{ cv.display_name }}</label>
+          <label>{{ cv.display_name | translate }}</label>
           <div sd-meta-terms
               class="data"
               data-item="item"
