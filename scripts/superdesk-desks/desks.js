@@ -1256,7 +1256,8 @@
                     exclude: '=',
                     onchoose: '&',
                     onsearch: '&',
-                    displayUser: '@'
+                    displayUser: '@',
+                    tabindex: '='
                 },
                 templateUrl: 'scripts/superdesk-desks/views/user-select.html',
                 link: function(scope, elem, attrs) {

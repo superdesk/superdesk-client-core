@@ -708,7 +708,8 @@ function MetaLocatorsDirective() {
             list: '=',
             change: '&',
             postprocessing: '&',
-            header: '@'
+            header: '@',
+            tabindex: '='
         },
 
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-locators.html',
