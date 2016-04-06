@@ -23,7 +23,6 @@ function CropPictureService($q, renditionsService, api, superdesk) {
                         renditionNames.push(renditionName);
                     }
                 });
-                console.log('renditionNames', renditionNames, 'result', result);
                 // perform the request to make the cropped images
                 angular.forEach(renditionNames, function(renditionName) {
                     savingImagePromises.push(
