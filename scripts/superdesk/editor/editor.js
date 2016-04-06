@@ -659,7 +659,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      */
     function useHistory(scope) {
         var TYPING_CLASS = 'typing';
-        var val = scope.history.get();
+        var val = scope.history.get() || '';
         var checkVal = val.innerHTML ? clearRangy(angular.copy(val)).innerHTML : val;
         if (clean(scope.node).innerHTML !== checkVal) {
             scope.node.innerHTML = val.innerHTML ? val.innerHTML : val;
