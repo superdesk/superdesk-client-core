@@ -199,7 +199,7 @@
         <div class="authoring-header__item"
              sd-validation-error="error.subject"
              data-required="schema.subject.required"
-             ng-if="metadata.subjectcodes && schema.subject && !metadata.subjects"
+             ng-if="metadata.subjectcodes && schema.subject && editor.subject && !metadata.subjects"
              sd-width="{{editor.subject.sdWidth}}"
              order="{{editor.subject.order}}">
           <label class="authoring-header__item-label" translate>SUBJECT</label>
