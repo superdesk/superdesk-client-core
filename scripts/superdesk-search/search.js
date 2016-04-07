@@ -1151,6 +1151,10 @@
 
                     scope.$on('key:v', toggleView);
 
+                    scope.$on('open:archived_kill', function(evt, item) {
+                        scope.selected.archived_kill = item;
+                    });
+
                     function setView(view) {
                         scope.view = view || 'mgrid';
                         preferencesUpdate['archive:view'].view = view || 'mgrid';

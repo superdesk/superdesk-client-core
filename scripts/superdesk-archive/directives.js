@@ -752,7 +752,6 @@
                         };
 
                         scope.cancel = function() {
-                            delete scope.item._initiateKill;
                             scope.item = null;
                         };
 

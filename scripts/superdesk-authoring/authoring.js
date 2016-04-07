@@ -2676,9 +2676,9 @@
                     priority: 100,
                     icon: 'kill',
                     group: 'corrections',
-                    controller: ['data', 'authoringWorkspace', 'api', function(data, authoringWorkspace, api) {
+                    controller: ['data', 'authoringWorkspace', 'api', '$rootScope', function(data, authoringWorkspace, api, $rootScope) {
                         if (data.item._type === 'archived') {
-                            data.item._initiateKill = true;
+                            $rootScope.$broadcast('open:archived_kill', data.item);
                         } else {
                             authoringWorkspace.kill(data.item);
                         }

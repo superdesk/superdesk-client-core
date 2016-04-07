@@ -13,7 +13,7 @@
   <div class="headline" ng-if="!_editable">{{item.headline}}</div>
 </div>
 
-<div class="field" ng-if="schema.sms" order="{{editor.sms.order}}">
+<div class="field" ng-if="schema.sms && item._type !== 'archived'" order="{{editor.sms.order}}">
     <label ng-if="_editable" translate>SMS</label>
     <div ng-if="_editable">
         <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms"></span>
