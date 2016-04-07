@@ -207,10 +207,8 @@
         this.save = function saveAutosave(item) {
             if (item._editable && !item._locked) {
                 this.stop(item);
-
                 timeouts[item._id] = $timeout(function() {
                     var diff = extendItem({_id: item._id}, item);
-
                     return api.save(RESOURCE, {}, diff).then(function(_autosave) {
                         var orig = Object.getPrototypeOf(item);
                         orig._autosave = _autosave;
@@ -467,7 +465,6 @@
         this.save = function saveAuthoring(origItem, item) {
             var diff = extendItem({}, item);
             // Finding if all the keys are dirty for real
-
             if (angular.isDefined(origItem)) {
                 angular.forEach(_.keys(diff), function(key) {
                     if (_.isEqual(diff[key], origItem[key])) {
@@ -1433,10 +1430,9 @@
                  * Close preview and start working again
                  */
                 $scope.closePreview = function() {
-                    $scope.item = _.create(_.cloneDeep($scope.origItem));
+                    $scope.item = _.create($scope.origItem);
                     extendItem($scope.item, $scope.item._autosave || {});
                     $scope._editable = $scope.action !== 'view' && authoring.isEditable($scope.origItem);
-                    $scope.item._editable = $scope._editable;
                 };
 
                 /**
@@ -1475,7 +1471,6 @@
                     $scope.dirty = true;
                     var autosavedItem = authoring.autosave(item);
                     authoringWorkspace.addAutosave();
-
                     return autosavedItem;
                 };
 
@@ -1501,9 +1496,6 @@
                         });
                 }
 
-                // init
-                $scope.content = content;
-                $scope.closePreview();
                 $scope.$on('savework', function(e, msg) {
                     var changeMsg = msg;
                     authoring.saveWorkConfirmation($scope.origItem, $scope.item, $scope.dirty, changeMsg)
@@ -1569,6 +1561,9 @@
                     }
                 });
 
+                // init
+                $scope.content = content;
+                $scope.closePreview();
                 macros.setupShortcuts($scope);
             }
         };
@@ -1834,6 +1829,7 @@
                 view: '=',
                 _beforeSend: '&beforeSend',
                 _editable: '=editable',
+                _publish: '&publish',
                 _action: '=action',
                 mode: '@'
             },

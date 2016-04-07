@@ -98,6 +98,7 @@ describe('authoring', function() {
 
         expect($scope.dirty).toBe(false);
         expect($scope.item.guid).toBe(GUID);
+        spyOn(api, 'save').and.returnValue($q.when({headline: 'foo'}));
 
         // edit
         $scope.item.headline = headline;
@@ -105,7 +106,6 @@ describe('authoring', function() {
         expect($scope.dirty).toBe(true);
 
         // autosave
-        spyOn(api, 'save').and.returnValue($q.when({headline: 'foo'}));
         $timeout.flush(5000);
         expect(api.save).toHaveBeenCalled();
         expect($scope.item.headline).toBe(headline);
