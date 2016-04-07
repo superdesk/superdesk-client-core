@@ -400,6 +400,10 @@
             var maxHeight = 32 * (maxItems || defaultMaxItems) + 6;
             return {'max-height':  maxHeight.toString() + 'px'};
         };
+
+        $scope.$on('open:archived_kill', function(evt, item) {
+            $scope.archived_kill = item;
+        });
     }
 
     AggregateSettingsDirective.$inject = ['desks', 'workspaces', 'session', 'preferencesService', 'WizardHandler', '$filter'];
