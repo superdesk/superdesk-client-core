@@ -1832,9 +1832,8 @@
             scope: {
                 item: '=',
                 view: '=',
-                _beforeSend: '=beforeSend',
+                _beforeSend: '&beforeSend',
                 _editable: '=editable',
-                _publish: '=publish',
                 _action: '=action',
                 mode: '@'
             },
@@ -2168,7 +2167,7 @@
                         .then(function(task) {
                             scope.task = task;
                             msg = sendAndContinue ? 'Send & Continue' : 'Send';
-                            return scope.beforeSend(msg);
+                            return scope.beforeSend({'action': msg});
                         })
                         .then(function(result) {
                             if (result && result._etag) {
