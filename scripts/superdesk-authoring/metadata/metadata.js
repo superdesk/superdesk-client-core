@@ -494,13 +494,17 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             change: '&',
             header: '@',
             reloadList: '@',
-            cv: '='
+            cv: '=',
+            includeParent: '@'
         },
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem) {
             metadata.subjectScope = scope;
             var reloadList = scope.reloadList === 'true' ? true : false;
+            var includeParent = scope.includeParent === 'true' ? true : false;
             scope.combinedList = [];
+
+            scope.termPath = [];
 
             scope.$watch('unique', function(value) {
                 scope.uniqueField = value || 'qcode';
@@ -550,6 +554,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
             scope.openTree = function(term, $event) {
                 scope.activeTerm = term;
+                scope.termPath.push(term);
                 scope.activeTree = scope.tree[term ? term.qcode : null];
                 $event.stopPropagation();
                 _.defer(function () {
@@ -588,52 +593,63 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 });
             }
 
-            scope.selectTerm = function(term) {
-                if (term) {
-                    // Only select terms that are not already selected
-                    if (!_.find(scope.item[scope.field], function(i) {return i[scope.uniqueField] === term[scope.uniqueField];})) {
-                        //instead of simple push, extend the item[field] in order to trigger dirty $watch
-                        var t = [];
+            function addTerm(term) {
+                // Only select terms that are not already selected
+                if (!_.find(scope.item[scope.field], function(i) {return i[scope.uniqueField] === term[scope.uniqueField];})) {
+                    //instead of simple push, extend the item[field] in order to trigger dirty $watch
+                    var t = [];
 
-                        if (!term.single_value) {
-                            t = _.clone(scope.item[scope.field]) || [];
-                        }
+                    if (!term.single_value) {
+                        t = _.clone(scope.item[scope.field]) || [];
+                    }
 
-                        if (scope.cv && scope.cv.single_value) {
-                            t = _.filter(t, function(term) {
-                                return term.scheme !== scope.cv._id;
+                    if (scope.cv && scope.cv.single_value) {
+                        t = _.filter(t, function(term) {
+                            return term.scheme !== scope.cv._id;
+                        });
+                    }
+
+                    //build object
+                    var o = {};
+
+                    // dependent is set only for category
+                    if (scope.dependent) {
+                        if (term.single_value) {
+                            // if only single selection supported -> reset all selected values on dependent CVs
+                            o[scope.dependent] = [];
+                        } else {
+                            //delete if already selected a service with single value
+                            _.forEach(scope.item[scope.field], function(service) {
+                                if (service.single_value) {
+                                    o[scope.dependent] = [];
+                                    t = [];
+                                }
                             });
                         }
+                    }
 
-                        //build object
-                        var o = {};
+                    t.push(angular.extend({}, term, {
+                        scheme: scope.cv ? scope.cv._id : null
+                    }));
 
-                        // dependent is set only for category
-                        if (scope.dependent) {
-                            if (term.single_value) {
-                                // if only single selection supported -> reset all selected values on dependent CVs
-                                o[scope.dependent] = [];
-                            } else {
-                                //delete if already selected a service with single value
-                                _.forEach(scope.item[scope.field], function(service) {
-                                    if (service.single_value) {
-                                        o[scope.dependent] = [];
-                                        t = [];
-                                    }
-                                });
-                            }
-                        }
+                    o[scope.field] = t;
+                    _.extend(scope.item, o);
+                }
+            }
 
-                        t.push(angular.extend({}, term, {
-                            scheme: scope.cv ? scope.cv._id : null
-                        }));
+            scope.selectTerm = function(term) {
+                if (term) {
+                    addTerm(term);
 
-                        o[scope.field] = t;
-                        _.extend(scope.item, o);
+                    if (includeParent) {
+                        scope.termPath.forEach(function(term) {
+                            addTerm(term);
+                        });
                     }
 
                     scope.activeTerm = '';
                     scope.selectedTerm = '';
+                    scope.termPath = [];
                     scope.searchTerms();
                     scope.activeTree = scope.tree[null];
 
