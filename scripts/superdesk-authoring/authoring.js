@@ -1436,6 +1436,7 @@
                     $scope.item = _.create(_.cloneDeep($scope.origItem));
                     extendItem($scope.item, $scope.item._autosave || {});
                     $scope._editable = $scope.action !== 'view' && authoring.isEditable($scope.origItem);
+                    $scope.item._editable = $scope._editable;
                 };
 
                 /**
