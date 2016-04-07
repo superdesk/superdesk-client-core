@@ -719,7 +719,7 @@
             if ((!item.lock_user && item._editable) || force) {
                 return api.save('archive_lock', {}, {}, item).then(function(lock) {
                     _.extend(item, lock);
-                    item._locked = false;
+                    item._locked = true;
                     item.lock_user = session.identity._id;
                     item.lock_session = session.sessionId;
                     return item;
@@ -741,7 +741,7 @@
         this.unlock = function unlock(item) {
             return api('archive_unlock', item).save({}).then(function(lock) {
                 _.extend(item, lock);
-                item._locked = true;
+                item._locked = false;
                 return item;
             }, function(err) {
                 item._locked = true;

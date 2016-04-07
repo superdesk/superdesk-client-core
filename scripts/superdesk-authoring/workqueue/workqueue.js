@@ -72,7 +72,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     $scope.$on('item:lock', updateWorkqueue);
     $scope.$on('item:unlock', function (_e, data) {
         var item = _.find(workqueue.items, {_id: data.item});
-        if (item && session.sessionId !== data.lock_session && $scope.active !== item) {
+        if (item && lock.isLocked(item) && session.sessionId !== data.lock_session && $scope.active !== item) {
             authoring.unlock(item, data.user, item.headline);
         }
 
