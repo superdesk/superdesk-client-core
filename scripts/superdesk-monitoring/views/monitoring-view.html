@@ -70,7 +70,7 @@
                     <button class="dropdown-toggle" dropdown-toggle><i class="icon-dots-vertical"></i></button>
                     <ul class="dropdown-menu pull-right">
                         <li class="filter-type">
-                            <div ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType}}">
+                            <div ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                                 <a ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
                                 <i ng-if="fileType!='all'" class="filetype-icon-{{fileType}}"></i>
                             </div>

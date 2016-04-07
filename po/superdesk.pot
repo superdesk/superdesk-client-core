@@ -440,6 +440,10 @@ msgstr ""
 msgid "At"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:4
+msgid "audio"
+msgstr ""
+
 #: scripts/superdesk-ingest/views/settings/rssConfig.html:18
 msgid "Authentication Info"
 msgstr ""
@@ -768,6 +772,10 @@ msgstr ""
 msgid "COMPANY"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:4
+msgid "composite"
+msgstr ""
+
 #: scripts/superdesk-legal-archive/legal_archive.js:236
 msgid "Confidential data"
 msgstr ""
@@ -808,6 +816,10 @@ msgstr ""
 #: scripts/superdesk-publish/views/odbc-config.html:2
 #: scripts/superdesk-publish/views/odbc-config.html:3
 msgid "Connection string"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:5
+msgid "content"
 msgstr ""
 
 #: scripts/superdesk-content-filters/views/production-test-view.html:56
@@ -894,6 +906,10 @@ msgstr ""
 
 #: scripts/superdesk-authoring/authoring.js:2698
 msgid "Correct item"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:7
+msgid "corrected"
 msgstr ""
 
 #: scripts/superdesk-authoring/versioning/history/views/history.html:51
@@ -1300,6 +1316,10 @@ msgstr ""
 msgid "DONE"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:6
+msgid "draft"
+msgstr ""
+
 #: scripts/superdesk-archive/views/upload.html:9
 msgid "Drag Your Files Here"
 msgstr ""
@@ -1576,6 +1596,10 @@ msgstr ""
 msgid "Enter web url"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:5
+msgid "error"
+msgstr ""
+
 #: scripts/superdesk-archive/views/upload.html:22
 #: scripts/superdesk-ingest/views/settings/ingest-sources-content.html:143
 msgid "Error"
@@ -1761,6 +1785,10 @@ msgstr ""
 msgid "Exposure time"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:6
+msgid "failed"
+msgstr ""
+
 #: scripts/superdesk-archive/directives.js:735
 #: scripts/superdesk-authoring/authoring.js:2840
 msgid "Failed to apply kill template to the item."
@@ -1828,6 +1856,10 @@ msgstr ""
 #: scripts/superdesk-authoring/views/send-item.html:6
 #: scripts/superdesk-ingest/module.js:1406
 msgid "Fetch To"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:6
+msgid "fetched"
 msgstr ""
 
 #: scripts/superdesk-authoring/versioning/history/views/history.html:41
@@ -2233,6 +2265,10 @@ msgstr ""
 msgid "In the story \""
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:5
+msgid "in-progress"
+msgstr ""
+
 #: scripts/superdesk-users/views/edit-form.html:13
 #: scripts/superdesk-users/views/user-list-item.html:15
 msgid "inactive"
@@ -2297,6 +2333,10 @@ msgstr ""
 
 #: scripts/superdesk-ingest/ingest-stats-widget/stats.js:10
 msgid "Ingest Stats"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:6
+msgid "ingested"
 msgstr ""
 
 #: scripts/superdesk-users/views/edit-form.html:74
@@ -2433,6 +2473,10 @@ msgstr ""
 
 #: scripts/superdesk-authoring/authoring.js:2676
 msgid "Kill item"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:7
+msgid "killed"
 msgstr ""
 
 #: scripts/superdesk-authoring/versioning/history/views/history.html:56
@@ -3256,6 +3300,10 @@ msgstr ""
 msgid "Pick task"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:4
+msgid "picture"
+msgstr ""
+
 #: scripts/superdesk/itemList/views/item-list-widget.html:57
 msgid "Pin"
 msgstr ""
@@ -3444,6 +3492,10 @@ msgstr ""
 msgid "Provider Type"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:4
+msgid "publish"
+msgstr ""
+
 #: scripts/superdesk-authoring/views/authoring-topbar.html:46
 #: scripts/superdesk-authoring/views/authoring-topbar.html:47
 #: scripts/superdesk-ingest/views/settings/ingest-routing-action.html:25
@@ -3472,6 +3524,10 @@ msgstr ""
 #: scripts/superdesk-archive/views/metadata-view.html:124
 #: scripts/superdesk-authoring/views/send-item.html:48
 msgid "Publish Schedule"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:7
+msgid "published"
 msgstr ""
 
 #: scripts/superdesk-dashboard/workspace-tasks/views/desk-stages.html:22
@@ -3710,6 +3766,10 @@ msgstr ""
 msgid "Restored by"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:6
+msgid "retrying"
+msgstr ""
+
 #: scripts/superdesk-authoring/versioning/versions/views/versions.html:26
 msgid "revert"
 msgstr ""
@@ -3737,6 +3797,10 @@ msgstr ""
 
 #: scripts/superdesk-users/views/settings-privileges.html:3
 msgid "Roles privileges"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:6
+msgid "routed"
 msgstr ""
 
 #: scripts/superdesk-ingest/views/settings/settings.html:12
@@ -3895,6 +3959,10 @@ msgstr ""
 msgid "Schedule"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:7
+msgid "scheduled"
+msgstr ""
+
 #: scripts/superdesk-publish/views/publish-queue.html:75
 msgid "Scheduled at"
 msgstr ""
@@ -4024,6 +4092,10 @@ msgstr ""
 
 #: scripts/superdesk/views/sdSearchList.html:14
 msgid "Selected items"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:4
+msgid "send"
 msgstr ""
 
 #: scripts/superdesk-authoring/views/send-item.html:68
@@ -4161,6 +4233,10 @@ msgstr ""
 msgid "SLUGLINE"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:5
+msgid "sluglines"
+msgstr ""
+
 #: scripts/superdesk-archive/views/item-preview.html:11
 #: scripts/superdesk-archive/views/media-box-grid.html:50
 #: scripts/superdesk-archive/views/media-box-list.html:49
@@ -4287,6 +4363,10 @@ msgstr ""
 msgid "Spike Monitoring"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:7
+msgid "spiked"
+msgstr ""
+
 #: scripts/superdesk-dashboard/workspace-tasks/views/desk-stages.html:17
 msgid "Spiked"
 msgstr ""
@@ -4388,6 +4468,10 @@ msgstr ""
 msgid "SUBJECT"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:6
+msgid "submitted"
+msgstr ""
+
 #: scripts/superdesk-publish/views/publish-queue.html:72
 msgid "Subscriber"
 msgstr ""
@@ -4412,6 +4496,10 @@ msgstr ""
 #: scripts/superdesk-publish/views/settings.html:6
 #: scripts/superdesk-publish/views/subscribers.html:3
 msgid "Subscribers"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:5
+msgid "success"
 msgstr ""
 
 #: scripts/superdesk-ingest/views/settings/ingest-routing-general.html:11
@@ -4525,6 +4613,10 @@ msgstr ""
 
 #: scripts/superdesk-content-filters/views/manage-filters.html:18
 msgid "Test Filter Against Content"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:4
+msgid "text"
 msgstr ""
 
 #: scripts/superdesk/auth/reset-password.html:79
@@ -5018,6 +5110,10 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:5
+msgid "users"
+msgstr ""
+
 #: scripts/superdesk-users/views/list.html:3
 msgid "Users"
 msgstr ""
@@ -5050,6 +5146,10 @@ msgstr ""
 
 #: scripts/superdesk-authoring/versioning/views/versioning.html:3
 msgid "Versions"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:4
+msgid "video"
 msgstr ""
 
 #: scripts/superdesk-content-filters/views/production-test-view.html:24
