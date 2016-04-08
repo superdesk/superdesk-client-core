@@ -8,7 +8,7 @@
 
 <div class="dropdown dropright dropdown-bigger dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position
     tooltip="{{ allSelected ? 'All items selected' : ''  | translate }}" tooltip-placement="left">
-    <button class="dropdown-toggle" dropdown-toggle ng-disabled="disabled" ng-if="header && !disabled">
+    <button class="dropdown-toggle" dropdown-toggle tabindex="{{tabindex}}" ng-disabled="disabled" ng-if="header && !disabled">
         <i class="icon-white icon-plus-large"></i>
     </button>
     <ul class="dropdown-menu nested-menu pull-right">
