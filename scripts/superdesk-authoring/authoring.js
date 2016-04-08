@@ -1536,8 +1536,8 @@
                     }
                 });
 
-                $scope.$on('item:updated', function(_e, data) {
-                    if (data.item === $scope.origItem._id && $scope.action === 'view') {
+                $scope.$on('content:update', function(_e, data) {
+                    if ($scope.action === 'view' && data.items && data.items[$scope.origItem._id]) {
                         refreshItem();
                     }
                 });
