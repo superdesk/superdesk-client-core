@@ -400,17 +400,6 @@
                  *
                  * @return {*}
                  */
-                var fetchContentFilters = function() {
-                    return api.query('content_filters').then(function(filters) {
-                        $scope.contentFilters = filters._items;
-                    });
-                };
-
-                /**
-                 * Fetches content filters from backend and returns the same.
-                 *
-                 * @return {*}
-                 */
                 var fetchProducts = function() {
                     return api.query('products').then(function(products) {
                         $scope.availableProducts = products._items;
@@ -420,7 +409,6 @@
                         });
                     });
                 };
-
 
                 /**
                  * Initializes the Global Filters on the selected subscriber.
@@ -538,7 +526,7 @@
                         $scope.origSubscriber = subscriber || {};
                         $scope.subscriber = _.create($scope.origSubscriber);
                         $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
-                        
+
                         $scope.subscriber.products = [];
                         if ($scope.origSubscriber.products) {
                             _.each($scope.origSubscriber.products, function(p) {

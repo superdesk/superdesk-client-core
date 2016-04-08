@@ -24,7 +24,7 @@
                 }
             });
         }])
-        .factory('products', ['$q', 'api', 'storage', 'contentFilters', function($q, api, storage, contentFilters) {
+        .factory('products', ['$q', 'api', 'contentFilters', function($q, api, contentFilters) {
             var productsService = {
                 products: null,
                 contentFilters: null,
@@ -69,14 +69,22 @@
             };
         });
 
-    ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal'];
-    function ProductsConfigController ($scope, gettext, notify, api, products, modal) {
+    ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal', 'adminPublishSettingsService'];
+    function ProductsConfigController ($scope, gettext, notify, api, products, modal, adminPublishSettingsService) {
 
         var initProducts = function() {
             products.initialize().then(function() {
                 $scope.products = products.products;
                 $scope.contentFilters = products.contentFilters;
             });
+        };
+
+        var initSubscribers = function() {
+            if (!$scope.subscribers) {
+                adminPublishSettingsService.fetchSubscribers().then(function(items) {
+                    $scope.subscribers = items._items;
+                });
+            }
         };
 
         $scope.newProduct = function() {
@@ -98,13 +106,13 @@
             $scope.product = {};
             $scope.product.edit = null;
             initProducts();
+            initSubscribers();
         };
 
         $scope.cancel();
 
         $scope.save = function() {
-            var isNew = $scope.product.edit._id ? false : true;
-            var product = _.omit($scope.product, 'edit')
+            var product = _.omit($scope.product, 'edit');
             api.products.save(product, $scope.product.edit).then(function() {
                 notify.success(gettext('Product is saved.'));
             }, function(response) {
@@ -119,7 +127,7 @@
                     }
                 }
             }).then($scope.cancel);
-        }
+        };
 
         $scope.remove = function(product) {
             modal.confirm(gettext('Are you sure you want to delete product?')).then(

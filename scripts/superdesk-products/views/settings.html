@@ -1,15 +1,13 @@
-<div sd-settings-view>
-
+<div sd-settings-view> 
 	<div class="split-content" sd-products-config>
 		<div class="header">
 			<h2 translate>Product management</h2>
 			<button class="btn btn-info pull-right" ng-click="newProduct()">
-		        <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Product' | translate }}
-		    </button>
+				<i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Product' | translate }}
+			</button>
 		</div>
-
-	    <div class="content">
-	    	<div sd-shadow>
+		<div class="content">
+			<div sd-shadow>
 				<ul class="pills-list" >
 					<li ng-repeat="product in products._items">
 						<h6>{{ product.name }}</h6>
@@ -20,8 +18,7 @@
 					</li>
 				</ul>
 			</div>
-	    </div>
-
-    	<div sd-products-config-modal ></div>
-    </div>
+		</div>
+		<div sd-products-config-modal ></div>
+	</div>
 </div>

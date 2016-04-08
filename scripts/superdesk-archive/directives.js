@@ -759,6 +759,57 @@
                 };
             }
         ])
+
+        .directive('sdResendItem', ['adminPublishSettingsService', 'authoring', 'api', 'notify', 'gettext',
+            function(adminPublishSettingsService, authoring, api, notify, gettext) {
+                return {
+                    templateUrl: 'scripts/superdesk-archive/views/resend-configuration.html',
+                    scope: {
+                        'item': '='
+                    },
+                    link: function (scope, elem, attr) {
+                        scope.selectedSubscribers = {items: []};
+                        scope.customSubscribers = [];
+
+                        adminPublishSettingsService.fetchSubscribers().then(function(items) {
+                            scope.subscribers = items._items;
+                            _.each(items._items, function(item) {
+                                scope.customSubscribers.push({'qcode': item._id, 'name': item.name});
+                            });
+                        });
+
+                        function getSubscriberIds() {
+                            var subscriberIds = [];
+                            _.forEach(scope.selectedSubscribers.items, function(item) {
+                                subscriberIds.push(item.qcode);
+                            });
+                            return subscriberIds;
+                        }
+
+                        scope.resendItem = function () {
+                            var data = {subscribers: getSubscriberIds(), version: scope.item._current_version};
+                            api.save('archive_resend', {}, data, scope.item)
+                                .then(function () {
+                                    notify.success(gettext('Item has been resent.'));
+                                    scope.cancel();
+                                }, function (response) {
+                                    if (response.data._message) {
+                                        notify.error(response.data._message);
+                                    } else {
+                                        notify.error(gettext('Unknown Error: Cannot resend the item'));
+                                    }
+                                });
+                        };
+
+                        scope.cancel = function() {
+                            scope.selectedSubscribers = {items: []};
+                            scope.item = false;
+                        };
+
+                    }
+                };
+            }
+        ])
         .service('familyService', ['api', 'desks', function(api, desks) {
             this.fetchItems = function(familyId, excludeItem) {
                 var repo = 'archive,published';

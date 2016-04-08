@@ -404,6 +404,10 @@
         $scope.$on('open:archived_kill', function(evt, item) {
             $scope.archived_kill = item;
         });
+
+        $scope.$on('open:resend', function(evt, item) {
+            $scope.resend = item;
+        });
     }
 
     AggregateSettingsDirective.$inject = ['desks', 'workspaces', 'session', 'preferencesService', 'WizardHandler', '$filter'];
