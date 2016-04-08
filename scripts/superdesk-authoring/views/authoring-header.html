@@ -48,6 +48,7 @@
             <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
             <div class="authoring-header__input-holder">
               <input type="text"
+                     tabindex="{{editor.slugline.order}}"
                      class="line-input slugline"
                      id="slugline"
                      ng-model="item.slugline"
@@ -68,6 +69,7 @@
             <div class="authoring-header__input-holder">
               <div sd-meta-dropdown
                    class="data"
+                   data-tabindex="editor.genre.order"
                    data-item="item"
                    data-field="genre"
                    data-list="metadata.genre"
@@ -86,6 +88,7 @@
             <label class="authoring-header__item-label" translate>TAKEKEY</label>
             <div class="authoring-header__input-holder">
               <input type="text"
+                     tabindex="{{editor.anpa_take_key.order}}"
                      class="line-input"
                      id="anpa_take_key"
                      ng-model="item.anpa_take_key"
@@ -105,6 +108,7 @@
           <div class="authoring-header__input-holder">
             <div sd-meta-dropdown
                  class="data"
+                 data-tabindex="editor.place.order"
                  data-item="item"
                  data-field="place"
                  data-list="metadata.locators"
@@ -123,6 +127,7 @@
           <div class="authoring-header__input-holder">
             <div sd-meta-dropdown
                  data-item="item"
+                 data-tabindex="editor.priority.order"
                  data-field="priority"
                  data-list="metadata.priority"
                  data-icon="priority-label priority-label-"
@@ -143,6 +148,7 @@
           <div class="authoring-header__input-holder">
             <div sd-meta-dropdown
                  data-item="item"
+                 data-tabindex="editor.urgency.order"
                  data-field="urgency"
                  data-list="metadata.urgency"
                  data-icon="urgency-label urgency-label-"
@@ -164,6 +170,7 @@
           <div class="authoring-header__input-holder">
             <div sd-meta-dropdown
                  data-item="item"
+                 data-tabindex="editor.ranking.order"
                  data-field="ranking"
                  data-list="metadata.ranking"
                  data-icon="urgency-label urgency-label-"
@@ -184,6 +191,7 @@
           <label class="authoring-header__item-label uppercase" translate>SERVICE</label>
           <div sd-meta-terms
                class="data"
+               data-tabindex="editor.anpa_category.order"
                ng-disabled="!_editable"
                data-item="item"
                data-field="anpa_category"
@@ -206,6 +214,7 @@
           <div id="subjects"
                sd-meta-terms
                class="data"
+               data-tabindex="editor.subject.order"
                data-item="item"
                data-field="subject"
                data-unique="qcode"
@@ -219,13 +228,15 @@
 
         <div class="authoring-header__item"
             ng-repeat="cv in cvs track by cv._id"
+            sd-validation-error="error[cv._id]"
             data-required="schema[cv._id].required"
             ng-if="cv.terms.length && schema[cv._id]"
             sd-width="{{editor[cv._id].sdWidth}}"
             order="{{editor[cv._id].order}}">
-          <label>{{ cv.display_name | translate }}</label>
+          <label class="authoring-header__item-label" translate>{{ cv.display_name }}</label>
           <div sd-meta-terms
               class="data"
+              data-tabindex="editor[cv._id].order"
               data-item="item"
               data-field="subject"
               data-unique="qcode"
@@ -248,6 +259,7 @@
           <label class="authoring-header__item-label" translate>COMPANY</label>
           <div sd-meta-terms
                class="data"
+               data-tabindex="editor.company_codes.order"
                data-item="item"
                data-field="company_codes"
                data-unique="qcode"
@@ -268,6 +280,7 @@
           <label class="authoring-header__item-label" translate>ED. NOTE</label>
           <div class="authoring-header__input-holder">
               <textarea id="ednote" class="line-input ed-note"
+                        tabindex="{{editor.ednote.order}}"
                         ng-model="item.ednote"
                         ng-disabled="!_editable"
                         ng-change="autosave(item)">

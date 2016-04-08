@@ -260,7 +260,8 @@ function MetaDropdownDirective($filter, keyboardManager) {
             icon: '@',
             label: '@',
             change: '&',
-            key: '@'
+            key: '@',
+            tabindex: '='
         },
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
@@ -495,7 +496,8 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             header: '@',
             reloadList: '@',
             cv: '=',
-            includeParent: '@'
+            includeParent: '@',
+            tabindex: '='
         },
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem) {
