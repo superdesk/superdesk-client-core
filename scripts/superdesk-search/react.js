@@ -869,7 +869,7 @@
                         return React.createElement(
                             'li',
                             null,
-                            React.createElement('div', {className: 'menu-label'}, props.label)
+                            React.createElement('div', {className: 'menu-label'}, gettextCatalog.getString(props.label))
                         );
                     };
 
@@ -931,9 +931,9 @@
                                         {className: 'dropdown dropdown-noarrow' + (this.state.open ? ' open' : '')},
                                         React.createElement(
                                             'a',
-                                            {className: 'dropdown-toggle', title: activity.label},
+                                            {className: 'dropdown-toggle', title: gettextCatalog.getString(activity.label)},
                                             activity.icon ? React.createElement('i', {className: 'icon-' + activity.icon}, '') : null,
-                                            activity.label,
+                                            gettextCatalog.getString(activity.label),
                                             React.createElement('i', {className: 'icon-chevron-right-thin submenu-icon'})
                                         ),
                                         this.state.open ? $injector.invoke(activity.dropdown, activity, {
@@ -948,9 +948,9 @@
                                     null,
                                     React.createElement(
                                         'a',
-                                        {title: gettext(activity.label), onClick: this.run},
+                                        {title: gettextCatalog.getString(activity.label), onClick: this.run},
                                         React.createElement('i', {className: 'icon-' + activity.icon}),
-                                        React.createElement('span', {style: {display: 'inline'}}, gettext(activity.label))
+                                        React.createElement('span', {style: {display: 'inline'}}, gettextCatalog.getString(activity.label))
                                     )
                                 );
                             }
@@ -963,7 +963,8 @@
 
                     var ErrorBox = function(props) {
                         return React.createElement('div', {className: 'error-box'},
-                            React.createElement('p', {className: 'message'}, gettext('There was an error archiving this item')),
+                            React.createElement('p', {className: 'message'},
+                            gettextCatalog.getString('There was an error archiving this item')),
                             React.createElement('div', {className: 'buttons'})
                         );
                     };
