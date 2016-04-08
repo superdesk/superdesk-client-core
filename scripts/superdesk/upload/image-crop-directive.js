@@ -164,6 +164,11 @@
                 });
 
                 scope.$on('poiUpdate', function(e, point) {
+
+                    angular.element('.crop-area.thumbnails').css({
+                        'height': angular.element('.crop-area.thumbnails').height()
+                    });
+
                     var center = {
                         x: point.x * scope.original.width,
                         y: point.y * scope.original.height
