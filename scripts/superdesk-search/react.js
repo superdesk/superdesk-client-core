@@ -963,7 +963,8 @@
 
                     var ErrorBox = function(props) {
                         return React.createElement('div', {className: 'error-box'},
-                            React.createElement('p', {className: 'message'}, gettextCatalog.getString('There was an error archiving this item')),
+                            React.createElement('p', {className: 'message'},
+                            gettextCatalog.getString('There was an error archiving this item')),
                             React.createElement('div', {className: 'buttons'})
                         );
                     };

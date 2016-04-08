@@ -856,7 +856,8 @@
          */
         this.confirmPublish = function confirmPublish(action) {
             return modal.confirm(
-                $interpolate(gettextCatalog.getString('There are some unsaved changes, do you want to save it and {{ action }} now?'))({action: action}),
+                $interpolate(gettextCatalog.getString('There are some unsaved changes, do you want to save it and {{ action }} now?'))
+                ({action: action}),
                 gettextCatalog.getString('Save changes?'),
                 $interpolate(gettextCatalog.getString('Save and {{ action }}'))({action: action}),
                 gettextCatalog.getString('Cancel')
@@ -868,7 +869,8 @@
          */
         this.confirmSendTo = function confirmSendTo(action) {
             return modal.confirm(
-                $interpolate(gettextCatalog.getString('There are some unsaved changes, do you want to save it and {{ action }} now?'))({action: action}),
+                $interpolate(gettextCatalog.getString('There are some unsaved changes, do you want to save it and {{ action }} now?'))
+                ({action: action}),
                 gettextCatalog.getString('Save changes?'),
                 $interpolate(gettextCatalog.getString('Save and {{ action }}'))({action: action}),
                 gettextCatalog.getString('Cancel')
@@ -877,7 +879,9 @@
 
         this.confirmSaveWork = function confirmSavework(msg) {
             return modal.confirm(
-                $interpolate(gettextCatalog.getString('Configuration has changed. {{ message }} Would you like to save the story to your workspace?'))
+                $interpolate(
+                    gettextCatalog.getString('Configuration has changed. {{ message }} Would you like to save the story to your workspace?')
+                )
                 ({message: msg})
             );
         };
