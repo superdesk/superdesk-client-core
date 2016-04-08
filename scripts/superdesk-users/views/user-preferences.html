@@ -6,17 +6,17 @@
     </div>
 
     <div class="preferences form-flat inner-content" ng-init="val = true">
-        <div class="title">User settings</div>
+        <div class="title" translate>User settings</div>
         <ul>
             <li class="fieldset" ng-repeat="(id, p) in preferences track by id"
                 ng-if="p.category !== 'article_defaults' && p.category !== 'categories'">
-                <div class="legend">{{ p.category }}</div>
+                <div class="legend">{{ p.category | translate }}</div>
                 <div sd-info-item>
-                    <label>{{ :: p.label | translate}}</label>
+                    <label>{{ :: p.label | translate }}</label>
                     <span ng-hide="p.allowed" sd-switch ng-model="p.enabled"></span>
                     <span ng-show="p.allowed">
                         <label ng-repeat="i in p.allowed">
-                            <input name="allowed" type="radio" ng-model="p.view" ng-value="i">{{ i }}
+                            <input name="allowed" type="radio" ng-model="p.view" ng-value="i">{{ i | translate }}
                         </label>
                     </span>
                 </div>
@@ -45,7 +45,7 @@
 
             <li class="fieldset">
               <div class="legend">
-                {{ :: preferences['categories:preferred'].category }}
+                {{ :: preferences['categories:preferred'].category | translate }}
               </div>
 
               <div sd-info-item>
