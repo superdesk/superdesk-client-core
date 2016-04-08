@@ -287,43 +287,13 @@
                     width: 100%;
                     height: 200px;
                     background: @sd-background url(../../images/loading-large.gif) center center no-repeat;
-                }
-                div {
-                    margin-top: 20px;
-                }
-                figure {
-                    position: relative;
-                    &:hover {
-                        .preview-overlay {
-                            opacity: 1;
-                            transition: opacity 0.2s;
-                            cursor: pointer;
-                        }
-                    }
-                }
-                .preview-overlay {
-                    position: absolute;
-                    top: 0;
-                    bottom: 0;
-                    right: 0;
-                    left: 0;
-                    background-color: rgba(0,0,0,0.7);
-                    margin-top: 0;
-                    opacity: 0;
-                    transition: opacity 0.2s;
-                    i {
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        margin-top: -16px;
-                        margin-left: -16px;
-                        color: rgba(255,255,255,0.9);
-                        width: 32px;
-                        height: 32px;
-                        font-size: 32px;
-                        line-height: 32px;
-                    }
-                }
+                }                
+            }
+            figure {
+                margin: 10px 0 8px 0;
+            }
+            figcaption {
+                margin: 6px 0 10px 0;
             }
             video, audio {
                 width: 100%;
@@ -339,6 +309,10 @@
                 font-size: 15px;
                 line-height: 140%;
                 font-weight: 300;
+                &.description-text {
+                    font-size: 14px;
+                    font-weight: 400;
+                }
             }
             .body-text {
                 line-height: 140%;
@@ -1058,7 +1032,6 @@
 // Preview Header
 // ---------------------
 
-
 .preview-header {
     position: relative;
     margin: 1px -20px 20px;
@@ -1218,7 +1191,43 @@
         }
 }
 
+// Preview image overlay
+// ---------------------\
 
+figure.preview-overlay-on {
+    position: relative;
+    display: inline-block;
+    &:hover {
+        .preview-overlay {
+            opacity: 1;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+    }
+}
+.preview-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.7);
+    margin-top: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+    i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -16px;
+        margin-left: -16px;
+        color: rgba(255,255,255,0.9);
+        width: 32px;
+        height: 32px;
+        font-size: 32px;
+        line-height: 32px;
+    }
+}
 
 // .metadata-details-new {
 //     color:#777;
