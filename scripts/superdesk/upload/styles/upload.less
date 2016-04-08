@@ -581,92 +581,92 @@ edit image modal
 ======================================
 */
 .modal-body__flex {
-	display: flex;
-	flex-direction: column;
-	padding: 0;
-	overflow-y: hidden !important;
-	&-top {
-		display: flex;
-		flex: 1;
-	}
-	&-bottom {
-		background-color: #dedede;
-		border-top: 1px solid #d5d5d5;
-		padding: 15px 8px 0 8px;
-		.box-sizing(border-box);
-		flex: 0 0 auto;
-	}
-	&-main {
-		flex: 1;
-		overflow: auto;
-		padding: 4px 20px 0px 20px;
-		.box-sizing(border-box);
-		label {
-			color: #808080;
-			span.size {
-				color: black;
-				font-weight: 500;
-				margin-left: 10px;
-			}
-		}
-	}
-	&-sidebar {
-		width: 335px;
-		overflow-y: auto;
-		background-color: #f0f0f0;
-		border-left: 1px solid #dfdfdf;
-		.box-sizing(border-box);
-		padding: 15px;
-	}
-	&-metadata {
-		> div {
-			margin-bottom: 12px;
-		}
-		label {
-			font-size: 11px;
-			text-transform: uppercase;
-			color: @grayLight;
-			line-height: 12px;
-		}
-		.header {
-			font-size: 16px;
-		}
-	}
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow-y: hidden !important;
+    &-top {
+        display: flex;
+        flex: 1;
+    }
+    &-bottom {
+        background-color: #dedede;
+        border-top: 1px solid #d5d5d5;
+        padding: 15px 8px 0 8px;
+        .box-sizing(border-box);
+        flex: 0 0 auto;
+    }
+    &-main {
+        flex: 1;
+        overflow: auto;
+        padding: 4px 20px 0px 20px;
+        .box-sizing(border-box);
+        label {
+            color: #808080;
+            span.size {
+                color: black;
+                font-weight: 500;
+                margin-left: 10px;
+            }
+        }
+    }
+    &-sidebar {
+        width: 335px;
+        overflow-y: auto;
+        background-color: #f0f0f0;
+        border-left: 1px solid #dfdfdf;
+        .box-sizing(border-box);
+        padding: 15px;
+    }
+    &-metadata {
+        > div {
+            margin-bottom: 12px;
+        }
+        label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: @grayLight;
+            line-height: 12px;
+        }
+        .header {
+            font-size: 16px;
+        }
+    }
 }
 
 .crop-area {
-	&__thumbnails {
-		max-height: 260px;
-		overflow-y: auto;
-		ul {
-			li {
-				margin: 0 7px 14px 7px;
-				width: 160px;
-				max-width: 160px;
-				height: 115px;
-				display: inline-block;
-				padding: 10px 10px 0px 10px;
-				background-color: #f0f0f0;
-				border: 1px solid #d6d6d6;
-				.box-sizing(border-box);
-				.box-shadow(0 1px 0 #d6d6d6);
-				.border-radius(2px);
-				vertical-align: top;
-				img {
-					max-width: 140px;
-    				max-height: 80px;
-				}
-				&.active {
-					border: 1px solid #b3b3b3;
-					background-color: white;
-					.box-shadow(0 1px 0 #b3b3b3);
-				}
-				label {
-					color: #808080;
-				}
-			}
-		}
-	}
+    &__thumbnails {
+        max-height: 260px;
+        overflow-y: auto;
+        ul {
+            li {
+                margin: 0 7px 14px 7px;
+                width: 160px;
+                max-width: 160px;
+                height: 115px;
+                display: inline-block;
+                padding: 10px 10px 0px 10px;
+                background-color: #f0f0f0;
+                border: 1px solid #d6d6d6;
+                .box-sizing(border-box);
+                .box-shadow(0 1px 0 #d6d6d6);
+                .border-radius(2px);
+                vertical-align: top;
+                img {
+                    max-width: 140px;
+                    max-height: 80px;
+                }
+                &.active {
+                    border: 1px solid #b3b3b3;
+                    background-color: white;
+                    .box-shadow(0 1px 0 #b3b3b3);
+                }
+                label {
+                    color: #808080;
+                }
+            }
+        }
+    }
 }
 .poi {
     &__image {
@@ -730,20 +730,20 @@ edit image modal
 }
 
 @media only screen and (min-width: 1900px) {
-	.crop-area {
-		&__thumbnails {
-			max-height: 390px;
-			ul {
-				li {
-					width: 225px;
-    				max-width: 225px;
-    				height: 177px;
-					img {
-						max-width: 200px;
-   						max-height: 132px;
-					}
-				}
-			}
-		}
-	}
+    .crop-area {
+        &__thumbnails {
+            max-height: 390px;
+            ul {
+                li {
+                    width: 225px;
+                    max-width: 225px;
+                    height: 177px;
+                    img {
+                        max-width: 200px;
+                        max-height: 132px;
+                    }
+                }
+            }
+        }
+    }
 }
