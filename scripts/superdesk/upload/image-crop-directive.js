@@ -212,8 +212,17 @@
                             return;
                         }
                         elem.append(img);
+                        var ratio;
+                        if (angular.isDefined(scope.rendition.ratio)) {
+                            ratio = scope.rendition.ratio.split(':');
+                            ratio = parseInt(ratio[0]) / parseInt(ratio[1]);
+                        } else if (angular.isDefined(scope.rendition.width) && angular.isDefined(scope.rendition.height)) {
+                            ratio = scope.rendition.width / scope.rendition.height;
+                        } else {
+                            ratio = scope.original.width / scope.original.height;
+                        }
                         $(img).Jcrop({
-                            aspectRatio: scope.rendition.width ? scope.rendition.width / scope.rendition.height : null,
+                            aspectRatio: ratio,
                             minSize: [scope.rendition.width, scope.rendition.height],
                             trueSize: [scope.original.width, scope.original.height],
                             boxWidth: scope.boxWidth,

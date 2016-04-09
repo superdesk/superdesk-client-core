@@ -39,14 +39,14 @@ function CropPictureService($q, renditionsService, api, superdesk) {
                         picture.poi = result.poi;
                         // update association renditions
                         picture.renditions[renditionNames[index]] = angular.extend(
+                            image.crop,
                             {
                                 href: url,
                                 width: image.width,
                                 height: image.height,
                                 media: image._id,
                                 mimetype: image.item.mimetype
-                            },
-                            image.crop
+                            }
                         );
                     });
                     return picture;
