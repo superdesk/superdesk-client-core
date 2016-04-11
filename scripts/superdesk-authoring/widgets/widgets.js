@@ -70,7 +70,14 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
 
     $scope.activate = function(widget) {
         if (!$scope.isLocked(widget)) {
-            $scope.active = $scope.active === widget ? null : widget;
+            if ($scope.active === widget) {
+                $scope.closeWidget();
+                if (typeof $scope.closePreview === 'function') {
+                    $scope.closePreview();
+                }
+            } else {
+                $scope.active = widget;
+            }
         }
     };
 
@@ -78,7 +85,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
         $scope.activate(widget);
     };
 
-    $scope.closeWidget = function(widget) {
+    $scope.closeWidget = function() {
         $scope.active = null;
     };
 

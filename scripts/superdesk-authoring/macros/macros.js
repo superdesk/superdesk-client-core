@@ -71,6 +71,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
             } else {
                 $rootScope.$broadcast('macro:diff', res.diff);
             }
+            $scope.closeWidget();
         });
     };
 }

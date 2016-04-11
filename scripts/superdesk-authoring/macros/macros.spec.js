@@ -30,6 +30,7 @@ describe('macros', function() {
         spyOn($rootScope, '$broadcast');
         $scope.origItem = {};
         $scope.item = item;
+        $scope.closeWidget = function() {};
         $controller('Macros', {$scope: $scope});
         $scope.call('test');
         expect(macros.call).toHaveBeenCalled();
