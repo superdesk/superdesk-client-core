@@ -585,9 +585,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             if (renditionsList && data.renditions) {
                 var renditionsHtml = [];
                 renditionsList.forEach(function(r) {
-                    var rendition = data.renditions[r.name];
-                    if (angular.isDefined(rendition)) {
-                        renditionsHtml.push(rendition.href.replace('http://', '//') + ' ' + rendition.width + 'w');
+                    if (r.width) {
+                        var rendition = data.renditions[r.name];
+                        if (angular.isDefined(rendition)) {
+                            renditionsHtml.push(rendition.href.replace('http://', '//') + ' ' + rendition.width + 'w');
+                        }
                     }
                 });
                 if (renditionsHtml.length > 0) {
