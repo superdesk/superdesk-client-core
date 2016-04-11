@@ -1,6 +1,6 @@
 <div id="subnav" class="subnav subnav--authoring" ng-class="{'auth-sendto': views.send}" sd-media-query min-width="900">
 
-    <div class="dropdown dropright lock-avatar pull-left" ng-if="item._locked" dropdown>
+    <div class="dropdown dropright lock-avatar pull-left" ng-if="isLocked(item)" dropdown>
         <figure class="avatar small avatar-with-info" dropdown-toggle>
             <div class="logged-info"></div>
             <div class="user-image">
