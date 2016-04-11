@@ -110,7 +110,7 @@
         <div class="dateline-date">
             <select id="datelineMonth"
                     tabindex="{{editor.dateline.order}}"
-                    ng-options="monthName for (monthName, monthValue) in monthNames"
+                    ng-options="monthName | translate for (monthName, monthValue) in monthNames"
                     ng-disabled="!item.dateline.located || !_editable"
                     ng-change="resetNumberOfDays(true, datelineMonth)"
                     placeholder="Choose month"

@@ -2392,7 +2392,8 @@
                 /* Start: Dateline related properties */
 
                 scope.monthNames = {'Jan': '0', 'Feb': '1', 'Mar': '2', 'Apr': '3', 'May': '4', 'Jun': '5',
-                                    'Jul': '6', 'Aug': '7', 'Sept': '8', 'Oct': '9', 'Nov': '10', 'Dec': '11'};
+                                    'Jul': '6', 'Aug': '7', 'Sep': '8', 'Oct': '9', 'Nov': '10', 'Dec': '11'};
+
                 scope.datelineMonth = '';
                 scope.datelineDay = '';
 
@@ -2461,7 +2462,8 @@
                         scope.resetNumberOfDays(false);
 
                         item.dateline.text = $filter('formatDatelineToLocMMMDDSrc')(item.dateline.located,
-                            _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; }),
+                            $interpolate('{{ month | translate }}')
+                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
                             scope.datelineDay, item.dateline.source);
                     }
                 };
@@ -2540,7 +2542,8 @@
                                 parseInt(scope.datelineMonth), parseInt(scope.datelineDay));
 
                         scope.item.dateline.text = $filter('formatDatelineToLocMMMDDSrc')(scope.item.dateline.located,
-                            _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; }),
+                            $interpolate('{{ month | translate }}')
+                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
                             scope.datelineDay, scope.item.dateline.source);
 
                         autosave.save(scope.item);
