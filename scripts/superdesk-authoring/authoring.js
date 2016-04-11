@@ -9,7 +9,6 @@
         anpa_take_key: null,
         byline: null,
         urgency: null,
-        ranking: null,
         priority: null,
         subject: [],
         'anpa_category': [],
