@@ -397,17 +397,7 @@
                         return React.createElement(
                             'div',
                             {className: 'list-field urgency'},
-                            item.priority ?
-                                React.createElement(
-                                    'span',
-                                    {className: 'priority-label priority-label--' + item.priority, title: gettext('Priority')},
-                                    item.priority
-                                ) :
-                                React.createElement(
-                                    'span',
-                                    {className: 'output-item-label label-' + item.urgency , title: gettext('Urgency')},
-                                    item.urgency
-                                )
+                            item.priority ? new ItemPriority(props) : new ItemUrgency(props)
                         );
                     };
 
@@ -706,7 +696,7 @@
                         var urgency = props.urgency || 3;
                         return React.createElement(
                             'span',
-                            {className: 'urgency-label urgency-label--' + urgency, title: gettext('Urgency')},
+                            {className: 'urgency-label urgency-label--' + urgency, title: gettextCatalog.getString('Urgency')},
                             urgency
                         );
                     };
@@ -1079,7 +1069,7 @@
                                         item: item,
                                         onMultiSelect: this.props.onMultiSelect
                                     }),
-                                    React.createElement(ListPriority, {item: item}),
+                                    (item.priority || item.urgency) ? React.createElement(ListPriority, {item: item}) : null,
                                     React.createElement(ListItemInfo, {
                                         item: item,
                                         desk: this.props.desk,
