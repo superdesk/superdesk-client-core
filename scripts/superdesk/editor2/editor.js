@@ -1119,7 +1119,26 @@ angular.module('superdesk.editor2', [
                         updateTimeout = $timeout(vm.updateModel, 800, false);
                     });
 
+                    /**
+                     * Test if given point {x, y} is in given bouding rectangle.
+                     */
+                    function isPointInRect(point, rect) {
+                        return rect.left < point.x && rect.right > point.x && rect.top < point.y && rect.bottom > point.y;
+                    }
+
                     editorElem.on('contextmenu', function(event) {
+                        var err, pos;
+                        var point = {x: event.clientX, y: event.clientY};
+                        var errors = elem[0].parentNode.getElementsByClassName('sderror');
+                        for (var i = 0; i < errors.length; i++) {
+                            err = errors.item(i);
+                            pos = err.getBoundingClientRect();
+                            if (isPointInRect(point, pos)) {
+                                event.preventDefault();
+                                return;
+                            }
+                        }
+
                         if (editor.isErrorNode(event.target)) {
                             event.preventDefault();
                             var menu = elem[0].getElementsByClassName('dropdown-menu')[0],
