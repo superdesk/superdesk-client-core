@@ -58,7 +58,8 @@
         multi_edit: false,
         send: false,
         create_broadcast: false,
-        add_to_current: false
+        add_to_current: false,
+        resend: false
     });
 
     // http://docs.python-cerberus.org/en/stable/usage.html
@@ -652,6 +653,9 @@
             action.re_write = !is_read_only_state && _.contains(['text'], current_item.type) &&
                 !current_item.embargo && !current_item.rewritten_by && action.new_take &&
                 (!current_item.broadcast || !current_item.broadcast.master_id);
+
+            action.resend = _.contains(['text'], current_item.type) && !current_item.rewritten_by &&
+                _.contains(['published', 'corrected', 'killed'], current_item.state);
 
             //mark item for highlights
             action.mark_item = (current_item.task && current_item.task.desk &&

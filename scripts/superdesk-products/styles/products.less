@@ -1,0 +1,40 @@
+// product.less
+// Styling for the superdesk product module
+// ----------------------------------------------------------------------------------------
+@import 'mixins.less';
+@import 'variables.less';
+
+
+/* 	============================
+		PRODUCT CONFIG
+	============================ */
+
+/* Product create/edit popup */
+
+.add-product-popup {
+
+	.modal-body {
+		bottom: 0;
+		height: 500px !important;
+		max-height: 500px !important;
+		.border-radius(0px 0px 4px 4px);
+
+		.modal-screen {
+			top: 48px;
+		}
+		.char-count {
+        	font-size: 11px;
+            font-style: italic;
+            &.error {
+            	.text-semibold();
+                color: #D33C30;
+            }
+		}
+	}
+	.modal-footer {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+}

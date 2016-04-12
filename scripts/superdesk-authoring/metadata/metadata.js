@@ -490,7 +490,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             dependent: '@',
             disabled: '=ngDisabled',
             list: '=',
-            unique: '=',
+            unique: '@',
             postprocessing: '&',
             change: '&',
             header: '@',

@@ -643,6 +643,20 @@
                                 });
                         }]
                 })
+                .activity('resend', {
+                    label: gettext('Resend item'),
+                    priority: 100,
+                    icon: 'broadcast',
+                    group: 'corrections',
+                    controller: ['data', '$rootScope', function(data, $rootScope) {
+                        $rootScope.$broadcast('open:resend', data.item);
+                    }],
+                    filters: [{action: 'list', type: 'archive'}],
+                    additionalCondition:['authoring', 'item', function(authoring, item) {
+                        return authoring.itemActions(item).resend;
+                    }],
+                    privileges: {resend: 1}
+                })
                 .activity('rewrite', {
                     label: gettext('Update'),
                     icon: 'edit-line',

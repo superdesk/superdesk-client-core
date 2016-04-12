@@ -1155,6 +1155,10 @@
                         scope.selected.archived_kill = item;
                     });
 
+                    scope.$on('open:resend', function(evt, item) {
+                        scope.selected.resend = item;
+                    });
+
                     function setView(view) {
                         scope.view = view || 'mgrid';
                         preferencesUpdate['archive:view'].view = view || 'mgrid';
