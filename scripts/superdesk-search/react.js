@@ -405,7 +405,7 @@
                         removeHighlight: function(highlight) {
                             return function(event) {
                                 event.stopPropagation();
-                                highlightsService.markItem(highlight._id, this.props.item._id);
+                                highlightsService.markItem(highlight._id, this.props.item);
                             }.bind(this);
                         },
                         render: function() {
