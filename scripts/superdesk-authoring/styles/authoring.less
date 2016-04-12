@@ -276,15 +276,23 @@
         background-color: rgba(237, 212, 0, 0.55);
     }
 
-    &.typing {
-        .sderror, .sdfindreplace {
-            border-bottom: none;
-            background-color: transparent;
-        }
-    }
+
 
     a {
       color: #5d9bc0;
+    }
+}
+
+.typing {
+    .text-editor {
+        .sderror, .typing .sdfindreplace {
+            border-bottom: none;
+            background-color: transparent;
+        }
+
+        &.clone {
+            display: none;
+        }
     }
 }
 

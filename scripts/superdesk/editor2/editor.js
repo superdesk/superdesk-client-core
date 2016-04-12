@@ -229,7 +229,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} force force rendering manually - eg. via keyboard
      */
     this.renderScope = function(scope, force, preventStore) {
-        self.cleanScope(scope);
+        //self.cleanScope(scope); avoid cursor manipulation
         if (self.settings.findreplace) {
             renderFindreplace(scope.node);
         } else if (self.settings.spellcheck || force) {
@@ -325,19 +325,26 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Boolean} preventStore
      */
     function hilite(node, tokens, className, preventStore) {
-        if (!tokens.length) {
-            self.resetSelection(node);
-            return;
-        }
+        var CLONE_CLASS = 'clone';
+        var parentNode = node.parentNode;
 
-        if (!preventStore) {
-            self.storeSelection(node);
-        }
-        var token = tokens.shift();
-        hiliteToken(node, token, className);
-        $timeout(function() {
-            hilite(node, tokens, className, true);
-        }, 0, false);
+        // remove old hilite nodes if any
+        var clones = parentNode.getElementsByClassName(CLONE_CLASS);
+        Array.prototype.forEach.call(clones, function(clone) {
+            parentNode.removeChild(clone);
+        });
+
+        // create a clone
+        var hiliteNode = node.cloneNode(true);
+        hiliteNode.classList.add(CLONE_CLASS);
+
+        // generate hilite markup in clone
+        tokens.forEach(function(token) {
+            hiliteToken(hiliteNode, token, className);
+        });
+
+        // render clone
+        parentNode.appendChild(hiliteNode);
     }
 
     /**
@@ -999,8 +1006,7 @@ angular.module('superdesk.editor2', [
                             editorConfig.extensions.table = new window.MediumEditorTable();
                         }
                     }
-                    // FIXME: create unwanted cursor moves
-                    // spellcheck.setLanguage(scope.language);
+                    spellcheck.setLanguage(scope.language);
                     editorElem = elem.find(scope.type === 'preformatted' ?  '.editor-type-text' : '.editor-type-html');
                     editorElem.empty();
                     editorElem.html(ngModel.$viewValue || '');
@@ -1045,7 +1051,7 @@ angular.module('superdesk.editor2', [
                     scope.$on('key:ctrl:shift:s', render);
                     function cancelTimeout(event) {
                         $timeout.cancel(updateTimeout);
-                        scope.node.classList.add(TYPING_CLASS);
+                        scope.node.parentNode.classList.add(TYPING_CLASS);
                     }
 
                     function changeSelectedParagraph(direction) {
@@ -1156,7 +1162,7 @@ angular.module('superdesk.editor2', [
                 };
 
                 function render($event, event, preventStore) {
-                    scope.node.classList.remove(TYPING_CLASS);
+                    scope.node.parentNode.classList.remove(TYPING_CLASS);
                     editor.renderScope(scope, $event, preventStore);
                     if (event) {
                         event.preventDefault();
