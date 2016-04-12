@@ -13,6 +13,7 @@
         .config(configureMonitoring)
         .config(configureSpikeMonitoring)
         .config(configurePersonal)
+        .filter('splitText', SplitFilter)
         .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
             keyboardManager.register('Monitoring', 'ctrl + g', gettext('Switches between single/grouped stage view'));
             keyboardManager.register('Monitoring', 'ctrl + alt + g', gettext('Switches between single/grouped desk view'));
@@ -189,6 +190,22 @@
                 return true;
             }
         }
+    }
+
+    function SplitFilter() {
+        return function(input) {
+            input = input || '';
+            var out = '';
+            for (var i = 0; i < input.length; i++) {
+                if (input.charAt(i) === input.charAt(i).toUpperCase()) {
+                    out = out + ' ';
+                }
+
+                out = out + input.charAt(i);
+            }
+
+            return out;
+        };
     }
 
     MonitoringController.$inject = ['$location', 'desks'];

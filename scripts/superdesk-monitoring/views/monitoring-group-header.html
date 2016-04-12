@@ -8,7 +8,7 @@
     </span>
     <span class="stage-name" ng-if="group.header && !group.subheader && group.singleViewType == null">
         <a href="" ng-click="viewSingleGroup(group, 'single-stage')">
-            {{ :: group.header }} {{ :: group.type}}
+            {{ :: group.header }} {{ :: group.type|splitText}}
         </a>
     </span>
     <span class="label-total">{{ total || '0' }}</span>
