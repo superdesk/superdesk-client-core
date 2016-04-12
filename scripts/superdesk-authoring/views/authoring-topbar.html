@@ -58,22 +58,22 @@
     </div>
     <div class="subnav__button-stack subnav__button-stack--default" sd-media-query min-width="180">
       <button id="Edit" class="btn btn-medium" ng-if="item._type !== 'legal_archive'"
-        ng-show="action === 'view' && !item._locked && itemActions.edit"
+        ng-show="action === 'view' && !item._editable && itemActions.edit"
         ng-click="edit()"
         translate>Edit</button>
 
       <button class="btn"
-        ng-show="action === 'view' && !item._locked && itemActions.deschedule"
+        ng-show="(action === 'view' || !item._editable) && itemActions.deschedule"
         ng-click="deschedule()"
         translate>Deschedule</button>
 
       <button class="btn btn-info" ng-if="item._type !== 'legal_archive'"
-        ng-show="action === 'view' && !item._locked && itemActions.correct"
+        ng-show="(action === 'view' || !item._editable) && itemActions.correct"
         ng-click="openAction('correct')"
         translate>Edit and Correct</button>
 
       <button class="btn btn-info" ng-if="item._type !== 'legal_archive'"
-        ng-show="action === 'view' && !item._locked && itemActions.kill"
+        ng-show="(action === 'view' || !item._editable) && itemActions.kill"
         ng-click="openAction('kill')"
         translate>Edit and Kill</button>
 

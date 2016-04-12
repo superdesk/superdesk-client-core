@@ -1544,7 +1544,7 @@
                 });
 
                 $scope.$on('content:update', function(_e, data) {
-                    if ($scope.action === 'view' && data.items && data.items[$scope.origItem._id]) {
+                    if (!$scope._editable && data.items && data.items[$scope.origItem._id]) {
                         refreshItem();
                     }
                 });
