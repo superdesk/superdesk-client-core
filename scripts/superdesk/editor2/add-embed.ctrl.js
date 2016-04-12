@@ -9,7 +9,6 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
     angular.extend(vm, {
         editorCtrl: undefined,  // defined in link method
         previewLoading: false,
-        // extended: angular.isDefined(vm.extended) ? vm.extended : undefined,
         toggle: function(close) {
             // use parameter or toggle
             vm.extended = angular.isDefined(close) ? !close : !vm.extended;
