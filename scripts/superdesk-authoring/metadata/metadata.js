@@ -366,6 +366,7 @@ function MetaTagsDirective(api, $timeout) {
                 scope.refreshing = true;
                 var body = (scope.item[scope.sourceField] || '')
                     .replace(/<br[^>]*>/gi, '&nbsp;')
+                    .replace(/(<figcaption\b[^>]*>)[^<>]*(<\/figcaption>)/gi, '')
                     .replace(/<\/?[^>]+>/gi, '').trim()
                     .replace(/&nbsp;/g, ' ');
                 if (body) {
