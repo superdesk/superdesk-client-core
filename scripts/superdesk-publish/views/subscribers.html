@@ -87,10 +87,12 @@
 
                         <div class="field">
                             <label translate>Sequence Number Settings</label>
-                            <span translate>Minimum</span>
-                            <input type="number" class="input-mini" ng-model="subscriber.sequence_num_settings.min" min ="1" id="subscriber-seq_num_settings.min" required>
-                            <span translate>Maximum</span>
-                            <input type="number" class="input-small" ng-model="subscriber.sequence_num_settings.max" min ="2" id="subscriber-seq_num_settings.max" required>
+                            <div>
+                                <span translate>Minimum</span>
+                                <input type="number" class="input-mini" ng-model="subscriber.sequence_num_settings.min" min ="1" id="subscriber-seq_num_settings.min" required>
+                                <span translate>Maximum</span>
+                                <input type="number" class="input-small" ng-model="subscriber.sequence_num_settings.max" min ="2" id="subscriber-seq_num_settings.max" required>
+                            </div>
                         </div>
 
                         <fieldset class="separated">

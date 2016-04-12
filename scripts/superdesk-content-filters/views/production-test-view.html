@@ -3,7 +3,7 @@
         <div class="list-pane">
             <header>
                 <div class="sortbar pull-left">
-                    <span ng-repeat="type in resultType">
+                    <span class="result-type" ng-repeat="type in resultType">
                         <input type="radio" ng-click="fetchResults()" name="type" value="{{ :: type.value}}" data-ng-model="model.selectedType"> {{ :: type.id}}
                     </span>
                 </div>
