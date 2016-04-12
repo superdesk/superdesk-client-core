@@ -97,23 +97,23 @@
         urgency: {order: 6, sdWidth: 'quarter'},
         anpa_category: {order: 7, sdWidth: 'full'},
         subject: {order: 8, sdWidth: 'full'},
-        company_codes: {order: 10, sdWidth: 'full'},
-        ednote: {order: 11, sdWidth: 'full'},
-        headline: {order: 1, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
-        sms: {order: 2},
-        abstract: {order: 3, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
+        company_codes: {sdWidth: 'full'},
+        ednote: {order: 9, sdWidth: 'full'},
+        headline: {order: 10, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
+        sms: {order: 11},
+        abstract: {order: 12, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
+        byline: {order: 13},
+        dateline: {order: 14},
         body_html: {
-            order: 6,
+            order: 15,
             formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'removeFormat']
         },
-        byline: {order: 4},
-        dateline: {order: 5},
+        footer: {order: 16},
+        sign_off: {order: 17},
         located: {},
-        sign_off: {order: 9},
-        footer: {order: 7},
-        body_footer: {order: 8},
-        media: {order: 5},
-        media_description: {order: 6}
+        body_footer: {},
+        media: {},
+        media_description: {}
     });
 
     /**
