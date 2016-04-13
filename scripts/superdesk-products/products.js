@@ -24,7 +24,7 @@
                 }
             });
         }])
-        .factory('products', ['$q', 'api', 'contentFilters', function($q, api, contentFilters) {
+        .factory('products', ['$q', 'api', 'contentFilters', '$filter', function($q, api, contentFilters, $filter) {
             var productsService = {
                 products: null,
                 contentFilters: null,
@@ -44,7 +44,7 @@
                     var self = this;
 
                     return contentFilters.getAllContentFilters().then(function(filters) {
-                        self.contentFilters = filters;
+                        self.contentFilters = $filter('sortByName')(filters);
                     });
                 },
                 initialize: function() {

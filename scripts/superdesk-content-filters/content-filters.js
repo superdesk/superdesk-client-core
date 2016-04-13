@@ -82,7 +82,7 @@
                 items = items.concat(result._items);
                 if (result._links.next) {
                     page++;
-                    return _getAll(page, items);
+                    return _getAll(endPoint, page, items);
                 }
                 return items;
             });
