@@ -53,4 +53,12 @@ describe('highlights', function() {
                 jasmine.objectContaining({headline: 'Foo', highlight: 'foo_highlight'}));
         }));
     });
+
+    describe('highlights service', function() {
+        it('can mark item for highlights', inject(function(highlightsService, api, $q) {
+            spyOn(api, 'save').and.returnValue($q.when({}));
+            highlightsService.markItem('h1', {_id: 'id', guid: 'guid'});
+            expect(api.save).toHaveBeenCalledWith('marked_for_highlights', {highlights: 'h1', marked_item: 'guid'});
+        }));
+    });
 });
