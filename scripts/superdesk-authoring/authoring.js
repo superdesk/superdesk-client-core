@@ -2692,7 +2692,7 @@
                     filters: [{action: 'list', type: 'archive'}, {action: 'list', type: 'archived'}],
                     additionalCondition:['authoring', 'item', 'privileges', function(authoring, item, privileges) {
                         if (item._type === 'archived') {
-                            return privileges.privileges.archived;
+                            return privileges.privileges.archived && item.type === 'text';
                         }
 
                         return authoring.itemActions(item).kill;
