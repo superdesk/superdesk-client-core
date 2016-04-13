@@ -1978,7 +1978,7 @@
                 scope.disableSendButton = function () {
                     if (scope.item && scope.item.task) {
                         return !scope.selectedDesk ||
-                                (scope.mode !== 'ingest' && scope.selectedStage._id === scope.item.task.stage);
+                                (scope.mode !== 'ingest' && scope.selectedStage && scope.selectedStage._id === scope.item.task.stage);
                     }
                 };
 
@@ -2866,6 +2866,15 @@
                 scope.contentType = null;
                 scope.schema = angular.extend({}, DEFAULT_SCHEMA);
                 scope.editor = angular.extend({}, DEFAULT_EDITOR);
+
+                scope.shouldDisplayUrgency = function() {
+                    return !scope.editor.urgency.service || (
+                        scope.item.anpa_category &&
+                        scope.item.anpa_category[0] &&
+                        scope.item.anpa_category[0].qcode &&
+                        scope.editor.urgency.service[scope.item.anpa_category[0].qcode]
+                    );
+                };
 
                 /**
                  * Returns true if the Company Codes field should be displayed, false otherwise.

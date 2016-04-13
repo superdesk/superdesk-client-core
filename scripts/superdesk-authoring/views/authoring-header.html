@@ -142,7 +142,7 @@
         <div class="authoring-header__item"
              sd-validation-error="error.urgency"
              data-required="schema.urgency.required"
-             ng-if="schema.urgency"
+             ng-if="schema.urgency && shouldDisplayUrgency()"
              sd-width="{{editor.urgency.sdWidth}}"
              order="{{editor.urgency.order}}">
           <label class="authoring-header__item-label" translate>URGENCY</label>
