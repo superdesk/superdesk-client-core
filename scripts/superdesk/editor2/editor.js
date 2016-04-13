@@ -345,9 +345,9 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
 
         // remove old hilite nodes if any
         var clones = parentNode.getElementsByClassName(CLONE_CLASS);
-        Array.prototype.forEach.call(clones, function(clone) {
-            parentNode.removeChild(clone);
-        });
+        if (clones.length) {
+            parentNode.removeChild(clones.item(0));
+        }
 
         // create a clone
         var hiliteNode = node.cloneNode(true);
@@ -1154,7 +1154,7 @@ angular.module('superdesk.editor2', [
                         var err, pos;
                         var point = {x: event.clientX, y: event.clientY};
                         var errors = elem[0].parentNode.getElementsByClassName('sderror');
-                        for (var i = 0; i < errors.length; i++) {
+                        for (var i = 0, l = errors.length; i < l; i++) {
                             err = errors.item(i);
                             pos = err.getBoundingClientRect();
                             if (isPointInRect(point, pos)) {
