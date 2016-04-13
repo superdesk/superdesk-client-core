@@ -397,7 +397,7 @@
                         return React.createElement(
                             'div',
                             {className: 'list-field urgency'},
-                            item.priority ? new ItemPriority(props) : new ItemUrgency(props)
+                            [(item.priority ? new ItemPriority(item) : null), (item.urgency ? new ItemUrgency(item) : null)]
                         );
                     };
 
