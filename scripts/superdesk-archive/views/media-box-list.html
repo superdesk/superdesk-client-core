@@ -47,6 +47,7 @@
             <div ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</div>
             <div ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</div>
             <div ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</div>
+            <div ng-if="item.rewritten_by" class="state-label updated" translate>Updated</div>
             <div class="category" ng-if="item['anpa_category'].name">{{ item['anpa_category'].name }}</div>
             <div class="provider" sd-meta-ingest data-item="item"></div>
             <div class="expires" ng-if="item.is_spiked"><span translate>expires</span> {{ item.expiry | reldate }}</div>

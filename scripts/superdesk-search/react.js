@@ -306,34 +306,18 @@
                             meta
                         ));
 
-                        if (flags.marked_for_not_publication) {
-                            info.push(React.createElement(
-                                'div',
-                                {key: 3, className: 'state-label not-for-publication'},
-                                gettext('Not For publication')
-                            ));
-                        }
-
                         if (flags.marked_for_legal) {
                             info.push(React.createElement(
                                 'div',
-                                {key: 4, className: 'state-label legal'},
+                                {key: 3, className: 'state-label legal'},
                                 gettext('Legal')
-                            ));
-                        }
-
-                        if (flags.marked_for_sms) {
-                            info.push(React.createElement(
-                                'div',
-                                {key: 4, className: 'state-label sms'},
-                                gettext('Sms')
                             ));
                         }
 
                         if (item.archived) {
                             info.push(React.createElement(
                                 'div',
-                                {className: 'fetched-desk', key: 5},
+                                {className: 'fetched-desk', key: 4},
                                 React.createElement(FetchedDesksInfo, {item: item})
                             ));
                         }
@@ -677,6 +661,9 @@
                                     null,
                                 flags.marked_for_sms ?
                                     React.createElement('div', {className: 'state-label sms'}, gettext('Sms')) :
+                                    null,
+                                item.rewritten_by ?
+                                    React.createElement('div', {className: 'state-label updated'}, gettext('Updated')) :
                                     null,
                                 anpa.name ?
                                     React.createElement('div', {className: 'category'}, anpa.name) :
