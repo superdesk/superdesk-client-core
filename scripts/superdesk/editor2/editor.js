@@ -12,15 +12,6 @@
 'use strict';
 
 /**
- * Generate click event on given target node
- *
- * @param {Node} target
- */
-function click(target) {
-    target.dispatchEvent(new MouseEvent('click'));
-}
-
-/**
  * Replace given dom elem with its contents
  *
  * It is like jQuery unwrap
@@ -55,7 +46,7 @@ function removeClass(elem, className) {
 }
 
 /**
- * Find text node + offset for given node and offset
+ * Find text node within given node for given character offset
  *
  * This will find text node within given node that contains character on given offset
  *
@@ -63,7 +54,7 @@ function removeClass(elem, className) {
  * @param {numeric} offset
  * @return {Object} {node: {Node}, offset: {numeric}}
  */
-function findTextNode(node, offset) {
+function findOffsetNode(node, offset) {
     var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
     var currentLength;
     var currentOffset = 0;
@@ -77,6 +68,30 @@ function findTextNode(node, offset) {
 
         currentOffset += currentLength;
     }
+}
+
+/**
+ * Find text node within given node where word is located
+ *
+ * It will find text type node where the whole word is located
+ *
+ * @param {Node} node
+ * @param {Number} index
+ * @param {Number} length
+ * @return {Object} {node: {Node}, offset: {Number}}
+ */
+function findWordNode(node, index, length) {
+    var start = findOffsetNode(node, index);
+    var end = findOffsetNode(node, index + length);
+
+    // correction for linebreaks - first node on a new line is set to
+    // linebreak text node which is not even visible in dom, maybe dom bug?
+    if (start.node !== end.node) {
+        start.node = end.node;
+        start.offset = 0;
+    }
+
+    return start;
 }
 
 /**
@@ -355,22 +370,15 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {string} className
      */
     function hiliteToken(node, token, className) {
-        var start = findTextNode(node, token.index);
-        var end = findTextNode(node, token.index + token.word.length);
-
-        // correction for linebreaks - first node on a new line is set to
-        // linebreak text node which is not even visible in dom, maybe dom bug?
-        if (start.node !== end.node) {
-            start.node = end.node;
-            start.offset = 0;
-        }
-
+        var start = findWordNode(node, token.index, token.word.length);
         var replace = start.node.splitText(start.offset);
         var span = document.createElement('span');
         span.classList.add(className);
         span.classList.add(HILITE_CLASS);
-        replace.splitText(end.offset - start.offset);
+        replace.splitText(token.word.length);
         span.textContent = replace.textContent;
+        span.dataset.word = token.word;
+        span.dataset.index = token.index;
         replace.parentNode.replaceChild(span, replace);
     }
 
@@ -434,6 +442,22 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             replaceNodes(nodes, text);
             self.commitScope(scope);
         });
+    };
+
+    /**
+     * Replace text at given index with word
+     *
+     * @param {Object} scope
+     * @param {Number} index
+     * @param {Number} length
+     * @param {String} word
+     */
+    this.replaceWord = function(scope, index, length, word) {
+        var node = scope.node;
+        var start = findWordNode(node, index, length);
+        var characters = start.node.textContent.split('');
+        characters.splice(index, length, word);
+        start.node.textContent = characters.join('');
     };
 
     /**
@@ -1135,31 +1159,40 @@ angular.module('superdesk.editor2', [
                             pos = err.getBoundingClientRect();
                             if (isPointInRect(point, pos)) {
                                 event.preventDefault();
-                                return;
+                                event.stopPropagation();
+                                renderContextMenu(err);
+                                return false;
                             }
-                        }
-
-                        if (editor.isErrorNode(event.target)) {
-                            event.preventDefault();
-                            var menu = elem[0].getElementsByClassName('dropdown-menu')[0],
-                                toggle = elem[0].getElementsByClassName('dropdown-toggle')[0];
-                            if (elem.find('.dropdown.open').length) {
-                                click(toggle);
-                            }
-                            scope.suggestions = null;
-                            spellcheck.suggest(event.target.textContent).then(function(suggestions) {
-                                scope.suggestions = suggestions;
-                                scope.replaceTarget = event.target;
-                                $timeout(function() {
-                                    menu.style.left = (event.target.offsetLeft) + 'px';
-                                    menu.style.top = (event.target.offsetTop + event.target.offsetHeight) + 'px';
-                                    menu.style.position = 'absolute';
-                                    click(toggle);
-                                }, 0, false);
-                            });
-                            return false;
                         }
                     });
+
+                    function renderContextMenu(node) {
+                        // close previous menu (if any)
+                        scope.$apply(function() {
+                            scope.suggestions = null;
+                            scope.openDropdown = false;
+                        });
+
+                        // set data needed for replacing
+                        scope.replaceWord = node.dataset.word;
+                        scope.replaceIndex = parseInt(node.dataset.index, 0);
+
+                        spellcheck.suggest(node.textContent).then(function(suggestions) {
+                            scope.suggestions = suggestions;
+                            scope.replaceTarget = node;
+                            $timeout(function() {
+                                scope.$apply(function() {
+                                    var menu = elem[0].getElementsByClassName('dropdown-menu')[0];
+                                    menu.style.left = (node.offsetLeft) + 'px';
+                                    menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
+                                    menu.style.position = 'absolute';
+                                    scope.openDropdown = true;
+                                });
+                            }, 0, false);
+                        });
+                        return false;
+                    }
+
                     if (scope.type === 'preformatted') {
                         editorElem.on('keydown keyup click', function() {
                             scope.$apply(function() {
@@ -1167,6 +1200,7 @@ angular.module('superdesk.editor2', [
                             });
                         });
                     }
+
                     scope.$on('$destroy', function() {
                         scope.medium.destroy();
                         editorElem.off();
@@ -1189,7 +1223,7 @@ angular.module('superdesk.editor2', [
                 }
 
                 scope.replace = function(text) {
-                    scope.replaceTarget.parentNode.replaceChild(document.createTextNode(text), scope.replaceTarget);
+                    editor.replaceWord(scope, scope.replaceIndex, scope.replaceWord.length, text);
                     editor.commitScope(scope);
                 };
 
