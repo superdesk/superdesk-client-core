@@ -2880,6 +2880,30 @@
                     );
                 };
 
+                scope.resetDependent = function(item) {
+                    var updates = {'subject': []};
+
+                    scope.cvs.forEach(function(cv) {
+                        var schemaField = cv.schema_field || cv._id;
+
+                        if (!cv.dependent && schemaField === 'subject' && item.subject) {
+                            //is not dependent but in subject -> keep them in subject
+                            item.subject.forEach(function(subject) {
+                                if (subject.scheme === cv._id) {
+                                    updates.subject.push(subject);
+                                }
+                            });
+                        }
+
+                        if (cv.dependent && schemaField !== 'subject' && schemaField !== 'anpa_category') {
+                            //is dependent but not on subject -> reset schemaField in item
+                            updates[schemaField] = [];
+                        }
+                    });
+
+                    return updates;
+                };
+
                 /**
                  * Returns true if the Company Codes field should be displayed, false otherwise.
                  * Company Codes field is displayed only if either Subject or Category has finance category.
