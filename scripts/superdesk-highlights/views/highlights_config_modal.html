@@ -1,4 +1,4 @@
-<div sd-modal data-model="modalActive" class="highlights-config-popup moz-scroll-fix responsive-popup hide" >
+<div sd-modal data-model="modalActive" class="highlights-config-popup moz-scroll-fix responsive-popup hide">
 
     <div class="modal-header">
         <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
@@ -34,9 +34,9 @@
                         </ul>
                     </div>
                 </div>
-                <div class="field" tooltip="{{ :: 'When creating a highlights package' | translate }}">
-                    <label translate>Automatically insert items from:</label>
-                    <select ng-model="configEdit.auto_insert" class="input-small">
+                <div class="field" title="{{ :: 'When creating a highlights package' | translate }}">
+                    <label translate>Automatically insert items from</label>
+                    <select ng-model="configEdit.auto_insert">
                         <option value="{{ :: auto.day }}" ng-selected="configEdit.auto_insert === auto.day" translate>Today</option>
                         <option value="{{ :: auto.week }}" ng-selected="configEdit.auto_insert === auto.week" translate>This week</option>
                         <option ng-repeat="hour in hours"
