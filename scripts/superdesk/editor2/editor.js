@@ -585,9 +585,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             if (renditionsList && data.renditions) {
                 var renditionsHtml = [];
                 renditionsList.forEach(function(r) {
-                    var rendition = data.renditions[r.name];
-                    if (angular.isDefined(rendition)) {
-                        renditionsHtml.push(rendition.href.replace('http://', '//') + ' ' + rendition.width + 'w');
+                    if (r.width) {
+                        var rendition = data.renditions[r.name];
+                        if (angular.isDefined(rendition)) {
+                            renditionsHtml.push(rendition.href.replace('http://', '//') + ' ' + rendition.width + 'w');
+                        }
                     }
                 });
                 if (renditionsHtml.length > 0) {
@@ -788,6 +790,9 @@ angular.module('superdesk.editor2', [
             },
             anchor: {
                 placeholderText: gettext('Paste or type a full link')
+            },
+            anchorPreview: {
+                showWhenToolbarIsVisible: true
             },
             placeholder: false,
             disableReturn: false,

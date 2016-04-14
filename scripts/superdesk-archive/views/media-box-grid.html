@@ -49,6 +49,8 @@
 
         <div ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</div>
 
+        <div ng-if="item.rewritten_by" class="state-label updated" translate>Updated</div>
+
         <div ng-if="item.archived" class="fetched-desk"><div sd-fetched-desks data-item="item"></div></div>
 
         <div sd-highlights-info data-item="item"></div>

@@ -13,6 +13,7 @@
         .config(configureMonitoring)
         .config(configureSpikeMonitoring)
         .config(configurePersonal)
+        .filter('splitText', SplitFilter)
         .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
             keyboardManager.register('Monitoring', 'ctrl + g', gettext('Switches between single/grouped stage view'));
             keyboardManager.register('Monitoring', 'ctrl + alt + g', gettext('Switches between single/grouped desk view'));
@@ -189,6 +190,22 @@
                 return true;
             }
         }
+    }
+
+    function SplitFilter() {
+        return function(input) {
+            input = input || '';
+            var out = '';
+            for (var i = 0; i < input.length; i++) {
+                if (input.charAt(i) === input.charAt(i).toUpperCase()) {
+                    out = out + ' ';
+                }
+
+                out = out + input.charAt(i);
+            }
+
+            return out;
+        };
     }
 
     MonitoringController.$inject = ['$location', 'desks'];
@@ -480,7 +497,7 @@
 
                 var criteria;
 
-                function edit(item, lock) {
+                function edit(item) {
                     if (item.state !== 'spiked'){
                         if (item._type === 'ingest') {
                             var intent = {action: 'list', type: 'ingest'},
@@ -488,7 +505,7 @@
 
                             activityService.start(activity, {data: {item: item}})
                                 .then(function (item) {
-                                    authoringWorkspace.edit(item, !lock);
+                                    authoringWorkspace.edit(item);
                                 });
                         } else if (item.type === 'composite' && item.package_type === 'takes') {
                             authoringWorkspace.view(item);

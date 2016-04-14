@@ -15,8 +15,8 @@
     /**
      * Service for highlights with caching.
      */
-    HighlightsService.$inject = ['api', '$q', '$cacheFactory', 'packages'];
-    function HighlightsService(api, $q, $cacheFactory, packages) {
+    HighlightsService.$inject = ['api', '$q', '$cacheFactory', 'packages', 'privileges'];
+    function HighlightsService(api, $q, $cacheFactory, packages, privileges) {
         var service = {};
         var promise = {};
         var cache = $cacheFactory('highlightList');
@@ -77,7 +77,7 @@
          * Mark an item for a highlight
          */
         service.markItem = function(highlight, marked_item) {
-            return api.markForHighlights.create({highlights: highlight, marked_item: marked_item});
+            return api.save('marked_for_highlights', {highlights: highlight, marked_item: marked_item.guid});
         };
 
         /**
@@ -111,6 +111,10 @@
             return api.find('highlights', _id);
         };
 
+        service.hasMarkItemPrivilege = function() {
+            return !!privileges.privileges.mark_for_highlights;
+        };
+
         return service;
     }
 
@@ -122,7 +126,7 @@
 
                 scope.markItem = function(highlight) {
                     scope.item.multiSelect = false;
-                    highlightsService.markItem(highlight._id, scope.item._id);
+                    highlightsService.markItem(highlight._id, scope.item);
                 };
 
                 scope.isMarked = function(highlight) {
@@ -153,7 +157,7 @@
                     angular.forEach(multi.getItems(), function(item) {
                         item.multiSelect = true;
                         if (!_.includes(item.highlights, highlight._id)) {
-                            highlightsService.markItem(highlight._id, item._id);
+                            highlightsService.markItem(highlight._id, item);
                         }
                     });
                     multi.reset();
@@ -246,7 +250,7 @@
                  * @param {string} highlight
                  */
                 scope.unmarkHighlight = function (highlight) {
-                    highlightsService.markItem(highlight, scope.item._id).then(function() {
+                    highlightsService.markItem(highlight, scope.item).then(function() {
                         scope.item.highlights = _.without(scope.item.highlights, highlight);
                     });
                 };
@@ -503,7 +507,7 @@
                 var HighlightBtn = React.createClass({
                     markHighlight: function(event) {
                         event.stopPropagation();
-                        highlightsService.markItem(this.props.highlight._id, this.props.item._id);
+                        highlightsService.markItem(this.props.highlight._id, this.props.item);
                     },
                     render: function() {
                         var item = this.props.item;

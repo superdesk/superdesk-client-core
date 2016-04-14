@@ -83,7 +83,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
                     }
                     // retrieve the association reference
                     var association;
-                    var embedAssoKey = /{id: "(_embedded_\d+)"}/;
+                    var embedAssoKey = /{id: "(embedded\d+)"}/;
                     if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null) {
                         association = vm.associations && vm.associations[match[1]];
                     }
@@ -170,7 +170,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
                             var blockName = block.embedType.trim();
                             // add an id to the image in order to retrieve it in `assocations` field
                             if (block.association) {
-                                blockName += ' {id: "_embedded_' + vm.generateBlockId(block) + '"}';
+                                blockName += ' {id: "embedded' + vm.generateBlockId(block) + '"}';
                             }
                             new_body += [
                                 '<!-- EMBED START ' + blockName + ' -->\n',
@@ -201,7 +201,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
             }
             // remove older associations
             angular.forEach(vm.associations, function(value, key) {
-                if (_.startsWith(key, '_embedded_')) {
+                if (_.startsWith(key, 'embedded')) {
                     delete vm.associations[key];
                 }
             });
@@ -219,7 +219,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
                 // we keep the association only for Superdesk images
                 if (block.association) {
                     // add the association
-                    association['_embedded_' + vm.generateBlockId(block)] = angular.copy(block.association);
+                    association['embedded' + vm.generateBlockId(block)] = angular.copy(block.association);
                 }
             });
             return association;

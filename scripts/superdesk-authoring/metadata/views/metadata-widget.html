@@ -30,7 +30,7 @@
                 </label>
             </li>
             <li>
-                <label translate>Usageterms</label>
+                <label translate>Usage terms</label>
                 <div class="data">
                     <input class="line-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
                 </div>
@@ -75,6 +75,7 @@
                     <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
                     <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                     <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
+                    <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
                 </div>
             </li>
             <li class="terms-box">

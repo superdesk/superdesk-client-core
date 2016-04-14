@@ -58,7 +58,8 @@
         multi_edit: false,
         send: false,
         create_broadcast: false,
-        add_to_current: false
+        add_to_current: false,
+        resend: false
     });
 
     // http://docs.python-cerberus.org/en/stable/usage.html
@@ -96,23 +97,23 @@
         urgency: {order: 6, sdWidth: 'quarter'},
         anpa_category: {order: 7, sdWidth: 'full'},
         subject: {order: 8, sdWidth: 'full'},
-        company_codes: {order: 10, sdWidth: 'full'},
-        ednote: {order: 11, sdWidth: 'full'},
-        headline: {order: 1, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
-        sms: {order: 2},
-        abstract: {order: 3, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
+        company_codes: {sdWidth: 'full'},
+        ednote: {order: 9, sdWidth: 'full'},
+        headline: {order: 10, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
+        sms: {order: 11},
+        abstract: {order: 12, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
+        byline: {order: 13},
+        dateline: {order: 14},
         body_html: {
-            order: 6,
+            order: 15,
             formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'removeFormat']
         },
-        byline: {order: 4},
-        dateline: {order: 5},
+        footer: {order: 16},
+        sign_off: {order: 17},
         located: {},
-        sign_off: {order: 9},
-        footer: {order: 7},
-        body_footer: {order: 8},
-        media: {order: 5},
-        media_description: {order: 6}
+        body_footer: {},
+        media: {},
+        media_description: {}
     });
 
     /**
@@ -652,6 +653,9 @@
             action.re_write = !is_read_only_state && _.contains(['text'], current_item.type) &&
                 !current_item.embargo && !current_item.rewritten_by && action.new_take &&
                 (!current_item.broadcast || !current_item.broadcast.master_id);
+
+            action.resend = _.contains(['text'], current_item.type) && !current_item.rewritten_by &&
+                _.contains(['published', 'corrected', 'killed'], current_item.state);
 
             //mark item for highlights
             action.mark_item = (current_item.task && current_item.task.desk &&
@@ -1466,6 +1470,10 @@
                     }
                 };
 
+                $scope.isLocked = function() {
+                    return lock.isLocked($scope.item);
+                };
+
                 $scope.isLockedByMe = function() {
                     return lock.isLockedByMe($scope.item);
                 };
@@ -1540,7 +1548,7 @@
                 });
 
                 $scope.$on('content:update', function(_e, data) {
-                    if ($scope.action === 'view' && data.items && data.items[$scope.origItem._id]) {
+                    if (!$scope._editable && data.items && data.items[$scope.origItem._id]) {
                         refreshItem();
                     }
                 });
@@ -1974,7 +1982,7 @@
                 scope.disableSendButton = function () {
                     if (scope.item && scope.item.task) {
                         return !scope.selectedDesk ||
-                                (scope.mode !== 'ingest' && scope.selectedStage._id === scope.item.task.stage);
+                                (scope.mode !== 'ingest' && scope.selectedStage && scope.selectedStage._id === scope.item.task.stage);
                     }
                 };
 
@@ -2688,7 +2696,7 @@
                     filters: [{action: 'list', type: 'archive'}, {action: 'list', type: 'archived'}],
                     additionalCondition:['authoring', 'item', 'privileges', function(authoring, item, privileges) {
                         if (item._type === 'archived') {
-                            return privileges.privileges.archived;
+                            return privileges.privileges.archived && item.type === 'text';
                         }
 
                         return authoring.itemActions(item).kill;
@@ -2862,6 +2870,39 @@
                 scope.contentType = null;
                 scope.schema = angular.extend({}, DEFAULT_SCHEMA);
                 scope.editor = angular.extend({}, DEFAULT_EDITOR);
+
+                scope.shouldDisplayUrgency = function() {
+                    return !scope.editor.urgency.service || (
+                        scope.item.anpa_category &&
+                        scope.item.anpa_category[0] &&
+                        scope.item.anpa_category[0].qcode &&
+                        scope.editor.urgency.service[scope.item.anpa_category[0].qcode]
+                    );
+                };
+
+                scope.resetDependent = function(item) {
+                    var updates = {'subject': []};
+
+                    scope.cvs.forEach(function(cv) {
+                        var schemaField = cv.schema_field || cv._id;
+
+                        if (!cv.dependent && schemaField === 'subject' && item.subject) {
+                            //is not dependent but in subject -> keep them in subject
+                            item.subject.forEach(function(subject) {
+                                if (subject.scheme === cv._id) {
+                                    updates.subject.push(subject);
+                                }
+                            });
+                        }
+
+                        if (cv.dependent && schemaField !== 'subject' && schemaField !== 'anpa_category') {
+                            //is dependent but not on subject -> reset schemaField in item
+                            updates[schemaField] = [];
+                        }
+                    });
+
+                    return updates;
+                };
 
                 /**
                  * Returns true if the Company Codes field should be displayed, false otherwise.
@@ -3304,8 +3345,10 @@
         return function(input) {
             var output = {};
             for (var i in input) {
-                if (i.charAt(0) !== '_') {
-                    output[i] = input[i];
+                if (input.hasOwnProperty(i)) {
+                    if (!/^embedded/.test(i)) {
+                        output[i] = input[i];
+                    }
                 }
             }
             return output;

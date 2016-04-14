@@ -822,7 +822,8 @@ describe('authoring actions', function() {
                 'unlock': true,
                 'publish': true,
                 'correct': true,
-                'kill': true
+                'kill': true,
+                'resend': true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -855,7 +856,7 @@ describe('authoring actions', function() {
 
             itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
-                'mark_item', 'package_item', 'multi_edit', 'correct', 'kill', 're_write']);
+                'mark_item', 'package_item', 'multi_edit', 'correct', 'kill', 're_write', 'resend']);
         }));
 
     it('Can perform correction or kill on published item',
@@ -900,7 +901,60 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
-                'mark_item', 'package_item', 'multi_edit', 'correct', 'kill', 're_write', 'create_broadcast']);
+                'mark_item', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
+                'create_broadcast', 'resend']);
+        }));
+
+    it('Cannot perform resend on rewritten item',
+        inject(function(privileges, desks, authoring, $q, $rootScope) {
+            var item = {
+                '_id': 'test',
+                'state': 'published',
+                'flags': {'marked_for_not_publication': false},
+                'type': 'text',
+                'task': {
+                    'desk': 'desk1'
+                },
+                'more_coming': false,
+                '_current_version': 10,
+                'archive_item': {
+                    '_id': 'test',
+                    'state': 'published',
+                    'marked_for_not_publication': false,
+                    'type': 'text',
+                    'task': {
+                        'desk': 'desk1'
+                    },
+                    'more_coming': false,
+                    '_current_version': 10
+                }
+            };
+
+            var userPrivileges = {
+                'duplicate': true,
+                'mark_item': false,
+                'spike': true,
+                'unspike': true,
+                'mark_for_highlights': true,
+                'unlock': true,
+                'publish': true,
+                'correct': true,
+                'kill': true,
+                'archive_broadcast': true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+            allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
+                'mark_item', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
+                'create_broadcast', 'resend']);
+
+            item.archive_item.rewritten_by = 'abc';
+            itemActions = authoring.itemActions(item);
+            allowedActions(itemActions, ['duplicate', 'view', 'add_to_current', 'mark_item',
+                'package_item', 'multi_edit', 'correct', 'kill', 'create_broadcast']);
+
         }));
 
     it('Cannot perform correction or kill on published item without privileges',
@@ -944,7 +998,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
-                'mark_item', 'package_item', 'multi_edit', 're_write']);
+                'mark_item', 'package_item', 'multi_edit', 're_write', 'resend']);
         }));
 
     it('Can only view if the item is not the current version',
@@ -1075,7 +1129,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['correct', 'kill', 'new_take', 're_write', 'add_to_current',
-                'mark_item', 'duplicate', 'view', 'package_item', 'multi_edit']);
+                'mark_item', 'duplicate', 'view', 'package_item', 'multi_edit', 'resend']);
         }));
 
     it('Cannot send item if the version is zero',
@@ -1291,7 +1345,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['correct', 'kill', 'duplicate', 'add_to_current', 'new_take', 're_write',
-                'view', 'package_item', 'mark_item', 'multi_edit']);
+                'view', 'package_item', 'mark_item', 'multi_edit', 'resend']);
         }));
 
     it('Create broadcast icon is available for text item.',
@@ -1338,7 +1392,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item', 'multi_edit',
-                    'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current']);
+                    'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
         }));
 
     it('Create broadcast icon is available for text item with genre Article.',
@@ -1385,7 +1439,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item', 'multi_edit',
-                    'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current']);
+                    'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
         }));
 
     it('Create broadcast icon is not available for broadcast item',
@@ -1438,7 +1492,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'mark_item', 'multi_edit',
-                    'correct', 'kill', 'package_item', 'view', 'add_to_current']);
+                    'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
         }));
 
     it('takes package is in published state.',

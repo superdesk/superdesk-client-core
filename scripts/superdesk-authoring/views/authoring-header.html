@@ -29,6 +29,7 @@
             <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
             <span class="state-label sms" ng-if="item.flags.marked_for_sms" translate>Sms</span>
             <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
+            <span class="state-label updated" ng-if="item.rewritten_by" translate>Updated</span>
         </div>
         <div ng-if="item.broadcast.master_id">
             <label ng-class="{'broadcast-status': item.broadcast.status !== ''}" tooltip="{{item.broadcast.status}}"><span translate>MASTER</span><b ng-if="item.broadcast.status"> !</b></label>
@@ -62,7 +63,7 @@
           <div class="authoring-header__item"
                sd-validation-error="error.genre"
                data-required="schema.genre.required"
-               ng-if="schema.genre && !metadata.genre_service"
+               ng-if="schema.genre && editor.genre"
                sd-width="{{editor.genre.sdWidth}}"
                order="{{editor.genre.order}}">
             <label class="authoring-header__item-label" translate>GENRE</label>
@@ -101,7 +102,7 @@
         <div class="authoring-header__item"
              sd-validation-error="error.place"
              data-required="schema.place.required"
-             ng-if="metadata.locators && schema.place"
+             ng-if="metadata.locators && schema.place && editor.place"
              sd-width="{{editor.place.sdWidth}}"
              order="{{editor.place.order}}">
           <label class="authoring-header__item-label" translate>PLACE</label>
@@ -141,7 +142,7 @@
         <div class="authoring-header__item"
              sd-validation-error="error.urgency"
              data-required="schema.urgency.required"
-             ng-if="schema.urgency"
+             ng-if="schema.urgency && shouldDisplayUrgency()"
              sd-width="{{editor.urgency.sdWidth}}"
              order="{{editor.urgency.order}}">
           <label class="authoring-header__item-label" translate>URGENCY</label>
@@ -173,7 +174,7 @@
                ng-disabled="!_editable"
                data-item="item"
                data-field="anpa_category"
-               data-dependent="subject"
+               data-reset-dependent="resetDependent(item)"
                data-unique="qcode"
                data-list="availableCategories"
                data-header="true"
@@ -185,7 +186,7 @@
         <div class="authoring-header__item"
              sd-validation-error="error.subject"
              data-required="schema.subject.required"
-             ng-if="metadata.subjectcodes && schema.subject && editor.subject && !metadata.subjects"
+             ng-if="metadata.subjectcodes && schema.subject && editor.subject"
              sd-width="{{editor.subject.sdWidth}}"
              order="{{editor.subject.order}}">
           <label class="authoring-header__item-label" translate>SUBJECT</label>
@@ -207,16 +208,18 @@
         <div class="authoring-header__item"
             ng-repeat="cv in cvs track by cv._id"
             sd-validation-error="error[cv._id]"
-            data-required="schema[cv._id].required"
-            ng-if="cv.terms.length && schema[cv._id]"
+            data-required="{{editor[cv._id].required || schema[cv._id].required}}"
+            ng-if="cv.terms.length && (editor[cv._id] || schema[cv._id])"
             sd-width="{{editor[cv._id].sdWidth}}"
             order="{{editor[cv._id].order}}">
-          <label class="authoring-header__item-label">{{ cv.display_name | translate }}</label>
+          <label class="authoring-header__item-label">
+            <span>{{ cv.display_name | translate }}</span>
+          </label>
           <div sd-meta-terms
               class="data"
               data-tabindex="editor[cv._id].order"
               data-item="item"
-              data-field="subject"
+              data-field="{{cv.schema_field || 'subject'}}"
               data-unique="qcode"
               data-list="cv.terms"
               data-cv="cv"
@@ -224,7 +227,7 @@
               data-header="true"
               data-change="autosave(item)"
               data-reload-list="true"
-              data-include-parent="true">
+              data-include-parent="editor[cv._id].includeparent">
           </div>
         </div>
 

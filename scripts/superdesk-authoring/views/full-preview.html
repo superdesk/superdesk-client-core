@@ -64,7 +64,7 @@
                 <p><i class="icon-picture" ng-if="hide_images"></i>{{association.description_text}}</p>
             </div>
 
-            <div class="abstract">{{item.abstract}}</div>
+            <div class="abstract" sd-html-preview="item.abstract"></div>
             <div class="byline">{{item.byline}}</div>
             <div sd-html-preview="item.body_html" class="body"></div>
         </div>

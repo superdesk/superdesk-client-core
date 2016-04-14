@@ -36,13 +36,13 @@
                             <span class="takekey">{{item.anpa_take_key}}</span>
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                             <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
+                            <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
                         </div>
                     </div>
                 </li>
             </ul>
         </div>
     </div>
-
 </div>
 
 <div class="preview" ng-class="{wrap: !selected}">
@@ -55,3 +55,5 @@
         </div>
     </div>
 </div>
+
+

@@ -369,6 +369,7 @@
                 $scope.subscribers = null;
                 $scope.newDestination = null;
                 $scope.contentFilters = null;
+                $scope.availableProducts = null;
                 $scope.geoRestrictions = null;
                 $scope.subTypes = null;
 
@@ -399,9 +400,13 @@
                  *
                  * @return {*}
                  */
-                var fetchContentFilters = function() {
-                    return api.query('content_filters').then(function(filters) {
-                        $scope.contentFilters = filters._items;
+                var fetchProducts = function() {
+                    return api.query('products').then(function(products) {
+                        $scope.availableProducts = products._items;
+                        $scope.productLookup = [];
+                        _.each(products._items, function(item) {
+                            $scope.productLookup[item._id] = item;
+                        });
                     });
                 };
 
@@ -479,11 +484,9 @@
                  * Upserts the selected subscriber.
                  */
                 $scope.save = function() {
-                    if ($scope.subscriber.content_filter && $scope.subscriber.content_filter.filter_id === '') {
-                        $scope.subscriber.content_filter = null;
-                    }
 
                     $scope.subscriber.destinations = $scope.destinations;
+                    $scope.subscriber.products = _.map($scope.subscriber.products, '_id');
 
                     api.subscribers.save($scope.origSubscriber, $scope.subscriber)
                         .then(
@@ -516,16 +519,22 @@
                 $scope.edit = function(subscriber) {
                     var promises = [];
                     promises.push(fetchPublishErrors());
-                    promises.push(fetchContentFilters());
+                    promises.push(fetchProducts());
                     promises.push(fetchGlobalContentFilters());
 
                     $q.all(promises).then(function() {
                         $scope.origSubscriber = subscriber || {};
                         $scope.subscriber = _.create($scope.origSubscriber);
                         $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
-                        $scope.subscriber.content_filter = $scope.origSubscriber.content_filter || {};
+
+                        $scope.subscriber.products = [];
+                        if ($scope.origSubscriber.products) {
+                            _.each($scope.origSubscriber.products, function(p) {
+                                $scope.subscriber.products.push($scope.productLookup[p]);
+                            });
+                        }
+
                         $scope.subscriber.global_filters =  $scope.origSubscriber.global_filters || {};
-                        $scope.subscriber.content_filter.filter_type = $scope.subscriber.content_filter.filter_type  || 'blocking';
 
                         $scope.destinations = [];
                         if (angular.isDefined($scope.subscriber.destinations) && !_.isNull($scope.subscriber.destinations) &&

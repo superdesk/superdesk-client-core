@@ -306,34 +306,18 @@
                             meta
                         ));
 
-                        if (flags.marked_for_not_publication) {
-                            info.push(React.createElement(
-                                'div',
-                                {key: 3, className: 'state-label not-for-publication'},
-                                gettext('Not For publication')
-                            ));
-                        }
-
                         if (flags.marked_for_legal) {
                             info.push(React.createElement(
                                 'div',
-                                {key: 4, className: 'state-label legal'},
+                                {key: 3, className: 'state-label legal'},
                                 gettext('Legal')
-                            ));
-                        }
-
-                        if (flags.marked_for_sms) {
-                            info.push(React.createElement(
-                                'div',
-                                {key: 4, className: 'state-label sms'},
-                                gettext('Sms')
                             ));
                         }
 
                         if (item.archived) {
                             info.push(React.createElement(
                                 'div',
-                                {className: 'fetched-desk', key: 5},
+                                {className: 'fetched-desk', key: 4},
                                 React.createElement(FetchedDesksInfo, {item: item})
                             ));
                         }
@@ -397,17 +381,7 @@
                         return React.createElement(
                             'div',
                             {className: 'list-field urgency'},
-                            item.priority ?
-                                React.createElement(
-                                    'span',
-                                    {className: 'priority-label priority-label--' + item.priority, title: gettext('Priority')},
-                                    item.priority
-                                ) :
-                                React.createElement(
-                                    'span',
-                                    {className: 'output-item-label label-' + item.urgency , title: gettext('Urgency')},
-                                    item.urgency
-                                )
+                            [(item.priority ? new ItemPriority(item) : null), (item.urgency ? new ItemUrgency(item) : null)]
                         );
                     };
 
@@ -415,7 +389,7 @@
                         removeHighlight: function(highlight) {
                             return function(event) {
                                 event.stopPropagation();
-                                highlightsService.markItem(highlight._id, this.props.item._id);
+                                highlightsService.markItem(highlight._id, this.props.item);
                             }.bind(this);
                         },
                         render: function() {
@@ -429,11 +403,11 @@
                                         'li',
                                         {key: 'item-highlight-' + highlight._id},
                                         highlight.name,
-                                        React.createElement(
+                                        highlightsService.hasMarkItemPrivilege() ? React.createElement(
                                             'button',
                                             {className: 'btn btn-mini', onClick: this.removeHighlight(highlight)},
                                             gettext('REMOVE')
-                                        )
+                                        ):null
                                     );
                                 }
                             }.bind(this);
@@ -688,6 +662,9 @@
                                 flags.marked_for_sms ?
                                     React.createElement('div', {className: 'state-label sms'}, gettext('Sms')) :
                                     null,
+                                item.rewritten_by ?
+                                    React.createElement('div', {className: 'state-label updated'}, gettext('Updated')) :
+                                    null,
                                 anpa.name ?
                                     React.createElement('div', {className: 'category'}, anpa.name) :
                                     null,
@@ -706,7 +683,7 @@
                         var urgency = props.urgency || 3;
                         return React.createElement(
                             'span',
-                            {className: 'urgency-label urgency-label--' + urgency, title: gettext('Urgency')},
+                            {className: 'urgency-label urgency-label--' + urgency, title: gettextCatalog.getString('Urgency')},
                             urgency
                         );
                     };
@@ -1079,7 +1056,7 @@
                                         item: item,
                                         onMultiSelect: this.props.onMultiSelect
                                     }),
-                                    React.createElement(ListPriority, {item: item}),
+                                    (item.priority || item.urgency) ? React.createElement(ListPriority, {item: item}) : null,
                                     React.createElement(ListItemInfo, {
                                         item: item,
                                         desk: this.props.desk,
