@@ -599,24 +599,6 @@
                         }
                     });
 
-                    var ItemState = function(props) {
-                        var item = props.item;
-                        return React.createElement(
-                            'span',
-                            {},
-                            React.createElement(
-                                'span',
-                                {className: 'state-label state-' + item.state},
-                                $filter('removeLodash')(item.state)
-                            ),
-                            item.embargo ? React.createElement(
-                                'span',
-                                {className: 'state-label state_embargo'},
-                                gettext('embargo')
-                            ) : null
-                        );
-                    };
-
                     var ListItemInfo = function(props) {
                         var item = props.item;
                         var flags = item.flags || {};
@@ -636,7 +618,16 @@
                                 React.createElement(TimeElem, {date: item.versioncreated})
                             ),
                             React.createElement('div', {className: 'line'},
-                                React.createElement(ItemState, {item: item}),
+                                React.createElement(
+                                    'span',
+                                    {title: $filter('removeLodash')(item.state), className: 'state-label state-' + item.state},
+                                    $filter('removeLodash')(item.state)
+                                ),
+                                item.embargo ? React.createElement(
+                                    'span',
+                                    {className: 'state-label state_embargo', title: gettext('embargo')},
+                                    gettext('embargo')
+                                ) : null,
                                 item.correction_sequence ?
                                     React.createElement('div', {className: 'provider'}, gettext('Update') +
                                         ' ' + item.correction_sequence) : null,
@@ -653,12 +644,12 @@
                                     React.createElement('span', {className: 'broadcast-status', tooltip: broadcast.status}, '!') :
                                     null,
                                 flags.marked_for_not_publication ?
-                                    React.createElement('div', {className: 'state-label not-for-publication'},
-                                        gettext('Not For Publication')) :
+                                    React.createElement('div', {className: 'state-label not-for-publication',
+                                        title: gettext('Not For Publications')}, gettext('Not For Publications')) :
                                     null,
                                 flags.marked_for_legal ?
-                                    React.createElement('div', {className: 'state-label legal'}, gettext('Legal')) :
-                                    null,
+                                    React.createElement('div', {className: 'state-label legal', title: gettext('Legal')},
+                                        gettext('Legal')) : null,
                                 flags.marked_for_sms ?
                                     React.createElement('div', {className: 'state-label sms'}, gettext('Sms')) :
                                     null,
