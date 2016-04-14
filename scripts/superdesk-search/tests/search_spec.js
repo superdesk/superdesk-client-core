@@ -186,7 +186,6 @@ describe('sdSearchFacets directive', function () {
             fetchSubjectcodes: jasmine.createSpy()
         };
 
-        $provide.value('api', fakeApi);
         $provide.value('metadata', fakeMetadata);
     }));
 

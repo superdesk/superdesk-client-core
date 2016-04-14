@@ -44,5 +44,8 @@
         <button id="fetch-all-as-btn" class="navbtn strict" title="{{ :: 'Fetch to' | translate }}" ng-click="action.sendAs()">
             <i class="big-icon-fetch-as"></i>
         </button>
+        <button id="remove-all-as-btn" class="navbtn strict" class="navbtn strict" title="{{ :: 'Remove' | translate }}" ng-click="action.removeIngestItems()" ng-if="action.canRemoveIngestItems()">
+            <i class="big-icon-spike"></i>
+        </button>
     </div>
 </div>

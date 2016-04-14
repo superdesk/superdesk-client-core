@@ -64,6 +64,12 @@ describe('fetch', function() {
         expect(content.count()).toBe(3);
     });
 
+    it('can remove ingest item', function() {
+        workspace.openIngest();
+        content.actionOnItem('Remove', 0);
+        expect(content.count()).toBe(0);
+    });
+
     it('can not Fetch-and-Open if selected desk as a non-member', function() {
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
@@ -101,5 +107,12 @@ describe('fetch', function() {
         content.send();
         workspace.openContent();
         expect(content.count()).toBe(3);
+    });
+
+    it('can remove multiple ingest item', function() {
+        workspace.openIngest();
+        content.selectItem(0);
+        element(by.id('remove-all-as-btn')).click();
+        expect(content.count()).toBe(0);
     });
 });

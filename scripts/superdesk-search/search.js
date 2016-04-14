@@ -976,6 +976,7 @@
                     scope.context = 'search';
                     scope.$on('item:deleted:archived', itemDelete);
                     scope.$on('item:fetch', queryItems);
+                    scope.$on('item:deleted', queryItems);
                     scope.$on('item:spike', queryItems);
                     scope.$on('item:unspike', queryItems);
                     scope.$on('item:duplicate', queryItems);
@@ -2080,15 +2081,35 @@
             keyboardManager.register('Search', 'v', gettext('Toggles search view'));
         }]);
 
-    MultiActionBarController.$inject = ['$rootScope', 'multi', 'multiEdit', 'send',
+    MultiActionBarController.$inject = ['$rootScope', 'multi', 'multiEdit', 'send', 'remove',
                                         'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges'];
-    function MultiActionBarController($rootScope, multi, multiEdit, send, packages, superdesk, notify, spike, authoring, privileges) {
+    function MultiActionBarController($rootScope, multi, multiEdit, send, remove,
+            packages, superdesk, notify, spike, authoring, privileges) {
+
         this.send  = function() {
-            return send.all(multi.getItems());
+            send.all(multi.getItems());
         };
 
         this.sendAs = function() {
-            return send.allAs(multi.getItems());
+            send.allAs(multi.getItems());
+        };
+
+        this.canRemoveIngestItems = function() {
+            var canRemove = true;
+            multi.getItems().forEach(function(item) {
+                canRemove = canRemove && remove.canRemove(item);
+            });
+            return canRemove;
+        };
+
+        /**
+         * Remove multiple ingest items
+         */
+        this.removeIngestItems = function() {
+            multi.getItems().forEach(function(item) {
+                remove.remove(item);
+            });
+            multi.reset();
         };
 
         this.multiedit = function() {
