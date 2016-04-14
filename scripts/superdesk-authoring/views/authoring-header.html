@@ -212,7 +212,9 @@
             ng-if="cv.terms.length && schema[cv._id]"
             sd-width="{{editor[cv._id].sdWidth}}"
             order="{{editor[cv._id].order}}">
-          <label class="authoring-header__item-label">{{ cv.display_name | translate }}</label>
+          <label class="authoring-header__item-label">
+            <span>{{ cv.display_name | translate }}</span>
+          </label>
           <div sd-meta-terms
               class="data"
               data-tabindex="editor[cv._id].order"

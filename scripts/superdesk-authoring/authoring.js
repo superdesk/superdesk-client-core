@@ -1470,6 +1470,10 @@
                     }
                 };
 
+                $scope.isLocked = function() {
+                    return lock.isLocked($scope.item);
+                };
+
                 $scope.isLockedByMe = function() {
                     return lock.isLockedByMe($scope.item);
                 };
