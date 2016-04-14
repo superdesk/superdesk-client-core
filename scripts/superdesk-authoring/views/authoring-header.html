@@ -63,7 +63,7 @@
           <div class="authoring-header__item"
                sd-validation-error="error.genre"
                data-required="schema.genre.required"
-               ng-if="schema.genre && !metadata.genre_service"
+               ng-if="schema.genre && editor.genre"
                sd-width="{{editor.genre.sdWidth}}"
                order="{{editor.genre.order}}">
             <label class="authoring-header__item-label" translate>GENRE</label>
@@ -102,7 +102,7 @@
         <div class="authoring-header__item"
              sd-validation-error="error.place"
              data-required="schema.place.required"
-             ng-if="metadata.locators && schema.place"
+             ng-if="metadata.locators && schema.place && editor.place"
              sd-width="{{editor.place.sdWidth}}"
              order="{{editor.place.order}}">
           <label class="authoring-header__item-label" translate>PLACE</label>
@@ -174,7 +174,7 @@
                ng-disabled="!_editable"
                data-item="item"
                data-field="anpa_category"
-               data-dependent="subject"
+               data-reset-dependent="resetDependent(item)"
                data-unique="qcode"
                data-list="availableCategories"
                data-header="true"
@@ -186,7 +186,7 @@
         <div class="authoring-header__item"
              sd-validation-error="error.subject"
              data-required="schema.subject.required"
-             ng-if="metadata.subjectcodes && schema.subject && editor.subject && !metadata.subjects"
+             ng-if="metadata.subjectcodes && schema.subject && editor.subject"
              sd-width="{{editor.subject.sdWidth}}"
              order="{{editor.subject.order}}">
           <label class="authoring-header__item-label" translate>SUBJECT</label>
@@ -208,8 +208,8 @@
         <div class="authoring-header__item"
             ng-repeat="cv in cvs track by cv._id"
             sd-validation-error="error[cv._id]"
-            data-required="schema[cv._id].required"
-            ng-if="cv.terms.length && schema[cv._id]"
+            data-required="{{editor[cv._id].required || schema[cv._id].required}}"
+            ng-if="cv.terms.length && (editor[cv._id] || schema[cv._id])"
             sd-width="{{editor[cv._id].sdWidth}}"
             order="{{editor[cv._id].order}}">
           <label class="authoring-header__item-label">
@@ -219,7 +219,7 @@
               class="data"
               data-tabindex="editor[cv._id].order"
               data-item="item"
-              data-field="subject"
+              data-field="{{cv.schema_field || 'subject'}}"
               data-unique="qcode"
               data-list="cv.terms"
               data-cv="cv"
@@ -227,7 +227,7 @@
               data-header="true"
               data-change="autosave(item)"
               data-reload-list="true"
-              data-include-parent="true">
+              data-include-parent="editor[cv._id].includeparent">
           </div>
         </div>
 

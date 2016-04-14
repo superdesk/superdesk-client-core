@@ -488,7 +488,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
         scope: {
             item: '=',
             field: '@',
-            dependent: '@',
+            resetDependent: '&',
             disabled: '=ngDisabled',
             list: '=',
             unique: '@',
@@ -501,7 +501,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             tabindex: '='
         },
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-terms.html',
-        link: function(scope, elem) {
+        link: function(scope, elem, attrs) {
             metadata.subjectScope = scope;
             var reloadList = scope.reloadList === 'true' ? true : false;
             var includeParent = scope.includeParent === 'true' ? true : false;
@@ -596,6 +596,14 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 });
             }
 
+            function resetDependent (update) {
+                if (scope.resetDependent) {
+                    return scope.resetDependent({item: scope.item}) || {};
+                } else {
+                    return {};
+                }
+            }
+
             function addTerm(term) {
                 // Only select terms that are not already selected
                 if (!_.find(scope.item[scope.field], function(i) {return i[scope.uniqueField] === term[scope.uniqueField];})) {
@@ -616,15 +624,15 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     var o = {};
 
                     // dependent is set only for category
-                    if (scope.dependent) {
+                    if ('resetDependent' in attrs) {
                         if (term.single_value) {
                             // if only single selection supported -> reset all selected values on dependent CVs
-                            o[scope.dependent] = [];
+                            o = resetDependent();
                         } else {
                             //delete if already selected a service with single value
                             _.forEach(scope.item[scope.field], function(service) {
                                 if (service.single_value) {
-                                    o[scope.dependent] = [];
+                                    o = resetDependent();
                                     t = [];
                                 }
                             });
@@ -691,14 +699,15 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     subjectCodesArray = scope.item[scope.field],
                     filteredArray = _.without(subjectCodesArray, term);
 
+                if ('resetDependent' in attrs && term.single_value) {
+                    tempItem = resetDependent();
+                }
+
                 if (subjectCodesArray && filteredArray.length === subjectCodesArray.length) {
                     _.remove(filteredArray, {name: term});
                 }
 
                 tempItem[scope.field] = filteredArray;
-                if (scope.dependent && term.single_value) {
-                    tempItem[scope.dependent] = [];
-                }
 
                 _.extend(scope.item, tempItem);
 
