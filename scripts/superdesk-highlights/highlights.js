@@ -15,8 +15,8 @@
     /**
      * Service for highlights with caching.
      */
-    HighlightsService.$inject = ['api', '$q', '$cacheFactory', 'packages'];
-    function HighlightsService(api, $q, $cacheFactory, packages) {
+    HighlightsService.$inject = ['api', '$q', '$cacheFactory', 'packages', 'privileges'];
+    function HighlightsService(api, $q, $cacheFactory, packages, privileges) {
         var service = {};
         var promise = {};
         var cache = $cacheFactory('highlightList');
@@ -109,6 +109,10 @@
          */
         service.find = function(_id) {
             return api.find('highlights', _id);
+        };
+
+        service.hasMarkItemPrivilege = function() {
+            return !!privileges.privileges.mark_for_highlights;
         };
 
         return service;

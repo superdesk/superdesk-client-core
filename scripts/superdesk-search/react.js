@@ -403,11 +403,11 @@
                                         'li',
                                         {key: 'item-highlight-' + highlight._id},
                                         highlight.name,
-                                        React.createElement(
+                                        highlightsService.hasMarkItemPrivilege() ? React.createElement(
                                             'button',
                                             {className: 'btn btn-mini', onClick: this.removeHighlight(highlight)},
                                             gettext('REMOVE')
-                                        )
+                                        ):null
                                     );
                                 }
                             }.bind(this);
