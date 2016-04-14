@@ -500,8 +500,8 @@
             label: gettext('Mark for highlight'),
             priority: 30,
             icon: 'star',
-            dropdown: ['item', 'className', 'highlightsService', 'desks', 'gettext',
-            function(item, className, highlightsService, desks, gettext) {
+            dropdown: ['item', 'className', 'highlightsService', 'desks', 'gettext', 'translatedLabel',
+            function(item, className, highlightsService, desks, gettext, translatedLabel) {
                 var highlights = highlightsService.getSync(desks.getCurrentDeskId()) || {_items: []};
 
                 var HighlightBtn = React.createClass({
@@ -537,7 +537,7 @@
                         React.createElement(
                             'button',
                             {disabled: true},
-                            gettext('No available highlights'))
+                            translatedLabel)
                     );
                 };
 
