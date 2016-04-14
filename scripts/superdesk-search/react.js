@@ -915,7 +915,8 @@
                                         ),
                                         this.state.open ? $injector.invoke(activity.dropdown, activity, {
                                             item: this.props.item,
-                                            className: 'dropdown-menu right-submenu upward'
+                                            className: 'dropdown-menu right-submenu upward',
+                                            translatedLabel: gettextCatalog.getString('No available highlights')
                                         }) : null
                                     )
                                 );
