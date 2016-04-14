@@ -497,7 +497,7 @@
 
                 var criteria;
 
-                function edit(item, lock) {
+                function edit(item) {
                     if (item.state !== 'spiked'){
                         if (item._type === 'ingest') {
                             var intent = {action: 'list', type: 'ingest'},
@@ -505,7 +505,7 @@
 
                             activityService.start(activity, {data: {item: item}})
                                 .then(function (item) {
-                                    authoringWorkspace.edit(item, !lock);
+                                    authoringWorkspace.edit(item);
                                 });
                         } else if (item.type === 'composite' && item.package_type === 'takes') {
                             authoringWorkspace.view(item);
