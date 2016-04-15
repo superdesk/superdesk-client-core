@@ -9,6 +9,38 @@ msgstr ""
 msgid "---Assign Rights---"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:18
+msgid "'ABSTRACT is a required field'"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:19
+msgid "'ANPA_CATEGORY is a required field'"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:18
+msgid "'BYLINE is a required field'"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:17
+msgid "'GENRE is a required field'"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:20
+msgid "'GENRE null value not allowed'"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:19
+msgid "'HEADLINE is a required field'"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:19
+msgid "'SLUGLINE is a required field'"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:18
+msgid "'SUBJECT is a required field'"
+msgstr ""
+
 #: scripts/superdesk-authoring/authoring.js:2853
 msgid "\" sent at:"
 msgstr ""
@@ -43,12 +75,20 @@ msgid_plural "{{ $count }} words"
 msgstr[0] ""
 msgstr[1] ""
 
+#: scripts/superdesk-archive/views/upload.html:92
+msgid "* fields are required"
+msgstr ""
+
 #: scripts/superdesk-users/views/edit-form.html:29
 msgid "* mandatory fields"
 msgstr ""
 
 #: scripts/superdesk/editor2/views/editor.html:1
 msgid "<i class=\"svg-icon-move\"></i> Cancel reordering"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:20
+msgid "412: Can't publish as item state is draft"
 msgstr ""
 
 #: scripts/superdesk/auth/reset-password.html:43
@@ -76,7 +116,7 @@ msgstr ""
 
 #: scripts/superdesk-desks/views/settings.html:22
 #: scripts/superdesk-monitoring/views/item-actions-menu.html:14
-#: scripts/superdesk-search/react.js:778
+#: scripts/superdesk-search/react.js:769
 #: scripts/superdesk-templates/views/templates.html:18
 msgid "Actions"
 msgstr ""
@@ -281,7 +321,7 @@ msgstr ""
 msgid "Admin tools"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:114
+#: scripts/superdesk-users/views/edit-form.html:115
 msgid "administrator"
 msgstr ""
 
@@ -483,7 +523,7 @@ msgid "Automatically create item"
 msgstr ""
 
 #: scripts/superdesk-highlights/views/highlights_config_modal.html:38
-msgid "Automatically insert items from:"
+msgid "Automatically insert items from"
 msgstr ""
 
 #: scripts/superdesk-authoring/versioning/versions/views/versions.html:9
@@ -494,7 +534,7 @@ msgstr ""
 msgid "Available clock"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:926
+#: scripts/superdesk/editor2/editor.js:957
 msgid "B"
 msgstr ""
 
@@ -535,7 +575,7 @@ msgstr ""
 msgid "Body"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:924
+#: scripts/superdesk/editor2/editor.js:955
 msgid "bold"
 msgstr ""
 
@@ -612,8 +652,8 @@ msgstr ""
 #: scripts/superdesk-search/views/save-search.html:32
 #: scripts/superdesk-templates/views/create-template.html:48
 #: scripts/superdesk-templates/views/templates.html:139
-#: scripts/superdesk-users/views/edit-form.html:162
-#: scripts/superdesk-users/views/edit-form.html:197
+#: scripts/superdesk-users/views/edit-form.html:163
+#: scripts/superdesk-users/views/edit-form.html:198
 #: scripts/superdesk-users/views/edit-form.html:4
 #: scripts/superdesk-users/views/settings-roles.html:51
 #: scripts/superdesk-users/views/user-preferences.html:5
@@ -827,7 +867,7 @@ msgstr ""
 msgid "Configuration name"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:189
+#: scripts/superdesk-users/views/edit-form.html:190
 msgid "confirm"
 msgstr ""
 
@@ -956,7 +996,7 @@ msgid "Correction issued by"
 msgstr ""
 
 #: scripts/superdesk-monitoring/views/item-actions-menu.html:28
-#: scripts/superdesk-search/react.js:781
+#: scripts/superdesk-search/react.js:772
 msgid "Corrections"
 msgstr ""
 
@@ -1066,7 +1106,7 @@ msgstr ""
 msgid "Crop changes have been recorded"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:177
+#: scripts/superdesk-users/views/edit-form.html:178
 msgid "current"
 msgstr ""
 
@@ -1132,7 +1172,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:125
+#: scripts/superdesk-users/views/edit-form.html:126
 msgid "Default Desk"
 msgstr ""
 
@@ -1330,7 +1370,7 @@ msgstr ""
 msgid "Do some admin chores"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:159
+#: scripts/superdesk-users/views/edit-form.html:160
 msgid "Do you want to reset the password for user {{ user.full_name }} ?"
 msgstr ""
 
@@ -1619,7 +1659,8 @@ msgstr ""
 msgid "Email User"
 msgstr ""
 
-#: scripts/superdesk-search/react.js:615
+#: scripts/superdesk-search/react.js:628
+#: scripts/superdesk-search/react.js:629
 msgid "embargo"
 msgstr ""
 
@@ -1847,7 +1888,7 @@ msgstr ""
 #: scripts/superdesk-archive/views/media-box-list.html:53
 #: scripts/superdesk-archive/views/preview.html:78
 #: scripts/superdesk-search/react.js:290
-#: scripts/superdesk-search/react.js:674
+#: scripts/superdesk-search/react.js:665
 msgid "expires"
 msgstr ""
 
@@ -2200,11 +2241,11 @@ msgstr ""
 msgid "GUID"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:900
+#: scripts/superdesk/editor2/editor.js:931
 msgid "H1"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:913
+#: scripts/superdesk/editor2/editor.js:944
 msgid "H2"
 msgstr ""
 
@@ -2212,11 +2253,11 @@ msgstr ""
 msgid "Have password? Sign in."
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:898
+#: scripts/superdesk/editor2/editor.js:929
 msgid "header type 1"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:911
+#: scripts/superdesk/editor2/editor.js:942
 msgid "header type 2"
 msgstr ""
 
@@ -2227,6 +2268,10 @@ msgstr ""
 #: scripts/superdesk-publish/views/publish-queue.html:69
 #: scripts/superdesk-search/views/item-search.html:46
 msgid "Headline"
+msgstr ""
+
+#: scripts/superdesk-users/views/edit-form.html:111
+msgid "Help us translate Superdesk"
 msgstr ""
 
 #: scripts/superdesk-authoring/views/article-edit.html:200
@@ -2253,7 +2298,7 @@ msgstr ""
 #: scripts/superdesk-highlights/highlights.js:561
 #: scripts/superdesk-highlights/views/package_highlights_dropdown_directive.html:1
 #: scripts/superdesk-monitoring/views/item-actions-menu.html:24
-#: scripts/superdesk-search/react.js:780
+#: scripts/superdesk-search/react.js:771
 #: scripts/superdesk-templates/templates.js:67
 msgid "Highlights"
 msgstr ""
@@ -2297,7 +2342,7 @@ msgstr ""
 msgid "hrs"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:943
+#: scripts/superdesk/editor2/editor.js:974
 msgid "I"
 msgstr ""
 
@@ -2365,6 +2410,10 @@ msgstr ""
 
 #: scripts/superdesk-authoring/authoring.js:2853
 msgid "In the story \""
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:5
+msgid "in_progress"
 msgstr ""
 
 #: scripts/superdesk/missing-translations-strings.js:5
@@ -2469,7 +2518,7 @@ msgstr ""
 msgid "It will update existing template."
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:941
+#: scripts/superdesk/editor2/editor.js:972
 msgid "italic"
 msgstr ""
 
@@ -2651,7 +2700,8 @@ msgstr ""
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:76
 #: scripts/superdesk-authoring/views/authoring-header.html:29
 #: scripts/superdesk-search/react.js:313
-#: scripts/superdesk-search/react.js:660
+#: scripts/superdesk-search/react.js:651
+#: scripts/superdesk-search/react.js:652
 #: scripts/superdesk-search/views/search-facets.html:134
 #: scripts/superdesk/itemList/views/item-list-widget.html:73
 #: scripts/superdesk/itemList/views/item-list-widget.html:90
@@ -2667,7 +2717,7 @@ msgstr ""
 msgid "Line: {{ cursor.line }}, Column: {{ cursor.column }}"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:950
+#: scripts/superdesk/editor2/editor.js:981
 msgid "link"
 msgstr ""
 
@@ -2813,7 +2863,7 @@ msgstr ""
 msgid "Media Type"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:139
+#: scripts/superdesk-users/views/edit-form.html:140
 msgid "member since"
 msgstr ""
 
@@ -2969,7 +3019,7 @@ msgstr ""
 msgid "Navigate through the newsroom"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:183
+#: scripts/superdesk-users/views/edit-form.html:184
 msgid "new"
 msgstr ""
 
@@ -3003,7 +3053,7 @@ msgstr ""
 
 #: scripts/superdesk-highlights/views/mark_highlights_dropdown_directive.html:8
 #: scripts/superdesk-highlights/views/package_highlights_dropdown_directive.html:11
-#: scripts/superdesk-search/react.js:919
+#: scripts/superdesk-search/react.js:910
 msgid "No available highlights"
 msgstr ""
 
@@ -3125,8 +3175,11 @@ msgstr ""
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:18
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:75
 #: scripts/superdesk-authoring/views/authoring-header.html:31
-#: scripts/superdesk-search/react.js:657
 msgid "Not For Publication"
+msgstr ""
+
+#: scripts/superdesk-search/react.js:648
+msgid "Not For Publications"
 msgstr ""
 
 #: scripts/superdesk/missing-translations-strings.js:8
@@ -3175,6 +3228,17 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
+#: scripts/superdesk-authoring/versioning/history/views/history.html:12
+#: scripts/superdesk-authoring/versioning/history/views/history.html:18
+#: scripts/superdesk-authoring/versioning/history/views/history.html:22
+#: scripts/superdesk-authoring/versioning/history/views/history.html:26
+#: scripts/superdesk-authoring/versioning/history/views/history.html:30
+#: scripts/superdesk-authoring/versioning/history/views/history.html:34
+#: scripts/superdesk-authoring/versioning/history/views/history.html:38
+#: scripts/superdesk-authoring/versioning/history/views/history.html:43
+#: scripts/superdesk-authoring/versioning/history/views/history.html:47
+#: scripts/superdesk-authoring/versioning/history/views/history.html:52
+#: scripts/superdesk-authoring/versioning/history/views/history.html:57
 #: scripts/superdesk-authoring/versioning/history/views/publish_queue.html:17
 #: scripts/superdesk-authoring/versioning/history/views/publish_queue.html:22
 #: scripts/superdesk-ingest/views/dashboard/ingest-dashboard-widget.html:11
@@ -3326,7 +3390,7 @@ msgid "Packages"
 msgstr ""
 
 #: scripts/superdesk-monitoring/views/item-actions-menu.html:20
-#: scripts/superdesk-search/react.js:779
+#: scripts/superdesk-search/react.js:770
 msgid "Packaging"
 msgstr ""
 
@@ -3381,7 +3445,7 @@ msgid "passwords must be same"
 msgstr ""
 
 #: scripts/superdesk/editor/editor.js:686
-#: scripts/superdesk/editor2/editor.js:792
+#: scripts/superdesk/editor2/editor.js:823
 msgid "Paste or type a full link"
 msgstr ""
 
@@ -3431,7 +3495,7 @@ msgstr ""
 msgid "Personal Items"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:130
+#: scripts/superdesk-users/views/edit-form.html:131
 msgid "phone number"
 msgstr ""
 
@@ -3503,7 +3567,7 @@ msgstr ""
 msgid "Please provide an article id"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:134
+#: scripts/superdesk-users/views/edit-form.html:135
 msgid "please provide number in international format"
 msgstr ""
 
@@ -3695,7 +3759,7 @@ msgstr ""
 msgid "Publish Filter Type"
 msgstr ""
 
-#: scripts/superdesk-publish/publish.js:612
+#: scripts/superdesk-publish/publish.js:611
 #: scripts/superdesk-publish/views/publish-queue.html:2
 msgid "Publish Queue"
 msgstr ""
@@ -3834,7 +3898,7 @@ msgstr ""
 msgid "Remove Filter Condition"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:957
+#: scripts/superdesk/editor2/editor.js:988
 msgid "remove formatting"
 msgstr ""
 
@@ -3936,7 +4000,7 @@ msgstr ""
 msgid "Resend To"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:163
+#: scripts/superdesk-users/views/edit-form.html:164
 #: scripts/superdesk/auth/reset-password.html:64
 msgid "Reset password"
 msgstr ""
@@ -3962,7 +4026,7 @@ msgstr ""
 msgid "revert"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:119
+#: scripts/superdesk-users/views/edit-form.html:120
 msgid "role"
 msgstr ""
 
@@ -4048,6 +4112,7 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
+#: scripts/superdesk-archive/views/upload.html:93
 #: scripts/superdesk-authoring/authoring.js:835
 #: scripts/superdesk-authoring/authoring.js:848
 #: scripts/superdesk-authoring/multiedit/views/sd-multiedit-article.html:3
@@ -4116,7 +4181,7 @@ msgstr ""
 msgid "Save content item?"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:198
+#: scripts/superdesk-users/views/edit-form.html:199
 msgid "Save password"
 msgstr ""
 
@@ -4453,7 +4518,7 @@ msgstr ""
 #: scripts/superdesk-archive/views/preview.html:37
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:77
 #: scripts/superdesk-authoring/views/authoring-header.html:30
-#: scripts/superdesk-search/react.js:663
+#: scripts/superdesk-search/react.js:654
 #: scripts/superdesk-search/views/search-facets.html:138
 #: scripts/superdesk/itemList/views/item-list-widget.html:74
 #: scripts/superdesk/itemList/views/item-list-widget.html:91
@@ -4855,7 +4920,7 @@ msgstr ""
 msgid "The password has been reset."
 msgstr ""
 
-#: scripts/superdesk-search/react.js:1263
+#: scripts/superdesk-search/react.js:1254
 msgid "There are currently no items"
 msgstr ""
 
@@ -4932,7 +4997,7 @@ msgid "There was a problem, stage was not deleted."
 msgstr ""
 
 #: scripts/superdesk-archive/views/media-box-grid.html:10
-#: scripts/superdesk-search/react.js:945
+#: scripts/superdesk-search/react.js:936
 msgid "There was an error archiving this item"
 msgstr ""
 
@@ -5106,7 +5171,7 @@ msgstr ""
 msgid "Uncheck all"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:933
+#: scripts/superdesk/editor2/editor.js:964
 msgid "underline"
 msgstr ""
 
@@ -5185,7 +5250,7 @@ msgstr ""
 #: scripts/superdesk-archive/module.js:661
 #: scripts/superdesk-archive/views/media-box-list.html:42
 #: scripts/superdesk-ingest/views/settings/ingest-sources-content.html:125
-#: scripts/superdesk-search/react.js:641
+#: scripts/superdesk-search/react.js:632
 msgid "Update"
 msgstr ""
 
@@ -5217,7 +5282,7 @@ msgstr ""
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:78
 #: scripts/superdesk-authoring/views/authoring-header.html:32
 #: scripts/superdesk-legal-archive/legal_archive.js:10
-#: scripts/superdesk-search/react.js:666
+#: scripts/superdesk-search/react.js:657
 #: scripts/superdesk-search/search.js:14
 #: scripts/superdesk/itemList/views/item-list-widget.html:92
 #: scripts/superdesk/itemList/views/relatedItem-list-widget.html:39
@@ -5245,7 +5310,7 @@ msgstr ""
 #: scripts/superdesk-authoring/views/authoring-header.html:156
 #: scripts/superdesk-desks/views/stage-item-list.html:9
 #: scripts/superdesk-legal-archive/legal_archive.js:12
-#: scripts/superdesk-search/react.js:686
+#: scripts/superdesk-search/react.js:677
 #: scripts/superdesk-search/search.js:16
 #: scripts/superdesk-search/views/search-facets.html:112
 msgid "Urgency"
@@ -5302,7 +5367,7 @@ msgstr ""
 msgid "User Profile to Import"
 msgstr ""
 
-#: scripts/superdesk-users/views/edit-form.html:144
+#: scripts/superdesk-users/views/edit-form.html:145
 msgid "user role"
 msgstr ""
 
@@ -5468,6 +5533,10 @@ msgstr[1] ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:17
 msgid "Word Count"
+msgstr ""
+
+#: scripts/superdesk-authoring/authoring.js:1683
+msgid "words"
 msgstr ""
 
 #: scripts/superdesk-desks/views/desk-config-modal.html:76

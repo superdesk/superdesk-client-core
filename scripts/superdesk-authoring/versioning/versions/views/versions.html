@@ -22,7 +22,7 @@
             </div>
             <div class="footer">
                 <em>{{ :: 'version' | translate }}: {{ version._current_version }}</em>
-                <div class="state-label state-{{ :: version.state}}">{{ :: version.state }}</div>
+                <div class="state-label state-{{ :: version.state}}">{{ :: version.state | translate }}</div>
                 <button class="btn btn-light btn-mini pull-right"
                     ng-show="canRevert && !$first"
                     ng-click="revert(version)"

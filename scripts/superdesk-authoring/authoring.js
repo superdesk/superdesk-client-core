@@ -1673,14 +1673,14 @@
         };
     }
 
-    WordCount.$inject = [];
-    function WordCount() {
+    WordCount.$inject = ['gettextCatalog'];
+    function WordCount(gettextCatalog) {
         return {
             scope: {
                 item: '=',
                 html: '@'
             },
-            template: '<span class="char-count">{{numWords}} <span translate>words</span></span>',
+            template: '<span class="char-count">{{numWords}} <span translate>' + gettextCatalog.getString('words') + '</span></span>',
             link: function wordCountLink(scope, elem, attrs) {
                 scope.html = scope.html || false;
                 scope.numWords = 0;

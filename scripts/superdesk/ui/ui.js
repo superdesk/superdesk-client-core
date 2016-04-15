@@ -1185,8 +1185,8 @@
      * Usage:
      * <input type='text' sd-validation-error='error.field' ng-required='schema.field.required' />
      */
-    validationDirective.$inject = ['gettext'];
-    function validationDirective(gettext) {
+    validationDirective.$inject = ['gettext', 'gettextCatalog'];
+    function validationDirective(gettext, gettextCatalog) {
         return {
             restrict: 'A',
             link: function (scope, elem, attrs, ctrl) {
@@ -1198,7 +1198,7 @@
 
                     elem.addClass('sd-validate');
                     if (elem.hasClass('field')) {
-                        elem.find('label').after('<span class="sd-required">' + gettext('Required') + '</span>');
+                        elem.find('label').after('<span class="sd-required">' + gettextCatalog.getString('Required') + '</span>');
                     } else if (elem.find('.authoring-header__input-holder').length) {
                         elem.find('.authoring-header__input-holder').append(invalidText);
                     } else {
