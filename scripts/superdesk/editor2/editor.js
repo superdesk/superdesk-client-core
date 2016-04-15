@@ -456,7 +456,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
         var node = scope.node;
         var start = findWordNode(node, index, length);
         var characters = start.node.textContent.split('');
-        characters.splice(index, length, word);
+        characters.splice(start.offset, length, word);
         start.node.textContent = characters.join('');
     };
 
