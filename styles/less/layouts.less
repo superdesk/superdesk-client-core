@@ -696,6 +696,16 @@ a:hover {
     background-color: white;
     font-size: 13px;
     color: #333;
+    &--with-click {
+        &:hover {
+            box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.5);
+        }
+    }
+    &--flex {
+        display: flex;
+        flex-direction: column;
+    }
+
     .card-box__header {
         background-color: @main-item-color;
         padding: 0;
@@ -731,9 +741,9 @@ a:hover {
                 position: relative;
                 z-index: 2;
                 opacity: .4;
-                                i {
-                                    color: #fff;
-                                }
+                i {
+                    color: #fff;
+                }
                 &:hover {
                     opacity: .7;
                 }
@@ -744,7 +754,25 @@ a:hover {
                 }
             }
         }
+        &--empty {
+            height:8px;
+        }
+        &--padded-flex {
+            display:flex;
+            padding: 14px 24px 6px 14px;
+            i {
+                color: rgba(255,255,255, 0.8);
+                padding-right: 10px;
+            }
+        }
     }
+
+    &.active {
+        .card-box__header {
+            background-color: @sd-blue;
+        }
+    }
+
     .card-box__heading {
         padding: 20px 16px 12px;
         font-size: 12px;
@@ -779,6 +807,7 @@ a:hover {
     }
     .card-box__content {
         padding: 16px;
+        flex-grow: 1;
         .box-sizing(border-box);
         h4 {
             text-transform: uppercase;
@@ -841,11 +870,41 @@ a:hover {
             cursor: pointer;
         }
     }
+
+    .card-box__article-header {
+        padding: 16px;
+    }
+    .card-box__time-date {
+        font-size: 11px;
+        color: #ababab;
+        font-weight: 300;
+        &--reverse-color {
+            color: rgba(255,255,255, 0.6);
+        }
+    }
+
+    .cardbox__close {
+        position: absolute;
+        top: 12px;
+        right: 6px;
+        z-index: 3;
+    }
     .card-box__footer {
         padding: 14px 16px;
         border-top: 1px solid #eee;
         background-color: #f8f8f8;
         .border-radius (0 0 2px 2px);
+        &--light {
+            background-color: white;
+        }
+    }
+    .card-box__full-click {
+        position: absolute;
+        top:0;
+        bottom:0;
+        right:0;
+        left:0;
+        z-index: 2;
     }
 }
 
