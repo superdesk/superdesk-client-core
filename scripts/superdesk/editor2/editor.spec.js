@@ -49,6 +49,13 @@ describe('text editor', function() {
         expect(html).toBe('test <b>foo</b> error it');
     }));
 
+    it('can replace word in node', inject(function(editor, $q, $rootScope) {
+        var content = 'test <b>foo</b>';
+        var scope = createScope(content, $rootScope);
+        editor.replaceWord(scope, 5, 3, 'bars');
+        expect(scope.node.innerHTML).toBe('test <b>bars</b>');
+    }));
+
     xit('can findreplace', inject(function(editor, spellcheck, $q, $rootScope, $timeout) {
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
         var scope = createScope('test foo and foo', $rootScope);
