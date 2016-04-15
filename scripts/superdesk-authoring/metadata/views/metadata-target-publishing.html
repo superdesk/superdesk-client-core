@@ -1,0 +1,11 @@
+<span sd-check ng-model="deny" tooltip="Add Negation" tooltip-placement="right"></span>
+<select ng-model="target" ng-disabled="disabled">
+    <option value=""></option>
+    <option value="{{t.name}}" ng-repeat="t in list track by t.name">{{:: t.name}}</option>
+</select>
+<button class="btn btn-small btn-primary" type="button" ng-click="addTarget(target)" ng-disabled="canAddTarget()" translate>Add</button>
+<div class="terms" ng-if="targets.length">
+    <ul>
+        <li ng-repeat="t in targets" ng-click="removeTarget(t)">{{ :: t['allow'] == false ? 'Not ' + t.name : t.name}}<i class="icon-close-small"></i></li>
+    </ul>
+</div>

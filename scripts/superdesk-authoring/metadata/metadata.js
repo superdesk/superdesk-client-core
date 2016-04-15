@@ -28,34 +28,6 @@ function MetadataCtrl(
         });
     };
 
-    $scope.disableAddingTargetedFor = function() {
-        return !$scope.item._editable || angular.isUndefined($scope.item.targeted_for_value) || $scope.item.targeted_for_value === '';
-    };
-
-    $scope.addTargeted = function() {
-        if (angular.isUndefined($scope.item.targeted_for)) {
-            $scope.item.targeted_for = [];
-        }
-
-        if (!angular.isUndefined($scope.item.targeted_for_value) && $scope.item.targeted_for_value !== '') {
-            var targeted_for = {'name': $scope.item.targeted_for_value};
-
-            if (angular.isUndefined(_.find($scope.item.targeted_for, targeted_for))) {
-                targeted_for.allow = angular.isUndefined($scope.item.negation) ? true : !$scope.item.negation;
-                $scope.item.targeted_for.push(targeted_for);
-                $scope.autosave($scope.item);
-            }
-        }
-
-    };
-
-    $scope.removeTargeted = function(to_remove) {
-        if (angular.isDefined(_.find($scope.item.targeted_for, to_remove))) {
-            $scope.item.targeted_for = _.without($scope.item.targeted_for, to_remove);
-            $scope.autosave($scope.item);
-        }
-    };
-
     /**
     * Builds a list of categories available for selection in scope. Used by
     * the "category" menu in the Authoring metadata section.
@@ -196,6 +168,39 @@ function MetadataCtrl(
     $scope.unique_name_editable = Boolean(privileges.privileges.metadata_uniquename &&
         $scope.action !== 'correct' && $scope.action !== 'kill');
     resolvePublishScheduleAndEmbargoTS();
+}
+
+MetaTargetedPublishingDirective.$inject = []
+function MetaTargetedPublishingDirective() {
+    return {
+        scope: {
+            list: '=',
+            disabled: '=ngDisabled',
+            targets: '=',
+            autosave: '&'
+        },
+        templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-target-publishing.html',
+        link: function(scope, elem) {
+
+            scope.removeTarget = function(target) {
+                scope.targets = _.without(scope.targets, target);
+                scope.autosave();
+            };
+
+            scope.addTarget = function(target) {
+                if (angular.isUndefined(scope.targets)) {
+                    scope.targets = [];
+                }
+
+                scope.targets.push({'name': target, 'allow': !scope.deny});
+                scope.autosave();
+            };
+
+            scope.canAddTarget = function() {
+                return scope.disabled || !scope.target || scope.target === '';
+            };
+        }
+    };
 }
 
 MetadropdownFocusDirective.$inject = ['keyboardManager'];
@@ -831,8 +836,8 @@ function MetaLocatorsDirective() {
     };
 }
 
-MetadataService.$inject = ['api', '$q'];
-function MetadataService(api, $q) {
+MetadataService.$inject = ['api', '$q', 'adminPublishSettingsService'];
+function MetadataService(api, $q, adminPublishSettingsService) {
     var service = {
         values: {},
         cvs: [],
@@ -845,12 +850,23 @@ function MetadataService(api, $q) {
                     self.values[vocabulary._id] = vocabulary.items;
                 });
                 self.cvs = result._items;
-                self.values.targeted_for = _.sortBy(
-                    _.union(self.values.geographical_restrictions, self.values.subscriber_types),
-                    function(target) {
+                self.values.regions = _.sortBy(self.values.geographical_restrictions, function(target) {
                         return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
                     }
                 );
+                self.values.subscriberTypes = _.sortBy(self.values.subscriber_types, function(target) {
+                        return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
+                    }
+                );
+            });
+        },
+        fetchSubscribers: function() {
+            var self = this;
+            self.values.customSubscribers = [];
+            return adminPublishSettingsService.fetchSubscribers().then(function(items) {
+                _.each(items._items, function(item) {
+                    self.values.customSubscribers.push({'_id': item._id, 'name': item.name});
+                });
             });
         },
         fetchSubjectcodes: function(code) {
@@ -893,6 +909,7 @@ function MetadataService(api, $q) {
             if (!this.loaded) {
                 this.loaded = this.fetchMetadataValues()
                     .then(angular.bind(this, this.fetchSubjectcodes))
+                    .then(angular.bind(this, this.fetchSubscribers))
                     .then(angular.bind(this, this.fetchCities));
             }
 
@@ -919,6 +936,7 @@ angular.module('superdesk.authoring.metadata', ['superdesk.authoring.widgets'])
 
     .controller('MetadataWidgetCtrl', MetadataCtrl)
     .service('metadata', MetadataService)
+    .directive('sdMetaTarget', MetaTargetedPublishingDirective)
     .directive('sdMetaTerms', MetaTermsDirective)
     .directive('sdMetaTags', MetaTagsDirective)
     .directive('sdMetaDropdown', MetaDropdownDirective)
