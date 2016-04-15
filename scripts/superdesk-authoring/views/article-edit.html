@@ -65,7 +65,7 @@
         ng-change="autosave(item)"
         ng-if="_editable"
         ng-trim="false"></div>
-  <div class="abstract" ng-if="!_editable">{{item.abstract}}</div>
+  <div class="abstract" ng-if="!_editable" sd-html-preview="item.abstract"></div>
 </div>
 
 <div class="field" ng-if="item._type !== 'archived' && schema.byline" order="{{editor.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
