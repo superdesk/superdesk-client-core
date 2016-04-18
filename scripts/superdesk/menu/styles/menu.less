@@ -265,7 +265,7 @@
     }
     .content {
         position: absolute;
-        bottom: 155px;
+        bottom: 190px;
         left:0; right: 0;
         top:@nav-height;
         .box-sizing(border-box);
@@ -361,7 +361,7 @@
     }
     .footer {
         position: absolute;
-        height: 175px;
+        height: 190px;
         .box-sizing(border-box);
         left:0; right:0; bottom: 0;
         border-top: 1px solid #1f1f1f;
@@ -383,20 +383,36 @@
         .about {
             display: block;
             .box-sizing(border-box);
-            color: rgba(255,255,255,1);
-            background-color: rgba(0,0,0,0.6);
-            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.9);
+            background-color: rgba(0,0,0,0.3);
+            //border-top: 1px solid rgba(255,255,255,0.1);
             font-size: 12px;
-            margin-top: 8px;
+            margin-top: 12px;
             font-weight: 00;
-            text-align: right;
-            padding: 12px 20px;
+            padding: 16px 20px;
+            font-weight: 500;
+            letter-spacing:0.1em;
             a {
-              color: rgba(255,255,255,1);
+              color: rgba(255,255,255,0.9);
+              cursor: pointer;
             }
 
         }
     }
+}
+
+// About modal content
+
+.about-content {
+  position: relative;
+  .sf-logo {
+    width: 110px;
+    background-size: 110px;
+    opacity: 0.5;
+    position: absolute;
+    top:0;
+    right:0;
+  }
 }
 
 
