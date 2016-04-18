@@ -23,6 +23,11 @@
 - `feature.preview`: `false` - enables print preview in authoring
 - `feature.alchemy`: `false` - allow alchemy widget for keywords
 
+
+##### Workspace
+- `workspace.content`: `false` - enable content view in workspace (obsolete)
+- `workspace.ingest`: `false` - enable ingest view in workspace (obsolete)
+
 ##### Editor
 
 - `editor.disableEditorToolbar`: `false` - disable editor toolbar in authoring
