@@ -1047,7 +1047,6 @@
                                     for (var field in response.data._issues) {
                                         if (scope.userForm[field]) {
                                             if (scope.error[field]) {
-                                                scope.error[field].format = true;
                                                 scope.error.message = null;
                                             }
                                             for (var constraint in response.data._issues[field]) {
