@@ -206,7 +206,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
                 }
             });
             // update associations with the ones stored in blocks
-            angular.extend(vm.associations, vm.getAssociations());
+            vm.associations = angular.extend({}, vm.associations, vm.getAssociations());
             // save model with latest state of blocks
             vm.model.$setViewValue(vm.serializeBlock());
         },

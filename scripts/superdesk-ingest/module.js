@@ -1451,17 +1451,18 @@
                 icon: 'archive',
                 monitor: true,
                 controller: ['api', 'data', 'desks', function(api, data, desks) {
-                    desks.fetchCurrentDeskId().then(function(deskid) {
-                        api(data.item.fetch_endpoint).save({
+                    return desks.fetchCurrentDeskId().then(function(deskid) {
+                        return api(data.item.fetch_endpoint).save({
                             guid: data.item.guid,
                             desk: deskid
                         })
-                        .then(
-                            function(response) {
-                                data.item.error = response;
-                            })
-                        ['finally'](function() {
-                            data.item.actioning.externalsource = false;
+                        .then(function(response) {
+                            data.item = response;
+                            data.item.actioning = angular.extend({}, data.item.actioning, {externalsource: false});
+                            return data.item;
+                        }, function errorHandler(error) {
+                            data.item.error = error;
+                            return data.item;
                         });
                     });
                 }],
