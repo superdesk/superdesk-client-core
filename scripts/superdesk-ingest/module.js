@@ -1441,9 +1441,12 @@
                             desk: deskid
                         })
                         .then(function(response) {
-                            data.item.error = response;
+                            data.item = response;
                             data.item.actioning = angular.extend({}, data.item.actioning, {externalsource: false});
-                            return response;
+                            return data.item;
+                        }, function errorHandler(error) {
+                            data.item.error = error;
+                            return data.item;
                         });
                     });
                 }],
