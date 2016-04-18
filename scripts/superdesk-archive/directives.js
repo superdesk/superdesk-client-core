@@ -766,13 +766,12 @@
                     templateUrl: 'scripts/superdesk-archive/views/resend-configuration.html',
                     scope: {item: '='},
                     link: function (scope, elem, attr) {
-                        scope.customSubscribers = [];
-
                         scope.$watch('item', function(item) {
                             scope.selectedSubscribers = {items: []};
 
-                            if (item && !scope.customSubscribers.length) {
+                            if (item && !scope.customSubscribers) {
                                 adminPublishSettingsService.fetchSubscribers().then(function(items) {
+                                    scope.customSubscribers = [];
                                     scope.subscribers = items._items;
                                     _.each(items._items, function(item) {
                                         scope.customSubscribers.push({'qcode': item._id, 'name': item.name});
