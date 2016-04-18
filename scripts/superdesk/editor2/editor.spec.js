@@ -37,7 +37,9 @@ describe('text editor', function() {
         editor.renderScope(scope);
         $rootScope.$digest();
 
-        expect(scope.node.innerHTML).toBe('<span class="sderror sdhilite">test</span>');
+        expect(scope.node.innerHTML).toBe('test');
+        expect(scope.node.parentNode.lastChild.innerHTML)
+            .toBe('<span class="sderror sdhilite" data-word="test" data-index="0">test</span>');
     }));
 
     it('can remove highlights but keep marker', inject(function(editor, $q, $rootScope) {
@@ -47,7 +49,14 @@ describe('text editor', function() {
         expect(html).toBe('test <b>foo</b> error it');
     }));
 
-    it('can findreplace', inject(function(editor, spellcheck, $q, $rootScope, $timeout) {
+    it('can replace word in node', inject(function(editor, $q, $rootScope) {
+        var content = 'test <b>foo</b>';
+        var scope = createScope(content, $rootScope);
+        editor.replaceWord(scope, 5, 3, 'bars');
+        expect(scope.node.innerHTML).toBe('test <b>bars</b>');
+    }));
+
+    xit('can findreplace', inject(function(editor, spellcheck, $q, $rootScope, $timeout) {
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
         var scope = createScope('test foo and foo', $rootScope);
         editor.registerScope(scope);

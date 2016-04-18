@@ -644,6 +644,40 @@ describe('monitoring', function() {
         monitoring.expectIsNotChecked(0, 8);
     });
 
+    it('can update selected item count after a selected item is corrected', function() {
+        setupDeskMonitoringSettings('POLITIC DESK');
+        monitoring.turnOffDeskWorkingStage(0, false);
+
+        // Keep Only deskoutput on and turn off rest of stages
+        monitoring.toggleStage(0, 1);
+        monitoring.toggleStage(0, 2);
+        monitoring.toggleStage(0, 4);
+        monitoring.nextStages();
+        monitoring.nextSearches();
+        monitoring.moveOrderItem(0, 1);
+        monitoring.nextReorder();
+
+        monitoring.saveSettings();
+
+        monitoring.openMonitoring();
+
+        expect(monitoring.getTextItem(1, 2)).toBe('item6');
+
+        monitoring.actionOnItem('Edit', 1, 2);
+        authoring.publish();
+        monitoring.filterAction('text');
+        expect(monitoring.getTextItem(0, 0)).toBe('item6');
+        //select first item
+        monitoring.selectItem(0, 0);
+        monitoring.expectIsChecked(0, 0);
+        expect(monitoring.getMultiSelectCount()).toBe('1 Item selected');
+
+        monitoring.actionOnItem('Correct item', 0, 0);
+        authoring.sendToButton.click();
+        authoring.correct_button.click();
+        expect(element(by.id('multi-select-count')).isPresent()).toBeFalsy();
+    });
+
     it('can view published duplicated item in duplicate tab of non-published original item', function() {
         monitoring.openMonitoring();
         expect(monitoring.getGroupItems(1).count()).toBe(0);

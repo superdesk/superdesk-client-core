@@ -101,6 +101,13 @@
 
                         <div sd-content-expiry data-item="provider" data-preview="false" data-expiryfield="content_expiry" data-header="Content Expiry"></div>
 
+                        <div class="field">
+                            <label class="right">
+                                {{:: 'Allow Remove Ingested Items' | translate }}
+                                <span sd-switch ng-model="provider.allow_remove_ingested"></span>
+                            </label>
+                        </div>
+
                         <div class="field credentials">
                             <div ng-include="getConfigTemplateURL()"></div>
                         </div>

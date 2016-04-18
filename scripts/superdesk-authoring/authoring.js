@@ -97,21 +97,21 @@
         urgency: {order: 6, sdWidth: 'quarter'},
         anpa_category: {order: 7, sdWidth: 'full'},
         subject: {order: 8, sdWidth: 'full'},
-        company_codes: {sdWidth: 'full'},
-        ednote: {order: 9, sdWidth: 'full'},
-        headline: {order: 10, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
-        sms: {order: 11},
-        abstract: {order: 12, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
-        byline: {order: 13},
-        dateline: {order: 14},
+        company_codes: {order: 9, sdWidth: 'full'},
+        ednote: {order: 10, sdWidth: 'full'},
+        headline: {order: 11, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
+        sms: {order: 12},
+        abstract: {order: 13, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
+        byline: {order: 14},
+        dateline: {order: 15},
         body_html: {
-            order: 15,
+            order: 16,
             formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'removeFormat']
         },
-        footer: {order: 16},
-        sign_off: {order: 17},
+        footer: {order: 17},
+        body_footer: {order: 18},
+        sign_off: {order: 19},
         located: {},
-        body_footer: {},
         media: {},
         media_description: {}
     });
@@ -1673,14 +1673,14 @@
         };
     }
 
-    WordCount.$inject = [];
-    function WordCount() {
+    WordCount.$inject = ['gettextCatalog'];
+    function WordCount(gettextCatalog) {
         return {
             scope: {
                 item: '=',
                 html: '@'
             },
-            template: '<span class="char-count">{{numWords}} <span translate>words</span></span>',
+            template: '<span class="char-count">{{numWords}} <span translate>' + gettextCatalog.getString('words') + '</span></span>',
             link: function wordCountLink(scope, elem, attrs) {
                 scope.html = scope.html || false;
                 scope.numWords = 0;

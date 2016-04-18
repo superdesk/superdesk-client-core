@@ -605,8 +605,7 @@
                     controller: AdminPublishSettingsController,
                     category: superdesk.MENU_SETTINGS,
                     privileges: {subscribers: 1},
-                    priority: 2000,
-                    beta: true
+                    priority: 2000
                 })
                 .activity('/publish_queue', {
                     label: gettext('Publish Queue'),

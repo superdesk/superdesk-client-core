@@ -12,15 +12,6 @@
 'use strict';
 
 /**
- * Generate click event on given target node
- *
- * @param {Node} target
- */
-function click(target) {
-    target.dispatchEvent(new MouseEvent('click'));
-}
-
-/**
  * Replace given dom elem with its contents
  *
  * It is like jQuery unwrap
@@ -55,7 +46,7 @@ function removeClass(elem, className) {
 }
 
 /**
- * Find text node + offset for given node and offset
+ * Find text node within given node for given character offset
  *
  * This will find text node within given node that contains character on given offset
  *
@@ -63,7 +54,7 @@ function removeClass(elem, className) {
  * @param {numeric} offset
  * @return {Object} {node: {Node}, offset: {numeric}}
  */
-function findTextNode(node, offset) {
+function findOffsetNode(node, offset) {
     var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
     var currentLength;
     var currentOffset = 0;
@@ -77,6 +68,30 @@ function findTextNode(node, offset) {
 
         currentOffset += currentLength;
     }
+}
+
+/**
+ * Find text node within given node where word is located
+ *
+ * It will find text type node where the whole word is located
+ *
+ * @param {Node} node
+ * @param {Number} index
+ * @param {Number} length
+ * @return {Object} {node: {Node}, offset: {Number}}
+ */
+function findWordNode(node, index, length) {
+    var start = findOffsetNode(node, index);
+    var end = findOffsetNode(node, index + length);
+
+    // correction for linebreaks - first node on a new line is set to
+    // linebreak text node which is not even visible in dom, maybe dom bug?
+    if (start.node !== end.node) {
+        start.node = end.node;
+        start.offset = 0;
+    }
+
+    return start;
 }
 
 /**
@@ -229,7 +244,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} force force rendering manually - eg. via keyboard
      */
     this.renderScope = function(scope, force, preventStore) {
-        self.cleanScope(scope);
+        //self.cleanScope(scope); avoid cursor manipulation
         if (self.settings.findreplace) {
             renderFindreplace(scope.node);
         } else if (self.settings.spellcheck || force) {
@@ -325,19 +340,26 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Boolean} preventStore
      */
     function hilite(node, tokens, className, preventStore) {
-        if (!tokens.length) {
-            self.resetSelection(node);
-            return;
+        var CLONE_CLASS = 'clone';
+        var parentNode = node.parentNode;
+
+        // remove old hilite nodes if any
+        var clones = parentNode.getElementsByClassName(CLONE_CLASS);
+        if (clones.length) {
+            parentNode.removeChild(clones.item(0));
         }
 
-        if (!preventStore) {
-            self.storeSelection(node);
-        }
-        var token = tokens.shift();
-        hiliteToken(node, token, className);
-        $timeout(function() {
-            hilite(node, tokens, className, true);
-        }, 0, false);
+        // create a clone
+        var hiliteNode = node.cloneNode(true);
+        hiliteNode.classList.add(CLONE_CLASS);
+
+        // generate hilite markup in clone
+        tokens.forEach(function(token) {
+            hiliteToken(hiliteNode, token, className);
+        });
+
+        // render clone
+        parentNode.appendChild(hiliteNode);
     }
 
     /**
@@ -348,22 +370,15 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {string} className
      */
     function hiliteToken(node, token, className) {
-        var start = findTextNode(node, token.index);
-        var end = findTextNode(node, token.index + token.word.length);
-
-        // correction for linebreaks - first node on a new line is set to
-        // linebreak text node which is not even visible in dom, maybe dom bug?
-        if (start.node !== end.node) {
-            start.node = end.node;
-            start.offset = 0;
-        }
-
+        var start = findWordNode(node, token.index, token.word.length);
         var replace = start.node.splitText(start.offset);
         var span = document.createElement('span');
         span.classList.add(className);
         span.classList.add(HILITE_CLASS);
-        replace.splitText(end.offset - start.offset);
+        replace.splitText(token.word.length);
         span.textContent = replace.textContent;
+        span.dataset.word = token.word;
+        span.dataset.index = token.index;
         replace.parentNode.replaceChild(span, replace);
     }
 
@@ -427,6 +442,22 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             replaceNodes(nodes, text);
             self.commitScope(scope);
         });
+    };
+
+    /**
+     * Replace text at given index with word
+     *
+     * @param {Object} scope
+     * @param {Number} index
+     * @param {Number} length
+     * @param {String} word
+     */
+    this.replaceWord = function(scope, index, length, word) {
+        var node = scope.node;
+        var start = findWordNode(node, index, length);
+        var characters = start.node.textContent.split('');
+        characters.splice(start.offset, length, word);
+        start.node.textContent = characters.join('');
     };
 
     /**
@@ -1001,8 +1032,7 @@ angular.module('superdesk.editor2', [
                             editorConfig.extensions.table = new window.MediumEditorTable();
                         }
                     }
-                    // FIXME: create unwanted cursor moves
-                    // spellcheck.setLanguage(scope.language);
+                    spellcheck.setLanguage(scope.language);
                     editorElem = elem.find(scope.type === 'preformatted' ?  '.editor-type-text' : '.editor-type-html');
                     editorElem.empty();
                     editorElem.html(ngModel.$viewValue || '');
@@ -1047,7 +1077,7 @@ angular.module('superdesk.editor2', [
                     scope.$on('key:ctrl:shift:s', render);
                     function cancelTimeout(event) {
                         $timeout.cancel(updateTimeout);
-                        scope.node.classList.add(TYPING_CLASS);
+                        scope.node.parentNode.classList.add(TYPING_CLASS);
                     }
 
                     function changeSelectedParagraph(direction) {
@@ -1115,28 +1145,56 @@ angular.module('superdesk.editor2', [
                         updateTimeout = $timeout(vm.updateModel, 800, false);
                     });
 
+                    /**
+                     * Test if given point {x, y} is in given bouding rectangle.
+                     */
+                    function isPointInRect(point, rect) {
+                        return rect.left < point.x && rect.right > point.x && rect.top < point.y && rect.bottom > point.y;
+                    }
+
                     editorElem.on('contextmenu', function(event) {
-                        if (editor.isErrorNode(event.target)) {
-                            event.preventDefault();
-                            var menu = elem[0].getElementsByClassName('dropdown-menu')[0],
-                                toggle = elem[0].getElementsByClassName('dropdown-toggle')[0];
-                            if (elem.find('.dropdown.open').length) {
-                                click(toggle);
+                        var err, pos;
+                        var point = {x: event.clientX, y: event.clientY};
+                        var errors = elem[0].parentNode.getElementsByClassName('sderror');
+                        for (var i = 0, l = errors.length; i < l; i++) {
+                            err = errors.item(i);
+                            pos = err.getBoundingClientRect();
+                            if (isPointInRect(point, pos)) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                renderContextMenu(err);
+                                return false;
                             }
-                            scope.suggestions = null;
-                            spellcheck.suggest(event.target.textContent).then(function(suggestions) {
-                                scope.suggestions = suggestions;
-                                scope.replaceTarget = event.target;
-                                $timeout(function() {
-                                    menu.style.left = (event.target.offsetLeft) + 'px';
-                                    menu.style.top = (event.target.offsetTop + event.target.offsetHeight) + 'px';
-                                    menu.style.position = 'absolute';
-                                    click(toggle);
-                                }, 0, false);
-                            });
-                            return false;
                         }
                     });
+
+                    function renderContextMenu(node) {
+                        // close previous menu (if any)
+                        scope.$apply(function() {
+                            scope.suggestions = null;
+                            scope.openDropdown = false;
+                        });
+
+                        // set data needed for replacing
+                        scope.replaceWord = node.dataset.word;
+                        scope.replaceIndex = parseInt(node.dataset.index, 0);
+
+                        spellcheck.suggest(node.textContent).then(function(suggestions) {
+                            scope.suggestions = suggestions;
+                            scope.replaceTarget = node;
+                            $timeout(function() {
+                                scope.$apply(function() {
+                                    var menu = elem[0].getElementsByClassName('dropdown-menu')[0];
+                                    menu.style.left = (node.offsetLeft) + 'px';
+                                    menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
+                                    menu.style.position = 'absolute';
+                                    scope.openDropdown = true;
+                                });
+                            }, 0, false);
+                        });
+                        return false;
+                    }
+
                     if (scope.type === 'preformatted') {
                         editorElem.on('keydown keyup click', function() {
                             scope.$apply(function() {
@@ -1144,6 +1202,7 @@ angular.module('superdesk.editor2', [
                             });
                         });
                     }
+
                     scope.$on('$destroy', function() {
                         scope.medium.destroy();
                         editorElem.off();
@@ -1158,7 +1217,7 @@ angular.module('superdesk.editor2', [
                 };
 
                 function render($event, event, preventStore) {
-                    scope.node.classList.remove(TYPING_CLASS);
+                    scope.node.parentNode.classList.remove(TYPING_CLASS);
                     editor.renderScope(scope, $event, preventStore);
                     if (event) {
                         event.preventDefault();
@@ -1166,7 +1225,7 @@ angular.module('superdesk.editor2', [
                 }
 
                 scope.replace = function(text) {
-                    scope.replaceTarget.parentNode.replaceChild(document.createTextNode(text), scope.replaceTarget);
+                    editor.replaceWord(scope, scope.replaceIndex, scope.replaceWord.length, text);
                     editor.commitScope(scope);
                 };
 
@@ -1195,7 +1254,7 @@ angular.module('superdesk.editor2', [
                     renderTimeout = $timeout(render, 0, false);
                 }
             },
-            controller: ['$scope', 'editor', function(scope, editor) {
+            controller: ['$scope', 'editor', 'api', 'superdesk', function(scope, editor, api , superdesk) {
                 var vm = this;
                 angular.extend(vm, {
                     block: undefined, // provided in link method
@@ -1227,25 +1286,33 @@ angular.module('superdesk.editor2', [
                         editor.commitScope(scope);
                     },
                     insertPicture: function(picture) {
-                        // cut the text that is after the caret in the block and save it in order to add it after the embed later
-                        var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
-                        // save the blocks (with removed leading text)
-                        vm.updateModel();
-                        var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
-                        editor.generateImageTag(picture).then(function(imgTag) {
-                            vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                                blockType: 'embed',
-                                embedType: 'Image',
-                                body: imgTag,
-                                caption: picture.description_text,
-                                association: picture
-                            }, true);
-                            indexWhereToAddBlock++;
-                        }).then(function() {
-                            // add new text block for the remaining text
-                            vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                                body: textThatWasAfterCaret
-                            }, true);
+                        var performRenditions = $.when(picture);
+                        if (picture._type === 'externalsource') {
+                            performRenditions = superdesk.intent('list', 'externalsource',  {item: picture}).then(function(item) {
+                                return api.find('archive', item._id);
+                            });
+                        }
+                        performRenditions.then(function(picture) {
+                            // cut the text that is after the caret in the block and save it in order to add it after the embed later
+                            var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
+                            // save the blocks (with removed leading text)
+                            vm.updateModel();
+                            var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
+                            editor.generateImageTag(picture).then(function(imgTag) {
+                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                                    blockType: 'embed',
+                                    embedType: 'Image',
+                                    body: imgTag,
+                                    caption: picture.description_text,
+                                    association: picture
+                                }, true);
+                                indexWhereToAddBlock++;
+                            }).then(function() {
+                                // add new text block for the remaining text
+                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                                    body: textThatWasAfterCaret
+                                }, true);
+                            });
                         });
                     }
                 });

@@ -106,6 +106,7 @@
             'monitoringState',
             'authoringWorkspace',
             'gettextCatalog',
+            '$rootScope',
         function(
             $location,
             $timeout,
@@ -130,7 +131,8 @@
             highlightsService,
             monitoringState,
             authoringWorkspace,
-            gettextCatalog
+            gettextCatalog,
+            $rootScope
         ) {
             return {
                 link: function(scope, elem) {
@@ -139,6 +141,10 @@
                     var menuHolderElem = document.getElementById('react-placeholder');
                     var closeActionsMenu = function() {
                         ReactDOM.unmountComponentAtNode(menuHolderElem);
+                    };
+
+                    var getViewType = function() {
+                        return scope.viewType;
                     };
 
                     var groupId = scope.$id;
@@ -163,6 +169,15 @@
                      */
                     function hasThumbnail(item) {
                         return item.type === 'picture' && item.renditions.thumbnail;
+                    }
+
+                    /**
+                     * Test if an multi-selection allowed
+                     *
+                     * @return {Boolean}
+                     */
+                    function isCheckAllowed(item) {
+                        return !(item.state === 'killed' || (item._type === 'published' && !item.last_published_version));
                     }
 
                     /**
@@ -216,14 +231,21 @@
                     var SelectBox = React.createClass({
                         toggle: function(event) {
                             event.stopPropagation();
-                            var selected = !this.props.item.selected;
-                            this.props.onMultiSelect(this.props.item, selected);
+                            if (isCheckAllowed(this.props.item))
+                            {
+                                var selected = !this.props.item.selected;
+                                this.props.onMultiSelect(this.props.item, selected);
+                            }
                         },
 
                         render: function() {
+                            if (this.props.item.selected) {
+                                this.props.item.selected = isCheckAllowed(this.props.item);
+                            }
                             return React.createElement(
                                 'div',
-                                {className: 'selectbox', onClick: this.toggle},
+                                {className: 'selectbox', title: isCheckAllowed(this.props.item) ? null : 'selection not allowed',
+                                    onClick: this.toggle},
                                 React.createElement(
                                     'span',
                                     {className: 'sd-checkbox' + (this.props.item.selected ? ' checked' : '')}
@@ -390,6 +412,10 @@
                             return function(event) {
                                 event.stopPropagation();
                                 highlightsService.markItem(highlight._id, this.props.item);
+
+                                if (getViewType() === 'highlights' && this.props.item.highlights.length === 1) {
+                                    $rootScope.$broadcast('multi:remove', this.props.item._id);
+                                }
                             }.bind(this);
                         },
                         render: function() {
@@ -466,7 +492,17 @@
 
                         render: function() {
                             var item = this.props.item.archive_item || this.props.item;
-                            var highlights = item.highlights || [];
+
+                            var highlights = [];
+                            if (isCheckAllowed(this.props.item)) {
+                                if (this.props.item.archive_item && this.props.item.archive_item.highlights &&
+                                    this.props.item.archive_item.highlights.length) {
+                                    highlights = this.props.item.archive_item.highlights;
+                                } else {
+                                    highlights = this.props.item.highlights || [];
+                                }
+                            }
+
                             return React.createElement(
                                 'div',
                                 {
@@ -599,24 +635,6 @@
                         }
                     });
 
-                    var ItemState = function(props) {
-                        var item = props.item;
-                        return React.createElement(
-                            'span',
-                            {},
-                            React.createElement(
-                                'span',
-                                {className: 'state-label state-' + item.state},
-                                $filter('removeLodash')(item.state)
-                            ),
-                            item.embargo ? React.createElement(
-                                'span',
-                                {className: 'state-label state_embargo'},
-                                gettext('embargo')
-                            ) : null
-                        );
-                    };
-
                     var ListItemInfo = function(props) {
                         var item = props.item;
                         var flags = item.flags || {};
@@ -636,7 +654,16 @@
                                 React.createElement(TimeElem, {date: item.versioncreated})
                             ),
                             React.createElement('div', {className: 'line'},
-                                React.createElement(ItemState, {item: item}),
+                                React.createElement(
+                                    'span',
+                                    {title: $filter('removeLodash')(item.state), className: 'state-label state-' + item.state},
+                                    $filter('removeLodash')(item.state)
+                                ),
+                                item.embargo ? React.createElement(
+                                    'span',
+                                    {className: 'state-label state_embargo', title: gettext('embargo')},
+                                    gettext('embargo')
+                                ) : null,
                                 item.correction_sequence ?
                                     React.createElement('div', {className: 'provider'}, gettext('Update') +
                                         ' ' + item.correction_sequence) : null,
@@ -653,12 +680,12 @@
                                     React.createElement('span', {className: 'broadcast-status', tooltip: broadcast.status}, '!') :
                                     null,
                                 flags.marked_for_not_publication ?
-                                    React.createElement('div', {className: 'state-label not-for-publication'},
-                                        gettext('Not For Publication')) :
+                                    React.createElement('div', {className: 'state-label not-for-publication',
+                                        title: gettext('Not For Publications')}, gettext('Not For Publications')) :
                                     null,
                                 flags.marked_for_legal ?
-                                    React.createElement('div', {className: 'state-label legal'}, gettext('Legal')) :
-                                    null,
+                                    React.createElement('div', {className: 'state-label legal', title: gettext('Legal')},
+                                        gettext('Legal')) : null,
                                 flags.marked_for_sms ?
                                     React.createElement('div', {className: 'state-label sms'}, gettext('Sms')) :
                                     null,
@@ -862,6 +889,7 @@
                             scope.$apply(function() {
                                 activityService.start(this.props.activity, {data: {item: this.props.item}});
                             }.bind(this));
+
                             closeActionsMenu();
                         },
 
@@ -915,7 +943,8 @@
                                         ),
                                         this.state.open ? $injector.invoke(activity.dropdown, activity, {
                                             item: this.props.item,
-                                            className: 'dropdown-menu right-submenu upward'
+                                            className: 'dropdown-menu right-submenu upward',
+                                            translatedLabel: gettextCatalog.getString('No available highlights')
                                         }) : null
                                     )
                                 );
@@ -1317,7 +1346,7 @@
                                 var itemId = search.generateTrackByIdentifier(item);
                                 var oldItem = itemsById[itemId] || null;
                                 if (!oldItem || !isSameVersion(oldItem, item) || !isArchiveItemSameVersion(oldItem, item)) {
-                                    itemsById[itemId] = item;
+                                    itemsById[itemId] = angular.extend({}, oldItem, item);
                                 }
 
                                 if (!currentItems[itemId]) { // filter out possible duplicates

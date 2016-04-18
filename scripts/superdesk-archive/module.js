@@ -6,6 +6,8 @@
 
         var items = [];
 
+        var self = this;
+
         /**
          * Test if given item is selected
          *
@@ -61,9 +63,36 @@
             $rootScope.$broadcast('multi:reset', {ids: ids}); // let react know
         };
 
+        /**
+         * update count on deselection
+         * e.g, when selected item gets published, corrected or killed
+         */
+        this.remove = function(itemId) {
+            _.remove(items, {_id: itemId});
+            this.count = items.length;
+        };
+
         // main
         this.reset();
         $rootScope.$on('$routeChangeStart', angular.bind(this, this.reset));
+        $rootScope.$on('multi:remove', function(_e, itemId) {
+            self.remove(itemId);
+        });
+        $rootScope.$on('item:spike', function(e, data) {
+            if (data != null) {
+                self.remove(data.item);
+            }
+        });
+        $rootScope.$on('item:unspike', function(e, data) {
+            if (data != null) {
+                self.remove(data.item);
+            }
+        });
+        $rootScope.$on('item:publish', function(e, data) {
+            self.remove(data.item);
+        });
+
+        //ToDo: Track upcoming item:move event as well for updateCount.
     }
 
     SpikeService.$inject = ['$location', 'api', 'notify', 'gettext'];
@@ -304,7 +333,7 @@
             }
 
             return _.max(versions, function(version) {
-                return version._current_version || version.version || version._updated;
+                return version._current_version || version.version;
             });
         };
     }

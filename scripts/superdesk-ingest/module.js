@@ -235,6 +235,7 @@
 
         $scope.$on('ingest:update', update);
         $scope.$on('item:fetch', update);
+        $scope.$on('item:deleted', update);
         $scope.$watchCollection(function getSearchWithoutId() {
             return _.omit($location.search(), '_id');
         }, update);
@@ -1358,6 +1359,7 @@
 
     app
         .service('ingestSources', IngestProviderService)
+        .service('remove', RemoveIngestedService)
         .factory('subjectService', SubjectService)
         .directive('sdIngestSourcesContent', IngestSourcesContent)
         .directive('sdIngestRulesContent', IngestRulesContent)
@@ -1402,6 +1404,20 @@
                 adminTools: true,
                 privileges: {ingest_providers: 1}
             })
+            .activity('remove_ingested', {
+                label: gettext('Remove'),
+                icon: 'trash',
+                controller: ['data', 'remove', function(data, remove) {
+                    remove.remove(data.item);
+                }],
+                filters: [
+                    {action: 'list', type: 'ingest'}
+                ],
+                additionalCondition:['remove', 'item', function(remove, item) {
+                    return remove.canRemove(item);
+                }],
+                privileges: {fetch: 1}
+            })
             .activity('fetchAs', {
                 label: gettext('Fetch To'),
                 icon: 'fetch-as',
@@ -1435,17 +1451,18 @@
                 icon: 'archive',
                 monitor: true,
                 controller: ['api', 'data', 'desks', function(api, data, desks) {
-                    desks.fetchCurrentDeskId().then(function(deskid) {
-                        api(data.item.fetch_endpoint).save({
+                    return desks.fetchCurrentDeskId().then(function(deskid) {
+                        return api(data.item.fetch_endpoint).save({
                             guid: data.item.guid,
                             desk: deskid
                         })
-                        .then(
-                            function(response) {
-                                data.item.error = response;
-                            })
-                        ['finally'](function() {
-                            data.item.actioning.externalsource = false;
+                        .then(function(response) {
+                            data.item = response;
+                            data.item.actioning = angular.extend({}, data.item.actioning, {externalsource: false});
+                            return data.item;
+                        }, function errorHandler(error) {
+                            data.item.error = error;
+                            return data.item;
                         });
                     });
                 }],
@@ -1611,4 +1628,52 @@
         }
     }
 
+    RemoveIngestedService.$inject = ['api', '$rootScope'];
+    function RemoveIngestedService(api, $rootScope) {
+        this.canRemove = canRemove;
+        this.remove = remove;
+        this.fetchProviders = fetchProviders;
+
+        var providers = {};
+
+        /**
+         * Fetch ingest providers in order to read if remove is allowed
+         */
+        function fetchProviders() {
+            if (api.ingestProviders) {
+                return api.ingestProviders.query({max_results: 200})
+                .then(function(result) {
+                    _.each(result._items, function(provider) {
+                        providers[provider._id] = provider.allow_remove_ingested || false;
+                    });
+                });
+            }
+        }
+
+        $rootScope.$on('ingest_provider:create', fetchProviders);
+        $rootScope.$on('ingest_provider:update', fetchProviders);
+
+        /**
+         * Return true if the item can be removed
+         *
+         * @param {Object} item
+         * @returns {boolean}
+         */
+        function canRemove(item) {
+            return item.ingest_provider && providers[item.ingest_provider];
+        }
+
+        /**
+         * Remove an ingested item
+         *
+         * @param {Object} item
+         */
+        function remove(item) {
+            return api('ingest').remove(item);
+        }
+    }
+
+    app.run(['remove', function(remove) {
+        remove.fetchProviders();
+    }]);
 })();
