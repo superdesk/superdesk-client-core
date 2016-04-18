@@ -4,8 +4,7 @@ var monitoring = require('./helpers/monitoring'),
     authoring = require('./helpers/authoring'),
     ctrlKey = require('./helpers/utils').ctrlKey,
     ctrlShiftKey = require('./helpers/utils').ctrlShiftKey,
-    assertToastMsg = require('./helpers/utils').assertToastMsg,
-    desks = require('./helpers/desks');
+    assertToastMsg = require('./helpers/utils').assertToastMsg;
 
 describe('authoring', function() {
 
@@ -92,7 +91,7 @@ describe('authoring', function() {
         expect(authoring.edit_kill_button.isDisplayed()).toBe(false);
     });
 
-    xit('authoring history', function() {
+    it('authoring history', function() {
         //view item history create-fetch operation
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
@@ -116,6 +115,16 @@ describe('authoring', function() {
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(3);
         expect(authoring.getHistoryItem(2).getText()).toMatch(/Moved to Politic Desk\/two by .*/);
+        authoring.close();
+
+        //view item history editable for newly created unsaved item
+        authoring.createTextItem();
+        authoring.showHistory();
+        expect(authoring.getHistoryItems().count()).toBe(1);
+        expect(authoring.getHistoryItem(0).getText()).toMatch(/Story \d+ (.*) Created by.*/);
+        expect(authoring.save_button.isDisplayed()).toBe(true);
+        authoring.getHistoryItem(0).click();
+        expect(authoring.save_button.isDisplayed()).toBe(true); //expect save button still available
         authoring.close();
 
         //view item history create-update operations
@@ -171,15 +180,8 @@ describe('authoring', function() {
         //view item history duplicate operation
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Duplicate', 2, 0);
-        monitoring.showSpiked();
-
-        desks.openDesksSettings();
-        desks.showMonitoringSettings('POLITIC DESK');
-        monitoring.turnOffDeskWorkingStage(0);
-        monitoring.openMonitoring();
-
-        expect(monitoring.getTextItem(5, 1)).toBe('item5');
-        monitoring.actionOnItem('Edit', 5, 1);
+        expect(monitoring.getTextItem(0, 1)).toBe('item5');
+        monitoring.actionOnItem('Edit', 0, 1);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
         expect(authoring.getHistoryItem(1).getText()).toMatch(/Copied to \d+ \(Politic Desk\/Working Stage\) by .*/);

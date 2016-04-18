@@ -304,7 +304,7 @@
             }
 
             return _.max(versions, function(version) {
-                return version._current_version || version.version || version._updated;
+                return version._current_version || version.version;
             });
         };
     }
