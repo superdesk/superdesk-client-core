@@ -528,6 +528,14 @@
                     select(item);
                 }
 
+                // For highlight page return only highlights items, i.e, include only last version if item type is published
+                function getOnlyHighlightsItems(items) {
+                    items._items = _.filter(items._items, function(item) {
+                        return ((item._type === 'published' && item.last_published_version) || item._type !== 'published');
+                    });
+                    return items;
+                }
+
                 function queryItems() {
                     criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                     criteria.source.from = 0;
@@ -540,8 +548,9 @@
                     }
 
                     return apiquery().then(function(items) {
-                        monitoring.totalItems = items._meta.total;
                         scope.total = items._meta.total;
+                        items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
+                        monitoring.totalItems = items._items.length;
                         scope.items = merge(items);
                     });
                 }
@@ -552,7 +561,7 @@
                             if (scope.total !== items._meta.total) {
                                 scope.total = items._meta.total;
                             }
-
+                            items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
                             scope.items = merge(items, next);
                         });
                     });
