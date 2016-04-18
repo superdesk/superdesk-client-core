@@ -1,14 +1,13 @@
-<form name="editForm">
 <div sd-modal data-model="item" class="resend-popup">
+    <form name="editForm">
     <div class="modal-header">
         <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         <h3 translate>Resend To</h3>
     </div>
 
     <div class="modal-body">
-        
         <fieldset>
-            <div class="field">
+            <div class="field" ng-show="customSubscribers">
                 <label translate>Select Subscribers</label>
                 <div class="term-editor"
                      sd-meta-terms
@@ -17,10 +16,10 @@
                      data-unique="qcode"
                      data-list="customSubscribers"
                      data-header="true"
+                     data-reload-list="true"
                      ></div>
             </div>
         </fieldset>
-
     </div>
 
     <div class="modal-footer">
@@ -29,5 +28,5 @@
             ng-disabled="selectedSubscribers.items.length == 0" translate>Resend</button>
         <button id="cancel-edit-btn" type="button" class="btn pull-right" ng-click="cancel()" translate>Cancel</button>
     </div>
+    </form>
 </div>
-</form>

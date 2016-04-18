@@ -507,6 +507,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             var includeParent = scope.includeParent === 'true' ? true : false;
             scope.combinedList = [];
 
+            scope.tree = {};
             scope.termPath = [];
 
             scope.$watch('unique', function(value) {
