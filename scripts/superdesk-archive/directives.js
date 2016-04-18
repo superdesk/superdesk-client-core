@@ -764,18 +764,21 @@
             function(adminPublishSettingsService, authoring, api, notify, gettext) {
                 return {
                     templateUrl: 'scripts/superdesk-archive/views/resend-configuration.html',
-                    scope: {
-                        'item': '='
-                    },
+                    scope: {item: '='},
                     link: function (scope, elem, attr) {
-                        scope.selectedSubscribers = {items: []};
                         scope.customSubscribers = [];
 
-                        adminPublishSettingsService.fetchSubscribers().then(function(items) {
-                            scope.subscribers = items._items;
-                            _.each(items._items, function(item) {
-                                scope.customSubscribers.push({'qcode': item._id, 'name': item.name});
-                            });
+                        scope.$watch('item', function(item) {
+                            scope.selectedSubscribers = {items: []};
+
+                            if (item && !scope.customSubscribers.length) {
+                                adminPublishSettingsService.fetchSubscribers().then(function(items) {
+                                    scope.subscribers = items._items;
+                                    _.each(items._items, function(item) {
+                                        scope.customSubscribers.push({'qcode': item._id, 'name': item.name});
+                                    });
+                                });
+                            }
                         });
 
                         function getSubscriberIds() {
@@ -802,10 +805,8 @@
                         };
 
                         scope.cancel = function() {
-                            scope.selectedSubscribers = {items: []};
-                            scope.item = false;
+                            scope.item = null;
                         };
-
                     }
                 };
             }
