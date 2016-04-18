@@ -104,7 +104,19 @@
                     privileges.loaded.then(function() {
                         scope.privileges = privileges.privileges;
                     });
+
+                    scope.openAbout = function () {
+                      scope.aboutActive = true;
+                    }
+                    scope.closeAbout = function () {
+                      scope.aboutActive = false;
+                    }
                 }
             };
+        }])
+        .directive('sdAbout', ['asset', function(asset) {
+          return {
+            templateUrl: asset.templateUrl('superdesk/menu/views/about.html')
+          }
         }]);
 })();

@@ -265,7 +265,7 @@
     }
     .content {
         position: absolute;
-        bottom: 100px;
+        bottom: 155px;
         left:0; right: 0;
         top:@nav-height;
         .box-sizing(border-box);
@@ -361,23 +361,40 @@
     }
     .footer {
         position: absolute;
-        height: 100px;
+        height: 175px;
         .box-sizing(border-box);
         left:0; right:0; bottom: 0;
         border-top: 1px solid #1f1f1f;
         .box-shadow-both(inset 0 1px 0px 0px #353535,0 -2px 3px 0px #232323);
         text-align: center;
         .icon-superdesk {
-            background: url(../../images/superdesk-icon.png) no-repeat 0 0;
+            background: url(../../images/superdesk-logo.svg) no-repeat 0 0;
             width: 154px;
-            height: 45px;
-            margin-top: 15px;
+            height: 48px;
+            margin-top: 20px;
         }
-        span {
+        .powered {
             display: block;
-            color: #505050;
+            color: rgba(255,255,255,0.3);
             font-size: 11px;
             margin-top: 8px;
+            font-weight: 300;
+        }
+        .about {
+            display: block;
+            .box-sizing(border-box);
+            color: rgba(255,255,255,1);
+            background-color: rgba(0,0,0,0.6);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 12px;
+            margin-top: 8px;
+            font-weight: 00;
+            text-align: right;
+            padding: 12px 20px;
+            a {
+              color: rgba(255,255,255,1);
+            }
+
         }
     }
 }
