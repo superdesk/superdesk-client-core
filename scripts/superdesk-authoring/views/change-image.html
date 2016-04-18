@@ -43,23 +43,23 @@
             <div class="header" translate>Metadata</div>
             <div>
                 <label translate>Title *</label>
-                <input type="text" ng-model="data.metadata.headline" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.headline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
                 <label translate>Caption *</label>
-                <input type="text" ng-model="data.metadata.description_text" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
                 <label translate>Alt Text</label>
-                <input type="text" ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
                 <label translate>Credit</label>
-                <input type="text" ng-model="data.metadata.byline" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.byline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
                 <label translate>Copyright holder</label>
-                <input type="text" ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
                 <select ng-model="data.metadata.usageterms">
@@ -71,7 +71,7 @@
             </div>
             <div>
                 <label translate>Copyright notice</label>
-                <input type="text" ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
         </div>
     </div><!-- end flex top -->
