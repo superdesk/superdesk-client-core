@@ -370,15 +370,12 @@
                 $scope.newDestination = null;
                 $scope.contentFilters = null;
                 $scope.availableProducts = null;
-                $scope.geoRestrictions = null;
                 $scope.subTypes = null;
 
-                if (angular.isDefined(metadata.values.geographical_restrictions)) {
-                    $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
+                if (angular.isDefined(metadata.values.subscriber_types)) {
                     $scope.subTypes = metadata.values.subscriber_types;
                 } else {
                     metadata.fetchMetadataValues().then(function() {
-                        $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
                         $scope.subTypes = metadata.values.subscriber_types;
                     });
                 }
