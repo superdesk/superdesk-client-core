@@ -62,8 +62,9 @@
                 <div ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
+                <label><span translate>Assign Rights</span></label>
                 <select ng-model="data.metadata.usageterms">
-                    <option translate value="">---Assign Rights---</option> <!-- not selected / blank option -->
+                    <option translate value="">--- Not selected ---</option> <!-- not selected / blank option -->
                     <option translate value="single-usage">Single Usage</option>
                     <option translate value="time-restricted">Time Restricted</option>
                     <option translate value="indefinite-usage">Indefinite Usage</option>

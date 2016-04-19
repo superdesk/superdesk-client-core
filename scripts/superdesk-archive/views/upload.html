@@ -39,25 +39,29 @@
 
                     <div class="row">
                         <label><span translate>Title</span> *</label>
-                        <input type="text" ng-model="item.meta.headline">
+                        <div ng-model="item.meta.headline" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                     </div>
                     <div class="other-info">
                         <div class="row">
                             <label><span translate>Caption</span> *</label>
-                            <input type="text" ng-model="item.meta.description_text">
+                            <div ng-model="item.meta.description_text" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
                         <div class="row">
                             <label><span translate>Alt text</span></label>
-                            <input type="text" ng-model="item.meta.alt_text"></div>
+                            <div ng-model="item.meta.alt_text" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
+                        </div>
                         <div class="row">
                             <label><span translate>Credit</span></label>
-                            <input type="text" ng-model="item.meta.byline"></div>
+                            <div ng-model="item.meta.byline" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
+                        </div>
                         <div class="row">
                             <label><span translate>Copyright holder</span></label>
-                            <input type="text" ng-model="item.meta.copyrightholder"></div>
+                            <div ng-model="item.meta.copyrightholder" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
+                        </div>
                         <div class="row">
+                            <label><span translate>Assign Rights</span></label>
                             <select ng-model="item.meta.usageterms">
-                                <option translate value="">---Assign Rights---</option> <!-- not selected / blank option -->
+                                <option translate value="">--- Not selected ---</option> <!-- not selected / blank option -->
                                 <option translate value="single-usage">Single Usage</option>
                                 <option translate value="time-restricted">Time Restricted</option>
                                 <option translate value="indefinite-usage">Indefinite Usage</option>
@@ -65,7 +69,7 @@
                         </div>
                         <div class="row">
                             <label><span translate>Copyright notice</span></label>
-                            <input type="text" ng-model="item.meta.copyrightnotice">
+                            <div ng-model="item.meta.copyrightnotice" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
                         <div class="row" ng-if="item.cssType === 'image'">
                             <label><span translate>Dimensions</span></label>
