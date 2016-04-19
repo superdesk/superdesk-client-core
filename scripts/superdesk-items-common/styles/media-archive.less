@@ -562,6 +562,7 @@
 @rightfield-width:60px;
 
 .mlist-view, .compact-view {
+    overflow:hidden;
     box-shadow: @block-shadow-depth-2;
     .list-item-view {
         width: 100%;
@@ -672,6 +673,7 @@
                 box-sizing: border-box;
                 dl {
                     margin: 0;
+                    white-space:nowrap;
                 }
                 dt, dd {
                     display: inline-block;
@@ -688,9 +690,7 @@
             }
             .state-label {
                 margin-top: 2px;
-                margin-right: 10px;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                margin-right: 4px;
                 white-space: nowrap;
             }
             .label {
@@ -765,6 +765,9 @@
                 .text-semibold();
                 color: #444;
                 margin-right: 10px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             .takekey {
                 color: #333;
@@ -780,6 +783,7 @@
                 color: #686b6c;
                 float: left;
                 margin-right: 10px;
+                white-space: nowrap;
             }
             .expires {
                 float: right;
