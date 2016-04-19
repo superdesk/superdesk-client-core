@@ -663,14 +663,6 @@
                             $location.search('_id', item ? item._id : null);
                         };
 
-                        scope.openLightbox = function openLightbox() {
-                            scope.selected.view = scope.selected.preview;
-                        };
-
-                        scope.closeLightbox = function closeLightbox() {
-                            scope.selected.view = null;
-                        };
-
                         scope.openSingleItem = function (packageItem) {
                             packages.fetchItem(packageItem).then(function (item) {
                                 scope.selected.view = item;

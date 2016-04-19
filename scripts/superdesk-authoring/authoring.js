@@ -3075,7 +3075,7 @@
                 }
             }.bind(this);
 
-            if (item._type === 'ingest') {
+            if (item._type === 'ingest' || item.state === 'ingested') {
                 send.one(item).then(_open);
             } else {
                 _open(item);
