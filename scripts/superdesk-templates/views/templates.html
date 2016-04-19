@@ -18,7 +18,7 @@
                           <li><div class="menu-label" translate>Actions</div></li>
                           <li class="divider"></li>
                           <li><button ng-click="edit(template)" title="{{:: 'Edit Template' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                          <li><button ng-click="remove(template)" title="{{:: 'Remove Template' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                          <li ng-if="template.template_type !== 'kill'"><button ng-click="remove(template)" title="{{:: 'Remove Template' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                       </ul>
                   </div>
                   <div class="card-box__heading">{{ template.template_name }}</div>
@@ -66,7 +66,7 @@
             <label for="template-type" translate>Template Type</label>
             <select id="template-type" required
               ng-model="template.template_type"
-              ng-options="type._id as type.label for type in types"></select>
+              ng-options="type._id as type.label for type in types | filter:templatesFilter"></select>
         </div>
 
         <div class="field">
