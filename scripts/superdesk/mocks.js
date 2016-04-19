@@ -16,7 +16,11 @@ angular.module('superdesk.preferences', []);
 angular.module('superdesk.mocks', [])
     .constant('config', {
         server: {url: null},
-        editor: {}
+        editor: {},
+        model: {
+            dateformat: 'DD/MM/YYYY',
+            timeformat: 'HH:mm:ss'
+        }
     })
     .service('features', function() {})
     .service('preferencesService', function($q) {
