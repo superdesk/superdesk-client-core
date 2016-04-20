@@ -194,7 +194,7 @@ describe('user edit form', function() {
         var scope = $rootScope.$new(true);
         var user = {
             _id: 1,
-            _readonly: {'first_name': true, 'last_name': true, 'phone': true, 'email': true},
+            _readonly: {'first_name': true, 'last_name': true, 'email': true},
             is_active: true,
             need_activation: false
         };
@@ -207,7 +207,6 @@ describe('user edit form', function() {
 
         expect($(elm.find('input[name=first_name]')[0]).attr('readonly')).toBeDefined();
         expect($(elm.find('input[name=last_name]')[0]).attr('readonly')).toBeDefined();
-        expect($(elm.find('input[name=phone]')[0]).attr('readonly')).toBeDefined();
         expect($(elm.find('input[name=email]')[0]).attr('readonly')).toBeDefined();
     }));
 
