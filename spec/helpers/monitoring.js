@@ -166,12 +166,18 @@ function Monitoring() {
 
     /**
      * Perform filter by filterType that can be
-     * all, audio, video, text, picture and composite
+     * all, audio, video, text, picture, composite, takesPackage and highlightsPackage
      *
      * @param {string} fileType
      */
     this.filterAction = function(fileType) {
-        element(by.className('filetype-icon-' + fileType)).click();
+        if (fileType === 'highlightsPackage') {
+            element(by.className('filetype-icon-highlight-pack')).click();
+        } else if (fileType === 'takesPackage') {
+            element(by.className('filetype-icon-takes-pack')).click();
+        } else {
+            element(by.className('filetype-icon-' + fileType)).click();
+        }
     };
 
     this.previewAction = function(group, item) {
