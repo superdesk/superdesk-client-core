@@ -1041,7 +1041,7 @@
                     $timeout(function () {
                         authoring = element.next('#authoring-container');
                         authoring.width(superdesk.authoringWidth);
-                    });
+                    }, 0, false);
                 }
 
                 workspace.resizable({

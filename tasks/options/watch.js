@@ -20,7 +20,8 @@ module.exports = {
         tasks: [],
         files: [
             path.join(core, 'scripts/**/*.js'),
-            '<%= appDir %>/**/*.js'
+            '<%= appDir %>/**/*.js',
+            '!' + path.join(core, 'scripts/**/*[sS]pec.js')
         ]
     },
     ngtemplates: {
