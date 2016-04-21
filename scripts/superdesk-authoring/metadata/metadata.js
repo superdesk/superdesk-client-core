@@ -101,14 +101,7 @@ function MetadataCtrl(
 
     $scope.$watch('item.time_zone', function(newValue, oldValue) {
         if ((newValue || oldValue) && (newValue !== oldValue)) {
-            $scope.item.schedule_settings = {};
-
-            if (!$scope.item.time_zone) {
-                $scope.item.schedule_settings.time_zone = null;
-            } else {
-                $scope.item.schedule_settings.time_zone = $scope.item.time_zone;
-            }
-
+            setTimeZone();
             setPublishScheduleDate(newValue, oldValue);
             setEmbargoTS(newValue, oldValue);
 
@@ -118,6 +111,15 @@ function MetadataCtrl(
         }
     });
 
+    function setTimeZone() {
+        $scope.item.schedule_settings = {};
+        if (!$scope.item.time_zone) {
+            $scope.item.schedule_settings.time_zone = null;
+        } else {
+            $scope.item.schedule_settings.time_zone = $scope.item.time_zone;
+        }
+    }
+
     function setPublishScheduleDate(newValue, oldValue) {
         if ((newValue || oldValue) && (newValue !== oldValue)) {
             if ($scope.item.publish_schedule_date && $scope.item.publish_schedule_time) {
@@ -126,6 +128,7 @@ function MetadataCtrl(
                     $scope.item.publish_schedule_time,
                     $scope.item.time_zone
                 );
+                setTimeZone();
             } else {
                 $scope.item.publish_schedule = null;
             }
@@ -160,6 +163,7 @@ function MetadataCtrl(
                     $scope.item.embargo_time,
                     $scope.item.time_zone
                 );
+                setTimeZone();
             } else {
                 $scope.item.embargo = null;
             }
@@ -175,19 +179,26 @@ function MetadataCtrl(
      */
     function resolvePublishScheduleAndEmbargoTS() {
         var info;
-
+        var embargo = $scope.item.embargo, publish_schedule = $scope.item.publish_schedule;
         if ($scope.item.schedule_settings) {
             $scope.item.time_zone = $scope.item.schedule_settings.time_zone;
+            if ($scope.item.schedule_settings.utc_embargo) {
+                embargo = $scope.item.schedule_settings.utc_embargo;
+            }
+
+            if ($scope.item.schedule_settings.utc_publish_schedule) {
+                publish_schedule = $scope.item.schedule_settings.utc_publish_schedule;
+            }
         }
 
-        if ($scope.item.embargo) {
-            info = datetimeHelper.splitDateTime($scope.item.embargo, $scope.item.time_zone);
+        if (embargo) {
+            info = datetimeHelper.splitDateTime(embargo, $scope.item.time_zone);
             $scope.item.embargo_date = info.date;
             $scope.item.embargo_time = info.time;
         }
 
-        if ($scope.item.publish_schedule) {
-            info = datetimeHelper.splitDateTime($scope.item.publish_schedule, $scope.item.time_zone);
+        if (publish_schedule) {
+            info = datetimeHelper.splitDateTime(publish_schedule, $scope.item.time_zone);
             $scope.item.publish_schedule_date = info.date;
             $scope.item.publish_schedule_time = info.time;
         }
