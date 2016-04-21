@@ -73,6 +73,42 @@
         }
     }
 
+    DateTimeHelperService.$inject = ['moment', 'config'];
+    function DateTimeHelperService(moment, config) {
+
+        /*
+        * @param timestring 2016-03-01T04:45:00+0000
+        * @param timezone Europe/London
+        */
+        this.splitDateTime = function(timestring, timezone) {
+            var momentTS = moment.tz(timestring, timezone);
+
+            return {
+                'date': momentTS.format(config.model.dateformat),
+                'time': momentTS.format(config.model.timeformat)
+            };
+        };
+
+        this.isValidTime = function(value, format) {
+            var timeFormat = format || config.model.timeformat;
+            return moment(value, timeFormat, true).isValid();
+        };
+
+        this.isValidDate = function(value, format) {
+            var dateFormat = format || config.model.dateformat;
+            return moment(value, dateFormat, true).isValid();
+        };
+
+        this.mergeDateTime = function(date_str, time_str, timezone) {
+            var tz = timezone || config.defaultTimezone;
+            var merge_str = date_str + ' ' + time_str;
+            var formatter = config.model.dateformat + ' ' + config.model.timeformat;
+
+            // return without timezone information, which is stored separately
+            return moment.tz(merge_str, formatter, tz).format('YYYY-MM-DD[T]HH:mm:ss');
+        };
+    }
+
     return angular.module('superdesk.datetime', [
         'superdesk.datetime.absdate',
         'superdesk.datetime.groupdates',
@@ -112,6 +148,7 @@
         }])
 
         .service('datetime', DateTimeService)
+        .service('datetimeHelper', DateTimeHelperService)
 
         ;
 

@@ -4,6 +4,7 @@
 
     describe('superdesk.datetime module', function() {
 
+        beforeEach(module('superdesk.mocks'));
         beforeEach(module('superdesk.datetime'));
 
         describe('reldate filter', function() {
@@ -39,6 +40,12 @@
                 expect(now.format('LLL')).toBe(datetime.longFormat(now.format()));
             }));
         });
-    });
 
+        describe('datetime helper service', function() {
+            it('can merge date time and tz', inject(function(datetimeHelper) {
+                var merged = datetimeHelper.mergeDateTime('19/04/2016', '15:36:00', 'Europe/Prague');
+                expect(merged).toBe('2016-04-19T15:36:00');
+            }));
+        });
+    });
 })();
