@@ -64,9 +64,7 @@ module.exports = function(grunt) {
         },
         test: {
             options: data('http://localhost:5000/api'),
-            files: {
-                '<%= distDir %>/index.html': '<%= appDir %>/index.html',
-            }
+            files: {'<%= distDir %>/index.html': '<%= appDir %>/index.html'}
         },
         docs: {
             files: {'<%= distDir %>/docs.html': '<%= appDir %>/docs.html'}

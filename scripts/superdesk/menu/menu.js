@@ -119,6 +119,7 @@
                 templateUrl: asset.templateUrl('superdesk/menu/views/about.html'),
                 link: function(scope) {
                     scope.version = config.version;
+                    scope.year = (new Date()).getUTCFullYear();
                     scope.releaseDate = config.releaseDate;
                 }
             };
