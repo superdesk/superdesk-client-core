@@ -10,7 +10,7 @@ module.exports = function(grunt) {
     };
 
     var config = {
-        pkg: grunt.file.readJSON('./package.json'),
+        pkg: grunt.file.readJSON(path.join(__dirname, 'package.json')),
         appDir: 'app',
         tmpDir: '.tmp',
         distDir: 'dist',
@@ -97,6 +97,7 @@ module.exports = function(grunt) {
         'copy:js',
         'copy:docs',
         'template:test',
+        'template:docs',
         'filerev',
         'usemin'
     ]);
