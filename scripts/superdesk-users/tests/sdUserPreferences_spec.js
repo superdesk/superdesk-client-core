@@ -11,6 +11,7 @@ describe('sdUserPreferences directive', function() {
     beforeEach(module('superdesk.authoring.metadata'));
     beforeEach(module('superdesk.filters'));
     beforeEach(module('superdesk.templates-cache'));
+    beforeEach(module('superdesk.publish'));
 
     beforeEach(inject(function (
         $rootScope, $compile, $q, metadata, preferencesService, session, userList

@@ -69,9 +69,9 @@
             };
         });
 
-    ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal', 
+    ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal',
     'adminPublishSettingsService', 'metadata', '$filter'];
-    function ProductsConfigController ($scope, gettext, notify, api, products, modal, 
+    function ProductsConfigController ($scope, gettext, notify, api, products, modal,
         adminPublishSettingsService, metadata, $filter) {
 
         var initProducts = function() {
@@ -97,7 +97,7 @@
                     $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
                 });
             }
-        }
+        };
 
         $scope.newProduct = function() {
             $scope.product.edit = {};

@@ -114,7 +114,11 @@
             return function(array) {
                 var merged = [];
                 _.forEach(array, function(item) {
-                    merged.push(item.allow === false ? 'Not ' + item.name : item.name);
+                    if ('allow' in item) {
+                        merged.push(item.allow === false ? 'Not ' + item.name : item.name);
+                    } else {
+                        merged.push(item.name);
+                    }
                 });
 
                 return merged.join(', ');

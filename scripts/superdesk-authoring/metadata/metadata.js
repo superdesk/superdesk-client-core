@@ -167,10 +167,13 @@ function MetadataCtrl(
 
     $scope.unique_name_editable = Boolean(privileges.privileges.metadata_uniquename &&
         $scope.action !== 'correct' && $scope.action !== 'kill');
+
+    $scope.targetsEditable = $scope.action !== 'correct' && $scope.action !== 'kill';
+
     resolvePublishScheduleAndEmbargoTS();
 }
 
-MetaTargetedPublishingDirective.$inject = []
+MetaTargetedPublishingDirective.$inject = [];
 function MetaTargetedPublishingDirective() {
     return {
         scope: {
@@ -192,7 +195,8 @@ function MetaTargetedPublishingDirective() {
                     scope.targets = [];
                 }
 
-                scope.targets.push({'name': target, 'allow': !scope.deny});
+                target = JSON.parse(target);
+                scope.targets.push({'qcode': target.qcode, 'name': target.name, 'allow': !scope.deny});
                 scope.autosave();
             };
 
