@@ -19,6 +19,11 @@
     <a href="#/workspace/spike-monitoring" class="big-icon-spiked" ng-click="hideMonitoring(currentRoute.href === '/workspace/spike-monitoring', $event)"
        title="{{ :: 'Spike' | translate }}"></a>
 </li>
+<li ng-if="workspaceConfig.content && privileges.archive"
+    ng-class="{active: currentRoute.href === '/workspace/content'}">
+    <a href="#/workspace/content" class="big-icon-archive"
+       title="{{ :: 'Content' | translate }}"></a>
+</li>
 
 <hr>
 <li ng-class="{active: currentRoute.href === '/workspace/personal'}">
@@ -30,12 +35,10 @@
        title="{{ :: 'Search' | translate }}"></a>
 </li>
 
-<hr><!-- this is something like deprecated.. don't add, only remove -->
-<li ng-class="{active: currentRoute.href === '/workspace/ingest'}" ng-if="privileges.ingest">
+<!-- this is something like deprecated.. don't add, only remove -->
+<hr ng-if="workspaceConfig.ingest">
+<li ng-if="workspaceConfig.ingest && privileges.ingest"
+    ng-class="{active: currentRoute.href === '/workspace/ingest'}">
     <a href="#/workspace/ingest" class="big-icon-ingest"
        title="{{ :: 'Ingest' | translate }}"></a>
-</li>
-<li ng-class="{active: currentRoute.href === '/workspace/content'}" ng-if="privileges.archive">
-    <a href="#/workspace/content" class="big-icon-archive"
-       title="{{ :: 'Content' | translate }}"></a>
 </li>
