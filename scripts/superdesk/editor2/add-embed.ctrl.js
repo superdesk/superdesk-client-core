@@ -85,8 +85,9 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                                             data = JSON.parse(data);
                                             // set association
                                             embedBlock.association = {
-                                                id: data.bid.id,
+                                                uri: data.bid.id,
                                                 title: data.bid.videos[0].name,
+                                                type: 'video',
                                                 thumbnail: data.bid.videos[0].thumbnail,
                                                 url: data.bid.videos[0].videoUrls[0],
                                                 // size: ,
