@@ -728,9 +728,12 @@
 
                         return preferencesService.get('desk:last_worked').then(function(result) {
                             self.activeDeskId = null;
-                            if (angular.isDefined(result)) {
+                            if (angular.isDefined(result) && result !== '') {
                                 self.activeDeskId = result;
+                            } else {
+                                self.activeDeskId = self.getCurrentDeskId();
                             }
+
                             return self.activeDeskId;
                         });
                     },
