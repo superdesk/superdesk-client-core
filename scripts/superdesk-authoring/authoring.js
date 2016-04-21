@@ -205,7 +205,7 @@
          * Auto-saves an item
          */
         this.save = function saveAutosave(item) {
-            if (item._editable && !item._locked) {
+            if (item._editable && item._locked) {
                 this.stop(item);
                 timeouts[item._id] = $timeout(function() {
                     var diff = extendItem({_id: item._id}, item);
