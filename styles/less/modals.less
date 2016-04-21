@@ -19,6 +19,8 @@
 @modal-footer-height : 58px;
 @modal-subnav-height : @nav-height;
 
+
+
 // Background
 .modal-backdrop {
     position: fixed;
@@ -90,6 +92,7 @@ body:not(:-moz-handler-blocked) .modal{
         flex-direction: column;
         flex: 0 0 @modal-base-width + 20px;
         margin: 10px;
+        .border-radius(@modal-border-radius);
         .box-shadow(0 0 8px 2px rgba(0, 0, 0, 0.3));
         .modal-header, .modal-footer {
             flex: 0 0 auto;
@@ -137,6 +140,32 @@ body:not(:-moz-handler-blocked) .modal{
         margin: 5px 0 0;
         padding: 5px;
     }
+}
+.modal--about {
+  h4 {
+    font-size: 16px;
+  }
+  .date-released {
+    color: #767676;
+    margin-bottom: 24px;
+  }
+}
+
+.modal-header--about {
+  background-color: @superdesk-green;
+  padding: 15px 15px 20px 20px;
+  i {
+    color: white;
+  }
+  .modal-header__sd-logo {
+    background: url(../../images/superdesk-logo_white.svg) no-repeat 0 0;
+    width: 154px;
+    height: 48px;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    float: left;
+  }
 }
 
 // Body (where all modal content resises)
@@ -292,16 +321,17 @@ body:not(:-moz-handler-blocked) .modal{
             .modal-dialog {
                 width: 100%;
                 height: 100%;
-                .modal-content {                   
+                .modal-content {
                     flex: 0 0 100%;
                     margin: 0;
+                    .border-radius(0);
                     .scroll-shadow {
                         position: absolute;
                         top: 47px;
                         width: 100vw;
                     }
                     .modal-header {
-                        .border-radius(0);                  
+                        .border-radius(0);
                         .btn-group {
                             button {
                                 cursor: pointer;
@@ -331,7 +361,7 @@ body:not(:-moz-handler-blocked) .modal{
                             border: 0;
                         }
                     }
-                    .modal-body {                        
+                    .modal-body {
                         max-height: none;
                         flex: 1 1 auto;
                         // styles for preview content
@@ -476,6 +506,7 @@ body:not(:-moz-handler-blocked) .modal{
         text-align: right;
     }
 }
+
 
 
 // SPLIT POPUP (left sidebar)
