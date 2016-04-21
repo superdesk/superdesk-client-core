@@ -3186,8 +3186,8 @@
         init();
     }
 
-    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', 'cropPicture'];
-    function ItemAssociationDirective(superdesk, renditions, $timeout, api, cropPicture) {
+    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', 'cropPicture', '$q'];
+    function ItemAssociationDirective(superdesk, renditions, $timeout, api, cropPicture, $q) {
         return {
             scope: {
                 rel: '=',
@@ -3221,7 +3221,14 @@
                 elem.on('drop', function(event) {
                     event.preventDefault();
                     var item = getItem(event, PICTURE_TYPE);
-                    scope.edit(item);
+                    var performRenditions = $q.when(item);
+                    // ingest picture if it comes from an external source (create renditions)
+                    if (item._type === 'externalsource') {
+                        performRenditions = superdesk.intent('list', 'externalsource',  {item: item}).then(function(item) {
+                            return api.find('archive', item._id);
+                        });
+                    }
+                    performRenditions.then(scope.edit);
                 });
 
                 function updateItemAssociation(updated) {

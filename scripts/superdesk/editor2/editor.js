@@ -1287,6 +1287,7 @@ angular.module('superdesk.editor2', [
                     },
                     insertPicture: function(picture) {
                         var performRenditions = $.when(picture);
+                        // ingest picture if it comes from an external source (create renditions)
                         if (picture._type === 'externalsource') {
                             performRenditions = superdesk.intent('list', 'externalsource',  {item: picture}).then(function(item) {
                                 return api.find('archive', item._id);

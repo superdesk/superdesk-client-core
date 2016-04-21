@@ -2,12 +2,16 @@
 'use strict';
 
 angular.module('superdesk.authoring').service('cropPicture', CropPictureService);
-CropPictureService.$inject = ['$q', 'renditions', 'api', 'superdesk'];
+CropPictureService.$inject = ['$q', 'renditions', 'api', 'superdesk', 'lodash'];
 
-function CropPictureService($q, renditionsService, api, superdesk) {
+function CropPictureService($q, renditionsService, api, superdesk, _) {
     this.crop = function(picture) {
         var poi = {x: 0.5, y: 0.5};
         return renditionsService.get().then(function(renditions) {
+            // we want to crop only renditions that change the ratio
+            renditions = _.filter(renditions, function(rendition) {
+                return angular.isDefined(rendition.ratio);
+            });
             return superdesk.intent('edit', 'crop', {
                 item: picture,
                 renditions: renditions,
