@@ -46,7 +46,7 @@
                                 </select>
                             </div>
                             <div class="field">
-                                <label translate>CATEGORY</label>
+                                <label translate>SERVICE</label>
                                 <div sd-meta-terms
                                     class="data"
                                     data-item="desk.edit.desk_metadata"
@@ -61,7 +61,7 @@
                         <span class="alert-danger" ng-show="_error">{{ _errorMessage }}</span>
                     </div>
                     <div class="modal-footer">
-                        <button id="next-general" class="btn btn-primary" ng-click="save(desk.edit)" ng-disabled="!generalStep.$valid || _errorLimits" translate>Save & Continue</button>
+                        <button id="next-general" class="btn btn-primary" ng-click="save(desk.edit)" ng-disabled="!generalStep.$valid || _errorLimits">{{ 'Save & Continue' | translate }}</button>
                         <button id="done-general" class="btn btn-primary" ng-click="save(desk.edit, true)" ng-disabled="!generalStep.$valid || _errorLimits" translate>Done</button>
                     </div>
                 </form>
@@ -230,7 +230,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="next-people" class="btn btn-primary" ng-click="save()" ng-disabled="message != null" translate>Save & Continue</button>
+                    <button id="next-people" class="btn btn-primary" ng-click="save()" ng-disabled="message != null">{{ 'Save & Continue' | translate }</button>
                     <button id="done-people" class="btn btn-primary" ng-click="save(true)" ng-disabled="message != null" translate>Done</button>
                 </div>
             </div>
