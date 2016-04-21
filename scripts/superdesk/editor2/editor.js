@@ -827,7 +827,8 @@ angular.module('superdesk.editor2', [
             },
             placeholder: false,
             disableReturn: false,
-            spellcheck: false
+            spellcheck: false,
+            targetBlank: true
         };
 
         /**
