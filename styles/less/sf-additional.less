@@ -182,20 +182,20 @@
 }
 
 .flat-searchbar {
-    float: left;
-    &.monitoring-flat-searchbar{
-        margin-top: -9px;
-        .search-handler{
-            padding-left:5px;
+    &.monitoring-flat-searchbar {
+        .search-handler {
+
         }
     }
     .search-handler {
-        min-width: 40px;
-        height: @nav-height - 1;
-        padding: 10px 10px 10px 20px;
+        min-width: 48px;
+        height: @nav-height;
+        padding: 10px 10px 10px 14px;
         .box-sizing(border-box);
         background: none;
-        float: left;
+        display: flex;
+        border-right: 1px solid #e0e0e0;
+        white-space: nowrap;
         .transition(all 0.3s ease);
         input {
             height: 28px;
@@ -342,6 +342,9 @@
             }
         }
     }
+}
+.filter-type--padded {
+  padding: 10px 0 10px 20px;
 }
 
 .result-type {
