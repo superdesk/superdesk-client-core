@@ -110,7 +110,6 @@
 
         /*
         * @param timestring 2016-03-01T04:45:00+0000.
-        * @param timezone Europe/London
         */
         this.greaterThanUTC = function(timestring) {
             return moment(timestring, 'YYYY-MM-DDTHH:mm:ssZZ') > moment.utc();
