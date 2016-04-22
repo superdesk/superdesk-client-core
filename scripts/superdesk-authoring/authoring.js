@@ -919,8 +919,8 @@
         };
     }
 
-    ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q'];
-    function ChangeImageController($scope, gettext, notify, modal, $q) {
+    ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash'];
+    function ChangeImageController($scope, gettext, notify, modal, $q, _) {
         $scope.data = $scope.locals.data;
         $scope.data.cropData = {};
         var sizes = {};
@@ -949,6 +949,27 @@
         * notify the user and then resolve the activity.
         */
         $scope.done = function() {
+            /* Throw an exception if PoI is outisde of a crop */
+            function poiIsInsideEachCrop() {
+                var originalImage = $scope.data.metadata.renditions.original;
+                var originalPoi = {x: originalImage.width * $scope.data.poi.x, y: originalImage.height * $scope.data.poi.y};
+                _.forEach($scope.data.cropData, function(cropData, cropName) {
+                    if (originalPoi.y < cropData.CropTop ||
+                        originalPoi.y > cropData.CropBottom ||
+                        originalPoi.x < cropData.CropLeft ||
+                        originalPoi.x > cropData.CropRight) {
+                        throw gettext('Point of interest outside the crop '+ cropName +' limits');
+                    }
+                });
+            }
+            // check if data are valid
+            try {
+                poiIsInsideEachCrop();
+            } catch (e) {
+                // show an error and stop the "done" operation
+                notify.error(e);
+                return false;
+            }
             if ($scope.data.showMetadataEditor) {
                 // update metadata in `item`
                 angular.extend($scope.data.item, $scope.data.metadata);
