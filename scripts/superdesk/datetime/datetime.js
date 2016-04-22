@@ -107,6 +107,13 @@
             // return without timezone information, which is stored separately
             return moment.tz(merge_str, formatter, tz).format('YYYY-MM-DD[T]HH:mm:ss');
         };
+
+        /*
+        * @param timestring 2016-03-01T04:45:00+0000.
+        */
+        this.greaterThanUTC = function(timestring) {
+            return moment(timestring, 'YYYY-MM-DDTHH:mm:ssZZ') > moment.utc();
+        };
     }
 
     return angular.module('superdesk.datetime', [
