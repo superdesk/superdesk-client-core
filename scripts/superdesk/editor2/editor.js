@@ -643,8 +643,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     };
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'cropPicture'];
-function SdTextEditorBlockEmbedController($timeout, editor, cropPicture) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions'];
+function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
@@ -681,7 +681,7 @@ function SdTextEditorBlockEmbedController($timeout, editor, cropPicture) {
             if (!vm.model.association) {
                 return false;
             }
-            cropPicture.crop(picture).then(function(picture) {
+            renditions.crop(picture).then(function(picture) {
                 // update block
                 vm.model.association = picture;
                 editor.generateImageTag(picture).then(function(img) {
@@ -1255,7 +1255,7 @@ angular.module('superdesk.editor2', [
                     renderTimeout = $timeout(render, 0, false);
                 }
             },
-            controller: ['$scope', 'editor', 'api', 'superdesk', function(scope, editor, api , superdesk) {
+            controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', function(scope, editor, api , superdesk, renditions) {
                 var vm = this;
                 angular.extend(vm, {
                     block: undefined, // provided in link method
@@ -1287,13 +1287,7 @@ angular.module('superdesk.editor2', [
                         editor.commitScope(scope);
                     },
                     insertPicture: function(picture) {
-                        var performRenditions = $.when(picture);
-                        if (picture._type === 'externalsource') {
-                            performRenditions = superdesk.intent('list', 'externalsource',  {item: picture}).then(function(item) {
-                                return api.find('archive', item._id);
-                            });
-                        }
-                        performRenditions.then(function(picture) {
+                        renditions.ingest(picture).then(function(picture) {
                             // cut the text that is after the caret in the block and save it in order to add it after the embed later
                             var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
                             // save the blocks (with removed leading text)

@@ -2627,7 +2627,6 @@
         .service('lock', LockService)
         .service('authThemes', AuthoringThemesService)
         .service('authoringWorkspace', AuthoringWorkspaceService)
-        .service('renditions', RenditionsService)
 
         .directive('sdDashboardCard', DashboardCard)
         .directive('sdSendItem', SendItem)
@@ -3186,8 +3185,8 @@
         init();
     }
 
-    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', 'cropPicture'];
-    function ItemAssociationDirective(superdesk, renditions, $timeout, api, cropPicture) {
+    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', '$q'];
+    function ItemAssociationDirective(superdesk, renditions, $timeout, api, $q) {
         return {
             scope: {
                 rel: '=',
@@ -3221,7 +3220,8 @@
                 elem.on('drop', function(event) {
                     event.preventDefault();
                     var item = getItem(event, PICTURE_TYPE);
-                    scope.edit(item);
+                    // ingest picture if it comes from an external source (create renditions)
+                    renditions.ingest(item).then(scope.edit);
                 });
 
                 function updateItemAssociation(updated) {
@@ -3245,7 +3245,7 @@
                 renditions.get();
 
                 scope.edit = function(item) {
-                    cropPicture.crop(item).then(function(updatedItem) {
+                    renditions.crop(item).then(function(updatedItem) {
                         var data = updateItemAssociation(updatedItem);
                         scope.onchange({item: scope.item, data: data});
                     });
@@ -3269,17 +3269,6 @@
                     }
                 };
             }
-        };
-    }
-
-    RenditionsService.$inject = ['metadata'];
-    function RenditionsService(metadata) {
-        var self = this;
-        this.get = function() {
-            return metadata.initialize().then(function() {
-                self.renditions = metadata.values.crop_sizes;
-                return self.renditions;
-            });
         };
     }
 
