@@ -719,7 +719,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                 ctrlOperations[editor.KEY_CODES.Y] = doRedo;
 
                 scope.$on('spellcheck:run', render);
-                keyboardManager.bind('ctrl+shift+d', render);
 
                 ngModel.$render = function (force) {
                     if (!scope.history || scope.history.getIndex() === -1 || force) {

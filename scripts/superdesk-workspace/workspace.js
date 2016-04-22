@@ -342,18 +342,7 @@
                  * By using keyboard shortcuts, change the current showed view
                  *
                  */
-                keyboardManager.bind('alt+h', function (e) {
-                    e.preventDefault();
-                    $location.url('/workspace');
-                }, {global: true, inputDisabled: false});
-
-                keyboardManager.bind('alt+m', function (e) {
-                    e.preventDefault();
-                    $location.url('/workspace/monitoring');
-                }, {global: true, inputDisabled: false});
-
-                keyboardManager.bind('alt+d', function (e) {
-                    e.preventDefault();
+                scope.highlightsHotkey = function () {
                     elem.find('.highlights-dropdown .dropdown-toggle').click();
                     elem.find('.dropdown-menu button')[0].focus();
                     keyboardManager.push('up', function() {
@@ -362,27 +351,7 @@
                     keyboardManager.push('down', function() {
                         elem.find('.dropdown-menu button:focus').parent('li').next().children('button').focus();
                     });
-                }, {global: true, inputDisabled: false});
-
-                keyboardManager.bind('alt+t', function (e) {
-                    e.preventDefault();
-                    $location.url('/workspace/tasks');
-                }, {global: true, inputDisabled: false});
-
-                keyboardManager.bind('alt+x', function (e) {
-                    e.preventDefault();
-                    $location.url('/workspace/spike-monitoring');
-                }, {global: true, inputDisabled: false});
-
-                keyboardManager.bind('alt+p', function (e) {
-                    e.preventDefault();
-                    $location.url('/workspace/personal');
-                }, {global: true, inputDisabled: false});
-
-                keyboardManager.bind('alt+f', function (e) {
-                    e.preventDefault();
-                    $location.url('search');
-                }, {global: true, inputDisabled: false});
+                };
             }
         };
     }
