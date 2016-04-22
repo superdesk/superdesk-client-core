@@ -98,6 +98,11 @@ describe('text editor', function() {
         editor.commit();
         expect(scope.model.$setViewValue).not.toHaveBeenCalled();
 
+        editor.undo(scope);
+        expect(scope.model.$setViewValue).not.toHaveBeenCalled();
+        editor.redo(scope);
+        expect(scope.model.$setViewValue).not.toHaveBeenCalled();
+
         scope.node.innerHTML = 'bar';
         editor.commit();
         expect(scope.model.$setViewValue).toHaveBeenCalledWith('bar');
