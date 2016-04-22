@@ -33,11 +33,17 @@ function Dashboard() {
      * Get the widget at index 'index' from the list of available widgets on
      * dashboard settings.
      *
-     * @param {number} index
+     * @param {string} name
      * @return {promise} widget element
      */
-    this.getSettingsWidget = function(index) {
-        return this.getSettingsWidgets().get(index);
+    this.getSettingsWidget = function(name) {
+        return this.getSettingsWidgets().filter(function(elem) {
+            return elem.element(by.className('title')).getText().then(function(text) {
+                return text.toLowerCase().indexOf(name.toLowerCase()) > -1;
+            });
+        }).then(function(widgets) {
+            return widgets[0];
+        });
     };
 
     /**
@@ -46,8 +52,8 @@ function Dashboard() {
      *
      * @param {number} index
      */
-    this.addWidget = function(index) {
-        this.getSettingsWidget(index).click();
+    this.addWidget = function(name) {
+        this.getSettingsWidget(name).then(function(widget) { widget.click(); });
         element.all(by.css('[ng-click="dashboard.addWidget(dashboard.selectedWidget)"]')).first().click();
     };
 
