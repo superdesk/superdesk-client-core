@@ -297,19 +297,19 @@
 
                         if (props.ingestProvider) {
                             meta.push(
-                                React.createElement('dt', {key: 1}, gettext('source')),
+                                React.createElement('dt', {key: 1}, gettextCatalog.getString('source')),
                                 React.createElement('dd', {key: 2, className: 'provider'}, props.ingestProvider.name ||
                                     props.ingestProvider.source)
                             );
                         }
 
                         meta.push(
-                            React.createElement('dt', {key: 3}, gettext('updated')),
+                            React.createElement('dt', {key: 3}, gettextCatalog.getString('updated')),
                             React.createElement('dd', {key: 4}, datetime.shortFormat(item.versioncreated))
                         );
 
                         if (item.is_spiked) {
-                            meta.push(React.createElement('dt', {key: 5}, gettext('expires')));
+                            meta.push(React.createElement('dt', {key: 5}, gettextCatalog.getString('expires')));
                             meta.push(React.createElement('dd', {key: 6}, datetime.shortFormat(item.expiry)));
                         }
 
@@ -657,7 +657,7 @@
                                 React.createElement(
                                     'span',
                                     {title: $filter('removeLodash')(item.state), className: 'state-label state-' + item.state},
-                                    $filter('removeLodash')(item.state)
+                                    $filter('removeLodash')(gettextCatalog.getString(item.state))
                                 ),
                                 item.embargo ? React.createElement(
                                     'span',
