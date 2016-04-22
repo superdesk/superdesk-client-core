@@ -133,8 +133,10 @@
         };
     }
 
-    ContentCreateDirective.$inject = ['api', 'desks', 'templates', 'content', 'authoringWorkspace', 'superdesk', 'keyboardManager'];
-    function ContentCreateDirective(api, desks, templates, content, authoringWorkspace, superdesk, keyboardManager) {
+    ContentCreateDirective.$inject = ['api', 'desks', 'templates', 'content', 'authoringWorkspace', 'superdesk', 'keyboardManager',
+    '$location'];
+    function ContentCreateDirective(api, desks, templates, content, authoringWorkspace, superdesk, keyboardManager,
+        $location) {
         return {
             scope: true,
             templateUrl: 'scripts/superdesk-workspace/content/views/sd-content-create.html',
@@ -164,6 +166,13 @@
                  */
                 scope.createPackage = function() {
                     content.createPackageItem().then(edit);
+                };
+
+                /**
+                 * Do not allow packages to be created from personal workspace
+                **/
+                scope.canCreatePackage = function() {
+                    return $location.path() !== '/workspace/personal';
                 };
 
                 /**

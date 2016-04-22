@@ -9,7 +9,7 @@
     </button>
 </li>
 
-<li ng-if="content_types.length === 0">
+<li ng-if="content_types.length === 0 && canCreatePackage()">
     <button id="create_package"  ng-click="createPackage()">
         <i class="icon-plus-small icon-round icon-white"></i>
         {{ :: 'Empty Package' | translate }}
