@@ -389,10 +389,6 @@
 
             if (this.isPublished(original)) {
                 delete updates.dateline;
-
-                if (updates.embargo) {
-                    delete updates.embargo;
-                }
             }
 
             //check if rendition is dirty for real
@@ -1830,10 +1826,14 @@
             }
         };
     }
-    SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace', 'superdeskFlags', '$location', 'macros',
-        '$rootScope', 'authoring', 'send', 'editor', 'confirm', 'archiveService', 'preferencesService', 'multi'];
-    function SendItem($q, api, desks, notify, authoringWorkspace, superdeskFlags, $location, macros,
-            $rootScope, authoring, send, editor, confirm, archiveService, preferencesService, multi) {
+    SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
+        'superdeskFlags', '$location', 'macros', '$rootScope',
+        'authoring', 'send', 'editor', 'confirm', 'archiveService',
+        'preferencesService', 'multi', 'datetimeHelper'];
+    function SendItem($q, api, desks, notify, authoringWorkspace,
+                      superdeskFlags, $location, macros, $rootScope,
+                      authoring, send, editor, confirm, archiveService,
+                      preferencesService, multi, datetimeHelper) {
         return {
             scope: {
                 item: '=',
@@ -1856,6 +1856,8 @@
                 scope.selectedMacro = null;
                 scope.beforeSend = scope._beforeSend || $q.when;
                 scope.destination_last = null;
+                scope.origItem = angular.extend({}, scope.item);
+
                 var PREFERENCE_KEY = 'destination:active';
 
                 scope.$watch('item', activateItem);
@@ -2022,7 +2024,12 @@
                         !scope.item.publish_schedule_time && !authoring.isTakeItem(scope.item);
 
                     if (prePublishCondition && authoring.isPublished(scope.item)) {
-                        return scope.item.embargo;
+                        if (['published', 'corrected'].indexOf(scope.item.state) >= 0) {
+                            return scope.origItem.embargo;
+                        } else {
+                            // for published states other than 'published', 'corrected'
+                            return false;
+                        }
                     }
 
                     return prePublishCondition;
@@ -2032,7 +2039,12 @@
                  * Returns true if Embargo needs to be displayed, false otherwise.
                  */
                 scope.isEmbargoEditable = function() {
-                    return scope.item && scope.item._editable && !authoring.isPublished(scope.item);
+                    var publishedCondition = authoring.isPublished(scope.item) && scope.item.schedule_settings &&
+                        scope.item.schedule_settings.utc_embargo &&
+                        datetimeHelper.greaterThanUTC(scope.item.schedule_settings.utc_embargo);
+
+                    return scope.item && scope.item._editable &&
+                        (!authoring.isPublished(scope.item) || publishedCondition);
                 };
 
                 function runSend(open) {
