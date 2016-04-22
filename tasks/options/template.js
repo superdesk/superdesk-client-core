@@ -1,3 +1,4 @@
+
 module.exports = function(grunt) {
 
     'use strict';
@@ -14,6 +15,8 @@ module.exports = function(grunt) {
         }
 
         var config = {
+            version: grunt.config.process('<%= pkg.version %>'),
+
             raven: {dsn: process.env.SUPERDESK_RAVEN_DSN || ''},
             server: {url: server, ws: ws},
             iframely: {key: process.env.IFRAMELY_KEY || ''},
@@ -61,10 +64,7 @@ module.exports = function(grunt) {
         },
         test: {
             options: data('http://localhost:5000/api'),
-            files: {
-                '<%= distDir %>/index.html': '<%= appDir %>/index.html',
-                '<%= distDir %>/docs.html': '<%= appDir %>/docs.html'
-            }
+            files: {'<%= distDir %>/index.html': '<%= appDir %>/index.html'}
         },
         docs: {
             files: {'<%= distDir %>/docs.html': '<%= appDir %>/docs.html'}

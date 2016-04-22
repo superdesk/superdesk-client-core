@@ -114,9 +114,14 @@
                     }
                 };
             }])
-        .directive('sdAbout', ['asset', function (asset) {
+        .directive('sdAbout', ['asset', 'config', function (asset, config) {
             return {
-                templateUrl: asset.templateUrl('superdesk/menu/views/about.html')
+                templateUrl: asset.templateUrl('superdesk/menu/views/about.html'),
+                link: function(scope) {
+                    scope.version = config.version;
+                    scope.year = (new Date()).getUTCFullYear();
+                    scope.releaseDate = config.releaseDate;
+                }
             };
         }]);
 })();

@@ -1,22 +1,22 @@
 <div sd-modal data-model="aboutActive" class="modal modal-large modal--about">
   <div class="modal-header modal-header--about">
-    <h3 class="modal-header__sd-logo" translate>Superdesk</h3>
+    <h3 class="modal-header__sd-logo">Superdesk</h3>
     <div class="btn-group pull-right">
-      <button ng-click="closeAbout()" title="{{'Close'|translate}}" class="close"><i class="icon-close-small"></i></button>
+      <button ng-click="closeAbout()" title="{{ :: 'Close' | translate }}" class="close"><i class="icon-close-small"></i></button>
     </div>
   </div>
 
   <div class="modal-body">
     <div class="about-content">
       <span class="sf-logo"></span>
-      <h4>Superdesk 1.0.1</h4>
-      <p class="date-released">Released on 25/04/2016</p>
+      <h4>Superdesk v{{ :: version }}</h4>
+      <p class="date-released"><span ng-show="releaseDate">Released on</span> {{ :: releaseDate }}</p>
       <p>
         Sourcefabric's <a href="https://www.superdesk.org/en/" target="_blank"><b>Superdesk</b></a> is an open source end-to-end news creation, production, curation, distribution and publishing platform maintained by a nonprofit organisation with the sole purpose of making the best possible software for journalism.
       </p>
       <p>
-        Copyright (c) 2014 - 2016 Sourcefabric z.u. and <a href="https://github.com/superdesk/superdesk-client-core/graphs/contributors" target="_blank"></a>contributors.<br>
-        Superdesk is released under the <a href="https://github.com/superdesk/superdesk-client-core/blob/cf7f72fe35b31e95517efd5d02ae235f7e257a8f/LICENSE" target="_blank">open source license GPLv3</a>.
+        Copyright (c) 2014 - {{ year }} Sourcefabric z.u. and contributors.<br>
+        Superdesk is released under the <a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank">open source license GPLv3</a>.
       </p>
       <p>
         Looking for help or support?<br>
@@ -28,6 +28,6 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button ng-click="closeAbout()" class="btn btn-primary pull-right" translate="">Close</button>
+    <button ng-click="closeAbout()" class="btn btn-primary pull-right" translate>Close</button>
   </div>
 </div>
