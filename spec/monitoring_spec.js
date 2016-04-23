@@ -294,6 +294,7 @@ describe('monitoring', function() {
         desks.removeStage('three');
         desks.showTab('macros');
         desks.save();
+        browser.sleep(200);
 
         monitoring.openMonitoring();
         expect(monitoring.getGroups().count()).toBe(5);

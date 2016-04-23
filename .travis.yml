@@ -49,7 +49,7 @@ script:
       (nohup honcho start & ) ;
       sleep 5 ;
       cd ..;
-    - ./node_modules/.bin/protractor-flake --node-bin node --max-attempts=3 -- protractor-conf.js --stackTrace --verbose
+    - ./node_modules/protractor/bin/protractor protractor-conf.js --stackTrace --verbose
 
 after_script:
     - killall -9 python
