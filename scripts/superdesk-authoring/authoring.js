@@ -243,8 +243,10 @@
         };
     }
 
-    AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges', 'desks', 'superdeskFlags'];
-    function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags) {
+    AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
+                        'desks', 'superdeskFlags', 'notify', 'session', '$injector'];
+    function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
+                        notify, session, $injector) {
         var self = this;
 
         this.limits = {
@@ -301,6 +303,25 @@
                     return autosave.open(item);
                 });
             }
+        };
+
+        this.rewrite = function (item) {
+            var authoringWorkspace = $injector.get('authoringWorkspace');
+
+            session.getIdentity()
+                .then(function(user) {
+                    return api.save('archive_rewrite', {}, {}, item);
+                })
+                .then(function(new_item) {
+                    notify.success(gettext('Update Created.'));
+                    authoringWorkspace.edit(new_item._id);
+                }, function(response) {
+                    if (angular.isDefined(response.data._message)) {
+                        notify.error(gettext('Failed to generate update: ' + response.data._message));
+                    } else {
+                        notify.error(gettext('There was an error. Failed to generate update.'));
+                    }
+                });
         };
 
         /**
@@ -1345,22 +1366,18 @@
                     return false;
                 };
 
+                $scope.saveAndContinue = function(customButtonAction) {
+                    if ($scope.dirty) {
+                        $scope.saveTopbar().then(customButtonAction);
+                    } else {
+                        customButtonAction();
+                    }
+                };
+
                 $scope.publishAndContinue = function() {
                     $scope.publish().then(function(published) {
                         if (published) {
-                            var itemDeskId = null;
-                            if ($scope.item.task && $scope.item.task.desk) {
-                                itemDeskId = $scope.item.task.desk;
-                            }
-
-                            return authoring.linkItem($scope.item, null, itemDeskId);
-                        }
-                    })
-                    .then(function (item) {
-                        if (item) {
-                            authoringWorkspace.close(false);
-                            notify.success(gettext('New take created.'));
-                            authoringWorkspace.edit(item);
+                            authoring.rewrite($scope.item);
                         }
                     }, function(err) {
                         notify.error(gettext('Failed to publish and continue.'));
@@ -1485,7 +1502,7 @@
                     return autosavedItem;
                 };
 
-                $scope.sendToNextStage = function(item) {
+                $scope.sendToNextStage = function() {
                     var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
                     for (var i = 0; i < stageList.length; i++){
                         if (stageList[i]._id === $scope.stage._id) {
@@ -1586,9 +1603,9 @@
             templateUrl: 'scripts/superdesk-authoring/views/authoring-topbar.html',
             link: function(scope) {
                 scope.saveDisabled = false;
-                scope.saveTopbar = function(item) {
+                scope.saveTopbar = function() {
                     scope.saveDisabled = true;
-                    return scope.save(item)
+                    return scope.save(scope.item)
                     ['finally'](function() {
                         scope.saveDisabled = false;
                     });
@@ -2412,6 +2429,14 @@
 
                 scope.$watch('item', function(item) {
                     if (item) {
+                        if (item.profile) {
+                            content.getType(item.profile)
+                                .then(function(type) {
+                                    scope.contentType = type;
+                                    scope.editor = type.editor || DEFAULT_EDITOR;
+                                    scope.schema = type.schema || DEFAULT_SCHEMA;
+                                });
+                        }
                         /* Creates a copy of dateline object from item.__proto__.dateline */
                         if (item.dateline) {
                             var updates = {dateline: {}};
@@ -2423,15 +2448,6 @@
                                 scope.resetNumberOfDays(false);
                             }
                             _.extend(item, updates);
-
-                            if (item.profile) {
-                                content.getType(item.profile)
-                                    .then(function(type) {
-                                        scope.contentType = type;
-                                        scope.editor = type.editor || DEFAULT_EDITOR;
-                                        scope.schema = type.schema || DEFAULT_SCHEMA;
-                                    });
-                            }
                         }
                         if (autopopulateByline && !item.byline) {
                             item.byline = $interpolate(gettext('by {{ display_name }}'))({display_name: session.identity.display_name});
@@ -2941,6 +2957,15 @@
                     scope.loaded = true;
 
                     if (!archiveService.isLegal(scope.item)) {
+                        if (item.profile) {
+                            content.getType(item.profile)
+                                .then(function(type) {
+                                    scope.contentType = type;
+                                    scope.editor = type.editor || DEFAULT_EDITOR;
+                                    scope.schema = type.schema || DEFAULT_SCHEMA;
+                                });
+                        }
+
                         // Related Items
                         if (scope.item.slugline) {
                             archiveService.getRelatedItems(scope.item.slugline).then(function(items) {
@@ -2963,15 +2988,6 @@
                                 $rootScope.$broadcast('broadcast:preview', {'item': item});
                             });
                         };
-
-                        if (item.profile) {
-                            content.getType(item.profile)
-                                .then(function(type) {
-                                    scope.contentType = type;
-                                    scope.editor = type.editor || DEFAULT_EDITOR;
-                                    scope.schema = type.schema || DEFAULT_SCHEMA;
-                                });
-                        }
                     }
 
                 });

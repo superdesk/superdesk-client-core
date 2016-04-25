@@ -35,21 +35,20 @@
     <div class="subnav__stretch-bar">
       <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-if="$root.config.features.customAuthoringTopbar" ng-show="_editable && itemActions.save && action === 'edit'">
         <button class="btn btn-custom"
-                ng-if="itemActions.send"
-                ng-click="sendToNextStage()"
+                ng-click="saveAndContinue(sendToNextStage)"
                 title="{{ :: 'To Desk' | translate }}">
                 <span class="btn__text" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
         </button>
         <button class="btn btn-custom"
                 type="submit"
-                ng-click="publish()"
+                ng-click="saveAndContinue(publish)"
                 title="{{ :: 'Publish' | translate }}">
                 <span class="btn__text" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button class="btn btn-custom"
-                ng-click="publishAndContinue()"
+                ng-click="saveAndContinue(publishAndContinue)"
                 title="{{ :: 'Publish and Continue' | translate }}">
                 <span class="btn__text" translate>Publish &amp; Continue</span>
                 <span class="btn__text--short" translate>P &amp; C</span>
@@ -80,7 +79,7 @@
       <button class="btn btn--close" id="closeAuthoringBtn" ng-click="close()" title="{{ :: 'Close' | translate }}"><span class="btn__text" translate>Close</span><i class="icon-close-small btn__text--alt-icon"></i></button>
 
       <button class="btn btn-info" type="submit"
-        ng-click="saveTopbar(item)"
+        ng-click="saveTopbar()"
         ng-show="_editable"
         ng-if = "itemActions.save && action === 'edit'"
         ng-disabled="!save_enabled() || saveDisabled"
