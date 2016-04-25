@@ -198,7 +198,7 @@ describe('content', function() {
 
         setEmbargo();
 
-        element(by.css('[ng-click="saveTopbar(item)"]')).click();
+        element(by.css('[ng-click="saveTopbar()"]')).click();
         element(by.id('closeAuthoringBtn')).click();
 
         content.previewItem('item3');
