@@ -790,13 +790,25 @@ angular.module('superdesk.editor2', [
             link: function(scope, element, attr, controllers) {
                 var controller = controllers[0];
                 var ngModel = controllers[1];
-                $timeout(function() {
-                    if (controller.config.multiBlockEdition) {
-                        controller.initEditorWithMultipleBlock(ngModel);
-                    } else {
-                        controller.initEditorWithOneBlock(ngModel);
+                function init() {
+                    $timeout(function() {
+                        if (controller.config.multiBlockEdition) {
+                            controller.initEditorWithMultipleBlock(ngModel);
+                        } else {
+                            controller.initEditorWithOneBlock(ngModel);
+                        }
+                    });
+                }
+                // init editor based on model
+                init();
+                // when the model change from outside, update the editor
+                scope.$watch(function() {
+                    return ngModel.$viewValue;
+                }, function() {
+                    if (ngModel.$viewValue !== controller.serializeBlock()) {
+                        init();
                     }
-                });
+                }, true);
             }
         };
     }])
