@@ -50,17 +50,19 @@ function Dashboard() {
      * Add to current dashboard the widget at index 'index' from the list
      * of available widgets on dashboard settings.
      *
-     * @param {number} index
+     * @param {string} name
      */
-    this.addWidget = function(name) {
-        this.getSettingsWidget(name).then(function(widget) { widget.click(); });
+    this.addWidget = function (name) {
+        this.getSettingsWidget(name).then(function (widget) {
+            widget.click();
+        });
         element.all(by.css('[ng-click="dashboard.addWidget(dashboard.selectedWidget)"]')).first().click();
     };
 
     /**
      * Close the dashboard settings.
      */
-    this.doneAction = function() {
+    this.doneAction = function () {
         element.all(by.css('[ng-click="dashboard.add = false"]')).first().click();
     };
 
