@@ -278,7 +278,7 @@
             }
         };
     }])
-    .directive('sdImagePoint', ['$window', function($window) {
+    .directive('sdImagePoint', ['$window', 'lodash', function($window, _) {
         return {
             scope: {
                 src: '=',
@@ -301,9 +301,12 @@
             link: function(scope, element, attrs, vm) {
                 var circleRadius = 30 / 2;
                 var lineThickness = 2;
-                function drawPoint(img) {
-                    var topOffset = (vm.poi.y * img.height) - circleRadius;
-                    var leftOffset = (vm.poi.x * img.width) - circleRadius;
+                function drawPoint(img, poi) {
+                    if (!angular.isDefined(poi)) {
+                        poi = vm.poi;
+                    }
+                    var topOffset = (poi.y * img.height) - circleRadius;
+                    var leftOffset = (poi.x * img.width) - circleRadius;
                     var verticalLeftOffset = leftOffset + circleRadius - (lineThickness / 2);
                     var horizontalTopffset = topOffset + circleRadius - (lineThickness / 2);
                     element.find('.image-point__poi').css({
@@ -341,40 +344,62 @@
                 // load the image in order to know the size
                 var img = new Image();
                 img.onload = function() {
+                    function drawPointsFromModel() {
+                        drawPoint($img);
+                    }
                     var $img = element.find('.image-point__image').get(0);
-                    drawPoint($img);
+                    // initialize points
+                    drawPointsFromModel();
                     // draw when needed
-                    scope.$on('poiUpdate', function() {
-                        drawPoint($img);
-                    });
-                    angular.element($window).on('resize', function() {
-                        drawPoint($img);
-                    });
+                    scope.$on('poiUpdate', drawPointsFromModel);
+                    angular.element($window).on('resize', drawPointsFromModel);
                     // setup overlay to listen mouse events
                     (function($img) {
-                        function updatePOI(e) {
-                            vm.updatePOI({
+                        function updatePOIModel(e) {
+                            var newPoi = {
                                 x: Math.round(e.offsetX * 100 / $img.width) / 100,
                                 y: Math.round(e.offsetY * 100 / $img.height) / 100
-                            });
+                            };
+                            // refresh the points
+                            drawPoint($img, newPoi);
+                            // and notice the controller that points have been moved
+                            debouncedPoiUpdateModel(newPoi);
                         }
+                        var debouncedPoiUpdateModel = _.debounce(function(newPoi) {
+                            vm.updatePOI(newPoi);
+                        }, 500);
+                        // binds overlay events
                         var overlay = element.find('.image-point__poi__overlay');
                         var mousedown = false;
-                        overlay.on('mousedown', function(e) {
-                            // enable drag mode
+                        /** enable drag mode */
+                        function enableDragMode(e) {
                             mousedown = true;
-                            updatePOI(e);
-                        });
-                        overlay.on('mousemove', function(e) {
+                            updatePOIModel(e);
+                        }
+                        /** exit Drag Mode */
+                        function exitDragMode(e) {
+                            updateOnMouseDrag(e);
+                            mousedown = false;
+                        }
+                        /** update Poi if mouse is clicked */
+                        function updateOnMouseDrag(e) {
                             if (mousedown) {
-                                updatePOI(e);
+                                updatePOIModel(e);
                             }
+                        }
+                        var onExistEvents = ['mouseleave', 'mouseup'];
+                        overlay.on('mousedown', enableDragMode);
+                        overlay.on('mousemove', updateOnMouseDrag);
+                        onExistEvents.forEach(function(eventName) {
+                            overlay.on(eventName, exitDragMode);
                         });
-                        // exit Drag Mode
-                        ['mouseleave', 'mouseup'].forEach(function(eventName) {
-                            overlay.on(eventName, function() {
-                                mousedown = false;
+                        scope.$on('$destroy', function () {
+                            overlay.off('mousedown', enableDragMode);
+                            overlay.off('mousemove', updateOnMouseDrag);
+                            onExistEvents.forEach(function(eventName) {
+                                overlay.off(eventName, exitDragMode);
                             });
+                            angular.element($window).off('resize', drawPointsFromModel);
                         });
                     })($img);
                 };
