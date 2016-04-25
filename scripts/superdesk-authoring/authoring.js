@@ -958,7 +958,7 @@
                         originalPoi.y > cropData.CropBottom ||
                         originalPoi.x < cropData.CropLeft ||
                         originalPoi.x > cropData.CropRight) {
-                        throw gettext('Point of interest outside the crop '+ cropName +' limits');
+                        throw gettext('Point of interest outside the crop ' + cropName + ' limits');
                     }
                 });
             }
