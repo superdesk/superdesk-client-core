@@ -133,11 +133,7 @@
 
                 <div sd-info-item>
                   <label for="phone" translate>phone number</label>
-                  <input type="text" name="phone" id="phone" ng-model="user.phone" ng-pattern="phonePattern">
-                  <div ng-show="userForm.phone.$error.pattern || error.phone" sd-valid-info>
-                    <i class="icon-info-sign-warning"></i>
-                    <span translate>please provide number in international format</span>
-                  </div>
+                  <input type="text" name="phone" id="phone" ng-model="user.phone">
                 </div>
 
                 <div sd-info-item ng-show="user._id">
