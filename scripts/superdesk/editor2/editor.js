@@ -801,7 +801,7 @@ angular.module('superdesk.editor2', [
                 }
                 // init editor based on model
                 init();
-                // when the model change from outside, update the editor
+                // when the model changes from outside, updates the editor
                 scope.$watch(function() {
                     return ngModel.$viewValue;
                 }, function() {
