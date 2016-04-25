@@ -301,6 +301,12 @@
             link: function(scope, element, attrs, vm) {
                 var circleRadius = 30 / 2;
                 var lineThickness = 2;
+                var $poiContainer = element.find('.image-point__poi');
+                var $poiCursor = element.find('.image-point__poi__cursor');
+                var $poiLeft = element.find('.image-point__poi__cross-left');
+                var $poiRight = element.find('.image-point__poi__cross-right');
+                var $poiTop = element.find('.image-point__poi__cross-top');
+                var $poiBottom = element.find('.image-point__poi__cross-bottom');
                 function drawPoint(img, poi) {
                     if (!angular.isDefined(poi)) {
                         poi = vm.poi;
@@ -309,28 +315,28 @@
                     var leftOffset = (poi.x * img.width) - circleRadius;
                     var verticalLeftOffset = leftOffset + circleRadius - (lineThickness / 2);
                     var horizontalTopffset = topOffset + circleRadius - (lineThickness / 2);
-                    element.find('.image-point__poi').css({
+                    $poiContainer.css({
                         width: img.width,
                         height: img.height
                     });
-                    element.find('.image-point__poi__cursor').css({
+                    $poiCursor.css({
                         left: leftOffset,
                         top: topOffset
                     });
-                    element.find('.image-point__poi__cross-left').css({
+                    $poiLeft.css({
                         width: leftOffset,
                         top: horizontalTopffset
                     });
-                    element.find('.image-point__poi__cross-right').css({
+                    $poiRight.css({
                         width: img.width - (leftOffset + (2 * circleRadius)),
                         top: horizontalTopffset,
                         left: leftOffset +  (2 * circleRadius)
                     });
-                    element.find('.image-point__poi__cross-top').css({
+                    $poiTop.css({
                         height: topOffset,
                         left: verticalLeftOffset
                     });
-                    element.find('.image-point__poi__cross-bottom').css({
+                    $poiBottom.css({
                         height: img.height - (topOffset + (2 * circleRadius)),
                         left: verticalLeftOffset,
                         top: topOffset + (2 * circleRadius)
@@ -404,6 +410,8 @@
                     })($img);
                 };
                 img.src = scope.vm.src;
+                // Break the circular link. The handler doesn’t reference DOM element any more.
+                img = null;
             }
         };
     }]);
