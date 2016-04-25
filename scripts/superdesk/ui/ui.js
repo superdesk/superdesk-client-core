@@ -1183,9 +1183,8 @@
     }
 
     return angular.module('superdesk.ui', [
-        'superdesk.dashboard.world-clock',
-        'superdesk.ui.autoheight',
-        'superdesk.datetime'
+        'superdesk.datetime',
+        'superdesk.ui.autoheight'
     ])
         .directive('sdShadow', ShadowDirective)
         .directive('sdToggleBox', ToggleBoxDirective)
