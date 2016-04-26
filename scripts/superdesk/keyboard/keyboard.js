@@ -333,33 +333,40 @@
     }])
 
     .directive('sdHotkey', ['keyboardManager', '$timeout', function (keyboardManager, $timeout) {
-            return {
-                link: function (scope, elem, attrs, ctrl) {
-                    var hotkey = attrs.sdHotkey,
-                        callback = scope.$eval(attrs.sdHotkeyCallback),
-                        options = scope.$eval(attrs.sdHotkeyOptions);
+        return {
+            link: function (scope, elem, attrs, ctrl) {
+                var hotkey = attrs.sdHotkey,
+                    callback = scope.$eval(attrs.sdHotkeyCallback),
+                    options = scope.$eval(attrs.sdHotkeyOptions);
 
-                    keyboardManager.bind(hotkey, function (e) {
-                        e.preventDefault();
-                        if (callback) {
-                            callback();
-                        } else {
-                            elem.click();
-                        }
-                    }, options);
+                keyboardManager.bind(hotkey, function (e) {
+                    e.preventDefault();
+                    if (callback) {
+                        callback();
+                    } else {
+                        elem.click();
+                    }
+                }, options);
 
-                    $timeout(function () {
-                        if (elem.attr('title')) {
-                            elem.attr('title', elem.attr('title') + ' (' + hotkey + ')');
-                        } else if (elem.attr('tooltip')) {
-                            elem.attr('tooltip', elem.attr('tooltip') + ' (' + hotkey + ')');
-                        } else {
-                            elem.attr('title', hotkey);
-                        }
-                    }, 0, false);
-                }
-            };
-        }])
+                /*
+                 * On scope $destroy unbind binded shortcuts
+                 */
+                scope.$on('$destroy', function () {
+                    keyboardManager.unbind(hotkey);
+                });
+
+                $timeout(function () {
+                    if (elem.attr('title')) {
+                        elem.attr('title', elem.attr('title') + ' (' + hotkey + ')');
+                    } else if (elem.attr('tooltip')) {
+                        elem.attr('tooltip', elem.attr('tooltip') + ' (' + hotkey + ')');
+                    } else {
+                        elem.attr('title', hotkey);
+                    }
+                }, 0, false);
+            }
+        };
+    }])
 
     .directive('sdKeyboardModal', ['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         return {
