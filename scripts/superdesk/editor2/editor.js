@@ -11,6 +11,8 @@
 
 'use strict';
 
+var TYPING_CLASS = 'typing';
+
 /**
  * Replace given dom elem with its contents
  *
@@ -137,6 +139,15 @@ function HistoryStack(initialValue) {
     this.get = function() {
         var state = index > -1 ? stack[index] : initialValue;
         return state;
+    };
+
+    /**
+     * Get current index
+     *
+     * @return {Number}
+     */
+    this.getIndex = function() {
+        return index;
     };
 }
 
@@ -574,8 +585,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     this.undo = function(scope) {
-        scope.history.selectPrev();
-        useHistory(scope);
+        if (scope.history.getIndex() > -1) {
+            scope.history.selectPrev();
+            useHistory(scope);
+        }
     };
 
     /**
@@ -584,8 +597,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     this.redo = function(scope) {
+        var oldIndex = scope.history.getIndex();
         scope.history.selectNext();
-        useHistory(scope);
+        if (oldIndex !== scope.history.getIndex()) {
+            useHistory(scope);
+        }
     };
 
     /**
@@ -594,7 +610,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     function useHistory(scope) {
-        var val = scope.history.get();
+        var val = scope.history.get() || '';
         if (val != null) {
             scope.node.innerHTML = val;
             scope.model.$setViewValue(val);
@@ -1043,7 +1059,6 @@ angular.module('superdesk.editor2', [
                     sdEditorCtrl: sdTextEditor
                 });
                 vm.block = scope.sdTextEditorBlockText;
-                var TYPING_CLASS = 'typing';
                 var editorElem;
                 var updateTimeout;
                 var renderTimeout;
@@ -1107,7 +1122,7 @@ angular.module('superdesk.editor2', [
 
                     function cancelTimeout(event) {
                         $timeout.cancel(updateTimeout);
-                        scope.node.parentNode.classList.add(TYPING_CLASS);
+                        startTyping();
                     }
 
                     function changeSelectedParagraph(direction) {
@@ -1247,7 +1262,7 @@ angular.module('superdesk.editor2', [
                 };
 
                 function render($event, event, preventStore) {
-                    scope.node.parentNode.classList.remove(TYPING_CLASS);
+                    stopTyping();
                     editor.renderScope(scope, $event, preventStore);
                     if (event) {
                         event.preventDefault();
@@ -1269,6 +1284,7 @@ angular.module('superdesk.editor2', [
                     scope.$applyAsync(function() {
                         editor.undo(scope);
                         editor.renderScope(scope);
+                        stopTyping();
                     });
                 }
 
@@ -1276,12 +1292,21 @@ angular.module('superdesk.editor2', [
                     scope.$applyAsync(function() {
                         editor.redo(scope);
                         editor.renderScope(scope);
+                        stopTyping();
                     });
                 }
 
                 function changeListener() {
                     $timeout.cancel(renderTimeout);
                     renderTimeout = $timeout(render, 0, false);
+                }
+
+                function startTyping() {
+                    scope.node.parentNode.classList.add(TYPING_CLASS);
+                }
+
+                function stopTyping() {
+                    scope.node.parentNode.classList.remove(TYPING_CLASS);
                 }
             },
             controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', function(scope, editor, api , superdesk, renditions) {
