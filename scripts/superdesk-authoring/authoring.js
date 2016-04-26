@@ -1281,7 +1281,7 @@
                                     var errors = response.data._issues['validator exception'];
                                     var modified_errors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
                                     for (var i = 0; i < modified_errors.length; i++) {
-                                        notify.error(modified_errors[i]);
+                                        notify.error(_.trim(modified_errors[i]));
                                     }
 
                                     if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
