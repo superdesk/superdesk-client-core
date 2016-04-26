@@ -142,6 +142,9 @@ function HistoryStack(initialValue) {
 
 EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions'];
 function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService) {
+
+    var CLONE_CLASS = 'clone';
+
     this.settings = {spellcheck: true};
 
     /**
@@ -249,14 +252,20 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             renderFindreplace(scope.node);
         } else if (self.settings.spellcheck || force) {
             renderSpellcheck(scope.node, preventStore);
+        } else {
+            removeHilites(scope.node);
         }
     };
 
     /**
      * Render highlights in all registered scopes
+     *
+     * @param {Boolean} force rendering
      */
-    this.render = function() {
-        scopes.forEach(self.renderScope);
+    this.render = function(force) {
+        scopes.forEach(function(scope) {
+            self.renderScope(scope, force);
+        });
     };
 
     /**
@@ -330,6 +339,19 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     }
 
     /**
+     * Remove hilites node from nodes parent
+     *
+     * @param {Node} node
+     */
+    function removeHilites(node) {
+        var parentNode = node.parentNode;
+        var clones = parentNode.getElementsByClassName(CLONE_CLASS);
+        if (clones.length) {
+            parentNode.removeChild(clones.item(0));
+        }
+    }
+
+    /**
      * Hilite all tokens within node using span with given className
      *
      * This first stores caret position, updates markup, and then restores the caret.
@@ -340,14 +362,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Boolean} preventStore
      */
     function hilite(node, tokens, className, preventStore) {
-        var CLONE_CLASS = 'clone';
-        var parentNode = node.parentNode;
-
-        // remove old hilite nodes if any
-        var clones = parentNode.getElementsByClassName(CLONE_CLASS);
-        if (clones.length) {
-            parentNode.removeChild(clones.item(0));
-        }
+        // remove old hilites
+        removeHilites(node);
 
         // create a clone
         var hiliteNode = node.cloneNode(true);
@@ -359,7 +375,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
         });
 
         // render clone
-        parentNode.appendChild(hiliteNode);
+        node.parentNode.appendChild(hiliteNode);
     }
 
     /**
@@ -1088,6 +1104,7 @@ angular.module('superdesk.editor2', [
                     });
                     scope.$on('spellcheck:run', render);
                     scope.$on('key:ctrl:shift:s', render);
+
                     function cancelTimeout(event) {
                         $timeout.cancel(updateTimeout);
                         scope.node.parentNode.classList.add(TYPING_CLASS);
