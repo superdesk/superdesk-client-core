@@ -3233,7 +3233,12 @@
                     event.preventDefault();
                     var item = getItem(event, PICTURE_TYPE);
                     // ingest picture if it comes from an external source (create renditions)
-                    renditions.ingest(item).then(scope.edit);
+                    scope.loading = true;
+                    renditions.ingest(item)
+                    .then(scope.edit)
+                    .finally(function() {
+                        scope.loading = false;
+                    });
                 });
 
                 function updateItemAssociation(updated) {
@@ -3257,9 +3262,13 @@
                 renditions.get();
 
                 scope.edit = function(item) {
-                    renditions.crop(item).then(function(updatedItem) {
+                    scope.loading = true;
+                    return renditions.crop(item).then(function(updatedItem) {
                         var data = updateItemAssociation(updatedItem);
                         scope.onchange({item: scope.item, data: data});
+                    })
+                    .finally(function() {
+                        scope.loading = false;
                     });
                 };
 
