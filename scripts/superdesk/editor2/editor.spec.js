@@ -6,6 +6,7 @@ describe('text editor', function() {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}});
     }));
 
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.config'));
     beforeEach(module('superdesk.editor2'));
     beforeEach(module('superdesk.editor.spellcheck'));

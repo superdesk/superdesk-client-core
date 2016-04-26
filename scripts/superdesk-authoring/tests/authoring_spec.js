@@ -11,11 +11,11 @@ describe('authoring', function() {
         $provide.constant('lodash', _);
     }));
 
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.preferences'));
     beforeEach(module('superdesk.archive'));
     beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.auth'));
     beforeEach(module('superdesk.workspace.content'));
     beforeEach(module('superdesk.mocks'));
@@ -351,6 +351,7 @@ describe('authoring', function() {
 });
 
 describe('cropImage', function() {
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.authoring'));
     beforeEach(module('superdesk.mocks'));
     beforeEach(module('superdesk.templates-cache'));

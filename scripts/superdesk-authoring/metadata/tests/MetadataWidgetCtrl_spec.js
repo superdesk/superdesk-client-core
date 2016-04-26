@@ -6,6 +6,7 @@ describe('MetadataWidgetCtrl controller', function () {
         prefsGet,  //deferred result of the preferences service's get() method
         scope;
 
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.desks'));
     beforeEach(module('superdesk.ui'));
     beforeEach(module('superdesk.filters'));
@@ -103,6 +104,7 @@ describe('metadata list editing directive', function() {
     beforeEach(module('superdesk.templates-cache'));
     beforeEach(module('superdesk.api'));
     beforeEach(module('superdesk.filters'));
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.authoring.metadata'));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {
@@ -386,6 +388,7 @@ describe('dateline dropdown', function() {
     ];
 
     beforeEach(module('superdesk.templates-cache'));
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.authoring.metadata'));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {

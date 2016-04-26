@@ -2,6 +2,7 @@
 
 describe('text editor', function() {
 
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.editor.spellcheck'));
     beforeEach(module('superdesk.templates-cache'));

@@ -69,8 +69,10 @@
             };
         });
 
-    ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal', 'adminPublishSettingsService'];
-    function ProductsConfigController ($scope, gettext, notify, api, products, modal, adminPublishSettingsService) {
+    ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal',
+    'adminPublishSettingsService', 'metadata', '$filter'];
+    function ProductsConfigController ($scope, gettext, notify, api, products, modal,
+        adminPublishSettingsService, metadata, $filter) {
 
         var initProducts = function() {
             products.initialize().then(function() {
@@ -83,6 +85,16 @@
             if (!$scope.subscribers) {
                 adminPublishSettingsService.fetchSubscribers().then(function(items) {
                     $scope.subscribers = items._items;
+                });
+            }
+        };
+
+        var initRegions = function() {
+            if (angular.isDefined(metadata.values.geographical_restrictions)) {
+                $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
+            } else {
+                metadata.fetchMetadataValues().then(function() {
+                    $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
                 });
             }
         };
@@ -107,6 +119,7 @@
             $scope.product.edit = null;
             initProducts();
             initSubscribers();
+            initRegions();
         };
 
         $scope.cancel();

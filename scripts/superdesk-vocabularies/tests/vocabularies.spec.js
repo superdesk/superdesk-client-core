@@ -2,6 +2,7 @@
 describe('vocabularies', function() {
     'use strict';
 
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.vocabularies'));
     beforeEach(module('superdesk.authoring'));
     beforeEach(module('superdesk.templates-cache'));
