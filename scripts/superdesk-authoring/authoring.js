@@ -1608,31 +1608,6 @@
                         scope.saveDisabled = false;
                     });
                 };
-                keyboardManager.bind('ctrl+shift+u', function(e) {
-                    e.preventDefault();
-                    if (scope.item._locked &&
-                        !scope.item.sendTo &&
-                        scope.can_unlock() &&
-                        scope.itemActions.save &&
-                        !scope.unlockClicked
-                    ) {
-                        scope.unlock();
-                    }
-                });
-                keyboardManager.bind('ctrl+shift+e', function() {
-                    scope.close();
-                });
-                keyboardManager.bind('ctrl+shift+s', function(e) {
-                    e.preventDefault();
-                    if (scope._editable &&
-                        scope.itemActions.save &&
-                        scope.action === 'edit' &&
-                        !scope.saveDisabled &&
-                        scope.save_enabled()
-                    ) {
-                        scope.saveTopbar();
-                    }
-                });
             }
         };
     }
