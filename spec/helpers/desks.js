@@ -1,7 +1,7 @@
 
 'use strict';
 
-var openUrl = require('./utils').open;
+var nav = require('./utils').nav;
 
 module.exports = new Desks();
 
@@ -25,8 +25,7 @@ function Desks() {
      * Open the desk settings wizard
      **/
     this.openDesksSettings = function() {
-        openUrl('/#/settings/desks');
-        browser.sleep(500);
+        nav('/settings/desks');
     };
 
     /**
