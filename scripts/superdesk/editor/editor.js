@@ -155,8 +155,8 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q'];
-function EditorService(spellcheck, $rootScope, $timeout, $q) {
+EditorService.$inject = ['spellcheck', 'editorUtils', '$rootScope', '$timeout', '$q'];
+function EditorService(spellcheck, utils, $rootScope, $timeout, $q) {
     this.settings = {spellcheck: true};
     window.editor = this;
 

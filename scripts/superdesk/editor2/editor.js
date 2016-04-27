@@ -47,7 +47,6 @@ function removeClass(elem, className) {
     return node;
 }
 
-
 /**
  * History stack
  *
@@ -262,7 +261,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             utils.hilite(node, tokens, ERROR_CLASS, preventStore);
         });
     }
-    
+
     /**
      * Set next highlighted node active.
      *
@@ -738,8 +737,8 @@ angular.module('superdesk.editor2', [
             controller: SdTextEditorBlockEmbedController
         };
     }])
-    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog',
-    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog) {
+    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog', 'config',
+    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog, config) {
         var EDITOR_CONFIG = {
             toolbar: {
                 static: true,
@@ -759,6 +758,10 @@ angular.module('superdesk.editor2', [
             spellcheck: false,
             targetBlank: true
         };
+
+        if (config.editor) {
+            angular.extend(EDITOR_CONFIG, config.editor);
+        }
 
         /**
          * Get number of lines for all p nodes before given node withing same parent.
@@ -951,16 +954,19 @@ angular.module('superdesk.editor2', [
                 ngModel.$render = function() {
                     editor.registerScope(scope);
                     var editorConfig = angular.merge({}, EDITOR_CONFIG, scope.config || {});
-                    editorConfig.toolbar.buttons = [];
-                    setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
-                    // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
-                    if (scope.config.multiBlockEdition) {
-                        // this dummy imageDragging stop preventing drag & drop events
-                        editorConfig.extensions = {'imageDragging': {}};
-                        if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
-                            editorConfig.extensions.table = new window.MediumEditorTable();
+                    if (editorConfig.toolbar) {
+                        editorConfig.toolbar.buttons = [];
+                        setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
+                        // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
+                        if (scope.config.multiBlockEdition) {
+                            // this dummy imageDragging stop preventing drag & drop events
+                            editorConfig.extensions = {'imageDragging': {}};
+                            if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
+                                editorConfig.extensions.table = new window.MediumEditorTable();
+                            }
                         }
                     }
+
                     spellcheck.setLanguage(scope.language);
                     editorElem = elem.find(scope.type === 'preformatted' ?  '.editor-type-text' : '.editor-type-html');
                     editorElem.empty();

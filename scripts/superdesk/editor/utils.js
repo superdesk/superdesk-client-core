@@ -17,7 +17,6 @@
             return b.length - a.length;
         }
 
-        
         /**
          * Find text node within given node for given character offset
          *
@@ -161,8 +160,6 @@
                     parentNode.removeChild(clones.item(0));
                 }
             },
-
-
 
             /**
              * Find text node within given node where word is located
