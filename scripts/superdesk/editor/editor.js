@@ -14,18 +14,6 @@
 var TYPING_CLASS = 'typing';
 
 /**
- * Escape given string for reg exp
- *
- * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
- *
- * @param {string} string
- * @return {string}
- */
-function escapeRegExp(string){
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-/**
  * Generate click event on given target node
  *
  * @param {Node} target
@@ -301,66 +289,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      * @param {Node} node
      */
     function renderFindreplace(node) {
-        var tokens = getFindReplaceTokens(node);
+        var tokens = utils.getFindReplaceTokens(node, self.settings);
         hilite(node, tokens, FINDREPLACE_CLASS);
         if (self.settings.findreplace.diff) {
             self.selectNext();
         }
-    }
-
-    /**
-     * Function for sorting array of strings from longest to shortest
-     *
-     * @param {string} a
-     * @param {string} b
-     * @return {number}
-     */
-    function reverseLengthSort(a, b) {
-        return b.length - a.length;
-    }
-
-    /**
-     * Find all matches for current find&replace needle in given node
-     *
-     * Each match is {word: {string}, offset: {number}} in given node,
-     * we can't return nodes here because those will change when we start
-     * highlighting and offsets wouldn't match
-     *
-     * @param {Node} node
-     * @return {Array} list of matches
-     */
-    function getFindReplaceTokens(node) {
-        var tokens = [];
-        var diff = self.settings.findreplace.diff || {};
-        var pattern = Object.keys(diff).sort(reverseLengthSort).map(escapeRegExp).join('|');
-        if (!pattern) {
-            return tokens;
-        }
-
-        var flags = self.settings.findreplace.caseSensitive ? 'm' : 'im';
-        var re = new RegExp(pattern, flags);
-        var nodeOffset = 0;
-        var text, match, offset;
-
-        var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
-        while (tree.nextNode()) {
-            text = tree.currentNode.textContent;
-            while ((match = text.match(re)) != null) {
-                tokens.push({
-                    word: match[0],
-                    index: nodeOffset + match.index,
-                    title: diff[match[0]] || ''
-                });
-
-                offset = match.index + match[0].length;
-                text = text.substr(offset);
-                nodeOffset += offset;
-            }
-
-            nodeOffset += text.length;
-        }
-
-        return tokens;
     }
 
     /**
@@ -678,7 +611,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     }
 }
 
-angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
+angular.module('superdesk.editor', ['superdesk.editor.spellcheck', 'superdesk.editor.utils'])
 
     .service('editor', EditorService)
 
