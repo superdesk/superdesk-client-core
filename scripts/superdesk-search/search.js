@@ -1331,6 +1331,19 @@
         }])
 
         .directive('sdItemPreview', ['asset', function(asset) {
+            /**
+             * @description Closes the preview panel if the currently previewed
+             * item is spiked or unspiked.
+             * @param {Object} scope - angular scope
+             * @param {Object} _ - event data (unused)
+             * @param {Object=} args - the item that was spiked/unspiked
+             */
+            function onSpikeAndUnspike(scope, _, args) {
+                if (args && args.item === scope.item._id) {
+                    scope.close();
+                }
+            }
+
             return {
                 templateUrl: asset.templateUrl('superdesk-search/views/item-preview.html'),
                 scope: {
@@ -1347,9 +1360,8 @@
                         scope.selected = {preview: item || null};
                     });
 
-                    scope.$on('item:spike', scope.close);
-
-                    scope.$on('item:unspike', scope.close);
+                    scope.$on('item:spike', onSpikeAndUnspike.bind(this, scope));
+                    scope.$on('item:unspike', onSpikeAndUnspike.bind(this, scope));
 
                     /**
                      * Return true if the menu actions from
