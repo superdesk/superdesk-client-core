@@ -67,6 +67,7 @@
     // http://docs.python-cerberus.org/en/stable/usage.html
     var DEFAULT_SCHEMA = Object.freeze({
         slugline: {maxlength: 24},
+        relatedItems: {},
         genre: {},
         anpa_take_key: {},
         place: {},
@@ -2394,8 +2395,6 @@
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
                 scope.contentType = null;
-                scope.schema = angular.extend({}, DEFAULT_SCHEMA);
-                scope.editor = angular.extend({}, DEFAULT_EDITOR);
                 scope.canEditSignOff = config.user && config.user.sign_off_mapping ? true: false;
                 scope.editSignOff = false;
 
@@ -2418,14 +2417,6 @@
 
                 scope.$watch('item', function(item) {
                     if (item) {
-                        if (item.profile) {
-                            content.getType(item.profile)
-                                .then(function(type) {
-                                    scope.contentType = type;
-                                    scope.editor = type.editor || DEFAULT_EDITOR;
-                                    scope.schema = type.schema || DEFAULT_SCHEMA;
-                                });
-                        }
                         /* Creates a copy of dateline object from item.__proto__.dateline */
                         if (item.dateline) {
                             var updates = {dateline: {}};
@@ -2872,8 +2863,6 @@
             require: '^sdAuthoringWidgets',
             link: function (scope, elem, attrs, WidgetsManagerCtrl) {
                 scope.contentType = null;
-                scope.schema = angular.extend({}, DEFAULT_SCHEMA);
-                scope.editor = angular.extend({}, DEFAULT_EDITOR);
 
                 scope.shouldDisplayUrgency = function() {
                     return !scope.editor.urgency.service || (
@@ -2952,6 +2941,9 @@
                                     scope.editor = type.editor || DEFAULT_EDITOR;
                                     scope.schema = type.schema || DEFAULT_SCHEMA;
                                 });
+                        } else {
+                            scope.schema = angular.extend({}, DEFAULT_SCHEMA);
+                            scope.editor = angular.extend({}, DEFAULT_EDITOR);
                         }
 
                         // Related Items

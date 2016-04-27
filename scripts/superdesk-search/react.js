@@ -654,6 +654,9 @@
                                 React.createElement(TimeElem, {date: item.versioncreated})
                             ),
                             React.createElement('div', {className: 'line'},
+                                item.profile ?
+                                    React.createElement('div', {className: 'label label--' + item.profile}, item.profile) :
+                                    null,
                                 React.createElement(
                                     'span',
                                     {title: $filter('removeLodash')(item.state), className: 'state-label state-' + item.state},
@@ -667,9 +670,6 @@
                                 item.correction_sequence ?
                                     React.createElement('div', {className: 'provider'}, gettext('Update') +
                                         ' ' + item.correction_sequence) : null,
-                                item.profile ?
-                                    React.createElement('div', {className: 'label label--' + item.profile}, item.profile) :
-                                    null,
                                 item.anpa_take_key ?
                                     React.createElement('div', {className: 'takekey'}, item.anpa_take_key) :
                                     null,
