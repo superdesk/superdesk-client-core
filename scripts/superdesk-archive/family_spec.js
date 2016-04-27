@@ -27,12 +27,12 @@ describe('familyService', function() {
                         return $q.reject({});
                     },
                     query: function(params) {
-                        var familyId = params.source.query.filtered.filter.and[1].term.family_id;
+                        var familyId = params.source.query.bool.filter.bool.must[1].term.family_id;
                         var members = _.filter(items, {family_id: familyId});
 
-                        if (params.source.query.filtered.filter.and[2]) {
+                        if (params.source.query.bool.filter.bool.must[2]) {
                             _.remove(members,
-                                {unique_id: params.source.query.filtered.filter.and[2].not.term.unique_id}
+                                {unique_id: params.source.query.bool.filter.and[2].not.term.unique_id} // FIXME
                             );
                         }
 

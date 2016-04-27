@@ -30,14 +30,14 @@
          * @returns {Object}
          */
         function buildQuery(params, filters) {
-            var query = {filtered: {}};
+            var query = {bool: {}};
 
             if (filters && filters.length) {
-                query.filtered.filter = {and: filters};
+                query.bool.filter = {bool: {must: filters}};
             }
 
             if (params.q) {
-                query.filtered.query = {query_string: {query: params.q}};
+                query.bool.must = {query_string: {query: params.q}};
             }
 
             return paginate({query: query}, params);

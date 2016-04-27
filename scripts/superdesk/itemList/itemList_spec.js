@@ -31,7 +31,7 @@ describe('itemListService', function() {
             _endpointParam: undefined,
             source: {
                 query: {
-                    filtered: {}
+                    bool: {}
                 },
                 size: 25,
                 from: 0,
@@ -107,7 +107,7 @@ describe('itemListService', function() {
             queryParams = params;
         });
         $rootScope.$digest();
-        expect(queryParams.source.query.filtered.filter.and[0].terms.type).toEqual(
+        expect(queryParams.source.query.bool.filter.bool.must[0].terms.type).toEqual(
             ['text', 'picture', 'composite']
         );
     }));
@@ -122,7 +122,7 @@ describe('itemListService', function() {
             queryParams = params;
         });
         $rootScope.$digest();
-        expect(queryParams.source.query.filtered.filter.and[0].or).toEqual([
+        expect(queryParams.source.query.bool.filter.bool.must[0].bool.should).toEqual([
             {term: {state: 'spiked'}},
             {term: {state: 'published'}}
         ]);
@@ -138,7 +138,7 @@ describe('itemListService', function() {
             queryParams = params;
         });
         $rootScope.$digest();
-        expect(queryParams.source.query.filtered.filter.and).toEqual([
+        expect(queryParams.source.query.bool.filter.bool.must).toEqual([
             {not: {term: {state: 'spiked'}}},
             {not: {term: {state: 'published'}}}
         ]);
@@ -157,7 +157,7 @@ describe('itemListService', function() {
             queryParams = params;
         });
         $rootScope.$digest();
-        expect(queryParams.source.query.filtered.filter.and).toEqual([
+        expect(queryParams.source.query.bool.filter.bool.must).toEqual([
             {range: {_created: {lte: 1, gte: 2}}},
             {range: {_updated: {lte: 3, gte: 4}}}
         ]);
@@ -175,7 +175,7 @@ describe('itemListService', function() {
             queryParams = params;
         });
         $rootScope.$digest();
-        expect(queryParams.source.query.filtered.filter.and).toEqual([
+        expect(queryParams.source.query.bool.filter.bool.must).toEqual([
             {term: {provider: 'reuters'}},
             {term: {source: 'reuters_1'}},
             {term: {urgency: 5}}
@@ -197,7 +197,7 @@ describe('itemListService', function() {
             queryParams = params;
         });
         $rootScope.$digest();
-        expect(queryParams.source.query.filtered.query).toEqual({
+        expect(queryParams.source.query.bool.must).toEqual({
             query_string: {
                 query: 'headline:(*h*) subject.name:(*s*) slugline:(*k*) unique_name:(*u*) body_html:(*b*)',
                 lenient: false,
@@ -216,7 +216,7 @@ describe('itemListService', function() {
             queryParams = params;
         });
         $rootScope.$digest();
-        expect(queryParams.source.query.filtered.query).toEqual({
+        expect(queryParams.source.query.bool.must).toEqual({
             query_string: {
                 query: 'headline:(*s*) subject.name:(*s*) slugline:(*s*) unique_name:(*s*) body_html:(*s*)',
                 lenient: false,
@@ -254,7 +254,7 @@ describe('itemListService', function() {
         });
         $rootScope.$digest();
 
-        expect(queryParams.source.query.filtered.query).toEqual({
+        expect(queryParams.source.query.bool.must).toEqual({
             query_string: {
                 query: 'slugline:(kilo)',
                 lenient: false,
@@ -275,7 +275,7 @@ describe('itemListService', function() {
         });
         $rootScope.$digest();
 
-        expect(queryParams.source.query.filtered.query).toEqual({
+        expect(queryParams.source.query.bool.must).toEqual({
             query_string: {
                 query: 'slugline:("kilo gram") slugline:(kilo) slugline:(gram)',
                 lenient: false,
@@ -296,7 +296,7 @@ describe('itemListService', function() {
         });
         $rootScope.$digest();
 
-        expect(queryParams.source.query.filtered.query).toEqual({
+        expect(queryParams.source.query.bool.must).toEqual({
             query_string: {
                 query: 'slugline:("kilo\\/ gram\\/") slugline:(kilo\\/) slugline:(gram\\/)',
                 lenient: false,
@@ -317,7 +317,7 @@ describe('itemListService', function() {
         });
         $rootScope.$digest();
 
-        expect(queryParams.source.query.filtered.query).toEqual({
+        expect(queryParams.source.query.bool.query).toEqual({
             query_string: {
                 query: 'slugline:("kilo gram") slugline:(kilo) slugline:(gram)',
                 lenient: false,

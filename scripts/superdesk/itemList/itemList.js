@@ -12,7 +12,7 @@ var DEFAULT_OPTIONS = {
 angular.module('superdesk.itemList', ['superdesk.search'])
 .service('itemListService', ['api', '$q', 'search', function(api, $q, search) {
     function getQuery(options) {
-        var query = {source: {query: {filtered: {}}}};
+        var query = {source: {query: {bool: {}}}};
         // process filter aliases and shortcuts
         if (options.sortField && options.sortDirection) {
             var sort = {};
@@ -36,7 +36,7 @@ angular.module('superdesk.itemList', ['superdesk.search'])
             options.urgency ||
             options.savedSearch
         ) {
-            query.source.query.filtered.filter = {and: []};
+            query.source.query.bool.filter = {bool: {must: []}};
         }
         // process page and pageSize
         query.source.size = options.pageSize;
@@ -49,12 +49,12 @@ angular.module('superdesk.itemList', ['superdesk.search'])
         }
         // process types
         if (options.types) {
-            query.source.query.filtered.filter.and.push({terms: {type: options.types}});
+            query.source.query.bool.filter.bool.must.push({terms: {type: options.types}});
         }
         // process notState
         if (options.notStates) {
             _.each(options.notStates, function(notState) {
-                query.source.query.filtered.filter.and.push({not: {term: {state: notState}}});
+                query.source.query.bool.filter.bool.must_not.push({term: {state: notState}});
             });
         }
         // process state
@@ -63,7 +63,7 @@ angular.module('superdesk.itemList', ['superdesk.search'])
             _.each(options.states, function(state) {
                 stateQuery.push({term: {state: state}});
             });
-            query.source.query.filtered.filter.and.push({or: stateQuery});
+            query.source.query.bool.filter.bool.push({should: stateQuery});
         }
         // process creation date
         var dateKeys = {creationDate: '_created', modificationDate: '_updated'};
@@ -75,7 +75,7 @@ angular.module('superdesk.itemList', ['superdesk.search'])
                     lte: options[field + 'Before'] || undefined,
                     gte: options[field + 'After'] || undefined
                 };
-                query.source.query.filtered.filter.and.push({range: dateQuery});
+                query.source.query.bool.filter.bool.must.push({range: dateQuery});
             }
         });
         // process provider, source, urgency
@@ -83,7 +83,7 @@ angular.module('superdesk.itemList', ['superdesk.search'])
             if (options[field]) {
                 var directQuery = {};
                 directQuery[field] = options[field];
-                query.source.query.filtered.filter.and.push({term: directQuery});
+                query.source.query.bool.filter.bool.must.push({term: directQuery});
             }
         });
 
@@ -102,7 +102,7 @@ angular.module('superdesk.itemList', ['superdesk.search'])
             }
         });
         if (queryContent.length) {
-            query.source.query.filtered.query = {
+            query.source.query.bool.must = {
                 query_string: {
                     query: queryContent.join(' '),
                     lenient: false,
@@ -130,7 +130,7 @@ angular.module('superdesk.itemList', ['superdesk.search'])
             }
 
             if (queryRelatedItem.length) {
-                query.source.query.filtered.query = {
+                query.source.query.bool.must = {
                     query_string: {
                         query: queryRelatedItem.join(' '),
                         lenient: false,
@@ -146,7 +146,7 @@ angular.module('superdesk.itemList', ['superdesk.search'])
             _.each(_.values(fields), function(dbField) {
                 queryContentAny.push(dbField + ':(*' + options.search + '*)');
             });
-            query.source.query.filtered.query = {
+            query.source.query.bool.must = {
                 query_string: {
                     query: queryContentAny.join(' '),
                     lenient: false,
@@ -160,8 +160,8 @@ angular.module('superdesk.itemList', ['superdesk.search'])
             return api.get(options.savedSearch._links.self.href).then(function(savedSearch) {
                 var criteria = search.query(savedSearch.filter.query).getCriteria();
 
-                query.source.query.filtered.filter.and = query.source.query.filtered.filter.and.concat(
-                    criteria.query.filtered.filter.and
+                query.source.query.bool.filter.bool.must = query.source.query.bool.filter.bool.must.concat(
+                    criteria.query.bool.filter.bool.must
                 );
 
                 query.source.post_filter = criteria.post_filter;

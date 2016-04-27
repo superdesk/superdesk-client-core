@@ -87,7 +87,7 @@ describe('content', function() {
             archiveService.getRelatedItems('test');
             expect(api.query).toHaveBeenCalled();
             var criteria = api.query.calls.mostRecent().args[1];
-            expect(criteria.source.query.filtered.query.query_string.query).toBe('slugline:(test)');
+            expect(criteria.source.query.bool.must.query_string.query).toBe('slugline:(test)');
         }));
 
         it('can verify if the item is published or not', inject(function(archiveService) {
