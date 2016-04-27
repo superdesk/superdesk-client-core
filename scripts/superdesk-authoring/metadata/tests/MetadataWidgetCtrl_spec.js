@@ -74,6 +74,20 @@ describe('MetadataWidgetCtrl controller', function () {
             [{qcode: 'a'}, {qcode: 'c'}]
         );
     });
+
+    it('can pupulate list of categories for new users', function() {
+        metadata.values = {
+            categories: [
+                {qcode: 'a'}, {qcode: 'b'}, {qcode: 'c'}, {qcode: 'd'}
+            ]
+        };
+
+        metaInit.resolve();
+        prefsGet.resolve({'categories:preferred': {selected: {}}});
+        scope.$digest();
+
+        expect(scope.availableCategories.length).toBe(4);
+    });
 });
 
 describe('metadata list editing directive', function() {
