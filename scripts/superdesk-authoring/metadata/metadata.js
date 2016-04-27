@@ -57,7 +57,7 @@ function MetadataCtrl(
         });
 
         filtered = _.filter(all, function (cat) {
-            return !assigned[cat.qcode] && (userPrefs == null || userPrefs[cat.qcode]);
+            return !assigned[cat.qcode] && (_.isEmpty(userPrefs) || userPrefs[cat.qcode]);
         });
 
         $scope.availableCategories = _.sortBy(filtered, 'name');
