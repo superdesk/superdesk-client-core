@@ -6,18 +6,16 @@
         </span>
         <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
             <div class="search-handler">
-                <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"></label>
+                <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
                 <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="aggregate.search(query)">
                 <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-close-small"></i></button>
             </div>
-            <div class="separator-handler"></div>
         </div>
-        <h3 class="page-nav-title">
+        <h3 class="subnav__page-title">
             <span ng-if="!monitoring.singleGroup && type === 'monitoring'" translate>Monitoring</span>
             <span ng-if="type === 'spike'"><span translate>Spiked Items</span> <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems }}</span></span>
             <span ng-if="type === 'personal'" translate>Personal Items</span>
-            <div ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems">
-            </div>
+            <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span>
 
             <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
                 {{ :: monitoring.singleGroup.header }} / {{ :: monitoring.singleGroup.subheader }} {{ :: monitoring.singleGroup.type}}
@@ -39,7 +37,7 @@
 
         <div sd-multi-action-bar></div>
 
-        <div class="button-stack right-stack">
+        <div class="subnav__button-stack--square-buttons">
             <div class="pull-left-10x" ng-if="type === 'highlights'" sd-create-highlights-button data-highlight="monitoring.queryParam.highlight"></div>
             <button class="navbtn strict" ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'" ng-click="aggregate.edit()">
                 <i class="icon-settings"></i>
@@ -56,14 +54,16 @@
 
         <div sd-media-query min-width="450" class="subnav">
 
-            <ul class="filter-type pull-left" ng-if="!elementState || elementState === 'comfort'">
+            <ul class="filter-type filter-type--padded" ng-if="!elementState || elementState === 'comfort'">
                 <li ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                     <a href="" ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
                     <i ng-if="fileType!='all'" class="filetype-icon-{{fileType}}"></i>
                 </li>
             </ul>
 
-            <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'"></div>
+            <div class="subnav__stretch-bar"></div>
+
+            <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'" class="sortbar-container"></div>
 
             <div class="button-stack right-stack" ng-if="elementState === 'compact'">
                 <div class="dropdown navbtn strict" dropdown>

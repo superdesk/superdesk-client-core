@@ -182,20 +182,21 @@
 }
 
 .flat-searchbar {
-    float: left;
-    &.monitoring-flat-searchbar{
-        margin-top: -9px;
-        .search-handler{
-            padding-left:5px;
+  flex-grow: 0;
+    &.monitoring-flat-searchbar {
+        .search-handler {
+
         }
     }
     .search-handler {
-        min-width: 40px;
-        height: @nav-height - 1;
-        padding: 10px 10px 10px 20px;
+        min-width: 48px;
+        height: @nav-height;
+        padding: 10px 10px 10px 14px;
         .box-sizing(border-box);
         background: none;
-        float: left;
+        display: flex;
+        border-right: 1px solid #e0e0e0;
+        white-space: nowrap;
         .transition(all 0.3s ease);
         input {
             height: 28px;
@@ -204,6 +205,7 @@
             border: 0 !important;
             width: 0;
             padding: 0;
+            background-color: rgba(255,255,255,0);
             .transition(all 0.3s ease);
             &:focus {
                 .box-shadow(none) !important;
@@ -215,11 +217,13 @@
             width: 28px;
             height: 28px;
             display: inline-block;
-            background: url(../../images/search-icon.png) no-repeat 5px 5px;
-            .opacity(85);
+            .opacity(50);
             &:hover {
                 cursor: pointer;
-                .opacity(100);
+                .opacity(80);
+            }
+            i {
+              padding: 7px 3px 4px 6px;
             }
         }
     }
@@ -241,9 +245,10 @@
     }
 
     &.extended {
+      flex-grow: 1;
         .search-handler {
             input {
-                width: 320px;
+                width: auto;
                 padding: 0 6px;
             }
             background: #fff;
@@ -256,6 +261,11 @@
             display: inline-block;
         }
     }
+}
+
+.ui-responsive-small .flat-searchbar.extended {
+  position: absolute;
+  z-index: 2;
 }
 
 .monitoring-backlink{
@@ -342,6 +352,9 @@
             }
         }
     }
+}
+.filter-type--padded {
+  padding: 10px 0 10px 20px;
 }
 
 .result-type {
