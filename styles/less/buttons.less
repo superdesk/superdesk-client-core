@@ -10,6 +10,8 @@
 @btnDangerColor : #c83929;
 @btnInverseColor : #141414;
 @btnCustomColor : #666;
+@btnPublishColor: #01579B;
+@btnPublishPlusColor: #623b7a;
 
 
 //mixin
@@ -89,6 +91,14 @@
 }
 .btn-custom {
     .buttonStates(@btnCustomColor, @white);
+    white-space: nowrap;
+}
+.btn-publish {
+    .buttonStates(@btnPublishColor, @white);
+    white-space: nowrap;
+}
+.btn-publish-plus {
+    .buttonStates(@btnPublishPlusColor, @white);
     white-space: nowrap;
 }
 
