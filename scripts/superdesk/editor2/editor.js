@@ -14,40 +14,6 @@
 var TYPING_CLASS = 'typing';
 
 /**
- * Replace given dom elem with its contents
- *
- * It is like jQuery unwrap
- *
- * @param {Node} elem
- */
-function replaceSpan(elem) {
-    var parent = elem.parentNode;
-    while (elem.hasChildNodes()) {
-        parent.insertBefore(elem.childNodes.item(0), elem);
-    }
-
-    parent.removeChild(elem);
-}
-
-/**
- * Remove all elements with given className but keep its contents
- *
- * @param {Node} elem
- * @param {string} className
- * @return {Node}
- */
-function removeClass(elem, className) {
-    var node = elem.cloneNode(true);
-    var spans = node.getElementsByClassName(className);
-    while (spans.length) {
-        replaceSpan(spans.item(0));
-    }
-
-    node.normalize();
-    return node;
-}
-
-/**
  * History stack
  *
  * It supports undo/redo operations
@@ -102,8 +68,8 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions', 'editorUtils'];
-function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService, utils) {
+EditorService.$inject = ['spellcheck', '$q', 'lodash', 'renditions', 'editorUtils'];
+function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
     this.settings = {spellcheck: true};
 
@@ -186,28 +152,12 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     };
 
     /**
-     * Remove highlighting from given scope and return its contents
-     *
-     * @param {Scope} scope
-     * @return {string}
-     */
-    this.cleanScope = function(scope) {
-        self.storeSelection(scope.node);
-        var html = clean(scope.node).innerHTML;
-        html = html.replace('\ufeff', ''); // remove rangy marker
-        scope.node.innerHTML = html;
-        self.resetSelection(scope.node);
-        return html;
-    };
-
-    /**
      * Render highlights for given scope based on settings
      *
      * @param {Scope} scope
      * @param {Scope} force force rendering manually - eg. via keyboard
      */
     this.renderScope = function(scope, force, preventStore) {
-        //self.cleanScope(scope); avoid cursor manipulation
         if (self.settings.findreplace) {
             renderFindreplace(scope.node);
         } else if (self.settings.spellcheck || force) {
@@ -227,16 +177,6 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             self.renderScope(scope, force);
         });
     };
-
-    /**
-     * Remove highlight markup from given node
-     *
-     * @param {Node} node
-     * @return {Node}
-     */
-    function clean(node) {
-        return removeClass(node, HILITE_CLASS);
-    }
 
     /**
      * Highlight find&replace matches in given node
@@ -356,44 +296,6 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     };
 
     /**
-     * Store current anchor position within given node
-     */
-    this.storeSelection = function storeSelection() {
-        self.selection = window.rangy ? window.rangy.saveSelection() : null;
-    };
-
-    /**
-     * Reset stored anchor position in given node
-     */
-    this.resetSelection = function resetSelection(node) {
-        if (self.selection) {
-            window.rangy.restoreSelection(self.selection);
-            self.selection = null;
-        }
-
-        clearRangy(node);
-    };
-
-    /**
-     * Remove all rangy stored selections from given node
-     *
-     * @param {Node} node
-     * @return {Node}
-     */
-    function clearRangy(node) {
-        var spans = node.getElementsByClassName('rangySelectionBoundary');
-        while (spans.length) {
-            var span = spans.item(0);
-            span.parentNode.removeChild(span);
-            if (span.parentNode.normalize) {
-                span.parentNode.normalize();
-            }
-        }
-
-        return node;
-    }
-
-    /**
      * Update settings
      *
      * @param {Object} settings
@@ -425,7 +327,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     this.commitScope = function(scope) {
-        var nodeValue = clearRangy(clean(scope.node)).innerHTML;
+        var nodeValue = scope.node.innerHTML;
         if (nodeValue !== scope.model.$viewValue) {
             scope.model.$setViewValue(nodeValue);
             scope.history.add(scope.model.$viewValue);
@@ -704,25 +606,24 @@ angular.module('superdesk.editor2', [
                 var controller = controllers[0];
                 var ngModel = controllers[1];
                 function init() {
-                    scope.$applyAsync(function() {
-                        if (controller.config.multiBlockEdition) {
-                            controller.initEditorWithMultipleBlock(ngModel);
-                        } else {
-                            controller.initEditorWithOneBlock(ngModel);
-                        }
-                    });
+                    if (controller.config.multiBlockEdition) {
+                        controller.initEditorWithMultipleBlock(ngModel);
+                    } else {
+                        controller.initEditorWithOneBlock(ngModel);
+                    }
                 }
                 // when the model changes from outside, updates the editor
                 scope.$watch(function() {
                     return ngModel.$viewValue;
                 }, function() {
-                    $timeout(function() {
+                    scope.$applyAsync(function() {
                         // if controller is ready and the value has changed
                         if (controller.blocks.length > 0 && ngModel.$viewValue && ngModel.$viewValue !== controller.serializeBlock()) {
                             init();
                         }
-                    }, 0, false);
-                }, false);
+                    });
+                });
+                init();
             }
         };
     }])
