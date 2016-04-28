@@ -1334,26 +1334,47 @@ angular.module('superdesk.editor2', [
         };
     }])
     .run(['embedService', 'iframelyService', function(embedService, iframelyService) {
-        var pattern = 'https?:\/\/(?:www)\.playbuzz\.com(.*)$';
-        var loader = '//snappa.embed.pressassociation.io/playbuzz.js';
-        var html = [
+        var playBuzzPattern = 'https?:\/\/(?:www)\.playbuzz\.com(.*)$';
+        var playBuzzlLoader = '//snappa.embed.pressassociation.io/playbuzz.js';
+        var playBuzzEmbed = [
             '<script type="text/javascript" src="$_LOADER"></script>',
             '<div class="pb_feed" data-game="$_URL" data-recommend="false" ',
             'data-game-info="false" data-comments="false" data-shares="false" ></div>'
         ].join('');
         embedService.registerHandler({
             name: 'PlayBuzz',
-            patterns: [pattern],
+            patterns: [playBuzzPattern],
             embed: function(url) {
                 return iframelyService.embed(url)
-                    .then(function(result) {
-                        result.html = html
-                            .replace('$_LOADER', loader)
-                            .replace('$_URL', url.match(pattern)[1]);
-                        return result;
-                    });
+                .then(function(result) {
+                    result.html = playBuzzEmbed
+                        .replace('$_LOADER', playBuzzlLoader)
+                        .replace('$_URL', url.match(playBuzzPattern)[1]);
+                    return result;
+                });
             }
         });
+        var samdeskEmbed = [
+            '<script>(function(d, s, id) { var fjs = d.getElementsByTagName(s)[0];',
+            'var js = d.createElement(s); js.id = id; js.src = \'https://embed.samdesk.io/js/2/embed.js\';',
+            'fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'sam-embed-js\'));</script>',
+            '<div class="sam-embed" data-href="embed.samdesk.io/embed/$_ID"></div>'
+        ].join('');
+        var sameDeskPattern = 'https?://embed.samdesk.io/embed/(.+)';
+        embedService.registerHandler({
+            name: 'SAMDesk',
+            patterns: [sameDeskPattern],
+            embed: function(url) {
+                var embed = samdeskEmbed.replace('$_ID', url.match(sameDeskPattern)[1]);
+                return {
+                    provider_name: 'SAMDesk',
+                    html: embed,
+                    url: url,
+                    type: 'rich'
+                };
+            }
+        });
+
     }])
     .config(['embedServiceProvider', 'iframelyServiceProvider', '$injector',
         function(embedServiceProvider, iframelyServiceProvider, $injector) {
