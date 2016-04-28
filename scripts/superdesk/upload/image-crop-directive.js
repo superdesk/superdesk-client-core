@@ -88,8 +88,6 @@
                 onChange: '&',
                 original: '=',
                 rendition: '=',
-                boxWidth: '=',
-                boxHeight: '=',
                 showMinSizeError: '='
             },
             link: function(scope, elem) {
@@ -150,18 +148,16 @@
                 });
 
                 scope.$watch('cropData', function() {
-                    if (!cropData) {
-                        cropData = scope.cropData;
-                        if (cropData && cropData.CropBottom) {
-                            refreshImage(img.src, [
-                                cropData.CropLeft,
-                                cropData.CropTop,
-                                cropData.CropRight,
-                                cropData.CropBottom
-                            ]);
-                        }
+                    cropData = scope.cropData;
+                    if (cropData && cropData.CropBottom) {
+                        refreshImage(img.src, [
+                            cropData.CropLeft,
+                            cropData.CropTop,
+                            cropData.CropRight,
+                            cropData.CropBottom
+                        ]);
                     }
-                });
+                }, true);
 
                 scope.$on('poiUpdate', function(e, point) {
 
@@ -225,8 +221,6 @@
                             aspectRatio: ratio,
                             minSize: [scope.rendition.width, scope.rendition.height],
                             trueSize: [scope.original.width, scope.original.height],
-                            boxWidth: scope.boxWidth,
-                            boxHeight: scope.boxHeight,
                             setSelect: setSelect,
                             allowSelect: false,
                             addClass: 'jcrop-dark',

@@ -82,8 +82,6 @@ describe('Image Crop', function() {
 
                 var retObj = mySpy.calls.argsFor(0);
                 expect(retObj[0].aspectRatio).toBe(4 / 3);
-                expect(retObj[0].boxWidth).toBe(640);
-                expect(retObj[0].boxHeight).toBe(480);
                 expect(retObj[0].minSize).toEqual([800, 600]);
                 expect(retObj[0].trueSize).toEqual([900, 600]);
                 expect(retObj[0].setSelect).toEqual([50, 0, 850, 600]);
