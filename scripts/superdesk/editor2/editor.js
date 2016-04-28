@@ -681,6 +681,7 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
             if (!vm.model.association) {
                 return false;
             }
+            vm.model.loading = true;
             renditions.crop(picture).then(function(picture) {
                 // update block
                 vm.model.association = picture;
@@ -689,6 +690,8 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
                 });
                 // update caption
                 vm.saveCaption(vm.model.association.description_text);
+            }).finally(function() {
+                vm.model.loading = false;
             });
         }
     });
@@ -1299,24 +1302,28 @@ angular.module('superdesk.editor2', [
                         editor.commitScope(scope);
                     },
                     insertPicture: function(picture) {
+                        // cut the text that is after the caret in the block and save it in order to add it after the embed later
+                        var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
+                        // save the blocks (with removed leading text)
+                        vm.updateModel();
+                        var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
+                        var block = vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                            blockType: 'embed',
+                            embedType: 'Image',
+                            caption: picture.description_text,
+                            loading: true,
+                            association: picture
+                        }, true);
                         renditions.ingest(picture).then(function(picture) {
-                            // cut the text that is after the caret in the block and save it in order to add it after the embed later
-                            var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
-                            // save the blocks (with removed leading text)
-                            vm.updateModel();
-                            var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
                             editor.generateImageTag(picture).then(function(imgTag) {
-                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                                    blockType: 'embed',
-                                    embedType: 'Image',
+                                angular.extend(block, {
                                     body: imgTag,
-                                    caption: picture.description_text,
-                                    association: picture
-                                }, true);
-                                indexWhereToAddBlock++;
+                                    association: picture,
+                                    loading: false
+                                });
                             }).then(function() {
                                 // add new text block for the remaining text
-                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock++, {
                                     body: textThatWasAfterCaret
                                 }, true);
                             });

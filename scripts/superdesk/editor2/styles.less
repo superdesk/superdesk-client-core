@@ -203,11 +203,16 @@
 .add-embed__body .preview {
     &--loading {
         min-height: 100px;
+        img {
+            opacity: .3;
+        }
         &:before {
             content: '';
-            top: 40px;
-            position: relative;
-            .spinner-alt;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 0;
+            .spinner-big;
         }
     }
     text-align: center;
