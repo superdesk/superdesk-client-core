@@ -155,12 +155,7 @@ angular.module('superdesk.authoring.macros', [
                 order: 6,
                 needEditable: true,
                 side: 'right',
-                display: {authoring: true, packages: true, killedItem: false, legalArchive: false, archived: false},
-                afterClose: function(scope) {
-                    if (scope && typeof scope.closePreview === 'function') {
-                        scope.closePreview();
-                    }
-                }
+                display: {authoring: true, packages: true, killedItem: false, legalArchive: false, archived: false}
             });
     }]);
 })();
