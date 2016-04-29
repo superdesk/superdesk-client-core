@@ -90,7 +90,7 @@
 
             params.spike = (card.type === 'spike' || card.type === 'spike-personal');
 
-            var query = search.query(params);
+            var query = search.query(search.setFilters(params));
 
             switch (card.type) {
             case 'search':
