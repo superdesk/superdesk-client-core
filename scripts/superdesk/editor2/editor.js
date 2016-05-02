@@ -1360,12 +1360,12 @@ angular.module('superdesk.editor2', [
             'fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'sam-embed-js\'));</script>',
             '<div class="sam-embed" data-href="embed.samdesk.io/embed/$_ID"></div>'
         ].join('');
-        var sameDeskPattern = 'https?://embed.samdesk.io/embed/(.+)';
+        var samDeskPattern = 'https?://embed.samdesk.io/embed/(.+)';
         embedService.registerHandler({
             name: 'SAMDesk',
-            patterns: [sameDeskPattern],
+            patterns: [samDeskPattern],
             embed: function(url) {
-                var embed = samdeskEmbed.replace('$_ID', url.match(sameDeskPattern)[1]);
+                var embed = samdeskEmbed.replace('$_ID', url.match(samDeskPattern)[1]);
                 return {
                     provider_name: 'SAMDesk',
                     html: embed,
