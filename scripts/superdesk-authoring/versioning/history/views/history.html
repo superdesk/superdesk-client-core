@@ -3,7 +3,7 @@
         <li class="item"
             ng-class="{selected: selected === version}"
             ng-repeat="version in versions track by version._current_version"
-            ng-disabled="!item._editable">
+            ng-disabled="!item._editable || dirty">
 
             <div ng-if="version.operation == 'create'" ng-click="openVersion(version)">
                 {{ :: version.typeName }} <b>{{ :: version.unique_id }}</b>

@@ -88,6 +88,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
         if ($scope.active && typeof $scope.active.afterClose === 'function') {
             $scope.active.afterClose($scope);
         }
+
         $scope.active = null;
     };
 

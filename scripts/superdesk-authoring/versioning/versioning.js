@@ -12,7 +12,12 @@ angular.module('superdesk.authoring.versioning', [])
                 template: 'scripts/superdesk-authoring/versioning/views/versioning.html',
                 order: 4,
                 side: 'right',
-                display: {authoring: true, packages: true, killedItem: true, legalArchive: true, archived: false}
+                display: {authoring: true, packages: true, killedItem: true, legalArchive: true, archived: false},
+                afterClose: function(scope) {
+                    if (scope && typeof scope.closePreview === 'function' && !scope._editable) {
+                        scope.closePreview();
+                    }
+                }
             });
     }]);
 
