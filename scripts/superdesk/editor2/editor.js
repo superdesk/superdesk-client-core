@@ -840,7 +840,8 @@ angular.module('superdesk.editor2', [
                 scope.$watch(function() {
                     return ngModel.$viewValue;
                 }, function() {
-                    if (ngModel.$viewValue !== controller.serializeBlock()) {
+                    // if controller is ready and the value has changed
+                    if (controller.blocks.length > 0 && ngModel.$viewValue !== controller.serializeBlock()) {
                         init();
                     }
                 }, true);
