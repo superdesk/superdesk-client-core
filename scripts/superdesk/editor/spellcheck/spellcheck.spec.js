@@ -40,8 +40,8 @@ describe('spellcheck', function() {
 
         spellcheck.errors(p).then(assignErrors);
         $rootScope.$digest();
-        expect(errors).toContain({word: 'test', index: 0});
-        expect(errors).toContain({word: 'if', index: 10});
+        expect(errors).toContain({word: 'test', index: 0, sentenceWord: true});
+        expect(errors).toContain({word: 'if', index: 10, sentenceWord: false});
         expect(dictionaries.getActive).toHaveBeenCalledWith(LANG, 'en');
     }));
 
@@ -52,13 +52,14 @@ describe('spellcheck', function() {
 
         spellcheck.errors(p).then(assignErrors);
         $rootScope.$digest();
-        expect(errors).toContain({word: 'test', index: 0});
-        expect(errors).toContain({word: 'if', index: 10});
+
+        expect(errors).toContain({word: 'test', index: 0, sentenceWord: true});
+        expect(errors).toContain({word: 'if', index: 10, sentenceWord: false});
         expect(dictionaries.getActive).toHaveBeenCalledWith('en', null);
     }));
 
     it('can add words to user dictionary', inject(function(spellcheck, api, $rootScope) {
-        var p = createParagraph('test');
+        var p = createParagraph('Test');
 
         spyOn(api, 'save');
         spellcheck.errors(p).then(assignErrors);
@@ -71,6 +72,23 @@ describe('spellcheck', function() {
         $rootScope.$digest();
 
         expect(errors.length).toBe(0);
+    }));
+
+    it('can report error if paragraph starts with small letter', inject(function(spellcheck, api, $rootScope) {
+        // Test with existing words in dictionary
+        var p = createParagraph('Foo what');
+
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(0);
+
+        // now test if existing word starts with small letter
+        p = createParagraph('foo what');
+
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(1);
+        expect(errors).toContain({word: 'foo', index: 0, sentenceWord: true});
     }));
 
     it('can suggest', inject(function(spellcheck, api, $q) {

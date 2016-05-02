@@ -420,6 +420,9 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
         var span = document.createElement('span');
         span.classList.add(className);
         span.classList.add(HILITE_CLASS);
+        if (token.sentenceWord) {
+            span.classList.add('sdCapitalize');
+        }
         if (token.title) {
             span.title = token.title;
         }
@@ -786,7 +789,11 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
 
                                 scope.suggestions = null;
                                 spellcheck.suggest(event.target.textContent).then(function(suggestions) {
-                                    scope.suggestions = suggestions;
+                                    // capitalize first letter and include it as a suggestion
+                                    if (_.includes(event.target.classList, 'sdCapitalize')) {
+                                        suggestions.push(event.target.textContent[0].toUpperCase() + event.target.textContent.slice(1));
+                                    }
+                                    scope.suggestions = _.uniq(suggestions);
                                     scope.replaceTarget = event.target;
                                     $timeout(function() {
                                         menu.style.left = (event.target.offsetLeft) + 'px';
