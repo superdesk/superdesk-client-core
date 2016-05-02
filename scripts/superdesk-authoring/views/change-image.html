@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h3 class="pull-left">{{ activity.label|translate }}</h3>    
+    <h3 class="pull-left">{{ activity.label|translate }}</h3>
     <div class="pull-right">
         <button type="button"
         class="btn"
@@ -14,31 +14,25 @@
 </div>
 
 <div class="modal-body modal-body__flex">
-
     <div class="modal-body__flex-top">
-
         <div class="modal-body__flex-main">
-            <div ng-hide="selectedRendition">
+            <div ng-if="!selectedRendition">
                 <label class="field-label" translate>Original <span class="size">{{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}</span></label>
-                <div sd-image-point
+                <sd-image-point
                     data-src="data.item.renditions.viewImage.href"
-                    data-point="data.poi"
-                    data-on-change="data.isDirty = true"
-                    class="poi__image">
-                </div>
+                    data-poi="data.poi"
+                    data-on-change="data.isDirty = true">
+                </sd-image-point>
             </div>
-            <div class="crop-area selected" ng-show="selectedRendition">
-                <div ng-repeat="rendition in data.renditions track by rendition.name" ng-show="selectedRendition.name === rendition.name">
-                    <label class="field-label">{{selectedRendition.name}}</label>
-                    <div sd-image-crop-view
-                        data-src="data.item.renditions.viewImage.href"
-                        data-original="data.item.renditions.original"
-                        data-crop-data="data.cropData[rendition.name]"
-                    ></div>
-                </div>
+            <div class="crop-area selected" ng-if="selectedRendition">
+                <label class="field-label">{{ selectedRendition.name }}</label>
+                <div sd-image-crop-view
+                     data-src="data.item.renditions.viewImage.href"
+                     data-original="data.item.renditions.original"
+                     data-crop-data="data.cropData[selectedRendition.name]"
+                ></div>
             </div>
         </div>
-
         <div class="modal-body__flex-sidebar modal-body__flex-metadata" ng-if="data.showMetadataEditor">
             <div class="header" translate>Metadata</div>
             <div>
@@ -81,12 +75,11 @@
         <div class="crop-area__thumbnails">
             <ul>
                 <li ng-click="selectRendition()" ng-class="{active: selectedRendition === null}">
-                    <div sd-image-point
+                    <sd-image-point
                         data-src="data.item.renditions.viewImage.href"
-                        data-point="data.poi"
-                        data-on-change="data.isDirty = true"
-                        class="poi__image">
-                    </div>
+                        data-poi="data.poi"
+                        data-on-change="data.isDirty = true">
+                    </sd-image-point>
                     <label class="field-label" translate>Original</label>
                 </li>
                 <li ng-repeat="rendition in data.renditions track by rendition.name" ng-click="selectRendition(rendition)" ng-class="{active: rendition === selectedRendition}">
