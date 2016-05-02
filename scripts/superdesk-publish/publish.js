@@ -47,10 +47,31 @@
         $scope.showFilterConditions  = Boolean(user_privileges.publish_filters);
     }
 
-    AdminPublishSettingsService.$inject = ['api', '$q'];
-    function AdminPublishSettingsService(api, $q) {
+    AdminPublishSettingsService.$inject = ['api', '$q', '$filter'];
+    function AdminPublishSettingsService(api, $q, $filter) {
         var _fetch = function(endpoint, criteria) {
             return api[endpoint].query(criteria);
+        };
+
+        /**
+         * Recursivly returns all products
+         *
+         * @return {*}
+         */
+        var _getAllProducts = function(page, products) {
+            page = page || 1;
+            products = products || [];
+
+            return api('products')
+            .query({max_results: 10, page: page})
+            .then(function(result) {
+                products = products.concat(result._items);
+                if (result._links.next) {
+                    page++;
+                    return _getAllProducts(page, products);
+                }
+                return $filter('sortByName')(products);
+            });
         };
 
         var service = {
@@ -82,6 +103,10 @@
             fetchPublishErrors: function() {
                 var criteria = {'io_type': 'publish'};
                 return _fetch('io_errors', criteria);
+            },
+
+            fetchAllProducts: function() {
+                return _getAllProducts();
             }
         };
 
@@ -433,33 +458,12 @@
                  * @return {*}
                  */
                 var fetchProducts = function() {
-                    return _getAllProducts().then(function(products) {
+                    return adminPublishSettingsService.fetchAllProducts().then(function(products) {
                         $scope.availableProducts = products;
                         $scope.productLookup = [];
                         _.each(products, function(item) {
                             $scope.productLookup[item._id] = item;
                         });
-                    });
-                };
-
-                /**
-                 * Recursivly returns all products
-                 *
-                 * @return {*}
-                */
-                var _getAllProducts = function(page, products) {
-                    page = page || 1;
-                    products = products || [];
-
-                    return api('products')
-                    .query({max_results: 200, page: page})
-                    .then(function(result) {
-                        products = products.concat(result._items);
-                        if (result._links.next) {
-                            page++;
-                            return _getAllProducts(page, products);
-                        }
-                        return $filter('sortByName')(products);
                     });
                 };
 

@@ -24,7 +24,8 @@
                 }
             });
         }])
-        .factory('products', ['$q', 'api', 'contentFilters', '$filter', function($q, api, contentFilters, $filter) {
+        .factory('products', ['$q', 'api', 'contentFilters', '$filter', 'adminPublishSettingsService',
+            function($q, api, contentFilters, $filter, adminPublishSettingsService) {
             var productsService = {
                 products: null,
                 contentFilters: null,
@@ -32,7 +33,7 @@
                 fetchProducts: function() {
                     var self = this;
 
-                    return api.products.query({max_results: 500})
+                    return adminPublishSettingsService.fetchAllProducts()
                     .then(function(result) {
                         self.products = result;
                         _.each(result._items, function(product) {
