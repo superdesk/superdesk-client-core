@@ -840,11 +840,13 @@ angular.module('superdesk.editor2', [
                 scope.$watch(function() {
                     return ngModel.$viewValue;
                 }, function() {
-                    // if controller is ready and the value has changed
-                    if (controller.blocks.length > 0 && ngModel.$viewValue !== controller.serializeBlock()) {
-                        init();
-                    }
-                }, true);
+                    $timeout(function() {
+                        // if controller is ready and the value has changed
+                        if (controller.blocks.length > 0 && ngModel.$viewValue && ngModel.$viewValue !== controller.serializeBlock()) {
+                            init();
+                        }
+                    }, 0, false);
+                }, false);
             }
         };
     }])
