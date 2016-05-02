@@ -78,22 +78,7 @@
                     <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
                 </div>
             </li>
-            <li class="terms-box">
-                <label translate>Targeted For</label>
-                <div ng-if="metadata.targeted_for">
-                    <span sd-check ng-model="item.negation" tooltip="Adds Negation" tooltip-placement="right" ng-disabled="!_editable"></span>
-                    <select id="targeted_for_list" ng-model="item.targeted_for_value" ng-disabled="!_editable">
-                        <option value=""></option>
-                        <option value="{{g.name}}" ng-repeat="g in metadata.targeted_for track by g.name">{{:: g.name}}</option>
-                    </select>
-                    <button class="btn btn-small btn-primary" type="button" ng-click="addTargeted()" ng-disabled="disableAddingTargetedFor()" translate>Add</button>
-                    <div class="terms" ng-if="item['targeted_for'].length">
-                        <ul>
-                            <li ng-repeat="t in item['targeted_for']" ng-click="removeTargeted(t)">{{ :: t['allow'] == false ? 'Not ' + t.name : t.name}}<i class="icon-close-small"></i></li>
-                        </ul>
-                    </div>
-                </div>
-            </li>
+            
 
             <li ng-if="item.ingest_provider_sequence">
                 <label translate>Provider sequence</label>
@@ -112,6 +97,38 @@
                 <div class="data">
                     <input class="line-input" type="text" ng-model="item.unique_name" ng-change="autosave(item)" ng-disabled="!_editable || !unique_name_editable">
                 </div>
+            </li>
+        </ul>
+        <ul class="basic-list top-border">
+            <li class="terms-box">
+                <label translate>Target Subscribers</label>
+                <div class="term-editor"
+                     sd-meta-terms
+                     data-item="item"
+                     data-unique="_id"
+                     data-list="metadata.customSubscribers"
+                     ng-disabled="!_editable || !targetsEditable" 
+                     data-change="autosave(item)"
+                     data-field="target_subscribers"
+                     data-header="true"
+                     data-reload-list="true">
+                </div>
+            </li>
+            <li class="terms-box">
+                <label translate>Target Regions</label>
+                <div sd-meta-target 
+                    data-list="metadata.regions" 
+                    data-targets="item.target_regions"
+                    ng-disabled="!_editable || !targetsEditable" 
+                    data-autosave="autosave(item)"></div>
+            </li>
+            <li class="terms-box">
+                <label translate>Target Types</label>
+                <div sd-meta-target 
+                    data-list="metadata.subscriberTypes" 
+                    data-targets="item.target_types"
+                    ng-disabled="!_editable || !targetsEditable" 
+                    data-autosave="autosave(item)"></div>
             </li>
         </ul>
     </div>

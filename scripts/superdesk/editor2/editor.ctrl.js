@@ -9,6 +9,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
     function Block(attrs) {
         angular.extend(this, {
             body: attrs && attrs.body || '',
+            loading: attrs && attrs.loading || false,
             caption: attrs && attrs.caption || undefined,
             blockType: attrs && attrs.blockType || 'text',
             embedType: attrs && attrs.embedType || undefined,
@@ -231,18 +232,18 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
         ** Merge text blocks when there are following each other and add empty text block arround embeds if needed
         ** @param {Integer} position
         ** @param {Object} block ; block attributes
-        ** @param {boolean} unprocess ; if true, it won't merge text blocks and
+        ** @param {boolean} doNotRenderBlocks ; if true, it won't merge text blocks and
         ** add empty text block if needed through the `renderBlocks()` function.
         ** @returns {object} this
         */
-        insertNewBlock: function(position, attrs, unprocess) {
+        insertNewBlock: function(position, attrs, doNotRenderBlocks) {
             var new_block = new Block(attrs);
             vm.blocks.splice(position, 0, new_block);
             $timeout(vm.commitChanges);
-            if (!unprocess) {
+            if (!doNotRenderBlocks) {
                 $timeout(vm.renderBlocks);
             }
-            return this;
+            return new_block;
         },
         /**
         * Merge text blocks when there are following each other and add empty text block arround embeds if needed

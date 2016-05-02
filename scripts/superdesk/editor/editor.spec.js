@@ -2,6 +2,7 @@
 
 describe('text editor', function() {
 
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.editor.spellcheck'));
     beforeEach(module('superdesk.templates-cache'));
@@ -96,6 +97,11 @@ describe('text editor', function() {
 
         scope.node.innerHTML = 'foo';
         editor.commit();
+        expect(scope.model.$setViewValue).not.toHaveBeenCalled();
+
+        editor.undo(scope);
+        expect(scope.model.$setViewValue).not.toHaveBeenCalled();
+        editor.redo(scope);
         expect(scope.model.$setViewValue).not.toHaveBeenCalled();
 
         scope.node.innerHTML = 'bar';

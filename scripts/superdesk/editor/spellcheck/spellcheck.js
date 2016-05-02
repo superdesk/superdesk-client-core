@@ -142,9 +142,7 @@ function SpellcheckMenuController(editor, $rootScope) {
     var self = this;
 
     function spellcheck() {
-        editor.setSettings({spellcheck: true});
-        editor.render();
-        editor.setSettings({spellcheck: false});
+        editor.render(true);
     }
 
     function pushSettings() {

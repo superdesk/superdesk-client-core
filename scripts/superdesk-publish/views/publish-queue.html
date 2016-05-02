@@ -2,7 +2,7 @@
     <h3 class="page-nav-title" ng-hide="multiSelectCount > 0" translate>Publish Queue</h3>
 
     <div class="multi-action-bar">
-        <button class="btn" ng-click="cancelSelection(false)" ng-show="multiSelectCount > 0">{{ :: 'Cancel' | translate}}</button>
+        <button class="btn" ng-click="cancelSelection(false)" ng-show="multiSelectCount > 0">{{ :: 'Cancel Selection' | translate}}</button>
         <span id="multi-select-count"
               ng-show="multiSelectCount > 0"
               translate
@@ -10,6 +10,7 @@
               translate-plural="{{ multiSelectCount }} Items selected">{{ multiSelectCount}} Item selected
         </span>
         <button class="btn btn-info pull-right" ng-click="scheduleToSend()" ng-show="multiSelectCount > 0 && showResendBtn">{{ :: 'Resend' | translate}}</button>
+        <button class="btn btn-info pull-right" ng-click="cancelSend()" ng-show="multiSelectCount > 0 && showCancelBtn">{{ :: 'Cancel' | translate}}</button>
     </div>
 </div>
 <section class="main-section publish-queue">
@@ -82,7 +83,7 @@
                         <tbody>
                             <tr ng-repeat="queue_item in publish_queue track by queue_item._id" class="{{queue_item.state| queueStatus}}" ng-click="preview(queue_item);">
                                 <td>
-                                    <span sd-check ng-show="queue_item.state !== 'canceled'" ng-model="queue_item.selected" ng-change="selectQueuedItem(queue_item)" ng-checked="queue_item.selected"></span>
+                                    <span sd-check ng-model="queue_item.selected" ng-change="selectQueuedItem(queue_item)" ng-checked="queue_item.selected"></span>
                                 </td>
                                 <td>{{ queue_item.published_seq_num}}</td>
                                 <td>{{ queue_item.unique_name}}</td>
@@ -96,8 +97,11 @@
                                 <td class="align-right">{{queue_item.completed_at| dateTimeStringWithSecs}}</td>
                                 <td class="align-right">{{queue_item.state}}</td>
                                 <td class="align-right">{{queue_item.error_message}}</td>
+                                <td class="align-right" ng-if="queue_item.state === 'pending' || queue_item.state === 'retrying'">
+                                    <button class="btn btn-small" ng-click="cancelSend(queue_item)">{{ :: 'Cancel' | translate}}</button>
+                                </td>
                                 <td class="align-right">
-                                    <button class="btn btn-small" ng-if="queue_item.state === 'success' || queue_item.state === 'failed'" ng-click="scheduleToSend(queue_item)">{{ :: 'Resend' | translate}}</button>
+                                    <button class="btn btn-small" ng-if="queue_item.state === 'success' || queue_item.state === 'failed' || queue_item.state === 'canceled'" ng-click="scheduleToSend(queue_item)">{{ :: 'Resend' | translate}}</button>
                                 </td>
                             </tr>
                         </tbody>

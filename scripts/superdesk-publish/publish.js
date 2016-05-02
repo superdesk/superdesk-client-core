@@ -132,9 +132,10 @@
         $scope.selectedQueueItems = [];
         $scope.showResendBtn = false;
         $scope.showCancelBtn = false;
+        $scope.showCancelSelectionBtn = false;
         $scope.queueSearch = false;
         $scope.selected = {};
-        $scope.publish_queue_statuses = ['pending', 'in-progress', 'success', 'error', 'retrying', 'failed'];
+        $scope.publish_queue_statuses = ['pending', 'in-progress', 'success', 'error', 'retrying', 'failed', 'canceled'];
         $scope.pageSize = 25;
         $scope.page = 1;
 
@@ -175,7 +176,7 @@
                 $scope.publish_queue = queuedItems;
                 $scope.lastRefreshedAt = new Date();
                 $scope.showResendBtn = false;
-                $scope.showCancelBtn = false;
+                $scope.showCancelSelectionBtn = false;
                 $scope.maxPage =  Math.ceil(queue._meta.total / $scope.pageSize);
             });
         }
@@ -260,6 +261,25 @@
             );
         };
 
+        $scope.cancelSend = function(item) {
+            var itemList = [];
+            if (angular.isDefined(item)) {
+                itemList.push(item);
+            } else if ($scope.multiSelectCount > 0) {
+                _.forEach($scope.selectedQueueItems, function(item) {
+                    if (item.state === 'pending' || item.state === 'retrying') {
+                        item.state = 'canceled';
+                        itemList.push(item);
+                    }
+                });
+            }
+
+            _.forEach(itemList, function(item) {
+                api.publish_queue.update(item, {state: 'canceled'});
+            });
+            $scope.cancelSelection(false);
+        };
+
         $scope.filterSchedule = function(item, type) {
             if (type === 'subscriber') {
                 $scope.selectedFilterSubscriber = item;
@@ -286,25 +306,40 @@
                 $scope.selectedQueueItems = _.without($scope.selectedQueueItems, queuedItem);
             }
 
+            /* look for any items in states that cannot be resent */
             var idx = _.findIndex($scope.selectedQueueItems, function(item) {
-                return _.contains(['pending', 'in-progress', 'canceled', 'retrying'], item.state);
+                return _.contains(['pending', 'in-progress', 'retrying'], item.state);
             });
 
+            /* All selected items can be resent */
             if (idx === -1) {
                 $scope.showResendBtn = true;
                 $scope.showCancelBtn = false;
+                $scope.showCanceSelectionlBtn = false;
             } else {
+                /* Find the index of any item that can be resent */
                 idx = _.findIndex($scope.selectedQueueItems, function(item) {
                     return item.state === 'success' || item.state === 'in-progress' || item.state === 'canceled' ||
                         item.state === 'error' || item.state === 'retrying';
                 });
-
+                /* Nothing to resend found */
                 if (idx === -1) {
                     $scope.showResendBtn = false;
-                    $scope.showCancelBtn = true;
+                    $scope.showCancelSelectionBtn = true;
+                    /* look for items that can be canceled */
+                    idx = _.findIndex($scope.selectedQueueItems, function(item) {
+                        return item.state === 'pending' || item.state === 'retrying';
+                    });
+                    /* Something can be canceled so show the button */
+                    if (idx !== -1) {
+                        $scope.showCancelBtn = true;
+                    } else {
+                        $scope.showCancelBtn = false;
+                    }
                 } else {
                     $scope.showResendBtn = false;
                     $scope.showCancelBtn = false;
+                    $scope.showCancelSelectionBtn = false;
                 }
             }
 
@@ -370,15 +405,12 @@
                 $scope.newDestination = null;
                 $scope.contentFilters = null;
                 $scope.availableProducts = null;
-                $scope.geoRestrictions = null;
                 $scope.subTypes = null;
 
-                if (angular.isDefined(metadata.values.geographical_restrictions)) {
-                    $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
+                if (angular.isDefined(metadata.values.subscriber_types)) {
                     $scope.subTypes = metadata.values.subscriber_types;
                 } else {
                     metadata.fetchMetadataValues().then(function() {
-                        $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
                         $scope.subTypes = metadata.values.subscriber_types;
                     });
                 }

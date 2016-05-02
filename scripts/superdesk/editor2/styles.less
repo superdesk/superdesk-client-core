@@ -83,9 +83,13 @@
             right: 80px;
             z-index: 4;
             .transition(top 0.25s ease 1s);
-            top: 100px;
+            background-color: rgba(217, 217, 217, 1);
+            top: 0;
+            &:hover {
+                background-color: rgba(166, 166, 166, 1);
+            }
             &.ng-hide { // shows the button (reversed in order to have it hidden as initial state)
-                top: 140px;
+                top: 160px;
                 display: block !important;
             }
             i {
@@ -199,11 +203,16 @@
 .add-embed__body .preview {
     &--loading {
         min-height: 100px;
+        img {
+            opacity: .3;
+        }
         &:before {
             content: '';
-            top: 40px;
-            position: relative;
-            .spinner-alt;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 0;
+            .spinner-big;
         }
     }
     text-align: center;

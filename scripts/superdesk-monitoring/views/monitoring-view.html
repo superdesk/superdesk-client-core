@@ -32,7 +32,7 @@
                 <span class="label-total">{{ monitoring.totalItems }}</span>
             </span>
             <span ng-if="monitoring.singleGroup && !monitoring.singleGroup.subheader">
-                {{ :: monitoring.singleGroup.header }} {{ :: monitoring.singleGroup.type}}
+                {{ :: monitoring.singleGroup.header }} {{ :: monitoring.singleGroup.type | splitText | translate }}
                 <span class="label-total">{{ monitoring.totalItems }}</span>
             </span>
         </h3>

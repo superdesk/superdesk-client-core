@@ -938,41 +938,6 @@
         };
     }
 
-    DateTimeHelperService.$inject = ['moment', 'config'];
-    function DateTimeHelperService(moment, config) {
-
-        /*
-        * @param timestring 2016-03-01T04:45:00+0000
-        * @param timezone Europe/London
-        */
-        this.splitDateTime = function(timestring, timezone) {
-            var momentTS = moment.tz(timestring, timezone);
-
-            return {
-                'date': momentTS.format(config.model.dateformat),
-                'time': momentTS.format(config.model.timeformat)
-            };
-        };
-
-        this.isValidTime = function(value, format) {
-            var timeFormat = format || config.model.timeformat;
-            return moment(value, timeFormat, true).isValid();
-        };
-
-        this.isValidDate = function(value, format) {
-            var dateFormat = format || config.model.dateformat;
-            return moment(value, dateFormat, true).isValid();
-        };
-
-        this.mergeDateTime = function(date_str, time_str, timezone) {
-            var tz = timezone || config.defaultTimezone;
-            var merge_str = date_str + ' ' + time_str;
-            var formatter = config.model.dateformat + ' ' + config.model.timeformat;
-
-            return moment.tz(merge_str, formatter, tz);
-        };
-    }
-
     WeekdayPickerDirective.$inject = ['weekdays'];
     function WeekdayPickerDirective(weekdays) {
         return {
@@ -1041,7 +1006,7 @@
                     $timeout(function () {
                         authoring = element.next('#authoring-container');
                         authoring.width(superdesk.authoringWidth);
-                    });
+                    }, 0, false);
                 }
 
                 workspace.resizable({
@@ -1218,7 +1183,7 @@
     }
 
     return angular.module('superdesk.ui', [
-        'superdesk.dashboard.world-clock',
+        'superdesk.datetime',
         'superdesk.ui.autoheight'
     ])
         .directive('sdShadow', ShadowDirective)
@@ -1238,7 +1203,6 @@
         .directive('sdTimepickerPopup', TimepickerPopupDirective)
         .directive('sdTimepicker', TimepickerDirective)
         .service('popupService', PopupService)
-        .service('datetimeHelper', DateTimeHelperService)
         .filter('leadingZero', LeadingZeroFilter)
         .directive('sdDropdownPosition', DropdownPositionDirective)
         .directive('sdDropdownPositionRight', DropdownPositionRightDirective)

@@ -216,6 +216,22 @@
             }
         };
 
+        $scope.getFilterConditionSummary = function(filterCondition) {
+            var labels = [];
+
+            var values = filterCondition.value.split(',');
+            _.each(values, function(value) {
+                var v = _.find($scope.valueLookup[filterCondition.field], function(val) {
+                    return val[$scope.valueFieldLookup[filterCondition.field]].toString() === value;
+                });
+
+                labels.push(v.name);
+            });
+
+            var conditionValue = labels.length > 0 ? labels.join(', ') : filterCondition.value;
+            return '(' + filterCondition.field + ' ' + filterCondition.operator + ' ' + conditionValue + ')';
+        };
+
         var fetchFilterConditions = function() {
             contentFilters.getAllFilterConditions().then(function(_filterConditions) {
                 $scope.filterConditions = $filter('sortByName')(_filterConditions);

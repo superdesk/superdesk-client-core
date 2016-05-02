@@ -12,8 +12,8 @@
             <li ng-repeat="filterCondition in filterConditions track by filterCondition._id" class="clearfix">
                 <div class="header">
                     <div>
-                        <h6>{{ filterCondition.name }}</h6>
-                        <span class="pull-right-20">{{filterCondition | formatFilterCondition:valueLookup[filterCondition.field]}}</span>
+                        <h6>{{:: filterCondition.name }}</h6>
+                        <span class="pull-right-20">{{ getFilterConditionSummary(filterCondition) }}</span>
                     </div>
 
                     <div class="actions">
@@ -32,7 +32,7 @@
         <h3 translate ng-hide="filterCondition._id" translate>Add New Filter Condition</h3>
     </div>
     <div class="modal-body">
-        <form name="editForm" ng-submit="save()">
+        <form name="editForm">
             <fieldset>
                 <div class="field">
                     <label for="filterCondition-name" translate>Name</label>
@@ -59,9 +59,10 @@
                          sd-meta-terms
                          data-item="filterCondition"
                          data-field="values"
-                         data-unique="valueFieldLookup[filterCondition.field]"
+                         data-unique="{{valueFieldLookup[filterCondition.field]}}"
                          data-list="valueLookup[filterCondition.field]"
                          data-header="true"
+                         data-reload-list="true"
                          ></div>
                     </div>
                 </div>

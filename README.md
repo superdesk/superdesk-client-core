@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/superdesk/superdesk-client-core.svg?branch=master)](https://travis-ci.org/superdesk/superdesk-client-core)
 [![Code Climate](https://codeclimate.com/github/superdesk/superdesk-client-core/badges/gpa.svg)](https://codeclimate.com/github/superdesk/superdesk-client-core)
+### Installation
+
+For installation instructions, please refer to the README file at: [https://github.com/superdesk/superdesk/](https://github.com/superdesk/superdesk/ "")
 
 ### Config options
 
@@ -22,6 +25,11 @@
 
 - `feature.preview`: `false` - enables print preview in authoring
 - `feature.alchemy`: `false` - allow alchemy widget for keywords
+
+
+##### Workspace
+- `workspace.content`: `false` - enable content view in workspace (obsolete)
+- `workspace.ingest`: `false` - enable ingest view in workspace (obsolete)
 
 ##### Editor
 

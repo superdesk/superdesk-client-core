@@ -107,7 +107,7 @@
              data-append-class="active">
         </div>
 
-        <div class="dateline-date">
+        <div ng-show="!editor.dateline.hideDate" class="dateline-date">
             <select id="datelineMonth"
                     tabindex="{{editor.dateline.order}}"
                     ng-options="monthName | translate for (monthName, monthValue) in monthNames"

@@ -11,6 +11,17 @@
 (function() {
     'use strict';
 
+    function notifySaveError(response, notify) {
+        if (angular.isDefined(response.data._issues) &&
+            angular.isDefined(response.data._issues['validator exception'])) {
+            notify.error(gettext('Error: ' + response.data._issues['validator exception']));
+        } else if (angular.isDefined(response.data._message)) {
+            notify.error(gettext(response.data._message));
+        } else {
+            notify.error(gettext('Error: Failed to save template.'));
+        }
+    }
+
     TemplatesSettingsController.$inject = ['$scope'];
     function TemplatesSettingsController($scope) {
 
@@ -214,6 +225,14 @@
                     $scope.content_types = content.types;
                 });
 
+                $scope.templatesFilter = function(template_type) {
+                    if ($scope.template._id && $scope.template.template_type === 'kill') {
+                        return template_type._id === 'kill';
+                    } else {
+                        return template_type._id !== 'kill';
+                    }
+                };
+
                 /*
                  * Returns desk name
                  */
@@ -238,12 +257,7 @@
                             $scope.cancel();
                         },
                         function(response) {
-                            if (angular.isDefined(response.data._issues) &&
-                                angular.isDefined(response.data._issues['validator exception'])) {
-                                notify.error(gettext('Error: ' + response.data._issues['validator exception']));
-                            } else {
-                                notify.error(gettext('Error: Failed to save template.'));
-                            }
+                            notifySaveError(response, notify);
                         }
                     ).then(fetchTemplates);
                 };
@@ -303,8 +317,8 @@
         };
     }
 
-    CreateTemplateController.$inject = ['item', 'templates', 'api', 'desks', '$q'];
-    function CreateTemplateController(item, templates, api, desks, $q) {
+    CreateTemplateController.$inject = ['item', 'templates', 'api', 'desks', '$q', 'notify', 'lodash'];
+    function CreateTemplateController(item, templates, api, desks, $q, notify, _) {
         var vm = this;
 
         this.type = 'create';
@@ -313,6 +327,9 @@
         this.is_public = false;
 
         this.types = templates.types;
+        this.createTypes = _.filter(templates.types, function(element) {
+            return element._id !== 'kill';
+        });
         this.save = save;
 
         activate();
@@ -355,6 +372,7 @@
                 vm._issues = null;
                 return data;
             }, function(response) {
+                notifySaveError(response, notify);
                 vm._issues = response.data._issues;
                 return $q.reject(vm._issues);
             });

@@ -129,9 +129,19 @@
             <dd>{{ item.schedule_settings.time_zone || 'UTC'}}</dd>
         </dl>
 
-        <dl ng-if="item.targeted_for">
-            <dt translate>Targeted For</dt>
-            <dd>{{item.targeted_for | mergeTargets}}</dd>
+        <dl ng-if="item.target_subscribers">
+            <dt translate>Target Subscribers</dt>
+            <dd>{{item.target_subscribers | mergeTargets}}</dd>
+        </dl>
+
+        <dl ng-if="item.target_regions && item.target_regions.length > 0">
+            <dt translate>Target Regions</dt>
+            <dd>{{item.target_regions | mergeTargets}}</dd>
+        </dl>
+
+        <dl ng-if="item.target_types && item.target_types.length > 0">
+            <dt translate>Target Subscriber Types</dt>
+            <dd>{{item.target_types | mergeTargets}}</dd>
         </dl>
 
         <!-- file specific data -->

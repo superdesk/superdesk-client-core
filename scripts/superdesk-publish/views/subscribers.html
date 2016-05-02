@@ -66,11 +66,11 @@
                             </select>
                         </div>
 
+                        
+
                         <div class="field">
-                            <label for="geoRestrictions" translate>Geographical Restrictions</label>
-                            <select id="geoRestrictions" ng-model="subscriber.geo_restrictions" ng-options="g.name as g.name for g in geoRestrictions">
-                                <option value=""></option>
-                            </select>
+                            <label translate>Subscriber codes</label><i class="field-info" translate>*comma separated values</i>
+                            <textarea class="fullwidth-input" ng-model="subscriber.codes"></textarea>
                         </div>
 
                         <div class="field">

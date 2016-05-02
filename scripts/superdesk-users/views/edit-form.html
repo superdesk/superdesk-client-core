@@ -69,7 +69,7 @@
                   <input type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern" required>
 
                   <i ng-show="userForm.sign_off.$error.required" class="required-asteriks">*</i>
-                  <div ng-show="userForm.sign_off.$error.pattern || error.sign_off.format" sd-valid-info>
+                  <div ng-show="userForm.sign_off.$error.pattern || error.sign_off" sd-valid-info>
                     <i class="icon-info-sign-warning"></i>
                     <span translate>Invalid format. Only Alphanumerics are allowed.</span>
                   </div>
@@ -98,9 +98,13 @@
                     ng-readonly="user._readonly && user._readonly.email"
                     required>
                     <i ng-show="userForm.email.$error.required" class="required-asteriks">*</i>
-                  <div ng-show="userForm.email.$error.email || error.email.format" sd-valid-info>
+                  <div ng-show="userForm.email.$error.email" sd-valid-info>
                     <i class="icon-info-sign-warning"></i>
                     <span translate>please provide a valid email address</span>
+                  </div>
+                  <div ng-show="error.email" sd-valid-info>
+                    <i class="icon-info-sign-warning"></i>
+                    <span translate>{{error.email}}</span>
                   </div>
                   <div ng-show="userForm.email.$error.unique || error.email.unique" sd-valid-error translate>sorry, a user with this email already exists</div>
                 </div>
@@ -129,11 +133,7 @@
 
                 <div sd-info-item>
                   <label for="phone" translate>phone number</label>
-                  <input type="text" name="phone" id="phone" ng-model="user.phone" ng-pattern="phonePattern" ng-readonly="user._readonly && user._readonly.phone">
-                  <div ng-show="userForm.phone.$error.pattern || error.phone.format" sd-valid-info>
-                    <i class="icon-info-sign-warning"></i>
-                    <span translate>please provide number in international format</span>
-                  </div>
+                  <input type="text" name="phone" id="phone" ng-model="user.phone">
                 </div>
 
                 <div sd-info-item ng-show="user._id">

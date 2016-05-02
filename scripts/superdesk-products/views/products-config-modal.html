@@ -19,7 +19,7 @@
 								<textarea class="fullwidth-input" ng-model="product.edit.description"></textarea>
 							</div>
 							<div class="field">
-								<label translate>Product codes</label>
+								<label translate>Product codes</label><i class="field-info" translate>*comma separated values</i>
 								<textarea class="fullwidth-input" ng-model="product.edit.codes"></textarea>
 							</div>
 							<div class="field">
@@ -27,13 +27,19 @@
 								<select class="input" ng-model="product.edit.content_filter.filter_id">
 									<option value=""></option>
 									<option value="{{filter._id}}" ng-selected="filter._id === product.edit.content_filter.filter_id" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
-							</select>
+								</select>
 							</div>
 							<div class="field" ng-if="product.edit.content_filter.filter_id">
 								<label translate>Publish Filter Type</label>
 								<label class="inline-label"><input type="radio" ng-model="product.edit.content_filter.filter_type" value="permitting"><span translate>Permitting</span></label>
 								<label class="inline-label"><input type="radio" ng-model="product.edit.content_filter.filter_type" value="blocking"><span translate>Blocking</span></label>
 							</div>
+							<div class="field">
+	                            <label for="geoRestrictions" translate>Geographical Restrictions</label>
+	                            <select id="geoRestrictions" ng-model="product.edit.geo_restrictions" ng-options="g.qcode as g.name for g in geoRestrictions">
+	                                <option value=""></option>
+	                            </select>
+	                        </div>
 						</fieldset>
 					</tab>
 					<tab heading="Subscribers" class="TabContent">

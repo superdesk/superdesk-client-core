@@ -13,7 +13,7 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
 
     this.save = function(orig, task) {
         if (task.task.due_time) {
-            task.task.due_date = datetimeHelper.mergeDateTime(task.task.due_date, task.task.due_time).format();
+            task.task.due_date = datetimeHelper.mergeDateTime(task.task.due_date, task.task.due_time);
         }
         delete task.task.due_time;
         if (!task.task.user) {

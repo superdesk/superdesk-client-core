@@ -11,6 +11,8 @@
 
 'use strict';
 
+var TYPING_CLASS = 'typing';
+
 /**
  * Escape given string for reg exp
  *
@@ -615,8 +617,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      * @param {Scope} scope
      */
     this.undo = function(scope) {
-        scope.history.selectPrev();
-        useHistory(scope);
+        if (scope.history.getIndex() > -1) {
+            scope.history.selectPrev();
+            useHistory(scope);
+        }
     };
 
     /**
@@ -625,8 +629,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      * @param {Scope} scope
      */
     this.redo = function(scope) {
+        var oldIndex = scope.history.getIndex();
         scope.history.selectNext();
-        useHistory(scope);
+        if (oldIndex !== scope.history.getIndex()) {
+            useHistory(scope);
+        }
     };
 
     /**
@@ -658,7 +665,6 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      * @param {Scope} scope
      */
     function useHistory(scope) {
-        var TYPING_CLASS = 'typing';
         var val = scope.history.get() || '';
         var checkVal = val.innerHTML ? clearRangy(angular.copy(val)).innerHTML : val;
         if (clean(scope.node).innerHTML !== checkVal) {
@@ -696,8 +702,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
             link: function(scope, elem, attrs, ngModel) {
                 scope.model = ngModel;
 
-                var TYPING_CLASS = 'typing';
-
                 var editorElem;
                 var updateTimeout;
                 var renderTimeout;
@@ -715,7 +719,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                 ctrlOperations[editor.KEY_CODES.Y] = doRedo;
 
                 scope.$on('spellcheck:run', render);
-                keyboardManager.bind('ctrl+shift+d', render);
 
                 ngModel.$render = function (force) {
                     if (!scope.history || scope.history.getIndex() === -1 || force) {
@@ -740,9 +743,14 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                                 event.stopPropagation();
                             }
 
+                            if (event.ctrlKey && ctrlOperations[event.keyCode]) {
+                                event.preventDefault();
+                            }
+
                             if (editor.shouldIgnore(event)) {
                                 return;
                             }
+
                             cancelTimeout();
                         });
 

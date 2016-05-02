@@ -346,7 +346,7 @@
 
                 scope.style = {};
                 if (scope.limited) {
-                    scope.style.maxHeight = scope.group.max_items ? scope.group.max_items * ITEM_HEIGHT : null;
+                    updateGroupStyle();
                 }
 
                 scope.edit = edit;
@@ -355,7 +355,13 @@
                 scope.renderNew = renderNew;
                 scope.viewSingleGroup = viewSingleGroup;
 
-                scope.$watchCollection('group', queryItems);
+                scope.$watchCollection('group', function() {
+                    if (scope.limited) {
+                        updateGroupStyle();
+                    }
+                    queryItems();
+                });
+
                 scope.$on('task:stage', queryItems);
                 scope.$on('ingest:update', queryItems);
                 scope.$on('item:spike', queryItems);
@@ -423,6 +429,9 @@
                     }
                 }, {inputDisabled: false});
 
+                function updateGroupStyle() {
+                    scope.style.maxHeight = scope.group.max_items ? scope.group.max_items * ITEM_HEIGHT : null;
+                }
                 /*
                  * Bind item actions on keyboard shortcuts
                  * Keyboard shortcuts are defined with actions

@@ -28,7 +28,9 @@
         flags: null,
         pubstatus: null,
         more_coming: false,
-        targeted_for: [],
+        target_regions: [],
+        target_types: [],
+        target_subscribers: [],
         embargo: null,
         renditions: null,
         associations: null,
@@ -65,6 +67,7 @@
     // http://docs.python-cerberus.org/en/stable/usage.html
     var DEFAULT_SCHEMA = Object.freeze({
         slugline: {maxlength: 24},
+        relatedItems: {},
         genre: {},
         anpa_take_key: {},
         place: {},
@@ -205,7 +208,7 @@
          * Auto-saves an item
          */
         this.save = function saveAutosave(item) {
-            if (item._editable && !item._locked) {
+            if (item._editable && item._locked) {
                 this.stop(item);
                 timeouts[item._id] = $timeout(function() {
                     var diff = extendItem({_id: item._id}, item);
@@ -243,8 +246,10 @@
         };
     }
 
-    AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges', 'desks', 'superdeskFlags'];
-    function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags) {
+    AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
+                        'desks', 'superdeskFlags', 'notify', 'session', '$injector'];
+    function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
+                        notify, session, $injector) {
         var self = this;
 
         this.limits = {
@@ -301,6 +306,25 @@
                     return autosave.open(item);
                 });
             }
+        };
+
+        this.rewrite = function (item) {
+            var authoringWorkspace = $injector.get('authoringWorkspace');
+
+            session.getIdentity()
+                .then(function(user) {
+                    return api.save('archive_rewrite', {}, {}, item);
+                })
+                .then(function(new_item) {
+                    notify.success(gettext('Update Created.'));
+                    authoringWorkspace.edit(new_item._id);
+                }, function(response) {
+                    if (angular.isDefined(response.data._message)) {
+                        notify.error(gettext('Failed to generate update: ' + response.data._message));
+                    } else {
+                        notify.error(gettext('There was an error. Failed to generate update.'));
+                    }
+                });
         };
 
         /**
@@ -389,10 +413,6 @@
 
             if (this.isPublished(original)) {
                 delete updates.dateline;
-
-                if (updates.embargo) {
-                    delete updates.embargo;
-                }
             }
 
             //check if rendition is dirty for real
@@ -919,8 +939,8 @@
         };
     }
 
-    ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q'];
-    function ChangeImageController($scope, gettext, notify, modal, $q) {
+    ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash'];
+    function ChangeImageController($scope, gettext, notify, modal, $q, _) {
         $scope.data = $scope.locals.data;
         $scope.data.cropData = {};
         var sizes = {};
@@ -949,6 +969,27 @@
         * notify the user and then resolve the activity.
         */
         $scope.done = function() {
+            /* Throw an exception if PoI is outisde of a crop */
+            function poiIsInsideEachCrop() {
+                var originalImage = $scope.data.metadata.renditions.original;
+                var originalPoi = {x: originalImage.width * $scope.data.poi.x, y: originalImage.height * $scope.data.poi.y};
+                _.forEach($scope.data.cropData, function(cropData, cropName) {
+                    if (originalPoi.y < cropData.CropTop ||
+                        originalPoi.y > cropData.CropBottom ||
+                        originalPoi.x < cropData.CropLeft ||
+                        originalPoi.x > cropData.CropRight) {
+                        throw gettext('Point of interest outside the crop ' + cropName + ' limits');
+                    }
+                });
+            }
+            // check if data are valid
+            try {
+                poiIsInsideEachCrop();
+            } catch (e) {
+                // show an error and stop the "done" operation
+                notify.error(e);
+                return false;
+            }
             if ($scope.data.showMetadataEditor) {
                 // update metadata in `item`
                 angular.extend($scope.data.item, $scope.data.metadata);
@@ -1262,7 +1303,7 @@
                                     var errors = response.data._issues['validator exception'];
                                     var modified_errors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
                                     for (var i = 0; i < modified_errors.length; i++) {
-                                        notify.error(modified_errors[i]);
+                                        notify.error(_.trim(modified_errors[i]));
                                     }
 
                                     if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
@@ -1345,22 +1386,18 @@
                     return false;
                 };
 
+                $scope.saveAndContinue = function(customButtonAction) {
+                    if ($scope.dirty) {
+                        $scope.saveTopbar().then(customButtonAction);
+                    } else {
+                        customButtonAction();
+                    }
+                };
+
                 $scope.publishAndContinue = function() {
                     $scope.publish().then(function(published) {
                         if (published) {
-                            var itemDeskId = null;
-                            if ($scope.item.task && $scope.item.task.desk) {
-                                itemDeskId = $scope.item.task.desk;
-                            }
-
-                            return authoring.linkItem($scope.item, null, itemDeskId);
-                        }
-                    })
-                    .then(function (item) {
-                        if (item) {
-                            authoringWorkspace.close(false);
-                            notify.success(gettext('New take created.'));
-                            authoringWorkspace.edit(item);
+                            authoring.rewrite($scope.item);
                         }
                     }, function(err) {
                         notify.error(gettext('Failed to publish and continue.'));
@@ -1485,7 +1522,7 @@
                     return autosavedItem;
                 };
 
-                $scope.sendToNextStage = function(item) {
+                $scope.sendToNextStage = function() {
                     var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
                     for (var i = 0; i < stageList.length; i++){
                         if (stageList[i]._id === $scope.stage._id) {
@@ -1586,38 +1623,13 @@
             templateUrl: 'scripts/superdesk-authoring/views/authoring-topbar.html',
             link: function(scope) {
                 scope.saveDisabled = false;
-                scope.saveTopbar = function(item) {
+                scope.saveTopbar = function() {
                     scope.saveDisabled = true;
-                    return scope.save(item)
+                    return scope.save(scope.item)
                     ['finally'](function() {
                         scope.saveDisabled = false;
                     });
                 };
-                keyboardManager.bind('ctrl+shift+u', function(e) {
-                    e.preventDefault();
-                    if (scope.item._locked &&
-                        !scope.item.sendTo &&
-                        scope.can_unlock() &&
-                        scope.itemActions.save &&
-                        !scope.unlockClicked
-                    ) {
-                        scope.unlock();
-                    }
-                });
-                keyboardManager.bind('ctrl+shift+e', function() {
-                    scope.close();
-                });
-                keyboardManager.bind('ctrl+shift+s', function(e) {
-                    e.preventDefault();
-                    if (scope._editable &&
-                        scope.itemActions.save &&
-                        scope.action === 'edit' &&
-                        !scope.saveDisabled &&
-                        scope.save_enabled()
-                    ) {
-                        scope.saveTopbar();
-                    }
-                });
             }
         };
     }
@@ -1830,10 +1842,14 @@
             }
         };
     }
-    SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace', 'superdeskFlags', '$location', 'macros',
-        '$rootScope', 'authoring', 'send', 'editor', 'confirm', 'archiveService', 'preferencesService', 'multi'];
-    function SendItem($q, api, desks, notify, authoringWorkspace, superdeskFlags, $location, macros,
-            $rootScope, authoring, send, editor, confirm, archiveService, preferencesService, multi) {
+    SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
+        'superdeskFlags', '$location', 'macros', '$rootScope',
+        'authoring', 'send', 'editor', 'confirm', 'archiveService',
+        'preferencesService', 'multi', 'datetimeHelper'];
+    function SendItem($q, api, desks, notify, authoringWorkspace,
+                      superdeskFlags, $location, macros, $rootScope,
+                      authoring, send, editor, confirm, archiveService,
+                      preferencesService, multi, datetimeHelper) {
         return {
             scope: {
                 item: '=',
@@ -1856,6 +1872,8 @@
                 scope.selectedMacro = null;
                 scope.beforeSend = scope._beforeSend || $q.when;
                 scope.destination_last = null;
+                scope.origItem = angular.extend({}, scope.item);
+
                 var PREFERENCE_KEY = 'destination:active';
 
                 scope.$watch('item', activateItem);
@@ -2022,7 +2040,12 @@
                         !scope.item.publish_schedule_time && !authoring.isTakeItem(scope.item);
 
                     if (prePublishCondition && authoring.isPublished(scope.item)) {
-                        return scope.item.embargo;
+                        if (['published', 'corrected'].indexOf(scope.item.state) >= 0) {
+                            return scope.origItem.embargo;
+                        } else {
+                            // for published states other than 'published', 'corrected'
+                            return false;
+                        }
                     }
 
                     return prePublishCondition;
@@ -2032,7 +2055,12 @@
                  * Returns true if Embargo needs to be displayed, false otherwise.
                  */
                 scope.isEmbargoEditable = function() {
-                    return scope.item && scope.item._editable && !authoring.isPublished(scope.item);
+                    var publishedCondition = authoring.isPublished(scope.item) && scope.item.schedule_settings &&
+                        scope.item.schedule_settings.utc_embargo &&
+                        datetimeHelper.greaterThanUTC(scope.item.schedule_settings.utc_embargo);
+
+                    return scope.item && scope.item._editable &&
+                        (!authoring.isPublished(scope.item) || publishedCondition);
                 };
 
                 function runSend(open) {
@@ -2388,8 +2416,6 @@
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
                 scope.contentType = null;
-                scope.schema = angular.extend({}, DEFAULT_SCHEMA);
-                scope.editor = angular.extend({}, DEFAULT_EDITOR);
                 scope.canEditSignOff = config.user && config.user.sign_off_mapping ? true: false;
                 scope.editSignOff = false;
 
@@ -2423,15 +2449,6 @@
                                 scope.resetNumberOfDays(false);
                             }
                             _.extend(item, updates);
-
-                            if (item.profile) {
-                                content.getType(item.profile)
-                                    .then(function(type) {
-                                        scope.contentType = type;
-                                        scope.editor = type.editor || DEFAULT_EDITOR;
-                                        scope.schema = type.schema || DEFAULT_SCHEMA;
-                                    });
-                            }
                         }
                         if (autopopulateByline && !item.byline) {
                             item.byline = $interpolate(gettext('by {{ display_name }}'))({display_name: session.identity.display_name});
@@ -2627,7 +2644,6 @@
         .service('lock', LockService)
         .service('authThemes', AuthoringThemesService)
         .service('authoringWorkspace', AuthoringWorkspaceService)
-        .service('renditions', RenditionsService)
 
         .directive('sdDashboardCard', DashboardCard)
         .directive('sdSendItem', SendItem)
@@ -2868,8 +2884,6 @@
             require: '^sdAuthoringWidgets',
             link: function (scope, elem, attrs, WidgetsManagerCtrl) {
                 scope.contentType = null;
-                scope.schema = angular.extend({}, DEFAULT_SCHEMA);
-                scope.editor = angular.extend({}, DEFAULT_EDITOR);
 
                 scope.shouldDisplayUrgency = function() {
                     return !scope.editor.urgency.service || (
@@ -2941,6 +2955,18 @@
                     scope.loaded = true;
 
                     if (!archiveService.isLegal(scope.item)) {
+                        if (item.profile) {
+                            content.getType(item.profile)
+                                .then(function(type) {
+                                    scope.contentType = type;
+                                    scope.editor = type.editor || DEFAULT_EDITOR;
+                                    scope.schema = type.schema || DEFAULT_SCHEMA;
+                                });
+                        } else {
+                            scope.schema = angular.extend({}, DEFAULT_SCHEMA);
+                            scope.editor = angular.extend({}, DEFAULT_EDITOR);
+                        }
+
                         // Related Items
                         if (scope.item.slugline) {
                             archiveService.getRelatedItems(scope.item.slugline).then(function(items) {
@@ -2963,15 +2989,6 @@
                                 $rootScope.$broadcast('broadcast:preview', {'item': item});
                             });
                         };
-
-                        if (item.profile) {
-                            content.getType(item.profile)
-                                .then(function(type) {
-                                    scope.contentType = type;
-                                    scope.editor = type.editor || DEFAULT_EDITOR;
-                                    scope.schema = type.schema || DEFAULT_SCHEMA;
-                                });
-                        }
                     }
 
                 });
@@ -3075,7 +3092,7 @@
                 }
             }.bind(this);
 
-            if (item._type === 'ingest') {
+            if (item._type === 'ingest' || item.state === 'ingested') {
                 send.one(item).then(_open);
             } else {
                 _open(item);
@@ -3186,8 +3203,8 @@
         init();
     }
 
-    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', 'cropPicture'];
-    function ItemAssociationDirective(superdesk, renditions, $timeout, api, cropPicture) {
+    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', '$q'];
+    function ItemAssociationDirective(superdesk, renditions, $timeout, api, $q) {
         return {
             scope: {
                 rel: '=',
@@ -3221,7 +3238,13 @@
                 elem.on('drop', function(event) {
                     event.preventDefault();
                     var item = getItem(event, PICTURE_TYPE);
-                    scope.edit(item);
+                    // ingest picture if it comes from an external source (create renditions)
+                    scope.loading = true;
+                    renditions.ingest(item)
+                    .then(scope.edit)
+                    .finally(function() {
+                        scope.loading = false;
+                    });
                 });
 
                 function updateItemAssociation(updated) {
@@ -3245,9 +3268,13 @@
                 renditions.get();
 
                 scope.edit = function(item) {
-                    cropPicture.crop(item).then(function(updatedItem) {
+                    scope.loading = true;
+                    return renditions.crop(item).then(function(updatedItem) {
                         var data = updateItemAssociation(updatedItem);
                         scope.onchange({item: scope.item, data: data});
+                    })
+                    .finally(function() {
+                        scope.loading = false;
                     });
                 };
 
@@ -3269,17 +3296,6 @@
                     }
                 };
             }
-        };
-    }
-
-    RenditionsService.$inject = ['metadata'];
-    function RenditionsService(metadata) {
-        var self = this;
-        this.get = function() {
-            return metadata.initialize().then(function() {
-                self.renditions = metadata.values.crop_sizes;
-                return self.renditions;
-            });
         };
     }
 

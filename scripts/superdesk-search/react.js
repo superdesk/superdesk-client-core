@@ -297,19 +297,19 @@
 
                         if (props.ingestProvider) {
                             meta.push(
-                                React.createElement('dt', {key: 1}, gettext('source')),
+                                React.createElement('dt', {key: 1}, gettextCatalog.getString('source')),
                                 React.createElement('dd', {key: 2, className: 'provider'}, props.ingestProvider.name ||
                                     props.ingestProvider.source)
                             );
                         }
 
                         meta.push(
-                            React.createElement('dt', {key: 3}, gettext('updated')),
+                            React.createElement('dt', {key: 3}, gettextCatalog.getString('updated')),
                             React.createElement('dd', {key: 4}, datetime.shortFormat(item.versioncreated))
                         );
 
                         if (item.is_spiked) {
-                            meta.push(React.createElement('dt', {key: 5}, gettext('expires')));
+                            meta.push(React.createElement('dt', {key: 5}, gettextCatalog.getString('expires')));
                             meta.push(React.createElement('dd', {key: 6}, datetime.shortFormat(item.expiry)));
                         }
 
@@ -403,7 +403,8 @@
                         return React.createElement(
                             'div',
                             {className: 'list-field urgency'},
-                            [(item.priority ? new ItemPriority(item) : null), (item.urgency ? new ItemUrgency(item) : null)]
+                            item.priority ? new ItemPriority(item) : null,
+                            item.urgency ? new ItemUrgency(item) : null
                         );
                     };
 
@@ -654,10 +655,13 @@
                                 React.createElement(TimeElem, {date: item.versioncreated})
                             ),
                             React.createElement('div', {className: 'line'},
+                                item.profile ?
+                                    React.createElement('div', {className: 'label label--' + item.profile}, item.profile) :
+                                    null,
                                 React.createElement(
                                     'span',
                                     {title: $filter('removeLodash')(item.state), className: 'state-label state-' + item.state},
-                                    $filter('removeLodash')(item.state)
+                                    $filter('removeLodash')(gettextCatalog.getString(item.state))
                                 ),
                                 item.embargo ? React.createElement(
                                     'span',
@@ -667,9 +671,6 @@
                                 item.correction_sequence ?
                                     React.createElement('div', {className: 'provider'}, gettext('Update') +
                                         ' ' + item.correction_sequence) : null,
-                                item.profile ?
-                                    React.createElement('div', {className: 'label label--' + item.profile}, item.profile) :
-                                    null,
                                 item.anpa_take_key ?
                                     React.createElement('div', {className: 'takekey'}, item.anpa_take_key) :
                                     null,

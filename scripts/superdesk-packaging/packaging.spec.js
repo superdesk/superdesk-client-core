@@ -50,25 +50,26 @@ describe('packaging', function() {
         var scope, item;
 
         beforeEach(inject(function($rootScope, $compile) {
-            scope = $rootScope.$new();
-            scope.item = {_id: 'foo'};
+            var parentScope = $rootScope.$new();
+            parentScope.item = {_id: 'foo'};
             item = {_id: 'bar'};
-            $compile('<div sd-package-item-preview></div>')(scope);
-            scope.$digest();
+            var elem = $compile('<div sd-package-item-preview data-item="item"></div>')(parentScope);
+            parentScope.$digest();
+            scope = elem.isolateScope();
         }));
 
-        it('can open preview', inject(function($rootScope, $q, superdesk) {
+        it('can preview item', inject(function($rootScope, $q, superdesk) {
             spyOn(superdesk, 'intent').and.returnValue($q.when());
-            scope.open(item);
+            scope.preview(item);
             $rootScope.$apply();
-            expect(superdesk.intent).toHaveBeenCalledWith('view', 'item', item);
+            expect(superdesk.intent).toHaveBeenCalledWith('preview', 'item', item);
         }));
 
-        it('can edit when you have lock', inject(function($rootScope, $q, superdesk) {
-            spyOn(superdesk, 'intent').and.returnValue($q.reject());
+        it('can open item', inject(function($rootScope, $q, authoringWorkspace) {
+            spyOn(authoringWorkspace, 'open').and.returnValue($q.when());
             scope.open(item);
             $rootScope.$apply();
-            expect(superdesk.intent.calls.count()).toBe(2);
+            expect(authoringWorkspace.open).toHaveBeenCalledWith(item);
         }));
     });
 });

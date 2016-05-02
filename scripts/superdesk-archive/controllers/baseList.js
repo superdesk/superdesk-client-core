@@ -8,14 +8,6 @@ function BaseListController($scope, $location, superdesk, api, search, desks, pr
 
     $scope.selected = {};
 
-    $scope.openLightbox = function openLightbox() {
-        $scope.selected.view = $scope.selected.preview;
-    };
-
-    $scope.closeLightbox = function closeLightbox() {
-        $scope.selected.view = null;
-    };
-
     $scope.fetchNext = function(from) {
         var criteria = self.getQuery();
         criteria.from = from;

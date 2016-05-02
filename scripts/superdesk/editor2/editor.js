@@ -11,6 +11,8 @@
 
 'use strict';
 
+var TYPING_CLASS = 'typing';
+
 /**
  * Replace given dom elem with its contents
  *
@@ -138,10 +140,22 @@ function HistoryStack(initialValue) {
         var state = index > -1 ? stack[index] : initialValue;
         return state;
     };
+
+    /**
+     * Get current index
+     *
+     * @return {Number}
+     */
+    this.getIndex = function() {
+        return index;
+    };
 }
 
 EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions'];
 function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService) {
+
+    var CLONE_CLASS = 'clone';
+
     this.settings = {spellcheck: true};
 
     /**
@@ -249,14 +263,20 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             renderFindreplace(scope.node);
         } else if (self.settings.spellcheck || force) {
             renderSpellcheck(scope.node, preventStore);
+        } else {
+            removeHilites(scope.node);
         }
     };
 
     /**
      * Render highlights in all registered scopes
+     *
+     * @param {Boolean} force rendering
      */
-    this.render = function() {
-        scopes.forEach(self.renderScope);
+    this.render = function(force) {
+        scopes.forEach(function(scope) {
+            self.renderScope(scope, force);
+        });
     };
 
     /**
@@ -330,6 +350,19 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     }
 
     /**
+     * Remove hilites node from nodes parent
+     *
+     * @param {Node} node
+     */
+    function removeHilites(node) {
+        var parentNode = node.parentNode;
+        var clones = parentNode.getElementsByClassName(CLONE_CLASS);
+        if (clones.length) {
+            parentNode.removeChild(clones.item(0));
+        }
+    }
+
+    /**
      * Hilite all tokens within node using span with given className
      *
      * This first stores caret position, updates markup, and then restores the caret.
@@ -340,14 +373,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Boolean} preventStore
      */
     function hilite(node, tokens, className, preventStore) {
-        var CLONE_CLASS = 'clone';
-        var parentNode = node.parentNode;
-
-        // remove old hilite nodes if any
-        var clones = parentNode.getElementsByClassName(CLONE_CLASS);
-        if (clones.length) {
-            parentNode.removeChild(clones.item(0));
-        }
+        // remove old hilites
+        removeHilites(node);
 
         // create a clone
         var hiliteNode = node.cloneNode(true);
@@ -359,7 +386,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
         });
 
         // render clone
-        parentNode.appendChild(hiliteNode);
+        node.parentNode.appendChild(hiliteNode);
     }
 
     /**
@@ -558,8 +585,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     this.undo = function(scope) {
-        scope.history.selectPrev();
-        useHistory(scope);
+        if (scope.history.getIndex() > -1) {
+            scope.history.selectPrev();
+            useHistory(scope);
+        }
     };
 
     /**
@@ -568,8 +597,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     this.redo = function(scope) {
+        var oldIndex = scope.history.getIndex();
         scope.history.selectNext();
-        useHistory(scope);
+        if (oldIndex !== scope.history.getIndex()) {
+            useHistory(scope);
+        }
     };
 
     /**
@@ -578,7 +610,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     function useHistory(scope) {
-        var val = scope.history.get();
+        var val = scope.history.get() || '';
         if (val != null) {
             scope.node.innerHTML = val;
             scope.model.$setViewValue(val);
@@ -643,8 +675,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     };
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'cropPicture'];
-function SdTextEditorBlockEmbedController($timeout, editor, cropPicture) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions'];
+function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
@@ -681,7 +713,8 @@ function SdTextEditorBlockEmbedController($timeout, editor, cropPicture) {
             if (!vm.model.association) {
                 return false;
             }
-            cropPicture.crop(picture).then(function(picture) {
+            vm.model.loading = true;
+            renditions.crop(picture).then(function(picture) {
                 // update block
                 vm.model.association = picture;
                 editor.generateImageTag(picture).then(function(img) {
@@ -689,6 +722,8 @@ function SdTextEditorBlockEmbedController($timeout, editor, cropPicture) {
                 });
                 // update caption
                 vm.saveCaption(vm.model.association.description_text);
+            }).finally(function() {
+                vm.model.loading = false;
             });
         }
     });
@@ -790,13 +825,25 @@ angular.module('superdesk.editor2', [
             link: function(scope, element, attr, controllers) {
                 var controller = controllers[0];
                 var ngModel = controllers[1];
-                $timeout(function() {
-                    if (controller.config.multiBlockEdition) {
-                        controller.initEditorWithMultipleBlock(ngModel);
-                    } else {
-                        controller.initEditorWithOneBlock(ngModel);
+                function init() {
+                    $timeout(function() {
+                        if (controller.config.multiBlockEdition) {
+                            controller.initEditorWithMultipleBlock(ngModel);
+                        } else {
+                            controller.initEditorWithOneBlock(ngModel);
+                        }
+                    });
+                }
+                // init editor based on model
+                init();
+                // when the model changes from outside, updates the editor
+                scope.$watch(function() {
+                    return ngModel.$viewValue;
+                }, function() {
+                    if (ngModel.$viewValue !== controller.serializeBlock()) {
+                        init();
                     }
-                });
+                }, true);
             }
         };
     }])
@@ -827,7 +874,8 @@ angular.module('superdesk.editor2', [
             },
             placeholder: false,
             disableReturn: false,
-            spellcheck: false
+            spellcheck: false,
+            targetBlank: true
         };
 
         /**
@@ -1014,7 +1062,6 @@ angular.module('superdesk.editor2', [
                     sdEditorCtrl: sdTextEditor
                 });
                 vm.block = scope.sdTextEditorBlockText;
-                var TYPING_CLASS = 'typing';
                 var editorElem;
                 var updateTimeout;
                 var renderTimeout;
@@ -1075,9 +1122,10 @@ angular.module('superdesk.editor2', [
                     });
                     scope.$on('spellcheck:run', render);
                     scope.$on('key:ctrl:shift:s', render);
+
                     function cancelTimeout(event) {
                         $timeout.cancel(updateTimeout);
-                        scope.node.parentNode.classList.add(TYPING_CLASS);
+                        startTyping();
                     }
 
                     function changeSelectedParagraph(direction) {
@@ -1217,7 +1265,7 @@ angular.module('superdesk.editor2', [
                 };
 
                 function render($event, event, preventStore) {
-                    scope.node.parentNode.classList.remove(TYPING_CLASS);
+                    stopTyping();
                     editor.renderScope(scope, $event, preventStore);
                     if (event) {
                         event.preventDefault();
@@ -1239,6 +1287,7 @@ angular.module('superdesk.editor2', [
                     scope.$applyAsync(function() {
                         editor.undo(scope);
                         editor.renderScope(scope);
+                        stopTyping();
                     });
                 }
 
@@ -1246,6 +1295,7 @@ angular.module('superdesk.editor2', [
                     scope.$applyAsync(function() {
                         editor.redo(scope);
                         editor.renderScope(scope);
+                        stopTyping();
                     });
                 }
 
@@ -1253,8 +1303,16 @@ angular.module('superdesk.editor2', [
                     $timeout.cancel(renderTimeout);
                     renderTimeout = $timeout(render, 0, false);
                 }
+
+                function startTyping() {
+                    scope.node.parentNode.classList.add(TYPING_CLASS);
+                }
+
+                function stopTyping() {
+                    scope.node.parentNode.classList.remove(TYPING_CLASS);
+                }
             },
-            controller: ['$scope', 'editor', 'api', 'superdesk', function(scope, editor, api , superdesk) {
+            controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', function(scope, editor, api , superdesk, renditions) {
                 var vm = this;
                 angular.extend(vm, {
                     block: undefined, // provided in link method
@@ -1286,30 +1344,28 @@ angular.module('superdesk.editor2', [
                         editor.commitScope(scope);
                     },
                     insertPicture: function(picture) {
-                        var performRenditions = $.when(picture);
-                        if (picture._type === 'externalsource') {
-                            performRenditions = superdesk.intent('list', 'externalsource',  {item: picture}).then(function(item) {
-                                return api.find('archive', item._id);
-                            });
-                        }
-                        performRenditions.then(function(picture) {
-                            // cut the text that is after the caret in the block and save it in order to add it after the embed later
-                            var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
-                            // save the blocks (with removed leading text)
-                            vm.updateModel();
-                            var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
+                        // cut the text that is after the caret in the block and save it in order to add it after the embed later
+                        var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
+                        // save the blocks (with removed leading text)
+                        vm.updateModel();
+                        var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
+                        var block = vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                            blockType: 'embed',
+                            embedType: 'Image',
+                            caption: picture.description_text,
+                            loading: true,
+                            association: picture
+                        }, true);
+                        renditions.ingest(picture).then(function(picture) {
                             editor.generateImageTag(picture).then(function(imgTag) {
-                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                                    blockType: 'embed',
-                                    embedType: 'Image',
+                                angular.extend(block, {
                                     body: imgTag,
-                                    caption: picture.description_text,
-                                    association: picture
-                                }, true);
-                                indexWhereToAddBlock++;
+                                    association: picture,
+                                    loading: false
+                                });
                             }).then(function() {
                                 // add new text block for the remaining text
-                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock++, {
                                     body: textThatWasAfterCaret
                                 }, true);
                             });
