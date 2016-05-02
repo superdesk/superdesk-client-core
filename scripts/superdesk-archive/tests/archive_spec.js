@@ -157,24 +157,6 @@ describe('content', function() {
         }));
     });
 
-    describe('media box directive', function() {
-        it('can select item for multi editing', inject(function(multi, $rootScope, $compile) {
-            var scope = $rootScope.$new();
-            scope.item = {_id: 1};
-
-            $compile('<div sd-media-box></div>')(scope);
-            scope.$digest();
-
-            expect(multi.getItems().length).toBe(0);
-            scope.item.selected = true;
-            scope.toggleSelected(scope.item);
-            expect(multi.getItems().length).toBe(1);
-
-            multi.reset();
-            $rootScope.$digest();
-            expect(multi.getItems().length).toBe(0);
-        }));
-    });
     describe('media-related directive', function() {
         it('can view item', inject(function(familyService, $rootScope, $compile, superdesk, $q) {
             var scope = $rootScope.$new();

@@ -372,99 +372,12 @@
             };
         }])
         .directive('sdSingleItem', [ function() {
-
             return {
                 templateUrl: 'scripts/superdesk-archive/views/single-item-preview.html',
                 scope: {
                     item: '=',
                     contents: '=',
                     setitem: '&'
-                }
-            };
-        }])
-        .directive('sdMediaBoxGrid', function() {
-            return {
-                templateUrl: 'scripts/superdesk-archive/views/media-box-grid.html'
-            };
-        })
-        .directive('sdMediaBoxList', function() {
-            return {
-                templateUrl: 'scripts/superdesk-archive/views/media-box-list.html'
-            };
-        })
-        .directive('sdMediaBox', ['$location', 'lock', 'multi', 'archiveService',
-            function($location, lock, multi, archiveService) {
-            return {
-                restrict: 'A',
-                link: function(scope, element, attrs) {
-                    scope.lock = {
-                        isLocked: scope.item && (lock.isLocked(scope.item) || lock.isLockedByMe(scope.item))
-                    };
-
-                    scope.$on('item:lock', function(_e, data) {
-                        if (scope.item && scope.item._id === data.item) {
-                            scope.lock.isLocked = true;
-                            scope.item.lock_user = data.user;
-                            scope.item.lock_session = data.lock_session;
-                            scope.item.lock_time = data.lock_time;
-                            scope.$digest();
-                        }
-                    });
-
-                    scope.$on('item:unlock', function(_e, data) {
-                        if (scope.item && scope.item._id === data.item) {
-                            scope.lock.isLocked = false;
-                            scope.item.lock_user = null;
-                            scope.item.lock_session = null;
-                            scope.item.lock_time = null;
-                            scope.$digest();
-                        }
-                    });
-
-                    scope.$on('task:progress', function(_e, data) {
-                        if (data.task === scope.item.task_id) {
-                            if (data.progress.total === 0) {
-                                scope._progress = 10;
-                            } else {
-                                scope._progress = Math.min(100, Math.round(100.0 * data.progress.current / data.progress.total));
-                            }
-                            scope.$digest();
-                        }
-                    });
-
-                    scope.$on('item:highlight', function(_e, data) {
-                        if (scope.item && scope.item._id === data.item_id) {
-                            if (!scope.item.highlights) {
-                                scope.item.highlights = [data.highlight_id];
-                            } else if (scope.item.highlights.indexOf(data.highlight_id) === -1){
-                                scope.item.highlights = [data.highlight_id].concat(scope.item.highlights);
-                            } else if (!scope.item.multiSelect){
-                                scope.item.highlights = _.without(scope.item.highlights, data.highlight_id);
-                            }
-                        }
-                    });
-
-                    scope.clickAction =  function clickAction(item) {
-                        if (typeof scope.preview === 'function') {
-                            $location.search('fetch', null);
-                            return scope.preview(item);
-                        }
-                        return false;
-                    };
-
-                    scope.toggleSelected = function(item) {
-                        multi.toggle(item);
-                    };
-
-                    /**
-                     * Get actions type based on item state. Used with activity filter.
-                     *
-                     * @param {Object} item
-                     * @returns {string}
-                     */
-                    scope.getType = function(item) {
-                        return archiveService.getType(item);
-                    };
                 }
             };
         }])
