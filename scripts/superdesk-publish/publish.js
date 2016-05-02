@@ -433,12 +433,33 @@
                  * @return {*}
                  */
                 var fetchProducts = function() {
-                    return api.query('products').then(function(products) {
-                        $scope.availableProducts = products._items;
+                    return _getAllProducts().then(function(products) {
+                        $scope.availableProducts = products;
                         $scope.productLookup = [];
-                        _.each(products._items, function(item) {
+                        _.each(products, function(item) {
                             $scope.productLookup[item._id] = item;
                         });
+                    });
+                };
+
+                /**
+                 * Recursivly returns all products
+                 *
+                 * @return {*}
+                */
+                var _getAllProducts = function(page, products) {
+                    page = page || 1;
+                    products = products || [];
+
+                    return api('products')
+                    .query({max_results: 200, page: page})
+                    .then(function(result) {
+                        products = products.concat(result._items);
+                        if (result._links.next) {
+                            page++;
+                            return _getAllProducts(page, products);
+                        }
+                        return $filter('sortByName')(products);
                     });
                 };
 
@@ -565,6 +586,7 @@
                                 $scope.subscriber.products.push($scope.productLookup[p]);
                             });
                         }
+                        $scope.subscriber.products = $filter('sortByName')($scope.subscriber.products);
 
                         $scope.subscriber.global_filters =  $scope.origSubscriber.global_filters || {};
 
