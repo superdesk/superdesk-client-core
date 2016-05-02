@@ -221,11 +221,13 @@
 
             var values = filterCondition.value.split(',');
             _.each(values, function(value) {
-                var v = _.find($scope.valueLookup[filterCondition.field], function(val) {
-                    return val[$scope.valueFieldLookup[filterCondition.field]].toString() === value;
-                });
+                if ($scope.valueLookup[filterCondition.field]) {
+                    var v = _.find($scope.valueLookup[filterCondition.field], function(val) {
+                        return val[$scope.valueFieldLookup[filterCondition.field]].toString() === value;
+                    });
 
-                labels.push(v.name);
+                    labels.push(v.name);
+                }
             });
 
             var conditionValue = labels.length > 0 ? labels.join(', ') : filterCondition.value;
