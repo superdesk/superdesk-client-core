@@ -53,27 +53,6 @@
             return api[endpoint].query(criteria);
         };
 
-        /**
-         * Recursivly returns all products
-         *
-         * @return {*}
-         */
-        var _getAllProducts = function(page, products) {
-            page = page || 1;
-            products = products || [];
-
-            return api('products')
-            .query({max_results: 10, page: page})
-            .then(function(result) {
-                products = products.concat(result._items);
-                if (result._links.next) {
-                    page++;
-                    return _getAllProducts(page, products);
-                }
-                return $filter('sortByName')(products);
-            });
-        };
-
         var service = {
             fetchSubscribers: function(criteria) {
                 criteria = criteria || {};
@@ -103,10 +82,6 @@
             fetchPublishErrors: function() {
                 var criteria = {'io_type': 'publish'};
                 return _fetch('io_errors', criteria);
-            },
-
-            fetchAllProducts: function() {
-                return _getAllProducts();
             }
         };
 
@@ -415,11 +390,11 @@
 
     SubscribersDirective.$inject = [
         'gettext', 'notify', 'api', 'adminPublishSettingsService', 'modal',
-        'metadata', 'contentFilters', '$q', '$filter'
+        'metadata', 'contentFilters', '$q', '$filter', 'products'
     ];
     function SubscribersDirective(
         gettext, notify, api, adminPublishSettingsService,
-        modal, metadata, contentFilters, $q, $filter) {
+        modal, metadata, contentFilters, $q, $filter, products) {
 
         return {
             templateUrl: 'scripts/superdesk-publish/views/subscribers.html',
@@ -458,10 +433,10 @@
                  * @return {*}
                  */
                 var fetchProducts = function() {
-                    return adminPublishSettingsService.fetchAllProducts().then(function(products) {
-                        $scope.availableProducts = products;
+                    return products.fetchAllProducts().then(function(items) {
+                        $scope.availableProducts = items;
                         $scope.productLookup = [];
-                        _.each(products, function(item) {
+                        _.each(items, function(item) {
                             $scope.productLookup[item._id] = item;
                         });
                     });
