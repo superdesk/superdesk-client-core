@@ -136,6 +136,7 @@
         ) {
             return {
                 link: function(scope, elem) {
+
                     elem.attr('tabindex', 0);
 
                     var menuHolderElem = document.getElementById('react-placeholder');
@@ -161,6 +162,66 @@
                             elem.focus();
                         }
                     });
+
+                    /**
+                     * Render element close to target, but append to body
+                     *
+                     * Used for dropdown menus that would be only partialy visible if rendered
+                     * within parent which has overflow: hidden that is required for scrolling
+                     *
+                     * @param {Object} elem React element
+                     * @param {Node} target DOM node
+                     */
+                    function renderToBody(elem, target) {
+                        // first render it somewhere not visible
+                        menuHolderElem.style.zIndex = -1;
+                        var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem));
+                        // make sure it's rendered
+                        node.style.display = 'block';
+                        var rect = node.getBoundingClientRect();
+                        var width = rect.width;
+                        var height = rect.height;
+
+                        var ACTION_MENU_FROM_TOP = 150; // 150 = top-menu + search bar
+                        var MENU_MARGIN_HEIGHT = 16;
+                        var LEFT_BAR_WIDTH = 48;
+                        var BOTTOM_BAR_HEIGHT = 30;
+                        var BUFFER = 5;
+
+                        // get target position
+                        var targetRect = target.getBoundingClientRect();
+
+                        // get workspace
+                        var workspace = document.getElementById('main-container');
+
+                        // compute menu position
+                        var top = targetRect.top + targetRect.height;
+                        var left = targetRect.left + targetRect.width - width;
+
+                        // menu goes off on the right side
+                        if (left + width + BUFFER > workspace.clientWidth) {
+                            left -= width;
+                            left += targetRect.width;
+                        }
+
+                        // menu goes off on the left side
+                        if (left - LEFT_BAR_WIDTH < 0) {
+                            left = targetRect.left;
+                        }
+
+                        // menu goes out on the bottom side
+                        if (top + height + BOTTOM_BAR_HEIGHT + BUFFER > workspace.clientHeight) {
+                            top -= height;
+                            top -= targetRect.height;
+                            top -= MENU_MARGIN_HEIGHT;
+                            top = top < ACTION_MENU_FROM_TOP ? ACTION_MENU_FROM_TOP : top;
+                        }
+
+                        node.style.top = top.toFixed() + 'px';
+                        node.style.left = left.toFixed() + 'px';
+                        node.style.position = 'absolute';
+                        menuHolderElem.style.zIndex = 1000;
+                    }
 
                     /**
                      * Test if an item has thumbnail
@@ -419,6 +480,23 @@
                                 }
                             }.bind(this);
                         },
+
+                        componentDidMount: function() {
+                            this.timeout = null;
+                        },
+
+                        componentWillUnmount: function() {
+                            this.stopTimeout();
+                        },
+
+                        stopTimeout: function() {
+                            this.timeout = $timeout.cancel(this.timeout);
+                        },
+
+                        close: function() {
+                            this.timeout = $timeout(closeActionsMenu, 2000, false);
+                        },
+
                         render: function() {
                             var highlights = this.props.highlights;
                             var highlightsById = this.props.highlightsById || {};
@@ -453,68 +531,50 @@
 
                             return React.createElement(
                                 'ul',
-                                {className: 'dropdown dropdown-menu highlights-list-menu open'},
+                                {
+                                    className: 'dropdown dropdown-menu highlights-list-menu open',
+                                    onMouseEnter: this.stopTimeout,
+                                    onMouseLeave: this.close
+                                },
                                 items.concat(highlights.map(createHighlight))
                             );
                         }
                     });
 
                     var HighlightsInfo = React.createClass({
-
-                        getInitialState: function() {
-                            return {open: false};
-                        },
-
-                        open: function() {
-                            $timeout.cancel(this.closeTimeout);
-                            this.closeTimeout = null;
-                            if (!this.state.open) {
-                                this.setState({open: true});
+                        toggle: function(event) {
+                            if (event) {
+                                event.stopPropagation();
                             }
+
+                            closeActionsMenu();
+                            this.renderDropdown();
                         },
 
-                        close: function() {
-                            if (this.state.open && !this.closeTimeout) {
-                                this.closeTimeout = $timeout(function() {
-                                    this.closeTimeout = null;
-                                    this.setState({open: false});
-                                }.bind(this), 200, false);
-                            }
-                        },
-
-                        componentWillUnmount: function() {
-                            $timeout.cancel(this.closeTimeout);
-                            this.closeTimeout = null;
-                        },
-
-                        stopClick: function(event) {
-                            event.stopPropagation();
-                        },
-
-                        render: function() {
-                            var item = this.props.item.archive_item || this.props.item;
-
-                            var highlights = [];
+                        getHighlights: function() {
                             if (isCheckAllowed(this.props.item)) {
                                 if (this.props.item.archive_item && this.props.item.archive_item.highlights &&
                                     this.props.item.archive_item.highlights.length) {
-                                    highlights = this.props.item.archive_item.highlights;
+                                    return this.props.item.archive_item.highlights;
                                 } else {
-                                    highlights = this.props.item.highlights || [];
+                                    return this.props.item.highlights || [];
                                 }
                             }
 
+                            return [];
+                        },
+
+                        render: function() {
+                            var highlights = this.getHighlights();
                             return React.createElement(
                                 'div',
                                 {
                                     className: 'highlights-box',
-                                    onMouseEnter: this.open,
-                                    onMouseLeave: this.close,
-                                    onClick: this.stopClick
+                                    onClick: this.toggle
                                 },
                                 highlights.length ? React.createElement(
                                     'div',
-                                    {className: 'highlights-list dropdown' + (this.state.open ? ' open' : '')},
+                                    {className: 'highlights-list dropdown'},
                                     React.createElement(
                                         'button',
                                         {className: 'dropdown-toggle'},
@@ -524,15 +584,22 @@
                                                 'icon-multi-star red': highlights.length > 1
                                             })
                                         })
-
-                                    ),
-                                    this.state.open ? React.createElement(HighlightsList, {
-                                        item: item,
-                                        highlights: highlights,
-                                        highlightsById: this.props.highlightsById
-                                    }) : null
+                                    )
                                 ) : null
                             );
+                        },
+
+                        renderDropdown: function() {
+                            var elem = React.createElement(HighlightsList, {
+                                item: this.props.item,
+                                highlights: this.getHighlights(),
+                                highlightsById: this.props.highlightsById
+                            });
+
+                            var icon = ReactDOM.findDOMNode(this)
+                                .getElementsByClassName('red')[0];
+
+                            renderToBody(elem, icon);
                         }
                     });
 
@@ -728,59 +795,14 @@
                     var ActionsMenu = React.createClass({
                         toggle: function(event) {
                             this.stopEvent(event);
-                            this.setState({open: !this.state.open}, function() {
-                                closeActionsMenu();
-                                if (this.state.open) {
-                                    // first render it somewhere not visible
-                                    var menuComponent = ReactDOM.render(this.renderMenu({top: 0, left: -500}), menuHolderElem);
-                                    // get its size
-                                    var menuElem = ReactDOM.findDOMNode(menuComponent);
-                                    var mainElem = document.getElementById('main-container');
-                                    var menuRect = menuElem.getBoundingClientRect();
-                                    var width = menuRect.width;
-                                    var height = menuRect.height;
-                                    var ACTION_MENU_FROM_TOP = 150;
-
-                                    // get button position
-                                    var iconRect = ReactDOM.findDOMNode(this)
-                                        .getElementsByClassName('icon-dots-vertical')[0]
-                                        .getBoundingClientRect();
-
-                                    // compute menu position
-                                    var top = iconRect.top + iconRect.height;
-                                    var left = iconRect.left + iconRect.width - width;
-
-                                    // menu goes off on the right side
-                                    if (left + width + 5 > mainElem.clientWidth) {
-                                        left -= width;
-                                        left += iconRect.width;
-                                    }
-
-                                    // menu goes off on the left side
-                                    if (left - 48 < 0) { // 48 is left bar width
-                                        left = iconRect.left;
-                                    }
-
-                                    // menu goes out on the bottom side
-                                    if (top + height + 35 > mainElem.clientHeight) { // 30 is bottom bar
-                                        top -= height;
-                                        top -= iconRect.height;
-                                        top -= 16; // menu margin
-                                        top = top < ACTION_MENU_FROM_TOP ? ACTION_MENU_FROM_TOP : top; // 150 = top-menu + search bar
-                                    }
-
-                                    menuElem.style.left = left.toFixed() + 'px';
-                                    menuElem.style.top = top.toFixed() + 'px';
-                                }
-                            });
+                            closeActionsMenu();
+                            var icon = ReactDOM.findDOMNode(this)
+                                .getElementsByClassName('icon-dots-vertical')[0];
+                            renderToBody(this.renderMenu(), icon);
                         },
 
                         stopEvent: function(event) {
                             event.stopPropagation();
-                        },
-
-                        getInitialState: function() {
-                            return {open: false};
                         },
 
                         getActions: function() {
@@ -809,7 +831,7 @@
                             {_id: 'corrections', label: gettext('Corrections')}
                         ],
 
-                        renderMenu: function(pos) {
+                        renderMenu: function() {
                             var menu = [];
                             var item = this.props.item;
 
@@ -842,7 +864,7 @@
                                 'ul',
                                 {
                                     className: 'dropdown dropdown-menu more-activity-menu open',
-                                    style: {top: pos.top, left: pos.left, display: 'block', minWidth: 200}
+                                    style: {display: 'block', minWidth: 200}
                                 },
                                 menu
                             );
@@ -1286,11 +1308,15 @@
                                         'list-view',
                                         this.state.view + '-view',
                                         {'list-without-items': isEmpty}
-                                    )
+                                    ),
+                                    onClick: this.closeActionsMenu,
                                 },
                                 isEmpty ?
-                                    React.createElement('li', {}, gettextCatalog.getString('There are currently no items')) :
-                                    this.state.itemsList.map(createItem)
+                                    React.createElement(
+                                        'li',
+                                        {onClick: this.closeActionsMenu},
+                                        gettextCatalog.getString('There are currently no items')
+                                    ) : this.state.itemsList.map(createItem)
                             );
                         }
                     });
