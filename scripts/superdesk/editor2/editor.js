@@ -834,9 +834,8 @@ angular.module('superdesk.editor2', [
                         }
                     });
                 }
-                var debouncedInit = _.debounce(init, 250);
                 // init editor based on model
-                debouncedInit();
+                init();
                 // when the model changes from outside, updates the editor
                 scope.$watch(function() {
                     return ngModel.$viewValue;
@@ -848,10 +847,10 @@ angular.module('superdesk.editor2', [
                             if (!_.some(controller.blocks, function(block) {
                                 return block.loading;
                             })) {
-                                debouncedInit();
+                                init();
                             }
                         }
-                    }, 0, false);
+                    }, 250, false);
                 });
             }
         };
