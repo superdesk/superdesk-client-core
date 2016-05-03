@@ -19,14 +19,14 @@ function($window) {
             // initialize state
             vm.updateState();
             // listen for update state signals
-            var listener = scope.$parent.$on('sdAddContent::updateState', function(signal, event, editorElem) {
+            var unbindListener = scope.$parent.$on('sdAddContent::updateState', function(signal, event, editorElem) {
                 vm.updateState(event, editorElem);
             });
             // update on resize
             angular.element($window).on('resize', vm.updateState);
             scope.$on('$destroy', function() {
                 angular.element($window).off('resize', vm.updateState);
-                listener();
+                unbindListener();
             });
         }
     };
