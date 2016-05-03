@@ -1359,6 +1359,7 @@ angular.module('superdesk.editor2', [
                             loading: true,
                             association: picture
                         }, true);
+                        indexWhereToAddBlock += 1;
                         renditions.ingest(picture).then(function(picture) {
                             editor.generateImageTag(picture).then(function(imgTag) {
                                 angular.extend(block, {
@@ -1368,7 +1369,7 @@ angular.module('superdesk.editor2', [
                                 });
                             }).then(function() {
                                 // add new text block for the remaining text
-                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock++, {
+                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
                                     body: textThatWasAfterCaret
                                 }, true);
                             });
