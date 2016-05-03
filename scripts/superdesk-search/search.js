@@ -110,6 +110,22 @@
         this.toggleSortDir = toggleSortDir;
 
         /**
+         * Converts the integer fields to string
+         * within a given search
+         *
+         * @return {Object} the updated search object
+         */
+        this.setFilters = function(search) {
+            _.forOwn(search, function(value, key) {
+                if (_.contains(['priority', 'urgency'], key)) {
+                    search[key] = JSON.stringify(value);
+                }
+            });
+
+            return search;
+        };
+
+        /**
          * Single query instance
          */
         function Query(params) {
@@ -1929,8 +1945,8 @@
         }])
 
         .directive('sdSavedSearches', ['$rootScope', 'api', 'session', 'modal', 'notify', 'gettext', 'asset',
-                                       '$location', 'desks', 'privileges',
-        function($rootScope, api, session, modal, notify, gettext, asset, $location, desks, privileges) {
+                                       '$location', 'desks', 'privileges', 'search',
+        function($rootScope, api, session, modal, notify, gettext, asset, $location, desks, privileges, search) {
             return {
                 templateUrl: asset.templateUrl('superdesk-search/views/saved-searches.html'),
                 scope: {},
@@ -1955,11 +1971,12 @@
                             scope.userSavedSearches.length = 0;
                             scope.globalSavedSearches.length = 0;
                             scope.searches = searches._items;
-                            _.forEach(scope.searches, function(search) {
-                                if (search.user === session.identity._id) {
-                                    scope.userSavedSearches.push(setFilters(search));
-                                } else if (search.is_global) {
-                                    scope.globalSavedSearches.push(setFilters(search));
+                            _.forEach(scope.searches, function(savedSearch) {
+                                savedSearch.filter.query = search.setFilters(savedSearch.filter.query);
+                                if (savedSearch.user === session.identity._id) {
+                                    scope.userSavedSearches.push(savedSearch);
+                                } else if (savedSearch.is_global) {
+                                    scope.globalSavedSearches.push(savedSearch);
                                 }
                             });
                             originalUserSavedSearches = _.clone(scope.userSavedSearches);
@@ -1973,22 +1990,6 @@
                         scope.selected = search;
                         $location.search(search.filter.query);
                     };
-
-                    /**
-                     * Converts the integer fields to string
-                     * within a given search
-                     *
-                     * @return {Object} the updated search object
-                     */
-                    function setFilters(search) {
-                        _.forOwn(search.filter.query, function(value, key) {
-                            if (_.contains(['priority', 'urgency'], key)) {
-                                search.filter.query[key] = JSON.stringify(value);
-                            }
-                        });
-
-                        return search;
-                    }
 
                     scope.edit = function(search) {
                         scope.select(search);
