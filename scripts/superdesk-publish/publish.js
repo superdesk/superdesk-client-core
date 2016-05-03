@@ -47,8 +47,8 @@
         $scope.showFilterConditions  = Boolean(user_privileges.publish_filters);
     }
 
-    AdminPublishSettingsService.$inject = ['api', '$q'];
-    function AdminPublishSettingsService(api, $q) {
+    AdminPublishSettingsService.$inject = ['api', '$q', '$filter'];
+    function AdminPublishSettingsService(api, $q, $filter) {
         var _fetch = function(endpoint, criteria) {
             return api[endpoint].query(criteria);
         };
@@ -390,11 +390,11 @@
 
     SubscribersDirective.$inject = [
         'gettext', 'notify', 'api', 'adminPublishSettingsService', 'modal',
-        'metadata', 'contentFilters', '$q', '$filter'
+        'metadata', 'contentFilters', '$q', '$filter', 'products'
     ];
     function SubscribersDirective(
         gettext, notify, api, adminPublishSettingsService,
-        modal, metadata, contentFilters, $q, $filter) {
+        modal, metadata, contentFilters, $q, $filter, products) {
 
         return {
             templateUrl: 'scripts/superdesk-publish/views/subscribers.html',
@@ -433,10 +433,10 @@
                  * @return {*}
                  */
                 var fetchProducts = function() {
-                    return api.query('products').then(function(products) {
-                        $scope.availableProducts = products._items;
+                    return products.fetchAllProducts().then(function(items) {
+                        $scope.availableProducts = items;
                         $scope.productLookup = [];
-                        _.each(products._items, function(item) {
+                        _.each(items, function(item) {
                             $scope.productLookup[item._id] = item;
                         });
                     });
@@ -565,6 +565,7 @@
                                 $scope.subscriber.products.push($scope.productLookup[p]);
                             });
                         }
+                        $scope.subscriber.products = $filter('sortByName')($scope.subscriber.products);
 
                         $scope.subscriber.global_filters =  $scope.origSubscriber.global_filters || {};
 
