@@ -19,11 +19,15 @@ function($window) {
             // initialize state
             vm.updateState();
             // listen for update state signals
-            scope.$parent.$on('sdAddContent::updateState', function(signal, event, editorElem) {
+            var unbindListener = scope.$parent.$on('sdAddContent::updateState', function(signal, event, editorElem) {
                 vm.updateState(event, editorElem);
             });
             // update on resize
             angular.element($window).on('resize', vm.updateState);
+            scope.$on('$destroy', function() {
+                angular.element($window).off('resize', vm.updateState);
+                unbindListener();
+            });
         }
     };
 }]);
@@ -51,7 +55,12 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout) {
             if (!angular.element(editorElem).is(':focus') && !elementContainsEventTarget()) {
                 return vm.hide();
             }
-            var currentParagraph = angular.element(scope.medium.getSelectedParentElement());
+            var currentParagraph;
+            try {
+                currentParagraph = angular.element(scope.medium.getSelectedParentElement());
+            } catch (e) {
+                return;
+            }
             var position = currentParagraph.position().top;
             // move the (+) button at the caret position
             elementHolder.css('top', position > 0 ? position : 0);
@@ -109,12 +118,14 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout) {
                 var indexWhereToAddNewBlock = vm.sdEditorCtrl.getBlockPosition(vm.textBlockCtrl.block) + 1;
                 // cut the text that is after the caret in the block and save it in order to add it after the embed later
                 var textThatWasAfterCaret = vm.textBlockCtrl.extractEndOfBlock().innerHTML;
-                // save the blocks (with removed leading text)
-                vm.textBlockCtrl.updateModel();
-                // add new text block for the remaining text
-                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddNewBlock, {
-                    body: textThatWasAfterCaret
-                }, true);
+                if (textThatWasAfterCaret && textThatWasAfterCaret !== '') {
+                    // save the blocks (with removed leading text)
+                    vm.textBlockCtrl.updateModel();
+                    // add new text block for the remaining text
+                    vm.sdEditorCtrl.insertNewBlock(indexWhereToAddNewBlock, {
+                        body: textThatWasAfterCaret
+                    }, true);
+                }
                 // show the add-embed form
                 vm.textBlockCtrl.block.showAndFocusLowerAddAnEmbedBox();
             },

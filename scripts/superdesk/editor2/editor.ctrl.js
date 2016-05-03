@@ -7,7 +7,8 @@ SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$ele
 function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) {
     var vm = this;
     function Block(attrs) {
-        angular.extend(this, {
+        var self = this;
+        angular.extend(self, {
             body: attrs && attrs.body || '',
             loading: attrs && attrs.loading || false,
             caption: attrs && attrs.caption || undefined,
@@ -16,7 +17,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
             association: attrs && attrs.association || undefined,
             lowerAddEmbedIsExtented: undefined,
             showAndFocusLowerAddAnEmbedBox: function() {
-                this.lowerAddEmbedIsExtented = true;
+                self.lowerAddEmbedIsExtented = true;
             },
         });
     }
@@ -163,6 +164,10 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
         },
         serializeBlock: function(blocks) {
             blocks = angular.isDefined(blocks) ? blocks : vm.blocks;
+            // in case blocks are not ready
+            if (blocks.length === 0) {
+                return '';
+            }
             var new_body = '';
             if (vm.config.multiBlockEdition) {
                 blocks.forEach(function(block) {
