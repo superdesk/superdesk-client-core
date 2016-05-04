@@ -1,4 +1,8 @@
 .template-card {
+    .card-box__header--dark {
+        background-color: #747c87;
+    }
+
     .card-box__content {
         min-height: 120px; /* should be big enough to fit in dropdown menu */
     }
@@ -11,5 +15,14 @@
         text-overflow: ellipsis;
         overflow: hidden;
         &:first-of-type { margin-right: 3px; }
+    }
+}
+
+.header {
+    .sortbar {
+        .lab { margin-top: -2px; }
+        margin: 3px 10px 0 0;
+        padding: 0 5px 0 0;
+        border-right: 2px dotted #bcbcbc;
     }
 }
