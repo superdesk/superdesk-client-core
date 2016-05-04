@@ -6,13 +6,11 @@
          * Typeahead direcitve
          *
          * Usage:
-         *  <div sd-typeahead items="subjects" term="subjectTerm" search="searchSubjects(term)" select="selectSubject(item)">
-         *      <ul>
-         *          <li typeahead-item="s" ng-repeat="s in subjects">
-         *              {{s.term}}
-         *          </li>
-         *      </ul>
-         *  </div>
+         *  <ul sd-typeahead items="subjects" term="subjectTerm" search="searchSubjects(term)" select="selectSubject(item)">
+         *      <li typeahead-item="s" ng-repeat="s in subjects">
+         *          {{s.term}}
+         *      </li>
+         *  </ul>
          *
          * Params:
          * @scope {Object} items - choice list
