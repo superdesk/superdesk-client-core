@@ -355,12 +355,12 @@
                     var MediaInfo = function(props) {
                         var item = props.item;
                         var meta = [];
-
-                        if (props.ingestProvider) {
+                        var source = item.source ? item.source :
+                            (props.ingestProvider ? props.ingestProvider.source : '');
+                        if (source) {
                             meta.push(
                                 React.createElement('dt', {key: 1}, gettextCatalog.getString('source')),
-                                React.createElement('dd', {key: 2, className: 'provider'}, props.ingestProvider.name ||
-                                    props.ingestProvider.source)
+                                React.createElement('dd', {key: 2, className: 'provider'}, source)
                             );
                         }
 
@@ -719,7 +719,7 @@
                         var flags = item.flags || {};
                         var anpa = item.anpa_category || {};
                         var broadcast = item.broadcast || {};
-                        var provider = props.ingestProvider || {name: null};
+                        var provider = item.source ? item.source : (props.ingestProvider ? props.ingestProvider.source: '');
                         return React.createElement(
                             'div',
                             {className: 'item-info'},
@@ -774,7 +774,7 @@
                                 anpa.name ?
                                     React.createElement('div', {className: 'category'}, anpa.name) :
                                     null,
-                                React.createElement('span', {className: 'provider'}, provider.name),
+                                React.createElement('span', {className: 'provider'}, provider),
                                 item.is_spiked ?
                                     React.createElement('div', {className: 'expires'},
                                         gettext('expires') + ' ' + datetime.shortFormat(item.expiry)) :
