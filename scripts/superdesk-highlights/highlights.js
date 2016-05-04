@@ -134,6 +134,31 @@
             return !!privileges.privileges.mark_for_highlights;
         };
 
+        /**
+         * Checks if the hourDifference falls in the
+         * defined range in highlight
+         *
+         * @param {string} highlight id
+         * @param {int} hourDifference
+         * @return {bool}
+         */
+        service.isInDateRange =  function(highlight, hourDifference) {
+            if (highlight) {
+                if (highlight.auto_insert === 'now/d') {
+                    return hourDifference <= 24;
+                } else if (highlight.auto_insert === 'now/w') {
+                    return hourDifference <= 168; //24*7
+                } else if (_.startsWith(highlight.auto_insert, 'now-')) {
+                    var trimmedValue = _.trimLeft(highlight.auto_insert, 'now-');
+                    trimmedValue = _.trimRight(highlight.auto_insert, 'h');
+                    return hourDifference <= _.parseInt(trimmedValue);
+                }
+            }
+
+            // If non matches then return false
+            return false;
+        };
+
         return service;
     }
 
