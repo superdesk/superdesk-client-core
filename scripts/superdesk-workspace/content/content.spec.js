@@ -127,5 +127,28 @@ describe('superdesk.workspace.content', function() {
                 task: {desk: 'sports', stage: 'inbox', user: 'foo'}
             });
         }));
+
+        it('can get schema for content type', inject(function(content) {
+            var schema = content.schema();
+            expect(schema.headline).toBeTruthy();
+            expect(schema.slugline).toBeTruthy();
+            expect(schema.body_html).toBeTruthy();
+
+            var contentType = {schema: {foo: 1}};
+            schema = content.schema(contentType);
+            expect(schema.headline).toBeFalsy();
+            expect(schema.foo).toBeTruthy();
+            expect(schema).not.toBe(content.schema(contentType)); // check it is a copy
+        }));
+
+        it('can get editor config for content type', inject(function(content) {
+            var editor = content.editor();
+            expect(editor.slugline.order).toBe(1);
+
+            var contentType = {editor: {foo: 2}};
+            editor = content.editor(contentType);
+            expect(editor.foo).toBe(2);
+            expect(editor.slugline).toBeFalsy();
+        }));
     });
 });

@@ -64,61 +64,6 @@
         resend: false
     });
 
-    // http://docs.python-cerberus.org/en/stable/usage.html
-    var DEFAULT_SCHEMA = Object.freeze({
-        slugline: {maxlength: 24},
-        relatedItems: {},
-        genre: {},
-        anpa_take_key: {},
-        place: {},
-        priority: {},
-        urgency: {},
-        anpa_category: {},
-        subject: {},
-        company_codes: {},
-        ednote: {},
-        headline: {maxlength: 64},
-        sms: {maxlength: 160},
-        abstract: {maxlength: 160},
-        body_html: {},
-        byline: {},
-        dateline: {},
-        located: {},
-        sign_off: {},
-        footer: {},
-        body_footer: {},
-        media: {},
-        media_description: {}
-    });
-
-    var DEFAULT_EDITOR = Object.freeze({
-        slugline: {order: 1, sdWidth: 'full'},
-        genre: {order: 2, sdWidth: 'half'},
-        anpa_take_key: {order: 3, sdWidth: 'half'},
-        place: {order: 4, sdWidth: 'half'},
-        priority: {order: 5, sdWidth: 'quarter'},
-        urgency: {order: 6, sdWidth: 'quarter'},
-        anpa_category: {order: 7, sdWidth: 'full'},
-        subject: {order: 8, sdWidth: 'full'},
-        company_codes: {order: 9, sdWidth: 'full'},
-        ednote: {order: 10, sdWidth: 'full'},
-        headline: {order: 11, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
-        sms: {order: 12},
-        abstract: {order: 13, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
-        byline: {order: 14},
-        dateline: {order: 15},
-        body_html: {
-            order: 16,
-            formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'removeFormat']
-        },
-        footer: {order: 17},
-        body_footer: {order: 18},
-        sign_off: {order: 19},
-        located: {},
-        media: {},
-        media_description: {}
-    });
-
     /**
      * Extend content of dest
      *
@@ -1077,22 +1022,17 @@
                     }
                 }, true);
 
-                $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
-                $scope.origItem.sign_off = $scope.origItem.sign_off || $scope.origItem.version_creator;
-
                 $scope.$watch('item.flags', function(newValue, oldValue) {
                     if (newValue !== oldValue) {
                         $scope.item.flags = _.clone($scope.origItem.flags);
                         $scope.item.flags = newValue;
                         $scope.origItem.flags = oldValue;
                         $scope.dirty = true;
-
-                        if (newValue.marked_for_sms && !oldValue.marked_for_sms &&
-                            !$scope.item.sms_message && $scope.item.headline) {
-                            $scope.item.sms_message = $scope.item.headline;
-                        }
                     }
                 }, true);
+
+                $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
+                $scope.origItem.sign_off = $scope.origItem.sign_off || $scope.origItem.version_creator;
 
                 $scope.fullPreview = false;
                 $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
@@ -2613,6 +2553,14 @@
                     });
                 };
 
+                scope.$watch('item.flags.marked_for_sms', function(isMarked) {
+                    if (isMarked) {
+                        scope.item.sms_message = scope.item.headline || '';
+                    } else {
+                        scope.item.sms_message = '';
+                    }
+                });
+
                 scope.extra = {}; // placeholder for fields not part of item
             }
         };
@@ -2960,12 +2908,12 @@
                             content.getType(item.profile)
                                 .then(function(type) {
                                     scope.contentType = type;
-                                    scope.editor = type.editor || DEFAULT_EDITOR;
-                                    scope.schema = type.schema || DEFAULT_SCHEMA;
+                                    scope.editor = content.editor(type);
+                                    scope.schema = content.schema(type);
                                 });
                         } else {
-                            scope.schema = angular.extend({}, DEFAULT_SCHEMA);
-                            scope.editor = angular.extend({}, DEFAULT_EDITOR);
+                            scope.schema = content.schema();
+                            scope.editor = content.editor();
                         }
 
                         // Related Items
