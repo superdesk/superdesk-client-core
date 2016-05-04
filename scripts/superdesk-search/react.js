@@ -412,7 +412,13 @@
                      * Type icon component
                      */
                     var TypeIcon = function(props) {
-                        return React.createElement('i', {className: 'filetype-icon-' + props.type});
+                        if (props.package_type) {
+                            return React.createElement('i', {className: 'filetype-icon-takes-pack'});
+                        } else if (props.type === 'composite' && props.highlight) {
+                            return React.createElement('i', {className: 'filetype-icon-highlight-pack'});
+                        } else {
+                            return React.createElement('i', {className: 'filetype-icon-' + props.type});
+                        }
                     };
 
                     var GridTypeIcon = function(props) {
@@ -445,7 +451,12 @@
                                 {className: 'list-field type-icon', onMouseEnter: this.setHover, onMouseLeave: this.unsetHover},
                                 showSelect ?
                                     React.createElement(SelectBox, {item: this.props.item, onMultiSelect: this.props.onMultiSelect}) :
-                                    React.createElement(TypeIcon, {type: this.props.item.type})
+                                    React.createElement(
+                                        TypeIcon,
+                                        {type: this.props.item.type,
+                                        package_type: this.props.item.package_type,
+                                        highlight: this.props.item.highlight}
+                                    )
                             );
                         }
                     });

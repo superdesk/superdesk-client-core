@@ -83,8 +83,7 @@ describe('authoring', function() {
         expect(authoring.edit_correct_button.isDisplayed()).toBe(true);
         expect(authoring.edit_kill_button.isDisplayed()).toBe(true);
         authoring.close();
-        monitoring.filterAction('text');
-        monitoring.filterAction('composite');
+        monitoring.filterAction('takesPackage');
         expect(monitoring.getTextItem(5, 0)).toBe('item6');
         monitoring.actionOnItem('Open', 5, 0);
         expect(authoring.edit_correct_button.isDisplayed()).toBe(false);
@@ -147,7 +146,7 @@ describe('authoring', function() {
         expect(authoring.save_button.getAttribute('disabled')).toBe(null);
         authoring.save();
         authoring.publish();
-        monitoring.filterAction('composite');
+        monitoring.filterAction('takesPackage');
         monitoring.actionOnItem('Open', 5, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(1);
@@ -157,7 +156,7 @@ describe('authoring', function() {
         transmissionDetails.get(0).click();
         expect(element(by.className('modal-body')).getText()).toMatch(/Kids Helpline*/);
         element(by.css('[ng-click="hideFormattedItem()"]')).click();
-        monitoring.filterAction('composite');
+        monitoring.filterAction('takesPackage');
         authoring.close();
 
         //view item history spike-unspike operations
