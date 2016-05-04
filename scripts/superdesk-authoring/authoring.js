@@ -1051,10 +1051,11 @@
         'archiveService',
         'confirm',
         'reloadService',
-        '$rootScope'
+        '$rootScope',
+        'config'
     ];
     function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
-            privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope) {
+        privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope, config) {
         return {
             link: function($scope, elem, attrs) {
                 var _closing;
@@ -1230,7 +1231,7 @@
                  * @return {string} if the values are invalid then returns appropriate error message.
                  *         Otherwise empty string.
                  */
-                function validateTimestamp(datePartOfTS, timePartOfTS, timestamp, fieldName) {
+                function validateTimestamp(datePartOfTS, timePartOfTS, timestamp, timezone, fieldName) {
                     var errorMessage = '';
 
                     if (datePartOfTS && !timePartOfTS) {
@@ -1240,13 +1241,12 @@
                     }
 
                     if (errorMessage === '' && timestamp) {
-                        var schedule = new Date(timestamp);
+                        var schedule = moment.tz(timestamp, timezone || config.defaultTimezone);
+                        var now = moment();
 
-                        if (!_.isDate(schedule)) {
+                        if (!schedule.isValid()) {
                             errorMessage = gettext(fieldName + ' is not a valid date!');
-                        } else if (!schedule.getTime()) {
-                            errorMessage = gettext(fieldName + ' time is invalid!');
-                        } else if (schedule < _.now()) {
+                        } else if (schedule.isBefore(now)) {
                             if (fieldName !== 'Embargo' || $scope._isInProductionStates) {
                                 errorMessage = gettext(fieldName + ' cannot be earlier than now!');
                             }
@@ -1269,7 +1269,8 @@
 
                     var errorMessage;
                     if (item.embargo_date || item.embargo_time) {
-                        errorMessage = validateTimestamp(item.embargo_date, item.embargo_time, item.embargo, 'Embargo');
+                        errorMessage = validateTimestamp(item.embargo_date, item.embargo_time, item.embargo,
+                            item.schedule_settings ? item.schedule_settings.time_zone : null, 'Embargo');
                         if (errorMessage !== '') {
                             notify.error(errorMessage);
                             return false;
@@ -1282,7 +1283,7 @@
                         }
 
                         errorMessage = validateTimestamp(item.publish_schedule_date, item.publish_schedule_time,
-                            item.publish_schedule, 'Publish Schedule');
+                            item.publish_schedule, item.schedule_settings ? item.schedule_settings.time_zone : null, 'Publish Schedule');
                         if (errorMessage !== '') {
                             notify.error(errorMessage);
                             return false;
