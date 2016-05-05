@@ -594,7 +594,7 @@ angular.module('superdesk.editor2', [
             }
         };
     }])
-    .directive('sdTextEditor', ['$timeout', function ($timeout) {
+    .directive('sdTextEditor', ['$timeout', 'lodash', function ($timeout, _) {
         return {
             scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '='},
             require: ['sdTextEditor', 'ngModel'],
@@ -606,24 +606,32 @@ angular.module('superdesk.editor2', [
                 var controller = controllers[0];
                 var ngModel = controllers[1];
                 function init() {
-                    if (controller.config.multiBlockEdition) {
-                        controller.initEditorWithMultipleBlock(ngModel);
-                    } else {
-                        controller.initEditorWithOneBlock(ngModel);
-                    }
+                    scope.$applyAsync(function() {
+                        if (controller.config.multiBlockEdition) {
+                            controller.initEditorWithMultipleBlock(ngModel);
+                        } else {
+                            controller.initEditorWithOneBlock(ngModel);
+                        }
+                    });
                 }
+                // init editor based on model
+                init();
                 // when the model changes from outside, updates the editor
                 scope.$watch(function() {
                     return ngModel.$viewValue;
                 }, function() {
-                    scope.$applyAsync(function() {
+                    $timeout(function() {
                         // if controller is ready and the value has changed
                         if (controller.blocks.length > 0 && ngModel.$viewValue && ngModel.$viewValue !== controller.serializeBlock()) {
-                            init();
+                            // if blocks are not loading
+                            if (!_.some(controller.blocks, function(block) {
+                                return block.loading;
+                            })) {
+                                init();
+                            }
                         }
-                    });
+                    }, 250, false);
                 });
-                init();
             }
         };
     }])
@@ -1146,6 +1154,11 @@ angular.module('superdesk.editor2', [
                             association: picture
                         }, true);
                         indexWhereToAddBlock += 1;
+                        // add new text block for the remaining text
+                        vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                            body: textThatWasAfterCaret
+                        }, true);
+                        // load the picture and update the block
                         renditions.ingest(picture).then(function(picture) {
                             editor.generateImageTag(picture).then(function(imgTag) {
                                 angular.extend(block, {
@@ -1153,11 +1166,6 @@ angular.module('superdesk.editor2', [
                                     association: picture,
                                     loading: false
                                 });
-                            }).then(function() {
-                                // add new text block for the remaining text
-                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                                    body: textThatWasAfterCaret
-                                }, true);
                             });
                         });
                     }
