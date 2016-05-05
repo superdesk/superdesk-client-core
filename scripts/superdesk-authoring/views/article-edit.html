@@ -22,6 +22,7 @@
         <span class="state-label not-for-sms" ng-show="item.flags.marked_for_sms" translate>Don't Send Sms</span>
         <span class="state-label for-sms" ng-show="!item.flags.marked_for_sms" translate>Send Sms</span>
     </label>
+    <span ng-if="item.flags.marked_for_sms" sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
     <div ng-if="item.flags.marked_for_sms">
         <label translate>SMS Message</label>
         <input type="text"
