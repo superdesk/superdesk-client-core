@@ -1,8 +1,8 @@
 (function() {
 'use strict';
 
-angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window',
-function($window) {
+angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window', 'config',
+function($window, config) {
     return {
         // the scope is not isolated because we require the medium instance
         controller: AddContentCtrl,
@@ -14,7 +14,8 @@ function($window) {
             var vm = ctrls[0];
             angular.extend(vm, {
                 textBlockCtrl: ctrls[1],
-                sdEditorCtrl: ctrls[2]
+                sdEditorCtrl: ctrls[2],
+                config: config.editor || {embeds: 1} // should be on by default
             });
             // initialize state
             vm.updateState();

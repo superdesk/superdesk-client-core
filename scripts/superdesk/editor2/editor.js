@@ -14,89 +14,6 @@
 var TYPING_CLASS = 'typing';
 
 /**
- * Replace given dom elem with its contents
- *
- * It is like jQuery unwrap
- *
- * @param {Node} elem
- */
-function replaceSpan(elem) {
-    var parent = elem.parentNode;
-    while (elem.hasChildNodes()) {
-        parent.insertBefore(elem.childNodes.item(0), elem);
-    }
-
-    parent.removeChild(elem);
-}
-
-/**
- * Remove all elements with given className but keep its contents
- *
- * @param {Node} elem
- * @param {string} className
- * @return {Node}
- */
-function removeClass(elem, className) {
-    var node = elem.cloneNode(true);
-    var spans = node.getElementsByClassName(className);
-    while (spans.length) {
-        replaceSpan(spans.item(0));
-    }
-
-    node.normalize();
-    return node;
-}
-
-/**
- * Find text node within given node for given character offset
- *
- * This will find text node within given node that contains character on given offset
- *
- * @param {Node} node
- * @param {numeric} offset
- * @return {Object} {node: {Node}, offset: {numeric}}
- */
-function findOffsetNode(node, offset) {
-    var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
-    var currentLength;
-    var currentOffset = 0;
-    var ZERO_WIDTH_SPACE = String.fromCharCode(65279);
-    while (tree.nextNode()) {
-        tree.currentNode.textContent = tree.currentNode.textContent.replace(ZERO_WIDTH_SPACE, '');
-        currentLength = tree.currentNode.textContent.length;
-        if (currentOffset + currentLength >= offset) {
-            return {node: tree.currentNode, offset: offset - currentOffset};
-        }
-
-        currentOffset += currentLength;
-    }
-}
-
-/**
- * Find text node within given node where word is located
- *
- * It will find text type node where the whole word is located
- *
- * @param {Node} node
- * @param {Number} index
- * @param {Number} length
- * @return {Object} {node: {Node}, offset: {Number}}
- */
-function findWordNode(node, index, length) {
-    var start = findOffsetNode(node, index);
-    var end = findOffsetNode(node, index + length);
-
-    // correction for linebreaks - first node on a new line is set to
-    // linebreak text node which is not even visible in dom, maybe dom bug?
-    if (start.node !== end.node) {
-        start.node = end.node;
-        start.offset = 0;
-    }
-
-    return start;
-}
-
-/**
  * History stack
  *
  * It supports undo/redo operations
@@ -151,10 +68,8 @@ function HistoryStack(initialValue) {
     };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions'];
-function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService) {
-
-    var CLONE_CLASS = 'clone';
+EditorService.$inject = ['spellcheck', '$q', 'lodash', 'renditions', 'editorUtils'];
+function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
     this.settings = {spellcheck: true};
 
@@ -237,34 +152,18 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     };
 
     /**
-     * Remove highlighting from given scope and return its contents
-     *
-     * @param {Scope} scope
-     * @return {string}
-     */
-    this.cleanScope = function(scope) {
-        self.storeSelection(scope.node);
-        var html = clean(scope.node).innerHTML;
-        html = html.replace('\ufeff', ''); // remove rangy marker
-        scope.node.innerHTML = html;
-        self.resetSelection(scope.node);
-        return html;
-    };
-
-    /**
      * Render highlights for given scope based on settings
      *
      * @param {Scope} scope
      * @param {Scope} force force rendering manually - eg. via keyboard
      */
     this.renderScope = function(scope, force, preventStore) {
-        //self.cleanScope(scope); avoid cursor manipulation
         if (self.settings.findreplace) {
             renderFindreplace(scope.node);
         } else if (self.settings.spellcheck || force) {
             renderSpellcheck(scope.node, preventStore);
         } else {
-            removeHilites(scope.node);
+            utils.removeHilites(scope.node);
         }
     };
 
@@ -280,62 +179,16 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     };
 
     /**
-     * Remove highlight markup from given node
-     *
-     * @param {Node} node
-     * @return {Node}
-     */
-    function clean(node) {
-        return removeClass(node, HILITE_CLASS);
-    }
-
-    /**
      * Highlight find&replace matches in given node
      *
      * @param {Node} node
      */
     function renderFindreplace(node) {
-        var tokens = getFindReplaceTokens(node);
-        hilite(node, tokens, FINDREPLACE_CLASS);
-    }
-
-    /**
-     * Find all matches for current find&replace needle in given node
-     *
-     * Each match is {word: {string}, offset: {number}} in given node,
-     * we can't return nodes here because those will change when we start
-     * highlighting and offsets wouldn't match
-     *
-     * @param {Node} node
-     * @return {Array} list of matches
-     */
-    function getFindReplaceTokens(node) {
-        var tokens = [];
-        var needle = self.settings.findreplace.needle || null;
-
-        if (!needle) {
-            return tokens;
+        var tokens = utils.getFindReplaceTokens(node, self.settings);
+        utils.hilite(node, tokens, FINDREPLACE_CLASS);
+        if (self.settings.findreplace.diff) {
+            self.selectNext();
         }
-
-        var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
-        var currentOffset = 0;
-        var index, text;
-        while (tree.nextNode()) {
-            text = tree.currentNode.textContent;
-            while ((index = text.indexOf(needle)) > -1) {
-                tokens.push({
-                    word: text.substr(index, needle.length),
-                    index: currentOffset + index
-                });
-
-                text = text.substr(index + needle.length);
-                currentOffset += index + needle.length;
-            }
-
-            currentOffset += text.length;
-        }
-
-        return tokens;
     }
 
     /**
@@ -345,68 +198,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      */
     function renderSpellcheck(node, preventStore) {
         spellcheck.errors(node).then(function(tokens) {
-            hilite(node, tokens, ERROR_CLASS, preventStore);
+            utils.hilite(node, tokens, ERROR_CLASS, preventStore);
         });
-    }
-
-    /**
-     * Remove hilites node from nodes parent
-     *
-     * @param {Node} node
-     */
-    function removeHilites(node) {
-        var parentNode = node.parentNode;
-        var clones = parentNode.getElementsByClassName(CLONE_CLASS);
-        if (clones.length) {
-            parentNode.removeChild(clones.item(0));
-        }
-    }
-
-    /**
-     * Hilite all tokens within node using span with given className
-     *
-     * This first stores caret position, updates markup, and then restores the caret.
-     *
-     * @param {Node} node
-     * @param {Array} tokens
-     * @param {string} className
-     * @param {Boolean} preventStore
-     */
-    function hilite(node, tokens, className, preventStore) {
-        // remove old hilites
-        removeHilites(node);
-
-        // create a clone
-        var hiliteNode = node.cloneNode(true);
-        hiliteNode.classList.add(CLONE_CLASS);
-
-        // generate hilite markup in clone
-        tokens.forEach(function(token) {
-            hiliteToken(hiliteNode, token, className);
-        });
-
-        // render clone
-        node.parentNode.appendChild(hiliteNode);
-    }
-
-    /**
-     * Highlight single `token` via putting it into a span with given class
-     *
-     * @param {Node} node
-     * @param {Object} token
-     * @param {string} className
-     */
-    function hiliteToken(node, token, className) {
-        var start = findWordNode(node, token.index, token.word.length);
-        var replace = start.node.splitText(start.offset);
-        var span = document.createElement('span');
-        span.classList.add(className);
-        span.classList.add(HILITE_CLASS);
-        replace.splitText(token.word.length);
-        span.textContent = replace.textContent;
-        span.dataset.word = token.word;
-        span.dataset.index = token.index;
-        replace.parentNode.replaceChild(span, replace);
     }
 
     /**
@@ -421,7 +214,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             if (node.classList.contains(ACTIVE_CLASS)) {
                 node.classList.remove(ACTIVE_CLASS);
                 nodes.item((i + 1) % nodes.length).classList.add(ACTIVE_CLASS);
-                return;
+                return node;
             }
         }
 
@@ -452,10 +245,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      */
     this.replace = function(text) {
         scopes.forEach(function(scope) {
-            var nodes = scope.node.getElementsByClassName(ACTIVE_CLASS);
-            replaceNodes(nodes, text, scope);
-            self.commitScope(scope);
-        });
+            var nodes = scope.node.parentNode.getElementsByClassName(ACTIVE_CLASS);
+            this.replaceNodes(nodes, text, scope);
+            this.commitScope(scope);
+        }.bind(this));
     };
 
     /**
@@ -465,10 +258,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      */
     this.replaceAll = function(text) {
         scopes.forEach(function(scope) {
-            var nodes = scope.node.getElementsByClassName(HILITE_CLASS);
-            replaceNodes(nodes, text);
-            self.commitScope(scope);
-        });
+            var nodes = scope.node.parentNode.getElementsByClassName(HILITE_CLASS);
+            this.replaceNodes(nodes, text, scope);
+            this.commitScope(scope);
+        }.bind(this));
     };
 
     /**
@@ -481,7 +274,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      */
     this.replaceWord = function(scope, index, length, word) {
         var node = scope.node;
-        var start = findWordNode(node, index, length);
+        var start = utils.findWordNode(node, index, length);
         var characters = start.node.textContent.split('');
         characters.splice(start.offset, length, word);
         start.node.textContent = characters.join('');
@@ -493,52 +286,14 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {HTMLCollection} nodes
      * @param {string} text
      */
-    function replaceNodes(nodes, text) {
-        while (nodes.length) {
-            var node = nodes.item(0);
-            var textNode = document.createTextNode(text);
-            node.parentNode.replaceChild(textNode, node);
-            textNode.parentNode.normalize();
+    this.replaceNodes = function(nodes, text, scope) {
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            var node = nodes.item(i);
+            var word = node.dataset.word;
+            var index = parseInt(node.dataset.index, 10);
+            this.replaceWord(scope, index, word.length, text);
         }
-    }
-
-    /**
-     * Store current anchor position within given node
-     */
-    this.storeSelection = function storeSelection() {
-        self.selection = window.rangy ? window.rangy.saveSelection() : null;
     };
-
-    /**
-     * Reset stored anchor position in given node
-     */
-    this.resetSelection = function resetSelection(node) {
-        if (self.selection) {
-            window.rangy.restoreSelection(self.selection);
-            self.selection = null;
-        }
-
-        clearRangy(node);
-    };
-
-    /**
-     * Remove all rangy stored selections from given node
-     *
-     * @param {Node} node
-     * @return {Node}
-     */
-    function clearRangy(node) {
-        var spans = node.getElementsByClassName('rangySelectionBoundary');
-        while (spans.length) {
-            var span = spans.item(0);
-            span.parentNode.removeChild(span);
-            if (span.parentNode.normalize) {
-                span.parentNode.normalize();
-            }
-        }
-
-        return node;
-    }
 
     /**
      * Update settings
@@ -572,7 +327,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     this.commitScope = function(scope) {
-        var nodeValue = clearRangy(clean(scope.node)).innerHTML;
+        var nodeValue = scope.node.innerHTML;
         if (nodeValue !== scope.model.$viewValue) {
             scope.model.$setViewValue(nodeValue);
             scope.history.add(scope.model.$viewValue);
@@ -616,6 +371,30 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             scope.model.$setViewValue(val);
         }
     }
+
+    /**
+     * Returns the cleaned node text
+     *
+     * @return {string}
+     */
+    this.getNodeText = function(scope) {
+        return scope.node.innerHTML;
+    };
+
+    /**
+     * Get active node text
+     *
+     * @return {string}
+     */
+    this.getActiveText = function() {
+        var active;
+        scopes.forEach(function(scope) {
+            var nodes = scope.node.parentNode.getElementsByClassName(ACTIVE_CLASS);
+            active = nodes.length ? nodes.item(0) : active;
+        });
+
+        return active ? active.textContent : null;
+    };
 
     this.generateImageTag = function(data) {
         var url = data.url, altText = data.altText;
@@ -740,6 +519,7 @@ angular.module('superdesk.editor2', [
         'superdesk.editor2.embed',
         'superdesk.editor2.content',
         'superdesk.editor.spellcheck',
+        'superdesk.editor.utils',
         'superdesk.authoring',
         'angular-embed'
     ])
@@ -826,27 +606,24 @@ angular.module('superdesk.editor2', [
                 var controller = controllers[0];
                 var ngModel = controllers[1];
                 function init() {
-                    $timeout(function() {
-                        if (controller.config.multiBlockEdition) {
-                            controller.initEditorWithMultipleBlock(ngModel);
-                        } else {
-                            controller.initEditorWithOneBlock(ngModel);
-                        }
-                    });
+                    if (controller.config.multiBlockEdition) {
+                        controller.initEditorWithMultipleBlock(ngModel);
+                    } else {
+                        controller.initEditorWithOneBlock(ngModel);
+                    }
                 }
-                // init editor based on model
-                init();
                 // when the model changes from outside, updates the editor
                 scope.$watch(function() {
                     return ngModel.$viewValue;
                 }, function() {
-                    $timeout(function() {
+                    scope.$applyAsync(function() {
                         // if controller is ready and the value has changed
                         if (controller.blocks.length > 0 && ngModel.$viewValue && ngModel.$viewValue !== controller.serializeBlock()) {
                             init();
                         }
-                    }, 0, false);
-                }, false);
+                    });
+                });
+                init();
             }
         };
     }])
@@ -859,8 +636,8 @@ angular.module('superdesk.editor2', [
             controller: SdTextEditorBlockEmbedController
         };
     }])
-    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog',
-    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog) {
+    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog', 'config',
+    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog, config) {
         var EDITOR_CONFIG = {
             toolbar: {
                 static: true,
@@ -880,6 +657,10 @@ angular.module('superdesk.editor2', [
             spellcheck: false,
             targetBlank: true
         };
+
+        if (config.editor) {
+            angular.extend(EDITOR_CONFIG, config.editor);
+        }
 
         /**
          * Get number of lines for all p nodes before given node withing same parent.
@@ -1072,16 +853,19 @@ angular.module('superdesk.editor2', [
                 ngModel.$render = function() {
                     editor.registerScope(scope);
                     var editorConfig = angular.merge({}, EDITOR_CONFIG, scope.config || {});
-                    editorConfig.toolbar.buttons = [];
-                    setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
-                    // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
-                    if (scope.config.multiBlockEdition) {
-                        // this dummy imageDragging stop preventing drag & drop events
-                        editorConfig.extensions = {'imageDragging': {}};
-                        if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
-                            editorConfig.extensions.table = new window.MediumEditorTable();
+                    if (editorConfig.toolbar) {
+                        editorConfig.toolbar.buttons = [];
+                        setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
+                        // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
+                        if (scope.config.multiBlockEdition) {
+                            // this dummy imageDragging stop preventing drag & drop events
+                            editorConfig.extensions = {'imageDragging': {}};
+                            if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
+                                editorConfig.extensions.table = new window.MediumEditorTable();
+                            }
                         }
                     }
+
                     spellcheck.setLanguage(scope.language);
                     editorElem = elem.find(scope.type === 'preformatted' ?  '.editor-type-text' : '.editor-type-html');
                     editorElem.empty();
@@ -1121,7 +905,10 @@ angular.module('superdesk.editor2', [
                     // update the toolbar, bc it can be displayed at the
                     // wrong place if offset of block has changed
                     scope.medium.subscribe('focus', function() {
-                        scope.medium.getExtensionByName('toolbar').positionStaticToolbar(scope.medium.getFocusedElement());
+                        var toolbar = scope.medium.getExtensionByName('toolbar');
+                        if (toolbar) {
+                            toolbar.positionStaticToolbar(scope.medium.getFocusedElement());
+                        }
                     });
                     scope.$on('spellcheck:run', render);
                     scope.$on('key:ctrl:shift:s', render);
@@ -1228,7 +1015,7 @@ angular.module('superdesk.editor2', [
 
                         // set data needed for replacing
                         scope.replaceWord = node.dataset.word;
-                        scope.replaceIndex = parseInt(node.dataset.index, 0);
+                        scope.replaceIndex = parseInt(node.dataset.index, 10);
 
                         spellcheck.suggest(node.textContent).then(function(suggestions) {
                             scope.suggestions = suggestions;
@@ -1432,5 +1219,195 @@ angular.module('superdesk.editor2', [
         // iframely respect the original embed for more services than 'embedly'
         embedServiceProvider.setConfig('fallbackService', 'iframely');
     }]);
+
+function EditorUtilsFactory() {
+
+    var CLONE_CLASS = 'clone';
+    var HILITE_CLASS = 'sdhilite';
+
+    /**
+     * Function for sorting array of strings from longest to shortest
+     *
+     * @param {string} a
+     * @param {string} b
+     * @return {number}
+     */
+    function reverseLengthSort(a, b) {
+        return b.length - a.length;
+    }
+
+    /**
+     * Find text node within given node for given character offset
+     *
+     * This will find text node within given node that contains character on given offset
+     *
+     * @param {Node} node
+     * @param {numeric} offset
+     * @return {Object} {node: {Node}, offset: {numeric}}
+     */
+    function findOffsetNode(node, offset) {
+        var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+        var currentLength;
+        var currentOffset = 0;
+        var ZERO_WIDTH_SPACE = String.fromCharCode(65279);
+        while (tree.nextNode()) {
+            tree.currentNode.textContent = tree.currentNode.textContent.replace(ZERO_WIDTH_SPACE, '');
+            currentLength = tree.currentNode.textContent.length;
+            if (currentOffset + currentLength >= offset) {
+                return {node: tree.currentNode, offset: offset - currentOffset};
+            }
+
+            currentOffset += currentLength;
+        }
+    }
+
+    /**
+     * Escape given string for reg exp
+     *
+     * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+     *
+     * @param {string} string
+     * @return {string}
+     */
+    function escapeRegExp(string){
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    return {
+
+        /**
+         * Find all matches for current find&replace needle in given node
+         *
+         * Each match is {word: {string}, offset: {number}} in given node,
+         * we can't return nodes here because those will change when we start
+         * highlighting and offsets wouldn't match
+         *
+         * @param {Node} node
+         * @param {Object} settings
+         * @return {Array} list of matches
+         */
+        getFindReplaceTokens: function(node, settings) {
+            var tokens = [];
+            var diff = settings.findreplace.diff || {};
+            var pattern = Object.keys(diff).sort(reverseLengthSort).map(escapeRegExp).join('|');
+            if (!pattern) {
+                return tokens;
+            }
+
+            var flags = settings.findreplace.caseSensitive ? 'm' : 'im';
+            var re = new RegExp(pattern, flags);
+            var nodeOffset = 0;
+            var text, match, offset;
+
+            var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+            while (tree.nextNode()) {
+                text = tree.currentNode.textContent;
+                while ((match = text.match(re)) != null) {
+                    tokens.push({
+                        word: match[0],
+                        index: nodeOffset + match.index,
+                        title: diff[match[0]] || ''
+                    });
+
+                    offset = match.index + match[0].length;
+                    text = text.substr(offset);
+                    nodeOffset += offset;
+                }
+
+                nodeOffset += text.length;
+            }
+
+            return tokens;
+        },
+
+        /**
+         * Hilite all tokens within node using span with given className
+         *
+         * This first stores caret position, updates markup, and then restores the caret.
+         *
+         * @param {Node} node
+         * @param {Array} tokens
+         * @param {string} className
+         * @param {Boolean} preventStore
+         */
+        hilite: function(node, tokens, className, preventStore) {
+            // remove old hilites
+            this.removeHilites(node);
+
+            // create a clone
+            var hiliteNode = node.cloneNode(true);
+            hiliteNode.classList.add(CLONE_CLASS);
+
+            // generate hilite markup in clone
+            tokens.forEach(function(token) {
+                this.hiliteToken(hiliteNode, token, className);
+            }.bind(this));
+
+            // render clone
+            node.parentNode.appendChild(hiliteNode);
+        },
+
+        /**
+         * Highlight single `token` via putting it into a span with given class
+         *
+         * @param {Node} node
+         * @param {Object} token
+         * @param {string} className
+         */
+        hiliteToken: function(node, token, className) {
+            var start = this.findWordNode(node, token.index, token.word.length);
+            var replace = start.node.splitText(start.offset);
+            var span = document.createElement('span');
+            span.classList.add(className);
+            span.classList.add(HILITE_CLASS);
+            replace.splitText(token.word.length);
+            span.textContent = replace.textContent;
+            span.dataset.word = token.word;
+            span.dataset.index = token.index;
+            replace.parentNode.replaceChild(span, replace);
+        },
+
+        /**
+         * Remove hilites node from nodes parent
+         *
+         * @param {Node} node
+         */
+        removeHilites: function(node) {
+            var parentNode = node.parentNode;
+            var clones = parentNode.getElementsByClassName(CLONE_CLASS);
+            if (clones.length) {
+                parentNode.removeChild(clones.item(0));
+            }
+        },
+
+        /**
+         * Find text node within given node where word is located
+         *
+         * It will find text type node where the whole word is located
+         *
+         * @param {Node} node
+         * @param {Number} index
+         * @param {Number} length
+         * @return {Object} {node: {Node}, offset: {Number}}
+         */
+        findWordNode: function(node, index, length) {
+            var start = findOffsetNode(node, index);
+            var end = findOffsetNode(node, index + length);
+
+            // correction for linebreaks - first node on a new line is set to
+            // linebreak text node which is not even visible in dom, maybe dom bug?
+            if (start.node !== end.node) {
+                start.node = end.node;
+                start.offset = 0;
+            }
+
+            return start;
+        }
+    };
+}
+
+angular.module('superdesk.editor.utils', [])
+    .factory('editorUtils', EditorUtilsFactory)
+    ;
 
 })();
