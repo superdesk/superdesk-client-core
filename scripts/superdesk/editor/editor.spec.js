@@ -37,6 +37,16 @@ describe('text editor', function() {
         expect(scope.node.innerHTML).toBe('<span class="sderror sdhilite">test</span>');
     }));
 
+    it('can highlight a sentence word for capitalization', inject(function(editor, spellcheck, $q, $rootScope) {
+        spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0, sentenceWord: true}]));
+        var scope = createScope('test', $rootScope);
+        editor.registerScope(scope);
+        editor.renderScope(scope);
+        $rootScope.$digest();
+
+        expect(scope.node.innerHTML).toBe('<span class="sderror sdhilite sdCapitalize">test</span>');
+    }));
+
     it('can remove highlights but keep marker', inject(function(editor, $q, $rootScope) {
         var content = 'test <b>foo</b> <span class="sderror sdhilite">error</span> it';
         var scope = createScope(content, $rootScope);
