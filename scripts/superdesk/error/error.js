@@ -11,8 +11,9 @@
                     Raven.captureException(new Error('HTTP response error'), {
                         tags: {component: 'server'},
                         extra: {
-                            config: rejection.config,
-                            status: rejection.status
+                            status: rejection.status,
+                            request: rejection.config,
+                            response: rejection.data
                         }
                     });
                 }
@@ -24,7 +25,11 @@
     angular.module('superdesk.error', [])
     .config(['config', '$httpProvider', '$provide', function(config, $httpProvider, $provide) {
         if (config.raven && config.raven.dsn) {
-            Raven.config(config.raven.dsn, {logger: 'javascript-client'}).install();
+            Raven.config(config.raven.dsn, {
+                logger: 'javascript-client',
+                release: config.version
+            }).install();
+
             $httpProvider.interceptors.push(ErrorHttpInterceptorFactory);
 
             $provide.factory('$exceptionHandler', function () {

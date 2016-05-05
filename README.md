@@ -33,7 +33,8 @@ For installation instructions, please refer to the README file at: [https://gith
 
 ##### Editor
 
-- `editor.disableEditorToolbar`: `false` - disable editor toolbar in authoring
+- `editor.toolbar`: `object|false` - editor toolbar configuration, set to `false` to disable toolbar
+- `editor.embeds`: `true` - enable embedding in article body
 
 ##### Date & Time
 

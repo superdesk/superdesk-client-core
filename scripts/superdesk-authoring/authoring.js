@@ -64,61 +64,6 @@
         resend: false
     });
 
-    // http://docs.python-cerberus.org/en/stable/usage.html
-    var DEFAULT_SCHEMA = Object.freeze({
-        slugline: {maxlength: 24},
-        relatedItems: {},
-        genre: {},
-        anpa_take_key: {},
-        place: {},
-        priority: {},
-        urgency: {},
-        anpa_category: {},
-        subject: {},
-        company_codes: {},
-        ednote: {},
-        headline: {maxlength: 64},
-        sms: {maxlength: 160},
-        abstract: {maxlength: 160},
-        body_html: {},
-        byline: {},
-        dateline: {},
-        located: {},
-        sign_off: {},
-        footer: {},
-        body_footer: {},
-        media: {},
-        media_description: {}
-    });
-
-    var DEFAULT_EDITOR = Object.freeze({
-        slugline: {order: 1, sdWidth: 'full'},
-        genre: {order: 2, sdWidth: 'half'},
-        anpa_take_key: {order: 3, sdWidth: 'half'},
-        place: {order: 4, sdWidth: 'half'},
-        priority: {order: 5, sdWidth: 'quarter'},
-        urgency: {order: 6, sdWidth: 'quarter'},
-        anpa_category: {order: 7, sdWidth: 'full'},
-        subject: {order: 8, sdWidth: 'full'},
-        company_codes: {order: 9, sdWidth: 'full'},
-        ednote: {order: 10, sdWidth: 'full'},
-        headline: {order: 11, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
-        sms: {order: 12},
-        abstract: {order: 13, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
-        byline: {order: 14},
-        dateline: {order: 15},
-        body_html: {
-            order: 16,
-            formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'removeFormat']
-        },
-        footer: {order: 17},
-        body_footer: {order: 18},
-        sign_off: {order: 19},
-        located: {},
-        media: {},
-        media_description: {}
-    });
-
     /**
      * Extend content of dest
      *
@@ -1051,10 +996,11 @@
         'archiveService',
         'confirm',
         'reloadService',
-        '$rootScope'
+        '$rootScope',
+        'config'
     ];
     function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
-            privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope) {
+        privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope, config) {
         return {
             link: function($scope, elem, attrs) {
                 var _closing;
@@ -1076,22 +1022,17 @@
                     }
                 }, true);
 
-                $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
-                $scope.origItem.sign_off = $scope.origItem.sign_off || $scope.origItem.version_creator;
-
                 $scope.$watch('item.flags', function(newValue, oldValue) {
                     if (newValue !== oldValue) {
                         $scope.item.flags = _.clone($scope.origItem.flags);
                         $scope.item.flags = newValue;
                         $scope.origItem.flags = oldValue;
                         $scope.dirty = true;
-
-                        if (newValue.marked_for_sms && !oldValue.marked_for_sms &&
-                            !$scope.item.sms_message && $scope.item.headline) {
-                            $scope.item.sms_message = $scope.item.headline;
-                        }
                     }
                 }, true);
+
+                $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
+                $scope.origItem.sign_off = $scope.origItem.sign_off || $scope.origItem.version_creator;
 
                 $scope.fullPreview = false;
                 $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
@@ -1230,7 +1171,7 @@
                  * @return {string} if the values are invalid then returns appropriate error message.
                  *         Otherwise empty string.
                  */
-                function validateTimestamp(datePartOfTS, timePartOfTS, timestamp, fieldName) {
+                function validateTimestamp(datePartOfTS, timePartOfTS, timestamp, timezone, fieldName) {
                     var errorMessage = '';
 
                     if (datePartOfTS && !timePartOfTS) {
@@ -1240,13 +1181,12 @@
                     }
 
                     if (errorMessage === '' && timestamp) {
-                        var schedule = new Date(timestamp);
+                        var schedule = moment.tz(timestamp, timezone || config.defaultTimezone);
+                        var now = moment();
 
-                        if (!_.isDate(schedule)) {
+                        if (!schedule.isValid()) {
                             errorMessage = gettext(fieldName + ' is not a valid date!');
-                        } else if (!schedule.getTime()) {
-                            errorMessage = gettext(fieldName + ' time is invalid!');
-                        } else if (schedule < _.now()) {
+                        } else if (schedule.isBefore(now)) {
                             if (fieldName !== 'Embargo' || $scope._isInProductionStates) {
                                 errorMessage = gettext(fieldName + ' cannot be earlier than now!');
                             }
@@ -1269,7 +1209,8 @@
 
                     var errorMessage;
                     if (item.embargo_date || item.embargo_time) {
-                        errorMessage = validateTimestamp(item.embargo_date, item.embargo_time, item.embargo, 'Embargo');
+                        errorMessage = validateTimestamp(item.embargo_date, item.embargo_time, item.embargo,
+                            item.schedule_settings ? item.schedule_settings.time_zone : null, 'Embargo');
                         if (errorMessage !== '') {
                             notify.error(errorMessage);
                             return false;
@@ -1282,7 +1223,7 @@
                         }
 
                         errorMessage = validateTimestamp(item.publish_schedule_date, item.publish_schedule_time,
-                            item.publish_schedule, 'Publish Schedule');
+                            item.publish_schedule, item.schedule_settings ? item.schedule_settings.time_zone : null, 'Publish Schedule');
                         if (errorMessage !== '') {
                             notify.error(errorMessage);
                             return false;
@@ -2612,6 +2553,14 @@
                     });
                 };
 
+                scope.$watch('item.flags.marked_for_sms', function(isMarked) {
+                    if (isMarked) {
+                        scope.item.sms_message = scope.item.headline || '';
+                    } else {
+                        scope.item.sms_message = '';
+                    }
+                });
+
                 scope.extra = {}; // placeholder for fields not part of item
             }
         };
@@ -2959,12 +2908,12 @@
                             content.getType(item.profile)
                                 .then(function(type) {
                                     scope.contentType = type;
-                                    scope.editor = type.editor || DEFAULT_EDITOR;
-                                    scope.schema = type.schema || DEFAULT_SCHEMA;
+                                    scope.editor = content.editor(type);
+                                    scope.schema = content.schema(type);
                                 });
                         } else {
-                            scope.schema = angular.extend({}, DEFAULT_SCHEMA);
-                            scope.editor = angular.extend({}, DEFAULT_EDITOR);
+                            scope.schema = content.schema();
+                            scope.editor = content.editor();
                         }
 
                         // Related Items

@@ -73,6 +73,7 @@ function Dictionaries() {
     };
 
     this.search = function(word) {
+        element(by.id('words-search')).clear();
         element(by.id('words-search')).sendKeys(word);
     };
 

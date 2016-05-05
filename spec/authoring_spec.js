@@ -4,7 +4,9 @@ var monitoring = require('./helpers/monitoring'),
     authoring = require('./helpers/authoring'),
     ctrlKey = require('./helpers/utils').ctrlKey,
     ctrlShiftKey = require('./helpers/utils').ctrlShiftKey,
-    assertToastMsg = require('./helpers/utils').assertToastMsg;
+    assertToastMsg = require('./helpers/utils').assertToastMsg,
+    openUrl = require('./helpers/utils').open,
+    dictionaries = require('./helpers/dictionaries');
 
 describe('authoring', function() {
 
@@ -77,14 +79,15 @@ describe('authoring', function() {
         monitoring.actionOnItem('Correct item', 5, 0);
         authoring.sendToButton.click();
         expect(authoring.correct_button.isDisplayed()).toBe(true);
+
         authoring.close();
         expect(monitoring.getTextItem(5, 0)).toBe('item6');
         monitoring.actionOnItem('Open', 5, 0);
         expect(authoring.edit_correct_button.isDisplayed()).toBe(true);
         expect(authoring.edit_kill_button.isDisplayed()).toBe(true);
         authoring.close();
-        monitoring.filterAction('text');
-        monitoring.filterAction('composite');
+        monitoring.filterAction('all'); // reset filter
+        monitoring.filterAction('takesPackage');
         expect(monitoring.getTextItem(5, 0)).toBe('item6');
         monitoring.actionOnItem('Open', 5, 0);
         expect(authoring.edit_correct_button.isDisplayed()).toBe(false);
@@ -147,7 +150,7 @@ describe('authoring', function() {
         expect(authoring.save_button.getAttribute('disabled')).toBe(null);
         authoring.save();
         authoring.publish();
-        monitoring.filterAction('composite');
+        monitoring.filterAction('takesPackage');
         monitoring.actionOnItem('Open', 5, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(1);
@@ -157,7 +160,7 @@ describe('authoring', function() {
         transmissionDetails.get(0).click();
         expect(element(by.className('modal-body')).getText()).toMatch(/Kids Helpline*/);
         element(by.css('[ng-click="hideFormattedItem()"]')).click();
-        monitoring.filterAction('composite');
+        monitoring.filterAction('takesPackage');
         authoring.close();
 
         //view item history spike-unspike operations
@@ -234,6 +237,28 @@ describe('authoring', function() {
         authoring.close();
         monitoring.actionOnItem('Edit', 2, 2);
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
+    });
+
+    it('spellcheck hilite sentence word for capitalization and ignore the word after abbreviations', function() {
+        openUrl('/#/settings/dictionaries');
+        dictionaries.edit('Test 1');
+        expect(dictionaries.getWordsCount()).toBe(0);
+        dictionaries.search('abbrev.');
+        dictionaries.saveWord();
+        dictionaries.search('abbrev');
+        dictionaries.saveWord();
+        expect(dictionaries.getWordsCount()).toBe(2);
+        dictionaries.save();
+        browser.sleep(200);
+
+        monitoring.openMonitoring();
+
+        authoring.createTextItem();
+        authoring.writeText('some is a sentence word, but words come after an abbrev. few are not');
+        browser.sleep(200);
+        expect(authoring.getBodyInnerHtml()).toContain('<span class="sderror sdhilite sdCapitalize">some</span>');
+        expect(authoring.getBodyInnerHtml()).not.toContain('<span class="sderror sdhilite sdCapitalize">few</span>');
+        expect(authoring.getBodyInnerHtml()).toContain('<span class="sderror sdhilite">few</span>');
     });
 
     it('related item widget', function() {

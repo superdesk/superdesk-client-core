@@ -98,15 +98,12 @@
                 criteria.$or = [];
 
                 if (user) { // user private templates
-                    criteria.$or.push({user: user, is_public: false});
+                    criteria.$or.push({user: user});
                 }
 
                 if (desk) { // all non private desk templates
-                    criteria.$or.push({template_desk: desk, is_public: {$ne: false}});
+                    criteria.$or.push({template_desk: desk});
                 }
-            } else {
-                // only show public templates
-                criteria.is_public = {$ne: false};
             }
 
             if (!_.isEmpty(criteria)) {
@@ -278,6 +275,19 @@
                     $scope.updateStages($scope.template.template_desk);
                 };
 
+                $scope.$watch('item.profile', function(profile) {
+                    if (profile) {
+                        content.getType(profile).then(setupContentType);
+                    } else {
+                        setupContentType();
+                    }
+                });
+
+                function setupContentType(type) {
+                    $scope.schema = content.schema(type);
+                    $scope.editor = content.editor(type);
+                }
+
                 $scope.remove = function(template) {
                     modal.confirm(gettext('Are you sure you want to delete the template?'))
                         .then(function() {
@@ -312,8 +322,63 @@
                         true;
                 };
 
+                $scope.filters = [
+                    {label: gettext('All'), value: 'All'},
+                    {label: gettext('Personal'), value: 'Personal'},
+                    {label: gettext('No Desk'), value: 'None'}
+                ];
+
+                // holds the index of the active filter.
+                $scope.activeFilter = 0;
+
+                // sets the active filter to another index.
+                $scope.filterBy = function(idx) {
+                    $scope.activeFilter = idx;
+                };
+
+                // fetch all desks for the current user and add them to
+                // the list of filters.
+                desks.fetchCurrentUserDesks().then(function(desks) {
+                    $scope.filters = $scope.filters.concat(
+                        desks._items.map(function(d) {
+                            return {label: d.name, value: d._id};
+                        })
+                    );
+                });
+
                 fetchTemplates();
             }
+        };
+    }
+
+    /**
+     * @description Returns a function that allows filtering an array of
+     * templates by various criteria.
+     */
+    function FilterTemplatesFilter() {
+        /**
+         * @description Returns a new array based on the passed filter.
+         * @param {Array<Object>} all - Array of templates to filter.
+         * @param {Object} f - The filter. Contains keys 'label' and 'value'.
+         * If the 'value' is 'All', the entire array is returned. For 'None',
+         * only the items without a desk are returned. For 'Personal', only
+         * non-public items are returned, and every other value is a hash that
+         * represents the desk to filter by.
+         * @returns {Array<Object>} The filtered array.
+         */
+        return function(all, f) {
+            return (all || []).filter(function(item) {
+                switch (f.value) {
+                    case 'All':
+                        return all;
+                    case 'None':
+                        return item.is_public && typeof item.template_desk === 'undefined';
+                    case 'Personal':
+                        return !item.is_public;
+                    default:
+                        return item.template_desk === f.value;
+                }
+            });
         };
     }
 
@@ -472,6 +537,7 @@
 
     angular.module('superdesk.templates', ['superdesk.activity', 'superdesk.authoring', 'superdesk.preferences'])
         .service('templates', TemplatesService)
+        .filter('templatesBy', FilterTemplatesFilter)
         .directive('sdTemplates', TemplatesDirective)
         .directive('sdTemplateSelect', TemplateSelectDirective)
         .directive('sdTemplateList', TemplateListDirective)
