@@ -15,7 +15,7 @@ function($window, config) {
             angular.extend(vm, {
                 textBlockCtrl: ctrls[1],
                 sdEditorCtrl: ctrls[2],
-                config: config.editor || {embeds: 1} // should be on by default
+                config: angular.extend({embeds: true}, config.editor || {}) // should be on by default
             });
             // initialize state
             vm.updateState();
