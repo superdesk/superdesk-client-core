@@ -40,19 +40,6 @@ function Authoring() {
     this.linkToMasterButton = element(by.id('preview-master'));
 
     /**
-     * Find all file type icons in the item's info icons box matching the
-     * given file type.
-     *
-     * @param {string} itemType - the item type of interest, e.g. 'text',
-     *   'composite', 'picture', etc.
-     * @return {Object} a promise that is resolved with all DOM elements found
-     */
-    this.findItemTypeIcons = function (itemType) {
-        var selector = '.filetype-icon-' + itemType;
-        return this.infoIconsBox.all(by.css(selector));
-    };
-
-    /**
      * Send item to given desk
      *
      * @param {string} desk Desk name
