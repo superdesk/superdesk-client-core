@@ -1044,7 +1044,6 @@ angular.module('superdesk.editor2', [
                     scope.$on('$destroy', function() {
                         scope.medium.destroy();
                         editorElem.off();
-                        spellcheck.setLanguage(null);
                     });
                     scope.cursor = {};
                     render(null, null, true);

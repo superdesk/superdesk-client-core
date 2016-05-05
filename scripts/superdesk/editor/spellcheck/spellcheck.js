@@ -55,6 +55,7 @@ function SpellcheckService($q, api, dictionaries) {
 
         if (!dict) {
             dict = dictionaries.getActive(lang, baseLang).then(function(items) {
+                dict = dict || {};
                 dict.content = {};
 
                 if (baseLang && _.find(items, {'language_id': lang}) && _.find(items, {'language_id': baseLang})) {
