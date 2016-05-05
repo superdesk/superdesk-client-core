@@ -550,7 +550,7 @@
     DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', 'config'];
     function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper, config) {
         var popupTpl =
-        '<div sd-datepicker-wrapper ng-model="date" ng-change="dateSelection()">' +
+        '<div sd-datepicker-wrapper ng-model="date">' +
             '<div datepicker format-day="d" show-weeks="false"></div>' +
         '</div>';
 
