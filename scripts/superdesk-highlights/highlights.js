@@ -74,6 +74,25 @@
         };
 
         /**
+         * Saves highlight configuration
+         */
+        service.saveConfig = function(config, configEdit) {
+            return api.highlights.save(config, configEdit).then(function(item) {
+                service.clearCache();
+                return item;
+            });
+        };
+
+        /**
+         * Removes highlight configuration
+         */
+        service.removeConfig = function(config) {
+            return api.highlights.remove(config).then(function() {
+                service.clearCache();
+            });
+        };
+
+        /**
          * Mark an item for a highlight
          */
         service.markItem = function(highlight, marked_item) {
@@ -391,13 +410,12 @@
             var _new = !_config._id;
             $scope.configEdit.desks = assignedDesks();
             $scope.configEdit.groups = ['main'];
-            api.highlights.save(_config, $scope.configEdit)
-            .then(function(item) {
+
+            highlightsService.saveConfig(_config, $scope.configEdit).then(function(item) {
                 $scope.message = null;
                 if (_new) {
                     $scope.configurations._items.unshift(item);
                 }
-                highlightsService.clearCache();
                 $scope.modalActive = false;
             }, function(response) {
                 errorMessage(response);
@@ -416,7 +434,7 @@
         $scope.remove = function(config) {
             modal.confirm(gettext('Are you sure you want to delete configuration?'))
             .then(function() {
-                api.highlights.remove(config).then(function() {
+                highlightsService.removeConfig(config).then(function() {
                     _.remove($scope.configurations._items, config);
                     notify.success(gettext('Configuration deleted.'), 3000);
                 });

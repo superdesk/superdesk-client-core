@@ -60,5 +60,31 @@ describe('highlights', function() {
             highlightsService.markItem('h1', {_id: 'id', guid: 'guid'});
             expect(api.save).toHaveBeenCalledWith('marked_for_highlights', {highlights: 'h1', marked_item: 'guid'});
         }));
+
+        it('can save highlights configuration', inject(function(highlightsService, api, $q) {
+            spyOn(api.highlights, 'save').and.returnValue($q.when({}));
+            var config = {};
+            var configEdit = {
+                auto_insert: 'now/d',
+                desks: [],
+                groups: ['main'],
+                name: 'Today highlight'
+            };
+            highlightsService.saveConfig(config, configEdit);
+            expect(api.highlights.save).toHaveBeenCalledWith(config, configEdit);
+        }));
+
+        it('can remove highlights configuration', inject(function(highlightsService, api, $q) {
+            spyOn(api.highlights, 'remove').and.returnValue($q.when({}));
+            var config = {
+                _id: '123456',
+                auto_insert: 'now/d',
+                desks: [],
+                groups: ['main'],
+                name: 'Today highlight'
+            };
+            highlightsService.removeConfig(config);
+            expect(api.highlights.remove).toHaveBeenCalledWith(config);
+        }));
     });
 });
