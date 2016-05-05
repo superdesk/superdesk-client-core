@@ -35,7 +35,7 @@
             <span class="state-label updated" ng-if="item.rewritten_by" translate>Updated</span>
         </div>
         <div ng-if="item.broadcast.master_id">
-            <label ng-class="{'broadcast-status': item.broadcast.status !== ''}" tooltip="{{item.broadcast.status}}"><span translate>MASTER</span><b ng-if="item.broadcast.status"> !</b></label>
+            <label ng-class="{'broadcast-status': item.broadcast.status !== ''}" title="{{item.broadcast.status | translate}}"><span translate>MASTER</span><b ng-if="item.broadcast.status"> !</b></label>
             <div class="data"><a id="preview-master" ng-click="previewMasterStory()" title="{{ :: 'Preview master story' | translate }}"
                                  class="open-item"><i class="icon-external"></i></a></div>
         </div>
