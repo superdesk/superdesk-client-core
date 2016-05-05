@@ -275,6 +275,19 @@
                     $scope.updateStages($scope.template.template_desk);
                 };
 
+                $scope.$watch('item.profile', function(profile) {
+                    if (profile) {
+                        content.getType(profile).then(setupContentType);
+                    } else {
+                        setupContentType();
+                    }
+                });
+
+                function setupContentType(type) {
+                    $scope.schema = content.schema(type);
+                    $scope.editor = content.editor(type);
+                }
+
                 $scope.remove = function(template) {
                     modal.confirm(gettext('Are you sure you want to delete the template?'))
                         .then(function() {
