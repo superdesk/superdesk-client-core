@@ -7,15 +7,17 @@ SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$ele
 function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) {
     var vm = this;
     function Block(attrs) {
-        angular.extend(this, {
+        var self = this;
+        angular.extend(self, {
             body: attrs && attrs.body || '',
+            loading: attrs && attrs.loading || false,
             caption: attrs && attrs.caption || undefined,
             blockType: attrs && attrs.blockType || 'text',
             embedType: attrs && attrs.embedType || undefined,
             association: attrs && attrs.association || undefined,
             lowerAddEmbedIsExtented: undefined,
             showAndFocusLowerAddAnEmbedBox: function() {
-                this.lowerAddEmbedIsExtented = true;
+                self.lowerAddEmbedIsExtented = true;
             },
         });
     }
@@ -162,6 +164,10 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
         },
         serializeBlock: function(blocks) {
             blocks = angular.isDefined(blocks) ? blocks : vm.blocks;
+            // in case blocks are not ready
+            if (blocks.length === 0) {
+                return '';
+            }
             var new_body = '';
             if (vm.config.multiBlockEdition) {
                 blocks.forEach(function(block) {
@@ -231,18 +237,18 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
         ** Merge text blocks when there are following each other and add empty text block arround embeds if needed
         ** @param {Integer} position
         ** @param {Object} block ; block attributes
-        ** @param {boolean} unprocess ; if true, it won't merge text blocks and
+        ** @param {boolean} doNotRenderBlocks ; if true, it won't merge text blocks and
         ** add empty text block if needed through the `renderBlocks()` function.
         ** @returns {object} this
         */
-        insertNewBlock: function(position, attrs, unprocess) {
+        insertNewBlock: function(position, attrs, doNotRenderBlocks) {
             var new_block = new Block(attrs);
             vm.blocks.splice(position, 0, new_block);
             $timeout(vm.commitChanges);
-            if (!unprocess) {
+            if (!doNotRenderBlocks) {
                 $timeout(vm.renderBlocks);
             }
-            return this;
+            return new_block;
         },
         /**
         * Merge text blocks when there are following each other and add empty text block arround embeds if needed

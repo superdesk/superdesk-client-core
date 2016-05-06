@@ -85,8 +85,9 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                                             data = JSON.parse(data);
                                             // set association
                                             embedBlock.association = {
-                                                id: data.bid.id,
+                                                uri: data.bid.id,
                                                 title: data.bid.videos[0].name,
+                                                type: 'video',
                                                 thumbnail: data.bid.videos[0].thumbnail,
                                                 url: data.bid.videos[0].videoUrls[0],
                                                 // size: ,
@@ -156,7 +157,7 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
     // toggle when the `extended` directive attribute changes
     $scope.$watch(function() {
         return vm.extended;
-    }, function(extended) {
+    }, function(extended, wasExtended) {
         // on enter, focus on input
         if (angular.isDefined(extended)) {
             if (extended) {
@@ -164,7 +165,7 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                     angular.element($element).find('input').focus();
                 }, 500, false); // positive timeout because of a chrome issue
             // on leave, clear field
-            } else {
+            } else if (wasExtended) {
                 vm.input = '';
                 vm.onClose();
             }

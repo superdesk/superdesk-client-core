@@ -263,6 +263,8 @@
 }
 
 .text-editor {
+    min-height: 20px;
+
     .sderror {
         border-bottom: 1px dotted #cc0000;
         background-color: rgba(204, 0, 0, 0.08);
@@ -705,6 +707,9 @@
   .dropdown-toggle {
     line-height: 13px;
     height: auto;
+  }
+  .update-info {
+    padding-left: 0;
   }
 }
 
@@ -1180,6 +1185,21 @@
     height: 65px;
     position: relative;
 
+    &--loading {
+        background-color: fade(#f7f7f7, 40%);
+        border-color: fade(#cfcfcf, 40%);
+        &:before {
+            .spinner-big;
+            content: '';
+            top: 50%;
+            transform: translateY(-50%);
+            position: absolute;
+        }
+        img {
+            opacity: .2;
+        }
+    }
+
     [contenteditable] {
         border: 1px solid @sd-blue;
         .border-radius(3px);
@@ -1187,11 +1207,11 @@
         min-height: 18px;
     }
 
-    &:not(.preview) {
+    &:not(&--preview) {
         cursor: pointer;
     }
 
-    &.preview {
+    &--preview {
         border: none;
         background-color: transparent;
     }

@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h3 class="pull-left">{{ activity.label|translate }}</h3>    
+    <h3 class="pull-left">{{ activity.label|translate }}</h3>
     <div class="pull-right">
         <button type="button"
         class="btn"
@@ -14,56 +14,51 @@
 </div>
 
 <div class="modal-body modal-body__flex">
-
     <div class="modal-body__flex-top">
-
         <div class="modal-body__flex-main">
-            <div ng-hide="selectedRendition">
+            <div ng-if="!selectedRendition">
                 <label class="field-label" translate>Original <span class="size">{{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}</span></label>
-                <div sd-image-point
+                <sd-image-point
                     data-src="data.item.renditions.viewImage.href"
-                    data-point="data.poi"
-                    data-on-change="data.isDirty = true"
-                    class="poi__image">
-                </div>
+                    data-poi="data.poi"
+                    data-on-change="data.isDirty = true">
+                </sd-image-point>
             </div>
-            <div class="crop-area selected" ng-show="selectedRendition">
-                <div ng-repeat="rendition in data.renditions track by rendition.name" ng-show="selectedRendition.name === rendition.name">
-                    <label class="field-label">{{selectedRendition.name}}</label>
-                    <div sd-image-crop-view
-                        data-src="data.item.renditions.viewImage.href"
-                        data-original="data.item.renditions.original"
-                        data-crop-data="data.cropData[rendition.name]"
-                    ></div>
-                </div>
+            <div class="crop-area selected" ng-if="selectedRendition">
+                <label class="field-label">{{ selectedRendition.name }}</label>
+                <div sd-image-crop-view
+                     data-src="data.item.renditions.viewImage.href"
+                     data-original="data.item.renditions.original"
+                     data-crop-data="data.cropData[selectedRendition.name]"
+                ></div>
             </div>
         </div>
-
         <div class="modal-body__flex-sidebar modal-body__flex-metadata" ng-if="data.showMetadataEditor">
             <div class="header" translate>Metadata</div>
             <div>
                 <label translate>Title *</label>
-                <input type="text" ng-model="data.metadata.headline" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.headline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
                 <label translate>Caption *</label>
-                <input type="text" ng-model="data.metadata.description_text" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
                 <label translate>Alt Text</label>
-                <input type="text" ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
                 <label translate>Credit</label>
-                <input type="text" ng-model="data.metadata.byline" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.byline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
                 <label translate>Copyright holder</label>
-                <input type="text" ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
+                <label><span translate>Assign Rights</span></label>
                 <select ng-model="data.metadata.usageterms">
-                    <option translate value="">---Assign Rights---</option> <!-- not selected / blank option -->
+                    <option translate value="">--- Not selected ---</option> <!-- not selected / blank option -->
                     <option translate value="single-usage">Single Usage</option>
                     <option translate value="time-restricted">Time Restricted</option>
                     <option translate value="indefinite-usage">Indefinite Usage</option>
@@ -71,7 +66,7 @@
             </div>
             <div>
                 <label translate>Copyright notice</label>
-                <input type="text" ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" class="line-input">
+                <div ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
         </div>
     </div><!-- end flex top -->
@@ -80,19 +75,16 @@
         <div class="crop-area__thumbnails">
             <ul>
                 <li ng-click="selectRendition()" ng-class="{active: selectedRendition === null}">
-                    <div sd-image-point
+                    <sd-image-point
                         data-src="data.item.renditions.viewImage.href"
-                        data-point="data.poi"
-                        data-on-change="data.isDirty = true"
-                        class="poi__image">
-                    </div>
+                        data-poi="data.poi"
+                        data-on-change="data.isDirty = true">
+                    </sd-image-point>
                     <label class="field-label" translate>Original</label>
                 </li>
                 <li ng-repeat="rendition in data.renditions track by rendition.name" ng-click="selectRendition(rendition)" ng-class="{active: rendition === selectedRendition}">
                     <div sd-image-crop
                         data-show-Min-Size-Error="true"
-                        data-box-width="600"
-                        data-box-height="400"
                         data-src="data.item.renditions.viewImage.href"
                         data-original="data.item.renditions.original"
                         data-rendition="rendition"

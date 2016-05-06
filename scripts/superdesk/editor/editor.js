@@ -11,6 +11,8 @@
 
 'use strict';
 
+var TYPING_CLASS = 'typing';
+
 /**
  * Escape given string for reg exp
  *
@@ -167,7 +169,7 @@ function HistoryStack(initialValue) {
 
 EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q'];
 function EditorService(spellcheck, $rootScope, $timeout, $q) {
-    this.settings = {spellcheck: true};
+    this.settings = {spellcheck: false};
     window.editor = this;
 
     this.KEY_CODES = Object.freeze({
@@ -276,10 +278,12 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
 
     /**
      * Render highlights in all registered scopes
+     *
+     * @param {Boolean} force rendering
      */
-    this.render = function() {
+    this.render = function(force) {
         scopes.forEach(function(scope) {
-            self.renderScope(scope);
+            self.renderScope(scope, force);
         });
     };
 
@@ -418,6 +422,9 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
         var span = document.createElement('span');
         span.classList.add(className);
         span.classList.add(HILITE_CLASS);
+        if (token.sentenceWord) {
+            span.classList.add('sdCapitalize');
+        }
         if (token.title) {
             span.title = token.title;
         }
@@ -615,8 +622,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      * @param {Scope} scope
      */
     this.undo = function(scope) {
-        scope.history.selectPrev();
-        useHistory(scope);
+        if (scope.history.getIndex() > -1) {
+            scope.history.selectPrev();
+            useHistory(scope);
+        }
     };
 
     /**
@@ -625,8 +634,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      * @param {Scope} scope
      */
     this.redo = function(scope) {
+        var oldIndex = scope.history.getIndex();
         scope.history.selectNext();
-        useHistory(scope);
+        if (oldIndex !== scope.history.getIndex()) {
+            useHistory(scope);
+        }
     };
 
     /**
@@ -658,7 +670,6 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      * @param {Scope} scope
      */
     function useHistory(scope) {
-        var TYPING_CLASS = 'typing';
         var val = scope.history.get() || '';
         var checkVal = val.innerHTML ? clearRangy(angular.copy(val)).innerHTML : val;
         if (clean(scope.node).innerHTML !== checkVal) {
@@ -696,8 +707,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
             link: function(scope, elem, attrs, ngModel) {
                 scope.model = ngModel;
 
-                var TYPING_CLASS = 'typing';
-
                 var editorElem;
                 var updateTimeout;
                 var renderTimeout;
@@ -715,7 +724,6 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                 ctrlOperations[editor.KEY_CODES.Y] = doRedo;
 
                 scope.$on('spellcheck:run', render);
-                keyboardManager.bind('ctrl+shift+d', render);
 
                 ngModel.$render = function (force) {
                     if (!scope.history || scope.history.getIndex() === -1 || force) {
@@ -740,9 +748,14 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
                                 event.stopPropagation();
                             }
 
+                            if (event.ctrlKey && ctrlOperations[event.keyCode]) {
+                                event.preventDefault();
+                            }
+
                             if (editor.shouldIgnore(event)) {
                                 return;
                             }
+
                             cancelTimeout();
                         });
 
@@ -778,7 +791,11 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
 
                                 scope.suggestions = null;
                                 spellcheck.suggest(event.target.textContent).then(function(suggestions) {
-                                    scope.suggestions = suggestions;
+                                    // capitalize first letter and include it as a suggestion
+                                    if (_.includes(event.target.classList, 'sdCapitalize')) {
+                                        suggestions.push(event.target.textContent[0].toUpperCase() + event.target.textContent.slice(1));
+                                    }
+                                    scope.suggestions = _.uniq(suggestions);
                                     scope.replaceTarget = event.target;
                                     $timeout(function() {
                                         menu.style.left = (event.target.offsetLeft) + 'px';

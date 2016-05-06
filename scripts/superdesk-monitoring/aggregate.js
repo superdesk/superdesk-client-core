@@ -26,7 +26,7 @@
         this.searchLookup = {};
         this.deskLookup = {};
         this.stageLookup = {};
-        this.fileTypes = ['all', 'text', 'picture', 'composite', 'video', 'audio'];
+        this.fileTypes = ['all', 'text', 'picture', 'composite', 'takesPackage', 'highlightsPackage', 'video', 'audio'];
         this.selectedFileType = [];
         this.monitoringSearch = false;
         this.searchQuery = null;

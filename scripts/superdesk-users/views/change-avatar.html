@@ -7,7 +7,7 @@
     <aside class="sidebar">
         <ul>
             <li ng-repeat="method in methods" ng-click="activate(method)" ng-class="{active: active === method}">
-                <i class="avatar-icon-{{ method.id }}"></i> {{ method.label }}
+                <i class="avatar-icon-{{ method.id }}"></i> {{ method.label | translate }}
             </li>
         </ul>
         <div class="remove-avatar" ng-click="removeImage()" ng-show="locals.data.picture_url">
@@ -26,7 +26,7 @@
             <div class="dropzone" ngf-drop="preview.img = $files[0]">
                 <div class="text" translate>Drop it here</div>
                 <div class="input-holder">
-                    <input type="file" accept="image/*;capture=camera" ngf-select="preview.img = $files[0]">
+                    <input type="file" accept="image/*;capture=camera" ngf-select="preview.img = $files[0]" label="{{ 'or Select from computer' | translate }}">
                 </div>
                 <div class="info" translate>The minimum image resolution is 200x200 pixels.</div>
             </div>

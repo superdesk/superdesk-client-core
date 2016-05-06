@@ -17,5 +17,6 @@ gettext('Transformation Rules Management');gettext('Un Spike');gettext('Unlock c
 gettext('Groups Management');gettext('Vocabularies Management');gettext('Sending');gettext('\'GENRE is a required field\'');
 gettext('\'SUBJECT is a required field\'');gettext('\'BYLINE is a required field\'');gettext('\'ABSTRACT is a required field\'');
 gettext('\'HEADLINE is a required field\'');gettext('\'ANPA_CATEGORY is a required field\'');gettext('\'SLUGLINE is a required field\'');
-gettext('\'GENRE null value not allowed\'');gettext('412: Can\'t publish as item state is draft');
+gettext('\'GENRE null value not allowed\'');gettext('412: Can\'t publish as item state is draft');gettext('production');gettext('search');
+gettext('desk Output');gettext('scheduled Desk Output');gettext('Search');gettext('Content Expiry');
 

@@ -9,6 +9,7 @@ SpellcheckService.$inject = ['$q', 'api', 'dictionaries'];
 function SpellcheckService($q, api, dictionaries) {
     var lang,
         dict,
+        abbreviationList = [],
         numberOfErrors,
         self;
 
@@ -54,6 +55,7 @@ function SpellcheckService($q, api, dictionaries) {
 
         if (!dict) {
             dict = dictionaries.getActive(lang, baseLang).then(function(items) {
+                dict = dict || {};
                 dict.content = {};
 
                 if (baseLang && _.find(items, {'language_id': lang}) && _.find(items, {'language_id': baseLang})) {
@@ -61,6 +63,11 @@ function SpellcheckService($q, api, dictionaries) {
                 }
 
                 angular.forEach(items, addDict);
+
+                // Abbreviations found in dictionary.
+                var re = /\w+(?:\.\w*)+/g;
+                abbreviationList = _.words(Object.keys(dict.content), re);
+
                 return dict.content;
             });
         }
@@ -78,6 +85,124 @@ function SpellcheckService($q, api, dictionaries) {
     }
 
     /**
+     * Get words that come after an abbreviation.
+     *
+     * @param {string} textContent
+     * @param {integer} currentOffset
+     * @return {Array.<Object>} Array of Object:
+     *     {
+     *       word,
+     *       index
+     *     }
+     */
+    function getNonSentenceWords(textContent, currentOffset) {
+        // words contains one or more periods in content. e.g., E.N.T., Aborig. or etc.
+        var reAbbreviations = /\w+(?:\.\w*)+/g;
+        var abbreviationWords = _.words(textContent, reAbbreviations);
+
+        // consider only abbreviations in content that found in dictionary
+        var _abbrevArr = [];
+        _.forEach(abbreviationWords, function(abbrevWord) {
+            _.filter(abbreviationList, function(item) {
+                if (item === abbrevWord) {
+                    _abbrevArr.push(abbrevWord);
+                }
+            });
+        });
+        var _abbreviationString = _abbrevArr.join('|');
+
+        // Prepare non sentence words
+        var match, wordIndex;
+        var nonSentenceWords = [];
+
+        // Words that come after an abbreviation in content.
+        var _reNonSentenceWords = '\\s+(?:' + _abbreviationString + ')(\\s+\\w+)';
+        var reNonSentenceWords = new RegExp(_reNonSentenceWords, 'g');
+        while ((match = reNonSentenceWords.exec(textContent)) != null) {
+            wordIndex = match.index + match[0].indexOf(_.trim(match[1]));
+            nonSentenceWords.push({
+                word: _.trim(match[1]),
+                index: currentOffset + wordIndex
+            });
+        }
+
+        return nonSentenceWords;
+    }
+
+    /**
+     * Get words that contributing beginning of sentences.
+     * excluding words that come after an abbreviation.
+     *
+     * @param {string} textContent
+     * @param {integer} currentOffset
+     * @return {Array.<Object>} Array of Object:
+     *     {
+     *       word,
+     *       index
+     *     }
+     */
+    function getSentenceWords(textContent, currentOffset) {
+        var reSentenceWords = /(?:^|(?:[.|?|!]\s+))(\w+)/g; // words come after by .|?|!
+        var match, wordIndex;
+        var sentenceWords = [];
+        while ((match = reSentenceWords.exec(textContent)) != null) {
+            wordIndex = match.index + match[0].indexOf(match[1]);
+            sentenceWords.push({
+                word: match[1],
+                index: currentOffset + wordIndex
+            });
+        }
+
+        // Excluding the words from sentence word if come after an abbreviation.
+        var nonSentenceWords = getNonSentenceWords(textContent, currentOffset);
+
+        _.forEach(nonSentenceWords, function(nonSentenceWord) {
+            _.remove(sentenceWords, {index: nonSentenceWord.index, word: nonSentenceWord.word});
+        });
+
+        return sentenceWords;
+    }
+
+    // Case in-sensitive search if 'i' option provided.
+    function wordExistInDict(word, i) {
+        var result = {};
+        if (i) {
+            result = _.pick(dict.content, function(value, key) {
+                return key.toLowerCase() === word.toLowerCase();
+            });
+        } else {
+            result = _.pick(dict.content, function(value, key) {
+                return key === word;
+            });
+        }
+        return !_.isEmpty(result);
+    }
+
+    // Verify if the word exist in dictionary and the first letter is capital in case of sentence word.
+    function verifyDictWord(word, index, objSentenceWord) {
+        if (index === 0) {
+            if (!isFirstLetterCapital(word)) {
+                return false;
+            } else {
+                return wordExistInDict(word, 'i');
+            }
+        } else {
+            if (!_.isEmpty(objSentenceWord)) {
+                if (isFirstLetterCapital(objSentenceWord[0].word)) {
+                    return wordExistInDict(word, 'i');
+                } else {
+                    return false;
+                }
+            }
+            return dict.content[word];
+        }
+    }
+
+    function isFirstLetterCapital(word) {
+        return word[0] === word[0].toUpperCase();
+    }
+
+    /**
      * Find errors in given node
      *
      * @param {Node} node
@@ -91,16 +216,20 @@ function SpellcheckService($q, api, dictionaries) {
                 tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
 
             while (tree.nextNode()) {
+                var objSentenceWords = getSentenceWords(tree.currentNode.textContent, currentOffset);
                 while ((match = regexp.exec(tree.currentNode.textContent)) != null) {
                     var word = match[0];
-                    if (isNaN(word) && !dict.content[word]) {
+                    var objSentenceWord = _.filter(objSentenceWords, {index: currentOffset + match.index});
+                    var isSentenceWord = match.index === 0 ? true : !_.isEmpty(objSentenceWord);
+
+                    if (isNaN(word) && !verifyDictWord(word, match.index, objSentenceWord)) {
                         errors.push({
                             word: word,
-                            index: currentOffset + match.index
+                            index: currentOffset + match.index,
+                            sentenceWord: isSentenceWord
                         });
                     }
                 }
-
                 currentOffset += tree.currentNode.length;
             }
 
@@ -119,6 +248,13 @@ function SpellcheckService($q, api, dictionaries) {
             word: word,
             language_id: lang
         }).then(function(result) {
+            var allDict = getDict();
+            var wordFoundInDict = _.pick(allDict.content, function(value, key) {
+                if (key.toLowerCase() === word.toLowerCase()) {
+                    return key;
+                }
+            });
+            angular.extend(result.corrections, Object.keys(wordFoundInDict));
             return result.corrections || [];
         });
     };
@@ -133,24 +269,70 @@ function SpellcheckService($q, api, dictionaries) {
     };
 }
 
-SpellcheckMenuController.$inject = ['editor', '$rootScope'];
-function SpellcheckMenuController(editor, $rootScope) {
-    this.isAuto = editor.settings.spellcheck;
+SpellcheckMenuController.$inject = ['editor', 'preferencesService'];
+function SpellcheckMenuController(editor, preferencesService) {
+    this.isAuto = null;
     this.spellcheck = spellcheck;
     this.pushSettings = pushSettings;
-
+    var PREFERENCES_KEY = 'spellchecker:status';
     var self = this;
 
-    function spellcheck() {
-        editor.setSettings({spellcheck: true});
-        editor.render();
-        editor.setSettings({spellcheck: false});
+    /**
+     * Set the spell checker status
+     */
+    function setStatus(status) {
+        var updates = {};
+        updates[PREFERENCES_KEY] = {
+            'type': 'bool',
+            'enabled': status,
+            'default': true
+        };
+
+        preferencesService.update(updates, PREFERENCES_KEY);
     }
 
-    function pushSettings() {
+    /**
+     * Get the spell checker status
+     */
+    function getStatus() {
+        var status = true;
+        return preferencesService.get(PREFERENCES_KEY).then(function(result) {
+            if (angular.isDefined(result)) {
+                status = result.enabled;
+            }
+            return status;
+        }, function(error) {
+            return status;
+        });
+    }
+
+    /**
+     * Force spell ckecking
+     */
+    function spellcheck() {
+        editor.render(true);
+    }
+
+    /**
+     * render the editor based on the spell check settings.
+     */
+    function render() {
         editor.setSettings({spellcheck: self.isAuto});
         editor.render();
     }
+
+    /**
+     * update the editor and preferences
+     */
+    function pushSettings() {
+        render();
+        setStatus(self.isAuto);
+    }
+
+    getStatus().then(function(status) {
+        self.isAuto = status;
+        render();
+    });
 }
 
 angular.module('superdesk.editor.spellcheck', ['superdesk.dictionaries'])

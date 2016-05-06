@@ -1,0 +1,33 @@
+<div sd-modal data-model="aboutActive" class="modal modal-large modal--about">
+  <div class="modal-header modal-header--about">
+    <h3 class="modal-header__sd-logo">Superdesk</h3>
+    <div class="btn-group pull-right">
+      <button ng-click="closeAbout()" title="{{ :: 'Close' | translate }}" class="close"><i class="icon-close-small"></i></button>
+    </div>
+  </div>
+
+  <div class="modal-body">
+    <div class="about-content">
+      <span class="sf-logo"></span>
+      <h4>Superdesk v{{ :: version }}</h4>
+      <p class="date-released"><span ng-show="releaseDate">Released on</span> {{ :: releaseDate }}</p>
+      <p>
+        <a href="https://www.superdesk.org" target="_blank"><b>Superdesk</b></a> is an open source end-to-end news creation, production, curation, distribution and publishing platform maintained by <a href="http://sourcefabric.org">Sourcefabric z.u.</a>, a nonprofit organisation whose primary purpose is to make the best possible software for journalism.
+      </p>
+      <p>
+        Copyright (c) 2014 - {{ year }} Sourcefabric z.u. and contributors.<br>
+        Superdesk is released under the <a href="https://www.gnu.org/licenses/agpl-3.0" target="_blank">open source license AGPLv3</a>.
+      </p>
+      <p>
+        Looking for help or support?<br>
+        <a href="https://forum.sourcefabric.org/categories/superdesk-dev" target="_blank">Forum</a>&nbsp;&nbsp; | &nbsp;&nbsp;<a href="#" target="_blank">User Manual</a>
+      </p>
+      <p>
+        Get in touch with us via direct email <a href="mailto:superdesk@sourcefabric.org">superdesk@sourcefabric.org</a>... or find us in IRC Freenode at the #superdesk channel.
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button ng-click="closeAbout()" class="btn btn-primary pull-right" translate>Close</button>
+  </div>
+</div>

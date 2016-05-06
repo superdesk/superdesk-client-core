@@ -9,11 +9,8 @@ var files = [
         src: '<%= appDir %>/index.less'
     },
     {
-        expand: true,
-        dest: '<%= tmpDir %>/docs/',
-        cwd: '<%= coreDir %>/docs/',
-        src: ['styles/*.less'],
-        ext: '.css'
+        dest: '<%= distDir %>/docs.css',
+        src: '<%= appDir %>/docs/styles/main.less'
     }
 ];
 

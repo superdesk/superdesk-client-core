@@ -1008,3 +1008,25 @@ textarea {
   margin-bottom: 0;
   vertical-align: top;
 }
+
+// line input for contenteditable div
+.contenteditable-input {
+  min-height: 18px;
+  padding: 3px 0;
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0,0,0,0.15);
+  line-height: 16px;
+  &:hover {
+        border-color: rgba(0,0,0,0.3);
+        background-color: transparent;
+    }
+    &:focus {
+        box-shadow: 0 1px 0 0 @sd-blue;
+        border-color: @sd-blue;
+        background-color: transparent;
+    }
+    &--side-padding {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+}

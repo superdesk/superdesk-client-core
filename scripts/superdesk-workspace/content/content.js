@@ -1,6 +1,61 @@
 (function() {
     'use strict';
 
+    // http://docs.python-cerberus.org/en/stable/usage.html
+    var DEFAULT_SCHEMA = Object.freeze({
+        slugline: {maxlength: 24},
+        relatedItems: {},
+        genre: {},
+        anpa_take_key: {},
+        place: {},
+        priority: {},
+        urgency: {},
+        anpa_category: {},
+        subject: {},
+        company_codes: {},
+        ednote: {},
+        headline: {maxlength: 64},
+        sms: {maxlength: 160},
+        abstract: {maxlength: 160},
+        body_html: {},
+        byline: {},
+        dateline: {},
+        located: {},
+        sign_off: {},
+        footer: {},
+        body_footer: {},
+        media: {},
+        media_description: {}
+    });
+
+    var DEFAULT_EDITOR = Object.freeze({
+        slugline: {order: 1, sdWidth: 'full'},
+        genre: {order: 2, sdWidth: 'half'},
+        anpa_take_key: {order: 3, sdWidth: 'half'},
+        place: {order: 4, sdWidth: 'half'},
+        priority: {order: 5, sdWidth: 'quarter'},
+        urgency: {order: 6, sdWidth: 'quarter'},
+        anpa_category: {order: 7, sdWidth: 'full'},
+        subject: {order: 8, sdWidth: 'full'},
+        company_codes: {order: 9, sdWidth: 'full'},
+        ednote: {order: 10, sdWidth: 'full'},
+        headline: {order: 11, formatOptions: ['underline', 'anchor', 'bold', 'removeFormat']},
+        sms: {order: 12},
+        abstract: {order: 13, formatOptions: ['bold', 'italic', 'underline', 'anchor', 'removeFormat']},
+        byline: {order: 14},
+        dateline: {order: 15},
+        body_html: {
+            order: 16,
+            formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'anchor', 'embed', 'picture', 'removeFormat']
+        },
+        footer: {order: 17},
+        body_footer: {order: 18},
+        sign_off: {order: 19},
+        located: {},
+        media: {},
+        media_description: {}
+    });
+
     angular.module('superdesk.workspace.content', [
         'superdesk.api',
         'superdesk.archive',
@@ -131,10 +186,32 @@
         this.getType = function(id) {
             return api.find('content_types', id);
         };
+
+        /**
+         * Get schema for given content type
+         *
+         * @param {Object} contentType
+         * @return {Object}
+         */
+        this.schema = function(contentType) {
+            return contentType && contentType.schema ? angular.extend({}, contentType.schema) : DEFAULT_SCHEMA;
+        };
+
+        /**
+         * Get editor config for given content type
+         *
+         * @param {Object} contentType
+         * @return {Object}
+         */
+        this.editor = function(contentType) {
+            return contentType && contentType.editor ? angular.extend({}, contentType.editor) : DEFAULT_EDITOR;
+        };
     }
 
-    ContentCreateDirective.$inject = ['api', 'desks', 'templates', 'content', 'authoringWorkspace', 'superdesk', 'keyboardManager'];
-    function ContentCreateDirective(api, desks, templates, content, authoringWorkspace, superdesk, keyboardManager) {
+    ContentCreateDirective.$inject = ['api', 'desks', 'templates', 'content', 'authoringWorkspace', 'superdesk', 'keyboardManager',
+    '$location'];
+    function ContentCreateDirective(api, desks, templates, content, authoringWorkspace, superdesk, keyboardManager,
+        $location) {
         return {
             scope: true,
             templateUrl: 'scripts/superdesk-workspace/content/views/sd-content-create.html',
@@ -164,6 +241,13 @@
                  */
                 scope.createPackage = function() {
                     content.createPackageItem().then(edit);
+                };
+
+                /**
+                 * Do not allow packages to be created from personal workspace
+                **/
+                scope.canCreatePackage = function() {
+                    return $location.path() !== '/workspace/personal';
                 };
 
                 /**

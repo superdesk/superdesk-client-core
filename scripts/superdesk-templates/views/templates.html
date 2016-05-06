@@ -1,15 +1,29 @@
 <div class="split-content">
   <div class="header">
     <h2 translate>Templates</h2>
-    <button class="btn btn-info pull-right" ng-click="edit()">
-      <i class="icon-plus-sign icon-white"></i> <span translate>Add New Template</span>
-    </button>
+    <div class="pull-right">
+        <div class="sortbar pull-left">
+           <span class="lab" translate>Filter:</span>
+           <div class="dropdown" dropdown sd-dropdown-position>
+             <button id="order_button" class="dropdown-toggle" dropdown-toggle>{{ filters[activeFilter].label | translate }} <b class="caret"></b>
+             </button>
+             <ul class="dropdown-menu left-submenu" id="order_selector">
+                <li ng-repeat="f in filters track by $index" ng-class="{active: activeFilter === $index}">
+                  <a href="" ng-click="filterBy($index)">{{ f.label | translate }}</a>
+                </li>
+             </ul>
+           </div>
+        </div>
+        <button class="btn btn-info" ng-click="edit()">
+          <i class="icon-plus-sign icon-white"></i> <span translate>Add New Template</span>
+        </button>
+    </div>
   </div>
 
   <div class="content">
       <div class="flex-grid box wrap-items small-2 medium-4 large-6">
-          <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items track by template._id" ng-if="desks">
-              <div class="card-box__header">
+          <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | templatesBy:filters[activeFilter]" ng-if="desks">
+              <div class="card-box__header" ng-class="{'card-box__header--dark': !template.is_public}" >
                   <div class="dropdown" dropdown>
                       <button class="dropdown-toggle" dropdown-toggle>
                           <i class="icon-dots-vertical"></i>
@@ -18,7 +32,7 @@
                           <li><div class="menu-label" translate>Actions</div></li>
                           <li class="divider"></li>
                           <li><button ng-click="edit(template)" title="{{:: 'Edit Template' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                          <li><button ng-click="remove(template)" title="{{:: 'Remove Template' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                          <li ng-if="template.template_type !== 'kill'"><button ng-click="remove(template)" title="{{:: 'Remove Template' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                       </ul>
                   </div>
                   <div class="card-box__heading">{{ template.template_name }}</div>
@@ -66,7 +80,7 @@
             <label for="template-type" translate>Template Type</label>
             <select id="template-type" required
               ng-model="template.template_type"
-              ng-options="type._id as type.label for type in types"></select>
+              ng-options="type._id as type.label for type in types | filter:templatesFilter"></select>
         </div>
 
         <div class="field">

@@ -2,6 +2,7 @@
 
 describe('text editor', function() {
 
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.editor.spellcheck'));
     beforeEach(module('superdesk.templates-cache'));
@@ -27,6 +28,7 @@ describe('text editor', function() {
     }
 
     it('can spellcheck', inject(function(editor, spellcheck, $q, $rootScope) {
+        editor.setSettings({spellcheck: true});
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
         var scope = createScope('test', $rootScope);
         editor.registerScope(scope);
@@ -36,7 +38,19 @@ describe('text editor', function() {
         expect(scope.node.innerHTML).toBe('<span class="sderror sdhilite">test</span>');
     }));
 
+    it('can highlight a sentence word for capitalization', inject(function(editor, spellcheck, $q, $rootScope) {
+        editor.setSettings({spellcheck: true});
+        spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0, sentenceWord: true}]));
+        var scope = createScope('test', $rootScope);
+        editor.registerScope(scope);
+        editor.renderScope(scope);
+        $rootScope.$digest();
+
+        expect(scope.node.innerHTML).toBe('<span class="sderror sdhilite sdCapitalize">test</span>');
+    }));
+
     it('can remove highlights but keep marker', inject(function(editor, $q, $rootScope) {
+        editor.setSettings({spellcheck: true});
         var content = 'test <b>foo</b> <span class="sderror sdhilite">error</span> it';
         var scope = createScope(content, $rootScope);
         var html = editor.cleanScope(scope);
@@ -44,6 +58,7 @@ describe('text editor', function() {
     }));
 
     it('can findreplace', inject(function(editor, spellcheck, $q, $rootScope, $timeout) {
+        editor.setSettings({spellcheck: true});
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
         var scope = createScope('test $foo and $foo', $rootScope);
         editor.registerScope(scope);
@@ -96,6 +111,11 @@ describe('text editor', function() {
 
         scope.node.innerHTML = 'foo';
         editor.commit();
+        expect(scope.model.$setViewValue).not.toHaveBeenCalled();
+
+        editor.undo(scope);
+        expect(scope.model.$setViewValue).not.toHaveBeenCalled();
+        editor.redo(scope);
         expect(scope.model.$setViewValue).not.toHaveBeenCalled();
 
         scope.node.innerHTML = 'bar';

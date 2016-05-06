@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    var constans = {
+    var constants = {
         MENU_MAIN: 'superdesk.menu.main',
         MENU_SETTINGS: 'superdesk.menu.settings',
         ACTION_EDIT: 'edit',
@@ -17,7 +17,7 @@
         var permissions = {};
         var panes = {};
 
-        angular.extend(this, constans);
+        angular.extend(this, constants);
 
         /**
          * Register widget.
@@ -275,7 +275,7 @@
                             return menu;
                         });
                     }
-                }, constans);
+                }, constants);
             }];
     }
 

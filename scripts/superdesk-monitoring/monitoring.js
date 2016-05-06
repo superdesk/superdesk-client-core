@@ -90,7 +90,7 @@
 
             params.spike = (card.type === 'spike' || card.type === 'spike-personal');
 
-            var query = search.query(params);
+            var query = search.query(search.setFilters(params));
 
             switch (card.type) {
             case 'search':
@@ -157,7 +157,47 @@
             }
 
             if (card.fileType) {
-                query.filter({terms: {'type': JSON.parse(card.fileType)}});
+                var termsHighlightsPackage = {and: [
+                    {bool: {must: {'exists':{'field': 'highlight'}}}},
+                    {terms: {'type': ['composite']}}
+                ]};
+
+                var termsTakesPackage = {and: [
+                    {term: {'package_type': 'takes'}},
+                    {term: {'type': ['composite']}}
+                ]};
+
+                var termsFileType = {terms: {'type': JSON.parse(card.fileType)}};
+
+                // Normal package
+                if (_.contains(JSON.parse(card.fileType), 'composite')) {
+                    termsFileType = {and: [
+                        {bool: {must_not: {'exists':{'field': 'highlight'}}}},
+                        {bool: {must_not: {term: {'package_type': 'takes'}}}},
+                        {terms: {'type': JSON.parse(card.fileType)}}
+                    ]};
+                }
+
+                if (_.contains(JSON.parse(card.fileType), 'highlightsPackage') &&
+                    _.contains(JSON.parse(card.fileType), 'takesPackage')) {
+                    query.filter({or: [
+                        termsHighlightsPackage,
+                        termsTakesPackage,
+                        termsFileType
+                    ]});
+                } else if (_.contains(JSON.parse(card.fileType), 'takesPackage')) {
+                    query.filter({or: [
+                        termsTakesPackage,
+                        termsFileType
+                    ]});
+                } else if (_.contains(JSON.parse(card.fileType), 'highlightsPackage')) {
+                    query.filter({or: [
+                        termsHighlightsPackage,
+                        termsFileType
+                    ]});
+                } else {
+                    query.filter(termsFileType);
+                }
             }
 
             if (queryString) {
@@ -346,7 +386,7 @@
 
                 scope.style = {};
                 if (scope.limited) {
-                    scope.style.maxHeight = scope.group.max_items ? scope.group.max_items * ITEM_HEIGHT : null;
+                    updateGroupStyle();
                 }
 
                 scope.edit = edit;
@@ -355,7 +395,13 @@
                 scope.renderNew = renderNew;
                 scope.viewSingleGroup = viewSingleGroup;
 
-                scope.$watchCollection('group', queryItems);
+                scope.$watchCollection('group', function() {
+                    if (scope.limited) {
+                        updateGroupStyle();
+                    }
+                    queryItems();
+                });
+
                 scope.$on('task:stage', queryItems);
                 scope.$on('ingest:update', queryItems);
                 scope.$on('item:spike', queryItems);
@@ -423,6 +469,9 @@
                     }
                 }, {inputDisabled: false});
 
+                function updateGroupStyle() {
+                    scope.style.maxHeight = scope.group.max_items ? scope.group.max_items * ITEM_HEIGHT : null;
+                }
                 /*
                  * Bind item actions on keyboard shortcuts
                  * Keyboard shortcuts are defined with actions

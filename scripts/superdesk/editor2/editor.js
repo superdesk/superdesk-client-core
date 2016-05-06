@@ -11,88 +11,7 @@
 
 'use strict';
 
-/**
- * Replace given dom elem with its contents
- *
- * It is like jQuery unwrap
- *
- * @param {Node} elem
- */
-function replaceSpan(elem) {
-    var parent = elem.parentNode;
-    while (elem.hasChildNodes()) {
-        parent.insertBefore(elem.childNodes.item(0), elem);
-    }
-
-    parent.removeChild(elem);
-}
-
-/**
- * Remove all elements with given className but keep its contents
- *
- * @param {Node} elem
- * @param {string} className
- * @return {Node}
- */
-function removeClass(elem, className) {
-    var node = elem.cloneNode(true);
-    var spans = node.getElementsByClassName(className);
-    while (spans.length) {
-        replaceSpan(spans.item(0));
-    }
-
-    node.normalize();
-    return node;
-}
-
-/**
- * Find text node within given node for given character offset
- *
- * This will find text node within given node that contains character on given offset
- *
- * @param {Node} node
- * @param {numeric} offset
- * @return {Object} {node: {Node}, offset: {numeric}}
- */
-function findOffsetNode(node, offset) {
-    var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
-    var currentLength;
-    var currentOffset = 0;
-    var ZERO_WIDTH_SPACE = String.fromCharCode(65279);
-    while (tree.nextNode()) {
-        tree.currentNode.textContent = tree.currentNode.textContent.replace(ZERO_WIDTH_SPACE, '');
-        currentLength = tree.currentNode.textContent.length;
-        if (currentOffset + currentLength >= offset) {
-            return {node: tree.currentNode, offset: offset - currentOffset};
-        }
-
-        currentOffset += currentLength;
-    }
-}
-
-/**
- * Find text node within given node where word is located
- *
- * It will find text type node where the whole word is located
- *
- * @param {Node} node
- * @param {Number} index
- * @param {Number} length
- * @return {Object} {node: {Node}, offset: {Number}}
- */
-function findWordNode(node, index, length) {
-    var start = findOffsetNode(node, index);
-    var end = findOffsetNode(node, index + length);
-
-    // correction for linebreaks - first node on a new line is set to
-    // linebreak text node which is not even visible in dom, maybe dom bug?
-    if (start.node !== end.node) {
-        start.node = end.node;
-        start.offset = 0;
-    }
-
-    return start;
-}
+var TYPING_CLASS = 'typing';
 
 /**
  * History stack
@@ -138,10 +57,20 @@ function HistoryStack(initialValue) {
         var state = index > -1 ? stack[index] : initialValue;
         return state;
     };
+
+    /**
+     * Get current index
+     *
+     * @return {Number}
+     */
+    this.getIndex = function() {
+        return index;
+    };
 }
 
-EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q', 'lodash', 'renditions'];
-function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsService) {
+EditorService.$inject = ['spellcheck', '$q', 'lodash', 'renditions', 'editorUtils'];
+function EditorService(spellcheck, $q, _, renditionsService, utils) {
+
     this.settings = {spellcheck: true};
 
     /**
@@ -223,51 +152,31 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     };
 
     /**
-     * Remove highlighting from given scope and return its contents
-     *
-     * @param {Scope} scope
-     * @return {string}
-     */
-    this.cleanScope = function(scope) {
-        self.storeSelection(scope.node);
-        var html = clean(scope.node).innerHTML;
-        html = html.replace('\ufeff', ''); // remove rangy marker
-        scope.node.innerHTML = html;
-        self.resetSelection(scope.node);
-        return html;
-    };
-
-    /**
      * Render highlights for given scope based on settings
      *
      * @param {Scope} scope
      * @param {Scope} force force rendering manually - eg. via keyboard
      */
     this.renderScope = function(scope, force, preventStore) {
-        //self.cleanScope(scope); avoid cursor manipulation
         if (self.settings.findreplace) {
             renderFindreplace(scope.node);
         } else if (self.settings.spellcheck || force) {
             renderSpellcheck(scope.node, preventStore);
+        } else {
+            utils.removeHilites(scope.node);
         }
     };
 
     /**
      * Render highlights in all registered scopes
-     */
-    this.render = function() {
-        scopes.forEach(self.renderScope);
-    };
-
-    /**
-     * Remove highlight markup from given node
      *
-     * @param {Node} node
-     * @return {Node}
+     * @param {Boolean} force rendering
      */
-    function clean(node) {
-        return removeClass(node, HILITE_CLASS);
-    }
+    this.render = function(force) {
+        scopes.forEach(function(scope) {
+            self.renderScope(scope, force);
+        });
+    };
 
     /**
      * Highlight find&replace matches in given node
@@ -275,47 +184,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Node} node
      */
     function renderFindreplace(node) {
-        var tokens = getFindReplaceTokens(node);
-        hilite(node, tokens, FINDREPLACE_CLASS);
-    }
-
-    /**
-     * Find all matches for current find&replace needle in given node
-     *
-     * Each match is {word: {string}, offset: {number}} in given node,
-     * we can't return nodes here because those will change when we start
-     * highlighting and offsets wouldn't match
-     *
-     * @param {Node} node
-     * @return {Array} list of matches
-     */
-    function getFindReplaceTokens(node) {
-        var tokens = [];
-        var needle = self.settings.findreplace.needle || null;
-
-        if (!needle) {
-            return tokens;
+        var tokens = utils.getFindReplaceTokens(node, self.settings);
+        utils.hilite(node, tokens, FINDREPLACE_CLASS);
+        if (self.settings.findreplace.diff) {
+            self.selectNext();
         }
-
-        var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
-        var currentOffset = 0;
-        var index, text;
-        while (tree.nextNode()) {
-            text = tree.currentNode.textContent;
-            while ((index = text.indexOf(needle)) > -1) {
-                tokens.push({
-                    word: text.substr(index, needle.length),
-                    index: currentOffset + index
-                });
-
-                text = text.substr(index + needle.length);
-                currentOffset += index + needle.length;
-            }
-
-            currentOffset += text.length;
-        }
-
-        return tokens;
     }
 
     /**
@@ -325,61 +198,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      */
     function renderSpellcheck(node, preventStore) {
         spellcheck.errors(node).then(function(tokens) {
-            hilite(node, tokens, ERROR_CLASS, preventStore);
+            utils.hilite(node, tokens, ERROR_CLASS, preventStore);
         });
-    }
-
-    /**
-     * Hilite all tokens within node using span with given className
-     *
-     * This first stores caret position, updates markup, and then restores the caret.
-     *
-     * @param {Node} node
-     * @param {Array} tokens
-     * @param {string} className
-     * @param {Boolean} preventStore
-     */
-    function hilite(node, tokens, className, preventStore) {
-        var CLONE_CLASS = 'clone';
-        var parentNode = node.parentNode;
-
-        // remove old hilite nodes if any
-        var clones = parentNode.getElementsByClassName(CLONE_CLASS);
-        if (clones.length) {
-            parentNode.removeChild(clones.item(0));
-        }
-
-        // create a clone
-        var hiliteNode = node.cloneNode(true);
-        hiliteNode.classList.add(CLONE_CLASS);
-
-        // generate hilite markup in clone
-        tokens.forEach(function(token) {
-            hiliteToken(hiliteNode, token, className);
-        });
-
-        // render clone
-        parentNode.appendChild(hiliteNode);
-    }
-
-    /**
-     * Highlight single `token` via putting it into a span with given class
-     *
-     * @param {Node} node
-     * @param {Object} token
-     * @param {string} className
-     */
-    function hiliteToken(node, token, className) {
-        var start = findWordNode(node, token.index, token.word.length);
-        var replace = start.node.splitText(start.offset);
-        var span = document.createElement('span');
-        span.classList.add(className);
-        span.classList.add(HILITE_CLASS);
-        replace.splitText(token.word.length);
-        span.textContent = replace.textContent;
-        span.dataset.word = token.word;
-        span.dataset.index = token.index;
-        replace.parentNode.replaceChild(span, replace);
     }
 
     /**
@@ -394,7 +214,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
             if (node.classList.contains(ACTIVE_CLASS)) {
                 node.classList.remove(ACTIVE_CLASS);
                 nodes.item((i + 1) % nodes.length).classList.add(ACTIVE_CLASS);
-                return;
+                return node;
             }
         }
 
@@ -425,10 +245,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      */
     this.replace = function(text) {
         scopes.forEach(function(scope) {
-            var nodes = scope.node.getElementsByClassName(ACTIVE_CLASS);
-            replaceNodes(nodes, text, scope);
-            self.commitScope(scope);
-        });
+            var nodes = scope.node.parentNode.getElementsByClassName(ACTIVE_CLASS);
+            this.replaceNodes(nodes, text, scope);
+            this.commitScope(scope);
+        }.bind(this));
     };
 
     /**
@@ -438,10 +258,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      */
     this.replaceAll = function(text) {
         scopes.forEach(function(scope) {
-            var nodes = scope.node.getElementsByClassName(HILITE_CLASS);
-            replaceNodes(nodes, text);
-            self.commitScope(scope);
-        });
+            var nodes = scope.node.parentNode.getElementsByClassName(HILITE_CLASS);
+            this.replaceNodes(nodes, text, scope);
+            this.commitScope(scope);
+        }.bind(this));
     };
 
     /**
@@ -454,7 +274,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      */
     this.replaceWord = function(scope, index, length, word) {
         var node = scope.node;
-        var start = findWordNode(node, index, length);
+        var start = utils.findWordNode(node, index, length);
         var characters = start.node.textContent.split('');
         characters.splice(start.offset, length, word);
         start.node.textContent = characters.join('');
@@ -466,52 +286,14 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {HTMLCollection} nodes
      * @param {string} text
      */
-    function replaceNodes(nodes, text) {
-        while (nodes.length) {
-            var node = nodes.item(0);
-            var textNode = document.createTextNode(text);
-            node.parentNode.replaceChild(textNode, node);
-            textNode.parentNode.normalize();
+    this.replaceNodes = function(nodes, text, scope) {
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            var node = nodes.item(i);
+            var word = node.dataset.word;
+            var index = parseInt(node.dataset.index, 10);
+            this.replaceWord(scope, index, word.length, text);
         }
-    }
-
-    /**
-     * Store current anchor position within given node
-     */
-    this.storeSelection = function storeSelection() {
-        self.selection = window.rangy ? window.rangy.saveSelection() : null;
     };
-
-    /**
-     * Reset stored anchor position in given node
-     */
-    this.resetSelection = function resetSelection(node) {
-        if (self.selection) {
-            window.rangy.restoreSelection(self.selection);
-            self.selection = null;
-        }
-
-        clearRangy(node);
-    };
-
-    /**
-     * Remove all rangy stored selections from given node
-     *
-     * @param {Node} node
-     * @return {Node}
-     */
-    function clearRangy(node) {
-        var spans = node.getElementsByClassName('rangySelectionBoundary');
-        while (spans.length) {
-            var span = spans.item(0);
-            span.parentNode.removeChild(span);
-            if (span.parentNode.normalize) {
-                span.parentNode.normalize();
-            }
-        }
-
-        return node;
-    }
 
     /**
      * Update settings
@@ -545,7 +327,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     this.commitScope = function(scope) {
-        var nodeValue = clearRangy(clean(scope.node)).innerHTML;
+        var nodeValue = scope.node.innerHTML;
         if (nodeValue !== scope.model.$viewValue) {
             scope.model.$setViewValue(nodeValue);
             scope.history.add(scope.model.$viewValue);
@@ -558,8 +340,10 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     this.undo = function(scope) {
-        scope.history.selectPrev();
-        useHistory(scope);
+        if (scope.history.getIndex() > -1) {
+            scope.history.selectPrev();
+            useHistory(scope);
+        }
     };
 
     /**
@@ -568,8 +352,11 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     this.redo = function(scope) {
+        var oldIndex = scope.history.getIndex();
         scope.history.selectNext();
-        useHistory(scope);
+        if (oldIndex !== scope.history.getIndex()) {
+            useHistory(scope);
+        }
     };
 
     /**
@@ -578,12 +365,36 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
      * @param {Scope} scope
      */
     function useHistory(scope) {
-        var val = scope.history.get();
+        var val = scope.history.get() || '';
         if (val != null) {
             scope.node.innerHTML = val;
             scope.model.$setViewValue(val);
         }
     }
+
+    /**
+     * Returns the cleaned node text
+     *
+     * @return {string}
+     */
+    this.getNodeText = function(scope) {
+        return scope.node.innerHTML;
+    };
+
+    /**
+     * Get active node text
+     *
+     * @return {string}
+     */
+    this.getActiveText = function() {
+        var active;
+        scopes.forEach(function(scope) {
+            var nodes = scope.node.parentNode.getElementsByClassName(ACTIVE_CLASS);
+            active = nodes.length ? nodes.item(0) : active;
+        });
+
+        return active ? active.textContent : null;
+    };
 
     this.generateImageTag = function(data) {
         var url = data.url, altText = data.altText;
@@ -643,8 +454,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q, _, renditionsServic
     };
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'cropPicture'];
-function SdTextEditorBlockEmbedController($timeout, editor, cropPicture) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions'];
+function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
@@ -681,7 +492,8 @@ function SdTextEditorBlockEmbedController($timeout, editor, cropPicture) {
             if (!vm.model.association) {
                 return false;
             }
-            cropPicture.crop(picture).then(function(picture) {
+            vm.model.loading = true;
+            renditions.crop(picture).then(function(picture) {
                 // update block
                 vm.model.association = picture;
                 editor.generateImageTag(picture).then(function(img) {
@@ -689,6 +501,8 @@ function SdTextEditorBlockEmbedController($timeout, editor, cropPicture) {
                 });
                 // update caption
                 vm.saveCaption(vm.model.association.description_text);
+            }).finally(function() {
+                vm.model.loading = false;
             });
         }
     });
@@ -705,6 +519,7 @@ angular.module('superdesk.editor2', [
         'superdesk.editor2.embed',
         'superdesk.editor2.content',
         'superdesk.editor.spellcheck',
+        'superdesk.editor.utils',
         'superdesk.authoring',
         'angular-embed'
     ])
@@ -779,7 +594,7 @@ angular.module('superdesk.editor2', [
             }
         };
     }])
-    .directive('sdTextEditor', ['$timeout', function ($timeout) {
+    .directive('sdTextEditor', ['$timeout', 'lodash', function ($timeout, _) {
         return {
             scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '='},
             require: ['sdTextEditor', 'ngModel'],
@@ -790,12 +605,32 @@ angular.module('superdesk.editor2', [
             link: function(scope, element, attr, controllers) {
                 var controller = controllers[0];
                 var ngModel = controllers[1];
-                $timeout(function() {
-                    if (controller.config.multiBlockEdition) {
-                        controller.initEditorWithMultipleBlock(ngModel);
-                    } else {
-                        controller.initEditorWithOneBlock(ngModel);
-                    }
+                function init() {
+                    scope.$applyAsync(function() {
+                        if (controller.config.multiBlockEdition) {
+                            controller.initEditorWithMultipleBlock(ngModel);
+                        } else {
+                            controller.initEditorWithOneBlock(ngModel);
+                        }
+                    });
+                }
+                // init editor based on model
+                init();
+                // when the model changes from outside, updates the editor
+                scope.$watch(function() {
+                    return ngModel.$viewValue;
+                }, function() {
+                    $timeout(function() {
+                        // if controller is ready and the value has changed
+                        if (controller.blocks.length > 0 && ngModel.$viewValue && ngModel.$viewValue !== controller.serializeBlock()) {
+                            // if blocks are not loading
+                            if (!_.some(controller.blocks, function(block) {
+                                return block.loading;
+                            })) {
+                                init();
+                            }
+                        }
+                    }, 250, false);
                 });
             }
         };
@@ -809,8 +644,8 @@ angular.module('superdesk.editor2', [
             controller: SdTextEditorBlockEmbedController
         };
     }])
-    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog',
-    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog) {
+    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog', 'config',
+    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog, config) {
         var EDITOR_CONFIG = {
             toolbar: {
                 static: true,
@@ -827,8 +662,13 @@ angular.module('superdesk.editor2', [
             },
             placeholder: false,
             disableReturn: false,
-            spellcheck: false
+            spellcheck: false,
+            targetBlank: true
         };
+
+        if (config.editor) {
+            angular.extend(EDITOR_CONFIG, config.editor);
+        }
 
         /**
          * Get number of lines for all p nodes before given node withing same parent.
@@ -1014,7 +854,6 @@ angular.module('superdesk.editor2', [
                     sdEditorCtrl: sdTextEditor
                 });
                 vm.block = scope.sdTextEditorBlockText;
-                var TYPING_CLASS = 'typing';
                 var editorElem;
                 var updateTimeout;
                 var renderTimeout;
@@ -1022,16 +861,19 @@ angular.module('superdesk.editor2', [
                 ngModel.$render = function() {
                     editor.registerScope(scope);
                     var editorConfig = angular.merge({}, EDITOR_CONFIG, scope.config || {});
-                    editorConfig.toolbar.buttons = [];
-                    setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
-                    // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
-                    if (scope.config.multiBlockEdition) {
-                        // this dummy imageDragging stop preventing drag & drop events
-                        editorConfig.extensions = {'imageDragging': {}};
-                        if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
-                            editorConfig.extensions.table = new window.MediumEditorTable();
+                    if (editorConfig.toolbar) {
+                        editorConfig.toolbar.buttons = [];
+                        setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
+                        // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
+                        if (scope.config.multiBlockEdition) {
+                            // this dummy imageDragging stop preventing drag & drop events
+                            editorConfig.extensions = {'imageDragging': {}};
+                            if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
+                                editorConfig.extensions.table = new window.MediumEditorTable();
+                            }
                         }
                     }
+
                     spellcheck.setLanguage(scope.language);
                     editorElem = elem.find(scope.type === 'preformatted' ?  '.editor-type-text' : '.editor-type-html');
                     editorElem.empty();
@@ -1071,13 +913,17 @@ angular.module('superdesk.editor2', [
                     // update the toolbar, bc it can be displayed at the
                     // wrong place if offset of block has changed
                     scope.medium.subscribe('focus', function() {
-                        scope.medium.getExtensionByName('toolbar').positionStaticToolbar(scope.medium.getFocusedElement());
+                        var toolbar = scope.medium.getExtensionByName('toolbar');
+                        if (toolbar) {
+                            toolbar.positionStaticToolbar(scope.medium.getFocusedElement());
+                        }
                     });
                     scope.$on('spellcheck:run', render);
                     scope.$on('key:ctrl:shift:s', render);
+
                     function cancelTimeout(event) {
                         $timeout.cancel(updateTimeout);
-                        scope.node.parentNode.classList.add(TYPING_CLASS);
+                        startTyping();
                     }
 
                     function changeSelectedParagraph(direction) {
@@ -1177,7 +1023,7 @@ angular.module('superdesk.editor2', [
 
                         // set data needed for replacing
                         scope.replaceWord = node.dataset.word;
-                        scope.replaceIndex = parseInt(node.dataset.index, 0);
+                        scope.replaceIndex = parseInt(node.dataset.index, 10);
 
                         spellcheck.suggest(node.textContent).then(function(suggestions) {
                             scope.suggestions = suggestions;
@@ -1206,7 +1052,6 @@ angular.module('superdesk.editor2', [
                     scope.$on('$destroy', function() {
                         scope.medium.destroy();
                         editorElem.off();
-                        spellcheck.setLanguage(null);
                     });
                     scope.cursor = {};
                     render(null, null, true);
@@ -1217,7 +1062,7 @@ angular.module('superdesk.editor2', [
                 };
 
                 function render($event, event, preventStore) {
-                    scope.node.parentNode.classList.remove(TYPING_CLASS);
+                    stopTyping();
                     editor.renderScope(scope, $event, preventStore);
                     if (event) {
                         event.preventDefault();
@@ -1239,6 +1084,7 @@ angular.module('superdesk.editor2', [
                     scope.$applyAsync(function() {
                         editor.undo(scope);
                         editor.renderScope(scope);
+                        stopTyping();
                     });
                 }
 
@@ -1246,6 +1092,7 @@ angular.module('superdesk.editor2', [
                     scope.$applyAsync(function() {
                         editor.redo(scope);
                         editor.renderScope(scope);
+                        stopTyping();
                     });
                 }
 
@@ -1253,8 +1100,16 @@ angular.module('superdesk.editor2', [
                     $timeout.cancel(renderTimeout);
                     renderTimeout = $timeout(render, 0, false);
                 }
+
+                function startTyping() {
+                    scope.node.parentNode.classList.add(TYPING_CLASS);
+                }
+
+                function stopTyping() {
+                    scope.node.parentNode.classList.remove(TYPING_CLASS);
+                }
             },
-            controller: ['$scope', 'editor', 'api', 'superdesk', function(scope, editor, api , superdesk) {
+            controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', function(scope, editor, api , superdesk, renditions) {
                 var vm = this;
                 angular.extend(vm, {
                     block: undefined, // provided in link method
@@ -1286,32 +1141,31 @@ angular.module('superdesk.editor2', [
                         editor.commitScope(scope);
                     },
                     insertPicture: function(picture) {
-                        var performRenditions = $.when(picture);
-                        if (picture._type === 'externalsource') {
-                            performRenditions = superdesk.intent('list', 'externalsource',  {item: picture}).then(function(item) {
-                                return api.find('archive', item._id);
-                            });
-                        }
-                        performRenditions.then(function(picture) {
-                            // cut the text that is after the caret in the block and save it in order to add it after the embed later
-                            var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
-                            // save the blocks (with removed leading text)
-                            vm.updateModel();
-                            var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
+                        // cut the text that is after the caret in the block and save it in order to add it after the embed later
+                        var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
+                        // save the blocks (with removed leading text)
+                        vm.updateModel();
+                        var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
+                        var block = vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                            blockType: 'embed',
+                            embedType: 'Image',
+                            caption: picture.description_text,
+                            loading: true,
+                            association: picture
+                        }, true);
+                        indexWhereToAddBlock += 1;
+                        // add new text block for the remaining text
+                        vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                            body: textThatWasAfterCaret
+                        }, true);
+                        // load the picture and update the block
+                        renditions.ingest(picture).then(function(picture) {
                             editor.generateImageTag(picture).then(function(imgTag) {
-                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                                    blockType: 'embed',
-                                    embedType: 'Image',
+                                angular.extend(block, {
                                     body: imgTag,
-                                    caption: picture.description_text,
-                                    association: picture
-                                }, true);
-                                indexWhereToAddBlock++;
-                            }).then(function() {
-                                // add new text block for the remaining text
-                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                                    body: textThatWasAfterCaret
-                                }, true);
+                                    association: picture,
+                                    loading: false
+                                });
                             });
                         });
                     }
@@ -1320,26 +1174,47 @@ angular.module('superdesk.editor2', [
         };
     }])
     .run(['embedService', 'iframelyService', function(embedService, iframelyService) {
-        var pattern = 'https?:\/\/(?:www)\.playbuzz\.com(.*)$';
-        var loader = '//snappa.embed.pressassociation.io/playbuzz.js';
-        var html = [
+        var playBuzzPattern = 'https?:\/\/(?:www)\.playbuzz\.com(.*)$';
+        var playBuzzlLoader = '//snappa.embed.pressassociation.io/playbuzz.js';
+        var playBuzzEmbed = [
             '<script type="text/javascript" src="$_LOADER"></script>',
             '<div class="pb_feed" data-game="$_URL" data-recommend="false" ',
             'data-game-info="false" data-comments="false" data-shares="false" ></div>'
         ].join('');
         embedService.registerHandler({
             name: 'PlayBuzz',
-            patterns: [pattern],
+            patterns: [playBuzzPattern],
             embed: function(url) {
                 return iframelyService.embed(url)
-                    .then(function(result) {
-                        result.html = html
-                            .replace('$_LOADER', loader)
-                            .replace('$_URL', url.match(pattern)[1]);
-                        return result;
-                    });
+                .then(function(result) {
+                    result.html = playBuzzEmbed
+                        .replace('$_LOADER', playBuzzlLoader)
+                        .replace('$_URL', url.match(playBuzzPattern)[1]);
+                    return result;
+                });
             }
         });
+        var samdeskEmbed = [
+            '<script>(function(d, s, id) { var fjs = d.getElementsByTagName(s)[0];',
+            'var js = d.createElement(s); js.id = id; js.src = \'https://embed.samdesk.io/js/2/embed.js\';',
+            'fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'sam-embed-js\'));</script>',
+            '<div class="sam-embed" data-href="embed.samdesk.io/embed/$_ID"></div>'
+        ].join('');
+        var samDeskPattern = 'https?://embed.samdesk.io/embed/(.+)';
+        embedService.registerHandler({
+            name: 'SAMDesk',
+            patterns: [samDeskPattern],
+            embed: function(url) {
+                var embed = samdeskEmbed.replace('$_ID', url.match(samDeskPattern)[1]);
+                return {
+                    provider_name: 'SAMDesk',
+                    html: embed,
+                    url: url,
+                    type: 'rich'
+                };
+            }
+        });
+
     }])
     .config(['embedServiceProvider', 'iframelyServiceProvider', '$injector',
         function(embedServiceProvider, iframelyServiceProvider, $injector) {
@@ -1351,5 +1226,195 @@ angular.module('superdesk.editor2', [
         // iframely respect the original embed for more services than 'embedly'
         embedServiceProvider.setConfig('fallbackService', 'iframely');
     }]);
+
+function EditorUtilsFactory() {
+
+    var CLONE_CLASS = 'clone';
+    var HILITE_CLASS = 'sdhilite';
+
+    /**
+     * Function for sorting array of strings from longest to shortest
+     *
+     * @param {string} a
+     * @param {string} b
+     * @return {number}
+     */
+    function reverseLengthSort(a, b) {
+        return b.length - a.length;
+    }
+
+    /**
+     * Find text node within given node for given character offset
+     *
+     * This will find text node within given node that contains character on given offset
+     *
+     * @param {Node} node
+     * @param {numeric} offset
+     * @return {Object} {node: {Node}, offset: {numeric}}
+     */
+    function findOffsetNode(node, offset) {
+        var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+        var currentLength;
+        var currentOffset = 0;
+        var ZERO_WIDTH_SPACE = String.fromCharCode(65279);
+        while (tree.nextNode()) {
+            tree.currentNode.textContent = tree.currentNode.textContent.replace(ZERO_WIDTH_SPACE, '');
+            currentLength = tree.currentNode.textContent.length;
+            if (currentOffset + currentLength >= offset) {
+                return {node: tree.currentNode, offset: offset - currentOffset};
+            }
+
+            currentOffset += currentLength;
+        }
+    }
+
+    /**
+     * Escape given string for reg exp
+     *
+     * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+     *
+     * @param {string} string
+     * @return {string}
+     */
+    function escapeRegExp(string){
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    return {
+
+        /**
+         * Find all matches for current find&replace needle in given node
+         *
+         * Each match is {word: {string}, offset: {number}} in given node,
+         * we can't return nodes here because those will change when we start
+         * highlighting and offsets wouldn't match
+         *
+         * @param {Node} node
+         * @param {Object} settings
+         * @return {Array} list of matches
+         */
+        getFindReplaceTokens: function(node, settings) {
+            var tokens = [];
+            var diff = settings.findreplace.diff || {};
+            var pattern = Object.keys(diff).sort(reverseLengthSort).map(escapeRegExp).join('|');
+            if (!pattern) {
+                return tokens;
+            }
+
+            var flags = settings.findreplace.caseSensitive ? 'm' : 'im';
+            var re = new RegExp(pattern, flags);
+            var nodeOffset = 0;
+            var text, match, offset;
+
+            var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+            while (tree.nextNode()) {
+                text = tree.currentNode.textContent;
+                while ((match = text.match(re)) != null) {
+                    tokens.push({
+                        word: match[0],
+                        index: nodeOffset + match.index,
+                        title: diff[match[0]] || ''
+                    });
+
+                    offset = match.index + match[0].length;
+                    text = text.substr(offset);
+                    nodeOffset += offset;
+                }
+
+                nodeOffset += text.length;
+            }
+
+            return tokens;
+        },
+
+        /**
+         * Hilite all tokens within node using span with given className
+         *
+         * This first stores caret position, updates markup, and then restores the caret.
+         *
+         * @param {Node} node
+         * @param {Array} tokens
+         * @param {string} className
+         * @param {Boolean} preventStore
+         */
+        hilite: function(node, tokens, className, preventStore) {
+            // remove old hilites
+            this.removeHilites(node);
+
+            // create a clone
+            var hiliteNode = node.cloneNode(true);
+            hiliteNode.classList.add(CLONE_CLASS);
+
+            // generate hilite markup in clone
+            tokens.forEach(function(token) {
+                this.hiliteToken(hiliteNode, token, className);
+            }.bind(this));
+
+            // render clone
+            node.parentNode.appendChild(hiliteNode);
+        },
+
+        /**
+         * Highlight single `token` via putting it into a span with given class
+         *
+         * @param {Node} node
+         * @param {Object} token
+         * @param {string} className
+         */
+        hiliteToken: function(node, token, className) {
+            var start = this.findWordNode(node, token.index, token.word.length);
+            var replace = start.node.splitText(start.offset);
+            var span = document.createElement('span');
+            span.classList.add(className);
+            span.classList.add(HILITE_CLASS);
+            replace.splitText(token.word.length);
+            span.textContent = replace.textContent;
+            span.dataset.word = token.word;
+            span.dataset.index = token.index;
+            replace.parentNode.replaceChild(span, replace);
+        },
+
+        /**
+         * Remove hilites node from nodes parent
+         *
+         * @param {Node} node
+         */
+        removeHilites: function(node) {
+            var parentNode = node.parentNode;
+            var clones = parentNode.getElementsByClassName(CLONE_CLASS);
+            if (clones.length) {
+                parentNode.removeChild(clones.item(0));
+            }
+        },
+
+        /**
+         * Find text node within given node where word is located
+         *
+         * It will find text type node where the whole word is located
+         *
+         * @param {Node} node
+         * @param {Number} index
+         * @param {Number} length
+         * @return {Object} {node: {Node}, offset: {Number}}
+         */
+        findWordNode: function(node, index, length) {
+            var start = findOffsetNode(node, index);
+            var end = findOffsetNode(node, index + length);
+
+            // correction for linebreaks - first node on a new line is set to
+            // linebreak text node which is not even visible in dom, maybe dom bug?
+            if (start.node !== end.node) {
+                start.node = end.node;
+                start.offset = 0;
+            }
+
+            return start;
+        }
+    };
+}
+
+angular.module('superdesk.editor.utils', [])
+    .factory('editorUtils', EditorUtilsFactory)
+    ;
 
 })();

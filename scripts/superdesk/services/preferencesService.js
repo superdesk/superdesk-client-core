@@ -18,7 +18,8 @@
                         'agg:view': 1,
                         'workspace:active': 1,
                         'categories:preferred': 1,
-                        'destination:active': 1
+                        'destination:active': 1,
+                        'spellchecker:status': 1
                     },
                     preferences,
                     preferencesPromise;

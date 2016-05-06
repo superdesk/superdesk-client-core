@@ -12,24 +12,23 @@
                 cropData: '=',
                 original: '='
             },
+            template: '<img ng-src="{{ src }}"/><div class="crop-box"></div>',
             link: function(scope, elem) {
                 var img;
-                var cropBox = angular.element('<div class="crop-box"></div>');
+                var $cropBox = elem.find('.crop-box');
+                var $img = elem.find('img');
                 elem.css({
                     'position': 'relative'
                 });
                 scope.$watch('src', function() {
                     img = new Image();
                     img.onload = function() {
-                        elem.empty();
-                        $(img).css({
+                        $img.css({
                             'position': 'absolute',
                             'top': 0,
                             'left': 0,
                             'z-index': 1000
                         });
-                        elem.append(img);
-                        elem.append(cropBox);
                         updateCropBox();
                     };
                     img.src = scope.src;
@@ -37,15 +36,15 @@
                 scope.$watch('cropData', updateCropBox);
 
                 function updateCropBox() {
-                    if (img && scope.original && scope.cropData) {
-                        var ratio = img.height / scope.original.height;
+                    if ($img && scope.original && scope.cropData) {
+                        var ratio = $img.height() / scope.original.height;
                         var cTop = scope.cropData.CropTop * ratio;
                         var cLeft = scope.cropData.CropLeft * ratio;
-                        var cBottom = img.height - scope.cropData.CropBottom * ratio;
-                        var cRight = img.width - scope.cropData.CropRight * ratio;
-                        cropBox.css({
-                            'width': img.width,
-                            'height': img.height,
+                        var cBottom = $img.height() - scope.cropData.CropBottom * ratio;
+                        var cRight = $img.width() - scope.cropData.CropRight * ratio;
+                        $cropBox.css({
+                            'width': $img.width(),
+                            'height': $img.height(),
                             'border-top-width': cTop + 'px',
                             'border-left-width': cLeft + 'px',
                             'border-bottom-width': cBottom + 'px',
@@ -78,8 +77,8 @@
      * scope.preview should be define on container page so that the coordiates can be used
      * to pass in api that is serving for saving the crop.
      */
-     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', '$timeout', 'lodash',
-     function(gettext, $interpolate, imageFactory, $timeout, _) {
+     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', 'lodash',
+     function(gettext, $interpolate, imageFactory, _) {
         return {
             scope: {
                 src: '=',
@@ -88,8 +87,6 @@
                 onChange: '&',
                 original: '=',
                 rendition: '=',
-                boxWidth: '=',
-                boxHeight: '=',
                 showMinSizeError: '='
             },
             link: function(scope, elem) {
@@ -150,18 +147,16 @@
                 });
 
                 scope.$watch('cropData', function() {
-                    if (!cropData) {
-                        cropData = scope.cropData;
-                        if (cropData && cropData.CropBottom) {
-                            refreshImage(img.src, [
-                                cropData.CropLeft,
-                                cropData.CropTop,
-                                cropData.CropRight,
-                                cropData.CropBottom
-                            ]);
-                        }
+                    cropData = scope.cropData;
+                    if (cropData && cropData.CropBottom) {
+                        refreshImage(img.src, [
+                            cropData.CropLeft,
+                            cropData.CropTop,
+                            cropData.CropRight,
+                            cropData.CropBottom
+                        ]);
                     }
-                });
+                }, true);
 
                 scope.$on('poiUpdate', function(e, point) {
 
@@ -225,8 +220,6 @@
                             aspectRatio: ratio,
                             minSize: [scope.rendition.width, scope.rendition.height],
                             trueSize: [scope.original.width, scope.original.height],
-                            boxWidth: scope.boxWidth,
-                            boxHeight: scope.boxHeight,
                             setSelect: setSelect,
                             allowSelect: false,
                             addClass: 'jcrop-dark',
@@ -279,136 +272,140 @@
             }
         };
     }])
-    .directive('sdImagePoint', ['$rootScope', function($rootScope) {
+    .directive('sdImagePoint', ['$window', 'lodash', function($window, _) {
         return {
             scope: {
                 src: '=',
-                point: '=',
+                poi: '=',
                 onChange: '&'
             },
-            link: function(scope, elem) {
-                var img;
-                var pointElem = angular.element('<div class="poi__cursor"></div>');
-                var crossLeft = angular.element('<div class="poi__cross-left"></div>');
-                var crossTop = angular.element('<div class="poi__cross-top"></div>');
-                var crossBottom = angular.element('<div class="poi__cross-bottom"></div>');
-                var crossRight = angular.element('<div class="poi__cross-right"></div>');
-                //use this to calculate mouse offsets.
-                var overlay = document.createElement('div');
-                //wrap content and contain overlay.
-                var container = angular.element('<div class="crop-container"></div>');
-
-                pointElem.css({
-                    'position': 'absolute'
-                });
-
-                $(overlay).css({
-                    'position': 'absolute',
-                    'top': 0,
-                    'left': 0,
-                    'bottom': 0,
-                    'right': 0
-                });
-
-                container.css({
-                    'position': 'relative',
-                    'display': 'inline-block'
-                });
-
-                elem.append(container);
-
-                scope.$watch('src', function(src) {
-                    refreshImage(src);
-                });
-
-                scope.$watch('point', function() {
-                    if (img && pointElem) {
-                        drawPoint();
+            templateUrl: 'scripts/superdesk-authoring/views/image-point.html',
+            bindToController: true,
+            controllerAs: 'vm',
+            controller: ['$rootScope', function($rootScope) {
+                var vm = this;
+                angular.extend(vm, {
+                    updatePOI: function(poi) {
+                        angular.extend(vm.poi, poi);
+                        vm.onChange();
+                        $rootScope.$broadcast('poiUpdate', vm.poi);
                     }
-                }, true);
-
-                scope.$on('$destroy', function () {
-                    overlay.onmousedown = null;
                 });
-
-                function refreshImage(src) {
-                    container.detach();
-                    container.empty();
-
-                    img = new Image();
-                    img.onload = function() {
-                        //prepend for z-index purposes.
-                        container.prepend(img);
-                        container.append(overlay);
-                        elem.append(container);
-                        drawPoint();
-                    };
-
-                    function updatePOI(offsetX, offsetY) {
-                        scope.$apply(function() {
-                            scope.point.x = Math.round(offsetX * 100 / img.width) / 100;
-                            scope.point.y = Math.round(offsetY * 100 / img.height) / 100;
-                            scope.onChange();
+            }],
+            link: function(scope, element, attrs, vm) {
+                var circleRadius = 30 / 2;
+                var lineThickness = 2;
+                var $poiContainer = element.find('.image-point__poi');
+                var $poiCursor = element.find('.image-point__poi__cursor');
+                var $poiLeft = element.find('.image-point__poi__cross-left');
+                var $poiRight = element.find('.image-point__poi__cross-right');
+                var $poiTop = element.find('.image-point__poi__cross-top');
+                var $poiBottom = element.find('.image-point__poi__cross-bottom');
+                function drawPoint(img, poi) {
+                    if (!angular.isDefined(poi)) {
+                        poi = vm.poi;
+                    }
+                    var topOffset = (poi.y * img.height) - circleRadius;
+                    var leftOffset = (poi.x * img.width) - circleRadius;
+                    var verticalLeftOffset = leftOffset + circleRadius - (lineThickness / 2);
+                    var horizontalTopffset = topOffset + circleRadius - (lineThickness / 2);
+                    $poiContainer.css({
+                        width: img.width,
+                        height: img.height
+                    });
+                    $poiCursor.css({
+                        left: leftOffset,
+                        top: topOffset
+                    });
+                    $poiLeft.css({
+                        width: leftOffset,
+                        top: horizontalTopffset
+                    });
+                    $poiRight.css({
+                        width: img.width - (leftOffset + (2 * circleRadius)),
+                        top: horizontalTopffset,
+                        left: leftOffset +  (2 * circleRadius)
+                    });
+                    $poiTop.css({
+                        height: topOffset,
+                        left: verticalLeftOffset
+                    });
+                    $poiBottom.css({
+                        height: img.height - (topOffset + (2 * circleRadius)),
+                        left: verticalLeftOffset,
+                        top: topOffset + (2 * circleRadius)
+                    });
+                }
+                // init directive element style
+                element.css({
+                    position: 'relative',
+                    display: 'block'
+                });
+                // load the image in order to know the size
+                var img = new Image();
+                img.onload = function() {
+                    function drawPointsFromModel() {
+                        drawPoint($img);
+                    }
+                    var $img = element.find('.image-point__image').get(0);
+                    // initialize points
+                    drawPointsFromModel();
+                    // draw when needed
+                    scope.$on('poiUpdate', drawPointsFromModel);
+                    angular.element($window).on('resize', drawPointsFromModel);
+                    // setup overlay to listen mouse events
+                    (function($img) {
+                        function updatePOIModel(e) {
+                            var newPoi = {
+                                x: Math.round(e.offsetX * 100 / $img.width) / 100,
+                                y: Math.round(e.offsetY * 100 / $img.height) / 100
+                            };
+                            // refresh the points
+                            drawPoint($img, newPoi);
+                            // and notice the controller that points have been moved
+                            debouncedPoiUpdateModel(newPoi);
+                        }
+                        var debouncedPoiUpdateModel = _.debounce(function(newPoi) {
+                            vm.updatePOI(newPoi);
+                        }, 500);
+                        // binds overlay events
+                        var overlay = element.find('.image-point__poi__overlay');
+                        var mousedown = false;
+                        /** enable drag mode */
+                        function enableDragMode(e) {
+                            mousedown = true;
+                            updatePOIModel(e);
+                        }
+                        /** exit Drag Mode */
+                        function exitDragMode(e) {
+                            updateOnMouseDrag(e);
+                            mousedown = false;
+                        }
+                        /** update Poi if mouse is clicked */
+                        function updateOnMouseDrag(e) {
+                            if (mousedown) {
+                                updatePOIModel(e);
+                            }
+                        }
+                        var onExistEvents = ['mouseleave', 'mouseup'];
+                        overlay.on('mousedown', enableDragMode);
+                        overlay.on('mousemove', updateOnMouseDrag);
+                        onExistEvents.forEach(function(eventName) {
+                            overlay.on(eventName, exitDragMode);
                         });
-                    }
-
-                    function leaveOverlay(e) {
-                        e.preventDefault();
-                        updatePOI(e.offsetX, e.offsetY);
-                        $rootScope.$broadcast('poiUpdate', scope.point);
-                        overlay.onmousemove = null;
-                        overlay.onmouseup = null;
-                        overlay.onmouseleave = null;
-                    }
-
-                    overlay.onmousedown = function(e) {
-                        e.preventDefault();
-                        updatePOI(e.offsetX, e.offsetY);
-                        $rootScope.$broadcast('poiUpdate', scope.point);
-
-                        overlay.onmousemove = function(e) {
-                            e.preventDefault();
-                            updatePOI(e.offsetX, e.offsetY);
-                        };
-
-                        overlay.onmouseup = leaveOverlay;
-                        overlay.onmouseleave = leaveOverlay;
-                    };
-
-                    img.src = src;
-
-                    container.append(pointElem);
-                    container.append(crossLeft);
-                    container.append(crossRight);
-                    container.append(crossTop);
-                    container.append(crossBottom);
-
-                }
-
-                function drawPoint() {
-                    pointElem.css({
-                        left: (scope.point.x * img.width) - 15,
-                        top: (scope.point.y * img.height) - 15
-                    });
-                    crossLeft.css({
-                        width: (scope.point.x * img.width) - 15,
-                        top: (scope.point.y * img.height)
-                    });
-                    crossRight.css({
-                        width: ((1 - scope.point.x) * img.width) - 19,
-                        top: (scope.point.y * img.height),
-                        left: (scope.point.x * img.width) + 19
-                    });
-                    crossBottom.css({
-                        height: ((1 - scope.point.y) * img.height) - 19,
-                        top: (scope.point.y * img.height) + 19,
-                        left: (scope.point.x * img.width) + 1
-                    });
-                    crossTop.css({
-                        height: (scope.point.y * img.height) - 15,
-                        left: (scope.point.x * img.width) + 1
-                    });
-                }
+                        scope.$on('$destroy', function () {
+                            overlay.off('mousedown', enableDragMode);
+                            overlay.off('mousemove', updateOnMouseDrag);
+                            onExistEvents.forEach(function(eventName) {
+                                overlay.off(eventName, exitDragMode);
+                            });
+                            angular.element($window).off('resize', drawPointsFromModel);
+                        });
+                    })($img);
+                };
+                img.src = scope.vm.src;
+                // Break the circular link. The handler doesn’t reference DOM element any more.
+                img = null;
             }
         };
     }]);

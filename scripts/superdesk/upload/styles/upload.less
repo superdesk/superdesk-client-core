@@ -146,7 +146,7 @@ user avatar uploader
                       visibility: hidden;
                     }
                     input:before {
-                      content: 'or Select from computer';
+                      content: attr(label);
                       display: inline-block;
                       background: -webkit-linear-gradient(top, #f9f9f9, #fff);
                       border: 1px solid #d0d0d0;
@@ -641,9 +641,7 @@ edit image modal
         ul {
             li {
                 margin: 0 7px 14px 7px;
-                width: 160px;
                 max-width: 160px;
-                height: 115px;
                 display: inline-block;
                 padding: 10px 10px 0px 10px;
                 background-color: #f0f0f0;
@@ -654,7 +652,7 @@ edit image modal
                 vertical-align: top;
                 img {
                     max-width: 140px;
-                    max-height: 80px;
+                    max-height: 140px;
                 }
                 &.active {
                     border: 1px solid #b3b3b3;
@@ -668,56 +666,52 @@ edit image modal
         }
     }
 }
-.poi {
-    &__image {
-        img:hover {
-            cursor: crosshair;
-        }
-    }
-    &__cursor {
-        width: 30px;
-        height: 30px;
-        .border-radius(50%);
-        border: 2px solid rgba(255,255,255,0.7);
-    }
-    &__cross-left {
-        height: 2px;
-        background-color: rgba(255,255,255,0.7);
+.image-point__image, .crop-area img {
+    max-height: 55vh;
+}
+.image-point {
+    &__poi {
         position: absolute;
-        left: 0;
-        z-index: 10000;
-    }
-    &__cross-right {
-        height: 2px;
-        background-color: rgba(255,255,255,0.7);
-        position: absolute;
-        z-index: 10000;
-    }
-    &__cross-top {
-        width: 2px;
-        background-color: rgba(255,255,255,0.7);
-        position: absolute;
-        z-index: 10000;
         top: 0;
-    }
-    &__cross-bottom {
-        width: 2px;
-        background-color: rgba(255,255,255,0.7);
-        position: absolute;
-        z-index: 10000;
-    }
-}
-.transition-on {
-    .poi {
-        &__cursor,
-        &__cross-left,
-        &__cross-right,
-        &__cross-top,
-        &__cross-bottom {
-            .transition(all .3s);
+        left: 0;
+        z-index: 1;
+        display: inline-block;
+        &__overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 3;
+            &:hover {
+                cursor: crosshair;
+            }
+        }
+        &__cursor {
+            width: 30px;
+            height: 30px;
+            .border-radius(50%);
+            position: absolute;
+            z-index: 2;
+            border: 2px solid rgba(255,255,255,0.7);
+            box-sizing: border-box;
+        }
+        &__cross-left, &__cross-right, &__cross-top, &__cross-bottom {
+            background-color: rgba(255,255,255,0.7);
+            position: absolute;
+            z-index: 2;
+        }
+        &__cross-left, &__cross-right {
+            height: 2px;
+            left: 0;
+        }
+        &__cross-top, &__cross-bottom {
+            width: 2px;
+            top: 0;
         }
     }
 }
+
 .crop-box {
     background: transparent;
     position: absolute;

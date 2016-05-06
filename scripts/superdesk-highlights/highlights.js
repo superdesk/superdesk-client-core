@@ -74,6 +74,25 @@
         };
 
         /**
+         * Saves highlight configuration
+         */
+        service.saveConfig = function(config, configEdit) {
+            return api.highlights.save(config, configEdit).then(function(item) {
+                service.clearCache();
+                return item;
+            });
+        };
+
+        /**
+         * Removes highlight configuration
+         */
+        service.removeConfig = function(config) {
+            return api.highlights.remove(config).then(function() {
+                service.clearCache();
+            });
+        };
+
+        /**
          * Mark an item for a highlight
          */
         service.markItem = function(highlight, marked_item) {
@@ -113,6 +132,31 @@
 
         service.hasMarkItemPrivilege = function() {
             return !!privileges.privileges.mark_for_highlights;
+        };
+
+        /**
+         * Checks if the hourDifference falls in the
+         * defined range in highlight
+         *
+         * @param {string} highlight id
+         * @param {int} hourDifference
+         * @return {bool}
+         */
+        service.isInDateRange =  function(highlight, hourDifference) {
+            if (highlight) {
+                if (highlight.auto_insert === 'now/d') {
+                    return hourDifference <= 24;
+                } else if (highlight.auto_insert === 'now/w') {
+                    return hourDifference <= 168; //24*7
+                } else if (_.startsWith(highlight.auto_insert, 'now-')) {
+                    var trimmedValue = _.trimLeft(highlight.auto_insert, 'now-');
+                    trimmedValue = _.trimRight(highlight.auto_insert, 'h');
+                    return hourDifference <= _.parseInt(trimmedValue);
+                }
+            }
+
+            // If non matches then return false
+            return false;
         };
 
         return service;
@@ -391,13 +435,12 @@
             var _new = !_config._id;
             $scope.configEdit.desks = assignedDesks();
             $scope.configEdit.groups = ['main'];
-            api.highlights.save(_config, $scope.configEdit)
-            .then(function(item) {
+
+            highlightsService.saveConfig(_config, $scope.configEdit).then(function(item) {
                 $scope.message = null;
                 if (_new) {
                     $scope.configurations._items.unshift(item);
                 }
-                highlightsService.clearCache();
                 $scope.modalActive = false;
             }, function(response) {
                 errorMessage(response);
@@ -416,7 +459,7 @@
         $scope.remove = function(config) {
             modal.confirm(gettext('Are you sure you want to delete configuration?'))
             .then(function() {
-                api.highlights.remove(config).then(function() {
+                highlightsService.removeConfig(config).then(function() {
                     _.remove($scope.configurations._items, config);
                     notify.success(gettext('Configuration deleted.'), 3000);
                 });

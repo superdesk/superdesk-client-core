@@ -32,7 +32,7 @@
                 <span class="label-total">{{ monitoring.totalItems }}</span>
             </span>
             <span ng-if="monitoring.singleGroup && !monitoring.singleGroup.subheader">
-                {{ :: monitoring.singleGroup.header }} {{ :: monitoring.singleGroup.type}}
+                {{ :: monitoring.singleGroup.header }} {{ :: monitoring.singleGroup.type | splitText | translate }}
                 <span class="label-total">{{ monitoring.totalItems }}</span>
             </span>
         </h3>
@@ -59,7 +59,9 @@
             <ul class="filter-type pull-left" ng-if="!elementState || elementState === 'comfort'">
                 <li ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                     <a href="" ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
-                    <i ng-if="fileType!='all'" class="filetype-icon-{{fileType}}"></i>
+                    <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
+                    <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack"></i>
+                    <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack"></i>
                 </li>
             </ul>
 
@@ -72,7 +74,9 @@
                         <li class="filter-type">
                             <div ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                                 <a ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
-                                <i ng-if="fileType!='all'" class="filetype-icon-{{fileType}}"></i>
+                                <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
+                                <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack"></i>
+                                <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack"></i>
                             </div>
                         </li>
                         <li class="divider"></li>
@@ -130,5 +134,5 @@
     </section>
     <div sd-archived-item-kill ng-if="archived_kill" data-item="archived_kill"></div>
 
-    <div sd-resend-item ng-if="resend" data-item="resend"></div>
+    <div sd-resend-item data-item="resend"></div>
 </div>

@@ -698,23 +698,9 @@
                     additionalCondition:['authoring', 'item', function(authoring, item) {
                         return authoring.itemActions(item).re_write;
                     }],
-                    controller: ['data', '$location', 'api', 'notify', 'session', 'authoringWorkspace', 'desks', 'superdesk',
-                        function(data, $location, api, notify, session, authoringWorkspace, desks, superdesk) {
-                            session.getIdentity()
-                                .then(function(user) {
-                                    return api.save('archive_rewrite', {}, {}, data.item);
-                                })
-                                .then(function(new_item) {
-                                    notify.success(gettext('Update Created.'));
-                                    authoringWorkspace.edit(new_item._id);
-                                }, function(response) {
-                                    if (angular.isDefined(response.data._message)) {
-                                        notify.error(gettext('Failed to generate update: ' + response.data._message));
-                                    } else {
-                                        notify.error(gettext('There was an error. Failed to generate update.'));
-                                    }
-                                });
-                        }]
+                    controller: ['data', 'authoring', function(data, authoring) {
+                        authoring.rewrite(data.item);
+                    }]
                 });
         }])
 

@@ -24,36 +24,61 @@
                 }
             });
         }])
-        .factory('products', ['$q', 'api', 'contentFilters', '$filter', function($q, api, contentFilters, $filter) {
-            var productsService = {
-                products: null,
-                contentFilters: null,
-                productLookup: {},
-                fetchProducts: function() {
-                    var self = this;
+        .factory('products', ['$q', 'api', 'contentFilters', '$filter',
+            function($q, api, contentFilters, $filter) {
+                /**
+                 * Recursivly returns all products
+                 *
+                 * @return {*}
+                 */
+                var _getAllProducts = function(page, products) {
+                    page = page || 1;
+                    products = products || [];
 
-                    return api.products.query({max_results: 500})
+                    return api('products')
+                    .query({max_results: 200, page: page})
                     .then(function(result) {
-                        self.products = result;
-                        _.each(result._items, function(product) {
-                            self.productLookup[product._id] = product;
-                        });
+                        products = products.concat(result._items);
+                        if (result._links.next) {
+                            page++;
+                            return _getAllProducts(page, products);
+                        }
+                        return $filter('sortByName')(products);
                     });
-                },
-                fetchContentFilters: function() {
-                    var self = this;
+                };
 
-                    return contentFilters.getAllContentFilters().then(function(filters) {
-                        self.contentFilters = $filter('sortByName')(filters);
-                    });
-                },
-                initialize: function() {
-                    return this.fetchProducts()
-                    .then(angular.bind(this, this.fetchContentFilters));
-                }
-            };
-            return productsService;
-        }])
+                var productsService = {
+                    products: null,
+                    contentFilters: null,
+                    productLookup: {},
+                    fetchProducts: function() {
+                        var self = this;
+
+                        return _getAllProducts()
+                        .then(function(result) {
+                            self.products = result;
+                            _.each(result._items, function(product) {
+                                self.productLookup[product._id] = product;
+                            });
+                        });
+                    },
+                    fetchAllProducts: function() {
+                        return _getAllProducts();
+                    },
+                    fetchContentFilters: function() {
+                        var self = this;
+
+                        return contentFilters.getAllContentFilters().then(function(filters) {
+                            self.contentFilters = $filter('sortByName')(filters);
+                        });
+                    },
+                    initialize: function() {
+                        return this.fetchProducts()
+                        .then(angular.bind(this, this.fetchContentFilters));
+                    }
+                };
+                return productsService;
+            }])
         .directive('sdProductsConfig', function() {
             return {
                 controller: ProductsConfigController
@@ -69,8 +94,10 @@
             };
         });
 
-    ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal', 'adminPublishSettingsService'];
-    function ProductsConfigController ($scope, gettext, notify, api, products, modal, adminPublishSettingsService) {
+    ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal',
+    'adminPublishSettingsService', 'metadata', '$filter'];
+    function ProductsConfigController ($scope, gettext, notify, api, products, modal,
+        adminPublishSettingsService, metadata, $filter) {
 
         var initProducts = function() {
             products.initialize().then(function() {
@@ -83,6 +110,16 @@
             if (!$scope.subscribers) {
                 adminPublishSettingsService.fetchSubscribers().then(function(items) {
                     $scope.subscribers = items._items;
+                });
+            }
+        };
+
+        var initRegions = function() {
+            if (angular.isDefined(metadata.values.geographical_restrictions)) {
+                $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
+            } else {
+                metadata.fetchMetadataValues().then(function() {
+                    $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
                 });
             }
         };
@@ -107,6 +144,7 @@
             $scope.product.edit = null;
             initProducts();
             initSubscribers();
+            initRegions();
         };
 
         $scope.cancel();

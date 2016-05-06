@@ -136,6 +136,7 @@
         ) {
             return {
                 link: function(scope, elem) {
+
                     elem.attr('tabindex', 0);
 
                     var menuHolderElem = document.getElementById('react-placeholder');
@@ -161,6 +162,66 @@
                             elem.focus();
                         }
                     });
+
+                    /**
+                     * Render element close to target, but append to body
+                     *
+                     * Used for dropdown menus that would be only partialy visible if rendered
+                     * within parent which has overflow: hidden that is required for scrolling
+                     *
+                     * @param {Object} elem React element
+                     * @param {Node} target DOM node
+                     */
+                    function renderToBody(elem, target) {
+                        // first render it somewhere not visible
+                        menuHolderElem.style.zIndex = -1;
+                        var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem));
+                        // make sure it's rendered
+                        node.style.display = 'block';
+                        var rect = node.getBoundingClientRect();
+                        var width = rect.width;
+                        var height = rect.height;
+
+                        var ACTION_MENU_FROM_TOP = 150; // 150 = top-menu + search bar
+                        var MENU_MARGIN_HEIGHT = 16;
+                        var LEFT_BAR_WIDTH = 48;
+                        var BOTTOM_BAR_HEIGHT = 30;
+                        var BUFFER = 5;
+
+                        // get target position
+                        var targetRect = target.getBoundingClientRect();
+
+                        // get workspace
+                        var workspace = document.getElementById('main-container');
+
+                        // compute menu position
+                        var top = targetRect.top + targetRect.height;
+                        var left = targetRect.left + targetRect.width - width;
+
+                        // menu goes off on the right side
+                        if (left + width + BUFFER > workspace.clientWidth) {
+                            left -= width;
+                            left += targetRect.width;
+                        }
+
+                        // menu goes off on the left side
+                        if (left - LEFT_BAR_WIDTH < 0) {
+                            left = targetRect.left;
+                        }
+
+                        // menu goes out on the bottom side
+                        if (top + height + BOTTOM_BAR_HEIGHT + BUFFER > workspace.clientHeight) {
+                            top -= height;
+                            top -= targetRect.height;
+                            top -= MENU_MARGIN_HEIGHT;
+                            top = top < ACTION_MENU_FROM_TOP ? ACTION_MENU_FROM_TOP : top;
+                        }
+
+                        node.style.top = top.toFixed() + 'px';
+                        node.style.left = left.toFixed() + 'px';
+                        node.style.position = 'absolute';
+                        menuHolderElem.style.zIndex = 1000;
+                    }
 
                     /**
                      * Test if an item has thumbnail
@@ -268,7 +329,7 @@
                                     label = gettext('location:');
                                     value = gettext('workspace');
                                 } else {
-                                    if (item._type === 'published' && item.allow_post_publish_actions === false) {
+                                    if (item._type === 'archived') {
                                         label = '';
                                         value = gettext('archived');
                                     }
@@ -294,22 +355,22 @@
                     var MediaInfo = function(props) {
                         var item = props.item;
                         var meta = [];
-
-                        if (props.ingestProvider) {
+                        var source = item.source ? item.source :
+                            (props.ingestProvider ? props.ingestProvider.source : '');
+                        if (source) {
                             meta.push(
-                                React.createElement('dt', {key: 1}, gettext('source')),
-                                React.createElement('dd', {key: 2, className: 'provider'}, props.ingestProvider.name ||
-                                    props.ingestProvider.source)
+                                React.createElement('dt', {key: 1}, gettextCatalog.getString('source')),
+                                React.createElement('dd', {key: 2, className: 'provider'}, source)
                             );
                         }
 
                         meta.push(
-                            React.createElement('dt', {key: 3}, gettext('updated')),
+                            React.createElement('dt', {key: 3}, gettextCatalog.getString('updated')),
                             React.createElement('dd', {key: 4}, datetime.shortFormat(item.versioncreated))
                         );
 
                         if (item.is_spiked) {
-                            meta.push(React.createElement('dt', {key: 5}, gettext('expires')));
+                            meta.push(React.createElement('dt', {key: 5}, gettextCatalog.getString('expires')));
                             meta.push(React.createElement('dd', {key: 6}, datetime.shortFormat(item.expiry)));
                         }
 
@@ -351,7 +412,13 @@
                      * Type icon component
                      */
                     var TypeIcon = function(props) {
-                        return React.createElement('i', {className: 'filetype-icon-' + props.type});
+                        if (props.package_type) {
+                            return React.createElement('i', {className: 'filetype-icon-takes-pack'});
+                        } else if (props.type === 'composite' && props.highlight) {
+                            return React.createElement('i', {className: 'filetype-icon-highlight-pack'});
+                        } else {
+                            return React.createElement('i', {className: 'filetype-icon-' + props.type});
+                        }
                     };
 
                     var GridTypeIcon = function(props) {
@@ -384,7 +451,12 @@
                                 {className: 'list-field type-icon', onMouseEnter: this.setHover, onMouseLeave: this.unsetHover},
                                 showSelect ?
                                     React.createElement(SelectBox, {item: this.props.item, onMultiSelect: this.props.onMultiSelect}) :
-                                    React.createElement(TypeIcon, {type: this.props.item.type})
+                                    React.createElement(
+                                        TypeIcon,
+                                        {type: this.props.item.type,
+                                        package_type: this.props.item.package_type,
+                                        highlight: this.props.item.highlight}
+                                    )
                             );
                         }
                     });
@@ -403,7 +475,8 @@
                         return React.createElement(
                             'div',
                             {className: 'list-field urgency'},
-                            [(item.priority ? new ItemPriority(item) : null), (item.urgency ? new ItemUrgency(item) : null)]
+                            item.priority ? new ItemPriority(item) : null,
+                            item.urgency ? new ItemUrgency(item) : null
                         );
                     };
 
@@ -418,6 +491,23 @@
                                 }
                             }.bind(this);
                         },
+
+                        componentDidMount: function() {
+                            this.timeout = null;
+                        },
+
+                        componentWillUnmount: function() {
+                            this.stopTimeout();
+                        },
+
+                        stopTimeout: function() {
+                            this.timeout = $timeout.cancel(this.timeout);
+                        },
+
+                        close: function() {
+                            this.timeout = $timeout(closeActionsMenu, 2000, false);
+                        },
+
                         render: function() {
                             var highlights = this.props.highlights;
                             var highlightsById = this.props.highlightsById || {};
@@ -452,86 +542,104 @@
 
                             return React.createElement(
                                 'ul',
-                                {className: 'dropdown dropdown-menu highlights-list-menu open'},
+                                {
+                                    className: 'dropdown dropdown-menu highlights-list-menu open',
+                                    onMouseEnter: this.stopTimeout,
+                                    onMouseLeave: this.close
+                                },
                                 items.concat(highlights.map(createHighlight))
                             );
                         }
                     });
 
                     var HighlightsInfo = React.createClass({
-
-                        getInitialState: function() {
-                            return {open: false};
-                        },
-
-                        open: function() {
-                            $timeout.cancel(this.closeTimeout);
-                            this.closeTimeout = null;
-                            if (!this.state.open) {
-                                this.setState({open: true});
+                        toggle: function(event) {
+                            if (event) {
+                                event.stopPropagation();
                             }
+
+                            closeActionsMenu();
+                            this.renderDropdown();
                         },
 
-                        close: function() {
-                            if (this.state.open && !this.closeTimeout) {
-                                this.closeTimeout = $timeout(function() {
-                                    this.closeTimeout = null;
-                                    this.setState({open: false});
-                                }.bind(this), 200, false);
-                            }
+                        /**
+                         * Checks if the given item is in the daterange of the highlights
+                         * for every highlight given
+                         *
+                         * @param {array} highlights
+                         * @param {Object} item
+                         * @return {Object}
+                         */
+                        getHighlightStatuses: function(highlights, item) {
+                            var highlightStatuses = {};
+                            var highlightsById = this.props.highlightsById;
+                            _.forEach(highlights, function(highlight) {
+                                var hours = $filter('hoursFromNow')(item.versioncreated);
+                                highlightStatuses[highlight] = highlightsService.isInDateRange(highlightsById[highlight], hours);
+                            });
+
+                            return highlightStatuses;
                         },
 
-                        componentWillUnmount: function() {
-                            $timeout.cancel(this.closeTimeout);
-                            this.closeTimeout = null;
-                        },
-
-                        stopClick: function(event) {
-                            event.stopPropagation();
-                        },
-
-                        render: function() {
-                            var item = this.props.item.archive_item || this.props.item;
-
-                            var highlights = [];
+                        getHighlights: function() {
+                            var itemHighlights = [];
                             if (isCheckAllowed(this.props.item)) {
                                 if (this.props.item.archive_item && this.props.item.archive_item.highlights &&
                                     this.props.item.archive_item.highlights.length) {
-                                    highlights = this.props.item.archive_item.highlights;
+                                    itemHighlights = this.props.item.archive_item.highlights;
                                 } else {
-                                    highlights = this.props.item.highlights || [];
+                                    itemHighlights = this.props.item.highlights || [];
                                 }
+                            }
+
+                            return this.getHighlightStatuses(itemHighlights, this.props.item);
+                        },
+
+                        render: function() {
+                            var highlights = this.getHighlights();
+                            var highlightsLength = _.keys(highlights).length;
+
+                            var highlightId = _.keys(highlights)[0];
+                            if ($location.path() === '/workspace/highlights') {
+                                highlightId = $location.search().highlight;
                             }
 
                             return React.createElement(
                                 'div',
                                 {
                                     className: 'highlights-box',
-                                    onMouseEnter: this.open,
-                                    onMouseLeave: this.close,
-                                    onClick: this.stopClick
+                                    onClick: this.toggle
                                 },
-                                highlights.length ? React.createElement(
+                                highlightsLength ? React.createElement(
                                     'div',
-                                    {className: 'highlights-list dropdown' + (this.state.open ? ' open' : '')},
+                                    {className: 'highlights-list dropdown'},
                                     React.createElement(
                                         'button',
                                         {className: 'dropdown-toggle'},
                                         React.createElement('i', {
                                             className: classNames({
-                                                'icon-star red': highlights.length === 1,
-                                                'icon-multi-star red': highlights.length > 1
+                                                'icon-star red': highlightsLength === 1,
+                                                'icon-multi-star red': highlightsLength > 1,
+                                                'icon-star gray': highlightsLength === 1 && !highlights[highlightId],
+                                                'icon-multi-star gray': highlightsLength > 1 && !highlights[highlightId],
                                             })
                                         })
-
-                                    ),
-                                    this.state.open ? React.createElement(HighlightsList, {
-                                        item: item,
-                                        highlights: highlights,
-                                        highlightsById: this.props.highlightsById
-                                    }) : null
+                                    )
                                 ) : null
                             );
+                        },
+
+                        renderDropdown: function() {
+                            var elem = React.createElement(HighlightsList, {
+                                item: this.props.item,
+                                highlights: this.getHighlights(),
+                                highlightsById: this.props.highlightsById
+                            });
+
+                            var icon = ReactDOM.findDOMNode(this)
+                                .getElementsByClassName('red')[0];
+
+                            renderToBody(elem, icon);
                         }
                     });
 
@@ -640,7 +748,7 @@
                         var flags = item.flags || {};
                         var anpa = item.anpa_category || {};
                         var broadcast = item.broadcast || {};
-                        var provider = props.ingestProvider || {name: null};
+                        var provider = item.source ? item.source : (props.ingestProvider ? props.ingestProvider.source: '');
                         return React.createElement(
                             'div',
                             {className: 'item-info'},
@@ -654,10 +762,13 @@
                                 React.createElement(TimeElem, {date: item.versioncreated})
                             ),
                             React.createElement('div', {className: 'line'},
+                                item.profile ?
+                                    React.createElement('div', {className: 'label label--' + item.profile}, item.profile) :
+                                    null,
                                 React.createElement(
                                     'span',
                                     {title: $filter('removeLodash')(item.state), className: 'state-label state-' + item.state},
-                                    $filter('removeLodash')(item.state)
+                                    $filter('removeLodash')(gettextCatalog.getString(item.state))
                                 ),
                                 item.embargo ? React.createElement(
                                     'span',
@@ -667,9 +778,6 @@
                                 item.correction_sequence ?
                                     React.createElement('div', {className: 'provider'}, gettext('Update') +
                                         ' ' + item.correction_sequence) : null,
-                                item.profile ?
-                                    React.createElement('div', {className: 'label label--' + item.profile}, item.profile) :
-                                    null,
                                 item.anpa_take_key ?
                                     React.createElement('div', {className: 'takekey'}, item.anpa_take_key) :
                                     null,
@@ -677,7 +785,7 @@
                                     React.createElement('span', {className: 'signal'}, item.signal) :
                                     null,
                                 broadcast.status ?
-                                    React.createElement('span', {className: 'broadcast-status', tooltip: broadcast.status}, '!') :
+                                    React.createElement('span', {className: 'broadcast-status', title: broadcast.status}, '!') :
                                     null,
                                 flags.marked_for_not_publication ?
                                     React.createElement('div', {className: 'state-label not-for-publication',
@@ -695,7 +803,7 @@
                                 anpa.name ?
                                     React.createElement('div', {className: 'category'}, anpa.name) :
                                     null,
-                                React.createElement('span', {className: 'provider'}, provider.name),
+                                React.createElement('span', {className: 'provider'}, provider),
                                 item.is_spiked ?
                                     React.createElement('div', {className: 'expires'},
                                         gettext('expires') + ' ' + datetime.shortFormat(item.expiry)) :
@@ -719,7 +827,7 @@
                         var broadcast = props.broadcast || {};
                         return React.createElement(
                             'span',
-                            {className: 'broadcast-status', tooltip: broadcast.status},
+                            {className: 'broadcast-status', title: broadcast.status},
                             '!'
                         );
                     };
@@ -727,59 +835,14 @@
                     var ActionsMenu = React.createClass({
                         toggle: function(event) {
                             this.stopEvent(event);
-                            this.setState({open: !this.state.open}, function() {
-                                closeActionsMenu();
-                                if (this.state.open) {
-                                    // first render it somewhere not visible
-                                    var menuComponent = ReactDOM.render(this.renderMenu({top: 0, left: -500}), menuHolderElem);
-                                    // get its size
-                                    var menuElem = ReactDOM.findDOMNode(menuComponent);
-                                    var mainElem = document.getElementById('main-container');
-                                    var menuRect = menuElem.getBoundingClientRect();
-                                    var width = menuRect.width;
-                                    var height = menuRect.height;
-                                    var ACTION_MENU_FROM_TOP = 150;
-
-                                    // get button position
-                                    var iconRect = ReactDOM.findDOMNode(this)
-                                        .getElementsByClassName('icon-dots-vertical')[0]
-                                        .getBoundingClientRect();
-
-                                    // compute menu position
-                                    var top = iconRect.top + iconRect.height;
-                                    var left = iconRect.left + iconRect.width - width;
-
-                                    // menu goes off on the right side
-                                    if (left + width + 5 > mainElem.clientWidth) {
-                                        left -= width;
-                                        left += iconRect.width;
-                                    }
-
-                                    // menu goes off on the left side
-                                    if (left - 48 < 0) { // 48 is left bar width
-                                        left = iconRect.left;
-                                    }
-
-                                    // menu goes out on the bottom side
-                                    if (top + height + 35 > mainElem.clientHeight) { // 30 is bottom bar
-                                        top -= height;
-                                        top -= iconRect.height;
-                                        top -= 16; // menu margin
-                                        top = top < ACTION_MENU_FROM_TOP ? ACTION_MENU_FROM_TOP : top; // 150 = top-menu + search bar
-                                    }
-
-                                    menuElem.style.left = left.toFixed() + 'px';
-                                    menuElem.style.top = top.toFixed() + 'px';
-                                }
-                            });
+                            closeActionsMenu();
+                            var icon = ReactDOM.findDOMNode(this)
+                                .getElementsByClassName('icon-dots-vertical')[0];
+                            renderToBody(this.renderMenu(), icon);
                         },
 
                         stopEvent: function(event) {
                             event.stopPropagation();
-                        },
-
-                        getInitialState: function() {
-                            return {open: false};
                         },
 
                         getActions: function() {
@@ -808,7 +871,7 @@
                             {_id: 'corrections', label: gettext('Corrections')}
                         ],
 
-                        renderMenu: function(pos) {
+                        renderMenu: function() {
                             var menu = [];
                             var item = this.props.item;
 
@@ -841,7 +904,7 @@
                                 'ul',
                                 {
                                     className: 'dropdown dropdown-menu more-activity-menu open',
-                                    style: {top: pos.top, left: pos.left, display: 'block', minWidth: 200}
+                                    style: {display: 'block', minWidth: 200}
                                 },
                                 menu
                             );
@@ -1285,11 +1348,15 @@
                                         'list-view',
                                         this.state.view + '-view',
                                         {'list-without-items': isEmpty}
-                                    )
+                                    ),
+                                    onClick: this.closeActionsMenu,
                                 },
                                 isEmpty ?
-                                    React.createElement('li', {}, gettextCatalog.getString('There are currently no items')) :
-                                    this.state.itemsList.map(createItem)
+                                    React.createElement(
+                                        'li',
+                                        {onClick: this.closeActionsMenu},
+                                        gettextCatalog.getString('There are currently no items')
+                                    ) : this.state.itemsList.map(createItem)
                             );
                         }
                     });
@@ -1306,7 +1373,8 @@
                          * @return {Boolean}
                          */
                         function isSameVersion(a, b) {
-                            return a._etag === b._etag && a._current_version === b._current_version;
+                            return a._etag === b._etag && a._current_version === b._current_version &&
+                                a._updated === b._updated;
                         }
 
                         /**
@@ -1327,7 +1395,8 @@
                                     return false;   //take package of the new item might have changed
                                 }
 
-                                return (a.archive_item._current_version === b.archive_item._current_version);
+                                return (a.archive_item._current_version === b.archive_item._current_version &&
+                                a.archive_item._updated === b.archive_item._updated);
                             }
 
                             return false;
@@ -1345,6 +1414,7 @@
                             items._items.forEach(function(item) {
                                 var itemId = search.generateTrackByIdentifier(item);
                                 var oldItem = itemsById[itemId] || null;
+
                                 if (!oldItem || !isSameVersion(oldItem, item) || !isArchiveItemSameVersion(oldItem, item)) {
                                     itemsById[itemId] = angular.extend({}, oldItem, item);
                                 }

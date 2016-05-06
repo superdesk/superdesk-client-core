@@ -1,8 +1,8 @@
 (function() {
 'use strict';
 
-angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window',
-function($window) {
+angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window', 'config',
+function($window, config) {
     return {
         // the scope is not isolated because we require the medium instance
         controller: AddContentCtrl,
@@ -14,16 +14,21 @@ function($window) {
             var vm = ctrls[0];
             angular.extend(vm, {
                 textBlockCtrl: ctrls[1],
-                sdEditorCtrl: ctrls[2]
+                sdEditorCtrl: ctrls[2],
+                config: angular.extend({embeds: true}, config.editor || {}) // should be on by default
             });
             // initialize state
             vm.updateState();
             // listen for update state signals
-            scope.$parent.$on('sdAddContent::updateState', function(signal, event, editorElem) {
+            var unbindListener = scope.$parent.$on('sdAddContent::updateState', function(signal, event, editorElem) {
                 vm.updateState(event, editorElem);
             });
             // update on resize
             angular.element($window).on('resize', vm.updateState);
+            scope.$on('$destroy', function() {
+                angular.element($window).off('resize', vm.updateState);
+                unbindListener();
+            });
         }
     };
 }]);
@@ -51,7 +56,12 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout) {
             if (!angular.element(editorElem).is(':focus') && !elementContainsEventTarget()) {
                 return vm.hide();
             }
-            var currentParagraph = angular.element(scope.medium.getSelectedParentElement());
+            var currentParagraph;
+            try {
+                currentParagraph = angular.element(scope.medium.getSelectedParentElement());
+            } catch (e) {
+                return;
+            }
             var position = currentParagraph.position().top;
             // move the (+) button at the caret position
             elementHolder.css('top', position > 0 ? position : 0);
@@ -109,12 +119,14 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout) {
                 var indexWhereToAddNewBlock = vm.sdEditorCtrl.getBlockPosition(vm.textBlockCtrl.block) + 1;
                 // cut the text that is after the caret in the block and save it in order to add it after the embed later
                 var textThatWasAfterCaret = vm.textBlockCtrl.extractEndOfBlock().innerHTML;
-                // save the blocks (with removed leading text)
-                vm.textBlockCtrl.updateModel();
-                // add new text block for the remaining text
-                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddNewBlock, {
-                    body: textThatWasAfterCaret
-                }, true);
+                if (textThatWasAfterCaret && textThatWasAfterCaret !== '') {
+                    // save the blocks (with removed leading text)
+                    vm.textBlockCtrl.updateModel();
+                    // add new text block for the remaining text
+                    vm.sdEditorCtrl.insertNewBlock(indexWhereToAddNewBlock, {
+                        body: textThatWasAfterCaret
+                    }, true);
+                }
                 // show the add-embed form
                 vm.textBlockCtrl.block.showAndFocusLowerAddAnEmbedBox();
             },

@@ -6,6 +6,7 @@ describe('text editor', function() {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}});
     }));
 
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.config'));
     beforeEach(module('superdesk.editor2'));
     beforeEach(module('superdesk.editor.spellcheck'));
@@ -42,13 +43,6 @@ describe('text editor', function() {
             .toBe('<span class="sderror sdhilite" data-word="test" data-index="0">test</span>');
     }));
 
-    it('can remove highlights but keep marker', inject(function(editor, $q, $rootScope) {
-        var content = 'test <b>foo</b> <span class="sderror sdhilite">error</span> it';
-        var scope = createScope(content, $rootScope);
-        var html = editor.cleanScope(scope);
-        expect(html).toBe('test <b>foo</b> error it');
-    }));
-
     it('can replace word in node', inject(function(editor, $q, $rootScope) {
         var content = 'test <b>foo</b>';
         var scope = createScope(content, $rootScope);
@@ -56,43 +50,49 @@ describe('text editor', function() {
         expect(scope.node.innerHTML).toBe('test <b>bars</b>');
     }));
 
-    xit('can findreplace', inject(function(editor, spellcheck, $q, $rootScope, $timeout) {
+    it('can findreplace', inject(function(editor, spellcheck, $q, $rootScope) {
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
         var scope = createScope('test foo and foo', $rootScope);
         editor.registerScope(scope);
 
-        editor.setSettings({findreplace: {needle: 'foo'}});
+        editor.setSettings({findreplace: {diff: {foo: '', bar: ''}}});
         editor.render();
-        $timeout.flush();
-
         $rootScope.$digest();
-        var foo = '<span class="sdfindreplace sdhilite">foo</span>';
-        var fooActive = '<span class="sdfindreplace sdhilite sdactive">foo</span>';
-        expect(scope.node.innerHTML).toBe('test ' + foo + ' and ' + foo);
+
+        var foo1 = '<span class="sdfindreplace sdhilite" data-word="foo" data-index="5">foo</span>';
+        var foo1active = '<span class="sdfindreplace sdhilite sdactive" data-word="foo" data-index="5">foo</span>';
+        var foo2 = '<span class="sdfindreplace sdhilite" data-word="foo" data-index="13">foo</span>';
+        var foo2active = '<span class="sdfindreplace sdhilite sdactive" data-word="foo" data-index="13">foo</span>';
+
+        expect(scope.node.innerHTML).toBe('test foo and foo');
+        expect(scope.node.parentNode.lastChild.innerHTML).toBe('test ' + foo1active + ' and ' + foo2);
 
         editor.selectNext();
-        expect(scope.node.innerHTML).toBe('test ' + fooActive + ' and ' + foo);
-
-        editor.selectNext();
-        expect(scope.node.innerHTML).toBe('test ' + foo + ' and ' + fooActive);
+        expect(scope.node.innerHTML).toBe('test foo and foo');
+        expect(scope.node.parentNode.lastChild.innerHTML).toBe('test ' + foo1 + ' and ' + foo2active);
 
         editor.selectPrev();
-        expect(scope.node.innerHTML).toBe('test ' + fooActive + ' and ' + foo);
+        expect(scope.node.parentNode.lastChild.innerHTML).toBe('test ' + foo1active + ' and ' + foo2);
 
-        editor.replace('test');
-        expect(scope.node.innerHTML).toBe('test test and ' + foo);
-
-        editor.setSettings({findreplace: {needle: 'test'}});
+        editor.replace('tic');
+        $rootScope.$digest();
+        expect(scope.node.innerHTML).toBe('test tic and foo');
         editor.render();
-        $timeout.flush();
-        editor.replaceAll('bar');
-        expect(scope.node.innerHTML).toBe('bar bar and foo');
+        $rootScope.$digest();
+        expect(scope.node.parentNode.lastChild.innerHTML).toBe('test tic and ' + foo2active);
+
+        editor.setSettings({findreplace: {diff: {test: ''}}});
+        editor.render();
+        $rootScope.$digest();
+        editor.replaceAll('bars');
+        expect(scope.node.innerHTML).toBe('bars tic and foo');
 
         editor.setSettings({findreplace: null});
         editor.render();
         $rootScope.$digest();
-        expect(scope.node.innerHTML).toContain('sderror');
-        expect(scope.node.innerHTML).not.toContain('active');
+        expect(scope.node.parentNode.lastChild.innerHTML).toContain('sderror');
+        expect(scope.node.parentNode.lastChild.innerHTML).not.toContain('active');
+        expect(scope.node.innerHTML).toBe('bars tic and foo');
     }));
 
     it('can save model value', inject(function(editor, $rootScope) {

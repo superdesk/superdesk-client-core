@@ -11,11 +11,11 @@ describe('authoring', function() {
         $provide.constant('lodash', _);
     }));
 
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.preferences'));
     beforeEach(module('superdesk.archive'));
     beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.auth'));
     beforeEach(module('superdesk.workspace.content'));
     beforeEach(module('superdesk.mocks'));
@@ -92,7 +92,7 @@ describe('authoring', function() {
     }));
 
     it('can autosave and save an item', inject(function(api, $q, $timeout, $rootScope) {
-        var $scope = startAuthoring({guid: GUID, _id: GUID, task: 'desk:1', _locked: false, _editable: true},
+        var $scope = startAuthoring({guid: GUID, _id: GUID, task: 'desk:1', _locked: true, _editable: true},
                                     'edit'),
             headline = 'test headline';
 
@@ -351,6 +351,7 @@ describe('authoring', function() {
 });
 
 describe('cropImage', function() {
+    beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.authoring'));
     beforeEach(module('superdesk.mocks'));
     beforeEach(module('superdesk.templates-cache'));
@@ -430,7 +431,7 @@ describe('autosave', function() {
     }));
 
     it('can create an autosave', inject(function(autosave, api, $q, $timeout, $rootScope) {
-        var item = {_id: 1, _etag: 'x', _locked: false, _editable: true};
+        var item = {_id: 1, _etag: 'x', _locked: true, _editable: true};
         var edit = Object.create(item);
         edit.headline = 'test';
         spyOn(api, 'save').and.returnValue($q.when({_id: 2}));
@@ -445,8 +446,8 @@ describe('autosave', function() {
     }));
 
     it('can save multiple items', inject(function(autosave, api, $q, $timeout, $rootScope) {
-        var item1 = {_id: 1, _etag: '1', _locked: false, _editable: true},
-            item2 = {_id: 2, _etag: '2', _locked: false, _editable: true};
+        var item1 = {_id: 1, _etag: '1', _locked: true, _editable: true},
+            item2 = {_id: 2, _etag: '2', _locked: true, _editable: true};
         spyOn(api, 'save').and.returnValue($q.when({}));
 
         autosave.save(_.create(item1));

@@ -6,7 +6,7 @@
 <div class="preview" ng-show="!vm.editable">
     <div class="preview--embed"
          ng-click="vm.model.association && vm.editPicture(vm.model.association)"
-         ng-class="{'preview--embed--loading': ng-model.body === ''}"
+         ng-class="{'preview--embed--loading': vm.model.loading}"
          sd-html-preview="vm.model.body">
     </div>
     <!-- TODO: find a new design for that -->
