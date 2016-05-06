@@ -1,8 +1,8 @@
 (function() {
 'use strict';
 
-angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window', 'config',
-function($window, config) {
+angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window',
+function($window) {
     return {
         // the scope is not isolated because we require the medium instance
         controller: AddContentCtrl,
@@ -14,9 +14,11 @@ function($window, config) {
             var vm = ctrls[0];
             angular.extend(vm, {
                 textBlockCtrl: ctrls[1],
-                sdEditorCtrl: ctrls[2],
-                config: angular.extend({embeds: true}, config.editor || {}) // should be on by default
+                sdEditorCtrl: ctrls[2]
             });
+            if (!vm.config.embeds) {
+                return;
+            }
             // initialize state
             vm.updateState();
             // listen for update state signals
@@ -33,12 +35,13 @@ function($window, config) {
     };
 }]);
 
-AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout'];
-function AddContentCtrl (scope, element, superdesk, editor, $timeout) {
+AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout', 'config'];
+function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
     var elementHolder = element.find('div:first-child').first();
     var vm = this;
     angular.extend(vm, {
         expanded: false,
+        config: angular.extend({embeds: true}, config.editor || {}), // should be on by default
         // update the (+) vertical position on the left and his visibility (hidden/shown)
         updateState: function(event, editorElem) {
             /** Return true if the event come from this directive's element */
