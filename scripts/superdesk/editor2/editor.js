@@ -1200,7 +1200,7 @@ angular.module('superdesk.editor2', [
             'fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'sam-embed-js\'));</script>',
             '<div class="sam-embed" data-href="embed.samdesk.io/embed/$_ID"></div>'
         ].join('');
-        var samDeskPattern = 'https?://embed.samdesk.io/embed/(.+)';
+        var samDeskPattern = 'https?://embed.samdesk.io/(?:embed|preview)/(.+)';
         embedService.registerHandler({
             name: 'SAMDesk',
             patterns: [samDeskPattern],
