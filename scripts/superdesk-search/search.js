@@ -210,10 +210,6 @@
                     query.post_filter({terms: {'anpa_category.name': JSON.parse(params.category)}});
                 }
 
-                if (params.keywords) {
-                    query.post_filter({terms: {'keywords': JSON.parse(params.keywords)}});
-                }
-
                 if (params.genre) {
                     query.post_filter({terms: {'genre.name': JSON.parse(params.genre)}});
                 }
@@ -396,7 +392,6 @@
         var FacetKeys = {
             'type': 1,
             'category': 1,
-            'keywords': 1,
             'urgency': 1,
             'priority': 1,
             'source': 1,
@@ -628,7 +623,6 @@
                             'source': {},
                             'credit': {},
                             'category': {},
-                            'keywords': {},
                             'urgency': {},
                             'priority': {},
                             'genre': {},
@@ -648,6 +642,8 @@
                                 return;
                             }
 
+                            initAggregations();
+
                             if (angular.isDefined(scope.items._aggregations.type)) {
                                 _.forEach(scope.items._aggregations.type.buckets, function(type) {
                                     scope.aggregations.type[type.key] = type.doc_count;
@@ -658,14 +654,6 @@
                                 _.forEach(scope.items._aggregations.category.buckets, function(cat) {
                                     if (cat.key !== '') {
                                         scope.aggregations.category[cat.key] = cat.doc_count;
-                                    }
-                                });
-                            }
-
-                            if (angular.isDefined(scope.items._aggregations.keywords)) {
-                                _.forEach(scope.items._aggregations.keywords.buckets, function(cat) {
-                                    if (cat.key !== '') {
-                                        scope.aggregations.keywords[cat.key] = cat.doc_count;
                                     }
                                 });
                             }
@@ -986,8 +974,15 @@
 
                     scope.repo = {
                         ingest: true, archive: true,
-                        published: true, archived: true
+                        published: true, archived: true,
+                        search: 'local'
                     };
+
+                    if ($location.search().repo &&
+                        !_.intersection($location.search().repo.split(','),
+                            ['archive', 'published', 'ingest', 'archived']).length) {
+                        scope.repo.search = $location.search().repo;
+                    }
 
                     scope.context = 'search';
                     scope.$on('item:deleted:archived', itemDelete);
@@ -1336,7 +1331,7 @@
                                 scope.item.label = 'location:';
                                 scope.item.value = 'workspace';
                             } else {
-                                if (scope.item._type === 'published' && scope.item.allow_post_publish_actions === false) {
+                                if (scope.item._type === 'archived') {
                                     scope.item.label = '';
                                     scope.item.value = 'archived';
                                 }
