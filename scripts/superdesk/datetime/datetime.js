@@ -132,6 +132,22 @@
             };
         })
 
+        /**
+         * Returns the difference between given date and the
+         * current datetime in hours
+         *
+         * @param {Datetime} date iso format datetime
+         * @return {Int} hours
+         */
+        .filter('hoursFromNow', function hoursFromNowFactory() {
+            return function hoursFromNow(date) {
+                var difference = moment().diff(moment(date));
+                var d = moment.duration(difference);
+                var s = Math.floor(d.asHours());
+                return s;
+            };
+        })
+
         // format datetime obj to time string
         .filter('time', ['config', function timeFilterFactory(config) {
             var TIME_FORMAT = config.view ? config.view.timeformat : 'h:mm';

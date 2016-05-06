@@ -562,28 +562,55 @@
                             this.renderDropdown();
                         },
 
+                        /**
+                         * Checks if the given item is in the daterange of the highlights
+                         * for every highlight given
+                         *
+                         * @param {array} highlights
+                         * @param {Object} item
+                         * @return {Object}
+                         */
+                        getHighlightStatuses: function(highlights, item) {
+                            var highlightStatuses = {};
+                            var highlightsById = this.props.highlightsById;
+                            _.forEach(highlights, function(highlight) {
+                                var hours = $filter('hoursFromNow')(item.versioncreated);
+                                highlightStatuses[highlight] = highlightsService.isInDateRange(highlightsById[highlight], hours);
+                            });
+
+                            return highlightStatuses;
+                        },
+
                         getHighlights: function() {
+                            var itemHighlights = [];
                             if (isCheckAllowed(this.props.item)) {
                                 if (this.props.item.archive_item && this.props.item.archive_item.highlights &&
                                     this.props.item.archive_item.highlights.length) {
-                                    return this.props.item.archive_item.highlights;
+                                    itemHighlights = this.props.item.archive_item.highlights;
                                 } else {
-                                    return this.props.item.highlights || [];
+                                    itemHighlights = this.props.item.highlights || [];
                                 }
                             }
 
-                            return [];
+                            return this.getHighlightStatuses(itemHighlights, this.props.item);
                         },
 
                         render: function() {
                             var highlights = this.getHighlights();
+                            var highlightsLength = _.keys(highlights).length;
+
+                            var highlightId = _.keys(highlights)[0];
+                            if ($location.path() === '/workspace/highlights') {
+                                highlightId = $location.search().highlight;
+                            }
+
                             return React.createElement(
                                 'div',
                                 {
                                     className: 'highlights-box',
                                     onClick: this.toggle
                                 },
-                                highlights.length ? React.createElement(
+                                highlightsLength ? React.createElement(
                                     'div',
                                     {className: 'highlights-list dropdown'},
                                     React.createElement(
@@ -591,8 +618,10 @@
                                         {className: 'dropdown-toggle'},
                                         React.createElement('i', {
                                             className: classNames({
-                                                'icon-star red': highlights.length === 1,
-                                                'icon-multi-star red': highlights.length > 1
+                                                'icon-star red': highlightsLength === 1,
+                                                'icon-multi-star red': highlightsLength > 1,
+                                                'icon-star gray': highlightsLength === 1 && !highlights[highlightId],
+                                                'icon-multi-star gray': highlightsLength > 1 && !highlights[highlightId],
                                             })
                                         })
                                     )
