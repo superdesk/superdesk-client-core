@@ -329,7 +329,7 @@
                                     label = gettext('location:');
                                     value = gettext('workspace');
                                 } else {
-                                    if (item._type === 'published' && item.allow_post_publish_actions === false) {
+                                    if (item._type === 'archived') {
                                         label = '';
                                         value = gettext('archived');
                                     }
@@ -756,7 +756,7 @@
                                     React.createElement('span', {className: 'signal'}, item.signal) :
                                     null,
                                 broadcast.status ?
-                                    React.createElement('span', {className: 'broadcast-status', tooltip: broadcast.status}, '!') :
+                                    React.createElement('span', {className: 'broadcast-status', title: broadcast.status}, '!') :
                                     null,
                                 flags.marked_for_not_publication ?
                                     React.createElement('div', {className: 'state-label not-for-publication',
@@ -798,7 +798,7 @@
                         var broadcast = props.broadcast || {};
                         return React.createElement(
                             'span',
-                            {className: 'broadcast-status', tooltip: broadcast.status},
+                            {className: 'broadcast-status', title: broadcast.status},
                             '!'
                         );
                     };
@@ -1344,7 +1344,8 @@
                          * @return {Boolean}
                          */
                         function isSameVersion(a, b) {
-                            return a._etag === b._etag && a._current_version === b._current_version;
+                            return a._etag === b._etag && a._current_version === b._current_version &&
+                                a._updated === b._updated;
                         }
 
                         /**
@@ -1365,7 +1366,8 @@
                                     return false;   //take package of the new item might have changed
                                 }
 
-                                return (a.archive_item._current_version === b.archive_item._current_version);
+                                return (a.archive_item._current_version === b.archive_item._current_version &&
+                                a.archive_item._updated === b.archive_item._updated);
                             }
 
                             return false;
@@ -1383,6 +1385,7 @@
                             items._items.forEach(function(item) {
                                 var itemId = search.generateTrackByIdentifier(item);
                                 var oldItem = itemsById[itemId] || null;
+
                                 if (!oldItem || !isSameVersion(oldItem, item) || !isArchiveItemSameVersion(oldItem, item)) {
                                     itemsById[itemId] = angular.extend({}, oldItem, item);
                                 }
