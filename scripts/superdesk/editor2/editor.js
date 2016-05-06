@@ -1032,19 +1032,23 @@ angular.module('superdesk.editor2', [
                         // set data needed for replacing
                         scope.replaceWord = node.dataset.word;
                         scope.replaceIndex = parseInt(node.dataset.index, 10);
+                        scope.sentenceWord = node.dataset.sentenceWord === 'true';
 
                         spellcheck.suggest(node.textContent).then(function(suggestions) {
-                            scope.suggestions = suggestions;
+                            if (scope.sentenceWord) {
+                                suggestions.push(scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1));
+                                scope.suggestions = _.unique(suggestions);
+                            } else {
+                                scope.suggestions = suggestions;
+                            }
                             scope.replaceTarget = node;
-                            $timeout(function() {
-                                scope.$apply(function() {
-                                    var menu = elem[0].getElementsByClassName('dropdown-menu')[0];
-                                    menu.style.left = (node.offsetLeft) + 'px';
-                                    menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
-                                    menu.style.position = 'absolute';
-                                    scope.openDropdown = true;
-                                });
-                            }, 0, false);
+                            scope.$applyAsync(function() {
+                                var menu = elem[0].getElementsByClassName('dropdown-menu')[0];
+                                menu.style.left = (node.offsetLeft) + 'px';
+                                menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
+                                menu.style.position = 'absolute';
+                                scope.openDropdown = true;
+                            });
                         });
                         return false;
                     }
@@ -1379,6 +1383,9 @@ function EditorUtilsFactory() {
             span.textContent = replace.textContent;
             span.dataset.word = token.word;
             span.dataset.index = token.index;
+            if (token.sentenceWord) {
+                span.dataset.sentenceWord = 'true';
+            }
             replace.parentNode.replaceChild(span, replace);
         },
 
