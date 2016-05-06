@@ -12,11 +12,12 @@ gettext('Correction');gettext('Desk Management');gettext('Dictionaries List Mana
 gettext('Edit Unique Name');gettext('Feature Preview');gettext('Fetch Content To a Desk');gettext('Highlights/Summary List Management');
 gettext('Hold');gettext('Ingest Channels');gettext('Manage Global Saved Searches');gettext('Manage Search Providers');
 gettext('Mark items for Highlights/Summary Lists');gettext('Move Content to another desk');gettext('Planning Management');
-gettext('Restore');gettext('Roles Management');gettext('Routing Rules Management');gettext('Tasks Management');
-gettext('Transformation Rules Management');gettext('Un Spike');gettext('Unlock content');gettext('User Management');
+gettext('Restore');gettext('Roles Management');gettext('Routing Rules Management');gettext('Tasks Management');gettext('Last Day');
+gettext('Transformation Rules Management');gettext('Un Spike');gettext('Unlock content');gettext('User Management');gettext('Last Month');
 gettext('Groups Management');gettext('Vocabularies Management');gettext('Sending');gettext('\'GENRE is a required field\'');
 gettext('\'SUBJECT is a required field\'');gettext('\'BYLINE is a required field\'');gettext('\'ABSTRACT is a required field\'');
 gettext('\'HEADLINE is a required field\'');gettext('\'ANPA_CATEGORY is a required field\'');gettext('\'SLUGLINE is a required field\'');
 gettext('\'GENRE null value not allowed\'');gettext('412: Can\'t publish as item state is draft');gettext('production');gettext('search');
-gettext('desk Output');gettext('scheduled Desk Output');gettext('Search');gettext('Content Expiry');
+gettext('desk Output');gettext('scheduled Desk Output');gettext('Search');gettext('Content Expiry');gettext('stage');gettext('Last Week');
+gettext('authoring');
 

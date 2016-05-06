@@ -147,7 +147,7 @@
                     <div ng-repeat="(key,value) in aggregations.date" >
                         <button ng-click="toggleFilter('date', key)"
                             class="btn btn-mini" ng-class="{active: hasFilter('date',key)}"
-                            >{{key}}</button>
+                            >{{key | translate}}</button>
                     </div>
                 </div>
                 <fieldset ng-show="repo.search === 'local' || repo.search === 'paimg'">

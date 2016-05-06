@@ -821,6 +821,13 @@ angular.module('superdesk.editor2', [
                             aria: gettextCatalog.getString('link')
                         });
                         break;
+                    case 'quote':
+                        editorConfig.toolbar.buttons.push({
+                            name: 'quote',
+                            action: 'append-blockquote',
+                            aria: gettextCatalog.getString('quote')
+                        });
+                        break;
                     case 'removeFormat':
                         editorConfig.toolbar.buttons.push({
                             name: 'removeFormat',
@@ -869,7 +876,7 @@ angular.module('superdesk.editor2', [
                             // this dummy imageDragging stop preventing drag & drop events
                             editorConfig.extensions = {'imageDragging': {}};
                             if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
-                                editorConfig.extensions.table = new window.MediumEditorTable();
+                                editorConfig.extensions.table = new window.MediumEditorTable({aria:gettextCatalog.getString('insert table')});
                             }
                         }
                     }
