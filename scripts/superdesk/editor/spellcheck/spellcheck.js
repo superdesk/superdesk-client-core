@@ -269,22 +269,70 @@ function SpellcheckService($q, api, dictionaries) {
     };
 }
 
-SpellcheckMenuController.$inject = ['editor', '$rootScope'];
-function SpellcheckMenuController(editor, $rootScope) {
-    this.isAuto = editor.settings.spellcheck;
+SpellcheckMenuController.$inject = ['editor', 'preferencesService'];
+function SpellcheckMenuController(editor, preferencesService) {
+    this.isAuto = null;
     this.spellcheck = spellcheck;
     this.pushSettings = pushSettings;
-
+    var PREFERENCES_KEY = 'spellchecker:status';
     var self = this;
 
+    /**
+     * Set the spell checker status
+     */
+    function setStatus(status) {
+        var updates = {};
+        updates[PREFERENCES_KEY] = {
+            'type': 'bool',
+            'enabled': status,
+            'default': true
+        };
+
+        preferencesService.update(updates, PREFERENCES_KEY);
+    }
+
+    /**
+     * Get the spell checker status
+     */
+    function getStatus() {
+        var status = true;
+        return preferencesService.get(PREFERENCES_KEY).then(function(result) {
+            if (angular.isDefined(result)) {
+                status = result.enabled;
+            }
+            return status;
+        }, function(error) {
+            return status;
+        });
+    }
+
+    /**
+     * Force spell ckecking
+     */
     function spellcheck() {
         editor.render(true);
     }
 
-    function pushSettings() {
+    /**
+     * render the editor based on the spell check settings.
+     */
+    function render() {
         editor.setSettings({spellcheck: self.isAuto});
         editor.render();
     }
+
+    /**
+     * update the editor and preferences
+     */
+    function pushSettings() {
+        render();
+        setStatus(self.isAuto);
+    }
+
+    getStatus().then(function(status) {
+        self.isAuto = status;
+        render();
+    });
 }
 
 angular.module('superdesk.editor.spellcheck', ['superdesk.dictionaries'])

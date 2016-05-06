@@ -22,8 +22,9 @@ describe('spellcheck', function() {
 
     beforeEach(module('superdesk.editor'));
     beforeEach(module('superdesk.editor.spellcheck'));
+    beforeEach(module('superdesk.preferences'));
 
-    beforeEach(inject(function(dictionaries, spellcheck, $q) {
+    beforeEach(inject(function(dictionaries, spellcheck, $q, preferencesService) {
 
         spyOn(dictionaries, 'getActive').and.returnValue($q.when([
             {_id: 'foo', content: DICT},
@@ -32,6 +33,8 @@ describe('spellcheck', function() {
         ]));
 
         spellcheck.setLanguage(LANG);
+        spyOn(preferencesService, 'get').and.returnValue($q.when({'enabled': true}));
+        spyOn(preferencesService, 'update').and.returnValue($q.when({}));
     }));
 
     it('can spellcheck using multiple dictionaries',
@@ -119,16 +122,22 @@ describe('spellcheck', function() {
     }
 
     describe('spellcheck menu', function() {
-        it('can toggle auto spellcheck', inject(function(editor, $controller, $rootScope) {
+        it('can toggle auto spellcheck', inject(function(editor, $controller, $rootScope, preferencesService) {
             var ctrl = $controller('SpellcheckMenu');
+            expect(ctrl.isAuto).toBe(null);
+
+            $rootScope.$digest();
             expect(ctrl.isAuto).toBe(true);
+            expect(preferencesService.get).toHaveBeenCalledWith('spellchecker:status');
 
             ctrl.pushSettings();
             expect(editor.settings.spellcheck).toBe(true);
+            expect(preferencesService.update).toHaveBeenCalled();
 
             ctrl.isAuto = false;
             ctrl.pushSettings();
             expect(editor.settings.spellcheck).toBe(false);
+            expect(preferencesService.update).toHaveBeenCalled();
 
             spyOn(editor, 'render');
             ctrl.spellcheck();

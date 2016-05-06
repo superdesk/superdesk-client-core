@@ -169,7 +169,7 @@ function HistoryStack(initialValue) {
 
 EditorService.$inject = ['spellcheck', '$rootScope', '$timeout', '$q'];
 function EditorService(spellcheck, $rootScope, $timeout, $q) {
-    this.settings = {spellcheck: true};
+    this.settings = {spellcheck: false};
     window.editor = this;
 
     this.KEY_CODES = Object.freeze({
@@ -278,10 +278,12 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
 
     /**
      * Render highlights in all registered scopes
+     *
+     * @param {Boolean} force rendering
      */
-    this.render = function() {
+    this.render = function(force) {
         scopes.forEach(function(scope) {
-            self.renderScope(scope);
+            self.renderScope(scope, force);
         });
     };
 

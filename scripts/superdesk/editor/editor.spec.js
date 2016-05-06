@@ -28,6 +28,7 @@ describe('text editor', function() {
     }
 
     it('can spellcheck', inject(function(editor, spellcheck, $q, $rootScope) {
+        editor.setSettings({spellcheck: true});
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
         var scope = createScope('test', $rootScope);
         editor.registerScope(scope);
@@ -38,6 +39,7 @@ describe('text editor', function() {
     }));
 
     it('can highlight a sentence word for capitalization', inject(function(editor, spellcheck, $q, $rootScope) {
+        editor.setSettings({spellcheck: true});
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0, sentenceWord: true}]));
         var scope = createScope('test', $rootScope);
         editor.registerScope(scope);
@@ -48,6 +50,7 @@ describe('text editor', function() {
     }));
 
     it('can remove highlights but keep marker', inject(function(editor, $q, $rootScope) {
+        editor.setSettings({spellcheck: true});
         var content = 'test <b>foo</b> <span class="sderror sdhilite">error</span> it';
         var scope = createScope(content, $rootScope);
         var html = editor.cleanScope(scope);
@@ -55,6 +58,7 @@ describe('text editor', function() {
     }));
 
     it('can findreplace', inject(function(editor, spellcheck, $q, $rootScope, $timeout) {
+        editor.setSettings({spellcheck: true});
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
         var scope = createScope('test $foo and $foo', $rootScope);
         editor.registerScope(scope);
