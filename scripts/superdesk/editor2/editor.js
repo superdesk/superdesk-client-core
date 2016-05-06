@@ -1508,6 +1508,7 @@ function EditorUtilsFactory() {
             span.dataset.index = token.index;
             if (token.sentenceWord) {
                 span.dataset.sentenceWord = 'true';
+                span.classList.add('sdCapitalize');
             }
             replace.parentNode.replaceChild(span, replace);
         },
