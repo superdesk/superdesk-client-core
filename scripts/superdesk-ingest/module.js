@@ -212,6 +212,7 @@
             criteria.aggregations = 1;
             api.query('ingest', criteria).then(function(items) {
                 $scope.items = search.mergeItems(items, $scope.items, next);
+                $scope.total = items._meta.total;
             })
             ['finally'](function() {
                 $scope.loading = false;

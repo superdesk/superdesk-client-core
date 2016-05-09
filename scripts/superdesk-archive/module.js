@@ -809,6 +809,7 @@
             resource.query(criteria).then(function(items) {
                 $scope.loading = false;
                 $scope.items = search.mergeItems(items, $scope.items, next);
+                $scope.total = items._meta.total;
             }, function() {
                 $scope.loading = false;
             });

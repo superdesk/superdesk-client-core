@@ -1119,6 +1119,7 @@
 
                         function setScopeItems(items) {
                             scope.items = search.mergeItems(items, scope.items, next);
+                            scope.total_records = items._meta.total;
                         }
                     }
 
@@ -1906,7 +1907,9 @@
             };
 
             return {
-                scope: {},
+                scope: {
+                    total: '='
+                },
                 templateUrl: asset.templateUrl('superdesk-search/views/item-sortbar.html'),
                 link: function(scope) {
                     scope.sortOptions = search.sortOptions;
