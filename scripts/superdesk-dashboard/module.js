@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces', 'modal', 'gettext'];
-    function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces, modal, gettext) {
+    DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces', 'modal', 'gettext', 'privileges'];
+    function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces, modal, gettext, privileges) {
         var vm = this;
 
         $scope.edited = null;
@@ -13,6 +13,8 @@
         function setupWorkspace(workspace) {
             vm.current = null;
             if (workspace) {
+                // is the user allowed to configure widgets on this desk?
+                $scope.configurable = workspaces.isCustom() || privileges.userHasPrivileges({desks: 1});
                 // do this async so that it can clean up previous grid
                 $scope.$applyAsync(function() {
                     vm.current = workspace;
