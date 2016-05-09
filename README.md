@@ -26,7 +26,6 @@ For installation instructions, please refer to the README file at: [https://gith
 - `feature.preview`: `false` - enables print preview in authoring
 - `feature.alchemy`: `false` - allow alchemy widget for keywords
 
-
 ##### Workspace
 - `workspace.content`: `false` - enable content view in workspace (obsolete)
 - `workspace.ingest`: `false` - enable ingest view in workspace (obsolete)
@@ -49,3 +48,7 @@ For installation instructions, please refer to the README file at: [https://gith
 ##### Authoring
 
 - `previewSubjectFilterKey`: `null` - full preview in authoring displays only matching subjects
+
+##### UI
+
+- `ui.italicAbstract`: `true` - render abstract using italics

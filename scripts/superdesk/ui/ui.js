@@ -1183,9 +1183,15 @@
     }
 
     return angular.module('superdesk.ui', [
+        'superdesk.config',
         'superdesk.datetime',
         'superdesk.ui.autoheight'
     ])
+
+        .config(['defaultConfigProvider', function(defaultConfig) {
+            defaultConfig.set('ui.italicAbstract', true);
+        }])
+
         .directive('sdShadow', ShadowDirective)
         .directive('sdToggleBox', ToggleBoxDirective)
         .filter('nl2el', NewlineToElement)
