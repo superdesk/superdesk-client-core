@@ -22,17 +22,17 @@
     </div>
 
     <div class="pull-right" ng-if="type === 'archive'">
-        <button class="navbtn strict" ng-if="state !== 'spiked'" ng-click="action.multiedit()" title="{{ :: 'Multiedit' | translate }}">
+        <button class="navbtn strict" ng-if="activity['edit.item']" ng-click="action.multiedit()" title="{{ :: 'Multiedit' | translate }}">
             <i class="big-icon-multiedit"></i>
         </button>
         <button class="navbtn strict" ng-click="action.spikeItems()" title="{{ :: 'Spike' | translate }}"
-            ng-if="!spike && !publish && action.canSpikeItems()">
+            ng-if="!spike && !publish && activity['spike']">
             <i class="big-icon-spike"></i>
         </button>
         <button class="navbtn strict" ng-click="action.unspikeItems()" title="{{ :: 'Unspike' | translate }}" ng-if="state === 'spiked'">
             <i class="big-icon-unspike"></i>
         </button>
-        <button id="send-to-btn" class="navbtn strict" title="{{ :: 'Send to' | translate }}" ng-if="state !== 'spiked' && action.canSendItems()" ng-click="action.sendAs()">
+        <button id="send-to-btn" class="navbtn strict" title="{{ :: 'Send to' | translate }}" ng-if="activity['edit.item']" ng-click="action.sendAs()">
             <i class="svg-icon-sendto"></i>
         </button>
     </div>
