@@ -86,7 +86,7 @@
 
 <!--This article-edit view is used by templates as well.
     ng-if is used to hide dateline for the template create/edit screen.-->
-<div class="field" ng-if="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" order="{{editor.dateline.order}}" sd-validation-error="error.located" data-required="schema.dateline.required">
+<div class="field" ng-if="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" order="{{editor.dateline.order}}" sd-validation-error="error.dateline" data-required="schema.dateline.required">
     <label translate>Dateline</label>
     <div class="dateline">
         <div sd-meta-locators
