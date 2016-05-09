@@ -839,6 +839,7 @@
                             closeActionsMenu();
                             var icon = ReactDOM.findDOMNode(this)
                                 .getElementsByClassName('icon-dots-vertical')[0];
+
                             renderToBody(this.renderMenu(), icon);
                         },
 
