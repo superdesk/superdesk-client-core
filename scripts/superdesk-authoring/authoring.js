@@ -287,19 +287,6 @@
         this.close = function closeAuthoring(diff, orig, isDirty, closeItem) {
             var promise = $q.when();
             if (this.isEditable(diff)) {
-                //content item just created and no change -> it will be deleted
-                if (!isDirty && orig.state === 'draft' && orig._current_version === 1) {
-
-                    promise = confirm.confirmClose()
-                        .then(angular.bind(this, function save() {
-                            //force a fake change
-                            diff.body_html = (diff.body_html || orig.body_html || '') + ' ';
-                            return this.save(orig, diff);
-                        }), function() { // ignore saving
-                            return $q.when('ignore');
-                        });
-                }
-
                 if (isDirty) {
                     if (!_.contains(['published', 'corrected'], orig.state)) {
                         promise = confirm.confirm()
@@ -845,19 +832,6 @@
             return modal.confirm(
                 gettextCatalog.getString('There are some unsaved changes, do you want to save it now?'),
                 gettextCatalog.getString('Save changes?'),
-                gettextCatalog.getString('Save'),
-                gettextCatalog.getString('Ignore'),
-                gettextCatalog.getString('Cancel')
-            );
-        };
-
-        /**
-         * In case the item version has just been created the user is asked if wants to save the document.
-         */
-        this.confirmClose = function confirm() {
-            return modal.confirm(
-                gettextCatalog.getString('Do you want to save newly created content item?'),
-                gettextCatalog.getString('Save content item?'),
                 gettextCatalog.getString('Save'),
                 gettextCatalog.getString('Ignore'),
                 gettextCatalog.getString('Cancel')
