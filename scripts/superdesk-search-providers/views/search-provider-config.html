@@ -54,19 +54,23 @@
                     </select>
                 </div>
 
-                <div class="field">
+                <div class="field" ng-if="provider.search_provider !== 'scanpix'">
                     <label for="provider-source" translate>Source</label>
-                    <input type="text" id="provider-source" placeholder="{{ source | translate }}" ng-model="provider.source" required>
+                    <input type="text" id="provider-source" placeholder="source of the search provider" ng-model="provider.source" required>
+                </div>
+
+                <div class="field" ng-if="provider.search_provider === 'scanpix'">
+                    <span ng-init="provider.source='scanpix'">
                 </div>
 
                 <div class="field">
                     <label for="provider-username" translate>Username</label>
-                    <input type="text" id="provider-username" placeholder="{{ username | translate }}" ng-model="provider.config.username">
+                    <input type="text" id="provider-username" placeholder="{{ 'search provider username' | translate }}" ng-model="provider.config.username">
                 </div>
 
                 <div class="field">
                     <label for="provider-password" translate>Password</label>
-                    <input type="text" id="provider-password" placeholder="{{ password | translate }}" ng-model="provider.config.password">
+                    <input type="password" id="provider-password" placeholder="{{ 'search provider password' | translate }}" ng-model="provider.config.password">
                 </div>
             </fieldset>
         </form>
