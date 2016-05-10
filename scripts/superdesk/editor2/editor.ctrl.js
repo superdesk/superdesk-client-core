@@ -196,7 +196,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     }
                 });
             } else {
-                new_body = blocks[0].body;
+                new_body = (blocks.length > 0) ? blocks[0].body : '';
             }
             // strip <br> and <p>
             new_body = new_body.trim().replace(/<p><br><\/p>$/, '');

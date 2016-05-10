@@ -916,8 +916,8 @@
         };
     }
 
-    ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash'];
-    function ChangeImageController($scope, gettext, notify, modal, $q, _) {
+    ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash', 'api', '$rootScope'];
+    function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $rootScope) {
         $scope.data = $scope.locals.data;
         $scope.data.cropData = {};
         var sizes = {};
@@ -932,7 +932,6 @@
         // initialize metadata from `item`
         $scope.data.metadata = angular.copy($scope.data.item);
         $scope.selectedRendition = null;
-
         $scope.selectRendition = function(rendition) {
             if (!rendition) {
                 $scope.selectedRendition = null;
@@ -988,9 +987,41 @@
             }
         };
 
+        // Area of Interest
+        $scope.showAreaOfInterestView = function(show) {
+            angular.extend($scope, {
+                isAoISelectionModeEnabled: show === undefined || show,
+                areaOfInterestData: {},
+                loaderForAoI: false
+            });
+        };
+        $scope.saveAreaOfInterest = function(croppingData) {
+            $scope.loaderForAoI = true;
+            api.save('picture_crop', {item: $scope.data.item, crop: croppingData})
+            .then(function(result) {
+                angular.extend(result.item.renditions.original, {
+                    href: result.href,
+                    width: result.width,
+                    height: result.height,
+                    media: result._id
+                });
+                return api.save('picture_renditions', {item: result.item}).then(function(item) {
+                    $scope.data.item.renditions = item.renditions;
+                    $scope.data.metadata = $scope.data.item;
+                    $scope.data.poi = {x: 0.5, y: 0.5};
+                    $rootScope.$broadcast('poiUpdate', $scope.data.poi);
+                });
+            })
+            .then(function() {
+                $scope.showAreaOfInterestView(false);
+            });
+        };
+
         $scope.onChange = function(renditionName, cropData) {
             $scope.$apply(function() {
-                $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
+                if (angular.isDefined(renditionName)) {
+                    $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
+                }
                 $scope.data.isDirty = true;
             });
         };

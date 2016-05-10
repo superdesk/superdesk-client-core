@@ -609,6 +609,9 @@ edit image modal
                 margin-left: 10px;
             }
         }
+        button {
+            margin-top: 20px;
+        }
     }
     &-sidebar {
         width: 335px;
@@ -617,6 +620,15 @@ edit image modal
         border-left: 1px solid #dfdfdf;
         .box-sizing(border-box);
         padding: 15px;
+    }
+    &-loader:before {
+        content: '';
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        transform: translateY(-50%);
+        background-position: left !important;
+        .spinner-big;
     }
     &-metadata {
         > div {

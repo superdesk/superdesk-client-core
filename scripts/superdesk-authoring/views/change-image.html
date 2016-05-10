@@ -8,7 +8,7 @@
         <button type="button"
         class="btn btn-primary"
         ng-click="done()"
-        ng-disabled="!data.isDirty"
+        ng-disabled="!data.isDirty || isAoISelectionModeEnabled"
         translate>Save</button>
     </div>
 </div>
@@ -19,10 +19,24 @@
             <div ng-if="!selectedRendition">
                 <label class="field-label" translate>Original <span class="size">{{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}</span></label>
                 <sd-image-point
+                    ng-if="!isAoISelectionModeEnabled"
                     data-src="data.item.renditions.viewImage.href"
                     data-poi="data.poi"
                     data-on-change="data.isDirty = true">
                 </sd-image-point>
+                <div class="modal-body__flex-loader" ng-if="loaderForAoI"></div>
+                <div sd-image-crop
+                    data-show-Min-Size-Error="true"
+                    data-src="data.item.renditions.viewImage.href"
+                    data-original="data.item.renditions.original"
+                    data-crop-data="areaOfInterestData"
+                    ng-if="isAoISelectionModeEnabled && !loaderForAoI">
+                </div>
+                <div ng-if="isAoISelectionModeEnabled && !loaderForAoI">
+                    <button class="btn btn-danger" ng-click="saveAreaOfInterest(areaOfInterestData)" translate>Save</button>
+                    <button class="btn btn-default" ng-click="showAreaOfInterestView(false)" translate>Cancel</button>
+                </div>
+                <button class="btn btn-default" ng-click="showAreaOfInterestView()" ng-if="!isAoISelectionModeEnabled" translate>Select the area of interest</button>
             </div>
             <div class="crop-area selected" ng-if="selectedRendition">
                 <label class="field-label">{{ selectedRendition.name }}</label>
@@ -33,7 +47,8 @@
                 ></div>
             </div>
         </div>
-        <div class="modal-body__flex-sidebar modal-body__flex-metadata" ng-if="data.showMetadataEditor">
+        <div class="modal-body__flex-sidebar modal-body__flex-metadata"
+             ng-if="data.showMetadataEditor && !isAoISelectionModeEnabled">
             <div class="header" translate>Metadata</div>
             <div>
                 <label translate>Title *</label>
@@ -72,7 +87,7 @@
     </div><!-- end flex top -->
 
     <div class="modal-body__flex-bottom">
-        <div class="crop-area__thumbnails">
+        <div class="crop-area__thumbnails" ng-show="!isAoISelectionModeEnabled">
             <ul>
                 <li ng-click="selectRendition()" ng-class="{active: selectedRendition === null}">
                     <sd-image-point
