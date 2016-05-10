@@ -437,6 +437,9 @@
             return parameters;
         }
 
+        /*
+         * function to parse search input from the search bar.
+         */
         function initSelectedKeywords (keywords) {
             tags.selectedKeywords = [];
             while (keywords.indexOf('(') >= 0 && keywords.indexOf(')') > 0) {
@@ -1739,6 +1742,7 @@
                          */
                         function getQuery() {
                             var metas = [];
+                            var pattern = /[()]/g;
 
                             angular.forEach(scope.meta, function(val, key) {
                                 //checkbox boolean values.
@@ -1746,7 +1750,10 @@
                                     val = booleanToBinaryString(val);
                                 }
 
-                                val = val.replace(/[()]/g, '');
+                                if (typeof(val) === 'string') {
+                                    val = val.replace(pattern, '');
+                                }
+
                                 if (key === '_all') {
                                     metas.push(val.join(' '));
                                 } else {
@@ -1755,6 +1762,11 @@
                                             if (val) {
                                                 metas.push(key + ':(' + val + ')');
                                             }
+                                        } else if (angular.isArray(val)) {
+                                            angular.forEach(val, function(value) {
+                                                value = value.replace(pattern, '');
+                                                metas.push(key + ':(' + value + ')');
+                                            });
                                         } else {
                                             var subkey = getFirstKey(val);
                                             if (val[subkey]) {
@@ -1825,7 +1837,11 @@
                          * Converting to object and adding pre-selected subject codes to list in left sidebar
                          */
                         metadata
-                            .fetchSubjectcodes()
+                            .initialize()
+                            .then(function() {
+                                scope.keywords = metadata.values.keywords;
+                                return metadata.fetchSubjectcodes();
+                            })
                             .then(function () {
                                 scope.subjectcodes = metadata.values.subjectcodes;
                                 return tags.initSelectedFacets();
