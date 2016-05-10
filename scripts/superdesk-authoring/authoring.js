@@ -258,7 +258,10 @@
 
             session.getIdentity()
                 .then(function(user) {
-                    return api.save('archive_rewrite', {}, {}, item);
+                    var updates = {
+                        desk_id: desks.getCurrentDeskId() || item.task.desk
+                    };
+                    return api.save('archive_rewrite', {}, updates, item);
                 })
                 .then(function(new_item) {
                     notify.success(gettext('Update Created.'));
@@ -618,6 +621,7 @@
             action.re_write = !is_read_only_state && _.contains(['text'], current_item.type) &&
                 !current_item.embargo && !current_item.rewritten_by && action.new_take &&
                 (!current_item.broadcast || !current_item.broadcast.master_id);
+            var re_write = action.re_write;
 
             action.resend = _.contains(['text'], current_item.type) && !current_item.rewritten_by &&
                 _.contains(['published', 'corrected', 'killed'], current_item.state);
@@ -651,6 +655,8 @@
                 var desk = _.find(self.userDesks, {'_id': current_item.task.desk});
                 if (!desk) {
                     action = angular.extend({}, DEFAULT_ACTIONS);
+                    // user can action `update` even if the user is not a member.
+                    action.re_write = re_write;
                 }
             } else {
                 // personal
