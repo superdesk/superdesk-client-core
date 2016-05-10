@@ -132,15 +132,42 @@
             </div>
         </div>
     </fieldset>
-    <fieldset ng-show="repo.search === 'paimg'">
+    <fieldset ng-show="repo.search === 'paimg' || repo.search === 'scanpix'">
         <div class="field">
             <label for="search-text" translate>Search</label>
             <div class="control">
                 <input type="text" id="search-text" ng-model="meta.text">
             </div>
-            <label for="search-starred" translate>Editor's Choice</label>
-            <div class="control">
-                <input type="checkbox" id="search-starred" ng-model="meta.starred">
+            <div ng-show="repo.search === 'scanpix'">
+                <label for="search-id" translate>Scanpix ID(s)</label>
+                <div class="control">
+                    <input type="text" id="search-id" ng-model="meta.id">
+                </div>
+            </div>
+            <div ng-show="repo.search === 'paimg'">
+            <label ng-show="repo.search === 'paimg'" for="search-starred" translate>Editor's Choice</label>
+                <div class="control">
+                    <input type="checkbox" id="search-starred" ng-model="meta.starred">
+                </div>
+            </div>
+            <div ng-show="repo.search === 'scanpix'">
+                <label for="search-bw" translate>Black&amp;White</label>
+                <div class="control">
+                    <input type="checkbox" id="search-bw" ng-model="meta.bw">
+                </div>
+                <label for="search-clear_edge" translate>Clear Edge</label>
+                <div class="control">
+                    <input type="checkbox" id="search-clear_edge" ng-model="meta.clear_edge">
+                </div>
+                <label for="from-desk">
+                    {{:: 'Subscription' | translate}}
+                </label>
+                <select
+                    id="subscription" name="subscription"
+                    ng-options="o for o in ['subscription', 'punchcard']"
+                    ng-model="meta.subscription">
+                    <option value="" label=""></option>
+                </select>
             </div>
         </div>
     </fieldset>

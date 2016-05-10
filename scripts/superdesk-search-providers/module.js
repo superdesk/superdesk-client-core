@@ -15,7 +15,8 @@
 
     app.value('providerTypes', {
         aapmm: 'AAP Multimedia',
-        paimg: 'PA Images'
+        paimg: 'PA Images',
+        scanpix: 'NTB ScanPix',
     });
 
     SearchProviderService.$inject = ['providerTypes'];
