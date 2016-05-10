@@ -137,10 +137,11 @@ function SpellcheckService($q, api, dictionaries) {
      *     }
      */
     function getSentenceWords(textContent, currentOffset) {
-        var reSentenceWords = /(?:^|(?:[.|?|!]\s*))(\w+)/g; // words come after by .|?|!
+        var reSentenceWords = /(?:^\s*|(?:[.|?|!|:]\s*))(\w+)/g; // words come after by .|?|!|:
         var match, wordIndex;
         var sentenceWords = {};
-        while ((match = reSentenceWords.exec(textContent)) != null) {
+        // Replace quotes (",“,”,‘,’,'), that might occur at start/end of sentence/paragraph before applying regex.
+        while ((match = reSentenceWords.exec(textContent.replace(/["“”‘’']/g, ' '))) != null) {
             wordIndex = match.index + match[0].indexOf(match[1]);
             sentenceWords[currentOffset + wordIndex] = match[1];
         }
