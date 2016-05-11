@@ -675,7 +675,7 @@
                 .activity('resend', {
                     label: gettext('Resend item'),
                     priority: 100,
-                    icon: 'broadcast',
+                    icon: 'share-alt',
                     group: 'corrections',
                     controller: ['data', '$rootScope', function(data, $rootScope) {
                         $rootScope.$broadcast('open:resend', data.item);
