@@ -620,7 +620,8 @@
 
             action.re_write = !is_read_only_state && _.contains(['text'], current_item.type) &&
                 !current_item.embargo && !current_item.rewritten_by && action.new_take &&
-                (!current_item.broadcast || !current_item.broadcast.master_id);
+                (!current_item.broadcast || !current_item.broadcast.master_id) &&
+                (!current_item.rewrite_of || (current_item.rewrite_of && this.isPublished(current_item)));
             var re_write = action.re_write;
 
             action.resend = _.contains(['text'], current_item.type) && !current_item.rewritten_by &&
