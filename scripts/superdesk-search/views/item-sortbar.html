@@ -1,4 +1,6 @@
 <div class="sortbar" ng-show="canSort()">
+    <span ng-show="total" translate>Total:</span>
+    <span ng-show="total" class="label-total">{{total}}</span>
     <span class="lab" translate>Sort:</span>
     <div class="dropdown" dropdown sd-dropdown-position>
         <button id="order_button" class="dropdown-toggle" dropdown-toggle>{{ active.label | translate }} <b class="caret"></b>
