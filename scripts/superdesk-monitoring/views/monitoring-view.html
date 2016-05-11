@@ -60,8 +60,10 @@
                 <li ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                     <a href="" ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
                     <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
-                    <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack"></i>
-                    <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack"></i>
+                    <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack" 
+                    title="{{ :: 'Takes Package' | translate }}"></i>
+                    <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack" 
+                    title="{{ :: 'Highlight Package' | translate }}"></i>
                 </li>
             </ul>
 
@@ -75,8 +77,10 @@
                             <div ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                                 <a ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
                                 <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
-                                <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack"></i>
-                                <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack"></i>
+                                <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack" 
+                                title="{{ :: 'Takes Package' | translate }}"></i>
+                                <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack" 
+                                title="{{ :: 'Highlight Package' | translate }}"></i>
                             </div>
                         </li>
                         <li class="divider"></li>
