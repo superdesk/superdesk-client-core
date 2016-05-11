@@ -8,8 +8,8 @@
         to_desk: 'To Desk'
     });
 
-    SearchService.$inject = ['$location', 'gettext'];
-    function SearchService($location, gettext) {
+    SearchService.$inject = ['$location', 'gettext', 'config'];
+    function SearchService($location, gettext, config) {
         var sortOptions = [
             {field: 'versioncreated', label: gettext('Updated')},
             {field: 'firstcreated', label: gettext('Created')},
@@ -19,6 +19,8 @@
             {field: 'priority', label: gettext('Priority')},
             {field: 'genre.name', label: gettext('Genre')}
         ];
+
+        this.cvs = config.search_cvs || [{'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'}];
 
         function getSort() {
             var sort = ($location.search().sort || 'versioncreated:desc').split(':');
@@ -79,28 +81,35 @@
         }
 
         /*
-         * Function for finding object by string array for subject codes
+         * Function for finding object by string array for cv codes
          */
-        this.getSubjectCodes = function (currentTags, subjectcodes) {
+        this.getSelectedCodes = function (currentTags, codeList, field) {
             var queryArray = currentTags.selectedParameters, filteredArray = [];
             if (!$location.search().q) {
                 return filteredArray;
             }
             for (var i = 0, queryArrayLength = queryArray.length; i < queryArrayLength; i++) {
                 var queryArrayElement = queryArray[i];
-                if (queryArrayElement.indexOf('subject.qcode') !== -1 ||
-                    queryArrayElement.indexOf('subject.name') !== -1) {
+                if (queryArrayElement.indexOf(field + '.qcode') !== -1 ||
+                    queryArrayElement.indexOf(field + '.name') !== -1) {
                     var elementName = queryArrayElement.substring(
                             queryArrayElement.lastIndexOf('(') + 1,
                             queryArrayElement.lastIndexOf(')'));
-                    for (var j = 0, subjectCodesLength = subjectcodes.length; j < subjectCodesLength; j++) {
-                        if (subjectcodes[j].qcode === elementName || subjectcodes[j].name === elementName) {
-                            filteredArray.push(subjectcodes[j]);
+                    for (var j = 0, codeListLength = codeList.length; j < codeListLength; j++) {
+                        if (codeList[j].qcode === elementName || codeList[j].name === elementName) {
+                            filteredArray.push(codeList[j]);
                         }
                     }
                 }
             }
             return filteredArray;
+        };
+
+        /*
+         * Function for finding object by string array for subject codes
+         */
+        this.getSubjectCodes = function (currentTags, subjectcodes) {
+            return this.getSelectedCodes(currentTags, subjectcodes, 'subject');
         };
 
         // sort public api
@@ -128,13 +137,22 @@
         /**
          * Single query instance
          */
-        function Query(params) {
+        function Query(_params) {
             var size,
                 filters = [],
-                post_filters = [];
-
-            if (params == null) {
+                post_filters = [],
                 params = {};
+
+            angular.forEach(_params, function(value, key) {
+                params[key] = value;
+            });
+
+            if (params.q) {
+                angular.forEach(this.cvs, function(cv) {
+                    if (cv.field !== cv.id) {
+                        params.q = params.q.replace(cv.id + '.qcode:(', cv.field + '.qcode:(');
+                    }
+                });
             }
 
             function buildFilters(params, query) {
@@ -379,15 +397,13 @@
         };
     }
 
-    TagService.$inject = ['$location', 'desks', 'userList', 'metadata'];
-    function TagService($location, desks, userList, metadata) {
+    TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search'];
+    function TagService($location, desks, userList, metadata, search) {
         var tags = {};
         tags.selectedFacets = {};
         tags.selectedParameters = [];
         tags.selectedKeywords = [];
         tags.currentSearch = {};
-
-        var subjects;
 
         var FacetKeys = {
             'type': 1,
@@ -406,11 +422,7 @@
             'sms': 1
         };
 
-        metadata
-            .fetchSubjectcodes()
-            .then(function () {
-                subjects = metadata.values.subjectcodes;
-            });
+        var cvs = search.cvs;
 
         function initSelectedParameters (parameters) {
             tags.selectedParameters = [];
@@ -420,14 +432,22 @@
 
                 var colonIndex = parameters.indexOf(':');
                 var parameter = parameters.substring(parameters.lastIndexOf(' ', colonIndex), parameters.indexOf(')', colonIndex) + 1);
+                var added = false;
 
-                if (parameter.indexOf('subject.qcode') !== -1) {
-                    var value = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')'));
-                    var subjectName = _.result(_.find(subjects, {qcode: value}), 'name');
+                for (var i = 0; i < cvs.length; i++) {
+                    var cv = cvs[i];
+                    if (parameter.indexOf(cv.id + '.qcode') !== -1) {
+                        var value = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')),
+                            codeList = metadata.values[cv.list],
+                            name = _.result(_.find(codeList, {qcode: value}), 'name');
+                        if (name) {
+                            tags.selectedParameters.push(cv.id + '.name:(' + name + ')');
+                            added = true;
+                        }
+                    }
+                }
 
-                    tags.selectedParameters.push('subject.name:(' + subjectName + ')');
-
-                } else {
+                if (!added) {
                     tags.selectedParameters.push(parameter);
                 }
 
@@ -836,6 +856,7 @@
                 scope: {},
                 templateUrl: asset.templateUrl('superdesk-search/views/search-tags.html'),
                 link: function(scope) {
+                    scope.cvs = metadata.search_cvs;
 
                     scope.$watch(function getSearchParams() {
                         return _.omit($location.search(), ['_id', 'item', 'action']);
@@ -847,9 +868,9 @@
 
                     function init() {
                         metadata
-                            .fetchSubjectcodes()
+                            .initialize()
                             .then(function () {
-                                scope.subjectcodes = metadata.values.subjectcodes;
+                                scope.metadata = metadata.values;
                             });
 
                         reloadTags();
@@ -870,24 +891,32 @@
                     scope.removeParameter = function(param) {
                         var params = $location.search();
                         if (params.q) {
-                            // If it is subject code, remove it from left bar, too
-                            if (param.indexOf('subject.name:') !== -1) {
-                                var elementName = param.substring(
-                                    param.indexOf('(') + 1,
-                                    param.lastIndexOf(')')
-                                );
+                            var found = false;
+                            angular.forEach(scope.cvs, function(cv) {
+                                // If it is subject code, remove it from left bar, too
+                                if (param.indexOf(cv.id + '.name:') !== -1) {
+                                    var elementName = param.substring(
+                                        param.indexOf('(') + 1,
+                                        param.lastIndexOf(')')
+                                    );
 
-                                var qcode = _.result(_.find(scope.subjectcodes, function(item) {
-                                                        return item.name === elementName;
-                                                    }), 'qcode');
+                                    var codeList = scope.metadata[cv.list];
+                                    var qcode = _.result(_.find(codeList, function(item) {
+                                                            return item.name === elementName;
+                                                        }), 'qcode');
+                                    if (qcode) {
+                                        found = true;
+                                        params.q = params.q.replace(cv.id + '.qcode:(' + qcode + ')', '').trim();
+                                        $location.search('q', params.q || null);
 
-                                params.q = params.q.replace('subject.qcode:(' + qcode + ')', '').trim();
-                                $location.search('q', params.q || null);
-
-                                if (metadata.subjectScope != null) {
-                                    metadata.removeSubjectTerm(elementName);
+                                        if (metadata.subjectScope != null) {
+                                            metadata.removeSubjectTerm(elementName);
+                                        }
+                                    }
                                 }
-                            } else {
+                            });
+
+                            if (!found) {
                                 params.q = params.q.replace(param, '').trim();
                                 $location.search('q', params.q || null);
                             }
@@ -1589,6 +1618,12 @@
                             scope.fields = {};
                             scope.providers = [];
                             scope.searchProviderTypes = searchProviderService.getProviderTypes();
+                            scope.cvs = metadata.search_cvs;
+
+                            scope.lookupCvs = {};
+                            angular.forEach(scope.cvs, function(cv) {
+                                scope.lookupCvs[cv.id] = cv;
+                            });
 
                             if (params.repo) {
                                 var param_list = params.repo.split(',');
@@ -1614,6 +1649,7 @@
                             }
 
                             if (load_data) {
+                                fetchMetadata();
                                 fetchProviders(params);
                                 fetchUsers();
                                 fetchDesks();
@@ -1696,6 +1732,29 @@
                                     scope.fields[field] = deskParams[0];
                                 }
                             }
+                        }
+
+                        /*
+                         * Converting to object and adding pre-selected subject codes, location, genre and service to list in left sidebar
+                         */
+                        function fetchMetadata() {
+                            metadata
+                                .initialize()
+                                .then(function() {
+                                    scope.keywords = metadata.values.keywords;
+                                    return metadata.fetchSubjectcodes();
+                                })
+                                .then(function () {
+                                    scope.subjectcodes = metadata.values.subjectcodes;
+                                    scope.metadata = metadata.values;
+                                    return tags.initSelectedFacets();
+                                })
+                                .then(function (currentTags) {
+                                    scope.selecteditems = {};
+                                    angular.forEach(scope.cvs, function(cv) {
+                                        scope.selecteditems[cv.id] = search.getSelectedCodes(currentTags, scope.metadata[cv.list], cv.id);
+                                    });
+                                });
                         }
 
                         scope.$on('$locationChangeSuccess', function() {
@@ -1834,25 +1893,6 @@
                         });
 
                         /*
-                         * Converting to object and adding pre-selected subject codes to list in left sidebar
-                         */
-                        metadata
-                            .initialize()
-                            .then(function() {
-                                scope.keywords = metadata.values.keywords;
-                                return metadata.fetchSubjectcodes();
-                            })
-                            .then(function () {
-                                scope.subjectcodes = metadata.values.subjectcodes;
-                                return tags.initSelectedFacets();
-                            })
-                            .then(function (currentTags) {
-                                scope.subjectitems = {
-                                    subject: search.getSubjectCodes(currentTags, scope.subjectcodes)
-                                };
-                            });
-
-                        /*
                          * Get the Desk Type
                          * @param {string} field from or to
                          * @returns {string} desk querystring parameter
@@ -1876,27 +1916,30 @@
                          */
                         scope.subjectSearch = function (item) {
                             tags.initSelectedFacets().then(function (currentTags) {
-                                var subjectCodes = search.getSubjectCodes(currentTags, scope.subjectcodes);
-                                if (item.subject.length > subjectCodes.length) {
-                                    /* Adding subject codes to filter */
-                                    var addItemSubjectName = 'subject.qcode:(' + item.subject[item.subject.length - 1].qcode + ')',
-                                        q = (scope.query ? scope.query + ' ' + addItemSubjectName : addItemSubjectName);
-
-                                    $location.search('q', q);
-                                } else if (item.subject.length < subjectCodes.length) {
-                                    /* Removing subject codes from filter */
-                                    var params = $location.search();
-                                    if (params.q) {
-                                        for (var j = 0; j < subjectCodes.length; j++) {
-                                            if (item.subject.indexOf(subjectCodes[j]) === -1) {
-                                                var removeItemSubjectName = 'subject.qcode:(' + subjectCodes[j].qcode + ')';
-                                                params.q = params.q.replace(removeItemSubjectName, '').trim();
-                                                $location.search('q', params.q || null);
-                                                return;
+                                angular.forEach(item, function(newSelectedCodes, field) {
+                                    var codeList = scope.metadata[scope.lookupCvs[field].list];
+                                    var selectedCodes = search.getSelectedCodes(currentTags, codeList, field);
+                                    if (newSelectedCodes.length > selectedCodes.length) {
+                                        /* Adding subject codes to filter */
+                                        var qcode = newSelectedCodes[newSelectedCodes.length - 1].qcode,
+                                            addItemSubjectName = field + '.qcode:(' + qcode + ')',
+                                            q = (scope.query ? scope.query + ' ' + addItemSubjectName : addItemSubjectName);
+                                        $location.search('q', q);
+                                    } else if (newSelectedCodes.length < selectedCodes.length) {
+                                        /* Removing subject codes from filter */
+                                        var params = $location.search();
+                                        if (params.q) {
+                                            for (var j = 0; j < selectedCodes.length; j++) {
+                                                if (newSelectedCodes.indexOf(selectedCodes[j]) === -1) {
+                                                    var removeItemSubjectName = field + '.qcode:(' + selectedCodes[j].qcode + ')';
+                                                    params.q = params.q.replace(removeItemSubjectName, '').trim();
+                                                    $location.search('q', params.q || null);
+                                                    return;
+                                                }
                                             }
                                         }
                                     }
-                                }
+                                });
                             });
                         };
 

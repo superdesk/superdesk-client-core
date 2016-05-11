@@ -851,11 +851,12 @@ function MetaLocatorsDirective() {
     };
 }
 
-MetadataService.$inject = ['api', '$q', 'subscribersService'];
-function MetadataService(api, $q, subscribersService) {
+MetadataService.$inject = ['api', '$q', 'subscribersService', 'config'];
+function MetadataService(api, $q, subscribersService, config) {
     var service = {
         values: {},
         cvs: [],
+        search_cvs: config.search_cvs || [{'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'}],
         subjectScope: null,
         loaded: null,
         fetchMetadataValues: function() {
@@ -896,22 +897,23 @@ function MetadataService(api, $q, subscribersService) {
             }
 
             var self = this,
-                tempItem = {},
-                subjectCodesArray = self.subjectScope.item[self.subjectScope.field],
-                filteredArray = _.without(subjectCodesArray, term);
+                tempItem = {};
 
-            if (filteredArray.length === subjectCodesArray.length) {
-                _.remove(filteredArray, {name: term});
-            }
+            angular.forEach(this.search_cvs || [], function(cv) {
+                if (term == null) { // clear subject scope
+                    self.subjectScope.item[cv.id].length = 0;
+                } else {
+                    var subjectCodesArray = self.subjectScope.item[cv.id],
+                        filteredArray = _.without(subjectCodesArray, term);
 
-            tempItem[self.subjectScope.field] = filteredArray;
+                    if (filteredArray.length === subjectCodesArray.length) {
+                        _.remove(filteredArray, {name: term});
+                    }
+                    tempItem[cv.id] = filteredArray;
+                }
+            });
 
             _.extend(self.subjectScope.item, tempItem);
-
-            if (term == null) { // clear subject scope
-                self.subjectScope.item.subject.length = 0;
-            }
-
             self.subjectScope.change({item: self.subjectScope.item});
         },
         fetchCities: function() {
