@@ -2055,8 +2055,8 @@
             };
         })
 
-        .directive('sdMultiActionBar', ['asset', 'multi', 'authoringWorkspace',
-        function(asset, multi, authoringWorkspace) {
+        .directive('sdMultiActionBar', ['asset', 'multi', 'authoringWorkspace', 'superdesk',
+        function(asset, multi, authoringWorkspace, superdesk) {
             return {
                 controller: 'MultiActionBar',
                 controllerAs: 'action',
@@ -2080,14 +2080,28 @@
                     function detectType(items) {
                         var types = {};
                         var states = [];
+                        var activities = {};
                         angular.forEach(items, function(item) {
                             types[item._type] = 1;
                             states.push(item.state);
+
+                            var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
+                            _activities.forEach(function(activity) {
+                                activities[activity._id] = activities[activity._id] ? activities[activity._id] + 1 : 1;
+                            });
+                        });
+
+                        // keep only activities available for all items
+                        Object.keys(activities).forEach(function(activity) {
+                            if (activities[activity] < items.length) {
+                                activities[activity] = 0;
+                            }
                         });
 
                         var typesList = Object.keys(types);
                         scope.type = typesList.length === 1 ? typesList[0] : null;
                         scope.state = typesList.length === 1 ? states[0] : null;
+                        scope.activity = activities;
                     }
                 }
             };
@@ -2177,14 +2191,6 @@
             multi.reset();
         };
 
-        this.canSpikeItems = function() {
-            var canSpike = true;
-            multi.getItems().forEach(function(item) {
-                canSpike = canSpike && authoring.itemActions(item).spike && !item.lock_user;
-            });
-            return canSpike;
-        };
-
         this.canPackageItems = function() {
             var canPackage = true;
             multi.getItems().forEach(function(item) {
@@ -2192,10 +2198,6 @@
                     !_.contains(['ingested', 'spiked', 'killed', 'draft'], item.state);
             });
             return canPackage;
-        };
-
-        this.canSendItems = function() {
-            return Boolean(privileges.userHasPrivileges({move: 1}));
         };
     }
 })();
