@@ -17,7 +17,7 @@
             </label>
         </div>
     </fieldset>
-    <fieldset ng-show="repo.search === 'local'">
+    <fieldset class="search-parameters" ng-show="repo.search === 'local'">
         <div class="field">
             <label for="search-slugline">
                 {{:: 'Slugline' | translate}}
@@ -50,11 +50,10 @@
             </div>
         </div>
 
-
         <div class="multiple">
             <div class="field">
                 <label for="search-storyname">
-                    {{:: 'Story Name' | translate}}
+                    {{:: 'Unique Name' | translate}}
                 </label>
                 <input type="text" id="search-storyname" ng-model="fields.unique_name">
             </div>
@@ -65,12 +64,27 @@
                 <input type="text" id="search-storytext" ng-model="meta.body_html">
             </div>
         </div>
+
         <div class="field">
             <label for="search-byline">
                 {{:: 'Byline' | translate}}
             </label>
             <input type="text" id="search-byline" ng-model="meta.byline">
         </div>
+
+        <div class="field keywords">
+            <label for="search-keywords">
+                {{:: 'Keywords' | translate}}
+            </label>
+            <div id="search-keywords"
+                 sd-meta-words-list
+                 data-field="keywords"
+                 data-header="true"
+                 data-list="keywords"
+                 data-item="meta"
+            ></div>
+        </div>
+
         <div class="field" ng-if="repo.archive">
             <label for="search-creator">
                 {{:: 'Creator' | translate}}
@@ -81,6 +95,7 @@
             <option value="" label=""></option>
             </select>
         </div>
+
         <div class="field">
             <label for="from-desk">
                 {{:: 'From Desk' | translate}}

@@ -210,10 +210,6 @@
                     query.post_filter({terms: {'anpa_category.name': JSON.parse(params.category)}});
                 }
 
-                if (params.keywords) {
-                    query.post_filter({terms: {'keywords': JSON.parse(params.keywords)}});
-                }
-
                 if (params.genre) {
                     query.post_filter({terms: {'genre.name': JSON.parse(params.genre)}});
                 }
@@ -396,7 +392,6 @@
         var FacetKeys = {
             'type': 1,
             'category': 1,
-            'keywords': 1,
             'urgency': 1,
             'priority': 1,
             'source': 1,
@@ -442,6 +437,9 @@
             return parameters;
         }
 
+        /*
+         * function to parse search input from the search bar.
+         */
         function initSelectedKeywords (keywords) {
             tags.selectedKeywords = [];
             while (keywords.indexOf('(') >= 0 && keywords.indexOf(')') > 0) {
@@ -628,7 +626,6 @@
                             'source': {},
                             'credit': {},
                             'category': {},
-                            'keywords': {},
                             'urgency': {},
                             'priority': {},
                             'genre': {},
@@ -648,6 +645,8 @@
                                 return;
                             }
 
+                            initAggregations();
+
                             if (angular.isDefined(scope.items._aggregations.type)) {
                                 _.forEach(scope.items._aggregations.type.buckets, function(type) {
                                     scope.aggregations.type[type.key] = type.doc_count;
@@ -658,14 +657,6 @@
                                 _.forEach(scope.items._aggregations.category.buckets, function(cat) {
                                     if (cat.key !== '') {
                                         scope.aggregations.category[cat.key] = cat.doc_count;
-                                    }
-                                });
-                            }
-
-                            if (angular.isDefined(scope.items._aggregations.keywords)) {
-                                _.forEach(scope.items._aggregations.keywords.buckets, function(cat) {
-                                    if (cat.key !== '') {
-                                        scope.aggregations.keywords[cat.key] = cat.doc_count;
                                     }
                                 });
                             }
@@ -986,8 +977,15 @@
 
                     scope.repo = {
                         ingest: true, archive: true,
-                        published: true, archived: true
+                        published: true, archived: true,
+                        search: 'local'
                     };
+
+                    if ($location.search().repo &&
+                        !_.intersection($location.search().repo.split(','),
+                            ['archive', 'published', 'ingest', 'archived']).length) {
+                        scope.repo.search = $location.search().repo;
+                    }
 
                     scope.context = 'search';
                     scope.$on('item:deleted:archived', itemDelete);
@@ -1336,7 +1334,7 @@
                                 scope.item.label = 'location:';
                                 scope.item.value = 'workspace';
                             } else {
-                                if (scope.item._type === 'published' && scope.item.allow_post_publish_actions === false) {
+                                if (scope.item._type === 'archived') {
                                     scope.item.label = '';
                                     scope.item.value = 'archived';
                                 }
@@ -1744,6 +1742,7 @@
                          */
                         function getQuery() {
                             var metas = [];
+                            var pattern = /[()]/g;
 
                             angular.forEach(scope.meta, function(val, key) {
                                 //checkbox boolean values.
@@ -1751,7 +1750,10 @@
                                     val = booleanToBinaryString(val);
                                 }
 
-                                val = val.replace(/[()]/g, '');
+                                if (typeof(val) === 'string') {
+                                    val = val.replace(pattern, '');
+                                }
+
                                 if (key === '_all') {
                                     metas.push(val.join(' '));
                                 } else {
@@ -1760,6 +1762,11 @@
                                             if (val) {
                                                 metas.push(key + ':(' + val + ')');
                                             }
+                                        } else if (angular.isArray(val)) {
+                                            angular.forEach(val, function(value) {
+                                                value = value.replace(pattern, '');
+                                                metas.push(key + ':(' + value + ')');
+                                            });
                                         } else {
                                             var subkey = getFirstKey(val);
                                             if (val[subkey]) {
@@ -1830,7 +1837,11 @@
                          * Converting to object and adding pre-selected subject codes to list in left sidebar
                          */
                         metadata
-                            .fetchSubjectcodes()
+                            .initialize()
+                            .then(function() {
+                                scope.keywords = metadata.values.keywords;
+                                return metadata.fetchSubjectcodes();
+                            })
                             .then(function () {
                                 scope.subjectcodes = metadata.values.subjectcodes;
                                 return tags.initSelectedFacets();
