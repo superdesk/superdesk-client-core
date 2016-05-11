@@ -106,6 +106,9 @@
          * @param {Object} item
          */
         this.spike = function(item) {
+            if ('archive_item' in item) {
+                item._etag = item.archive_item._etag;
+            }
             return api.update(SPIKE_RESOURCE, item, {state: 'spiked'})
                 .then(function() {
                     if ($location.search()._id === item._id) {
@@ -252,7 +255,8 @@
          * @return boolean if the state of the item is in one of the published states, false otherwise.
          */
         this.isPublished = function(item) {
-            return _.contains(['published', 'killed', 'scheduled', 'corrected'], item.state);
+            return _.contains(['published', 'killed', 'corrected'], item.state)
+                   && (!item.package_type ||  item.package_type != 'takes');
         };
 
         /***
@@ -547,7 +551,6 @@
                         });
                     }],
                     filters: [{action: 'list', type: 'archive'}],
-                    action: 'spike',
                     keyboardShortcut: 'ctrl+x',
                     condition: function(item) {
                         return (item.lock_user === null || angular.isUndefined(item.lock_user));

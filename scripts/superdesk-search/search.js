@@ -2183,8 +2183,17 @@
             return canPackage;
         };
 
+        this.canMultieditItems = function() {
+            var canMultiedit = true;
+            multi.getItems().forEach(function(item) {
+                canMultiedit = canMultiedit && authoring.itemActions(item).edit;
+            });
+            return canMultiedit;
+        };
+
         this.canSendItems = function() {
-            return Boolean(privileges.userHasPrivileges({move: 1}));
+            return Boolean(privileges.userHasPrivileges({move: 1}))
+                   && this.canMultieditItems();
         };
     }
 })();

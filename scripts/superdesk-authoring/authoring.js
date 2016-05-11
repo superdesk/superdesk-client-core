@@ -483,7 +483,8 @@
          * @param {Object} item
          */
         this.isPublished = function isPublished(item) {
-            return _.contains(['published', 'killed', 'scheduled', 'corrected'], item.state);
+            return _.contains(['published', 'killed', 'corrected'], item.state)
+                   && (!item.package_type ||  item.package_type != 'takes');;
         };
 
         /**
@@ -555,7 +556,7 @@
 
             var digital_package = (angular.isDefined(current_item.package_type) &&
                                 current_item.package_type === 'takes');
-            var is_read_only_state = _.contains(['spiked', 'scheduled', 'killed'], current_item.state) ||
+            var is_read_only_state = _.contains(['spiked', 'killed'], current_item.state) ||
                                     digital_package;
 
             var lockedByMe = !lock.isLocked(current_item);
@@ -585,15 +586,17 @@
                 }
 
                 action.view = true;
-                if (current_item.state === 'scheduled' && !digital_package) {
-                    action.deschedule = true;
-                } else if (current_item.state === 'published' || current_item.state === 'corrected') {
+                if (current_item.state === 'published' || current_item.state === 'corrected') {
                     action.kill = user_privileges.kill && lockedByMe && !is_read_only_state;
                     action.correct = user_privileges.correct && lockedByMe && !is_read_only_state;
                 }
 
             } else {
                 // production states i.e in_progress, routed, fetched, submitted.
+                if (current_item.state === 'scheduled') {
+                    action.deschedule = !digital_package;
+                    action.view = digital_package;
+                }
 
                 //if spiked
                 if (current_item.state === 'spiked') {
@@ -610,7 +613,7 @@
                 action.edit = !(current_item.type === 'composite' && current_item.package_type === 'takes') &&
                                 current_item.state !== 'spiked' && lockedByMe;
                 action.unspike = current_item.state === 'spiked' && user_privileges.unspike;
-                action.spike = current_item.state !== 'spiked' && user_privileges.spike &&
+                action.spike = current_item.state !== 'spiked' && user_privileges.spike && !digital_package &&
                     (angular.isUndefined(current_item.takes) || current_item.takes.last_take === current_item._id);
                 action.send = current_item._current_version > 0 && user_privileges.move;
             }
@@ -628,9 +631,8 @@
                  user_privileges.mark_for_highlights);
 
             // allow all stories to be packaged if it doesn't have Embargo
-            action.package_item = !_.contains(['spiked', 'scheduled', 'killed'], current_item.state) &&
-                !current_item.embargo && current_item.package_type !== 'takes' &&
-                (this.isPublished(current_item) || !current_item.publish_schedule);
+            action.package_item = !_.contains(['spiked', 'killed'], current_item.state) &&
+                !current_item.embargo && current_item.package_type !== 'takes';
 
             action.create_broadcast = (_.contains(['published', 'corrected'], current_item.state)) &&
                 _.contains(['text', 'preformatted'], current_item.type) &&
@@ -646,7 +648,7 @@
                     !_.contains(['spiked', 'killed'], current_item.state) &&
                     (angular.isUndefined(current_item.package_type) || current_item.package_type !== 'takes');
 
-                action.add_to_current = !_.contains(['spiked', 'scheduled', 'killed'], current_item.state);
+                action.add_to_current = !_.contains(['spiked', 'killed'], current_item.state);
 
                 var desk = _.find(self.userDesks, {'_id': current_item.task.desk});
                 if (!desk) {
@@ -1425,7 +1427,7 @@
                  */
                 $scope.can_unlock = function() {
                     return $scope.item._locked && !$scope.item.sendTo && lock.can_unlock($scope.item) &&
-                        ($scope.itemActions.save || _.contains(['published', 'scheduled', 'corrected'], $scope.item.state));
+                        ($scope.itemActions.save || _.contains(['published', 'corrected'], $scope.item.state));
                 };
 
                 $scope.save_enabled = function() {
