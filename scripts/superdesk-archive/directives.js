@@ -673,8 +673,8 @@
             }
         ])
 
-        .directive('sdResendItem', ['adminPublishSettingsService', 'authoring', 'api', 'notify', 'gettext',
-            function(adminPublishSettingsService, authoring, api, notify, gettext) {
+        .directive('sdResendItem', ['subscribersService', 'authoring', 'api', 'notify', 'gettext',
+            function(subscribersService, authoring, api, notify, gettext) {
                 return {
                     templateUrl: 'scripts/superdesk-archive/views/resend-configuration.html',
                     scope: {item: '='},
@@ -683,10 +683,10 @@
                             scope.selectedSubscribers = {items: []};
 
                             if (item && !scope.customSubscribers) {
-                                adminPublishSettingsService.fetchSubscribers().then(function(items) {
+                                subscribersService.fetchActiveSubscribers().then(function(items) {
                                     scope.customSubscribers = [];
                                     scope.subscribers = items._items;
-                                    _.each(items._items, function(item) {
+                                    _.each(items, function(item) {
                                         scope.customSubscribers.push({'qcode': item._id, 'name': item.name});
                                     });
                                 });
