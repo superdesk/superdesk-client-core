@@ -1,26 +1,22 @@
-<div class="subnav" ng-class="{active: multiSelectCount > 0}">
-    <h3 class="page-nav-title" ng-hide="multiSelectCount > 0" translate>Publish Queue</h3>
-
-    <div class="multi-action-bar">
-        <button class="btn" ng-click="cancelSelection(false)" ng-show="multiSelectCount > 0">{{ :: 'Cancel Selection' | translate}}</button>
-        <span id="multi-select-count"
-              ng-show="multiSelectCount > 0"
-              translate
-              translate-n="multiSelectCount"
-              translate-plural="{{ multiSelectCount }} Items selected">{{ multiSelectCount}} Item selected
-        </span>
-        <button class="btn btn-info pull-right" ng-click="scheduleToSend()" ng-show="multiSelectCount > 0 && showResendBtn">{{ :: 'Resend' | translate}}</button>
-        <button class="btn btn-info pull-right" ng-click="cancelSend()" ng-show="multiSelectCount > 0 && showCancelBtn">{{ :: 'Cancel' | translate}}</button>
-    </div>
-</div>
 <section class="main-section publish-queue">
     <div class="preview-layout" ng-class="{closed: !selected.preview}">
         <div class="list-pane">
             <header>
+                <div class="flat-searchbar pull-left" ng-class="{extended: queueSearch}">
+                    <div class="search-handler" >
+                        <label for="search-input" class="trigger-icon" ng-click="queueSearch = !queueSearch"><i class="icon-search"></i></label>
+                        <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
+                        <button class="search-close" ng-click="search(query = null)" ng-class="{visible: query}"><i class="icon-close-small"></i></button>
+                    </div>
+                </div>
+
                 <div class="sortbar pull-left">
                     <span class="lab pull-left" translate>Subscriber:</span>
                     <div class="dropdown pull-left" dropdown>
-                        <button class="dropdown-toggle" dropdown-toggle> {{ selectedFilterSubscriber.name }} <b class="caret"></b>
+                        <button class="dropdown-toggle" dropdown-toggle>
+                            {{ selectedFilterSubscriber.name }}
+                            <span ng-if="!selectedFilterSubscriber">none</span>
+                            <b class="caret"></b>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
@@ -33,31 +29,38 @@
                     </div>
                     <span class="lab pull-left" translate>Status:</span>
                     <div class="dropdown pull-left" dropdown>
-                        <button class="dropdown-toggle" dropdown-toggle> {{ selectedFilterStatus }} <b class="caret"></b>
+                        <button class="dropdown-toggle" dropdown-toggle>
+                            {{ selectedFilterStatus }}
+                            <span ng-if="!selectedFilterStatus">none</span>
+                            <b class="caret"></b>
                         </button>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="" ng-click="filterStatus(null, 'status')" translate>None</a>
-                            </li>
+                            <li><a href="" ng-click="filterStatus(null, 'status')" translate>None</a></li>
                             <li ng-repeat="status in publish_queue_statuses track by $index">
                                 <a href="" ng-click="filterStatus(status, 'status')">{{ :: status | translate}}</a>
                             </li>
                         </ul>
                     </div>
-                    <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: queueSearch}">
-                        <div class="search-handler">
-                            <label for="search-input" class="trigger-icon" ng-click="queueSearch = !queueSearch"></label>
-                            <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
-                            <button class="search-close" ng-click="search(query = null)" ng-class="{visible: query}"><i class="icon-close-small"></i></button>
-                        </div>
-                        <div class="separator-handler"></div>
-                    </div>
                 </div>
+
                 <div class="refresh-box">
                     <button ng-click="reload()" class="pull-right" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left"><i class="icon-refresh"></i></button>
-                    <span class="pull-right"><span translate>Last refreshed at</span>: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                    <span class="pull-right">{{ :: 'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
                 </div>
+
                 <div sd-pagination-alt class="pagination-box" data-page="page" data-max-page="maxPage"></div>
+
+                <div class="multi-action-bar" ng-show="multiSelectCount > 0">
+                    <button class="btn" ng-click="cancelSelection(false)" ng-show="multiSelectCount > 0">{{ :: 'Cancel Selection' | translate}}</button>
+                    <span id="multi-select-count"
+                          ng-show="multiSelectCount > 0"
+                          translate
+                          translate-n="multiSelectCount"
+                          translate-plural="{{ multiSelectCount }} Items selected">{{ multiSelectCount}} Item selected
+                    </span>
+                    <button class="btn btn-info pull-right" ng-click="scheduleToSend()" ng-show="multiSelectCount > 0 && showResendBtn">{{ :: 'Resend' | translate}}</button>
+                    <button class="btn btn-info pull-right" ng-click="cancelSend()" ng-show="multiSelectCount > 0 && showCancelBtn">{{ :: 'Cancel' | translate}}</button>
+                </div>
             </header>
             <div class="content">
                 <div sd-shadow>
