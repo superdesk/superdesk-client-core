@@ -1534,7 +1534,7 @@
                 $scope.$on('item:publish:wrong:format', function(_e, data) {
                     if (data.item === $scope.item._id) {
                         notify.error(gettext('No formatters found for ') + data.formats.join(',') +
-                            ' while publishing item having story name ' + data.unique_name);
+                            ' while publishing item having unique name ' + data.unique_name);
                     }
                 });
 
