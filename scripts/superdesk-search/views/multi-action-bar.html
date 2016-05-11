@@ -21,8 +21,8 @@
         </div>
     </div>
 
-    <div class="pull-right" ng-if="type === 'archive'">
-        <button class="navbtn strict" ng-if="state !== 'spiked'" ng-click="action.multiedit()" title="{{ :: 'Multiedit' | translate }}">
+    <div class="pull-right">
+        <button class="navbtn strict" ng-if="state !== 'spiked' && action.canMultieditItems()" ng-click="action.multiedit()" title="{{ :: 'Multiedit' | translate }}">
             <i class="big-icon-multiedit"></i>
         </button>
         <button class="navbtn strict" ng-click="action.spikeItems()" title="{{ :: 'Spike' | translate }}"
