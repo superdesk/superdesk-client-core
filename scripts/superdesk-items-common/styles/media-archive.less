@@ -582,7 +582,8 @@
         background: #fff;
         border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         border-right: 2px solid #fff;
-        padding-left: 3px;
+        padding-left: 40px;
+        overflow: hidden;
         &:hover {
             background-color: #f4f4f4 !important;
             border-right: 2px solid #f4f4f4;
@@ -603,7 +604,6 @@
             border-right: 1px solid rgba(0,0,0,0.06);
             float: left;
             padding: 10px;
-            height: 36px;
 
             &.no-border {
                 border:0;
@@ -619,33 +619,48 @@
         }
 
         .type-icon {
-            width: 36px;
-            height: 56px;
-            padding: 10px;
-            .box-sizing(border-box);
+            position: absolute;
+            top: 0;
+            left: 4px;
+            bottom: 0;
+            padding: 0;
+            width: 37px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             i {
                 color: @grayLight;
                 width: 24px;
-                padding-left: 0;
-                margin-left: 0;
-                margin-top: 7px;
+                margin: 0;
+                padding: 0;
             }
 
             .sd-checkbox {
-                margin: 9px 0 0 1px;
+                margin: 1px 0 0 1px;
+                padding: 0;
             }
         }
 
         .urgency {
-            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 42px;
+            bottom: 0;
+            padding: 0;
+            width: 37px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            column-count: 1;
             .output-item-label, .urgency-label {
-                clear: both;
-                float: left;
-                margin-top: 8px;
+                margin: 3px 0;
             }
             i, .priority-label {
-                float: left;
+                clear: both;
+                margin: 3px 0;
             }
         }
         .urgency {
@@ -668,7 +683,7 @@
                 height: 18px;
                 line-height: 18px;
                 position: relative;
-                margin-left: 75px;
+                margin-left: 38px;
                 display: flex;
                 box-sizing: border-box;
                 dl {
@@ -803,6 +818,7 @@
                 white-space: nowrap;
                 min-width: 60px;
                 text-align: right;
+                margin-left: 3px;
             }
         }
 

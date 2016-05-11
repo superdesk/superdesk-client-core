@@ -1,6 +1,36 @@
 (function() {
     'use strict';
 
+    var DEFAULT_LIST_CONFIG = {
+        'priority': [
+            'priority',
+            'urgency'
+        ],
+        'firstLine': [
+            'wordcount',
+            'slugline',
+            'highlights',
+            'headline',
+            'versioncreated'
+        ],
+        'secondLine': [
+            'profile',
+            'state',
+            'embargo',
+            'update',
+            'takekey',
+            'takepackage',
+            'signal',
+            'broadcast',
+            'flags',
+            'updated',
+            'category',
+            'provider',
+            'expiry',
+            'desk'
+        ]
+    };
+
     /**
      * Monitoring state - keeps information required to render lists.
      */
@@ -107,6 +137,8 @@
             'authoringWorkspace',
             'gettextCatalog',
             '$rootScope',
+            'config',
+            '$interpolate',
         function(
             $location,
             $timeout,
@@ -132,8 +164,31 @@
             monitoringState,
             authoringWorkspace,
             gettextCatalog,
-            $rootScope
+            $rootScope,
+            config,
+            $interpolate
         ) {
+
+            var listConfig = config.list || DEFAULT_LIST_CONFIG;
+
+            var ItemPriority = function(props) {
+                var priority = props.priority || 3;
+                return React.createElement(
+                    'span',
+                    {className: 'priority-label priority-label--' + priority, title: gettext('Priority'), key: 'priority'},
+                    priority
+                );
+            };
+
+            var ItemUrgency = function(props) {
+                var urgency = props.urgency || 3;
+                return React.createElement(
+                    'span',
+                    {className: 'urgency-label urgency-label--' + urgency, title: gettextCatalog.getString('Urgency'), key: 'urgency'},
+                    urgency
+                );
+            };
+
             return {
                 link: function(scope, elem) {
 
@@ -461,23 +516,9 @@
                         }
                     });
 
-                    var ItemPriority = function(props) {
-                        var priority = props.priority || 3;
-                        return React.createElement(
-                            'span',
-                            {className: 'priority-label priority-label--' + priority, title: gettext('Priority')},
-                            priority
-                        );
-                    };
-
                     var ListPriority = function(props) {
-                        var item = props.item;
-                        return React.createElement(
-                            'div',
-                            {className: 'list-field urgency'},
-                            item.priority ? new ItemPriority(item) : null,
-                            item.urgency ? new ItemUrgency(item) : null
-                        );
+                        var css = {className: 'list-field urgency'};
+                        return renderArea('priority', props, css) || React.createElement('div', css);
                     };
 
                     var HighlightsList = React.createClass({
@@ -754,107 +795,244 @@
                     });
 
                     var ListItemInfo = function(props) {
-                        var item = props.item;
-                        var flags = item.flags || {};
-                        var anpa = item.anpa_category || {};
-                        var broadcast = item.broadcast || {};
-                        var provider = item.source ? item.source : (props.ingestProvider ? props.ingestProvider.source: '');
-                        var isTake = (_.contains(['text'], item.type) && item.takes && item.takes.sequence > 1);
-
-                        var selectTakesPackage = function(event) {
-                            event.stopPropagation();
-                            props.selectTakesPackage();
-                        };
-                        var selectUpdate = function(event) {
-                            event.stopPropagation();
-                            props.selectUpdate();
-                        };
                         return React.createElement(
                             'div',
                             {className: 'item-info'},
-                            React.createElement('div', {className: 'line'},
-                                React.createElement('span', {className: 'word-count'}, item.word_count),
-                                item.slugline ? React.createElement('span', {className: 'keyword'}, item.slugline.substr(0, 40)) : null,
-                                React.createElement(HighlightsInfo, {item: item, highlightsById: props.highlightsById}),
-                                React.createElement('span', {className: 'item-heading'}, item.headline ?
-                                    item.headline.substr(0, 90) :
-                                    item.type),
-                                React.createElement(TimeElem, {date: item.versioncreated})
-                            ),
-                            React.createElement('div', {className: 'line'},
-                                item.profile ?
-                                    React.createElement('div', {className: 'label label--' + item.profile}, item.profile) :
-                                    null,
-                                React.createElement(
+                            renderArea('firstLine', props, {className: 'line'}),
+                            renderArea('secondLine', props, {className: 'line'})
+                        );
+                    };
+
+                    function renderArea(area, itemProps, props) {
+                        var specs = listConfig[area] || [];
+                        var contents = specs.map(function(field) {
+                            if (fields[field]) {
+                                return fields[field](itemProps);
+                            } else {
+                                console.warn('missing field in list: ' + field);
+                            }
+                        }).filter(angular.identity);
+                        var elemProps = angular.extend({key: area}, props);
+                        return contents.length ? React.createElement('div', elemProps, contents) : null;
+                    }
+
+                    /**
+                     * Fields specified via list config
+                     */
+                    var fields = {
+                        headline: function(props) {
+                            return React.createElement(
+                                'span',
+                                {className: 'item-heading', key: 'headline'},
+                                props.item.headline ?
+                                    props.item.headline.substr(0, 90) :
+                                    props.item.type
+                            );
+                        },
+
+                        slugline: function(props) {
+                            if (props.item.slugline) {
+                                return React.createElement(
                                     'span',
-                                    {title: $filter('removeLodash')(item.state), className: 'state-label state-' + item.state},
-                                    $filter('removeLodash')(gettextCatalog.getString(item.state))
-                                ),
-                                item.embargo ? React.createElement(
+                                    {className: 'keyword', key: 'slugline'},
+                                    props.item.slugline.substr(0, 40)
+                                );
+                            }
+                        },
+
+                        wordcount: function(props) {
+                            return React.createElement(
+                                'span',
+                                {className: 'word-count', key: 'wordcount'},
+                                props.item.word_count
+                            );
+                        },
+
+                        highlights: function(props) {
+                            return React.createElement(HighlightsInfo, angular.extend({key: 'highlights'}, props));
+                        },
+
+                        versioncreated: function(props) {
+                            return React.createElement(
+                                TimeElem,
+                                {date: props.item.versioncreated, key: 'versioncreated'}
+                            );
+                        },
+
+                        profile: function(props) {
+                            if (props.item.profile) {
+                                return React.createElement(
+                                    'div',
+                                    {className: 'label label--' + props.item.profile, key: 'profile'},
+                                    props.item.profile
+                                );
+                            }
+                        },
+
+                        state: function(props) {
+                            return React.createElement(
+                                'span',
+                                {
+                                    title: $filter('removeLodash')(props.item.state),
+                                    className: 'state-label state-' + props.item.state,
+                                    key: 'state'
+                                },
+                                $filter('removeLodash')(gettextCatalog.getString(props.item.state))
+                            );
+                        },
+
+                        embargo: function(props) {
+                            if (props.item.embargo) {
+                                return React.createElement(
                                     'span',
-                                    {className: 'state-label state_embargo', title: gettext('embargo')},
+                                    {className: 'state-label state_embargo', title: gettext('embargo'), key: 'embargo'},
                                     gettext('embargo')
-                                ) : null,
-                                item.correction_sequence ?
-                                    React.createElement('div', {className: 'provider'}, gettext('Update') +
-                                        ' ' + item.correction_sequence) : null,
-                                item.anpa_take_key ?
-                                    React.createElement('div', {className: 'takekey'}, item.anpa_take_key) :
-                                    null,
-                                item.signal ?
-                                    React.createElement('span', {className: 'signal'}, item.signal) :
-                                    null,
-                                broadcast.status ?
-                                    React.createElement('span', {className: 'broadcast-status', title: broadcast.status}, '!') :
-                                    null,
+                                );
+                            }
+                        },
+
+                        update: function(props) {
+                            if (props.item.correction_sequence) {
+                                return React.createElement(
+                                    'div',
+                                    {className: 'provider', key: 'update'},
+                                    $interpolate(gettext('Update {{ seq }}'))({seq: props.item.correction_sequence})
+                                );
+                            }
+                        },
+
+                        updated: function(props) {
+
+                            var selectUpdate = function(event) {
+                                event.stopPropagation();
+                                props.selectUpdate();
+                            };
+
+                            if (props.item.rewritten_by) {
+                                return React.createElement(
+                                    'div',
+                                    {className: 'state-label updated', key: 'updated', onClick: selectUpdate},
+                                    gettext('Updated')
+                                );
+                            }
+                        },
+
+                        takekey: function(props) {
+                            if (props.item.anpa_take_key) {
+                                return React.createElement('div', {className: 'takekey', key: 'takekey'}, props.item.anpa_take_key);
+                            }
+                        },
+
+                        signal: function(props) {
+                            if (props.item.signal) {
+                                return React.createElement('span', {className: 'signal', key: 'signal'}, props.item.signal);
+                            }
+                        },
+
+                        broadcast: function(props) {
+                            var broadcast = props.item.broadcast || {};
+                            if (broadcast.status) {
+                                return React.createElement(
+                                    'span',
+                                    {className: 'broadcast-status', title: broadcast.status, key: 'broadcast'},
+                                    '!'
+                                );
+                            }
+                        },
+
+                        flags: function(props) {
+                            var flags = props.item.flags || {};
+                            var elems = [
                                 flags.marked_for_not_publication ?
-                                    React.createElement('div', {className: 'state-label not-for-publication',
-                                        title: gettext('Not For Publications')}, gettext('Not For Publications')) :
-                                    null,
+                                    React.createElement(
+                                        'div', {
+                                            className: 'state-label not-for-publication',
+                                            title: gettext('Not For Publications'),
+                                            key: 'not-for-publication'
+                                        }, gettext('Not For Publications'))
+                                    : null,
                                 flags.marked_for_legal ?
-                                    React.createElement('div', {className: 'state-label legal', title: gettext('Legal')},
-                                        gettext('Legal')) : null,
+                                    React.createElement(
+                                        'div', {
+                                            className: 'state-label legal',
+                                            title: gettext('Legal'),
+                                            key: 'legal'
+                                        }, gettext('Legal'))
+                                    : null,
                                 flags.marked_for_sms ?
-                                    React.createElement('div', {className: 'state-label sms'}, gettext('Sms')) :
-                                    null,
-                                isTake ?
-                                    React.createElement('div', {className: 'state-label takes',
-                                        onClick: selectTakesPackage}, gettext('Takes')) :
-                                    null,
-                                item.rewritten_by ?
-                                    React.createElement('div', {className: 'state-label updated',
-                                        onClick: selectUpdate}, gettext('Updated')) :
-                                    null,
-                                anpa.name ?
-                                    React.createElement('div', {className: 'category'}, anpa.name) :
-                                    null,
-                                React.createElement('span', {className: 'provider'}, provider),
-                                item.is_spiked ?
-                                    React.createElement('div', {className: 'expires'},
-                                        gettext('expires') + ' ' + datetime.shortFormat(item.expiry)) :
-                                    null,
-                                item.archived ? React.createElement(FetchedDesksInfo, {item: item}) : null,
-                                React.createElement(ItemContainer, {item: item, desk: props.desk})
-                            )
-                        );
-                    };
+                                    React.createElement(
+                                        'div', {
+                                            className: 'state-label sms',
+                                            key: 'sms'},
+                                        gettext('Sms'))
+                                    : null
+                            ].filter(angular.identity);
+                            return elems.length ? React.createElement('div', {key: 'flags'}, elems) : null;
+                        },
 
-                    var ItemUrgency = function(props) {
-                        var urgency = props.urgency || 3;
-                        return React.createElement(
-                            'span',
-                            {className: 'urgency-label urgency-label--' + urgency, title: gettextCatalog.getString('Urgency')},
-                            urgency
-                        );
-                    };
+                        takepackage: function(props) {
+                            var item = props.item;
+                            var isTake = _.contains(['text'], item.type) && item.takes && item.takes.sequence > 1;
 
-                    var BroadcastStatus = function(props) {
-                        var broadcast = props.broadcast || {};
-                        return React.createElement(
-                            'span',
-                            {className: 'broadcast-status', title: broadcast.status},
-                            '!'
-                        );
+                            var selectTakesPackage = function(event) {
+                                event.stopPropagation();
+                                props.selectTakesPackage();
+                            };
+
+                            if (isTake) {
+                                return React.createElement(
+                                    'div',
+                                    {className: 'state-label takes', onClick: selectTakesPackage, key: 'takepackage'},
+                                    gettext('Takes')
+                                );
+                            }
+                        },
+
+                        category: function(props) {
+                            var anpa = props.item.anpa_category || {};
+                            if (anpa.name) {
+                                return React.createElement('div', {className: 'category', key: 'category'}, anpa.name);
+                            }
+                        },
+
+                        provider: function(props) {
+                            var provider = props.item.source ?
+                                props.item.source
+                                : (props.ingestProvider ? props.ingestProvider.source : '');
+                            if (provider) {
+                                return React.createElement('span', {className: 'provider', key: 'provider'}, provider);
+                            }
+                        },
+
+                        expiry: function(props) {
+                            if (props.item.is_spiked) {
+                                return React.createElement(
+                                    'div',
+                                    {className: 'expires', key: 'expiry'},
+                                    gettext('expires') + ' ' + datetime.shortFormat(props.item.expiry)
+                                );
+                            }
+                        },
+
+                        desk: function(props) {
+                            if (props.item.archived) {
+                                return React.createElement(FetchedDesksInfo, {item: props.item, key: 'desk'});
+                            } else {
+                                return React.createElement(ItemContainer, {item: props.item, desk: props.desk, key: 'desk'});
+                            }
+                        },
+
+                        priority: function(props) {
+                            return props.item.priority ?
+                                React.createElement(ItemPriority, angular.extend({key: 'priority'}, props.item))
+                                : null;
+                        },
+
+                        urgency: function(props) {
+                            return props.item.urgency ?
+                                React.createElement(ItemUrgency, angular.extend({key: 'urgency'}, props.item))
+                                : null;
+                        }
                     };
 
                     var ActionsMenu = React.createClass({
@@ -1139,7 +1317,6 @@
 
                         render: function() {
                             var item = this.props.item;
-                            var broadcast = item.broadcast || {};
                             var contents = [
                                 'div',
                                 {
@@ -1170,9 +1347,9 @@
                                     }),
                                     React.createElement(MediaInfo, {item: item, ingestProvider: this.props.ingestProvider}),
                                     React.createElement(GridTypeIcon, {item: item}),
-                                    item.priority ? React.createElement(ItemPriority, {priority: item.priority}) : null,
-                                    item.urgency ? React.createElement(ItemUrgency, {urgency: item.urgency}) : null,
-                                    broadcast.status ? React.createElement(BroadcastStatus, {broadcast: broadcast}) : null,
+                                    item.priority ? React.createElement(ItemPriority, item) : null,
+                                    item.urgency ? React.createElement(ItemUrgency, item) : null,
+                                    fields.broadcast({item: item}),
                                     this.state.hover ? React.createElement(ActionsMenu, {item: item}) : null
                                 );
                             } else {

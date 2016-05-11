@@ -52,3 +52,42 @@ For installation instructions, please refer to the README file at: [https://gith
 ##### UI
 
 - `ui.italicAbstract`: `true` - render abstract using italics
+
+##### List
+
+You can configure what will be displayed in list views, there are 3 areas in list which you can configure:
+
+- `priority` - second box, you can use there `priority` and `urgency`, in case you use also `secondLine` both
+
+- `firstLine` - main area - defaults are:
+    - `wordcount`
+    - `slugline`
+    - `headline`
+    - `versioncreated`
+
+- `secondLine` - optional second line - defaults are:
+    - `profile`
+    - `state` - workflow state
+    - `embargo` - flag if item is embargoed
+    - `update` - flag if item is an update
+    - `takekey`
+    - `takepackage` - link to other takes
+    - `signal`
+    - `broadcast`
+    - `flags` - flags for "not for publication", "sms"
+    - `updated` - flag if an item was updated
+    - `category` - anpa category
+    - `provider` - ingest provider info
+    - `expiry` - expiry of spiked items
+    - `desk` - where an item was fetched for ingested, where an item is for others
+
+###### Single line config example
+
+Use this for "minimal" view with only slugline and headline, state and timestamp.
+
+```
+config.list = {
+    priority: ['urgency'],
+    firstLine: ['slugline', 'headline', 'state', 'versioncreated']
+}
+```
