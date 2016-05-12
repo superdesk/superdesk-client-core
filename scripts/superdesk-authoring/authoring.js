@@ -192,9 +192,9 @@
     }
 
     AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-                        'desks', 'superdeskFlags', 'notify', 'session', '$injector'];
+                        'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
     function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-                        notify, session, $injector) {
+                        notify, session, $injector, moment, config) {
         var self = this;
 
         this.limits = {
@@ -680,6 +680,47 @@
             return (_.contains(['text'], item.type) &&
                 item.takes && item.takes.sequence > 1);
         };
+
+        /**
+         * Validate schedule
+         *
+         * should be both valid date and time and it should be some time in future
+         *
+         * @param {String} datePart
+         * @param {String} timePart
+         * @param {String} timestamp datePart + T + timepart
+         * @param {String} timezone
+         * @return {Object}
+         */
+        this.validateSchedule = function(datePart, timePart, timestamp, timezone) {
+            function errors(key) {
+                var _errors = {};
+                _errors[key] = 1;
+                return _errors;
+            }
+
+            if (!datePart) {
+                return errors('date');
+            }
+
+            if (!timePart) {
+                return errors('time');
+            }
+
+            var now = moment();
+            var schedule = moment.tz(
+                timestamp.replace('+0000', ''), // in case timestamp made it to server, it will be with tz, ignore it
+                timezone || config.defaultTimezone
+            );
+
+            if (!schedule.isValid()) {
+                return errors('timestamp');
+            }
+
+            if (schedule.isBefore(now)) {
+                return errors('future');
+            }
+        };
     }
 
     LockService.$inject = ['$q', 'api', 'session', 'privileges', 'notify'];
@@ -1004,10 +1045,11 @@
         'confirm',
         'reloadService',
         '$rootScope',
-        'config'
+        '$interpolate'
     ];
     function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
-        privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope, config) {
+        privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope,
+        $interpolate) {
         return {
             link: function($scope, elem, attrs) {
                 var _closing;
@@ -1179,28 +1221,37 @@
                  *         Otherwise empty string.
                  */
                 function validateTimestamp(datePartOfTS, timePartOfTS, timestamp, timezone, fieldName) {
-                    var errorMessage = '';
+                    var errors = authoring.validateSchedule(
+                        datePartOfTS,
+                        timePartOfTS,
+                        timestamp,
+                        timezone,
+                        fieldName
+                    );
 
-                    if (datePartOfTS && !timePartOfTS) {
-                        errorMessage = gettext(fieldName + ' time is invalid!');
-                    } else if (timePartOfTS && !datePartOfTS) {
-                        errorMessage = gettext(fieldName + ' date is invalid!');
+                    if (!errors) {
+                        return;
                     }
 
-                    if (errorMessage === '' && timestamp) {
-                        var schedule = moment.tz(timestamp, timezone || config.defaultTimezone);
-                        var now = moment();
-
-                        if (!schedule.isValid()) {
-                            errorMessage = gettext(fieldName + ' is not a valid date!');
-                        } else if (schedule.isBefore(now)) {
-                            if (fieldName !== 'Embargo' || $scope._isInProductionStates) {
-                                errorMessage = gettext(fieldName + ' cannot be earlier than now!');
-                            }
-                        }
+                    function fieldErr(err) {
+                        return $interpolate(err)({field: fieldName});
                     }
 
-                    return errorMessage;
+                    if (errors.date) {
+                        return fieldErr(gettext('{{ field }} date is required!'));
+                    }
+
+                    if (errors.time) {
+                        return fieldErr(gettext('{{ field }} time is required!'));
+                    }
+
+                    if (errors.timestamp) {
+                        return fieldErr(gettext('{{ field }} is not a valid date!'));
+                    }
+
+                    if (errors.future && fieldName !== 'Embargo' || $scope._isInProductionStates) {
+                        return fieldErr(gettext('{{ field }} cannot be earlier than now!'));
+                    }
                 }
 
                 /**
@@ -1216,9 +1267,11 @@
 
                     var errorMessage;
                     if (item.embargo_date || item.embargo_time) {
-                        errorMessage = validateTimestamp(item.embargo_date, item.embargo_time, item.embargo,
-                            item.schedule_settings ? item.schedule_settings.time_zone : null, 'Embargo');
-                        if (errorMessage !== '') {
+                        errorMessage = validateTimestamp(
+                            item.embargo_date, item.embargo_time, item.embargo,
+                            item.schedule_settings ? item.schedule_settings.time_zone : null,
+                            gettext('Embargo'));
+                        if (errorMessage) {
                             notify.error(errorMessage);
                             return false;
                         }
@@ -1229,9 +1282,11 @@
                             return true;
                         }
 
-                        errorMessage = validateTimestamp(item.publish_schedule_date, item.publish_schedule_time,
-                            item.publish_schedule, item.schedule_settings ? item.schedule_settings.time_zone : null, 'Publish Schedule');
-                        if (errorMessage !== '') {
+                        errorMessage = validateTimestamp(
+                            item.publish_schedule_date, item.publish_schedule_time,
+                            item.publish_schedule, item.schedule_settings ? item.schedule_settings.time_zone : null,
+                            gettext('Publish Schedule'));
+                        if (errorMessage) {
                             notify.error(errorMessage);
                             return false;
                         }

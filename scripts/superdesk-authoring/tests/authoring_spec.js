@@ -347,6 +347,26 @@ describe('authoring', function() {
             expect(lock.unlock).toHaveBeenCalled();
             expect(autosave.drop).toHaveBeenCalled();
         }));
+
+        it('can validate schedule', inject(function(authoring) {
+            var errors = authoring.validateSchedule('2010-10-10', '08:10:10', '2010-10-10T08:10:10', 'Europe/Prague');
+            expect(errors).toBeTruthy();
+            expect(errors.future).toBeTruthy();
+
+            errors = authoring.validateSchedule('2099-10-10', '11:32:21', '2099-10-10T08:10:10', 'Europe/Prague');
+            expect(errors).toBeFalsy();
+        }));
+
+        it('can validate schedule for pre utc timezone', inject(function(authoring, moment) {
+            // utc - 1h and matching server tz format
+            var timestamp = moment.utc().subtract(1, 'hours').format().replace('+00:00', '+0000');
+            expect(authoring.validateSchedule(
+                timestamp.slice(0, 10),
+                timestamp.slice(11, 19),
+                timestamp,
+                'America/Toronto' // anything before utc
+            )).toBeFalsy();
+        }));
     });
 });
 
