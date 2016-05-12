@@ -668,7 +668,6 @@
                 .activity('/publish_queue', {
                     label: gettext('Publish Queue'),
                     templateUrl: 'scripts/superdesk-publish/views/publish-queue.html',
-                    topTemplateUrl: 'scripts/superdesk-dashboard/views/workspace-topnav.html',
                     sideTemplateUrl: 'scripts/superdesk-workspace/views/workspace-sidenav.html',
                     controller: PublishQueueController,
                     category: superdesk.MENU_MAIN,

@@ -337,36 +337,39 @@
 // ------------
 .subnav {
     position: absolute;
+    display: flex;
     top: @nav-height;
     left: 0;
     right: 0;
     height:@subnav-height;
-    padding:10px 20px;
     .border-box();
     z-index: 1001;
     background: rgba(245,245,245,0.90);
     border-bottom: 0px;
     .box-shadow-both(0 1px 3px rgba(0,0,0,0.07), 0 1px 0 0 rgba(0,0,0,0.1));
     .transition( all 0.3s ease);
-    //page title placed in subnav-fixed
-    .page-nav-title {
-        color: #666;
-        font-size: 18px;
-        line-height: 28px;
-        float: left;
-        .text-normal();
-        span {
-            color: #666;
-            .text-semibold();
-        }
-    }
-    &--plain {
-        padding: 0;
+    &--padded {
+        padding: 10px 20px;
     }
     &--archive {
         top:@nav-height*2;
         z-index: 1000;
     }
+}
+.subnav__page-title,
+.page-nav-title {
+  padding: 10px 20px;
+  color: #444;
+  font-size: 18px;
+  line-height: 28px;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .text-normal();
+}
+.subnav__desk-stage {
+    flex-grow: 1;
 }
 
 .subnav.level2 {
@@ -387,29 +390,125 @@
 }
 
 .button-stack {
-        height:@subnav-height !important;
-        position: relative;
-        margin: -10px 20px 0 -20px;
-        float: left;
-        > .btn {
-                margin-left: 20px;
-                margin-top: 10px;
-        }
-        &.right-stack {
-                float: right;
-                margin: -10px -20px 0 5px;
-                .navbtn {
-                        border-left: 1px solid rgba(0,0,0,0.1) !important;
-                        border-right: 0 !important;
-                                                .dropdown-toggle {
-                                                    width: 100%;
-                                                }
-                }
-                > .btn {
-                        margin-right: 12px;
-                        margin-left: 0;
-                }
-        }
+  height:@subnav-height !important;
+  position: relative;
+  margin: 0 20px 0 0;
+  float: left;
+    > .btn {
+    margin-left: 20px;
+    margin-top: 10px;
+  }
+  &.right-stack {
+    float: right;
+    margin: 0 0 0 5px;
+    .navbtn {
+      border-left: 1px solid rgba(0,0,0,0.1) !important;
+      border-right: 0 !important;
+      .dropdown-toggle {
+          width: 100%;
+      }
+    }
+    > .btn {
+      margin-right: 12px;
+      margin-left: 0;
+    }
+  }
+}
+
+.subnav__stretch-bar {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  margin: 0 16px;
+}
+.subnav__button-stack {
+  position: relative;
+  max-width: 100%;
+  & > .btn {
+    padding: 8px 20px;
+    height: 28px;
+  }
+  &--square-buttons {
+    height:48px;
+    margin: 0 0 0 16px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-grow: 0;
+    flex-shrink: 1;
+    max-width: 100%;
+  }
+  &--custom-buttons {
+    margin: 0 auto;
+    padding: 10px 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-width: 0 1px;
+    box-sizing: border-box;
+    display: flex;
+    max-width: 100%;
+    .btn {
+      flex-grow: 0;
+      margin:0 4px;
+    }
+    .btn__text--short {
+      display: none;
+    }
+    .btn__text {
+      display: inline;
+    }
+  }
+}
+
+.subnav__button-stack--custom-buttons {
+  .btn__text--short {
+    display: none;
+  }
+  .btn__text {
+    display: inline;
+  }
+}
+.compact {
+  .subnav__button-stack--custom-buttons {
+    .btn__text--short {
+      display: inline;
+    }
+    .btn__text {
+      display: none;
+    }
+  }
+}
+
+.subnav__button-stack--default {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+  padding: 10px 0;
+  .btn {
+    flex-grow: 0;
+    margin:0 4px;
+  }
+  .btn--close {
+    .btn__text--alt-icon {
+      display: none;
+    }
+    .btn__text {
+      display: inline;
+    }
+  }
+}
+
+.subnav__button-stack--default {
+  &.compact {
+    .btn--close {
+      padding: 0 3px 0 6px;
+      .btn__text--alt-icon {
+        display: inline;
+        opacity: 0.7;
+      }
+      .btn__text {
+        display: none;
+      }
+    }
+  }
 }
 
 .shortcut {
