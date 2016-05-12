@@ -95,9 +95,9 @@
         });
 
     ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal',
-    'adminPublishSettingsService', 'metadata', '$filter'];
+    'subscribersService', 'metadata', '$filter'];
     function ProductsConfigController ($scope, gettext, notify, api, products, modal,
-        adminPublishSettingsService, metadata, $filter) {
+        subscribersService, metadata, $filter) {
 
         var initProducts = function() {
             products.initialize().then(function() {
@@ -108,8 +108,8 @@
 
         var initSubscribers = function() {
             if (!$scope.subscribers) {
-                adminPublishSettingsService.fetchSubscribers().then(function(items) {
-                    $scope.subscribers = items._items;
+                subscribersService.fetchSubscribers().then(function(items) {
+                    $scope.subscribers = items;
                 });
             }
         };

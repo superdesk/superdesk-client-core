@@ -113,14 +113,14 @@ describe('publish queue', function() {
     beforeEach(module('superdesk.mocks'));
     beforeEach(module('superdesk.templates-cache'));
 
-    beforeEach(inject(function($rootScope, $controller, adminPublishSettingsService, $q, api) {
-        spyOn(adminPublishSettingsService, 'fetchSubscribers').and.returnValue($q.when(subscribers));
+    beforeEach(inject(function($rootScope, $controller, subscribersService, $q, api) {
+        spyOn(subscribersService, 'fetchSubscribers').and.returnValue($q.when(subscribers));
         spyOn(api.publish_queue, 'query').and.returnValue($q.when(publishQueue));
         $scope = $rootScope.$new();
         $controller('publishQueueCtrl',
             {
                 $scope: $scope,
-                'adminPublishSettingsService': adminPublishSettingsService,
+                'subscribersService': subscribersService,
                 '$q': $q,
                 'api': api
             }

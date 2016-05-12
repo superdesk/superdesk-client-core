@@ -5,7 +5,7 @@ var openUrl = require('./utils').open;
 module.exports = new Subscribers();
 
 function Subscribers() {
-    this.list = element.all(by.repeater('subscriber in subscribers._items'));
+    this.list = element.all(by.repeater('subscriber in subscribers'));
     this.saveSubscriberButton = element(by.css('[ng-click="save()"]'));
     this.cancelSubscriberButton = element(by.css('[ng-click="cancel()"]'));
 

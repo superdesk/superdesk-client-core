@@ -851,8 +851,8 @@ function MetaLocatorsDirective() {
     };
 }
 
-MetadataService.$inject = ['api', '$q', 'adminPublishSettingsService'];
-function MetadataService(api, $q, adminPublishSettingsService) {
+MetadataService.$inject = ['api', '$q', 'subscribersService'];
+function MetadataService(api, $q, subscribersService) {
     var service = {
         values: {},
         cvs: [],
@@ -878,8 +878,8 @@ function MetadataService(api, $q, adminPublishSettingsService) {
         fetchSubscribers: function() {
             var self = this;
             self.values.customSubscribers = [];
-            return adminPublishSettingsService.fetchSubscribers().then(function(items) {
-                _.each(items._items, function(item) {
+            return subscribersService.fetchActiveSubscribers().then(function(items) {
+                _.each(items, function(item) {
                     self.values.customSubscribers.push({'_id': item._id, 'name': item.name});
                 });
             });

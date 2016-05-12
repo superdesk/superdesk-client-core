@@ -8,7 +8,7 @@
 
     <div class="content">
         <ul class="pills-list provider-list">
-            <li ng-repeat="subscriber in subscribers._items track by subscriber._id" class="clearfix">
+            <li ng-repeat="subscriber in subscribers track by subscriber._id" class="clearfix">
                 <div class="header">
                     <h6 id="subscriberName">{{ subscriber.name }}</h6>
                     <span class="label offProvider" ng-if="!subscriber.is_active" translate>Not Active</span>
