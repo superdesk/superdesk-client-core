@@ -24,7 +24,8 @@
                 scope: {
                     status: '=',
                     widgets: '=',
-                    save: '&'
+                    save: '&',
+                    configurable: '='
                 },
                 templateUrl: 'scripts/superdesk-dashboard/grid/views/grid.html',
                 controller: ['$scope', function($scope) {
