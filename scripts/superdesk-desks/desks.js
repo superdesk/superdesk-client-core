@@ -617,6 +617,11 @@
                     activeDeskId: null,
                     activeStageId: null,
                     active: {desk: null, stage: null},
+
+                    /**
+                     * @description Fetches all desks in the system.
+                     * @returns {Promise}
+                     */
                     fetchDesks: function() {
                         var self = this;
 
@@ -628,8 +633,10 @@
                             _.each(items, function(item) {
                                 self.deskLookup[item._id] = item;
                             });
+                            return self.desks;
                         });
                     },
+
                     fetchUsers: function() {
                         var self = this;
                         return userList.getAll()
