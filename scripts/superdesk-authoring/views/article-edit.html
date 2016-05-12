@@ -72,17 +72,15 @@
 <div class="field" ng-if="item._type !== 'archived' && schema.byline" order="{{editor.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
   <label translate>Byline</label>
    <!-- Placeholder text is temporary, ideally it should come from content type -->
-  <input type="text"
-         class="byline"
-         tabindex="{{editor.byline.order}}" 
-         id="byline"
-         ng-model="item.byline"
-         ng-change="autosave(item)"
-         ng-if="_editable"
-         placeholder="{{ 'Add text here' | translate }}"
-         sd-focus-element
-         data-append-element=".field"
-         data-append-class="active">
+   <div id="byline" class="byline"
+        sd-text-editor
+        data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.byline.order}"
+        data-editorformat="editor.byline.formatOptions"
+        data-language="item.language"
+        ng-model="item.byline"
+        ng-change="autosave(item)"
+        ng-if="_editable"
+        ng-trim="false"></div>
   <div ng-if="!_editable">{{item.byline}}</div>
 </div>
 
@@ -181,15 +179,15 @@
 
 <div ng-if="isMediaType" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text">
   <label translate>Description</label>
-  <textarea class="abstract"
-        sd-auto-height
+  <div id="title" class="abstract"
+        sd-text-editor
+        data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.description_text.order}"
+        data-editorformat="editor.description_text.formatOptions"
+        data-language="item.language"
         ng-model="item.description_text"
         ng-change="autosave(item)"
         ng-if="_editable"
-        ng-trim="false"
-        sd-focus-element
-        data-append-element=".field"
-        data-append-class="active"></textarea>
+        ng-trim="false"></div>
   <div class="abstract" ng-if="!_editable">{{item.description_text}}</div>
 </div>
 

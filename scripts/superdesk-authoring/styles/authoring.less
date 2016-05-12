@@ -1106,9 +1106,7 @@
     }
 
     [contenteditable] {
-        border: 1px solid @sd-blue;
-        .border-radius(3px);
-        padding: 5px;
+        padding: 8px;
         min-height: 18px;
     }
 
@@ -1117,20 +1115,36 @@
     }
 
     &--preview {
-        border: none;
+        border: 1px solid rgba(150, 150, 150, 0.15);
         background-color: transparent;
     }
 
     img {
-        border: 1px solid #cfcfcf;
         max-width: 100%;
+        &:hover {
+          cursor: pointer;
+        }
     }
 
     .close-overlay {
         z-index:10000;
         position: absolute;
-        top: 30px;
-        right: 30px;
+        top: 10px;
+        right: 10px;
+        .btn {
+          padding: 10px 7px 6px;
+          height: auto;
+          & [class^="icon-"] {
+            color: @gray;
+            font-size: 18px;
+          }
+          &:hover {
+            background-color: rgba(255, 255, 255, .4);
+            & [class^="icon-"] {
+              color: @grayDark;
+            }
+          }
+        }
     }
 }
 

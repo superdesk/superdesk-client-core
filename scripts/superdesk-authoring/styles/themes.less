@@ -420,7 +420,11 @@ body, html {
         max-width: 100%;
         margin: 0 auto;
     }
-
+    figcaption {
+        background-color: @grayLighter;
+        padding: 8px;
+        min-height: 18px;
+    }
 
     // text styles
 
@@ -438,6 +442,10 @@ body, html {
     .byline {
         font-size: 16px;
         text-transform: none;
+        line-height: 150%;
+        .text-editor {
+            min-height: 24px;
+        }
     &::-webkit-input-placeholder {
       color: #ccc;
     }
@@ -452,8 +460,9 @@ body, html {
     }
 
     .image-caption {
-        font-size: 16px;
+        font-size: 14px;
         text-transform: none;
+        line-height: 140%;
     &::-webkit-input-placeholder {
       color: #ccc;
     }
