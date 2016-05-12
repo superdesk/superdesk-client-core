@@ -10,6 +10,7 @@ function Authoring() {
     this.correct_button = element(by.buttonText('correct'));
     this.kill_button = element(by.buttonText('kill'));
     this.close_button = element(by.buttonText('Close'));
+    this.add_content_button = element(by.className('add-content__plus-btn'));
     this.ignore_button = element(by.buttonText('Ignore'));
     this.save_publish_button = element(by.buttonText('Save and publish'));
     this.save_button = element(by.buttonText('Save'));
@@ -120,6 +121,16 @@ function Authoring() {
 
     this.close = function() {
         return this.close_button.click();
+    };
+
+    this.addEmbed = function(embedCode) {
+        browser.wait(function() {
+            return this.add_content_button.isDisplayed();
+        }.bind(this), 1000);
+        this.add_content_button.click();
+        element(by.css('[ng-click="vm.triggerAction(\'addEmbed\')"]')).click();
+        element(by.css('.add-embed__input input')).sendKeys(embedCode || 'embed code');
+        element(by.css('[ng-click="vm.createBlockFromEmbed()"]')).click();
     };
 
     this.ignore = function() {
@@ -401,6 +412,11 @@ function Authoring() {
 
     this.focusBodyHtmlElement = function() {
         bodyHtml.click();
+    };
+
+    this.cleanBodyHtmlElement = function() {
+        bodyHtml.clear();
+        bodyHtml.sendKeys(protractor.Key.BACK_SPACE);
     };
 
     this.getHeadlineText = function() {

@@ -14,6 +14,40 @@ describe('authoring', function() {
         monitoring.openMonitoring();
     });
 
+    it('add an embed and respect the order', function() {
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        function generateLines(from, to) {
+            var i;
+            var lines = '';
+            for (i = from; i < to; i++) {
+                lines += 'line ' + i + '\n';
+            }
+            return lines;
+        }
+        var body_1 = generateLines(0, 8);
+        var body_2 = generateLines(8, 15);
+        var body_3 = generateLines(15 , 20);
+        authoring.writeText(body_1 + body_2 + body_3);
+        for (var i = 0; i < 5; i++) {
+            authoring.writeText(protractor.Key.UP);
+        }
+        authoring.writeText(protractor.Key.ENTER);
+        authoring.writeText(protractor.Key.UP);
+        authoring.addEmbed('Embed at position 15');
+        function textBlockContains(position, value) {
+            expect(element(by.model('item.body_html')).all(by.css('.editor-type-html.clone')).get(position).getText()).toBe(value);
+        }
+        textBlockContains(0, (body_1 + body_2).replace(/\n$/, ''));
+        textBlockContains(1, body_3.replace(/\n$/, ''));
+        element(by.model('item.body_html')).all(by.css('.editor-type-html')).get(0).click();
+        authoring.writeText(protractor.Key.ENTER);
+        authoring.addEmbed('Embed at position 8');
+        textBlockContains(0, body_1.replace(/\n$/, ''));
+        textBlockContains(1, body_2.replace(/\n$/, ''));
+        textBlockContains(2, body_3.replace(/\n$/, ''));
+    });
+
     it('authoring operations', function() {
         //undo and redo operations by using CTRL+Z and CTRL+y
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
