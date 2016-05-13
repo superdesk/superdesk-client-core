@@ -447,7 +447,9 @@
             if (_.size(diff) > 0) {
                 return api.save('archive', item, diff).then(function(_item) {
                     item._autosave = null;
+                    item._autosaved = false;
                     item._locked = lock.isLocked(item);
+                    $injector.get('authoringWorkspace').update(item);
                     return item;
                 });
             } else {
@@ -3178,6 +3180,13 @@
             if (self.item) {
                 self.item._autosaved = true;
             }
+        };
+
+        /*
+         * Updates current item
+         */
+        this.update = function(item) {
+            self.item = item;
         };
 
         /**
