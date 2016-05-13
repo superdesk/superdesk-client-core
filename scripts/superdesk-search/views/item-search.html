@@ -26,19 +26,19 @@
                 <input type="text" id="search-slugline" ng-model="meta.slugline">
             </div>
         </div>
-        <div class="field">
+        <div class="field" ng-repeat="cv in cvs track by cv.id">
             <label for="search-subject">
-                {{:: 'Subject' | translate}}
+                {{cv.name | translate}}
             </label>
             <div id="search-subject">
                 <div id="subjects" sd-meta-terms
-                    data-item="subjectitems"
-                    data-field="subject"
+                    data-item="selecteditems"
+                    data-field="{{cv.id}}"
                     data-unique="qcode"
-                    data-list="subjectcodes"
+                    data-list="metadata[cv.list]"
                     data-reload-list="true"
                     data-header="true"
-                    data-change="subjectSearch(subjectitems)"></div>
+                    data-change="subjectSearch(selecteditems)"></div>
             </div>
         </div>
         <div class="field">
@@ -163,3 +163,4 @@
 <div class="actions">
     <button class="btn btn-info pull-right" ng-click="search()" ng-disabled="!isSearchEnabled()" translate>Go</button>
 </div>
+ 

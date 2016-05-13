@@ -82,7 +82,7 @@
             </ul>
         </div>
 
-        <div sd-toggle-box data-title="{{:: 'Categories' | translate }}" ng-hide="isEmpty('category')" data-open="true">
+        <div sd-toggle-box data-title="{{:: 'Services' | translate }}" ng-hide="isEmpty('category')" data-open="true">
             <ul class="filter-box">
                 <li ng-repeat="(key,value) in aggregations.category" ng-click="toggleFilter('category', key)">
                     <span class="sd-checkbox" ng-checked="hasFilter('category',key)"></span>
