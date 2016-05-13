@@ -22,19 +22,19 @@
             <dd>{{ item.keywords | mergeWords}}</dd>
         </dl>
 
-        <dl ng-if="item.original_source">
-            <dt translate>Originator</dt>
-            <dd>{{ item.original_source }}</dd>
-        </dl>
-
         <dl ng-if="item.ingest_provider">
             <dt translate>Ingest Provider</dt>
             <dd sd-meta-ingest data-item="item"></dd>
         </dl>
 
+        <dl ng-if="item.original_source">
+            <dt translate>Original Source</dt>
+            <dd>{{ item.original_source }}</dd>
+        </dl>
+
         <dl ng-if="item.source">
             <dt translate>Source</dt>
-            <dd>{{item.source}}</dd>
+            <dd>{{ item.source }}</dd>
         </dl>
 
         <dl>
