@@ -117,6 +117,7 @@
     }
 
     return angular.module('superdesk.datetime', [
+        'superdesk.config',
         'ngResource',
         'superdesk.datetime.absdate',
         'superdesk.datetime.groupdates',
@@ -124,6 +125,10 @@
         'superdesk.datetime.reldate',
         'superdesk.translate'
     ])
+        .config(['defaultConfigProvider', function(defaultConfig) {
+            defaultConfig.set('shortTimeFormat', 'HH:mm'); // 24h format
+        }])
+
         .directive('sdDatetime', DateTimeDirective)
 
         .filter('reldate', function reldateFactory() {
