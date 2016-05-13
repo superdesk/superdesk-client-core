@@ -1957,7 +1957,8 @@
         .directive('sdItemSortbar', ['search', 'asset', '$location', function sortBarDirective(search, asset, $location) {
             var repos = {
                 'aapmm': true,
-                'paimg': true
+                'paimg': true,
+                'scanpix': true
             };
 
             return {

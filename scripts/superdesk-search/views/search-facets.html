@@ -141,7 +141,7 @@
                             >{{key | translate}}</button>
                     </div>
                 </div>
-                <fieldset ng-show="repo.search === 'local' || repo.search === 'paimg'">
+                <fieldset ng-show="repo.search === 'local' || repo.search === 'paimg' || repo.search === 'scanpix'">
                     <div class="multiple">
                         <div class="field" sd-date-param data-location="afterfirstcreated">
                              <label for="created_after" translate>Created from</label>
@@ -152,7 +152,7 @@
                             <div sd-datepicker ng-model="date"></div>
                         </div>
                     </div>
-                    <div class="multiple">
+                    <div class="multiple" ng-show="repo.search !== 'scanpix'">
                         <div class="field" sd-date-param data-location="afterfirstmodified">
                             <label for="modified_after" translate>Modified from</label>
                             <div sd-datepicker ng-model="date"></div>
