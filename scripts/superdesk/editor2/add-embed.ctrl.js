@@ -167,7 +167,9 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
             // on leave, clear field
             } else if (wasExtended) {
                 vm.input = '';
-                vm.onClose();
+                if (typeof vm.onClose === 'function') {
+                    $timeout(vm.onClose);
+                }
             }
         }
     });
