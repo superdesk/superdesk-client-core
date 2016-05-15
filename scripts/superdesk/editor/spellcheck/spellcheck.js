@@ -5,8 +5,8 @@
 
 'use strict';
 
-SpellcheckService.$inject = ['$q', 'api', 'dictionaries'];
-function SpellcheckService($q, api, dictionaries) {
+SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope'];
+function SpellcheckService($q, api, dictionaries, $rootScope) {
     var lang,
         dict,
         abbreviationList = [],
@@ -14,7 +14,7 @@ function SpellcheckService($q, api, dictionaries) {
         self;
 
     self = this;
-
+    self.abbreviationsDict = null;
     /**
      * Set current language
      *
@@ -74,6 +74,48 @@ function SpellcheckService($q, api, dictionaries) {
 
         return dict;
     }
+
+    /**
+     * Get abbreviations for replacement
+     *
+     * @return {Promise}
+     */
+    this.getAbbreviationsDict = function(force) {
+        if (!lang) {
+            return $q.reject();
+        }
+
+        var baseLang = getBaseLanguage(lang);
+
+        if (!self.abbreviationsDict || force) {
+            return dictionaries.getUserAbbreviations(lang, baseLang).then(function(items) {
+                self.abbreviationsDict = self.abbreviationsDict || {};
+                self.abbreviationsDict.content = {};
+
+                if (baseLang && _.find(items, {'language_id': lang}) && _.find(items, {'language_id': baseLang})) {
+                    items = _.filter(items, {'language_id': lang});
+                }
+
+                angular.forEach(items, function(item) {
+                    angular.extend(self.abbreviationsDict.content, item.content || {});
+                });
+
+                return self.abbreviationsDict.content;
+            });
+        }
+
+        return $q.when(self.abbreviationsDict.content);
+    };
+
+    function updateAbbreviations (data) {
+        if (self.abbreviationsDict && self.abbreviationsDict.content) {
+            angular.extend(self.abbreviationsDict.content, data || {});
+        }
+    }
+
+    $rootScope.$on('abbreviations:updated', angular.bind(self, function(evt , data) {
+        updateAbbreviations(data);
+    }));
 
     /**
      * Add dictionary content to spellcheck

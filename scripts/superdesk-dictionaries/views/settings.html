@@ -10,6 +10,9 @@
             <button id="createDictionary" class="btn btn-info pull-right" ng-click="createDictionary()">
                 <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Dictionary' | translate }}
             </button>
+            <button id="createAbbreviations" class="btn btn-info pull-right" ng-click="createAbbreviationsDictionary()">
+                <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Abbreviations Dictionary' | translate }}
+            </button>
         </div>
 
         <div class="content dictionary-settings">
@@ -20,8 +23,11 @@
                            <h6>{{ dictionary.name }}</h6>&nbsp;<em><strong>({{ :: dictionary.language_id }})</strong></em>
                         </div>
                         <div ng-if="dictionary.user">
-                    <h6 id="{{dictionary.language_id}}">{{ :: 'Personal' | translate }}</h6>&nbsp;<em><strong>({{ :: dictionary.language_id }})</strong></em>
-            </div>
+                            <h6 id="{{dictionary.language_id}}">{{ :: 'Personal' | translate }}{{ :: (isAbbreviations(dictionary) ? ' - Abbreviations' : '') | translate }}</h6>&nbsp;
+                            <em>
+                                <strong>({{ :: dictionary.language_id }})</strong>
+                            </em>
+                        </div>
                         <div class="actions">
                             <button ng-click="openDictionary(dictionary)" title="{{:: 'Edit dictionary' | translate }}"><i class="icon-pencil"></i></button>
                             <button ng-click="remove(dictionary)" title="{{:: 'Remove dictionary' | translate }}"><i class="icon-trash"></i></button>

@@ -469,6 +469,16 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
         }
     };
 
+    function replaceText(scope, text, className) {
+        if (!className) {
+            className = ACTIVE_CLASS;
+        }
+        var nodes = scope.node.getElementsByClassName(className);
+        var nodesLength = nodes.length;
+        replaceNodes(nodes, text);
+        return nodesLength;
+    }
+
     /**
      * Replace active node with given text.
      *
@@ -476,8 +486,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
      */
     this.replace = function(text) {
         scopes.forEach(function(scope) {
-            var nodes = scope.node.getElementsByClassName(ACTIVE_CLASS);
-            replaceNodes(nodes, text, scope);
+            replaceText(scope, text);
             self.commitScope(scope);
         });
     };
@@ -540,7 +549,8 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     this.storeSelection = function storeSelection(node) {
         var spans = node.getElementsByClassName('rangySelectionBoundary');
         if (spans.length === 0 || !self.selection) {
-            self.selection = window.rangy ? window.rangy.saveSelection() : null;
+            self.selection = window.rangy && (typeof window.rangy.saveSelection === 'function') ?
+                window.rangy.saveSelection() : null;
         }
     };
 
@@ -602,18 +612,69 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     };
 
     /**
+     * Replace abbreviations.
+     * @param {Scope} scope
+     */
+    function replaceAbbreviations (scope) {
+        if (!scope.node.classList.contains(TYPING_CLASS)) {
+            return $q.when({});
+        }
+
+        if (scope.node.innerText !== '') {
+            return spellcheck.getAbbreviationsDict().then(function(abbreviations) {
+                if (_.keys(abbreviations).length) {
+                    var pattern = '\\b(' + _.map(_.keys(abbreviations), function(item) {
+                            return escapeRegExp(item);
+                        }).join('|') + ')(\\*)';
+                    var found = scope.node.innerText.match(new RegExp(pattern, 'g'));
+                    if (found) {
+                        // store old settings
+                        var old_settings = angular.extend({}, self.settings);
+                        var caretPosition = scope.medium.exportSelection();
+
+                        _.forEach(_.uniq(found), function(val) {
+                            var replacementValue = abbreviations[val.replace('*', '')];
+                            if (replacementValue) {
+                                var diff = {};
+                                diff[val] = replacementValue;
+                                self.cleanScope(scope);
+                                self.setSettings({findreplace: {diff: diff, caseSensitive: true}});
+                                renderFindreplace(scope.node);
+                                var nodesLength = replaceText(scope, replacementValue, FINDREPLACE_CLASS);
+                                if (nodesLength > 0) {
+                                    var incrementCaretPosition = (replacementValue.length - val.length) * nodesLength;
+                                    caretPosition.start += incrementCaretPosition;
+                                    caretPosition.end += incrementCaretPosition;
+                                }
+                            }
+                        });
+
+                        scope.medium.importSelection(caretPosition);
+                        // apply old settings
+                        self.setSettings({findreplace: (old_settings.findreplace ? old_settings.findreplace : null)});
+                    }
+                }
+            });
+        }
+
+        return $q.when({});
+    }
+
+    /**
      * Commit changes in given scope to its model
      *
      * @param {Scope} scope
      */
     this.commitScope = function(scope) {
-        var nodeValue = clean(scope.node).innerHTML;
-        if (nodeValue !== scope.model.$viewValue) {
-            scope.model.$setViewValue(nodeValue);
-            self.storeSelection(scope.node);
-            scope.history.add(clean(scope.node), self.selection);
-            self.resetSelection(scope.node);
-        }
+        replaceAbbreviations(scope).then(function() {
+            var nodeValue = clean(scope.node).innerHTML;
+            if (nodeValue !== scope.model.$viewValue) {
+                scope.model.$setViewValue(nodeValue);
+                self.storeSelection(scope.node);
+                scope.history.add(clean(scope.node), self.selection);
+                self.resetSelection(scope.node);
+            }
+        });
     };
 
     /**

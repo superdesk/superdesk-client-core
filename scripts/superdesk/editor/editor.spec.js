@@ -22,6 +22,14 @@ describe('text editor', function() {
                 this.$viewValue = value;
             }
         };
+        scope.medium = {
+            exportSelection: function() {
+                return {start: 0, end: 0};
+            },
+            importSelection: function(pos) {
+                return;
+            }
+        };
         document.body.appendChild(scope.node);
         spyOn(scope.model, '$setViewValue').and.callThrough();
         return scope;
@@ -105,7 +113,43 @@ describe('text editor', function() {
         expect(scope.node.innerHTML).not.toContain('active');
     }));
 
-    it('can save model value', inject(function(editor, $rootScope) {
+    it('can replace abbreviations', inject(function(editor, spellcheck, $q, $rootScope, $timeout) {
+        editor.setSettings({spellcheck: true});
+        var abbreviations = {
+            IMF: 'International Monetory Fund',
+            WHO: 'World Health Organisation',
+            UN: 'United Nations'
+        };
+        spyOn(spellcheck, 'getAbbreviationsDict').and.returnValue($q.when(abbreviations));
+        var scope = createScope('test', $rootScope);
+        editor.registerScope(scope);
+        scope.node.classList.add('typing');
+        scope.node.innerHTML = 'foo';
+        editor.commit();
+        expect(scope.model.$setViewValue).not.toHaveBeenCalled();
+        $rootScope.$digest();
+        expect(scope.model.$setViewValue).toHaveBeenCalledWith('foo');
+        expect(scope.node.innerHTML).toBe('foo');
+
+        scope.node.innerHTML = 'foo IMF*';
+        editor.commit();
+        $rootScope.$digest();
+        expect(scope.node.innerHTML).toBe('foo ' + abbreviations.IMF);
+
+        scope.node.innerHTML = 'foo IMF IMF* IMF*';
+        editor.commit();
+        $rootScope.$digest();
+        expect(scope.node.innerHTML).toBe('foo IMF ' + abbreviations.IMF + ' ' + abbreviations.IMF);
+
+        scope.node.innerHTML = 'foo IMF* WHO*';
+        editor.commit();
+        $rootScope.$digest();
+        expect(scope.node.innerHTML).toBe('foo ' + abbreviations.IMF + ' ' + abbreviations.WHO);
+
+    }));
+
+    it('can save model value', inject(function(editor, $rootScope, spellcheck, $q) {
+        spyOn(spellcheck, 'getAbbreviationsDict').and.returnValue($q.when({}));
         var scope = createScope('foo', $rootScope);
         editor.registerScope(scope);
 
@@ -120,11 +164,12 @@ describe('text editor', function() {
 
         scope.node.innerHTML = 'bar';
         editor.commit();
+        $rootScope.$digest();
         expect(scope.model.$setViewValue).toHaveBeenCalledWith('bar');
 
         scope.node.innerHTML = 'baz';
         editor.commit();
-
+        $rootScope.$digest();
         editor.undo(scope);
         editor.undo(scope);
         expect(scope.node.innerHTML).toBe('foo');
@@ -140,7 +185,7 @@ describe('text editor', function() {
 
         scope.node.innerHTML = 'test';
         editor.commit();
-
+        $rootScope.$digest();
         editor.redo(scope);
         expect(scope.node.innerHTML).toBe('test');
     }));
