@@ -58,12 +58,25 @@
 
     angular.module('superdesk.workspace.content', [
         'superdesk.api',
+        'superdesk.menu',
         'superdesk.archive',
         'superdesk.templates',
         'superdesk.packaging'
     ])
         .service('content', ContentService)
         .directive('sdContentCreate', ContentCreateDirective)
+        .config(['superdeskProvider', function(superdesk) {
+            superdesk
+                .activity('/settings/content-profiles', {
+                    label: gettext('Content Profiles'),
+                    controller: ContentProfilesController,
+                    controllerAs: 'ctrl',
+                    templateUrl: 'scripts/superdesk-workspace/content/views/profile-settings.html',
+                    category: superdesk.MENU_SETTINGS,
+                    priority: -800,
+                    privileges: {} // todo(petr): pick something
+                });
+        }])
         .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
             keyboardManager.register('General', 'ctrl + m', gettext('Creates new item'));
         }])
@@ -161,12 +174,18 @@
         /**
          * Get content types from server
          *
+         * @param {Boolean} includeDisabled
          * @return {Promise}
          */
-        this.getTypes = function() {
+        this.getTypes = function(includeDisabled) {
             var self = this;
-            var where = {enabled: true};
-            return api.query('content_types', {where: where}).then(function(result) {
+            var params = {};
+
+            if (!includeDisabled) {
+                params = {where: {enabled: true}};
+            }
+
+            return api.query('content_types', params).then(function(result) {
                 self.types = result._items.sort(function(a, b) {
                     return b.priority - a.priority; // with higher priority goes up
                 });
@@ -306,5 +325,13 @@
                 });
             }
         };
+    }
+
+    ContentProfilesController.$inject = ['content'];
+    function ContentProfilesController(content) {
+        // fetch all types
+        content.getTypes(true).then(function() {
+            this.types = content.types;
+        }.bind(this));
     }
 })();
