@@ -1596,8 +1596,8 @@
         };
     }
 
-    AuthoringTopbarDirective.$inject = ['keyboardManager'];
-    function AuthoringTopbarDirective(keyboardManager) {
+    AuthoringTopbarDirective.$inject = [];
+    function AuthoringTopbarDirective() {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/authoring-topbar.html',
             link: function(scope) {
