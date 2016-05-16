@@ -19,8 +19,8 @@
               </figure>
           </button>
           <button ng-if="privileges.feature_preview" ng-click="toggleBeta()" class="beta-switch pull-right">
-              <span class="stable" ng-if="!beta" tooltip="{{ :: 'Switch to feature preview' | translate }}" tooltip-placement="left">stable</span>
-              <span class="beta" ng-if="beta" tooltip="{{ :: 'Turn off feature preview' | translate }}" tooltip-placement="left">feature preview</span>
+              <span class="stable" ng-hide="beta" title="{{ :: 'Switch to feature preview' | translate }}">stable</span>
+              <span class="beta" ng-show="beta" title="{{ :: 'Turn off feature preview' | translate }}">feature preview</span>
           </button>
       </div>
   </div>

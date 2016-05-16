@@ -85,11 +85,11 @@
                     var $input = element.find('.input-term > input');
                     var $list = element.find('.item-list');
 
-                    $input.bind('focus', function() {
+                    $input.on('focus', function() {
                         scope.$apply(function() { scope.focused = true; });
                     });
 
-                    $input.bind('blur', function() {
+                    $input.on('blur', function() {
                         scope.$apply(function() {
                             scope.focused = false;
                             if (typeof scope.blur === 'function' && !scope.hide) {
@@ -98,15 +98,15 @@
                         });
                     });
 
-                    $list.bind('mouseover', function() {
+                    $list.on('mouseover', function() {
                         scope.$apply(function() { scope.mousedOver = true; });
                     });
 
-                    $list.bind('mouseleave', function() {
+                    $list.on('mouseleave', function() {
                         scope.$apply(function() { scope.mousedOver = false; });
                     });
 
-                    $input.bind('keyup', function(e) {
+                    $input.on('keyup', function(e) {
                         if (e.keyCode === Keys.enter) {
                             scope.$apply(function() { controller.selectActive(); });
                         }
@@ -116,7 +116,7 @@
                         }
                     });
 
-                    $input.bind('keydown', function(e) {
+                    $input.on('keydown', function(e) {
                         if (e.keyCode === Keys.enter || e.keyCode === Keys.escape) {
                             e.preventDefault();
                         }
@@ -138,6 +138,11 @@
                         }
                     });
 
+                    scope.$on('$destroy', function() {
+                        $input.off();
+                        $list.off();
+                    });
+
                     function scrollToActive() {
                         $timeout(function() {
                             var list = element.find('.item-list')[0];
@@ -156,10 +161,8 @@
 
                     scope.$watch('isVisible()', function(visible) {
                         if (visible || scope.alwaysVisible) {
-                            $list.show();
                             scope.hide = false;
                         } else {
-                            $list.hide();
                             scope.active = null;
                         }
                     });
@@ -181,12 +184,16 @@
                         }
                     });
 
-                    element.bind('mouseenter', function(e) {
+                    element.on('mouseenter', function(e) {
                         scope.$apply(function() { controller.activate(item); });
                     });
 
-                    element.bind('click', function(e) {
+                    element.on('click', function(e) {
                         scope.$apply(function() { controller.select(item); });
+                    });
+
+                    scope.$on('$destroy', function() {
+                        element.off();
                     });
                 }
             };

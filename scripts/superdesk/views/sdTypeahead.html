@@ -2,7 +2,8 @@
     <div class="input-term">
         <input ng-model="term" ng-change="query()" tabindex="{{tabindex}}" type="text" ng-disabled="disabled" autocomplete="off" ng-click="$event.stopPropagation()" placeholder="{{placeholder}}">
     </div>
-    <ul class="item-list" ng-transclude>
 
-    </ul>
+    <div ng-if="isVisible()">
+        <ul class="item-list" ng-transclude></ul>
+    </div>
 </div>

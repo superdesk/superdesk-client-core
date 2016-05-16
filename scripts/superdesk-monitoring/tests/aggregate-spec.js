@@ -90,9 +90,11 @@ describe('templates', function() {
                 ]
             };
 
-            var elemStr = ['<div ng-repeat="group in agg.cards">',
-                           '     <div sd-stage-items data-stage="group" data-filter="group.query"></div>',
-                           '</div>'].join('');
+            var elemStr = [
+                '<div ng-repeat="group in agg.cards">',
+                '<div sd-stage-items data-stage="group" data-filter="group.query" data-total="total"></div>',
+                '</div>'
+            ].join('');
 
             $compile(elemStr)(scope);
             scope.$digest();

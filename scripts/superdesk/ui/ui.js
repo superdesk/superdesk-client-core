@@ -543,7 +543,10 @@
                 dt: '=ngModel',
                 disabled: '=ngDisabled'
             },
-            templateUrl: 'scripts/superdesk/ui/views/sd-datepicker.html'
+            templateUrl: 'scripts/superdesk/ui/views/sd-datepicker.html',
+            link: function(scope, elem) {
+                scope.state = {opened: false};
+            }
         };
     }
 
@@ -1052,24 +1055,6 @@
         };
     }
 
-    function MouseHoverDirective() {
-        return {
-            link: function (scope, elem, attrs) {
-                var key = attrs.sdMouseHover || 'hover';
-
-                elem.on('mouseenter', function () {
-                    scope[key] = true;
-                    scope.$digest();
-                });
-
-                elem.on('mouseleave', function () {
-                    scope[key] = false;
-                    scope.$digest();
-                });
-            }
-        };
-    }
-
     /*
      * Media Query directive is used for creating responsive
      * layout's for single elements on page
@@ -1087,16 +1072,17 @@
             },
             link: function (scope, elem) {
                 var window = angular.element($window);
-
-                window.on('resize', _.debounce(calcSize, 300));
+                var resize = _.debounce(calcSize, 300);
+                window.on('resize', resize);
 
                 function calcSize() {
-                    if (elem.width() < scope.minWidth) {
+                    var width = elem.width();
+                    if (width < scope.minWidth) {
                         scope.$parent.$applyAsync(function () {
                             scope.$parent.elementState = 'compact';
                         });
                         elem.removeClass('comfort').addClass('compact');
-                    } else if (elem.width() > scope.maxWidth) {
+                    } else if (width > scope.maxWidth) {
                         scope.$parent.$applyAsync(function () {
                             scope.$parent.elementState = 'comfort';
                         });
@@ -1109,7 +1095,12 @@
                     }
                 }
 
-                calcSize();
+                // init
+                resize();
+
+                scope.$on('$destroy', function() {
+                    window.off('resize', resize);
+                });
             }
         };
     }
@@ -1217,7 +1208,6 @@
         .directive('sdDropdownFocus', DropdownFocus)
         .directive('sdWeekdayPicker', WeekdayPickerDirective)
         .directive('sdSplitterWidget', splitterWidget)
-        .directive('sdMouseHover', MouseHoverDirective)
         .directive('sdMediaQuery', mediaQuery)
         .directive('sdFocusElement', focusElement)
         .directive('sdValidationError', validationDirective);

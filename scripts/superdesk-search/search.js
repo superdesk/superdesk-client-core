@@ -1442,6 +1442,11 @@
                         scope.flags.enabled = false;
                     }, {global: true});
 
+                    scope.$on('$destroy', function() {
+                        keyboardManager.unbind('ctrl+0');
+                        keyboardManager.unbind('esc');
+                    });
+
                     function reset() {
                         scope.meta.unique_name = '';
                     }

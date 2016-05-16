@@ -2,7 +2,7 @@
     <div class="modal-header">
         <h3 class="pull-left" translate>Currently working on</h3>
         <div class="btn-group pull-right">
-            <button ng-click="closeDashboard()" title="{{'Close'|translate}}"><i class="icon-close-small"></i></button>
+            <button ng-click="closeDashboard()" title="{{ :: 'Close'|translate}}"><i class="icon-close-small"></i></button>
         </div>
     </div>
 
@@ -19,7 +19,7 @@
                 <div class="card-box__article-header">
 
                     <h4 ng-show="article.headline">{{ article.headline}}</h4>
-                    <h4 ng-show="!article.headline">{{ 'Untitled' | translate }}</h4>
+                    <h4 ng-show="!article.headline">{{ :: 'Untitled' | translate }}</h4>
                 </div>
                 <div class="card-box__content card-box__content--article">
 

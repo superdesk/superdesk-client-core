@@ -23,6 +23,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
     $scope.$watch('item', function(item) {
         if (!item) {
             $scope.widgets = null;
+            unbindAllShortcuts();
             return;
         }
 
@@ -40,12 +41,25 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             return !!widget.display[display];
         });
 
-        function bindKeyShortcutToWidget(shortcut, widget) {
-            keyboardManager.bind(shortcut, function () {
-                $scope.activate(widget);
-            }, {inputDisabled: false});
-        }
+        bindAllShortcuts();
+    });
 
+    var shortcuts = [];
+
+    function unbindAllShortcuts() {
+        shortcuts.forEach(function(unbind) {
+            unbind();
+        });
+        shortcuts = [];
+    }
+
+    function bindKeyShortcutToWidget(shortcut, widget) {
+        shortcuts.push($scope.$on('key:' + shortcut.replace('+', ':'), function () {
+            $scope.activate(widget);
+        }));
+    }
+
+    function bindAllShortcuts() {
         /*
          * Navigate throw right tab widgets with keyboard combination
          * Combination: Ctrl + {{widget number}} and custom keys from `keyboardShortcut` property
@@ -61,7 +75,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
                 $scope.activate(widget);
             }
         });
-    });
+    }
 
     $scope.isLocked = function(widget) {
         if (widget) {
@@ -118,7 +132,12 @@ function AuthoringWidgetsDir(desks, commentsService) {
             var editor = elem.find('.page-content-container'),
                 stickyHeader = elem.find('.authoring-sticky');
 
-            editor.on('scroll', _.debounce(clipHeader, 100));
+            var scrollHandler = _.debounce(clipHeader, 100);
+
+            editor.on('scroll', scrollHandler);
+            scope.$on('$destroy', function() {
+                editor.off('scroll', scrollHandler);
+            });
 
             function clipHeader() {
                 if (editor.scrollTop() > 5) {

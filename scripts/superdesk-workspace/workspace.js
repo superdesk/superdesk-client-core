@@ -324,8 +324,8 @@
         };
     }
 
-    WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'keyboardManager', 'gettext', 'config'];
-    function WorkspaceSidenavDirective(superdeskFlags, $location, keyboardManager, gettext, config) {
+    WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'Keys', 'gettext', 'config'];
+    function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gettext, config) {
         return {
             templateUrl: 'scripts/superdesk-workspace/views/workspace-sidenav-items.html',
             link: function(scope, elem) {
@@ -355,13 +355,19 @@
                 scope.highlightsHotkey = function () {
                     elem.find('.highlights-dropdown .dropdown-toggle').click();
                     elem.find('.dropdown-menu button')[0].focus();
-                    keyboardManager.push('up', function() {
-                        elem.find('.dropdown-menu button:focus').parent('li').prev().children('button').focus();
-                    });
-                    keyboardManager.push('down', function() {
-                        elem.find('.dropdown-menu button:focus').parent('li').next().children('button').focus();
-                    });
                 };
+
+                elem.on('keydown', function WorkspaceKeyboard(event) {
+                    if (event.which === Keys.up) {
+                        elem.find('.dropdown-menu button:focus').parent('li').prev().children('button').focus();
+                        return false;
+                    }
+
+                    if (event.which === Keys.down) {
+                        elem.find('.dropdown-menu button:focus').parent('li').next().children('button').focus();
+                        return false;
+                    }
+                });
             }
         };
     }
