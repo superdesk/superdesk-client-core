@@ -43,7 +43,7 @@
                 <span class="word-count"><b>{{ selected.preview.word_count || 0 }}</b> <span translate translate-n="selected.preview.word_count" translate-plural="WORDS">WORD</span></span>
             </div>
             <div class="preview-header__flex-row">
-              <span class="data" sd-meta-ingest data-item="item"></span>
+              <span class="data">{{ item.source }}</span>
             </div>
             <div class="preview-header__flex-row">
               <div sd-highlights-info data-item="selected.preview"></div>

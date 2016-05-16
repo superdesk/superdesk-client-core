@@ -359,12 +359,12 @@
                 template: '{{ name }}',
                 link: function(scope) {
                     scope.$watch('item', renderIngest);
-                    scope.name = scope.item.source;
-
                     function renderIngest() {
                         ingestSources.initialize().then(function() {
                             if (scope.item.ingest_provider && scope.item.ingest_provider in ingestSources.providersLookup) {
                                 scope.name = ingestSources.providersLookup[scope.item.ingest_provider].name;
+                            } else {
+                                scope.name = '';
                             }
                         });
                     }
