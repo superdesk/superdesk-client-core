@@ -343,7 +343,7 @@
 
                 // fetch all desks for the current user and add them to
                 // the list of filters.
-                desks.fetchCurrentUserDesks().then(function(desks) {
+                desks.fetchDesks().then(function(desks) {
                     $scope.filters = $scope.filters.concat(
                         desks._items.map(function(d) {
                             return {label: d.name, value: d._id};
