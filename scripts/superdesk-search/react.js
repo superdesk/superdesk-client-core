@@ -696,6 +696,15 @@
                                 }.bind(this));
                         },
 
+                        componentDidUpdate: function(prevProps, prevState) {
+                            if (prevProps.item !== this.props.item) {
+                                familyService.fetchDesks(this.props.item, false)
+                                .then(function(fetchedDesks) {
+                                    this.setState({desks: fetchedDesks});
+                                }.bind(this));
+                            }
+                        },
+
                         formatDeskName: function(name) {
                             return name.substr(0, 10) + (name.length > 10 ? '...' : '');
                         },
