@@ -34,7 +34,7 @@
         <form name="editForm" ng-submit="save()">
             <fieldset>
                 <tabset>
-                    <tab heading="General" class="TabContent">
+                    <tab heading="{{ 'General' | translate }}" class="TabContent">
                         <div class="field">
                             <label class="right">
                                 {{:: 'Status' | translate }}
@@ -124,7 +124,7 @@
                             </select>
                         </div>
                     </tab>
-                    <tab heading="Notification" class="TabContent">
+                    <tab heading="{{ 'Notification' | translate }}" class="TabContent">
                         <div class="field">
                             <label>
                                 {{ :: 'Update' | translate}}
@@ -151,7 +151,7 @@
                         </div>
                     </tab>
 
-                     <tab heading="Critical Errors" class="TabContent" ng-show="provider.feeding_service" ng-click="fetchSourceErrors()">
+                     <tab heading="{{ 'Critical Errors' | translate }}" class="TabContent" ng-show="provider.feeding_service" ng-click="fetchSourceErrors()">
                         <div class="content privileges-settings">
                             <div class="horizontal">
                                 <div class="roles-list">

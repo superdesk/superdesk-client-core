@@ -30,7 +30,7 @@
         <form name="editForm">
             <fieldset>
                 <tabset>
-                    <tab heading="General" class="TabContent">
+                    <tab heading="{{ 'General' | translate }}" class="TabContent">
                         <div class="field">
                             <label class="left">
                                 {{:: 'Status' | translate }}
@@ -109,7 +109,7 @@
                         </fieldset>
                     </tab>
 
-                    <tab heading="Critical Errors" class="TabContent">
+                    <tab heading="{{ 'Critical Errors' | translate }}" class="TabContent">
                         <div ng-repeat="(key, val) in all_errors | orderBy:name" class="field">
                             <label>
                                 {{::key}}: {{::val}}
@@ -118,7 +118,7 @@
                         </div>
                     </tab>
 
-                    <tab heading="Applied Global Filters" class="TabContent">
+                    <tab heading="{{ 'Applied Global Filters' | translate }}" class="TabContent">
                         <div class="content privileges-settings">
                             <div class="horizontal">
                                 <div class="roles-list">
