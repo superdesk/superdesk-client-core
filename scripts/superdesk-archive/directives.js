@@ -417,52 +417,40 @@
                 templateUrl: 'scripts/superdesk-archive/views/item-rendition.html',
                 scope: {
                     item: '=',
-                    rendition: '@',
-                    ratio: '=?'
+                    rendition: '@'
                 },
-                link: function(scope, elem) {
+                link: function(scope, elem, attrs) {
                     scope.$watch('item.renditions[rendition].href', function(href) {
                         var figure = elem.find('figure'),
                             oldImg = figure.find('img').css('opacity', 0.5),
                             previewHover = '<div class="preview-overlay"><i class="icon-fullscreen"></i></div>';
                         if (href) {
                             var img = new Image();
+
                             img.onload = function() {
                                 if (oldImg.length) {
                                     oldImg.replaceWith(img);
                                 } else {
                                     figure.html(img);
-                                    figure.append(previewHover);
+                                    if (attrs.ngClick) {
+                                        figure.append(previewHover);
+                                    }
                                 }
-                                _calcRatio();
+
+                                if (img.naturalWidth < img.naturalHeight) {
+                                    elem.addClass('portrait');
+                                } else {
+                                    elem.removeClass('portrait');
+                                }
                             };
 
                             img.onerror = function() {
                                 figure.html('');
                             };
+
                             img.src = href;
                         }
                     });
-
-                    var stopRatioWatch = scope.$watch('ratio', function(val) {
-                        if (val === undefined) {
-                            stopRatioWatch();
-                        }
-                        _.debounce(_calcRatio, 150);
-                    });
-
-                    function _calcRatio() {
-                        var el = elem.find('figure');
-                        if (el && scope.ratio) {
-                            var img = el.find('img')[0];
-                            var ratio = img ? img.naturalWidth / img.naturalHeight : 1;
-                            if (scope.ratio > ratio) {
-                                el.parent().addClass('portrait');
-                            } else {
-                                el.parent().removeClass('portrait');
-                            }
-                        }
-                    }
                 }
             };
         })
