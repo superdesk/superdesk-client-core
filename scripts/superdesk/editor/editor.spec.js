@@ -182,4 +182,30 @@ describe('text editor', function() {
             toBe(config.editor.disableEditorToolbar);
     }));
 
+    it('can observe and set tabindex from data-config if defined',
+    inject(function($rootScope, $compile, config) {
+        var scope = $rootScope.$new();
+
+        scope.item = {
+            body_html: '<p>test</p>',
+            type: 'text'
+        };
+
+        scope.node = document.createElement('p');
+        scope.node.innerHTML = 'test';
+
+        window.MediumEditor = jasmine.createSpy('editor');
+
+        var $elm = $compile('<div sd-text-editor ng-model="item.body_html" data-type="item.type"' +
+            ' data-config="{tabindex: 1}"></div>')(scope);
+        scope.$digest();
+
+        var isoScope = $elm.isolateScope();
+
+        isoScope.$digest();
+
+        expect(isoScope.config.tabindex).toBe(1);
+        expect(window.MediumEditor).toHaveBeenCalled();
+    }));
+
 });

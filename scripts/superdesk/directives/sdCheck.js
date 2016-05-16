@@ -136,7 +136,7 @@
          * Params:
          * @scope {boolean} ngModel - model for checkbox value
          */
-        .directive('sdSwitch', function() {
+        .directive('sdSwitch', ['Keys', function (Keys) {
             return {
                 require: 'ngModel',
                 replace: true,
@@ -150,6 +150,17 @@
                         render(element, ngModel.$viewValue);
                     };
 
+                    element.bind('keydown', function(e) {
+                        if (e.keyCode === Keys.enter || e.keyCode === Keys.space) {
+                            e.preventDefault();
+                            $scope.$apply(function() {
+                                ngModel.$setViewValue(!ngModel.$viewValue);
+                            });
+
+                            return false;
+                        }
+                    });
+
                     $scope.$watch(attrs.ngModel, function() {
                         render(element, ngModel.$viewValue);
                     });
@@ -161,8 +172,13 @@
 
                         return false;
                     });
+
+                    $scope.$on('$destroy', function() {
+                        element.unbind('keydown');
+                        element.off('click');
+                    });
                 }
             };
-        });
+        }]);
 
 })();
