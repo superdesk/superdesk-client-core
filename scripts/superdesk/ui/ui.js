@@ -904,10 +904,12 @@
                         local = moment(newVal, MODEL_TIME_FORMAT);
                     } else {
                         local = moment();
+                        local.add(5 - local.minute() % 5, 'm'); // and some time up to 5m
                     }
+
                     scope.hour = local.hour();
-                    scope.minute = local.minute() - local.minute() % 5;
-                    scope.second = local.second();
+                    scope.minute = local.minute();
+                    scope.second = 0;
                 });
 
                 scope.submit = function(offset) {
