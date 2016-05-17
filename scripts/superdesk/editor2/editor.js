@@ -485,7 +485,9 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
             // update the caption in the view
             vm.caption = caption;
             // on change callback
-            vm.onBlockChange();
+            $timeout(function() {
+                vm.onBlockChange();
+            });
         },
         editPicture: function(picture) {
             // only for SD images (with association)
