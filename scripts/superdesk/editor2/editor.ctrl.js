@@ -15,9 +15,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
             blockType: attrs && attrs.blockType || 'text',
             embedType: attrs && attrs.embedType || undefined,
             association: attrs && attrs.association || undefined,
-            lowerAddEmbedIsExtented: undefined,
+            lowerAddEmbedIsExtended: undefined,
             showAndFocusLowerAddAnEmbedBox: function() {
-                self.lowerAddEmbedIsExtented = true;
+                self.lowerAddEmbedIsExtended = true;
             },
         });
     }

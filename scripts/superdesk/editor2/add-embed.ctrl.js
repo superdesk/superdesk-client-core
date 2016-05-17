@@ -151,6 +151,10 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                 // close the addEmbed form
                 vm.toggle(true);
             });
+        },
+        closeEmbed: function() {
+            //put block back together on embed form close.
+            vm.toggle();
         }
     });
 
