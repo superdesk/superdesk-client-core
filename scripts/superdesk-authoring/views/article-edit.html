@@ -18,16 +18,12 @@
     <div ng-if="_editable">
         <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms"></span>
     </div>
-    <label ng-if="!_editable">
-        <span class="state-label not-for-sms" ng-show="item.flags.marked_for_sms" translate>Don't Send Sms</span>
-        <span class="state-label for-sms" ng-show="!item.flags.marked_for_sms" translate>Send Sms</span>
-    </label>
     <span ng-if="item.flags.marked_for_sms" sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
     <div ng-if="item.flags.marked_for_sms">
         <label translate>SMS Message</label>
         <input type="text"
          class="byline"
-         id="byline"
+         id="sms_message"
          ng-model="item.sms_message"
          ng-change="autosave(item)"
          ng-if="_editable"
