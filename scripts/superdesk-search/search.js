@@ -2131,7 +2131,9 @@
 
                             var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
                             _activities.forEach(function(activity) {
-                                activities[activity._id] = activities[activity._id] ? activities[activity._id] + 1 : 1;
+                                if (!item.lock_user) { //ignore activities if the item is locked
+                                    activities[activity._id] = activities[activity._id] ? activities[activity._id] + 1 : 1;
+                                }
                             });
                         });
 
@@ -2238,7 +2240,7 @@
         this.canPackageItems = function() {
             var canPackage = true;
             multi.getItems().forEach(function(item) {
-                canPackage = canPackage && item._type !== 'archived' &&
+                canPackage = canPackage && item._type !== 'archived' && !item.lock_user &&
                     !_.contains(['ingested', 'spiked', 'killed', 'draft'], item.state);
             });
             return canPackage;
