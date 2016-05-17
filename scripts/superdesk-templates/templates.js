@@ -360,7 +360,8 @@
      * @description Returns a function that allows filtering an array of
      * templates by various criteria.
      */
-    function FilterTemplatesFilter() {
+    FilterTemplatesFilter.$inject = ['session'];
+    function FilterTemplatesFilter(session) {
         /**
          * @description Returns a new array based on the passed filter.
          * @param {Array<Object>} all - Array of templates to filter.
@@ -379,7 +380,7 @@
                     case 'None':
                         return item.is_public && typeof item.template_desk === 'undefined';
                     case 'Personal':
-                        return !item.is_public;
+                        return !item.is_public && item.user === session.identity._id;
                     default:
                         return item.template_desk === f.value;
                 }
