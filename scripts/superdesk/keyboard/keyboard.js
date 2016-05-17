@@ -11,7 +11,8 @@
         right: 39,
         down: 40,
         enter: 13,
-        escape: 27
+        escape: 27,
+        space: 32
     }))
 
     // unbind all keyboard shortcuts when switching route
