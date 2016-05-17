@@ -103,9 +103,9 @@
 
     <div class="subnav__button-stack subnav__button-stack--square-buttons">
         <button class="navbtn strict"
-            ng-if="!item._locked && _editable"
-            title="{{ :: 'Minimize' | translate }}"
-            ng-click="minimize()">
+                ng-if="!isLocked() && _editable"
+                title="{{ :: 'Minimize' | translate }}"
+                ng-click="minimize()">
             <i class="big-icon-minimize"></i>
         </button>
 
@@ -124,8 +124,8 @@
                   </li>
                 </ul>
 
-                <ul id="multiedit" ng-if="item.task.desk && itemActions.multi_edit && !item._locked" ng-show="action !== 'kill'">
-                  <li>
+                <ul id="multiedit" ng-if="item.task.desk && itemActions.multi_edit && !isLocked()" ng-show="action !== 'kill'">
+                    <li>
                     <div class="dropdown highlights-toggle" dropdown>
                       <button class="dropdown-toggle" dropdown-toggle>
                         {{ :: 'Multiedit' | translate }}
