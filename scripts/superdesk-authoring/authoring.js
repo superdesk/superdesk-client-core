@@ -791,7 +791,7 @@
             if (this.isLockedByMe(item)) {
                 return true;
             } else {
-                return privileges.privileges.unlock;
+                return item.state === 'draft'? false : privileges.privileges.unlock;
             }
         };
     }
