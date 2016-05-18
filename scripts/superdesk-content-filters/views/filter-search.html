@@ -19,13 +19,13 @@
                 <input ng-if="!isListValue()" required ng-model="filterCondition.value">
                 <div ng-if="isListValue()">
                     <div class="term-editor"
-                         ng-keypress="handleKey($event)"
                          sd-meta-terms
                          data-item="filterCondition"
                          data-field="values"
-                         data-unique="valueFieldLookup[filterCondition.field]"
+                         data-unique="{{valueFieldLookup[filterCondition.field]}}"
                          data-list="valueLookup[filterCondition.field]"
                          data-header="true"
+                         data-reload-list="true"
                          ></div>
                 </div>
             </div>
