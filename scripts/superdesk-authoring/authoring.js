@@ -1021,14 +1021,16 @@
         'confirm',
         'reloadService',
         '$rootScope',
-        '$interpolate'
+        '$interpolate',
+        'metadata'
     ];
     function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
         privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope,
-        $interpolate) {
+        $interpolate, metadata) {
         return {
             link: function($scope, elem, attrs) {
                 var _closing;
+                var tryPublish = false;
 
                 $scope.privileges = privileges.privileges;
                 $scope.dirty = false;
@@ -1274,6 +1276,7 @@
                 function publishItem(orig, item) {
                     var action = $scope.action === 'edit' ? 'publish' : $scope.action;
                     validate(orig, item);
+
                     return authoring.publish(orig, item, action)
                     .then(function(response) {
                         if (response) {
@@ -1314,17 +1317,49 @@
 
                 function validate(orig, item) {
                     $scope.error = {};
-                    angular.forEach(_.extend(orig, item), function (value, key) {
-                        if (value) {
-                            if (typeof value === 'object' && !value.length) {
-                                $scope.error[key] = true;
-                            } else {
-                                $scope.error[key] = false;
-                            }
+                    tryPublish = true;
+                    _.extend(orig, item);
+                    angular.forEach(authoring.editor, function (editor, key) {
+                        if (!authoring.schema[key]) {
+                            var found = false;
+                            var cv = _.find(metadata.cvs, function(item) {
+                                return item._id === key;
+                            });
+
+                            var field = cv.schema_field || 'subject';
+                            angular.forEach(cv.items, function(row) {
+                                var element = _.find(orig[field], function(item) {
+                                       return item.qcode === row.qcode;
+                                   });
+                                if (element) {
+                                    found = true;
+                                }
+                            });
+
+                            $scope.error[key] = !found;
                         } else {
-                            $scope.error[key] = true;
+                            var value = orig[key];
+                            if (value) {
+                                if (typeof value === 'object' && hasNullValue(value)) {
+                                    $scope.error[key] = true;
+                                } else {
+                                    $scope.error[key] = false;
+                                }
+                            } else {
+                                $scope.error[key] = true;
+                            }
                         }
                     });
+                }
+
+                function hasNullValue (target) {
+                    for (var member in target) {
+                        if (target[member] == null) {
+                            return true;
+                        }
+                    }
+
+                    return false;
                 }
 
                 function notifyPreconditionFailed() {
@@ -1496,6 +1531,10 @@
 
                 $scope.autosave = function(item) {
                     $scope.dirty = true;
+                    if (tryPublish) {
+                        validate($scope.origItem, item);
+                    }
+
                     var autosavedItem = authoring.autosave(item);
                     authoringWorkspace.addAutosave();
                     return autosavedItem;
@@ -2865,8 +2904,9 @@
         };
     }
 
-    AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata', 'content', 'lodash'];
-    function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content, lodash) {
+    AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata',
+                'content', 'lodash', 'authoring'];
+    function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content, lodash, authoring) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/authoring-header.html',
             require: '^sdAuthoringWidgets',
@@ -2947,12 +2987,12 @@
                             content.getType(item.profile)
                                 .then(function(type) {
                                     scope.contentType = type;
-                                    scope.editor = content.editor(type);
-                                    scope.schema = content.schema(type);
+                                    scope.editor = authoring.editor = content.editor(type);
+                                    scope.schema = authoring.schema = content.schema(type);
                                 });
                         } else {
-                            scope.schema = content.schema();
-                            scope.editor = content.editor();
+                            scope.editor = authoring.editor = content.editor();
+                            scope.schema = authoring.schema = content.schema();
                         }
 
                         // Related Items
