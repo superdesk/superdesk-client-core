@@ -528,6 +528,16 @@ describe('lock service', function() {
         expect(lock.can_unlock({lock_user: user._id, lock_session: 'another_session'})).toBe(true);
         expect(lock.can_unlock({lock_user: anotherUser._id, lock_session: 'another_session'})).toBe(0);
     }));
+
+    it('can unlock own draft but not other users item', inject(function(lock, privileges, $rootScope) {
+        privileges.setUserPrivileges({unlock: 1});
+        $rootScope.$digest();
+        // testing if the user can unlock its own content.
+        expect(lock.can_unlock({lock_user: user._id, state: 'draft'})).toBe(true);
+        expect(lock.can_unlock({lock_user: user._id, state: 'draft', lock_session: 'another_session'})).toBe(true);
+        var item = {lock_user: anotherUser._id, state: 'draft', lock_session: 'another_session'};
+        expect(lock.can_unlock(item)).toBe(false);
+    }));
 });
 
 describe('authoring actions', function() {
