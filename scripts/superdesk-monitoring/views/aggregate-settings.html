@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="legend" translate>Select desks for view</div>
-            <div class="desk" ng-repeat="desk in desks | orderBy: 'name'">
+            <div class="desk" ng-repeat="desk in desks | orderBy: 'name' track by desk._id">
                 <div class="desk-title">
                     {{desk.name}}
                     <span sd-switch class="pull-right" ng-model="editGroups[desk._id].selected" ng-click="setDeskInfo(desk._id)"></span>

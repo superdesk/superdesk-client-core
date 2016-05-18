@@ -674,6 +674,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
         var checkVal = val.innerHTML ? clearRangy(angular.copy(val)).innerHTML : val;
         if (clean(scope.node).innerHTML !== checkVal) {
             scope.node.innerHTML = val.innerHTML ? val.innerHTML : val;
+            clearRangy(scope.node);
             scope.model.$setViewValue(val.innerHTML ? val.innerHTML : val);
             self.selection = scope.history.getSelection();
         } else {

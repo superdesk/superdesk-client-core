@@ -123,6 +123,7 @@
 
                         if (e.keyCode === Keys.down) {
                             e.preventDefault();
+                            e.stopPropagation();
                             scope.$apply(function() {
                                 controller.activateNextItem();
                                 scrollToActive();
@@ -131,6 +132,7 @@
 
                         if (e.keyCode === Keys.up) {
                             e.preventDefault();
+                            e.stopPropagation();
                             scope.$apply(function() {
                                 controller.activatePreviousItem();
                                 scrollToActive();
