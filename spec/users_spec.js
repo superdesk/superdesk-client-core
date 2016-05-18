@@ -247,10 +247,8 @@ describe('users', function() {
 
                 // now type some search term and check if down arrow navigates to filtered list
                 browser.actions().sendKeys('fin').perform();
-                browser.sleep(100);
                 browser.actions().sendKeys(protractor.Key.DOWN).perform();
-                browser.sleep(100);
-                expect(browser.driver.switchTo().activeElement().getText()).toEqual('Finance');
+                expect(element(by.css('.sd-typeahead li.active')).getText()).toBe('Finance');
             }
         );
         //

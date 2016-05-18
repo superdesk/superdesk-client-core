@@ -39,12 +39,14 @@
 
         $document.on('keydown', function(e) {
             var ctrlKey = e.ctrlKey || e.metaKey,
+                altKey = e.altKey,
                 shiftKey = e.shiftKey,
                 isGlobal = ctrlKey && shiftKey;
             if (isGlobal || !ignoreNodes[e.target.nodeName]) { // $document.body is empty when testing
                 var character = String.fromCharCode(e.which).toLowerCase(),
                     modifier = '';
                 modifier += ctrlKey ? 'ctrl:' : '';
+                modifier += altKey ? 'alt:' : '';
                 modifier += shiftKey ? 'shift:' : '';
 
                 // also handle arrows, enter/escape, etc.
@@ -164,7 +166,7 @@
                 elt = document.getElementById(opt.target);
             }
 
-            fct = function (e) {
+            fct = function keyboardHandler(e) {
                 e = e || $window.event;
 
                 // Disable event handler when focus input and textarea
@@ -275,6 +277,10 @@
 
             };
 
+            if (this.keyboardEvent[label]) {
+                console.warn(label);
+            }
+
             // Store shortcut
             this.keyboardEvent[label] = {
                 'callback': fct,
@@ -371,6 +377,7 @@
 
     .directive('sdKeyboardModal', ['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         return {
+            scope: true,
             templateUrl: 'scripts/superdesk/keyboard/views/keyboard-modal.html',
             link: function(scope) {
                 scope.enabled = false;

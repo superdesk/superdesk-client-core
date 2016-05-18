@@ -28,7 +28,7 @@
                     configurable: '='
                 },
                 templateUrl: 'scripts/superdesk-dashboard/grid/views/grid.html',
-                controller: ['$scope', function($scope) {
+                controller: ['$scope', function GridController($scope) {
                     this.addWidget = function(widget, element) {
                         widget.active = true;
                         widget.el = $scope.gridster.add_widget(
@@ -87,6 +87,12 @@
                                 scope.gridster.disable();
                             }
                         }
+                    });
+
+                    scope.$on('$destroy', function() {
+                        scope.gridster.remove_all_widgets();
+                        scope.gridster.destroy();
+                        scope.gridster = null;
                     });
                 }
             };

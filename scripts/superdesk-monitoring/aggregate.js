@@ -35,7 +35,7 @@
 
         desks.initialize()
         .then(angular.bind(this, function() {
-            this.desks = desks.deskLookup;
+            this.desks = desks.desks._items;
             this.deskLookup = desks.deskLookup;
             this.deskStages = desks.deskStages;
             _.each(this.desks, function(desk) {

@@ -445,7 +445,7 @@
                  * Change between single stage view and grouped view by keyboard
                  * Keyboard shortcut: Ctrl + g
                  */
-                keyboardManager.bind('ctrl+g', function () {
+                scope.$on('key:ctrl:g', function () {
                     if (scope.selected) {
                         if (monitoring.singleGroup == null) {
                             monitoring.viewSingleGroup(monitoring.selectedGroup, 'stage');
@@ -453,13 +453,13 @@
                             monitoring.viewMonitoringHome();
                         }
                     }
-                }, {inputDisabled: false});
+                });
 
                 /*
                  * Change between single desk view and grouped view by keyboard
                  * Keyboard shortcut: Ctrl + g
                  */
-                keyboardManager.bind('ctrl+alt+g', function () {
+                scope.$on('key:ctrl:alt:g', function () {
                     if (scope.selected) {
                         if (monitoring.singleGroup == null) {
                             monitoring.viewSingleGroup(monitoring.selectedGroup, 'desk');
@@ -467,7 +467,7 @@
                             monitoring.viewMonitoringHome();
                         }
                     }
-                }, {inputDisabled: false});
+                });
 
                 function updateGroupStyle() {
                     scope.style.maxHeight = scope.group.max_items ? scope.group.max_items * ITEM_HEIGHT : null;
@@ -480,21 +480,20 @@
                  */
                 function bindActionKeyShortcuts(item) {
                     // First unbind all binded shortcuts
-                    if (monitoring.bindedItems) {
+                    if (monitoring.bindedItems.length) {
                         unbindActionKeyShortcuts();
                     }
 
                     var intent = {action: 'list'};
                     superdesk.findActivities(intent, item).forEach(function (activity) {
                         if (activity.keyboardShortcut && workflowService.isActionAllowed(item, activity.action)) {
-                            monitoring.bindedItems.push(activity.keyboardShortcut);
-                            keyboardManager.bind(activity.keyboardShortcut, function () {
+                            monitoring.bindedItems.push(scope.$on('key:' + activity.keyboardShortcut.replace('+', ':'), function () {
                                 if (activity._id === 'mark.item') {
                                     bindMarkItemShortcut();
                                 } else {
                                     activityService.start(activity, {data: {item: scope.selected}});
                                 }
-                            }, {inputDisabled: true});
+                            }));
                         }
                     });
                 }
@@ -526,8 +525,8 @@
                  * Unbind all item actions
                  */
                 function unbindActionKeyShortcuts() {
-                    monitoring.bindedItems.forEach(function (item) {
-                        keyboardManager.unbind(item);
+                    monitoring.bindedItems.forEach(function (func) {
+                        func();
                     });
                     monitoring.bindedItems = [];
                 }

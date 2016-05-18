@@ -165,7 +165,8 @@ describe('templates', function() {
                 {_id: 'private', is_public: false}
             ], _meta: {total: 3}}));
             var scope = $rootScope.$new();
-            var elem = $compile('<div sd-template-select></div>')(scope);
+            scope.open = {};
+            var elem = $compile('<div sd-template-select data-open="open"></div>')(scope);
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalled();
             var args = api.query.calls.argsFor(0);

@@ -1940,7 +1940,7 @@
 
                     if (scope.$parent.views) {
                         scope.$parent.views.send = false;
-                    } else {
+                    } else if (scope.item) {
                         scope.item = null;
                     }
 

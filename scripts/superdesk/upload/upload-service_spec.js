@@ -22,14 +22,14 @@ describe('upload service', function() {
     }));
 
     it('can restart uploading', inject(function(upload, Upload) {
-        var config = {};
+        var config = {url: 'test'};
         spyOn(Upload, 'http');
         upload.restart(config);
         expect(Upload.http).toHaveBeenCalledWith(config);
     }));
 
     it('should know that config after calling start is an upload', inject(function(upload) {
-        var config = {};
+        var config = {url: 'test'};
         upload.start(config);
         expect(upload.isUpload(config)).toBe(true);
     }));

@@ -265,6 +265,7 @@
 
                 scope.$on('$destroy', function() {
                     $document.unbind('click', closeOnClick);
+                    elem.unbind('click');
                 });
 
                 function closeOnClick() {

@@ -1,8 +1,10 @@
-<div class="datepicker-input" ng-init="opened = false">
+<div class="datepicker-input">
      <input type="text"
-         class="input-small" ng-model="dt"
-         sd-datepicker-inner opened="opened"
-         ng-disabled = "disabled"
+         class="input-small"
+         ng-model="dt"
+         sd-datepicker-inner
+         data-opened="state.opened"
+         ng-disabled="disabled"
      />
-    <button type="button" class="btn btn-default" ng-click="opened = !opened" ng-disabled = "disabled"><i class="icon-calendar"></i></button>
+    <button type="button" class="btn btn-default" ng-click="state.opened = !state.opened" ng-disabled = "disabled"><i class="icon-calendar"></i></button>
 </div>

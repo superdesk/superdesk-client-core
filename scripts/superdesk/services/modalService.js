@@ -54,30 +54,32 @@
                 scope: {
                     model: '='
                 },
-                link: function(scope, element, attrs) {
+                link: function modalLinkFunction(scope, element, attrs) {
 
                     var content, _initialized = false;
 
                     scope.$watch('model', function() {
                         if (scope.model) {
-                            if (!_initialized) {
+                            if (!initialized()) {
                                 content = element.children();
                                 content.addClass(element.attr('class'));
                                 content.appendTo($document.find('body'));
+                                content[0].foo = 'bar';
                                 _initialized = true;
                             }
                             content.modal('show');
                         } else {
                             if (initialized()) {
                                 content.modal('hide');
+                                closeModal();
                             }
                         }
                     });
 
-                    $(document).on('hidden.bs.modal', '.modal', function () {
+                    var closeModal = function () {
                         scope.model = false;
                         scope.$evalAsync();
-                    });
+                    };
 
                     function initialized() {
                         return _initialized && content;
@@ -88,7 +90,6 @@
                             content.modal('hide');
                             content.remove();
                         }
-                        angular.element(document.body).find('.modal-backdrop').remove();
                     });
                 }
             };

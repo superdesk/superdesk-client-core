@@ -306,6 +306,10 @@
                     scope.create();
                 });
 
+                scope.$on('$destroy', function() {
+                    keyboardManager.unbind('ctrl+m');
+                });
+
                 /**
                  * Create a new item using given type and start editing
                  *
