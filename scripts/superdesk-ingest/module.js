@@ -212,6 +212,7 @@
             criteria.aggregations = 1;
             api.query('ingest', criteria).then(function(items) {
                 $scope.items = search.mergeItems(items, $scope.items, next);
+                $scope.total = items._meta.total;
             })
             ['finally'](function() {
                 $scope.loading = false;
@@ -1053,8 +1054,8 @@
         };
     }
 
-    IngestRoutingAction.$inject = ['desks', 'macros'];
-    function IngestRoutingAction(desks, macros) {
+    IngestRoutingAction.$inject = ['desks', 'macros', 'subscribersService'];
+    function IngestRoutingAction(desks, macros, subscribersService) {
         return {
             scope: {rule: '='},
             templateUrl: 'scripts/superdesk-ingest/views/settings/ingest-routing-action.html',
@@ -1064,6 +1065,7 @@
                 scope.deskLookup = {};
                 scope.stageLookup = {};
                 scope.macroLookup = {};
+                scope.customSubscribers = [];
 
                 desks.initialize()
                 .then(function() {
@@ -1076,6 +1078,29 @@
                         scope.macroLookup[macro.name] = macro;
                     });
                 });
+
+                subscribersService.fetchActiveSubscribers().then(function(items) {
+                    scope.customSubscribers = [];
+                    _.each(items, function(item) {
+                        scope.customSubscribers.push({'_id': item._id, 'name': item.name});
+                    });
+                });
+
+                scope.getActionString = function(action) {
+                    if (scope.deskLookup[action.desk] && scope.stageLookup[action.stage]) {
+                        var actionString = scope.deskLookup[action.desk].name + ' / ';
+                        actionString = actionString + scope.stageLookup[action.stage].name + ' / ';
+                        if (action.macro) {
+                            actionString = actionString + scope.macroLookup[action.macro].label + ' / ';
+                        } else {
+                            actionString = actionString + ' - / ';
+                        }
+                        if (action.target_subscribers && action.target_subscribers.length > 0) {
+                            actionString = actionString + _.map(action.target_subscribers, 'name').join(',');
+                        }
+                        return actionString;
+                    }
+                };
 
                 scope.addFetch = function() {
                     if (scope.newFetch.desk && scope.newFetch.stage) {
@@ -1094,6 +1119,7 @@
                     if (scope.newPublish.desk && scope.newPublish.stage) {
                         scope.rule.actions.publish.push(scope.newPublish);
                         scope.newPublish = {};
+                        scope.newPublish.target_subscribers = [];
                     }
                 };
 

@@ -15,9 +15,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
             blockType: attrs && attrs.blockType || 'text',
             embedType: attrs && attrs.embedType || undefined,
             association: attrs && attrs.association || undefined,
-            lowerAddEmbedIsExtented: undefined,
+            lowerAddEmbedIsExtended: undefined,
             showAndFocusLowerAddAnEmbedBox: function() {
-                self.lowerAddEmbedIsExtented = true;
+                self.lowerAddEmbedIsExtended = true;
             },
         });
     }
@@ -243,11 +243,14 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
         */
         insertNewBlock: function(position, attrs, doNotRenderBlocks) {
             var new_block = new Block(attrs);
-            vm.blocks.splice(position, 0, new_block);
-            $timeout(vm.commitChanges);
-            if (!doNotRenderBlocks) {
-                $timeout(vm.renderBlocks);
-            }
+
+            $timeout(function() {
+                vm.blocks.splice(position, 0, new_block);
+                $timeout(vm.commitChanges, 0, false);
+                if (!doNotRenderBlocks) {
+                    $timeout(vm.renderBlocks, 0, false);
+                }
+            });
             return new_block;
         },
         /**

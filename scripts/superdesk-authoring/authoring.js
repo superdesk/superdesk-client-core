@@ -192,9 +192,9 @@
     }
 
     AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-                        'desks', 'superdeskFlags', 'notify', 'session', '$injector'];
+                        'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
     function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-                        notify, session, $injector) {
+                        notify, session, $injector, moment, config) {
         var self = this;
 
         this.limits = {
@@ -258,7 +258,10 @@
 
             session.getIdentity()
                 .then(function(user) {
-                    return api.save('archive_rewrite', {}, {}, item);
+                    var updates = {
+                        desk_id: desks.getCurrentDeskId() || item.task.desk
+                    };
+                    return api.save('archive_rewrite', {}, updates, item);
                 })
                 .then(function(new_item) {
                     notify.success(gettext('Update Created.'));
@@ -284,19 +287,6 @@
         this.close = function closeAuthoring(diff, orig, isDirty, closeItem) {
             var promise = $q.when();
             if (this.isEditable(diff)) {
-                //content item just created and no change -> it will be deleted
-                if (!isDirty && orig.state === 'draft' && orig._current_version === 1) {
-
-                    promise = confirm.confirmClose()
-                        .then(angular.bind(this, function save() {
-                            //force a fake change
-                            diff.body_html = (diff.body_html || orig.body_html || '') + ' ';
-                            return this.save(orig, diff);
-                        }), function() { // ignore saving
-                            return $q.when('ignore');
-                        });
-                }
-
                 if (isDirty) {
                     if (!_.contains(['published', 'corrected'], orig.state)) {
                         promise = confirm.confirm()
@@ -444,7 +434,9 @@
             if (_.size(diff) > 0) {
                 return api.save('archive', item, diff).then(function(_item) {
                     item._autosave = null;
+                    item._autosaved = false;
                     item._locked = lock.isLocked(item);
+                    $injector.get('authoringWorkspace').update(item);
                     return item;
                 });
             } else {
@@ -617,7 +609,9 @@
 
             action.re_write = !is_read_only_state && _.contains(['text'], current_item.type) &&
                 !current_item.embargo && !current_item.rewritten_by && action.new_take &&
-                (!current_item.broadcast || !current_item.broadcast.master_id);
+                (!current_item.broadcast || !current_item.broadcast.master_id) &&
+                (!current_item.rewrite_of || (current_item.rewrite_of && this.isPublished(current_item)));
+            var re_write = action.re_write;
 
             action.resend = _.contains(['text'], current_item.type) && !current_item.rewritten_by &&
                 _.contains(['published', 'corrected', 'killed'], current_item.state);
@@ -651,6 +645,8 @@
                 var desk = _.find(self.userDesks, {'_id': current_item.task.desk});
                 if (!desk) {
                     action = angular.extend({}, DEFAULT_ACTIONS);
+                    // user can action `update` even if the user is not a member.
+                    action.re_write = re_write;
                 }
             } else {
                 // personal
@@ -672,6 +668,47 @@
         this.isTakeItem = function(item) {
             return (_.contains(['text'], item.type) &&
                 item.takes && item.takes.sequence > 1);
+        };
+
+        /**
+         * Validate schedule
+         *
+         * should be both valid date and time and it should be some time in future
+         *
+         * @param {String} datePart
+         * @param {String} timePart
+         * @param {String} timestamp datePart + T + timepart
+         * @param {String} timezone
+         * @return {Object}
+         */
+        this.validateSchedule = function(datePart, timePart, timestamp, timezone) {
+            function errors(key) {
+                var _errors = {};
+                _errors[key] = 1;
+                return _errors;
+            }
+
+            if (!datePart) {
+                return errors('date');
+            }
+
+            if (!timePart) {
+                return errors('time');
+            }
+
+            var now = moment();
+            var schedule = moment.tz(
+                timestamp.replace('+0000', ''), // in case timestamp made it to server, it will be with tz, ignore it
+                timezone || config.defaultTimezone
+            );
+
+            if (!schedule.isValid()) {
+                return errors('timestamp');
+            }
+
+            if (schedule.isBefore(now)) {
+                return errors('future');
+            }
         };
     }
 
@@ -797,19 +834,6 @@
             return modal.confirm(
                 gettextCatalog.getString('There are some unsaved changes, do you want to save it now?'),
                 gettextCatalog.getString('Save changes?'),
-                gettextCatalog.getString('Save'),
-                gettextCatalog.getString('Ignore'),
-                gettextCatalog.getString('Cancel')
-            );
-        };
-
-        /**
-         * In case the item version has just been created the user is asked if wants to save the document.
-         */
-        this.confirmClose = function confirm() {
-            return modal.confirm(
-                gettextCatalog.getString('Do you want to save newly created content item?'),
-                gettextCatalog.getString('Save content item?'),
                 gettextCatalog.getString('Save'),
                 gettextCatalog.getString('Ignore'),
                 gettextCatalog.getString('Cancel')
@@ -997,10 +1021,11 @@
         'confirm',
         'reloadService',
         '$rootScope',
-        'config'
+        '$interpolate'
     ];
     function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
-        privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope, config) {
+        privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope,
+        $interpolate) {
         return {
             link: function($scope, elem, attrs) {
                 var _closing;
@@ -1172,28 +1197,37 @@
                  *         Otherwise empty string.
                  */
                 function validateTimestamp(datePartOfTS, timePartOfTS, timestamp, timezone, fieldName) {
-                    var errorMessage = '';
+                    var errors = authoring.validateSchedule(
+                        datePartOfTS,
+                        timePartOfTS,
+                        timestamp,
+                        timezone,
+                        fieldName
+                    );
 
-                    if (datePartOfTS && !timePartOfTS) {
-                        errorMessage = gettext(fieldName + ' time is invalid!');
-                    } else if (timePartOfTS && !datePartOfTS) {
-                        errorMessage = gettext(fieldName + ' date is invalid!');
+                    if (!errors) {
+                        return;
                     }
 
-                    if (errorMessage === '' && timestamp) {
-                        var schedule = moment.tz(timestamp, timezone || config.defaultTimezone);
-                        var now = moment();
-
-                        if (!schedule.isValid()) {
-                            errorMessage = gettext(fieldName + ' is not a valid date!');
-                        } else if (schedule.isBefore(now)) {
-                            if (fieldName !== 'Embargo' || $scope._isInProductionStates) {
-                                errorMessage = gettext(fieldName + ' cannot be earlier than now!');
-                            }
-                        }
+                    function fieldErr(err) {
+                        return $interpolate(err)({field: fieldName});
                     }
 
-                    return errorMessage;
+                    if (errors.date) {
+                        return fieldErr(gettext('{{ field }} date is required!'));
+                    }
+
+                    if (errors.time) {
+                        return fieldErr(gettext('{{ field }} time is required!'));
+                    }
+
+                    if (errors.timestamp) {
+                        return fieldErr(gettext('{{ field }} is not a valid date!'));
+                    }
+
+                    if (errors.future && fieldName !== 'Embargo' || $scope._isInProductionStates) {
+                        return fieldErr(gettext('{{ field }} cannot be earlier than now!'));
+                    }
                 }
 
                 /**
@@ -1209,9 +1243,11 @@
 
                     var errorMessage;
                     if (item.embargo_date || item.embargo_time) {
-                        errorMessage = validateTimestamp(item.embargo_date, item.embargo_time, item.embargo,
-                            item.schedule_settings ? item.schedule_settings.time_zone : null, 'Embargo');
-                        if (errorMessage !== '') {
+                        errorMessage = validateTimestamp(
+                            item.embargo_date, item.embargo_time, item.embargo,
+                            item.schedule_settings ? item.schedule_settings.time_zone : null,
+                            gettext('Embargo'));
+                        if (errorMessage) {
                             notify.error(errorMessage);
                             return false;
                         }
@@ -1222,9 +1258,11 @@
                             return true;
                         }
 
-                        errorMessage = validateTimestamp(item.publish_schedule_date, item.publish_schedule_time,
-                            item.publish_schedule, item.schedule_settings ? item.schedule_settings.time_zone : null, 'Publish Schedule');
-                        if (errorMessage !== '') {
+                        errorMessage = validateTimestamp(
+                            item.publish_schedule_date, item.publish_schedule_time,
+                            item.publish_schedule, item.schedule_settings ? item.schedule_settings.time_zone : null,
+                            gettext('Publish Schedule'));
+                        if (errorMessage) {
                             notify.error(errorMessage);
                             return false;
                         }
@@ -1534,7 +1572,7 @@
                 $scope.$on('item:publish:wrong:format', function(_e, data) {
                     if (data.item === $scope.item._id) {
                         notify.error(gettext('No formatters found for ') + data.formats.join(',') +
-                            ' while publishing item having story name ' + data.unique_name);
+                            ' while publishing item having unique name ' + data.unique_name);
                     }
                 });
 
@@ -1558,8 +1596,8 @@
         };
     }
 
-    AuthoringTopbarDirective.$inject = ['keyboardManager'];
-    function AuthoringTopbarDirective(keyboardManager) {
+    AuthoringTopbarDirective.$inject = [];
+    function AuthoringTopbarDirective() {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/authoring-topbar.html',
             link: function(scope) {
@@ -1597,9 +1635,10 @@
         // remove embeds by using the comments around them. Embeds don't matter for word counters
         .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
         .replace(/<br[^>]*>/gi, '&nbsp;')
-        .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
+        .replace(/<\/?[^>]+><\/?[^>]+>/gi, '')
         .replace(/<\/?[^>]+>/gi, '').trim()
-        .replace(/&nbsp;/g, ' ');
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s\s+/g, ' ');
     };
 
     CharacterCount.$inject = [];
@@ -2392,7 +2431,7 @@
                             _.extend(item, updates);
                         }
                         if (autopopulateByline && !item.byline) {
-                            item.byline = $interpolate(gettext('by {{ display_name }}'))({display_name: session.identity.display_name});
+                            item.byline = $interpolate(gettext('By {{ display_name }}'))({display_name: session.identity.display_name});
                         }
                     }
                 });
@@ -3115,6 +3154,13 @@
             if (self.item) {
                 self.item._autosaved = true;
             }
+        };
+
+        /*
+         * Updates current item
+         */
+        this.update = function(item) {
+            self.item = item;
         };
 
         /**

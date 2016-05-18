@@ -592,12 +592,13 @@
                                 }
                             }
 
-                            return this.getHighlightStatuses(itemHighlights, this.props.item);
+                            return itemHighlights;
                         },
 
                         render: function() {
                             var highlights = this.getHighlights();
-                            var highlightsLength = _.keys(highlights).length;
+                            var highlightsLength = highlights.length;
+                            var highlightsStatus = this.getHighlightStatuses(highlights, this.props.item);
 
                             var highlightId = _.keys(highlights)[0];
                             if ($location.path() === '/workspace/highlights') {
@@ -620,8 +621,8 @@
                                             className: classNames({
                                                 'icon-star red': highlightsLength === 1,
                                                 'icon-multi-star red': highlightsLength > 1,
-                                                'icon-star gray': highlightsLength === 1 && !highlights[highlightId],
-                                                'icon-multi-star gray': highlightsLength > 1 && !highlights[highlightId],
+                                                'icon-star gray': highlightsLength === 1 && !highlightsStatus[highlightId],
+                                                'icon-multi-star gray': highlightsLength > 1 && !highlightsStatus[highlightId],
                                             })
                                         })
                                     )
@@ -693,6 +694,15 @@
                                 .then(function(fetchedDesks) {
                                     this.setState({desks: fetchedDesks});
                                 }.bind(this));
+                        },
+
+                        componentDidUpdate: function(prevProps, prevState) {
+                            if (prevProps.item !== this.props.item) {
+                                familyService.fetchDesks(this.props.item, false)
+                                .then(function(fetchedDesks) {
+                                    this.setState({desks: fetchedDesks});
+                                }.bind(this));
+                            }
                         },
 
                         formatDeskName: function(name) {
@@ -838,6 +848,7 @@
                             closeActionsMenu();
                             var icon = ReactDOM.findDOMNode(this)
                                 .getElementsByClassName('icon-dots-vertical')[0];
+
                             renderToBody(this.renderMenu(), icon);
                         },
 

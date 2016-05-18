@@ -1,11 +1,14 @@
 (function() {
     'use strict';
 
-    function SuperdeskFlagsService() {
+    SuperdeskFlagsService.$inject = ['config'];
+    function SuperdeskFlagsService(config) {
         this.flags = {
             menu: false,
             notifications: false
         };
+
+        angular.extend(this.flags, config.ui);
     }
 
     angular.module('superdesk.menu', [

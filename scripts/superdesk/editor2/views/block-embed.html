@@ -13,11 +13,13 @@
     <!-- <a class="btn btn-default btn-small" ng-click="vm.toggleEdition()" translate>Edit the code</a> -->
 </div>
 <div class="editor--caption">
-    <input sd-remove-tags
+    <div sd-remove-tags
         placeholder="{{::'Caption'|translate}}"
         type="text"
         ng-model="vm.caption"
         ng-model-options="{debounce: 1000}"
         ng-change="vm.saveCaption(vm.caption)"
-        class="image-caption">
+        contenteditable="true"
+        class="image-caption contenteditable-input">
+    </div>
 </div>

@@ -851,11 +851,12 @@ function MetaLocatorsDirective() {
     };
 }
 
-MetadataService.$inject = ['api', '$q', 'adminPublishSettingsService'];
-function MetadataService(api, $q, adminPublishSettingsService) {
+MetadataService.$inject = ['api', '$q', 'subscribersService', 'config'];
+function MetadataService(api, $q, subscribersService, config) {
     var service = {
         values: {},
         cvs: [],
+        search_cvs: config.search_cvs || [{'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'}],
         subjectScope: null,
         loaded: null,
         fetchMetadataValues: function() {
@@ -878,8 +879,8 @@ function MetadataService(api, $q, adminPublishSettingsService) {
         fetchSubscribers: function() {
             var self = this;
             self.values.customSubscribers = [];
-            return adminPublishSettingsService.fetchSubscribers().then(function(items) {
-                _.each(items._items, function(item) {
+            return subscribersService.fetchActiveSubscribers().then(function(items) {
+                _.each(items, function(item) {
                     self.values.customSubscribers.push({'_id': item._id, 'name': item.name});
                 });
             });
@@ -896,22 +897,23 @@ function MetadataService(api, $q, adminPublishSettingsService) {
             }
 
             var self = this,
-                tempItem = {},
-                subjectCodesArray = self.subjectScope.item[self.subjectScope.field],
-                filteredArray = _.without(subjectCodesArray, term);
+                tempItem = {};
 
-            if (filteredArray.length === subjectCodesArray.length) {
-                _.remove(filteredArray, {name: term});
-            }
+            angular.forEach(this.search_cvs || [], function(cv) {
+                if (term == null) { // clear subject scope
+                    self.subjectScope.item[cv.id].length = 0;
+                } else {
+                    var subjectCodesArray = self.subjectScope.item[cv.id],
+                        filteredArray = _.without(subjectCodesArray, term);
 
-            tempItem[self.subjectScope.field] = filteredArray;
+                    if (filteredArray.length === subjectCodesArray.length) {
+                        _.remove(filteredArray, {name: term});
+                    }
+                    tempItem[cv.id] = filteredArray;
+                }
+            });
 
             _.extend(self.subjectScope.item, tempItem);
-
-            if (term == null) { // clear subject scope
-                self.subjectScope.item.subject.length = 0;
-            }
-
             self.subjectScope.change({item: self.subjectScope.item});
         },
         fetchCities: function() {

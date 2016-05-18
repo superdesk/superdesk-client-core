@@ -89,10 +89,9 @@ function SpellcheckService($q, api, dictionaries) {
      *
      * @param {string} textContent
      * @param {integer} currentOffset
-     * @return {Array.<Object>} Array of Object:
+     * @return {Object} - list of non sentence words.
      *     {
-     *       word,
-     *       index
+     *       index: word
      *     }
      */
     function getNonSentenceWords(textContent, currentOffset) {
@@ -120,10 +119,7 @@ function SpellcheckService($q, api, dictionaries) {
         var reNonSentenceWords = new RegExp(_reNonSentenceWords, 'g');
         while ((match = reNonSentenceWords.exec(textContent)) != null) {
             wordIndex = match.index + match[0].indexOf(_.trim(match[1]));
-            nonSentenceWords.push({
-                word: _.trim(match[1]),
-                index: currentOffset + wordIndex
-            });
+            nonSentenceWords[currentOffset + wordIndex] = _.trim(match[1]);
         }
 
         return nonSentenceWords;
@@ -135,69 +131,73 @@ function SpellcheckService($q, api, dictionaries) {
      *
      * @param {string} textContent
      * @param {integer} currentOffset
-     * @return {Array.<Object>} Array of Object:
+     * @return {Object} - list of sentence words.
      *     {
-     *       word,
-     *       index
+     *       index: word
      *     }
      */
     function getSentenceWords(textContent, currentOffset) {
-        var reSentenceWords = /(?:^|(?:[.|?|!]\s+))(\w+)/g; // words come after by .|?|!
+        var reSentenceWords = /(?:^\s*|(?:[.|?|!|:]\s*))(\w+)/g; // words come after by .|?|!|:
         var match, wordIndex;
-        var sentenceWords = [];
-        while ((match = reSentenceWords.exec(textContent)) != null) {
+        var sentenceWords = {};
+        // Replace quotes (",“,”,‘,’,'), that might occur at start/end of sentence/paragraph before applying regex.
+        while ((match = reSentenceWords.exec(textContent.replace(/["“”‘’']/g, ' '))) != null) {
             wordIndex = match.index + match[0].indexOf(match[1]);
-            sentenceWords.push({
-                word: match[1],
-                index: currentOffset + wordIndex
-            });
+            sentenceWords[currentOffset + wordIndex] = match[1];
         }
 
         // Excluding the words from sentence word if come after an abbreviation.
         var nonSentenceWords = getNonSentenceWords(textContent, currentOffset);
 
-        _.forEach(nonSentenceWords, function(nonSentenceWord) {
-            _.remove(sentenceWords, {index: nonSentenceWord.index, word: nonSentenceWord.word});
-        });
+        sentenceWords = _.omit(sentenceWords, Object.keys(nonSentenceWords));
 
         return sentenceWords;
     }
 
-    // Case in-sensitive search if 'i' option provided.
+    /**
+     * Test if word exists in dictionary
+     *
+     * @param {String} word
+     * @param {Boolean} i - if true tests case in-sensitive
+     * @return {Boolean}
+     */
     function wordExistInDict(word, i) {
-        var result = {};
         if (i) {
-            result = _.pick(dict.content, function(value, key) {
-                return key.toLowerCase() === word.toLowerCase();
+            var lowerCaseWord = word.toLowerCase();
+            return _.find(Object.keys(dict.content), function(val) {
+                return val.toLowerCase() === lowerCaseWord;
             });
         } else {
-            result = _.pick(dict.content, function(value, key) {
-                return key === word;
-            });
-        }
-        return !_.isEmpty(result);
-    }
-
-    // Verify if the word exist in dictionary and the first letter is capital in case of sentence word.
-    function verifyDictWord(word, index, objSentenceWord) {
-        if (index === 0) {
-            if (!isFirstLetterCapital(word)) {
-                return false;
-            } else {
-                return wordExistInDict(word, 'i');
-            }
-        } else {
-            if (!_.isEmpty(objSentenceWord)) {
-                if (isFirstLetterCapital(objSentenceWord[0].word)) {
-                    return wordExistInDict(word, 'i');
-                } else {
-                    return false;
-                }
-            }
             return dict.content[word];
         }
     }
 
+    /**
+     * Test if word is a spelling mistake
+     *
+     * @param {String} word
+     * @param {Boolean} sentenceWord - it's first word in a sentence
+     * @return {Boolean}
+     */
+    function isSpellingMistake(word, sentenceWord) {
+        if (sentenceWord && !isFirstLetterCapital(word)) {
+            return true; // first word in sentence should be capital
+        } else if (sentenceWord && isFirstLetterCapital(word)) {
+            // first word, maybe it is in dict with capital, maybe not, check both
+            var lowercase = word[0].toLowerCase() + word.slice(1);
+            return !wordExistInDict(word) && !wordExistInDict(lowercase);
+        }
+
+        // check it as it is
+        return !wordExistInDict(word);
+    }
+
+    /**
+     * Test if first letter of word is uppercase
+     *
+     * @param {String} word
+     * @return {Boolean}
+     */
     function isFirstLetterCapital(word) {
         return word[0] === word[0].toUpperCase();
     }
@@ -215,14 +215,13 @@ function SpellcheckService($q, api, dictionaries) {
                 currentOffset = 0,
                 tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
 
+            var objSentenceWords = getSentenceWords(node.textContent, currentOffset);
+
             while (tree.nextNode()) {
-                var objSentenceWords = getSentenceWords(tree.currentNode.textContent, currentOffset);
                 while ((match = regexp.exec(tree.currentNode.textContent)) != null) {
                     var word = match[0];
-                    var objSentenceWord = _.filter(objSentenceWords, {index: currentOffset + match.index});
-                    var isSentenceWord = match.index === 0 ? true : !_.isEmpty(objSentenceWord);
-
-                    if (isNaN(word) && !verifyDictWord(word, match.index, objSentenceWord)) {
+                    var isSentenceWord = !!objSentenceWords[currentOffset + match.index];
+                    if (isNaN(word) && isSpellingMistake(word, isSentenceWord)) {
                         errors.push({
                             word: word,
                             index: currentOffset + match.index,

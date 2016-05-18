@@ -3,9 +3,6 @@
 
 describe('superdesk ui', function() {
 
-    beforeEach(module('superdesk.ui'));
-    beforeEach(module('superdesk.templates-cache'));
-
     beforeEach(module(function($provide) {
         $provide.constant('config', {
             model: {
@@ -20,6 +17,9 @@ describe('superdesk ui', function() {
             server: {url: undefined}
         });
     }));
+
+    beforeEach(module('superdesk.ui'));
+    beforeEach(module('superdesk.templates-cache'));
 
     var datetimeHelper;
 
@@ -223,5 +223,12 @@ describe('superdesk ui', function() {
                 expect(isoScope.timezone).not.toBeDefined();
             });
         });
+    });
+
+    describe('default ui config', function() {
+        it('ui.italicAbstract is on', inject(function(config) {
+            expect(config.ui).toBeDefined();
+            expect(config.ui.italicAbstract).toBeTruthy();
+        }));
     });
 });

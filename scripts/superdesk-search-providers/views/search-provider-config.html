@@ -56,7 +56,7 @@
 
                 <div class="field" ng-if="provider.search_provider !== 'scanpix'">
                     <label for="provider-source" translate>Source</label>
-                    <input type="text" id="provider-source" placeholder="source of the search provider" ng-model="provider.source" required>
+                    <input type="text" id="provider-source" placeholder="{{ 'source of the search provider' | translate }}" ng-model="provider.source" required>
                 </div>
 
                 <div class="field" ng-if="provider.search_provider === 'scanpix'">

@@ -47,26 +47,42 @@
         $scope.showFilterConditions  = Boolean(user_privileges.publish_filters);
     }
 
-    AdminPublishSettingsService.$inject = ['api', '$q', '$filter'];
-    function AdminPublishSettingsService(api, $q, $filter) {
-        var _fetch = function(endpoint, criteria) {
-            return api[endpoint].query(criteria);
+    SubscribersService.$inject = ['api', '$q', '$filter'];
+    function SubscribersService(api, $q, $filter) {
+        /**
+         * Recursively returns all subscribers
+         *
+         * @return {*}
+         */
+        var _getAllSubscribers = function(criteria, page, subscribers) {
+            page = page || 1;
+            subscribers = subscribers || [];
+            criteria = criteria || {};
+
+            return api.query('subscribers', _.extend({max_results: 200, page: page}, criteria))
+            .then(function(result) {
+                subscribers = subscribers.concat(result._items);
+                if (result._links.next) {
+                    page++;
+                    return _getAllSubscribers(criteria, page, subscribers);
+                }
+                return $filter('sortByName')(subscribers);
+            });
         };
 
         var service = {
             fetchSubscribers: function(criteria) {
-                criteria = criteria || {};
-                return _fetch('subscribers', criteria);
+                return _getAllSubscribers(criteria);
+            },
+
+            fetchActiveSubscribers: function(criteria) {
+                return _getAllSubscribers(criteria).then(function(result) {
+                    return _.filter(result, {'is_active': true});
+                });
             },
 
             fetchSubscribersByKeyword: function(keyword) {
-                return this.fetchSubscribers({
-                    where: JSON.stringify({
-                        '$or': [
-                            {name: {'$regex': keyword, '$options': '-i'}}
-                        ]
-                    })
-                });
+                return this.fetchSubscribers({'$or': [{name: {'$regex': keyword, '$options': '-i'}}]});
             },
 
             fetchSubscribersByIds: function(ids) {
@@ -74,11 +90,20 @@
                 _.each(ids, function(id) {
                     parts.push({_id: id});
                 });
-                return this.fetchSubscribers({
-                    where: JSON.stringify({'$or': parts})
-                });
-            },
+                return this.fetchSubscribers({'$or': parts});
+            }
+        };
 
+        return service;
+    }
+
+    AdminPublishSettingsService.$inject = ['api'];
+    function AdminPublishSettingsService(api) {
+        var _fetch = function(endpoint, criteria) {
+            return api[endpoint].query(criteria);
+        };
+
+        var service = {
             fetchPublishErrors: function() {
                 var criteria = {'io_type': 'publish'};
                 return _fetch('io_errors', criteria);
@@ -122,8 +147,8 @@
         $scope.reload ();
     }
 
-    PublishQueueController.$inject = ['$scope', 'adminPublishSettingsService', 'api', '$q', 'notify', '$location'];
-    function PublishQueueController($scope, adminPublishSettingsService, api, $q, notify, $location) {
+    PublishQueueController.$inject = ['$scope', 'subscribersService', 'api', '$q', 'notify', '$location'];
+    function PublishQueueController($scope, subscribersService, api, $q, notify, $location) {
         $scope.subscribers = null;
         $scope.subscriberLookup = {};
         $scope.publish_queue = [];
@@ -145,9 +170,9 @@
 
         var promises = [];
 
-        promises.push(adminPublishSettingsService.fetchSubscribers().then(function(items) {
-            $scope.subscribers = items._items;
-            _.each(items._items, function(item) {
+        promises.push(subscribersService.fetchSubscribers().then(function(items) {
+            $scope.subscribers = items;
+            _.each(items, function(item) {
                 $scope.subscriberLookup[item._id] = item;
             });
         }));
@@ -389,11 +414,11 @@
     }
 
     SubscribersDirective.$inject = [
-        'gettext', 'notify', 'api', 'adminPublishSettingsService', 'modal',
+        'gettext', 'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
         'metadata', 'contentFilters', '$q', '$filter', 'products'
     ];
     function SubscribersDirective(
-        gettext, notify, api, adminPublishSettingsService,
+        gettext, notify, api, subscribersService, adminPublishSettingsService,
         modal, metadata, contentFilters, $q, $filter, products) {
 
         return {
@@ -419,9 +444,8 @@
                  * Fetches all subscribers from backend
                  */
                 function fetchSubscribers() {
-                    adminPublishSettingsService.fetchSubscribers().then(
+                    subscribersService.fetchSubscribers().then(
                         function(result) {
-                            result._items = $filter('sortByName')(result._items);
                             $scope.subscribers = result;
                         }
                     );
@@ -625,6 +649,7 @@
 
     app
         .service('adminPublishSettingsService', AdminPublishSettingsService)
+        .service('subscribersService', SubscribersService)
         .directive('sdAdminPubSubscribers', SubscribersDirective)
         .directive('sdDestination', DestinationDirective)
         .controller('publishQueueCtrl', PublishQueueController);
@@ -643,7 +668,6 @@
                 .activity('/publish_queue', {
                     label: gettext('Publish Queue'),
                     templateUrl: 'scripts/superdesk-publish/views/publish-queue.html',
-                    topTemplateUrl: 'scripts/superdesk-dashboard/views/workspace-topnav.html',
                     sideTemplateUrl: 'scripts/superdesk-workspace/views/workspace-sidenav.html',
                     controller: PublishQueueController,
                     category: superdesk.MENU_MAIN,

@@ -85,13 +85,60 @@ describe('spellcheck', function() {
         $rootScope.$digest();
         expect(errors.length).toBe(0);
 
-        // now test if existing word starts with small letter
+        // now test if existing word starts with small letter.
         p = createParagraph('foo what');
 
         spellcheck.errors(p).then(assignErrors);
         $rootScope.$digest();
         expect(errors.length).toBe(1);
         expect(errors).toContain({word: 'foo', index: 0, sentenceWord: true});
+    }));
+
+    it('can report error if word comes after .|?|!|: (i.e, after : or at new sentence) starts with small letter',
+    inject(function(spellcheck, api, $rootScope) {
+        // Test with existing words in dictionary
+        var p = createParagraph('Foo what? Foo is foo. Foo is foo! What foo: Foo?');
+
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(0);
+
+        // now test if existing word comes after .|?|!|: starts with small letter.
+        p = createParagraph('Foo what? foo is foo. foo is foo! what foo: foo?');
+
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(4);
+    }));
+
+    it('can report error for sentences beginning with any quotes and starts with small letter',
+    inject(function(spellcheck, api, $rootScope) {
+        // Test with existing words in dictionary.
+        var p = createParagraph('"Foo what."');
+
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(0);
+
+        // now test if existing word starts with small letter within quotes.
+        p = createParagraph('"foo what."');
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(1);
+        expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
+
+        // now test if different variety of quote (“ ” or ' ') is used at beginning.
+        p = createParagraph('“foo what.”');
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(1);
+        expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
+
+        p = createParagraph('\'foo what.\'');
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(1);
+        expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
     }));
 
     it('can suggest', inject(function(spellcheck, api, $q) {

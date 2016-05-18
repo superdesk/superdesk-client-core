@@ -13,8 +13,13 @@
 
     function notifySaveError(response, notify) {
         if (angular.isDefined(response.data._issues) &&
-            angular.isDefined(response.data._issues['validator exception'])) {
+                angular.isDefined(response.data._issues['validator exception'])) {
             notify.error(gettext('Error: ' + response.data._issues['validator exception']));
+
+        } else if (angular.isDefined(response.data._issues) &&
+                angular.isDefined(response.data._issues.template_name)) {
+            notify.error(gettext('Error: ' + response.data._issues.template_name));
+
         } else if (angular.isDefined(response.data._message)) {
             notify.error(gettext(response.data._message));
         } else {
@@ -338,7 +343,7 @@
 
                 // fetch all desks for the current user and add them to
                 // the list of filters.
-                desks.fetchCurrentUserDesks().then(function(desks) {
+                desks.fetchDesks().then(function(desks) {
                     $scope.filters = $scope.filters.concat(
                         desks._items.map(function(d) {
                             return {label: d.name, value: d._id};
@@ -355,7 +360,8 @@
      * @description Returns a function that allows filtering an array of
      * templates by various criteria.
      */
-    function FilterTemplatesFilter() {
+    FilterTemplatesFilter.$inject = ['session'];
+    function FilterTemplatesFilter(session) {
         /**
          * @description Returns a new array based on the passed filter.
          * @param {Array<Object>} all - Array of templates to filter.
@@ -374,7 +380,7 @@
                     case 'None':
                         return item.is_public && typeof item.template_desk === 'undefined';
                     case 'Personal':
-                        return !item.is_public;
+                        return !item.is_public && item.user === session.identity._id;
                     default:
                         return item.template_desk === f.value;
                 }

@@ -1,19 +1,15 @@
 <div class="subnav">
-
-    <h3 class="page-nav-title" translate>Users</h3>
-
-    <div class="button-stack right-stack">
+    <h3 class="subnav__page-title" translate>Users</h3>
+    <div class="subnav__button-stack--square-buttons">
         <button class="navbtn sd-create-btn" ng-click="createUser()"></button>
     </div>
 </div>
 
 <section class="main-section users">
-
     <div class="preview-layout" ng-class="{closed: !selected.user}">
         <div class="list-pane">
             <header>
-                <div sd-searchbar></div>
-                <div class="separator-handler"></div>
+                <div class="pull-left" sd-searchbar></div>
                 <div class="online-users">
                     <p><span sd-check ng-model="online_users" name="online_users" id="online_users"></span></p>
                     <label translate>show only online users</label>

@@ -28,6 +28,7 @@
         this.getActiveId = readActiveWorkspaceId;
         this.readActive = readActiveWorkspace;
         this.queryUserWorkspaces = queryUserWorkspaces;
+        this.isCustom = isCustom;
 
         var PREFERENCE_KEY = 'workspace:active',
             RESOURCE = 'workspaces',
@@ -94,6 +95,15 @@
         function updateActive(workspace) {
             self.active = workspace || null;
             return workspace;
+        }
+
+        /**
+         * Returns true if the workspace is custom (not a desk).
+         *
+         * @return {bool}
+         */
+        function isCustom() {
+            return angular.isDefined(self.workspaceType) && self.workspaceType === 'workspace';
         }
 
         /**

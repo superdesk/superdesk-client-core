@@ -56,6 +56,7 @@
 
                 promise[key] = api('highlights').query(criteria)
                     .then(function(result) {
+                        setLabel(result._items);
                         cache.put(key, result);
                         promise[key] = null;
                         return $q.when(result);
@@ -64,6 +65,12 @@
                 return promise[key];
             }
         };
+
+        function setLabel(objItems) {
+            _.forEach(objItems, function (item) {
+                item.label = item.desks.length ? item.name : item.name + ' ' + gettext('(Global)');
+            });
+        }
 
         /**
          * Clear user cache
@@ -197,6 +204,7 @@
             templateUrl: 'scripts/superdesk-highlights/views/mark_highlights_dropdown_directive.html',
             link: function(scope) {
 
+                scope.multiMark = true;
                 scope.markItem = function(highlight) {
                     angular.forEach(multi.getItems(), function(item) {
                         item.multiSelect = true;
@@ -354,7 +362,7 @@
     function HighlightLabelDirective(desks, highlightsService) {
         return {
             scope: {highlight_id: '=highlight', totalItems: '=total'},
-            template: '<span translate>{{ highlightItem.name }} ({{ totalItems }} items)</span>',
+            template: '<span translate>{{ highlightItem.label }} ({{ totalItems }} items)</span>',
             link: function(scope) {
                 highlightsService.get(desks.getCurrentDeskId()).then(function(result) {
                     scope.highlightItem =  _.find(result._items, {_id: scope.highlight_id});
@@ -560,7 +568,7 @@
                             'button',
                             {disabled: isMarked, onClick: this.markHighlight},
                             React.createElement('i', {className: 'icon-star'}),
-                            highlight.name
+                            highlight.label
                         );
                     }
                 });

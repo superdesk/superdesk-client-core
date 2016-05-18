@@ -28,7 +28,7 @@
             restrict: 'A',
             replace: true,
             transclude: true,
-            scope: {widget: '=', save: '&'},
+            scope: {widget: '=', save: '&', configurable: '='},
             link: function(scope, element, attrs) {
                 scope.openConfiguration = function () {
                     $modal.open({

@@ -359,12 +359,12 @@
                 template: '{{ name }}',
                 link: function(scope) {
                     scope.$watch('item', renderIngest);
-                    scope.name = scope.item.source;
-
                     function renderIngest() {
                         ingestSources.initialize().then(function() {
                             if (scope.item.ingest_provider && scope.item.ingest_provider in ingestSources.providersLookup) {
                                 scope.name = ingestSources.providersLookup[scope.item.ingest_provider].name;
+                            } else {
+                                scope.name = '';
                             }
                         });
                     }
@@ -417,52 +417,40 @@
                 templateUrl: 'scripts/superdesk-archive/views/item-rendition.html',
                 scope: {
                     item: '=',
-                    rendition: '@',
-                    ratio: '=?'
+                    rendition: '@'
                 },
-                link: function(scope, elem) {
+                link: function(scope, elem, attrs) {
                     scope.$watch('item.renditions[rendition].href', function(href) {
                         var figure = elem.find('figure'),
                             oldImg = figure.find('img').css('opacity', 0.5),
                             previewHover = '<div class="preview-overlay"><i class="icon-fullscreen"></i></div>';
                         if (href) {
                             var img = new Image();
+
                             img.onload = function() {
                                 if (oldImg.length) {
                                     oldImg.replaceWith(img);
                                 } else {
                                     figure.html(img);
-                                    figure.append(previewHover);
+                                    if (attrs.ngClick) {
+                                        figure.append(previewHover);
+                                    }
                                 }
-                                _calcRatio();
+
+                                if (img.naturalWidth < img.naturalHeight) {
+                                    elem.addClass('portrait');
+                                } else {
+                                    elem.removeClass('portrait');
+                                }
                             };
 
                             img.onerror = function() {
                                 figure.html('');
                             };
+
                             img.src = href;
                         }
                     });
-
-                    var stopRatioWatch = scope.$watch('ratio', function(val) {
-                        if (val === undefined) {
-                            stopRatioWatch();
-                        }
-                        _.debounce(_calcRatio, 150);
-                    });
-
-                    function _calcRatio() {
-                        var el = elem.find('figure');
-                        if (el && scope.ratio) {
-                            var img = el.find('img')[0];
-                            var ratio = img ? img.naturalWidth / img.naturalHeight : 1;
-                            if (scope.ratio > ratio) {
-                                el.parent().addClass('portrait');
-                            } else {
-                                el.parent().removeClass('portrait');
-                            }
-                        }
-                    }
                 }
             };
         })
@@ -673,8 +661,8 @@
             }
         ])
 
-        .directive('sdResendItem', ['adminPublishSettingsService', 'authoring', 'api', 'notify', 'gettext',
-            function(adminPublishSettingsService, authoring, api, notify, gettext) {
+        .directive('sdResendItem', ['subscribersService', 'authoring', 'api', 'notify', 'gettext',
+            function(subscribersService, authoring, api, notify, gettext) {
                 return {
                     templateUrl: 'scripts/superdesk-archive/views/resend-configuration.html',
                     scope: {item: '='},
@@ -683,10 +671,10 @@
                             scope.selectedSubscribers = {items: []};
 
                             if (item && !scope.customSubscribers) {
-                                adminPublishSettingsService.fetchSubscribers().then(function(items) {
+                                subscribersService.fetchActiveSubscribers().then(function(items) {
                                     scope.customSubscribers = [];
                                     scope.subscribers = items._items;
-                                    _.each(items._items, function(item) {
+                                    _.each(items, function(item) {
                                         scope.customSubscribers.push({'qcode': item._id, 'name': item.name});
                                     });
                                 });

@@ -2,15 +2,15 @@
     <h3 class="page-nav-title"><span translate>Dashboard</span> {{ dashboard.current.name | translate}}</h3>
 
     <div class="button-stack right-stack">
-        <button class="navbtn navbtn--with-text" ng-click="dashboard.edit = true" ng-show="dashboard.widgets.length && !dashboard.edit">
-            <i class="svg-icon-move"></i> <span class="title" translate>Rearrange widgets</span>
+        <button ng-if="configurable" class="navbtn navbtn--with-text" ng-click="dashboard.edit = true" ng-show="dashboard.widgets.length && !dashboard.edit">
+            <i class="icon-move"></i> <span class="title" translate>Rearrange widgets</span>
         </button>
 
         <button class="navbtn navbtn-info" ng-click="dashboard.save()" ng-show="dashboard.edit">
             <i class="svg-icon-ok inverse"></i> <span class="title" translate>Save</span>
         </button>
 
-        <button class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true"></button>
+        <button ng-if="configurable" class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true"></button>
         <div class="dropdown-menu pull-right" sd-multiedit-dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"></div>
         <div class="navbtn dropdown pull-left" dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk">
             <button class="dropdown-toggle" dropdown-toggle>
@@ -47,6 +47,7 @@
             data-status="dashboard.edit"
             data-widgets="dashboard.widgets"
             data-save="dashboard.save()"
+            data-configurable="configurable"
             ></div>
         <div class="empty-dashboard" ng-show="dashboard.widgets.length === 0" translate>Dashboard is empty.</div>
         <div class="empty-dashboard loading" ng-show="dashboard.widgets == null" translate>Loading...</div>

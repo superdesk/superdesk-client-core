@@ -11,7 +11,6 @@ describe('subscribers', function() {
 
         it('list subscriber', function() {
             expect(subscribers.getCount()).toBe(1);
-
             expect(subscribers.getSubscriber('Public API').count()).toBe(1);
         });
     });

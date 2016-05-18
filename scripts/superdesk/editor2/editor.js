@@ -485,7 +485,9 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
             // update the caption in the view
             vm.caption = caption;
             // on change callback
-            vm.onBlockChange();
+            $timeout(function() {
+                vm.onBlockChange();
+            });
         },
         editPicture: function(picture) {
             // only for SD images (with association)
@@ -821,6 +823,13 @@ angular.module('superdesk.editor2', [
                             aria: gettextCatalog.getString('link')
                         });
                         break;
+                    case 'quote':
+                        editorConfig.toolbar.buttons.push({
+                            name: 'quote',
+                            action: 'append-blockquote',
+                            aria: gettextCatalog.getString('quote')
+                        });
+                        break;
                     case 'removeFormat':
                         editorConfig.toolbar.buttons.push({
                             name: 'removeFormat',
@@ -869,7 +878,8 @@ angular.module('superdesk.editor2', [
                             // this dummy imageDragging stop preventing drag & drop events
                             editorConfig.extensions = {'imageDragging': {}};
                             if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
-                                editorConfig.extensions.table = new window.MediumEditorTable();
+                                editorConfig.extensions.table =
+                                new window.MediumEditorTable({aria:gettextCatalog.getString('insert table')});
                             }
                         }
                     }
@@ -1024,19 +1034,23 @@ angular.module('superdesk.editor2', [
                         // set data needed for replacing
                         scope.replaceWord = node.dataset.word;
                         scope.replaceIndex = parseInt(node.dataset.index, 10);
+                        scope.sentenceWord = node.dataset.sentenceWord === 'true';
 
                         spellcheck.suggest(node.textContent).then(function(suggestions) {
-                            scope.suggestions = suggestions;
+                            if (scope.sentenceWord) {
+                                suggestions.push(scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1));
+                                scope.suggestions = _.unique(suggestions);
+                            } else {
+                                scope.suggestions = suggestions;
+                            }
                             scope.replaceTarget = node;
-                            $timeout(function() {
-                                scope.$apply(function() {
-                                    var menu = elem[0].getElementsByClassName('dropdown-menu')[0];
-                                    menu.style.left = (node.offsetLeft) + 'px';
-                                    menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
-                                    menu.style.position = 'absolute';
-                                    scope.openDropdown = true;
-                                });
-                            }, 0, false);
+                            scope.$applyAsync(function() {
+                                var menu = elem[0].getElementsByClassName('dropdown-menu')[0];
+                                menu.style.left = (node.offsetLeft) + 'px';
+                                menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
+                                menu.style.position = 'absolute';
+                                scope.openDropdown = true;
+                            });
                         });
                         return false;
                     }
@@ -1200,7 +1214,7 @@ angular.module('superdesk.editor2', [
             'fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'sam-embed-js\'));</script>',
             '<div class="sam-embed" data-href="embed.samdesk.io/embed/$_ID"></div>'
         ].join('');
-        var samDeskPattern = 'https?://embed.samdesk.io/embed/(.+)';
+        var samDeskPattern = 'https?://embed.samdesk.io/(?:embed|preview)/(.+)';
         embedService.registerHandler({
             name: 'SAMDesk',
             patterns: [samDeskPattern],
@@ -1371,6 +1385,9 @@ function EditorUtilsFactory() {
             span.textContent = replace.textContent;
             span.dataset.word = token.word;
             span.dataset.index = token.index;
+            if (token.sentenceWord) {
+                span.dataset.sentenceWord = 'true';
+            }
             replace.parentNode.replaceChild(span, replace);
         },
 

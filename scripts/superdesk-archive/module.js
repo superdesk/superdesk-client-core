@@ -675,7 +675,7 @@
                 .activity('resend', {
                     label: gettext('Resend item'),
                     priority: 100,
-                    icon: 'broadcast',
+                    icon: 'share-alt',
                     group: 'corrections',
                     controller: ['data', '$rootScope', function(data, $rootScope) {
                         $rootScope.$broadcast('open:resend', data.item);
@@ -809,6 +809,7 @@
             resource.query(criteria).then(function(items) {
                 $scope.loading = false;
                 $scope.items = search.mergeItems(items, $scope.items, next);
+                $scope.total = items._meta.total;
             }, function() {
                 $scope.loading = false;
             });

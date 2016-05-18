@@ -25,11 +25,11 @@
                 var now = moment();
                 var day = now.isoWeekday();
 
-                expect(now.format('hh:mm')).toBe(datetime.shortFormat(now.format()));
+                expect(now.format('HH:mm')).toBe(datetime.shortFormat(now.format()));
 
                 // on monday do tuesday, otherwise day before
                 var week = day === 1 ? now.add(1, 'days') : now.subtract(1, 'days');
-                expect(week.format('dddd, hh:mm')).toBe(datetime.shortFormat(week.format()));
+                expect(week.format('dddd, HH:mm')).toBe(datetime.shortFormat(week.format()));
 
                 var next = now.add(8, 'days');
                 expect(next.format('MM/DD')).toBe(datetime.shortFormat(next.format()));
@@ -45,6 +45,13 @@
             it('can merge date time and tz', inject(function(datetimeHelper) {
                 var merged = datetimeHelper.mergeDateTime('19/04/2016', '15:36:00', 'Europe/Prague');
                 expect(merged).toBe('2016-04-19T15:36:00');
+            }));
+        });
+
+        describe('default shortTimeFormat config', function() {
+            it('shortTimeFormat is in 24h format', inject(function(config) {
+                expect(config.shortTimeFormat).toBeDefined();
+                expect(config.shortTimeFormat).toEqual('HH:mm');
             }));
         });
     });

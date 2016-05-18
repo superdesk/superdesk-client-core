@@ -281,24 +281,25 @@
         $scope.filterWords = function filterWords(search) {
             $scope.words = [];
             $scope.isNew = !!search;
-            var key = search[0].toLowerCase();
-            if (search && (wordsTrie[key])) {
-                var searchWords = wordsTrie[key],
-                    length = searchWords.length,
-                    words = [],
-                    word;
-                for (var i = 0; i < length; i++) {
-                    word = searchWords[i];
-                    if ($scope.dictionary.content[word] > 0 && isPrefix(search, word)) {
-                        words.push(word);
-                        if (word.length === search.length) {
-                            $scope.isNew = false;
+            if (search) {
+                var key = search[0].toLowerCase();
+                if (wordsTrie[key]) {
+                    var searchWords = wordsTrie[key],
+                        length = searchWords.length,
+                        words = [],
+                        word;
+                    for (var i = 0; i < length; i++) {
+                        word = searchWords[i];
+                        if ($scope.dictionary.content[word] > 0 && isPrefix(search, word)) {
+                            words.push(word);
+                            if (word === search) {
+                                $scope.isNew = false;
+                            }
                         }
                     }
+                    words.sort();
+                    $scope.words = words;
                 }
-
-                words.sort();
-                $scope.words = words;
             }
         };
 

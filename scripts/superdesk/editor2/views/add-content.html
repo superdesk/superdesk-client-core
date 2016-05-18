@@ -1,4 +1,4 @@
-<div ng-if="vm.config.embeds" class="add-content" ng-class="{'add-content--expanded': vm.expanded}">
+<div ng-show="vm.config.embeds" class="add-content" ng-class="{'add-content--expanded': vm.expanded}">
     <button class="add-content__plus-btn dropdown-toggle sd-create-btn"
             ng-click="$event.preventDefault(); vm.toogleExpand()">
         <i class="svg-icon-plus"></i>

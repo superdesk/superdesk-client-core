@@ -1,8 +1,8 @@
 (function() {
 'use strict';
 
-angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window', 'config',
-function($window, config) {
+angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window',
+function($window) {
     return {
         // the scope is not isolated because we require the medium instance
         controller: AddContentCtrl,
@@ -14,9 +14,11 @@ function($window, config) {
             var vm = ctrls[0];
             angular.extend(vm, {
                 textBlockCtrl: ctrls[1],
-                sdEditorCtrl: ctrls[2],
-                config: angular.extend({embeds: true}, config.editor || {}) // should be on by default
+                sdEditorCtrl: ctrls[2]
             });
+            if (!vm.config.embeds) {
+                return;
+            }
             // initialize state
             vm.updateState();
             // listen for update state signals
@@ -33,12 +35,13 @@ function($window, config) {
     };
 }]);
 
-AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout'];
-function AddContentCtrl (scope, element, superdesk, editor, $timeout) {
+AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout', 'config'];
+function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
     var elementHolder = element.find('div:first-child').first();
     var vm = this;
     angular.extend(vm, {
         expanded: false,
+        config: angular.extend({embeds: true}, config.editor || {}), // should be on by default
         // update the (+) vertical position on the left and his visibility (hidden/shown)
         updateState: function(event, editorElem) {
             /** Return true if the event come from this directive's element */
@@ -131,12 +134,13 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout) {
                 vm.textBlockCtrl.block.showAndFocusLowerAddAnEmbedBox();
             },
             addPicture: function() {
-                // cut the text that is after the caret in the block and save it in order to add it after the embed later
-                var textThatWasAfterCaret = vm.textBlockCtrl.extractEndOfBlock().innerHTML;
-                // save the blocks (with removed leading text)
-                vm.textBlockCtrl.updateModel();
-                var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.textBlockCtrl.block) + 1;
                 superdesk.intent('upload', 'media').then(function(images) {
+                    // cut the text that is after the caret in the block and save it in order to add it after the embed later
+                    var textThatWasAfterCaret = vm.textBlockCtrl.extractEndOfBlock().innerHTML;
+                    // save the blocks (with removed leading text)
+                    vm.textBlockCtrl.updateModel();
+                    var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.textBlockCtrl.block) + 1;
+
                     images.forEach(function(image, index) {
                         editor.generateImageTag(image).then(function(imgTag) {
                             vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
@@ -150,10 +154,10 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout) {
                         });
                     });
                     // add new text block for the remaining text
-                }).finally(function() {
                     vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
                         body: textThatWasAfterCaret
                     }, true);
+
                 });
             }
         }
