@@ -13,9 +13,18 @@
     <div ng-if="data.type === 'video'"><i class="filetype-icon-large-video"></i></div>
   </div>
 
-  <div class="package-item__item-headline">
-    <div ng-show=":: data.headline || data.slugline || data.description_text">{{ :: data.headline || data.slugline || data.description_text}}</div>
-    <div ng-hide=":: data.headline || data.slugline || data.description_text" translate>Blank headline received</div>
+  <div class="package-item__item-text-group">
+    <div class="package-item__item-headline">
+      <div ng-show=":: data.headline || data.slugline || data.description_text">{{ :: data.headline || data.slugline || data.description_text}}</div>
+      <div ng-hide=":: data.headline || data.slugline || data.description_text" translate>Blank headline received</div>
+    </div>
+
+    <div class="package-item__item-creator">
+      Created <time sd-datetime data-date="item.firstcreated" data-from-now="true"></time>
+	 <span ng-if="userLookup[data.original_creator]" translate>by <b>{{userLookup[data.original_creator].display_name}}</b></span>
+    </div>
+
+    <div class="package-item__item-abstract" ng-if="data.abstract" ng-bind-html="data.abstract"></div>
   </div>
 
   <a ng-if="no_open"
