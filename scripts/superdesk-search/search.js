@@ -236,10 +236,6 @@
                     query.post_filter({terms: {'task.desk': JSON.parse(params.desk)}});
                 }
 
-                if (params.stage) {
-                    query.post_filter({terms: {'task.stage': JSON.parse(params.stage)}});
-                }
-
                 if (params.legal) {
                     query.post_filter({terms: {'flags.marked_for_legal': JSON.parse(params.legal)}});
                 }
@@ -412,11 +408,7 @@
             'priority': 1,
             'source': 1,
             'credit': 1,
-            'day': 1,
-            'week': 1,
-            'month': 1,
             'desk': 1,
-            'stage': 1,
             'genre': 1,
             'legal': 1,
             'sms': 1
@@ -554,13 +546,6 @@
                             _.forEach(selectedDesks, function(selectedDesk) {
                                 tags.selectedFacets[key].push(desks.deskLookup[selectedDesk].name);
                             });
-                        } else if (key === 'stage') {
-                            var stageid = type;
-                            _.forEach(desks.deskStages[desks.getCurrentDeskId()], function(deskStage) {
-                                if (deskStage._id === JSON.parse(stageid)[0]) {
-                                    tags.selectedFacets[key].push(deskStage.name);
-                                }
-                            });
                         } else if (key === 'after') {
 
                             if (type === 'now-24H') {
@@ -641,7 +626,6 @@
                         scope.aggregations = {
                             'type': {},
                             'desk': {},
-                            'stage': {},
                             'date': {},
                             'source': {},
                             'credit': {},
@@ -714,23 +698,7 @@
                                 });
                             }
 
-                            if (angular.isDefined(scope.items._aggregations.day)) {
-                                _.forEach(scope.items._aggregations.day.buckets, function(day) {
-                                    scope.aggregations.date['Last Day'] = day.doc_count;
-                                });
-                            }
-
-                            if (angular.isDefined(scope.items._aggregations.week)) {
-                                _.forEach(scope.items._aggregations.week.buckets, function(week) {
-                                    scope.aggregations.date['Last Week'] = week.doc_count;
-                                });
-                            }
-
-                            _.forEach(scope.items._aggregations.month.buckets, function(month) {
-                                scope.aggregations.date['Last Month'] = month.doc_count;
-                            });
-
-                            if (!scope.desk && angular.isDefined(scope.items._aggregations.stage)) {
+                            if (angular.isDefined(scope.items._aggregations.desk)) {
                                 _.forEach(scope.items._aggregations.desk.buckets, function(desk) {
                                     var lookedUpDesk = desks.deskLookup[desk.key];
 
@@ -747,16 +715,6 @@
                                             count: desk.doc_count,
                                             id: desk.key
                                         };
-                                });
-                            }
-
-                            if (scope.desk && angular.isDefined(scope.items._aggregations.stage)) {
-                                _.forEach(scope.items._aggregations.stage.buckets, function(stage) {
-                                    _.forEach(desks.deskStages[scope.desk._id], function(deskStage) {
-                                        if (deskStage._id === stage.key) {
-                                            scope.aggregations.stage[deskStage.name] = {count: stage.doc_count, id: stage.key};
-                                        }
-                                    });
                                 });
                             }
 
