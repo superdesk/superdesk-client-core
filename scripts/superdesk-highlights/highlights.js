@@ -397,7 +397,7 @@
             $scope.desks = desks.deskLookup;
         });
 
-        api.query('content_templates', {'template_type': 'highlights'}).then(function(result) {
+        api.query('content_templates', {where: {'template_type': 'highlights'}}).then(function(result) {
             $scope.templates = result._items || [];
         });
 
