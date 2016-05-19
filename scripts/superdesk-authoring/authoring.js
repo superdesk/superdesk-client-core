@@ -814,6 +814,9 @@
             };
         };
 
+        // Flag to set for instant checking if $scope is dirty for current item
+        this.dirty = null;
+
         /**
          * Called from workqueue in case of unsaved changes.
          */
@@ -1502,6 +1505,7 @@
                 };
 
                 $scope.save_enabled = function() {
+                    confirm.dirty = $scope.dirty;
                     return $scope.dirty || $scope.item._autosave;
                 };
 
