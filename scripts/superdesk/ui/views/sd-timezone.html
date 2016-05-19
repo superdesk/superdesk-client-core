@@ -25,10 +25,9 @@
     <li class="pull-left">
         <div id="timezone" class="name right-pad">{{timezone}}</div>
         <div class="actions">
-            <button
-                ng-click="clearSelectedTimeZone()"
-                title="{{:: 'Clear' | translate }}"
-                ><i class="icon-trash"></i></button>
+            <button title="{{:: 'Clear' | translate }}" ng-click="clearSelectedTimeZone()">
+			  <i class="icon-pencil"></i>
+		  </button>
         </div>
     </li>
 </ul>
