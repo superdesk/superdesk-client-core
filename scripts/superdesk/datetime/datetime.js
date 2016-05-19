@@ -4,7 +4,7 @@
     DateTimeDirective.$inject = ['datetime', 'moment'];
     function DateTimeDirective(datetime, moment) {
         return {
-            scope: {date: '='},
+            scope: {date: '=', fromNow: '='},
             link: function datetimeLink(scope, elem) {
                 scope.$watch('date', renderDate);
 
@@ -15,7 +15,8 @@
                  */
                 function renderDate(date) {
                     var momentDate = moment(date);
-                    elem.text(datetime.shortFormat(momentDate));
+                    var txt = scope.fromNow ? momentDate.fromNow() : datetime.shortFormat(momentDate);
+                    elem.text(txt);
                     elem.attr('title', momentDate.format('LLLL'));
                 }
             }

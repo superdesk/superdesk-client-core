@@ -506,8 +506,8 @@
         };
     }
 
-    PackageItemPreviewDirective.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$location'];
-    function PackageItemPreviewDirective(api, lock, superdesk, authoringWorkspace, $location) {
+    PackageItemPreviewDirective.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$location', '$sce', 'desks'];
+    function PackageItemPreviewDirective(api, lock, superdesk, authoringWorkspace, $location, $sce, desks) {
         return {
             scope: {
                 item: '=',
@@ -518,6 +518,7 @@
                 scope.data = null;
                 scope.error = null;
                 scope.no_open = scope.readonly || null;
+                scope.userLookup = desks.userLookup;
 
                 if (scope.item.location) {
                     var url = '';
@@ -540,6 +541,9 @@
                     api[endpoint].getByUrl(url)
                     .then(function(result) {
                         scope.data = result;
+                        if (scope.data.abstract) {
+                            scope.data.abstract = $sce.trustAsHtml(scope.data.abstract);
+                        }
                         scope.isLocked = lock.isLocked(scope.data);
                         scope.isPublished = _.contains(['published', 'corrected'], scope.data.state);
                         scope.isKilled =  scope.data.state === 'killed';
