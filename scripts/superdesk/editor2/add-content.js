@@ -39,6 +39,7 @@ AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout
 function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
     var elementHolder = element.find('div:first-child').first();
     var vm = this;
+    var caretPosition = null;
     angular.extend(vm, {
         expanded: false,
         config: angular.extend({embeds: true}, config.editor || {}), // should be on by default
@@ -111,6 +112,7 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
             });
         },
         toogleExpand: function() {
+            caretPosition = scope.medium.exportSelection();
             vm.expanded = !vm.expanded;
         },
         triggerAction: function(action) {
@@ -157,7 +159,9 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
                     vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
                         body: textThatWasAfterCaret
                     }, true);
-
+                }, function() {
+                    scope.node.focus();
+                    scope.medium.importSelection(caretPosition);
                 });
             }
         }
