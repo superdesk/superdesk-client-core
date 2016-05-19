@@ -3,9 +3,15 @@
         <div>
             <i class="filetype-icon-{{ :: item.type}}" title="{{ :: 'Article Type' | translate }}"></i>
         </div>
-        <div ng-if="item.profile">
+        <div ng-if="item.profile && !change_profile">
             <label translate>PROFILE</label>
             <div class="data">{{ :: item.profile }}</div>
+        </div>
+        <div ng-if="change_profile">
+          <label translate>PROFILE</label>
+          <div class="data">
+            <select id="item-profile" ng-model="item.profile" ng-options="type._id as type.label for type in content_types"></select>
+          </div>
         </div>
         <div ng-if="item.type === 'text'">
             <label class="word-count"><b>{{ item.word_count || 0 }}</b> <span translate translate-n="item.word_count" translate-plural="WORDS">WORD</span></label>
@@ -211,7 +217,7 @@
         <div class="authoring-header__item"
             ng-repeat="cv in cvs track by cv._id"
             sd-validation-error="error[cv._id]"
-            data-required="{{editor[cv._id].required || schema[cv._id].required}}"
+            data-required="editor[cv._id].required"
             ng-if="cv.terms.length && (editor[cv._id] || schema[cv._id])"
             sd-width="{{editor[cv._id].sdWidth}}"
             order="{{editor[cv._id].order}}">

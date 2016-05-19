@@ -1148,15 +1148,27 @@
         return {
             restrict: 'A',
             link: function (scope, elem, attrs, ctrl) {
-                var invalidText = '<span class="sd-invalid-text">' + gettext('This field is required') + '</span>';
+                var invalidText = '<span id="required_span" class="sd-invalid-text">' + gettext('This field is required') + '</span>';
                 scope.$watch(attrs.required, function (required) {
+
                     if (!required) {
+                        if (elem.hasClass('sd-validate')) {
+                            elem.removeClass('sd-validate');
+                        }
+                        if (elem.find('#required_span').length) {
+                            elem.find('#required_span').remove();
+                        }
+                        return;
+                    }
+
+                    if (elem.find('#required_span').length) {
                         return;
                     }
 
                     elem.addClass('sd-validate');
                     if (elem.hasClass('field')) {
-                        elem.find('label').after('<span class="sd-required">' + gettextCatalog.getString('Required') + '</span>');
+                        elem.find('label')
+                        .after('<span id="required_span" class="sd-required">' + gettextCatalog.getString('Required') + '</span>');
                     } else if (elem.find('.authoring-header__input-holder').length) {
                         elem.find('.authoring-header__input-holder').append(invalidText);
                     } else {
