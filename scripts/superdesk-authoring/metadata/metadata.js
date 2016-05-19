@@ -922,6 +922,40 @@ function MetadataService(api, $q, subscribersService, config) {
                 self.values.cities = result._items;
             });
         },
+        filterCvs: function(qcodes, cvs) {
+            var self = this;
+            self.cvs.forEach(function(cv) {
+                var cvService = cv.service || {};
+                var match = false;
+
+                if (cvService.all) {
+                    match = true;
+                    cv.terms = self.filterByService(cv.items, qcodes);
+                } else {
+                    qcodes.forEach(function(qcode) {
+                        match = match || cvService[qcode];
+                    });
+                    cv.terms = cv.items;
+                }
+
+                if (match) {
+                    cvs.push(cv);
+                }
+            });
+        },
+        filterByService: function(items, qcodes) {
+            return _.filter(items, function(item) {
+                var match = false;
+                if (item.service) {
+                    qcodes.forEach(function(qcode) {
+                        match = match || item.service[qcode];
+                    });
+                } else {
+                    match = true;
+                }
+                return match;
+            });
+        },
         initialize: function() {
             if (!this.loaded) {
                 this.loaded = this.fetchMetadataValues()

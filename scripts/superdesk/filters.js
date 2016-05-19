@@ -22,12 +22,16 @@
             };
         }).
         filter('mergeWords', function() {
-            return function(array, propertyName) {
+            return function(array, propertyName, schemeName) {
                 var subjectMerged = [];
                 _.forEach(array, function(item) {
-                    var value = (propertyName == null?item:item[propertyName]);
+                    var value = (propertyName == null ? item : item[propertyName]);
                     if (value) {
                         subjectMerged.push(value);
+
+                        if (schemeName && item.scheme !==  schemeName) {
+                            subjectMerged.pop();
+                        }
                     }
                 });
 
