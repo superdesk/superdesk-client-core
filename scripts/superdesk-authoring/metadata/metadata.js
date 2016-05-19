@@ -4,11 +4,11 @@
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', '$filter', 'privileges', 'datetimeHelper',
-    'preferencesService', 'archiveService', 'config', 'moment'
+    'preferencesService', 'archiveService', 'config', 'moment', 'content'
 ];
 function MetadataCtrl(
     $scope, desks, metadata, $filter, privileges, datetimeHelper,
-    preferencesService, archiveService, config, moment) {
+    preferencesService, archiveService, config, moment, content) {
 
     desks.initialize()
     .then(function() {
@@ -21,6 +21,14 @@ function MetadataCtrl(
         return preferencesService.get();
     })
     .then(setAvailableCategories);
+
+    content.getTypes().then(function() {
+        $scope.content_types = content.types;
+    });
+
+    $scope.changeProfile = function(id) {
+    	console.log('change profile for: ', id);
+    }
 
     $scope.processGenre = function() {
         $scope.item.genre = _.map($scope.item.genre, function(g) {
