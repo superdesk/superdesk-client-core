@@ -716,10 +716,12 @@
         display: inline-block;
         min-width: 75px;
         font-size: 11px;
-        line-height: 26px;
+        line-height: 12px;
         margin: 0;
         color: @sd-text-label;
         padding-right: 5px;
+        padding-top: 4px;
+        font-weight: 500;
     }
 
     input.slugline {
@@ -765,9 +767,8 @@
   padding-right: 6px;
   flex-shrink: 1;
   flex-grow: 1;
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-wrap: break-word;
 }
 
 .authoring-header__input-holder {
