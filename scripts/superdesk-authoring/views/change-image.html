@@ -57,7 +57,7 @@
             </div>
             <div>
                 <label><span translate>Assign Rights</span></label>
-                <select ng-model="data.metadata.usageterms">
+                <select ng-model="data.metadata.usageterms" ng-change="data.isDirty = true">
                     <option translate value="">--- Not selected ---</option> <!-- not selected / blank option -->
                     <option translate value="single-usage">Single Usage</option>
                     <option translate value="time-restricted">Time Restricted</option>
