@@ -6,7 +6,7 @@
 
 <div ng-show="item.show_status" class="status" ng-class="{closed: item.is_closed, opened: !item.is_closed}">
     <div ng-show="item.is_closed">
-        <div><span class="uppercase" translate>Closed</span><span> by {{item.last_closed.display_name || 'System'}}</span></div>
+        <div><span class="uppercase" translate>Closed</span><span>by {{item.last_closed.display_name || 'System' | translate}}</span></div>
         <div class="time" ng-show="item.last_closed && item.last_closed.closed_at">
             <span translate>on</span> {{item.last_closed.closed_at | dateTimeString}}
         </div>
@@ -15,7 +15,7 @@
         </div>
     </div>
     <div ng-show="!item.is_closed">
-        <div><span class="uppercase" translate>Opened</span><span> by {{item.last_opened.display_name  || 'System'}}</span></div>
+        <div><span class="uppercase" translate>Opened</span><span>by {{item.last_opened.display_name  || 'System' | translate}}</span></div>
         <div class="time" ng-show="item.last_opened && item.last_opened.opened_at">
             <span translate>since</span> {{item.last_opened.opened_at | dateTimeString | translate}}
         </div>
