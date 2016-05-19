@@ -16,6 +16,7 @@
   <div class="package-item__item-text-group">
     <div class="package-item__item-headline">
       <div ng-show=":: data.headline || data.slugline || data.description_text">{{ :: data.headline || data.slugline || data.description_text}}</div>
+	  <div ng-show=":: data.anpa_take_key">{{ :: data.anpa_take_key}}</div>
       <div ng-hide=":: data.headline || data.slugline || data.description_text" translate>Blank headline received</div>
     </div>
 
@@ -26,18 +27,11 @@
 
     <div class="package-item__item-abstract" ng-if="data.abstract" ng-bind-html="data.abstract"></div>
   </div>
-
-  <a ng-if="no_open"
-    ng-click="preview(data)"
-    title="{{ :: 'Preview item' | translate }}"
-    class="package-item__open-item"><i class="icon-external"></i></a>
-
-  <a ng-if="!no_open"
-    ng-disabled="!data.guid || error"
-    ng-click="open(data)"
-    title="{{ :: 'Open item' | translate }}"
-    class="package-item__open-item"><i class="icon-pencil"></i></a>
-
+  
+  <div class="action-menu">
+      <div sd-item-actions-menu data-item="data" data-active="data"></div>
+  </div>
+  
   <div class="package-details" ng-if="data.type === 'composite'"><i class="svg-icon-right"></i></div>
   <div class="alert-error" ng-show="error" translate ng-if="data.type == 'composite' || data.type == 'text'">Problems occurred while fetching data.</div>
 </div>
