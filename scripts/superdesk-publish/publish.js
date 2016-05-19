@@ -582,6 +582,7 @@
                         $scope.origSubscriber = subscriber || {};
                         $scope.subscriber = _.create($scope.origSubscriber);
                         $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
+                        $scope.subscriber.sequence_num_settings = $scope.origSubscriber.sequence_num_settings;
 
                         $scope.subscriber.products = [];
                         if ($scope.origSubscriber.products) {
