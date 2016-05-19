@@ -165,7 +165,7 @@
                     <input type="checkbox" id="search-starred" ng-model="meta.starred">
                 </div>
             </div>
-            <div ng-show="repo.search === 'scanpix'">
+            <div ng-if="repo.search === 'scanpix'" >
                 <label for="search-bw" translate>Black&amp;White</label>
                 <div class="control">
                     <input type="checkbox" id="search-bw" ng-model="meta.bw">
@@ -180,6 +180,7 @@
                 <select
                     id="subscription" name="subscription"
                     ng-options="o for o in ['subscription', 'punchcard']"
+                    ng-init="meta.subscription='subscription'"
                     ng-model="meta.subscription">
                     <option value="" label=""></option>
                 </select>
