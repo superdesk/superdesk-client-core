@@ -2975,6 +2975,18 @@
                     return display;
                 };
 
+                scope.$watch('item.profile', function (profile) {
+                	console.log('watch item.profile: ', profile);
+                	if (profile) {
+                        content.getType(profile)
+                            .then(function(type) {
+                                scope.contentType = type;
+                                scope.editor = authoring.editor = content.editor(type);
+                                scope.schema = authoring.schema = content.schema(type);
+                            })
+                	}
+                });
+
                 scope.$watch('item', function (item) {
                     if (!item) {
                         return;
