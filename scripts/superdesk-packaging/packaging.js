@@ -517,7 +517,6 @@
             link: function(scope, elem) {
                 scope.data = null;
                 scope.error = null;
-                scope.no_open = scope.readonly || null;
                 scope.userLookup = desks.userLookup;
 
                 if (scope.item.location) {
@@ -550,10 +549,6 @@
                     }, function(response) {
                         scope.error = true;
                     });
-                }
-
-                if ($location.path() === '/publish_queue') {
-                    scope.no_open = true;
                 }
 
                 scope.$on('item:lock', function(_e, data) {

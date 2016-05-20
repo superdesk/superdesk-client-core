@@ -759,6 +759,16 @@
                         var anpa = item.anpa_category || {};
                         var broadcast = item.broadcast || {};
                         var provider = item.source ? item.source : (props.ingestProvider ? props.ingestProvider.source: '');
+                        var isTake = (_.contains(['text'], item.type) && item.takes && item.takes.sequence > 1);
+
+                        var selectTakesPackage = function(event) {
+                            event.stopPropagation();
+                            props.selectTakesPackage();
+                        };
+                        var selectUpdate = function(event) {
+                            event.stopPropagation();
+                            props.selectUpdate();
+                        };
                         return React.createElement(
                             'div',
                             {className: 'item-info'},
@@ -807,8 +817,13 @@
                                 flags.marked_for_sms ?
                                     React.createElement('div', {className: 'state-label sms'}, gettext('Sms')) :
                                     null,
+                                isTake ?
+                                    React.createElement('div', {className: 'state-label takes',
+                                        onClick: selectTakesPackage}, gettext('Takes')) :
+                                    null,
                                 item.rewritten_by ?
-                                    React.createElement('div', {className: 'state-label updated'}, gettext('Updated')) :
+                                    React.createElement('div', {className: 'state-label updated',
+                                        onClick: selectUpdate}, gettext('Updated')) :
                                     null,
                                 anpa.name ?
                                     React.createElement('div', {className: 'category'}, anpa.name) :
@@ -1064,8 +1079,16 @@
                             this.props.onSelect(this.props.item);
                         },
 
+                        selectTakesPackage: function() {
+                            this.props.onSelect(this.props.item.takes);
+                        },
+
+                        selectUpdate: function() {
+                            authoringWorkspace.edit({_id: this.props.item.rewritten_by}, 'view');
+                        },
+
                         edit: function(event) {
-                            this.props.onEdit(this.props.item);
+                            authoringWorkspace.open(this.props.item);
                         },
 
                         getInitialState: function() {
@@ -1162,6 +1185,8 @@
                                     (item.priority || item.urgency) ? React.createElement(ListPriority, {item: item}) : null,
                                     React.createElement(ListItemInfo, {
                                         item: item,
+                                        selectTakesPackage: this.selectTakesPackage,
+                                        selectUpdate: this.selectUpdate,
                                         desk: this.props.desk,
                                         ingestProvider: this.props.ingestProvider,
                                         highlightsById: this.props.highlightsById

@@ -258,8 +258,22 @@
   &.legal {
     .state-color(@state-color-red);
   }
+  &.takes {
+    .state-color(@state-color-magenta);
+    div:hover {
+        background-color: @state-color-magenta;
+    }
+  }
+  &.takes:hover {
+    background-color: @state-color-magenta;
+    color: @white;
+  }
   &.sms,&.updated {
     .state-color(@state-color-navy);
+  }
+  &.updated:hover {
+    background-color: @state-color-navy;
+    color: @white;
   }
 }
 
