@@ -87,7 +87,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
                     var association;
                     var embedAssoKey = /{id: "(embedded\d+)"}/;
                     if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null) {
-                        association = vm.associations && vm.associations[match[1]];
+                        if (vm.associations) {
+                            association = angular.copy(vm.associations[match[1]]);
+                        }
                     }
                     // create the embed block
                     block = new Block({blockType: 'embed', embedType: embedType, association: association});
@@ -201,18 +203,19 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
             return new_body;
         },
         commitChanges: function() {
+            var associations = angular.copy(vm.associations);
             // initialize associations if doesn't exist
-            if (typeof vm.associations !== 'object') {
-                vm.associations = {};
+            if (typeof associations !== 'object') {
+                associations = {};
             }
             // remove older associations
-            angular.forEach(vm.associations, function(value, key) {
+            angular.forEach(associations, function(value, key) {
                 if (_.startsWith(key, 'embedded')) {
-                    delete vm.associations[key];
+                    associations[key] = null;
                 }
             });
             // update associations with the ones stored in blocks
-            vm.associations = angular.extend({}, vm.associations, vm.getAssociations());
+            vm.associations = angular.extend({}, associations, vm.getAssociations());
             // save model with latest state of blocks
             vm.model.$setViewValue(vm.serializeBlock());
         },
