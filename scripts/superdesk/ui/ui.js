@@ -524,6 +524,7 @@
             link: function (scope, element) {
                 element.bind('click', function(event) {
                     event.preventDefault();
+                    event.stopPropagation();
                 });
             }
         };
@@ -536,16 +537,39 @@
      * <div sd-datepicker ng-model="date"></div>
      *
      */
-
-    function DatepickerDirective() {
+    DatepickerDirective.$inject = ['$document'];
+    function DatepickerDirective($document) {
         return {
             scope: {
                 dt: '=ngModel',
                 disabled: '=ngDisabled'
             },
             templateUrl: 'scripts/superdesk/ui/views/sd-datepicker.html',
-            link: function(scope, elem) {
+            link: function(scope, element) {
                 scope.state = {opened: false};
+                scope.openCalendar = function(e) {
+                    scope.state.opened = !scope.state.opened;
+
+                    $document.on('click', handleDatePicker);
+                };
+
+                function close() {
+                    scope.state.opened = false;
+                    $document.off('click', handleDatePicker);
+                }
+
+                function handleDatePicker(e) {
+                    var isChild = element.find(event.target).length > 0;
+                    if (scope.state.opened && !isChild) {  // outside Datepicker click
+                        scope.$apply(function() {
+                            close();
+                        });
+                    }
+                }
+
+                scope.$on('$destroy', function() {
+                    $document.off('click', handleDatePicker);
+                });
             }
         };
     }
@@ -670,13 +694,40 @@
         };
     }
 
-    function TimepickerDirective() {
+    TimepickerDirective.$inject = ['$document'];
+    function TimepickerDirective($document) {
         return {
             scope: {
                 tt: '=ngModel',
                 disabled: '=ngDisabled'
             },
-            templateUrl: 'scripts/superdesk/ui/views/sd-timepicker.html'
+            templateUrl: 'scripts/superdesk/ui/views/sd-timepicker.html',
+            link: function (scope, element) {
+
+                scope.openTimePicker = function(e) {
+                    scope.opened = !scope.opened;
+
+                    $document.on('click', handleTimePicker);
+                };
+
+                function close() {
+                    scope.opened = false;
+                    $document.off('click', handleTimePicker);
+                }
+
+                function handleTimePicker(e) {
+                    var isChild = element.find(event.target).length > 0;
+                    if (scope.opened && !isChild) {  // outside Timepicker click
+                        scope.$apply(function() {
+                            close();
+                        });
+                    }
+                }
+
+                scope.$on('$destroy', function() {
+                    $document.off('click', handleTimePicker);
+                });
+            }
         };
     }
 
@@ -896,6 +947,7 @@
 
                 element.bind('click', function(event) {
                     event.preventDefault();
+                    event.stopPropagation();
                 });
 
                 scope.hours = _.range(24);
