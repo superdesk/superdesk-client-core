@@ -127,15 +127,27 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
                 return confirm.reopen();
             })
             .then(function(reopen) {
-                if (($scope.active && $scope.active._id !== item._id) || (!$scope.active && item)) {
-                    authoringWorkspace.edit(item);
-                } else {
-                    notify.success(gettext('Item already open.'));
-                }
+                _reOpenItem(item);
             }, function(err) {
+                if (angular.isDefined(err)) {
+                    // confirm dirty checking for current item just incase if it's before autosaved.
+                    if (confirm.dirty && $scope.active && $scope.active._id === item._id) {
+                        return confirm.reopen().then(function(reopen) {
+                            _reOpenItem(item);
+                        });
+                    }
+                }
                 _closeItem(item);
             });
     };
+
+    function _reOpenItem(item) {
+        if (($scope.active && $scope.active._id !== item._id) || (!$scope.active && item)) {
+            authoringWorkspace.edit(item);
+        } else {
+            notify.success(gettext('Item already open.'));
+        }
+    }
 
     function _closeItem(item) {
         lock.unlock(item);
