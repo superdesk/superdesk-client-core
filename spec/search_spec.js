@@ -156,10 +156,10 @@ describe('search', function() {
     it('can search by genre field', function () {
         globalSearch.openFilterPanel();
         expect(globalSearch.getItems().count()).toBe(14);
-        expect(globalSearch.getGenreElements().count()).toBe(1);
+        expect(globalSearch.getGenreElements().count()).toBe(2);
         var genre = globalSearch.getGenreElementByIndex(0);
         genre.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        expect(globalSearch.getItems().count()).toBe(9);
     });
 
     it('search by from desk field', function() {
