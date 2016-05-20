@@ -19,6 +19,7 @@
         'superdesk.ui',
         'superdesk.services.modal',
 
+        'superdesk.keyboard',
         'superdesk.directives.autofocus',
         'superdesk.directives.throttle',
         'superdesk.directives.sort',
