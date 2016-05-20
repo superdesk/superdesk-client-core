@@ -63,7 +63,34 @@
                     'class': 'open',
                     icon: 'icon-expand',
                     condition: function(item) {
-                        return true;
+                        return item.type !== 'composite';
+                    }
+                },
+                addTake: {
+                    title: 'Associate as take',
+                    method: function(item) {
+                        var target = {_id: item.package_type === 'takes' ? item.last_take : item._id};
+                        var originalItem = $scope.item;
+                        authoring.linkItem(target, $scope.item._id).then(function(_item) {
+                            notify.success(gettext('item is associated as a take.'));
+                            authoringWorkspace.close(false);
+                            authoringWorkspace.edit(originalItem);
+                        }, function(err) {
+                            if (angular.isDefined(err.data._message)) {
+                                notify.error(gettext('Failed to associated as take: ' + err.data._message));
+                            } else {
+                                notify.error(gettext('There is an error. Failed to associated as take.'));
+                            }
+                        });
+                    },
+                    'class': 'open',
+                    icon: 'icon-expand',
+                    condition: function(item) {
+                        var canHaveNewTake = authoring.itemActions(item).new_take;
+                        return (item.package_type === 'takes' || canHaveNewTake) &&
+                                $scope.item.type === 'text' &&
+                                !$scope.item.takes &&
+                                $scope.item._current_version >= 1;
                     }
                 },
                 update: {
