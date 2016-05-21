@@ -40,6 +40,7 @@ describe('dictionaries', function() {
             where: {$and:
                 [{$or: [{language_id: LANG}]},
                 {is_active: {$in: ['true', null]}},
+                {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
                 {$or: [{user: USER_ID}, {user: {$exists: false}}]}]
             }
         });
@@ -64,6 +65,7 @@ describe('dictionaries', function() {
             where: {$and:
                 [{$or: [{language_id: 'en-US'}, {language_id: 'en'}]},
                 {is_active: {$in: ['true', null]}},
+                {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
                 {$or: [{user: USER_ID}, {user: {$exists: false}}]}]
             }
         });
@@ -75,7 +77,15 @@ describe('dictionaries', function() {
         spyOn(api, 'query').and.returnValue($q.when({_items: [userDict]}));
         dictionaries.getUserDictionary(LANG);
         $rootScope.$digest();
-        expect(api.query).toHaveBeenCalledWith('dictionaries', {where: {user: 'foo', language_id: 'en'}});
+        var where = {
+            where: {
+                $and: [
+                    {language_id: 'en'}, {user: 'foo'},
+                    {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]}
+                ]
+            }
+        };
+        expect(api.query).toHaveBeenCalledWith('dictionaries', where);
     }));
 
     it('can create dict when adding word', inject(function(dictionaries, api, $q, $rootScope) {

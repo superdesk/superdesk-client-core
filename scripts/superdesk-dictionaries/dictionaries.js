@@ -19,6 +19,7 @@
         this.getActive = getActive;
         this.getUserDictionary = getUserDictionary;
         this.addWordToUserDictionary = addWordToUserDictionary;
+        this.getUserAbbreviations = getUserAbbreviations;
 
         function setPersonalName (data) {
             if (data.user) {
@@ -91,6 +92,34 @@
             return api.remove(dictionary).then(success, error);
         };
 
+        this.isAbbreviationsDictionary = function(dict) {
+            return dict && dict.type === 'abbreviations';
+        };
+
+        /**
+         * Get list of active abbreviations for given lang
+         *
+         * @param {string} lang
+         */
+        function getUserAbbreviations(lang, baseLang) {
+            return session.getIdentity().then(function(identity) {
+                var languageIds = [{language_id: lang}];
+                if (baseLang) {
+                    languageIds.push({language_id: baseLang});
+                }
+
+                return api.query('dictionaries', {
+                    where: {$and:
+                        [{$or: languageIds},
+                        {is_active: 'true'},
+                        {type: 'abbreviations'},
+                        {user: identity._id}]
+                    }}).then(function(items) {
+                        return items._items;
+                    });
+            });
+        }
+
         /**
          * Get list of active dictionaries for given lang
          *
@@ -108,6 +137,7 @@
                     where: {$and:
                         [{$or: languageIds},
                         {is_active: {$in: ['true', null]}},
+                        {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
                         {$or: [{user: identity._id}, {user: {$exists: false}}]}]
                     }}).then(function(items) {
                         return $q.all(items._items.map(fetchItem));
@@ -126,7 +156,15 @@
          */
         function getUserDictionary(lang) {
             return session.getIdentity().then(function(identity) {
-                return api.query('dictionaries', {where: {language_id: lang, user: identity._id}})
+                var where = {
+                    where: {
+                        $and: [
+                            {language_id: lang}, {user: identity._id},
+                            {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]}
+                        ]
+                    }
+                };
+                return api.query('dictionaries', where)
                     .then(function(response) {
                         return response._items.length ? response._items[0] : {
                             name: identity._id + ':' + lang,
@@ -168,15 +206,35 @@
 
         $scope.createDictionary = function() {
             $scope.dictionary = {is_active: 'true'};
-            $scope.origDictionary = {};
+            $scope.origDictionary = {
+                type: 'dictionary'
+            };
         };
 
         $scope.createPersonalDictionary = function() {
             return session.getIdentity().then(function(identity) {
                 $scope.dictionary = {
                     is_active: 'true',
+                    type: 'dictionary',
                     user: identity._id,
                     name: identity._id
+                };
+                $scope.origDictionary = {};
+            });
+        };
+
+        $scope.isAbbreviations = function(dict) {
+            return dictionaries.isAbbreviationsDictionary(dict);
+        };
+
+        $scope.createAbbreviationsDictionary = function() {
+            return session.getIdentity().then(function(identity) {
+                $scope.dictionary = {
+                    is_active: 'true',
+                    type: 'abbreviations',
+                    user: identity._id,
+                    name: identity._id,
+                    content: {}
                 };
                 $scope.origDictionary = {};
             });
@@ -186,7 +244,13 @@
             dictionaries.open(dictionary, function(result) {
                 $scope.origDictionary = result;
                 $scope.dictionary = _.create(result);
-                $scope.dictionary.content = _.create(result.content || {});
+
+                if (dictionaries.isAbbreviationsDictionary(result)) {
+                    $scope.dictionary.content = angular.extend({}, result.content);
+                } else {
+                    $scope.dictionary.content = _.create(result.content || {});
+                }
+
                 $scope.dictionary.is_active = $scope.dictionary.is_active !== 'false';
             });
         };
@@ -209,10 +273,13 @@
         $scope.fetchDictionaries();
     }
 
-    DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'gettext', 'notify', 'modal'];
-    function DictionaryEditController ($scope, dictionaries, upload, gettext, notify, modal) {
+    DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'gettext', 'notify', 'modal', '$rootScope', '$q'];
+    function DictionaryEditController ($scope, dictionaries, upload, gettext, notify, modal, $rootScope, $q) {
 
         function onSuccess(result) {
+            if ($scope.isAbbreviations()) {
+                $rootScope.$broadcast('abbreviations:updated', result.content);
+            }
             $scope.closeDictionary();
             $scope.fetchDictionaries();
             notify.success(gettext('Dictionary saved successfully'));
@@ -321,6 +388,56 @@
                 $scope.wordsCount++;
             }
         }
+
+        $scope.isAbbreviations = function() {
+            return dictionaries.isAbbreviationsDictionary($scope.dictionary);
+        };
+
+        $scope.editAbbreviations = function(abbreviation, phrase) {
+            $scope.dictionary.content[abbreviation] = phrase;
+        };
+
+        $scope.removeAbbreviation = function(abbreviation) {
+            modal.confirm(gettext('Do you want to remove Abbreviation?'))
+                .then(function() {
+                    delete $scope.dictionary.content[abbreviation];
+                    init();
+                });
+        };
+
+        function confirmAdd() {
+            if ($scope.dictionary.content[$scope.abbreviation.key]) {
+                return modal.confirm(gettext('Abbreviation already exists. Do you want to overwrite it?'))
+                    .then(function() {
+                        return true;
+                    }, function() {
+                        return false;
+                    });
+            } else {
+                return $q.when(true);
+            }
+        }
+
+        $scope.addAbbreviation = function() {
+            confirmAdd().then(function(result) {
+                if (result) {
+                    $scope.dictionary.content[$scope.abbreviation.key] = $scope.abbreviation.phrase;
+                    init();
+                }
+            });
+        };
+
+        function init() {
+            if ($scope.isAbbreviations()) {
+                $scope.abbreviation = {
+                    key: '', phrase: ''
+                };
+
+                $scope.abbreviationKeys = _.sortBy(Object.keys($scope.dictionary.content));
+            }
+        }
+
+        init();
     }
 
     var app = angular.module('superdesk.dictionaries', [
