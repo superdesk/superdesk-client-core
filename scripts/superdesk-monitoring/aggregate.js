@@ -191,7 +191,9 @@
 
             if (isDesk) {
                 var desk = desks.getCurrentDesk();
-                self.spikeGroups = [{_id: desk._id, type: 'spike'}];
+                if (desk) {
+                    self.spikeGroups = [{_id: desk._id, type: 'spike'}];
+                }
                 return;
             }
 
