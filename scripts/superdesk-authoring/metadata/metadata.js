@@ -856,7 +856,8 @@ function MetadataService(api, $q, subscribersService, config) {
     var service = {
         values: {},
         cvs: [],
-        search_cvs: config.search_cvs || [{'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'}],
+        search_cvs: config.search_cvs || [{'id': 'subject', 'name': 'Subject',
+            'field': 'subject', 'list': 'subjectcodes'}],
         subjectScope: null,
         loaded: null,
         fetchMetadataValues: function() {

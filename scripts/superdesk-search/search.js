@@ -20,7 +20,8 @@
             {field: 'genre.name', label: gettext('Genre')}
         ];
 
-        this.cvs = config.search_cvs || [{'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'}];
+        this.cvs = config.search_cvs || [{'id': 'subject', 'name': 'Subject',
+                'field': 'subject', 'list': 'subjectcodes'}];
 
         function getSort() {
             var sort = ($location.search().sort || 'versioncreated:desc').split(':');
