@@ -1,0 +1,41 @@
+<section class="main-section profiling-data">
+    <div class="preview-layout" ng-class="{closed: !selected.preview}">
+        <div class="list-pane">
+            <header>
+                <div class="refresh-box">
+                    <button ng-click="reload()" class="pull-right" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left"><i class="icon-refresh"></i></button>
+                    <span class="pull-right">{{ :: 'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                    <button class="btn btn-info pull-left-20" ng-click="reset()">{{ :: 'Reset' | translate}}</button>
+                </div>
+            </header>
+            <div class="content">
+                <div sd-shadow>
+                    <table class="table styled-table">
+                        <thead>
+                            <tr>
+                                <th translate>No of calls</th>
+                                <th translate>Total time</th>
+                                <th translate>Time per call</th>
+                                <th translate>Cumulative time</th>
+                                <th translate>Cumulative time per call</th>
+                                <th translate>File name/line</th>
+                                <th translate>Function</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="profile_item in profiling_data">
+                                <td>{{ profile_item.ncalls}}</td>
+                                <td>{{ profile_item.tottime}}</td>
+                                <td>{{ profile_item.percall}}</td>
+                                <td>{{ profile_item.cumtime}}</td>
+                                <td>{{ profile_item.percall_cumtime}}</td>
+                                <td>{{ profile_item.filename_lineno}}</td>
+                                <td>{{ profile_item.func_name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
