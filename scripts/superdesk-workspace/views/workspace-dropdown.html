@@ -2,7 +2,7 @@
     <button id="selected-desk" data-toggle="dropdown" class="dropdown-toggle {{workspaceType}} pull-left">
         <span class="name" ng-if="selected.name">{{ selected.name | uppercase }}</span>
         <span class="name" ng-if="!selected" translate>Select Workspace</span>
-        <span class="name" ng-if="!selected.name && workspaceType">{{ :: 'Untitled' | translate }}</span>
+        <span class="name" ng-if="selected && !selected.name && workspaceType">{{ :: 'Untitled' | translate }}</span>
         <span class="caret"></span>
     </button>
 
@@ -14,6 +14,9 @@
                 {{ :: desk.name }}
             </button>
         </li>
+        <li class="desk-item" ng-show="desks.length === 0"><i class="no-desk">No Desks Assigned</i></li>
+        
+
 
         <li class="menu-label"><div translate>CUSTOM WORKSPACES</div></li>
         <li class="workspace-item" ng-repeat="workspace in wsList track by workspace._id">
