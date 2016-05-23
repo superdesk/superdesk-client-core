@@ -264,7 +264,7 @@ describe('authoring', function() {
     it('related item widget', function() {
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.openRelatedItem();
-        expect(authoring.getRelatedItems().count()).toBe(8);
+        expect(authoring.getRelatedItems().count()).toBe(7);
         authoring.searchRelatedItems('item3');
         expect(authoring.getRelatedItems().count()).toBe(1);
     });
