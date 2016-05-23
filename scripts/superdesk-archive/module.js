@@ -647,9 +647,6 @@
                     filters: [{action: 'list', type: 'archive'}],
                     keyboardShortcut: 'ctrl+alt+t',
                     privileges: {archive: 1},
-                    condition: function(item) {
-                        return (item.lock_user === null || angular.isUndefined(item.lock_user));
-                    },
                     additionalCondition:['authoring', 'item', function(authoring, item) {
                         return authoring.itemActions(item).new_take;
                     }],
