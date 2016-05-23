@@ -2637,7 +2637,7 @@
 
                 scope.$watch('item.flags.marked_for_sms', function(isMarked) {
                     if (isMarked) {
-                        scope.item.sms_message = scope.item.headline || '';
+                        scope.item.sms_message = scope.item.sms_message || scope.item.headline || '';
                     } else {
                         scope.item.sms_message = '';
                     }
@@ -2901,6 +2901,8 @@
                         $filter('formatLocalDateTimeString')(scope.item.versioncreated, config.view.dateformat + ' ' +
                             config.view.timeformat) +
                         gettext('\r\n\r\nThis is a corrected repeat.');
+                        scope.item.flags.marked_for_sms = false;
+                        scope.item.sms_message = '';
                     }
                     scope.origItem = scope.item;
                 }
