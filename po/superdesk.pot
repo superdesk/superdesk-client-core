@@ -1208,7 +1208,7 @@ msgid "Disable user"
 msgstr ""
 
 #: scripts/superdesk/notification/notification.js:104
-msgid "Disconnected to Notification Server!"
+msgid "Disconnected from Notification Server!"
 msgstr ""
 
 #: scripts/superdesk/itemList/views/item-list-widget.html:24
