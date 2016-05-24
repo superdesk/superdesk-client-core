@@ -48,11 +48,9 @@
 
 <div class="field abstract" ng-class="{'limit-error': item.abstract.length > limits.abstract}" ng-if="schema.abstract" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
   <label translate>Abstract</label>
-    <span ng-if="schema.abstract.maxlength"
-          sd-character-count
+    <span sd-character-count
           data-item="item.abstract"
-          data-html="true"
-          data-limit="schema.abstract.maxlength"></span>
+          data-html="true"></span>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
         sd-text-editor
