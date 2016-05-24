@@ -778,19 +778,22 @@
                 scope.rule = null;
                 scope.ruleIndex = null;
                 scope.schemes = [];
-
-                api('routing_schemes').query().then(function(result) {
-                    scope.schemes = $filter('sortByName')(result._items);
-                });
-
                 scope.contentFilters = [];
 
-                contentFilters.getAllContentFilters(
-                    filtersStartPage, scope.contentFilters
-                )
-                .then(function (filters) {
-                    scope.contentFilters = filters;
-                });
+                function initSchemes() {
+                    api('routing_schemes').query().then(function(result) {
+                        scope.schemes = $filter('sortByName')(result._items);
+                    });
+
+                    contentFilters.getAllContentFilters(
+                        filtersStartPage, scope.contentFilters
+                    )
+                    .then(function (filters) {
+                        scope.contentFilters = filters;
+                    });
+                }
+
+                initSchemes();
 
                 function confirm(context) {
                     if (context === 'scheme') {
@@ -802,7 +805,7 @@
 
                 scope.edit = function(scheme) {
                     scope.editScheme = _.clone(scheme);
-                    scope.editScheme.rules = scope.editScheme.rules || [];
+                    scope.editScheme.rules = _.clone(scheme.rules || []);
                     _orig = scheme;
                 };
 
@@ -840,6 +843,10 @@
                 scope.cancel = function () {
                     scope.editScheme = null;
                     scope.rule = null;
+                    scope.ruleIndex = null;
+                    scope.schemes = [];
+                    scope.contentFilters = [];
+                    initSchemes();
                 };
 
                 scope.remove = function(scheme) {
@@ -1073,7 +1080,7 @@
                     scope.stageLookup = desks.stageLookup;
                 });
 
-                macros.get().then(function(macros) {
+                macros.get(true).then(function(macros) {
                     _.transform(macros, function(lookup, macro, idx) {
                         scope.macroLookup[macro.name] = macro;
                     });
