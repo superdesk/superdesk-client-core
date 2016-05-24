@@ -90,18 +90,26 @@ describe('MetadataWidgetCtrl controller', function () {
     });
 });
 
-describe('metadata list editing directive', function() {
+describe('metadata terms directive', function() {
     var $rootScope,
         $compile,
         itemCategories,
         subjects,
         itemSubjects,
-        availableCategories;
+        availableCategories,
+        itemCompanyCodes,
+        availableCompanyCodes;
 
     itemCategories = [{'name': 'National', 'qcode': 'a'}, {'name': 'Sports', 'qcode': 's'}];
     availableCategories = [{'name': 'International', 'qcode': 'i'},
                 {'name': 'Domestic Sport', 'qcode': 't'}, {'name': 'Motor Racing', 'qcode': 'm'},
                 {'name': 'Horse Racing', 'qcode': 'r'}];
+
+    itemCompanyCodes = [{'name': '1-PAGE LIMITED', 'qcode': '1PG'}, {'name': '1300 SMILES LIMITED', 'qcode': 'ONT'}];
+    availableCompanyCodes = [{'name': '1ST AVAILABLE LTD', 'qcode': '1ST'},
+                {'name': '360 CAPITAL GROUP', 'qcode': 'TGP'}, {'name': '360 CAPITAL INDUSTRIAL FUND', 'qcode': 'TIX'},
+                {'name': '360 CAPITAL OFFICE FUND', 'qcode': 'TOF'}];
+
     subjects = [{'name': 'a', 'qcode': '123'},
         {'name': 'b', 'qcode': '456', 'parent': '123'},
         {'name': 'c', 'qcode': '789', 'parent': '123'},
@@ -131,6 +139,30 @@ describe('metadata list editing directive', function() {
         angular.extend(scope, scopeValues);
         return $compile(html)(scope);
     }
+
+    it('combined list contains all company_codes and terms contains only available company_codes', inject(function() {
+        var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
+                      'data-item="item" data-field="company_codes" data-unique="qcode" ' +
+                      'data-list="availableCompanyCodes" data-header="true" ' +
+                      'data-reload-list="false"></div>';
+
+        var iScope;
+        var scopeValues = {
+            item: {
+                company_codes: itemCompanyCodes
+            },
+            _editable: true,
+            availableCompanyCodes: availableCompanyCodes
+        };
+
+        var elm = compileDirective(elmHtml, scopeValues);
+        $rootScope.$digest();
+        iScope = elm.isolateScope();
+        expect(iScope.terms.length).toBe(4);
+        expect(iScope.activeTree.length).toBe(4);
+        expect(iScope.uniqueField).toBe('qcode');
+        expect(iScope.combinedList.length).toBe(6);
+    }));
 
     it('combined list all categories and terms contains only available category', inject(function() {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
@@ -202,7 +234,7 @@ describe('metadata list editing directive', function() {
             iScope.selectTerm(category);
         });
         expect(iScope.terms.length).toBe(0);
-        expect(iScope.activeTree.length).toBe(3);
+        expect(iScope.activeTree.length).toBe(0);
         expect(iScope.item[iScope.field].length).toBe(6);
     }));
 

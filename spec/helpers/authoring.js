@@ -34,7 +34,7 @@ function Authoring() {
         .element(by.tagName('button'));
 
     this.getCategoryListItems = element(by.id('category-setting'))
-        .all(by.repeater('term in activeTree'));
+        .all(by.repeater('term in $vs_collection track by term[uniqueField]'));
 
     this.sendItemContainer = element(by.id('send-item-container'));
     this.linkToMasterButton = element(by.id('preview-master'));

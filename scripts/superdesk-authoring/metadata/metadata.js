@@ -22,7 +22,8 @@ function MetadataCtrl(
         $scope.metadata = metadata.values;
         return preferencesService.get();
     })
-    .then(setAvailableCategories);
+    .then(setAvailableCategories)
+    .then(setAvailableCompanyCodes);
 
     content.getTypes().then(function() {
         $scope.content_types = content.types;
@@ -67,6 +68,34 @@ function MetadataCtrl(
         });
 
         $scope.availableCategories = _.sortBy(filtered, 'name');
+    }
+
+    /**
+    * Builds a list of company_codes available for selection in scope. Used by
+    * the "company_codes" menu in the Authoring metadata section.
+    *
+    * @function setAvailableCompanyCodes
+    */
+    function setAvailableCompanyCodes() {
+        var all,        // all available company codes
+            assigned = {},   // company codes already assigned to the article
+            filtered,
+            itemCompanyCodes;  // existing company codes assigned to the article
+
+        all = metadata.values.company_codes || [];
+
+        // gather article's existing company codes
+        itemCompanyCodes = $scope.item.company_codes || [];
+
+        itemCompanyCodes.forEach(function (companyCode) {
+            assigned[companyCode.qcode] = true;
+        });
+
+        filtered = _.filter(all, function (companyCode) {
+            return !assigned[companyCode.qcode];
+        });
+
+        $scope.availableCompanyCodes = _.sortBy(filtered, 'name');
     }
 
     $scope.$watch('item.publish_schedule_date', function(newValue, oldValue) {
@@ -601,12 +630,12 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     scope.activeList = false;
                 } else {
                     var searchList = reloadList? scope.list : scope.combinedList;
-                    scope.terms = _.filter(filterSelected(searchList), function(t) {
+                    scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), function(t) {
                         var searchObj = {};
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
                         return ((t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
                             !_.find(scope.item[scope.field], searchObj));
-                    });
+                    }));
                     scope.activeList = true;
                 }
                 return scope.terms;
@@ -689,7 +718,6 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     scope.selectedTerm = '';
                     scope.termPath = [];
                     scope.searchTerms();
-                    scope.activeTree = scope.tree[null];
 
                     if (!reloadList) {
                         // Remove the selected term from the terms
@@ -715,7 +743,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                             scope.activeTree = scope.tree[null];
                         } else {
                             scope.terms = _.clone(scope.activeTree) || [];
-                            scope.allSelected = scope.item[scope.field].length === scope.list.length;
+                            scope.allSelected = scope.terms.length === 0;
                         }
                     });
                 }
@@ -749,6 +777,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.change({item: scope.item});
                 elem.find('.dropdown-toggle').focus(); // retain focus
             };
+
         }
     };
 }
@@ -980,7 +1009,7 @@ function MetadataService(api, $q, subscribersService, config) {
     return service;
 }
 
-angular.module('superdesk.authoring.metadata', ['superdesk.authoring.widgets'])
+angular.module('superdesk.authoring.metadata', ['superdesk.authoring.widgets', 'vs-repeat'])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
             .widget('metadata', {
