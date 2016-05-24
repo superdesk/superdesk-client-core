@@ -126,7 +126,7 @@
           </div>
         </div>
 
-        <div class="field" ng-if="template.template_type !== 'kill' && template.is_public">
+        <div class="field" ng-if="template.template_desk && template.template_type !== 'kill' && template.is_public">
           <label for="schedule-toggle" translate>Automatically create item</label>
           <div class="control">
             <span sd-switch ng-model="template.schedule.is_active"></span>
