@@ -638,13 +638,18 @@
 
                         render: function() {
                             var highlights = this.getHighlights();
-                            var highlightsLength = highlights.length;
-                            var highlightsStatus = this.getHighlightStatuses(highlights, this.props.item);
 
-                            var highlightId = _.keys(highlights)[0];
-                            if ($location.path() === '/workspace/highlights') {
-                                highlightId = $location.search().highlight;
-                            }
+                            var hasActiveHighlight = (function() {
+                                var statuses = this.getHighlightStatuses(highlights, this.props.item);
+
+                                if ($location.path() === '/workspace/highlights') {
+                                    return statuses[$location.search().highlight];
+                                }
+
+                                return highlights.some(function(h) {
+                                    return statuses[h];
+                                });
+                            }).call(this);
 
                             return React.createElement(
                                 'div',
@@ -652,7 +657,7 @@
                                     className: 'highlights-box',
                                     onClick: this.toggle
                                 },
-                                highlightsLength ? React.createElement(
+                                highlights.length ? React.createElement(
                                     'div',
                                     {className: 'highlights-list dropdown'},
                                     React.createElement(
@@ -660,10 +665,9 @@
                                         {className: 'dropdown-toggle'},
                                         React.createElement('i', {
                                             className: classNames({
-                                                'icon-star red': highlightsLength === 1,
-                                                'icon-multi-star red': highlightsLength > 1,
-                                                'icon-star gray': highlightsLength === 1 && !highlightsStatus[highlightId],
-                                                'icon-multi-star gray': highlightsLength > 1 && !highlightsStatus[highlightId],
+                                                'icon-star': highlights.length === 1,
+                                                'icon-multi-star': highlights.length > 1,
+                                                'red': hasActiveHighlight
                                             })
                                         })
                                     )
