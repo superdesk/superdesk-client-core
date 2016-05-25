@@ -1583,7 +1583,7 @@
                             scope.providers = [];
                             scope.searchProviderTypes = searchProviderService.getProviderTypes();
                             scope.cvs = metadata.search_cvs;
-
+                            scope.search_config = metadata.search_config;
                             scope.lookupCvs = {};
                             angular.forEach(scope.cvs, function(cv) {
                                 scope.lookupCvs[cv.id] = cv;
