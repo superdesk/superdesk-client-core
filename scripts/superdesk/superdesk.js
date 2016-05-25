@@ -34,6 +34,7 @@
         'superdesk.directives.autofocus',
         'superdesk.directives.throttle',
         'superdesk.directives.sort',
+        'superdesk.directives.passwordStrength',
         'superdesk.links',
         'superdesk.check.directives',
         'superdesk.confirm.directives',
