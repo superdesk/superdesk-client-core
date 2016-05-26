@@ -1,0 +1,20 @@
+can display monitoring after publishing an item using full view of authoring
+Kill Template apply
+can navigate with keyboard
+can select multiple items
+can create text article in a desk
+can create empty package in a desk
+can close unsaved empty package in a desk
+add a widget to a desk
+edit desk
+add desk
+can fetch from ingest with menu
+can fetch from content with menu
+add highlights configuration:
+mark for highlights in a desk:
+form renders modal on load
+user can log in
+configure a saved search and show it on monitoring view
+can save a global search and another user sees it
+can search by search field
+profile:
