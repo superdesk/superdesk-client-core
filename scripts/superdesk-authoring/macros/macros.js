@@ -2,23 +2,55 @@
 
 'use strict';
 
-MacrosService.$inject = ['api', 'notify'];
-function MacrosService(api, notify) {
+MacrosService.$inject = ['api', 'notify', '$filter'];
+function MacrosService(api, notify, $filter) {
 
-    this.get = function() {
-        return api.query('macros')
-            .then(angular.bind(this, function(macros) {
-                this.macros = macros._items;
-                return this.macros;
-            }));
+    /**
+     * Recursively returns all macros
+     *
+     * @return {*}
+     */
+    var _getAllMacros = function(criteria, page, macros) {
+        page = page || 1;
+        macros = macros || [];
+        criteria = criteria || {};
+
+        return api.query('macros', _.extend({max_results: 200, page: page}, criteria))
+        .then(function(result) {
+            macros = macros.concat(result._items);
+            if (result._links.next) {
+                page++;
+                return _getAllMacros(criteria, page, macros);
+            }
+            return $filter('sortByName')(macros);
+        });
     };
 
+    /**
+     * Returns all frontend macros if includeBackend is false or none
+     * If includeBackend is true then results will include the backend macros
+     *
+     * @param {bool} includeBackend
+     */
+    this.get = function(includeBackend) {
+        return _getAllMacros({'backend': !!includeBackend}).then(angular.bind(this, function(macros) {
+            this.macros = macros;
+            return this.macros;
+        }));
+    };
+
+    /**
+     * Returns all frontend macros for a given desk if includeBackend is false or none
+     * If includeBackend is true then results will include the backend macros for hat desk
+     *
+     * @param {string} desk
+     * @param {bool} includeBackend
+     */
     this.getByDesk = function(desk, includeBackend) {
-        return api.query('macros', {'desk': desk, 'backend': !!includeBackend})
-            .then(angular.bind(this, function(macros) {
-                this.macros = macros._items;
-                return this.macros;
-            }));
+        return _getAllMacros({'desk': desk, 'backend': !!includeBackend}).then(angular.bind(this, function(macros) {
+            this.macros = macros;
+            return this.macros;
+        }));
     };
 
     this.setupShortcuts = function ($scope) {
