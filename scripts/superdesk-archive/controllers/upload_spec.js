@@ -67,6 +67,7 @@ describe('Upload controller', function() {
         scope.items[0].meta.headline = 'headline text';
         scope.items[0].meta.slugline = 'slugline text';
         scope.items[0].meta.description_text = 'description';
+        scope.items[0].meta.alt_text = 'alt text';
 
         scope.save();
         $rootScope.$digest();
