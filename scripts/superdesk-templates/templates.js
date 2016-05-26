@@ -32,8 +32,8 @@
 
     }
 
-    TemplatesService.$inject = ['api', '$q', 'gettext', 'preferencesService'];
-    function TemplatesService(api, $q, gettext, preferencesService) {
+    TemplatesService.$inject = ['api', 'session', '$q', 'gettext', 'preferencesService'];
+    function TemplatesService(api, session, $q, gettext, preferencesService) {
         var PAGE_SIZE = 10;
         var PREFERENCES_KEY = 'templates:recent';
 
@@ -91,6 +91,8 @@
 
             var criteria = {};
 
+            criteria.$or = [{is_public: true}, {user: session.identity._id}];
+
             if (type !== undefined) {
                 criteria.template_type = type;
             }
@@ -100,8 +102,6 @@
             }
 
             if (user || desk) {
-                criteria.$or = [];
-
                 if (user) { // user private templates
                     criteria.$or.push({user: user});
                 }
@@ -360,8 +360,8 @@
      * @description Returns a function that allows filtering an array of
      * templates by various criteria.
      */
-    FilterTemplatesFilter.$inject = ['session'];
-    function FilterTemplatesFilter(session) {
+    FilterTemplatesFilter.$inject = [];
+    function FilterTemplatesFilter() {
         /**
          * @description Returns a new array based on the passed filter.
          * @param {Array<Object>} all - Array of templates to filter.
@@ -380,7 +380,7 @@
                     case 'None':
                         return item.is_public && typeof item.template_desk === 'undefined';
                     case 'Personal':
-                        return !item.is_public && item.user === session.identity._id;
+                        return !item.is_public;
                     default:
                         return item.template_desk === f.value;
                 }
