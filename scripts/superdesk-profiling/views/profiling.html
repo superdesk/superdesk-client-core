@@ -2,10 +2,26 @@
     <div class="preview-layout" ng-class="{closed: !selected.preview}">
         <div class="list-pane">
             <header>
+                <div class="sortbar pull-left">
+                    <span class="lab pull-left" translate>Profile:</span>
+                    <div class="dropdown pull-left" dropdown>
+                        <button class="dropdown-toggle" dropdown-toggle>
+                            {{ profile_names[current_profile] }}
+                            <span ng-if="!current_profile">{{ :: 'none' | translate }}</span>
+                            <b class="caret"></b>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="profile in profiles">
+                                <a href="" ng-click="loadProfile(profile)">{{ profile_names[profile] }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div class="refresh-box">
+                    <button class="btn btn-info pull-right" ng-click="reset()">{{ :: 'Reset' | translate}}</button>
                     <button ng-click="reload()" class="pull-right" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left"><i class="icon-refresh"></i></button>
                     <span class="pull-right">{{ :: 'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
-                    <button class="btn btn-info pull-left-20" ng-click="reset()">{{ :: 'Reset' | translate}}</button>
                 </div>
             </header>
             <div class="content">

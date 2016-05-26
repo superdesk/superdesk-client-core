@@ -16,28 +16,18 @@
     ProfilingController.$inject = ['$scope', 'api'];
     function ProfilingController($scope, api) {
         $scope.profiling_data = [];
-        $scope.sort = null;
+        $scope.current_profile = null;
+        $scope.profiles = ['rest', 'publish:enqueue', 'publish:transmit'];
+        $scope.profile_names = {'rest': 'Rest', 'publish:enqueue': 'Publish Enqueue', 'publish:transmit': 'Publish Transmit'};
 
         /*
         * Populates the profiling data.
         */
         function populateProfilingData () {
-            fetchProfilingData().then(function(profile) {
-                $scope.profiling_data = profile._items[0].data;
+            api.profiling.getById($scope.current_profile).then(function(profile) {
+                $scope.profiling_data = profile.profiling_data;
                 $scope.lastRefreshedAt = new Date();
             });
-        }
-
-        /*
-        * Fetch the profiling data
-        */
-        function fetchProfilingData () {
-            var criteria = {};
-
-            if (!_.isEmpty($scope.sort)) {
-                criteria.sort = $scope.sort;
-            }
-            return api.profiling.query(criteria);
         }
 
         $scope.reload = function() {
@@ -47,6 +37,14 @@
         $scope.reset = function() {
             api.profiling.remove({_links: {self: {href: 'profiling'}}});
             $scope.reload();
+        };
+
+        $scope.loadProfile = function(profile) {
+            if (profile !== $scope.current_profile) {
+                $scope.current_profile = profile;
+                $scope.profiling_data = [];
+                $scope.reload();
+            }
         };
 
         $scope.reload();
