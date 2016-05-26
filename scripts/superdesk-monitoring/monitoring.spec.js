@@ -169,7 +169,7 @@ describe('monitoring', function() {
 
             scope.$broadcast('content:update', {stages: {'foo': 1}});
             scope.$digest();
-            $timeout.flush(500);
+            $timeout.flush(1000);
             expect(api.query).toHaveBeenCalled();
         }));
 

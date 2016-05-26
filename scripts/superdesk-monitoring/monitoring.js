@@ -425,11 +425,14 @@
 
                 scope.$on('item:highlight', queryItems);
 
-                scope.$on('content:update', function(event, data) {
-                    if (cards.shouldUpdate(scope.group, data)) {
+                function scheduleIfShouldUpdate(event, data) {
+                    if (event && data && cards.shouldUpdate(scope.group, data)) {
                         scheduleQuery();
                     }
-                });
+                }
+
+                scope.$on('item:fetch', scheduleIfShouldUpdate);
+                scope.$on('content:update', scheduleIfShouldUpdate);
 
                 scope.$on('content:expired', queryItems);
 
@@ -534,13 +537,20 @@
                 var queryTimeout;
 
                 /**
-                 * Schedule content reload in next 50ms
+                 * Schedule content reload after some delay
                  *
-                 * In case there is another signal within timeout it will trigger it only once.
+                 * In case it gets called multiple times it will query only once
                  */
                 function scheduleQuery() {
-                    $timeout.cancel(queryTimeout);
-                    queryTimeout = $timeout(queryItems, 50, false);
+                    if (!queryTimeout) {
+                        queryTimeout = $timeout(function() {
+                            queryItems();
+                            scope.$applyAsync(function() {
+                                // ignore any updates requested in current $digest
+                                queryTimeout = null;
+                            });
+                        }, 1000, false);
+                    }
                 }
 
                 var criteria;
