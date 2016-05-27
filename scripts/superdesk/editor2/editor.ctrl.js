@@ -3,8 +3,8 @@
 
 angular.module('superdesk.editor2.ctrl', []).controller('SdTextEditorController', SdTextEditorController);
 
-SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element', 'editor'];
-function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) {
+SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element', 'editor', 'config'];
+function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, config) {
     var vm = this;
     function Block(attrs) {
         var self = this;
@@ -150,6 +150,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor) 
         return blocks;
     }
     angular.extend(vm, {
+        configuration: angular.extend({embeds: true}, config.editor || {}),
         blocks: [],
         initEditorWithOneBlock: function(model) {
             vm.model = model;
