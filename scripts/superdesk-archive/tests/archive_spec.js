@@ -6,6 +6,7 @@ describe('content', function() {
     beforeEach(module('superdesk.templates-cache'));
     beforeEach(module('superdesk.mocks'));
     beforeEach(module('superdesk.archive'));
+    beforeEach(module('superdesk.publish'));
 
     beforeEach(module(function($provide) {
         $provide.constant('config', {

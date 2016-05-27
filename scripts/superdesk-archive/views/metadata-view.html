@@ -17,7 +17,7 @@
             <dt translate>Word Count</dt>
             <dd>{{ item.word_count }}</dd>
         </dl>
-        <dl ng-if="item.keywords && item.keywords.length > 0">
+        <dl ng-if="item.keywords && item.keywords.length">
             <dt translate>Keywords</dt>
             <dd>{{ item.keywords | mergeWords}}</dd>
         </dl>
@@ -45,29 +45,29 @@
             <dt translate>Signal</dt>
             <dd>{{ item.signal }}</dd>
         </dl>
-        <dl>
-            <dt translate>ANPA Category</dt>
-            <dd ng-if="item['anpa_category']">{{ item['anpa_category'] | mergeWords:'name' }}</dd>
+        <dl ng-if="item.anpa_category && item.anpa_category.length">
+            <dt translate>Service</dt>
+            <dd>{{ item.anpa_category | mergeWords:'name' }}</dd>
         </dl>
-        <dl >
-            <dt translate>Subject</dt>
-            <dd ng-if="item.subject && item.subject.length > 0">{{ item.subject | mergeWords:'name'}}</dd>
+        <dl ng-repeat="cv in cvs track by cv._id" ng-if="item[cv.schema_field] | mergeWords:'name' : cv._id">
+            <dt>{{ cv.display_name | translate }}</dt>
+            <dd>{{ item[cv.schema_field] | mergeWords:'name' : cv._id}}</dd>
+        </dl>
+        <dl ng-if="item.genre  && item.genre.length > 0 && !genreInCvs">
+            <dt translate>Genre</dt>
+            <dd>{{ item.genre | mergeWords:'name'}}</dd>
+        </dl>
+        <dl ng-if="item.place && item.place.length > 0 && !placeInCvs">
+            <dt translate>Place</dt>
+            <dd>{{ item.place | mergeWords:'name'}}</dd>
         </dl>
         <dl ng-if="item.ednote">
             <dt translate>Editorial Note</dt>
             <dd>{{ item.ednote }}</dd>
         </dl>
-        <dl ng-if="item.genre  && item.genre.length > 0">
-            <dt translate>Genre</dt>
-            <dd>{{ item.genre | mergeWords:'name'}}</dd>
-        </dl>
         <dl>
             <dt translate>Dateline</dt>
             <dd>{{ item.dateline.text }}</dd>
-        </dl>
-        <dl ng-if="item.place && item.place.length > 0">
-            <dt translate>Place</dt>
-            <dd>{{ item.place | mergeWords:'name'}}</dd>
         </dl>
         <dl>
             <dt translate>Byline</dt>

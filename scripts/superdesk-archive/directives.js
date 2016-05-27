@@ -258,7 +258,7 @@
                 }
             };
         }])
-        .directive('sdMediaMetadata', ['userList', 'archiveService', function(userList, archiveService) {
+        .directive('sdMediaMetadata', ['userList', 'archiveService', 'metadata', function(userList, archiveService, metadata) {
             return {
                 scope: {
                     item: '='
@@ -269,6 +269,16 @@
                     scope.$watch('item', reloadData);
 
                     function reloadData() {
+                        var qcodes = [];
+                        var cvs = [];
+
+                        metadata.fetchMetadataValues().then(function() {
+                            metadata.filterCvs(qcodes, cvs);
+                            scope.cvs = _.sortBy(cvs, 'priority');
+                            scope.genreInCvs = _.pluck(cvs, 'schema_field').indexOf('genre') !== -1;
+                            scope.placeInCvs = _.pluck(cvs, 'schema_field').indexOf('place') !== -1;
+                        });
+
                         scope.originalCreator = scope.item.original_creator;
                         scope.versionCreator = scope.item.version_creator;
 

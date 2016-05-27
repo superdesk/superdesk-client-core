@@ -72,7 +72,7 @@
           <div class="authoring-header__item"
                sd-validation-error="error.genre"
                data-required="schema.genre.required"
-               ng-if="schema.genre && editor.genre"
+               ng-if="schema.genre && editor.genre && !genreInCvs"
                sd-width="{{editor.genre.sdWidth}}"
                order="{{editor.genre.order}}">
             <label class="authoring-header__item-label" translate>GENRE</label>
@@ -111,7 +111,7 @@
         <div class="authoring-header__item"
              sd-validation-error="error.place"
              data-required="schema.place.required"
-             ng-if="metadata.locators && schema.place && editor.place"
+             ng-if="metadata.locators && schema.place && editor.place && !placeInCvs"
              sd-width="{{editor.place.sdWidth}}"
              order="{{editor.place.order}}">
           <label class="authoring-header__item-label" translate>PLACE</label>
