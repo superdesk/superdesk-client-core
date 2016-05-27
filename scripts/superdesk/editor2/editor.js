@@ -1094,6 +1094,12 @@ angular.module('superdesk.editor2', [
                     editor.render();
                 };
 
+                scope.ignoreWord = function() {
+                    var word = scope.replaceTarget.textContent;
+                    spellcheck.ignoreWord(word);
+                    editor.render();
+                };
+
                 function doUndo() {
                     scope.$applyAsync(function() {
                         editor.undo(scope);
