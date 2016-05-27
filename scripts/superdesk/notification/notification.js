@@ -101,7 +101,7 @@
         _this.message = null;
 
         $rootScope.$on('disconnected', function(event) {
-            _this.message = gettext('Disconnected to Notification Server!');
+            _this.message = gettext('Disconnected from Notification Server!');
             $rootScope.$applyAsync(function () {
                 notify.warning(_this.message);
             });
