@@ -241,6 +241,7 @@
         };
 
         $scope.openDictionary = function(dictionary) {
+            $scope.loading = true;
             dictionaries.open(dictionary, function(result) {
                 $scope.origDictionary = result;
                 $scope.dictionary = _.create(result);
@@ -253,6 +254,10 @@
 
                 $scope.dictionary.is_active = $scope.dictionary.is_active !== 'false';
             });
+        };
+
+        $scope.stopLoading = function() {
+            $scope.loading = false;
         };
 
         $scope.closeDictionary = function() {
@@ -341,6 +346,8 @@
             $scope.wordsCount--;
         };
 
+        $scope.stopLoading = $scope.stopLoading || angular.noop;
+
         function isPrefix(prefix, word) {
             return word.length >= prefix.length && word.substr(0, prefix.length).toLowerCase() === prefix.toLowerCase();
         }
@@ -372,6 +379,8 @@
 
         var wordsTrie = {};
         $scope.wordsCount = 0;
+        generateTrie();
+        $scope.stopLoading();
 
         function addWordToTrie(word) {
             var key = word[0].toLowerCase();
@@ -382,10 +391,15 @@
             }
         }
 
-        for (var word in $scope.dictionary.content) {
-            if ($scope.dictionary.content.hasOwnProperty(word) || $scope.origDictionary.content.hasOwnProperty(word)) {
-                addWordToTrie(word);
-                $scope.wordsCount++;
+        function generateTrie() {
+            var content = $scope.dictionary.content;
+            if ($scope.origDictionary && $scope.origDictionary.content) {
+                content = $scope.dictionary.content;
+            }
+            var words = Object.keys(content || {});
+            $scope.wordsCount = words.length;
+            for (var i = 0; i < $scope.wordsCount; i++) {
+                addWordToTrie(words[i]);
             }
         }
 

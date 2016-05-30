@@ -1239,6 +1239,25 @@
         };
     }
 
+    /**
+     * Loading indicator directive
+     *
+     * Will fill the closest parent with position absolute/relative,
+     * not necessary the element where it's used.
+     */
+    function LoadingDirective() {
+        return {
+            transclude: true,
+            scope: {loading: '=sdLoading'},
+            template: [
+                '<div>',
+                    '<div ng-transclude></div>',
+                    '<div class="loading-overlay" ng-class="{active: loading}"></div>',
+                '</div>'
+            ].join('')
+        };
+    }
+
     return angular.module('superdesk.ui', [
         'superdesk.config',
         'superdesk.datetime',
@@ -1274,5 +1293,7 @@
         .directive('sdSplitterWidget', splitterWidget)
         .directive('sdMediaQuery', mediaQuery)
         .directive('sdFocusElement', focusElement)
-        .directive('sdValidationError', validationDirective);
+        .directive('sdValidationError', validationDirective)
+        .directive('sdLoading', LoadingDirective)
+        ;
 })();
