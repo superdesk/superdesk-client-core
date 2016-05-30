@@ -155,6 +155,38 @@ describe('spellcheck', function() {
         expect(then).not.toHaveBeenCalled();
     }));
 
+    it('can ignore word', inject(function(spellcheck, $rootScope, $location) {
+        $location.search('item', 'foo');
+        var p = createParagraph('ignore errors');
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(2);
+
+        spellcheck.ignoreWord('ignore');
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(1);
+
+        $location.search('item', 'bar');
+        $rootScope.$digest();
+
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(2);
+
+        $location.search('item', 'foo');
+        $rootScope.$digest();
+
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(1);
+
+        $rootScope.$broadcast('item:unlock', {item: 'foo'});
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(2);
+    }));
+
     function assignErrors(_errors) {
         errors.splice(0, errors.length);
         errors.push.apply(errors, _errors);

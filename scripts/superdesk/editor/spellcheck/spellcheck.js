@@ -5,10 +5,11 @@
 
 'use strict';
 
-SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope'];
-function SpellcheckService($q, api, dictionaries, $rootScope) {
+SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location'];
+function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
     var lang,
         dict,
+        ignored = {},
         abbreviationList = [],
         numberOfErrors,
         self;
@@ -263,7 +264,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope) {
                 while ((match = regexp.exec(tree.currentNode.textContent)) != null) {
                     var word = match[0];
                     var isSentenceWord = !!objSentenceWords[currentOffset + match.index];
-                    if (isNaN(word) && isSpellingMistake(word, isSentenceWord)) {
+                    if (isNaN(word) && !isIgnored(word) && isSpellingMistake(word, isSentenceWord)) {
                         errors.push({
                             word: word,
                             index: currentOffset + match.index,
@@ -302,11 +303,50 @@ function SpellcheckService($q, api, dictionaries, $rootScope) {
 
     /**
      * Add word to user dictionary
+     *
+     * @param {String} word
      */
     this.addWordToUserDictionary = function(word) {
         dictionaries.addWordToUserDictionary(word, lang);
         dict.content[word] = dict.content[word] ? dict.content[word] + 1 : 1;
     };
+
+    /**
+     * Ignore word when spellchecking
+     *
+     * @param {String} word
+     */
+    this.ignoreWord = function(word) {
+        getItemIgnored()[word] = 1;
+    };
+
+    /**
+     * Test if given word is in ingored
+     *
+     * @param {String} word
+     * @return {Boolean}
+     */
+    function isIgnored(word) {
+        return !!getItemIgnored()[word];
+    }
+
+    /**
+     * Get ignored collection for current item
+     *
+     * @return {Object}
+     */
+    function getItemIgnored() {
+        var item = $location.search().item || '';
+        ignored[item] = ignored[item] || {};
+        return ignored[item];
+    }
+
+    // reset ignore list for an item if it was unlocked
+    $rootScope.$on('item:unlock', function(event, data) {
+        if (ignored.hasOwnProperty(data.item)) {
+            ignored[data.item] = {};
+        }
+    });
 }
 
 SpellcheckMenuController.$inject = ['editor', 'preferencesService'];
