@@ -151,4 +151,68 @@ describe('superdesk.workspace.content', function() {
             expect(editor.slugline).toBeFalsy();
         }));
     });
+
+    describe('content profiles controller', function() {
+        beforeEach(module('superdesk.mocks'));
+        beforeEach(module('superdesk.workspace.content'));
+
+        it('should load profiles on start', inject(function($controller, content, $q, $rootScope) {
+            spyOn(content, 'getTypes').and.returnValue($q.when('list'));
+            var scope = $rootScope.$new();
+            var ctrl = $controller('ContentProfilesController', {$scope: scope});
+            scope.$digest();
+            expect(content.getTypes).toHaveBeenCalledWith(true);
+            expect(ctrl.items).toBe('list');
+        }));
+    });
+
+    describe('content profiles schema editor', function() {
+        var compile;
+
+        beforeEach(module('superdesk.workspace.content'));
+
+        beforeEach(inject(function(_$compile_, _$rootScope_) {
+            compile = function(props) {
+                var scope = _$rootScope_.$new();
+                angular.extend(scope, props);
+                return _$compile_(
+                    '<form><sd-content-schema-editor ng-model="schema"></sd-content-schema-editor></form>'
+                )(scope);
+            };
+        }));
+
+        it('render correctly', function() {
+            var el = compile({
+                schema: {
+                    'headline': {},
+                    'slugline': null
+                }
+            });
+
+            el.scope().$digest();
+
+            var fields = el.find('li');
+            expect(fields.length).toBe(2);
+            expect($(fields[0]).find('span.sd-toggle').hasClass('checked')).toBeTruthy();
+            expect($(fields[1]).find('span.sd-toggle').hasClass('checked')).toBeFalsy();
+        });
+
+        it('should dirty parent form when toggling fields', function() {
+            var el = compile({
+                schema: {
+                    'headline': {},
+                    'slugline': null
+                }
+            });
+
+            el.scope().$digest();
+
+            var fields = el.find('li');
+            var form = el.controller('form');
+
+            expect(form.$dirty).toBeFalsy();
+            $(fields[1]).find('span.sd-toggle').click();
+            expect(form.$dirty).toBeTruthy();
+        });
+    });
 });

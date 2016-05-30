@@ -63,6 +63,8 @@
     ])
         .service('content', ContentService)
         .directive('sdContentCreate', ContentCreateDirective)
+        .directive('sdContentSchemaEditor', ContentProfileSchemaEditor)
+        .controller('ContentProfilesController', ContentProfilesController)
         .config(['superdeskProvider', function(superdesk) {
             superdesk
                 .activity('/settings/content-profiles', {
@@ -71,7 +73,7 @@
                     controllerAs: 'ctrl',
                     templateUrl: 'scripts/superdesk-workspace/content/views/profile-settings.html',
                     category: superdesk.MENU_SETTINGS,
-                    priority: -800,
+                    priority: 100,
                     privileges: {} // todo(petr): pick something
                 });
         }])
@@ -167,6 +169,37 @@
             archiveService.addTaskToArticle(item);
 
             return save(item);
+        };
+
+        /**
+         * Creates a new content profile.
+         *
+         * @param {Object} data
+         * @return {Promise}
+         */
+        this.createProfile = function(data) {
+            return api.save('content_types', data);
+        };
+
+        /**
+         * Creates a new content profile.
+         *
+         * @param {Object} item
+         * @param {Object} updates
+         * @return {Promise}
+         */
+        this.updateProfile = function(item, updates) {
+            return api.update('content_types', item, updates);
+        };
+
+        /**
+         * Creates a new content profile.
+         *
+         * @param {Object} item
+         * @return {Promise}
+         */
+        this.removeProfile = function(item) {
+            return api.remove(item, {}, 'content_types');
         };
 
         /**
@@ -329,11 +362,146 @@
         };
     }
 
-    ContentProfilesController.$inject = ['content'];
-    function ContentProfilesController(content) {
-        // fetch all types
-        content.getTypes(true).then(function() {
-            this.types = content.types;
-        }.bind(this));
+    ContentProfilesController.$inject = ['$scope', 'notify', 'content', 'modal'];
+    function ContentProfilesController($scope, notify, content, modal) {
+        var that = this;
+
+        // creating will be true while the modal for creating a new content
+        // profile is visible.
+        $scope.creating = false;
+
+        // editing will hold data about the content profile being edited, as well
+        // as the bind to the editing form. If no profile is being edited, it will
+        // be null.
+        $scope.editing = null;
+
+        /**
+         * @description Refreshes the list of content profiles by fetching them.
+         * @returns {Promise}
+         * @private
+         */
+        function refreshList() {
+            return content.getTypes(true).then(function(types) {
+                that.items = types;
+            });
+        }
+
+        /**
+         * @description Reports that an error has occurred.
+         * @private
+         */
+        function reportError(resp) {
+            notify.error('Operation failed (check console for response).');
+            console.error(resp);
+        }
+
+        /**
+         * @description Toggles the visibility of the creation modal.
+         */
+        this.toggleCreate = function() {
+            $scope.new = {};
+            $scope.creating = !$scope.creating;
+        };
+
+        /**
+         * @description Toggles the visibility of the profile editing modal.
+         * @param {Object} p the content profile being edited.
+         */
+        this.toggleEdit = function(p) {
+            $scope.editing = angular.isObject(p) ? {
+                form: _.cloneDeep(p),
+                original: p
+            } : null;
+        };
+
+        /**
+         * @description Creates a new content profile.
+         */
+        this.save = function() {
+            content.createProfile($scope.new)
+                .then(refreshList, reportError)
+                .then(this.toggleCreate);
+        };
+
+        /**
+         * @description Commits the changes made in the editing form for a profile
+         * to the server.
+         */
+        this.update = function() {
+            var e = $scope.editing;
+            var diff = {};
+
+            Object.keys(e.form).forEach(function(k) {
+                if (!_.isEqual(e.form[k], e.original[k])) {
+                    diff[k] = e.form[k];
+                }
+            });
+
+            content.updateProfile(e.original, diff)
+                .then(refreshList, reportError)
+                .then(this.toggleEdit.bind(this, null));
+        };
+
+        /**
+         * @description Queries the user for confirmation and deletes the content profile.
+         */
+        this.delete = function(item) {
+            modal.confirm('Are you sure you want to delete this profile?').then(function() {
+                content.removeProfile(item)
+                    .then(refreshList, reportError)
+                    .then(this.toggleEdit.bind(this, null));
+            }.bind(this));
+        };
+
+        refreshList();
+    }
+
+    ContentProfileSchemaEditor.$inject = ['gettext'];
+    function ContentProfileSchemaEditor(gettext) {
+        // labelMap maps schema entry keys to their display names.
+        var labelMap = {
+            'headline': gettext('Headline'),
+            'slugline': gettext('Slug'),
+            'genre': gettext('Genre'),
+            'anpa_take_key': gettext('ANPA Take Key'),
+            'place': gettext('Place'),
+            'priority': gettext('Priority'),
+            'urgency': gettext('Urgency'),
+            'anpa_category': gettext('ANPA Category'),
+            'subject': gettext('Subject'),
+            'ednote': gettext('Editorial Note'),
+            'abstract': gettext('Abstract'),
+            'body_html': gettext('Body HTML'),
+            'byline': gettext('By'),
+            'dateline': gettext('Date'),
+            'located': gettext('Located'),
+            'sign_off': gettext('Sign Off')
+        };
+
+        return {
+            restrict: 'E',
+            templateUrl: 'scripts/superdesk-workspace/content/views/schema-editor.html',
+            require: '^form',
+            scope: {
+                schema: '=ngModel',
+            },
+            link: function(scope, elem, attr, form) {
+                /**
+                 * @description label returns the display name for a key.
+                 */
+                scope.label = function(id) {
+                    return labelMap[id];
+                };
+
+                /**
+                 * @description Toggles whether a field is enabled or not.
+                 * @param {String} id the key of the field to toggle.
+                 */
+                scope.toggle = function(id) {
+                    scope.schema[id] = !!scope.schema[id] ? null : {};
+                    form.$dirty = true;
+                };
+            }
+        };
     }
 })();
