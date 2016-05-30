@@ -1,6 +1,6 @@
 <div class="article-versions" ng-controller="VersioningWidgetCtrl">
     <ul class="versions-list card-list">
-        <li class="item" ng-class="{selected: selected === version}" ng-repeat="version in versions" ng-click="openVersion(version)" ng-disabled="!item._editable || dirty">
+        <li class="item" ng-class="{selected: selected === version}" ng-repeat="version in versions" ng-click="openVersion(version)" ng-disabled="dirty">
             <div class="header">
                 <time title="{{ :: version.versioncreated | date:'medium' }}">{{ version.versioncreated|reldate }}</time>
                 <span class="user">{{ :: 'by' | translate }} {{ version.creator }}</span>

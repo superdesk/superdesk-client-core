@@ -41,12 +41,14 @@ function VersioningController($scope, authoring, api, notify, lock, desks, archi
     }
 
     /**
-     * Open given version for preview
-     *
-     * If there is no autosave then last one will make item editable
+     * Opens the given version for preview if the story is not editable
+     * Or if editable but not dirty.
+     * Then the last version can be edited only when editable and not dirty.
      */
     $scope.openVersion = function (version) {
-        if ($scope.item._editable && !$scope.dirty) {
+        if (!$scope.item._editable) {
+            $scope.preview(version);
+        } else if ($scope.item._editable && !$scope.dirty) {
             $scope.selected = version;
             if (version === $scope.last && !$scope.item._autosave) {
                 if (!$scope._editable) {
