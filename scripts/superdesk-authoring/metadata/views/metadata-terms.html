@@ -12,7 +12,7 @@
         <i class="icon-white icon-plus-large"></i>
     </button>
     <ul class="dropdown-menu nested-menu pull-right">
-        <li ng-if="!activeTerm && header">
+        <li ng-show="!activeTerm && header">
             <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" always-visible="header" data-disabled="disabled || allSelected">
                 <ul ng-if="!activeTree.length || activeList">
                     <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]"><button>{{ :: t.name }}</button></li>

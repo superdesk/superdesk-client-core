@@ -398,9 +398,10 @@
             require: 'dropdown',
             link: function (scope, elem, attrs, dropdown) {
                 scope.$watch(dropdown.isOpen, function(isOpen) {
+                    var inputField = elem.find('input[type="text"]');
+
                     if (isOpen) {
                         _.defer(function() {
-                            var inputField = elem.find('input[type="text"]');
                             var buttonList = elem.find('button:not([disabled]):not(.dropdown-toggle)');
                             var handlers = {};
 
@@ -420,6 +421,13 @@
                                     event.preventDefault();
                                     event.stopPropagation();
                                     handlers[event.keyCode]();
+                                }
+                            });
+
+                            inputField.on('keydown', function(event) {
+                                var mainList = elem.find('.main-list').children('ul').find('li > button')[0];
+                                if (event.keyCode === Keys.down && mainList) {
+                                    mainList.focus();
                                 }
                             });
 
@@ -480,6 +488,7 @@
                         });
                     } else if (isOpen === false) { // Exclusively false, prevent executing if it is undefined
                         elem.off('keydown');
+                        inputField.off('keydown');
                     }
                 });
             }
