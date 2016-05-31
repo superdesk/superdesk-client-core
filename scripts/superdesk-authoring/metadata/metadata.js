@@ -666,6 +666,10 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         }
                     }
 
+                    if (term.language) {
+                        o.language = term.language;
+                    }
+
                     t.push(angular.extend({}, term, {
                         scheme: scope.cv ? scope.cv._id : null
                     }));
