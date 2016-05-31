@@ -881,7 +881,7 @@
                 controller: DeskConfigController
             };
         })
-        .directive('sdDeskConfigModal', ['metadata', function(metadata) {
+        .directive('sdDeskConfigModal', ['metadata', 'content', function(metadata, content) {
             return {
                 scope: {
                     modalActive: '=active',
@@ -895,6 +895,10 @@
                 link: function(scope, elem, attrs, ctrl) {
                     metadata.initialize().then(function() {
                         scope.metadata = metadata.values;
+                    });
+
+                    content.getTypes().then(function(profiles) {
+                        scope.profiles = profiles;
                     });
                 }
             };

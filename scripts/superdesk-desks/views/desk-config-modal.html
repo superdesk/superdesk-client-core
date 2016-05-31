@@ -56,6 +56,21 @@
                                     data-header="true">
                                 </div>
                             </div>
+                            <div class="field">
+                                <label translate>Content Profiles</label>
+                                <ul class="content-profiles-list pills">
+                                    <li ng-repeat="profile in profiles track by profile._id">
+                                        <label>{{ profile.label }}</label> <span sd-check ng-model="desk.edit.content_profiles[profile._id]"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="field">
+                                <label translate>Default Content Profile</label>
+                                <select
+                                    ng-model="desk.edit.default_content_profile"
+                                    ng-options="profile._id as profile.label for profile in profiles">
+                                </select>
+                            </div>
                         </fieldset>
                         <span class="alert-danger" ng-show="_errorLimits" translate>Character limit exceeded, desk can not be created/updated.</span>
                         <span class="alert-danger" ng-show="_error">{{ _errorMessage }}</span>
