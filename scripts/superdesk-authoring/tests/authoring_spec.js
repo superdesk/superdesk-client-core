@@ -601,7 +601,8 @@ describe('authoring actions', function() {
                 'type': 'text',
                 'task': {
                     'desk': 'desk1'
-                }
+                },
+                '_current_version': 1
             };
 
             var userPrivileges = {
@@ -630,7 +631,8 @@ describe('authoring actions', function() {
                 'type': 'text',
                 'task': {
                     'desk': 'desk1'
-                }
+                },
+                '_current_version': 1
             };
 
             var userPrivileges = {
@@ -659,7 +661,8 @@ describe('authoring actions', function() {
                 'type': 'text',
                 'task': {
                     'desk': 'desk1'
-                }
+                },
+                '_current_version': 1
             };
 
             var userPrivileges = {
@@ -843,7 +846,8 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false
+                'more_coming': false,
+                '_current_version': 1
             };
 
             var userPrivileges = {
@@ -870,6 +874,7 @@ describe('authoring actions', function() {
                 'state': 'published',
                 'marked_for_not_publication': false,
                 'type': 'text',
+                '_current_version': 1,
                 'task': {
                     'desk': 'desk1'
                 },
@@ -883,7 +888,8 @@ describe('authoring actions', function() {
                     },
                     'takes': {
                         'last_take': 'test'
-                    }
+                    },
+                    '_current_version': 1
                 }
             };
 
@@ -1196,8 +1202,43 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    'mark_item', 'package_item', 'multi_edit', 'publish', 're_write']);
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
+                    'mark_item', 'package_item', 'multi_edit', 'publish']);
+        }));
+
+    it('Cannot perform new take if the version is zero',
+        inject(function(privileges, desks, authoring, $q, $rootScope) {
+            var item = {
+                '_id': 'test',
+                'state': 'in_progress',
+                'flags': {'marked_for_not_publication': false},
+                'type': 'text',
+                'task': {
+                    'desk': 'desk1'
+                },
+                'more_coming': false,
+                '_current_version': 0
+            };
+
+            var userPrivileges = {
+                'duplicate': true,
+                'mark_item': false,
+                'spike': true,
+                'unspike': true,
+                'mark_for_highlights': true,
+                'unlock': true,
+                'publish': true,
+                'correct': true,
+                'kill': true,
+                'package_item': false,
+                'move': true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
+                    'mark_item', 'package_item', 'multi_edit', 'publish']);
         }));
 
     it('Cannot send item if the no move privileges',
