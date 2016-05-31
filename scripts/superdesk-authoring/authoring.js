@@ -38,7 +38,8 @@
         company_codes: [],
         schedule_settings: null,
         sms_message: null,
-        poi: {}
+        poi: {},
+        profile: null
     });
 
     var DEFAULT_ACTIONS = Object.freeze({
