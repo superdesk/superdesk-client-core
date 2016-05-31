@@ -1580,7 +1580,6 @@
                             scope.flags = false;
                             scope.meta = {};
                             scope.fields = {};
-                            scope.providers = [];
                             scope.searchProviderTypes = searchProviderService.getProviderTypes();
                             scope.cvs = metadata.search_cvs;
                             scope.search_config = metadata.search_config;
