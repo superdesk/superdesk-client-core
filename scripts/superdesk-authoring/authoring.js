@@ -2889,9 +2889,7 @@
                         item = _.pick(result, _.keys(CONTENT_FIELDS_DEFAULTS));
                         scope.origItem = angular.extend({}, scope.item);
                         _.each(item, function(value, key) {
-                            if (!_.isEmpty(value)) {
-                                scope.origItem[key] = value;
-                            }
+                            scope.origItem[key] = value;
                         });
                     }, function(err) {
                         notify.error(gettext('Failed to apply kill template to the item.'));
