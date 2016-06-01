@@ -15,7 +15,7 @@
             </button>
         </div>
 
-        <div class="content dictionary-settings">
+        <div class="content dictionary-settings" sd-loading="loading">
             <div sd-shadow>
                 <ul class="pills-list">
                     <li ng-repeat="dictionary in dictionaries._items track by dictionary._id" ng-class="{inactive: dictionary.is_active === 'false'}">
