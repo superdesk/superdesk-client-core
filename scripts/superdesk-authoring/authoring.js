@@ -2639,8 +2639,22 @@
                 scope.$watch('item.flags.marked_for_sms', function(isMarked) {
                     if (isMarked) {
                         scope.item.sms_message = scope.item.sms_message || scope.item.headline || '';
-                    } else {
+                    } else if (scope.item) {
                         scope.item.sms_message = '';
+                    }
+                });
+
+                scope.$watch('item.profile', function (profile) {
+                    if (profile) {
+                        content.getType(profile)
+                            .then(function(type) {
+                                scope.contentType = type;
+                                scope.editor = authoring.editor = content.editor(type);
+                                scope.schema = authoring.schema = content.schema(type);
+                            });
+                    } else {
+                        scope.editor = authoring.editor = content.editor();
+                        scope.schema = authoring.schema = content.schema();
                     }
                 });
 
@@ -2981,17 +2995,6 @@
 
                     return display;
                 };
-
-                scope.$watch('item.profile', function (profile) {
-                    if (profile) {
-                        content.getType(profile)
-                            .then(function(type) {
-                                scope.contentType = type;
-                                scope.editor = authoring.editor = content.editor(type);
-                                scope.schema = authoring.schema = content.schema(type);
-                            });
-                    }
-                });
 
                 scope.$watch('item', function (item) {
                     if (!item) {

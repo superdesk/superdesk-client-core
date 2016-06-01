@@ -186,8 +186,8 @@
         };
     }
 
-    MultieditArticleDirective.$inject = ['authoring', 'multiEdit', '$timeout'];
-    function MultieditArticleDirective(authoring, multiEdit, $timeout) {
+    MultieditArticleDirective.$inject = ['authoring', 'multiEdit', 'lock', '$timeout'];
+    function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
         return {
             templateUrl: 'scripts/superdesk-authoring/multiedit/views/sd-multiedit-article.html',
             scope: {article: '=', focus: '='},
@@ -210,6 +210,7 @@
                                 elem.children().focus();
                             }, 0, false);
                         }
+                        scope.isLocked = lock.isLocked(item);
                     });
                 }
 
