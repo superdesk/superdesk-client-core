@@ -563,11 +563,13 @@
             }
 
             // new take should be on the text item that are closed or last take but not killed and doesn't have embargo.
-            action.new_take = !is_read_only_state && current_item.type === 'text' &&
+            var new_take = !is_read_only_state && current_item.type === 'text' &&
                 !current_item.embargo && (this.isPublished(current_item) || !current_item.publish_schedule) &&
                 (angular.isUndefined(current_item.takes) || current_item.takes.last_take === current_item._id) &&
                 (angular.isUndefined(current_item.more_coming) || !current_item.more_coming) && !isBroadcast &&
                 !current_item.rewritten_by;
+
+            action.new_take = new_take;
 
             // item is published state - corrected, published, scheduled, killed
             if (self.isPublished(current_item)) {
@@ -648,6 +650,7 @@
                     action = angular.extend({}, DEFAULT_ACTIONS);
                     // user can action `update` even if the user is not a member.
                     action.re_write = re_write;
+                    action.new_take = new_take;
                 }
             } else {
                 // personal

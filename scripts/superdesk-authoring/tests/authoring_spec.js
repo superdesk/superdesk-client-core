@@ -688,7 +688,8 @@ describe('authoring actions', function() {
                 'type': 'text',
                 'task': {
                     'desk': 'desk3'
-                }
+                },
+                '_current_version': 2
             };
 
             var userPrivileges = {
@@ -697,13 +698,14 @@ describe('authoring actions', function() {
                 'spike': true,
                 'unspike': true,
                 'mark_for_highlights': true,
-                'unlock': true
+                'unlock': true,
+                'archive': true
             };
 
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['view', 're_write']);
+            allowedActions(itemActions, ['view', 're_write', 'new_take']);
         }));
 
     it('can only view the item if the item is killed',
