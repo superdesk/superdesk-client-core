@@ -182,8 +182,7 @@
 
         <div class="field">
           <label translate>new</label>
-          <input name="new" type="password" ng-model="newPwd" required ng-minlength="5">
-          <p sd-valid-error ng-show="changePasswordForm.new.$error.minlength">please provide password at least 5 characters long.</p>
+          <input sd-password-strength name="new" type="password" ng-model="newPwd" required>
         </div>
 
         <div class="field">
