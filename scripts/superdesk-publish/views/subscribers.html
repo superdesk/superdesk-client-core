@@ -66,11 +66,18 @@
                             </select>
                         </div>
 
-                        
-
                         <div class="field">
                             <label translate>Subscriber codes</label><i class="field-info" translate>*comma separated values</i>
                             <textarea class="fullwidth-input" ng-model="subscriber.codes"></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label class="left">
+                                {{:: 'Targetable by users' | translate }}
+                                <span title="{{ subscriber.is_targetable ? 'Deactivate' : 'Activate'  | translate }}">
+                                    <span sd-switch ng-model="subscriber.is_targetable"></span>
+                                </span>
+                            </label>
                         </div>
 
                         <div class="field">
