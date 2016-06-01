@@ -654,8 +654,12 @@
                         function(data, $rootScope, desks, authoring, authoringWorkspace, notify) {
                             // get the desk of the item to create the new take.
                             var deskId = null;
-                            if (data.item.task && data.item.task.desk) {
-                                deskId = data.item.task.desk;
+                            deskId = desks.getCurrentDeskId();
+
+                            if (!deskId) {
+                                notify.error(gettext('Desk not specified. ' +
+                                    'Please select Desk or configure a default desk.'));
+                                return;
                             }
 
                             authoring.linkItem(data.item, null, deskId)
