@@ -8,7 +8,7 @@
      class="block__container"
      ng-class="{'block--selected': vm.blockToMoveIndex === $index,
                 'block--not-alone-and-empty': vm.blocks.length > 1 && !block.body}">
-    <div class="block__actions" ng-if="vm.config.multiBlockEdition && !vm.reorderingMode">
+    <div class="block__actions" ng-if="vm.config.multiBlockEdition && !vm.reorderingMode && vm.configuration.embeds">
         <div class="block__remove" ng-click="vm.removeBlock(block)">
             <i class="icon-close-small"></i>
         </div>

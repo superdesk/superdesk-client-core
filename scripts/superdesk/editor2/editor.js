@@ -68,6 +68,18 @@ function HistoryStack(initialValue) {
     };
 }
 
+/**
+ * Escape given string for reg exp
+ *
+ * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+ *
+ * @param {string} string
+ * @return {string}
+ */
+function escapeRegExp(string){
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 EditorService.$inject = ['spellcheck', '$q', 'lodash', 'renditions', 'editorUtils'];
 function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
@@ -238,6 +250,16 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         }
     };
 
+    function replaceText(scope, text, className) {
+        if (!className) {
+            className = ACTIVE_CLASS;
+        }
+        var nodes = scope.node.parentNode.getElementsByClassName(className);
+        var nodesLength = nodes.length;
+        self.replaceNodes(nodes, text, scope);
+        return nodesLength;
+    }
+
     /**
      * Replace active node with given text.
      *
@@ -245,8 +267,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
      */
     this.replace = function(text) {
         scopes.forEach(function(scope) {
-            var nodes = scope.node.parentNode.getElementsByClassName(ACTIVE_CLASS);
-            this.replaceNodes(nodes, text, scope);
+            replaceText(scope, text);
             this.commitScope(scope);
         }.bind(this));
     };
@@ -287,11 +308,13 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
      * @param {string} text
      */
     this.replaceNodes = function(nodes, text, scope) {
+        var index, replacementOffset = 0;
         for (var i = 0, l = nodes.length; i < l; i++) {
             var node = nodes.item(i);
             var word = node.dataset.word;
-            var index = parseInt(node.dataset.index, 10);
+            index = parseInt(node.dataset.index, 10) + replacementOffset;
             this.replaceWord(scope, index, word.length, text);
+            replacementOffset += (text.length - word.length);
         }
     };
 
@@ -322,16 +345,66 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
     };
 
     /**
+     * Replace abbreviations.
+     * @param {Scope} scope
+     */
+    function replaceAbbreviations (scope) {
+        if (!scope.node.parentNode.classList.contains(TYPING_CLASS)) {
+            return $q.when({});
+        }
+
+        if (scope.node.innerText !== '') {
+            return spellcheck.getAbbreviationsDict().then(function(abbreviations) {
+                if (_.keys(abbreviations).length) {
+                    var pattern = '\\b(' + _.map(_.keys(abbreviations), function(item) {
+                            return escapeRegExp(item);
+                        }).join('|') + ')(\\*)';
+                    var found = scope.node.innerText.match(new RegExp(pattern, 'g'));
+                    if (found) {
+                        // store old settings
+                        var old_settings = angular.extend({}, self.settings);
+                        var caretPosition = scope.medium.exportSelection();
+
+                        _.forEach(_.uniq(found), function(val) {
+                            var replacementValue = abbreviations[val.replace('*', '')];
+                            if (replacementValue) {
+                                var diff = {};
+                                diff[val] = replacementValue;
+                                self.setSettings({findreplace: {diff: diff, caseSensitive: true}});
+                                renderFindreplace(scope.node);
+                                var nodesLength = replaceText(scope, replacementValue, FINDREPLACE_CLASS);
+                                if (nodesLength > 0) {
+                                    var incrementCaretPosition = (replacementValue.length - val.length) * nodesLength;
+                                    caretPosition.start += incrementCaretPosition;
+                                    caretPosition.end += incrementCaretPosition;
+                                }
+                            }
+                        });
+
+                        scope.medium.importSelection(caretPosition);
+                        // apply old settings
+                        self.setSettings({findreplace: (old_settings.findreplace ? old_settings.findreplace : null)});
+                    }
+                }
+            });
+        }
+
+        return $q.when({});
+    }
+
+    /**
      * Commit changes in given scope to its model
      *
      * @param {Scope} scope
      */
     this.commitScope = function(scope) {
-        var nodeValue = scope.node.innerHTML;
-        if (nodeValue !== scope.model.$viewValue) {
-            scope.model.$setViewValue(nodeValue);
-            scope.history.add(scope.model.$viewValue);
-        }
+        replaceAbbreviations(scope).then(function() {
+            var nodeValue = scope.node.innerHTML;
+            if (nodeValue !== scope.model.$viewValue) {
+                scope.model.$setViewValue(nodeValue);
+                scope.history.add(scope.model.$viewValue);
+            }
+        });
     };
 
     /**
@@ -667,7 +740,6 @@ angular.module('superdesk.editor2', [
             spellcheck: false,
             targetBlank: true
         };
-
         if (config.editor) {
             angular.extend(EDITOR_CONFIG, config.editor);
         }
@@ -870,6 +942,7 @@ angular.module('superdesk.editor2', [
                 ngModel.$render = function() {
                     editor.registerScope(scope);
                     var editorConfig = angular.merge({}, EDITOR_CONFIG, scope.config || {});
+
                     if (editorConfig.toolbar) {
                         editorConfig.toolbar.buttons = [];
                         setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
@@ -894,6 +967,7 @@ angular.module('superdesk.editor2', [
                     if (scope.medium) {
                         scope.medium.destroy();
                     }
+
                     // create a new instance of the medium editor binded to this node
                     scope.medium = new window.MediumEditor(scope.node, editorConfig);
                     // restore the selection if exist
@@ -1286,18 +1360,6 @@ function EditorUtilsFactory() {
 
             currentOffset += currentLength;
         }
-    }
-
-    /**
-     * Escape given string for reg exp
-     *
-     * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-     *
-     * @param {string} string
-     * @return {string}
-     */
-    function escapeRegExp(string){
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     return {
