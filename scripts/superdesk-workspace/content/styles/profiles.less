@@ -1,0 +1,49 @@
+.profile-settings {
+	.card-box {
+		cursor: pointer;
+
+		&:hover .icon-pencil {
+			opacity: 1;
+		}
+
+		.icon-pencil {
+			opacity: 0;
+			transition: 0.3s all;
+			color: #EEE;
+		}
+	}
+
+}
+
+sd-content-schema-editor {
+	.schema-editor {
+		margin-bottom: 10px;
+		overflow: hidden;
+		padding: 12px;
+		background-color: #f3f3f3;
+		border-radius: 2px;
+		box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+		box-sizing: border-box;
+
+		h4 {
+			padding: 5px;
+		}
+
+		ul.pills-list {
+			padding-top: 10px;
+
+			li {
+				.header {
+					.title {
+						font-weight: bold;
+						font-size: 14px;
+					}
+				}
+
+				.body {
+					padding-top: 10px;
+				}
+			}
+		}
+	}
+}
