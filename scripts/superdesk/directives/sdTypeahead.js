@@ -20,7 +20,7 @@
          * @scope {Function} select - callback for select item aciton
          *
          */
-        directive('sdTypeahead', ['$timeout', 'Keys', function($timeout, Keys) {
+        directive('sdTypeahead', ['$timeout', 'Keys', '$document', function($timeout, Keys, $document) {
             return {
                 restrict: 'A',
                 transclude: true,
@@ -67,6 +67,13 @@
                             $scope.hide = true;
                             $scope.focused = false;
                             $scope.select({item: item});
+                            $scope.active = null;
+                            $scope.term = null;
+
+                            // triggers closing of dropdown when adding item on search by pressing enter
+                            if (item) {
+                                $document.triggerHandler('click');
+                            }
                         }
                     };
 
@@ -121,22 +128,29 @@
                             e.preventDefault();
                         }
 
+                        var list = element.find('.item-list')[0];
+                        var active = element.find('.active')[0];
+
                         if (e.keyCode === Keys.down) {
                             e.preventDefault();
                             e.stopPropagation();
-                            scope.$apply(function() {
-                                controller.activateNextItem();
-                                scrollToActive();
-                            });
+                            if (list && list.children.length) {
+                                scope.$apply(function() {
+                                    controller.activateNextItem();
+                                    scrollToActive(list, active);
+                                });
+                            }
                         }
 
                         if (e.keyCode === Keys.up) {
                             e.preventDefault();
                             e.stopPropagation();
-                            scope.$apply(function() {
-                                controller.activatePreviousItem();
-                                scrollToActive();
-                            });
+                            if (list && list.children.length) {
+                                scope.$apply(function() {
+                                    controller.activatePreviousItem();
+                                    scrollToActive(list, active);
+                                });
+                            }
                         }
                     });
 
@@ -145,10 +159,8 @@
                         $list.off();
                     });
 
-                    function scrollToActive() {
+                    function scrollToActive(list, active) {
                         $timeout(function() {
-                            var list = element.find('.item-list')[0];
-                            var active = element.find('.active')[0];
                             if (list && active) {
                                 list.scrollTop = Math.max(0, active.offsetTop - 2 * active.clientHeight);
                             }
@@ -158,6 +170,8 @@
                     scope.$watch('focused', function(focused) {
                         if (focused) {
                             $timeout(function() { $input.focus(); }, 0, false);
+                        } else {
+                            scope.active = null;
                         }
                     });
 
