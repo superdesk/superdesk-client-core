@@ -22,7 +22,7 @@ function MacrosService(api, notify, $filter) {
                 page++;
                 return _getAllMacros(criteria, page, macros);
             }
-            return $filter('sortByName')(macros);
+            return $filter('sortByName')(macros, 'label');
         });
     };
 
@@ -84,6 +84,8 @@ function MacrosService(api, notify, $filter) {
 
 MacrosController.$inject = ['$scope', 'macros', 'desks', 'autosave', '$rootScope'];
 function MacrosController($scope, macros, desks, autosave, $rootScope) {
+    $scope.loading = true;
+
     macros.get().then(function() {
         var currentDeskId = desks.getCurrentDeskId();
         if (currentDeskId !== null) {
@@ -93,7 +95,9 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
         } else {
             $scope.macros = macros.macros;
         }
+        $scope.loading = false;
     });
+
     $scope.call = function(macro) {
         var item = _.extend({}, $scope.origItem, $scope.item);
         return macros.call(macro, item).then(function(res) {

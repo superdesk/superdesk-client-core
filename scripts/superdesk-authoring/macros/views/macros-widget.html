@@ -1,6 +1,5 @@
 <div class="widget" ng-controller="Macros">
-    <h3>Macros</h3>
-    <ul class="link-list">
+    <ul class="link-list" sd-loading="loading">
         <li ng-repeat="macro in macros">
             <button class="btn" ng-click="call(macro)">{{ macro.label }}</button>
         </li>
