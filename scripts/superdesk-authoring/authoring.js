@@ -1378,12 +1378,23 @@
                     $scope.dirty = false;
                 }
 
+                function validateForPublish(item) {
+                    if (item.type === 'picture') {
+                        if (item.alt_text === null || _.trim(item.alt_text) === '') {
+                            notify.error(gettext('Alt text is mandatory for image publishing! ' +
+                                'Edit crops to fill in the alt text.'));
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
                 /**
                  * Depending on the item state one of the publish, correct, kill actions will be executed on the item
                  * in $scope.
                  */
                 $scope.publish = function() {
-                    if (validatePublishScheduleAndEmbargo($scope.item)) {
+                    if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                         var message = 'publish';
                         if ($scope.action && $scope.action !== 'edit') {
                             message = $scope.action;
