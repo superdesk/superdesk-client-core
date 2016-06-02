@@ -681,7 +681,7 @@
                             scope.selectedSubscribers = {items: []};
 
                             if (item && !scope.customSubscribers) {
-                                subscribersService.fetchActiveSubscribers().then(function(items) {
+                                subscribersService.fetchTargetableSubscribers().then(function(items) {
                                     scope.customSubscribers = [];
                                     scope.subscribers = items._items;
                                     _.each(items, function(item) {

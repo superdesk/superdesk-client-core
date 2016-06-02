@@ -892,7 +892,7 @@ function MetadataService(api, $q, subscribersService, config) {
         fetchSubscribers: function() {
             var self = this;
             self.values.customSubscribers = [];
-            return subscribersService.fetchActiveSubscribers().then(function(items) {
+            return subscribersService.fetchTargetableSubscribers().then(function(items) {
                 _.each(items, function(item) {
                     self.values.customSubscribers.push({'_id': item._id, 'name': item.name});
                 });

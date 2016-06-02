@@ -81,6 +81,14 @@
                 });
             },
 
+            fetchTargetableSubscribers: function(criteria) {
+                return _getAllSubscribers(criteria).then(function(result) {
+                    return _.filter(result, function(r) {
+                        return (!('is_targetable' in r) || r.is_targetable) && r.is_active;
+                    });
+                });
+            },
+
             fetchSubscribersByKeyword: function(keyword) {
                 return this.fetchSubscribers({'$or': [{name: {'$regex': keyword, '$options': '-i'}}]});
             },
@@ -583,6 +591,10 @@
                         $scope.subscriber = _.create($scope.origSubscriber);
                         $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
                         $scope.subscriber.sequence_num_settings = $scope.origSubscriber.sequence_num_settings;
+
+                        if (!('is_targetable' in $scope.origSubscriber)) {
+                            $scope.subscriber.is_targetable = true;
+                        }
 
                         $scope.subscriber.products = [];
                         if ($scope.origSubscriber.products) {

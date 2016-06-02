@@ -8,7 +8,10 @@ describe('subscribers service', function() {
     beforeEach(inject(function(subscribersService, $q, api) {
         spyOn(api, 'query').and.returnValue($q.when({
             _items: [{'name': 'sub-1', 'is_active': false},
-            {'name': 'sub-2', 'is_active': true}, {'name': 'sub-3', 'is_active': false}],
+            {'name': 'sub-2', 'is_active': true, 'is_targetable': true},
+            {'name': 'sub-3', 'is_active': false},
+            {'name': 'sub-4', 'is_active': true, 'is_targetable': false},
+            {'name': 'sub-5', 'is_active': true}],
             _links: {}
         }));
     }));
@@ -20,7 +23,7 @@ describe('subscribers service', function() {
         });
 
         $rootScope.$digest();
-        expect(allSubscribers.length).toBe(3);
+        expect(allSubscribers.length).toBe(5);
     }));
 
     it('can get all subscribers with criteria', inject(function(subscribersService, api, $q, $rootScope) {
@@ -36,7 +39,17 @@ describe('subscribers service', function() {
         });
 
         $rootScope.$digest();
-        expect(allSubscribers.length).toBe(1);
+        expect(allSubscribers.length).toBe(3);
+    }));
+
+    it('can get all targetable subscribers', inject(function(subscribersService, api, $q, $rootScope) {
+        var allSubscribers;
+        subscribersService.fetchTargetableSubscribers().then(function(subs) {
+            allSubscribers = subs;
+        });
+
+        $rootScope.$digest();
+        expect(allSubscribers.length).toBe(2);
     }));
 
 });
