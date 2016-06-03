@@ -643,7 +643,6 @@
 
                     scope.$watch('items', function() {
                         tags.initSelectedFacets().then(function(currentTags) {
-
                             scope.tags = currentTags;
 
                             if (!scope.items || scope.items._aggregations === undefined) {
@@ -1042,6 +1041,7 @@
                      * Function for fetching total items and filling scope for the first time.
                      */
                     function _queryItems() {
+                        scope.loading = true;
                         criteria = search.query($location.search()).getCriteria(true);
                         criteria.source.size = 50;
                         criteria.source.from = 0;
@@ -1055,6 +1055,7 @@
                             scope.total = items._meta.total;
                             scope.$applyAsync(function() {
                                 render(items);
+                                scope.loading = false;
                             });
                         });
 

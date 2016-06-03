@@ -1568,7 +1568,7 @@
                                     ),
                                     onClick: this.closeActionsMenu,
                                 },
-                                isEmpty ?
+                                isEmpty && !scope.loading ?
                                     React.createElement(
                                         'li',
                                         {onClick: this.closeActionsMenu},
@@ -1647,7 +1647,7 @@
                                 itemsById: itemsById,
                                 view: scope.view
                             }, function() {
-                                scope.rendering = false;
+                                scope.rendering = scope.loading = false;
                             });
                         });
 
@@ -1738,7 +1738,7 @@
                             }
 
                             if (isListEnd(elem[0]) && !scope.rendering) {
-                                scope.rendering = true;
+                                scope.rendering = scope.loading = true;
                                 scope.fetchNext(listComponent.state.itemsList.length);
                             }
                         }
