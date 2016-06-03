@@ -148,7 +148,7 @@
                         _month = momentizedTimestamp.format('MMM');
                     }
 
-                    return $filter('formatDatelineToLocMMMDDSrc')(located, _month, momentizedTimestamp.format('DD'), source);
+                    return $filter('formatDatelineText')(located, _month, momentizedTimestamp.format('D'), source);
                 } else {
                     return '';
                 }
@@ -160,13 +160,13 @@
                 var daysInCurrMonth = [];
 
                 for (var i = _timeStamp.startOf('month').date(); i <= _timeStamp.endOf('month').date(); i++) {
-                    daysInCurrMonth.push(i < 10 ? ('0' + i) : i.toString());
+                    daysInCurrMonth.push(i.toString());
                 }
 
                 return daysInCurrMonth;
             };
         })
-        .filter('formatDatelineToMMDD', function() {
+        .filter('parseDateline', function() {
             return function (date_to_format, located) {
                 var momentizedTimestamp = moment.utc(date_to_format);
 
@@ -174,10 +174,10 @@
                     momentizedTimestamp = momentizedTimestamp.tz(located.tz);
                 }
 
-                return {'month': momentizedTimestamp.month().toString(), 'day': momentizedTimestamp.format('DD')};
+                return {'month': momentizedTimestamp.month().toString(), 'day': momentizedTimestamp.format('D')};
             };
         })
-        .filter('formatDatelineToLocMMMDDSrc', function() {
+        .filter('formatDatelineText', function() {
             return function(located, month, date, source) {
                 if (!source) {
                     source = '';
