@@ -104,6 +104,19 @@ describe('superdesk.workspace.content', function() {
             expect(content.types).toBe(types);
         }));
 
+        it('can fetch content types and filter by desk', inject(function(content, $rootScope, $q) {
+            spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo'}, {_id: 'bar'}]));
+
+            var profiles;
+            content.getDeskProfiles({content_profiles: {bar: 1}}).then(function(_profiles) {
+                profiles = _profiles;
+            });
+
+            $rootScope.$digest();
+            expect(profiles.length).toBe(1);
+            expect(profiles[0]._id).toBe('bar');
+        }));
+
         it('can get content type', inject(function(api, content, $rootScope, $q) {
             var type = {_id: 'foo'};
             spyOn(api, 'find').and.returnValue($q.when(type));

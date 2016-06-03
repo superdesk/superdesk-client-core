@@ -256,6 +256,23 @@
         this.editor = function(contentType) {
             return contentType && contentType.editor ? angular.extend({}, contentType.editor) : DEFAULT_EDITOR;
         };
+
+        /**
+         * Get profiles selected for given desk
+         *
+         * @param {Object} desk
+         * @return {Promise}
+         */
+        this.getDeskProfiles = function(desk) {
+            return this.getTypes().then(function(profiles) {
+                return !desk || _.isEmpty(desk.content_profiles) ?
+                    profiles :
+                    profiles.filter(function(profile) {
+                        return desk.content_profiles[profile._id];
+                    }
+                );
+            });
+        };
     }
 
     ContentCreateDirective.$inject = ['api', 'desks', 'templates', 'content', 'authoringWorkspace', 'superdesk', 'keyboardManager',
@@ -323,12 +340,18 @@
 
                 scope.contentTemplates = null;
 
-                scope.$watch(function() {
-                    return desks.activeDeskId;
-                }, function() {
-                    templates.getRecentTemplates(desks.activeDeskId, NUM_ITEMS)
-                    .then(function(result) {
-                        scope.contentTemplates = result;
+                desks.initialize().then(function() {
+                    scope.$watch(function() {
+                        return desks.active.desk;
+                    }, function(activeDeskId) {
+                        templates.getRecentTemplates(activeDeskId, NUM_ITEMS).then(function(result) {
+                            scope.contentTemplates = result;
+                        });
+
+                        content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null)
+                            .then(function(profiles) {
+                                scope.profiles = profiles;
+                            });
                     });
                 });
 
@@ -351,13 +374,6 @@
                 scope.createFromType = function(contentType) {
                     content.createItemFromContentType(contentType).then(edit);
                 };
-
-                /**
-                 * Populate list of available content types
-                 */
-                content.getTypes().then(function() {
-                    scope.content_types = content.types;
-                });
             }
         };
     }
