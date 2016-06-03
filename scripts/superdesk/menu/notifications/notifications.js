@@ -199,7 +199,7 @@
      */
     MarkAsReadDirective.$inject = ['userNotifications', '$timeout'];
     function MarkAsReadDirective(userNotifications, $timeout) {
-        var TIMEOUT = 5000;
+        var TIMEOUT = 1500;
         return {
             link: function(scope) {
                 if (!scope.notification._unread) {
