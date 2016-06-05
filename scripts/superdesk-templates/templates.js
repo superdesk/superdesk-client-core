@@ -37,8 +37,8 @@
         var PAGE_SIZE = 10;
         var PREFERENCES_KEY = 'templates:recent';
 
-        var KILL_TEMPLATE_IGNORE_FIELDS = ['dateline', 'template_desk', 'template_stage',
-        'schedule', 'next_run', 'last_run'];
+        var KILL_TEMPLATE_IGNORE_FIELDS = ['dateline', 'template_desks', 'schedule_desk',
+        'schedule_stage', 'schedule', 'next_run', 'last_run'];
 
         this.TEMPLATE_METADATA = [
             'headline',
@@ -111,7 +111,7 @@
                 }
 
                 if (desk) { // all non private desk templates
-                    criteria.$or.push({template_desk: desk});
+                    criteria.template_desks = desk;
                 }
             }
 
@@ -213,6 +213,7 @@
                 $scope.origTemplate = null;
                 $scope.template = null;
                 $scope.desks = null;
+                $scope.template_desk = null;
 
                 function fetchTemplates() {
                     templates.fetchTemplates(1, 50).then(
@@ -231,6 +232,53 @@
                     $scope.content_types = content.types;
                 });
 
+                $scope.showDesks = function() {
+                    return $scope.template != null &&
+                        $scope.template.template_type != null &&
+                        $scope.template.template_type !== 'kill' &&
+                        $scope.template.is_public;
+                };
+
+                $scope.showStages = function() {
+                    return $scope.showScheduling() &&
+                        $scope.stages != null && $scope.stages.length > 0;
+                };
+
+                $scope.showScheduling = function() {
+                    return $scope.template != null &&
+                        $scope.template.template_type !== 'kill' &&
+                        $scope.template.is_public;
+                };
+
+                $scope.isDeskSelected = function(deskId) {
+                    if (!angular.isDefined($scope.template.template_type)) {
+                        return false;
+                    }
+                    if ($scope.template.template_type === 'create') {
+                        return $scope.template.template_desks != null &&
+                            $scope.template.template_desks.indexOf(deskId) !== -1;
+                    } else {
+                        return $scope.template_desk === deskId;
+                    }
+                };
+
+                $scope.setTemplateDesks = function(deskId) {
+                    if (deskId == null || deskId === '') {
+                        $scope.template.template_desks = null;
+                    } else {
+                        $scope.template.template_desks = [deskId];
+                    }
+                };
+
+                $scope.resetDesks = function() {
+                    if ($scope.template.template_desks != null &&
+                            $scope.template.template_type !== 'create' &&
+                            $scope.template.template_desks.length > 0) {
+                        $scope.template.template_desks.splice(1, $scope.template.template_desks.length - 1);
+                        $scope.template_desk = $scope.template.template_desks[0];
+                    }
+                };
+
                 $scope.templatesFilter = function(template_type) {
                     if ($scope.template._id && $scope.template.template_type === 'kill') {
                         return template_type._id === 'kill';
@@ -240,17 +288,35 @@
                 };
 
                 /*
-                 * Returns desk name
+                 * Returns desks names
                  */
-                $scope.getTemplateDesk = function getTemplateDesk(template) {
-                    return _.find($scope.desks._items , {_id: template.template_desk});
+                $scope.getTemplateDesks = function (template) {
+                    var templateDesks = [];
+                    _.forEach(template.template_desks, function(templateId) {
+                        var desk = _.find($scope.desks._items , {_id: templateId});
+                        templateDesks.splice(-1, 0, desk.name);
+                    });
+                    return templateDesks.join(', ');
                 };
 
                 /*
-                 * Returns stage name
+                 * Returns the schedule desk stage name
                  */
-                $scope.getTemplateStage = function getTemplateStage(template) {
-                    return _.find(desks.stages._items , {_id: template.template_stage});
+                $scope.getScheduleDesk = function (template) {
+                    if (template != null) {
+                        return _.find($scope.desks._items , {_id: template.schedule_desk}).name;
+                    }
+                    return null;
+                };
+
+                /*
+                 * Returns the schedule desk stage name
+                 */
+                $scope.getScheduleStage = function (template) {
+                    if (template != null) {
+                        return _.find(desks.stages._items , {_id: template.schedule_stage}).name;
+                    }
+                    return null;
                 };
 
                 $scope.types = templates.types;
@@ -281,7 +347,7 @@
                     $scope.template.is_public = $scope.template.is_public !== false;
                     $scope.item = $scope.template.data || {};
                     $scope._editable = true;
-                    $scope.updateStages($scope.template.template_desk);
+                    $scope.updateStages($scope.template.schedule_desk);
                 };
 
                 $scope.$watch('item.profile', function(profile) {
@@ -323,6 +389,7 @@
 
                 $scope.updateStages = function(desk) {
                     $scope.stages = desk ? desks.deskStages[desk] : null;
+                    $scope.template.schedule_stage = null;
                 };
 
                 $scope.validSchedule = function() {
@@ -382,11 +449,11 @@
                     case 'All':
                         return all;
                     case 'None':
-                        return item.is_public && typeof item.template_desk === 'undefined';
+                        return item.is_public && typeof item.template_desks === 'undefined';
                     case 'Personal':
                         return !item.is_public;
                     default:
-                        return item.template_desk === f.value;
+                        return item.template_desks === f.value;
                 }
             });
         };
@@ -413,7 +480,7 @@
             if (item.template) {
                 api.find('content_templates', item.template).then(function(template) {
                     vm.name = template.template_name;
-                    vm.desk = template.template_desk || null;
+                    vm.desk = template.template_desks != null ? template.template_desks[0] : null;
                     vm.is_public = template.is_public !== false;
                     vm.template = template;
                 });
@@ -428,7 +495,7 @@
             var data = {
                 template_name: vm.name,
                 template_type: vm.type,
-                template_desk: vm.is_public ? vm.desk : null,
+                template_desks: vm.is_public ? [vm.desk] : null,
                 is_public: vm.is_public,
                 data: templates.pickItemData(item)
             };
