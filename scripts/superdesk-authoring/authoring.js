@@ -2844,7 +2844,7 @@
                     }]
                 })
                 .activity('edit.crop', {
-                    label: gettext('EDIT CROP'),
+                    label: gettext('Edit Crop'),
                     modal: true,
                     cssClass: 'modal--fullscreen',
                     controller: ChangeImageController,
