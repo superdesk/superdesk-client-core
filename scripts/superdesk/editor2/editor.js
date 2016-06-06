@@ -993,6 +993,8 @@ angular.module('superdesk.editor2', [
                     scope.medium.subscribe('blur', function() {
                         // save latest know caret position
                         vm.savePosition();
+
+                        vm.updateModel();
                     });
                     // update the toolbar, bc it can be displayed at the
                     // wrong place if offset of block has changed
