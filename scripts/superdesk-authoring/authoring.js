@@ -2482,7 +2482,7 @@
                             var updates = {dateline: {}};
                             updates.dateline = _.pick(item.dateline, ['source', 'date', 'located', 'text']);
                             if (item.dateline.located) {
-                                var monthAndDay = $filter('formatDatelineToMMDD')(item.dateline.date, item.dateline.located);
+                                var monthAndDay = $filter('parseDateline')(item.dateline.date, item.dateline.located);
                                 scope.datelineMonth = monthAndDay.month;
                                 scope.datelineDay = monthAndDay.day;
                                 scope.resetNumberOfDays(false);
@@ -2518,13 +2518,13 @@
                         scope.datelineMonth = '';
                         scope.datelineDay = '';
                     } else {
-                        var monthAndDay = $filter('formatDatelineToMMDD')(item.dateline.date, item.dateline.located);
+                        var monthAndDay = $filter('parseDateline')(item.dateline.date, item.dateline.located);
 
                         scope.datelineMonth = monthAndDay.month;
                         scope.datelineDay = monthAndDay.day;
                         scope.resetNumberOfDays(false);
 
-                        item.dateline.text = $filter('formatDatelineToLocMMMDDSrc')(item.dateline.located,
+                        item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
                             $interpolate('{{ month | translate }}')
                             ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
                             scope.datelineDay, item.dateline.source);
@@ -2604,7 +2604,7 @@
                         scope.item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
                                 parseInt(scope.datelineMonth), parseInt(scope.datelineDay));
 
-                        scope.item.dateline.text = $filter('formatDatelineToLocMMMDDSrc')(scope.item.dateline.located,
+                        scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
                             $interpolate('{{ month | translate }}')
                             ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
                             scope.datelineDay, scope.item.dateline.source);
