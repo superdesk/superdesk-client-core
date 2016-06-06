@@ -21,7 +21,7 @@
             <div ng-if="!selectedRendition">
                 <label class="field-label" translate>Original <span class="size">{{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}</span></label>
                 <sd-image-point
-                    ng-if="!isAoISelectionModeEnabled"
+                    ng-show="!isAoISelectionModeEnabled"
                     data-src="data.item.renditions.viewImage.href"
                     data-poi="data.poi"
                     data-on-change="data.isDirty = true">
@@ -32,7 +32,7 @@
                     data-src="data.item.renditions.viewImage.href"
                     data-original="data.item.renditions.original"
                     data-crop-data="areaOfInterestData"
-                    ng-if="isAoISelectionModeEnabled && !loaderForAoI">
+                    ng-show="isAoISelectionModeEnabled && !loaderForAoI">
                 </div>
                 <div ng-if="isAoISelectionModeEnabled && !loaderForAoI">
                     <button class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</button>
