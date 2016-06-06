@@ -5,7 +5,7 @@
         </div>
         <div ng-if="item.profile && !change_profile">
             <label translate>PROFILE</label>
-            <div class="data">{{ :: item.profile }}</div>
+            <div class="data" sd-item-profile data-profile="item.profile"></div>
         </div>
         <div ng-if="change_profile">
           <label translate>PROFILE</label>

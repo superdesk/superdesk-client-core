@@ -99,7 +99,7 @@ describe('superdesk.workspace.content', function() {
             var success = jasmine.createSpy('ok');
             content.getTypes().then(success);
             $rootScope.$digest();
-            expect(api.query).toHaveBeenCalledWith('content_types', {where: {enabled: true}});
+            expect(api.query).toHaveBeenCalledWith('content_types', {where: {enabled: true}}, false);
             expect(success).toHaveBeenCalledWith(types);
             expect(content.types).toBe(types);
         }));
@@ -115,6 +115,17 @@ describe('superdesk.workspace.content', function() {
             $rootScope.$digest();
             expect(profiles.length).toBe(1);
             expect(profiles[0]._id).toBe('bar');
+        }));
+
+        it('can generate content types lookup dict', inject(function(content, $q, $rootScope) {
+            spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo', name: 'Foo'}, {_id: 'bar'}]));
+            var lookup;
+            content.getTypesLookup().then(function(_lookup) {
+                lookup = _lookup;
+            });
+
+            $rootScope.$digest();
+            expect(lookup.foo.name).toBe('Foo');
         }));
 
         it('can get content type', inject(function(api, content, $rootScope, $q) {
