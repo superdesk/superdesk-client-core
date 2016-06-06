@@ -92,6 +92,19 @@ describe('authoring', function() {
         monitoring.actionOnItem('Open', 5, 0);
         expect(authoring.edit_correct_button.isDisplayed()).toBe(false);
         expect(authoring.edit_kill_button.isDisplayed()).toBe(false);
+
+        //update(rewrite) item
+        monitoring.openMonitoring();
+        expect(monitoring.getTextItem(2, 1)).toBe('item7');
+        monitoring.actionOnItem('Edit', 2, 1);
+        authoring.publish();
+        monitoring.filterAction('text');
+        expect(monitoring.getTextItem(5, 0)).toBe('item7');
+        monitoring.actionOnItem('Open', 5, 0);
+        expect(authoring.update_button.isDisplayed()).toBe(true);
+        authoring.update_button.click();
+        expect(monitoring.getTextItem(0, 0)).toBe('item7');
+        expect(monitoring.getTextItem(5, 0)).toBe('item7');
     });
 
     it('authoring history', function() {
