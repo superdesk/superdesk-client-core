@@ -10,9 +10,11 @@
         <div class="list-pane">
             <header>
                 <div class="pull-left" sd-searchbar></div>
-                <div class="online-users">
-                    <p><span sd-check ng-model="online_users" name="online_users" id="online_users"></span></p>
-                    <label translate>show only online users</label>
+                <div class="pull-left sd-pagination">
+                    <select id="user-filter"
+                        ng-model="userFilter"
+                        ng-options="filter.id as filter.label for filter in filterOptions">
+                    </select>
                 </div>
                 <div sd-pagination data-items="users"></div>
             </header>
