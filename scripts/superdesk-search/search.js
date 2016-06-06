@@ -1343,7 +1343,8 @@
              * @param {Object=} args - the item that was spiked/unspiked
              */
             function onSpikeAndUnspike(scope, _, args) {
-                if (args && args.item === scope.item._id) {
+                // if preview pane currently previewed then close
+                if (scope.item && args && args.item === scope.item._id) {
                     scope.close();
                 }
             }
