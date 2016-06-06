@@ -567,7 +567,7 @@
                     $document.off('click', handleDatePicker);
                 }
 
-                function handleDatePicker(e) {
+                function handleDatePicker(event) {
                     var isChild = element.find(event.target).length > 0;
                     if (scope.state.opened && !isChild) {  // outside Datepicker click
                         scope.$apply(function() {
@@ -725,7 +725,7 @@
                     $document.off('click', handleTimePicker);
                 }
 
-                function handleTimePicker(e) {
+                function handleTimePicker(event) {
                     var isChild = element.find(event.target).length > 0;
                     if (scope.opened && !isChild) {  // outside Timepicker click
                         scope.$apply(function() {
