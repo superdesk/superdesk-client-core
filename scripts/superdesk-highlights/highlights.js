@@ -344,7 +344,7 @@
                     return desks.active;
                 }, function(active) {
                     scope.selected = active;
-                    highlightsService.get(active.desk).then(function(result) {
+                    highlightsService.get(desks.getCurrentDeskId()).then(function(result) {
                         scope.highlights = result._items;
                         scope.hasHighlights = _.size(scope.highlights) > 0;
                     });
