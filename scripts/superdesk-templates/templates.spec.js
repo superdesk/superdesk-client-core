@@ -7,7 +7,7 @@ describe('templates', function() {
 
     describe('templates widget', function() {
 
-        var existingTemplate = {template_name: 'template1', template_desk: 'sports'};
+        var existingTemplate = {template_name: 'template1', template_desks: ['sports']};
 
         beforeEach(inject(function(desks, api, $q) {
             spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: []}));
@@ -27,7 +27,7 @@ describe('templates', function() {
             expect(api.save).toHaveBeenCalledWith('content_templates', {
                 template_name: 'test',
                 template_type: 'create',
-                template_desk: null,
+                template_desks: null,
                 is_public: false,
                 data: {
                     headline: 'foo',
@@ -57,7 +57,8 @@ describe('templates', function() {
             ctrl.save();
             expect(api.save.calls.argsFor(0)[1]).not.toBe(existingTemplate);
             expect(api.save.calls.argsFor(0)[1].is_public).toBe(true);
-            expect(api.save.calls.argsFor(0)[1].template_desk).toBe('sports');
+            expect(api.save.calls.argsFor(0)[1].template_desks[0]).toBe('sports');
+            expect(api.save.calls.argsFor(0)[1].template_desks.length).toBe(1);
         }));
     });
 
@@ -97,7 +98,7 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
                 page: 1,
-                where: '{"$and":[{"$or":[{"is_public":true},{"user":"foo"},{"template_desk":"desk1"}]}]}'
+                where: '{"$and":[{"$or":[{"is_public":true},{"user":"foo"}],"template_desks":"desk1"}]}'
             });
         }));
         it('can fetch templates using personal desk parameter', inject(function(api, templates) {
@@ -180,9 +181,8 @@ describe('templates', function() {
             expect(args[0]).toBe('content_templates');
             var where = JSON.parse(args[1].where);
             expect(where.$and.length).toBe(1);
-            var $or = where.$and[0].$or;
-            expect($or).toContain({template_desk: 'sports'});
-            expect($or).toContain({user: session.identity._id});
+            expect(where.$and[0].template_desks).toContain('sports');
+            expect(where.$and[0].$or).toContain({user: session.identity._id});
             $rootScope.$digest();
             var iscope = elem.isolateScope();
             expect(iscope.publicTemplates.length).toBe(2);
