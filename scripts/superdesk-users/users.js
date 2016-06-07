@@ -269,9 +269,7 @@
                     max_results: Number(params.max_results) || DEFAULT_SIZE
                 };
 
-            if (params.q || $scope.online_users) {
-                criteria.where = initCriteria(params.q, $scope.online_users);
-            }
+            criteria.where = initCriteria(params, $scope.userFilter);
 
             if (params.page) {
                 criteria.page = parseInt(params.page, 10);
@@ -286,35 +284,47 @@
             return criteria;
         }
 
-        function initCriteria(search, online) {
-            var querySearch = null;
-            var queryOnline = null;
+        function initCriteria(search, filter) {
+            var query = {};
 
-            if (search) {
-                querySearch = {
+            if (search.q) {
+                query = {
                     '$or': [
-                        {username: {'$regex': search, '$options': '-i'}},
-                        {display_name: {'$regex': search, '$options': '-i'}},
-                        {email: {'$regex': search, '$options': '-i'}}
+                        {username: {'$regex': search.q, '$options': '-i'}},
+                        {display_name: {'$regex': search.q, '$options': '-i'}},
+                        {email: {'$regex': search.q, '$options': '-i'}}
                     ]
                 };
             }
 
-            if (online) {
-                queryOnline = {
-                    session_preferences: {$exists: true, $nin: [null, {}]}
-                };
+            switch (filter) {
+                case 'online':
+                    query.session_preferences = {$exists: true, $nin: [null, {}]};
+                    break;
+
+                case 'pending':
+                    query.needs_activation = true;
+                    break;
+
+                case 'inactive':
+                    query.is_active = false;
+                    break;
+
+                case 'disabled':
+                    query.is_enabled = false;
+                    break;
+
+                case 'all':
+                    break;
+
+                default:
+                    query.is_active = true;
+                    query.is_enabled = true;
+                    query.needs_activation = false;
+                    break;
             }
 
-            if (search && online) {
-                return JSON.stringify({'$and': [querySearch, queryOnline]});
-            } else if (search) {
-                return JSON.stringify(querySearch);
-            } else if (online) {
-                return JSON.stringify(queryOnline);
-            }
-
-            return null;
+            return JSON.stringify(query);
         }
 
         function fetchUsers(criteria) {
@@ -334,6 +344,17 @@
                     return '[("' + encodeURIComponent(key) + '", ' + val + ')]';
             }
         }
+
+        $scope.filterOptions = [
+            {id: null, label: gettext('Active')},
+            {id: 'online', label: gettext('Online')},
+            {id: 'pending', label: gettext('Pending')},
+            {id: 'inactive', label: gettext('Inactive')},
+            {id: 'disabled', label: gettext('Disabled')},
+            {id: 'all', label: gettext('All')}
+        ];
+
+        $scope.userFilter = null;
 
         $scope.$watchCollection(getCriteria, fetchUsers);
     }
