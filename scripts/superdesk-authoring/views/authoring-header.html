@@ -18,7 +18,7 @@
             <div class="data">{{ item.source }}</div>
         </div>
         <div ng-if="item.anpa_take_key && !schema.relatedItems">
-            <div class="data update-info">{{ item.anpa_take_key }}</div>
+            <div class="data update-info">{{ item.anpa_take_key | translate }}</div>
         </div>
         <div ng-if="relatedItems._items.length && schema.relatedItems">
             <label translate>RELATED</label>
