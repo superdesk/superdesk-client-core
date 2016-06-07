@@ -90,22 +90,20 @@
         this.reload();
         var reload = angular.bind(this, this.reload);
         session.getIdentity().then(function() {
-            if (session.identity.user_type === 'user') {
-                $rootScope.$on('user:mention', function(_e, extras) {
-                    if (isCurrentUser(extras)) {
-                        $timeout(reload, UPDATE_TIMEOUT, false);
-                    }
-                });
-            }
+            $rootScope.$on('user:mention', function(_e, extras) {
+                if (isCurrentUser(extras)) {
+                    $timeout(reload, UPDATE_TIMEOUT, false);
+                }
+            });
+
+            $rootScope.$on('activity', function(_e, extras) {
+                if (isCurrentUser(extras)) {
+                    $timeout(reload, UPDATE_TIMEOUT, false);
+                }
+            });
         });
 
-        $rootScope.$on('activity', function(_e, extras) {
-            if (isCurrentUser(extras)) {
-                $timeout(reload, UPDATE_TIMEOUT, false);
-            }
-        });
         $rootScope.$on(SESSION_EVENTS.LOGIN, reload);
-
     }
 
     DeskNotificationsService.$inject = ['$rootScope', 'api', 'session'];
