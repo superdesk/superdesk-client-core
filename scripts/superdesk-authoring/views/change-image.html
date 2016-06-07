@@ -19,7 +19,19 @@
     <div class="modal-body__flex-top">
         <div class="modal-body__flex-main">
             <div ng-if="!selectedRendition">
-                <label class="field-label" translate>Original <span class="size">{{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}</span></label>
+                <label ng-if="!isAoISelectionModeEnabled"class="field-label" translate>
+                    Original
+                    <span class="size">
+                        {{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}
+                    </span>
+                </label>
+                <label ng-if="isAoISelectionModeEnabled" class="field-label" translate>
+                    New size
+                    <span class="size">
+                        {{ areaOfInterestData.CropRight - areaOfInterestData.CropLeft }}
+                        x {{ areaOfInterestData.CropBottom - areaOfInterestData.CropTop }}
+                    </span>
+                </label>
                 <sd-image-point
                     ng-show="!isAoISelectionModeEnabled"
                     data-src="data.item.renditions.viewImage.href"
@@ -28,11 +40,11 @@
                 </sd-image-point>
                 <div class="modal-body__flex-loader" ng-if="loaderForAoI"></div>
                 <div sd-image-crop
-                    data-show-Min-Size-Error="true"
+                    data-show-min-size-error="true"
                     data-src="data.item.renditions.viewImage.href"
                     data-original="data.item.renditions.original"
                     data-crop-data="areaOfInterestData"
-                    ng-show="isAoISelectionModeEnabled && !loaderForAoI">
+                    ng-if="isAoISelectionModeEnabled && !loaderForAoI">
                 </div>
                 <div ng-if="isAoISelectionModeEnabled && !loaderForAoI">
                     <button class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</button>

@@ -77,8 +77,8 @@
      * scope.preview should be define on container page so that the coordiates can be used
      * to pass in api that is serving for saving the crop.
      */
-     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', 'lodash',
-     function(gettext, $interpolate, imageFactory, _) {
+     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', 'lodash', '$timeout',
+     function(gettext, $interpolate, imageFactory, _, $timeout) {
         return {
             scope: {
                 src: '=',
@@ -101,8 +101,10 @@
                     var nextData = formatCoordinates(cords);
                     selectionWidth = nextData.CropRight - nextData.CropLeft;
                     selectionHeight = nextData.CropBottom - nextData.CropTop;
-                    angular.extend(scope.cropData, nextData);
-                    scope.onChange({renditionName: scope.rendition && scope.rendition.name || undefined, cropData: nextData});
+                    $timeout(function() {
+                        angular.extend(scope.cropData, nextData);
+                        scope.onChange({renditionName: scope.rendition && scope.rendition.name || undefined, cropData: nextData});
+                    });
                 }
 
                 /**
