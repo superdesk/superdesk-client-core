@@ -56,7 +56,7 @@
                                     data-header="true">
                                 </div>
                             </div>
-                            <div class="field">
+                            <div class="field" ng-show="profiles.length">
                                 <label translate>Content Profiles</label>
                                 <ul class="content-profiles-list pills">
                                     <li ng-repeat="profile in profiles track by profile._id">
@@ -64,7 +64,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="field">
+                            <div class="field" ng-show="profiles.length">
                                 <label translate>Default Content Profile</label>
                                 <select
                                     ng-model="desk.edit.default_content_profile"
