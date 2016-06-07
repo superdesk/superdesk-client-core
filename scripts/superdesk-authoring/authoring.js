@@ -1538,6 +1538,8 @@
                         authoringWorkspace.correct($scope.item);
                     } else if (action === 'kill') {
                         authoringWorkspace.kill($scope.item);
+                    } else if (action === 'rewrite') {
+                        authoring.rewrite($scope.item);
                     }
                 };
 
