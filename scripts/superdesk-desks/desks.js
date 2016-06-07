@@ -1007,6 +1007,7 @@
                     scope.edit = function(desk) {
                         scope.desk.edit = _.create(desk);
                         scope.desk.edit.desk_metadata = desk.desk_metadata || {};
+                        scope.desk.edit.content_profiles = desk.content_profiles || {};
                     };
 
                     /**
