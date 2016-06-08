@@ -60,6 +60,7 @@
             'description_text',
             'body_html',
             'body_text',
+            'body_footer',
             'place',
             'located',
             'creditline',
@@ -491,13 +492,18 @@
                     scope.close();
                 };
 
+                scope.loading = false;
+
                 /**
                  * Fetch templates and assign it to scope but split it into public/private
                  */
                 function fetchTemplates() {
+                    scope.loading = true;
+
                     templates.fetchTemplates(scope.options.page, PAGE_SIZE, 'create',
                         desks.getCurrentDeskId(), session.identity._id, scope.options.templateName)
                     .then(function(result) {
+                        scope.loading = false;
                         if (result._items.length === 0) {
                             notify.error(gettext('No Templates found.'));
                         } else {
