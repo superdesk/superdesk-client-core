@@ -981,7 +981,6 @@
                     scope.$on('item:spike', queryItems);
                     scope.$on('item:unspike', queryItems);
                     scope.$on('item:duplicate', queryItems);
-                    scope.$on('content:expired', queryItems);
 
                     scope.$on('broadcast:preview', function(event, args) {
                         scope.previewingBroadcast = true;

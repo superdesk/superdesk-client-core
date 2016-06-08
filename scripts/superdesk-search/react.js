@@ -1281,7 +1281,9 @@
                         },
 
                         select: function() {
-                            this.props.onSelect(this.props.item);
+                            if (!this.props.item.gone) {
+                                this.props.onSelect(this.props.item);
+                            }
                         },
 
                         selectTakesPackage: function() {
@@ -1293,7 +1295,9 @@
                         },
 
                         edit: function(event) {
-                            this.props.onEdit(this.props.item);
+                            if (!this.props.item.gone) {
+                                this.props.onEdit(this.props.item);
+                            }
                         },
 
                         getInitialState: function() {
@@ -1353,7 +1357,8 @@
                                         {
                                             locked: item.lock_user && item.lock_session,
                                             selected: this.props.flags.selected,
-                                            archived: item.archived || item.created
+                                            archived: item.archived || item.created,
+                                            gone: item.gone
                                         }
                                     )
 
@@ -1377,7 +1382,7 @@
                                     item.priority ? React.createElement(ItemPriority, item) : null,
                                     item.urgency ? React.createElement(ItemUrgency, item) : null,
                                     fields.broadcast({item: item}),
-                                    this.state.hover ? React.createElement(ActionsMenu, {item: item}) : null
+                                    this.state.hover && !item.gone ? React.createElement(ActionsMenu, {item: item}) : null
                                 );
                             } else {
                                 contents.push(
@@ -1396,7 +1401,7 @@
                                         highlightsById: this.props.highlightsById,
                                         profilesById: this.props.profilesById
                                     }),
-                                    this.state.hover ? React.createElement(ActionsMenu, {item: item}) : null
+                                    this.state.hover && !item.gone ? React.createElement(ActionsMenu, {item: item}) : null
                                 );
                             }
 
@@ -1696,6 +1701,14 @@
                                 lock_user: null,
                                 lock_session: null,
                                 lock_time: null
+                            });
+                        });
+
+                        scope.$on('item:expired', function(_e, data) {
+                            Object.keys(data.items || {}).forEach(function(itemId) {
+                                listComponent.updateAllItems(itemId, {
+                                    gone: true
+                                });
                             });
                         });
 

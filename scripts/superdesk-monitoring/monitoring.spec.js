@@ -155,19 +155,19 @@ describe('monitoring', function() {
                 '<div id="group" sd-monitoring-group data-group="{type: \'stage\', _id: \'foo\'}"></div>');
         }));
 
-        it('can update items on content:update event',
+        it('can update items on item:move event',
         inject(function($rootScope, $compile, $q, api, $timeout) {
             var scope = $rootScope.$new();
             $compile('<div sd-monitoring-view></div>')(scope);
             scope.$digest();
 
             spyOn(api, 'query').and.returnValue($q.when({_items: [], _meta: {total: 0}}));
-            scope.$broadcast('content:update', {stages: {'bar': 1}});
+            scope.$broadcast('item:move', {to_stage: 'bar'});
             scope.$digest();
             $timeout.flush(500);
             expect(api.query).not.toHaveBeenCalled();
 
-            scope.$broadcast('content:update', {stages: {'foo': 1}});
+            scope.$broadcast('item:move', {to_stage: 'foo'});
             scope.$digest();
             $timeout.flush(1000);
             expect(api.query).toHaveBeenCalled();

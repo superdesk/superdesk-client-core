@@ -402,18 +402,16 @@
                     queryItems();
                 });
 
-                scope.$on('task:stage', queryItems);
-                scope.$on('ingest:update', queryItems);
-                scope.$on('item:spike', queryItems);
-                scope.$on('item:duplicate', queryItems);
-                scope.$on('item:copy', queryItems);
+                scope.$on('task:stage', scheduleQuery);
+                scope.$on('item:spike', scheduleQuery);
+                scope.$on('item:duplicate', scheduleQuery);
+                scope.$on('item:copy', scheduleQuery);
                 scope.$on('broadcast:created', function(event, args) {
                     scope.previewingBroadcast = true;
                     queryItems();
                     preview(args.item);
                 });
                 scope.$on('item:unspike', queryItems);
-                scope.$on('$routeUpdate', queryItems);
                 scope.$on('broadcast:preview', function(event, args) {
                     scope.previewingBroadcast = true;
                     if (args.item != null) {
@@ -425,16 +423,41 @@
 
                 scope.$on('item:highlight', queryItems);
 
+                if (scope.group.type !== 'stage') {
+                    scope.$on('ingest:update', scheduleQuery);
+                }
+
                 function scheduleIfShouldUpdate(event, data) {
-                    if (event && data && cards.shouldUpdate(scope.group, data)) {
+                    // item was moved from current stage
+                    if (data.from_stage && data.from_stage === scope.group._id) {
+                        extendItem(data.item, {
+                            gone: true,
+                            _etag: data.from_stage // this must change to make it re-render
+                        });
+                    }
+
+                    // new item in current stage
+                    if (data.to_stage && data.to_stage === scope.group._id) {
                         scheduleQuery();
                     }
                 }
 
-                scope.$on('item:fetch', scheduleIfShouldUpdate);
-                scope.$on('content:update', scheduleIfShouldUpdate);
+                function extendItem(itemId, updates) {
+                    scope.$apply(function() {
+                        scope.items._items = scope.items._items.map(function(item) {
+                            if (item._id === itemId) {
+                                return angular.extend(item, updates);
+                            }
 
-                scope.$on('content:expired', queryItems);
+                            return item;
+                        });
+
+                        scope.items = angular.extend({}, scope.items); // trigger a watch
+                    });
+                }
+
+                scope.$on('item:fetch', scheduleIfShouldUpdate);
+                scope.$on('item:move', scheduleIfShouldUpdate);
 
                 scope.$on('$destroy', unbindActionKeyShortcuts);
 
