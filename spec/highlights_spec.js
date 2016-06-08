@@ -14,7 +14,7 @@ describe('highlights', function() {
         beforeEach(route('/settings/highlights'));
 
         it('highlights management', function() {
-            //add highlights configuration with one desk
+            //add highlights configuration with one desk and open it in monitoring
             highlights.add();
             highlights.setName('highlight new');
             highlights.setTemplate('custom_highlight');
@@ -25,8 +25,13 @@ describe('highlights', function() {
             expect(highlights.getTemplate()).toMatch('custom_highlight');
             highlights.expectDeskSelection('Sports Desk', true);
             highlights.cancel();
+            monitoring.openMonitoring();
+            workspace.selectDesk('Sports Desk');
+            workspace.showHighlightList('highlight new');
+            expect(highlights.getHighlightTitle()).toMatch('highlight new');
 
             //add highlights configuration with the same name'
+            highlights.get();
             highlights.add();
             highlights.setName('Highlight one');
             highlights.save();
@@ -44,13 +49,19 @@ describe('highlights', function() {
             expect(highlights.btnSave.isEnabled()).toBe(true);
             highlights.cancel();
 
-            //add highlights configuration with no desk
+            //add highlights configuration with no desk and open it from all desks
             highlights.add();
             highlights.setName('highlight no desk');
             highlights.save();
             expect(highlights.getRow('highlight no desk').count()).toBe(1);
+            monitoring.openMonitoring();
+            workspace.selectDesk('Sports Desk');
+            workspace.showHighlightList('highlight no desk');
+            workspace.selectDesk('Politic Desk');
+            workspace.showHighlightList('highlight no desk');
 
             //set default template for highlight configuration
+            highlights.get();
             highlights.edit('highlight one');
             highlights.setTemplate('default');
             highlights.save();
@@ -73,8 +84,12 @@ describe('highlights', function() {
             highlights.edit('highlight new name');
             highlights.expectDeskSelection('Politic Desk', true);
             highlights.cancel();
+            monitoring.openMonitoring();
+            workspace.selectDesk('Politic Desk');
+            workspace.showHighlightList('highlight new name');
 
             //delete a desk from highlight configuration
+            highlights.get();
             highlights.edit('highlight three');
             highlights.expectDeskSelection('Politic Desk', true);
             highlights.toggleDesk('Politic Desk');
@@ -82,8 +97,12 @@ describe('highlights', function() {
             highlights.edit('highlight three');
             highlights.expectDeskSelection('Politic Desk', false);
             highlights.cancel();
+            monitoring.openMonitoring();
+            workspace.selectDesk('Politic Desk');
+            expect(workspace.getHighlightListItem('highlight three').isPresent()).toBe(false);
 
             //delete highlight configuration'
+            highlights.get();
             expect(highlights.getRow('highlight four').count()).toBe(1);
             highlights.remove('highlight four');
             expect(highlights.getRow('highlight four').count()).toBe(0);
@@ -93,14 +112,12 @@ describe('highlights', function() {
     describe('mark for highlights in a desk:', function() {
         beforeEach(route('/workspace/monitoring'));
 
-        xit('create highlight package', function() {
+        it('create highlight package', function() {
             // Setup Desk Monitoring Settings
             expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
             desks.openDesksSettings();
-
             desks.showMonitoringSettings('POLITIC DESK');
             monitoring.turnOffDeskWorkingStage(0);
-
             monitoring.openMonitoring();
 
             //mark for highlight in monitoring
@@ -120,50 +137,60 @@ describe('highlights', function() {
             monitoring.checkMarkedForHighlight('Highlight two', 1, 1);
 
             //multi mark for highlights
+            highlights.get();
+            highlights.add();
+            highlights.setName('Highlight All Desks');
+            highlights.save();
+            monitoring.openMonitoring();
+            workspace.selectDesk('Politic Desk');
             monitoring.selectItem(1, 3);
-            monitoring.selectItem(2, 0);
-            highlights.multiMarkHighlight('Highlight two');
-            monitoring.checkMarkedForHighlight('Highlight two', 1, 3);
-            monitoring.checkMarkedForHighlight('Highlight two', 2, 0);
+            monitoring.selectItem(2, 2);
+            highlights.multiMarkHighlight('Highlight All Desks');
+            monitoring.checkMarkedForHighlight('Highlight All Desks', 1, 3);
+            monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
 
             //multi mark for highlights, in case of partial mark for selected items
             monitoring.selectItem(2, 1);
             monitoring.selectItem(2, 2);
-            highlights.multiMarkHighlight('Highlight two');
-            monitoring.checkMarkedForHighlight('Highlight two', 2, 1);
-            monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
+            highlights.multiMarkHighlight('Highlight All Desks');
+            monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 1);
+            monitoring.selectItem(2, 1); //to close the popup
+            monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
+            monitoring.selectItem(2, 1); //to close the popup
 
             //Highlighting two items out of which first is already highlighted should retain it's highlight mark
+            monitoring.actionOnItem('Edit', 2, 2);
+            authoring.markForHighlights();
+            highlights.selectHighlight(authoring.getSubnav(), 'Highlight two');
+            monitoring.checkMarkedForMultiHighlight('Highlight All Desks', 2, 2);
+            monitoring.checkMarkedForMultiHighlight('Highlight two', 2, 2);
+            //now remove from the first highlight
+            monitoring.removeFromFirstHighlight(2, 2);
             monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
-            //now multi select this already highlighted item(2, 2) and other item(2, 3) for highlight
-            monitoring.selectItem(2, 2);
-            monitoring.selectItem(2, 3);
-            highlights.multiMarkHighlight('Highlight two');
-            //now check if previously highlighted item(2,2) still retains it's marked highlight
-            monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
-            monitoring.checkMarkedForHighlight('Highlight two', 2, 3);
 
             //create the highlight and add a item to it
-            highlights.createHighlightsPackage('Highlight two');
-            workspace.actionOnItemSubmenu('Add to current', 'one', 3);
-            expect(authoring.getGroupItems('one').count()).toBe(3);
+            monitoring.actionOnItemSubmenu('Mark for highlight', 'Highlight All Desks', 2, 2);
+            highlights.createHighlightsPackage('Highlight All Desks');
+            workspace.actionOnItemSubmenu('Add to current', 'main', 1);
+            expect(authoring.getGroupItems('main').count()).toBe(2);
+            expect(element(by.className('preview-container')).isPresent()).toBe(true);
 
             //from monitoring add an item to highlight package
-            workspace.showList('Monitoring');
-            monitoring.actionOnItemSubmenu('Add to current', 'two', 2, 3);
-            expect(authoring.getGroupItems('two').count()).toBe(1);
+            workspace.showList('Monitoring (alt+m)');
+            monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 3);
+            expect(authoring.getGroupItems('main').count()).toBe(3);
 
             //change desk on highlights
-            workspace.showHighlightList('Highlight one');
+            workspace.showHighlightList('Highlight four');
             workspace.selectDesk('SPORTS DESK');
             expect(browser.getLocationAbsUrl()).toMatch('/monitoring');
 
             //show highlight three and add an item to highlight package two
             workspace.selectDesk('POLITIC DESK');
             workspace.showHighlightList('Highlight three');
-            expect(authoring.getGroupItems('two').count()).toBe(1);
-            workspace.actionOnItemSubmenu('Add to current', 'two', 0);
-            expect(authoring.getGroupItems('two').count()).toBe(2);
+            expect(authoring.getGroupItems('main').count()).toBe(3);
+            workspace.actionOnItemSubmenu('Add to current', 'main', 0);
+            expect(authoring.getGroupItems('main').count()).toBe(4);
 
             //export highlight
             authoring.save();
@@ -172,21 +199,13 @@ describe('highlights', function() {
             highlights.exportHighlightsConfirm();
 
             //check that the new highlight package and generated list are on personal
-            workspace.showList('Monitoring');
-
+            workspace.showList('Monitoring (alt+m)');
             desks.openDesksSettings();
             desks.showMonitoringSettings('POLITIC DESK');
             monitoring.turnOffDeskWorkingStage(0);
             monitoring.openMonitoring();
-
-            expect(monitoring.getTextItem(5, 0)).toBe('Highlight two');
-            expect(monitoring.getTextItem(5, 1)).toBe('Highlight two');
-
-            //close generated content item
-            authoring.close();
-            highlights.saveTextHighlightsConfirm();
-            expect(monitoring.getTextItem(5, 0)).toBe('Highlight two');
-            expect(monitoring.getTextItem(5, 1)).toBe('Highlight two');
+            expect(monitoring.getTextItem(5, 0)).toBe('Highlight All Desks');
+            expect(monitoring.getTextItem(5, 1)).toBe('Highlight All Desks');
         });
     });
 });

@@ -544,15 +544,39 @@ function Monitoring() {
      */
     this.checkMarkedForHighlight = function(highlight, group, item) {
         var crtItem = this.getItem(group, item);
-        var star = crtItem.element(by.className('icon-star'));
-        waitFor(star);
-        browser.actions()
-            .mouseMove(star, {x: -5, y: -5})
-            .mouseMove(star)
-            .perform();
+        crtItem.element(by.className('icon-star')).click();
         var highlightList = element(by.className('highlights-list-menu'));
         waitFor(highlightList);
         expect(highlightList.getText()).toContain(highlight);
+    };
+
+    /**
+     * Check if on monitoring view an item from group is marked for highlight
+     * @param {string} highlight
+     * @param {number} group
+     * @param {number} item
+     */
+    this.checkMarkedForMultiHighlight = function(highlight, group, item) {
+        var crtItem = this.getItem(group, item);
+        var star = crtItem.element(by.className('icon-multi-star'));
+        expect(star.isPresent()).toBe(true);
+        star.click();
+        var highlightList = element(by.className('highlights-list-menu'));
+        waitFor(highlightList);
+        expect(highlightList.getText()).toContain(highlight);
+    };
+
+    /**
+     * Remove from the first highlight in the list
+     * @param {number} group
+     * @param {number} item
+     */
+    this.removeFromFirstHighlight = function(group, item) {
+        var crtItem = this.getItem(group, item);
+        crtItem.element(by.className('icon-multi-star')).click();
+        var highlightList = element(by.className('highlights-list-menu'));
+        waitFor(highlightList);
+        highlightList.all(by.className('btn-mini')).first().click();
     };
 
     /**

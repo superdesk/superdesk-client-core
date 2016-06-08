@@ -682,8 +682,8 @@
                                 highlightsById: this.props.highlightsById
                             });
 
-                            var icon = ReactDOM.findDOMNode(this)
-                                .getElementsByClassName('red')[0];
+                            var icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-star')[0] ||
+                            ReactDOM.findDOMNode(this).getElementsByClassName('icon-multi-star')[0];
 
                             renderToBody(elem, icon);
                         }
