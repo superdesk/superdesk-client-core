@@ -577,6 +577,14 @@
                                         'div',
                                         {className: 'menu-label'},
                                         gettext('Marked For')
+                                    ),
+                                    React.createElement(
+                                        'button',
+                                        {className: 'close-button'},
+                                        React.createElement(
+                                            'i',
+                                            {className: 'icon-close-small icon-white', onClick: closeActionsMenu}
+                                        )
                                     )
                                 )
                             ];
@@ -1144,7 +1152,16 @@
                         return React.createElement(
                             'li',
                             null,
-                            React.createElement('div', {className: 'menu-label'}, gettextCatalog.getString(props.label))
+                            React.createElement('div', {className: 'menu-label'}, gettextCatalog.getString(props.label),
+                                props.label === 'Actions' ? React.createElement(
+                                    'button',
+                                    {className: 'close-button'},
+                                    React.createElement(
+                                        'i',
+                                        {className: 'icon-close-small', onClick: closeActionsMenu}
+                                    )
+                                ) : null
+                            )
                         );
                     };
 
