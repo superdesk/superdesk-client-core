@@ -23,6 +23,13 @@ describe('publish queue', function() {
         }
     ]};
 
+    var providers = [
+        {
+            '_id': '123',
+            'name': 'Test Provider'
+        }
+    ];
+
     var publishQueue = {'_items': [
             {
             '_created': '2015-05-15T06:27:13+0000',
@@ -72,7 +79,8 @@ describe('publish queue', function() {
             'state': 'success',
             'subscriber_id': '555045901d41c80c5804501a',
             'transmit_started_at': '2015-05-19T05:13:34+0000',
-            'unique_name': '#55860'
+            'unique_name': '#55860',
+            'ingest_provider': '123'
         },
         {
             '_created': '2015-05-19T08:56:43+0000',
@@ -110,17 +118,20 @@ describe('publish queue', function() {
     beforeEach(module('superdesk.users'));
     beforeEach(module('superdesk.content_filters'));
     beforeEach(module('superdesk.publish'));
+    beforeEach(module('superdesk.ingest'));
     beforeEach(module('superdesk.mocks'));
     beforeEach(module('superdesk.templates-cache'));
 
-    beforeEach(inject(function($rootScope, $controller, subscribersService, $q, api) {
+    beforeEach(inject(function($rootScope, $controller, subscribersService, $q, api, ingestSources) {
         spyOn(subscribersService, 'fetchSubscribers').and.returnValue($q.when(subscribers));
+        spyOn(ingestSources, 'fetchAllIngestProviders').and.returnValue($q.when(providers));
         spyOn(api.publish_queue, 'query').and.returnValue($q.when(publishQueue));
         $scope = $rootScope.$new();
         $controller('publishQueueCtrl',
             {
                 $scope: $scope,
                 'subscribersService': subscribersService,
+                'ingestSouces': ingestSources,
                 '$q': $q,
                 'api': api
             }
@@ -193,14 +204,21 @@ describe('publish queue', function() {
     it('sets the selected filter subscriber', inject(function() {
         var subscriberValue = {foo: 'bar'};
         $scope.selectedFilterSubscriber = null;
-        $scope.filterSchedule(subscriberValue, 'subscriber');
+        $scope.filterPublishQueue(subscriberValue, 'subscriber');
         expect($scope.selectedFilterSubscriber).toEqual(subscriberValue);
+    }));
+
+    it('sets the selected filter ingest provider', inject(function() {
+        var value = {foo: 'bar'};
+        $scope.selectedFilterIngestProvider = null;
+        $scope.filterPublishQueue(value, 'ingest_provider');
+        expect($scope.selectedFilterIngestProvider).toEqual(value);
     }));
 
     it('sets the selected filter status', inject(function() {
         var statusValue = 'success';
         $scope.selectedFilterStatus = null;
-        $scope.filterStatus(statusValue, 'status');
+        $scope.filterPublishQueue(statusValue, 'status');
         expect($scope.selectedFilterStatus).toEqual(statusValue);
     }));
 

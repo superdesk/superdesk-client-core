@@ -26,7 +26,7 @@ function PublishQueue() {
 
     this.getDestination = function(rowNo) {
         var row = this.getRow(rowNo);
-        return row.all(by.className('ng-binding')).get(6);
+        return row.all(by.className('ng-binding')).get(7);
     };
 
     this.previewAction = function(rowNo) {
