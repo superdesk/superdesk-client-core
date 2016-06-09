@@ -50,7 +50,7 @@
         }
         .preview--caption, .editor--caption {
             margin: 0;
-            border: 1px solid rgba(150, 150, 150, 0.15);            
+            border: 1px solid rgba(150, 150, 150, 0.15);
         }
         .editor--caption [contenteditable] {
             padding: 8px;
@@ -83,13 +83,9 @@
             z-index: 4;
             .transition(top 0.25s ease 1s);
             background-color: rgba(217, 217, 217, 1);
-            top: 0;
+            top: 160px;
             &:hover {
                 background-color: rgba(166, 166, 166, 1);
-            }
-            &.ng-hide { // shows the button (reversed in order to have it hidden as initial state)
-                top: 160px;
-                display: block !important;
             }
             i {
                 position: absolute;
