@@ -59,7 +59,8 @@
         {value: 'dpa_iptc7901', name: 'DPA IPTC 7901 Parser'},
         {value: 'zczc', name: 'ZCZC Parser'},
         {value: 'ap_anpa1312', name: 'AP ANPA parser'},
-        {value: 'text_file', name: 'Text File'}
+        {value: 'text_file', name: 'Text File'},
+        {value: 'News Bites', name: 'News Bites'}
     ]);
 
     var PROVIDER_DASHBOARD_DEFAULTS = {
