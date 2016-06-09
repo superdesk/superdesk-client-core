@@ -737,8 +737,10 @@
                 return api('search').query({
                     repo: repo,
                     source: {
-                        query: {filtered: {filter: {
-                            and: filter
+                        query: {bool: {filter: {
+                            bool: {
+                                must: filter
+                            }
                         }}},
                         sort: [{versioncreated: 'desc'}],
                         size: 100,

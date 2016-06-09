@@ -254,16 +254,16 @@
                 var sort = getSort();
                 setParameters(filters, params);
                 var criteria = {
-                    query: {filtered: {filter: {and: filters}}},
+                    query: {bool: {filter: {bool: {must: filters}}}},
                     sort: [_.zipObject([sort.field], [sort.dir])]
                 };
 
                 if (post_filters.length > 0) {
-                    criteria.post_filter = {'and': post_filters};
+                    criteria.post_filter = {'bool': {'must': post_filters}};
                 }
 
                 if (search.q) {
-                    criteria.query.filtered.query = {query_string: {
+                    criteria.query.bool.must = {query_string: {
                         query: search.q.replace(/\//g, '\\/'),
                         lenient: false,
                         default_operator: 'AND'
@@ -316,32 +316,32 @@
             if (params.spike) {
                 this.filter({term: {state: 'spiked'}});
             } else {
-                this.filter({not: {term: {state: 'spiked'}}});
+                this.filter({bool: {must_not: {term: {state: 'spiked'}}}});
             }
 
             if (params.ignoreKilled) {
-                this.filter({not: {term: {state: 'killed'}}});
+                this.filter({bool: {must_not: {term: {state: 'killed'}}}});
             }
 
             if (params.onlyLastPublished) {
-                this.filter({not: {term: {last_published_version: 'false'}}});
+                this.filter({bool: {must_not: {term: {last_published_version: 'false'}}}});
             }
 
             if (params.ignoreDigital) {
-                this.filter({not: {term: {package_type: 'takes'}}});
+                this.filter({bool: {must_not: {term: {package_type: 'takes'}}}});
             }
 
             if (params.ignoreScheduled) {
-                this.filter({not: {term: {state: 'scheduled'}}});
+                this.filter({bool: {must_not: {term: {state: 'scheduled'}}}});
             }
 
             // remove the older version of digital package as part for base filtering.
-            this.filter({not: {and: [{term: {_type: 'published'}},
+            this.filter({bool: {must_not: [{term: {_type: 'published'}},
                 {term: {package_type: 'takes'}},
                 {term: {last_published_version: false}}]}});
 
             //remove the digital package from production view.
-            this.filter({not: {and: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
+            this.filter({bool: {must_not: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
 
             buildFilters(params, this);
         }
@@ -1437,14 +1437,16 @@
                     }
                     function fetchItem() {
                         var filter = [
-                            {not: {term: {state: 'spiked'}}},
+                            {bool: {must_not: {term: {state: 'spiked'}}}},
                             {term: {unique_name: scope.meta.unique_name}}
                         ];
                         var criteria = {
                             repo: 'archive',
                             source: {
-                                query: {filtered: {filter: {
-                                    and: filter
+                                query: {bool: {filter: {
+                                    bool: {
+                                        must: filter
+                                    }
                                 }}}
                             }
                         };

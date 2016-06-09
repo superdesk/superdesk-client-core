@@ -7,7 +7,7 @@ describe('search service', function() {
     it('can create base query', inject(function(search) {
         var query = search.query();
         var criteria = query.getCriteria();
-        var filters = criteria.query.filtered.filter.and;
+        var filters = criteria.query.bool.filter.bool.must;
         expect(filters).toContain({not: {term: {state: 'spiked'}}});
         expect(filters).toContain({not: {and: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
         expect(filters).toContain({not: {and: [{term: {_type: 'published'}},
@@ -18,27 +18,27 @@ describe('search service', function() {
 
     it('can create query string query', inject(function($rootScope, search) {
         var criteria = search.query({q: 'test'}).getCriteria();
-        expect(criteria.query.filtered.query.query_string.query).toBe('test');
+        expect(criteria.query.bool.must.query_string.query).toBe('test');
     }));
 
     it('can create query for from_desk', inject(function($rootScope, search) {
         // only from desk is specified
         var criteria = search.query({from_desk: 'test-authoring'}).getCriteria();
-        var filters = criteria.query.filtered.filter.and;
+        var filters = criteria.query.bool.filter.bool.must;
         expect(filters).toContain({term: {'task.last_authoring_desk': 'test'}});
         criteria = search.query({from_desk: 'test-production'}).getCriteria();
-        filters = criteria.query.filtered.filter.and;
+        filters = criteria.query.bool.filter.bool.must;
         expect(filters).toContain({term: {'task.last_production_desk': 'test'}});
     }));
 
     it('can create query for to_desk', inject(function($rootScope, search) {
         // only to desk is specified
         var criteria = search.query({to_desk: '456-authoring'}).getCriteria();
-        var filters = criteria.query.filtered.filter.and;
+        var filters = criteria.query.bool.filter.bool.must;
         expect(filters).toContain({term: {'task.desk': '456'}});
         expect(filters).toContain({exists: {field: 'task.last_production_desk'}});
         criteria = search.query({to_desk: '456-production'}).getCriteria();
-        filters = criteria.query.filtered.filter.and;
+        filters = criteria.query.bool.filter.bool.must;
         expect(filters).toContain({term: {'task.desk': '456'}});
         expect(filters).toContain({exists: {field: 'task.last_authoring_desk'}});
     }));
@@ -46,7 +46,7 @@ describe('search service', function() {
     it('can create query for from_desk and to_desk', inject(function($rootScope, search) {
         // both from desk and to desk are specified
         var criteria = search.query({from_desk: '123-authoring', to_desk: '456-production'}).getCriteria();
-        var filters = criteria.query.filtered.filter.and;
+        var filters = criteria.query.bool.filter.bool.must;
         expect(filters).toContain({term: {'task.last_authoring_desk': '123'}});
         expect(filters).toContain({term: {'task.desk': '456'}});
     }));
@@ -54,14 +54,14 @@ describe('search service', function() {
     it('can create query for original_creator', inject(function($rootScope, search) {
         // only to desk is specified
         var criteria = search.query({original_creator: '123'}).getCriteria();
-        var filters = criteria.query.filtered.filter.and;
+        var filters = criteria.query.bool.filter.bool.must;
         expect(filters).toContain({term: {'original_creator': '123'}});
     }));
 
     it('can create query for unique_name', inject(function($rootScope, search) {
         // only to desk is specified
         var criteria = search.query({unique_name: '123'}).getCriteria();
-        var filters = criteria.query.filtered.filter.and;
+        var filters = criteria.query.bool.filter.bool.must;
         expect(filters).toContain({term: {'unique_name': '123'}});
     }));
 

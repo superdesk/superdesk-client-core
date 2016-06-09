@@ -37,12 +37,12 @@ describe('monitoring', function() {
         it('can get criteria for stage', inject(function(cards) {
             var card = {_id: '123'};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.filter.and).toContain({
+            expect(criteria.source.query.bool.filter.bool.must).toContain({
                 term: {'task.stage': card._id}
             });
 
             criteria = cards.criteria(card, 'foo');
-            expect(criteria.source.query.filtered.filter.and).toContain({
+            expect(criteria.source.query.bool.filter.bool.must).toContain({
                 query: {query_string: {query: 'foo', lenient: false}}
             });
         }));
@@ -51,7 +51,7 @@ describe('monitoring', function() {
             var card = {type: 'personal'};
             session.identity = {_id: 'foo'};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.filter.and).toContain({
+            expect(criteria.source.query.bool.filter.bool.must).toContain({
                 bool: {
                     must: {term: {original_creator: session.identity._id}},
                     must_not: {exists: {field: 'task.desk'}}
@@ -62,16 +62,16 @@ describe('monitoring', function() {
         it('can get criteria for saved search', inject(function(cards) {
             var card = {type: 'search', search: {filter: {query: {q: 'foo'}}}};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.query.query_string.query).toBe('foo');
+            expect(criteria.source.query.bool.must.query_string.query).toBe('foo');
         }));
 
         it('can get criteria for spike desk', inject(function(cards) {
             var card = {type: 'spike'};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.filter.and).toContain({
+            expect(criteria.source.query.bool.filter.bool.must).toContain({
                 term: {'task.desk': card._id}
             });
-            expect(criteria.source.query.filtered.filter.and).toContain({
+            expect(criteria.source.query.bool.filter.bool.must).toContain({
                 term: {'state': 'spiked'}
             });
         }));
@@ -80,7 +80,7 @@ describe('monitoring', function() {
             var card = {type: 'highlights'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
-            expect(criteria.source.query.filtered.filter.and).toContain({
+            expect(criteria.source.query.bool.filter.bool.must).toContain({
                 and: [{term: {'highlights': queryParam.highlight}}]
             });
         }));
@@ -88,33 +88,33 @@ describe('monitoring', function() {
         it('can get criteria for stage with search', inject(function(cards) {
             var card = {_id: '123', query: 'test'};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
+            expect(criteria.source.query.bool.must.query_string.query).toBe('test');
         }));
 
         it('can get criteria for personal with search', inject(function(cards, session) {
             var card = {type: 'personal', query: 'test'};
             session.identity = {_id: 'foo'};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
+            expect(criteria.source.query.bool.must.query_string.query).toBe('test');
         }));
 
         it('can get criteria for spike with search', inject(function(cards) {
             var card = {_id: '123', type: 'spike', query: 'test'};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
+            expect(criteria.source.query.bool.must.query_string.query).toBe('test');
         }));
 
         it('can get criteria for highlight with search', inject(function(cards) {
             var card = {type: 'highlights', query: 'test'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
-            expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
+            expect(criteria.source.query.bool.must.query_string.query).toBe('test');
         }));
 
         it('can get criteria for file type filter', inject(function(cards) {
             var card = {_id: '123', fileType: JSON.stringify(['text'])};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.filter.and).toContain({
+            expect(criteria.source.query.bool.filter.bool.must).toContain({
                 terms: {type: ['text']}
             });
         }));
@@ -124,14 +124,14 @@ describe('monitoring', function() {
                         search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}}
             };
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.query.query_string.query).toBe('(test) foo');
+            expect(criteria.source.query.bool.must.query_string.query).toBe('(test) foo');
             expect(criteria.source.post_filter.and).toContain({terms: {type: ['picture']}});
         }));
 
         it('can get criteria for file type filter with search', inject(function(cards) {
             var card = {_id: '123', fileType: JSON.stringify(['text']), query: 'test'};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.filter.and).toContain({
+            expect(criteria.source.query.bool.filter.bool.must).toContain({
                 terms: {type: ['text']}
             });
         }));
@@ -139,7 +139,7 @@ describe('monitoring', function() {
         it('can get criteria for multiple file type filter', inject(function(cards) {
             var card = {_id: '123', fileType: JSON.stringify(['text', 'picture'])};
             var criteria = cards.criteria(card);
-            expect(criteria.source.query.filtered.filter.and).toContain({
+            expect(criteria.source.query.bool.filter.bool.must).toContain({
                 terms: {type: ['text', 'picture']}
             });
         }));

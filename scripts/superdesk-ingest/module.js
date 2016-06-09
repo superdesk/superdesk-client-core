@@ -1236,12 +1236,14 @@
                     var criteria = {
                             source: {
                                 query: {
-                                    filtered: {
+                                    bool: {
                                         filter: {
-                                            and: [
-                                                {term: {ingest_provider: scope.item._id}},
-                                                {range: {versioncreated: {gte: 'now-24h'}}}
-                                            ]
+                                            bool: {
+                                                must: [
+                                                    {term: {ingest_provider: scope.item._id}},
+                                                    {range: {versioncreated: {gte: 'now-24h'}}}
+                                                ]
+                                            }
                                         }
                                     }
                                 },
