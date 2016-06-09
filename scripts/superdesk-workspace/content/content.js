@@ -64,6 +64,7 @@
         .service('content', ContentService)
         .directive('sdContentCreate', ContentCreateDirective)
         .directive('sdContentSchemaEditor', ContentProfileSchemaEditor)
+        .directive('sdItemProfile', ItemProfileDirective)
         .controller('ContentProfilesController', ContentProfilesController)
         .config(['superdeskProvider', function(superdesk) {
             superdesk
@@ -216,7 +217,8 @@
                 params = {where: {enabled: true}};
             }
 
-            return api.query('content_types', params).then(function(result) {
+            // cache when fetching all types
+            return api.query('content_types', params, !!includeDisabled).then(function(result) {
                 self.types = result._items.sort(function(a, b) {
                     return b.priority - a.priority; // with higher priority goes up
                 });
@@ -224,6 +226,23 @@
             }, function(reason) {
                 self.types = [];
                 return self.types;
+            });
+        };
+
+        /**
+         * Get types lookup
+         *
+         * @return {Promise}
+         */
+        this.getTypesLookup = function() {
+            return this.getTypes(true).then(function(profiles) {
+                var lookup = {};
+
+                profiles.forEach(function(profile) {
+                    lookup[profile._id] = profile;
+                });
+
+                return lookup;
             });
         };
 
@@ -520,4 +539,20 @@
             }
         };
     }
+
+    ItemProfileDirective.$inject = ['content'];
+    function ItemProfileDirective(content) {
+        return {
+            scope: {profileId: '=profile'},
+            template: '{{ profile }}',
+            link: function(scope) {
+                content.getTypesLookup().then(function(lookup) {
+                    scope.profile = lookup[scope.profileId] ?
+                        lookup[scope.profileId].label :
+                        scope.profileId;
+                });
+            }
+        };
+    }
+
 })();

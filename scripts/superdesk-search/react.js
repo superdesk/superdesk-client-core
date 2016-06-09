@@ -34,8 +34,8 @@
     /**
      * Monitoring state - keeps information required to render lists.
      */
-    MonitoringState.$inject = ['$q', '$rootScope', 'ingestSources', 'desks', 'highlightsService'];
-    function MonitoringState($q, $rootScope, ingestSources, desks, highlightsService) {
+    MonitoringState.$inject = ['$q', '$rootScope', 'ingestSources', 'desks', 'highlightsService', 'content'];
+    function MonitoringState($q, $rootScope, ingestSources, desks, highlightsService, content) {
         this.init = init;
         this.state = {};
         this.setState = setState;
@@ -83,8 +83,12 @@
                         });
                         setState({highlightsById: highlightsById});
                     }),
+                    profilesById: content.getTypesLookup().then(function(profilesLookup) {
+                        setState({profilesById: profilesLookup});
+                    }),
+
                     // populates cache for mark for highlights activity dropdown
-                    deskHighlights: highlightsService.get(desks.getCurrentDeskId())
+                    deskHighlights: highlightsService.get(desks.getCurrentDeskId()),
                 });
             }
 
@@ -876,7 +880,9 @@
                                 return React.createElement(
                                     'div',
                                     {className: 'label label--' + props.item.profile, key: 'profile'},
-                                    props.item.profile
+                                    props.profilesById[props.item.profile] ?
+                                        props.profilesById[props.item.profile].label :
+                                        props.item.profile
                                 );
                             }
                         },
@@ -1387,7 +1393,8 @@
                                         selectUpdate: this.selectUpdate,
                                         desk: this.props.desk,
                                         ingestProvider: this.props.ingestProvider,
-                                        highlightsById: this.props.highlightsById
+                                        highlightsById: this.props.highlightsById,
+                                        profilesById: this.props.profilesById
                                     }),
                                     this.state.hover ? React.createElement(ActionsMenu, {item: item}) : null
                                 );
@@ -1571,7 +1578,8 @@
                                     onMultiSelect: this.multiSelect,
                                     ingestProvider: this.props.ingestProvidersById[item.ingest_provider] || null,
                                     desk: this.props.desksById[task.desk] || null,
-                                    highlightsById: this.props.highlightsById
+                                    highlightsById: this.props.highlightsById,
+                                    profilesById: this.props.profilesById
                                 });
                             }.bind(this);
                             var isEmpty = !this.state.itemsList.length;
