@@ -56,13 +56,15 @@ describe('users', function() {
         });
 
         it('can list users', function() {
-            expect(element.all(by.repeater('user in users')).count()).toBe(7);
+            expect(element.all(by.repeater('user in users')).count()).toBe(6);
             expect(element(by.repeater('user in users').row(0).column('username')).getText())
                 .toBe('test_user');
         });
 
         it('list online users', function() {
-            element(by.id('online_users')).click();
+            var online = element(by.id('user-filter')).all(by.tagName('option')).get(1);
+            expect(online.getText()).toBe('Online');
+            online.click();
             expect(element.all(by.repeater('user in users')).count()).toBe(2);
             expect(element(by.repeater('user in users').row(0).column('username')).getText())
                 .toBe('test_user');

@@ -4,7 +4,8 @@
 module.exports = new Workspace();
 
 var content = require('./content'),
-    nav = require('./utils').nav;
+    nav = require('./utils').nav,
+    waitFor = require('./utils').wait;
 
 function Workspace() {
     this.sideMenu = element(by.id('side-menu'));
@@ -105,9 +106,22 @@ function Workspace() {
      * @param {string} name
      */
     this.showHighlightList = function(name) {
+        var item = this.getHighlightListItem(name);
+        waitFor(item);
+        item.click();
+    };
+
+    /**
+     * Get highlight list item by name
+     *
+     * @param {string} name
+     *
+     * @return {promise} highlight element
+     */
+    this.getHighlightListItem = function(name) {
         var menu = element(by.id('highlightPackage'));
         browser.actions().mouseMove(menu).perform();
-        menu.element(by.css('[option="' + name + '"]')).click();
+        return menu.element(by.css('[option="' + name + '"]'));
     };
 
     /**

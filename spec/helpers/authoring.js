@@ -14,6 +14,7 @@ function Authoring() {
     this.save_publish_button = element(by.buttonText('Save and publish'));
     this.save_button = element(by.buttonText('Save'));
     this.edit_button = element(by.id('Edit'));
+    this.update_button = element(by.buttonText('Update'));
     this.edit_correct_button = element(by.buttonText('Edit and Correct'));
     this.edit_kill_button = element(by.buttonText('Edit and Kill'));
 
@@ -354,7 +355,7 @@ function Authoring() {
 
     this.checkMarkedForHighlight = function(highlight, item) {
         expect(element(by.className('icon-star')).isDisplayed()).toBeTruthy();
-        browser.actions().mouseMove(element(by.className('icon-star'))).perform();
+        browser.actions().click(element(by.className('icon-star'))).perform();
         element.all(by.css('.dropdown-menu.open li')).then(function (items) {
             expect(items[1].getText()).toContain(highlight);
         });

@@ -77,7 +77,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
         });
     }
 
-    $scope.isLocked = function(widget) {
+    $scope.isWidgetLocked = function(widget) {
         if (widget) {
             return (widget.needUnlock && $scope.item._locked) ||
             (widget.needEditable && !$scope.item._editable);
@@ -85,7 +85,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
     };
 
     $scope.activate = function(widget) {
-        if (!$scope.isLocked(widget)) {
+        if (!$scope.isWidgetLocked(widget)) {
             if ($scope.active === widget) {
                 $scope.closeWidget();
             } else {

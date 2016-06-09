@@ -18,7 +18,7 @@
                             <span ng-if="!selectedFilterSubscriber">none</span>
                             <b class="caret"></b>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu scrollable">
                             <li>
                                 <a href="" ng-click="filterSchedule(null, 'subscriber')" translate>None</a>
                             </li>
@@ -112,6 +112,10 @@
                 </div>
             </div>
         </div>
-        <div sd-item-preview data-item="selected.preview" data-hide-actions-menu="true" data-close="preview(null)"></div>
+        <div sd-item-preview data-item="selected.preview"
+            data-hide-actions-menu="true"
+            data-show-history-tab="true"
+            data-close="preview(null)">
+        </div>
     </div>
 </section>

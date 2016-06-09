@@ -19,5 +19,6 @@ gettext('\'SUBJECT is a required field\'');gettext('\'BYLINE is a required field
 gettext('\'HEADLINE is a required field\'');gettext('\'ANPA_CATEGORY is a required field\'');gettext('\'SLUGLINE is a required field\'');
 gettext('\'GENRE null value not allowed\'');gettext('412: Can\'t publish as item state is draft');gettext('production');gettext('search');
 gettext('desk Output');gettext('scheduled Desk Output');gettext('Search');gettext('Content Expiry');gettext('stage');gettext('Last Week');
-gettext('authoring');
+gettext('authoring');gettext('update');gettext('2nd update');gettext('3rd update');gettext('4th update');gettext('5th update');
+gettext('Content Profiles');
 

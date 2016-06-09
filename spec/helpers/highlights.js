@@ -60,6 +60,10 @@ function Highlights() {
         this.name.sendKeys(name);
     };
 
+    this.getHighlightTitle = function() {
+        return element.all(by.css('[ng-if="type === \'highlights\'"]')).get(0).getText();
+    };
+
     this.getDesk = function(name) {
         return this.desks.filter(function(elem, index) {
             return elem.element(by.binding('desk.name')).getText().then(function(text) {
@@ -144,7 +148,7 @@ function Highlights() {
     };
 
     this.getHighlights = function(elem) {
-        return elem.all(by.repeater('h in highlights')).filter(function(highlight, index) {
+        return elem.all(by.repeater('h in highlights track by h._id')).filter(function(highlight, index) {
             return highlight.getText().then(function(text) {
                 return text;
             });
@@ -189,7 +193,7 @@ function Highlights() {
         var elem = element(by.css('[class="multi-action-bar ng-scope"]'));
         elem.element(by.className('big-icon-marked-star')).click();
         browser.sleep(200);
-        elem.all(by.repeater('h in highlights')).all(by.css('[option="' + name + '"]')).click();
+        elem.all(by.repeater('h in highlights track by h._id')).all(by.css('[option="' + name + '"]')).click();
         browser.sleep(200);
     };
 }

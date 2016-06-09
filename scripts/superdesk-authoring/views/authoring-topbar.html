@@ -34,7 +34,7 @@
         <span ng-if="item.highlights" sd-highlights-title data-item="item"></span>
     </div>
 
-    <div class="subnav__stretch-bar">
+    <div class="subnav__stretch-bar" ng-if="item.task && item.task.desk">
       <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-if="$root.config.features.customAuthoringTopbar" ng-show="_editable && itemActions.save && action === 'edit'">
         <button class="btn btn-custom"
                 ng-click="saveAndContinue(sendToNextStage)"
@@ -67,6 +67,11 @@
         ng-show="(action === 'view' || !item._editable) && itemActions.deschedule"
         ng-click="deschedule()"
         translate>Deschedule</button>
+
+      <button class="btn btn-info" ng-if="item._type !== 'legal_archive'"
+        ng-show="(action === 'view' || !item._editable) && itemActions.re_write"
+        ng-click="openAction('rewrite')"
+        translate>Update</button>
 
       <button class="btn btn-info" ng-if="item._type !== 'legal_archive'"
         ng-show="(action === 'view' || !item._editable) && itemActions.correct"
@@ -126,7 +131,7 @@
 
                 <ul id="multiedit" ng-if="item.task.desk && itemActions.multi_edit && !isLocked()" ng-show="action !== 'kill'">
                     <li>
-                    <div class="dropdown highlights-toggle" dropdown>
+                    <div class="dropdown multiedit-toggle" dropdown>
                       <button class="dropdown-toggle" dropdown-toggle>
                         {{ :: 'Multiedit' | translate }}
                         <i class="icon-chevron-right-thin submenu-icon"></i>
