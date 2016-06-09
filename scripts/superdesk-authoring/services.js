@@ -33,6 +33,7 @@ function RenditionsService(metadata, $q, api, superdesk, _) {
                 item: picture,
                 renditions: renditions,
                 poi: picture.poi || poi,
+                showAoISelectionButton: true,
                 showMetadataEditor: true
             })
             .then(function(result) {

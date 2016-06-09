@@ -988,6 +988,7 @@
         };
 
         // Area of Interest
+        $scope.data.showAoISelectionButton = $scope.data.showAoISelectionButton === true;
         $scope.showAreaOfInterestView = function(show) {
             angular.extend($scope, {
                 isAoISelectionModeEnabled: show === undefined || show,

@@ -50,7 +50,10 @@
                     <button class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</button>
                     <button class="btn btn-primary" ng-click="saveAreaOfInterest(areaOfInterestData)" translate>Save</button>
                 </div>
-                <button class="btn btn-default" ng-click="showAreaOfInterestView()" ng-if="!isAoISelectionModeEnabled" translate>Select the area of interest</button>
+                <button class="btn btn-default"
+                        ng-click="showAreaOfInterestView()"
+                        ng-if="data.showAoISelectionButton && !isAoISelectionModeEnabled"
+                        translate>Select the area of interest</button>
             </div>
             <div class="crop-area selected" ng-if="selectedRendition">
                 <label class="field-label">{{ selectedRendition.name }}</label>
