@@ -1419,6 +1419,14 @@
                     return false;
                 };
 
+                $scope.showCustomButtons = function(item) {
+                    if (!item.task || item.state === 'draft' && !$scope.dirty) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                };
+
                 $scope.saveAndContinue = function(customButtonAction) {
                     if ($scope.dirty) {
                         $scope.saveTopbar().then(customButtonAction);
