@@ -1356,7 +1356,8 @@
                     close: '&',
                     openLightbox: '=',
                     openSingleItem: '=',
-                    hideActionsMenu: '='
+                    hideActionsMenu: '=',
+                    showHistoryTab: '='
                 },
                 link: function(scope) {
                     scope.tab = 'content';
