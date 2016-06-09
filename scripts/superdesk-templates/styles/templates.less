@@ -25,15 +25,29 @@
         display: inline-block;
         vertical-align: top;
         width: 63%;
+
+        .box-shadow(3px -3px 8px -3px rgba(0, 0, 0, 0.1));
     }
 
     .template-metadata {
+        display: inline-block;
         position: absolute;
         width: calc(~'37.25% - 2px');
         height: 100%;
         top: 0; right: 0;
         padding: 20px 31px;
-        .box-shadow(inset 3px 0 8px -3px rgba(0,0,0,0.1));
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        .sd-toggle {
+            margin-top: 4px;
+        }
+
+        .toggle-box__label {
+            color: @black;
+        }
     }
 
     .template-icon {
@@ -44,19 +58,25 @@
         i {
             width: 36px; height: 36px;
             font-size: 36px; line-height: 36px;
-            opacity: .5;
+            opacity: .7;
         }
     }
 
     .template-header {
-        display: inline-block;
+        display: inline-flex;
+        flex-wrap: wrap;
         vertical-align: top;
-        padding: 20px 31px;
+        padding: 20px 13px;
         width: calc(~'100% - 95px');
 
         input#template-name {
             font-size: 15px;
             font-weight: 500;
+        }
+
+        .authoring-header__item label {
+            min-width: 90px;
+            line-height: 16px;
         }
     }
 
@@ -74,4 +94,24 @@
             padding: 20px 38px;
         }
     }
+
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+        .transition(all 0.3s);
+    }
+
+    .field--double {
+        > select, > input, > .field {
+            display: inline-block;
+            vertical-align: top;
+            width: 48%;
+            &:first-of-type {
+                margin-right: 2%;
+            }
+        }
+    }
+
 }

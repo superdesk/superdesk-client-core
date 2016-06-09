@@ -6,37 +6,40 @@
 
     <div class="modal-body">
         <form class="template-content">
-
             <div class="template-icon">
                 <i class="icon-text"></i>
             </div>
 
             <div class="template-header">
-                <div class="field">
+                <div class="authoring-header__item" sd-width="full">
                     <input type="text" id="template-name" class="line-input" ng-model="template.template_name" placeholder="{{ :: 'Template name' | translate }}" required>
                 </div>
 
-                <div class="field" ng-if="template.template_type !== 'kill' && !content_types.length">
+                <div class="authoring-header__item" sd-width="full" ng-if="template.template_type !== 'kill' && !content_types.length">
                     <label for="template-profile" class="pull-left" translate>Content Type</label>
                     <input type="text" class="line-input" id="template-profile" ng-model="item.profile">
                 </div>
 
-                <div class="field" ng-if="template.template_type !== 'kill' && content_types.length">
+                <div class="authoring-header__item" sd-width="half" ng-if="template.template_type !== 'kill' && content_types.length">
                     <label for="template-profile" translate>Content Type</label>
-                    <select id="template-profile" class="line-input" ng-model="item.profile" ng-options="type._id as type.label for type in content_types"></select>
+                    <div class="authoring-header__input-holder">
+                        <select id="template-profile" class="dropdown-toggle line-input" ng-model="item.profile" ng-options="type._id as type.label for type in content_types"></select>
+                    </div>
                 </div>
 
-                <div class="field">
+                <div class="authoring-header__item " sd-width="half">
                     <label for="template-type" translate>Template Type</label>
-                    <select id="template-type"
-                            class="line-input"
-                            ng-model="template.template_type"
-                            ng-options="type._id as type.label for type in types| filter:templatesFilter"
-                            required>
-                    </select>
+                    <div class="authoring-header__input-holder">
+                        <select id="template-type"
+                                class="dropdown-toggle line-input"
+                                ng-model="template.template_type"
+                                ng-options="type._id as type.label for type in types| filter:templatesFilter"
+                                required>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="field">
+                <div class="authoring-header__item" sd-width="full">
                     <span sd-switch ng-model="template.is_public"></span>
                     <label for="template-is-private" translate>Make Public</label>
                 </div>
@@ -48,72 +51,71 @@
                     <div class="fieldset" sd-article-edit></div>
                 </div>
             </div>
-
         </form>
 
         <div class="template-metadata">
-            <!-- Publication -->
-            <label translate>Not For Publication</label>
-            <span sd-switch ng-model="item.flags.marked_for_not_publication"></span>
-            <label>
-                <span class="state-label not-for-publication" ng-show="item.flags.marked_for_not_publication" translate>Not For Publication</span>
-                <span class="state-label for-publication" ng-show="!item.flags.marked_for_not_publication" translate>For Publication</span>
-            </label>
-            <!-- End Publication -->
-
-            <!-- Usage Terms -->
-            <label translate>Usage terms</label>
-            <div class="data">
-                <input class="line-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
-            </div>
-            <!-- End Usage Terms -->
-
-            <!-- Language -->
-            <label translate>Language</label>
-            <div class="data">
-                <input class="line-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
-            </div>
-            <!-- End Language -->
-
             <div class="field" ng-if="template.template_type !== 'kill' && template.is_public">
-                <label for="template-desk" translate>Desk</label>
-                <div class="control">
-                    <select id="template-desk" ng-model="template.template_desk" ng-change="updateStages(template.template_desk)">
+                <label for="template-desk" translate>Desk / Stage</label>
+                <div class="field--double">
+                    <select id="template-desk" ng-model="template.template_desk" class="dropdown-toggle line-input" ng-change="updateStages(template.template_desk)">
                         <option value="" translate>None</option>
                         <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id}}" ng-selected="desk._id === template.template_desk">{{ :: desk.name}}</option>
                     </select>
-                </div>
-            </div>
-
-            <div class="field" ng-if="template.template_desk && stages && template.template_type !== 'kill' && template.is_public">
-                <label for="template-stage" translate>Stage</label>
-                <div class="control">
-                    <select id="template-stage" ng-model="template.template_stage">
+                    <select id="template-stage" class="dropdown-toggle line-input" ng-model="template.template_stage">
                         <option ng-repeat="stage in stages track by stage._id" value="{{ stage._id}}" ng-selected="stage._id === template.template_stage">{{ :: stage.name}}</option>
                     </select>
                 </div>
             </div>
 
-            <div class="field" ng-if="template.template_desk && template.template_type !== 'kill' && template.is_public">
-                <label for="schedule-toggle" translate>Automatically create item</label>
-                <div class="control">
-                    <span sd-switch ng-model="template.schedule.is_active"></span>
+            <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false">
+                <div class="field">
+                    <label translate>Not For Publication</label>
+                    <span sd-switch ng-model="item.flags.marked_for_not_publication" class="pull-right"></span>
+                </div>
+
+                <div class="field">
+                    <label translate>Usage terms</label>
+                    <div class="data">
+                        <input class="line-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label translate>Language</label>
+                    <div class="data">
+                        <input class="line-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
+                    </div>
                 </div>
             </div>
 
-            <div class="field" ng-if="template.schedule.is_active && template.template_type !== 'kill'">
-                <label translate>On</label>
-                <div class="day-filter-box clearfix" sd-weekday-picker data-model="template.schedule.day_of_week"></div>
-            </div>
-
-            <div class="field" ng-if="template.schedule.is_active && template.template_type !== 'kill'">
-                <label translate>At</label>
-                <span sd-timepicker ng-model="template.schedule.create_at"></span>
-                <div sd-timezone data-timezone="template.schedule.time_zone"></div>
+            <div class="field" ng-if="template.template_desk && template.template_type !== 'kill' && template.is_public">
+                <div class="toggle-box">
+                    <div class="toggle-box__header">
+                        <span class="toggle-box__chevron" sd-switch ng-model="template.schedule.is_active"></span>
+                        <div class="toggle-box__label">{{ :: 'Automatically create item' | translate }}</div>
+                        <div class="toggle-box__line"></div>
+                    </div>
+                </div>
+                <div class="toggle-box__content">
+                    <div class="field" ng-if="template.schedule.is_active && template.template_type !== 'kill'">
+                        <label translate>On</label>
+                        <div class="day-filter-box clearfix" sd-weekday-picker data-model="template.schedule.day_of_week"></div>
+                    </div>
+                    <div class="field" ng-if="template.schedule.is_active && template.template_type !== 'kill'">
+                        <div class="field--double">
+                            <div class="field">
+                                <label translate>At</label>
+                                <span sd-timepicker ng-model="template.schedule.create_at" data-style="line-input"></span>
+                            </div>
+                            <div class="field">
+                                <div sd-timezone data-timezone="template.schedule.time_zone" data-style="line-input"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
-
     </div>
 
     <div class="modal-footer">

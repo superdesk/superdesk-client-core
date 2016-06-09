@@ -2943,7 +2943,7 @@
     function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content, lodash, authoring) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/authoring-header.html',
-            require: '^sdAuthoringWidgets',
+            require: '?^sdAuthoringWidgets',
             link: function (scope, elem, attrs, WidgetsManagerCtrl) {
                 scope.contentType = null;
 
