@@ -1587,6 +1587,14 @@
                             scope.searchProviderTypes = searchProviderService.getProviderTypes();
                             scope.cvs = metadata.search_cvs;
                             scope.search_config = metadata.search_config;
+                            scope.scanpix_subscriptions = [{
+                                name: 'subscription',
+                                label: 'inside subscription',
+                            }, {
+                                name: 'all',
+                                label: 'all photos',
+                            }];
+                            scope.meta.scanpix_subscription = scope.scanpix_subscriptions[0].name;
                             scope.lookupCvs = {};
                             angular.forEach(scope.cvs, function(cv) {
                                 scope.lookupCvs[cv.id] = cv;
@@ -1789,6 +1797,9 @@
                                     metas.push(val.join(' '));
                                 } else {
                                     if (val) {
+                                        if (key.startsWith('scanpix_')) {
+                                            key = key.substring(8);
+                                        }
                                         if (typeof(val) === 'string'){
                                             if (val) {
                                                 metas.push(key + ':(' + val + ')');
