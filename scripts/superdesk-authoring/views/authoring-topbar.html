@@ -68,7 +68,7 @@
         ng-click="deschedule()"
         translate>Deschedule</button>
 
-      <button class="btn btn-info" ng-if="item._type !== 'legal_archive'"
+      <button class="btn btn-info" ng-if="item._type !== 'legal_archive' && !isLocked()"
         ng-show="(action === 'view' || !item._editable) && itemActions.re_write"
         ng-click="openAction('rewrite')"
         translate>Update</button>
