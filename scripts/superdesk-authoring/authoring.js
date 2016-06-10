@@ -1451,6 +1451,14 @@
                     return false;
                 };
 
+                $scope.showCustomButtons = function(item) {
+                    if (!item.task || item.state === 'draft' && !$scope.dirty) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                };
+
                 $scope.saveAndContinue = function(customButtonAction) {
                     if ($scope.dirty) {
                         $scope.saveTopbar().then(customButtonAction);
@@ -1918,11 +1926,11 @@
     SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
         'superdeskFlags', '$location', 'macros', '$rootScope',
         'authoring', 'send', 'editor', 'confirm', 'archiveService',
-        'preferencesService', 'multi', 'datetimeHelper'];
+        'preferencesService', 'multi', 'datetimeHelper', 'config'];
     function SendItem($q, api, desks, notify, authoringWorkspace,
                       superdeskFlags, $location, macros, $rootScope,
                       authoring, send, editor, confirm, archiveService,
-                      preferencesService, multi, datetimeHelper) {
+                      preferencesService, multi, datetimeHelper, config) {
         return {
             scope: {
                 item: '=',
@@ -2108,6 +2116,9 @@
                  * Returns true if Embargo needs to be displayed, false otherwise.
                  */
                 scope.showEmbargo = function() {
+                    if (config.ui && config.ui.publishEmbargo === false) {
+                        return false;
+                    }
                     var prePublishCondition = scope.item && archiveService.getType(scope.item) !== 'ingest' &&
                         scope.item.type !== 'composite' && !scope.item.publish_schedule_date &&
                         !scope.item.publish_schedule_time && !authoring.isTakeItem(scope.item);
@@ -2166,6 +2177,9 @@
                 }
 
                 scope.canSendAndContinue = function() {
+                    if (config.ui && config.ui.publishSendAdnContinue === false) {
+                        return false;
+                    }
                     return !authoring.isPublished(scope.item) && _.contains(['text'], scope.item.type);
                 };
 
