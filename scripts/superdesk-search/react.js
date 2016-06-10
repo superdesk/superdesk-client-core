@@ -1293,7 +1293,7 @@
                         },
 
                         edit: function(event) {
-                            authoringWorkspace.open(this.props.item);
+                            this.props.onEdit(this.props.item);
                         },
 
                         getInitialState: function() {
