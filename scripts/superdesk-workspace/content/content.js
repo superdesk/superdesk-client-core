@@ -431,6 +431,29 @@
         }
 
         /**
+         * @description Middle-ware that checks an error response to verify whether
+         * it is a duplication error.
+         * @param {Function} next The function to be called when error is not a
+         * duplication error.
+         * @private
+         */
+        function uniqueError(next) {
+            return function(resp) {
+                if (angular.isObject(resp) &&
+                    angular.isObject(resp.data) &&
+                    angular.isObject(resp.data._issues) &&
+                    angular.isObject(resp.data._issues.label) &&
+                    resp.data._issues.label.unique) {
+                    notify.error(that.duplicateErrorTxt);
+                    return resp;
+                }
+                return next(resp);
+            };
+        }
+
+        this.duplicateErrorTxt = gettext('A content profile with this name already exists.');
+
+        /**
          * @description Toggles the visibility of the creation modal.
          */
         this.toggleCreate = function() {
@@ -454,7 +477,7 @@
          */
         this.save = function() {
             content.createProfile($scope.new)
-                .then(refreshList, reportError)
+                .then(refreshList, uniqueError(reportError))
                 .then(this.toggleCreate);
         };
 
