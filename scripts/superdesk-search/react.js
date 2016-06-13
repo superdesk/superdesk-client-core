@@ -584,10 +584,10 @@
                                     ),
                                     React.createElement(
                                         'button',
-                                        {className: 'close-button'},
+                                        {className: 'close-button', onClick: closeActionsMenu},
                                         React.createElement(
                                             'i',
-                                            {className: 'icon-close-small icon-white', onClick: closeActionsMenu}
+                                            {className: 'icon-close-small icon-white'}
                                         )
                                     )
                                 )
@@ -1161,10 +1161,10 @@
                             React.createElement('div', {className: 'menu-label'}, gettextCatalog.getString(props.label),
                                 props.label === 'Actions' ? React.createElement(
                                     'button',
-                                    {className: 'close-button'},
+                                    {className: 'close-button', onClick: closeActionsMenu},
                                     React.createElement(
                                         'i',
-                                        {className: 'icon-close-small', onClick: closeActionsMenu}
+                                        {className: 'icon-close-small'}
                                     )
                                 ) : null
                             )
