@@ -288,7 +288,7 @@
                      * @return {Boolean}
                      */
                     function hasThumbnail(item) {
-                        return item.type === 'picture' && item.renditions.thumbnail;
+                        return item.renditions && item.renditions.thumbnail;
                     }
 
                     /**
