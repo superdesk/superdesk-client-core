@@ -709,6 +709,7 @@
         return {
             scope: {
                 tt: '=ngModel',
+                style: '@',
                 disabled: '=ngDisabled'
             },
             templateUrl: 'scripts/superdesk/ui/views/sd-timepicker.html',
@@ -861,7 +862,8 @@
         return {
             templateUrl: 'scripts/superdesk/ui/views/sd-timezone.html',
             scope: {
-                timezone: '='
+                timezone: '=',
+                style: '@'
             },
             link: function(scope) {
                 scope.timeZones = [];     // all time zones to choose from

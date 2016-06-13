@@ -49,6 +49,7 @@
             'subject',
             'genre',
             'type',
+            'flags',
             'language',
             'anpa_category',
             'anpa_take_key',
@@ -65,7 +66,9 @@
             'located',
             'creditline',
             'ednote',
-            'language'
+            'language',
+            'usageterms'
+
         ];
 
         /**
@@ -547,16 +550,22 @@
         };
     }
 
+    function TemplateEditorModal() {
+        return {
+            templateUrl: 'scripts/superdesk-templates/views/template-editor-modal.html'
+        };
+    }
+
     angular.module('superdesk.templates', ['superdesk.activity', 'superdesk.authoring', 'superdesk.preferences'])
         .service('templates', TemplatesService)
         .filter('templatesBy', FilterTemplatesFilter)
         .directive('sdTemplates', TemplatesDirective)
         .directive('sdTemplateSelect', TemplateSelectDirective)
         .directive('sdTemplateList', TemplateListDirective)
+        .directive('sdTemplateEditorModal', TemplateEditorModal)
         .controller('CreateTemplateController', CreateTemplateController)
         .controller('TemplateMenu', TemplateMenuController)
-        .config(config)
-        ;
+        .config(config);
 
     config.$inject = ['superdeskProvider', 'apiProvider'];
     function config(superdesk, apiProvider) {

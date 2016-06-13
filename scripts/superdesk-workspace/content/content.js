@@ -17,7 +17,7 @@
         headline: {maxlength: 64, type: 'string', required: true},
         sms: {maxlength: 160},
         abstract: {maxlength: 160, type: 'string'},
-        body_html: {},
+        body_html: {required: true},
         byline: {type: 'string'},
         dateline: {type: 'dict', required: true},
         sign_off: {type: 'string'},

@@ -35,7 +35,8 @@
                     disabled: '=',
                     blur: '&',
                     placeholder: '@',
-                    tabindex: '='
+                    tabindex: '=',
+                    style: '='
                 },
                 controller: ['$scope', function($scope) {
                     $scope.hide = true;
