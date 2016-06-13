@@ -476,9 +476,15 @@
          * @description Creates a new content profile.
          */
         this.save = function() {
+            var onSuccess = function(resp) {
+                refreshList();
+                that.toggleCreate();
+                return resp;
+            };
+
             content.createProfile($scope.new)
-                .then(refreshList, uniqueError(reportError))
-                .then(this.toggleCreate);
+                .then(onSuccess, uniqueError(reportError))
+                .then(this.toggleEdit);
         };
 
         /**
