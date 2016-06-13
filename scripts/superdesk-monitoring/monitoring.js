@@ -220,7 +220,7 @@
             switch (card.type) {
             case 'stage':
                 // refresh stage if it matches updated stage
-                return !!data.stages[card._id];
+                return data.stages && !!data.stages[card._id];
 
             case 'personal':
                 return data.user === session.identity._id;
@@ -404,14 +404,15 @@
 
                 scope.$on('task:stage', scheduleQuery);
                 scope.$on('item:spike', scheduleQuery);
-                scope.$on('item:duplicate', scheduleQuery);
                 scope.$on('item:copy', scheduleQuery);
+                scope.$on('item:duplicate', scheduleQuery);
                 scope.$on('broadcast:created', function(event, args) {
                     scope.previewingBroadcast = true;
                     queryItems();
                     preview(args.item);
                 });
-                scope.$on('item:unspike', queryItems);
+                scope.$on('item:unspike', scheduleQuery);
+                scope.$on('$routeUpdate', scheduleQuery);
                 scope.$on('broadcast:preview', function(event, args) {
                     scope.previewingBroadcast = true;
                     if (args.item != null) {
@@ -421,23 +422,24 @@
                     }
                 });
 
-                scope.$on('item:highlight', queryItems);
+                scope.$on('item:highlight', scheduleQuery);
+                scope.$on('content:update', scheduleIfShouldUpdate);
 
                 if (scope.group.type !== 'stage') {
                     scope.$on('ingest:update', scheduleQuery);
                 }
 
                 function scheduleIfShouldUpdate(event, data) {
-                    // item was moved from current stage
                     if (data.from_stage && data.from_stage === scope.group._id) {
+                        // item was moved from current stage
                         extendItem(data.item, {
                             gone: true,
                             _etag: data.from_stage // this must change to make it re-render
                         });
-                    }
-
-                    // new item in current stage
-                    if (data.to_stage && data.to_stage === scope.group._id) {
+                    } else if (data.to_stage && data.to_stage === scope.group._id) {
+                        // new item in current stage
+                        scheduleQuery();
+                    } else if (data && cards.shouldUpdate(scope.group, data)) {
                         scheduleQuery();
                     }
                 }

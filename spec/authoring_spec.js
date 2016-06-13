@@ -103,6 +103,7 @@ describe('authoring', function() {
         monitoring.actionOnItem('Open', 5, 0);
         expect(authoring.update_button.isDisplayed()).toBe(true);
         authoring.update_button.click();
+        monitoring.filterAction('all');
         expect(monitoring.getTextItem(0, 0)).toBe('item7');
         expect(monitoring.getTextItem(5, 0)).toBe('item7');
     });
@@ -126,6 +127,7 @@ describe('authoring', function() {
         expect(authoring.getHistoryItems().count()).toBe(2);
         authoring.sendTo('Politic Desk', 'two');
         authoring.confirmSendTo();
+
         expect(monitoring.getTextItem(3, 0)).toBe('item8');
         monitoring.actionOnItem('Edit', 3, 0);
         authoring.showHistory();

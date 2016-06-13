@@ -1668,7 +1668,11 @@
                             var selected = listComponent.selectedCom;
 
                             if (selected) {
-                                offsetTop = ReactDOM.findDOMNode(selected).offsetTop;
+                                try {
+                                    offsetTop = ReactDOM.findDOMNode(selected).offsetTop;
+                                } catch (err) {
+                                    selected = null;
+                                }
                             }
 
                             items._items.forEach(function(item) {
@@ -1690,9 +1694,14 @@
                                 itemsById: itemsById,
                                 view: scope.view
                             }, function() {
-                                if (selected) { // maintain selected items position
-                                    var selectedNode = ReactDOM.findDOMNode(selected);
-                                    elem[0].scrollTop += selectedNode.offsetTop - offsetTop;
+                                if (selected) {
+                                    // maintain selected items position
+                                    try {
+                                        var selectedNode = ReactDOM.findDOMNode(selected);
+                                        elem[0].scrollTop += selectedNode.offsetTop - offsetTop;
+                                    } catch (err) {
+                                        // pass - selected item is not in list anymore
+                                    }
                                 }
 
                                 scope.rendering = scope.loading = false;
