@@ -1343,6 +1343,8 @@
                                         list.scrollTop = elem.offsetTop;
                                     }
                                 }
+
+                                this.props.setSelectedComponent(this);
                             }
                         },
 
@@ -1569,6 +1571,10 @@
                             this.closeActionsMenu();
                         },
 
+                        setSelectedComponent: function(com) {
+                            this.selectedCom = com;
+                        },
+
                         render: function render() {
                             var createItem = function createItem(itemId) {
                                 var item = this.state.itemsById[itemId];
@@ -1584,7 +1590,8 @@
                                     ingestProvider: this.props.ingestProvidersById[item.ingest_provider] || null,
                                     desk: this.props.desksById[task.desk] || null,
                                     highlightsById: this.props.highlightsById,
-                                    profilesById: this.props.profilesById
+                                    profilesById: this.props.profilesById,
+                                    setSelectedComponent: this.setSelectedComponent
                                 });
                             }.bind(this);
                             var isEmpty = !this.state.itemsList.length;
@@ -1654,9 +1661,15 @@
                                 return;
                             }
 
+                            var offsetTop = 0;
                             var itemsList = [];
                             var currentItems = {};
                             var itemsById = angular.extend({}, listComponent.state.itemsById);
+                            var selected = listComponent.selectedCom;
+
+                            if (selected) {
+                                offsetTop = ReactDOM.findDOMNode(selected).offsetTop;
+                            }
 
                             items._items.forEach(function(item) {
                                 var itemId = search.generateTrackByIdentifier(item);
@@ -1677,6 +1690,11 @@
                                 itemsById: itemsById,
                                 view: scope.view
                             }, function() {
+                                if (selected) { // maintain selected items position
+                                    var selectedNode = ReactDOM.findDOMNode(selected);
+                                    elem[0].scrollTop += selectedNode.offsetTop - offsetTop;
+                                }
+
                                 scope.rendering = scope.loading = false;
                             });
                         });
@@ -1705,11 +1723,18 @@
                         });
 
                         scope.$on('item:expired', function(_e, data) {
-                            Object.keys(data.items || {}).forEach(function(itemId) {
-                                listComponent.updateAllItems(itemId, {
-                                    gone: true
-                                });
+                            var itemsById = angular.extend({}, listComponent.state.itemsById);
+                            var shouldUpdate = false;
+                            _.forOwn(itemsById, function(item, key) {
+                                if (data.items[item._id]) {
+                                    itemsById[key] = angular.extend({gone: true}, item);
+                                    shouldUpdate = true;
+                                }
                             });
+
+                            if (shouldUpdate) {
+                                listComponent.setState({itemsById: itemsById});
+                            }
                         });
 
                         scope.$on('item:highlight', function(_e, data) {
