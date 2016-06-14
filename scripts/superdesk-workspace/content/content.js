@@ -83,8 +83,8 @@
         }])
         ;
 
-    ContentService.$inject = ['api', 'superdesk', 'templates', 'desks', 'packages', 'archiveService'];
-    function ContentService(api, superdesk, templates, desks, packages, archiveService) {
+    ContentService.$inject = ['api', 'superdesk', 'templates', 'desks', 'packages', 'archiveService', '$filter'];
+    function ContentService(api, superdesk, templates, desks, packages, archiveService, $filter) {
 
         var TEXT_TYPE = 'text';
 
@@ -147,6 +147,11 @@
         this.createItemFromTemplate = function(template) {
             var item = newItem(template.data.type || null);
             angular.extend(item, templates.pickItemData(template.data || {}), {template: template._id});
+            // set the dateline date to default utc date.
+            if (item.dateline && item.located) {
+                item.dateline = _.omit(item.dateline, 'text');
+                item.dateline.date = $filter('formatDateTimeString')();
+            }
             archiveService.addTaskToArticle(item);
             return save(item).then(function(_item) {
                 templates.addRecentTemplate(desks.activeDeskId, template._id);
