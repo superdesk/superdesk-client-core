@@ -119,7 +119,12 @@
                 <option value="" label=""></option>
             </select>
         </div>
-
+        <div class="field" ng-if="search_config.spike">
+            <label for="search-spike">
+            {{:: 'In Spiked' | translate}}
+            </label>
+            <span sd-switch ng-model="fields.spike"></span>
+        </div>
     </fieldset>
     <fieldset ng-show="repo.search === 'aapmm'">
         <div class="field">
