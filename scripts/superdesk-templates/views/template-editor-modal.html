@@ -33,6 +33,7 @@
                         <select id="template-type"
                                 class="dropdown-toggle line-input"
                                 ng-model="template.template_type"
+                                ng-change="resetDesks()"
                                 ng-options="type._id as type.label for type in types| filter:templatesFilter"
                                 required>
                         </select>
@@ -54,15 +55,23 @@
         </form>
 
         <div class="template-metadata">
-            <div class="field" ng-if="template.template_type !== 'kill' && template.is_public">
-                <label for="template-desk" translate>Desk / Stage</label>
-                <div class="field--double">
-                    <select id="template-desk" ng-model="template.template_desk" class="dropdown-toggle line-input" ng-change="updateStages(template.template_desk)">
+            <div class="authoring-header__item" ng-if="showDesks()">
+                <label for="template-desk" ng-if="template.template_type !== 'create'" translate>Desk</label>
+                <label for="template-desks" ng-if="template.template_type === 'create'" translate>Desks</label>
+                <div class="authoring-header__input-holder">
+                    <select id="template-desk" ng-if="template.template_type !== 'create'"
+                            ng-model="template_desk" ng-change="setTemplateDesks(template_desk)"
+                            class="dropdown-toggle line-input">
                         <option value="" translate>None</option>
-                        <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id}}" ng-selected="desk._id === template.template_desk">{{ :: desk.name}}</option>
+                        <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
+                            ng-selected="isDeskSelected(desk._id)">{{ :: desk.name }}</option>
                     </select>
-                    <select id="template-stage" class="dropdown-toggle line-input" ng-model="template.template_stage">
-                        <option ng-repeat="stage in stages track by stage._id" value="{{ stage._id}}" ng-selected="stage._id === template.template_stage">{{ :: stage.name}}</option>
+                    <select id="template-desks" ng-if="template.template_type === 'create'" multiple="true"
+                            ng-model="template.template_desks"
+                            class="line-input">
+                        <option value="" translate>None</option>
+                        <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
+                            ng-selected="isDeskSelected(desk._id)">{{ :: desk.name }}</option>
                     </select>
                 </div>
             </div>
@@ -88,7 +97,7 @@
                 </div>
             </div>
 
-            <div class="field" ng-if="template.template_desk && template.template_type !== 'kill' && template.is_public">
+            <div class="field" ng-if="showScheduling()">
                 <div class="toggle-box">
                     <div class="toggle-box__header">
                         <span class="toggle-box__chevron" sd-switch ng-model="template.schedule.is_active"></span>
@@ -111,6 +120,27 @@
                                 <div sd-timezone data-timezone="template.schedule.time_zone" data-style="line-input"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="authoring-header__item" ng-if="showScheduling() && template.schedule.is_active" sd-width="full">
+                    <label for="schedule-desk" translate>Schedule Desk</label>
+                    <div class="authoring-header__input-holder">
+                        <select id="schedule-desk" ng-model="template.schedule_desk"
+                                ng-change="updateStages(template.schedule_desk)" class="dropdown-toggle line-input">
+                            <option value="" translate>None</option>
+                            <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
+                                ng-selected="desk._id === template.schedule_desk">{{ :: desk.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="authoring-header__item" ng-if="showStages()" sd-width="full">
+                    <label for="template-stage" translate>Schedule Stage</label>
+                    <div class="authoring-header__input-holder">
+                        <select id="template-stage" ng-model="template.schedule_stage" class="dropdown-toggle line-input">
+                            <option ng-repeat="stage in stages track by stage._id" value="{{ stage._id }}"
+                                ng-selected="stage._id === template.schedule_stage">{{ :: stage.name }}</option>
+                        </select>
                     </div>
                 </div>
             </div>

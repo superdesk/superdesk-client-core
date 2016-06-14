@@ -42,9 +42,14 @@
                       <li>
                           <h4 class="with-value">{{ :: 'Template type' | translate }} <span class="value-label">{{ template.template_type }}</span></h4>
                       </li>
-                      <li ng-if="getTemplateDesk(template).name">
-                          <h4>{{ :: 'Desk / Stage' | translate }}</h4>
-                          <span>{{getTemplateDesk(template).name}} / {{getTemplateStage(template).name}}</span>
+                      <li ng-if="getTemplateDesks(template)">
+                          <h4>{{ :: 'Desk(s)' | translate }}</h4>
+                          <span>{{getTemplateDesks(template)}}</span>
+                      </li>
+                      <li ng-if="template.schedule_desk">
+                          <h4>{{ :: 'Sched. Desk / Stage' | translate }}</h4>
+                          <span>{{getScheduleDesk(template)}}</span>
+                          <span ng-if="getScheduleStage(template)"> / {{getScheduleStage(template)}}</span>
                       </li>
                       <li ng-if="template.schedule.is_active">
                           <h4>{{ :: 'Automated item creation' | translate }}</h4>
