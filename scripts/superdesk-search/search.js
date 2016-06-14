@@ -5,7 +5,8 @@
         unique_name: 'Unique Name',
         original_creator: 'Creator',
         from_desk: 'From Desk',
-        to_desk: 'To Desk'
+        to_desk: 'To Desk',
+        spike: 'In Spiked'
     });
 
     SearchService.$inject = ['$location', 'gettext', 'config'];
@@ -71,6 +72,9 @@
                                     filters.push({'exists': {'field': field}});
                                 }
                             }
+                            break;
+                        case 'spike':
+                            // Will get set in the base filters
                             break;
                         default:
                             var filter = {'term': {}};
@@ -487,6 +491,11 @@
                         case 'to_desk':
                             tags.selectedParameters.push(value + ':' +
                                 desks.deskLookup[params[key].split('-')[0]].name);
+                            break;
+                        case 'spike':
+                            if (params[key]) {
+                                tags.selectedParameters.push(value);
+                            }
                             break;
                         default:
                             tags.selectedParameters.push(value + ':' + params[key]);
@@ -1614,6 +1623,10 @@
                                 scope.fields.unique_name = $location.search().unique_name;
                             }
 
+                            if ($location.search().spike) {
+                                scope.fields.spike = true;
+                            }
+
                             if (load_data) {
                                 fetchMetadata();
                                 fetchProviders(params);
@@ -1728,7 +1741,8 @@
                                 scope.fields.from_desk !== $location.search().from_desk ||
                                 scope.fields.to_desk !== $location.search().to_desk ||
                                 scope.fields.unique_name !== $location.search().unique_name ||
-                                scope.fields.original_creator !== $location.search().original_creator) {
+                                scope.fields.original_creator !== $location.search().original_creator ||
+                                scope.fields.spike !== $location.search().spike) {
                                 init();
                             }
                         });

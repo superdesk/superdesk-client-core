@@ -88,7 +88,8 @@
                 params.q = card.query;
             }
 
-            params.spike = (card.type === 'spike' || card.type === 'spike-personal');
+            params.spike = (card.type === 'spike' || card.type === 'spike-personal' ||
+                (card.type === 'search' && params.spike === true));
 
             var query = search.query(search.setFilters(params));
 
