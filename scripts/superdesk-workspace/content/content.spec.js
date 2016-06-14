@@ -188,6 +188,32 @@ describe('superdesk.workspace.content', function() {
             expect(content.getTypes).toHaveBeenCalledWith(true);
             expect(ctrl.items).toBe('list');
         }));
+
+        it('should notify appropriate error when created profile is not unique', inject(function(
+            notify, $controller, content, $q, $rootScope) {
+            spyOn(content, 'createProfile').and.returnValue($q.reject({
+                data: {_issues: {label: {unique: 1}}}
+            }));
+            var errorFn = spyOn(notify, 'error');
+            var scope = $rootScope.$new();
+            var ctrl = $controller('ContentProfilesController', {$scope: scope});
+            ctrl.save();
+            scope.$digest();
+            expect(errorFn).toHaveBeenCalledWith(ctrl.duplicateErrorTxt);
+        }));
+
+        it('should log appropriate error when created profile is unique', inject(function(
+            notify, $controller, content, $q, $rootScope) {
+            spyOn(content, 'createProfile').and.returnValue($q.reject({
+                data: {_issues: {label: {other_error: 1}}}
+            }));
+            var errorFn = spyOn(notify, 'error');
+            var scope = $rootScope.$new();
+            var ctrl = $controller('ContentProfilesController', {$scope: scope});
+            ctrl.save();
+            scope.$digest();
+            expect(errorFn).not.toHaveBeenCalledWith(ctrl.duplicateErrorTxt);
+        }));
     });
 
     describe('content profiles schema editor', function() {
