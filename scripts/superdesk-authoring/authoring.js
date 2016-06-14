@@ -1334,15 +1334,17 @@
                                 return item._id === key;
                             });
 
-                            var field = cv.schema_field || 'subject';
-                            angular.forEach(cv.items, function(row) {
-                                var element = _.find(orig[field], function(item) {
-                                       return item.qcode === row.qcode;
-                                   });
-                                if (element) {
-                                    found = true;
-                                }
-                            });
+                            if (cv) {
+                                var field = cv.schema_field || 'subject';
+                                angular.forEach(cv.items, function (row) {
+                                    var element = _.find(orig[field], function (item) {
+                                        return item.qcode === row.qcode;
+                                    });
+                                    if (element) {
+                                        found = true;
+                                    }
+                                });
+                            }
 
                             $scope.error[key] = !found;
                         } else {
