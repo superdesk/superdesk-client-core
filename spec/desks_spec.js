@@ -9,6 +9,7 @@
  */
 'use strict';
 var desks = require('./helpers/desks');
+var assertToastMsg = require('./helpers/utils').assertToastMsg;
 
 describe('desks', function() {
 
@@ -24,6 +25,7 @@ describe('desks', function() {
         desks.setDeskContentExpiry(1, 10);
         desks.actionSaveAndContinueOnGeneralTab();
         desks.showTab('macros');
+        //expect(desks.listedMacros.count()).toBeGreaterThan(0);
         desks.save();
         desks.edit('Politic Desk');
         expect(desks.deskDescriptionElement().getAttribute('value')).toEqual('New Description');
@@ -31,9 +33,10 @@ describe('desks', function() {
         expect(desks.getDeskType().getAttribute('value')).toEqual('production');
         expect(desks.getDeskContentExpiryHours().getAttribute('value')).toEqual('1');
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('10');
-    });
+        desks.close();
 
-    it('add desk', function() {
+        //add a new desk
+        desks.openDesksSettings();
         desks.getNewDeskButton().click();
         desks.deskNameElement().sendKeys('Test Desk');
         desks.deskDescriptionElement().sendKeys('Test Description');
@@ -50,32 +53,52 @@ describe('desks', function() {
         expect(desks.getDeskType().getAttribute('value')).toEqual('authoring');
         expect(desks.getDeskContentExpiryHours().getAttribute('value')).toEqual('10');
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('1');
-    });
+        desks.close();
 
-    it('add desk with Done action', function() {
+        //add desk with Done action
+        desks.openDesksSettings();
         desks.getNewDeskButton().click();
-        desks.deskNameElement().sendKeys('Test Desk');
-        desks.deskDescriptionElement().sendKeys('Test Description');
+        desks.deskNameElement().sendKeys('Test Desk2');
+        desks.deskDescriptionElement().sendKeys('Test Description2');
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
         desks.setDeskContentExpiry(10, 1);
-        desks.actionDoneOnGeneralTab();
-        desks.edit('Test Desk');
-        expect(desks.deskNameElement().getAttribute('value')).toEqual('Test Desk');
-        expect(desks.deskDescriptionElement().getAttribute('value')).toEqual('Test Description');
+        desks.actionSaveAndContinueOnGeneralTab();
+        desks.showTab('macros');
+        desks.save();
+        desks.edit('Test Desk2');
+        expect(desks.deskNameElement().getAttribute('value')).toEqual('Test Desk2');
+        expect(desks.deskDescriptionElement().getAttribute('value')).toEqual('Test Description2');
         expect(desks.deskSourceElement().getAttribute('value')).toEqual('Test Source');
         expect(desks.getDeskType().getAttribute('value')).toEqual('authoring');
         expect(desks.getDeskContentExpiryHours().getAttribute('value')).toEqual('10');
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('1');
-    });
+        desks.close();
 
-    it('add desk reflects default stage count', function() {
+        //add desk reflects default stage count
+        desks.openDesksSettings();
         desks.getNewDeskButton().click();
-        desks.deskNameElement().sendKeys('Test Desk');
+        desks.deskNameElement().sendKeys('Test Desk3');
         desks.deskDescriptionElement().sendKeys('Test Description');
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
         desks.actionDoneOnGeneralTab();
         expect(desks.getStageCount('Test Desk')).toEqual('2');
+
+        //add another workingstage and assert the first working stage is deletable
+        desks.edit('Test Desk3');
+        desks.showTab('Stages');
+        desks.getNewStageButton().click();
+        desks.stageNameElement().sendKeys('Test Stage');
+        desks.stageDescriptionElement().sendKeys('Test Stage Description');
+        desks.toggleWorkingStageFlag();
+        desks.saveStage();
+        desks.confirmStageDeleteButton('Working Stage');
+
+        //try to delete working stage will display error message
+        desks.editStage('Test Stage');
+        desks.toggleWorkingStageFlag();
+        desks.saveStage();
+        assertToastMsg('error', 'Must have one working stage');
     });
 });
