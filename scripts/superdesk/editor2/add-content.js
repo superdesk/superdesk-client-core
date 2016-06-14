@@ -142,7 +142,6 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
                     // save the blocks (with removed leading text)
                     vm.textBlockCtrl.updateModel();
                     var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.textBlockCtrl.block) + 1;
-
                     images.forEach(function(image, index) {
                         editor.generateImageTag(image).then(function(imgTag) {
                             vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
@@ -161,7 +160,7 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
                     }, true);
                 }, function() {
                     scope.node.focus();
-                    scope.medium.importSelection(caretPosition);
+                    vm.textBlockCtrl.restoreSelection();
                 });
             }
         }
