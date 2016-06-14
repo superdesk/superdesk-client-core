@@ -69,7 +69,6 @@
                             $scope.focused = false;
                             $scope.select({item: item});
                             $scope.active = null;
-                            $scope.term = null;
 
                             // triggers closing of dropdown when adding item on search by pressing enter
                             if (item) {
