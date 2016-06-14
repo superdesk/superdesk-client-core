@@ -11,7 +11,7 @@ describe('content', function() {
     var body = element(by.tagName('body'));
 
     function selectedHeadline() {
-        var headline = element(by.className('preview-headline'));
+        var headline = element.all(by.css('.preview-headline')).first();
 
         browser.wait(function() {
             return headline.isDisplayed();
@@ -28,7 +28,7 @@ describe('content', function() {
 
     // wait a bit after sending keys to body
     function pressKey(key) {
-        body.sendKeys(key);
+        browser.actions().sendKeys(key).perform();
         browser.sleep(50);
     }
 
@@ -43,7 +43,9 @@ describe('content', function() {
         element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
     }
 
-    xit('can navigate with keyboard', function() {
+    it('can navigate with keyboard', function() {
+        body.click();
+
         pressKey(protractor.Key.UP);
         expect(selectedHeadline()).toBe('item1');
 
