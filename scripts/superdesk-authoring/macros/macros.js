@@ -134,7 +134,7 @@ function MacrosReplaceDirective(macros, editor) {
                     scope.noMatch = Object.keys(diff || {}).length;
                     editor.setSettings({findreplace: {diff: diff}});
                     editor.render();
-                    scope.next();
+                    scope.preview = getCurrentReplace();
                 } else {
                     editor.setSettings({findreplace: null});
                     editor.render();
