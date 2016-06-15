@@ -442,7 +442,6 @@
         }
     }
 
-
 .mgrid-view, #scratchpad {
     .media-box {
         .action {
@@ -459,6 +458,10 @@
         .media-box-generic;
         &.locked {
             border-bottom-color: #e51c23 !important;
+        }
+
+        &.gone {
+            opacity: 0.5;
         }
 
         .highlights-title {
@@ -597,6 +600,10 @@
                 background: linear-gradient(to right, rgba(244,244,244,0) 0%,rgba(244,244,244,0) 0%,rgba(244,244,244,1) 40%) !important;
             }
 
+        }
+
+        &.gone {
+            opacity: 0.5;
         }
 
         .list-field {

@@ -990,7 +990,7 @@
                     scope.$on('item:spike', queryItems);
                     scope.$on('item:unspike', queryItems);
                     scope.$on('item:duplicate', queryItems);
-                    scope.$on('content:expired', queryItems);
+                    scope.$on('ingest:update', queryItems);
 
                     scope.$on('broadcast:preview', function(event, args) {
                         scope.previewingBroadcast = true;
@@ -1023,27 +1023,19 @@
                     };
 
                     var nextUpdate;
-                    var shouldUpdate;
 
                     /**
                      * Schedule an update if it's not there yet
                      */
                     function queryItems() {
-                        shouldUpdate = true;
                         if (!nextUpdate) {
-                            nextUpdate = $timeout(update, 1000, false);
+                            nextUpdate = $timeout(function() {
+                                _queryItems();
+                                scope.$applyAsync(function() {
+                                    nextUpdate = null; // reset for next $digest
+                                });
+                            }, 3000, false);
                         }
-                    }
-
-                    /**
-                     * Trigger update. In case it got another notification after running query
-                     * schedule next update.
-                     */
-                    function update() {
-                        shouldUpdate = false;
-                        _queryItems().then(function() {
-                            nextUpdate = shouldUpdate ? $timeout(update, 1000, false) : null;
-                        });
                     }
 
                     /**
