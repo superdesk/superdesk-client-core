@@ -477,10 +477,12 @@
                     margin-top: 25px;
 
                     .char-count {
-                        position: absolute;
-                        top: -18px;
-                        left: 0;
-                        color: @black;
+                        font-size: 11px;
+                        font-style: italic;
+                        &.error {
+                            .text-semibold();
+                            color: #D33C30;
+                        }
                     }
                 }
             }

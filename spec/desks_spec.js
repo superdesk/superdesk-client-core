@@ -92,13 +92,13 @@ describe('desks', function() {
         desks.stageNameElement().sendKeys('Test Stage');
         desks.stageDescriptionElement().sendKeys('Test Stage Description');
         desks.toggleWorkingStageFlag();
-        desks.saveStage();
+        desks.saveNewStage();
         desks.confirmStageDeleteButton('Working Stage');
 
         //try to delete working stage will display error message
         desks.editStage('Test Stage');
         desks.toggleWorkingStageFlag();
-        desks.saveStage();
+        desks.saveEditedStage();
         assertToastMsg('error', 'Must have one working stage');
     });
 });
