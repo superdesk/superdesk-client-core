@@ -325,13 +325,13 @@ describe('authoring', function() {
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 
-    xit('keyboard navigation operations on subject dropdown', function() {
+    it('keyboard navigation operations on subject dropdown', function() {
         //Open any item in Edit mode
         monitoring.actionOnItem('Edit', 2, 1);
 
         //Open subject metadata dropdown field
         authoring.getSubjectMetadataDropdownOpened();
-        browser.sleep(200); //wait a bit
+        browser.sleep(500); //wait a bit
 
         //Perform down arrow would focus/active next element in list
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
