@@ -16,8 +16,10 @@ function AuthoringWidgetsProvider() {
     };
 }
 
-WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'keyboardManager', '$location'];
-function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService, keyboardManager, $location) {
+WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService',
+                                'keyboardManager', '$location', 'desks', 'lock'];
+function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService,
+    keyboardManager, $location, desks, lock) {
     $scope.active = null;
 
     $scope.$watch('item', function(item) {
@@ -79,8 +81,11 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
 
     $scope.isWidgetLocked = function(widget) {
         if (widget) {
-            return (widget.needUnlock && $scope.item._locked) ||
-            (widget.needEditable && !$scope.item._editable);
+            var locked = lock.isLocked($scope.item) && !lock.can_unlock($scope.item);
+            var isReadOnlyStage = desks.isReadOnlyStage($scope.item.task.stage);
+
+            return (widget.needUnlock && (locked || isReadOnlyStage)) ||
+            (widget.needEditable && (!$scope.item._editable || isReadOnlyStage));
         }
     };
 

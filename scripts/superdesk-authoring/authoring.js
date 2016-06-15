@@ -536,11 +536,13 @@
             var current_item = item && item.archive_item && item.archive_item.state ? item.archive_item : item;
             var user_privileges = privileges.privileges;
             var action = angular.extend({}, DEFAULT_ACTIONS);
+            var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
 
             // takes packages are readonly.
             // killed item and item that have last publish action are readonly
             if ((angular.isUndefined(current_item) || angular.isUndefined(user_privileges)) ||
                 (current_item.state === 'killed') ||
+                itemOnReadOnlyStage ||
                 (angular.isDefined(current_item.takes) && current_item.takes.state === 'killed') ||
                 (current_item._type && current_item._type === 'archived')) {
                 return action;

@@ -859,6 +859,9 @@
                     },
                     isPublishType: function(type) {
                         return type === 'deskOutput' || type === 'scheduledDeskOutput' || type === 'highlights';
+                    },
+                    isReadOnlyStage: function(stageId) {
+                        return this.stageLookup[stageId] ? this.stageLookup[stageId].local_readonly : false;
                     }
                 };
 
@@ -1145,6 +1148,8 @@
                         if (stage.is_visible == null) {
                             stage.is_visible = true;
                         }
+
+                        stage.local_readonly = !!stage.local_readonly;
 
                         orig = stage;
                         scope.editStage = _.create(stage);

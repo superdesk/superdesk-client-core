@@ -104,7 +104,10 @@
                                     <div ng-if="!isActive(stage)">
                                         {{ stage.name }}
                                         <label class="global-label" ng-if="!stage.is_visible">
-                                            <span translate>Global Read</span><span>: OFF</span>
+                                            <span translate>Global Read</span><span translate>: OFF</span>
+                                        </label>
+                                        <label class="global-label" ng-if="stage.local_readonly">
+                                            <span translate>Local Readonly</span><span translate>: ON</span>
                                         </label>
                                     </div>
 
@@ -146,7 +149,11 @@
                             </div>
                             <div class="field" ng-if="selected.is_visible">
                                 <label translate>Global Read: </label>
-                                <span>{{selected.is_visible ? 'ON' : 'OFF'}}</span>
+                                <span  translate>{{selected.is_visible ? 'ON' : 'OFF'}}</span>
+                            </div>
+                            <div class="field" ng-if="selected.local_readonly">
+                                <label translate>Local Read Only: </label>
+                                <span  translate>{{selected.local_readonly ? 'ON' : 'OFF'}}</span>
                             </div>
                             <div class="field" ng-if="selected.description">
                                 <label translate>Stage description: </label>
@@ -174,6 +181,10 @@
                             <div class="field">
                                 <label>{{ :: 'Global Read' | translate }}</label>
                                 <span class="pull-right" sd-switch ng-model="editStage.is_visible"></span>
+                            </div>
+                            <div class="field">
+                                <label>{{ :: 'Local Read Only' | translate }}</label>
+                                <span class="pull-right" sd-switch ng-model="editStage.local_readonly"></span>
                             </div>
                             <div class="field">
                                 <label>{{:: 'Working Stage' | translate }}</label>
