@@ -8,8 +8,9 @@
         <b class="caret"></b>
     </button>
     <button ng-disabled="disabled" class="dropdown-toggle line-input" tabindex="{{tabindex}}" dropdown-toggle ng-if="icon">
-        <span class="{{icon}}-{{item[field]}}">{{item[field] ? item[field] : 0}}</span>
-         <b class="caret"></b>
+        <span class="{{icon}}-{{item[field]}}"
+            ng-style="{backgroundColor: values[item[field]].color}">{{ values[item[field]].short || item[field] || 0 }}</span>
+        {{ values[item[field]].name }} <b class="caret"></b>
     </button>
     <ul class="dropdown-menu" ng-if="status.isOpen">
         <li ng-if="label"><div class="menu-label">{{ label }}</div></li>
@@ -17,7 +18,9 @@
 
         <li ng-repeat="item in list" ng-click="select(item)" ng-if="field !== 'place'">
             <button ng-disabled="disabled">
-                <span ng-if="icon" class="{{icon}}-{{item.name}}">{{item.name}}</span>
+                <span ng-if="icon"
+                    class="{{icon}}-{{item.name}}"
+                    ng-style="{backgroundColor: item.color}">{{item.short || item.name}}</span>
                 {{::item.name}}
             </button>
         </li>

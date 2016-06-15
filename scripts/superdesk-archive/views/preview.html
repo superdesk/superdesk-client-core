@@ -16,12 +16,10 @@
             <div class="preview-header__flex-row">
               <i class="filetype-icon-{{selected.preview.type }}" title="{{'Article Type' | translate }}"></i>
             </div>
-            <div class="preview-header__flex-row">
-              <span ng-if="selected.preview.priority" class="priority-label priority-label--{{selected.preview.priority}}" title="{{:: 'Priority'| translate }}">{{selected.preview.priority}}</span>
-            </div>
-            <div class="preview-header__flex-row">
-              <span ng-if="selected.preview.urgency" class="urgency-label urgency-label--{{selected.preview.urgency}}" title="{{:: 'Urgency'| translate }}">{{selected.preview.urgency}}</span>
-            </div>
+            <div class="preview-header__flex-row"
+              sd-item-priority data-priority="selected.preview.priority"></div>
+            <div class="preview-header__flex-row"
+              sd-item-urgency data-urgency="selected.preview.urgency"></div>
           </div>
           <div class="preview-header__main-block">
             <div class="preview-header__flex-row">

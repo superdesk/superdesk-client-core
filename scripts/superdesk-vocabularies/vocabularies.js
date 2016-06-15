@@ -59,9 +59,10 @@
       'notify',
       'api',
       'vocabularies',
-      'metadata'
+      'metadata',
+      'cvSchema'
     ];
-    function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata) {
+    function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema) {
 
         var origVocabularyItems = _.cloneDeep($scope.vocabulary.items);
 
@@ -138,11 +139,13 @@
                 _.map($scope.vocabulary.items, function(o) { return _.keys(o); })
             ))
         ), function() { return null; });
+
         $scope.model = model;
+        $scope.schema = $scope.vocabulary.schema || cvSchema[$scope.vocabulary._id] || null;
     }
 
     var app = angular.module('superdesk.vocabularies',
-                             [ 'superdesk.activity']);
+                             [ 'superdesk.activity', 'superdesk.authoring.metadata']);
     app.config([
       'superdeskProvider',
       function(superdesk) {
@@ -175,5 +178,20 @@
             controller: 'VocabularyEdit',
             templateUrl: 'scripts/superdesk-vocabularies/views/vocabulary-config-modal.html'
         };
-    });
+    })
+    .factory('cvSchema', ['gettext', function(gettext) {
+        var colorScheme = {
+            name: {type: 'text', label: gettext('Name')},
+            qcode: {type: 'text', label: gettext('QCode')},
+            color: {type: 'color', label: gettext('Color')},
+            short: {type: 'text', label: gettext('List Name')}
+        };
+
+        return {
+            urgency: colorScheme,
+            priority: colorScheme
+        };
+    }])
+    ;
+
 })();

@@ -15,7 +15,7 @@
                     <i class="filetype-icon-{{item.type}}"></i>
                 </span>
             </div>
-            <div class="content-item__urgency-field"><span class="urgency-label urgency-label--{{item.urgency}}" title="{{ :: 'Urgency' | translate }}">{{item.urgency}}</span></div>
+            <div class="content-item__urgency-field" sd-item-urgency data-urgency="item.urgency"></div>
             <div class="content-item__text">
                 <time sd-datetime data-date="item.versioncreated" class="pull-right"></time>
                 <span class="keywords">{{item.slugline}}</span>
