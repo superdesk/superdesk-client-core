@@ -212,7 +212,7 @@
                 }
 
                 _collection = _.sortBy(_collection, function (_entry) {
-                    return _entry[propertyName].toLowerCase();
+                    return _entry[propertyName] ? _entry[propertyName].toLowerCase() : _entry.name.toLowerCase();
                 });
 
                 return _collection;
