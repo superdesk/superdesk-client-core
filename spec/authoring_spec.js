@@ -281,8 +281,8 @@ describe('authoring', function() {
         authoring.searchRelatedItems('item3');
         expect(authoring.getRelatedItems().count()).toBe(1);
     });
-    //ToDo: Need to be fix as now Open button is now available in related item's more-actions
-    xit('related item widget can open published item', function() {
+
+    it('related item widget can open published item', function() {
         expect(monitoring.getGroups().count()).toBe(6);
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
         expect(monitoring.getTextItemBySlugline(2, 1)).toBe('ITEM9 SLUGLINE');
@@ -290,9 +290,7 @@ describe('authoring', function() {
         authoring.publish(); // item9 published
 
         monitoring.filterAction('text');
-        browser.sleep(200);
         monitoring.actionOnItem('Duplicate', 5, 0); // duplicate item9 text published item
-        browser.sleep(500);
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         monitoring.actionOnItem('Edit', 0, 0);
 
