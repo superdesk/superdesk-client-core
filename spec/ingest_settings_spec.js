@@ -9,7 +9,7 @@ describe('ingest_settings', function() {
         openUrl('/#/settings/ingest').then(done);
     });
 
-    xit('unselecting options in dropdown lists on the Actions pane', function () {
+    it('unselecting options in dropdown lists on the Actions pane', function () {
         var deskList,   // dropdown list for choosing a desk
             macroList,  // dropdown list for choosing a macro
             stageList,  // dropdown list for choosing a desk stage
@@ -39,6 +39,7 @@ describe('ingest_settings', function() {
         utils.getListOption(stageList, 2).click();
 
         macroList = ruleSettings.fetchMacroList;
+        browser.sleep(200);
         utils.getListOption(macroList, 2).click();
 
         // now select first options and then check that they are all blank
