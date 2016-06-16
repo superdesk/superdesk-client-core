@@ -37,7 +37,7 @@ describe('content', function() {
         //choose time with date not in a valid month number.
         //default view time format in config
         var embargoDate = '09/22/' + (now.getFullYear() + 1);
-        var embargoTime = now.getHours() + ':' + now.getMinutes();
+        var embargoTime = now.getHours() + ':' + (now.getMinutes() < 10 ? ('0' + now.getMinutes()) : now.getMinutes());
 
         element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
         element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
@@ -194,22 +194,25 @@ describe('content', function() {
         element(by.id('closeAuthoringBtn')).click();
     });
 
-    xit('can display embargo in metadata when set', function() {
+    it('can display embargo in metadata when set', function() {
         workspace.editItem('item3', 'SPORTS');
         authoring.sendToButton.click();
 
         setEmbargo();
+        browser.sleep(100);
 
         element(by.css('[ng-click="saveTopbar()"]')).click();
         element(by.id('closeAuthoringBtn')).click();
 
         content.previewItem('item3');
         element(by.css('[ng-click="tab = \'metadata\'"]')).click();
+
         expect(element(by.model('item.embargo')).isDisplayed()).toBe(true);
+
         content.closePreview();
     });
 
-    xit('can enable/disable send and continue based on embargo', function() {
+    it('can enable/disable send and continue based on embargo', function() {
         // Initial steps before proceeding, to get initial state of send buttons.
         workspace.editItem('item3', 'SPORTS');
         authoring.sendTo('Sports Desk', 'Incoming Stage');
@@ -236,6 +239,7 @@ describe('content', function() {
 
         // State after setting Embargo
         setEmbargo();
+        browser.sleep(100);
         expect(authoring.sendAndContinueBtn.isEnabled()).toBe(false);
         expect(authoring.sendBtn.isEnabled()).toBe(true);
 
