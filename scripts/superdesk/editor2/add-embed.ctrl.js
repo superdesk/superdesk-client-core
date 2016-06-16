@@ -3,8 +3,10 @@
 
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
-SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash', 'EMBED_PROVIDERS', '$scope', 'editor', '$http'];
-function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PROVIDERS, $scope, editor, $http) {
+SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash',
+'EMBED_PROVIDERS', '$scope', 'editor', 'api'];
+function SdAddEmbedController (embedService, $element, $timeout, $q, _,
+EMBED_PROVIDERS, $scope, editor, api) {
     var vm = this;
     angular.extend(vm, {
         editorCtrl: undefined,  // defined in link method
@@ -69,37 +71,13 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                         name: EMBED_PROVIDERS.youtube
                     },
                     {
-                        pattern: /src="(.*vidible\.tv.*pid=.*.js)/g,
+                        pattern: /src=".*vidible\.tv.*pid=(.+)\/(.+).js/g,
                         name: EMBED_PROVIDERS.vidible,
                         callback: function(match) {
-                            var url = 'https://' + match[1];
-                            // $http raise a Same Origin Policy error, so we use jquery here
-                            waitFor.push(
-                                $q(function(resolve, reject) {
-                                    $.ajax({
-                                        url: url,
-                                        type: 'GET',
-                                        dataType: 'text',
-                                        success: function(data) {
-                                            data = /({.*})/.exec(data)[1];
-                                            data = JSON.parse(data);
-                                            // set association
-                                            embedBlock.association = {
-                                                uri: data.bid.id,
-                                                title: data.bid.videos[0].name,
-                                                type: 'video',
-                                                thumbnail: data.bid.videos[0].thumbnail,
-                                                url: data.bid.videos[0].videoUrls[0],
-                                                // size: ,
-                                                // creationDate: ,
-                                                company: data.bid.videos[0].studioName,
-                                                duration: data.bid.videos[0].metadata.duration,
-                                            };
-                                            resolve(embedBlock);
-                                        }
-                                    });
-                                })
-                            );
+                            return api.get('vidible/bcid/' + match[2] + '/pid/' + match[1])
+                            .then(function(data) {
+                                embedBlock.association = data;
+                            });
                         }
                     }
                 ];
@@ -110,7 +88,7 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                     if (match) {
                         embedBlock.provider = provider.name;
                         if (provider.callback) {
-                            provider.callback(match);
+                            waitFor.push(provider.callback(match));
                         }
                         break;
                     }
