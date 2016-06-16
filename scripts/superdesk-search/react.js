@@ -288,7 +288,7 @@
                      * @return {Boolean}
                      */
                     function hasThumbnail(item) {
-                        return item.type === 'picture' && item.renditions.thumbnail;
+                        return item.renditions && item.renditions.thumbnail;
                     }
 
                     /**
@@ -584,10 +584,10 @@
                                     ),
                                     React.createElement(
                                         'button',
-                                        {className: 'close-button'},
+                                        {className: 'close-button', onClick: closeActionsMenu},
                                         React.createElement(
                                             'i',
-                                            {className: 'icon-close-small icon-white', onClick: closeActionsMenu}
+                                            {className: 'icon-close-small icon-white'}
                                         )
                                     )
                                 )
@@ -1161,10 +1161,10 @@
                             React.createElement('div', {className: 'menu-label'}, gettextCatalog.getString(props.label),
                                 props.label === 'Actions' ? React.createElement(
                                     'button',
-                                    {className: 'close-button'},
+                                    {className: 'close-button', onClick: closeActionsMenu},
                                     React.createElement(
                                         'i',
-                                        {className: 'icon-close-small', onClick: closeActionsMenu}
+                                        {className: 'icon-close-small'}
                                     )
                                 ) : null
                             )
@@ -1281,7 +1281,9 @@
                         },
 
                         select: function() {
-                            this.props.onSelect(this.props.item);
+                            if (!this.props.item.gone) {
+                                this.props.onSelect(this.props.item);
+                            }
                         },
 
                         selectTakesPackage: function() {
@@ -1293,7 +1295,9 @@
                         },
 
                         edit: function(event) {
-                            authoringWorkspace.open(this.props.item);
+                            if (!this.props.item.gone) {
+                                this.props.onEdit(this.props.item);
+                            }
                         },
 
                         getInitialState: function() {
@@ -1339,6 +1343,8 @@
                                         list.scrollTop = elem.offsetTop;
                                     }
                                 }
+
+                                this.props.setSelectedComponent(this);
                             }
                         },
 
@@ -1353,7 +1359,8 @@
                                         {
                                             locked: item.lock_user && item.lock_session,
                                             selected: this.props.flags.selected,
-                                            archived: item.archived || item.created
+                                            archived: item.archived || item.created,
+                                            gone: item.gone
                                         }
                                     )
 
@@ -1377,7 +1384,7 @@
                                     item.priority ? React.createElement(ItemPriority, item) : null,
                                     item.urgency ? React.createElement(ItemUrgency, item) : null,
                                     fields.broadcast({item: item}),
-                                    this.state.hover ? React.createElement(ActionsMenu, {item: item}) : null
+                                    this.state.hover && !item.gone ? React.createElement(ActionsMenu, {item: item}) : null
                                 );
                             } else {
                                 contents.push(
@@ -1396,7 +1403,7 @@
                                         highlightsById: this.props.highlightsById,
                                         profilesById: this.props.profilesById
                                     }),
-                                    this.state.hover ? React.createElement(ActionsMenu, {item: item}) : null
+                                    this.state.hover && !item.gone ? React.createElement(ActionsMenu, {item: item}) : null
                                 );
                             }
 
@@ -1564,6 +1571,10 @@
                             this.closeActionsMenu();
                         },
 
+                        setSelectedComponent: function(com) {
+                            this.selectedCom = com;
+                        },
+
                         render: function render() {
                             var createItem = function createItem(itemId) {
                                 var item = this.state.itemsById[itemId];
@@ -1579,7 +1590,8 @@
                                     ingestProvider: this.props.ingestProvidersById[item.ingest_provider] || null,
                                     desk: this.props.desksById[task.desk] || null,
                                     highlightsById: this.props.highlightsById,
-                                    profilesById: this.props.profilesById
+                                    profilesById: this.props.profilesById,
+                                    setSelectedComponent: this.setSelectedComponent
                                 });
                             }.bind(this);
                             var isEmpty = !this.state.itemsList.length;
@@ -1649,9 +1661,19 @@
                                 return;
                             }
 
+                            var offsetTop = 0;
                             var itemsList = [];
                             var currentItems = {};
                             var itemsById = angular.extend({}, listComponent.state.itemsById);
+                            var selected = listComponent.selectedCom;
+
+                            if (selected) {
+                                try {
+                                    offsetTop = ReactDOM.findDOMNode(selected).offsetTop;
+                                } catch (err) {
+                                    selected = null;
+                                }
+                            }
 
                             items._items.forEach(function(item) {
                                 var itemId = search.generateTrackByIdentifier(item);
@@ -1672,6 +1694,16 @@
                                 itemsById: itemsById,
                                 view: scope.view
                             }, function() {
+                                if (selected) {
+                                    // maintain selected items position
+                                    try {
+                                        var selectedNode = ReactDOM.findDOMNode(selected);
+                                        elem[0].scrollTop += selectedNode.offsetTop - offsetTop;
+                                    } catch (err) {
+                                        // pass - selected item is not in list anymore
+                                    }
+                                }
+
                                 scope.rendering = scope.loading = false;
                             });
                         });
@@ -1697,6 +1729,21 @@
                                 lock_session: null,
                                 lock_time: null
                             });
+                        });
+
+                        scope.$on('item:expired', function(_e, data) {
+                            var itemsById = angular.extend({}, listComponent.state.itemsById);
+                            var shouldUpdate = false;
+                            _.forOwn(itemsById, function(item, key) {
+                                if (data.items[item._id]) {
+                                    itemsById[key] = angular.extend({gone: true}, item);
+                                    shouldUpdate = true;
+                                }
+                            });
+
+                            if (shouldUpdate) {
+                                listComponent.setState({itemsById: itemsById});
+                            }
                         });
 
                         scope.$on('item:highlight', function(_e, data) {

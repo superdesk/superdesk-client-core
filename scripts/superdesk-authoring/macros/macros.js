@@ -95,11 +95,13 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
         } else {
             $scope.macros = macros.macros;
         }
+    }).finally(function() {
         $scope.loading = false;
     });
 
     $scope.call = function(macro) {
         var item = _.extend({}, $scope.origItem, $scope.item);
+        $scope.loading = true;
         return macros.call(macro, item).then(function(res) {
             if (!res.diff) {
                 angular.extend($scope.item, res.item);
@@ -108,6 +110,8 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
                 $rootScope.$broadcast('macro:diff', res.diff);
             }
             $scope.closeWidget();
+        }).finally(function() {
+            $scope.loading = false;
         });
     };
 }
@@ -130,7 +134,7 @@ function MacrosReplaceDirective(macros, editor) {
                     scope.noMatch = Object.keys(diff || {}).length;
                     editor.setSettings({findreplace: {diff: diff}});
                     editor.render();
-                    scope.next();
+                    scope.preview = getCurrentReplace();
                 } else {
                     editor.setSettings({findreplace: null});
                     editor.render();

@@ -160,4 +160,20 @@ div {
             }
         }
     }
+    .preview-layout {
+        &.closed {
+            .list-pane {
+                header {
+                    right: 0 !important;
+                }
+            }
+        }
+        .list-pane header {
+            right: @sidepreview-width + 160;
+            @media only screen and (max-width : 1430px) {
+                right: @sidepreview-width - 40;
+            }
+            height: 48px;
+        }
+    }
 }

@@ -155,12 +155,23 @@
         $scope.reload ();
     }
 
-    PublishQueueController.$inject = ['$scope', 'subscribersService', 'api', '$q', 'notify', '$location'];
-    function PublishQueueController($scope, subscribersService, api, $q, notify, $location) {
+    PublishQueueController.$inject = [
+        '$scope',
+        'subscribersService',
+        'api',
+        '$q',
+        'notify',
+        '$location',
+        'ingestSources'
+    ];
+    function PublishQueueController($scope, subscribersService, api, $q, notify, $location, ingestSources) {
         $scope.subscribers = null;
         $scope.subscriberLookup = {};
+        $scope.ingestProviders = null;
+        $scope.ingestProvidersLookup = {};
         $scope.publish_queue = [];
         $scope.selectedFilterSubscriber = null;
+        $scope.selectedFilterIngestProvider = null;
         $scope.multiSelectCount = 0;
         $scope.selectedQueueItems = [];
         $scope.showResendBtn = false;
@@ -180,9 +191,12 @@
 
         promises.push(subscribersService.fetchSubscribers().then(function(items) {
             $scope.subscribers = items;
-            _.each(items, function(item) {
-                $scope.subscriberLookup[item._id] = item;
-            });
+            $scope.subscriberLookup = _.indexBy(items, '_id');
+        }));
+
+        promises.push(ingestSources.fetchAllIngestProviders().then(function(items) {
+            $scope.ingestProviders = items;
+            $scope.ingestProvidersLookup = _.indexBy($scope.ingestProviders, '_id');
         }));
 
         /*
@@ -234,6 +248,10 @@
                 filterTerms.push({'state': $scope.selectedFilterStatus});
             }
 
+            if ($scope.selectedFilterIngestProvider != null) {
+                filterTerms.push({'ingest_provider': $scope.selectedFilterIngestProvider._id});
+            }
+
             var andTerms = [];
             _.each(filterTerms, function(term) {
                 andTerms.push(term);
@@ -260,7 +278,7 @@
 
         $scope.buildNewSchedule = function (item) {
             var pick_fields = ['item_id', 'item_version', 'publishing_action', 'formatted_item', 'headline',
-                'content_type', 'subscriber_id', 'unique_name', 'destination'];
+                'content_type', 'subscriber_id', 'unique_name', 'destination', 'ingest_provider'];
 
             var newItem = _.pick(item, pick_fields);
             return newItem;
@@ -280,7 +298,7 @@
             api.publish_queue.save([], queueItems).then(
                 function(response) {
                     $scope.reload();
-                    $scope.cancelSelection(false);
+                    $scope.cancelSelection();
                 },
                 function(response) {
                     if (angular.isDefined(response.data._issues)) {
@@ -310,21 +328,24 @@
             _.forEach(itemList, function(item) {
                 api.publish_queue.update(item, {state: 'canceled'});
             });
-            $scope.cancelSelection(false);
+            $scope.cancelSelection();
         };
 
-        $scope.filterSchedule = function(item, type) {
-            if (type === 'subscriber') {
-                $scope.selectedFilterSubscriber = item;
-            }
-            populatePublishQueue();
-            $scope.multiSelectCount = 0;
-            $scope.selectedQueueItems = [];
-            $scope.page = 1;
-        };
-        $scope.filterStatus = function(item, type) {
-            if (type === 'status') {
-                $scope.selectedFilterStatus = item;
+        $scope.filterPublishQueue = function(item, type) {
+            switch (type){
+                case 'subscriber':
+                    $scope.selectedFilterSubscriber = item;
+                    break;
+                case 'ingest_provider':
+                    $scope.selectedFilterIngestProvider = item;
+                    break;
+                case 'status':
+                    $scope.selectedFilterStatus = item;
+                    break;
+                default:
+                    $scope.selectedFilterSubscriber = null;
+                    $scope.selectedFilterIngestProvider = null;
+                    $scope.selectedFilterStatus = null;
             }
             populatePublishQueue();
             $scope.multiSelectCount = 0;
@@ -379,14 +400,9 @@
             $scope.multiSelectCount = $scope.selectedQueueItems.length;
         };
 
-        $scope.cancelSelection = function(resetSubscribersFilter) {
-            if (angular.isUndefined(resetSubscribersFilter) || _.isNull(resetSubscribersFilter) || resetSubscribersFilter) {
-                $scope.selectedFilterSubscriber = null;
-            }
-
+        $scope.cancelSelection = function() {
             $scope.selectedQueueItems = [];
             $scope.multiSelectCount = 0;
-            $scope.filterSchedule();
         };
 
         function refreshQueueState (data) {
@@ -406,10 +422,10 @@
         function previewItem() {
             var queueItem = _.find($scope.publish_queue, {_id: $location.search()._id}) || null;
             if (queueItem) {
-                api.archive.getById(queueItem.item_id)
-                .then(function(item) {
-                    $scope.selected.preview = item;
-                });
+                api.archive.getById(queueItem.item_id, {'version': queueItem.item_version})
+                    .then(function(item) {
+                        $scope.selected.preview = item;
+                    });
             } else {
                 $scope.selected.preview = null;
             }

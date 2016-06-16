@@ -119,21 +119,21 @@
             overflow-x: hidden;
             margin: 7px 0;
             &::-webkit-scrollbar {
-                    border-left: 5px solid #fff;
-                    border-right: 5px solid #fff;
-                    width: 13px;
-                    background: #fff;
-                    &:hover {
-                background: #e8e8e8;
-                    }
+                border-left: 5px solid #fff;
+                border-right: 5px solid #fff;
+                width: 13px;
+                background: #fff;
+                &:hover {
+                    background: #e8e8e8;
+                }
             }
             &::-webkit-scrollbar-thumb {
-                    border-left: 4px solid #fff;
-                    border-right: 4px solid #fff;
-                    background: #bbb;
-                    &:hover {
-                background: #787878;
-                    }
+                border-left: 4px solid #fff;
+                border-right: 4px solid #fff;
+                background: #bbb;
+                &:hover {
+                    background: #787878;
+                }
             }
         }
 
@@ -182,7 +182,7 @@
 }
 
 .flat-searchbar {
-  flex-grow: 0;
+    flex-grow: 0;
     &.monitoring-flat-searchbar {
         .search-handler {
 
@@ -223,7 +223,7 @@
                 .opacity(80);
             }
             i {
-              padding: 7px 3px 4px 6px;
+                padding: 7px 3px 4px 6px;
             }
         }
     }
@@ -245,7 +245,7 @@
     }
 
     &.extended {
-      flex-grow: 1;
+        flex-grow: 1;
         .search-handler {
             input {
                 width: auto;
@@ -264,8 +264,8 @@
 }
 
 .ui-responsive-small .flat-searchbar.extended {
-  position: absolute;
-  z-index: 2;
+    position: absolute;
+    z-index: 2;
 }
 
 .monitoring-backlink{
@@ -357,7 +357,7 @@
     }
 }
 .filter-type--padded {
-  padding: 10px 0 10px 20px;
+    padding: 10px 0 10px 20px;
 }
 
 .result-type {
@@ -463,7 +463,6 @@
         border: 1px #bbb;
         .box-shadow(0 0 3px 0 #ccc);
         position: absolute;
-        right: -5px;
         top:24px;
         z-index: 1;
         font-size: 12px;
@@ -501,6 +500,10 @@
         &.ng-invalid {
             border-color: #b61818 !important;
         }
+        &.line-input + .btn {
+            background-color: transparent;
+            top: 0px;
+        }
     }
     .btn {
         background: #fff;
@@ -535,8 +538,8 @@
         margin-top: -12px;
     }
     .icon-calendar, .icon-time {
-       color: @white;
-       margin-top: 0;
+        color: @white;
+        margin-top: 0;
     }
     .name {
         background-color: #4f4f4f;
@@ -719,6 +722,34 @@
     }
 }
 
+// Timezone picker
+// ---------------------------------------------
+.pills-list.line-input {
+    > li {
+        width: 100%;
+        border-radius: 0 !important;
+        border: 0 !important;
+        border-bottom: 1px solid rgba(0,0,0,0.15)!important;
+        background-color: transparent;
+        padding: 0;
+        height: 24px;
+        .box-shadow(none);
+        .actions {
+            top: -9px;
+        }
+        &:hover {
+            border-color: rgba(0,0,0,0.3) !important;
+            background-color: transparent !important;
+            .box-shadow(none);
+        }
+        &:focus {
+            box-shadow: 0 1px 0 0 @sd-blue !important;
+            border-color: @sd-blue !important;
+            background-color: transparent !important;
+        }
+    }
+}
+
 /*
     ----------------------------------------------------------------------
     OTHER CUSTOM ELEMENTS
@@ -864,62 +895,62 @@
 // ---------------------------------------------
 
 .activity-log {     //activivty log styles
-    margin-top: 10px;
-    ul {
-        margin:0;
-        padding: 0;
-        list-style-type: none;
-        li {
-            &.activity {
-                .activity-content {
-                    padding-left: 45px;
-                    margin-top: -3px;
-                    padding-right: 20px;
-                    color: #555;
-                    b {
-                        .text-semibold();
-                    }
-                }
-                .activity-date {
-                    padding-left: 45px;
-                    font-size: 11px;
-                    color: #999;
-                    margin-top: -5px;
-                }
+                    margin-top: 10px;
+                    ul {
+                        margin:0;
+                        padding: 0;
+                        list-style-type: none;
+                        li {
+                            &.activity {
+                                .activity-content {
+                                    padding-left: 45px;
+                                    margin-top: -3px;
+                                    padding-right: 20px;
+                                    color: #555;
+                                    b {
+                                        .text-semibold();
+                                    }
+                                }
+                                .activity-date {
+                                    padding-left: 45px;
+                                    font-size: 11px;
+                                    color: #999;
+                                    margin-top: -5px;
+                                }
 
-                &.with-date {
-                    margin-top: 35px;
+                                &.with-date {
+                                    margin-top: 35px;
 
-                    .date {
-                        border-top:1px solid #ebebeb;
-                        top: -17px;
-                        position:  absolute;
-                        right: 0;
-                        left: 0;
-                        span {
-                            font-size: 12px;
-                            color: #999;
-                            margin-top: -10px;
-                            display: block;
-                            float: left;
-                            background: @background-main;
-                            padding-right: 5px;
+                                    .date {
+                                        border-top:1px solid #ebebeb;
+                                        top: -17px;
+                                        position:  absolute;
+                                        right: 0;
+                                        left: 0;
+                                        span {
+                                            font-size: 12px;
+                                            color: #999;
+                                            margin-top: -10px;
+                                            display: block;
+                                            float: left;
+                                            background: @background-main;
+                                            padding-right: 5px;
+                                        }
+                                    }
+                                }
+                                &:hover {
+                                    cursor: default;
+                                }
+                            }
                         }
                     }
-                }
-                &:hover {
-                    cursor: default;
-                }
-            }
-        }
-    }
 }
 .activity-load-more {
-        width: 100%;
-        font-size: 12px;
-        font-weight: bold;
-        padding: 8px;
-        margin: 20px 0;
+    width: 100%;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 8px;
+    margin: 20px 0;
 }
 
 
@@ -1245,7 +1276,7 @@ header .sortbar {
         }
         .name {
             font-size: 13px;
-              color: @sd-blue-text;
+            color: @sd-blue-text;
         }
     }
 }
@@ -1279,7 +1310,7 @@ header .sortbar {
             background: @sd-blue;
         }
         &.inactive {
-          color: #ccc;
+            color: #ccc;
         }
     }
 }
@@ -1383,7 +1414,7 @@ header .sortbar {
         .user-select(none);
         background: #fff;
         margin-bottom: 6px;
-                margin-right: 2px;
+        margin-right: 2px;
         .border-radius(2px);
         padding: 10px 16px;
         min-height: 18px;
@@ -1437,10 +1468,10 @@ header .sortbar {
             color: @sd-text;
             .text-light();
             float: left;
-      max-width: 99%;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+            max-width: 99%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .label {
             font-size: 9px;
@@ -1805,7 +1836,7 @@ header .sortbar {
         background: #5e5e5e;
         border-color: #5e5e5e;
         .box-shadow(inset 0 1px 2px rgba(0,0,0,0.5));
-            &:hover {
+        &:hover {
             color: @white;
             border-color: #5e5e5e;
         }

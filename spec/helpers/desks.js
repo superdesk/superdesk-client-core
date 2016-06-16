@@ -173,6 +173,10 @@ function Desks() {
         element(by.id('save')).click();
     };
 
+    this.close = function() {
+        element(by.className('close')).click();
+    };
+
     /**
      * Get the desk name element
      * @returns {ElementFinder} desk name element
@@ -279,4 +283,57 @@ function Desks() {
         minutesElm.clear();
         minutesElm.sendKeys(minutes);
     };
+
+    /**
+     * new stage button
+     * @returns {ElementFinder} button
+     **/
+    this.getNewStageButton = function() {
+        return element(by.id('new-stage'));
+    };
+
+    /**
+     * Get the stage name element
+     * @returns {ElementFinder} stage name element
+     **/
+    this.stageNameElement = function() {
+        return element(by.model('editStage.name'));
+    };
+
+    /**
+     * Get the stage description element
+     * @returns {ElementFinder} stage name element
+     **/
+    this.stageDescriptionElement = function() {
+        return element(by.model('editStage.description'));
+    };
+
+    /**
+     * Toggles the working stage flag
+     **/
+    this.toggleWorkingStageFlag = function() {
+        element(by.model('editStage.working_stage')).click();
+    };
+
+    /**
+     * Toggles the global read flag
+     **/
+    this.toggleGlobalReadSFlag = function() {
+        element(by.model('editStage.is_visible')).click();
+    };
+
+    this.confirmStageDeleteButton = function(stageName) {
+        this.getStage(stageName).then(function(rows) {
+            browser.actions().mouseMove(rows[0]).perform();
+            expect(rows[0].element(by.className('icon-trash')).isPresent()).toBe(true);
+        });
+    };
+
+    /**
+     * Saves stage settings
+     **/
+    this.saveStage = function() {
+        element(by.id('save-stage')).click();
+    };
+
 }

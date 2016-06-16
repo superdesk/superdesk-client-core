@@ -12,6 +12,7 @@
 @modal-base-width : 460px;
 @modal-large-width : 660px;
 @modal-big-width : 820px;
+@modal-huge-width : 1051px;
 
 @modal-border-radius: 4px;
 
@@ -285,6 +286,14 @@ body:not(:-moz-handler-blocked) .modal{
             flex: 0 0 @modal-big-width + 20px;
         }
     }
+    &.modal-huge {
+        .modal-dialog {
+            width: @modal-huge-width + 20px;
+        }
+        .modal-content {
+            flex: 0 0 @modal-huge-width + 20px;
+        }
+    }
     &.modal-responsive {
         .modal-dialog {
             width: 100%;
@@ -551,4 +560,9 @@ body:not(:-moz-handler-blocked) .modal{
     .btn {
         .box-shadow(inset 0 1px 0 #707070);
     }
+}
+
+[sd-activity-modal] {
+    position: relative;
+    z-index: @zindexModal+1;
 }

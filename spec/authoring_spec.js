@@ -103,6 +103,7 @@ describe('authoring', function() {
         monitoring.actionOnItem('Open', 5, 0);
         expect(authoring.update_button.isDisplayed()).toBe(true);
         authoring.update_button.click();
+        monitoring.filterAction('all');
         expect(monitoring.getTextItem(0, 0)).toBe('item7');
         expect(monitoring.getTextItem(5, 0)).toBe('item7');
     });
@@ -126,6 +127,7 @@ describe('authoring', function() {
         expect(authoring.getHistoryItems().count()).toBe(2);
         authoring.sendTo('Politic Desk', 'two');
         authoring.confirmSendTo();
+
         expect(monitoring.getTextItem(3, 0)).toBe('item8');
         monitoring.actionOnItem('Edit', 3, 0);
         authoring.showHistory();
@@ -281,8 +283,8 @@ describe('authoring', function() {
         authoring.searchRelatedItems('item3');
         expect(authoring.getRelatedItems().count()).toBe(1);
     });
-    //ToDo: Need to be fix as now Open button is now available in related item's more-actions
-    xit('related item widget can open published item', function() {
+
+    it('related item widget can open published item', function() {
         expect(monitoring.getGroups().count()).toBe(6);
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
         expect(monitoring.getTextItemBySlugline(2, 1)).toBe('ITEM9 SLUGLINE');
@@ -290,9 +292,7 @@ describe('authoring', function() {
         authoring.publish(); // item9 published
 
         monitoring.filterAction('text');
-        browser.sleep(200);
         monitoring.actionOnItem('Duplicate', 5, 0); // duplicate item9 text published item
-        browser.sleep(500);
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         monitoring.actionOnItem('Edit', 0, 0);
 
@@ -327,13 +327,13 @@ describe('authoring', function() {
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 
-    xit('keyboard navigation operations on subject dropdown', function() {
+    it('keyboard navigation operations on subject dropdown', function() {
         //Open any item in Edit mode
         monitoring.actionOnItem('Edit', 2, 1);
 
         //Open subject metadata dropdown field
         authoring.getSubjectMetadataDropdownOpened();
-        browser.sleep(200); //wait a bit
+        browser.sleep(500); //wait a bit
 
         //Perform down arrow would focus/active next element in list
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
@@ -356,14 +356,17 @@ describe('authoring', function() {
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
         expect(browser.driver.switchTo().activeElement().getText()).toEqual('crime, law and justice');
     });
-    //ToDo: Need to fix as multi-edit option is now available in more-actions
-    xit('disable multi-edit option when action is kill', function() {
+
+    it('hide multi-edit option when action is kill', function() {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
+        authoring.moreActionsButton.click();
+        expect(authoring.multieditButton.isDisplayed()).toBe(true);
         authoring.publish();
         monitoring.filterAction('text');
         monitoring.actionOnItem('Kill item', 5, 0);
-        expect(authoring.multieditButton.isEnabled()).toBe(false);
+        authoring.moreActionsButton.click();
+        expect(authoring.multieditButton.isDisplayed()).toBe(false);
     });
 
     it('open publish item with footer text without <br> tag', function() {

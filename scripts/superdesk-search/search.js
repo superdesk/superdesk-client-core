@@ -5,7 +5,8 @@
         unique_name: 'Unique Name',
         original_creator: 'Creator',
         from_desk: 'From Desk',
-        to_desk: 'To Desk'
+        to_desk: 'To Desk',
+        spike: 'In Spiked'
     });
 
     SearchService.$inject = ['$location', 'gettext', 'config'];
@@ -71,6 +72,9 @@
                                     filters.push({'exists': {'field': field}});
                                 }
                             }
+                            break;
+                        case 'spike':
+                            // Will get set in the base filters
                             break;
                         default:
                             var filter = {'term': {}};
@@ -487,6 +491,11 @@
                         case 'to_desk':
                             tags.selectedParameters.push(value + ':' +
                                 desks.deskLookup[params[key].split('-')[0]].name);
+                            break;
+                        case 'spike':
+                            if (params[key]) {
+                                tags.selectedParameters.push(value);
+                            }
                             break;
                         default:
                             tags.selectedParameters.push(value + ':' + params[key]);
@@ -981,7 +990,7 @@
                     scope.$on('item:spike', queryItems);
                     scope.$on('item:unspike', queryItems);
                     scope.$on('item:duplicate', queryItems);
-                    scope.$on('content:expired', queryItems);
+                    scope.$on('ingest:update', queryItems);
 
                     scope.$on('broadcast:preview', function(event, args) {
                         scope.previewingBroadcast = true;
@@ -1014,27 +1023,19 @@
                     };
 
                     var nextUpdate;
-                    var shouldUpdate;
 
                     /**
                      * Schedule an update if it's not there yet
                      */
                     function queryItems() {
-                        shouldUpdate = true;
                         if (!nextUpdate) {
-                            nextUpdate = $timeout(update, 1000, false);
+                            nextUpdate = $timeout(function() {
+                                _queryItems();
+                                scope.$applyAsync(function() {
+                                    nextUpdate = null; // reset for next $digest
+                                });
+                            }, 3000, false);
                         }
-                    }
-
-                    /**
-                     * Trigger update. In case it got another notification after running query
-                     * schedule next update.
-                     */
-                    function update() {
-                        shouldUpdate = false;
-                        _queryItems().then(function() {
-                            nextUpdate = shouldUpdate ? $timeout(update, 1000, false) : null;
-                        });
                     }
 
                     /**
@@ -1614,6 +1615,10 @@
                                 scope.fields.unique_name = $location.search().unique_name;
                             }
 
+                            if ($location.search().spike) {
+                                scope.fields.spike = true;
+                            }
+
                             if (load_data) {
                                 fetchMetadata();
                                 fetchProviders(params);
@@ -1728,7 +1733,8 @@
                                 scope.fields.from_desk !== $location.search().from_desk ||
                                 scope.fields.to_desk !== $location.search().to_desk ||
                                 scope.fields.unique_name !== $location.search().unique_name ||
-                                scope.fields.original_creator !== $location.search().original_creator) {
+                                scope.fields.original_creator !== $location.search().original_creator ||
+                                scope.fields.spike !== $location.search().spike) {
                                 init();
                             }
                         });

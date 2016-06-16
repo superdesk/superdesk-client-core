@@ -8,16 +8,6 @@
     }
 }
 
-.template-header {
-    h3 span {
-        max-width: calc(~'100vw - 290px');
-        float: left;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        &:first-of-type { margin-right: 3px; }
-    }
-}
-
 .header {
     .sortbar {
         .lab { margin-top: -2px; }
@@ -25,4 +15,103 @@
         padding: 0 5px 0 0;
         border-right: 2px dotted #bcbcbc;
     }
+}
+
+.template-editor-modal {
+    * { box-sizing: border-box; }
+    .modal-body { padding: 0; }
+
+    .template-content {
+        display: inline-block;
+        vertical-align: top;
+        width: 63%;
+
+        .box-shadow(3px -3px 8px -3px rgba(0, 0, 0, 0.1));
+    }
+
+    .template-metadata {
+        display: inline-block;
+        position: absolute;
+        width: calc(~'37.25% - 2px');
+        height: 100%;
+        top: 0; right: 0;
+        padding: 20px 31px;
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        .sd-toggle {
+            margin-top: 4px;
+        }
+
+        .toggle-box__label {
+            color: @black;
+        }
+    }
+
+    .template-icon {
+        display: inline-block;
+        vertical-align: middle;
+        padding: 20px 0px 20px 31px;
+
+        i {
+            width: 36px; height: 36px;
+            font-size: 36px; line-height: 36px;
+            opacity: .7;
+        }
+    }
+
+    .template-header {
+        display: inline-flex;
+        flex-wrap: wrap;
+        vertical-align: top;
+        padding: 20px 13px;
+        width: calc(~'100% - 95px');
+
+        input#template-name {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .authoring-header__item label {
+            min-width: 90px;
+            line-height: 16px;
+        }
+    }
+
+    .template-editor {
+        border-top: 1px solid rgba(0,0,0,0.2);
+        background-color: @white;
+        .authoring-header__general-info {
+            display: none;
+        }
+        .authoring-header {
+            border: 0;
+            padding: 16px 27px;
+        }
+        .main-article {
+            padding: 20px 38px;
+        }
+    }
+
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+        .transition(all 0.3s);
+    }
+
+    .field--double {
+        > select, > input, > .field {
+            display: inline-block;
+            vertical-align: top;
+            width: 48%;
+            &:first-of-type {
+                margin-right: 2%;
+            }
+        }
+    }
+
 }

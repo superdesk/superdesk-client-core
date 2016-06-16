@@ -17,7 +17,7 @@
         headline: {maxlength: 64, type: 'string', required: true},
         sms: {maxlength: 160},
         abstract: {maxlength: 160, type: 'string'},
-        body_html: {},
+        body_html: {required: true},
         byline: {type: 'string'},
         dateline: {type: 'dict', required: true},
         sign_off: {type: 'string'},
@@ -83,8 +83,8 @@
         }])
         ;
 
-    ContentService.$inject = ['api', 'superdesk', 'templates', 'desks', 'packages', 'archiveService'];
-    function ContentService(api, superdesk, templates, desks, packages, archiveService) {
+    ContentService.$inject = ['api', 'superdesk', 'templates', 'desks', 'packages', 'archiveService', '$filter'];
+    function ContentService(api, superdesk, templates, desks, packages, archiveService, $filter) {
 
         var TEXT_TYPE = 'text';
 
@@ -147,6 +147,11 @@
         this.createItemFromTemplate = function(template) {
             var item = newItem(template.data.type || null);
             angular.extend(item, templates.pickItemData(template.data || {}), {template: template._id});
+            // set the dateline date to default utc date.
+            if (item.dateline && item.located) {
+                item.dateline = _.omit(item.dateline, 'text');
+                item.dateline.date = $filter('formatDateTimeString')();
+            }
             archiveService.addTaskToArticle(item);
             return save(item).then(function(_item) {
                 templates.addRecentTemplate(desks.activeDeskId, template._id);
@@ -431,6 +436,29 @@
         }
 
         /**
+         * @description Middle-ware that checks an error response to verify whether
+         * it is a duplication error.
+         * @param {Function} next The function to be called when error is not a
+         * duplication error.
+         * @private
+         */
+        function uniqueError(next) {
+            return function(resp) {
+                if (angular.isObject(resp) &&
+                    angular.isObject(resp.data) &&
+                    angular.isObject(resp.data._issues) &&
+                    angular.isObject(resp.data._issues.label) &&
+                    resp.data._issues.label.unique) {
+                    notify.error(that.duplicateErrorTxt);
+                    return resp;
+                }
+                return next(resp);
+            };
+        }
+
+        this.duplicateErrorTxt = gettext('A content profile with this name already exists.');
+
+        /**
          * @description Toggles the visibility of the creation modal.
          */
         this.toggleCreate = function() {
@@ -453,9 +481,15 @@
          * @description Creates a new content profile.
          */
         this.save = function() {
+            var onSuccess = function(resp) {
+                refreshList();
+                that.toggleCreate();
+                return resp;
+            };
+
             content.createProfile($scope.new)
-                .then(refreshList, reportError)
-                .then(this.toggleCreate);
+                .then(onSuccess, uniqueError(reportError))
+                .then(this.toggleEdit);
         };
 
         /**

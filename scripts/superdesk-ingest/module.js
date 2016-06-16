@@ -84,8 +84,24 @@
         });
     }
 
-    IngestProviderService.$inject = ['api', '$q', 'preferencesService'];
-    function IngestProviderService(api, $q, preferencesService) {
+    IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter'];
+    function IngestProviderService(api, $q, preferencesService, $filter) {
+
+        var _getAllIngestProviders = function(criteria, page, providers) {
+            page = page || 1;
+            providers = providers || [];
+            criteria = criteria || {};
+
+            return api.query('ingest_providers', _.extend({max_results: 200, page: page}, criteria))
+            .then(function(result) {
+                providers = providers.concat(result._items);
+                if (result._links.next) {
+                    page++;
+                    return _getAllIngestProviders(criteria, page, providers);
+                }
+                return $filter('sortByName')(providers);
+            });
+        };
 
         var service = {
             providers: null,
@@ -93,7 +109,7 @@
             fetched: null,
             fetchProviders: function() {
                 var self = this;
-                var providersPromise = $q.all([api.ingestProviders.query(), api.searchProviders.query()]);
+                var providersPromise = $q.all([_getAllIngestProviders(), api.searchProviders.query()]);
 
                 return providersPromise.then(function(results) {
                     self.providers = [];
@@ -119,10 +135,13 @@
 
                 return this.fetched;
             },
+            fetchAllIngestProviders: function(criteria) {
+                return _getAllIngestProviders(criteria);
+            },
             fetchDashboardProviders: function() {
                 var deferred = $q.defer();
-                api.ingestProviders.query({max_results:500}).then(function (result) {
-                    var ingest_providers = result._items;
+                _getAllIngestProviders().then(function (result) {
+                    var ingest_providers = result;
                     preferencesService.get('dashboard:ingest').then(function(user_ingest_providers) {
                         if (!_.isArray(user_ingest_providers)) {
                             user_ingest_providers = [];

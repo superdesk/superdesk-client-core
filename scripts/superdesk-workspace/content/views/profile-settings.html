@@ -11,15 +11,22 @@
         <div class="content profile-settings desk-settings">
             <div class="flex-grid box wrap-items small-2 medium-4 large-6">
                 <div class="flex-item card-box"
-                    ng-click="ctrl.toggleEdit(type)"
-                    ng-repeat="type in ctrl.items | orderBy: 'label' track by type._id"
+                     ng-repeat="type in ctrl.items | orderBy: 'label' track by type._id"
                     ng-class="{inactive: !type.enabled}">
 
                     <div class="card-box__header">
-                        <div class="card-box__heading">
-                            {{ type.label }}
-                            <i class="pull-right icon-pencil"></i>
+                        <div class="dropdown" dropdown>
+                            <button class="dropdown-toggle" dropdown-toggle>
+                                <i class="icon-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu more-activity-menu pull-right">
+                                <li><div class="menu-label" translate>Actions</div></li>
+                                <li class="divider"></li>
+                                <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                                <li><button ng-click="ctrl.delete(type)" title="{{:: 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                            </ul>
                         </div>
+                        <div class="card-box__heading">{{ type.label }}</div>
                     </div>
 
                     <div class="card-box__content">
@@ -60,7 +67,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" ng-disabled="createForm.$invalid" ng-click="ctrl.save()" translate>Save</button>
+                <button class="btn btn-primary" ng-disabled="createForm.$invalid" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
                 <button class="btn btn-default" ng-click="ctrl.toggleCreate()" translate>Cancel</button>
             </div>
     </div>
@@ -97,7 +104,6 @@
             <div class="modal-footer">
                 <button class="btn btn-primary" ng-disabled="editForm.$invalid || !editForm.$dirty" ng-click="ctrl.update()" translate>Save</button>
                 <button class="btn btn-default" ng-click="ctrl.toggleEdit(null)" translate>Cancel</button>
-                <button class="btn btn-danger" ng-click="ctrl.delete(editing.original)" translate>Delete</button>
             </div>
     </div>
 </div>

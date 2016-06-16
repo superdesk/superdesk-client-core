@@ -20,10 +20,26 @@
                         </button>
                         <ul class="dropdown-menu scrollable">
                             <li>
-                                <a href="" ng-click="filterSchedule(null, 'subscriber')" translate>None</a>
+                                <a href="" ng-click="filterPublishQueue(null, 'subscriber')" translate>None</a>
                             </li>
                             <li ng-repeat="subscriber in subscribers track by subscriber._id">
-                                <a href="" ng-click="filterSchedule(subscriber, 'subscriber')">{{ subscriber.name }}</a>
+                                <a href="" ng-click="filterPublishQueue(subscriber, 'subscriber')">{{ subscriber.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="lab pull-left" translate>Ingest Provider:</span>
+                    <div class="dropdown pull-left" dropdown>
+                        <button class="dropdown-toggle" dropdown-toggle>
+                            {{ selectedFilterIngestProvider.name }}
+                            <span ng-if="!selectedFilterIngestProvider">none</span>
+                            <b class="caret"></b>
+                        </button>
+                        <ul class="dropdown-menu scrollable">
+                            <li>
+                                <a href="" ng-click="filterPublishQueue(null, 'ingest_provider')" translate>None</a>
+                            </li>
+                            <li ng-repeat="provider in ingestProviders track by provider._id">
+                                <a href="" ng-click="filterPublishQueue(provider, 'ingest_provider')">{{ provider.name }}</a>
                             </li>
                         </ul>
                     </div>
@@ -35,9 +51,9 @@
                             <b class="caret"></b>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="" ng-click="filterStatus(null, 'status')" translate>None</a></li>
+                            <li><a href="" ng-click="filterPublishQueue(null, 'status')" translate>None</a></li>
                             <li ng-repeat="status in publish_queue_statuses track by $index">
-                                <a href="" ng-click="filterStatus(status, 'status')">{{ :: status | translate}}</a>
+                                <a href="" ng-click="filterPublishQueue(status, 'status')">{{ :: status | translate}}</a>
                             </li>
                         </ul>
                     </div>
@@ -74,6 +90,7 @@
                                 <th class="align-right" translate>Content Type</th>
                                 <th class="align-right" translate>Publishing Action</th>
                                 <th class="align-right" translate>Subscriber</th>
+                                <th class="align-right" translate>Ingest Provider</th>
                                 <th class="align-right" translate>Destination</th>
                                 <th class="align-right" translate>Queued at</th>
                                 <th class="align-right" translate>Scheduled at</th>
@@ -94,6 +111,7 @@
                                 <td class="align-right">{{ queue_item.content_type}}</td>
                                 <td class="align-right">{{ queue_item.publishing_action}}</td>
                                 <td class="align-right">{{subscriberLookup[queue_item.subscriber_id].name}}</td>
+                                <td class="align-right">{{queue_item.ingest_provider ? ingestProvidersLookup[queue_item.ingest_provider].name : ''}}</td>
                                 <td class="align-right">{{queue_item.destination.name}}</td>
                                 <td class="align-right">{{queue_item._created| dateTimeStringWithSecs}}</td>
                                 <td class="align-right">{{queue_item.publish_schedule| dateTimeStringWithSecs}}</td>
@@ -103,8 +121,8 @@
                                 <td class="align-right" ng-if="queue_item.state === 'pending' || queue_item.state === 'retrying'">
                                     <button class="btn btn-small" ng-click="cancelSend(queue_item); $event.stopPropagation()">{{ :: 'Cancel' | translate}}</button>
                                 </td>
-                                <td class="align-right">
-                                    <button class="btn btn-small" ng-if="queue_item.state === 'success' || queue_item.state === 'failed' || queue_item.state === 'canceled'" ng-click="scheduleToSend(queue_item); $event.stopPropagation()">{{ :: 'Resend' | translate}}</button>
+                                <td class="align-right" ng-if="queue_item.state === 'success' || queue_item.state === 'failed' || queue_item.state === 'canceled'">
+                                    <button class="btn btn-small" ng-click="scheduleToSend(queue_item); $event.stopPropagation()">{{ :: 'Resend' | translate}}</button>
                                 </td>
                             </tr>
                         </tbody>

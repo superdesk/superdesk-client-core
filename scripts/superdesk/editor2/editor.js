@@ -973,7 +973,7 @@ angular.module('superdesk.editor2', [
                     // restore the selection if exist
                     if (scope.sdTextEditorBlockText.caretPosition) {
                         scope.node.focus();
-                        scope.medium.importSelection(scope.sdTextEditorBlockText.caretPosition);
+                        vm.restoreSelection();
                         // clear the saved position
                         scope.sdTextEditorBlockText.caretPosition = undefined;
                     }
@@ -1215,13 +1215,18 @@ angular.module('superdesk.editor2', [
                         // save position
                         vm.savePosition();
                     },
+                    restoreSelection: function() {
+                        scope.medium.importSelection(vm.block.caretPosition);
+                        // put the caret at end of the selection
+                        scope.medium.options.ownerDocument.getSelection().collapseToEnd();
+                    },
                     savePosition: function() {
                         vm.block.caretPosition = scope.medium.exportSelection();
                     },
                     extractEndOfBlock: function() {
                         // it can happen that user lost the focus on the block when this fct in called
                         // so we restore the latest known position
-                        scope.medium.importSelection(vm.block.caretPosition);
+                        vm.restoreSelection();
                         // extract the text after the cursor
                         var remainingElementsContainer = document.createElement('div');
                         remainingElementsContainer.appendChild(extractBlockContentsFromCaret().cloneNode(true));

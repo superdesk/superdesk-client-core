@@ -275,7 +275,7 @@
                 }
             }
         }
-        &.media-picture {
+        &.media-picture, &.media-video {
             .text {
                 display: none;
                 position: absolute;
@@ -309,7 +309,7 @@
             }
         }
 
-        &.media-audio, &.media-video {
+        &.media-audio {
             .media {
                 width: @sfbox_minWidth;
                 max-width: @sfbox_minWidth;
@@ -442,7 +442,6 @@
         }
     }
 
-
 .mgrid-view, #scratchpad {
     .media-box {
         .action {
@@ -459,6 +458,10 @@
         .media-box-generic;
         &.locked {
             border-bottom-color: #e51c23 !important;
+        }
+
+        &.gone {
+            opacity: 0.5;
         }
 
         .highlights-title {
@@ -562,7 +565,6 @@
 @rightfield-width:60px;
 
 .mlist-view, .compact-view {
-    overflow:hidden;
     box-shadow: @block-shadow-depth-2;
     .list-item-view {
         width: 100%;
@@ -598,6 +600,10 @@
                 background: linear-gradient(to right, rgba(244,244,244,0) 0%,rgba(244,244,244,0) 0%,rgba(244,244,244,1) 40%) !important;
             }
 
+        }
+
+        &.gone {
+            opacity: 0.5;
         }
 
         .list-field {
