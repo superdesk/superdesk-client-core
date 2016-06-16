@@ -168,7 +168,7 @@ function GlobalSearch() {
      * @return {promise} list of elements
      */
     this.getSelectedSubjectsInFilter = function () {
-        return element.all(by.repeater('t in item[field]'));
+        return element.all(by.repeater('t in selectedItems'));
     };
 
     /**
