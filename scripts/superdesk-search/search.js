@@ -1551,9 +1551,9 @@
         }])
 
         .directive('sdItemSearch', ['$location', '$timeout', 'asset', 'api', 'tags', 'search', 'metadata',
-            'desks', 'userList', 'searchProviderService', '$filter',
+            'desks', 'userList', 'searchProviderService', '$filter', 'gettext',
             function($location, $timeout, asset, api, tags, search, metadata, desks,
-                     userList, searchProviderService, $filter) {
+                     userList, searchProviderService, $filter, gettext) {
                 return {
                     scope: {
                         repo: '=',
@@ -1589,12 +1589,11 @@
                             scope.search_config = metadata.search_config;
                             scope.scanpix_subscriptions = [{
                                 name: 'subscription',
-                                label: 'inside subscription',
+                                label: gettext('inside subscription'),
                             }, {
                                 name: 'all',
-                                label: 'all photos',
+                                label: gettext('all photos'),
                             }];
-                            scope.meta.scanpix_subscription = scope.scanpix_subscriptions[0].name;
                             scope.lookupCvs = {};
                             angular.forEach(scope.cvs, function(cv) {
                                 scope.lookupCvs[cv.id] = cv;
@@ -1617,6 +1616,10 @@
                                 } else {
                                     scope.repo.search = 'local';
                                 }
+                            }
+
+                            if (scope.repo && scope.repo.search && scope.repo.search === 'scanpix') {
+                                scope.meta.scanpix_subscription = scope.scanpix_subscriptions[0].name;
                             }
 
                             if ($location.search().unique_name) {
