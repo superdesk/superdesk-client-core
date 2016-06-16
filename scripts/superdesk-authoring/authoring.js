@@ -1896,11 +1896,11 @@
     SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
         'superdeskFlags', '$location', 'macros', '$rootScope',
         'authoring', 'send', 'editor', 'confirm', 'archiveService',
-        'preferencesService', 'multi', 'datetimeHelper', 'config'];
+        'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges'];
     function SendItem($q, api, desks, notify, authoringWorkspace,
                       superdeskFlags, $location, macros, $rootScope,
                       authoring, send, editor, confirm, archiveService,
-                      preferencesService, multi, datetimeHelper, config) {
+                      preferencesService, multi, datetimeHelper, config, privileges) {
         return {
             scope: {
                 item: '=',
@@ -2208,6 +2208,23 @@
                     }
 
                     return scope.mode === 'authoring' || itemType === 'archive';
+                };
+
+                /**
+                 * If the action is correct and kill then the publish privilege needs to be checked.
+                 */
+                scope.canPublishItem = function() {
+                    if (!scope.itemActions) {
+                        return false;
+                    }
+
+                    if (scope._action === 'edit') {
+                        return scope.itemActions.publish;
+                    } else if (scope._action === 'correct') {
+                        return privileges.privileges.publish && scope.itemActions.correct;
+                    } else if (scope._action === 'kill') {
+                        return privileges.privileges.publish && scope.itemActions.kill;
+                    }
                 };
 
                 /**
