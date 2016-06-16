@@ -246,15 +246,18 @@ describe('search', function() {
         expect(previewPane.isPresent()).toBe(false);    // avoids retaining already opened preview
     });
 
-    xit('can avoid opening item\'s preview (stops event propagation) on keyboard operations from text editor',
+    it('can avoid opening item\'s preview (stops event propagation) on keyboard operations from text editor',
         function() {
         expect(globalSearch.getItems().count()).toBe(14);
+
+        var body = element(by.tagName('body'));
 
         var previewPane = element(by.id('item-preview'));
         expect(previewPane.isPresent()).toBe(false);
 
+        body.click();
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
-        expect(previewPane.isPresent()).toBe(true); // DOWN arrow key selects an item and opens preview pane
+        expect(previewPane.isDisplayed()).toBe(true); // DOWN arrow key selects an item and opens preview pane
 
         // now proceed to perform keyboard operation on text editor
         globalSearch.actionOnItem('Edit', 2);
@@ -283,12 +286,16 @@ describe('search', function() {
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
         browser.actions().sendKeys('Testhilite').perform();
         expect(authoring.getBodyText()).toContain('Testhilite');
-        expect(authoring.getBodyInnerHtml()).not.toContain('sderror sdhilite');
+        authoring.getBodyHtmlCloneNode().then(function(node) {
+            expect(node.length).toBe(0);    // since auto spellcheck turned off, no clone node exists
+        });
 
         // trigger spell checker via keyboard operation
         browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, protractor.Key.SHIFT, 'd')).perform();
-        expect(authoring.getBodyText()).toContain('Testhilite');
-        expect(authoring.getBodyInnerHtml()).toContain('sderror sdhilite');
+        browser.sleep(500);
+        expect(authoring.getBodyHtmlCloneNode().first().getText()).toContain('Testhilite');
+        expect(authoring.getBodyHtmlCloneNode().first().isPresent()).toBe(true);
+        expect(authoring.getBodyHtmlCloneNode().first().getInnerHtml()).toContain('sderror sdhilite');
 
         // now test 'ctrl+0' shortcut that triggers story search dialog box
         browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, '0')).perform();

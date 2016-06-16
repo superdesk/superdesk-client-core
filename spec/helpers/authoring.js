@@ -362,6 +362,7 @@ function Authoring() {
     };
 
     var bodyHtml = element(by.model('item.body_html')).all(by.className('editor-type-html')).first();
+    var bodyHtmlCloneNode = element(by.model('item.body_html')).all(by.css('.text-editor.editor-type-html.clone'));
     var headline = element(by.model('item.headline')).all(by.className('editor-type-html')).first();
     var abstract = element(by.model('item.abstract')).all(by.className('editor-type-html')).first();
     var bodyFooter = element(by.id('body_footer')).all(by.className('editor-type-html')).first();
@@ -398,6 +399,10 @@ function Authoring() {
 
     this.getBodyInnerHtml = function() {
         return bodyHtml.getInnerHtml();
+    };
+
+    this.getBodyHtmlCloneNode = function() {
+        return bodyHtmlCloneNode;
     };
 
     this.focusBodyHtmlElement = function() {
