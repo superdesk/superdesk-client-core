@@ -93,12 +93,6 @@ describe('search', function() {
 
         // expect some search result returned
         expect(globalSearch.getItems().count()).toBeGreaterThan(0);
-
-        // now preview first item on search list and expect item contains selected subject
-        // SUBJECT IS NO LONGER IN THE MATADATA TAB OF PREVIEW
-        //globalSearch.itemClick(0);
-        //monitoring.tabAction('metadata');
-        //expect(globalSearch.getItemSubjectContains()).toContain('archaeology');
     });
 
     it('can search by priority field', function () {
