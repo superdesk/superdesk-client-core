@@ -4,9 +4,9 @@
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
 SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash',
-'EMBED_PROVIDERS', '$scope', 'editor', 'api'];
+'EMBED_PROVIDERS', '$scope', 'editor', 'config', '$injector'];
 function SdAddEmbedController (embedService, $element, $timeout, $q, _,
-EMBED_PROVIDERS, $scope, editor, api) {
+EMBED_PROVIDERS, $scope, editor, config, $injector) {
     var vm = this;
     angular.extend(vm, {
         editorCtrl: undefined,  // defined in link method
@@ -61,7 +61,7 @@ EMBED_PROVIDERS, $scope, editor, api) {
                     body: vm.input,
                     provider: EMBED_PROVIDERS.custom
                 };
-                var providersKnown = [
+                var knownPorviders = [
                     {
                         pattern: /twitter\.com\/widgets\.js/g,
                         name: EMBED_PROVIDERS.twitter
@@ -69,26 +69,23 @@ EMBED_PROVIDERS, $scope, editor, api) {
                     {
                         pattern: /www\.youtube\.com/g,
                         name: EMBED_PROVIDERS.youtube
-                    },
-                    {
-                        pattern: /src=".*vidible\.tv.*pid=(.+)\/(.+).js/g,
-                        name: EMBED_PROVIDERS.vidible,
-                        callback: function(match) {
-                            return api.get('vidible/bcid/' + match[2] + '/pid/' + match[1])
-                            .then(function(data) {
-                                embedBlock.association = data;
-                            });
-                        }
                     }
                 ];
+                // prepend with custom handlers from config
+                if (config.editorEmbedCodeParsers) {
+                    knownPorviders = $injector.invoke(config.editorEmbedCodeParsers).concat(knownPorviders);
+                }
+                function updateEmbedBlock(partialUpdate) {
+                    angular.extend(embedBlock, partialUpdate);
+                }
                 // try to guess the provider of the custom embed
-                for (var i = 0; i < providersKnown.length; i++) {
-                    var provider = providersKnown[i];
+                for (var i = 0; i < knownPorviders.length; i++) {
+                    var provider = knownPorviders[i];
                     var match = provider.pattern.exec(vm.input);
                     if (match) {
-                        embedBlock.provider = provider.name;
+                        updateEmbedBlock({provider: provider.name});
                         if (provider.callback) {
-                            waitFor.push(provider.callback(match));
+                            waitFor.push(provider.callback(match).then(updateEmbedBlock));
                         }
                         break;
                     }
