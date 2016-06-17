@@ -1551,9 +1551,9 @@
         }])
 
         .directive('sdItemSearch', ['$location', '$timeout', 'asset', 'api', 'tags', 'search', 'metadata',
-            'desks', 'userList', 'searchProviderService', '$filter',
+            'desks', 'userList', 'searchProviderService', '$filter', 'gettext',
             function($location, $timeout, asset, api, tags, search, metadata, desks,
-                     userList, searchProviderService, $filter) {
+                     userList, searchProviderService, $filter, gettext) {
                 return {
                     scope: {
                         repo: '=',
@@ -1587,6 +1587,13 @@
                             scope.searchProviderTypes = searchProviderService.getProviderTypes();
                             scope.cvs = metadata.search_cvs;
                             scope.search_config = metadata.search_config;
+                            scope.scanpix_subscriptions = [{
+                                name: 'subscription',
+                                label: gettext('inside subscription'),
+                            }, {
+                                name: 'all',
+                                label: gettext('all photos'),
+                            }];
                             scope.lookupCvs = {};
                             angular.forEach(scope.cvs, function(cv) {
                                 scope.lookupCvs[cv.id] = cv;
@@ -1609,6 +1616,10 @@
                                 } else {
                                     scope.repo.search = 'local';
                                 }
+                            }
+
+                            if (scope.repo && scope.repo.search && scope.repo.search === 'scanpix') {
+                                scope.meta.scanpix_subscription = scope.scanpix_subscriptions[0].name;
                             }
 
                             if ($location.search().unique_name) {
@@ -1789,6 +1800,9 @@
                                     metas.push(val.join(' '));
                                 } else {
                                     if (val) {
+                                        if (key.startsWith('scanpix_')) {
+                                            key = key.substring(8);
+                                        }
                                         if (typeof(val) === 'string'){
                                             if (val) {
                                                 metas.push(key + ':(' + val + ')');
