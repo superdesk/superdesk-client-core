@@ -206,6 +206,12 @@
                     query.post_filter({range: facetrange});
                 }
 
+                if (params.scheduled_after) {
+                    var schedulerange = {utc_publish_schedule: {}};
+                    schedulerange.utc_publish_schedule.gte = params.scheduled_after;
+                    query.post_filter({range: schedulerange});
+                }
+
                 if (params.type) {
                     var type = {
                         type: JSON.parse(params.type)
@@ -529,6 +535,8 @@
             var search = $location.search();
             if (search.after) {
                 $location.search('after', null);
+            } else if (search.scheduled_after) {
+                $location.search('scheduled_after', null);
             }
         }
 
@@ -565,7 +573,12 @@
                             } else if (type === 'now-1M'){
                                 tags.selectedFacets.date = ['Last Month'];
                             }
-
+                        } else if (key === 'scheduled_after') {
+                            if (type === 'now-8H') {
+                                tags.selectedFacets.date = ['Scheduled in the Last 8 Hours'];
+                            } else {
+                                tags.selectedFacets.date = ['Scheduled in the Last Day'];
+                            }
                         } else if (FacetKeys[key]) {
                             tags.selectedFacets[key] = JSON.parse(type);
                         }
@@ -618,6 +631,7 @@
 
                     scope.aggregations = {};
                     scope.privileges = privileges.privileges;
+                    scope.search_config = metadata.search_config;
 
                     scope.$on('edit:search', function(event, args)  {
                         scope.sTab = true;
@@ -792,8 +806,13 @@
                             $location.search('after', 'now-1w');
                         } else if (key === 'Last Month'){
                             $location.search('after', 'now-1M');
+                        } else if (key === 'Scheduled Last Day'){
+                            $location.search('scheduled_after', 'now-24H');
+                        } else if (key === 'Scheduled Last 8Hrs') {
+                            $location.search('scheduled_after', 'now-8H');
                         } else {
                             $location.search('after', null);
+                            $location.search('scheduled_after', null);
                         }
                     };
 
