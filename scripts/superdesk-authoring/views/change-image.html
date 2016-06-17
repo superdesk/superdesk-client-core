@@ -1,14 +1,16 @@
 <div class="modal-header">
-    <h3 class="pull-left">{{ activity.label|translate }}</h3>
+    <h3 ng-if="!isAoISelectionModeEnabled" class="pull-left">{{ activity.label|translate }}</h3>
+    <h3 ng-if="isAoISelectionModeEnabled" class="pull-left" translate>Select Area of Interest</h3>
     <div class="pull-right">
         <button type="button"
         class="btn"
+        ng-disabled="isAoISelectionModeEnabled"
         ng-click="close()"
         translate>Cancel</button>
         <button type="button"
         class="btn btn-primary"
         ng-click="done()"
-        ng-disabled="!data.isDirty"
+        ng-disabled="!data.isDirty || isAoISelectionModeEnabled"
         translate>Save</button>
     </div>
 </div>
@@ -17,12 +19,41 @@
     <div class="modal-body__flex-top">
         <div class="modal-body__flex-main">
             <div ng-if="!selectedRendition">
-                <label class="field-label" translate>Original <span class="size">{{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}</span></label>
+                <label ng-if="!isAoISelectionModeEnabled"class="field-label" translate>
+                    Original
+                    <span class="size">
+                        {{ data.item.renditions.original.width }} x {{ data.item.renditions.original.height }}
+                    </span>
+                </label>
+                <label ng-if="isAoISelectionModeEnabled" class="field-label" translate>
+                    New size
+                    <span class="size">
+                        {{ areaOfInterestData.CropRight - areaOfInterestData.CropLeft }}
+                        x {{ areaOfInterestData.CropBottom - areaOfInterestData.CropTop }}
+                    </span>
+                </label>
                 <sd-image-point
+                    ng-show="!isAoISelectionModeEnabled"
                     data-src="data.item.renditions.viewImage.href"
                     data-poi="data.poi"
                     data-on-change="data.isDirty = true">
                 </sd-image-point>
+                <div class="modal-body__flex-loader" ng-if="loaderForAoI"></div>
+                <div sd-image-crop
+                    data-show-min-size-error="true"
+                    data-src="data.item.renditions.viewImage.href"
+                    data-original="data.item.renditions.original"
+                    data-crop-data="areaOfInterestData"
+                    ng-if="isAoISelectionModeEnabled && !loaderForAoI">
+                </div>
+                <div ng-if="isAoISelectionModeEnabled && !loaderForAoI">
+                    <button class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</button>
+                    <button class="btn btn-primary" ng-click="saveAreaOfInterest(areaOfInterestData)" translate>Save</button>
+                </div>
+                <button class="btn btn-default"
+                        ng-click="showAreaOfInterestView()"
+                        ng-if="data.showAoISelectionButton && !isAoISelectionModeEnabled"
+                        translate>Select the area of interest</button>
             </div>
             <div class="crop-area selected" ng-if="selectedRendition">
                 <label class="field-label">{{ selectedRendition.name }}</label>
@@ -33,7 +64,9 @@
                 ></div>
             </div>
         </div>
-        <div class="modal-body__flex-sidebar modal-body__flex-metadata" ng-if="data.showMetadataEditor">
+        <div class="modal-body__flex-sidebar modal-body__flex-metadata"
+             ng-class="{'modal-body__flex--disabled': isAoISelectionModeEnabled}"
+             ng-if="data.showMetadataEditor">
             <div class="header" translate>Metadata</div>
             <div>
                 <label translate>Title *</label>
@@ -71,7 +104,7 @@
         </div>
     </div><!-- end flex top -->
 
-    <div class="modal-body__flex-bottom">
+    <div class="modal-body__flex-bottom" ng-class="{'modal-body__flex--disabled': isAoISelectionModeEnabled}">
         <div class="crop-area__thumbnails">
             <ul>
                 <li ng-click="selectRendition()" ng-class="{active: selectedRendition === null}">

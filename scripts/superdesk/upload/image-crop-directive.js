@@ -77,8 +77,8 @@
      * scope.preview should be define on container page so that the coordiates can be used
      * to pass in api that is serving for saving the crop.
      */
-     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', 'lodash',
-     function(gettext, $interpolate, imageFactory, _) {
+     .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', 'lodash', '$timeout',
+     function(gettext, $interpolate, imageFactory, _, $timeout) {
         return {
             scope: {
                 src: '=',
@@ -101,12 +101,10 @@
                     var nextData = formatCoordinates(cords);
                     selectionWidth = nextData.CropRight - nextData.CropLeft;
                     selectionHeight = nextData.CropBottom - nextData.CropTop;
-                    var prevData = cropData || scope.cropInit;
-                    var cropsList = ['CropLeft', 'CropRight', 'CropTop', 'CropBottom'];
-                    if (!angular.equals(_.pick(nextData, cropsList), _.pick(prevData, cropsList))) {
+                    $timeout(function() {
                         angular.extend(scope.cropData, nextData);
-                        scope.onChange({renditionName: scope.rendition.name, cropData: nextData});
-                    }
+                        scope.onChange({renditionName: scope.rendition && scope.rendition.name || undefined, cropData: nextData});
+                    });
                 }
 
                 /**
@@ -142,7 +140,7 @@
                 }
 
                 scope.$watch('src', function(src) {
-                    var cropSelect = parseCoordinates(scope.cropInit) || getDefaultCoordinates(scope.original, scope.rendition);
+                    var cropSelect = parseCoordinates(scope.cropInit) || getDefaultCoordinates(scope.original, scope.rendition || {});
                     refreshImage(src, cropSelect);
                 });
 
@@ -207,18 +205,21 @@
                             return;
                         }
                         elem.append(img);
-                        var ratio;
-                        if (angular.isDefined(scope.rendition.ratio)) {
-                            ratio = scope.rendition.ratio.split(':');
-                            ratio = parseInt(ratio[0]) / parseInt(ratio[1]);
-                        } else if (angular.isDefined(scope.rendition.width) && angular.isDefined(scope.rendition.height)) {
-                            ratio = scope.rendition.width / scope.rendition.height;
-                        } else {
-                            ratio = scope.original.width / scope.original.height;
+                        var ratio, minSize;
+                        if (angular.isDefined(scope.rendition)) {
+                            if (angular.isDefined(scope.rendition.ratio)) {
+                                ratio = scope.rendition.ratio.split(':');
+                                ratio = parseInt(ratio[0]) / parseInt(ratio[1]);
+                            } else if (angular.isDefined(scope.rendition.width) && angular.isDefined(scope.rendition.height)) {
+                                ratio = scope.rendition.width / scope.rendition.height;
+                            } else {
+                                ratio = scope.original.width / scope.original.height;
+                            }
+                            minSize = [scope.rendition.width, scope.rendition.height];
                         }
                         $(img).Jcrop({
                             aspectRatio: ratio,
-                            minSize: [scope.rendition.width, scope.rendition.height],
+                            minSize: minSize,
                             trueSize: [scope.original.width, scope.original.height],
                             setSelect: setSelect,
                             allowSelect: false,
@@ -233,6 +234,9 @@
                 }
 
                 function validateConstraints(img, rendition) {
+                    if (!angular.isDefined(rendition)) {
+                        return true;
+                    }
                     if (img.width < rendition.width || img.height < rendition.height) {
                         var text = $interpolate(
                             gettext('Sorry, but image must be at least {{ r.width }}x{{ r.height }},' +
@@ -241,12 +245,9 @@
                             r: rendition,
                             img: img
                         });
-
                         elem.append('<p class="error">' + text);
-
                         return false;
                     }
-
                     return true;
                 }
 
@@ -272,7 +273,18 @@
             }
         };
     }])
-    .directive('sdImagePoint', ['$window', 'lodash', function($window, _) {
+    .directive('imageonload', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                element.bind('load', function() {
+                    //call the function that was passed
+                    scope.$apply(attrs.imageonload);
+                });
+            }
+        };
+    })
+    .directive('sdImagePoint', ['$window', 'lodash', '$timeout', function($window, _, $timeout) {
         return {
             scope: {
                 src: '=',
@@ -293,6 +305,11 @@
                 });
             }],
             link: function(scope, element, attrs, vm) {
+                // init directive element style
+                element.css({
+                    position: 'relative',
+                    display: 'block'
+                });
                 var circleRadius = 30 / 2;
                 var lineThickness = 2;
                 var $poiContainer = element.find('.image-point__poi');
@@ -336,25 +353,18 @@
                         top: topOffset + (2 * circleRadius)
                     });
                 }
-                // init directive element style
-                element.css({
-                    position: 'relative',
-                    display: 'block'
-                });
-                // load the image in order to know the size
-                var img = new Image();
-                img.onload = function() {
+                function updateWhenImageIsReady() {
+                    var $img = element.find('.image-point__image').get(0);
                     function drawPointsFromModel() {
                         drawPoint($img);
                     }
-                    var $img = element.find('.image-point__image').get(0);
-                    // initialize points
+                    // draws points
                     drawPointsFromModel();
-                    // draw when needed
-                    scope.$on('poiUpdate', drawPointsFromModel);
-                    angular.element($window).on('resize', drawPointsFromModel);
                     // setup overlay to listen mouse events
-                    (function($img) {
+                    (function onMouseEvents($img) {
+                        var debouncedPoiUpdateModel = _.debounce(function(newPoi) {
+                            vm.updatePOI(newPoi);
+                        }, 500);
                         function updatePOIModel(e) {
                             var newPoi = {
                                 x: Math.round(e.offsetX * 100 / $img.width) / 100,
@@ -365,9 +375,6 @@
                             // and notice the controller that points have been moved
                             debouncedPoiUpdateModel(newPoi);
                         }
-                        var debouncedPoiUpdateModel = _.debounce(function(newPoi) {
-                            vm.updatePOI(newPoi);
-                        }, 500);
                         // binds overlay events
                         var overlay = element.find('.image-point__poi__overlay');
                         var mousedown = false;
@@ -399,13 +406,18 @@
                             onExistEvents.forEach(function(eventName) {
                                 overlay.off(eventName, exitDragMode);
                             });
-                            angular.element($window).off('resize', drawPointsFromModel);
                         });
                     })($img);
-                };
-                img.src = scope.vm.src;
-                // Break the circular link. The handler doesn’t reference DOM element any more.
-                img = null;
+                }
+                // initialize points
+                scope.onImageLoad = updateWhenImageIsReady;
+                // draw when needed
+                scope.$on('poiUpdate', updateWhenImageIsReady);
+                angular.element($window).on('resize', updateWhenImageIsReady);
+                // on destroy
+                scope.$on('$destroy', function () {
+                    angular.element($window).off('resize', updateWhenImageIsReady);
+                });
             }
         };
     }]);
