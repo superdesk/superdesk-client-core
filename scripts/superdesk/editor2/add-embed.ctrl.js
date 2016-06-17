@@ -61,7 +61,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector) {
                     body: vm.input,
                     provider: EMBED_PROVIDERS.custom
                 };
-                var knownPorviders = [
+                var knownProviders = [
                     {
                         pattern: /twitter\.com\/widgets\.js/g,
                         name: EMBED_PROVIDERS.twitter
@@ -73,14 +73,14 @@ EMBED_PROVIDERS, $scope, editor, config, $injector) {
                 ];
                 // prepend with custom handlers from config
                 if (config.editorEmbedCodeParsers) {
-                    knownPorviders = $injector.invoke(config.editorEmbedCodeParsers).concat(knownPorviders);
+                    knownProviders = $injector.invoke(config.editorEmbedCodeParsers).concat(knownProviders);
                 }
                 function updateEmbedBlock(partialUpdate) {
                     angular.extend(embedBlock, partialUpdate);
                 }
                 // try to guess the provider of the custom embed
-                for (var i = 0; i < knownPorviders.length; i++) {
-                    var provider = knownPorviders[i];
+                for (var i = 0; i < knownProviders.length; i++) {
+                    var provider = knownProviders[i];
                     var match = provider.pattern.exec(vm.input);
                     if (match) {
                         updateEmbedBlock({provider: provider.name});
