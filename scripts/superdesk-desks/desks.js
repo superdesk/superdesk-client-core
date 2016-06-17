@@ -659,10 +659,10 @@
                             });
                         });
                     },
-                    fetchDeskStages: function(desk) {
+                    fetchDeskStages: function(desk, refresh) {
                         var self = this;
 
-                        if (self.deskStages[desk]) {
+                        if (self.deskStages[desk] && !refresh) {
                             return $q.when().then(returnDeskStages);
                         } else {
                             return self.fetchStages()
@@ -1117,11 +1117,10 @@
                     scope.getstages = function(previous) {
                         if (scope.desk.edit && scope.desk.edit._id) {
                             scope.message = 'loading...';
-                            api('stages').query({where: {desk: scope.desk.edit._id}})
-                                .then(function(result) {
-                                    scope.stages = result._items;
-                                    scope.message = null;
-                                });
+                            desks.fetchDeskStages(scope.desk.edit._id, true).then(function(stages) {
+                                scope.stages = stages;
+                                scope.message = null;
+                            });
                         } else {
                             WizardHandler.wizard('desks').goTo(previous);
                         }

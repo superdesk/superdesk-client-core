@@ -330,10 +330,17 @@ function Desks() {
     };
 
     /**
-     * Saves stage settings
+     * Saves new stage settings
      **/
-    this.saveStage = function() {
-        element(by.id('save-stage')).click();
+    this.saveNewStage = function() {
+        element(by.id('save-new-stage')).click();
+    };
+
+    /**
+     * Saves edited stage settings
+     **/
+    this.saveEditedStage = function() {
+        element(by.id('save-edited-stage')).click();
     };
 
 }
