@@ -88,7 +88,7 @@
                     fetch and open
                 </button>
             </li>
-            <li class="full-width" ng-if="canSendItem() && (itemActions.publish || itemActions.kill || itemActions.correct)">
+            <li class="full-width" ng-if="canSendItem() && canPublishItem()">
                 <button type="submit"
                         class="btn btn-info"
                         ng-show="_editable"
