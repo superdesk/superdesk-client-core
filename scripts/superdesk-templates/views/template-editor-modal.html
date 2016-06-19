@@ -11,8 +11,9 @@
             </div>
 
             <div class="template-header">
-                <div class="authoring-header__item" sd-width="full">
-                    <input type="text" id="template-name" class="line-input" ng-model="template.template_name" placeholder="{{ :: 'Template name' | translate }}" required>
+                <div sd-validation-error="error.template_name" data-required="true"
+                        class="authoring-header__item" sd-width="full">
+                    <input type="text" id="template-name" class="line-input" ng-model="template.template_name" placeholder="{{ :: 'Template name' | translate }}" required data-field="template_name">
                 </div>
 
                 <div class="authoring-header__item" sd-width="full" ng-if="template.template_type !== 'kill' && !content_types.length">
@@ -27,7 +28,8 @@
                     </div>
                 </div>
 
-                <div class="authoring-header__item " sd-width="half">
+                <div sd-validation-error="error.template_type" data-required="true"
+                        class="authoring-header__item " sd-width="half">
                     <label for="template-type" translate>Template Type</label>
                     <div class="authoring-header__input-holder">
                         <select id="template-type"
