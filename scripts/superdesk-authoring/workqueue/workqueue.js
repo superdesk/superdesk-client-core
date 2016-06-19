@@ -67,9 +67,27 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;
 
-    $scope.$on('$locationChangeSuccess', updateWorkqueue);
-    $scope.$on('content:update', updateWorkqueue);
-    $scope.$on('item:lock', updateWorkqueue);
+    $scope.$on('content:update', function (_e, data) {
+        // only update the workqueue for content:update items in the workqueue
+        if (data && data.items) {
+            var updateItems = _.keys(data.items);
+            if (updateItems.length) {
+                var item = _.find(workqueue.items, function(item) {
+                    return _.contains(updateItems, item._id);
+                });
+
+                if (item) {
+                    updateWorkqueue();
+                }
+            }
+        }
+    });
+    $scope.$on('item:lock', function(_e, data) {
+        // Update Workqueue only if the user has locked an item.
+        if (data && data.user === session.identity._id) {
+            updateWorkqueue();
+        }
+    });
     $scope.$on('item:unlock', function (_e, data) {
         var item = _.find(workqueue.items, {_id: data.item});
         if (item && lock.isLocked(item) && session.sessionId !== data.lock_session && $scope.active !== item) {
@@ -85,8 +103,11 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
             });
         }
 
-        updateWorkqueue();
+        if (item) {
+            updateWorkqueue();
+        }
     });
+
     $scope.$on('media_archive', function(e, data) {
         workqueue.updateItem(data.item);
     });
@@ -219,7 +240,27 @@ function WorkqueueListDirective() {
 function ArticleDashboardDirective() {
     return {
         templateUrl: 'scripts/superdesk-authoring/views/dashboard-articles.html',
-        controller: 'Workqueue'
+        scope: {
+            closeDashboard: '&closeDashboard',
+            _edit: '&edit',
+            _closeItem: '&closeItem',
+            _link: '&link',
+            active: '=active',
+            items:'=items'
+        },
+        link: function (scope, elem, attrs) {
+            scope.closeItem = function(item) {
+                scope._closeItem({'item': item});
+            };
+
+            scope.edit = function(item, event) {
+                scope._edit({'item': item, 'event': event});
+            };
+
+            scope.link = function(item) {
+                scope._link({'item': item});
+            };
+        }
     };
 }
 
