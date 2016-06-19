@@ -3013,6 +3013,7 @@
             require: '?^sdAuthoringWidgets',
             link: function (scope, elem, attrs, WidgetsManagerCtrl) {
                 scope.contentType = null;
+                scope.displayCompanyCodes = null;
 
                 scope.shouldDisplayUrgency = function() {
                     return !scope.editor.urgency.service || (
@@ -3073,6 +3074,7 @@
                         display = !_.isUndefined(financeCategory) && !_.isNull(financeCategory);
                     }
 
+                    scope.displayCompanyCodes = display;
                     return display;
                 };
 
@@ -3119,7 +3121,6 @@
                             });
                         };
                     }
-
                 });
 
                 metadata.initialize().then(function() {
@@ -3132,6 +3133,12 @@
                         scope.cvs = _.sortBy(cvs, 'priority');
                         scope.genreInCvs = _.pluck(cvs, 'schema_field').indexOf('genre') !== -1;
                         scope.placeInCvs = _.pluck(cvs, 'schema_field').indexOf('place') !== -1;
+
+                        scope.shouldDisplayCompanyCodes();
+                    });
+
+                    scope.$watch('item.subject', function() {
+                        scope.shouldDisplayCompanyCodes();
                     });
                 });
 

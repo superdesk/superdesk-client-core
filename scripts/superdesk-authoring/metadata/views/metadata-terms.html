@@ -14,7 +14,7 @@
     <ul class="dropdown-menu nested-menu pull-right">
         <li ng-show="!activeTerm && header">
             <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" always-visible="header" data-disabled="disabled || allSelected">
-                <ul ng-if="!activeTree.length || activeList">
+                <ul vs-repeat vs-scroll-parent=".item-list" ng-if="!activeTree.length || activeList">
                     <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]"><button>{{ :: t.name }}</button></li>
                 </ul>
             </div>
@@ -27,7 +27,7 @@
             </button>
         </li>
         <li class="main-list" ng-if="activeTree.length && !activeList && header" ng-class="{active: activeTerm}" ng-hide="allSelected">
-            <ul sd-shadow>
+            <ul vs-repeat vs-scroll-parent=".main-list">
                 <li ng-repeat="term in activeTree track by term[uniqueField]">
                     <button ng-if="tree[term.qcode]" class="nested-toggle" ng-click="openTree(term, $event)">{{ :: term.name }} <i class="icon-chevron-right-thin submenu-icon"></i></button>
                     <button ng-if="!tree[term.qcode]" ng-click="selectTerm(term)">{{ :: term.name }}</button>
@@ -40,9 +40,9 @@
 <div class="terms-list" ng-if="selectedItems.length">
     <ul>
         <li ng-if="!disabled" class="pull-left"
-            ng-repeat="t in selectedItems"
+            ng-repeat="t in selectedItems track by t[uniqueField]"
             ng-click="removeTerm(t)">{{ :: t.name}}<i class="icon-close-small"></i></li>
         <li ng-if="disabled" class="pull-left disabled"
-            ng-repeat="t in selectedItems">{{ :: t.name}}</li>
+            ng-repeat="t in selectedItems track by t[uniqueField]">{{ :: t.name}}</li>
     </ul>
 </div>
