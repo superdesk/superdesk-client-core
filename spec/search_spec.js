@@ -308,4 +308,22 @@ describe('search', function() {
         expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
         expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
     });
+
+    it('can search scheduled', function() {
+        expect(globalSearch.getItems().count()).toBe(14);
+        globalSearch.actionOnItem('Edit', 4);
+        authoring.schedule(false);
+        globalSearch.openFilterPanel();
+        globalSearch.openParameters();
+        globalSearch.openToggleBox('Scheduled');
+        var scheduleDay = element(by.id('search_scheduled_24h'));
+        scheduleDay.click();
+        expect(globalSearch.getItems().count()).toBe(2);
+        expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);
+        expect(globalSearch.getItem(0).element(by.className('state-scheduled')).getText()).toEqual('SCHEDULED');
+        expect(element.all(by.repeater('key in keys')).count()).toBe(1);
+        element(by.css('.icon-close-small.icon-white')).click();
+        expect(globalSearch.getItems().count()).toBe(15);
+    });
+
 });

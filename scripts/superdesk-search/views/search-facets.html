@@ -172,6 +172,18 @@
                 </fieldset>
            </form>
         </div>
+        <div sd-toggle-box data-title="{{:: 'Scheduled' | translate }}" data-open="false"
+                ng-show="search_config.scheduled">
+            <form class="date-filter">
+                <div class="predefined-dates">
+                    <button id="search_scheduled_24h" ng-click="toggleFilter('date', 'Scheduled Last Day')" class="btn btn-mini" 
+                        ng-class="{active: hasFilter('date','Scheduled Last Day')}">{{'Last 24 Hours' | translate}}</button>
+                    <button id="search_scheduled_8h" ng-click="toggleFilter('date', 'Scheduled Last 8Hrs')" class="btn btn-mini" 
+                        ng-class="{active: hasFilter('date','Scheduled Last 8Hrs')}">{{'Last 8 Hours' | translate}}</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 
     <div sd-save-search ng-show="showSaveSearch && sTab"></div>
