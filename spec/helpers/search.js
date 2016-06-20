@@ -150,7 +150,7 @@ function GlobalSearch() {
      * @return {string}
      */
     this.getSubjectFilteredTerm = function(index) {
-        return this.subject.all(by.repeater('t in terms track by t[uniqueField]')).get(index).getText();
+        return this.subject.all(by.repeater('t in $vs_collection track by t[uniqueField]')).get(index).getText();
     };
 
     /**
