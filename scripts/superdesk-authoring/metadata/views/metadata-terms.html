@@ -14,7 +14,7 @@
     <ul class="dropdown-menu nested-menu pull-right">
         <li ng-show="!activeTerm && header">
             <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" always-visible="header" data-disabled="disabled || allSelected">
-                <ul vs-repeat vs-scroll-parent=".item-list" ng-if="!activeTree.length || activeList">
+                <ul class="item-list" vs-repeat vs-scroll-parent=".item-list" ng-if="!activeTree.length || activeList">
                     <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]"><button>{{ :: t.name }}</button></li>
                 </ul>
             </div>
