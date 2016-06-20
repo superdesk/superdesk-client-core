@@ -96,6 +96,10 @@ function GlobalSearch() {
     this.openItemMenu = function(index) {
         var itemElem = this.getItem(index);
         itemElem.click();
+        browser.actions()
+            .mouseMove(itemElem, {x: -50, y: -50}) // first move out
+            .mouseMove(itemElem) // now it can mouseover for sure
+            .perform();
         itemElem.element(by.className('icon-dots-vertical')).click();
         return element(by.css('.dropdown-menu.open'));
     };
@@ -225,6 +229,13 @@ function GlobalSearch() {
      */
     this.openSavedSearchTab = function() {
         element(by.id('saved_searches_tab')).click();
+    };
+
+    /**
+     * Click the Clear Filters button
+     */
+    this.clickClearFilters = function() {
+        element(by.id('clear_filters')).click();
     };
 
     /**
