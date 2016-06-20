@@ -402,8 +402,8 @@
         };
     }
 
-    ContentProfilesController.$inject = ['$scope', 'notify', 'content', 'modal'];
-    function ContentProfilesController($scope, notify, content, modal) {
+    ContentProfilesController.$inject = ['$scope', 'notify', 'content', 'modal', '$q'];
+    function ContentProfilesController($scope, notify, content, modal, $q) {
         var that = this;
 
         // creating will be true while the modal for creating a new content
@@ -433,6 +433,7 @@
         function reportError(resp) {
             notify.error('Operation failed (check console for response).');
             console.error(resp);
+            return $q.reject(resp);
         }
 
         /**
@@ -450,7 +451,7 @@
                     angular.isObject(resp.data._issues.label) &&
                     resp.data._issues.label.unique) {
                     notify.error(that.duplicateErrorTxt);
-                    return resp;
+                    return $q.reject(resp);
                 }
                 return next(resp);
             };
