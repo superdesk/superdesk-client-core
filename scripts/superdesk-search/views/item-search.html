@@ -12,7 +12,7 @@
         </div>
         <div ng-repeat="provider in providers">
             <label>
-                <input type="radio" ng-value="provider.search_provider" ng-model="repo.search" ng-checked="isDefault(provider)">
+                <input type="radio" ng-value="provider.search_provider" ng-model="repo.search" ng-checked="isDefault(provider)" ng-change="setDefaultValues()">
                 {{:: provider.source}}
             </label>
         </div>
