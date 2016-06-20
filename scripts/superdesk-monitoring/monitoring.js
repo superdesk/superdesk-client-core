@@ -634,7 +634,7 @@
                     return apiquery().then(function(items) {
                         scope.total = items._meta.total;
                         items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
-                        monitoring.totalItems = items._items.length;
+                        monitoring.totalItems = items._meta.total;
                         scope.items = merge(items);
                     });
                 }
