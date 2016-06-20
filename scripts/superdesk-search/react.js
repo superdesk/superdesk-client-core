@@ -1453,7 +1453,7 @@
                                         scope.preview(item);
                                     });
                                 }
-                            }, 200, false);
+                            }, 500, false);
                         },
 
                         edit: function(item) {
