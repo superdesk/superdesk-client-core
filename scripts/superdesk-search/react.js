@@ -1181,6 +1181,7 @@
                             // won't select that item for preview/authoring.
                             event.stopPropagation();
                             scope.$apply(function() {
+                                $rootScope.$broadcast('broadcast:preview', {'item': null}); // closes preview if already opened
                                 activityService.start(this.props.activity, {data: {item: this.props.item}});
                             }.bind(this));
 

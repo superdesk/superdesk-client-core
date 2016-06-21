@@ -1068,9 +1068,6 @@
                         scope.total = null;
                         scope.items = null;
                         criteria.aggregations = 1;
-                        if (!scope.previewingBroadcast) {
-                            scope.preview(null);
-                        }
                         return api.query(getProvider(criteria), criteria).then(function (items) {
                             scope.total = items._meta.total;
                             scope.$applyAsync(function() {
