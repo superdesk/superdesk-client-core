@@ -211,7 +211,52 @@ input[type="hidden"] {
   margin-left: 10px; // space out consecutive inline controls
 }
 
-
+// Custom radio button
+.sd-radio {
+  position: relative;
+  input[type="radio"] {
+    visibility: hidden;
+    + .check {
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 11px;
+      height: 11px;
+      .border-radius(50%);
+      border: 2px solid @inputBorder;
+      vertical-align: middle;
+      margin-left: 3px;
+    }
+    &:checked {
+      + .check {
+        border: 2px solid @sd-blue;
+        &:before {
+          content: '';
+          position: absolute;
+          width: 7px;
+          height: 7px;
+          margin: 2px 0 0 2px;
+          background-color: @sd-blue;
+          .border-radius(50%);
+          .box-sizing(border-box);
+        }
+      }
+    }
+  }
+  &:hover {
+    input[type="radio"] {
+      + .check {
+        border: 2px solid @grayLight;
+      }
+      &:checked {
+        + .check {
+          border: 2px solid @sd-blue;
+        }
+      }
+    }
+  }
+}
 
 // FOCUS STATE
 // -----------

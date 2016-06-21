@@ -17,14 +17,15 @@
                 </div>
 
                 <div class="authoring-header__item" sd-width="full" ng-if="template.template_type !== 'kill' && !content_types.length">
-                    <label for="template-profile" class="pull-left" translate>Content Type</label>
+                    <label for="template-profile" class="pull-left" translate>Content Profile</label>
                     <input type="text" class="line-input" id="template-profile" ng-model="item.profile">
                 </div>
 
                 <div class="authoring-header__item" sd-width="half" ng-if="template.template_type !== 'kill' && content_types.length">
-                    <label for="template-profile" translate>Content Type</label>
+                    <label for="template-profile" translate>Content Profile</label>
                     <div class="authoring-header__input-holder">
                         <select id="template-profile" class="dropdown-toggle line-input" ng-model="item.profile" ng-options="type._id as type.label for type in content_types"></select>
+                        <span class="arrow-down"><b class="caret"></b></span>
                     </div>
                 </div>
 
@@ -39,6 +40,7 @@
                                 ng-options="type._id as type.label for type in types| filter:templatesFilter"
                                 required>
                         </select>
+                        <span class="arrow-down"><b class="caret"></b></span>
                     </div>
                 </div>
 
@@ -75,6 +77,7 @@
                         <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
                             ng-selected="isDeskSelected(desk._id)">{{ :: desk.name }}</option>
                     </select>
+                    <span class="arrow-down" ng-if="template.template_type !== 'create'"><b class="caret"></b></span>
                 </div>
             </div>
 
@@ -134,6 +137,7 @@
                             <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
                                 ng-selected="desk._id === template.schedule_desk">{{ :: desk.name }}</option>
                         </select>
+                        <span class="arrow-down"><b class="caret"></b></span>
                     </div>
                 </div>
                 <div class="authoring-header__item" ng-if="showStages()" sd-width="full">
@@ -143,6 +147,7 @@
                             <option ng-repeat="stage in stages track by stage._id" value="{{ stage._id }}"
                                 ng-selected="stage._id === template.schedule_stage">{{ :: stage.name }}</option>
                         </select>
+                        <span class="arrow-down"><b class="caret"></b></span>
                     </div>
                 </div>
             </div>

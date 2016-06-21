@@ -1,8 +1,8 @@
 <form>
     <fieldset ng-if="context">
-        <label>
+        <label class="sd-radio">
             <input type="radio" value="local" ng-model="repo.search">
-            In Superdesk
+            In Superdesk<span class="check"></span>
         </label>
         <div class="superdeskRepos" ng-show="repo.search == 'local'">
             <button type="button" id="ingest-collection" class="toggle-button" ng-click="repo.ingest=!repo.ingest" ng-class="{'toggle-button--active': repo.ingest}">{{:: 'Ingest' | translate}}</button>
@@ -11,9 +11,9 @@
             <button type="button" id="archived-collection" class="toggle-button" ng-click="repo.archived=!repo.archived" ng-class="{'toggle-button--active': repo.archived}">{{:: 'Archived' | translate}}</button>
         </div>
         <div ng-repeat="provider in providers">
-            <label>
-                <input type="radio" ng-value="provider.search_provider" ng-model="repo.search" ng-checked="isDefault(provider)" ng-change="setDefaultValues()">
-                {{:: provider.source}}
+            <label class="sd-radio">
+                <input type="radio" ng-value="provider.search_provider" ng-model="repo.search" ng-checked="isDefault(provider)">
+                {{:: provider.source}}<span class="check"></span>
             </label>
         </div>
     </fieldset>
