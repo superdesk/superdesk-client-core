@@ -203,8 +203,9 @@
         }
     }
 
-    TemplatesDirective.$inject = ['gettext', 'notify', 'api', 'templates', 'modal', 'desks', 'weekdays', 'content', '$filter'];
-    function TemplatesDirective(gettext, notify, api, templates, modal, desks, weekdays, content, $filter) {
+    TemplatesDirective.$inject = ['gettext', 'notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
+                                  'content', '$filter', 'lodash'];
+    function TemplatesDirective(gettext, notify, api, templates, modal, desks, weekdays, content, $filter, _) {
         return {
             templateUrl: 'scripts/superdesk-templates/views/templates.html',
             link: function ($scope) {
@@ -214,6 +215,7 @@
                 $scope.template = null;
                 $scope.desks = null;
                 $scope.template_desk = null;
+                $scope.error = {};
 
                 function fetchTemplates() {
                     templates.fetchTemplates(1, 50).then(
@@ -321,17 +323,30 @@
 
                 $scope.types = templates.types;
 
+                function validate(orig, item) {
+                    $scope.error = {};
+                    if (!item.template_name) {
+                        $scope.error.template_name = true;
+                    }
+                    if (!item.template_type) {
+                        $scope.error.template_type = true;
+                    }
+                    return !_.has($scope.error, 'template_name') && !_.has($scope.error, 'template_type');
+                }
+
                 $scope.save = function() {
-                    templates.save($scope.origTemplate, $scope.template)
-                    .then(
-                        function() {
-                            notify.success(gettext('Template saved.'));
-                            $scope.cancel();
-                        },
-                        function(response) {
-                            notifySaveError(response, notify);
-                        }
-                    ).then(fetchTemplates);
+                    if (validate($scope.origTemplate, $scope.template)) {
+                        templates.save($scope.origTemplate, $scope.template)
+                        .then(
+                            function() {
+                                notify.success(gettext('Template saved.'));
+                                $scope.cancel();
+                            },
+                            function(response) {
+                                notifySaveError(response, notify);
+                            }
+                        ).then(fetchTemplates);
+                    }
                 };
 
                 $scope.edit = function(template) {
@@ -347,6 +362,7 @@
                     $scope.template.is_public = $scope.template.is_public !== false;
                     $scope.item = $scope.template.data || {};
                     $scope._editable = true;
+                    $scope.error = {};
                     $scope.updateStages($scope.template.schedule_desk);
                 };
 
