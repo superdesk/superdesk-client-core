@@ -186,7 +186,9 @@ function MetadataCtrl(
      */
     function resolvePublishScheduleAndEmbargoTS() {
         var info;
-        var embargo = $scope.item.embargo, publish_schedule = $scope.item.publish_schedule;
+        var embargo = datetimeHelper.removeTZ($scope.item.embargo);
+        var publish_schedule = datetimeHelper.removeTZ($scope.item.publish_schedule);
+
         if ($scope.item.schedule_settings) {
             $scope.item.time_zone = $scope.item.schedule_settings.time_zone;
             if ($scope.item.schedule_settings.utc_embargo) {
