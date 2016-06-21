@@ -1594,6 +1594,15 @@
                         });
 
                         /*
+                         * function to initialize default values on init or search provider change
+                         */
+                        scope.setDefaultValues = function() {
+                            if (scope.repo && scope.repo.search && scope.repo.search === 'scanpix') {
+                                scope.meta.scanpix_subscription = scope.scanpix_subscriptions[0].name;
+                            }
+                        };
+
+                        /*
                          * init function to setup the directive initial state and called by $locationChangeSuccess event
                          * @param {boolean} load_data.
                          */
@@ -1637,9 +1646,7 @@
                                 }
                             }
 
-                            if (scope.repo && scope.repo.search && scope.repo.search === 'scanpix') {
-                                scope.meta.scanpix_subscription = scope.scanpix_subscriptions[0].name;
-                            }
+                            scope.setDefaultValues();
 
                             if ($location.search().unique_name) {
                                 scope.fields.unique_name = $location.search().unique_name;
