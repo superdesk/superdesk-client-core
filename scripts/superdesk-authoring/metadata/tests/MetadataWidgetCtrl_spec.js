@@ -39,7 +39,10 @@ describe('MetadataWidgetCtrl controller', function () {
         spyOn(preferencesService, 'get').and.returnValue(prefsGet.promise);
 
         scope = $rootScope.$new();
-        scope.item = {publish_schedule: '2015-08-01T15:12:34+00:00'};
+        scope.item = {
+            publish_schedule: '2015-08-01T15:12:34+0000',
+            schedule_settings: {time_zone: 'Europe/Prague'}
+        };
         $controller('MetadataWidgetCtrl', {$scope: scope});
     }));
 

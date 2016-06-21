@@ -115,6 +115,20 @@
         this.greaterThanUTC = function(timestring) {
             return moment(timestring, 'YYYY-MM-DDTHH:mm:ssZZ') > moment.utc();
         };
+
+        /**
+         * Remove tz info from given datetime
+         *
+         * it's added automatically on server for every datetime like values
+         *
+         * @param {String} datetime
+         * @return {String}
+         */
+        this.removeTZ = function(datetime) {
+            if (datetime) {
+                return datetime.replace('+0000', '').replace('+00:00', '');
+            }
+        };
     }
 
     return angular.module('superdesk.datetime', [
