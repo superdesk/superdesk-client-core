@@ -201,7 +201,7 @@ function IngestSettings() {
         },
 
         timezoneLabel: element(by.id('timezone')),
-        timezoneDeleteBtn: $$('.icon-pencil').get(0),
+        timezoneDeleteBtn: $$('.icon-remove-sign').get(0),
         timezoneInput: $('[term="tzSearchTerm"]').element(by.model('term')),
         timezoneList: $('.item-list').all(by.tagName('li'))
     };

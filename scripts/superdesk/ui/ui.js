@@ -857,15 +857,15 @@
         };
     }
 
-    TimezoneDirective.$inject = ['tzdata', 'config'];
-    function TimezoneDirective(tzdata, config) {
+    TimezoneDirective.$inject = ['tzdata', 'config', '$timeout'];
+    function TimezoneDirective(tzdata, config, $timeout) {
         return {
             templateUrl: 'scripts/superdesk/ui/views/sd-timezone.html',
             scope: {
                 timezone: '=',
                 style: '@'
             },
-            link: function(scope) {
+            link: function(scope, el) {
                 scope.timeZones = [];     // all time zones to choose from
                 scope.tzSearchTerm = '';  // the current time zone search term
 
@@ -926,6 +926,9 @@
                  * @method clearSelectedTimeZone
                  */
                 scope.clearSelectedTimeZone = function () {
+                    $timeout(function() {
+                        el.find('input')[0].focus();
+                    }, 0, false);
                     delete scope.timezone;
                 };
 
