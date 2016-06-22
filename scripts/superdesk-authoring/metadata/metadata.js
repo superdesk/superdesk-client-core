@@ -338,7 +338,15 @@ function MetaDropdownDirective($filter, keyboardManager) {
                 _.defer (function() {
                     elem.find('.dropdown-toggle').focus();
                 });
+
+                if (scope.values) {
+                    scope.selected = scope.values[o[scope.field]] || null;
+                }
             };
+
+            scope.$watch(':: list', function() {
+                scope.values = _.indexBy(scope.list, 'qcode');
+            });
 
             scope.$applyAsync(function() {
                 if (scope.list) {
@@ -903,6 +911,8 @@ function MetadataService(api, $q, subscribersService, config) {
             'byline': 1, 'keywords': 1, 'creator': 1, 'from_desk': 1, 'to_desk': 1, 'spike': 1, 'scheduled': 1},
         subjectScope: null,
         loaded: null,
+        _urgencyByValue: {},
+        _priorityByValue: {},
         fetchMetadataValues: function() {
             var self = this;
             return api.query('vocabularies', {max_results: 50}).then(function(result) {
@@ -918,6 +928,14 @@ function MetadataService(api, $q, subscribersService, config) {
                         return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
                     }
                 );
+
+                if (self.values.urgency) {
+                    self._urgencyByValue = _.indexBy(self.values.urgency, 'qcode');
+                }
+
+                if (self.values.priority) {
+                    self._priorityByValue = _.indexBy(self.values.priority, 'qcode');
+                }
             });
         },
         fetchSubscribers: function() {
@@ -1009,13 +1027,19 @@ function MetadataService(api, $q, subscribersService, config) {
             }
 
             return this.loaded;
+        },
+        urgencyByValue: function(value) {
+            return this._urgencyByValue[value] || null;
+        },
+        priorityByValue: function(value) {
+            return this._priorityByValue[value] || null;
         }
     };
 
     return service;
 }
 
-angular.module('superdesk.authoring.metadata', ['superdesk.authoring.widgets', 'vs-repeat'])
+angular.module('superdesk.authoring.metadata', ['superdesk.authoring.widgets', 'superdesk.publish', 'vs-repeat'])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
             .widget('metadata', {

@@ -34,8 +34,8 @@
     /**
      * Monitoring state - keeps information required to render lists.
      */
-    MonitoringState.$inject = ['$q', '$rootScope', 'ingestSources', 'desks', 'highlightsService', 'content'];
-    function MonitoringState($q, $rootScope, ingestSources, desks, highlightsService, content) {
+    MonitoringState.$inject = ['$q', '$rootScope', 'ingestSources', 'desks', 'highlightsService', 'content', 'metadata'];
+    function MonitoringState($q, $rootScope, ingestSources, desks, highlightsService, content, metadata) {
         this.init = init;
         this.state = {};
         this.setState = setState;
@@ -89,6 +89,8 @@
 
                     // populates cache for mark for highlights activity dropdown
                     deskHighlights: highlightsService.get(desks.getCurrentDeskId()),
+
+                    metadata: metadata.initialize()
                 });
             }
 
@@ -113,7 +115,11 @@
         }
     }
 
-    angular.module('superdesk.search.react', ['superdesk.highlights', 'superdesk.datetime'])
+    angular.module('superdesk.search.react', [
+        'superdesk.highlights',
+        'superdesk.datetime',
+        'superdesk.authoring.metadata'
+    ])
         .service('monitoringState', MonitoringState)
         .directive('sdItemsList', [
             '$location',
@@ -143,6 +149,7 @@
             '$rootScope',
             'config',
             '$interpolate',
+            'metadata',
         function(
             $location,
             $timeout,
@@ -170,13 +177,47 @@
             gettextCatalog,
             $rootScope,
             config,
-            $interpolate
+            $interpolate,
+            metadata
         ) {
 
             var listConfig = config.list || DEFAULT_LIST_CONFIG;
 
+            function getSpecStyle(spec) {
+                var style = {};
+
+                if (spec.color) {
+                    style.backgroundColor = spec.color;
+                }
+
+                return style;
+            }
+
+            function getSpecTitle(spec, title) {
+                return spec.name || title;
+            }
+
+            function getSpecValue(spec, value) {
+                return spec.short || value;
+            }
+
             var ItemPriority = function(props) {
                 var priority = props.priority || 3;
+                var spec = metadata.priorityByValue(priority);
+
+                if (spec) {
+                    return React.createElement(
+                        'span',
+                        {
+                            className: 'priority-label priority-label--' + priority,
+                            style: getSpecStyle(spec),
+                            title: getSpecTitle(spec, gettext('Priority')),
+                            key: 'priority'
+                        },
+                        getSpecValue(spec, priority)
+                    );
+                }
+
                 return React.createElement(
                     'span',
                     {className: 'priority-label priority-label--' + priority, title: gettext('Priority'), key: 'priority'},
@@ -186,6 +227,21 @@
 
             var ItemUrgency = function(props) {
                 var urgency = props.urgency || 3;
+                var spec = metadata.urgencyByValue(urgency);
+
+                if (spec) {
+                    return React.createElement(
+                        'span',
+                        {
+                            className: 'urgency-label urgency-label--' + urgency,
+                            title: getSpecTitle(spec, gettextCatalog.getString('Urgency')),
+                            style: getSpecStyle(spec),
+                            key: 'urgency'
+                        },
+                        getSpecValue(spec, urgency)
+                    );
+                }
+
                 return React.createElement(
                     'span',
                     {className: 'urgency-label urgency-label--' + urgency, title: gettextCatalog.getString('Urgency'), key: 'urgency'},

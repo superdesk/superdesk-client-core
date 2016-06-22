@@ -750,8 +750,7 @@
                 return this.fetchItems(item.state === 'ingested' ? item._id : item.family_id, excludeSelf ? item : undefined)
                 .then(function(items) {
                     var deskList = [];
-                    var deskIdList = [];
-                    _.each(items._items, function(i) {
+                    var deskIdList = []; _.each(items._items, function(i) {
                         if (i.task && i.task.desk && desks.deskLookup[i.task.desk]) {
                             if (deskIdList.indexOf(i.task.desk) < 0) {
                                 var _isMember = !_.isEmpty(_.find(desks.userDesks._items, {_id: i.task.desk}));
@@ -773,5 +772,52 @@
                 });
             };
         }])
-        .service('dragitem', DragItemService);
+        .service('dragitem', DragItemService)
+
+        .directive('sdItemPriority', ['metadata', 'gettext', function(metadata, gettext) {
+            metadata.initialize();
+            return {
+                scope: {priority: '='},
+                template: [
+                    '<span ng-if="priority" class="priority-label priority-label--{{ priority }}" ',
+                    'ng-style="{backgroundColor: color}" title="{{ title }}">{{ short }}</span>'
+                ].join(''),
+                link: function(scope, elem) {
+                    scope.$watch('priority', function(priority) {
+                        if (priority) {
+                            var spec = metadata.priorityByValue(priority);
+                            if (spec) {
+                                scope.color = spec.color;
+                                scope.short = spec.short || priority;
+                                scope.title = spec.name || gettext('Priority');
+                            }
+                        }
+                    });
+                }
+            };
+        }])
+
+        .directive('sdItemUrgency', ['metadata', 'gettext', function(metadata, gettext) {
+            metadata.initialize();
+            return {
+                scope: {urgency: '='},
+                template: [
+                    '<span ng-if="urgency" class="urgency-label urgency-label--{{ urgency }}" ',
+                    'ng-style="{backgroundColor: color}" title="{{ title }}">{{ short }}</span>'
+                ].join(''),
+                link: function(scope, elem) {
+                    scope.$watch('urgency', function(urgency) {
+                        if (urgency) {
+                            var spec = metadata.urgencyByValue(urgency);
+                            if (spec) {
+                                scope.color = spec.color;
+                                scope.short = spec.short || urgency;
+                                scope.title = spec.name || gettext('Urgency');
+                            }
+                        }
+                    });
+                }
+            };
+        }])
+        ;
 })();
