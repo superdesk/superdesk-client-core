@@ -196,7 +196,12 @@ describe('search', function() {
         browser.sleep(200);
         var storyNameEl = element(by.model('meta.unique_name'));
         expect(storyNameEl.isPresent()).toBe(true);
-        browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
+        storyNameEl.click();
+        browser.actions().sendKeys('item1-in-archived').perform();
+        browser.actions().sendKeys(protractor.Key.ENTER).perform();
+        browser.sleep(200);
+        expect(authoring.getHeaderSluglineText()).toBe('item1 slugline');
+        authoring.close();
 
         //can avoid opening item\'s preview on an item action
         expect(globalSearch.getItems().count()).toBe(14);
