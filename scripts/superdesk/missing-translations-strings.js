@@ -10,7 +10,7 @@ gettext('Send notifications via email');gettext('feature');gettext('Enable Featu
 gettext('Preferred Categories');gettext('Archive');gettext('Archived Management');gettext('Broadcast');gettext('Content Types');
 gettext('Correction');gettext('Desk Management');gettext('Dictionaries List Management');gettext('Duplicate Content within a Desk');
 gettext('Edit Unique Name');gettext('Feature Preview');gettext('Fetch Content To a Desk');gettext('Highlights/Summary List Management');
-gettext('Hold');gettext('Ingest Channels');gettext('Manage Global Saved Searches');gettext('Manage Search Providers');
+gettext('Hold');gettext('Ingest Channels');gettext('Manage Global Saved Searches');gettext('Manage Search Providers');gettext('Sign Off');
 gettext('Mark items for Highlights/Summary Lists');gettext('Move Content to another desk');gettext('Planning Management');
 gettext('Restore');gettext('Roles Management');gettext('Routing Rules Management');gettext('Tasks Management');gettext('Last Day');
 gettext('Transformation Rules Management');gettext('Un Spike');gettext('Unlock content');gettext('User Management');gettext('Last Month');
@@ -20,5 +20,5 @@ gettext('\'HEADLINE is a required field\'');gettext('\'ANPA_CATEGORY is a requir
 gettext('\'GENRE null value not allowed\'');gettext('412: Can\'t publish as item state is draft');gettext('production');gettext('search');
 gettext('desk Output');gettext('scheduled Desk Output');gettext('Search');gettext('Content Expiry');gettext('stage');gettext('Last Week');
 gettext('authoring');gettext('update');gettext('2nd update');gettext('3rd update');gettext('4th update');gettext('5th update');
-gettext('Content Profiles');
+gettext('Content Profiles');gettext('ANPA Take Key');gettext('Body HTML');gettext('By');gettext('Date');gettext('Located');
 
