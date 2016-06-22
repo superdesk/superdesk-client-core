@@ -1456,7 +1456,7 @@
                 };
 
                 $scope.showCustomButtons = function(item) {
-                    if (!item.task || item.state === 'draft' && !$scope.dirty) {
+                    if (!(item.task && item.task.desk) || item.state === 'draft' && !$scope.dirty) {
                         return false;
                     } else {
                         return true;
