@@ -1458,10 +1458,16 @@
                     function fetchItem() {
                         var filter = [
                             {not: {term: {state: 'spiked'}}},
-                            {term: {unique_name: scope.meta.unique_name}}
+                            {bool:
+                            {should: [{term: {unique_name: scope.meta.unique_name}},
+                                    {term: {_id: scope.meta.unique_name}},
+                                    {term: {guid: scope.meta.unique_name}},
+                                    {term: {item_id: scope.meta.unique_name}}
+                                ]}
+                            }
                         ];
                         var criteria = {
-                            repo: 'archive',
+                            repo: 'archive,published,archived',
                             source: {
                                 query: {filtered: {filter: {
                                     and: filter
