@@ -331,6 +331,9 @@
             link: function(scope, elem) {
 
                 scope.workspaceConfig = config.workspace || {};
+                if (!('tasks' in scope.workspaceConfig)) {
+                    scope.workspaceConfig.tasks = 1;
+                }
 
                 /*
                  * Function for showing and hiding monitoring list

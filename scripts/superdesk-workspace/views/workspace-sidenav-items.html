@@ -13,7 +13,7 @@
          dropdown sd-package-highlights-dropdown>
     </div>
 </li>
-<li ng-class="{active: currentRoute.href === '/workspace/tasks'}" ng-if="privileges.tasks" sd-beta>
+<li ng-class="{active: currentRoute.href === '/workspace/tasks'}" ng-if="privileges.tasks && workspaceConfig.tasks">
     <a href="#/workspace/tasks" class="big-icon-tasks" ng-click="hideMonitoring(currentRoute.href === '/workspace/tasks', $event)"
        title="{{ :: 'Tasks' | translate }}" sd-hotkey="alt+t" sd-hotkey-options="{global: true}"></a>
 </li>
