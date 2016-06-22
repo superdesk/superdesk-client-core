@@ -244,9 +244,22 @@ function MetaTargetedPublishingDirective() {
                 }
 
                 target = JSON.parse(target);
-                scope.targets.push({'qcode': target.qcode, 'name': target.name, 'allow': !scope.deny});
-                scope.autosave();
+
+                var existing = _.find(scope.targets,
+                    {'qcode': target.qcode, 'name': target.name, 'allow': !scope.deny});
+
+                if (!existing) {
+                    scope.targets.push({'qcode': target.qcode, 'name': target.name, 'allow': !scope.deny});
+                    scope.autosave();
+                }
+
+                reset();
             };
+
+            function reset() {
+                scope.target = '';
+                scope.deny = false;
+            }
 
             scope.canAddTarget = function() {
                 return scope.disabled || !scope.target || scope.target === '';

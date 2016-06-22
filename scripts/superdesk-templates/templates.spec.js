@@ -4,6 +4,7 @@ describe('templates', function() {
     beforeEach(module('superdesk.session'));
     beforeEach(module('superdesk.templates'));
     beforeEach(module('superdesk.templates-cache'));
+    beforeEach(module('superdesk.privileges'));
 
     describe('templates widget', function() {
 
@@ -66,56 +67,56 @@ describe('templates', function() {
         beforeEach(inject(function($q, api) {
             spyOn(api, 'query').and.returnValue($q.when());
         }));
+
         beforeEach(inject(function(session) {
             session.identity = {_id: 'foo', user_type: 'user'};
         }));
+
         it('can fetch templates using default parameters', inject(function(api, templates) {
-            templates.fetchTemplates();
-            expect(api.query).toHaveBeenCalledWith('content_templates', {
-                max_results: 10,
-                page: 1,
-                where: '{"$and":[{"$or":[{"is_public":true},{"user":"foo"}]}]}'
-            });
+            templates.fetchTemplatesByUserDesk();
+            expect(api.query).not.toHaveBeenCalledWith('content_templates');
         }));
         it('can fetch templates using page parameters', inject(function(api, templates) {
-            templates.fetchTemplates(2, 25);
+            templates.fetchTemplatesByUserDesk('foo', undefined, 2, 25);
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 25,
                 page: 2,
-                where: '{"$and":[{"$or":[{"is_public":true},{"user":"foo"}]}]}'
+                where: '{"$and":[{"$or":[{"$or":[' +
+                '{"template_desks":{"$exists":false},"is_public":true},' +
+                '{"template_desks":{"$eq":[]},"is_public":true}]},' +
+                '{"user":"foo","is_public":false}],"schedule_desk":null}]}'
             });
         }));
         it('can fetch templates using type parameter', inject(function(api, templates) {
-            templates.fetchTemplates(undefined, undefined, 'create');
+            templates.fetchTemplatesByUserDesk('foo', undefined, undefined, undefined, 'create');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
                 page: 1,
-                where: '{"$and":[{"$or":[{"is_public":true},{"user":"foo"}],"template_type":"create"}]}'
+                where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
+                       '{"template_desks":{"$eq":[]},"is_public":true}]},' +
+                       '{"user":"foo","is_public":false}],"template_type":"create","schedule_desk":null}]}'
             });
         }));
         it('can fetch templates using desk parameter', inject(function(api, templates) {
-            templates.fetchTemplates(undefined, undefined, undefined, 'desk1');
+            templates.fetchTemplatesByUserDesk('foo', 'desk1', 2, 10);
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
-                page: 1,
-                where: '{"$and":[{"$or":[{"is_public":true},{"user":"foo"}],"template_desks":"desk1"}]}'
-            });
-        }));
-        it('can fetch templates using personal desk parameter', inject(function(api, templates) {
-            templates.fetchTemplates(undefined, undefined, undefined, null, 'foo');
-            expect(api.query).toHaveBeenCalledWith('content_templates', {
-                max_results: 10,
-                page: 1,
-                where: '{"$and":[{"$or":[{"is_public":true},{"user":"foo"},{"user":"foo"}]}]}'
+                page: 2,
+                where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
+                '{"template_desks":{"$eq":[]},"is_public":true},' +
+                '{"template_desks":{"$in":["desk1"]},"is_public":true}]},' +
+                '{"user":"foo","is_public":false}],"schedule_desk":null}]}'
             });
         }));
         it('can fetch templates using keyword parameter', inject(function(api, templates) {
-            templates.fetchTemplates(undefined, undefined, undefined, undefined, null, 'keyword');
+            templates.fetchTemplatesByUserDesk('foo', undefined, undefined, undefined, undefined, 'keyword');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
                 max_results: 10,
-                where: '{"$and":[{"$or":[{"is_public":true},{"user":"foo"}],' +
-                        '"template_name":{"$regex":"keyword","$options":"-i"}}]}'
+                where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
+                '{"template_desks":{"$eq":[]},"is_public":true}]},' +
+                '{"user":"foo","is_public":false}],' +
+                '"schedule_desk":null,"template_name":{"$regex":"keyword","$options":"-i"}}]}'
             });
         }));
         it('can fetch templates by id', inject(function(api, templates) {
@@ -159,6 +160,47 @@ describe('templates', function() {
             templates.save(orig, data);
             expect(api.save).toHaveBeenCalledWith('content_templates', orig, {data: {headline: '', 'body_html': ''}});
         }));
+
+        it('can fetch templates all templates', inject(function(api, templates) {
+            templates.fetchAllTemplates();
+            expect(api.query).toHaveBeenCalledWith('content_templates', {
+                page: 1,
+                max_results: 10,
+                where: '{"$and":[{"$or":[{"user":"foo"}]}]}'
+            });
+        }));
+
+        it('can fetch templates all templates with privileges', inject(function(api, templates, privileges) {
+            privileges.privileges = {content_templates: 1};
+            templates.fetchAllTemplates(1, 50);
+            expect(api.query).toHaveBeenCalledWith('content_templates', {
+                page: 1,
+                max_results: 50,
+                where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}]}]}'
+            });
+        }));
+
+        it('can fetch templates all templates with type parameter', inject(function(api, templates, privileges) {
+            privileges.privileges = {content_templates: 1};
+            templates.fetchAllTemplates(1, 50, 'create');
+            expect(api.query).toHaveBeenCalledWith('content_templates', {
+                page: 1,
+                max_results: 50,
+                where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}],"template_type":"create"}]}'
+            });
+        }));
+
+        it('can fetch templates all templates with type parameter and template name',
+            inject(function(api, templates, privileges) {
+            privileges.privileges = {content_templates: 1};
+            templates.fetchAllTemplates(1, 50, 'create', 'test');
+            expect(api.query).toHaveBeenCalledWith('content_templates', {
+                page: 1,
+                max_results: 50,
+                where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}],' +
+                '"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}'
+            });
+        }));
     });
 
     describe('template select directive', function() {
@@ -179,10 +221,6 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalled();
             var args = api.query.calls.argsFor(0);
             expect(args[0]).toBe('content_templates');
-            var where = JSON.parse(args[1].where);
-            expect(where.$and.length).toBe(1);
-            expect(where.$and[0].template_desks).toContain('sports');
-            expect(where.$and[0].$or).toContain({user: session.identity._id});
             $rootScope.$digest();
             var iscope = elem.isolateScope();
             expect(iscope.publicTemplates.length).toBe(2);

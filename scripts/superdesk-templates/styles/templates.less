@@ -48,6 +48,7 @@
         .toggle-box__label {
             color: @black;
         }
+
     }
 
     .template-icon {
@@ -115,3 +116,50 @@
     }
 
 }
+
+.target-field {
+    select {
+        width: 200px;
+    }
+    .terms {
+        .user-select(none);
+        padding-top: 10px;
+        .clearfix();
+        li {
+            position: relative;
+            background: #e8e8e8;
+            line-height: 26px;
+            float: left;
+            height: 26px;
+            padding: 0 6px;
+            .border-radius(3px);
+            margin: 0 5px 5px 0;
+            .transition(all .5s);
+            i:not(.alt) {
+                position: absolute;
+                display: none;
+                right: 5px;
+                top: 6px;
+                .opacity(0);
+                .transition(all .5s);
+            }
+            &:hover {
+                cursor: pointer;
+                background: #e0e0e0;
+                i {
+                    .opacity(70);
+                }
+            }
+            &:hover {
+                > i:not(.alt) {
+                    display: inline-block;
+                }
+            }
+            &.selected {
+                background: #333333;
+                color: #e8e8e8;
+            }
+        }
+    }
+}
+
