@@ -1136,8 +1136,8 @@ a:hover {
         }
     }
 }
-// large screen media query /75em = 1200px/
-@media only screen and (min-width: 75em) {
+// large screen media query /60em = 960px/
+@media only screen and (min-width: 60em) {
     .flex-grid {
         &.box.large {
             &-6 {
@@ -1178,6 +1178,87 @@ a:hover {
             }
         }
         &.large {
+            &-6 {
+                .flex-item {
+                    .flex(0, 0, 16.6666%);
+                    max-width: 16.6666%;
+                }
+            }
+            &-5 {
+                .flex-item {
+                    .flex(0, 0, 20%);
+                    max-width: 20%;
+                }
+            }
+            &-4 {
+                .flex-item {
+                    .flex(0, 0, 25%);
+                    max-width: 25%;
+                }
+            }
+            &-3 {
+                .flex-item {
+                    .flex(0, 0, 33.3333%);
+                    max-width: 33.3333%;
+                }
+            }
+            &-2 {
+                .flex-item {
+                    .flex(0, 0, 50%);
+                    max-width: 50%;
+                }
+            }
+            &-1 {
+                .flex-item {
+                    .flex(0, 0, 100%);
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+}
+// extra large screen media query /100em = 1600px/
+@media only screen and (min-width: 100em) {
+    .flex-grid {
+        &.box.xlarge {
+            &-6 {
+                .flex-item {
+                    .flex(0, 0, calc(~'16.6666% -' @flex-grid-gap*2));
+                    max-width: calc(~'16.6666% -' @flex-grid-gap*2);
+                }
+            }
+            &-5 {
+                .flex-item {
+                    .flex(0, 0, calc(~'20% -' @flex-grid-gap*2));
+                    max-width: calc(~'20% -' @flex-grid-gap*2);
+                }
+            }
+            &-4 {
+                .flex-item {
+                    .flex(0, 0, calc(~'25% -' @flex-grid-gap*2));
+                    max-width: calc(~'25% -' @flex-grid-gap*2);
+                }
+            }
+            &-3 {
+                .flex-item {
+                    .flex(0, 0, calc(~'33.3333% -' @flex-grid-gap*2));
+                    max-width: calc(~'33.3333% -' @flex-grid-gap*2);
+                }
+            }
+            &-2 {
+                .flex-item {
+                    .flex(0, 0, calc(~'50% -' @flex-grid-gap*2));
+                    max-width: calc(~'50% -' @flex-grid-gap*2);
+                }
+            }
+            &-1 {
+                .flex-item {
+                    .flex(0, 0, calc(~'100% -' @flex-grid-gap*2));
+                    max-width: calc(~'100% -' @flex-grid-gap*2);
+                }
+            }
+        }
+        &.xlarge {
             &-6 {
                 .flex-item {
                     .flex(0, 0, 16.6666%);

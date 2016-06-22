@@ -15,8 +15,8 @@
                     <label>{{ :: p.label | translate }}</label>
                     <span ng-hide="p.allowed" sd-switch ng-model="p.enabled"></span>
                     <span ng-show="p.allowed">
-                        <label ng-repeat="i in p.allowed">
-                            <input name="allowed" type="radio" ng-model="p.view" ng-value="i">{{ i | translate }}
+                        <label ng-repeat="i in p.allowed" class="sd-radio">
+                            <input name="allowed" type="radio" ng-model="p.view" ng-value="i">{{ i | translate }}<span class="check"></span>
                         </label>
                     </span>
                 </div>

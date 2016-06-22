@@ -272,26 +272,29 @@ body:not(:-moz-handler-blocked) .modal{
     }
     &.modal-large {
         .modal-dialog {
-            width: @modal-large-width + 20px;
+            max-width: @modal-large-width + 20px;
+            width: 100%;
         }
         .modal-content {
-            flex: 0 0 @modal-large-width + 20px;
+            flex: 0 0 100%;
         }
     }
     &.modal-big {
         .modal-dialog {
-            width: @modal-big-width + 20px;
+            max-width: @modal-big-width + 20px;
+            width: 100%;
         }
         .modal-content {
-            flex: 0 0 @modal-big-width + 20px;
+            flex: 0 0 100%;
         }
     }
     &.modal-huge {
         .modal-dialog {
-            width: @modal-huge-width + 20px;
+            max-width: @modal-huge-width + 20px;
+            width: 100%;
         }
         .modal-content {
-            flex: 0 0 @modal-huge-width + 20px;
+            flex: 0 0 100%;
         }
     }
     &.modal-responsive {
@@ -475,8 +478,9 @@ body:not(:-moz-handler-blocked) .modal{
             font-size: 11px;
             line-height: 26px;
             margin: 0;
-            color: #c0c0c0;
+            color: #909090;
             text-transform: uppercase;
+            font-weight: 500;
         }
         .field-info {
             margin-left: 20px;

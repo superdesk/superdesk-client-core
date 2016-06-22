@@ -777,10 +777,22 @@
 }
 
 .authoring-header__input-holder {
-    position: relative;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  .arrow-down {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+  &:hover {
+    .arrow-down {
+      .caret {
+        opacity: 1;
+      }
+    }
+  }
 }
 
 // --- various layout options ---
