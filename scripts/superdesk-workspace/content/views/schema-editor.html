@@ -6,7 +6,7 @@
             ng-class="{disabled: !!!props}">
 
             <div class="header">
-                <span class="title">{{ label(id) }}</span>
+                <span class="title">{{ label(id) | translate }}</span>
                 <div class="pull-right">
                     <span class="sd-toggle" 
                         ng-class="{'checked': !!props}"
@@ -17,7 +17,7 @@
             </div>
 
             <div class="body" ng-if="!!props">
-                <div sd-check ng-model="props.required"></div> Required
+                <div sd-check ng-model="props.required"></div> <span translate>Required</span>
             </div>
         </li>
     </ul>
