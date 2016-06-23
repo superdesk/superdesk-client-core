@@ -115,6 +115,9 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
             caretPosition = scope.medium.exportSelection();
             vm.expanded = !vm.expanded;
         },
+        isSomethingInClipboard: function() {
+            return angular.isDefined(vm.sdEditorCtrl.getCutBlock());
+        },
         triggerAction: function(action) {
             vm.hide();
             vm.actions[action]();
@@ -162,7 +165,24 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
                     scope.node.focus();
                     vm.textBlockCtrl.restoreSelection();
                 });
-            }
+            },
+            pasteBlock: function() {
+                if (!vm.sdEditorCtrl.getCutBlock()) {
+                    return false;
+                }
+                var indexWhereToAddNewBlock = vm.sdEditorCtrl.getBlockPosition(vm.textBlockCtrl.block) + 1;
+                // cut the text that is after the caret in the block and save it in order to add it after the embed later
+                var textThatWasAfterCaret = vm.textBlockCtrl.extractEndOfBlock().innerHTML;
+                if (textThatWasAfterCaret && textThatWasAfterCaret !== '') {
+                    // save the blocks (with removed leading text)
+                    vm.textBlockCtrl.updateModel();
+                    // add new text block for the remaining text
+                    vm.sdEditorCtrl.insertNewBlock(indexWhereToAddNewBlock, {
+                        body: textThatWasAfterCaret
+                    }, true);
+                }
+                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddNewBlock, vm.sdEditorCtrl.getCutBlock(true));
+            },
         }
     });
 }

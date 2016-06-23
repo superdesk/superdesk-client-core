@@ -1247,25 +1247,26 @@ angular.module('superdesk.editor2', [
                         // save the blocks (with removed leading text)
                         vm.updateModel();
                         var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
-                        var block = vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                        vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
                             blockType: 'embed',
                             embedType: 'Image',
                             caption: picture.description_text,
                             loading: true,
                             association: picture
-                        }, true);
-                        indexWhereToAddBlock += 1;
-                        // add new text block for the remaining text
-                        vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                            body: textThatWasAfterCaret
-                        }, true);
-                        // load the picture and update the block
-                        renditions.ingest(picture).then(function(picture) {
-                            editor.generateImageTag(picture).then(function(imgTag) {
-                                angular.extend(block, {
-                                    body: imgTag,
-                                    association: picture,
-                                    loading: false
+                        }, true).then(function(block) {
+                            indexWhereToAddBlock += 1;
+                            // add new text block for the remaining text
+                            vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                                body: textThatWasAfterCaret
+                            }, true);
+                            // load the picture and update the block
+                            renditions.ingest(picture).then(function(picture) {
+                                editor.generateImageTag(picture).then(function(imgTag) {
+                                    angular.extend(block, {
+                                        body: imgTag,
+                                        association: picture,
+                                        loading: false
+                                    });
                                 });
                             });
                         });
