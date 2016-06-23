@@ -3,8 +3,10 @@
 
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
-SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash', 'EMBED_PROVIDERS', '$scope', 'editor', '$http'];
-function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PROVIDERS, $scope, editor, $http) {
+SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash',
+'EMBED_PROVIDERS', '$scope', 'editor', 'config', '$injector'];
+function SdAddEmbedController (embedService, $element, $timeout, $q, _,
+EMBED_PROVIDERS, $scope, editor, config, $injector) {
     var vm = this;
     angular.extend(vm, {
         editorCtrl: undefined,  // defined in link method
@@ -59,7 +61,7 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                     body: vm.input,
                     provider: EMBED_PROVIDERS.custom
                 };
-                var providersKnown = [
+                var knownProviders = [
                     {
                         pattern: /twitter\.com\/widgets\.js/g,
                         name: EMBED_PROVIDERS.twitter
@@ -67,50 +69,23 @@ function SdAddEmbedController (embedService, $element, $timeout, $q, _, EMBED_PR
                     {
                         pattern: /www\.youtube\.com/g,
                         name: EMBED_PROVIDERS.youtube
-                    },
-                    {
-                        pattern: /src="(.*vidible\.tv.*pid=.*.js)/g,
-                        name: EMBED_PROVIDERS.vidible,
-                        callback: function(match) {
-                            var url = 'https://' + match[1];
-                            // $http raise a Same Origin Policy error, so we use jquery here
-                            waitFor.push(
-                                $q(function(resolve, reject) {
-                                    $.ajax({
-                                        url: url,
-                                        type: 'GET',
-                                        dataType: 'text',
-                                        success: function(data) {
-                                            data = /({.*})/.exec(data)[1];
-                                            data = JSON.parse(data);
-                                            // set association
-                                            embedBlock.association = {
-                                                uri: data.bid.id,
-                                                title: data.bid.videos[0].name,
-                                                type: 'video',
-                                                thumbnail: data.bid.videos[0].thumbnail,
-                                                url: data.bid.videos[0].videoUrls[0],
-                                                // size: ,
-                                                // creationDate: ,
-                                                company: data.bid.videos[0].studioName,
-                                                duration: data.bid.videos[0].metadata.duration,
-                                            };
-                                            resolve(embedBlock);
-                                        }
-                                    });
-                                })
-                            );
-                        }
                     }
                 ];
+                // prepend with custom handlers from config
+                if (config.editorEmbedCodeParsers) {
+                    knownProviders = $injector.invoke(config.editorEmbedCodeParsers).concat(knownProviders);
+                }
+                function updateEmbedBlock(partialUpdate) {
+                    angular.extend(embedBlock, partialUpdate);
+                }
                 // try to guess the provider of the custom embed
-                for (var i = 0; i < providersKnown.length; i++) {
-                    var provider = providersKnown[i];
+                for (var i = 0; i < knownProviders.length; i++) {
+                    var provider = knownProviders[i];
                     var match = provider.pattern.exec(vm.input);
                     if (match) {
-                        embedBlock.provider = provider.name;
+                        updateEmbedBlock({provider: provider.name});
                         if (provider.callback) {
-                            provider.callback(match);
+                            waitFor.push(provider.callback(match).then(updateEmbedBlock));
                         }
                         break;
                     }
