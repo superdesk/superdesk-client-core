@@ -527,8 +527,8 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
     };
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions'];
-function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions', 'config'];
+function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) {
     var vm = this;
     angular.extend(vm, {
         embedCode: undefined,  // defined below
@@ -561,6 +561,9 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
             $timeout(function() {
                 vm.onBlockChange();
             });
+        },
+        isEditable: function(picture) {
+            return picture._type !== 'externalsource';
         },
         editPicture: function(picture) {
             // only for SD images (with association)
@@ -1205,7 +1208,8 @@ angular.module('superdesk.editor2', [
                     scope.node.parentNode.classList.remove(TYPING_CLASS);
                 }
             },
-            controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', function(scope, editor, api , superdesk, renditions) {
+            controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', 'config',
+                         function(scope, editor, api , superdesk, renditions, config) {
                 var vm = this;
                 angular.extend(vm, {
                     block: undefined, // provided in link method
@@ -1260,7 +1264,8 @@ angular.module('superdesk.editor2', [
                             body: textThatWasAfterCaret
                         }, true);
                         // load the picture and update the block
-                        renditions.ingest(picture).then(function(picture) {
+                        if (config.features && 'editFeaturedImage' in config.features &&
+                            !config.features.editFeaturedImage && picture._type === 'externalsource') {
                             editor.generateImageTag(picture).then(function(imgTag) {
                                 angular.extend(block, {
                                     body: imgTag,
@@ -1268,7 +1273,17 @@ angular.module('superdesk.editor2', [
                                     loading: false
                                 });
                             });
-                        });
+                        } else {
+                            renditions.ingest(picture).then(function(picture) {
+                                editor.generateImageTag(picture).then(function(imgTag) {
+                                    angular.extend(block, {
+                                        body: imgTag,
+                                        association: picture,
+                                        loading: false
+                                    });
+                                });
+                            });
+                        }
                     }
                 });
             }]
