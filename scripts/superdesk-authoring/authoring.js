@@ -3320,8 +3320,8 @@
         init();
     }
 
-    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', '$q'];
-    function ItemAssociationDirective(superdesk, renditions, $timeout, api, $q) {
+    ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', '$q', 'config'];
+    function ItemAssociationDirective(superdesk, renditions, $timeout, api, $q, config) {
         return {
             scope: {
                 rel: '=',
@@ -3356,12 +3356,18 @@
                     event.preventDefault();
                     var item = getItem(event, PICTURE_TYPE);
                     // ingest picture if it comes from an external source (create renditions)
-                    scope.loading = true;
-                    renditions.ingest(item)
-                    .then(scope.edit)
-                    .finally(function() {
-                        scope.loading = false;
-                    });
+
+                    if (scope.isEditable()) {
+                        scope.loading = true;
+                        renditions.ingest(item)
+                        .then(scope.edit)
+                        .finally(function() {
+                            scope.loading = false;
+                        });
+                    } else {
+                        var data = updateItemAssociation(item);
+                        scope.onchange({item: scope.item, data: data});
+                    }
                 });
 
                 function updateItemAssociation(updated) {
@@ -3393,6 +3399,15 @@
                     .finally(function() {
                         scope.loading = false;
                     });
+                };
+
+                scope.isEditable = function() {
+                    if (config.features && 'editFeaturedImage' in config.features &&
+                            !config.features.editFeaturedImage) {
+                        return false;
+                    } else {
+                        return true;
+                    }
                 };
 
                 scope.remove = function(item) {

@@ -1,10 +1,10 @@
-<figure class="item-association" ng-class="{'item-association--preview': related, 'item-association--loading': loading}" ng-click="!related && upload()">
+<figure class="item-association" ng-class="{'item-association--preview': related, 'item-association--loading': loading}" ng-click="isEditable() && !related && upload()">
     <div ng-if="related" class="close-overlay">
         <button class="btn btn-mini btn-light pull-right" ng-click="remove(related); $event.stopPropagation()">
             <i class="icon-close-small"></i>
         </button>
     </div>
-    <img ng-if="related" ng-src="{{ related.renditions.viewImage.href }}" ng-click="edit(related); $event.stopPropagation()">
+    <img ng-if="related" ng-src="{{ related.renditions.viewImage.href }}" ng-click="isEditable() && edit(related); $event.stopPropagation()">
     <div sd-remove-tags
         type="text"
         ng-model="related.description_text"
