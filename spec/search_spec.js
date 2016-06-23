@@ -157,7 +157,7 @@ describe('search', function() {
 
     it('can action on items', function() {
         //DOWN arrow key selects an item and opens preview pane
-        expect(globalSearch.getItems().count()).toBe(14);
+        expect(globalSearch.getItems().count()).toBe(55);
         var previewPane = element(by.id('item-preview'));
         expect(previewPane.isPresent()).toBe(false);
         globalSearch.itemClick(2);
