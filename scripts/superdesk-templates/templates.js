@@ -32,8 +32,8 @@
 
     }
 
-    TemplatesService.$inject = ['api', 'session', '$q', 'gettext', 'preferencesService'];
-    function TemplatesService(api, session, $q, gettext, preferencesService) {
+    TemplatesService.$inject = ['api', 'session', '$q', 'gettext', 'preferencesService', 'privileges'];
+    function TemplatesService(api, session, $q, gettext, preferencesService, privileges) {
         var PAGE_SIZE = 10;
         var PREFERENCES_KEY = 'templates:recent';
 
@@ -67,8 +67,9 @@
             'creditline',
             'ednote',
             'language',
-            'usageterms'
-
+            'usageterms',
+            'target_types',
+            'target_regions'
         ];
 
         /**
@@ -87,15 +88,24 @@
             {_id: 'highlights', label: gettext('Highlights')}
         ];
 
-        this.fetchTemplates = function fetchTemplates(page, pageSize, type, desk, user, templateName) {
+        /*
+         * To fetch all the templates based on the user and its privileges.
+         * Used in template management screen.
+         */
+        this.fetchAllTemplates = function(page, pageSize, type, templateName) {
             var params = {
                 page: page || 1,
                 max_results: pageSize || PAGE_SIZE
             };
 
             var criteria = {};
+            // in template management only see the templates that are create by the user
+            criteria.$or = [{user: session.identity._id}];
 
-            criteria.$or = [{is_public: true}, {user: session.identity._id}];
+            // if you have content templates privileges
+            if (privileges.privileges.content_templates) {
+                criteria.$or.push({is_public: true});
+            }
 
             if (type !== undefined) {
                 criteria.template_type = type;
@@ -105,14 +115,44 @@
                 criteria.template_name = {'$regex': templateName, '$options': '-i'};
             }
 
-            if (user || desk) {
-                if (user) { // user private templates
-                    criteria.$or.push({user: user});
-                }
+            params.where = JSON.stringify({
+                '$and': [criteria]
+            });
 
-                if (desk) { // all non private desk templates
-                    criteria.template_desks = desk;
-                }
+            return api.query('content_templates', params);
+        };
+
+        this.fetchTemplatesByUserDesk = function (user, desk, page, pageSize, type, templateName) {
+            var params = {
+                page: page || 1,
+                max_results: pageSize || PAGE_SIZE
+            };
+
+            var criteria = {};
+
+            if (!user) {
+                return $q.when();
+            }
+
+            var desk_criteria = [
+                {'template_desks': {'$exists': false}, is_public: true},
+                {'template_desks': {'$eq': []}, is_public: true}
+            ];
+
+            if (desk) {
+                desk_criteria.push({'template_desks': {'$in': [desk]}, is_public: true});
+            }
+
+            criteria.$or = [{$or: desk_criteria}, {user: user, is_public: false}];
+
+            if (type !== undefined) {
+                criteria.template_type = type;
+            }
+
+            criteria.schedule_desk = null;
+
+            if (templateName) {
+                criteria.template_name = {'$regex': templateName, '$options': '-i'};
             }
 
             if (!_.isEmpty(criteria)) {
@@ -218,7 +258,7 @@
                 $scope.error = {};
 
                 function fetchTemplates() {
-                    templates.fetchTemplates(1, 50).then(
+                    templates.fetchAllTemplates(1, 200).then(
                         function(result) {
                             result._items = $filter('sortByName')(result._items, 'template_name');
                             $scope.content_templates = result;
@@ -296,7 +336,9 @@
                     var templateDesks = [];
                     _.forEach(template.template_desks, function(templateId) {
                         var desk = _.find($scope.desks._items , {_id: templateId});
-                        templateDesks.splice(-1, 0, desk.name);
+                        if (desk) {
+                            templateDesks.splice(-1, 0, desk.name);
+                        }
                     });
                     return templateDesks.join(', ');
                 };
@@ -469,7 +511,9 @@
                     case 'Personal':
                         return !item.is_public;
                     default:
-                        return item.template_desks === f.value;
+                        return _.find(item.template_desks, function(desk) {
+                                    return desk === f.value;
+                                });
                 }
             });
         };
@@ -586,8 +630,8 @@
                 function fetchTemplates() {
                     scope.loading = true;
 
-                    templates.fetchTemplates(scope.options.page, PAGE_SIZE, 'create',
-                        desks.getCurrentDeskId(), session.identity._id, scope.options.templateName)
+                    templates.fetchTemplatesByUserDesk(session.identity._id, desks.getCurrentDeskId(),
+                        scope.options.page, PAGE_SIZE, 'create', scope.options.templateName)
                     .then(function(result) {
                         scope.loading = false;
                         if (result._items.length === 0) {
