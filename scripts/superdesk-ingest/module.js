@@ -1082,8 +1082,8 @@
         };
     }
 
-    IngestRoutingAction.$inject = ['desks', 'macros', 'subscribersService'];
-    function IngestRoutingAction(desks, macros, subscribersService) {
+    IngestRoutingAction.$inject = ['desks', 'macros', 'subscribersService', 'metadata', 'gettext'];
+    function IngestRoutingAction(desks, macros, subscribersService, metadata, gettext) {
         return {
             scope: {rule: '='},
             templateUrl: 'scripts/superdesk-ingest/views/settings/ingest-routing-action.html',
@@ -1094,6 +1094,7 @@
                 scope.stageLookup = {};
                 scope.macroLookup = {};
                 scope.customSubscribers = [];
+                scope.target_types = [];
 
                 desks.initialize()
                 .then(function() {
@@ -1114,19 +1115,35 @@
                     });
                 });
 
+                metadata.initialize()
+                    .then(function() {
+                        scope.target_types = metadata.values.subscriberTypes;
+                    });
+
                 scope.getActionString = function(action) {
                     if (scope.deskLookup[action.desk] && scope.stageLookup[action.stage]) {
-                        var actionString = scope.deskLookup[action.desk].name + ' / ';
-                        actionString = actionString + scope.stageLookup[action.stage].name + ' / ';
+                        var actionValues = [];
+                        actionValues.push(scope.deskLookup[action.desk].name);
+                        actionValues.push(scope.stageLookup[action.stage].name);
                         if (action.macro) {
-                            actionString = actionString + scope.macroLookup[action.macro].label + ' / ';
+                            actionValues.push(scope.macroLookup[action.macro].label);
                         } else {
-                            actionString = actionString + ' - / ';
+                            actionValues.push(' - ');
                         }
                         if (action.target_subscribers && action.target_subscribers.length > 0) {
-                            actionString = actionString + _.map(action.target_subscribers, 'name').join(',');
+                            actionValues.push(_.map(action.target_subscribers, 'name').join(','));
+                        } else {
+                            actionValues.push(' - ');
                         }
-                        return actionString;
+                        if (action.target_types && action.target_types.length > 0) {
+                            var targets = [];
+                            _.forEach(action.target_types, function(target_type) {
+                                targets.push((!target_type.deny ? gettext('Not ') : '') + target_type.name);
+                            });
+                            actionValues.push(targets.join(','));
+                        }
+
+                        return actionValues.join(' / ');
                     }
                 };
 
@@ -1148,6 +1165,7 @@
                         scope.rule.actions.publish.push(scope.newPublish);
                         scope.newPublish = {};
                         scope.newPublish.target_subscribers = [];
+                        scope.newPublish.target_types = [];
                     }
                 };
 

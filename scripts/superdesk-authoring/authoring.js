@@ -3373,13 +3373,12 @@
                 function updateItemAssociation(updated) {
                     var data = {};
                     data[scope.rel] = updated;
-
                     scope.item.associations = angular.extend(
                         {},
                         scope.item.associations,
                         data
                     );
-
+                    scope.$apply();
                     return data;
                 }
 

@@ -48,6 +48,13 @@
                  data-reload-list="true"
                  ></div>
         </div>
+        <div class="field target-field" ng-show="showNewPublish">
+            <label translate>Target Types</label>
+            <div sd-meta-target
+                 data-list="target_types"
+                 data-targets="newPublish.target_types"
+                 ></div>
+        </div>
         <button ng-show="showNewPublish" class="btn" ng-click="addPublish();showNewPublish = false" ng-disabled="!newPublish.desk || !newPublish.stage" translate>Add</button>
         <button ng-show="showNewPublish" class="btn" ng-click="cancel();showNewPublish = false" translate>Cancel</button>
     </div>
