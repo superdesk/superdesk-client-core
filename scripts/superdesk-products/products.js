@@ -127,7 +127,7 @@
         $scope.newProduct = function() {
             $scope.product.edit = {};
             $scope.product.edit.content_filter = {};
-            $scope.product.edit.content_filter.filter_type = 'blocking';
+            $scope.product.edit.content_filter.filter_type = 'permitting';
             $scope.modalActive = true;
         };
 
