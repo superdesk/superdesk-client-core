@@ -1,4 +1,18 @@
 
+
+var gitInfo, version;
+
+try {
+    var git = require('git-rev-sync');
+    version = git.tag();
+    gitInfo = {
+        short: git.short(),
+        branch: git.branch()
+    };
+} catch (err) {
+    // pass
+}
+
 module.exports = function(grunt) {
 
     'use strict';
@@ -15,7 +29,7 @@ module.exports = function(grunt) {
         }
 
         var config = {
-            version: grunt.config.process('<%= pkg.version %>'),
+            version: version || grunt.config.process('<%= pkg.version %>'),
 
             raven: {dsn: process.env.SUPERDESK_RAVEN_DSN || ''},
             server: {url: server, ws: ws},
@@ -41,7 +55,8 @@ module.exports = function(grunt) {
             view: {
                 dateformat: process.env.VIEW_DATE_FORMAT || 'MM/DD/YYYY',
                 timeformat: process.env.VIEW_TIME_FORMAT || 'HH:mm'
-            }
+            },
+            git: gitInfo
         };
 
         return {data: {
