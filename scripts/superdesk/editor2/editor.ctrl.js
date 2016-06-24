@@ -237,6 +237,48 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         getBlockPosition: function(block) {
             return _.indexOf(vm.blocks, block);
         },
+        splitCurrentTextBlockAndInsertBetween: function(textBlockCtrl, blockToInserts) {
+            var indexWhereToAddNewBlock = vm.getBlockPosition(textBlockCtrl.block) + 1;
+            if (indexWhereToAddNewBlock === 0) {
+                throw 'Block to split not found';
+            }
+            // cut the text that is after the caret in the block and save it in order to add it after the embed later
+            var textThatWasAfterCaret = textBlockCtrl.extractEndOfBlock().innerHTML;
+            return $q.when((function() {
+                if (textThatWasAfterCaret) {
+                    // save the blocks (with removed leading text)
+                    textBlockCtrl.updateModel();
+                    // add new text block for the remaining text
+                    return vm.insertNewBlock(indexWhereToAddNewBlock, {
+                        body: textThatWasAfterCaret
+                    }, true);
+                }
+            })()).then(function() {
+                if (angular.isDefined(blockToInserts)) {
+                    var isArray = true;
+                    if (!angular.isArray(blockToInserts)) {
+                        isArray = false;
+                        blockToInserts = [blockToInserts];
+                    }
+                    var waitFor = $q.when();
+                    var createdBlocks = [];
+                    blockToInserts.forEach(function(bti) {
+                        waitFor = waitFor.then(function() {
+                            var newBlock = vm.insertNewBlock(indexWhereToAddNewBlock, bti);
+                            createdBlocks.push(newBlock);
+                            return newBlock;
+                        });
+                    });
+                    return waitFor.then(function() {
+                        if (isArray) {
+                            return $q.all(createdBlocks);
+                        } else {
+                            return createdBlocks[0];
+                        }
+                    });
+                }
+            });
+        },
         /**
         ** Merge text blocks when there are following each other and add empty text block arround embeds if needed
         ** @param {Integer} position
@@ -247,7 +289,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         */
         insertNewBlock: function(position, attrs, doNotRenderBlocks) {
             var new_block = new Block(attrs);
-            return $q(function(resolve, reject) {
+            return $q(function(resolve) {
                 $timeout(function() {
                     vm.blocks.splice(position, 0, new_block);
                     $timeout(function() {
@@ -280,7 +322,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 block.body = '';
             }
             vm.renderBlocks();
-            $timeout(vm.commitChanges);
+            return $timeout(vm.commitChanges);
         },
         selectedBlock: undefined,
         selectBlock: function(block) {
@@ -289,7 +331,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         _cutBlock: undefined,
         cutBlock: function(block) {
             vm._cutBlock = angular.copy(block);
-            vm.removeBlock(block);
+            return vm.removeBlock(block);
         },
         getCutBlock: function(remove) {
             var block = vm._cutBlock;

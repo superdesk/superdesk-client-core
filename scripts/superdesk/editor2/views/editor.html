@@ -1,4 +1,4 @@
-<div ng-repeat="block in vm.blocks track by vm.generateBlockId(block)"
+<div ng-repeat="block in vm.blocks"
      class="block__container"
      ng-click="vm.selectBlock(block)"
      ng-class="{'block--selected': vm.selectedBlock === block,

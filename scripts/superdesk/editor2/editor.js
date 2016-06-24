@@ -986,20 +986,7 @@ angular.module('superdesk.editor2', [
                         var clipboard = vm.sdEditorCtrl.getCutBlock(true);
                         if (clipboard) {
                             e.preventDefault();
-                            // cut the text that is after the caret in the block and save it in order to add it after the embed later
-                            var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
-                            // save the blocks (with removed leading text)
-                            vm.updateModel();
-                            var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
-                            vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, clipboard, true)
-                            .then(function(block) {
-                                indexWhereToAddBlock += 1;
-                                // add new text block for the remaining text
-                                vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                                    body: textThatWasAfterCaret
-                                }, true);
-                            });
-                            return false;
+                            vm.sdEditorCtrl.splitCurrentTextBlockAndInsertBetween(vm, clipboard);
                         }
                     });
                     // listen caret moves in order to show or hide the (+) button beside the caret
@@ -1267,23 +1254,14 @@ angular.module('superdesk.editor2', [
                         editor.commitScope(scope);
                     },
                     insertPicture: function(picture) {
-                        // cut the text that is after the caret in the block and save it in order to add it after the embed later
-                        var textThatWasAfterCaret = vm.extractEndOfBlock().innerHTML;
-                        // save the blocks (with removed leading text)
-                        vm.updateModel();
-                        var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.block) + 1;
-                        vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                        var imageBlock = {
                             blockType: 'embed',
                             embedType: 'Image',
                             caption: picture.description_text,
                             loading: true,
                             association: picture
-                        }, true).then(function(block) {
-                            indexWhereToAddBlock += 1;
-                            // add new text block for the remaining text
-                            vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                                body: textThatWasAfterCaret
-                            }, true);
+                        };
+                        vm.sdEditorCtrl.splitCurrentTextBlockAndInsertBetween(vm, imageBlock).then(function(block) {
                             // load the picture and update the block
                             renditions.ingest(picture).then(function(picture) {
                                 editor.generateImageTag(picture).then(function(imgTag) {
