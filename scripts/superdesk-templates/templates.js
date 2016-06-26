@@ -268,12 +268,16 @@
 
                 desks.initialize().then(function() {
                     $scope.desks = desks.desks;
+                    selectDesk(null);
                 });
 
                 content.getTypes().then(function() {
                     $scope.content_types = content.types;
                 });
 
+                /*
+                 * Returns true if desks selection should be displayed
+                 */
                 $scope.showDesks = function() {
                     return $scope.template != null &&
                         $scope.template.template_type != null &&
@@ -281,43 +285,88 @@
                         $scope.template.is_public;
                 };
 
+                /*
+                 * Returns true if stage selection should be displayed
+                 */
                 $scope.showStages = function() {
                     return $scope.showScheduling() &&
                         $scope.stages != null && $scope.stages.length > 0;
                 };
 
+                /*
+                 * Returns true if scheduling should be displayed
+                 */
                 $scope.showScheduling = function() {
                     return $scope.template != null &&
                         $scope.template.template_type !== 'kill' &&
                         $scope.template.is_public;
                 };
 
-                $scope.isDeskSelected = function(deskId) {
-                    if (!angular.isDefined($scope.template.template_type)) {
-                        return false;
+                /*
+                 * Called on desk toggle on multiple desk selection
+                 */
+                $scope.toggleDesk = function(desk) {
+                    desk.selected = !desk.selected;
+                    if (desk.selected && !$scope.template.template_desks) {
+                        $scope.template.template_desks = [desk._id];
+                        return;
                     }
-                    if ($scope.template.template_type === 'create') {
-                        return $scope.template.template_desks != null &&
-                            $scope.template.template_desks.indexOf(deskId) !== -1;
-                    } else {
-                        return $scope.template_desk === deskId;
+                    var deskIndex = _.findIndex($scope.template.template_desks, function(val) { return val === desk._id; });
+                    if (desk.selected && deskIndex === -1) {
+                        $scope.template.template_desks.push(desk._id);
+                    }
+                    if (!desk.selected && deskIndex !== -1) {
+                        $scope.template.template_desks.splice(deskIndex, 1);
                     }
                 };
 
+                /*
+                 * Set desk selected property for the given desk
+                 */
+                function selectDesk(deskId) {
+                    $scope.template_desk = deskId;
+                    _.forEach($scope.desks._items, function(desk) {
+                        desk.selected = desk._id === deskId;
+                    });
+                }
+
+                /*
+                 * Set desk selected property for the given desks
+                 */
+                function selectDesks(desksIds) {
+                    if (desksIds instanceof Array) {
+                        _.forEach($scope.desks._items, function(desk) {
+                            var deskIndex = _.findIndex(desksIds, function(deskId) { return deskId === desk._id; });
+                            desk.selected = deskIndex !== -1;
+                        });
+                    }
+                }
+
+                /*
+                 * Sets the template template_desks list to null if deskId is null/empty or to a list with one element.
+                 */
                 $scope.setTemplateDesks = function(deskId) {
                     if (deskId == null || deskId === '') {
                         $scope.template.template_desks = null;
+                        selectDesk(null);
                     } else {
                         $scope.template.template_desks = [deskId];
+                        selectDesk(deskId);
                     }
                 };
 
+                /*
+                 * Truncates the template template_desks list to the first element.
+                 */
                 $scope.resetDesks = function() {
                     if ($scope.template.template_desks != null &&
                             $scope.template.template_type !== 'create' &&
                             $scope.template.template_desks.length > 0) {
                         $scope.template.template_desks.splice(1, $scope.template.template_desks.length - 1);
-                        $scope.template_desk = $scope.template.template_desks[0];
+                        selectDesk($scope.template.template_desks[0]);
+                    }
+                    if ($scope.template.template_type === 'create') {
+                        $scope.template_desk = null;
                     }
                 };
 
@@ -334,8 +383,8 @@
                  */
                 $scope.getTemplateDesks = function (template) {
                     var templateDesks = [];
-                    _.forEach(template.template_desks, function(templateId) {
-                        var desk = _.find($scope.desks._items , {_id: templateId});
+                    _.forEach(template.template_desks, function(deskId) {
+                        var desk = _.find($scope.desks._items , {_id: deskId});
                         if (desk) {
                             templateDesks.splice(-1, 0, desk.name);
                         }
@@ -392,7 +441,7 @@
                 };
 
                 $scope.edit = function(template) {
-                    $scope.origTemplate = template || {type: 'text', is_public: true};
+                    $scope.origTemplate = template || {template_type: 'create', is_public: true};
                     $scope.template = _.create($scope.origTemplate);
                     $scope.template.schedule = $scope.origTemplate.schedule || {};
                     $scope.template.data = $scope.origTemplate.data || {
@@ -401,11 +450,13 @@
                         byline: '',
                         body_html: ''
                     };
+                    $scope.template.template_desks = $scope.origTemplate.template_desks || [];
+                    $scope.stages = $scope.template.schedule_desk ? desks.deskStages[$scope.template.schedule_desk] : null;
                     $scope.template.is_public = $scope.template.is_public !== false;
                     $scope.item = $scope.template.data || {};
                     $scope._editable = true;
                     $scope.error = {};
-                    $scope.updateStages($scope.template.schedule_desk);
+                    selectDesks($scope.template.template_desks);
                 };
 
                 $scope.$watch('item.profile', function(profile) {

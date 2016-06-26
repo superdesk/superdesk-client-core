@@ -52,7 +52,7 @@ describe('tasks', function() {
                 expect(scope.scheduled).toBe(result);
                 var scheduledArgs = api.query.calls.argsFor(1);
                 expect(scheduledArgs[0]).toBe('content_templates');
-                expect(scheduledArgs[1].where.template_desk).toBe(1);
+                expect(scheduledArgs[1].where.schedule_desk).toBe(1);
                 expect(moment(scheduledArgs[1].where.next_run.$gte).unix()).toBeLessThan(moment().unix());
                 expect(moment(scheduledArgs[1].where.next_run.$lte).unix()).toBeGreaterThan(moment().unix());
             }));
