@@ -124,6 +124,7 @@
                     scope.version = config.version;
                     scope.year = (new Date()).getUTCFullYear();
                     scope.releaseDate = config.releaseDate;
+                    scope.git = config.git || null;
                 }
             };
         }]);
