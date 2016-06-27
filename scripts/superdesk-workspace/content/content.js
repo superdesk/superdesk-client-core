@@ -545,7 +545,12 @@
             'byline': gettext('By'),
             'dateline': gettext('Date'),
             'located': gettext('Located'),
-            'sign_off': gettext('Sign Off')
+            'sign_off': gettext('Sign Off'),
+            'sms': gettext('SMS'),
+            'body_footer': gettext('Body footer'),
+            'footer': gettext('Footer'),
+            'media': gettext('Media'),
+            'media_description': gettext('Media Description')
         };
 
         return {
@@ -560,7 +565,13 @@
                  * @description label returns the display name for a key.
                  */
                 scope.label = function(id) {
-                    return labelMap[id];
+                    if (labelMap.hasOwnProperty(id)) {
+                        return labelMap[id];
+                    }
+
+                    console.warn('could not find label for ' + id +
+                        '. Please add it in (superdesk-workspace/content/content.js).ContentProfileSchemaEditor/labelMap');
+                    return id;
                 };
 
                 /**
