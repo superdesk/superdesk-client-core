@@ -158,7 +158,7 @@
                 <ul ng-if="_editable" ng-controller="SpellcheckMenu as spellcheckMenu">
                     <li class="divider"></li>
                     <li><span class="menu-label" translate>Spell Checker</span></li>
-                    <li>
+                    <li ng-if="!useTansaProofing()">
                       <span>
                         <span class="pull-right"
                             sd-switch
@@ -169,10 +169,18 @@
                         <span translate>Run automatically</span>
                       </span>
                     </li>
-                    <li>
+                    <li ng-if="!useTansaProofing()">
                         <button type="button"
                             ng-click="spellcheckMenu.spellcheck()"
                             ng-disabled="spellcheckMenu.isAuto"
+                            sd-hotkey="ctrl+shift+d">
+                              <span class="shortcut pull-right">Ctrl+Shift+D</span>
+                              <span translate>Check spelling</span>
+                        </button>
+                    </li>
+                    <li ng-if="useTansaProofing()">
+                        <button type="button"
+                            ng-click="runTansa()" 
                             sd-hotkey="ctrl+shift+d">
                               <span class="shortcut pull-right">Ctrl+Shift+D</span>
                               <span translate>Check spelling</span>

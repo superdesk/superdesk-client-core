@@ -62,20 +62,22 @@
             <div class="authoring-header__item" ng-if="showDesks()">
                 <label for="template-desk" ng-if="template.template_type !== 'create'" translate>Desk</label>
                 <label for="template-desks" ng-if="template.template_type === 'create'" translate>Desks</label>
+
                 <div class="authoring-header__input-holder">
+                    <div class="multi-select" ng-if="template.template_type === 'create'">
+                        <ul>
+                            <li ng-repeat="desk in desks._items track by desk._id">
+                                <span sd-check ng-model="desk.selected" ng-click="toggleDesk(desk)"></span>
+                                <span class="text" ng-click="toggleDesk(desk)">{{desk.name}}</span>
+                            </li>
+                        </ul>
+                    </div>
                     <select id="template-desk" ng-if="template.template_type !== 'create'"
                             ng-model="template_desk" ng-change="setTemplateDesks(template_desk)"
                             class="dropdown-toggle line-input">
                         <option value="" translate>None</option>
                         <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
-                            ng-selected="isDeskSelected(desk._id)">{{ :: desk.name }}</option>
-                    </select>
-                    <select id="template-desks" ng-if="template.template_type === 'create'" multiple="true"
-                            ng-model="template.template_desks"
-                            class="line-input">
-                        <option value="" translate>None</option>
-                        <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
-                            ng-selected="isDeskSelected(desk._id)">{{ :: desk.name }}</option>
+                            ng-selected="desk.selected">{{ :: desk.name }}</option>
                     </select>
                     <span class="arrow-down" ng-if="template.template_type !== 'create'"><b class="caret"></b></span>
                 </div>
