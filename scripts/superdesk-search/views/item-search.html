@@ -152,13 +152,13 @@
             </div>
         </div>
     </fieldset>
-    <fieldset ng-show="repo.search === 'paimg' || repo.search === 'scanpix'">
+    <fieldset ng-show="repo.search === 'paimg' || repo.search.indexOf('scanpix') === 0">
         <div class="field">
             <label for="search-text" translate>Search</label>
             <div class="control">
                 <input type="text" id="search-text" ng-model="meta.text">
             </div>
-            <div ng-show="repo.search === 'scanpix'">
+            <div ng-show="repo.search.indexOf('scanpix') === 0">
                 <label for="search-id" translate>Scanpix ID(s)</label>
                 <div class="control">
                     <input type="text" id="search-id" ng-model="meta.id">
@@ -170,7 +170,7 @@
                     <input type="checkbox" id="search-starred" ng-model="meta.starred">
                 </div>
             </div>
-            <div ng-if="repo.search === 'scanpix'" >
+            <div ng-if="repo.search.indexOf('scanpix') === 0" >
                 <label for="search-bw" translate>Black&amp;White</label>
                 <div class="control">
                     <input type="checkbox" id="search-bw" ng-model="meta.bw">

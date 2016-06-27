@@ -1600,7 +1600,7 @@
                          * function to initialize default values on init or search provider change
                          */
                         scope.setDefaultValues = function() {
-                            if (scope.repo && scope.repo.search && scope.repo.search === 'scanpix') {
+                            if (scope.repo && scope.repo.search && scope.repo.search.indexOf('scanpix') === 0) {
                                 scope.meta.scanpix_subscription = scope.scanpix_subscriptions[0].name;
                             }
                         };
@@ -1829,7 +1829,7 @@
                                     metas.push(val.join(' '));
                                 } else {
                                     if (val) {
-                                        if (key.startsWith('scanpix_')) {
+                                        if (key.indexOf('scanpix_') === 0) {
                                             key = key.substring(8);
                                         }
                                         if (typeof(val) === 'string'){
@@ -1973,7 +1973,12 @@
             var repos = {
                 'aapmm': true,
                 'paimg': true,
-                'scanpix': true
+                // temporaty fix to have several scanpix instances (SDNTB-217)
+                // FIXME: need to be refactored (SD-4448)
+                'scanpix(ntbtema)': true,
+                'scanpix(ntbkultur)': true,
+                'scanpix(desk)': true,
+                'scanpix(npk)': true
             };
 
             return {
