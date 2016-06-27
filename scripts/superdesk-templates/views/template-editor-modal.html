@@ -67,7 +67,7 @@
                     <div class="multi-select" ng-if="template.template_type === 'create'">
                         <ul>
                             <li ng-repeat="desk in desks._items track by desk._id">
-                                <span sd-check ng-model="desk.selected" ng-click="toggleDesk(desk)"></span>
+                                <span sd-check ng-model="desk.selected" ng-click="onDeskToggle(desk)"></span>
                                 <span class="text" ng-click="toggleDesk(desk)">{{desk.name}}</span>
                             </li>
                         </ul>
