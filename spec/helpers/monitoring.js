@@ -231,6 +231,11 @@ function Monitoring() {
         menu.element(by.partialLinkText(action)).click();
     };
 
+    this.getMenuActionElement = function(action, group, item) {
+        var menu = this.openItemMenu(group, item);
+        return menu.element(by.partialLinkText(action));
+    };
+
     /**
      * Perform 'submenu' operation on the 'action' menu from
      * 'item' element from 'group'
@@ -677,5 +682,19 @@ function Monitoring() {
             this.nextReorder();
             this.saveSettings();
         }
+    };
+
+    this.openSearchBox = function () {
+        element.all(by.css('[ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"]')).click();
+    };
+
+    this.searchInput = element(by.id('search-input'));
+
+    this.getCorrectionItems = function (group) {
+        return this.getGroupItems(5).all(by.css('[title="correction sequence"]'));
+    };
+
+    this.getTakeItems = function (group) {
+        return this.getGroupItems(group).all(by.className('takekey'));
     };
 }

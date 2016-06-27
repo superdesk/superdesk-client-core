@@ -21,7 +21,7 @@
         </div>
         <div>
             <label translate>SOURCE</label>
-            <div class="data">{{ item.source }}</div>
+            <div id="item-source" class="data">{{ item.source }}</div>
         </div>
         <div ng-if="item.anpa_take_key && !schema.relatedItems">
             <div class="data update-info">{{ item.anpa_take_key | translate }}</div>
@@ -30,7 +30,7 @@
             <label translate>RELATED</label>
             <div class="data"><a href="" ng-click="activateWidget()">{{relatedItems._items.length}}</a></div>
         </div>
-        <div ng-if="item.correction_sequence">
+        <div id="item-correction" ng-if="item.correction_sequence">
             <label translate>UPDATE</label>
             <div class="data">{{item.correction_sequence}}</div>
         </div>
