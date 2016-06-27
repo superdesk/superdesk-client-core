@@ -14,7 +14,7 @@
         subject: {type: 'list', required: true},
         company_codes: {type: 'list'},
         ednote: {},
-        headline: {maxlength: 64, type: 'string', required: true},
+        headline: {maxlength: 42, type: 'string', required: true},
         sms: {maxlength: 160},
         abstract: {maxlength: 160, type: 'string'},
         body_html: {required: true},

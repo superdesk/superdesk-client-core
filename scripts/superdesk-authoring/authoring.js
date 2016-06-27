@@ -198,12 +198,6 @@
                         notify, session, $injector, moment, config) {
         var self = this;
 
-        this.limits = {
-            slugline: 24,
-            headline: 64,
-            'abstract': 160
-        };
-
         //TODO: have to trap desk update event for refereshing users desks.
         this.userDesks = [];
 
@@ -2561,7 +2555,6 @@
         return {
             templateUrl: 'scripts/superdesk-authoring/views/article-edit.html',
             link: function(scope, elem) {
-                scope.limits = authoring.limits;
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
                 scope.contentType = null;
