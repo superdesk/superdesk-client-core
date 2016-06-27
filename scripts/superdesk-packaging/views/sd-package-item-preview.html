@@ -28,10 +28,8 @@
     <div class="package-item__item-abstract" ng-if="data.abstract" ng-bind-html="data.abstract"></div>
   </div>
   
-  <div class="action-menu">
-      <div sd-item-actions-menu data-item="data" data-active="data"></div>
-  </div>
-  
+  <div class="package-item__action-menu" sd-item-actions-menu data-item="data" data-active="data"></div>
+
   <div class="package-details" ng-if="data.type === 'composite'"><i class="svg-icon-right"></i></div>
   <div class="alert-error" ng-show="error" translate ng-if="data.type == 'composite' || data.type == 'text'">Problems occurred while fetching data.</div>
 </div>
