@@ -327,7 +327,7 @@ describe('authoring', function() {
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 
-    it('keyboard navigation operations on subject dropdown', function() {
+    fit('keyboard navigation operations on subject dropdown', function() {
         //Open any item in Edit mode
         monitoring.actionOnItem('Edit', 2, 1);
 
