@@ -1281,6 +1281,7 @@ angular.module('superdesk.editor2', [
                                         association: picture,
                                         loading: false
                                     });
+                                    $timeout(vm.sdEditorCtrl.commitChanges);
                                 });
                             });
                         });
