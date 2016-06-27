@@ -9,17 +9,17 @@
     </button>
 </li>
 
-<li ng-if="profiles.length === 0 && canCreatePackage()">
-    <button id="create_package"  ng-click="createPackage()">
-        <i class="icon-plus-small icon-round icon-white"></i>
-        {{ :: 'Empty Package' | translate }}
-    </button>
-</li>
-
 <li ng-repeat="profile in profiles track by profile._id">
     <button id="type-{{ :: profile._id }}" ng-click="createFromType(profile)">
         <i class="icon-plus-small icon-round icon-white"></i>
         {{ :: profile.label }}
+    </button>
+</li>
+
+<li ng-if="canCreatePackage()">
+    <button id="create_package"  ng-click="createPackage()">
+        <i class="icon-plus-small icon-round icon-white"></i>
+        {{ :: 'Empty Package' | translate }}
     </button>
 </li>
 
@@ -31,6 +31,7 @@
 </li>
 
 <li class="divider"></li>
+
 <li>
     <div class="menu-label" translate>From template</div>
 </li>
