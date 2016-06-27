@@ -1,9 +1,7 @@
 <div class="field">
     <label class="right">
         {{ :: 'Package individual items' | translate }}
-        <span tooltip="{{ destination.config.packaged ? 'Package individual items' : ''  | translate }}" tooltip-placement="right">
-            <span sd-check ng-model="destination.config.packaged"></span>
-        </span>
+        <span sd-check ng-model="destination.config.packaged"  tooltip="{{ destination.config.packaged ? 'Package individual items' : '' | translate }}" tooltip-placement="right"></span>
     </label>
 </div>
 <div class="field">
