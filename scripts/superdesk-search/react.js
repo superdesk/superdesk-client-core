@@ -757,43 +757,69 @@
                         }
                     });
 
+                    var closeTimeout;
                     var DesksDropdown = React.createClass({
                         getInitialState: function() {
                             return {open: false};
                         },
 
-                        toggle: function(event) {
-                            event.stopPropagation();
-                            this.setState({open: !this.state.open});
+                        close: function (cancel) {
+                            if (cancel === true && closeTimeout) {
+                                $timeout.cancel(closeTimeout);
+                            } else {
+                                closeTimeout = $timeout(function() {
+                                    closeActionsMenu();
+                                }, 200, false);
+                            }
                         },
 
-                        render: function() {
-                            var desks = this.props.desks.map(function(desk, index) {
+                        toggle: function (event) {
+                            if (event) {
+                                event.stopPropagation();
+                            }
+
+                            this.close(true);
+                            this.renderDropdown();
+                        },
+
+                        render: function () {
+                            return React.createElement('dd',
+                                    {className: 'dropdown dropup more-actions'},
+                                    React.createElement('button', {
+                                        className: 'dropdown-toggle',
+                                        onMouseOver: this.toggle,
+                                        onMouseLeave: this.close
+                                    },
+                                    React.createElement('i',
+                                            {className: 'icon-dots'})
+                                    ));
+                        },
+
+                        renderDropdown: function () {
+                            var desks = this.props.desks.map(function (desk, index) {
                                 return React.createElement(
-                                    'li',
-                                    {key: 'desk' + index},
-                                    React.createElement(
-                                        'a',
-                                        {disabled: !desk.isUserDeskMember, onClick: this.props.openDesk(desk)},
-                                        desk.desk.name + ' (' + desk.count + ')'
-                                    )
-                                );
+                                        'li',
+                                        {key: 'desk' + index},
+                                        React.createElement(
+                                                'a',
+                                                {disabled: !desk.isUserDeskMember, onClick: this.props.openDesk(desk)},
+                                                desk.desk.name + ' (' + desk.count + ')'
+                                                )
+                                        );
                             }.bind(this));
 
-                            return React.createElement(
-                                'dd',
-                                {className: 'dropdown dropup more-actions'},
-                                React.createElement(
-                                    'button',
-                                    {className: 'dropdown-toggle', onClick: this.toggle},
-                                    React.createElement('i', {className: 'icon-dots'})
-                                ),
-                                React.createElement(
-                                    'div',
-                                    {className: 'dropdown-menu'},
+                            var elem = React.createElement('div',
+                                    {
+                                        className: 'dropdown-menu more-activity-menu',
+                                        onMouseOver: this.toggle,
+                                        onMouseLeave: this.close
+                                    },
                                     React.createElement('ul', {}, desks)
-                                )
-                            );
+                                    );
+
+                            var icon = ReactDOM.findDOMNode(this).getElementsByClassName('dropdown-toggle')[0];
+
+                            renderToBody(elem, icon);
                         }
                     });
 
