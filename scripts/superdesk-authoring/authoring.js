@@ -1073,6 +1073,10 @@
             link: function($scope, elem, attrs) {
                 var _closing;
                 var tryPublish = false;
+                var onlyTansaProof = true;
+                if ($rootScope.config) {
+                    $rootScope.config.isCheckedByTansa = false;
+                }
 
                 $scope.privileges = privileges.privileges;
                 $scope.dirty = false;
@@ -1425,12 +1429,46 @@
                     return true;
                 }
 
+                $scope.useTansaProofing = function () {
+                    if ($rootScope.config.features && $rootScope.config.features.useTansaProofing) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                };
+
+                $scope.runTansa = function() {
+                    onlyTansaProof = true;
+
+                    switch ($scope.item.language){
+                        case 'nb-NO':
+                            window.tansa.settings.profileId = 446;
+                            break;
+                        case 'nn-NO':
+                            window.tansa.settings.profileId = 448;
+                            break;
+                        default:
+                            window.tansa.settings.profileId = 507;
+                    }
+
+                    window.RunTansaProofing();
+                };
+
+                $rootScope.publishAfterTansa = function () {
+                    if (!onlyTansaProof) {
+                        $scope.saveTopbar().then($scope.publish);
+                    }
+                };
+
                 /**
                  * Depending on the item state one of the publish, correct, kill actions will be executed on the item
                  * in $scope.
                  */
                 $scope.publish = function() {
-                    if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
+                    if ($scope.useTansaProofing() && $scope.item.urgency > 3 && !$rootScope.config.isCheckedByTansa) {
+                        $scope.runTansa();
+                        onlyTansaProof = false;
+                    } else if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                         var message = 'publish';
                         if ($scope.action && $scope.action !== 'edit') {
                             message = $scope.action;
@@ -1597,6 +1635,9 @@
 
                 $scope.autosave = function(item) {
                     $scope.dirty = true;
+                    if ($rootScope.config) {
+                        $rootScope.config.isCheckedByTansa = false;
+                    }
                     if (tryPublish) {
                         validate($scope.origItem, item);
                     }
