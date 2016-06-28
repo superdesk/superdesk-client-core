@@ -3,8 +3,8 @@
 
 angular.module('superdesk.editor2.ctrl', []).controller('SdTextEditorController', SdTextEditorController);
 
-SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element', 'editor', 'config'];
-function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, config) {
+SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element', 'editor', 'config', '$q'];
+function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, config, $q) {
     var vm = this;
     function Block(attrs) {
         var self = this;
@@ -237,6 +237,49 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         getBlockPosition: function(block) {
             return _.indexOf(vm.blocks, block);
         },
+        splitAndInsert: function(textBlockCtrl, blocksToInsert) {
+            // index where to add the new block
+            var index = vm.getBlockPosition(textBlockCtrl.block) + 1;
+            if (index === 0) {
+                throw 'Block to split not found';
+            }
+            // cut the text that is after the caret in the block and save it in order to add it after the embed later
+            var after = textBlockCtrl.extractEndOfBlock().innerHTML;
+            return $q.when((function() {
+                if (after) {
+                    // save the blocks (with removed leading text)
+                    textBlockCtrl.updateModel();
+                    // add new text block for the remaining text
+                    return vm.insertNewBlock(index, {
+                        body: after
+                    }, true);
+                }
+            })()).then(function() {
+                if (angular.isDefined(blocksToInsert)) {
+                    var isArray = true;
+                    if (!angular.isArray(blocksToInsert)) {
+                        isArray = false;
+                        blocksToInsert = [blocksToInsert];
+                    }
+                    var waitFor = $q.when();
+                    var createdBlocks = [];
+                    blocksToInsert.forEach(function(bti) {
+                        waitFor = waitFor.then(function() {
+                            var newBlock = vm.insertNewBlock(index, bti);
+                            createdBlocks.push(newBlock);
+                            return newBlock;
+                        });
+                    });
+                    return waitFor.then(function() {
+                        if (isArray) {
+                            return $q.all(createdBlocks);
+                        } else {
+                            return createdBlocks[0];
+                        }
+                    });
+                }
+            });
+        },
         /**
         ** Merge text blocks when there are following each other and add empty text block arround embeds if needed
         ** @param {Integer} position
@@ -247,15 +290,22 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         */
         insertNewBlock: function(position, attrs, doNotRenderBlocks) {
             var new_block = new Block(attrs);
-
-            $timeout(function() {
-                vm.blocks.splice(position, 0, new_block);
-                $timeout(vm.commitChanges, 0, false);
-                if (!doNotRenderBlocks) {
-                    $timeout(vm.renderBlocks, 0, false);
-                }
+            return $q(function(resolve) {
+                $timeout(function() {
+                    vm.blocks.splice(position, 0, new_block);
+                    $timeout(function() {
+                        vm.commitChanges();
+                        if (!doNotRenderBlocks) {
+                            $timeout(function() {
+                                vm.renderBlocks();
+                                resolve(new_block);
+                            }, 0, false);
+                        } else {
+                            resolve(new_block);
+                        }
+                    }, 0, false);
+                });
             });
-            return new_block;
         },
         /**
         * Merge text blocks when there are following each other and add empty text block arround embeds if needed
@@ -273,85 +323,23 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 block.body = '';
             }
             vm.renderBlocks();
-            $timeout(vm.commitChanges);
+            return $timeout(vm.commitChanges);
         },
-        getPreviousBlock: function(block) {
-            var pos = vm.getBlockPosition(block);
-            // if not the first one
-            if (pos > 0) {
-                return vm.blocks[pos - 1];
+        selectedBlock: undefined,
+        selectBlock: function(block) {
+            vm.selectedBlock = block;
+        },
+        _cutBlock: undefined,
+        cutBlock: function(block) {
+            vm._cutBlock = angular.copy(block);
+            return vm.removeBlock(block);
+        },
+        getCutBlock: function(remove) {
+            var block = vm._cutBlock;
+            if (remove) {
+                vm._cutBlock = undefined;
             }
-        },
-        reorderingMode: false,
-        hideHeader: function(hide) {
-            hide = angular.isDefined(hide) ? hide : true;
-            var prop;
-            if (hide) {
-                prop = {
-                    opacity: 0.4,
-                    pointerEvents: 'none'
-                };
-            } else {
-                prop = {
-                    opacity: 1,
-                    pointerEvents: 'auto'
-                };
-            }
-            angular.element('.authoring-header, .preview-modal-control, .theme-controls').css(prop);
-        },
-        enableReorderingMode: function(position, event) {
-            var blockToMove = vm.blocks[position];
-            var before = vm.serializeBlock(vm.blocks.slice(0, position));
-            var after = vm.serializeBlock(vm.blocks.slice(position + 1));
-            // split into blocks what is before the selected block
-            var newBlocks = splitIntoBlock(before);
-            // add the selected block in one piece
-            newBlocks.push(blockToMove);
-            // split into blocks what is after the selected block
-            newBlocks = newBlocks.concat(splitIntoBlock(after));
-            // save the vertical scroll position
-            var offsetTop = angular.element(event.currentTarget).offset().top;
-            // hide the header
-            vm.hideHeader();
-            // update the view model
-            angular.extend(vm, {
-                // save the new blocks (texts are a splited per paragraph)
-                blocks: newBlocks,
-                // save the index of the selected block
-                blockToMoveIndex: newBlocks.indexOf(blockToMove),
-                // used in template to show the reordering UI
-                reorderingMode: true
-            });
-            // restore the scroll postion at the new element level
-            $timeout(function() {
-                var el = $element.find('.block__container').get(vm.blockToMoveIndex);
-                var container = angular.element('.page-content-container');
-                var offset = container.scrollTop() + angular.element(el).offset().top - offsetTop;
-                container.scrollTop(offset);
-            }, 200, false); // wait after transitions
-        },
-        reorderToPosition: function(position) {
-            // adjust the position. Remove one if the moved element was before the wanted position
-            position = position > vm.blockToMoveIndex ? position - 1 : position;
-            // move the selected block to the given position
-            vm.blocks.splice(position, 0, vm.blocks.splice(vm.blockToMoveIndex, 1)[0]);
-            // save new position
-            vm.blockToMoveIndex = position;
-            // exit the reordering mode
-            vm.disableReorderingMode();
-        },
-        disableReorderingMode: function() {
-            // reset reorder mode state in vm
-            angular.extend(vm, {
-                blockToMoveIndex: undefined,
-                reorderingMode: false
-            });
-            // show the header
-            vm.hideHeader(false);
-            // merge the text blocks together
-            vm.renderBlocks();
-            // save changes
-            $timeout(vm.commitChanges);
+            return block;
         },
         /**
         * Compute an id for the block with its content and its position.

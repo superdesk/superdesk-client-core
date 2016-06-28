@@ -35,8 +35,8 @@ function($window) {
     };
 }]);
 
-AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout', 'config'];
-function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
+AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout', 'config', '$q'];
+function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q) {
     var elementHolder = element.find('div:first-child').first();
     var vm = this;
     var caretPosition = null;
@@ -115,54 +115,46 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config) {
             caretPosition = scope.medium.exportSelection();
             vm.expanded = !vm.expanded;
         },
+        isSomethingInClipboard: function() {
+            return angular.isDefined(vm.sdEditorCtrl.getCutBlock());
+        },
         triggerAction: function(action) {
             vm.hide();
             vm.actions[action]();
         },
         actions: {
             addEmbed: function() {
-                var indexWhereToAddNewBlock = vm.sdEditorCtrl.getBlockPosition(vm.textBlockCtrl.block) + 1;
-                // cut the text that is after the caret in the block and save it in order to add it after the embed later
-                var textThatWasAfterCaret = vm.textBlockCtrl.extractEndOfBlock().innerHTML;
-                if (textThatWasAfterCaret && textThatWasAfterCaret !== '') {
-                    // save the blocks (with removed leading text)
-                    vm.textBlockCtrl.updateModel();
-                    // add new text block for the remaining text
-                    vm.sdEditorCtrl.insertNewBlock(indexWhereToAddNewBlock, {
-                        body: textThatWasAfterCaret
-                    }, true);
-                }
-                // show the add-embed form
-                vm.textBlockCtrl.block.showAndFocusLowerAddAnEmbedBox();
+                vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl).then(function() {
+                    // show the add-embed form
+                    vm.textBlockCtrl.block.showAndFocusLowerAddAnEmbedBox();
+                });
             },
             addPicture: function() {
                 superdesk.intent('upload', 'media').then(function(images) {
-                    // cut the text that is after the caret in the block and save it in order to add it after the embed later
-                    var textThatWasAfterCaret = vm.textBlockCtrl.extractEndOfBlock().innerHTML;
-                    // save the blocks (with removed leading text)
-                    vm.textBlockCtrl.updateModel();
-                    var indexWhereToAddBlock = vm.sdEditorCtrl.getBlockPosition(vm.textBlockCtrl.block) + 1;
-                    images.forEach(function(image, index) {
-                        editor.generateImageTag(image).then(function(imgTag) {
-                            vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
+                    $q.all(images.map(function(image) {
+                        return editor.generateImageTag(image).then(function(imgTag) {
+                            return {
                                 blockType: 'embed',
                                 embedType: 'Image',
                                 body: imgTag,
                                 caption: image.description_text,
                                 association: image
-                            }, true);
-                            indexWhereToAddBlock++;
+                            };
                         });
+                    })).then(function(renderedImages) {
+                        vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl, renderedImages);
                     });
-                    // add new text block for the remaining text
-                    vm.sdEditorCtrl.insertNewBlock(indexWhereToAddBlock, {
-                        body: textThatWasAfterCaret
-                    }, true);
                 }, function() {
                     scope.node.focus();
                     vm.textBlockCtrl.restoreSelection();
                 });
-            }
+            },
+            pasteBlock: function() {
+                if (!vm.sdEditorCtrl.getCutBlock()) {
+                    return false;
+                }
+                vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl, vm.sdEditorCtrl.getCutBlock(true));
+            },
         }
     });
 }

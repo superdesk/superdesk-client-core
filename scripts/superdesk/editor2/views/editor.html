@@ -1,29 +1,17 @@
-<a class="btn btn-default block__move__cancel ng-cloak"
-   ng-click="vm.disableReorderingMode()"
-   ng-hide="!vm.reorderingMode"
-   translate>
-    <i class="svg-icon-move"></i> Cancel reordering
-</a>
-<div ng-repeat="block in vm.blocks track by vm.generateBlockId(block)"
+<div ng-repeat="block in vm.blocks"
      class="block__container"
-     ng-class="{'block--selected': vm.blockToMoveIndex === $index,
+     ng-click="vm.selectBlock(block)"
+     ng-class="{'block--selected': vm.selectedBlock === block,
                 'block--not-alone-and-empty': vm.blocks.length > 1 && !block.body}">
-    <div class="block__actions" ng-if="vm.config.multiBlockEdition && !vm.reorderingMode && vm.configuration.embeds">
+    <div class="block__actions" ng-if="vm.config.multiBlockEdition && vm.configuration.embeds">
+        <div class="block__cut" ng-click="vm.cutBlock(block)">
+            <i class="icon-cut"></i>
+        </div>
         <div class="block__remove" ng-click="vm.removeBlock(block)">
             <i class="icon-close-small"></i>
         </div>
-        <div class="block__move" ng-click="vm.enableReorderingMode($index, $event)"
-             ng-if="vm.blocks.length > 1 && block.body">
-            <i class="svg-icon-move"></i>
-        </div>
     </div>
-    <div ng-if="$first && vm.reorderingMode && vm.blockToMoveIndex !== $index"
-         ng-click="vm.reorderToPosition($index)"
-         class="block__move__dropzone"
-         translate>
-        Click to move the block here
-    </div>
-    <sd-add-embed ng-if="vm.config.multiBlockEdition && $first && !vm.reorderingMode"
+    <sd-add-embed ng-if="vm.config.multiBlockEdition && $first"
                   add-to-position="$index"
                   class="block__add-embed">
     </sd-add-embed>
@@ -41,16 +29,10 @@
              ng-model="block.body">
         </div>
     </div>
-    <sd-add-embed ng-if="vm.config.multiBlockEdition && !vm.reorderingMode"
+    <sd-add-embed ng-if="vm.config.multiBlockEdition"
                   extended="block.lowerAddEmbedIsExtended"
                   add-to-position="$index + 1"
                   on-close="vm.renderBlocks()"
                   class="block__add-embed">
     </sd-add-embed>
-    <div ng-if="vm.reorderingMode && vm.blockToMoveIndex !== ($index + 1) && vm.blockToMoveIndex !== $index"
-         ng-click="vm.reorderToPosition($index + 1)"
-         class="block__move__dropzone"
-         translate>
-        Click to move the block here
-    </div>
 </div>

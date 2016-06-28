@@ -5,11 +5,21 @@
         <span class="circle"></span>
     </button>
     <div class="add-content__actions" ng-show="vm.expanded">
-        <span ng-click="vm.triggerAction('addEmbed')"  tooltip="{{ :: 'add an embed' | translate }}" tooltip-placement="top">
-            <i class="icon-calendar-list"></i>
+        <span ng-click="vm.triggerAction('addEmbed')"
+              tooltip="{{ :: 'add an embed' | translate }}"
+              tooltip-placement="top">
+            <i class="icon-code"></i>
         </span>
-        <span ng-click="vm.triggerAction('addPicture')" tooltip="{{ :: 'add a picture' | translate }}" tooltip-placement="top">
+        <span ng-click="vm.triggerAction('addPicture')"
+              tooltip="{{ :: 'add a picture' | translate }}"
+              tooltip-placement="top">
             <i class="icon-photo"></i>
+        </span>
+        <span ng-click="vm.triggerAction('pasteBlock')"
+              tooltip="{{ :: 'paste a block' | translate }}"
+              tooltip-placement="bottom"
+              ng-if="vm.isSomethingInClipboard()">
+            <i class="icon-paste"></i>
         </span>
     </div>
 </div>
