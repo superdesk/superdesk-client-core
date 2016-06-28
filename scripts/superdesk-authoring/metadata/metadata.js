@@ -558,6 +558,7 @@ function MetaWordsListDirective() {
  * @param {Boolean} disabled - whether component should be disabled for editing or not
  * @param {Array} list - list of available values that can be added
  * @param {String} unique - specify the name of the field, in list item which is unique (qcode, value...)
+ * @param {Boolean} searchUnique - to search unique field as well as name field
  *
  */
 MetaTermsDirective.$inject = ['metadata', '$filter', '$timeout'];
@@ -576,13 +577,15 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             reloadList: '@',
             cv: '=',
             includeParent: '@',
-            tabindex: '='
+            tabindex: '=',
+            searchUnique: '@'
         },
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem, attrs) {
             metadata.subjectScope = scope;
             var reloadList = scope.reloadList === 'true' ? true : false;
             var includeParent = scope.includeParent === 'true' ? true : false;
+            var searchUnique = scope.searchUnique === 'true' ? true : false;
             scope.combinedList = [];
 
             scope.tree = {};
@@ -656,8 +659,14 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), function(t) {
                         var searchObj = {};
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
-                        return ((t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
-                            !_.find(scope.item[scope.field], searchObj));
+                        if (searchUnique) {
+                            return (((t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1) ||
+                                    (t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1)) &&
+                                !_.find(scope.item[scope.field], searchObj));
+                        } else {
+                            return ((t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
+                                !_.find(scope.item[scope.field], searchObj));
+                        }
                     }));
                     scope.activeList = true;
                 }
