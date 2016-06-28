@@ -69,6 +69,7 @@ function Content() {
 
     this.openItemMenu = function(item) {
         this.getItem(item).click();
+        browser.sleep(200);
 
         var preview = element(by.id('item-preview'));
         waitFor(preview);

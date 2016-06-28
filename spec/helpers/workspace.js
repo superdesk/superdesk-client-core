@@ -45,7 +45,8 @@ function Workspace() {
         dropdownMenu = element(by.id('select-desk-menu'));
 
         // open dropdown
-        dropdownBtn.click();
+        browser.actions().mouseMove(dropdownBtn, {x: -50, y: -50}).
+        mouseMove(dropdownBtn).click().perform();
 
         function textFilter(elem) {
             return elem.element(by.tagName('button')).getText()
@@ -205,7 +206,7 @@ function Workspace() {
 
         browser.wait(function() {
             return element(by.className('list-view')).isPresent();
-        }, 300);
+        }, 400);
 
         // toggle to list view if possible
         var listViewBtn = element(by.className('view-select')).all(by.tagName('button')).get(1);
