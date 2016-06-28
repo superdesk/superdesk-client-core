@@ -14,25 +14,24 @@ describe('publishing', function() {
         publishQueue.openPublishQueue();
     });
 
-    it('publish using HTTP Push delivery type', function() {
+    it('publish using HTTP Push delivery type and can preview content and search publish queue', function() {
         expect(publishQueue.getHeadline(0).getText()).toMatch(/item5/);
         expect(publishQueue.getDestination(0).getText()).toMatch(/HTTP Push/);
-    });
 
-    it('can preview content', function() {
+        // can preview content
         publishQueue.previewAction(0);
         expect(publishQueue.getPreviewTitle()).toBe('item5');
-    });
 
-    it('can search item by headline', function() {
+        // can search item by headline
         publishQueue.searchAction('item5');
         expect(publishQueue.getItemCount()).toBe(1);
         publishQueue.searchAction('item6');
         browser.sleep(100);
         expect(publishQueue.getItemCount()).toBe(0);
-    });
 
-    it('can search item by unique name', function() {
+        publishQueue.clearSearch();
+
+        // can search item by unique name
         var _uniqueName = publishQueue.getUniqueName(0).getText();
         publishQueue.searchAction(_uniqueName);
         expect(publishQueue.getItemCount()).toBe(1);
