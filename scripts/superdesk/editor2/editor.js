@@ -989,7 +989,7 @@ angular.module('superdesk.editor2', [
                         var clipboard = vm.sdEditorCtrl.getCutBlock(true);
                         if (clipboard) {
                             e.preventDefault();
-                            vm.sdEditorCtrl.splitCurrentTextBlockAndInsertBetween(vm, clipboard);
+                            vm.sdEditorCtrl.splitAndInsert(vm, clipboard);
                         }
                     });
                     // listen caret moves in order to show or hide the (+) button beside the caret
@@ -1265,7 +1265,7 @@ angular.module('superdesk.editor2', [
                             loading: true,
                             association: picture
                         };
-                        vm.sdEditorCtrl.splitCurrentTextBlockAndInsertBetween(vm, imageBlock).then(function(block) {
+                        vm.sdEditorCtrl.splitAndInsert(vm, imageBlock).then(function(block) {
                             // load the picture and update the block
                             $q.when((function() {
                                 if (config.features && 'editFeaturedImage' in config.features &&

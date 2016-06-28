@@ -124,7 +124,7 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
         },
         actions: {
             addEmbed: function() {
-                vm.sdEditorCtrl.splitCurrentTextBlockAndInsertBetween(vm.textBlockCtrl).then(function() {
+                vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl).then(function() {
                     // show the add-embed form
                     vm.textBlockCtrl.block.showAndFocusLowerAddAnEmbedBox();
                 });
@@ -142,7 +142,7 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
                             };
                         });
                     })).then(function(renderedImages) {
-                        vm.sdEditorCtrl.splitCurrentTextBlockAndInsertBetween(vm.textBlockCtrl, renderedImages);
+                        vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl, renderedImages);
                     });
                 }, function() {
                     scope.node.focus();
@@ -153,7 +153,7 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
                 if (!vm.sdEditorCtrl.getCutBlock()) {
                     return false;
                 }
-                vm.sdEditorCtrl.splitCurrentTextBlockAndInsertBetween(vm.textBlockCtrl, vm.sdEditorCtrl.getCutBlock(true));
+                vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl, vm.sdEditorCtrl.getCutBlock(true));
             },
         }
     });

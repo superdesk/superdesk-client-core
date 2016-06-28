@@ -237,34 +237,35 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         getBlockPosition: function(block) {
             return _.indexOf(vm.blocks, block);
         },
-        splitCurrentTextBlockAndInsertBetween: function(textBlockCtrl, blockToInserts) {
-            var indexWhereToAddNewBlock = vm.getBlockPosition(textBlockCtrl.block) + 1;
-            if (indexWhereToAddNewBlock === 0) {
+        splitAndInsert: function(textBlockCtrl, blocksToInsert) {
+            // index where to add the new block
+            var index = vm.getBlockPosition(textBlockCtrl.block) + 1;
+            if (index === 0) {
                 throw 'Block to split not found';
             }
             // cut the text that is after the caret in the block and save it in order to add it after the embed later
-            var textThatWasAfterCaret = textBlockCtrl.extractEndOfBlock().innerHTML;
+            var after = textBlockCtrl.extractEndOfBlock().innerHTML;
             return $q.when((function() {
-                if (textThatWasAfterCaret) {
+                if (after) {
                     // save the blocks (with removed leading text)
                     textBlockCtrl.updateModel();
                     // add new text block for the remaining text
-                    return vm.insertNewBlock(indexWhereToAddNewBlock, {
-                        body: textThatWasAfterCaret
+                    return vm.insertNewBlock(index, {
+                        body: after
                     }, true);
                 }
             })()).then(function() {
-                if (angular.isDefined(blockToInserts)) {
+                if (angular.isDefined(blocksToInsert)) {
                     var isArray = true;
-                    if (!angular.isArray(blockToInserts)) {
+                    if (!angular.isArray(blocksToInsert)) {
                         isArray = false;
-                        blockToInserts = [blockToInserts];
+                        blocksToInsert = [blocksToInsert];
                     }
                     var waitFor = $q.when();
                     var createdBlocks = [];
-                    blockToInserts.forEach(function(bti) {
+                    blocksToInsert.forEach(function(bti) {
                         waitFor = waitFor.then(function() {
-                            var newBlock = vm.insertNewBlock(indexWhereToAddNewBlock, bti);
+                            var newBlock = vm.insertNewBlock(index, bti);
                             createdBlocks.push(newBlock);
                             return newBlock;
                         });
