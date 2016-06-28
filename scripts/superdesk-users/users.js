@@ -999,9 +999,9 @@
                         if (lang === gettextCatalog.baseLanguage) {
                             noBaseLanguage = false;
                         }
-                        lang = lang.replace('_', '-');
-                        if (langmap[lang]) {
-                            return {'code': lang, 'nativeName': langmap[lang].nativeName};
+                        var lang_code = lang.replace('_', '-');
+                        if (langmap[lang_code]) {
+                            return {'code': lang, 'nativeName': langmap[lang_code].nativeName};
                         }
                     });
 
