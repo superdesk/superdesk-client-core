@@ -23,7 +23,7 @@
                                 <li><div class="menu-label" translate>Actions</div></li>
                                 <li class="divider"></li>
                                 <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                                <li><button ng-click="ctrl.delete(type)" title="{{:: 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                                <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                             </ul>
                         </div>
                         <div class="card-box__heading">{{ type.label }}</div>
