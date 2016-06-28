@@ -1,18 +1,4 @@
 
-
-var gitInfo, version;
-
-try {
-    var git = require('git-rev-sync');
-    version = git.tag();
-    gitInfo = {
-        short: git.short(),
-        branch: git.branch()
-    };
-} catch (err) {
-    // pass
-}
-
 module.exports = function(grunt) {
 
     'use strict';
@@ -26,6 +12,18 @@ module.exports = function(grunt) {
 
         if (forceUrl) {
             server = url;
+        }
+
+        var version;
+
+        try {
+            var pkg = grunt.file.readJSON('package.json');
+            version = pkg.dependencies['superdesk-core'];
+            if (version.indexOf('#') !== -1) {
+                version = version.split('#')[1];
+            }
+        } catch (err) {
+            // pass
         }
 
         var config = {
@@ -55,8 +53,7 @@ module.exports = function(grunt) {
             view: {
                 dateformat: process.env.VIEW_DATE_FORMAT || 'MM/DD/YYYY',
                 timeformat: process.env.VIEW_TIME_FORMAT || 'HH:mm'
-            },
-            git: gitInfo
+            }
         };
 
         return {data: {

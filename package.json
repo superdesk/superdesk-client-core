@@ -27,7 +27,6 @@
   ],
   "dependencies": {
     "btoa": "1.1.2",
-    "git-rev-sync": "^1.6.0",
     "jasmine-reporters": "2.0.7",
     "langmap": "0.0.9",
     "load-grunt-config": "0.17.2",
