@@ -40,7 +40,7 @@ describe('users', function() {
             browser.driver.wait(protractor.until.elementIsVisible(userPrefs.btnSave), 3000);
             userPrefs.btnSave.click();
             element(by.css('[ng-hide="currentRoute.topTemplateUrl"]')).getText().then(function(text) {
-                expect(text).toEqual('DE - My Profile');
+                expect(text).toEqual('Mein Profil');
             });
             browser.sleep(500);
             //go back to original lanuages
