@@ -63,6 +63,7 @@
     ])
         .service('content', ContentService)
         .directive('sdContentCreate', ContentCreateDirective)
+        .directive('stringToArray', StringToArrayDirective)
         .directive('sdContentSchemaEditor', ContentProfileSchemaEditor)
         .directive('sdItemProfile', ItemProfileDirective)
         .controller('ContentProfilesController', ContentProfilesController)
@@ -553,7 +554,7 @@
             templateUrl: 'scripts/superdesk-workspace/content/views/schema-editor.html',
             require: '^form',
             scope: {
-                schema: '=ngModel',
+                model: '=ngModel',
             },
             link: function(scope, elem, attr, form) {
                 /**
@@ -568,9 +569,29 @@
                  * @param {String} id the key of the field to toggle.
                  */
                 scope.toggle = function(id) {
-                    scope.schema[id] = !!scope.schema[id] ? null : {};
+                    scope.model.schema[id] = !!scope.model.schema[id] ? null : {};
                     form.$dirty = true;
                 };
+            }
+        };
+    }
+
+    /**
+     * @description Transforms and parses the displayed ng-model of the host
+     * from an array to a comma-separated list.
+     */
+    StringToArrayDirective.$inject = [];
+    function StringToArrayDirective() {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function(scope, elem, attr, ngModel) {
+                ngModel.$parsers.push(function(v) {
+                    return typeof v === 'string' ? v.split(',') : [];
+                });
+                ngModel.$formatters.push(function(v) {
+                    return Array.isArray(v) ? v.join(',') : '';
+                });
             }
         };
     }

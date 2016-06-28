@@ -2,7 +2,7 @@
     <h4 translate>Schema Configuration</h4>
     <ul class="pills-list">
         <li class="schema-item"
-            ng-repeat="(id, props) in schema track by $index"
+            ng-repeat="(id, props) in model.schema track by $index"
             ng-class="{disabled: !!!props}">
 
             <div class="header">
@@ -17,7 +17,33 @@
             </div>
 
             <div class="body" ng-if="!!props">
-                <div sd-check ng-model="props.required"></div> <span translate>Required</span>
+                <form>
+                    <fieldset>
+                       <div class="field">
+                           <span translate>Required:</span> <div sd-check ng-model="props.required"></div>
+                       </div>
+                       <div class="field">
+                           <span translate>Order:</span> <input placeholder="Default" type="number" class="input-small" ng-model="model.editor[id].order" />
+                       </div>
+                       <div class="field">
+                           <span translate>Length min:</span> <input placeholder="Not set" type="number" class="input-small" ng-model="props.minlength" /> <span translate>max:</span> <input placeholder="Not set" type="number" class="input-small" ng-model="props.maxlength" />
+                       </div>
+                       <div class="field" ng-switch="props.type">
+                           <span translate>Default:</span> <input ng-switch-default placeholder="Not set" type="text" class="input-medium" ng-model="model.editor[id].default" />
+                           <input ng-switch-when="number" placeholder="Not set" type="number" class="input-medium" ng-model="model.editor[id].default" />
+                       </div>
+                       <div class="field">
+                           <span translate>Width:</span> <select class="input-medium" ng-model="model.editor[id].sdWidth">
+                              <option value="full" translate>Full</option>
+                              <option value="half" translate>Half</option>
+                              <option value="quarter" translate>Quarter</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <span translate>Format options:</span> <input placeholder="ie. h1, h2, strong, embed" type="text" class="input-large" ng-model="model.editor[id].formatOptions" string-to-array />
+                        </div>
+                    </fieldset>
+                </form>
             </div>
         </li>
     </ul>

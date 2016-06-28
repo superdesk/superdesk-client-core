@@ -226,16 +226,18 @@ describe('superdesk.workspace.content', function() {
                 var scope = _$rootScope_.$new();
                 angular.extend(scope, props);
                 return _$compile_(
-                    '<form><sd-content-schema-editor ng-model="schema"></sd-content-schema-editor></form>'
+                    '<form><sd-content-schema-editor ng-model="model"></sd-content-schema-editor></form>'
                 )(scope);
             };
         }));
 
         it('render correctly', function() {
             var el = compile({
-                schema: {
-                    'headline': {},
-                    'slugline': null
+                model: {
+                    schema: {
+                        'headline': {},
+                        'slugline': null
+                    }
                 }
             });
 
@@ -249,9 +251,11 @@ describe('superdesk.workspace.content', function() {
 
         it('should dirty parent form when toggling fields', function() {
             var el = compile({
-                schema: {
-                    'headline': {},
-                    'slugline': null
+                model: {
+                    schema: {
+                        'headline': {},
+                        'slugline': null
+                    }
                 }
             });
 
