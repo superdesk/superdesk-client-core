@@ -45,8 +45,9 @@ describe('users', function() {
             browser.sleep(500);
             //go back to original lanuages
             userPrefs.setLang('English');
-            browser.driver.wait(protractor.until.elementIsVisible(userPrefs.btnSave), 3000);
-            userPrefs.btnSave.click();
+            var btnSave = $('.action-bar').element(by.buttonText('Speichern'));
+            browser.driver.wait(protractor.until.elementIsVisible(btnSave), 3000);
+            btnSave.click();
         });
     });
 
