@@ -37,10 +37,9 @@
                         <label>{{ options.label || key }}</label>
                     </div>
                     <div ng-repeat="item in vocabulary.items track by $index">
-                        <div ng-repeat="(key, options) in schema"
-                            class="field vocabularyField"
-                            ng-switch on="options.type">
-                            <input type="color" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-when="color">
+                        <div ng-repeat="(key, options) in schema" class="field vocabularyField" ng-switch on="options.label">
+                            <input type="color" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-when="Color">
+                            <input type="text" ng-model="item[key]" ng-disabled="!item.is_active" maxlength="2" placeholder="{{ :: '2 character limit' | translate }}" ng-switch-when="List Name">
                             <input type="text" ng-model="item[key]" ng-disabled="!item.is_active" ng-switch-default>
                         </div>
 

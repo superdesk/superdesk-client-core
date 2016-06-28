@@ -113,19 +113,13 @@
                         scope.$apply(function() { scope.mousedOver = false; });
                     });
 
-                    $input.on('keyup', function(e) {
+                    $input.on('keydown', function(e) {
                         if (e.keyCode === Keys.enter) {
                             scope.$apply(function() { controller.selectActive(); });
                         }
 
                         if (e.keyCode === Keys.escape) {
                             scope.$apply(function() { scope.hide = true; });
-                        }
-                    });
-
-                    $input.on('keydown', function(e) {
-                        if (e.keyCode === Keys.enter || e.keyCode === Keys.escape) {
-                            e.preventDefault();
                         }
 
                         var list = element.find('.item-list')[0];

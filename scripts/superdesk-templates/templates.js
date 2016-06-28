@@ -307,6 +307,13 @@
                  */
                 $scope.toggleDesk = function(desk) {
                     desk.selected = !desk.selected;
+                    $scope.onDeskToggle(desk);
+                };
+
+                /*
+                 * Called on desk toggle on multiple desk selection
+                 */
+                $scope.onDeskToggle = function(desk) {
                     if (desk.selected && !$scope.template.template_desks) {
                         $scope.template.template_desks = [desk._id];
                         return;
@@ -452,6 +459,7 @@
                     };
                     $scope.template.template_desks = $scope.origTemplate.template_desks || [];
                     $scope.stages = $scope.template.schedule_desk ? desks.deskStages[$scope.template.schedule_desk] : null;
+                    $scope.template.template_type = $scope.origTemplate.template_type;
                     $scope.template.is_public = $scope.template.is_public !== false;
                     $scope.item = $scope.template.data || {};
                     $scope._editable = true;

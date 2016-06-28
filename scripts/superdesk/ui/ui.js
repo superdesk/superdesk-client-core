@@ -424,7 +424,7 @@
                                 }
                             });
 
-                            inputField.on('keydown', function(event) {
+                            inputField.on('keyup', function(event) {
                                 var mainList = elem.find('.main-list').children('ul').find('li > button')[0];
                                 if (event.keyCode === Keys.down && mainList) {
                                     mainList.focus();
@@ -488,7 +488,7 @@
                         });
                     } else if (isOpen === false) { // Exclusively false, prevent executing if it is undefined
                         elem.off('keydown');
-                        inputField.off('keydown');
+                        inputField.off('keyup');
                     }
                 });
             }
