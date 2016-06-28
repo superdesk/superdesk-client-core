@@ -403,6 +403,7 @@
         $scope.cancelSelection = function() {
             $scope.selectedQueueItems = [];
             $scope.multiSelectCount = 0;
+            populatePublishQueue();
         };
 
         function refreshQueueState (data) {
