@@ -364,7 +364,7 @@
                 });
 
                 ngModel.$render = function() {
-                    scope.list = ngModel.$viewValue;
+                    scope.list = ngModel.$viewValue || [];
                 };
 
                 ngModel.$parsers.unshift(function(viewValue) {
@@ -392,6 +392,10 @@
                 ngModel.$formatters.unshift(function(modelValue) {
 
                     var root = _.find(modelValue, {id: 'root'});
+                    if (typeof root === 'undefined') {
+                        return;
+                    }
+
                     var firstLevelGroups = _.map(root.refs, function(group) {
                         return {
                             id: group.idRef,
