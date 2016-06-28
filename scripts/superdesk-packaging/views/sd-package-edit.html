@@ -1,8 +1,8 @@
 <header class="package-header">
     <div class="inputs">
-        <div class="field" ng-class="{'limit-error': item.headline.length > limits.headline}">
+        <div class="field" ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}">
             <label translate>Headline</label>
-            <span sd-character-count data-item="item.headline" data-limit="limits.headline"></span>
+            <span sd-character-count data-item="item.headline" data-limit="schema.headline.maxlength"></span>
             <textarea
                 class="title"
                 id="title"

@@ -1,4 +1,4 @@
-<div class="field" ng-class="{'limit-error': item.headline.length > limits.headline}" order="{{editor.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
+<div class="field" ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}" order="{{editor.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
   <label translate>Headline</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
@@ -46,7 +46,7 @@
     data-onchange="autosave(item)"></div>
 </div>
 
-<div class="field abstract" ng-class="{'limit-error': item.abstract.length > limits.abstract}" ng-if="schema.abstract" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
+<div class="field abstract" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
   <label translate>Abstract</label>
     <span sd-character-count
           data-item="item.abstract"
