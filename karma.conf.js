@@ -38,13 +38,13 @@ module.exports = function(config) {
             'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
             'bower_components/ng-file-upload/ng-file-upload.js',
             'bower_components/exif-js/exif.js',
+            'bower_components/angular-history/history.js',
 
             'bower_components/gridster/dist/jquery.gridster.with-extras.js',
             'bower_components/medium-editor/dist/js/medium-editor.js',
             'bower_components/ment.io/dist/mentio.js',
             'bower_components/rangy/rangy-core.js',
             'bower_components/rangy/rangy-selectionsaverestore.js',
-
             'bower_components/angular-embed/dist/angular-embed.js',
             'bower_components/angular-contenteditable/angular-contenteditable.js',
             'bower_components/angular-vs-repeat/src/angular-vs-repeat.js',

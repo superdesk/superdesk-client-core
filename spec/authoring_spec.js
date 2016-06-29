@@ -53,7 +53,20 @@ describe('authoring', function() {
     });
 
     it('authoring operations', function() {
-        //undo and redo operations by using CTRL+Z and CTRL+y
+        //undo and redo operations by using CTRL+Z and CTRL+y ...
+        // ... from a new item
+        authoring.createTextItem();
+        browser.sleep(1000);
+        authoring.writeText('to be undone');
+        expect(authoring.getBodyText()).toBe('to be undone');
+        browser.sleep(1000);
+        ctrlKey('z');
+        expect(authoring.getBodyText()).toBe('');
+        ctrlKey('y');
+        expect(authoring.getBodyText()).toBe('to be undone');
+        authoring.close();
+        authoring.ignore();
+        // ... from an existing item
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         expect(authoring.getBodyText()).toBe('item5 text');
