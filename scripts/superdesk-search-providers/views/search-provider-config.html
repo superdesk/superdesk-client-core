@@ -54,13 +54,13 @@
                     </select>
                 </div>
 
-                <div class="field" ng-if="provider.search_provider !== 'scanpix'">
+                <div class="field" ng-if="provider.search_provider.indexOf('scanpix') !== 0">
                     <label for="provider-source" translate>Source</label>
                     <input type="text" id="provider-source" placeholder="{{ 'source of the search provider' | translate }}" ng-model="provider.source" required>
                 </div>
 
-                <div class="field" ng-if="provider.search_provider === 'scanpix'">
-                    <span ng-init="provider.source='scanpix'">
+                <div class="field" ng-if="provider.search_provider.indexOf('scanpix') === 0">
+                    <span ng-init="provider.source=provider.search_provider">
                 </div>
 
                 <div class="field">
