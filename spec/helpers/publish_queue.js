@@ -61,6 +61,12 @@ function PublishQueue() {
         element(by.model('query')).sendKeys(search);
     };
 
+    this.clearSearch = function() {
+        element(by.css('.flat-searchbar')).click();
+        browser.sleep(100);
+        element(by.model('query')).clear();
+    };
+
     var list = element(by.className('list-pane'));
 
     this.getItemCount = function () {
