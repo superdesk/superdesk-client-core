@@ -17,9 +17,11 @@
             </div>
             <div class="content-item__urgency-field" sd-item-urgency data-urgency="item.urgency"></div>
             <div class="content-item__text">
-                <time sd-datetime data-date="item.versioncreated" class="pull-right"></time>
                 <span class="keywords">{{item.slugline}}</span>
                 <span id="title" class="headline">{{item.headline}}</span>
+            </div>
+            <div class="content-item__date">
+                <time sd-datetime data-date="item.versioncreated"></time>
             </div>
             <div class="content-item__action" ng-if="allowed">
                 <button ng-click="preview(item); $event.stopPropagation();" title="{{ :: 'Preview' | translate }}"><i class="icon-external"></i></button>
