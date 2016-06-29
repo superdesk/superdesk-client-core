@@ -1,21 +1,16 @@
 
-
-var gitInfo, version;
-
-try {
-    var git = require('git-rev-sync');
-    version = git.tag();
-    gitInfo = {
-        short: git.short(),
-        branch: git.branch()
-    };
-} catch (err) {
-    // pass
-}
-
 module.exports = function(grunt) {
 
     'use strict';
+
+    var version;
+
+    try {
+        var git = require('git-rev-sync');
+        version = git.short('..');
+    } catch (err) {
+        // pass
+    }
 
     function data(url, forceUrl) {
 
@@ -55,8 +50,7 @@ module.exports = function(grunt) {
             view: {
                 dateformat: process.env.VIEW_DATE_FORMAT || 'MM/DD/YYYY',
                 timeformat: process.env.VIEW_TIME_FORMAT || 'HH:mm'
-            },
-            git: gitInfo
+            }
         };
 
         return {data: {
