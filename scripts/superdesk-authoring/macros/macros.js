@@ -22,7 +22,7 @@ function MacrosService(api, notify, $filter) {
                 page++;
                 return _getAllMacros(criteria, page, macros);
             }
-            return $filter('sortByName')(macros, 'label');
+            return _.sortByAll(macros, ['order', 'label']);
         });
     };
 
