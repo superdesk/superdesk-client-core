@@ -95,7 +95,7 @@
                         <div class="row">
                             <ul class="pills-list" ng-class="{'edit-mode': editStage}">
                                 <li class="stage editable addnew" ng-show="editStage && !editStage._id">
-                                    <span sd-character-count data-item="editStage.name" data-limit="limits.stage"></span>
+                                    <span sd-character-count class="char-count-holder" data-item="editStage.name" data-limit="limits.stage"></span>
                                     <input type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" />
                                     <button class="btn" ng-click="cancel()" translate>Cancel</button>
                                     <button id="save-new-stage" class="btn btn-primary" ng-click="save()" ng-disabled="!enableSave()" translate>Save</button>
@@ -112,7 +112,7 @@
                                     </div>
 
                                     <div ng-if="isActive(stage)">
-                                        <span sd-character-count data-item="editStage.name" data-limit="limits.stage"></span>
+                                        <span sd-character-count class="char-count-holder" data-item="editStage.name" data-limit="limits.stage"></span>
                                         <input type="text" id="edit-stage" ng-model="editStage.name" ng-keyup="handleEdit($event);" required />
                                     </div>
 
