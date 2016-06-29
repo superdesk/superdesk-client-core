@@ -39,7 +39,8 @@
         schedule_settings: null,
         sms_message: null,
         poi: {},
-        profile: null
+        profile: null,
+        format: 'HTML'
     });
 
     var DEFAULT_ACTIONS = Object.freeze({
