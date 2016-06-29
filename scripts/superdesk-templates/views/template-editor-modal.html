@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="authoring-header__item" sd-width="full">
+                <div ng-if="isAdmin()" class="authoring-header__item" sd-width="full">
                     <span sd-switch ng-model="template.is_public"></span>
                     <label for="template-is-private" translate>Make Public</label>
                 </div>
