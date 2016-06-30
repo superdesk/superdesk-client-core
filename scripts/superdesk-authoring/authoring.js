@@ -531,6 +531,13 @@
             var user_privileges = privileges.privileges;
             var action = angular.extend({}, DEFAULT_ACTIONS);
             var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
+            var someoneElsesDraft = item.state === 'draft' && lock.isLocked(item) && !lock.isLockedByMe(item);
+
+            if (someoneElsesDraft) {
+                // No action is allowed if the story is someone else's draft
+                action.view = false;
+                return action;
+            }
 
             // takes packages are readonly.
             // killed item and item that have last publish action are readonly
@@ -3206,7 +3213,18 @@
          */
         this.edit = function(item, action) {
             if (item) {
-                authoringOpen(item._id, action || 'edit', item._type || null);
+                var actions = authoring.itemActions(item);
+                if (action) {
+                    // action is provided, check if it is permitted
+                    if (actions[action]) {
+                        authoringOpen(item._id, action, item._type || null);
+                    }
+                } else {
+                    // action is not provided, check the default action: edit
+                    if (actions.edit) {
+                        authoringOpen(item._id, 'edit', item._type || null);
+                    }
+                }
             } else {
                 self.close();
             }
