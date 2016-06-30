@@ -27,7 +27,11 @@
         {
             value: 'reuters_http',
             label: 'Reuters Feed API',
-            templateUrl: 'scripts/superdesk-ingest/views/settings/reutersConfig.html'
+            templateUrl: 'scripts/superdesk-ingest/views/settings/reutersConfig.html',
+            config: {
+                url: 'http://rmb.reuters.com/rmd/rest/xml',
+                auth_url: 'https://commerce.reuters.com/rmd/rest/xml/login'
+            }
         },
         {
             value: 'rss',
@@ -37,7 +41,8 @@
         {
             value: 'ftp',
             label: 'FTP',
-            templateUrl: 'scripts/superdesk-ingest/views/settings/ftp-config.html'
+            templateUrl: 'scripts/superdesk-ingest/views/settings/ftp-config.html',
+            config: {passive: true}
         },
         {
             value: 'email',
@@ -682,9 +687,11 @@
                  * Initializes the configuration for the selected feeding service if the config is not defined.
                  */
                 $scope.initProviderConfig = function () {
-                    if ($scope.provider.feeding_service === 'reuters_http' && !$scope.provider.config) {
-                        $scope.provider.config = {'url': 'http://rmb.reuters.com/rmd/rest/xml',
-                            'auth_url': 'https://commerce.reuters.com/rmd/rest/xml/login'};
+                    var service = getCurrentService();
+                    if (service && service.config) {
+                        $scope.provider.config = angular.extend({}, service.config);
+                    } else {
+                        $scope.provider.config = {};
                     }
                 };
 
@@ -693,12 +700,13 @@
                  * @returns {string}
                  */
                 $scope.getConfigTemplateURL = function() {
-                    var feedingService = _.find($scope.feedingServices, function (fs) {
-                        return fs.value === $scope.provider.feeding_service;
-                    });
-
+                    var feedingService = getCurrentService();
                     return feedingService ? feedingService.templateUrl : '';
                 };
+
+                function getCurrentService() {
+                    return _.find($scope.feedingServices, {value: $scope.provider.feeding_service});
+                }
             }
         };
     }

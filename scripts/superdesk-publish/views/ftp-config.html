@@ -11,6 +11,10 @@
     <input type="text" id="ftp_password" placeholder="{{ :: 'Password'|translate }}" ng-model="destination.config.password" ng-change="$parent.setConfig(destination)">
 </div>
 <div class="field">
+    <label for="ftp_passive" translate>Passive mode</label>
+    <input type="checkbox" id="ftp_passive" ng-model="destination.config.passive" ng-change="$parent.setConfig(destination)">
+</div>
+<div class="field">
     <label for="ftp_path" translate>Path</label>
     <input type="text" id="ftp_path" placeholder="{{ :: 'FTP Server Path'|translate }}" ng-model="destination.config.path" ng-change="$parent.setConfig(destination)">
 </div>
