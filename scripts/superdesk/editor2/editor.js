@@ -643,6 +643,7 @@ angular.module('superdesk.editor2', [
         return {
             scope: true,
             require: '^sdTextEditorBlockText',
+            restrict: 'C',
             link: function(scope, element, attrs, ctrl) {
                 var PICTURE_TYPE = 'application/superdesk.item.picture';
                 element
@@ -750,7 +751,8 @@ angular.module('superdesk.editor2', [
             placeholder: false,
             disableReturn: false,
             spellcheck: false,
-            targetBlank: true
+            targetBlank: true,
+            imageDragging: false
         };
         if (config.editor) {
             angular.extend(EDITOR_CONFIG, config.editor);
