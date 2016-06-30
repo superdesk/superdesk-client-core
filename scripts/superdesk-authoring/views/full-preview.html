@@ -20,7 +20,15 @@
                         <div sd-reldate-complex ng-model="item.versioncreated"></div>
                     </div>
                 </div>
-                <div ng-if="item.anpa_category.length">
+                <div ng-if="item.slugline && !editor.slugline.hideOnPrint" order="{{editor.slugline.order}}">
+                    <div class="preview-label">
+                        <label translate>Slugline</label>
+                    </div>
+                    <div class="preview-data">
+                        <span>{{item.slugline}}</span>
+                    </div>
+                </div>
+                <div ng-if="item.anpa_category.length && !editor.anpa_category.hideOnPrint" order="{{editor.anpa_category.order}}">
                     <div class="preview-label">
                         <label translate>Service</label>
                     </div>
@@ -30,7 +38,39 @@
                         </span>
                     </div>
                 </div>
-                <div>
+                <div ng-if="(item.subject | mergeWords:'name' : 'category') && !editor.category.hideOnPrint && !editor.subject.topicOnPrint"
+                    order="{{editor.category.order}}">
+                    <div class="preview-label">
+                        <label translate>Category</label>
+                    </div>
+                    <div class="preview-data">
+                        <span ng-repeat="category in item.subject | mergeWords:'name' : 'category': true">
+                            {{category}}
+                        </span>
+                    </div>
+                </div>
+                <div ng-if="item.genre.length && !editor.genre.hideOnPrint" order="{{editor.genre_custom.order}}">
+                    <div class="preview-label">
+                        <label translate>Genre</label>
+                    </div>
+                    <div class="preview-data">
+                        <span ng-repeat="genre in item.genre">
+                            {{genre.name}}
+                        </span>
+                    </div>
+                </div>
+                <div ng-if="(item.subject | mergeWords:'name' : 'subject_custom') && !editor.subject_custom.hideOnPrint && !editor.subject.topicOnPrint"
+                    order="{{editor.subject_custom.order}}">
+                    <div class="preview-label">
+                        <label translate>Subject</label>
+                    </div>
+                    <div class="preview-data">
+                        <span ng-repeat="subject in item.subject | mergeWords:'name' : 'subject_custom': true">
+                            {{subject}}
+                        </span>
+                    </div>
+                </div>
+                <div ng-if="item.subject.length && editor.subject.topicOnPrint" order="{{editor.subject_custom.order}}">
                     <div class="preview-label">
                         <label translate>Topic</label>
                     </div>
@@ -40,15 +80,17 @@
                         </span>
                     </div>
                 </div>
-                <div ng-if="item.slugline">
+                <div ng-if="item.place.length && !editor.place.hideOnPrint" order="{{editor.place_custom.order}}">
                     <div class="preview-label">
-                        <label translate>Keyword</label>
+                        <label translate>Place</label>
                     </div>
                     <div class="preview-data">
-                        <span>{{item.slugline}}</span>
+                        <span ng-repeat="place in item.place">
+                            {{place.name}}
+                        </span>
                     </div>
                 </div>
-                <div ng-if="item.ednote">
+                <div ng-if="item.ednote && !editor.ednote.hideOnPrint" order="{{editor.ednote.order}}">
                     <div class="preview-label">
                         <label translate>Ed. Note</label>
                     </div>
@@ -57,16 +99,17 @@
                     </div>
                 </div>
             </div>
-            <div class="headline">{{item.headline}}</div>
-
-            <div ng-repeat="association in item.associations|embeddedFilter" class="association">
+            <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline}}</div>
+            <div class="body" order="{{editor.dateline.order}}" ng-if="!editor.dateline.hideOnPrint">{{item.dateline.located.city}}</div>
+            <div class="byline" order="{{editor.byline.order}}" ng-if="!editor.byline.hideOnPrint">{{item.byline}}</div>
+            <div class="abstract" order="{{editor.abstract.order}}" ng-if="!editor.abstract.hideOnPrint" sd-html-preview="item.abstract"></div>
+            <div class="body" order="{{editor.body_html.order}}" ng-if="!editor.body_html.hideOnPrint" sd-html-preview="item.body_html"></div>
+            <div class="body" order="{{editor.sign_off.order}}" ng-if="!editor.sign_off.hideOnPrint">{{item.sign_off}}</div>
+            <div order="{{editor.feature_image.order}}" ng-if="!editor.feature_image.hideOnPrint" 
+                ng-repeat="association in item.associations|embeddedFilter" class="association">
                 <img src="{{association.renditions.viewImage.href}}" ng-if="!hide_images">
                 <p><i class="icon-picture" ng-if="hide_images"></i>{{association.description_text}}</p>
             </div>
-
-            <div class="abstract" sd-html-preview="item.abstract"></div>
-            <div class="byline">{{item.byline}}</div>
-            <div sd-html-preview="item.body_html" class="body"></div>
         </div>
     </div>
 </div>

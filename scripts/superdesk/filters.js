@@ -22,7 +22,7 @@
             };
         }).
         filter('mergeWords', function() {
-            return function(array, propertyName, schemeName) {
+            return function(array, propertyName, schemeName, returnArray) {
                 var subjectMerged = [];
                 _.forEach(array, function(item) {
                     var value = (propertyName == null ? item : item[propertyName]);
@@ -35,7 +35,11 @@
                     }
                 });
 
-                return subjectMerged.join(', ');
+                if (returnArray) {
+                    return subjectMerged;
+                } else {
+                    return subjectMerged.join(', ');
+                }
             };
         }).
         filter('splitWords', function() {

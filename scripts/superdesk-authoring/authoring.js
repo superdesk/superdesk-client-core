@@ -3483,8 +3483,8 @@
         };
     }
 
-    FullPreviewDirective.$inject = ['api', '$timeout', 'config'];
-    function FullPreviewDirective(api, $timeout, config) {
+    FullPreviewDirective.$inject = ['api', '$timeout', 'config', 'content'];
+    function FullPreviewDirective(api, $timeout, config, content) {
         return {
             scope: {
                 item: '=',
@@ -3495,6 +3495,15 @@
                 scope.hide_images = true;
 
                 scope.filterKey = config.previewSubjectFilterKey || '';
+
+                if (scope.item.profile) {
+                    content.getType(scope.item.profile)
+                        .then(function(type) {
+                            scope.editor = content.editor(type);
+                        });
+                } else {
+                    scope.editor = content.editor();
+                }
 
                 scope.printPreview = function () {
                     angular.element('body').addClass('prepare-print');
