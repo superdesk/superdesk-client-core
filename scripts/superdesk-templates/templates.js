@@ -32,13 +32,14 @@
 
     }
 
-    TemplatesService.$inject = ['api', 'session', '$q', 'gettext', 'preferencesService', 'privileges'];
-    function TemplatesService(api, session, $q, gettext, preferencesService, privileges) {
+    TemplatesService.$inject = ['api', 'session', '$q', 'gettext', 'preferencesService'];
+    function TemplatesService(api, session, $q, gettext, preferencesService) {
         var PAGE_SIZE = 10;
         var PREFERENCES_KEY = 'templates:recent';
 
         var KILL_TEMPLATE_IGNORE_FIELDS = ['dateline', 'template_desks', 'schedule_desk',
         'schedule_stage', 'schedule', 'next_run', 'last_run'];
+        var self = this;
 
         this.TEMPLATE_METADATA = [
             'headline',
@@ -69,7 +70,8 @@
             'language',
             'usageterms',
             'target_types',
-            'target_regions'
+            'target_regions',
+            'format'
         ];
 
         /**
@@ -89,7 +91,7 @@
         ];
 
         /*
-         * To fetch all the templates based on the user and its privileges.
+         * To fetch all the templates based on the user and its user_type
          * Used in template management screen.
          */
         this.fetchAllTemplates = function(page, pageSize, type, templateName) {
@@ -102,8 +104,8 @@
             // in template management only see the templates that are create by the user
             criteria.$or = [{user: session.identity._id}];
 
-            // if you have content templates privileges
-            if (privileges.privileges.content_templates) {
+            // if you are admin then you can edit public templates
+            if (self.isAdmin()) {
                 criteria.$or.push({is_public: true});
             }
 
@@ -184,6 +186,10 @@
                 }
                 return result;
             });
+        };
+
+        this.isAdmin = function() {
+            return session.identity.user_type === 'administrator';
         };
 
         this.addRecentTemplate = function(deskId, templateId) {
@@ -274,6 +280,13 @@
                 content.getTypes().then(function() {
                     $scope.content_types = content.types;
                 });
+
+                /*
+                 * Checks if the user is Admin or Not.
+                 */
+                $scope.isAdmin = function() {
+                    return templates.isAdmin();
+                };
 
                 /*
                  * Returns true if desks selection should be displayed
@@ -460,7 +473,13 @@
                     $scope.template.template_desks = $scope.origTemplate.template_desks || [];
                     $scope.stages = $scope.template.schedule_desk ? desks.deskStages[$scope.template.schedule_desk] : null;
                     $scope.template.template_type = $scope.origTemplate.template_type;
-                    $scope.template.is_public = $scope.template.is_public !== false;
+                    if (!templates.isAdmin()) {
+                        // User with no admin privileges cannot create public templates.
+                        $scope.template.is_public = false;
+                    } else {
+                        $scope.template.is_public = $scope.template.is_public !== false;
+                    }
+
                     $scope.item = $scope.template.data || {};
                     $scope._editable = true;
                     $scope.error = {};
@@ -760,7 +779,6 @@
             templateUrl: 'scripts/superdesk-templates/views/settings.html',
             controller: TemplatesSettingsController,
             category: superdesk.MENU_SETTINGS,
-            privileges: {content_templates: 1},
             priority: 2000
         });
     }

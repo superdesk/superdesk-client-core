@@ -4,7 +4,6 @@ describe('templates', function() {
     beforeEach(module('superdesk.session'));
     beforeEach(module('superdesk.templates'));
     beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.privileges'));
 
     describe('templates widget', function() {
 
@@ -161,7 +160,7 @@ describe('templates', function() {
             expect(api.save).toHaveBeenCalledWith('content_templates', orig, {data: {headline: '', 'body_html': ''}});
         }));
 
-        it('can fetch templates all templates', inject(function(api, templates) {
+        it('can fetch templates all templates with user type as user', inject(function(api, templates) {
             templates.fetchAllTemplates();
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
@@ -170,8 +169,9 @@ describe('templates', function() {
             });
         }));
 
-        it('can fetch templates all templates with privileges', inject(function(api, templates, privileges) {
-            privileges.privileges = {content_templates: 1};
+        it('can fetch templates all templates with user type as administrator',
+            inject(function(api, templates, session) {
+            session.identity = {_id: 'foo', user_type: 'administrator'};
             templates.fetchAllTemplates(1, 50);
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
@@ -180,8 +180,9 @@ describe('templates', function() {
             });
         }));
 
-        it('can fetch templates all templates with type parameter', inject(function(api, templates, privileges) {
-            privileges.privileges = {content_templates: 1};
+        it('can fetch templates all templates with type parameter as administrator',
+            inject(function(api, templates, session) {
+            session.identity = {_id: 'foo', user_type: 'administrator'};
             templates.fetchAllTemplates(1, 50, 'create');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
@@ -191,13 +192,12 @@ describe('templates', function() {
         }));
 
         it('can fetch templates all templates with type parameter and template name',
-            inject(function(api, templates, privileges) {
-            privileges.privileges = {content_templates: 1};
+            inject(function(api, templates) {
             templates.fetchAllTemplates(1, 50, 'create', 'test');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
                 max_results: 50,
-                where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}],' +
+                where: '{"$and":[{"$or":[{"user":"foo"}],' +
                 '"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}'
             });
         }));
