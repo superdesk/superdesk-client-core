@@ -128,6 +128,11 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
      * @return {boolen}
      */
     this.shouldIgnore = function (event) {
+        // ignore arrows
+        if (self.ARROWS[event.keyCode]) {
+            return true;
+        }
+
         // ignore meta keys (ctrl, shift or meta only)
         if (self.META[event.keyCode]) {
             return true;
