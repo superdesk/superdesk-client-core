@@ -6,7 +6,7 @@ var openUrl = require('./utils').open;
 module.exports = new Dictionaries();
 
 function Dictionaries() {
-    this.list = element.all(by.repeater('dictionary in dictionaries._items'));
+    this.list = element.all(by.repeater('dictionary in dictionaries'));
     this.name = element(by.model('dictionary.name'));
     this.languageId = element(by.model('dictionary.language_id'));
 

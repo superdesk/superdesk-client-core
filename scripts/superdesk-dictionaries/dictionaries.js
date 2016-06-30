@@ -198,9 +198,19 @@
         $scope.origDictionary = null;
         $scope.dictionary = null;
 
+        $scope.isAdmin = function() {
+            return session.identity.user_type === 'administrator';
+        };
+
         $scope.fetchDictionaries = function() {
             dictionaries.fetch(function(result) {
-                $scope.dictionaries = result;
+                if (!$scope.isAdmin()) {
+                    $scope.dictionaries = _.filter(result._items, function(f) {
+                        return f.user === session.identity._id;
+                    });
+                } else {
+                    $scope.dictionaries = result._items;
+                }
             });
         };
 
@@ -268,7 +278,7 @@
             modal.confirm(gettext('Please confirm you want to delete dictionary.')).then(
                 function runConfirmed() {
                     dictionaries.remove(dictionary, function() {
-                        _.remove($scope.dictionaries._items, dictionary);
+                        _.remove($scope.dictionaries, dictionary);
                         notify.success(gettext('Dictionary deleted.'), 3000);
                     });
                 }
