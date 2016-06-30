@@ -1052,8 +1052,8 @@
      * resize monitoring and authoring screen
      *
      */
-    splitterWidget.$inject = ['superdesk', '$timeout'];
-    function splitterWidget(superdesk, $timeout) {
+    splitterWidget.$inject = ['superdesk', 'superdeskFlags', '$timeout'];
+    function splitterWidget(superdesk, superdeskFlags, $timeout) {
         return {
             link: function(scope, element) {
                 var workspace = element,
@@ -1063,8 +1063,8 @@
                  * If custom sizes are defined, preload them
                  */
                 if (superdesk.monitoringWidth && superdesk.authoringWidth) {
-                    workspace.width(superdesk.monitoringWidth);
-                    authoring.width(superdesk.authoringWidth);
+                    workspace.css({width: superdesk.monitoringWidth});
+                    authoring.css({width: superdesk.authoringWidth});
                 }
 
                 /*
