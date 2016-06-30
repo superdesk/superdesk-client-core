@@ -998,6 +998,7 @@
                     scope.context = 'search';
                     scope.$on('item:deleted:archived', itemDelete);
                     scope.$on('item:fetch', queryItems);
+                    scope.$on('item:update', updateItem);
                     scope.$on('item:deleted', queryItems);
                     scope.$on('item:spike', queryItems);
                     scope.$on('item:unspike', queryItems);
@@ -1035,6 +1036,13 @@
                     };
 
                     var nextUpdate;
+
+                    function updateItem(e, data) {
+                        var item = _.find(scope.items._items, {_id: data.item._id});
+                        if (item) {
+                            angular.extend(item, data.item);
+                        }
+                    }
 
                     /**
                      * Schedule an update if it's not there yet

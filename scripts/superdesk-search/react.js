@@ -1790,7 +1790,7 @@
 
                                 scope.rendering = scope.loading = false;
                             });
-                        });
+                        }, true);
 
                         scope.$watch('view', function(newValue, oldValue) {
                             if (newValue !== oldValue) {
