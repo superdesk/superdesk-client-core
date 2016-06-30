@@ -995,7 +995,7 @@
                             if (props.item.correction_sequence) {
                                 return React.createElement(
                                     'div',
-                                    {className: 'provider', key: 'update'},
+                                    {className: 'provider', key: 'update', title: gettext('correction sequence')},
                                     $interpolate(gettext('Update {{ seq }}'))({seq: props.item.correction_sequence})
                                 );
                             }

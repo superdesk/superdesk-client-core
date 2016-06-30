@@ -39,6 +39,10 @@ function Authoring() {
 
     this.sendItemContainer = element(by.id('send-item-container'));
     this.linkToMasterButton = element(by.id('preview-master'));
+    this.marked_for_legal = element(by.model('item.flags.marked_for_legal'));
+    this.anpa_category = element(by.className('authoring-header__detailed')).
+                            all(by.css('[data-field="anpa_category"]'));
+    this.subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
 
     /**
      * Find all file type icons in the item's info icons box matching the
@@ -68,6 +72,14 @@ function Authoring() {
         }
     };
 
+    this.sendToAndContinue = function(desk, stage, skipConfirm) {
+        this.sendToButton.click();
+        this.sendToSidebarOpened(desk, stage, true);
+        if (skipConfirm) {
+            this.confirmSendTo();
+        }
+    };
+
     /**
      * function to set embargo date and time inside sendTo panel
      */
@@ -87,7 +99,7 @@ function Authoring() {
         });
     };
 
-    this.sendToSidebarOpened = function(desk, stage) {
+    this.sendToSidebarOpened = function(desk, stage, _continue) {
         var sidebar = element.all(by.css('.slide-pane')).last(),
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown-toggle'));
 
@@ -97,7 +109,11 @@ function Authoring() {
         if (stage) {
             sidebar.element(by.buttonText(stage)).click();
         }
-        this.sendBtn.click();
+        if (_continue) {
+            this.sendAndContinueBtn.click();
+        } else {
+            this.sendBtn.click();
+        }
     };
 
     this.selectDeskforSendTo = function(desk) {
@@ -225,6 +241,25 @@ function Authoring() {
 
     this.toggleNotForPublication = function() {
         element(by.model('item.flags.marked_for_not_publication')).click();
+    };
+
+    this.toggleLegal = function() {
+        this.marked_for_legal.click();
+    };
+
+    this.setKeywords = function(keyword) {
+        var keywords = element(by.css('[data-field="keywords"]')).all(by.model('term'));
+        keywords.sendKeys(keyword);
+        browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    };
+
+    this.getKeywords = function() {
+        return element(by.css('[data-field="keywords"]')).all(by.repeater('t in item[field] track by t')).
+                first().getText();
+    };
+
+    this.getPubStatus = function() {
+        return element(by.css('[ng-if="item.pubstatus"]')).all(by.className('data')).first().getText();
     };
 
     this.showPackages = function() {
@@ -367,6 +402,7 @@ function Authoring() {
     var bodyFooter = element(by.id('body_footer')).all(by.className('editor-type-html')).first();
     var bodyFooterPreview = element(by.id('body_footer_preview')).all(by.css('[ng-bind-html="html"]')).first();
     var packageSlugline = element.all(by.className('keyword')).last();
+    var byline = element(by.model('item.byline')).all(by.className('editor-type-html')).first();
 
     this.writeText = function (text) {
         bodyHtml.sendKeys(text);
@@ -378,6 +414,14 @@ function Authoring() {
 
     this.writeTextToAbstract = function (text) {
         abstract.sendKeys(text);
+    };
+
+    this.writeTextToByline = function (text) {
+        byline.sendKeys(text);
+    };
+
+    this.getBylineText = function() {
+        return byline.getText();
     };
 
     this.writeTextToComment = function(text) {
@@ -483,9 +527,30 @@ function Authoring() {
         relItem.element(by.id('Open')).click();
     };
 
+    this.actionRelatedItem = function(item, actionId) {
+        var relItem = element.all(by.repeater('item in processedItems')).get(item);
+        relItem.element(by.className('icon-dots-vertical')).click();
+        relItem.element(by.css('[id="' + actionId + '"]')).click();
+    };
+
     this.getHeaderSluglineText = function() {
         var headerDetails = element(by.className('authoring-header__detailed'));
         return headerDetails.all(by.model('item.slugline')).get(0).getAttribute('value');
+    };
+
+    this.setHeaderSluglineText = function(text) {
+        var headerDetails = element(by.className('authoring-header__detailed'));
+        return headerDetails.all(by.model('item.slugline')).sendKeys(text);
+    };
+
+    this.setHeaderEdNoteText = function(text) {
+        var headerDetails = element(by.className('authoring-header__detailed'));
+        return headerDetails.all(by.model('item.ednote')).sendKeys(text);
+    };
+
+    this.getHeaderEdNoteText = function(text) {
+        var headerDetails = element(by.className('authoring-header__detailed'));
+        return headerDetails.all(by.model('item.ednote')).get(0).getAttribute('value');
     };
 
     this.getDuplicatedItemState = function(item) {
@@ -505,18 +570,55 @@ function Authoring() {
     };
 
     this.getSubjectMetadataDropdownOpened = function() {
-        var subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
-        return subject.all(by.className('dropdown-toggle')).click();
+        return this.subject.all(by.className('dropdown-toggle')).click();
+    };
+
+    this.getSelectedSubjects = function () {
+        return this.subject.all(by.repeater('t in selectedItems'));
     };
 
     this.getCategoryMetadataDropdownOpened = function() {
-        var category = element(by.className('authoring-header__detailed')).all(by.css('[data-field="anpa_category"]'));
-        return category.all(by.className('dropdown-toggle')).click();
+        return this.anpa_category.all(by.className('dropdown-toggle')).click();
+    };
+
+    this.getSelectedCategories = function () {
+        return this.anpa_category.all(by.repeater('t in selectedItems'));
+    };
+
+    this.getANPATakeKeyValue = function() {
+        var takeKey = element(by.className('authoring-header__detailed')).all(by.id('anpa_take_key'));
+        return takeKey.get(0).getAttribute('value');
+    };
+
+    // set first filtered item as per inital term provided
+    this.setlocation = function (term) {
+        var location = element.all(by.css('[data-field="located"]')).all(by.model('term'));
+        location.sendKeys(term);
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+        browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    };
+
+    this.getSelectedLocation = function (term) {
+        var location = element.all(by.css('[data-field="located"]')).all(by.model('term'));
+        return location.first().getAttribute('value');
     };
 
     this.getNextLevelSelectedCategory = function() {
-        var subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
-        return subject.all(by.className('levelup')).all(by.css('[ng-click="selectTerm(activeTerm)"]'));
+        return this.subject.all(by.className('levelup')).all(by.css('[ng-click="selectTerm(activeTerm)"]'));
+    };
+
+    this.getItemSource = function() {
+        return element(by.className('authoring-header__general-info')).all(by.id('item-source')).first().getText();
+    };
+
+    this.getGenreDropdown = function() {
+        var genre = element(by.className('authoring-header__detailed')).all(by.css('[data-field="genre"]'));
+        return genre.all(by.className('dropdown-toggle'));
+    };
+
+    this.getPackageItems = function(group) {
+        var _list = element(by.css('[data-title="' + group + '"]')).all(by.tagName('UL')).all(by.tagName('LI'));
+        return _list;
     };
 
 }
