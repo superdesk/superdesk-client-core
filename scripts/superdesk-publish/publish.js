@@ -16,7 +16,8 @@
     app.value('transmissionTypes', {
         ftp: {
             label: 'FTP',
-            templateUrl: 'scripts/superdesk-publish/views/ftp-config.html'
+            templateUrl: 'scripts/superdesk-publish/views/ftp-config.html',
+            config: {passive: true}
         },
         email: {
             label: 'Email',
@@ -131,6 +132,12 @@
             },
             link: function ($scope) {
                 $scope.types = transmissionTypes;
+
+                $scope.$watch('destination.delivery_type', function(type) {
+                    if (type && !$scope.destination.config && $scope.types[type].config) {
+                        $scope.destination.config = angular.extend({}, $scope.types[type].config);
+                    }
+                });
             }
         };
     }
