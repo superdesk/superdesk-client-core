@@ -1138,10 +1138,12 @@
             flex-grow: 1;
             padding-right: 12px;
             text-align: left;
+            overflow: hidden;
         }
         .preview-header__flex-row {
             min-height: 18px;
             margin-bottom: 4px;
+            overflow: hidden;
             &--single-line {
                 //display:flex;
                 //flex-direction: row;
@@ -1154,6 +1156,10 @@
             display: inline-block;
             line-height: 116.6%;
             color: @sd-keyword;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 100%;
+            overflow: hidden;
         }
         .word-count {
             font-size: 10px;
