@@ -7,7 +7,7 @@
     <!-- Placeholder text is temporary, ideally it should come from content type -->
     <div class="text-editor editor-type-html"
         tabindex="{{config.tabindex}}"
-        ng-class="{'sd-text-editor-drop-zone': config.imageDragging}"
+        sd-text-editor-drop-zone="{{config.imageDragging !== false}}"
         sd-focus-element
         data-append-element=".field"
         data-append-class="active"
