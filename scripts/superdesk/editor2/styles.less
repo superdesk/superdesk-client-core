@@ -23,9 +23,6 @@
     }
 }
 .block {
-    &--selected {
-        border: 1px solid #5EA9C8;
-    }
     // hide text field on mouse out when empty if not alone
     &--not-alone-and-empty {
         .text-editor:not(.medium-editor-dragover) {
@@ -69,8 +66,8 @@
             display: inline-block;
         }
     }
-    // shows actions on hover and when selected
-    &__container:hover .block__actions, &--selected .block__actions {opacity: 1;}
+    // shows actions on hover
+    &__container:hover .block__actions {opacity: 1;}
 }
 .add-content { // (+) button
     position: absolute;

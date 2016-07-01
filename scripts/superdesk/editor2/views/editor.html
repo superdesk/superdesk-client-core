@@ -1,8 +1,6 @@
 <div ng-repeat="block in vm.blocks"
      class="block__container"
-     ng-click="vm.selectBlock(block)"
-     ng-class="{'block--selected': vm.selectedBlock === block,
-                'block--not-alone-and-empty': vm.blocks.length > 1 && !block.body}">
+     ng-class="{'block--not-alone-and-empty': vm.blocks.length > 1 && !block.body}">
     <div class="block__actions" ng-if="vm.config.multiBlockEdition && vm.configuration.embeds">
         <div class="block__cut" ng-click="vm.cutBlock(block)">
             <i class="icon-cut"></i>
