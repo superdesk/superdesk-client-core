@@ -962,8 +962,6 @@ angular.module('superdesk.editor2', [
                         setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
                         // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
                         if (scope.config.multiBlockEdition) {
-                            // this dummy imageDragging stop preventing drag & drop events
-                            editorConfig.extensions = {'imageDragging': {}};
                             if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
                                 editorConfig.extensions.table =
                                 new window.MediumEditorTable({aria:gettextCatalog.getString('insert table')});
