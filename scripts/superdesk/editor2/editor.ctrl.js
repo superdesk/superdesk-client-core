@@ -325,10 +325,6 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             vm.renderBlocks();
             return $timeout(vm.commitChanges);
         },
-        selectedBlock: undefined,
-        selectBlock: function(block) {
-            vm.selectedBlock = block;
-        },
         _cutBlock: undefined,
         cutBlock: function(block) {
             vm._cutBlock = angular.copy(block);
