@@ -641,11 +641,10 @@ angular.module('superdesk.editor2', [
     function (editor) {
         var dragOverClass = 'medium-editor-dragover';
         return {
-            scope: true,
             require: '^sdTextEditorBlockText',
             scope: {sdTextEditorDropZone: '@'},
             link: function(scope, element, attrs, ctrl) {
-                if (scope.sdTextEditorDropZone === "false") {
+                if (scope.sdTextEditorDropZone === 'false') {
                     return;
                 }
                 var PICTURE_TYPE = 'application/superdesk.item.picture';
