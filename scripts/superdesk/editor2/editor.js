@@ -643,8 +643,11 @@ angular.module('superdesk.editor2', [
         return {
             scope: true,
             require: '^sdTextEditorBlockText',
-            restrict: 'C',
+            scope: {sdTextEditorDropZone: '@'},
             link: function(scope, element, attrs, ctrl) {
+                if (scope.sdTextEditorDropZone === "false") {
+                    return;
+                }
                 var PICTURE_TYPE = 'application/superdesk.item.picture';
                 element
                 .on('drop', function(event) {
@@ -751,8 +754,7 @@ angular.module('superdesk.editor2', [
             placeholder: false,
             disableReturn: false,
             spellcheck: false,
-            targetBlank: true,
-            imageDragging: false
+            targetBlank: true
         };
         if (config.editor) {
             angular.extend(EDITOR_CONFIG, config.editor);

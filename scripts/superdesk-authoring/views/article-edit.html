@@ -3,7 +3,7 @@
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
         sd-text-editor
-        data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order}"
+        data-config="{disableToolbar: true, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order}"
         data-editorformat="editor.headline.formatOptions"
         data-language="item.language"
         ng-model="item.headline"
@@ -55,7 +55,7 @@
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
         sd-text-editor
-        data-config="{disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.abstract.order}"
+        data-config="{disableToolbar: true, imageDragging: false, disableEditing: isPublished(item), tabindex: editor.abstract.order}"
         data-editorformat="editor.abstract.formatOptions"
         data-language="item.language"
         ng-model="item.abstract"
@@ -70,7 +70,7 @@
    <!-- Placeholder text is temporary, ideally it should come from content type -->
    <div id="byline" class="byline"
         sd-text-editor
-        data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.byline.order}"
+        data-config="{disableToolbar: true, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.byline.order}"
         data-editorformat="editor.byline.formatOptions"
         data-language="item.language"
         ng-model="item.byline"
