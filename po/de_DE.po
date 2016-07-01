@@ -1,11 +1,11 @@
-#
+# 
 # Translators:
 # by oil <byoils@gmail.com>, 2016
 # Ingo Lauter <ingo.lauter@sourcefabric.org>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2016-06-28 10:22+0000\n"
+"PO-Revision-Date: 2016-06-30 13:08+0000\n"
 "Last-Translator: Ingo Lauter <ingo.lauter@sourcefabric.org>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/sourcefabric/superdesk/language/de_DE/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,7 @@ msgstr "'ANPA Kategorie' ist ein Pflichtfeld"
 
 #: scripts/superdesk/missing-translations-strings.js:18
 msgid "'BYLINE is a required field'"
-msgstr "'Ersteller/Kürzel' ist ein Pflichtfeld"
+msgstr "'Autor/Kürzel' ist ein Pflichtfeld"
 
 #: scripts/superdesk/missing-translations-strings.js:17
 msgid "'GENRE is a required field'"
@@ -362,7 +362,7 @@ msgstr "Zur Sammlung hinzufügen"
 
 #: scripts/superdesk-packaging/packaging.js:760
 msgid "Add to current"
-msgstr "Zum Aktuellen hinzfügen"
+msgstr "Zur Sammlung hinzufügen"
 
 #: scripts/superdesk/editor/views/editor.html:18
 #: scripts/superdesk/editor2/views/block-text.html:26
@@ -380,7 +380,7 @@ msgstr "Erweiterte Suche"
 #: scripts/superdesk-templates/templates.js:418
 #: scripts/superdesk-users/users.js:354
 msgid "All"
-msgstr "Alles"
+msgstr "Alle"
 
 #: scripts/superdesk/menu/notifications/views/notifications.html:40
 msgid "All good so far."
@@ -418,7 +418,7 @@ msgstr "Belichtung"
 
 #: scripts/superdesk-publish/views/subscribers.html:128
 msgid "Applied Global Filters"
-msgstr "Globale Filter wurden angewendet"
+msgstr "Globale Filter"
 
 #: scripts/superdesk/missing-translations-strings.js:10
 msgid "Archive"
@@ -426,7 +426,7 @@ msgstr "Archiv"
 
 #: scripts/superdesk-search/views/item-search.html:11
 msgid "Archived"
-msgstr "archiviert"
+msgstr "Archiviert"
 
 #: scripts/superdesk/missing-translations-strings.js:10
 msgid "Archived Management"
@@ -529,7 +529,7 @@ msgstr "Zugewiesen von"
 
 #: scripts/superdesk-templates/views/template-editor-modal.html:118
 msgid "At"
-msgstr "An"
+msgstr "Uhrzeit"
 
 #: scripts/superdesk-ingest/views/settings/rssConfig.html:18
 msgid "Authentication Info"
@@ -628,7 +628,7 @@ msgid ""
 "By selecting the categories you are interested in, the system\n"
 "                    will only display these in a menu for setting the content\n"
 "                    item's categories (along with any of its existing categories)."
-msgstr "Die Auswahl von Kategorien wird auf die Ansicht der Inhaltselemente berücksichtigt."
+msgstr "Die Auswahl von Kategorien wird bei der Ansicht der Inhaltselemente berücksichtigt."
 
 #: scripts/superdesk-authoring/authoring.js:2562
 msgid "By {{ display_name }}"
@@ -638,7 +638,7 @@ msgstr "Von {{ display_name }}"
 #: scripts/superdesk-authoring/views/article-edit.html:69
 #: scripts/superdesk-search/views/item-search.html:70
 msgid "Byline"
-msgstr "Ersteller/ Kürzel"
+msgstr "Autor/ Kürzel"
 
 #: scripts/superdesk-authoring/views/authoring-header.html:249
 msgid "COMPANY"
@@ -1095,7 +1095,7 @@ msgstr "Erstellt neues Element"
 
 #: scripts/superdesk-search/views/item-search.html:90
 msgid "Creator"
-msgstr "Ersteller"
+msgstr "Autor"
 
 #: scripts/superdesk-archive/views/upload.html:54
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:68
@@ -1481,7 +1481,7 @@ msgstr "Inhaltsprofil bearbeiten"
 
 #: scripts/superdesk-authoring/authoring.js:2885
 msgid "Edit Crop"
-msgstr "Bildzuschnitt bearbeiten"
+msgstr "Bild bearbeiten"
 
 #: scripts/superdesk-content-filters/views/manage-filter-conditions.html:20
 #: scripts/superdesk-content-filters/views/manage-filter-conditions.html:31
@@ -2376,16 +2376,16 @@ msgstr "Ingest-Quelle"
 
 #: scripts/superdesk/missing-translations-strings.js:13
 msgid "Ingest Channels"
-msgstr "Ingest-Quellen"
+msgstr "Ingest-Channel"
 
 #: scripts/superdesk-ingest/module.js:1453
 #: scripts/superdesk-ingest/views/dashboard/dashboard.html:2
 msgid "Ingest Dashboard"
-msgstr "Dashboard: Ingest-Quelle "
+msgstr "Dashboard Ingest-Quellen"
 
 #: scripts/superdesk-ingest/module.js:1238
 msgid "Ingest Dashboard preferences could not be saved."
-msgstr "Die Eigenschaften des Dashboard: Quelle konnten nicht gespeichert werden"
+msgstr "Fehler: die Änderungen am Dashboard Ingest-Quellen wurden nicht gespeichert."
 
 #: scripts/superdesk-archive/views/metadata-view.html:26
 #: scripts/superdesk-publish/views/publish-queue.html:93
@@ -2410,7 +2410,7 @@ msgstr "Ingest-Quelle gelöscht"
 
 #: scripts/superdesk-ingest/ingest-stats-widget/stats.js:10
 msgid "Ingest Stats"
-msgstr "Statistiken Ingest-Quelle "
+msgstr "Statistik Ingest-Quelle "
 
 #: scripts/superdesk-archive/views/metadata-view.html:122
 msgid "Ingest provider sequence"
@@ -2473,7 +2473,7 @@ msgstr "Das geöffnete Element wurde geändert. Bitte schliessen Sie das Element
 #: scripts/superdesk-authoring/versioning/views/versioning.html:6
 #: scripts/superdesk-search/views/item-preview.html:14
 msgid "Item history"
-msgstr "Element Verlauf"
+msgstr "Element Historie"
 
 #: scripts/superdesk-packaging/packaging.js:358
 msgid "Item is already in this package."
@@ -2513,7 +2513,7 @@ msgstr "Element gesendet."
 
 #: scripts/superdesk-ingest/ingest-stats-widget/configuration.html:11
 msgid "Item type stats"
-msgstr "Statistiken Elementtyp"
+msgstr "Statistik Elementtypen"
 
 #: scripts/superdesk-authoring/authoring.js:1155
 msgid "Item updated."
@@ -2861,7 +2861,7 @@ msgstr "Monitoring Einstellungen"
 msgid ""
 "Monitoring settings <span ng-if=\"settings.desk\" translate=\"\">for "
 "\"{{settings.desk.name}}\" Desk</span>"
-msgstr "Monitoring Einstellungen<span ng-if=\"settings.desk\" translate=\"\">für \"{{settings.desk.name}}\" Desk</span>"
+msgstr "Monitoring Einstellungen <span ng-if=\"settings.desk\" translate=\"\">für \"{{settings.desk.name}}\" Desk</span>"
 
 #: scripts/superdesk-authoring/views/authoring-topbar.html:120
 msgid "More actions"
@@ -2968,7 +2968,7 @@ msgstr "Neue Zusammenstellung erstellt"
 #: scripts/superdesk-groups/views/groups-config-modal.html:32
 #: scripts/superdesk-monitoring/views/aggregate-settings.html:131
 msgid "Next"
-msgstr "Nächster"
+msgstr "Nächste"
 
 #: scripts/superdesk-users/users.js:1814
 msgid "Next user"
@@ -3151,7 +3151,7 @@ msgstr "OK"
 #: scripts/superdesk-ingest/views/settings/ingest-routing-general.html:45
 #: scripts/superdesk-templates/views/template-editor-modal.html:112
 msgid "On"
-msgstr "An"
+msgstr "Tag"
 
 #: scripts/superdesk-users/users.js:350
 msgid "Online"
@@ -3244,7 +3244,7 @@ msgstr "Originalquelle"
 
 #: scripts/superdesk-archive/views/metadata-view.html:100
 msgid "Original creator"
-msgstr "Originaler Ersteller"
+msgstr "Ursprünglicher Autor"
 
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:60
 msgid "Original source"
@@ -3323,7 +3323,7 @@ msgstr "Seite"
 
 #: scripts/superdesk/list/views/sdPagination.html:1
 msgid "Page Size:"
-msgstr "Seitengröße"
+msgstr "Angezeigte Elemente"
 
 #: scripts/superdesk-search/views/search-facets.html:33
 msgid "Parameters"
@@ -3671,7 +3671,7 @@ msgstr "Veröfffentlichung Aktionen"
 
 #: scripts/superdesk-authoring/views/send-item.html:47
 msgid "Publishing Schedule"
-msgstr "Veröffentlichung Plan"
+msgstr "Veröffentlichungsplan"
 
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:54
 msgid "Pubstatus"
@@ -3733,7 +3733,7 @@ msgstr "Aktualisiere..."
 
 #: scripts/superdesk-archive/related-item-widget/relatedItem.js:10
 msgid "Related Item"
-msgstr "Zugehöriges Element"
+msgstr "Zugehörige Elemente"
 
 #: scripts/superdesk-desks/views/settings.html:26
 #: scripts/superdesk-highlights/views/highlights_title_directive.html:21
@@ -4126,7 +4126,7 @@ msgstr "Planung"
 
 #: scripts/superdesk-templates/views/template-editor-modal.html:129
 msgid "Schedule Desk"
-msgstr "Planung Desk"
+msgstr "Desk zuordnen"
 
 #: scripts/superdesk-templates/views/template-editor-modal.html:140
 msgid "Schedule Stage"
@@ -4267,7 +4267,7 @@ msgstr "Area of Interest auswählen"
 
 #: scripts/superdesk-archive/views/upload.html:12
 msgid "Select them from folder"
-msgstr "Aus dem Ordner auswählen"
+msgstr "Vom Computer auswählen"
 
 #: scripts/superdesk/views/sdSearchList.html:21
 msgid "Selected item"
@@ -4289,7 +4289,7 @@ msgstr "Senden an"
 #: scripts/superdesk-authoring/views/authoring-topbar.html:186
 #: scripts/superdesk-authoring/views/send-item.html:4
 msgid "Send to / Publish"
-msgstr "Verschicken an/ Veröffentlichen"
+msgstr "Verschicken / Veröffentlichen"
 
 #: scripts/superdesk/missing-translations-strings.js:17
 msgid "Sending"
@@ -4367,7 +4367,7 @@ msgstr "Sucheinstellungen anzeigen"
 #: scripts/superdesk-workspace/content/content.js:548
 #: scripts/superdesk/missing-translations-strings.js:23
 msgid "Sign Off"
-msgstr "Abmelden"
+msgstr "Freigabe"
 
 #: scripts/superdesk/auth/login-modal.html:46
 msgid "Sign in as a different user."
@@ -4377,7 +4377,7 @@ msgstr "Als anderer Benutzer anmelden"
 #: scripts/superdesk-authoring/views/article-edit.html:232
 #: scripts/superdesk-users/views/edit-form.html:68
 msgid "Sign-Off"
-msgstr "Abmelden"
+msgstr "Freigabe"
 
 #: scripts/superdesk-archive/views/metadata-view.html:45
 msgid "Signal"
@@ -4468,7 +4468,7 @@ msgstr "Quelle für Artikel von Benutzern"
 
 #: scripts/superdesk-ingest/ingest-stats-widget/configuration.html:9
 msgid "Source stats"
-msgstr "Quellen Statistiken"
+msgstr "Statistik Quelle"
 
 #: scripts/superdesk-ingest/views/settings/settings.html:6
 #: scripts/superdesk-search/views/search-facets.html:58
@@ -5045,7 +5045,7 @@ msgstr "ELEMENT HOCHLADEN"
 
 #: scripts/superdesk-authoring/views/authoring-header.html:157
 msgid "URGENCY"
-msgstr "Dringlichkeit"
+msgstr "Dringend"
 
 #: scripts/superdesk-ingest/views/settings/reutersConfig.html:6
 msgid "URL for Authentication"
@@ -5189,11 +5189,11 @@ msgstr "Medien hochladen"
 #: scripts/superdesk-search/views/search-facets.html:94
 #: scripts/superdesk-workspace/content/content.js:539
 msgid "Urgency"
-msgstr "Dringlichkeit"
+msgstr "Dringend"
 
 #: scripts/superdesk-ingest/ingest-stats-widget/configuration.html:10
 msgid "Urgency stats"
-msgstr "Statistiken Dringlichkeit"
+msgstr "Statistik Dringlichkeit"
 
 #: scripts/superdesk-archive/views/metadata-view.html:175
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:33
@@ -5301,7 +5301,7 @@ msgstr "Version"
 
 #: scripts/superdesk-archive/views/metadata-view.html:104
 msgid "Version creator"
-msgstr "Ersteller Version"
+msgstr "Version Autor"
 
 #: scripts/superdesk-authoring/versioning/versioning.js:10
 msgid "Versioning"
@@ -5515,7 +5515,7 @@ msgstr "von  <b>{{userLookup[data.original_creator].display_name}}</b>"
 
 #: scripts/superdesk-users/views/edit-form.html:79
 msgid "byline"
-msgstr "Ersteller/ Kürzel"
+msgstr "Autor/ Kürzel"
 
 #: scripts/superdesk/missing-translations-strings.js:9
 msgid "categories"
@@ -5743,7 +5743,7 @@ msgstr "Nachname"
 
 #: scripts/superdesk-ingest/views/dashboard/ingest-dashboard-widget.html:75
 msgid "last update and last item arrived."
-msgstr "Letzte Aktualisierung und letztes Element erfolgreich"
+msgstr "Letzte erfolgreiche Aktualisierung "
 
 #: scripts/superdesk/editor2/editor.js:895
 msgid "link"
@@ -5802,7 +5802,7 @@ msgstr "Keine Ergebnisse"
 #: scripts/superdesk-profiling/views/profiling.html:10
 #: scripts/superdesk-users/views/user-preferences.html:66
 msgid "none"
-msgstr "keine"
+msgstr "leer"
 
 #: scripts/superdesk/missing-translations-strings.js:8
 msgid "notifications"
