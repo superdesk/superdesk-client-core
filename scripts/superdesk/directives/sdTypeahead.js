@@ -116,6 +116,7 @@
                     $input.on('keydown', function(e) {
                         if (e.keyCode === Keys.enter) {
                             scope.$apply(function() { controller.selectActive(); });
+                            e.preventDefault();
                         }
 
                         if (e.keyCode === Keys.escape) {
