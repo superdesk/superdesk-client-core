@@ -542,6 +542,8 @@
             'subject': gettext('Subject'),
             'ednote': gettext('Editorial Note'),
             'abstract': gettext('Abstract'),
+            'age_range': gettext('Age Range'),
+            'assets': gettext('Assets'),
             'body_html': gettext('Body HTML'),
             'byline': gettext('By'),
             'dateline': gettext('Date'),
@@ -551,7 +553,19 @@
             'body_footer': gettext('Body footer'),
             'footer': gettext('Footer'),
             'media': gettext('Media'),
-            'media_description': gettext('Media Description')
+            'media_description': gettext('Media Description'),
+            'credit_level': gettext('Credit Level'),
+            'desired_response': gettext('Desired Response'),
+            'feature_image': gettext('Feature Image'),
+            'featured': gettext('Featured'),
+            'reader_type': gettext('Reader Type'),
+            'relatedItems': gettext('Related Items'),
+            'subservice_motoring': gettext('Motoring Subservice'),
+            'subservice_real_life': gettext('Real Life Subservice'),
+            'subservice_sport': gettext('Sport Subservice'),
+            'territory': gettext('Territory'),
+            'topic_news': gettext('Topic (News)'),
+            'topic_sport': gettext('Topic (Sport)')
         };
 
         return {

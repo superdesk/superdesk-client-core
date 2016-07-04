@@ -421,6 +421,10 @@ msgstr ""
 msgid "Advanced Search"
 msgstr ""
 
+#: scripts/superdesk-workspace/content/content.js:545
+msgid "Age Range"
+msgstr ""
+
 #: scripts/superdesk-monitoring/views/monitoring-view.html:60
 #: scripts/superdesk-monitoring/views/monitoring-view.html:79
 #: scripts/superdesk-users/views/user-preferences.html:62
@@ -585,6 +589,10 @@ msgstr ""
 msgid "Article Type(s)"
 msgstr ""
 
+#: scripts/superdesk-workspace/content/content.js:546
+msgid "Assets"
+msgstr ""
+
 #: scripts/superdesk-publish/views/http-push-config.html:12
 #: scripts/superdesk-publish/views/http-push-config.html:13
 msgid "Assets URL"
@@ -657,7 +665,7 @@ msgstr ""
 msgid "Available clock"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:885
+#: scripts/superdesk/editor2/editor.js:886
 msgid "B"
 msgstr ""
 
@@ -706,16 +714,16 @@ msgstr ""
 msgid "Body"
 msgstr ""
 
-#: scripts/superdesk-workspace/content/content.js:551
+#: scripts/superdesk-workspace/content/content.js:553
 msgid "Body footer"
 msgstr ""
 
-#: scripts/superdesk-workspace/content/content.js:545
+#: scripts/superdesk-workspace/content/content.js:547
 #: scripts/superdesk/missing-translations-strings.js:23
 msgid "Body HTML"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:883
+#: scripts/superdesk/editor2/editor.js:884
 msgid "bold"
 msgstr ""
 
@@ -737,7 +745,7 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: scripts/superdesk-workspace/content/content.js:546
+#: scripts/superdesk-workspace/content/content.js:548
 #: scripts/superdesk/missing-translations-strings.js:23
 msgid "By"
 msgstr ""
@@ -842,6 +850,7 @@ msgstr ""
 msgid "categories"
 msgstr ""
 
+#: scripts/superdesk-authoring/views/full-preview.html:44
 #: scripts/superdesk-legal-archive/legal_archive.js:13
 #: scripts/superdesk-search/search.js:18
 msgid "Category"
@@ -1271,6 +1280,10 @@ msgstr ""
 msgid "Credit"
 msgstr ""
 
+#: scripts/superdesk-workspace/content/content.js:557
+msgid "Credit Level"
+msgstr ""
+
 #: scripts/superdesk-search/views/search-facets.html:67
 msgid "Credits"
 msgstr ""
@@ -1321,7 +1334,7 @@ msgstr ""
 msgid "Dashboard is empty."
 msgstr ""
 
-#: scripts/superdesk-workspace/content/content.js:547
+#: scripts/superdesk-workspace/content/content.js:549
 #: scripts/superdesk/missing-translations-strings.js:23
 msgid "Date"
 msgstr ""
@@ -1407,6 +1420,10 @@ msgstr ""
 #: scripts/superdesk-workspace/content/views/profile-settings.html:63
 #: scripts/superdesk-workspace/content/views/profile-settings.html:88
 msgid "Description:"
+msgstr ""
+
+#: scripts/superdesk-workspace/content/content.js:558
+msgid "Desired Response"
 msgstr ""
 
 #: scripts/superdesk-authoring/metadata/views/metadata-widget.html:154
@@ -1653,7 +1670,7 @@ msgstr ""
 msgid "E-Mail to broadcast Kill Events"
 msgstr ""
 
-#: scripts/superdesk-authoring/views/full-preview.html:53
+#: scripts/superdesk-authoring/views/full-preview.html:95
 msgid "Ed. Note"
 msgstr ""
 
@@ -2162,8 +2179,16 @@ msgstr ""
 msgid "feature"
 msgstr ""
 
+#: scripts/superdesk-workspace/content/content.js:559
+msgid "Feature Image"
+msgstr ""
+
 #: scripts/superdesk/missing-translations-strings.js:12
 msgid "Feature Preview"
+msgstr ""
+
+#: scripts/superdesk-workspace/content/content.js:560
+msgid "Featured"
 msgstr ""
 
 #: scripts/superdesk-authoring/views/article-edit.html:41
@@ -2322,7 +2347,7 @@ msgid "Focal length"
 msgstr ""
 
 #: scripts/superdesk-authoring/views/article-edit.html:210
-#: scripts/superdesk-workspace/content/content.js:552
+#: scripts/superdesk-workspace/content/content.js:554
 msgid "Footer"
 msgstr ""
 
@@ -2400,6 +2425,7 @@ msgid "General"
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:57
+#: scripts/superdesk-authoring/views/full-preview.html:54
 #: scripts/superdesk-search/search.js:21
 #: scripts/superdesk-workspace/content/content.js:536
 msgid "Genre"
@@ -2485,11 +2511,11 @@ msgstr ""
 msgid "GUID"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:859
+#: scripts/superdesk/editor2/editor.js:860
 msgid "H1"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:872
+#: scripts/superdesk/editor2/editor.js:873
 msgid "H2"
 msgstr ""
 
@@ -2501,11 +2527,11 @@ msgstr ""
 msgid "Have password? Sign in."
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:857
+#: scripts/superdesk/editor2/editor.js:858
 msgid "header type 1"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:870
+#: scripts/superdesk/editor2/editor.js:871
 msgid "header type 2"
 msgstr ""
 
@@ -2596,7 +2622,7 @@ msgstr ""
 msgid "hrs"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:902
+#: scripts/superdesk/editor2/editor.js:903
 msgid "I"
 msgstr ""
 
@@ -2769,7 +2795,7 @@ msgstr ""
 msgid "ingested"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:969
+#: scripts/superdesk/editor2/editor.js:970
 msgid "insert table"
 msgstr ""
 
@@ -2797,7 +2823,7 @@ msgstr ""
 msgid "It will update existing template."
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:900
+#: scripts/superdesk/editor2/editor.js:901
 msgid "italic"
 msgstr ""
 
@@ -2896,10 +2922,6 @@ msgstr ""
 
 #: scripts/superdesk/keyboard/views/keyboard-modal.html:3
 msgid "Keyboard Shortcuts"
-msgstr ""
-
-#: scripts/superdesk-authoring/views/full-preview.html:45
-msgid "Keyword"
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:21
@@ -3033,7 +3055,7 @@ msgstr ""
 msgid "Line: {{ cursor.line }}, Column: {{ cursor.column }}"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:909
+#: scripts/superdesk/editor2/editor.js:910
 msgid "link"
 msgstr ""
 
@@ -3082,7 +3104,7 @@ msgstr ""
 msgid "Local Readonly"
 msgstr ""
 
-#: scripts/superdesk-workspace/content/content.js:548
+#: scripts/superdesk-workspace/content/content.js:550
 #: scripts/superdesk/missing-translations-strings.js:23
 #: scripts/superdesk/missing-translations-strings.js:9
 msgid "Located"
@@ -3198,11 +3220,11 @@ msgid "Maximum"
 msgstr ""
 
 #: scripts/superdesk-publish/views/subscribers.html:63
-#: scripts/superdesk-workspace/content/content.js:553
+#: scripts/superdesk-workspace/content/content.js:555
 msgid "Media"
 msgstr ""
 
-#: scripts/superdesk-workspace/content/content.js:554
+#: scripts/superdesk-workspace/content/content.js:556
 msgid "Media Description"
 msgstr ""
 
@@ -3309,6 +3331,10 @@ msgstr ""
 
 #: scripts/superdesk-workspace/content/views/sd-content-create.html:51
 msgid "More templates..."
+msgstr ""
+
+#: scripts/superdesk-workspace/content/content.js:563
+msgid "Motoring Subservice"
 msgstr ""
 
 #: scripts/superdesk/missing-translations-strings.js:14
@@ -3846,7 +3872,7 @@ msgid "paste a block"
 msgstr ""
 
 #: scripts/superdesk/editor/editor.js:759
-#: scripts/superdesk/editor2/editor.js:746
+#: scripts/superdesk/editor2/editor.js:748
 msgid "Paste or type a full link"
 msgstr ""
 
@@ -3926,6 +3952,7 @@ msgid "pinned from"
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:61
+#: scripts/superdesk-authoring/views/full-preview.html:85
 #: scripts/superdesk-workspace/content/content.js:538
 msgid "Place"
 msgstr ""
@@ -4240,7 +4267,7 @@ msgstr ""
 msgid "Queued at"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:916
+#: scripts/superdesk/editor2/editor.js:917
 msgid "quote"
 msgstr ""
 
@@ -4254,6 +4281,14 @@ msgstr ""
 
 #: scripts/superdesk-users/users.js:762
 msgid "Read users"
+msgstr ""
+
+#: scripts/superdesk-workspace/content/content.js:561
+msgid "Reader Type"
+msgstr ""
+
+#: scripts/superdesk-workspace/content/content.js:564
+msgid "Real Life Subservice"
 msgstr ""
 
 #: scripts/superdesk-dashboard/views/workspace.html:6
@@ -4288,6 +4323,10 @@ msgstr ""
 
 #: scripts/superdesk-archive/related-item-widget/relatedItem.js:10
 msgid "Related Item"
+msgstr ""
+
+#: scripts/superdesk-workspace/content/content.js:562
+msgid "Related Items"
 msgstr ""
 
 #: scripts/superdesk-desks/views/settings.html:26
@@ -4336,7 +4375,7 @@ msgstr ""
 msgid "Remove Filter Condition"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:923
+#: scripts/superdesk/editor2/editor.js:924
 msgid "remove formatting"
 msgstr ""
 
@@ -4901,7 +4940,7 @@ msgid "Server Folder"
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:49
-#: scripts/superdesk-authoring/views/full-preview.html:25
+#: scripts/superdesk-authoring/views/full-preview.html:33
 msgid "Service"
 msgstr ""
 
@@ -4970,7 +5009,7 @@ msgstr ""
 msgid "Sign in as a different user."
 msgstr ""
 
-#: scripts/superdesk-workspace/content/content.js:549
+#: scripts/superdesk-workspace/content/content.js:551
 #: scripts/superdesk/missing-translations-strings.js:13
 msgid "Sign Off"
 msgstr ""
@@ -5007,6 +5046,7 @@ msgid "Slug"
 msgstr ""
 
 #: scripts/superdesk-archive/views/metadata-view.html:5
+#: scripts/superdesk-authoring/views/full-preview.html:25
 #: scripts/superdesk-legal-archive/legal_archive.js:14
 #: scripts/superdesk-legal-archive/views/legal_archive.html:44
 #: scripts/superdesk-search/search.js:19
@@ -5037,7 +5077,7 @@ msgid "Sms"
 msgstr ""
 
 #: scripts/superdesk-authoring/views/article-edit.html:17
-#: scripts/superdesk-workspace/content/content.js:550
+#: scripts/superdesk-workspace/content/content.js:552
 msgid "SMS"
 msgstr ""
 
@@ -5167,6 +5207,10 @@ msgstr ""
 msgid "Spiked Items"
 msgstr ""
 
+#: scripts/superdesk-workspace/content/content.js:565
+msgid "Sport Subservice"
+msgstr ""
+
 #: scripts/superdesk/missing-translations-strings.js:21
 msgid "stage"
 msgstr ""
@@ -5254,6 +5298,7 @@ msgstr ""
 msgid "Strong"
 msgstr ""
 
+#: scripts/superdesk-authoring/views/full-preview.html:65
 #: scripts/superdesk-workspace/content/content.js:542
 msgid "Subject"
 msgstr ""
@@ -5452,6 +5497,10 @@ msgstr ""
 #: scripts/superdesk-templates/templates.js:778
 #: scripts/superdesk-templates/views/templates.html:3
 msgid "Templates"
+msgstr ""
+
+#: scripts/superdesk-workspace/content/content.js:566
+msgid "Territory"
 msgstr ""
 
 #: scripts/superdesk-content-filters/views/manage-filters.html:103
@@ -5685,8 +5734,16 @@ msgstr ""
 msgid "Tomorrow"
 msgstr ""
 
-#: scripts/superdesk-authoring/views/full-preview.html:35
+#: scripts/superdesk-authoring/views/full-preview.html:75
 msgid "Topic"
+msgstr ""
+
+#: scripts/superdesk-workspace/content/content.js:567
+msgid "Topic (News)"
+msgstr ""
+
+#: scripts/superdesk-workspace/content/content.js:568
+msgid "Topic (Sport)"
 msgstr ""
 
 #: scripts/superdesk-profiling/views/profiling.html:33
@@ -5744,7 +5801,7 @@ msgstr ""
 msgid "Uncheck all"
 msgstr ""
 
-#: scripts/superdesk/editor2/editor.js:892
+#: scripts/superdesk/editor2/editor.js:893
 msgid "underline"
 msgstr ""
 
