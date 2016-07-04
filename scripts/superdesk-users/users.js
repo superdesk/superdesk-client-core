@@ -303,10 +303,13 @@
                     break;
 
                 case 'pending':
+                    query.is_enabled = true;
+                    query.is_active = true;
                     query.needs_activation = true;
                     break;
 
                 case 'inactive':
+                    query.is_enabled = true;
                     query.is_active = false;
                     break;
 
