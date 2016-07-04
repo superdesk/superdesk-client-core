@@ -160,43 +160,36 @@
                 });
             }
 
+            // Prepares search date in YYYY-MM-DD format
+            function formatDate(date) {
+                var arrDate = date.split('/');
+                return arrDate[2] + '-' + arrDate[1] + '-' + arrDate[0];
+            }
+
             function buildFilters(params, query) {
 
                 //created & modified date filters
                 if (params.beforefirstcreated || params.afterfirstcreated ||
-                    params.beforefirstmodified || params.afterfirstmodified) {
-                    var range = {firstcreated: {}, firstmodified: {}};
+                    params.beforeversioncreated || params.afterversioncreated) {
+                    var range = {firstcreated: {}, versioncreated: {}};
 
                     if (params.beforefirstcreated) {
-                        range.firstcreated.lte = params.beforefirstcreated;
+                        range.firstcreated.lte = formatDate(params.beforefirstcreated);
                     }
 
                     if (params.afterfirstcreated) {
-                        range.firstcreated.gte = params.afterfirstcreated;
+                        range.firstcreated.gte = formatDate(params.afterfirstcreated);
                     }
 
-                    if (params.beforefirstmodified) {
-                        range.firstmodified.lte = params.beforefirstmodified;
-                    }
-
-                    if (params.afterfirstmodified) {
-                        range.firstmodified.gte = params.afterfirstmodified;
-                    }
-
-                    query.post_filter({range: range});
-                }
-
-                if (params.beforeversioncreated || params.afterversioncreated) {
-                    var vrange = {versioncreated: {}};
                     if (params.beforeversioncreated) {
-                        vrange.versioncreated.lte = params.beforeversioncreated;
+                        range.versioncreated.lte = formatDate(params.beforeversioncreated);
                     }
 
                     if (params.afterversioncreated) {
-                        vrange.versioncreated.gte = params.afterversioncreated;
+                        range.versioncreated.gte = formatDate(params.afterversioncreated);
                     }
 
-                    query.post_filter({range: vrange});
+                    query.post_filter({range: range});
                 }
 
                 if (params.after)

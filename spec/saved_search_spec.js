@@ -64,6 +64,7 @@ describe('saved_search', function() {
         browser.sleep(500);
 
         globalSearch.openSavedSearchTab();
+        browser.sleep(200);
         savedSearch = element.all(by.repeater('search in globalSavedSearches')).get(0);
         expect(savedSearch.element(by.css('.search-name')).getText()).toBe('A Global Search by first name last name');
     });

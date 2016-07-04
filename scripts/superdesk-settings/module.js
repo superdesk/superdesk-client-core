@@ -39,7 +39,9 @@
                     }
 
                     scope.$watch('date', function(date) {
-                        $location.search(attrs.location, date);
+                        if (date != null) {
+                            $location.search(attrs.location, date);
+                        }
                     });
                 }
             };
