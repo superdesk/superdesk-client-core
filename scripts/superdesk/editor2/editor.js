@@ -745,7 +745,8 @@ angular.module('superdesk.editor2', [
                 cleanPastedHTML: false
             },
             anchor: {
-                placeholderText: gettext('Paste or type a full link')
+                placeholderText: gettext('Paste or type a full link'),
+                linkValidation: true
             },
             anchorPreview: {
                 showWhenToolbarIsVisible: true
