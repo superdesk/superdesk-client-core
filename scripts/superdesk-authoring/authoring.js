@@ -3492,7 +3492,7 @@
             },
             templateUrl: 'scripts/superdesk-authoring/views/full-preview.html',
             link: function (scope, elem, attr, ctrl) {
-                scope.hide_images = true;
+                scope.hide_images = false;
 
                 scope.filterKey = config.previewSubjectFilterKey || '';
 

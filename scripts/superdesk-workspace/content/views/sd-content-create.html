@@ -16,7 +16,7 @@
     </button>
 </li>
 
-<li ng-if="canCreatePackage()">
+<li ng-if="canCreatePackage() && !$root.config.features.hideCreatePackage">
     <button id="create_package"  ng-click="createPackage()">
         <i class="icon-plus-small icon-round icon-white"></i>
         {{ :: 'Empty Package' | translate }}
