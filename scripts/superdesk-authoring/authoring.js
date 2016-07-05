@@ -1359,50 +1359,26 @@
                 function validate(orig, item) {
                     $scope.error = {};
                     tryPublish = true;
-                    _.extend(orig, item);
+                    var validationSchema = angular.extend({}, authoring.schema, authoring.schema.associations.schema || {});
+                    var validationItem = angular.extend({}, orig, item, item.associations);
+
                     angular.forEach(authoring.editor, function (editor, key) {
-                        if (!authoring.schema[key]) {
+                        if (!validationSchema[key]) {
                             var found = false;
                             var cv = _.find(metadata.cvs, function(item) {
                                 return item._id === key;
                             });
 
-                            if (cv) {
-                                var field = cv.schema_field || 'subject';
-                                angular.forEach(cv.items, function(row) {
-                                    var element = _.find(orig[field], function(item) {
-                                           return item.qcode === row.qcode;
-                                       });
-                                    if (element) {
-                                        found = true;
-                                    }
-                                });
+                            var subjectMetadata = _.map(validationItem.subject, 'scheme');
+                            if (cv && _.includes(subjectMetadata, cv._id)) {
+                                found = true;
                             }
 
                             $scope.error[key] = !found;
                         } else {
-                            var value = orig[key];
-                            if (value) {
-                                if (typeof value === 'object' && hasNullValue(value)) {
-                                    $scope.error[key] = true;
-                                } else {
-                                    $scope.error[key] = false;
-                                }
-                            } else {
-                                $scope.error[key] = true;
-                            }
+                            $scope.error[key] = !validationItem[key];
                         }
                     });
-                }
-
-                function hasNullValue (target) {
-                    for (var member in target) {
-                        if (target[member] == null) {
-                            return true;
-                        }
-                    }
-
-                    return false;
                 }
 
                 function notifyPreconditionFailed() {
