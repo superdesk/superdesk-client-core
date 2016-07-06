@@ -2198,12 +2198,7 @@
                         return sendContent(deskId, stageId, scope.selectedMacro, open);
                     } else if (scope.config) {
                         // Remember last destination desk and stage
-                        if (scope.destination_last &&
-                                (scope.destination_last.desk !== deskId && scope.destination_last.stage !== stageId)) {
-                            updateLastDestination(deskId, stageId);
-                        } else {
-                            updateLastDestination(deskId, stageId);
-                        }
+                        updateLastDestination(deskId, stageId);
 
                         return scope.config.resolve({
                             desk: deskId,
