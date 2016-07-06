@@ -73,7 +73,6 @@ function FindReplaceDirective($timeout, $rootScope, editor, macros) {
             scope.$watch('caseSensitive', function (caseSensitive) {
                 editor.setSettings({findreplace: {diff: getDiff(), caseSensitive: caseSensitive}});
                 editor.render();
-                editor.selectNext();
             });
 
             scope.$on('$destroy', function() {
