@@ -154,32 +154,34 @@
     </fieldset>
     <fieldset ng-show="repo.search === 'paimg' || repo.search.indexOf('scanpix') === 0">
         <div class="field">
-            <label for="search-text" translate>Search</label>
+            <label class="search-label" for="search-text" translate>Search</label>
             <div class="control">
                 <input type="text" id="search-text" ng-model="meta.text">
             </div>
             <div ng-show="repo.search.indexOf('scanpix') === 0">
-                <label for="search-id" translate>Scanpix ID(s)</label>
+                <label class="search-label" for="search-id" translate>Scanpix ID(s)</label>
                 <div class="control">
                     <input type="text" id="search-id" ng-model="meta.id">
                 </div>
             </div>
             <div ng-show="repo.search === 'paimg'">
-            <label ng-show="repo.search === 'paimg'" for="search-starred" translate>Editor's Choice</label>
+                <label class="search-label" ng-show="repo.search === 'paimg'" for="search-starred" translate>Editor's Choice</label>
                 <div class="control">
                     <input type="checkbox" id="search-starred" ng-model="meta.starred">
                 </div>
             </div>
             <div ng-if="repo.search.indexOf('scanpix') === 0" >
-                <label for="search-bw" translate>Black&amp;White</label>
-                <div class="control">
-                    <input type="checkbox" id="search-bw" ng-model="meta.bw">
+                <div class="checkbox">
+                    <label class="search-label">
+                        <input type="checkbox" id="search-bw" ng-model="meta.bw">{{:: 'Black&White' | translate}}
+                    </label>
                 </div>
-                <label for="search-clear_edge" translate>Clear Edge</label>
-                <div class="control">
-                    <input type="checkbox" id="search-clear_edge" ng-model="meta.clear_edge">
+                <div class="checkbox">
+                    <label class="search-label">
+                        <input type="checkbox" id="search-clear_edge" ng-model="meta.clear_edge">{{:: 'Clear Edge' | translate}}
+                    </label>
                 </div>
-                <label for="from-desk">
+                <label class="search-label" for="from-desk">
                     {{:: 'Subscription' | translate}}
                 </label>
                 <select

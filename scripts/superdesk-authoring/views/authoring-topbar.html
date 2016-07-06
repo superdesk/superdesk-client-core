@@ -58,12 +58,12 @@
       </div>
     </div>
     <div class="subnav__button-stack subnav__button-stack--default" sd-media-query min-width="180">
-      <button id="Edit" class="btn btn-medium" ng-if="item._type !== 'legal_archive'"
+      <button id="Edit" class="btn btn-medium btn-info" ng-if="item._type !== 'legal_archive'"
         ng-show="action === 'view' && !item._editable && itemActions.edit"
         ng-click="edit()"
         translate>Edit</button>
 
-      <button class="btn"
+      <button class="btn btn-info"
         ng-show="(action === 'view' || !item._editable) && itemActions.deschedule"
         ng-click="deschedule()"
         translate>Deschedule</button>
