@@ -692,6 +692,7 @@
                 margin-left: 38px;
                 display: flex;
                 box-sizing: border-box;
+                white-space: nowrap;
                 dl {
                     margin: 0;
                     white-space:nowrap;
@@ -709,10 +710,17 @@
                         }
                 }
             }
+            div:not(.state-label) {
+                display: flex;
+                white-space: nowrap;
+                overflow: hidden;
+            }
             .state-label {
                 margin-top: 2px;
                 margin-right: 4px;
                 white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             .label {
                 margin-right: 6px;
