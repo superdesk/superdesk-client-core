@@ -1019,7 +1019,8 @@
 
                         takekey: function(props) {
                             if (props.item.anpa_take_key) {
-                                return React.createElement('div', {className: 'takekey', key: 'takekey'}, props.item.anpa_take_key);
+                                return React.createElement('div', {className: 'takekey', key: 'takekey'},
+                                    gettextCatalog.getString(props.item.anpa_take_key));
                             }
                         },
 
