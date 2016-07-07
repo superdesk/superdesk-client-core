@@ -1003,6 +1003,7 @@
                     height: result.height,
                     media: result._id
                 });
+                $scope.data.isDirty = true;
                 return api.save('picture_renditions', {item: result.item}).then(function(item) {
                     $scope.data.item.renditions = item.renditions;
                     $scope.data.metadata = $scope.data.item;
