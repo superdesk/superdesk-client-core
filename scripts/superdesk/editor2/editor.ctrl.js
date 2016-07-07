@@ -124,7 +124,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                         url = block.association.renditions.viewImage.href;
                     }
                     block.body = '';
-                    editor.generateImageTag(block.association).then(function(img) {
+                    editor.generateMediaTag(block.association).then(function(img) {
                         block.body = img;
                     });
                 } else {

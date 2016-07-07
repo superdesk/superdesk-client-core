@@ -474,51 +474,68 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         return active ? active.textContent : null;
     };
 
-    this.generateImageTag = function(data) {
-        var url = data.url, altText = data.altText;
-        var promiseFinished;
-        // if this is a SD archive, we use its properties
-        if (data._type === 'archive' || data.type === 'picture') {
-            // get expected renditions list
-            promiseFinished = renditionsService.get().then(function(renditionsList) {
-                // ]use the first rendtion as default
-                var firstRendition = data.renditions[renditionsList[0].name];
-                if (angular.isDefined(firstRendition)) {
-                    url = firstRendition.href;
-                } else {
-                    // use "viewImage" rendition as fallback
-                    url = data.renditions.viewImage.href;
-                }
-                // if a `alt_text` exists, otherwise we fill w/ `description_text`
-                altText = data.alt_text || data.description_text;
-                return renditionsList;
-            });
-        }
-        // when previous promise is finished, compose the html
-        return $q.when(promiseFinished, function(renditionsList) {
-            var html = ['<img',
-            'src="' + url + '"',
-            'alt="' + _.escape(altText || '') + '"'];
-            // add a `srcset` attribute if renditions are availables
-            // NOTE: if renditions from renditionsService are not available For
-            // this picture, we should maybe use its own renditons
-            if (renditionsList && data.renditions) {
-                var renditionsHtml = [];
-                renditionsList.forEach(function(r) {
-                    if (r.width) {
-                        var rendition = data.renditions[r.name];
-                        if (angular.isDefined(rendition)) {
-                            renditionsHtml.push(rendition.href.replace('http://', '//') + ' ' + rendition.width + 'w');
-                        }
+    this.generateMediaTag = function(data) {
+        var mediaTypes = {
+            'video': function() {
+                var videoTag = ['<video controls="controls">'];
+                angular.forEach(data.renditions, function(rendition, name) {
+                    if (_.some(['.mp4', '.webm', '.ogv'], function(ext) {
+                        return _.endsWith(rendition.href, ext);
+                    })) {
+                        videoTag.push('<source src="' + rendition.href + '">');
                     }
                 });
-                if (renditionsHtml.length > 0) {
-                    html.push('srcset="' + renditionsHtml.join(', ') + '"');
+                videoTag.push('</video>');
+                return videoTag.join('');
+            },
+            'picture': function() {
+                var url = data.url, altText = data.altText;
+                var promiseFinished;
+                // if this is a SD archive, we use its properties
+                if (data._type === 'archive' || data.type === 'picture') {
+                    // get expected renditions list
+                    promiseFinished = renditionsService.get().then(function(renditionsList) {
+                        // ]use the first rendtion as default
+                        var firstRendition = data.renditions[renditionsList[0].name];
+                        if (angular.isDefined(firstRendition)) {
+                            url = firstRendition.href;
+                        } else {
+                            // use "viewImage" rendition as fallback
+                            url = data.renditions.viewImage.href;
+                        }
+                        // if a `alt_text` exists, otherwise we fill w/ `description_text`
+                        altText = data.alt_text || data.description_text;
+                        return renditionsList;
+                    });
                 }
+                // when previous promise is finished, compose the html
+                return $q.when(promiseFinished, function(renditionsList) {
+                    var html = ['<img',
+                    'src="' + url + '"',
+                    'alt="' + _.escape(altText || '') + '"'];
+                    // add a `srcset` attribute if renditions are availables
+                    // NOTE: if renditions from renditionsService are not available For
+                    // this picture, we should maybe use its own renditons
+                    if (renditionsList && data.renditions) {
+                        var renditionsHtml = [];
+                        renditionsList.forEach(function(r) {
+                            if (r.width) {
+                                var rendition = data.renditions[r.name];
+                                if (angular.isDefined(rendition)) {
+                                    renditionsHtml.push(rendition.href.replace('http://', '//') + ' ' + rendition.width + 'w');
+                                }
+                            }
+                        });
+                        if (renditionsHtml.length > 0) {
+                            html.push('srcset="' + renditionsHtml.join(', ') + '"');
+                        }
+                    }
+                    html.push('/>');
+                    return html.join(' ');
+                });
             }
-            html.push('/>');
-            return html.join(' ');
-        });
+        };
+        return $q.when(mediaTypes[data.type]());
     };
 
     this.getSelectedText = function() {
@@ -579,7 +596,7 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
             renditions.crop(picture).then(function(picture) {
                 // update block
                 vm.model.association = picture;
-                editor.generateImageTag(picture).then(function(img) {
+                editor.generateMediaTag(picture).then(function(img) {
                     vm.model.body = img;
                 });
                 // update caption
@@ -647,22 +664,22 @@ angular.module('superdesk.editor2', [
                 if (scope.sdTextEditorDropZone === 'false') {
                     return;
                 }
-                var PICTURE_TYPE = 'application/superdesk.item.picture';
-                element
-                .on('drop', function(event) {
+                var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.video'];
+                element.on('drop', function(event) {
                     event.preventDefault();
-                    var item = angular.fromJson(event.originalEvent.dataTransfer.getData(PICTURE_TYPE));
+                    var media_type = event.originalEvent.dataTransfer.types[0];
+                    var item = angular.fromJson(event.originalEvent.dataTransfer.getData(media_type));
                     var paragraph = angular.element(event.target);
                     paragraph.removeClass(dragOverClass);
                     if (paragraph.text() === '') {
                         // select paragraph element in order to know position
                         ctrl.selectElement(paragraph.get(0));
-                        ctrl.insertPicture(item);
+                        ctrl.insertMedia(item);
                     }
                 })
                 .on('dragover', function(event) {
                     var paragraph = angular.element(event.target);
-                    if (event.originalEvent.dataTransfer.types[0] === PICTURE_TYPE) {
+                    if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
                         // allow to overwite the drop binder (see above)
                         event.preventDefault();
                         // if dragged element is a picture and if the paragraph is empty, highlight the paragraph
@@ -1265,28 +1282,32 @@ angular.module('superdesk.editor2', [
                     updateModel: function() {
                         editor.commitScope(scope);
                     },
-                    insertPicture: function(picture) {
+                    insertMedia: function(media) {
+                        var mediaType = {
+                            'picture': 'Image',
+                            'video': 'Video'
+                        };
                         var imageBlock = {
                             blockType: 'embed',
-                            embedType: 'Image',
-                            caption: picture.description_text,
+                            embedType: mediaType[media.type],
+                            caption: media.description_text,
                             loading: true,
-                            association: picture
+                            association: media
                         };
                         vm.sdEditorCtrl.splitAndInsert(vm, imageBlock).then(function(block) {
-                            // load the picture and update the block
+                            // load the media and update the block
                             $q.when((function() {
                                 if (config.features && 'editFeaturedImage' in config.features &&
-                                    !config.features.editFeaturedImage && picture._type === 'externalsource') {
-                                    return picture;
+                                    !config.features.editFeaturedImage && media._type === 'externalsource') {
+                                    return media;
                                 } else {
-                                    return renditions.ingest(picture);
+                                    return renditions.ingest(media);
                                 }
-                            })()).then(function(picture) {
-                                editor.generateImageTag(picture).then(function(imgTag) {
+                            })()).then(function(media) {
+                                editor.generateMediaTag(media).then(function(imgTag) {
                                     angular.extend(block, {
                                         body: imgTag,
-                                        association: picture,
+                                        association: media,
                                         loading: false
                                     });
                                     $timeout(vm.sdEditorCtrl.commitChanges);
