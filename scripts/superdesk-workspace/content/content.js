@@ -149,7 +149,7 @@
             var item = newItem(template.data.type || null);
             angular.extend(item, templates.pickItemData(template.data || {}), {template: template._id});
             // set the dateline date to default utc date.
-            if (item.dateline && item.located) {
+            if (item.dateline && item.dateline.located) {
                 item.dateline = _.omit(item.dateline, 'text');
                 item.dateline.date = $filter('formatDateTimeString')();
             }
