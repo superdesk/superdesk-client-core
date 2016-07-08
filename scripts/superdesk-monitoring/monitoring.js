@@ -413,6 +413,7 @@
                     preview(args.item);
                 });
                 scope.$on('item:unspike', scheduleQuery);
+                scope.$on('item:move', scheduleQuery);
                 scope.$on('$routeUpdate', scheduleQuery);
                 scope.$on('broadcast:preview', function(event, args) {
                     scope.previewingBroadcast = true;
