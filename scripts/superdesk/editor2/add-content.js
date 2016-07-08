@@ -132,7 +132,7 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
             addPicture: function() {
                 superdesk.intent('upload', 'media').then(function(images) {
                     $q.all(images.map(function(image) {
-                        return editor.generateImageTag(image).then(function(imgTag) {
+                        return editor.generateMediaTag(image).then(function(imgTag) {
                             return {
                                 blockType: 'embed',
                                 embedType: 'Image',
