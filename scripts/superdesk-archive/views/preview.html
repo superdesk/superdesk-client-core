@@ -26,7 +26,7 @@
               <span ng-if="selected.preview.slugline" class="keyword" title="{{selected.preview.slugline}}">{{selected.preview.slugline}}</span>
             </div>
             <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="selected.preview.anpa_take_key">
-              <span class="inline-label">takekey:</span><span class="takekey">{{selected.preview.anpa_take_key}}</span>
+              <span class="inline-label">takekey:</span><span class="takekey">{{selected.preview.anpa_take_key | translate}}</span>
             </div>
             <div class="preview-header__flex-row">
               <span sd-item-state data-state=selected.preview.state data-embargo=item.embargo></span>

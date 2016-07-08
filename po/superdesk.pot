@@ -4,7 +4,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: scripts/superdesk-authoring/authoring.js:3032
+#: scripts/superdesk-authoring/authoring.js:3033
 msgid "\" sent at:"
 msgstr ""
 
@@ -20,6 +20,10 @@ msgstr ""
 msgid "'BYLINE is a required field'"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:27
+msgid "'DATELINE is a required field'"
+msgstr ""
+
 #: scripts/superdesk/missing-translations-strings.js:17
 msgid "'GENRE is a required field'"
 msgstr ""
@@ -30,6 +34,10 @@ msgstr ""
 
 #: scripts/superdesk/missing-translations-strings.js:19
 msgid "'HEADLINE is a required field'"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:25
+msgid "'PLACE is a required field'"
 msgstr ""
 
 #: scripts/superdesk/missing-translations-strings.js:19
@@ -66,8 +74,52 @@ msgstr ""
 msgid "--- Not selected ---"
 msgstr ""
 
+#: scripts/superdesk/missing-translations-strings.js:23
+msgid "10th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:23
+msgid "11th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:24
+msgid "12th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:24
+msgid "13th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:24
+msgid "14th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:24
+msgid "15th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:24
+msgid "16th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:24
+msgid "17th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:25
+msgid "18th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:25
+msgid "19th update"
+msgstr ""
+
 #: scripts/superdesk-vocabularies/views/vocabulary-config-modal.html:42
 msgid "2 character limit"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:25
+msgid "20th update"
 msgstr ""
 
 #: scripts/superdesk/missing-translations-strings.js:22
@@ -88,6 +140,22 @@ msgstr ""
 
 #: scripts/superdesk/missing-translations-strings.js:22
 msgid "5th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:23
+msgid "6th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:23
+msgid "7th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:23
+msgid "8th update"
+msgstr ""
+
+#: scripts/superdesk/missing-translations-strings.js:23
+msgid "9th update"
 msgstr ""
 
 #: scripts/superdesk-desks/views/desk-config-modal.html:107
@@ -125,7 +193,7 @@ msgid "ANPA Category"
 msgstr ""
 
 #: scripts/superdesk-workspace/content/content.js:537
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/missing-translations-strings.js:26
 msgid "ANPA Take Key"
 msgstr ""
 
@@ -530,7 +598,7 @@ msgstr ""
 msgid "Authentication Info"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2835
+#: scripts/superdesk-authoring/authoring.js:2836
 #: scripts/superdesk-authoring/multiedit/multiedit.js:309
 msgid "Authoring"
 msgstr ""
@@ -601,7 +669,7 @@ msgid "Body"
 msgstr ""
 
 #: scripts/superdesk-workspace/content/content.js:547
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/missing-translations-strings.js:26
 msgid "Body HTML"
 msgstr ""
 
@@ -618,7 +686,7 @@ msgid "Broadcast"
 msgstr ""
 
 #: scripts/superdesk-workspace/content/content.js:548
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/missing-translations-strings.js:26
 msgid "By"
 msgstr ""
 
@@ -629,7 +697,7 @@ msgid ""
 "                    item's categories (along with any of its existing categories)."
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2597
+#: scripts/superdesk-authoring/authoring.js:2598
 msgid "By {{ display_name }}"
 msgstr ""
 
@@ -839,7 +907,7 @@ msgstr ""
 msgid "Closed"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2959
+#: scripts/superdesk-authoring/authoring.js:2960
 msgid "Closes current item"
 msgstr ""
 
@@ -939,7 +1007,7 @@ msgstr ""
 #: scripts/superdesk-desks/views/desk-config-modal.html:60
 #: scripts/superdesk-workspace/content/content.js:73
 #: scripts/superdesk-workspace/content/views/profile-settings.html:4
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/missing-translations-strings.js:26
 msgid "Content Profiles"
 msgstr ""
 
@@ -995,7 +1063,7 @@ msgstr ""
 msgid "Copyright notice"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2888
+#: scripts/superdesk-authoring/authoring.js:2889
 msgid "Correct item"
 msgstr ""
 
@@ -1161,7 +1229,7 @@ msgid "Dashboard is empty."
 msgstr ""
 
 #: scripts/superdesk-workspace/content/content.js:549
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/missing-translations-strings.js:26
 msgid "Date"
 msgstr ""
 
@@ -1181,6 +1249,7 @@ msgid "Days"
 msgstr ""
 
 #: scripts/superdesk-users/views/settings-roles.html:43
+#: scripts/superdesk-workspace/content/views/schema-editor.html:26
 msgid "Default"
 msgstr ""
 
@@ -1460,7 +1529,7 @@ msgstr ""
 msgid "Ed. Note"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2850
+#: scripts/superdesk-authoring/authoring.js:2851
 #: scripts/superdesk-authoring/views/authoring-topbar.html:61
 #: scripts/superdesk-desks/views/settings.html:24
 #: scripts/superdesk-desks/views/stage-item-list.html:28
@@ -1494,7 +1563,7 @@ msgstr ""
 msgid "Edit Content Profile"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2920
+#: scripts/superdesk-authoring/authoring.js:2921
 msgid "Edit Crop"
 msgstr ""
 
@@ -1906,7 +1975,7 @@ msgid "FTP Server URL"
 msgstr ""
 
 #: scripts/superdesk-archive/directives.js:646
-#: scripts/superdesk-authoring/authoring.js:3028
+#: scripts/superdesk-authoring/authoring.js:3029
 msgid "Failed to apply kill template to the item."
 msgstr ""
 
@@ -1934,7 +2003,7 @@ msgstr ""
 msgid "Failed to publish and continue."
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2322
+#: scripts/superdesk-authoring/authoring.js:2323
 msgid "Failed to send and continue."
 msgstr ""
 
@@ -2374,7 +2443,7 @@ msgstr ""
 msgid "In Spiked"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:3032
+#: scripts/superdesk-authoring/authoring.js:3033
 msgid "In the story \""
 msgstr ""
 
@@ -2489,7 +2558,7 @@ msgstr ""
 msgid "Item already open."
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2436
+#: scripts/superdesk-authoring/authoring.js:2437
 msgid "Item fetched."
 msgstr ""
 
@@ -2541,8 +2610,8 @@ msgstr ""
 msgid "Item sent to Subscriber"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2358
-#: scripts/superdesk-authoring/authoring.js:2420
+#: scripts/superdesk-authoring/authoring.js:2359
+#: scripts/superdesk-authoring/authoring.js:2421
 msgid "Item sent."
 msgstr ""
 
@@ -2578,7 +2647,7 @@ msgstr ""
 msgid "Kill"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2866
+#: scripts/superdesk-authoring/authoring.js:2867
 msgid "Kill item"
 msgstr ""
 
@@ -2725,7 +2794,7 @@ msgid "Local Readonly"
 msgstr ""
 
 #: scripts/superdesk-workspace/content/content.js:550
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/missing-translations-strings.js:26
 #: scripts/superdesk/missing-translations-strings.js:9
 msgid "Located"
 msgstr ""
@@ -3005,7 +3074,7 @@ msgid ""
 msgstr ""
 
 #: scripts/superdesk-archive/module.js:667
-#: scripts/superdesk-authoring/authoring.js:2319
+#: scripts/superdesk-authoring/authoring.js:2320
 msgid "New take created."
 msgstr ""
 
@@ -3151,6 +3220,12 @@ msgstr ""
 msgid "Not been transmitted to any subscriber"
 msgstr ""
 
+#: scripts/superdesk-workspace/content/views/schema-editor.html:29
+#: scripts/superdesk-workspace/content/views/schema-editor.html:32
+#: scripts/superdesk-workspace/content/views/schema-editor.html:33
+msgid "Not set"
+msgstr ""
+
 #: scripts/superdesk-ingest/views/settings/ingest-sources-content.html:127
 msgid "Notification"
 msgstr ""
@@ -3218,7 +3293,7 @@ msgstr ""
 msgid "Oops! There are no items."
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2902
+#: scripts/superdesk-authoring/authoring.js:2903
 #: scripts/superdesk-ingest/views/settings/ingest-sources-content.html:142
 msgid "Open"
 msgstr ""
@@ -3682,10 +3757,6 @@ msgstr ""
 msgid "Publish"
 msgstr ""
 
-#: scripts/superdesk-authoring/views/authoring-topbar.html:55
-msgid "Publish & Continue"
-msgstr ""
-
 #: scripts/superdesk-publish/publish.js:706
 msgid "Publish Queue"
 msgstr ""
@@ -3697,6 +3768,7 @@ msgid "Publish Schedule"
 msgstr ""
 
 #: scripts/superdesk-authoring/views/authoring-topbar.html:54
+#: scripts/superdesk-authoring/views/authoring-topbar.html:55
 msgid "Publish and Continue"
 msgstr ""
 
@@ -3921,12 +3993,9 @@ msgstr ""
 msgid "Replace with"
 msgstr ""
 
+#: scripts/superdesk-workspace/content/views/schema-editor.html:23
 #: scripts/superdesk/ui/ui.js:1238
 msgid "Required"
-msgstr ""
-
-#: scripts/superdesk-workspace/content/views/schema-editor.html:23
-msgid "Required:"
 msgstr ""
 
 #: scripts/superdesk-ingest/views/settings/rssConfig.html:14
@@ -4137,8 +4206,11 @@ msgid "Save Search"
 msgstr ""
 
 #: scripts/superdesk-authoring/authoring.js:856
+msgid "Save and publish"
+msgstr ""
+
 #: scripts/superdesk-authoring/authoring.js:869
-msgid "Save and {{ action }}"
+msgid "Save and send"
 msgstr ""
 
 #: scripts/superdesk-authoring/views/authoring-topbar.html:126
@@ -4173,7 +4245,7 @@ msgstr ""
 msgid "Saved search removed"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2960
+#: scripts/superdesk-authoring/authoring.js:2961
 msgid "Saves current item"
 msgstr ""
 
@@ -4766,11 +4838,11 @@ msgstr ""
 msgid "Takes Package"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2242
+#: scripts/superdesk-authoring/authoring.js:2243
 msgid "Takes cannot be scheduled."
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2247
+#: scripts/superdesk-authoring/authoring.js:2248
 msgid "Takes cannot have Embargo."
 msgstr ""
 
@@ -4881,8 +4953,11 @@ msgid "There are items locked or not published. Do you want to continue?"
 msgstr ""
 
 #: scripts/superdesk-authoring/authoring.js:853
+msgid "There are some unsaved changes, do you want to save and publish it now?"
+msgstr ""
+
 #: scripts/superdesk-authoring/authoring.js:866
-msgid "There are some unsaved changes, do you want to save it and {{ action }} now?"
+msgid "There are some unsaved changes, do you want to save and send it now?"
 msgstr ""
 
 #: scripts/superdesk-authoring/authoring.js:840
@@ -4992,7 +5067,7 @@ msgstr ""
 msgid "This field is required"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:3035
+#: scripts/superdesk-authoring/authoring.js:3036
 msgid "This is a corrected repeat."
 msgstr ""
 
@@ -5199,7 +5274,7 @@ msgstr ""
 msgid "Unlock content"
 msgstr ""
 
-#: scripts/superdesk-authoring/authoring.js:2958
+#: scripts/superdesk-authoring/authoring.js:2959
 msgid "Unlocks current item"
 msgstr ""
 
@@ -5786,6 +5861,10 @@ msgstr ""
 msgid "hrs"
 msgstr ""
 
+#: scripts/superdesk-workspace/content/views/schema-editor.html:43
+msgid "ie. h1, h2, strong, embed"
+msgstr ""
+
 #: scripts/superdesk/ui/views/sd-timepicker-popup.html:7
 msgid "in 1 h"
 msgstr ""
@@ -5874,7 +5953,7 @@ msgid "many"
 msgstr ""
 
 #: scripts/superdesk-workspace/content/views/schema-editor.html:29
-msgid "max:"
+msgid "max"
 msgstr ""
 
 #: scripts/superdesk-users/views/edit-form.html:140
@@ -6202,6 +6281,14 @@ msgstr ""
 
 #: scripts/superdesk-search/react.js:445
 msgid "workspace"
+msgstr ""
+
+#: scripts/superdesk-authoring/views/authoring-topbar.html:56
+msgid "{{ :: 'P & C' | translate }}"
+msgstr ""
+
+#: scripts/superdesk-authoring/views/authoring-topbar.html:55
+msgid "{{ :: 'Publish and Continue' | translate }}"
 msgstr ""
 
 #: scripts/superdesk-authoring/authoring.js:1272

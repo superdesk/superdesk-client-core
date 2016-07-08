@@ -20,17 +20,17 @@
                 <form>
                     <fieldset>
                        <div class="field">
-                           <span translate>Required:</span> <div sd-check ng-model="props.required"></div>
+                           <span translate>Required</span>: <div sd-check ng-model="props.required"></div>
                        </div>
                        <div class="field">
-                           <span translate>Order:</span> <input placeholder="Default" type="number" class="input-small" ng-model="model.editor[id].order" />
+                           <span translate>Order:</span> <input placeholder="{{ 'Default' | translate }}" type="number" class="input-small" ng-model="model.editor[id].order" />
                        </div>
                        <div class="field">
-                           <span translate>Length min:</span> <input placeholder="Not set" type="number" class="input-small" ng-model="props.minlength" /> <span translate>max:</span> <input placeholder="Not set" type="number" class="input-small" ng-model="props.maxlength" />
+                           <span translate>Length min:</span> <input placeholder="{{ 'Not set' | translate }}" type="number" class="input-small" ng-model="props.minlength" /> <span translate>max</span>: <input placeholder="Not set" type="number" class="input-small" ng-model="props.maxlength" />
                        </div>
                        <div class="field" ng-switch="props.type">
-                           <span translate>Default:</span> <input ng-switch-default placeholder="Not set" type="text" class="input-medium" ng-model="model.editor[id].default" />
-                           <input ng-switch-when="number" placeholder="Not set" type="number" class="input-medium" ng-model="model.editor[id].default" />
+                           <span translate>Default:</span> <input ng-switch-default placeholder="{{ 'Not set' | translate }}" type="text" class="input-medium" ng-model="model.editor[id].default" />
+                           <input ng-switch-when="number" placeholder="{{ 'Not set' | translate }}" type="number" class="input-medium" ng-model="model.editor[id].default" />
                        </div>
                        <div class="field">
                            <span translate>Width:</span> <select class="input-medium" ng-model="model.editor[id].sdWidth">
@@ -40,7 +40,7 @@
                             </select>
                         </div>
                         <div class="field">
-                            <span translate>Format options:</span> <input placeholder="ie. h1, h2, strong, embed" type="text" class="input-large" ng-model="model.editor[id].formatOptions" string-to-array />
+                            <span translate>Format options:</span> <input placeholder="{{ 'ie. h1, h2, strong, embed' | translate }}" type="text" class="input-large" ng-model="model.editor[id].formatOptions" string-to-array />
                         </div>
                     </fieldset>
                 </form>
