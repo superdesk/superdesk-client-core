@@ -21,7 +21,8 @@ describe('monitoring', function() {
         expect(ctrl.state['with-preview']).toBeFalsy();
     }));
 
-    it('can edit item', inject(function($controller, $rootScope) {
+    it('can edit item', inject(function($controller, $rootScope, session) {
+        session.identity = {_id: 'foo'};
         var scope = $rootScope.$new(),
             ctrl = $controller('Monitoring', {$scope: scope}),
             item = {};
@@ -34,7 +35,8 @@ describe('monitoring', function() {
     }));
 
     describe('cards service', function() {
-        it('can get criteria for stage', inject(function(cards) {
+        it('can get criteria for stage', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {_id: '123'};
             var criteria = cards.criteria(card);
             expect(criteria.source.query.filtered.filter.and).toContain({
@@ -59,13 +61,15 @@ describe('monitoring', function() {
             });
         }));
 
-        it('can get criteria for saved search', inject(function(cards) {
+        it('can get criteria for saved search', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {type: 'search', search: {filter: {query: {q: 'foo'}}}};
             var criteria = cards.criteria(card);
             expect(criteria.source.query.filtered.query.query_string.query).toBe('foo');
         }));
 
-        it('can get criteria for spike desk', inject(function(cards) {
+        it('can get criteria for spike desk', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {type: 'spike'};
             var criteria = cards.criteria(card);
             expect(criteria.source.query.filtered.filter.and).toContain({
@@ -76,7 +80,8 @@ describe('monitoring', function() {
             });
         }));
 
-        it('can get criteria for highlight', inject(function(cards) {
+        it('can get criteria for highlight', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {type: 'highlights'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
@@ -85,7 +90,8 @@ describe('monitoring', function() {
             });
         }));
 
-        it('can get criteria for stage with search', inject(function(cards) {
+        it('can get criteria for stage with search', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {_id: '123', query: 'test'};
             var criteria = cards.criteria(card);
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
@@ -98,20 +104,23 @@ describe('monitoring', function() {
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
-        it('can get criteria for spike with search', inject(function(cards) {
+        it('can get criteria for spike with search', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'spike', query: 'test'};
             var criteria = cards.criteria(card);
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
-        it('can get criteria for highlight with search', inject(function(cards) {
+        it('can get criteria for highlight with search', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {type: 'highlights', query: 'test'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
-        it('can get criteria for file type filter', inject(function(cards) {
+        it('can get criteria for file type filter', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text'])};
             var criteria = cards.criteria(card);
             expect(criteria.source.query.filtered.filter.and).toContain({
@@ -119,7 +128,8 @@ describe('monitoring', function() {
             });
         }));
 
-        it('can get criteria for saved search with search', inject(function(cards) {
+        it('can get criteria for saved search with search', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'search', query: 'test',
                         search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}}
             };
@@ -128,7 +138,8 @@ describe('monitoring', function() {
             expect(criteria.source.post_filter.and).toContain({terms: {type: ['picture']}});
         }));
 
-        it('can get criteria for file type filter with search', inject(function(cards) {
+        it('can get criteria for file type filter with search', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text']), query: 'test'};
             var criteria = cards.criteria(card);
             expect(criteria.source.query.filtered.filter.and).toContain({
@@ -136,7 +147,8 @@ describe('monitoring', function() {
             });
         }));
 
-        it('can get criteria for multiple file type filter', inject(function(cards) {
+        it('can get criteria for multiple file type filter', inject(function(cards, session) {
+            session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text', 'picture'])};
             var criteria = cards.criteria(card);
             expect(criteria.source.query.filtered.filter.and).toContain({
@@ -156,7 +168,8 @@ describe('monitoring', function() {
         }));
 
         it('can update items on item:move event',
-        inject(function($rootScope, $compile, $q, api, $timeout) {
+        inject(function($rootScope, $compile, $q, api, $timeout, session) {
+            session.identity = {_id: 'foo'};
             var scope = $rootScope.$new();
             $compile('<div sd-monitoring-view></div>')(scope);
             scope.$digest();
@@ -173,7 +186,8 @@ describe('monitoring', function() {
             expect(api.query).toHaveBeenCalled();
         }));
 
-        it('can edit non spiked item', inject(function($controller, $rootScope, $compile, authoringWorkspace) {
+        it('can edit non spiked item', inject(function($controller, $rootScope, $compile, authoringWorkspace, session) {
+            session.identity = {_id: 'foo'};
             var scope = $rootScope.$new(),
                 $elm = $compile('<div sd-monitoring-view></div>')(scope);
             scope.$digest();

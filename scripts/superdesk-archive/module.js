@@ -157,8 +157,8 @@
         };
     }
 
-    ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location'];
-    function ArchiveService(desks, session, api, $q, search, $location) {
+    ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location', 'config'];
+    function ArchiveService(desks, session, api, $q, search, $location, config) {
         /**
          * Adds 'task' property to the article represented by item.
          *
@@ -227,7 +227,7 @@
          *  @return {Object} the list of archive items
          */
         this.getRelatedItems = function(slugline) {
-            var before24HrDateTime = moment().subtract(1, 'days').format();
+            var before24HrDateTime = moment().subtract(1, 'days').format(config.view.dateformat);
             var params = {};
             params.q = 'slugline:(' + slugline + ')';
             params.ignoreKilled = true;
