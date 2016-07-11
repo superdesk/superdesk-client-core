@@ -83,7 +83,7 @@ describe('templates', function() {
                 where: '{"$and":[{"$or":[{"$or":[' +
                 '{"template_desks":{"$exists":false},"is_public":true},' +
                 '{"template_desks":{"$eq":[]},"is_public":true}]},' +
-                '{"user":"foo","is_public":false}],"schedule_desk":null}]}'
+                '{"user":"foo","is_public":false}]}]}'
             });
         }));
         it('can fetch templates using type parameter', inject(function(api, templates) {
@@ -93,7 +93,7 @@ describe('templates', function() {
                 page: 1,
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
                        '{"template_desks":{"$eq":[]},"is_public":true}]},' +
-                       '{"user":"foo","is_public":false}],"template_type":"create","schedule_desk":null}]}'
+                       '{"user":"foo","is_public":false}],"template_type":"create"}]}'
             });
         }));
         it('can fetch templates using desk parameter', inject(function(api, templates) {
@@ -104,7 +104,7 @@ describe('templates', function() {
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
                 '{"template_desks":{"$eq":[]},"is_public":true},' +
                 '{"template_desks":{"$in":["desk1"]},"is_public":true}]},' +
-                '{"user":"foo","is_public":false}],"schedule_desk":null}]}'
+                '{"user":"foo","is_public":false}]}]}'
             });
         }));
         it('can fetch templates using keyword parameter', inject(function(api, templates) {
@@ -115,7 +115,7 @@ describe('templates', function() {
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
                 '{"template_desks":{"$eq":[]},"is_public":true}]},' +
                 '{"user":"foo","is_public":false}],' +
-                '"schedule_desk":null,"template_name":{"$regex":"keyword","$options":"-i"}}]}'
+                '"template_name":{"$regex":"keyword","$options":"-i"}}]}'
             });
         }));
         it('can fetch templates by id', inject(function(api, templates) {

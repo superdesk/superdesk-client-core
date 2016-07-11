@@ -151,8 +151,6 @@
                 criteria.template_type = type;
             }
 
-            criteria.schedule_desk = null;
-
             if (templateName) {
                 criteria.template_name = {'$regex': templateName, '$options': '-i'};
             }
