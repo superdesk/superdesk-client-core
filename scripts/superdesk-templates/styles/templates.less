@@ -18,6 +18,7 @@
 }
 
 .template-editor-modal {
+    z-index: @zindexModal - 1; /* prevent the modal to overlay new modals */
     * { box-sizing: border-box; }
     .modal-body { padding: 0; }
 
@@ -162,4 +163,3 @@
         }
     }
 }
-
