@@ -101,7 +101,7 @@
                 </div>
                 <div ng-repeat="key in abbreviationKeys track by key">
                     <div class="field abbreviations-field">
-                        <label>{{key}}</label>
+                        <label class="case-sensitive">{{key}}</label>
                     </div>
                     <div class="field abbreviations-field">
                         <input type="text" ng-model="dictionary.content[key]" >
