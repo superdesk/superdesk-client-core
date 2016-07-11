@@ -752,7 +752,7 @@ form.flat, .form-flat {
         font-size: 12px;
         color: #999;
         position: absolute;
-        right: 0;
+        right: 10px;
         top: 8px;
       }
       label {
@@ -797,7 +797,7 @@ form.flat, .form-flat {
         margin: 0;
       }
       .info-editable {
-        width: 275px;
+        min-width: 275px;
         border-color: rgba(0,0,0,0.10) !important;
         border-width: 0 0 1px 0 !important;
         border-radius: 0px !important;
@@ -816,6 +816,9 @@ form.flat, .form-flat {
           .box-shadow(0 1px 0 0 rgba(94,169,200,1)) !important;
           border-color: rgba(94,169,200,1) !important;
         }
+      }
+      input.info-editable {
+        min-width: auto;
       }
       textarea.info-editable {
         height: 150px;
