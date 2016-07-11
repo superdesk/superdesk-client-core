@@ -4,6 +4,8 @@
     <ul ng-if="items.length" class="inline-content-items">
         <li ng-repeat="item in items track by generateTrackByIdentifier(item)" class="content-item"
             ng-click="action({item: item})"
+            ng-dblclick="edit(item); $event.stopPropagation();"
+            ng-init="$root.config.features.customMonitoringWidget && $first && !selected ? action({item: item}) : false"
             ng-class="{'content-item--locked': item.lock_user, shifted: allowed, active: item._id === selected._id}">
             <div class="content-item__type">
                 <span ng-if="item.type==='composite'">

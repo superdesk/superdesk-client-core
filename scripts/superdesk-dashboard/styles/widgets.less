@@ -283,11 +283,17 @@
                     display: none;
                 }
             }
+            &.custom-widget {
+                bottom: 50%;
+            }
         }
         .preview {
             position: absolute;
             left: 0; width: 100%; bottom: 0; top: 33px;
             .transition(all ease 0.2s);
+            &.custom-widget {
+                top: 50%;
+            }
             .nav {
                 height: 36px;
                 .border-box();
