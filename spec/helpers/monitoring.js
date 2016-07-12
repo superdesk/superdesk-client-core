@@ -267,7 +267,7 @@ function Monitoring() {
 
     this.selectGivenItem = function(item) {
         var itemTypeIcon = item.element(by.css('.type-icon'));
-        browser.actions().mouseMove(itemTypeIcon).perform();
+        browser.actions().mouseMove(itemTypeIcon, {x: -50, y: -50}).mouseMove(itemTypeIcon).perform();
         var checkbox = item.element(by.className('sd-checkbox'));
         waitFor(checkbox, 500);
         return checkbox.click();
@@ -539,6 +539,11 @@ function Monitoring() {
      */
     this.createPackageFromItems = function() {
         element(by.css('[ng-click="action.createPackage()"]')).click();
+    };
+
+    this.addToCurrentMultipleItems = function() {
+        var elem = element(by.className('multi-action-bar'));
+        elem.element(by.css('[ng-click="action.addToPackage()"]')).click();
     };
 
     /**

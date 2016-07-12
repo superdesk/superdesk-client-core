@@ -331,6 +331,12 @@ function Authoring() {
         return element(by.id(group.toUpperCase())).all(by.repeater('item in group.items'));
     };
 
+    this.removeGroupItem = function(group, index) {
+        var groupItem = this.getGroupItems(group).get(index);
+        groupItem.all(by.css('[ng-click="remove(group.id, item.residRef)"]')).get(index).click();
+
+    };
+
     this.getGroupItem = function(group, item) {
         return this.getGroupItems(group).get(item);
     };
