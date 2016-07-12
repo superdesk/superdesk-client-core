@@ -1215,7 +1215,8 @@
         return {
             restrict: 'A',
             link: function (scope, elem, attrs, ctrl) {
-                var invalidText = '<span id="required_span" class="sd-invalid-text">' + gettext('This field is required') + '</span>';
+                var invalidText = '<span id="required_span" class="sd-invalid-text">' +
+                gettextCatalog.getString('This field is required') + '</span>';
                 scope.$watch(attrs.required, function (required) {
 
                     if (!required) {

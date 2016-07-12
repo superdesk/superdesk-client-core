@@ -20,5 +20,9 @@ gettext('\'HEADLINE is a required field\'');gettext('\'ANPA_CATEGORY is a requir
 gettext('\'GENRE null value not allowed\'');gettext('412: Can\'t publish as item state is draft');gettext('production');gettext('search');
 gettext('desk Output');gettext('scheduled Desk Output');gettext('Search');gettext('Content Expiry');gettext('stage');gettext('Last Week');
 gettext('authoring');gettext('update');gettext('2nd update');gettext('3rd update');gettext('4th update');gettext('5th update');
+gettext('6th update');gettext('7th update');gettext('8th update');gettext('9th update');gettext('10th update');gettext('11th update');
+gettext('12th update');gettext('13th update');gettext('14th update');gettext('15th update');gettext('16th update');gettext('17th update');
+gettext('18th update');gettext('19th update');gettext('20th update');gettext('\'PLACE is a required field\'');
 gettext('Content Profiles');gettext('ANPA Take Key');gettext('Body HTML');gettext('By');gettext('Date');gettext('Located');
+gettext('\'DATELINE is a required field\'');
 
