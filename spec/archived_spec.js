@@ -12,13 +12,7 @@ describe('archived', function() {
         openUrl('/#/search').then(globalSearch.setListView());
     });
 
-    it('display items from archived.', function() {
-        expect(globalSearch.getItems().count()).toBe(14);
-        globalSearch.getArchivedContent();
-        expect(globalSearch.getItems().count()).toBe(3);
-    });
-
-    it('open an item preview', function() {
+    it('display items and open an item preview', function() {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.getArchivedContent();
         expect(globalSearch.getItems().count()).toBe(3);

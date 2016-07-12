@@ -4,7 +4,8 @@ describe('search service', function() {
     beforeEach(module('superdesk.templates-cache'));
     beforeEach(module('superdesk.search'));
 
-    it('can create base query', inject(function(search) {
+    it('can create base query', inject(function(search, session) {
+        session.identity = {_id: 'foo'};
         var query = search.query();
         var criteria = query.getCriteria();
         var filters = criteria.query.filtered.filter.and;
@@ -16,13 +17,15 @@ describe('search service', function() {
         expect(criteria.sort).toEqual([{versioncreated: 'desc'}]);
     }));
 
-    it('can create query string query', inject(function($rootScope, search) {
+    it('can create query string query', inject(function($rootScope, search, session) {
+        session.identity = {_id: 'foo'};
         var criteria = search.query({q: 'test'}).getCriteria();
         expect(criteria.query.filtered.query.query_string.query).toBe('test');
     }));
 
-    it('can create query for from_desk', inject(function($rootScope, search) {
+    it('can create query for from_desk', inject(function($rootScope, search, session) {
         // only from desk is specified
+        session.identity = {_id: 'foo'};
         var criteria = search.query({from_desk: 'test-authoring'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
         expect(filters).toContain({term: {'task.last_authoring_desk': 'test'}});
@@ -31,8 +34,9 @@ describe('search service', function() {
         expect(filters).toContain({term: {'task.last_production_desk': 'test'}});
     }));
 
-    it('can create query for to_desk', inject(function($rootScope, search) {
+    it('can create query for to_desk', inject(function($rootScope, search, session) {
         // only to desk is specified
+        session.identity = {_id: 'foo'};
         var criteria = search.query({to_desk: '456-authoring'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
         expect(filters).toContain({term: {'task.desk': '456'}});
@@ -43,23 +47,26 @@ describe('search service', function() {
         expect(filters).toContain({exists: {field: 'task.last_authoring_desk'}});
     }));
 
-    it('can create query for from_desk and to_desk', inject(function($rootScope, search) {
+    it('can create query for from_desk and to_desk', inject(function($rootScope, search, session) {
         // both from desk and to desk are specified
+        session.identity = {_id: 'foo'};
         var criteria = search.query({from_desk: '123-authoring', to_desk: '456-production'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
         expect(filters).toContain({term: {'task.last_authoring_desk': '123'}});
         expect(filters).toContain({term: {'task.desk': '456'}});
     }));
 
-    it('can create query for original_creator', inject(function($rootScope, search) {
+    it('can create query for original_creator', inject(function($rootScope, search, session) {
         // only to desk is specified
+        session.identity = {_id: 'foo'};
         var criteria = search.query({original_creator: '123'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
         expect(filters).toContain({term: {'original_creator': '123'}});
     }));
 
-    it('can create query for unique_name', inject(function($rootScope, search) {
+    it('can create query for unique_name', inject(function($rootScope, search, session) {
         // only to desk is specified
+        session.identity = {_id: 'foo'};
         var criteria = search.query({unique_name: '123'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
         expect(filters).toContain({term: {'unique_name': '123'}});
@@ -76,7 +83,8 @@ describe('search service', function() {
         expect(search.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'asc'});
     }));
 
-    it('can be watched for changes', inject(function(search, $rootScope) {
+    it('can be watched for changes', inject(function(search, $rootScope, session) {
+        session.identity = {_id: 'foo'};
         var criteria = search.query().getCriteria();
         expect(criteria).toEqual(search.query().getCriteria());
         expect(criteria).not.toEqual(search.query({q: 'test'}).getCriteria());

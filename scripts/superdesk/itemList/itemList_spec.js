@@ -225,7 +225,8 @@ describe('itemListService', function() {
         });
     }));
 
-    it('can query with saved search', inject(function($rootScope, itemListService, api, $q) {
+    it('can query with saved search', inject(function($rootScope, itemListService, api, $q, session) {
+        session.identity = {_id: 'foo'};
         var params;
         api.get = angular.noop;
         spyOn(api, 'get').and.returnValue($q.when({filter: {query: {type: '["text"]'}}}));

@@ -9,8 +9,8 @@
         spike: 'In Spiked'
     });
 
-    SearchService.$inject = ['$location', 'gettext', 'config'];
-    function SearchService($location, gettext, config) {
+    SearchService.$inject = ['$location', 'gettext', 'config', 'session'];
+    function SearchService($location, gettext, config, session) {
         var sortOptions = [
             {field: 'versioncreated', label: gettext('Updated')},
             {field: 'firstcreated', label: gettext('Created')},
@@ -162,8 +162,7 @@
 
             // Prepares search date in YYYY-MM-DD format
             function formatDate(date) {
-                var arrDate = date.split('/');
-                return arrDate[2] + '-' + arrDate[1] + '-' + arrDate[0];
+                return moment(date, config.view.dateformat).format('YYYY-MM-DD');
             }
 
             function buildFilters(params, query) {
@@ -342,6 +341,11 @@
             this.filter({not: {and: [{term: {_type: 'published'}},
                 {term: {package_type: 'takes'}},
                 {term: {last_published_version: false}}]}});
+
+            // remove other users drafts.
+            this.filter({or:[{and: [{term: {state: 'draft'}},
+                                   {term: {'task.user': session.identity._id}}]},
+                             {not: {terms: {state: ['draft']}}}]});
 
             //remove the digital package from production view.
             this.filter({not: {and: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
