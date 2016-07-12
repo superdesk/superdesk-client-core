@@ -614,7 +614,7 @@
                 (!current_item.rewrite_of || (current_item.rewrite_of && this.isPublished(current_item)));
             var re_write = action.re_write;
 
-            action.resend = _.contains(['text'], current_item.type) && !current_item.rewritten_by &&
+            action.resend = _.contains(['text'], current_item.type) &&
                 _.contains(['published', 'corrected', 'killed'], current_item.state);
 
             //mark item for highlights

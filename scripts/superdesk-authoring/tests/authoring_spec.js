@@ -759,7 +759,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
-            allowedActions(itemActions, ['view', 'package_item', 'multi_edit', 'add_to_current']);
+            allowedActions(itemActions, ['view', 'package_item', 'multi_edit', 'add_to_current', 'resend']);
         }));
 
     it('can only view item if the item is spiked',
@@ -944,7 +944,7 @@ describe('authoring actions', function() {
                 'create_broadcast', 'resend']);
         }));
 
-    it('Cannot perform resend on rewritten item',
+    it('Can perform resend on rewritten item',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
                 '_id': 'test',
@@ -992,7 +992,7 @@ describe('authoring actions', function() {
             item.archive_item.rewritten_by = 'abc';
             itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'view', 'add_to_current', 'mark_item',
-                'package_item', 'multi_edit', 'correct', 'kill', 'create_broadcast']);
+                'package_item', 'multi_edit', 'correct', 'kill', 'create_broadcast', 'resend']);
 
         }));
 
@@ -1701,7 +1701,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'mark_item', 'multi_edit', 'create_broadcast',
-                    'correct', 'kill', 'package_item', 'view', 'add_to_current']);
+                    'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
         }));
 });
 
