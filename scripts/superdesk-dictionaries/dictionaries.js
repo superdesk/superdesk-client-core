@@ -254,14 +254,8 @@
             $scope.loading = true;
             dictionaries.open(dictionary, function(result) {
                 $scope.origDictionary = result;
-                $scope.dictionary = _.create(result);
-
-                if (dictionaries.isAbbreviationsDictionary(result)) {
-                    $scope.dictionary.content = angular.extend({}, result.content);
-                } else {
-                    $scope.dictionary.content = _.create(result.content || {});
-                }
-
+                $scope.dictionary = _.cloneDeep(result);
+                $scope.dictionary.content = $scope.dictionary.content || {};
                 $scope.dictionary.is_active = $scope.dictionary.is_active !== 'false';
             });
         };
