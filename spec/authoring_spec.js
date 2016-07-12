@@ -14,6 +14,44 @@ describe('authoring', function() {
         monitoring.openMonitoring();
     });
 
+    it('add an embed and respect the order', function() {
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        function generateLines(from, to) {
+            var i;
+            var lines = '';
+            for (i = from; i < to; i++) {
+                lines += 'line ' + i + '\n';
+            }
+            return lines;
+        }
+        var body1 = generateLines(0, 8);
+        var body2 = generateLines(8, 15);
+        var body3 = generateLines(15, 20);
+        authoring.writeText(body1 + body2 + body3);
+        for (var i = 0; i < 5; i++) {
+            authoring.writeText(protractor.Key.UP);
+        }
+        authoring.writeText(protractor.Key.ENTER);
+        authoring.writeText(protractor.Key.UP);
+        authoring.addEmbed('Embed at position 15');
+        function textBlockContains(position, value) {
+            expect(
+                element(by.model('item.body_html')).all(
+                    by.css('.editor-type-html.clone')
+                ).get(position).getText()
+            ).toBe(value);
+        }
+        textBlockContains(0, (body1 + body2).replace(/\n$/, ''));
+        textBlockContains(1, body3.replace(/\n$/, ''));
+        element(by.model('item.body_html')).all(by.css('.editor-type-html')).get(0).click();
+        authoring.writeText(protractor.Key.ENTER);
+        authoring.addEmbed('Embed at position 8');
+        textBlockContains(0, body1.replace(/\n$/, ''));
+        textBlockContains(1, body2.replace(/\n$/, ''));
+        textBlockContains(2, body3.replace(/\n$/, ''));
+    });
+
     it('authoring operations', function() {
         //undo and redo operations by using CTRL+Z and CTRL+y
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
@@ -209,7 +247,7 @@ describe('authoring', function() {
     it('keyboard shortcuts', function() {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.writeText('z');
-        element(by.cssContainingText('span', 'Body')).click();
+        element(by.cssContainingText('span', 'Dateline')).click();
         ctrlShiftKey('s');
         browser.wait(function() {
             return element(by.buttonText('Save')).getAttribute('disabled');
@@ -271,9 +309,12 @@ describe('authoring', function() {
         authoring.createTextItem();
         authoring.writeText('some is a sentence word, but words come after an abbrev. few are not');
         browser.sleep(200);
-        expect(authoring.getBodyInnerHtml()).toContain('<span class="sderror sdhilite sdCapitalize">some</span>');
-        expect(authoring.getBodyInnerHtml()).not.toContain('<span class="sderror sdhilite sdCapitalize">few</span>');
-        expect(authoring.getBodyInnerHtml()).toContain('<span class="sderror sdhilite">few</span>');
+        expect(authoring.getBodyInnerHtml()).toContain('<span class="sderror sdhilite sdCapitalize" data-word="some" ' +
+        'data-index="0" data-sentence-word="true">some</span>');
+        expect(authoring.getBodyInnerHtml()).not.toContain('<span class="sderror sdhilite sdCapitalize" ' +
+        'data-word="few" data-index="57">few</span>');
+        expect(authoring.getBodyInnerHtml()).toContain('<span class="sderror sdhilite" data-word="few" ' +
+        'data-index="57">few</span>');
     });
 
     it('related item widget', function() {
