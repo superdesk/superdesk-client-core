@@ -20,7 +20,7 @@
             <div class="active"
                  ng-show="user.is_enabled"
                  ng-if="!profile && user._id && !dirty"
-                 tooltip="{{ _active ? 'Disable user' : 'Enable user' | translate }}"
+                 tooltip="{{ _active ? 'Deactivate user' : 'Activate user' | translate }}"
                  tooltip-placement="left">
               <span sd-switch ng-model="user.is_active" ng-click="toggleStatus(user.is_active)"></span>
             </div>
