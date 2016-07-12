@@ -31,6 +31,7 @@ describe('master_desk', function() {
         masterDesks.switchToTab('content');
         masterDesks.editItem(0, 2, 0);
         authoring.writeText('some text');
+        browser.sleep(200);
         authoring.save();
         authoring.sendToButton.click();
         expect(authoring.publish_button.isDisplayed()).toBe(true);
