@@ -1582,8 +1582,8 @@
         });
     }]);
 
-    SendService.$inject = ['desks', 'api', '$q', 'notify', '$injector', 'multi'];
-    function SendService(desks, api, $q, notify, $injector, multi) {
+    SendService.$inject = ['desks', 'api', '$q', 'notify', '$injector', 'multi', '$rootScope'];
+    function SendService(desks, api, $q, notify, $injector, multi, $rootScope) {
         this.one = sendOne;
         this.all = sendAll;
 
@@ -1656,6 +1656,7 @@
                 });
             } else if (!item.lock_user) {
                 return api.save('move', {}, {task: data}, item).then(function (item) {
+                    $rootScope.$broadcast('item:update', {item: item});
                     return item;
                 });
             }
