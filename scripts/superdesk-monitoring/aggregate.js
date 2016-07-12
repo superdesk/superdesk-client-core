@@ -12,9 +12,9 @@
     'use strict';
 
     AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage',
-                             'gettext', 'multi', 'config'];
+                             'gettext', 'multi', 'config', '$timeout'];
     function AggregateCtrl($scope, api, desks, workspaces, preferencesService, storage,
-            gettext, multi, config) {
+            gettext, multi, config, $timeout) {
         var PREFERENCES_KEY = 'agg:view';
         var defaultMaxItems = 10;
         var self = this;
@@ -381,6 +381,13 @@
             });
         };
 
+        this.reload = function() {
+            $timeout(function() {
+                self.search(self.searchQuery);
+            }, 1, false);
+            self.search();
+        };
+
         this.state = storage.getItem('agg:state') || {};
         this.state.expanded = this.state.expanded || {};
 
@@ -409,6 +416,10 @@
 
         $scope.$on('open:resend', function(evt, item) {
             $scope.resend = item;
+        });
+
+        $scope.$on('item:move', function(evt, item) {
+            self.reload();
         });
     }
 
