@@ -158,7 +158,7 @@
                         <span class="arrow-down"><b class="caret"></b></span>
                     </div>
                 </div>
-                <div class="authoring-header__item" ng-if="showStages()" sd-width="full">
+                <div class="authoring-header__item" ng-if="showStages() && template.schedule.is_active" sd-width="full">
                     <label for="template-stage" translate>Schedule Stage</label>
                     <div class="authoring-header__input-holder">
                         <select id="template-stage" ng-model="template.schedule_stage" class="dropdown-toggle line-input">
