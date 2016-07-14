@@ -154,6 +154,7 @@
                 }
 
                 function queryItems(queryString) {
+                    console.log(scope.stage);
                     criteria = cards.criteria(scope.stage, queryString);
                     scope.loading = true;
                     scope.items = scope.total = null;
@@ -172,17 +173,17 @@
                 scope.$watch('filter', queryItems);
                 scope.$on('task:stage', function(event, data) {
                     if (scope.stage && (data.new_stage === scope.stage || data.old_stage === scope.stage)) {
-                        queryItems();
+                        scheduleQuery();
                     }
                 });
 
                 scope.$on('content:update', function($event, data) {
                     if (cards.shouldUpdate(scope.stage, data)) {
-                        queryItems();
+                        scheduleQuery();
                     }
                 });
 
-                scope.$on('content:expired', queryItems);
+                scope.$on('content:expired', scheduleQuery);
 
                 scope.$on('item:lock', function(_e, data) {
                     _.each(scope.items, function(item) {
@@ -199,6 +200,25 @@
                         }
                     });
                 });
+
+                var queryTimeout;
+
+                /**
+                 * Schedule content reload after some delay
+                 *
+                 * In case it gets called multiple times it will query only once
+                 */
+                function scheduleQuery() {
+                    if (!queryTimeout) {
+                        queryTimeout = $timeout(function() {
+                            queryItems();
+                            scope.$applyAsync(function() {
+                                // ignore any updates requested in current $digest
+                                queryTimeout = null;
+                            });
+                        }, 5000, false);
+                    }
+                }
 
                 var container = elem[0];
                 var offsetY = 0;
