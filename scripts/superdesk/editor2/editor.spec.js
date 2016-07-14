@@ -66,6 +66,7 @@ describe('text editor', function() {
         editor.setSettings({findreplace: {diff: {foo: '', bar: ''}}});
         editor.render();
         $rootScope.$digest();
+        editor.selectNext();
 
         var foo1 = '<span class="sdfindreplace sdhilite" data-word="foo" data-index="5">foo</span>';
         var foo1active = '<span class="sdfindreplace sdhilite sdactive" data-word="foo" data-index="5">foo</span>';
@@ -87,6 +88,7 @@ describe('text editor', function() {
         expect(scope.node.innerHTML).toBe('test tic and foo');
         editor.render();
         $rootScope.$digest();
+        editor.selectNext();
         expect(scope.node.parentNode.lastChild.innerHTML).toBe('test tic and ' + foo2active);
 
         editor.setSettings({findreplace: {diff: {test: ''}}});
@@ -114,6 +116,7 @@ describe('text editor', function() {
         var scope = createScope('test', $rootScope);
         editor.registerScope(scope);
         scope.node.parentNode.classList.add('typing');
+
         scope.node.innerHTML = 'foo';
         editor.commit();
         expect(scope.model.$setViewValue).not.toHaveBeenCalled();

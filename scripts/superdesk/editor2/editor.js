@@ -203,9 +203,6 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
     function renderFindreplace(node) {
         var tokens = utils.getFindReplaceTokens(node, self.settings);
         utils.hilite(node, tokens, FINDREPLACE_CLASS);
-        if (self.settings.findreplace.diff) {
-            self.selectNext();
-        }
     }
 
     /**
@@ -226,6 +223,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
      */
     this.selectNext = function() {
         var nodes = document.body.getElementsByClassName(HILITE_CLASS);
+
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes.item(i);
             if (node.classList.contains(ACTIVE_CLASS)) {
@@ -261,8 +259,32 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         }
         var nodes = scope.node.parentNode.getElementsByClassName(className);
         var nodesLength = nodes.length;
-        self.replaceNodes(nodes, text, scope);
+        var replacementOffset = self.replaceNodes(nodes, text, scope);
+        if (replacementOffset && className === ACTIVE_CLASS) {
+            updateIndexOnReplace(scope.node, replacementOffset);
+        }
         return nodesLength;
+    }
+
+    // updates the data-index of remaining find-replace candidates subsequent to just replaced active node
+    function updateIndexOnReplace(node, replacementOffset) {
+        var nodes = node.parentNode.getElementsByClassName(HILITE_CLASS);
+        var nextElem, newIndex, activeIndex;
+        for (var i = 0; i < nodes.length; i++) {
+            var currentNode = nodes.item(i);
+            if (currentNode.classList.contains(ACTIVE_CLASS)) {
+                currentNode.classList.remove(FINDREPLACE_CLASS);
+                activeIndex = i;
+            }
+        }
+
+        if (activeIndex != null) {
+            for (var j = activeIndex + 1; j < nodes.length; j++) {
+                nextElem = nodes.item(j);
+                newIndex = parseInt(nextElem.getAttribute('data-index'), 10) + replacementOffset;
+                nextElem.setAttribute('data-index', newIndex);
+            }
+        }
     }
 
     /**
@@ -272,8 +294,9 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
      */
     this.replace = function(text) {
         scopes.forEach(function(scope) {
-            replaceText(scope, text);
-            this.commitScope(scope);
+            if (replaceText(scope, text)) {
+                this.commitScope(scope);
+            }
         }.bind(this));
     };
 
@@ -321,6 +344,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
             this.replaceWord(scope, index, word.length, text);
             replacementOffset += (text.length - word.length);
         }
+        return replacementOffset;
     };
 
     /**
@@ -1378,6 +1402,8 @@ function EditorUtilsFactory() {
 
     var CLONE_CLASS = 'clone';
     var HILITE_CLASS = 'sdhilite';
+    var ACTIVE_CLASS = 'sdactive';
+    var FINDREPLACE_CLASS = 'sdfindreplace';
 
     /**
      * Function for sorting array of strings from longest to shortest
@@ -1440,22 +1466,44 @@ function EditorUtilsFactory() {
             var re = new RegExp(pattern, flags);
             var nodeOffset = 0;
             var text, match, offset;
+            var isActive, elementClone, elementFindReplace;
+
+            elementClone = node.parentNode.getElementsByClassName(CLONE_CLASS);
+
+            if (elementClone && elementClone.length) {
+                elementFindReplace = elementClone.item(0).getElementsByClassName(FINDREPLACE_CLASS);
+            }
+
+            function isTokenActive(index) {
+                var active, matched;
+                if (elementFindReplace && elementFindReplace.length) {
+                    matched = _.filter(elementFindReplace, function(elem) {
+                        return parseInt(elem.getAttribute('data-index'), 10) === index;
+                    });
+
+                    active = (matched && matched.length) ? matched[0].classList.contains(ACTIVE_CLASS) : false;
+                }
+                return active;
+            }
 
             var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
             while (tree.nextNode()) {
                 text = tree.currentNode.textContent;
+
                 while ((match = text.match(re)) != null) {
+                    isActive = isTokenActive(nodeOffset + match.index);
+
                     tokens.push({
                         word: match[0],
                         index: nodeOffset + match.index,
-                        title: diff[match[0]] || ''
+                        title: diff[match[0]] || '',
+                        active: isActive
                     });
 
                     offset = match.index + match[0].length;
                     text = text.substr(offset);
                     nodeOffset += offset;
                 }
-
                 nodeOffset += text.length;
             }
 
@@ -1500,8 +1548,14 @@ function EditorUtilsFactory() {
             var start = this.findWordNode(node, token.index, token.word.length);
             var replace = start.node.splitText(start.offset);
             var span = document.createElement('span');
+
             span.classList.add(className);
             span.classList.add(HILITE_CLASS);
+
+            if (token.active) {
+                span.classList.add(ACTIVE_CLASS);
+            }
+
             replace.splitText(token.word.length);
             span.textContent = replace.textContent;
             span.dataset.word = token.word;
