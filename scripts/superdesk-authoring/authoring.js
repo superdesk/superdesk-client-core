@@ -2001,6 +2001,13 @@
                 scope.$watch('item', activateItem);
                 scope.$watch(send.getConfig, activateConfig);
 
+                scope.publish = function() {
+                    scope.loading = true;
+                    scope._publish().finally(function() {
+                        scope.loading = false;
+                    });
+                };
+
                 function activateConfig(config, oldConfig) {
                     if (config !== oldConfig) {
                         scope.isActive = !!config;
@@ -2189,6 +2196,7 @@
                 };
 
                 function runSend(open) {
+                    scope.loading = true;
                     scope.item.sendTo = true;
                     var deskId = scope.selectedDesk._id;
                     var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
@@ -2305,6 +2313,8 @@
                     return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
                         .then(function() {
                             var itemDeskId = null;
+                            scope.loading = true;
+
                             if (scope.item.task && scope.item.task.desk) {
                                 itemDeskId = scope.item.task.desk;
                             }
@@ -2316,6 +2326,8 @@
                             authoringWorkspace.edit(item);
                         }, function(err) {
                             notify.error(gettext('Failed to send and continue.'));
+                        }).finally(function() {
+                            scope.loading = false;
                         });
                 }
 
@@ -2331,6 +2343,7 @@
 
                 function sendAuthoring(deskId, stageId, macro, sendAndContinue) {
                     var deferred, msg;
+                    scope.loading = true;
 
                     if (sendAndContinue) {
                         deferred = $q.defer();
@@ -2377,13 +2390,15 @@
                                         notify.error(err.data._issues['validator exception']);
                                     }
                                 }
+                            }
 
-                                if (sendAndContinue) {
-                                    deferred.reject(err);
-                                    return deferred.promise;
-                                }
+                            if (sendAndContinue) {
+                                deferred.reject(err);
+                                return deferred.promise;
                             }
                         });
+                    }).finally(function() {
+                        scope.loading = false;
                     });
                 }
 
@@ -2395,6 +2410,8 @@
 
                 function sendContent(deskId, stageId, macro, open) {
                     var finalItem;
+                    scope.loading = true;
+
                     return api.save('duplicate', {}, {desk: scope.item.task.desk}, scope.item)
                     .then(function(item) {
                         return api.find('archive', item._id);
@@ -2420,10 +2437,14 @@
                         } else {
                             $rootScope.$broadcast('item:fetch');
                         }
+                    }).finally(function() {
+                        scope.loading = false;
                     });
                 }
 
                 function sendIngest(deskId, stageId, macro, open) {
+                    scope.loading = true;
+
                     return send.oneAs(scope.item, {
                         desk: deskId,
                         stage: stageId,
@@ -2435,6 +2456,8 @@
                         } else {
                             $rootScope.$broadcast('item:fetch');
                         }
+                    }).finally(function() {
+                        scope.loading = false;
                     });
                 }
 
