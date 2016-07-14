@@ -62,7 +62,7 @@
 
     </div>
 
-    <div class="slide-pane__footer">
+    <div class="slide-pane__footer" sd-loading="loading">
         <ul class="btn-list">
             <li ng-if="mode === 'authoring' && canSendAndContinue() && itemActions.send && itemActions.new_take">
                 <button class="btn btn-info"
@@ -92,7 +92,7 @@
                 <button type="submit"
                         class="btn btn-info"
                         ng-show="_editable"
-                        ng-click="_publish()"
+                        ng-click="publish()"
                         >
                     {{_action === 'edit' ? 'publish' : _action | translate}}
                 </button>

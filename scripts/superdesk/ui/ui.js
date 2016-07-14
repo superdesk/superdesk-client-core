@@ -1267,7 +1267,7 @@
             template: [
                 '<div>',
                     '<div ng-transclude></div>',
-                    '<div class="loading-overlay" ng-class="{active: loading}"></div>',
+                    '<div class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>',
                 '</div>'
             ].join('')
         };
