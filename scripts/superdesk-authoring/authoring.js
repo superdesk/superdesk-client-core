@@ -2829,6 +2829,7 @@
         .service('authThemes', AuthoringThemesService)
         .service('authoringWorkspace', AuthoringWorkspaceService)
 
+        .directive('html5vfix', Html5vfix)
         .directive('sdDashboardCard', DashboardCard)
         .directive('sdSendItem', SendItem)
         .directive('sdCharacterCount', CharacterCount)
@@ -3373,6 +3374,17 @@
 
         init();
     }
+    /**
+     * Html5 Source tag doesn't support {{ angular }}
+     */
+    function Html5vfix() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attr) {
+                attr.$set('src', attr.vsrc);
+            }
+        };
+    }
 
     ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', '$q', 'config'];
     function ItemAssociationDirective(superdesk, renditions, $timeout, api, $q, config) {
@@ -3381,12 +3393,15 @@
                 rel: '=',
                 item: '=',
                 editable: '=',
+                allowVideo: '@',
                 onchange: '&'
             },
             templateUrl: 'scripts/superdesk-authoring/views/item-association.html',
             link: function(scope, elem) {
-                var PICTURE_TYPE = 'application/superdesk.item.picture';
-
+                var MEDIA_TYPES = ['application/superdesk.item.picture'];
+                if (scope.allowVideo === 'true') {
+                    MEDIA_TYPES.push('application/superdesk.item.video');
+                }
                 /**
                  * Get superdesk item from event
                  *
@@ -3400,7 +3415,7 @@
 
                 // it should prevent default as long as this is valid image
                 elem.on('dragover', function(event) {
-                    if (scope.editable && PICTURE_TYPE === event.originalEvent.dataTransfer.types[0]) {
+                    if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
                         event.preventDefault();
                     }
                 });
@@ -3408,9 +3423,8 @@
                 // update item associations on drop
                 elem.on('drop', function(event) {
                     event.preventDefault();
-                    var item = getItem(event, PICTURE_TYPE);
+                    var item = getItem(event, event.originalEvent.dataTransfer.types[0]);
                     // ingest picture if it comes from an external source (create renditions)
-
                     if (scope.isEditable()) {
                         scope.loading = true;
                         renditions.ingest(item)
@@ -3451,6 +3465,12 @@
                     })
                     .finally(function() {
                         scope.loading = false;
+                    });
+                };
+
+                scope.isVideo = function(rendition) {
+                    return _.some(['.mp4', '.webm', '.ogv'], function(ext) {
+                        return _.endsWith(rendition.href, ext);
                     });
                 };
 
