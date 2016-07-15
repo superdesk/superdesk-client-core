@@ -55,6 +55,7 @@ module.exports = function(grunt) {
     grunt.registerTask('server', [
         'clean',
         'style',
+        'webpack:build-dev',
         'template:test',
         'connect:test',
         'watch'

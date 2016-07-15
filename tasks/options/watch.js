@@ -17,7 +17,7 @@ module.exports = {
     },
     code: {
         options: {livereload: true},
-        tasks: [],
+        tasks: ['webpack:build-dev'],
         files: [
             path.join(core, 'scripts/**/*.js'),
             '<%= appDir %>/**/*.js',
