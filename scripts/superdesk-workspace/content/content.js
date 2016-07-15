@@ -612,10 +612,12 @@
             require: 'ngModel',
             link: function(scope, elem, attr, ngModel) {
                 ngModel.$parsers.push(function(v) {
-                    return typeof v === 'string' ? v.split(',') : [];
+                    return typeof v === 'string' ? v.split(',').map(function(x) {
+                        return x.trim();
+                    }) : [];
                 });
                 ngModel.$formatters.push(function(v) {
-                    return Array.isArray(v) ? v.join(',') : '';
+                    return Array.isArray(v) ? v.join(', ') : '';
                 });
             }
         };
