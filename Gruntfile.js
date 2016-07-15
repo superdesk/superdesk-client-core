@@ -53,6 +53,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('server', [
+        'newer:babel',
         'clean',
         'style',
         'template:test',

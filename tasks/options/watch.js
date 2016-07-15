@@ -17,7 +17,7 @@ module.exports = {
     },
     code: {
         options: {livereload: true},
-        tasks: [],
+        tasks: ['newer:babel'],
         files: [
             path.join(core, 'scripts/**/*.js'),
             '<%= appDir %>/**/*.js',
