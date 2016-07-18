@@ -103,11 +103,17 @@
         subscribersService, metadata, $filter) {
 
         $scope.testLookup = {};
+        $scope.productLookup = {};
+        $scope.loading = false;
+        $scope.resultType = 'All';
 
         var initProducts = function() {
             products.initialize().then(function() {
                 $scope.products = products.products;
                 $scope.contentFilters = products.contentFilters;
+                _.each(products.products, function(product) {
+                    $scope.productLookup[product._id] = product;
+                });
             });
         };
 
@@ -194,13 +200,27 @@
                 return;
             }
 
+            $scope.loading = true;
             products.testProducts({'article_id': $scope.articleId}).then(function(results) {
                 $scope.rawResults = results;
+                $scope.filteredProducts = [];
+
+                if ($scope.resultType === 'All') {
+                    $scope.filteredProducts = $scope.products;
+                }
                 _.each(results._id, function(result) {
+
                     $scope.testLookup[result.product_id] = result;
+
+                    if ((result.matched && $scope.resultType === 'Match') ||
+                    (!result.matched && $scope.resultType === 'No-Match')) {
+                        $scope.filteredProducts.push($scope.productLookup[result.product_id]);
+                    }
                 });
             }, function(response) {
                 notify.error(gettext('Error: ' + JSON.stringify(response)));
+            }).finally(function() {
+                $scope.loading = false;
             });
         };
     }
