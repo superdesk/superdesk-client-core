@@ -62,7 +62,6 @@
     <script src='dist/index.bundle.js' /></script>
 
     <script>
-        var config = <%= grunt.toJSON(config) %>;
         var modules = [
             'superdesk',
             'superdesk.settings',
@@ -99,7 +98,7 @@
             'superdesk.loading',
             'superdesk.templates-cache'
         ];
-        window.bootstrapSuperdesk(config, modules);
+        window.bootstrapSuperdesk(<%= grunt.toJSON(config) %>, modules);
     </script>
   </body>
 </html>

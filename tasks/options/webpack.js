@@ -1,44 +1,10 @@
-var path = require('path');
 var webpack = require('webpack');
-
-// webpack.config
-var appDir = path.dirname(path.dirname(__dirname));
-var options = {
-    cache: true,
-    entry: {
-        index: './scripts'
-    },
-    output: {
-        path: path.join(appDir, "dist"),
-        publicPath: 'dist/',
-        filename: '[name].bundle.js',
-        chunkFilename: '[id].bundle.js'
-    },
-    plugins: [
-        new webpack.ProvidePlugin({
-            jQuery: "jquery",
-            $: "jquery"
-        })
-    ],
-    module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
-                loader: 'babel',
-                query: {
-                    cacheDirectory: true,
-                    presets: ['es2015']
-                }
-            }
-        ]
-    }
-};
+var webpackConfig = require('../../webpack.config.js');
 
 module.exports = {
-    options: options,
+    options: webpackConfig,
     build: {
-        plugins: options.plugins.concat(
+        plugins: webpackConfig.plugins.concat(
             new webpack.DefinePlugin({
                 "process.env": {
                     // This has effect on the React lib size
