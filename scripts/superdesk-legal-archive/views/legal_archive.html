@@ -27,12 +27,17 @@
                 <form>
                     <fieldset>
                         <div class="field">
-                            <label for="search-story-id">{{:: 'Story Id' | translate}}</label>
+                            <label for="search-story-id">{{:: 'GUID' | translate}}</label>
                             <div class="control">
                                 <input type="text" id="search-story-id" ng-model="criteria._id" tabindex="1">
                             </div>
                         </div>
-
+                        <div class="field">
+                            <label for="search-unique-id">{{:: 'Unique Name' | translate}}</label>
+                            <div class="control">
+                                <input type="text" id="search-unique-id" ng-model="criteria.unique_name" tabindex="1">
+                            </div>
+                        </div>
                         <div class="field">
                             <label for="search-headline">{{:: 'Headline' | translate}}</label>
                             <div class="control">

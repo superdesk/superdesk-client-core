@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    LegalArchiveService.$inject = ['$q', 'api', 'notify', '$location', 'gettext'];
-    function LegalArchiveService($q, api, notify, $location, gettext) {
+    LegalArchiveService.$inject = ['$q', 'api', 'notify', '$location', 'gettext', 'config'];
+    function LegalArchiveService($q, api, notify, $location, gettext, config) {
         var DEFAULT_PER_PAGE = 25;
         this.default_items = Object.freeze({_meta: {max_results: DEFAULT_PER_PAGE, page: 1, total: 1}});
 
@@ -75,7 +75,7 @@
             var where = [];
 
             function prepareDate(val) {
-                return _.trunc(val, {'length': val.length - 3, 'omission': ''}) + '00';
+                return moment(val, config.view.dateformat).format('YYYY-MM-DD');
             }
 
             var hasId = false;
@@ -85,9 +85,9 @@
                 if (val) {
                     var clause = {};
                     if (key === 'published_after') {
-                        clause.versioncreated = {'$gte': prepareDate(val)};
+                        clause.versioncreated = {'$gte': prepareDate(val) + 'T00:00:00+0000'};
                     } else if (key === 'published_before') {
-                        clause.versioncreated = {'$lte': prepareDate(val)};
+                        clause.versioncreated = {'$lte': prepareDate(val) + 'T23:59:59+0000'};
                     } else if (key === '_id') {
                         clause._id = val;
                         hasId = true;
@@ -138,6 +138,7 @@
         $scope.extras = {'activity':{'action':'list'}};
 
         $scope.search = function () {
+            $location.search('page', null);
             legal.updateSearchQuery($scope.criteria);
         };
 
