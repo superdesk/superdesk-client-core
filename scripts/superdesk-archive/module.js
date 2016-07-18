@@ -95,8 +95,8 @@
         //ToDo: Track upcoming item:move event as well for updateCount.
     }
 
-    SpikeService.$inject = ['$location', 'api', 'notify', 'gettext'];
-    function SpikeService($location, api, notify, gettext) {
+    SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', '$q'];
+    function SpikeService($location, api, notify, gettext, $q) {
         var SPIKE_RESOURCE = 'archive_spike',
             UNSPIKE_RESOURCE = 'archive_unspike';
 
@@ -104,6 +104,7 @@
          * Spike given item.
          *
          * @param {Object} item
+         * @returns {Promise}
          */
         this.spike = function(item) {
             return api.update(SPIKE_RESOURCE, item, {state: 'spiked'})
@@ -125,9 +126,10 @@
          * Spike given items.
          *
          * @param {Object} items
+         * @returns {Promise}
          */
         this.spikeMultiple = function spikeMultiple(items) {
-            items.forEach(this.spike);
+            return $q.all(items.map(this.spike));
         };
 
         /**
