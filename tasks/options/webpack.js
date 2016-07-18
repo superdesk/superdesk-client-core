@@ -6,17 +6,17 @@ module.exports = {
     build: {
         plugins: webpackConfig.plugins.concat(
             new webpack.DefinePlugin({
-                "process.env": {
+                'process.env': {
                     // This has effect on the React lib size
-                    "NODE_ENV": JSON.stringify("production")
+                    'NODE_ENV': JSON.stringify('production')
                 }
             }),
             new webpack.optimize.DedupePlugin(),
             new webpack.optimize.UglifyJsPlugin()
         )
     },
-    "build-dev": {
-        devtool: "sourcemap",
+    'build-dev': {
+        devtool: 'sourcemap',
         debug: true
     }
 };

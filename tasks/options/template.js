@@ -60,7 +60,7 @@ module.exports = function(grunt) {
         }};
     }
 
-    var files = {'<%= distDir %>/index.html': '<%= appDir %>/index.html'};
+    var files = {'index.html': '<%= appDir %>/index.html'};
 
     return {
         mock: {
@@ -73,7 +73,7 @@ module.exports = function(grunt) {
         },
         test: {
             options: data('http://localhost:5000/api'),
-            files: {'<%= distDir %>/index.html': '<%= appDir %>/index.html'}
+            files: files
         },
         docs: {
             options: data('http://localhost:5000/api'),

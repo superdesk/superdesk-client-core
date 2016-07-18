@@ -55,10 +55,8 @@ module.exports = function(grunt) {
     grunt.registerTask('server', [
         'clean',
         'style',
-        'webpack:build-dev',
         'template:test',
-        'connect:test',
-        'watch'
+        'webpack-dev-server:start'
     ]);
 
     grunt.registerTask('server:e2e', [

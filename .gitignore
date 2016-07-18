@@ -3,6 +3,7 @@ node_modules
 nbproject
 bower
 dist
+index.html
 .tmp
 test-server/env
 test-server/__pycache__

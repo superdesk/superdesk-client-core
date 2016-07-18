@@ -15,15 +15,6 @@ module.exports = {
             '<%= appDir %>/**/*.less'
         ]
     },
-    code: {
-        options: {livereload: true},
-        tasks: ['webpack:build-dev'],
-        files: [
-            path.join(core, 'scripts/**/*.js'),
-            '<%= appDir %>/**/*.js',
-            '!' + path.join(core, 'scripts/**/*[sS]pec.js')
-        ]
-    },
     ngtemplates: {
         options: {livereload: true},
         tasks: [],

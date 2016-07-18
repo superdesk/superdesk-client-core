@@ -7,15 +7,15 @@ module.exports = {
         index: './scripts'
     },
     output: {
-        path: path.join(__dirname, "dist"),
+        path: path.join(__dirname, 'dist'),
         publicPath: 'dist/',
         filename: '[name].bundle.js',
         chunkFilename: '[id].bundle.js'
     },
     plugins: [
         new webpack.ProvidePlugin({
-            jQuery: "jquery",
-            $: "jquery"
+            jQuery: 'jquery',
+            $: 'jquery'
         })
     ],
     module: {
