@@ -1,5 +1,7 @@
+// Styles
 import 'index.less';
 
+// Core
 import 'superdesk/gettext';
 import 'superdesk/activity/activity';
 import 'superdesk/activity/activity-chooser-directive';
@@ -52,7 +54,6 @@ import 'superdesk/directives/sdSort';
 import 'superdesk/directives/sdTypeahead';
 import 'superdesk/directives/sdUserAvatar';
 import 'superdesk/directives/sdWithParams';
-
 import 'superdesk/editor2/editor';
 import 'superdesk/editor2/editor.ctrl';
 import 'superdesk/editor2/add-embed.ctrl';
@@ -62,11 +63,9 @@ import 'superdesk/services/asset';
 import 'superdesk/services/image-factory';
 import 'superdesk/list/list';
 import 'superdesk/keyboard/keyboard';
-
 import 'superdesk/privileges/privileges';
 import 'superdesk/notification/notification';
 import 'superdesk/itemList/itemList';
-
 import 'superdesk/menu/menu';
 import 'superdesk/menu/notifications/notifications';
 import 'superdesk/notify/notify';
@@ -79,6 +78,8 @@ import 'superdesk/upload/video-capture-directive';
 import 'superdesk/upload/crop-directive';
 import 'superdesk/upload/image-crop-directive';
 import 'superdesk/superdesk';
+
+// Modules
 import 'superdesk-workspace/content/content';
 import 'superdesk-dashboard/workspace-tasks/tasks';
 import 'superdesk-users/users';
@@ -134,6 +135,7 @@ import 'superdesk-dashboard/module';
 import 'superdesk-dashboard/sd-widget-directive';
 import 'superdesk-dashboard/grid/grid';
 import 'superdesk-search-providers/module';
+
+// App
 import 'app/scripts/translations';
-//import '.templates-cache';
 import 'app/main';

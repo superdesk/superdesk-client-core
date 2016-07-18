@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-    //cache: true,
+    cache: true,
     entry: {
         index: './scripts'
     },
