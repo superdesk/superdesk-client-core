@@ -1,8 +1,8 @@
 // dashboard.less
 // Styling for the superdesk dashboard page (gridster, widgets)
 // ----------------------------------------------------------------------------------------
-@import 'mixins.less';
-@import 'variables.less';
+@import '~mixins.less';
+@import '~variables.less';
 
 .dashboard-container {
     position: absolute;
@@ -119,7 +119,7 @@
         .arrow {
             width: 8px;
             height: 12px;
-            background: url(../../images/widget-slider.png) no-repeat 0 0;
+            background: url(~images/widget-slider.png) no-repeat 0 0;
             margin-top: 9px;
             .opacity(85);
             &.left {
@@ -301,7 +301,7 @@ Gridster library
                 position: absolute;
                 width: 30px;
                 height: 30px;
-                background: url("../../images/round-close.png") no-repeat 0 0;
+                background: url("~images/round-close.png") no-repeat 0 0;
                 z-index: 100;
                 right: -15px;
                 top: -15px;
@@ -328,7 +328,7 @@ Gridster library
                     float: left;
                     .opacity(0);
                     .transition(all 0.3s linear);
-                    background: url("../../images/widget-resize-icons.png") no-repeat 0 0;
+                    background: url("~images/widget-resize-icons.png") no-repeat 0 0;
                 }
                 .resize-right {
                     background-position: -23px 0;
@@ -346,7 +346,7 @@ Gridster library
                 .resize-up, .resize-down {
                     width : 43px;
                     height: 23px;
-                    background: url("../../images/widget-resize-icons.png") no-repeat -47px 0;
+                    background: url("~images/widget-resize-icons.png") no-repeat -47px 0;
                     .opacity(0);
                     .transition(all 0.3s linear);
                 }

@@ -1,8 +1,8 @@
 // world-clock.less
 // Styling for ingest widget
 // ----------------------------------------------------------------------------------------
-@import 'mixins.less';
-@import 'variables.less';
+@import '~mixins.less';
+@import '~variables.less';
 
 .sd-widget {
     &.ingest, &.archive, &.related-item, &.aggregate {
@@ -36,7 +36,7 @@
             left: 0; right: 0; top: 0;
             height: @nav-height - 10px;
             border-bottom: 1px solid #dcdcdc;
-            background: @white url(../../images/search-icon.png) no-repeat 10px 10px;
+            background: @white url(~images/search-icon.png) no-repeat 10px 10px;
             .border-box();
             input {
                 position: absolute;

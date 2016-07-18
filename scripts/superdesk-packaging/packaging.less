@@ -1,8 +1,8 @@
 // packaging.less
 // Styling for making packages - editor widget
 // ----------------------------------------------------------------------------------------
-@import 'mixins.less';
-@import 'variables.less';
+@import '~mixins.less';
+@import '~variables.less';
 
 
 .package-item {
@@ -27,7 +27,7 @@
         top:3px;
         bottom: 3px;
         left:2px;
-        background: url(../../images/draggable-bg.png) repeat 0 0;
+        background: url(~images/draggable-bg.png) repeat 0 0;
         width: 6px;
         opacity:0;
         transition: all 0.2s;
@@ -103,7 +103,7 @@
     .loading {
         width: 40px;
         height: 40px;
-        background: #f0f0f0 url(../../images/loading-large.gif) center center no-repeat;
+        background: #f0f0f0 url(~images/loading-large.gif) center center no-repeat;
     }
     .alert-error {
         font-size: 12px;

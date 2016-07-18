@@ -1,8 +1,8 @@
 // media-archive.less
 // Styling for the superdesk media archive and ingest
 // ----------------------------------------------------------------------------------------
-@import 'mixins.less';
-@import 'variables.less';
+@import '~mixins.less';
+@import '~variables.less';
 
 
 /* ====================================== */
@@ -203,7 +203,7 @@
         .box-shadow(0 1px 4px 0 rgba(0,0,0,0.2));
 
         &.archived {
-            background: #f2f2f2 url(../../images/checkmark-big.png) no-repeat bottom right;
+            background: #f2f2f2 url(~images/checkmark-big.png) no-repeat bottom right;
             .box-shadow-both(0 1px 4px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.03));
         }
 
@@ -496,7 +496,7 @@
                     vertical-align: middle;
                     text-align: center;
                     .actioning {
-                        background-image: url("../../images/loading-small.gif");
+                        background-image: url("~images/loading-small.gif");
                         background-repeat: no-repeat;
                                                 background-position: center;
                         display: inline-block;
@@ -837,7 +837,7 @@
         }
 
         &.archived {
-            background: @sd-background url('../../images/checkmark-big-full.png') no-repeat 70% 50%;
+            background: @sd-background url('~images/checkmark-big-full.png') no-repeat 70% 50%;
             background-size: 36px;
             //.box-shadow(inset 0 2px 0 0px #f2f2f2);
             border-right: 2px solid @sd-background;

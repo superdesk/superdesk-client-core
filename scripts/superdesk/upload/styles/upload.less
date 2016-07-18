@@ -1,8 +1,8 @@
 // uploader.less
 // Styling for the superdesk upload submodule (avatar upload, media upload)
 // ----------------------------------------------------------------------------------------
-@import 'mixins.less';
-@import 'variables.less';
+@import '~mixins.less';
+@import '~variables.less';
 
 .generic-upload-progress(@height:2px) {
     position: absolute;
@@ -262,7 +262,7 @@ user avatar uploader
                 &.image {
                     top: 200px;
                     .loading {
-                        background: url('../../images/loading-large.gif') no-repeat center;
+                        background: url('~images/loading-large.gif') no-repeat center;
                     }
                 }
             }
@@ -312,7 +312,7 @@ media uploader
             top: 50%; left: 50%;
             margin-top: -120px;
             margin-left: -200px;
-            background: url("../../images/dragfiles.png") no-repeat 50% 0;
+            background: url('~images/dragfiles.png') no-repeat 50% 0;
             padding-top: 100px;
             text-align: center;
             color: #a0a0a0;
@@ -449,7 +449,7 @@ media uploader
                             position: absolute;
                             left: 0; right: 0; top:0 ; bottom:0;
                             z-index: 2;
-                            background: rgba(255,255,255,0.7) url('../../images/icon_upload_error_big.png') no-repeat center center;
+                            background: rgba(255,255,255,0.7) url('~images/icon_upload_error_big.png') no-repeat center center;
                         }
                     }
 

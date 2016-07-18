@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-    cache: true,
+    //cache: true,
     entry: {
         index: './scripts'
     },
@@ -18,6 +18,15 @@ module.exports = {
             $: 'jquery'
         })
     ],
+    resolve: {
+        root: [
+            path.join(__dirname),
+            path.join(__dirname + '/scripts'),
+            path.join(__dirname + '/app'),
+            path.join(__dirname + '/styles/less')
+        ],
+        extensions: ['', '.js']
+    },
     module: {
         loaders: [
             {
@@ -28,6 +37,14 @@ module.exports = {
                     cacheDirectory: true,
                     presets: ['es2015']
                 }
+            },
+            {
+                test: /\.less$/,
+                loader: 'style!css!less'
+            },
+            {
+                test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
+                loader: 'file-loader'
             }
         ]
     }
