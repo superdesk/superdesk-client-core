@@ -1,12 +1,18 @@
+<div class="refresh-box pull-right">
+    <button ng-if="showRefresh" ng-click="refreshGroup()"
+        tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+        <i class="icon-repeat blue"></i>
+    </button>
+</div>
 <div class="stage-header clearfix">
-    <span class="stage-name" ng-if="group.header && group.subheader && group.singleViewType == null">
+    <span class="stage-name" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
         <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
         <span>/</span>
         <a href="" ng-click="viewSingleGroup(group, 'stage')">
             <span>{{ :: group.subheader }} </span> {{ :: group.type | translate }}
         </a>
     </span>
-    <span class="stage-name" ng-if="group.header && !group.subheader && group.singleViewType == null">
+    <span class="stage-name" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
         <a href="" ng-click="viewSingleGroup(group, 'single-stage')">
             {{ :: group.header }} {{ :: group.type|splitText | translate }}
         </a>

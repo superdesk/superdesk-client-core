@@ -4,7 +4,12 @@
 
       <div sd-item-searchbar data-repo="repo" data-context="context" class="searchbar-flex-handler"></div>
       <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
-
+      <div class="refresh-box">
+          <button ng-if="showRefresh" class="pull-right" ng-click="refreshList()"
+              tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+              <i class="icon-repeat blue"></i>
+          </button>
+      </div>
       <div class="view-select">
           <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-th"></i></button>
           <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-th-list"></i></button>

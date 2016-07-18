@@ -1840,16 +1840,10 @@ import classNames from 'classnames';
                                 itemsById: itemsById,
                                 view: scope.view
                             }, function() {
-                                if (selected) {
-                                    // maintain selected items position
-                                    try {
-                                        var selectedNode = ReactDOM.findDOMNode(selected);
-                                        elem[0].scrollTop += selectedNode.offsetTop - offsetTop;
-                                    } catch (err) {
-                                        // pass - selected item is not in list anymore
-                                    }
+                                // updates scroll position to top, such as when forced refresh
+                                if (scope.scrollTop === 0) {
+                                    elem[0].scrollTop = scope.scrollTop;
                                 }
-
                                 scope.rendering = scope.loading = false;
                             });
                         }, true);
@@ -1934,6 +1928,18 @@ import classNames from 'classnames';
                          * before activating render function
                          */
                         function handleScroll($event) {
+                            // If scroll bar leaves top position update scope.scrollTop
+                            // which is used to display refresh button on list item updates
+                            if (elem[0].scrollTop >= 0 && elem[0].scrollTop < 100) {
+                                scope.$applyAsync(function() {
+                                    scope.scrollTop = elem[0].scrollTop;
+                                    // force refresh the group or list, if scroll bar hits the top of list.
+                                    if (scope.scrollTop === 0) {
+                                        $rootScope.$broadcast('refresh:list', scope.group);
+                                    }
+                                });
+                            }
+
                             if (scope.rendering) { // ignore
                                 $event.preventDefault();
                                 return;

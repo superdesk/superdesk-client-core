@@ -104,7 +104,57 @@ describe('search service', function() {
         expect(nextItems._items.length).toBe(2);
         expect(nextItems._items[0]._id).toBe('bar');
         expect(nextItems._items[1]._id).toBe('foo');
+
+        // return newItems when forced
+        nextItems = search.mergeItems({_items: [{_id: 'foo'}]}, {_items: [{_id: 'bar'}]}, null, true);
+        expect(nextItems._items.length).toBe(1);
+        expect(nextItems._items[0]._id).toBe('foo');
+
+        // can merge content updates from matching newItem
+        nextItems = search.mergeItems({_items: [{_id: 'foo', _current_version: 2, slugline: 'slugline updated'}]},
+            {_items: [{_id: 'foo', _current_version: 1, slugline: 'slugline'}]}, null, false);
+        expect(nextItems._items.length).toBe(1);
+        expect(nextItems._items[0].slugline).toBe('slugline updated');
+
     }));
+
+    it('can evalute canShowRefresh for refresh button display', inject(function(search) {
+        var newItems, scopeItems, scrollTop, isItemPreviewing, _data;
+        newItems = {_items: [{_id: 'foo', _current_version: 1}]};
+        scopeItems = {_items: [{_id: 'bar', _current_version: 1}]};
+        // consider item is not currently previewing but scroll is not on top.
+        scrollTop = 50;
+
+        _data = prepareData(newItems, scopeItems, scrollTop, isItemPreviewing);
+        expect(search.canShowRefresh(_data)).toBe(true);
+
+        // consider published item ids are same, but version is different as in case of take/update.
+        newItems = {_items: [{_id: 'foo', _current_version: 1, _type: 'published'}]};
+        scopeItems = {_items: [{_id: 'foo', _current_version: 2, _type: 'published'}]};
+        // consider scroll on Top but item is currently previewing.
+        scrollTop = 0;
+        isItemPreviewing = true;
+
+        _data = prepareData(newItems, scopeItems, scrollTop, isItemPreviewing);
+        expect(search.canShowRefresh(_data)).toBe(true);
+
+        // consider newItems and scopeItems are same and scroll is on top and no item is currently previewing.
+        newItems = {_items: [{_id: 'foo', _current_version: 1}]};
+        scopeItems = {_items: [{_id: 'foo', _current_version: 1}]};
+
+        _data = prepareData(newItems, scopeItems, scrollTop, isItemPreviewing);
+        expect(search.canShowRefresh(_data)).toBe(undefined);
+
+    }));
+
+    function prepareData(newItems, scopeItems, scrollTop, isItemPreviewing) {
+        return {
+            newItems: newItems,
+            scopeItems: scopeItems,
+            scrollTop: scrollTop,
+            isItemPreviewing: isItemPreviewing
+        };
+    }
 
     describe('multi action bar directive', function() {
 
