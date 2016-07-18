@@ -567,6 +567,7 @@
                     controller: DeskListController,
                     priority: -100,
                     adminTools: false,
+                    beta: true,
                     category: superdesk.MENU_MAIN,
                     privileges: {desks: 1}
                 })
