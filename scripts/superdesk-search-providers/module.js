@@ -97,6 +97,7 @@
                 $scope.edit = function(provider) {
                     $scope.origProvider = provider || {};
                     $scope.provider = _.create($scope.origProvider);
+                    $scope.provider.config = _.create($scope.origProvider.config || {});
                 };
 
                 /**
