@@ -2762,7 +2762,7 @@
                     }
 
                     if (scope.extra.body_footer_value) {
-                        scope.item.body_footer = scope.item.body_footer + '\n<p>' + scope.extra.body_footer_value.value + '</p>';
+                        scope.item.body_footer = scope.item.body_footer + scope.extra.body_footer_value.value;
                         mainEditScope.dirty = true;
                         autosave.save(scope.item);
                     }
@@ -3073,9 +3073,9 @@
                 scope.displayCompanyCodes = null;
 
                 scope.shouldDisplayUrgency = function() {
-                    return !scope.editor.urgency.service || (
-                        scope.item.anpa_category &&
-                        scope.item.anpa_category[0] &&
+                    return !(scope.editor.urgency || {}).service || (
+                        Array.isArray(scope.item.anpa_category) &&
+                        scope.item.anpa_category.length &&
                         scope.item.anpa_category[0].qcode &&
                         scope.editor.urgency.service[scope.item.anpa_category[0].qcode]
                     );

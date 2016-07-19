@@ -2193,10 +2193,10 @@
             keyboardManager.register('Search', 'v', gettext('Toggles search view'));
         }]);
 
-    MultiActionBarController.$inject = ['$rootScope', 'multi', 'multiEdit', 'send', 'remove',
-                                        'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges'];
-    function MultiActionBarController($rootScope, multi, multiEdit, send, remove,
-            packages, superdesk, notify, spike, authoring, privileges) {
+    MultiActionBarController.$inject = ['$rootScope', 'multi', 'multiEdit', 'send', 'remove', 'modal', '$q',
+                                        'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location'];
+    function MultiActionBarController($rootScope, multi, multiEdit, send, remove, modal, $q,
+            packages, superdesk, notify, spike, authoring, privileges, $location) {
 
         this.send  = function() {
             send.all(multi.getItems());
@@ -2248,9 +2248,15 @@
          * Multiple item spike
          */
         this.spikeItems = function() {
-            spike.spikeMultiple(multi.getItems());
-            $rootScope.$broadcast('item:spike');
-            multi.reset();
+            var txt = gettext('Do you want to delete these items permanently?');
+            var isPersonal = $location.path() === '/workspace/personal';
+
+            return $q.when(isPersonal ? modal.confirm(txt) : 0)
+                .then(function() {
+                    spike.spikeMultiple(multi.getItems());
+                    $rootScope.$broadcast('item:spike');
+                    multi.reset();
+                });
         };
 
         /**

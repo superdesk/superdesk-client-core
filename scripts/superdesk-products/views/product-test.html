@@ -1,0 +1,29 @@
+<div ng-controller="ProductsConfigCtrl">
+	<div class="content">
+		<div class="product-search">
+            <label for="story-id" translate>Story GUID</label>
+            <input type="text" id="story-id" required ng-model="articleId">
+            <button class="btn btn-info pull-right" ng-disabled="!articleId" ng-click="test()" translate>Test Products</button>
+	    </div>
+		
+		<br />
+		<br />
+
+		<div sd-shadow>
+			<ul class="pills-list" >
+				<li ng-repeat="product in products">
+					<h6>{{ product.name }}</h6>
+					<div class="actions">
+						<button ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
+					</div>
+					<div ng-if="testLookup[product._id]">
+						<br /><br />
+						<div>Test Result: <span>{{ testLookup[product._id].matched ? 'Match':'No-Match' }}</span></div>
+						<div ng-if="!testLookup[product._id].matched">Reason: <span>{{ testLookup[product._id].reason }}</span></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div sd-products-config-modal ></div>
+</div>

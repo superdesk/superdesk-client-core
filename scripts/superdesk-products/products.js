@@ -24,6 +24,7 @@
                 }
             });
         }])
+        .controller('ProductsConfigCtrl', ProductsConfigController)
         .factory('products', ['$q', 'api', 'contentFilters', '$filter',
             function($q, api, contentFilters, $filter) {
                 /**
@@ -72,6 +73,9 @@
                             self.contentFilters = $filter('sortByName')(filters);
                         });
                     },
+                    testProducts: function(diff) {
+                        return api.save('product_tests', {}, diff);
+                    },
                     initialize: function() {
                         return this.fetchProducts()
                         .then(angular.bind(this, this.fetchContentFilters));
@@ -86,7 +90,6 @@
         })
         .directive('sdProductsConfigModal', function() {
             return {
-                require: '^sdProductsConfig',
                 templateUrl: 'scripts/superdesk-products/views/products-config-modal.html',
                 link: function(scope, elem, attrs, ctrl) {
 
@@ -98,6 +101,8 @@
     'subscribersService', 'metadata', '$filter'];
     function ProductsConfigController ($scope, gettext, notify, api, products, modal,
         subscribersService, metadata, $filter) {
+
+        $scope.testLookup = {};
 
         var initProducts = function() {
             products.initialize().then(function() {
@@ -181,6 +186,22 @@
                     });
                 }
             ).then($scope.cancel);
+        };
+
+        $scope.test = function() {
+            if (!$scope.articleId) {
+                notify.error(gettext('Please provide an article id'));
+                return;
+            }
+
+            products.testProducts({'article_id': $scope.articleId}).then(function(results) {
+                $scope.rawResults = results;
+                _.each(results._id, function(result) {
+                    $scope.testLookup[result.product_id] = result;
+                });
+            }, function(response) {
+                notify.error(gettext('Error: ' + JSON.stringify(response)));
+            });
         };
     }
 

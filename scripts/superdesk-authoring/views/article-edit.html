@@ -1,4 +1,4 @@
-<div class="field" ng-if="schema.headline" ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}" order="{{editor.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
+<div class="field" sd-width="{{editor.headline.sdWidth || 'full'}}" ng-if="schema.headline" ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}" order="{{editor.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
   <label translate>Headline</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
@@ -13,7 +13,7 @@
   <div class="headline" ng-if="!_editable">{{item.headline}}</div>
 </div>
 
-<div class="field" ng-if="schema.sms && item._type !== 'archived'" order="{{editor.sms.order}}">
+<div class="field" ng-if="schema.sms && item._type !== 'archived'" sd-width="{{editor.sms.sdWidth || 'full'}}" order="{{editor.sms.order}}">
     <label ng-if="_editable" translate>SMS</label>
     <div ng-if="_editable">
         <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms"
@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<div ng-if="schema.feature_image" sd-validation-error="error.feature_image" order="{{editor.feature_image.order}}"
+<div ng-if="schema.feature_image" sd-width="{{editor.feature_image.sdWidth || 'full'}}" sd-validation-error="error.feature_image" order="{{editor.feature_image.order}}"
     data-required="schema.feature_image.required" class="field">
   <label translate>Featured Image</label>
   <div sd-item-association
@@ -57,7 +57,7 @@
     data-onchange="autosave(item)"></div>
 </div>
 
-<div class="field abstract" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
+<div class="field abstract" sd-width="{{editor.abstract.sdWidth || 'full'}}" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
   <label translate>Abstract</label>
     <span sd-character-count
           data-item="item.abstract"
@@ -76,7 +76,7 @@
   <div class="abstract" ng-if="!_editable" sd-html-preview="item.abstract"></div>
 </div>
 
-<div class="field" ng-if="item._type !== 'archived' && schema.byline" order="{{editor.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
+<div class="field" ng-if="item._type !== 'archived' && schema.byline" sd-width="{{editor.byline.sdWidth || 'full'}}" order="{{editor.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
   <label translate>Byline</label>
    <!-- Placeholder text is temporary, ideally it should come from content type -->
    <div id="byline" class="byline"
@@ -93,7 +93,7 @@
 
 <!--This article-edit view is used by templates as well.
     ng-if is used to hide dateline for the template create/edit screen.-->
-<div class="field" ng-if="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" order="{{editor.dateline.order}}" sd-validation-error="error.dateline" data-required="schema.dateline.required">
+<div class="field" ng-if="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" order="{{editor.dateline.order}}" sd-validation-error="error.dateline" data-required="schema.dateline.required" sd-width="{{editor.dateline.sdWidth || 'full'}}">
     <label translate>Dateline</label>
     <div class="dateline">
         <div sd-meta-locators
@@ -143,7 +143,7 @@
     </div>
 </div>
 
-<div class="field body" ng-if="!isMediaType && schema.body_html" order="{{editor.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required">
+<div class="field body" ng-if="!isMediaType && schema.body_html" order="{{editor.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required" sd-width="{{editor.body_html.sdWidth || 'full'}}">
   <label translate>Body</label>
     <span sd-character-count data-item="item.body_html" data-html="true"></span>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
@@ -161,7 +161,7 @@
     <div class="text-editor" sd-html-preview="item.body_html" ng-if="!_editable"></div>
 </div>
 
-<div class="field" ng-if="isMediaType" order="{{editor.media.order}}">
+<div class="field" ng-if="isMediaType" order="{{editor.media.order}}" sd-width="{{editor.media.sdWidth || 'full'}}">
 
   <div ng-if="item.type == 'picture'" class="full-preview" sd-ratio-calc>
       <div>
@@ -184,7 +184,7 @@
   </div>
 </div>
 
-<div ng-if="isMediaType" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text">
+<div ng-if="isMediaType" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text" sd-width="{{editor.media_description.sdWidth || 'full'}}">
   <label translate>Description</label>
   <div id="title" class="abstract"
         sd-text-editor
@@ -202,7 +202,8 @@
      ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !item.package_type"
      sd-validation-error="error.body_footer_value"
      data-required="schema.footer.required"
-     order="{{editor.footer.order}}">
+     order="{{editor.footer.order}}"
+	sd-width="{{editor.media_description.sdWidth || 'full'}}">
     <label translate>Helplines/Contact Information</label>
     <select id="helplines"
             ng-model="extra.body_footer_value"
@@ -217,7 +218,7 @@
     </select>
 </div>
 
-<div class="field" ng-if="item.body_footer" order="{{editor.body_footer.order}}" sd-validation-error="error.body_footer">
+<div class="field" ng-if="item.body_footer" order="{{editor.body_footer.order}}" sd-validation-error="error.body_footer" sd-width="{{editor.body_footer.sdWidth || 'full'}}">
     <label translate>Footer</label>
     <div id="body_footer" class="body"
         sd-text-editor
@@ -239,7 +240,7 @@
   <div sd-package data-item="item" class="composite-preview" ng-if="!_editable"></div>
 </div>
 
-<div class="field pull-left" ng-if="item.sign_off && schema.sign_off" order="{{editor.sign_off.order}}">
+<div class="field pull-left" ng-if="item.sign_off && schema.sign_off" order="{{editor.sign_off.order}}" sd-width="{{editor.sign_off.sdWidth || 'full'}}">
     <label translate>Sign-Off</label>
     <button class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="canEditSignOff && _editable">
       <i class="icon-lock" ng-hide="editSignOff"></i>
