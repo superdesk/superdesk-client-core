@@ -187,6 +187,14 @@ describe('spellcheck', function() {
         expect(errors.length).toBe(2);
     }));
 
+    it('can resolve abbreviations without language specified', inject(function(spellcheck, $rootScope) {
+        var spy = jasmine.createSpy('success');
+        spellcheck.setLanguage('');
+        spellcheck.getAbbreviationsDict().then(spy);
+        $rootScope.$digest();
+        expect(spy).toHaveBeenCalled();
+    }));
+
     function assignErrors(_errors) {
         errors.splice(0, errors.length);
         errors.push.apply(errors, _errors);
