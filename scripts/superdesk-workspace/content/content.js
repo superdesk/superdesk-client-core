@@ -81,8 +81,7 @@
         }])
         .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
             keyboardManager.register('General', 'ctrl + m', gettext('Creates new item'));
-        }])
-        ;
+        }]);
 
     ContentService.$inject = ['api', 'superdesk', 'templates', 'desks', 'packages', 'archiveService', '$filter'];
     function ContentService(api, superdesk, templates, desks, packages, archiveService, $filter) {

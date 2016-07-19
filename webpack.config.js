@@ -21,9 +21,9 @@ module.exports = {
     resolve: {
         root: [
             path.join(__dirname),
-            path.join(__dirname + '/scripts'),
-            path.join(__dirname + '/app'),
-            path.join(__dirname + '/styles/less')
+            path.join(__dirname, '/scripts'),
+            path.join(__dirname, '/app'),
+            path.join(__dirname, '/styles/less')
         ],
         extensions: ['', '.js']
     },

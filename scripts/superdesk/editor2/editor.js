@@ -1607,7 +1607,5 @@ function EditorUtilsFactory() {
 }
 
 angular.module('superdesk.editor.utils', [])
-    .factory('editorUtils', EditorUtilsFactory)
-    ;
-
+    .factory('editorUtils', EditorUtilsFactory);
 })();

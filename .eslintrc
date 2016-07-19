@@ -3,7 +3,8 @@
         "browser": true,
         "node": true,
         "jasmine": true,
-        "amd": true
+        "amd": true,
+        "es6": true
     },
     "globals": {
         "$": false,
@@ -18,6 +19,10 @@
         "moment": false,
         "protractor": false,
         "requirejs": false
+    },
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
     },
     "rules": {
         "indent": [2, 4],

@@ -7,8 +7,7 @@
         'superdesk.api',
         'superdesk.desks'
         ])
-        .service('send', SendService)
-        ;
+        .service('send', SendService);
 
     var app = angular.module('superdesk.ingest', [
         'superdesk.search',

@@ -419,7 +419,5 @@ function SpellcheckMenuController(editor, preferencesService) {
 
 angular.module('superdesk.editor.spellcheck', ['superdesk.dictionaries'])
     .service('spellcheck', SpellcheckService)
-    .controller('SpellcheckMenu', SpellcheckMenuController)
-    ;
-
+    .controller('SpellcheckMenu', SpellcheckMenuController);
 })();

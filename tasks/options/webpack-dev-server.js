@@ -1,5 +1,4 @@
 var webpackConfig = require('../../webpack.config.js');
-var webpack = require('webpack');
 
 module.exports = {
     options: {

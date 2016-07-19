@@ -1560,8 +1560,7 @@
                 }
             };
         }])
-        .directive('sdStageHeader', StageHeaderDirective)
-        ;
+        .directive('sdStageHeader', StageHeaderDirective);
 
     function StageHeaderDirective() {
         return {templateUrl: 'scripts/superdesk-desks/views/stage-header.html'};

@@ -1310,6 +1310,5 @@
         .directive('sdMediaQuery', mediaQuery)
         .directive('sdFocusElement', focusElement)
         .directive('sdValidationError', validationDirective)
-        .directive('sdLoading', LoadingDirective)
-        ;
+        .directive('sdLoading', LoadingDirective);
 })();
