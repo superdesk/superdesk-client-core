@@ -3173,7 +3173,7 @@ msgstr "Ikke for publisering"
 
 #: scripts/superdesk-search/react.js:1051
 #: scripts/superdesk-search/react.js:1053
-msgid "Not For Publications"
+msgid "Not For Publication"
 msgstr "Ikke for publisering"
 
 #: scripts/superdesk-authoring/versioning/history/views/publish_queue.html:10

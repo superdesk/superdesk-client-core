@@ -3096,7 +3096,7 @@ msgid "Not For Publication"
 msgstr "Nicht zur Veröffentlichung"
 
 #: scripts/superdesk-search/react.js:968 scripts/superdesk-search/react.js:970
-msgid "Not For Publications"
+msgid "Not For Publication"
 msgstr "Nicht zur Veröffentlichung"
 
 #: scripts/superdesk-authoring/versioning/history/views/publish_queue.html:10
