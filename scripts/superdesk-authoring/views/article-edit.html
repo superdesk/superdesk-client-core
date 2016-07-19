@@ -37,11 +37,22 @@
 </div>
 
 <div ng-if="schema.feature_image" sd-width="{{editor.feature_image.sdWidth || 'full'}}" sd-validation-error="error.feature_image" order="{{editor.feature_image.order}}"
-    data-required="schema.feature_image.required" class="field featured-image">
+    data-required="schema.feature_image.required" class="field">
   <label translate>Featured Image</label>
   <div sd-item-association
     data-item="item"
     data-rel="'featureimage'"
+    data-editable="_editable"
+    data-onchange="autosave(item)"></div>
+</div>
+
+<div ng-if="schema.feature_media" sd-validation-error="error.feature_media" order="{{editor.feature_media.order}}"
+    data-required="schema.feature_media.required" class="field">
+  <label translate>Featured Media</label>
+  <div sd-item-association
+    data-allow-video="true"
+    data-item="item"
+    data-rel="'featuremedia'"
     data-editable="_editable"
     data-onchange="autosave(item)"></div>
 </div>
