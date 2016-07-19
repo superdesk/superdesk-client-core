@@ -19,16 +19,20 @@ var options = {
 };
 
 module.exports = {
-    app: {
-        cwd: '<%= appDir %>',
-        dest: '<%= distDir %>/app-templates-cache.js',
-        src: src,
-        options: options
-    },
     core: {
         cwd: '<%= coreDir %>',
         dest: '<%= distDir %>/templates-cache.js',
         src: src,
         options: options
+    },
+    dev: {
+        cwd: '<%= coreDir %>',
+        dest: '<%= distDir %>/templates-cache.js',
+        src: [],
+        options: {
+            bootstrap: function() {
+                return '';
+            }
+        }
     }
 };

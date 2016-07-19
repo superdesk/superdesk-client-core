@@ -33,11 +33,11 @@ module.exports = function(grunt) {
 
     grunt.registerTask('style', ['less:dev', 'cssmin']);
 
-    grunt.registerTask('test', ['karma:unit']);
+    grunt.registerTask('test', ['ngtemplates:dev', 'karma:unit']);
     grunt.registerTask('hint', ['jshint', 'jscs', 'eslint:specs', 'eslint:tasks', 'eslint:root']);
     grunt.registerTask('hint:docs', ['jshint:docs', 'jscs:docs']);
     grunt.registerTask('ci', ['test', 'hint']);
-    grunt.registerTask('ci:travis', ['karma:travis', 'hint']);
+    grunt.registerTask('ci:travis', ['ngtemplates:dev', 'karma:travis', 'hint']);
     grunt.registerTask('bamboo', ['karma:bamboo']);
     grunt.registerTask('lint', ['hint']);
 
@@ -48,31 +48,15 @@ module.exports = function(grunt) {
         'template:docs',
         'connect:test',
         'open:docs',
-        'ngtemplates',
+        'ngtemplates:core',
         'watch'
     ]);
 
     grunt.registerTask('server', [
         'clean',
         'template:dev',
+        'ngtemplates:dev',
         'webpack-dev-server:start'
-    ]);
-
-    grunt.registerTask('server:e2e', [
-        'clean',
-        'style',
-        'template:mock',
-        'connect:mock',
-        'ngtemplates',
-        'watch'
-    ]);
-
-    grunt.registerTask('server:travis', [
-        'clean',
-        'style',
-        'ngtemplates',
-        'template:travis',
-        'connect:travis'
     ]);
 
     grunt.registerTask('bower', [
@@ -86,7 +70,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'clean',
         //'less:dev',
-        'ngtemplates',
+        'ngtemplates:core',
         'webpack:build',
         'useminPrepare',
         'concat:generated',

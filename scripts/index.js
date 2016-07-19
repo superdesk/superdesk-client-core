@@ -139,7 +139,9 @@ import 'superdesk-dashboard/sd-widget-directive';
 import 'superdesk-dashboard/grid/grid';
 import 'superdesk-search-providers/module';
 
+// Angular $templateCache (empty on dev)
+import 'dist/templates-cache.js';
+
 // App
-//TODO(x) make this import work on dev: import 'templates-cache';
 import 'app/scripts/translations';
 import 'app/main';
