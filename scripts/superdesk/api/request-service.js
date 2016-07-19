@@ -10,7 +10,7 @@
         /**
          * @link upload:isUpload
          */
-        this.isUpload = function(config) {
+        this.isUpload = config => {
             return $injector.get('upload').isUpload(config);
         };
 

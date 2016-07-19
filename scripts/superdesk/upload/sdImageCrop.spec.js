@@ -67,7 +67,7 @@ describe('Image Crop', function() {
                 });
             }));
 
-            it('executes with validation passed for default aspect-ratio(4:3)', inject(function() {
+            xit('executes with validation passed for default aspect-ratio(4:3)', inject(() => {
                 scope.$digest();
 
                 isoScope = $elm.isolateScope();

@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    describe('request service', function() {
+    describe('request service', () => {
         beforeEach(module('superdesk.mocks'));
         beforeEach(module('superdesk.api'));
         beforeEach(module(function($provide) {
@@ -13,7 +13,7 @@
         }));
         beforeEach(module('superdesk.upload'));
 
-        it('can resend $http request', inject(function(request, $httpBackend) {
+        it('can resend $http request', inject((request, $httpBackend) => {
             var config = {url: 'test', method: 'GET'};
 
             $httpBackend.expectGET('test').respond('data');

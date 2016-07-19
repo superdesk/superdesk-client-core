@@ -1,6 +1,9 @@
 // Styles
 import 'index.less';
 
+// Vendor
+import 'jquery-jcrop';
+
 // Core
 import 'superdesk/gettext';
 import 'superdesk/activity/activity';
@@ -137,5 +140,6 @@ import 'superdesk-dashboard/grid/grid';
 import 'superdesk-search-providers/module';
 
 // App
+//TODO(x) make this import work on dev: import 'templates-cache';
 import 'app/scripts/translations';
 import 'app/main';

@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path');
+var webpackConfig = require('./webpack.config.js');
 
 module.exports = function(config) {
     config.set({
@@ -8,9 +9,19 @@ module.exports = function(config) {
             'jasmine'
         ],
 
+        plugins: [
+            'karma-jasmine',
+            'karma-chrome-launcher',
+            'karma-ng-html2js-preprocessor',
+            'karma-webpack'
+        ],
+
         preprocessors: {
-            '**/*.html': ['ng-html2js']
+            '**/*.html': ['ng-html2js'],
+            'scripts/index.js': ['webpack']
         },
+
+        webpack: webpackConfig,
 
         // list of files / patterns to load in the browser
         files: [
@@ -48,8 +59,12 @@ module.exports = function(config) {
             'bower_components/react/react-dom.js',
             'bower_components/classnames/index.js',
 
-            path.join(__dirname, 'scripts/**/*.js'),
-            path.join(__dirname, 'scripts/**/*.html')
+            'scripts/superdesk/mocks.js',
+            'scripts/superdesk/editor/editor.js',
+            'scripts/index.js',
+
+            'scripts/**/*.html',
+            'scripts/**/*[Ss]pec.js'
         ],
 
         ngHtml2JsPreprocessor: {
