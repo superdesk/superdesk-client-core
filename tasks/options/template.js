@@ -60,12 +60,16 @@ module.exports = function(grunt) {
         }};
     }
 
-    var files = {'index.html': '<%= appDir %>/index.html'};
+    var files = {'<%= distDir %>/index.html': '<%= appDir %>/index.html'};
 
     return {
         mock: {
             options: data('http://localhost:5000/api', true),
             files: files
+        },
+        dev: {
+            options: data('http://localhost:5000/api', true),
+            files: {'index.html': '<%= appDir %>/index.html'}
         },
         travis: {
             options: data('http://localhost:5000/api'),

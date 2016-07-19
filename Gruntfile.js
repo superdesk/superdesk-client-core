@@ -54,7 +54,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('server', [
         'clean',
-        'template:test',
+        'template:dev',
         'webpack-dev-server:start'
     ]);
 
@@ -85,8 +85,9 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', [
         'clean',
-        'less:dev',
+        //'less:dev',
         'ngtemplates',
+        'webpack:build',
         'useminPrepare',
         'concat:generated',
         'uglify:generated',

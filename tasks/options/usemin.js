@@ -1,3 +1,3 @@
 module.exports = {
-    html: ['index.html', '<%= distDir %>/docs.html']
+    html: ['<%= distDir %>/index.html', '<%= distDir %>/docs.html']
 };
