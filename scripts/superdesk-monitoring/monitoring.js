@@ -222,10 +222,15 @@
             case 'stage':
                 // refresh stage if it matches updated stage
                 return data.stages && !!data.stages[card._id];
-
             case 'personal':
                 return data.user === session.identity._id;
-
+            case 'deskOutput':
+            case 'scheduledDeskOutput':
+                var desk_id = card._id.substring(0, card._id.indexOf(':'));
+                if (desk_id) {
+                    return data.desks && !!data.desks[desk_id];
+                }
+                return false;
             default:
                 // no way to determine if item should be visible, refresh
                 return true;

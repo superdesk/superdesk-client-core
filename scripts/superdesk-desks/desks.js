@@ -154,7 +154,6 @@
                 }
 
                 function queryItems(queryString) {
-                    console.log(scope.stage);
                     criteria = cards.criteria(scope.stage, queryString);
                     scope.loading = true;
                     scope.items = scope.total = null;
