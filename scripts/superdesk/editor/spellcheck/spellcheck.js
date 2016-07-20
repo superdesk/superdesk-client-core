@@ -83,7 +83,9 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
      */
     this.getAbbreviationsDict = function(force) {
         if (!lang) {
-            return $q.reject();
+            // here it shouldn't reject like in getDict, where it would stop only spellchecking
+            // if there is no dictionary, while here it would stop scope commit in editor
+            return $q.when({});
         }
 
         var baseLang = getBaseLanguage(lang);
