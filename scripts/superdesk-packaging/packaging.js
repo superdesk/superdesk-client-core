@@ -838,7 +838,7 @@
                 controller: ['data', 'packages', 'authoringWorkspace', 'notify', 'gettext',
                 function(data, packages, authoringWorkspace, notify, gettext) {
                     var openItem = authoringWorkspace.getItem();
-                    packages.createPackageFromItems([data.item, openItem])
+                    packages.createPackageFromItems([openItem, data.item])
                     .then(function(newPackage) {
                         authoringWorkspace.edit(newPackage);
                     }, function(response) {
