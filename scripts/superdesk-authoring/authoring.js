@@ -1605,6 +1605,10 @@ import 'angular-history/history.js';
                     return $scope.dirty || $scope.item._autosave;
                 };
 
+                $scope.previewFormattedEnabled = function() {
+                    return !!$rootScope.config.previewFormats;
+                };
+
                 // call the function to unlock and lock the story for editing.
                 $scope.unlock = function() {
                     $scope.unlockClicked = true;
@@ -1751,6 +1755,42 @@ import 'angular-history/history.js';
                     return scope.save(scope.item)
                     ['finally'](function() {
                         scope.saveDisabled = false;
+                    });
+                };
+
+                scope.previewFormattedItem = function() {
+                    scope.previewFormatted = true;
+                };
+
+                scope.closePreviewFormatted = function() {
+                    scope.previewFormatted = false;
+                };
+            }
+        };
+    }
+
+    PreviewFormattedDirective.$inject = ['api', 'config', 'notify'];
+    function PreviewFormattedDirective(api, config, notify) {
+        return {
+            templateUrl: 'scripts/superdesk-authoring/views/preview-formatted.html',
+            link: function(scope) {
+                scope.formatters = config.previewFormats;
+                scope.loading = false;
+
+                scope.format = function(formatterString) {
+                    scope.loading = true;
+                    var formatter = JSON.parse(formatterString);
+                    api.save('formatters', {}, {'article_id': scope.item._id, 'formatter_name': formatter.name})
+                    .then(function(item) {
+                        if (formatter.outputType === 'json') {
+                            scope.formattedItem = JSON.parse(item._id.formatted_doc)[formatter.outputField];
+                        }
+                    }, function(error) {
+                        if (angular.isDefined(error.data._message)) {
+                            notify.error(gettext(error.data._message));
+                        }
+                    })['finally'](function() {
+                        scope.loading = false;
                     });
                 };
             }
@@ -2853,6 +2893,7 @@ import 'angular-history/history.js';
         .directive('sdArticleEdit', ArticleEditDirective)
         .directive('sdAuthoring', AuthoringDirective)
         .directive('sdAuthoringTopbar', AuthoringTopbarDirective)
+        .directive('sdPreviewFormatted', PreviewFormattedDirective)
         .directive('sdAuthoringContainer', AuthoringContainerDirective)
         .directive('sdAuthoringEmbedded', AuthoringEmbeddedDirective)
         .directive('sdAuthoringHeader', AuthoringHeaderDirective)
