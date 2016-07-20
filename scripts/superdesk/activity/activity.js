@@ -267,7 +267,8 @@
                         return privileges.loaded.then(function() {
                             var menu = [];
                             angular.forEach(activities, function(activity) {
-                                if (activity.category === category && isAllowed(activity)) {
+                                if (activity.category === category && isAllowed(activity) &&
+                                    (activity.beta === false || $rootScope.beta)) {
                                     menu.push(activity);
                                 }
                             });
