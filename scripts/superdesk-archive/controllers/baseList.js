@@ -67,3 +67,6 @@ function BaseListController($scope, $location, superdesk, api, search, desks, pr
         self.fetchItems({source: query});
     };
 }
+
+//TODO(x) This is nasty
+window.BaseListController = BaseListController;
