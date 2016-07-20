@@ -1048,9 +1048,9 @@
                                     React.createElement(
                                         'div', {
                                             className: 'state-label not-for-publication',
-                                            title: gettext('Not For Publications'),
+                                            title: gettext('Not For Publication'),
                                             key: 'not-for-publication'
-                                        }, gettext('Not For Publications'))
+                                        }, gettext('Not For Publication'))
                                     : null,
                                 flags.marked_for_legal ?
                                     React.createElement(

@@ -28,6 +28,9 @@
             <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="selected.preview.anpa_take_key">
               <span class="inline-label">takekey:</span><span class="takekey">{{selected.preview.anpa_take_key | translate}}</span>
             </div>
+            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="selected.preview.ednote">
+              <span class="inline-label">ednote:</span><span class="ednote">{{selected.preview.ednote | translate}}</span>
+            </div>
             <div class="preview-header__flex-row">
               <span sd-item-state data-state=selected.preview.state data-embargo=item.embargo></span>
               <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
