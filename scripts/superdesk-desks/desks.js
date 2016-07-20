@@ -1033,6 +1033,7 @@
 
                     scope.edit = function(desk) {
                         scope.desk.edit = _.create(desk);
+                        scope.desk.orig = desk;
                         scope.desk.edit.desk_metadata = desk.desk_metadata || {};
                         scope.desk.edit.content_profiles = desk.content_profiles || {};
                     };
@@ -1049,14 +1050,13 @@
                         scope.saving = true;
                         scope.message = gettext('Saving...');
                         var _new = desk._id ? false : true;
-                        desks.save(scope.desk.edit, desk).then(function() {
+                        desks.save(scope.desk.edit, desk).then(function(res) {
                             if (_new) {
                                 scope.edit(scope.desk.edit);
                                 scope.desks._items.unshift(scope.desk.edit);
                                 $rootScope.$broadcast('desks:refresh:stages');
                             } else {
-                                var origDesk = _.find(scope.desks._items, {_id: scope.desk.edit._id});
-                                _.extend(origDesk, scope.desk.edit);
+                                angular.extend(scope.desk.orig, res);
                             }
 
                             scope.desks._items = $filter('sortByName')(scope.desks._items);
@@ -1215,7 +1215,7 @@
                         scope.saving = true;
                         scope.message = gettext('Saving...');
                         if (!orig._id) {
-                            _.extend(scope.editStage, {desk: scope.desk.edit._id});
+                            angular.extend(scope.editStage, {desk: scope.desk.edit._id});
                             api('stages').save({}, scope.editStage)
                             .then(function(item) {
                                 scope.stages.push(item);
@@ -1470,12 +1470,12 @@
                         var members = _.map(scope.deskMembers, function(obj) {
                             return {user: obj._id};
                         });
+                        
                         scope.saving = true;
-                        desks.save(scope.desk.edit, {members: members}).then(function(result) {
-                            _.extend(scope.desk.edit, result);
+                        desks.save(scope.desk.edit, {members: members}).then(function(res) {
+                            angular.extend(scope.desk.edit, res);
                             desks.deskMembers[scope.desk.edit._id] = scope.deskMembers;
-                            var origDesk = desks.deskLookup[scope.desk.edit._id];
-                            _.extend(origDesk, scope.desk.edit);
+                            angular.extend(scope.desk.orig, res);
                             if (!done) {
                                 WizardHandler.wizard('desks').next();
                             } else {
