@@ -270,8 +270,8 @@
                 return api.find('legal_archive', item._id, {version: 'all'})
                     .then(function(result) {
                         _.each(result._items, function(version) {
-                            version.desk = version.task.desk;
-                            version.stage = version.task.stage;
+                            version.desk = version.task && version.task.desk ? version.task.desk : '';
+                            version.stage = version.task && version.task.stage ? version.task.stage : '';
                             version.creator = version.version_creator || version.original_creator;
 
                             if (version.type === 'text') {
