@@ -91,9 +91,11 @@
         '$q',
         '$location',
         '$anchorScroll',
-        'activityService'
+        'activityService',
+        '$rootScope'
     ];
-    function StageItemListDirective(search, api, superdesk, desks, cards, $timeout, $q, $location, $anchorScroll, activityService) {
+    function StageItemListDirective(search, api, superdesk, desks, cards, $timeout, $q,
+        $location, $anchorScroll, activityService, $rootScope) {
         return {
             templateUrl: 'scripts/superdesk-desks/views/stage-item-list.html',
             scope: {
@@ -154,7 +156,6 @@
                 }
 
                 function queryItems(queryString) {
-                    console.log(scope.stage);
                     criteria = cards.criteria(scope.stage, queryString);
                     scope.loading = true;
                     scope.items = scope.total = null;
@@ -337,7 +338,8 @@
                 });
 
                 scope.move = function (diff, event) {
-                    if (scope.selected != null && (scope.selected.task.stage === scope.stage)) {
+                    if (scope.selected != null && $rootScope.config &&
+                        $rootScope.config.features && $rootScope.config.features.customMonitoringWidget) {
                         if (scope.items) {
                             var index = _.findIndex(scope.items, {_id: scope.selected._id});
                             if (index === -1) { // selected not in current items, select first
@@ -348,7 +350,6 @@
                                 clickItem(_.last(scope.items), event);
                             }
                             if (index !== nextIndex) {
-                                scrollList(scope.items[nextIndex]._id);
                                 clickItem(scope.items[nextIndex], event);
                             } else {
                                 if (event) {

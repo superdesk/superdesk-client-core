@@ -4,9 +4,10 @@
     <ul ng-if="items.length" class="inline-content-items">
         <li ng-repeat="item in items track by generateTrackByIdentifier(item)" class="content-item"
             ng-click="action({item: item})"
-            ng-dblclick="edit(item); $event.stopPropagation();"
+            ng-dblclick="$root.config.features.customMonitoringWidget && edit(item); $event.stopPropagation();"
             ng-init="$root.config.features.customMonitoringWidget && $first && !selected ? action({item: item}) : false"
-            ng-class="{'content-item--locked': item.lock_user, shifted: allowed, active: item._id === selected._id}">
+            ng-class="{'content-item--locked': item.lock_user, shifted: allowed, 
+                active: item._id === selected._id, 'custom-monitoring': $root.config.features.customMonitoringWidget}">
             <div class="content-item__type">
                 <span ng-if="item.type==='composite'">
                     <i ng-if="item.package_type==='takes'" class="filetype-icon-takes-pack"></i>
@@ -27,7 +28,7 @@
             </div>
             <div class="content-item__action" ng-if="allowed">
                 <button ng-click="preview(item); $event.stopPropagation();" title="{{ :: 'Preview' | translate }}"><i class="icon-external"></i></button>
-                <button ng-click="edit(item); $event.stopPropagation();" title="{{ :: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
+                <button ng-if="!$root.config.features.customMonitoringWidget" ng-click="edit(item); $event.stopPropagation();" title="{{ :: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
             </div>
         </li>
     </ul>
