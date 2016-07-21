@@ -259,6 +259,19 @@
 
                 scope.hasMarkItemPrivilege = authoring.itemActions(scope.item).mark_item;
 
+                scope.$on('item:highlight', function($event, data) {
+                    var highlights = scope.item.highlights || [];
+                    if (scope.item._id === data.item_id) {
+                        scope.$apply(function() {
+                            if (data.marked) {
+                                scope.item.highlights = highlights.concat(data.highlight_id);
+                            } else {
+                                scope.item.highlights = _.without(highlights, data.highlight_id);
+                            }
+                        });
+                    }
+                });
+
                 scope.$watch('item.highlights', function(items) {
                     if (items) {
                         highlightsService.get().then(function(result) {
