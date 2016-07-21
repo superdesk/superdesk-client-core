@@ -368,6 +368,14 @@
             this.modalActive = true;
         };
 
+        this.searchOnEnter = function($event, query) {
+            var ENTER = 13;
+            if ($event.keyCode === ENTER) {
+                this.search(query);
+                $event.stopPropagation();
+            }
+        };
+
         /**
          * Set the search set by user on all groups
          */
