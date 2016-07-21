@@ -27,7 +27,7 @@ module.exports = {
     },
     dev: {
         cwd: '<%= coreDir %>',
-        dest: '<%= distDir %>/templates-cache.js',
+        dest: 'templates-cache.js',
         src: [],
         options: {
             bootstrap: function() {

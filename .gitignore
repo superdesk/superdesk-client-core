@@ -4,6 +4,7 @@ nbproject
 bower
 dist
 index.html
+templates-cache.js
 .tmp
 test-server/env
 test-server/__pycache__

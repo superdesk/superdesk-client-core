@@ -7,7 +7,7 @@ module.exports = {
         index: 'scripts/index.js'
     },
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(process.cwd(), 'dist'),
         filename: '[name].bundle.js',
         chunkFilename: '[id].bundle.js'
     },
@@ -30,7 +30,15 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
+                exclude: function(p) {
+                    'use strict';
+                    // exclude parsing bower components and node modules,
+                    // but allow the 'superdesk-core' node module, because
+                    // it will be used when building in the main 'superdesk'
+                    // repository.
+                    return p.indexOf('bower_components') > -1 ||
+                        p.indexOf('node_modules') > -1 && p.indexOf('superdesk-core') < 0;
+                },
                 loader: 'babel',
                 query: {
                     cacheDirectory: true,
