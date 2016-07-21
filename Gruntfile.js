@@ -69,7 +69,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', [
         'clean',
-        //'less:dev',
         'ngtemplates:core',
         'webpack:build',
         'useminPrepare',
