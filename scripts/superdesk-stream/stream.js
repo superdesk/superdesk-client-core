@@ -31,7 +31,7 @@
         };
 
         var fetchActivities = function() {
-            var filter = {embedded: {user: 1, item: 1}, max_results: $scope.max_results};
+            var filter = {max_results: $scope.max_results};
             if ($scope.desk) {
                 filter.where = {desk: $scope.desk._id};
             }
@@ -42,23 +42,33 @@
             });
         };
 
-        $scope.$watch('desk', function() {
-            fetchActivities();
-        });
+        // looks like route /workspace/stream is not longer
+        // hence commenting the code below just to be on safe side
 
-        $rootScope.$on('activity', function(_e, extras) {
-            fetchActivities();
-        });
+        // $scope.$watch('desk', function(_e, extras) {
+        //     fetchActivities();
+        // });
+
+        // $rootScope.$on('activity', function(_e, extras) {
+        //     fetchActivities();
+        // });
     }])
 
-    .directive('sdActivityStream', ['asset', function(asset) {
+    .directive('sdActivityStream', ['asset', 'authoringWorkspace', function(asset, authoringWorkspace) {
         return {
             scope: {
                 activities: '=',
                 max_results: '=maxResults',
                 loadMore: '&'
             },
-            templateUrl: asset.templateUrl('superdesk-stream/views/activity-stream.html')
+            templateUrl: asset.templateUrl('superdesk-stream/views/activity-stream.html'),
+            link: function(scope, element, attrs) {
+                scope.openArticle = function(activity) {
+                    if (activity.item) {
+                        authoringWorkspace.edit({'_id': activity.item}, 'edit');
+                    }
+                };
+            }
         };
     }])
 
@@ -87,6 +97,7 @@
         superdesk.activity('/workspace/stream', {
             label: gettext('Workspace'),
             controller: 'StreamController',
+            beta: true,
             templateUrl: asset.templateUrl('superdesk-stream/views/workspace-stream.html'),
             topTemplateUrl: asset.templateUrl('superdesk-dashboard/views/workspace-topnav.html')
         });
