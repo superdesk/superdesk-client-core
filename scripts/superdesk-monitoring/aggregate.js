@@ -12,9 +12,9 @@
     'use strict';
 
     AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage',
-                             'gettext', 'multi', 'config', '$timeout'];
+                             'gettext', 'multi', 'config', '$timeout', 'savedSearch'];
     function AggregateCtrl($scope, api, desks, workspaces, preferencesService, storage,
-            gettext, multi, config, $timeout) {
+            gettext, multi, config, $timeout, savedSearch) {
         var PREFERENCES_KEY = 'agg:view';
         var defaultMaxItems = 10;
         var self = this;
@@ -45,9 +45,8 @@
             });
         }))
         .then(angular.bind(this, function() {
-            return api.query('all_saved_searches', {'max_results': 200})
-               .then(angular.bind(this, function(searchesList) {
-                   this.searches = searchesList._items;
+            return savedSearch.getAllSavedSearches().then(angular.bind(this, function(searchesList) {
+                   this.searches = searchesList;
                    _.each(this.searches, function(item) {
                        self.searchLookup[item._id] = item;
                    });
@@ -62,6 +61,8 @@
                     this.settings = settings;
                 }));
         }));
+
+        $scope.$on('savedsearch:update', angular.bind(savedSearch, savedSearch.resetSavedSearches));
 
         /**
          * If view showed as widget set the current widget
