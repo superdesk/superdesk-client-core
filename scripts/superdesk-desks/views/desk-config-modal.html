@@ -72,12 +72,21 @@
                                 </select>
                             </div>
                         </fieldset>
+
+                        <span ng-show="message">{{ message }}</span>
                         <span class="alert-danger" ng-show="_errorLimits" translate>Character limit exceeded, desk can not be created/updated.</span>
                         <span class="alert-danger" ng-show="_error">{{ _errorMessage }}</span>
                     </div>
                     <div class="modal-footer">
-                        <button id="next-general" class="btn btn-primary" ng-click="save(desk.edit)" ng-disabled="!generalStep.$valid || _errorLimits">{{ 'Save & Continue' | translate }}</button>
-                        <button id="done-general" class="btn btn-primary" ng-click="save(desk.edit, true)" ng-disabled="!generalStep.$valid || _errorLimits" translate>Done</button>
+                        <button id="next-general"
+                                class="btn btn-primary"
+                                ng-click="save(desk.edit)"
+                                ng-disabled="!generalStep.$valid || _errorLimits || saving">
+                            {{ 'Save & Continue' | translate }}</button>
+                        <button id="done-general"
+                                class="btn btn-primary"
+                                ng-click="save(desk.edit, true)"
+                                ng-disabled="!generalStep.$valid || _errorLimits || saving" translate>Done</button>
                     </div>
                 </form>
             </div>
@@ -128,11 +137,16 @@
                             </ul>
 
                             <div ng-if="editStage && editStage._id">
-                                <button class="btn" ng-click="cancel()" translate>Cancel</button>
-                                <button id="save-edited-stage" class="btn btn-primary" ng-click="save()" ng-disabled="!enableSave()" translate>Save</button>
+                                <button class="btn"
+                                        ng-click="cancel()"
+                                        ng-disabled="saving" translate>Cancel</button>
+                                <button id="save-edited-stage"
+                                        class="btn btn-primary"
+                                        ng-click="save()"
+                                        ng-disabled="!enableSave() || saving" translate>Save</button>
                             </div>
 
-                            <p ng-if="message">{{ message }}</p>
+                            <p ng-show="message">{{ message }}</p>
                             <p ng-show="_errorUniqueness"><span translate>Stage with name</span> "{{ editStage.name }}"" <span translate>already exists</span>.</p>
                             <p ng-show="_errorLimits" translate>Character limit exceeded, stage can not be created/updated.</p>
                             <p ng-show="_error" translate>There was a problem, stage not created/updated.</p>
@@ -244,7 +258,7 @@
                 <div class="content people-stage" >
                     <div class="header" sd-user-select-list data-exclude="deskMembers" data-onchoose="add(user)"></div>
                     <div class="content">
-                        <p ng-if="message">{{ message }}</p>
+                        <p ng-show="message">{{ message }}</p>
                         <div class="member-list clearfix">
                             <ul>
                                 <li ng-repeat="user in deskMembers | orderBy: 'display_name' track by user._id" ng-class="{'inactive' : !user.is_enabled || !user.is_active}">
@@ -255,10 +269,18 @@
                             </ul>
                         </div>
                     </div>
+                    <span class="alert-danger" ng-show="_errorMessage">{{ _errorMessage }}</span>
                 </div>
                 <div class="modal-footer">
-                    <button id="next-people" class="btn btn-primary" ng-click="save()" ng-disabled="message != null">{{ 'Save & Continue' | translate }}</button>
-                    <button id="done-people" class="btn btn-primary" ng-click="save(true)" ng-disabled="message != null" translate>Done</button>
+                    <button id="next-people"
+                            class="btn btn-primary"
+                            ng-click="save()"
+                            ng-disabled="message != null || saving">{{ 'Save & Continue' | translate }}</button>
+                    <button
+                            id="done-people"
+                            class="btn btn-primary"
+                            ng-click="save(true)"
+                            ng-disabled="message != null || saving" translate>Done</button>
                 </div>
             </div>
         </div>
@@ -266,7 +288,7 @@
             <div class="content macros" sd-deskedit-macros>
                 <ul class="pills-list">
                     <li ng-repeat="macro in macros">
-                        <h6 class="pull-left">{{:: macro.name }}</h6><span>[{{:: macro.access_type }}]<span><span>[{{:: macro.action_type }}]<span>
+                        <h6 class="pull-left">{{:: macro.name }}</h6><span>[{{:: macro.access_type }}]</span><span>[{{:: macro.action_type }}]</span>
                     </li>
                 </ul>
             </div>

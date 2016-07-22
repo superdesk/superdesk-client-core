@@ -1019,6 +1019,8 @@
 
                     scope.limits = limits;
                     scope.deskTypes = [];
+                    scope.saving = false;
+                    scope.message = null;
 
                     scope.$watch('step.current', function(step) {
                         if (step === 'general') {
@@ -1044,8 +1046,8 @@
                      *      continues to next step in wizard handler.
                      */
                     scope.save = function(desk, done) {
+                        scope.saving = true;
                         scope.message = gettext('Saving...');
-
                         var _new = desk._id ? false : true;
                         desks.save(scope.desk.edit, desk).then(function() {
                             if (_new) {
@@ -1065,7 +1067,10 @@
                             } else {
                                 WizardHandler.wizard('desks').finish();
                             }
-                        }, errorMessage);
+                        }, errorMessage).finally(function() {
+                            scope.saving = false;
+                            scope.message = null;
+                        });
                     };
 
                     function errorMessage(response) {
@@ -1080,7 +1085,6 @@
                                 scope._errorMessage = gettext(response.data._issues['validator exception']);
                             }
                         }
-                        scope.message = null;
                     }
 
                     function clearErrorMessages() {
@@ -1088,6 +1092,7 @@
                             scope._errorMessage = '';
                             scope._error = null;
                             scope._errorLimits = null;
+                            scope.message = null;
                         }
                     }
 
@@ -1119,7 +1124,7 @@
                     var orig = null;
 
                     scope.limits = limits;
-
+                    scope.saving = false;
                     scope.statuses = tasks.statuses;
 
                     if (scope.desk.edit && scope.desk.edit._id) {
@@ -1141,10 +1146,12 @@
 
                     scope.getstages = function(previous) {
                         if (scope.desk.edit && scope.desk.edit._id) {
-                            scope.message = 'loading...';
+                            scope.message = gettext('loading...');
                             desks.fetchDeskStages(scope.desk.edit._id, true).then(function(stages) {
                                 scope.stages = stages;
                                 scope.message = null;
+                            }).finally(function () {
+
                             });
                         } else {
                             WizardHandler.wizard('desks').goTo(previous);
@@ -1205,6 +1212,8 @@
                     };
 
                     scope.save = function() {
+                        scope.saving = true;
+                        scope.message = gettext('Saving...');
                         if (!orig._id) {
                             _.extend(scope.editStage, {desk: scope.desk.edit._id});
                             api('stages').save({}, scope.editStage)
@@ -1218,7 +1227,10 @@
                                 desks.fetchDeskById(item.desk).then(function(desk) {
                                     scope.desk.edit = desk;
                                 });
-                            }, errorMessage);
+                            }, errorMessage).finally(function() {
+                                scope.saving = false;
+                                scope.message = null;
+                            });
                         } else {
                             api('stages').save(orig, scope.editStage)
                             .then(function(item) {
@@ -1230,7 +1242,10 @@
                                 desks.fetchDeskById(item.desk).then(function(desk) {
                                     scope.desk.edit = desk;
                                 });
-                            }, errorMessage);
+                            }, errorMessage).finally(function () {
+                                scope.saving = false;
+                                scope.message = null;
+                            });
                         }
                     };
 
@@ -1244,7 +1259,6 @@
                         } else {
                             scope._error = true;
                         }
-                        scope.message = null;
                     }
 
                     scope.handleEdit = function($event) {
@@ -1255,7 +1269,8 @@
                     };
 
                     scope.enableSave = function() {
-                        return scope.editStage.name && scope.editStage.name.length > 0 && !scope._errorLimits;
+                        return scope.editStage && scope.editStage.name &&
+                            scope.editStage.name.length > 0 && !scope._errorLimits;
                     };
 
                     function clearErrorMessages() {
@@ -1264,6 +1279,8 @@
                             scope._error = null;
                             scope._errorLimits = null;
                         }
+
+                        scope.message = null;
                     }
 
                     scope.remove = function(stage) {
@@ -1312,6 +1329,7 @@
                     scope.users = {};
                     scope.exclude = [];
                     scope.refresh = true;
+                    scope.message = null;
 
                     var _refresh = function() {
                         scope.users = {};
@@ -1418,7 +1436,7 @@
                         if (step === 'people') {
                             scope.search = null;
                             scope.deskMembers = [];
-                            scope.message = 'loading...';
+                            scope.message = gettext('loading...');
 
                             if (scope.desk.edit && scope.desk.edit._id) {
                                 desks.fetchUsers().then(function(result) {
@@ -1448,10 +1466,11 @@
                      *      continues to next step in wizard handler.
                      */
                     scope.save = function(done) {
+                        scope.message = gettext('Saving...');
                         var members = _.map(scope.deskMembers, function(obj) {
                             return {user: obj._id};
                         });
-
+                        scope.saving = true;
                         desks.save(scope.desk.edit, {members: members}).then(function(result) {
                             _.extend(scope.desk.edit, result);
                             desks.deskMembers[scope.desk.edit._id] = scope.deskMembers;
@@ -1463,7 +1482,15 @@
                                 WizardHandler.wizard('desks').finish();
                             }
                         }, function(response) {
-                            scope.message = gettext('There was a problem, members not saved.');
+                            if (angular.isDefined(response.data._message)) {
+                                scope.message = gettext('Error: ' + response.data._message);
+                            } else {
+                                scope._errorMessage = gettext('There was a problem, members not saved. Refresh Desks.');
+                            }
+
+                        }).finally(function() {
+                            scope.saving = false;
+                            scope.message = null;
                         });
                     };
                 }
