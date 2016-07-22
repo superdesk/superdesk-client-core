@@ -592,6 +592,57 @@
         };
     }
 
+    SavedSearchService.$inject = ['api', '$filter', '$q'];
+    function SavedSearchService(api, $filter, $q){
+
+        var _getAll = function(endPoint, page, items, params) {
+            page = page || 1;
+            items = items || [];
+            params = params || {};
+
+            return api(endPoint, params)
+            .query({max_results: 200, page: page})
+            .then(function(result) {
+                items = items.concat(result._items);
+                if (result._links.next) {
+                    page++;
+                    return _getAll(endPoint, page, items, params);
+                }
+                return $filter('sortByName')(items);
+            });
+        };
+
+        this.savedSearches = null;
+        this.savedSearchLookup = null;
+
+        this.getAllSavedSearches = function(page, items) {
+            var self = this;
+
+            if (self.savedSearches) {
+                return $q.when(self.savedSearches);
+            }
+
+            return _getAll('all_saved_searches', page, items)
+            .then(function(savedSearches) {
+                self.savedSearches = savedSearches;
+                self.savedSearchLookup = {};
+                _.each(savedSearches, function(item) {
+                    self.savedSearchLookup[item._id] = item;
+                });
+                return savedSearches;
+            });
+        };
+
+        this.getUserSavedSearches = function(userId, page, items) {
+            return _getAll('saved_searches', page, items, userId);
+        };
+
+        this.resetSavedSearches = function() {
+            this.savedSearches = null;
+            this.savedSearchLookup = null;
+        };
+    }
+
     angular.module('superdesk.search', [
         'superdesk.api',
         'superdesk.desks',
@@ -601,6 +652,7 @@
         'superdesk.search.react'
     ])
         .service('search', SearchService)
+        .service('savedSearch', SavedSearchService)
         .service('tags', TagService)
         .controller('MultiActionBar', MultiActionBarController)
 
@@ -2017,19 +2069,20 @@
             };
         }])
 
-        .directive('sdSavedSearchSelect', ['api', 'session', function SavedSearchSelectDirective(api, session) {
+        .directive('sdSavedSearchSelect', ['api', 'session', 'savedSearch',
+            function SavedSearchSelectDirective(api, session, savedSearch) {
             return {
                 link: function(scope) {
-                    api.query('saved_searches', {'max_results': 200}, session.identity).then(function(res) {
-                        scope.searches = res._items;
+                    savedSearch.getUserSavedSearches(session.identity).then(function(res) {
+                        scope.searches = res;
                     });
                 }
             };
         }])
 
         .directive('sdSavedSearches', ['$rootScope', 'api', 'session', 'modal', 'notify', 'gettext', 'asset',
-                                       '$location', 'desks', 'privileges', 'search',
-        function($rootScope, api, session, modal, notify, gettext, asset, $location, desks, privileges, search) {
+                                       '$location', 'desks', 'privileges', 'search', 'savedSearch',
+        function($rootScope, api, session, modal, notify, gettext, asset, $location, desks, privileges, search, savedSearch) {
             return {
                 templateUrl: asset.templateUrl('superdesk-search/views/saved-searches.html'),
                 scope: {},
@@ -2050,10 +2103,10 @@
                     });
 
                     function initSavedSearches() {
-                        resource.query({'max_results': 200}).then(function(searches) {
+                        savedSearch.getUserSavedSearches(session.identity).then(function(searches) {
                             scope.userSavedSearches.length = 0;
                             scope.globalSavedSearches.length = 0;
-                            scope.searches = searches._items;
+                            scope.searches = searches;
                             _.forEach(scope.searches, function(savedSearch) {
                                 savedSearch.filter.query = search.setFilters(savedSearch.filter.query);
                                 if (savedSearch.user === session.identity._id) {
