@@ -2003,7 +2003,10 @@
 
                 scope.publish = function() {
                     scope.loading = true;
-                    scope._publish().finally(function() {
+                    var result = scope._publish();
+                    $q.resolve(result).then(function(r) {
+                        scope.loading = false;
+                    }, function(e) {
                         scope.loading = false;
                     });
                 };
