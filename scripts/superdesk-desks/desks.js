@@ -184,6 +184,13 @@
                     }
                 });
 
+                scope.$on('item:move', function($event, data) {
+                    if ((data.to_stage && data.to_stage === scope.stage) ||
+                        (data.from_stage && data.from_stage === scope.stage)) {
+                        scheduleQuery();
+                    }
+                });
+
                 scope.$on('content:expired', scheduleQuery);
 
                 scope.$on('item:lock', function(_e, data) {
@@ -1470,7 +1477,7 @@
                         var members = _.map(scope.deskMembers, function(obj) {
                             return {user: obj._id};
                         });
-                        
+
                         scope.saving = true;
                         desks.save(scope.desk.edit, {members: members}).then(function(res) {
                             angular.extend(scope.desk.edit, res);
