@@ -10,7 +10,7 @@
             <button type="button" id="published-collection" class="toggle-button" ng-click="repo.published=!repo.published" ng-class="{'toggle-button--active': repo.published}">{{:: 'Published' | translate}}</button>
             <button type="button" id="archived-collection" class="toggle-button" ng-click="repo.archived=!repo.archived" ng-class="{'toggle-button--active': repo.archived}">{{:: 'Archived' | translate}}</button>
         </div>
-        <div ng-repeat="provider in providers">
+        <div ng-repeat="provider in providers track by provider._id">
             <label class="sd-radio">
                 <input type="radio" ng-value="provider.search_provider" ng-model="repo.search" ng-checked="isDefault(provider)" ng-change="setDefaultValues()">
                 {{:: provider.source}}<span class="check"></span>

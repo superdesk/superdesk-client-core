@@ -33,8 +33,20 @@
        title="{{ :: 'Personal' | translate }}" sd-hotkey="alt+p" sd-hotkey-options="{global: true}"></a>
 </li>
 <li ng-class="{active: currentRoute.href === '/search'}">
-    <a href="#/search" class="big-icon-global-search" ng-click="hideMonitoring(currentRoute.href === '/search', $event)"
-       title="{{ :: 'Search' | translate }}" sd-hotkey="alt+f" sd-hotkey-options="{global: true}"></a>
+   <div class="dropdown dropright dropdown-hover highlights-dropdown" dropdown>
+      <a href="#/search" class="dropdown-toggle big-icon-global-search" 
+        title="{{ :: 'Search' | translate }}"
+        sd-hotkey="alt+f" sd-hotkey-options="{global: true}"
+        ng-click="hideMonitoring(currentRoute.href === '/search', $event)">
+      </a>
+      <ul ng-if="$root.config.features.scanpixSearchShortcut && providers.length > 0" class="dropdown-menu pull-left">
+        <li ng-repeat="provider in providers track by provider._id">
+            <button ng-click="loadScanpixSearch(provider.source)">
+              {{:: provider.source}}
+            </button>
+        </li>
+      </ul>
+    </div>
 </li>
 
 <!-- this is something like deprecated.. don't add, only remove -->
