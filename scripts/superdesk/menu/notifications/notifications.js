@@ -39,7 +39,6 @@
 
             var criteria = {
                 where: getFilter(),
-                embedded: {user: 1, item: 1},
                 max_results: 8
             };
 
@@ -230,7 +229,7 @@
 
                     scope.openArticle = function (notification) {
                         ctrl.flags.notifications = !ctrl.flags.notifications;
-                        authoringWorkspace.edit(notification.item, 'edit');
+                        authoringWorkspace.edit({'_id': notification.item}, 'edit');
                     };
                 }
             };
