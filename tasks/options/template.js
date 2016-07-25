@@ -68,7 +68,7 @@ module.exports = function(grunt) {
             files: files
         },
         dev: {
-            options: data('http://localhost:5000/api', true),
+            options: data('http://localhost:5000/api'),
             files: {'index.html': '<%= appDir %>/index.html'}
         },
         travis: {
