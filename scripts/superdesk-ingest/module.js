@@ -219,53 +219,56 @@ import BaseListController from 'superdesk-archive/controllers/baseList';
         return service;
     }
 
-    IngestListController.$inject = ['$scope', '$injector', '$location', 'api', '$rootScope', 'search'];
-    function IngestListController($scope, $injector, $location, api, $rootScope, search) {
-        $injector.invoke(BaseListController, this, {$scope: $scope});
+    class IngestListController extends BaseListController {
+        constructor($scope, $injector, $location, api, $rootScope, search, desks) {
+            super($scope, $location, search, desks);
 
-        $scope.type = 'ingest';
-        $scope.loading = false;
-        $scope.repo = {
-            ingest: true,
-            archive: false
-        };
-        $scope.api = api.ingest;
-        $rootScope.currentModule = 'ingest';
+            $scope.type = 'ingest';
+            $scope.loading = false;
+            $scope.repo = {
+                ingest: true,
+                archive: false
+            };
+            $scope.api = api.ingest;
+            $rootScope.currentModule = 'ingest';
 
-        this.fetchItems = function(criteria, next) {
-            $scope.loading = true;
-            criteria.aggregations = 1;
-            api.query('ingest', criteria).then(function(items) {
-                $scope.items = search.mergeItems(items, $scope.items, next);
-                $scope.total = items._meta.total;
-            })
-            ['finally'](function() {
-                $scope.loading = false;
+            this.fetchItems = function(criteria, next) {
+                $scope.loading = true;
+                criteria.aggregations = 1;
+                api.query('ingest', criteria).then(function(items) {
+                    $scope.items = search.mergeItems(items, $scope.items, next);
+                    $scope.total = items._meta.total;
+                })
+                ['finally'](function() {
+                    $scope.loading = false;
+                });
+            };
+
+            this.fetchItem = function(id) {
+                return api.ingest.getById(id);
+            };
+
+            var oldQuery = _.omit($location.search(), '_id');
+            var update = angular.bind(this, function searchUpdated() {
+                var newquery = _.omit($location.search(), '_id');
+                if (!_.isEqual(_.omit(newquery, 'page'), _.omit(oldQuery, 'page'))) {
+                    $location.search('page', null);
+                }
+                var query = this.getQuery($location.search());
+                this.fetchItems({source: query});
+                oldQuery = newquery;
             });
-        };
 
-        this.fetchItem = function(id) {
-            return api.ingest.getById(id);
-        };
-
-        var oldQuery = _.omit($location.search(), '_id');
-        var update = angular.bind(this, function searchUpdated() {
-            var newquery = _.omit($location.search(), '_id');
-            if (!_.isEqual(_.omit(newquery, 'page'), _.omit(oldQuery, 'page'))) {
-                $location.search('page', null);
-            }
-            var query = this.getQuery($location.search());
-            this.fetchItems({source: query});
-            oldQuery = newquery;
-        });
-
-        $scope.$on('ingest:update', update);
-        $scope.$on('item:fetch', update);
-        $scope.$on('item:deleted', update);
-        $scope.$watchCollection(function getSearchWithoutId() {
-            return _.omit($location.search(), '_id');
-        }, update);
+            $scope.$on('ingest:update', update);
+            $scope.$on('item:fetch', update);
+            $scope.$on('item:deleted', update);
+            $scope.$watchCollection(function getSearchWithoutId() {
+                return _.omit($location.search(), '_id');
+            }, update);
+        }
     }
+
+    IngestListController.$inject = ['$scope', '$injector', '$location', 'api', '$rootScope', 'search', 'desks'];
 
     IngestSettingsController.$inject = ['$scope', 'privileges'];
     function IngestSettingsController($scope, privileges) {

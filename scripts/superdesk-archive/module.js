@@ -750,19 +750,14 @@ import BaseListController from './controllers/baseList';
         }]);
 })();
 
-(function() {
-    'use strict';
-
-    angular.module('superdesk.archive').controller('ArchiveListController', [
-        '$scope', '$injector', '$location', '$q', '$timeout', 'superdesk',
-        'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi', 'search',
-    function ($scope, $injector, $location, $q, $timeout, superdesk, session, api, desks, content,
-        StagesCtrl, notify, multi, search) {
+class ArchiveListController extends BaseListController {
+    constructor($scope, $injector, $location, $q, $timeout, superdesk, session, api, desks, content,
+    StagesCtrl, notify, multi, search) {
+        super($scope, $location, search, desks);
 
         var resource,
             self = this;
 
-        $injector.invoke(BaseListController, this, {$scope: $scope});
         $scope.currentModule = 'archive';
         $scope.stages = new StagesCtrl($scope);
         $scope.content = content;
@@ -904,5 +899,12 @@ import BaseListController from './controllers/baseList';
             }
             oldQuery = query;
         });
-    }]);
-})();
+    }
+}
+
+ArchiveListController.$inject = [
+    '$scope', '$injector', '$location', '$q', '$timeout', 'superdesk',
+    'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi', 'search'
+];
+
+angular.module('superdesk.archive').controller('ArchiveListController', ArchiveListController);
