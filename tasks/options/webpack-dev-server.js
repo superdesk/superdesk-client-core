@@ -1,6 +1,6 @@
 var o = require('../../webpack.config.js');
 
-module.exports = {
+var config = {
     options: {
         webpack: {
             cache: o.cache,
@@ -29,3 +29,23 @@ module.exports = {
         }
     }
 };
+
+// if the client-core is a node module, then we are in the main repo
+// and we need to rewrite some request URLs such as 'scripts/' and
+// 'images/' to 'node_modules/scripts/' and 'node_modules/images/'.
+var isModule = require('fs').existsSync('./node_modules/superdesk-core');
+if (isModule) {
+    var rewrite = {
+        target: 'http://localhost:9000',
+        rewrite: function(req) {
+            'use strict';
+            req.url = 'node_modules/superdesk-core' + req.url;
+        }
+    };
+    config.start.proxy = {
+        '/scripts/*': rewrite,
+        '/images/*': rewrite
+    };
+}
+
+module.exports = config;
