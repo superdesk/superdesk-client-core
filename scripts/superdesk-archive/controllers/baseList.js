@@ -1,72 +1,70 @@
-'use strict';
+export default class BaseListController {
+    constructor($scope, $location, search, desks) {
+        this.lastQueryParams = {};
+        this.$location = $location;
+        this.search = search;
+        this.desks = desks;
 
-BaseListController.$inject = ['$scope', '$location', 'superdesk', 'api', 'search', 'desks', 'preferencesService', 'notify'];
-function BaseListController($scope, $location, superdesk, api, search, desks, preferencesService, notify) {
-    var self = this;
+        $scope.selected = {};
 
-    var lastQueryParams = {};
+        $scope.fetchNext = from => {
+            var criteria = this.getQuery();
+            criteria.from = from;
+            this.fetchItems({source: criteria}, true);
+        };
 
-    $scope.selected = {};
-
-    $scope.fetchNext = function(from) {
-        var criteria = self.getQuery();
-        criteria.from = from;
-        self.fetchItems({source: criteria}, true);
-    };
-
-    $scope.$on('$routeUpdate', function(e, data) {
-        if (!$location.search()._id) {
-            $scope.selected.preview = null;
-        }
-        if ($location.search().fetch) {
-            self.fetchItem(decodeURIComponent($location.search().fetch))
-            .then(function(item) {
+        $scope.$on('$routeUpdate', (e, data) => {
+            if (!$location.search()._id) {
                 $scope.selected.preview = null;
-                $scope.selected.fetch = item;
-            });
-        }
-        if (!$location.search().fetch) {
-            $scope.selected.fetch = null;
-        }
-    });
+            }
+            if ($location.search().fetch) {
+                this.fetchItem(decodeURIComponent($location.search().fetch))
+                .then(function(item) {
+                    $scope.selected.preview = null;
+                    $scope.selected.fetch = item;
+                });
+            }
+            if (!$location.search().fetch) {
+                $scope.selected.fetch = null;
+            }
+        });
+    }
 
-    this.buildQuery = function(params, filterDesk) {
-
-        var query = search.query(params);
+    buildQuery(params, filterDesk) {
+        var query = this.search.query(params);
 
         if (filterDesk) {
-            if (desks.active.stage) {
-                query.filter({term: {'task.stage': desks.active.stage}});
-            } else if (desks.active.desk) {
-                query.filter({term: {'task.desk': desks.active.desk}});
+            if (this.desks.active.stage) {
+                query.filter({term: {'task.stage': this.desks.active.stage}});
+            } else if (this.desks.active.desk) {
+                query.filter({term: {'task.desk': this.desks.active.desk}});
             }
         }
 
         return query.getCriteria();
-    };
+    }
 
-    this.getQuery = function getQuery(params, filterDesk) {
-        if (!_.isEqual(_.omit(params, 'page'), _.omit(lastQueryParams, 'page'))) {
-            $location.search('page', null);
+    getQuery(params, filterDesk) {
+        if (!_.isEqual(_.omit(params, 'page'), _.omit(this.lastQueryParams, 'page'))) {
+            this.$location.search('page', null);
         }
         var query = this.buildQuery(params, filterDesk);
-        lastQueryParams = params;
+        this.lastQueryParams = params;
         return query;
-    };
+    }
 
-    this.fetchItems = function(criteria) {
+    fetchItems(criteria) {
         console.log('no api defined');
-    };
+    }
 
-    this.fetchItem = function(id) {
+    fetchItem(id) {
         console.log('no api defined');
-    };
+    }
 
-    this.refresh = function refresh(filterDesk) {
-        var query = self.getQuery(_.omit($location.search(), '_id'), filterDesk);
-        self.fetchItems({source: query});
-    };
+    refresh(filterDesk) {
+        var query = this.getQuery(_.omit(this.$location.search(), '_id'), filterDesk);
+        this.fetchItems({source: query});
+    }
 }
 
-//TODO(x) This is nasty
-window.BaseListController = BaseListController;
+BaseListController.$inject = ['$scope', '$location', 'search', 'desks'];

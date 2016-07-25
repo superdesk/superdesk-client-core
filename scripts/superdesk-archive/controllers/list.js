@@ -1,3 +1,5 @@
+import BaseListController from './baseList';
+
 (function() {
     'use strict';
 
@@ -10,7 +12,7 @@
         var resource,
             self = this;
 
-        $injector.invoke(window.BaseListController, this, {$scope: $scope});
+        $injector.invoke(BaseListController, this, {$scope: $scope});
         $scope.currentModule = 'archive';
         $scope.stages = new StagesCtrl($scope);
         $scope.content = content;

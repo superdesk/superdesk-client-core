@@ -1,3 +1,5 @@
+import BaseListController from './controllers/baseList';
+
 (function() {
     'use strict';
 
@@ -750,8 +752,6 @@
 
 (function() {
     'use strict';
-
-    var BaseListController = window.BaseListController;
 
     angular.module('superdesk.archive').controller('ArchiveListController', [
         '$scope', '$injector', '$location', '$q', '$timeout', 'superdesk',
