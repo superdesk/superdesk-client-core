@@ -1,5 +1,5 @@
 <div>
-  <div id="top-menu" ng-class="{'menu-open': flags.menu}">
+  <div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}" data-text="{{environmentName}}">
       <div class="nav pull-left">
         <button class="collapse-nav pull-left" ng-click="toggleMenu()">
           <i class="icon-collapse icon-white"></i>
