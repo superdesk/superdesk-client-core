@@ -1,0 +1,12 @@
+import './translate';
+import './preferencesService';
+import './permissionsService';
+import './data';
+import './entity';
+import './server';
+import './storage';
+import './dragDropService';
+import './modalService';
+import './workflowService';
+import './asset';
+import './image-factory';

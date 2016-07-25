@@ -1,0 +1,1 @@
+import './legal_archive';
