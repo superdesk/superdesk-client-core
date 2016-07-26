@@ -43,8 +43,9 @@
             'userNotifications',
             'asset',
             'privileges',
+            'config',
             'lodash',
-            function ($route, superdesk, betaService, userNotifications, asset, privileges, _) {
+            function ($route, superdesk, betaService, userNotifications, asset, privileges, config, _) {
                 return {
                     require: '^sdSuperdeskView',
                     templateUrl: asset.templateUrl('superdesk/menu/views/menu.html'),
@@ -53,6 +54,8 @@
                         scope.currentRoute = null;
                         scope.flags = ctrl.flags;
                         scope.menu = [];
+                        scope.isTestEnvironment = config.isTestEnvironment;
+                        scope.environmentName = config.environmentName;
 
                         superdesk.getMenu(superdesk.MENU_MAIN)
                                 .then(filterSettingsIfEmpty)

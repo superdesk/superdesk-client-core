@@ -19,6 +19,10 @@ module.exports = function(grunt) {
         var disableEditorToolbar = grunt.option('disableEditorToolbar');
         var defaultTimezone = grunt.option('defaultTimezone') || 'Europe/London';
 
+        //environment parameter is used to indicate a non-prod environment
+        var isTestEnvironment = !!grunt.option('environmentName');
+        var environmentName = grunt.option('environmentName');
+
         if (forceUrl) {
             server = url;
         }
@@ -50,7 +54,9 @@ module.exports = function(grunt) {
             view: {
                 dateformat: process.env.VIEW_DATE_FORMAT || 'MM/DD/YYYY',
                 timeformat: process.env.VIEW_TIME_FORMAT || 'HH:mm'
-            }
+            },
+            isTestEnvironment: isTestEnvironment,
+            environmentName: environmentName
         };
 
         return {data: {

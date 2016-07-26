@@ -48,6 +48,18 @@
         right: 0 !important;
     }
 
+    &.test-environment {
+        background: #ff0000;
+        &:after {
+            content: attr(data-text);
+            color: black;
+            font-size: 47px;
+            color: black;
+            top: 13px;
+            position: absolute;
+        }
+    }
+
     a, button {
         height: @nav-height;
         display: inline-block;
