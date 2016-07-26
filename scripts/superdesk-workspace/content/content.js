@@ -533,7 +533,7 @@
             'headline': gettext('Headline'),
             'slugline': gettext('Slug'),
             'genre': gettext('Genre'),
-            'anpa_take_key': gettext('ANPA Take Key'),
+            'anpa_take_key': gettext('Take Key'),
             'place': gettext('Place'),
             'priority': gettext('Priority'),
             'urgency': gettext('Urgency'),
