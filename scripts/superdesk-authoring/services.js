@@ -11,10 +11,10 @@ angular.module('superdesk.authoring')
  */
 HistoryFactory.$inject = ['History', '$window', '$timeout'];
 function HistoryFactory(History, $window, $timeout) {
-    var KeyOperations = {};
-    KeyOperations['Z'.charCodeAt(0)] = History.undo;
-    KeyOperations['Y'.charCodeAt(0)] = History.redo;
-
+    var KeyOperations = {
+        ['Z'.charCodeAt(0)]: History.undo,
+        ['Y'.charCodeAt(0)]: History.redo
+    };
     return {
         watch: function(expression, scope) {
             var lastArchive;

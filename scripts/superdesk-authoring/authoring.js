@@ -1,3 +1,5 @@
+import 'angular-history/history.js';
+
 (function() {
     'use strict';
 
