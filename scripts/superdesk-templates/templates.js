@@ -71,6 +71,7 @@
             'usageterms',
             'target_types',
             'target_regions',
+            'target_subscribers',
             'format'
         ];
 
