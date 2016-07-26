@@ -1318,8 +1318,7 @@ import BaseListController from 'superdesk-archive/controllers/baseList';
                 function getLogMessages() {
                     var criteria = {
                         max_results: 5,
-                        sort: '[(\'_created\',-1)]',
-                        embedded: {user: 1}
+                        sort: '[(\'_created\',-1)]'
                     };
 
                     var where = [

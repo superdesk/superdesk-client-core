@@ -17,8 +17,7 @@
         this.getUserActivity = function(user, maxResults, page) {
             var q = {
                 where: {user: user._id},
-                sort: '[(\'_created\',-1)]',
-                embedded: {user: 1, item: 1}
+                sort: '[(\'_created\',-1)]'
             };
 
             if (maxResults) {
@@ -44,8 +43,7 @@
         this.getAllUsersActivity = function(maxResults, page) {
             var q = {
                 sort: '[(\'_created\',-1)]',
-                where: {user: {$exists: true}, item: {$exists: true}},
-                embedded: {user: 1, item: 1}
+                where: {user: {$exists: true}, item: {$exists: true}}
             };
 
             if (maxResults) {
