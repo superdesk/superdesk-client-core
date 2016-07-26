@@ -545,7 +545,7 @@
             'assets': gettext('Assets'),
             'body_html': gettext('Body HTML'),
             'byline': gettext('By'),
-            'dateline': gettext('Date'),
+            'dateline': gettext('Dateline'),
             'located': gettext('Located'),
             'sign_off': gettext('Sign Off'),
             'sms': gettext('SMS'),
