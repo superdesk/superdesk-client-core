@@ -1073,7 +1073,11 @@
 
                         takepackage: function(props) {
                             var item = props.item;
-                            var isTake = _.contains(['text'], item.type) && item.takes && item.takes.sequence > 1;
+                            var archiveItem = props.item.archive_item;
+
+                            var isTake = item.type === 'text' &&
+                            ((item.takes && item.takes.sequence > 1) ||
+                                (item._type === 'published' && archiveItem && archiveItem.takes && archiveItem.takes.sequence > 1));
 
                             var selectTakesPackage = function(event) {
                                 event.stopPropagation();
@@ -1371,7 +1375,7 @@
                         },
 
                         selectTakesPackage: function() {
-                            this.props.onSelect(this.props.item.takes);
+                            this.props.onSelect(this.props.item.takes || this.props.item.archive_item.takes);
                         },
 
                         selectUpdate: function() {
