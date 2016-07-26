@@ -44,7 +44,6 @@ module.exports = function(config) {
             'bower_components/ment.io/dist/mentio.js',
             'bower_components/rangy/rangy-core.js',
             'bower_components/rangy/rangy-selectionsaverestore.js',
-
             'bower_components/angular-embed/dist/angular-embed.js',
             'bower_components/angular-contenteditable/angular-contenteditable.js',
             'bower_components/angular-vs-repeat/src/angular-vs-repeat.js',

@@ -437,44 +437,6 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
     };
 
     /**
-     * Undo last operation
-     *
-     * @param {Scope} scope
-     */
-    this.undo = function(scope) {
-        if (scope.history.getIndex() > -1) {
-            scope.history.selectPrev();
-            useHistory(scope);
-        }
-    };
-
-    /**
-     * Redo previous operation
-     *
-     * @param {Scope} scope
-     */
-    this.redo = function(scope) {
-        var oldIndex = scope.history.getIndex();
-        scope.history.selectNext();
-        if (oldIndex !== scope.history.getIndex()) {
-            useHistory(scope);
-        }
-    };
-
-    /**
-     * Use value from history and set it as node/model value.
-     *
-     * @param {Scope} scope
-     */
-    function useHistory(scope) {
-        var val = scope.history.get() || '';
-        if (val != null) {
-            scope.node.innerHTML = val;
-            scope.model.$setViewValue(val);
-        }
-    }
-
-    /**
      * Returns the cleaned node text
      *
      * @return {string}
@@ -749,7 +711,7 @@ angular.module('superdesk.editor2', [
                 }, function() {
                     $timeout(function() {
                         // if controller is ready and the value has changed
-                        if (controller.blocks.length > 0 && ngModel.$viewValue && ngModel.$viewValue !== controller.serializeBlock()) {
+                        if (controller.blocks.length > 0 && ngModel.$viewValue !== controller.serializeBlock()) {
                             // if blocks are not loading
                             if (!_.some(controller.blocks, function(block) {
                                 return block.loading;
@@ -1110,8 +1072,6 @@ angular.module('superdesk.editor2', [
                     }
 
                     var ctrlOperations = {}, shiftOperations = {};
-                    ctrlOperations[editor.KEY_CODES.Z] = doUndo;
-                    ctrlOperations[editor.KEY_CODES.Y] = doRedo;
                     ctrlOperations[editor.KEY_CODES.UP] = changeSelectedParagraph.bind(null, -1);
                     ctrlOperations[editor.KEY_CODES.DOWN] = changeSelectedParagraph.bind(null, 1);
                     shiftOperations[editor.KEY_CODES.F3] = toggleCase;
@@ -1240,22 +1200,6 @@ angular.module('superdesk.editor2', [
                     spellcheck.ignoreWord(word);
                     editor.render();
                 };
-
-                function doUndo() {
-                    scope.$applyAsync(function() {
-                        editor.undo(scope);
-                        editor.renderScope(scope);
-                        stopTyping();
-                    });
-                }
-
-                function doRedo() {
-                    scope.$applyAsync(function() {
-                        editor.redo(scope);
-                        editor.renderScope(scope);
-                        stopTyping();
-                    });
-                }
 
                 function changeListener() {
                     $timeout.cancel(renderTimeout);

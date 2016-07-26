@@ -1,7 +1,62 @@
 (function() {
 'use strict';
 
-angular.module('superdesk.authoring').service('renditions', RenditionsService);
+angular.module('superdesk.authoring')
+    .service('renditions', RenditionsService)
+    .factory('history', HistoryFactory);
+
+/**
+ * Watches an expression to keep history of its states
+ * and binds ctrl-z and ctrl-y to undo/redo its states
+ */
+HistoryFactory.$inject = ['History', '$window', '$timeout'];
+function HistoryFactory(History, $window, $timeout) {
+    var KeyOperations = {
+        ['Z'.charCodeAt(0)]: History.undo,
+        ['Y'.charCodeAt(0)]: History.redo
+    };
+    return {
+        watch: function(expression, scope) {
+            var lastArchive;
+            $timeout(function() {
+                History.watch(expression, scope);
+                lastArchive = new Date();
+            }, 0, false);
+            var onHistoryKeydown = function(event) {
+                if (event.ctrlKey && KeyOperations[event.keyCode]) {
+                    event.preventDefault();
+                }
+            };
+            var onHistoryKeyup = function(event) {
+                if (event.ctrlKey && KeyOperations[event.keyCode]) {
+                    scope.$apply(function() {
+                        KeyOperations[event.keyCode].bind(History)(expression, scope);
+                    });
+                }
+            };
+            angular.element($window).on('keydown', onHistoryKeydown);
+            angular.element($window).on('keyup', onHistoryKeyup);
+            scope.$on('History.archived', function(evt, data) {
+                var newDate = new Date();
+                if (lastArchive) {
+                    if (Math.abs(newDate.getTime() - lastArchive.getTime()) < 1000) {
+                        var history = History.history[scope.$id][expression];
+                        if (history.length > 1) {
+                            history.splice(history.length - 2, 1);
+                            History.pointers[scope.$id][expression] -= 1;
+                        }
+                    }
+                }
+                lastArchive = newDate;
+            });
+            scope.$on('$destroy', function() {
+                angular.element($window).unbind('keydown', onHistoryKeydown);
+                angular.element($window).unbind('keyup', onHistoryKeyup);
+                History.forget(scope, expression);
+            });
+        }
+    };
+}
 
 RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash'];
 function RenditionsService(metadata, $q, api, superdesk, _) {

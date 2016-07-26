@@ -141,42 +141,6 @@ describe('text editor', function() {
 
     }));
 
-    it('can save model value', inject(function(editor, $rootScope) {
-        var scope = createScope('foo', $rootScope);
-        editor.registerScope(scope);
-
-        scope.node.innerHTML = 'foo';
-        editor.commit();
-        expect(scope.model.$setViewValue).not.toHaveBeenCalled();
-
-        scope.node.innerHTML = 'bar';
-        editor.commit();
-        $rootScope.$digest();
-        expect(scope.model.$setViewValue).toHaveBeenCalledWith('bar');
-
-        scope.node.innerHTML = 'baz';
-        editor.commit();
-        $rootScope.$digest();
-        editor.undo(scope);
-        editor.undo(scope);
-        expect(scope.node.innerHTML).toBe('foo');
-
-        editor.redo(scope);
-        expect(scope.node.innerHTML).toBe('bar');
-
-        editor.redo(scope);
-        expect(scope.node.innerHTML).toBe('baz');
-
-        editor.undo(scope);
-        editor.undo(scope);
-
-        scope.node.innerHTML = 'test';
-        editor.commit();
-        $rootScope.$digest();
-        editor.redo(scope);
-        expect(scope.node.innerHTML).toBe('test');
-    }));
-
     it('can check if keyboard event is important or not', inject(function(editor) {
         expect(editor.shouldIgnore({keyCode: 16})).toBe(true);
         expect(editor.shouldIgnore({shiftKey: true, ctrlKey: true, keyCode: 65})).toBe(true);

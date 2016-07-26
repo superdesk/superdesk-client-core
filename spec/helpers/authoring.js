@@ -150,6 +150,29 @@ function Authoring() {
         element(by.css('[ng-click="vm.createBlockFromEmbed()"]')).click();
     };
 
+    this.getBlock = function(position) {
+        return element(by.model('item.body_html')).all(
+            by.css('.block__container')
+        ).get(position);
+    };
+
+    this.blockContains = function blockContains(position, expectedValue) {
+        var block = this.getBlock(position);
+        block.element(by.css('.editor-type-html.clone')).isPresent().then(function(isText) {
+            if (isText) {
+                return block.element(by.css('.editor-type-html.clone')).getText();
+            } else {
+                return block.element(by.css('.preview--embed')).getText();
+            }
+        }).then(function(value) {
+            expect(value).toBe(expectedValue);
+        });
+    };
+
+    this.cutBlock = function(position) {
+        return this.getBlock(position).element(by.css('.block__cut')).click();
+    };
+
     this.ignore = function() {
         return this.ignore_button.click();
     };

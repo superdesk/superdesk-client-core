@@ -325,15 +325,15 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             vm.renderBlocks();
             return $timeout(vm.commitChanges);
         },
-        _cutBlock: undefined,
+        clipboard: undefined,
         cutBlock: function(block) {
-            vm._cutBlock = angular.copy(block);
+            vm.clipboard = angular.copy(block);
             return vm.removeBlock(block);
         },
         getCutBlock: function(remove) {
-            var block = vm._cutBlock;
+            var block = vm.clipboard;
             if (remove) {
-                vm._cutBlock = undefined;
+                vm.clipboard = undefined;
             }
             return block;
         },

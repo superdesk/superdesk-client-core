@@ -35,25 +35,46 @@ describe('authoring', function() {
         authoring.writeText(protractor.Key.ENTER);
         authoring.writeText(protractor.Key.UP);
         authoring.addEmbed('Embed at position 15');
-        function textBlockContains(position, value) {
-            expect(
-                element(by.model('item.body_html')).all(
-                    by.css('.editor-type-html.clone')
-                ).get(position).getText()
-            ).toBe(value);
-        }
-        textBlockContains(0, (body1 + body2).replace(/\n$/, ''));
-        textBlockContains(1, body3.replace(/\n$/, ''));
+        authoring.blockContains(0, (body1 + body2).replace(/\n$/, ''));
+        authoring.blockContains(2, body3.replace(/\n$/, ''));
         element(by.model('item.body_html')).all(by.css('.editor-type-html')).get(0).click();
         authoring.writeText(protractor.Key.ENTER);
         authoring.addEmbed('Embed at position 8');
-        textBlockContains(0, body1.replace(/\n$/, ''));
-        textBlockContains(1, body2.replace(/\n$/, ''));
-        textBlockContains(2, body3.replace(/\n$/, ''));
+        authoring.blockContains(0, body1.replace(/\n$/, ''));
+        authoring.blockContains(2, body2.replace(/\n$/, ''));
+        authoring.blockContains(4, body3.replace(/\n$/, ''));
     });
 
     it('authoring operations', function() {
-        //undo and redo operations by using CTRL+Z and CTRL+y
+        //undo and redo operations by using CTRL+Z and CTRL+y ...
+        // ... from a new item
+        authoring.createTextItem();
+        browser.sleep(1000);
+        authoring.writeText('to be undone');
+        expect(authoring.getBodyText()).toBe('to be undone');
+        browser.sleep(1000);
+        ctrlKey('z');
+        expect(authoring.getBodyText()).toBe('');
+        ctrlKey('y');
+        expect(authoring.getBodyText()).toBe('to be undone');
+        authoring.writeText(protractor.Key.ENTER);
+        authoring.writeText(protractor.Key.UP);
+        authoring.addEmbed('Embed');
+        authoring.blockContains(1, 'Embed');
+        authoring.blockContains(2, 'to be undone');
+        ctrlKey('z');
+        authoring.blockContains(0, 'to be undone');
+        ctrlKey('y');
+        authoring.blockContains(1, 'Embed');
+        authoring.blockContains(2, 'to be undone');
+        authoring.cutBlock(1);
+        authoring.blockContains(0, 'to be undone');
+        ctrlKey('z');
+        authoring.blockContains(1, 'Embed');
+        authoring.blockContains(2, 'to be undone');
+        authoring.close();
+        authoring.ignore();
+        // ... from an existing item
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         expect(authoring.getBodyText()).toBe('item5 text');

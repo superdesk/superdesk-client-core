@@ -1,3 +1,5 @@
+import 'angular-history/history.js';
+
 (function() {
     'use strict';
 
@@ -2560,6 +2562,7 @@
         'config',
         'session',
         'gettext',
+        'history',
         '$interpolate'
     ];
     function ArticleEditDirective(
@@ -2573,6 +2576,7 @@
         config,
         session,
         gettext,
+        history,
         $interpolate
     ) {
         return {
@@ -2600,6 +2604,13 @@
                 };
 
                 /* End: Dateline related properties */
+
+                // watch item and save every change in history in order to perform undo/redo later
+                // ONLY for editor2 (with blocks)
+                try {
+                    angular.module('superdesk.editor2');
+                    history.watch('item', scope);
+                } catch (e) {}
 
                 scope.$watch('item', function(item) {
                     if (item) {
@@ -2823,6 +2834,7 @@
             'superdesk.desks',
             'superdesk.notification',
             'contenteditable',
+            'decipher.history',
             'superdesk.config'
         ])
 
