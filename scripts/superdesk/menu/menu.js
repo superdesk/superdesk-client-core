@@ -120,10 +120,18 @@
                     }
                 };
             }])
-        .directive('sdAbout', ['asset', 'config', function (asset, config) {
+        .directive('sdAbout', ['asset', 'config', 'api', function (asset, config, api) {
             return {
                 templateUrl: asset.templateUrl('superdesk/menu/views/about.html'),
                 link: function(scope) {
+
+                    api.query('backend_meta', {}).then(
+                        function(metadata)
+                        {
+                            scope.build_rev = metadata.meta_rev;
+                            scope.build_rev_core = metadata.meta_rev_core;
+                            scope.build_rev_client = metadata.meta_rev_client;
+                        });
                     scope.version = config.version;
                     scope.year = (new Date()).getUTCFullYear();
                     scope.releaseDate = config.releaseDate;
