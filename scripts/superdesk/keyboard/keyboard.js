@@ -277,10 +277,6 @@
 
             };
 
-            if (this.keyboardEvent[label]) {
-                console.warn(label);
-            }
-
             // Store shortcut
             this.keyboardEvent[label] = {
                 'callback': fct,

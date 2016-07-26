@@ -1191,15 +1191,27 @@
                             var actions = this.getActions();
                             this.groups.map(function(group) {
                                 if (actions[group._id]) {
-                                    menu.push(
-                                        React.createElement(ActionsMenu.Label, {
-                                            label: group.label,
-                                            key: 'group-label-' + group._id
-                                        }),
-                                        React.createElement(ActionsMenu.Divider, {
-                                            key: 'group-divider-' + group._id
-                                        })
-                                    );
+                                    if (group.label === 'Actions') {
+                                        menu.push(
+                                            React.createElement(ActionsMenu.Label, {
+                                                label: group.label,
+                                                key: 'group-label-' + group._id
+                                            }),
+                                            React.createElement(ActionsMenu.Divider, {
+                                                key: 'group-divider-' + group._id
+                                            })
+                                        );
+                                    } else {
+                                        menu.push(
+                                            React.createElement(ActionsMenu.Divider, {
+                                                key: 'group-divider-' + group._id
+                                            }),
+                                            React.createElement(ActionsMenu.Label, {
+                                                label: group.label,
+                                                key: 'group-label-' + group._id
+                                            })
+                                        );
+                                    }
 
                                     menu.push.apply(menu, actions[group._id].map(createAction));
                                 }
@@ -1279,7 +1291,20 @@
                             $timeout.cancel(this.closeTimeout);
                             this.closeTimeout = null;
                             if (!this.state.open) {
+                                this.setPosition();
                                 this.setState({open: true});
+                            }
+                        },
+
+                        setPosition: function () {
+                            var targetRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
+                            var LEFT_BAR_WIDTH = 48;
+                            var BUFFER = 250;
+
+                            if (targetRect.left < (LEFT_BAR_WIDTH + BUFFER)) {
+                                this.setState({position: 'left-submenu'});
+                            } else {
+                                this.setState({position: 'right-submenu'});
                             }
                         },
 
@@ -1321,7 +1346,7 @@
                                         ),
                                         this.state.open ? $injector.invoke(activity.dropdown, activity, {
                                             item: this.props.item,
-                                            className: 'dropdown-menu right-submenu upward',
+                                            className: 'dropdown-menu upward ' + this.state.position,
                                             translatedLabel: gettextCatalog.getString('No available highlights')
                                         }) : null
                                     )

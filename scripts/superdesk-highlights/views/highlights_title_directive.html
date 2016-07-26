@@ -1,9 +1,9 @@
 <div class="highlights-list dropdown"
      dropdown
-     sd-dropdown-position-right
      dropdown-append-to-body
      ng-if="highlights.length>0"
-     on-toggle="toggleClass(open)">
+     on-toggle="toggleClass(open)"
+     sd-dropdown-position-absolute>
 
     <button class="dropdown-toggle" dropdown-toggle>
         <i ng-class="{'icon-star red': highlights.length === 1, 'icon-multi-star red': highlights.length > 1}" class="icon-star red"></i>
