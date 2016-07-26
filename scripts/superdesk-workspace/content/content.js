@@ -537,7 +537,7 @@
             'place': gettext('Place'),
             'priority': gettext('Priority'),
             'urgency': gettext('Urgency'),
-            'anpa_category': gettext('ANPA Category'),
+            'anpa_category': gettext('Category'),
             'subject': gettext('Subject'),
             'ednote': gettext('Editorial Note'),
             'abstract': gettext('Abstract'),
