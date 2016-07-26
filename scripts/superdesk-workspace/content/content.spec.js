@@ -231,7 +231,7 @@ describe('superdesk.workspace.content', function() {
             };
         }));
 
-        it('render correctly', function() {
+        it('render correctly all fields', inject(function(content) {
             var el = compile({
                 model: {
                     schema: {
@@ -244,10 +244,10 @@ describe('superdesk.workspace.content', function() {
             el.scope().$digest();
 
             var fields = el.find('li');
-            expect(fields.length).toBe(2);
-            expect($(fields[0]).find('span.sd-toggle').hasClass('checked')).toBeTruthy();
-            expect($(fields[1]).find('span.sd-toggle').hasClass('checked')).toBeFalsy();
-        });
+            expect(fields.length).toBe(Object.keys(content.schema()).length);
+            expect($(fields[0]).find('span.sd-toggle').hasClass('checked')).toBeFalsy();
+            expect($(fields[11]).find('span.sd-toggle').hasClass('checked')).toBeTruthy();
+        }));
 
         it('should dirty parent form when toggling fields', function() {
             var el = compile({

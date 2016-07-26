@@ -6,23 +6,23 @@
         slugline: {maxlength: 24, type: 'string', required: true},
         relatedItems: {},
         genre: {type: 'list'},
-        anpa_take_key: {},
+        anpa_take_key: {type: 'string'},
         place: {type: 'list'},
-        priority: {},
-        urgency: {},
+        priority: {type: 'integer'},
+        urgency: {type: 'integer'},
         anpa_category: {type: 'list', required: true},
         subject: {type: 'list', required: true},
         company_codes: {type: 'list'},
-        ednote: {},
+        ednote: {type: 'string'},
         headline: {maxlength: 42, type: 'string', required: true},
-        sms: {maxlength: 160},
+        sms: {maxlength: 160, type: 'string'},
         abstract: {maxlength: 160, type: 'string'},
-        body_html: {required: true},
+        body_html: {required: true, type: 'string'},
         byline: {type: 'string'},
         dateline: {type: 'dict', required: true},
         sign_off: {type: 'string'},
         footer: {},
-        body_footer: {},
+        body_footer: {type: 'string'},
         media: {},
         media_description: {}
     });
@@ -52,6 +52,11 @@
         sign_off: {order: 19},
         media: {},
         media_description: {}
+    });
+
+    var CV_ALIAS = Object.freeze({
+        locators: 'place',
+        categories: 'anpa_category'
     });
 
     angular.module('superdesk.workspace.content', [
@@ -526,8 +531,8 @@
         refreshList();
     }
 
-    ContentProfileSchemaEditor.$inject = ['gettext'];
-    function ContentProfileSchemaEditor(gettext) {
+    ContentProfileSchemaEditor.$inject = ['gettext', 'metadata'];
+    function ContentProfileSchemaEditor(gettext, metadata) {
         // labelMap maps schema entry keys to their display names.
         var labelMap = {
             'headline': gettext('Headline'),
@@ -564,7 +569,8 @@
             'subservice_sport': gettext('Sport Subservice'),
             'territory': gettext('Territory'),
             'topic_news': gettext('Topic (News)'),
-            'topic_sport': gettext('Topic (Sport)')
+            'topic_sport': gettext('Topic (Sport)'),
+            'company_codes': gettext('Company Codes')
         };
 
         return {
@@ -575,6 +581,22 @@
                 model: '=ngModel',
             },
             link: function(scope, elem, attr, form) {
+
+                scope.model.schema = scope.model.schema || {};
+                scope.model.editor = scope.model.editor || {};
+                scope.schema = angular.extend({}, DEFAULT_SCHEMA);
+                scope.editor = angular.extend({}, DEFAULT_EDITOR);
+
+                metadata.initialize().then(function() {
+                    scope.options = {subject: metadata.values.subjectcodes};
+                    metadata.cvs.forEach(function(cv) {
+                        var cvId = CV_ALIAS[cv._id] || cv._id;
+                        if (scope.schema[cvId]) {
+                            scope.options[cvId] = cv.items;
+                        }
+                    });
+                });
+
                 /**
                  * @description label returns the display name for a key.
                  */
@@ -593,7 +615,8 @@
                  * @param {String} id the key of the field to toggle.
                  */
                 scope.toggle = function(id) {
-                    scope.model.schema[id] = !!scope.model.schema[id] ? null : {};
+                    scope.model.schema[id] = scope.model.schema[id] ? null : angular.extend({}, DEFAULT_SCHEMA[id]);
+                    scope.model.editor[id] = !scope.model.schema[id] ? null : angular.extend({}, DEFAULT_EDITOR[id]);
                     form.$dirty = true;
                 };
             }
