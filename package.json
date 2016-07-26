@@ -33,10 +33,10 @@
     "load-grunt-config": "0.17.2",
     "load-grunt-tasks": "3.2.0",
     "request": "2.61.0",
-    "selenium-webdriver": "2.45.1"
+    "selenium-webdriver": "2.45.1",
+    "angular-history": "git+https://github.com/decipherinc/angular-history.git#v0.8.0"
   },
   "devDependencies": {
-    "angular-history": "git+https://github.com/decipherinc/angular-history.git#v0.8.0",
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",
