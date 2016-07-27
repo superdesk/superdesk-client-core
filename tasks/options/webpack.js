@@ -1,15 +1,17 @@
 var webpack = require('webpack');
-var webpackConfig = require('../../webpack.config.js');
 
-module.exports = {
-    options: webpackConfig,
-    build: {
-        plugins: webpackConfig.plugins.concat(
-            new webpack.DefinePlugin({
-                'process.env': {'NODE_ENV': JSON.stringify('production')}
-            }),
-            new webpack.optimize.DedupePlugin(),
-            new webpack.optimize.UglifyJsPlugin()
-        )
-    }
+module.exports = function(grunt) { 
+    var config = require('../../webpack.config.js')(grunt);
+    return {
+        options: config,
+        build: {
+            plugins: config.plugins.concat(
+                new webpack.DefinePlugin({
+                    'process.env': {'NODE_ENV': JSON.stringify('production')}
+                }),
+                new webpack.optimize.DedupePlugin(),
+                new webpack.optimize.UglifyJsPlugin()
+            )
+        }
+    };
 };

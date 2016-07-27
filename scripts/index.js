@@ -58,4 +58,4 @@ import 'superdesk-search-providers';
 
 // App
 import 'app/scripts/translations';
-import 'app/main';
+import 'superdesk/bootstrap';
