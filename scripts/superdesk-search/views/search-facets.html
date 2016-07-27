@@ -5,7 +5,11 @@
       </div>
         <ul ng-show="!editingSearch || activateSearchPane">
             <li ng-class="{active: sTab}" ng-click="sTab = true" translate>Advanced Search</li>
-            <li id="saved_searches_tab" ng-show="privileges.saved_searches == 1" ng-class="{active: !sTab}" ng-click="sTab = false" translate>Saved</li>
+            <li id="saved_searches_tab" 
+                ng-show="privileges.saved_searches == 1" 
+                ng-class="{active: !sTab}" 
+                ng-click="sTab = false" translate>Saved
+            </li>
         </ul>
         <div class="doopen" ng-click="flags.facets = false"><i class="icon-close-small"></i></div>
     </div>
@@ -30,7 +34,7 @@
           </form>
         </div>
 
-        <div id="search-parameters" sd-toggle-box data-title="{{:: 'Parameters' | translate }}" data-open="false">
+        <div id="search-parameters" sd-toggle-box data-title="{{:: 'Parameters' | translate }}" data-open="{{repo.search.indexOf('scanpix') == 0}}">
             <div sd-item-search data-repo="repo" data-context="context"></div>
         </div>
 

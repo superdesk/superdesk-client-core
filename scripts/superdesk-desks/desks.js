@@ -341,6 +341,7 @@
                             e.preventDefault();
                             scope.move(DOWN, e);
                         }
+                        if (code === 13 && scope.selected) { scope.edit(scope.selected); }
                     });
                 });
 

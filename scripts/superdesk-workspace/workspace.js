@@ -324,8 +324,10 @@
         };
     }
 
-    WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'Keys', 'gettext', 'config'];
-    function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gettext, config) {
+    WorkspaceSidenavDirective.$inject = ['superdeskFlags', '$location', 'Keys', 'gettext', 'config',
+        '$route', 'api', '$filter', '$rootScope'];
+    function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gettext, config,
+        $route, api, $filter, $rootScope) {
         return {
             templateUrl: 'scripts/superdesk-workspace/views/workspace-sidenav-items.html',
             link: function(scope, elem) {
@@ -350,6 +352,21 @@
                         superdeskFlags.flags.hideMonitoring = false;
                     }
                 };
+
+                scope.loadScanpixSearch = function (source) {
+                    $location.url('/search?repo=' + source + '&q=subscription:(subscription)');
+                    $route.reload();
+                };
+
+                /*
+                 * Initialize the search providers
+                 */
+                if ($rootScope.config && $rootScope.config.features && $rootScope.config.features.scanpixSearchShortcut) {
+                    api.search_providers.query({max_results: 200})
+                        .then(function(result) {
+                            scope.providers = $filter('sortByName')(result._items, 'search_provider');
+                        });
+                }
 
                 /*
                  * By using keyboard shortcuts, change the current showed view

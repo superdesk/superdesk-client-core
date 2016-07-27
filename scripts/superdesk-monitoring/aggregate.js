@@ -408,7 +408,7 @@
         };
 
         this.getMaxHeightStyle = function(maxItems) {
-            var maxHeight = 32 * (maxItems || defaultMaxItems) + 6;
+            var maxHeight = 32 * (maxItems || defaultMaxItems);
             return {'max-height':  maxHeight.toString() + 'px'};
         };
 
