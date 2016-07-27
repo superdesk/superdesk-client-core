@@ -3078,8 +3078,9 @@ import 'angular-history/history.js';
     }
 
     AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata',
-                'content', 'lodash', 'authoring'];
-    function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content, lodash, authoring) {
+                'content', 'lodash', 'authoring', 'vocabularies'];
+    function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content,
+        lodash, authoring, vocabularies) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/authoring-header.html',
             require: '?^sdAuthoringWidgets',
@@ -3164,6 +3165,7 @@ import 'angular-history/history.js';
                                     scope.contentType = type;
                                     scope.editor = authoring.editor = content.editor(type);
                                     scope.schema = authoring.schema = content.schema(type);
+                                    initAnpaCategories();
                                 });
                         } else {
                             scope.editor = authoring.editor = content.editor();
@@ -3194,6 +3196,38 @@ import 'angular-history/history.js';
                         };
                     }
                 });
+
+                /**
+                 * Sets the anpa category corresponding to the required subservice: if a subservice
+                 * field (defined in vocabularies) was declared as required in a content profile
+                 * then make sure that the corresponding anpa category was added to the anpa_category
+                 * field in the newly created item. Without this value the anpa category field is not
+                 * displayed.
+                 */
+                function initAnpaCategories() {
+                    if (scope.schema.subject !== null && scope.schema.subject.mandatory_in_list !== null) {
+                        _.forEach(scope.schema.subject.mandatory_in_list.scheme, function(subjectName) {
+                            if (!_.startsWith(subjectName, 'subservice_')) {
+                                return;
+                            }
+                            vocabularies.getVocabularies().then(function(vocabulariesColl) {
+                                var vocabulary = _.find(vocabulariesColl._items, {'_id': subjectName});
+                                if (vocabulary) {
+                                    var qcode = _.keys(vocabulary.service).pop();
+                                    var categoriesVocabulary = _.find(vocabulariesColl._items, {'_id': 'categories'});
+                                    var category = _.find(categoriesVocabulary.items, {'qcode': qcode});
+                                    if (category && _.findIndex(scope.item.anpa_category, {'name': category.name}) === -1) {
+                                        if (!scope.item.anpa_category) {
+                                            scope.item.anpa_category = [];
+                                        }
+                                        scope.item.anpa_category.splice(-1, 0,
+                                            {'name': category.name, 'qcode': category.qcode, 'scheme': category.scheme});
+                                    }
+                                }
+                            });
+                        });
+                    }
+                }
 
                 metadata.initialize().then(function() {
                     scope.$watch('item.anpa_category', function(services) {
