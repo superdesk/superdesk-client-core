@@ -3,7 +3,6 @@ node_modules
 nbproject
 bower
 dist
-index.html
 templates-cache.js
 .tmp
 test-server/env

@@ -54,17 +54,8 @@ module.exports = function(grunt) {
 
     grunt.registerTask('server', [
         'clean',
-        'template:dev',
         'ngtemplates:dev',
         'webpack-dev-server:start'
-    ]);
-
-    grunt.registerTask('bower', [
-        'build',
-        'copy:bower',
-        'concat:bowerCore',
-        'uglify:bower',
-        'clean:bower'
     ]);
 
     grunt.registerTask('build', [
@@ -78,7 +69,7 @@ module.exports = function(grunt) {
         'copy:assets',
         'copy:js',
         'copy:docs',
-        'template:test',
+        'copy:index',
         'template:docs',
         'filerev',
         'usemin'

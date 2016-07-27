@@ -2,10 +2,15 @@
  *
  * This is the default configuration file for the Superdesk application.
  * For different build configurations, you may use other files which return these
- * value and set them via the OS environment variable SUPERDESK_CONFIG.
+ * values and set them via the OS environment variable SUPERDESK_CONFIG, or via the
+ * --config flag for grunt
  *
  * ie. running a server with a different build file would become:
- * `SUPERDESK_CONFIG=./other.conf.js grunt server`
+ * `SUPERDESK_CONFIG=./other.conf.js grunt server` or
+ * `grunt server --config=./other.conf.js`
+ *
+ * The return value of the exported function is passed into the app via Webpack's
+ * DefinePlugin as the global __SUPERDESK_CONFIG__ (see webpack.config.js).
  *
  */
 var path = require('path');

@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 // base webpack configuration
-var config = {
+var baseConfig = {
     cache: true,
     entry: {
         index: 'scripts/index.js'
@@ -59,14 +59,15 @@ var config = {
 };
 
 
-// addProxy adds proxy options to the webpack configuration, so that some
-// request URLs will be prepended with 'node_modules/superdesk-core' when
-// the client core is embedded as a node module. If the app is not a module 
-// then this function returns and takes no action.
-function addProxy() {
+// proxyConfig returns the proxy configuration based on whether the client core
+// is embedded as a node module into a different repo (such as the main superdesk
+// repo), or if it is not. If the client is embedded, some request URLs (such as
+// ones starting with 'scripts/' and 'images/') will be prepended with
+// './node_modules/superdesk-core'.
+function proxyConfig() {
     var isModule = require('fs').existsSync('./node_modules/superdesk-core');
     if (!isModule) {
-        return;
+        return {};
     }
     var rewrite = {
         target: 'http://localhost:9000',
@@ -75,25 +76,23 @@ function addProxy() {
             req.url = 'node_modules/superdesk-core' + req.url;
         }
     };
-    config.start.proxy = {
+    return {
         '/scripts/*': rewrite,
         '/images/*': rewrite
     };
 }
 
 module.exports = function(grunt, isDev) {
-    if (isDev) {
-        // dev server settings
-        addProxy();
-        config.output.publicPath = 'dist';
-    }
+    var appConfigPath = grunt.option('config') ||
+        process.env.SUPERDESK_CONFIG ||
+        './superdesk.config.js';
 
-    var appConfigPath = process.env.SUPERDESK_CONFIG || './superdesk.config.js';
-
-    config.plugins = config.plugins.concat(
+    baseConfig.output.publicPath = isDev ? 'dist' : '';
+    baseConfig.proxy = proxyConfig();
+    baseConfig.plugins = baseConfig.plugins.concat(
         new webpack.DefinePlugin({
             __SUPERDESK_CONFIG__: require(appConfigPath)(grunt)
         }));
 
-    return config;
+    return baseConfig;
 }
