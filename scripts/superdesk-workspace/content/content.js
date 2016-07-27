@@ -549,7 +549,7 @@
             'age_range': gettext('Age Range'),
             'assets': gettext('Assets'),
             'body_html': gettext('Body HTML'),
-            'byline': gettext('By'),
+            'byline': gettext('Byline'),
             'dateline': gettext('Dateline'),
             'located': gettext('Located'),
             'sign_off': gettext('Sign Off'),
