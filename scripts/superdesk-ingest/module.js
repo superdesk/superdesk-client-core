@@ -88,8 +88,8 @@ import BaseListController from 'superdesk-archive/controllers/baseList';
         });
     }
 
-    IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter'];
-    function IngestProviderService(api, $q, preferencesService, $filter) {
+    IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter', 'searchProviderService'];
+    function IngestProviderService(api, $q, preferencesService, $filter, searchProviderService) {
 
         var _getAllIngestProviders = function(criteria, page, providers) {
             page = page || 1;
@@ -113,13 +113,13 @@ import BaseListController from 'superdesk-archive/controllers/baseList';
             fetched: null,
             fetchProviders: function() {
                 var self = this;
-                var providersPromise = $q.all([_getAllIngestProviders(), api.searchProviders.query()]);
+                var providersPromise = $q.all([_getAllIngestProviders(), searchProviderService.getSearchProviders()]);
 
                 return providersPromise.then(function(results) {
                     self.providers = [];
 
                     results.forEach(function(result) {
-                        self.providers = self.providers.concat(result._items);
+                        self.providers = self.providers.concat(result);
                     });
                 });
             },
@@ -1569,12 +1569,6 @@ import BaseListController from 'superdesk-archive/controllers/baseList';
             type: 'http',
             backend: {
                 rel: 'ingest_providers'
-            }
-        });
-        apiProvider.api('searchProviders', {
-            type: 'http',
-            backend: {
-                rel: 'search_providers'
             }
         });
         apiProvider.api('activity', {

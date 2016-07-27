@@ -120,6 +120,7 @@ describe('publish queue', function() {
     beforeEach(module('superdesk.publish'));
     beforeEach(module('superdesk.ingest'));
     beforeEach(module('superdesk.mocks'));
+    beforeEach(module('superdesk.searchProviders'));
     beforeEach(module('superdesk.templates-cache'));
 
     beforeEach(inject(function($rootScope, $controller, subscribersService, $q, api, ingestSources) {
