@@ -59,9 +59,14 @@ var baseConfig = {
 };
 
 module.exports = function makeConfig(grunt, isDev) {
-    var appConfigPath = grunt.option('config') ||
-        process.env.SUPERDESK_CONFIG ||
-        './superdesk.config.js';
+    var appConfigPath = './superdesk.config.js';
+
+    if (process.env.SUPERDESK_CONFIG) {
+        appConfigPath = path.join(process.cwd(), process.env.SUPERDESK_CONFIG);
+    }
+    if (grunt.option('config')) {
+        appConfigPath = path.join(process.cwd(), grunt.option('config'));
+    }
 
     baseConfig.output.publicPath = isDev ? 'dist' : '';
     baseConfig.plugins = baseConfig.plugins.concat(

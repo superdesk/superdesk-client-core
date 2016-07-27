@@ -6,8 +6,8 @@
  * --config flag for grunt
  *
  * ie. running a server with a different build file would become:
- * `SUPERDESK_CONFIG=./other.conf.js grunt server` or
- * `grunt server --config=./other.conf.js`
+ * `SUPERDESK_CONFIG=relative/path/to/config.js grunt server` or
+ * `grunt server --config=relative/path/to/config.js`
  *
  * The return value of the exported function is passed into the app via Webpack's
  * DefinePlugin as the global __SUPERDESK_CONFIG__ (see webpack.config.js).
