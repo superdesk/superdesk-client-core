@@ -59,7 +59,7 @@ var baseConfig = {
 };
 
 module.exports = function makeConfig(grunt, isDev) {
-    var appConfigPath = './superdesk.config.js';
+    var appConfigPath = path.join(process.cwd(), 'superdesk.config.js');
 
     if (process.env.SUPERDESK_CONFIG) {
         appConfigPath = path.join(process.cwd(), process.env.SUPERDESK_CONFIG);

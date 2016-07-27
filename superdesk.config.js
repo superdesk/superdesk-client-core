@@ -1,17 +1,8 @@
 /**
- *
- * This is the default configuration file for the Superdesk application.
- * For different build configurations, you may use other files which return these
- * values and set them via the OS environment variable SUPERDESK_CONFIG, or via the
- * --config flag for grunt
- *
- * ie. running a server with a different build file would become:
- * `SUPERDESK_CONFIG=relative/path/to/config.js grunt server` or
- * `grunt server --config=relative/path/to/config.js`
- *
- * The return value of the exported function is passed into the app via Webpack's
- * DefinePlugin as the global __SUPERDESK_CONFIG__ (see webpack.config.js).
- *
+ * This is the default configuration file for the Superdesk application. By default,
+ * the app will use the file with the name "superdesk.config.js" found in the current
+ * working directory, but other files may also be specified using relative paths with
+ * the SUPERDESK_CONFIG environment variable or the grunt --config flag.
  */
 var path = require('path');
 var version;
@@ -19,9 +10,11 @@ var version;
 // attempt to fetch git revision and allow failure
 try { version = require('git-rev-sync').short('..'); } catch (err) {}
 
+// The return value of the function is passed into the app via Webpack's
+// DefinePlugin as the global __SUPERDESK_CONFIG__ (see webpack.config.js).
 module.exports = function(grunt) {
     return JSON.stringify({
-        version: version || grunt.file.readJSON(path.join(__dirname, 'package.json')),
+        version: version || grunt.file.readJSON(path.join(__dirname, 'package.json')).version,
         raven: {
             dsn: process.env.SUPERDESK_RAVEN_DSN || ''
         },
