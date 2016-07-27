@@ -54,6 +54,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('server', [
         'clean',
+        'copy:index',
         'ngtemplates:dev',
         'webpack-dev-server:start'
     ]);
@@ -62,6 +63,7 @@ module.exports = function(grunt) {
         'clean',
         'ngtemplates:core',
         'webpack:build',
+        'copy:index',
         'useminPrepare',
         'concat:generated',
         'uglify:generated',
@@ -69,7 +71,6 @@ module.exports = function(grunt) {
         'copy:assets',
         'copy:js',
         'copy:docs',
-        'copy:index',
         'template:docs',
         'filerev',
         'usemin'

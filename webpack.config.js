@@ -58,37 +58,12 @@ var baseConfig = {
     }
 };
 
-
-// proxyConfig returns the proxy configuration based on whether the client core
-// is embedded as a node module into a different repo (such as the main superdesk
-// repo), or if it is not. If the client is embedded, some request URLs (such as
-// ones starting with 'scripts/' and 'images/') will be prepended with
-// './node_modules/superdesk-core'.
-function proxyConfig() {
-    var isModule = require('fs').existsSync('./node_modules/superdesk-core');
-    if (!isModule) {
-        return {};
-    }
-    var rewrite = {
-        target: 'http://localhost:9000',
-        rewrite: function(req) {
-            'use strict';
-            req.url = 'node_modules/superdesk-core' + req.url;
-        }
-    };
-    return {
-        '/scripts/*': rewrite,
-        '/images/*': rewrite
-    };
-}
-
-module.exports = function(grunt, isDev) {
+module.exports = function makeConfig(grunt, isDev) {
     var appConfigPath = grunt.option('config') ||
         process.env.SUPERDESK_CONFIG ||
         './superdesk.config.js';
 
     baseConfig.output.publicPath = isDev ? 'dist' : '';
-    baseConfig.proxy = proxyConfig();
     baseConfig.plugins = baseConfig.plugins.concat(
         new webpack.DefinePlugin({
             __SUPERDESK_CONFIG__: require(appConfigPath)(grunt)

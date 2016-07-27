@@ -1,13 +1,20 @@
 var path = require('path');
-var root = path.dirname(path.dirname(__dirname));
+var appRoot = path.dirname(path.dirname(__dirname));
 
 module.exports = {
     index: {
-        files: [{
-            cwd: process.cwd(),
-            src: path.join(root, 'index.html'),
-            dest: '<%= distDir %>/index.html'
-        }]
+        files: [
+            {
+                cwd: process.cwd(),
+                src: path.join(appRoot, 'index.html'),
+                dest: '<%= distDir %>/index.html'
+            },
+            {
+                cwd: process.cwd(),
+                src: path.join(appRoot, 'index.html'),
+                dest: './index.html'
+            }
+        ]
     },
     assets: {
         files: [
