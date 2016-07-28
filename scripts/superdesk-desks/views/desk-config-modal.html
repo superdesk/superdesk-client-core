@@ -60,7 +60,7 @@
                                 <label translate>Content Profiles</label>
                                 <ul class="content-profiles-list pills">
                                     <li ng-repeat="profile in profiles track by profile._id">
-                                        <label>{{ profile.label }}</label> <span sd-check ng-model="desk.edit.content_profiles[profile._id]"></span>
+                                        <span sd-check ng-model="desk.edit.content_profiles[profile._id]"></span>{{ profile.label }}
                                     </li>
                                 </ul>
                             </div>

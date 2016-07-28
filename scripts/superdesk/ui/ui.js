@@ -263,28 +263,35 @@
                 var tolerance = 300,
                     isRightOriented = null,
                     isInlineOriented = null,
-                    menu = null;
+                    menu = null, authoring = null;
 
-                element.bind('click', function(event) {
+                element.bind('click', function() {
+                    if (!element.hasClass('open')) {
+                        return false;
+                    }
 
                     if (menu === null) {
                         checkOrientation();
                     }
 
-                    if (closeToBottom(event)) {
+                    if (authoring === null) {
+                        checkAuthoring();
+                    }
+
+                    if (closeToBottom()) {
                         element.addClass('dropup');
                     } else {
                         element.removeClass('dropup');
                     }
 
-                    if (isRightOriented) {
-                        if (closeToLeft(event)) {
-                            menu.removeClass('pull-right');
-                        } else {
-                            menu.addClass('pull-right');
-                        }
+                    if (closeToLeft()) {
+                        menu.removeClass('pull-right');
+                    } else {
+                        menu.addClass('pull-right');
+                    }
 
-                        if (closeToRight(event)) {
+                    if (isRightOriented) {
+                        if (closeToRight()) {
                             menu.addClass('pull-right');
                         } else {
                             menu.removeClass('pull-right');
@@ -292,16 +299,12 @@
                     }
 
                     if (isInlineOriented) {
-                        if (closeToLeft(event)) {
+                        if (closeToLeft() && !closeToRight()) {
                             element.removeClass('dropleft').addClass('dropright');
-                        } else {
-                            element.addClass('dropleft').removeClass('dropright');
-                        }
-
-                        if (closeToRight(event)) {
+                        } else if (closeToRight() && !closeToLeft()) {
                             element.removeClass('dropright').addClass('dropleft');
                         } else {
-                            element.addClass('dropright').removeClass('dropleft');
+                            element.removeClass('dropright dropleft');
                         }
                     }
                 });
@@ -312,29 +315,40 @@
                     isInlineOriented = element.hasClass('dropright') || element.hasClass('dropleft');
                 }
 
-                function closeToBottom(e) {
+                // In authoring, make dropdown's relative to edge of authoring screens
+                function checkAuthoring() {
+                    authoring = element.closest('#authoring-container');
+                }
+
+                function closeToBottom() {
                     var docHeight = $document.height();
-                    return e.pageY > docHeight - tolerance;
+                    return element.offset().top > docHeight - tolerance;
                 }
 
-                function closeToLeft(e) {
-                    return e.pageX < tolerance;
+                function closeToLeft() {
+                    var leftEdge = authoring.length ?
+                            element.offset().left - authoring.offset().left :
+                            element.offset().left;
+
+                    return leftEdge < tolerance;
                 }
 
-                function closeToRight(e) {
-                    var docWidth = $document.width();
-                    return (docWidth - e.pageX) < tolerance;
+                function closeToRight() {
+                    var docWidth = $document.width(),
+                        elemPosition = element.offset().left + element.width();
+
+                    return (docWidth - elemPosition) < tolerance;
                 }
             }
         };
     }
 
-    DropdownPositionRightDirective.$inject = ['$position'];
     /**
-     * Correct dropdown menu position to be right aligned
-     * with dots-vertical icon.
+     * Detect and set position for dropdown
+     * elements which are appended to body
      */
-    function DropdownPositionRightDirective($position) {
+    DropdownPositionAbsoluteDirective.$inject = ['$position'];
+    function DropdownPositionAbsoluteDirective($position) {
         return {
             require: 'dropdown',
             link: function(scope, elem, attrs, dropdown) {
@@ -1303,7 +1317,7 @@
         .service('popupService', PopupService)
         .filter('leadingZero', LeadingZeroFilter)
         .directive('sdDropdownPosition', DropdownPositionDirective)
-        .directive('sdDropdownPositionRight', DropdownPositionRightDirective)
+        .directive('sdDropdownPositionAbsolute', DropdownPositionAbsoluteDirective)
         .directive('sdDropdownFocus', DropdownFocus)
         .directive('sdWeekdayPicker', WeekdayPickerDirective)
         .directive('sdSplitterWidget', splitterWidget)
