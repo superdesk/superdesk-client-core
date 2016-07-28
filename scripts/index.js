@@ -62,10 +62,6 @@ import 'superdesk-search-providers';
 // Translations
 import 'app/scripts/translations';
 
-if (appConfig.localTranslations) {
-    require('app/translations.js');
-}
-
 // load spellcheckers
 if (appConfig.spellcheckers.indexOf('tansa') > -1) {
     require('superdesk-tansa');
