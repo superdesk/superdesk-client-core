@@ -43,10 +43,11 @@ module.exports = function makeConfig(grunt, opts) {
         ],
         resolve: {
             root: [
-                path.join(__dirname),
+                __dirname,
                 path.join(__dirname, '/scripts'),
                 path.join(__dirname, '/app'),
-                path.join(__dirname, '/styles/less')
+                path.join(__dirname, '/styles/less'),
+                process.cwd()
             ],
             extensions: ['', '.js']
         },
