@@ -72,8 +72,21 @@ EMBED_PROVIDERS, $scope, editor, config, $injector) {
                     }
                 ];
                 // prepend with custom handlers from config
-                if (config.editorEmbedCodeParsers) {
-                    knownProviders = $injector.invoke(config.editorEmbedCodeParsers).concat(knownProviders);
+                if (config.editor.vidible) {
+                    knownProviders = $injector.invoke(['EMBED_PROVIDERS', 'api', function(EMBED_PROVIDERS, api) {
+                        return [
+                            {
+                                pattern: /src=".*vidible\.tv.*pid=(.+)\/(.+).js/g,
+                                name: EMBED_PROVIDERS.vidible,
+                                callback: function(match) {
+                                    return api.get('vidible/bcid/' + match[2] + '/pid/' + match[1])
+                                    .then(function(data) {
+                                        return {association: data};
+                                    });
+                                }
+                            }
+                        ];
+                    }]).concat(knownProviders);
                 }
                 function updateEmbedBlock(partialUpdate) {
                     angular.extend(embedBlock, partialUpdate);

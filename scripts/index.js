@@ -62,6 +62,11 @@ import 'superdesk-search-providers';
 // Translations
 import 'app/scripts/translations';
 
+// load spellcheckers
+if (appConfig.spellcheckers.indexOf('tansa') > -1) {
+    require('superdesk-tansa');
+}
+
 // don't bootstrap in unit tests
 if (appConfig.buildParams.unit !== true) {
     require('superdesk/bootstrap');

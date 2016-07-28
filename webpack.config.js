@@ -156,6 +156,9 @@ function getDefaults(grunt, buildParams) {
         buildParams: buildParams,
 
         // route to be redirected to from '/'
-        defaultRoute: '/workspace/personal'
+        defaultRoute: '/workspace',
+
+        // array of spellcheckers (ie. ["tansa"])
+        spellcheckers: []
     };
 }
