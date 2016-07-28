@@ -71,22 +71,13 @@ EMBED_PROVIDERS, $scope, editor, config, $injector) {
                         name: EMBED_PROVIDERS.youtube
                     }
                 ];
-                // prepend with custom handlers from config
                 if (config.editor.vidible) {
-                    knownProviders = $injector.invoke(['EMBED_PROVIDERS', 'api', function(EMBED_PROVIDERS, api) {
-                        return [
-                            {
-                                pattern: /src=".*vidible\.tv.*pid=(.+)\/(.+).js/g,
-                                name: EMBED_PROVIDERS.vidible,
-                                callback: function(match) {
-                                    return api.get('vidible/bcid/' + match[2] + '/pid/' + match[1])
-                                    .then(function(data) {
-                                        return {association: data};
-                                    });
-                                }
-                            }
-                        ];
-                    }]).concat(knownProviders);
+                    knownProviders.push({
+                        pattern: /src=".*vidible\.tv.*pid=(.+)\/(.+).js/g,
+                        name: EMBED_PROVIDERS.vidible,
+                        callback: match => api.get(`vidible/bcid/${match[2]}/pid/${match[1]}`)
+                            .then(data => {{association: data}})
+                    });
                 }
                 function updateEmbedBlock(partialUpdate) {
                     angular.extend(embedBlock, partialUpdate);
