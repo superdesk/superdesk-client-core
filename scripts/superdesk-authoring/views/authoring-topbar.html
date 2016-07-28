@@ -99,6 +99,16 @@
         sd-hotkey="ctrl+shift+s"
         translate>Save</button>
 
+      <button class="btn btn-info" type="submit"
+        ng-click="previewFormattedItem()"
+        ng-show="_editable"
+        ng-if = "itemActions.save && previewFormattedEnabled() && action === 'edit'"
+        ng-disabled="save_enabled() && !saveDisabled"
+        sd-hotkey="ctrl+shift+p"
+        translate>Preview</button>
+
+        <div sd-preview-formatted ng-if="previewFormatted"></div>
+
       <button id="export" class="btn btn-info"
         ng-click="exportHighlight(item)"
         ng-disabled="!_editable"

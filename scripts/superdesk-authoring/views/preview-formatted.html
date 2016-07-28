@@ -1,0 +1,24 @@
+<div sd-modal data-model="previewFormatted" class="formatted-preview-popup modal-big">
+
+    <div class="modal-header">
+        <a href="" class="close" ng-click="closePreviewFormatted()"><i class="icon-close-small"></i></a>
+        <h3 translate>Preview Formatted Story</h3>
+    </div>
+
+    <div class="modal-body" ng-loading="loading">
+
+        <div class="formatters">
+            <label>{{ :: 'Formatters' | translate }}</label>
+            <select ng-model="selectedFormatter">
+                <option value="{{formatter}}" ng-repeat="formatter in formatters">{{:: formatter.name}}</option>
+            </select>
+            <button class="btn btn-info pull-right" ng-click="format(selectedFormatter)" translate>Format</button>
+        </div>
+
+        <div class="formatted-item">
+            <textarea  ng-model="formattedItem"></textarea>
+        </div>
+
+    </div>
+
+</div>
