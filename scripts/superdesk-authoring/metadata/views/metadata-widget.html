@@ -78,7 +78,11 @@
                     <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
                 </div>
             </li>
-            
+
+            <li ng-if="item.ingest_provider">
+                <label translate>Ingest Provider</label>
+                <div class="data" sd-meta-ingest data-item="item"></div>
+            </li>
 
             <li ng-if="item.ingest_provider_sequence">
                 <label translate>Provider sequence</label>

@@ -24,11 +24,18 @@
         'scanpix(npk)': 'ScanPix (npk)',
     });
 
-    SearchProviderService.$inject = ['providerTypes'];
-    function SearchProviderService(providerTypes) {
+    SearchProviderService.$inject = ['providerTypes', '$filter', 'api'];
+    function SearchProviderService(providerTypes, $filter, api) {
         var service = {
             getProviderTypes: function () {
                 return providerTypes;
+            },
+            getSearchProviders: function() {
+                return api.search_providers.query({}).then(
+                    function(result) {
+                        return $filter('sortByName')(result._items, 'search_provider');
+                    }
+                );
             }
         };
 
@@ -42,8 +49,8 @@
     function SearchProviderSettingsController($scope, privileges) {
     }
 
-    SearchProviderConfigDirective.$inject = ['providerTypes', 'gettext', 'notify', 'api', '$filter', 'modal'];
-    function SearchProviderConfigDirective(providerTypes, gettext, notify, api, $filter, modal) {
+    SearchProviderConfigDirective.$inject = ['searchProviderService', 'gettext', 'notify', 'api', 'modal'];
+    function SearchProviderConfigDirective(searchProviderService, gettext, notify, api, modal) {
         return {
             templateUrl: 'scripts/superdesk-search-providers/views/search-provider-config.html',
             link: function ($scope) {
@@ -51,15 +58,15 @@
                 $scope.origProvider = null;
                 $scope.providers = null;
                 $scope.newDestination = null;
-                $scope.providerTypes = providerTypes;
+                $scope.providerTypes = searchProviderService.getProviderTypes();
 
                 /**
                  * Fetches all search providers from backend
                  */
                 function fetchSearchProviders() {
-                    api.search_providers.query({}).then(
+                    searchProviderService.getSearchProviders().then(
                         function(result) {
-                            $scope.providers = $filter('sortByName')(result._items, 'search_provider');
+                            $scope.providers = result;
                         }
                     );
                 }

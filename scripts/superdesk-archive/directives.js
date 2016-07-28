@@ -371,8 +371,9 @@
                     scope.$watch('item', renderIngest);
                     function renderIngest() {
                         ingestSources.initialize().then(function() {
-                            if (scope.item.ingest_provider && scope.item.ingest_provider in ingestSources.providersLookup) {
-                                scope.name = ingestSources.providersLookup[scope.item.ingest_provider].name;
+                            if (scope.item && scope.item.ingest_provider in ingestSources.providersLookup) {
+                                scope.name = ingestSources.providersLookup[scope.item.ingest_provider].name ||
+                                ingestSources.providersLookup[scope.item.ingest_provider].search_provider;
                             } else {
                                 scope.name = '';
                             }
