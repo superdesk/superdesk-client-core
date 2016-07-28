@@ -1,7 +1,7 @@
 @import '~variables.less';
 @import '~mixins.less';
 
-[contenteditable=true] {
+.editor-type-html {
     &:before{
         display: block; /* For Firefox */
     }
@@ -12,6 +12,13 @@
     }
     &:focus:before{
         display: none;
+    }
+    // prevent chrome to add extra markup with style in contenteditable
+    span, p, h1, h2, h3, h4 {
+        background-color: transparent;
+    }
+    span, h3 {
+        font-size: 16px; line-height: 24px;
     }
 }
 .medium-editor-toolbar {
