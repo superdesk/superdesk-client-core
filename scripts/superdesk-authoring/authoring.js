@@ -2214,6 +2214,10 @@ import 'angular-history/history.js';
                         // Remember last destination desk and stage
                         updateLastDestination(deskId, stageId);
 
+                        scope.config.promise.finally(function() {
+                            scope.loading = false;
+                        });
+
                         return scope.config.resolve({
                             desk: deskId,
                             stage: stageId,
