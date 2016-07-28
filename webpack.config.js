@@ -29,7 +29,7 @@ module.exports = function makeConfig(grunt, opts) {
         output: {
             path: path.join(process.cwd(), 'dist'),
             filename: '[name].bundle.js',
-            publicPath: opts.dev ? 'dist' : '',
+            publicPath: opts.isDev ? 'dist' : '',
             chunkFilename: '[id].bundle.js'
         },
         plugins: [

@@ -68,6 +68,6 @@ if (appConfig.spellcheckers.indexOf('tansa') > -1) {
 }
 
 // don't bootstrap in unit tests
-if (appConfig.buildParams.unit !== true) {
+if (appConfig.buildParams.noBootstrap !== true) {
     require('superdesk/bootstrap');
 }
