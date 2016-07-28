@@ -1,8 +1,11 @@
 'use strict';
 
-var webpackConfig = require('./webpack.config.js');
+var grunt = require('grunt');
+var makeConfig = require('./webpack.config.js');
 
 module.exports = function(config) {
+    var webpackConfig = makeConfig(grunt, {dev: false, unit: true});
+
     config.set({
         frameworks: [
             'jasmine'

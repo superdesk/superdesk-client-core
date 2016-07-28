@@ -1,3 +1,6 @@
+/* globals __SUPERDESK_CONFIG__: true */
+const appConfig = __SUPERDESK_CONFIG__;
+
 var body = angular.element('body');
 var apps = [
     'superdesk',
@@ -33,12 +36,12 @@ var apps = [
     'superdesk.templates-cache'
 ];
 
-angular.module('superdesk.config').constant('config', __SUPERDESK_CONFIG__);
+angular.module('superdesk.config').constant('config', appConfig);
 
 angular.module('superdesk')
     .constant('lodash', _)
     .config(['$routeProvider', function($routeProvider) {
-        $routeProvider.when('/', {redirectTo: '/workspace'});
+        $routeProvider.when('/', {redirectTo: appConfig.defaultRoute || '/workspace'});
     }]);
 
 body.ready(function() {

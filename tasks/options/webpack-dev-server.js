@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 
     return {
         options: {
-            webpack: require('../../webpack.config.js')(grunt, true),
+            webpack: require('../../webpack.config.js')(grunt, {dev: true}),
             publicPath: '/dist',
             port: 9000,
             headers: {

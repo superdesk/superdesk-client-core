@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 
-module.exports = function(grunt) { 
+module.exports = function(grunt) {
+    'use strict';
     var config = require('../../webpack.config.js')(grunt);
     return {
         options: config,

@@ -1,3 +1,6 @@
+/* globals __SUPERDESK_CONFIG__: true */
+const appConfig = __SUPERDESK_CONFIG__;
+
 // Styles
 import 'index.less';
 
@@ -56,6 +59,10 @@ import 'superdesk-settings';
 import 'superdesk-ingest';
 import 'superdesk-search-providers';
 
-// App
+// Translations
 import 'app/scripts/translations';
-import 'superdesk/bootstrap';
+
+// don't bootstrap in unit tests
+if (appConfig.buildParams.unit !== true) {
+    require('superdesk/bootstrap');
+}
