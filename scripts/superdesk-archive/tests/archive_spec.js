@@ -29,10 +29,13 @@ describe('content', function() {
         expect(api.update).toHaveBeenCalledWith('archive_spike', item, {state: 'spiked'});
     }));
 
-    it('can unspike items', inject(function(spike, api, $q) {
+    it('can unspike items', inject(function(spike, api, send, $q, $rootScope) {
+        var config = {desk: 'foo', stage: 'working'};
         spyOn(api, 'update').and.returnValue($q.when());
+        spyOn(send, 'startConfig').and.returnValue($q.when(config));
         spike.unspike(item);
-        expect(api.update).toHaveBeenCalledWith('archive_unspike', item, {});
+        $rootScope.$digest();
+        expect(api.update).toHaveBeenCalledWith('archive_unspike', item, {task: config});
     }));
 
     describe('archive service', function() {
