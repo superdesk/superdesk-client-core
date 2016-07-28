@@ -1,6 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
-var _ = require('lodash');
+var lodash = require('lodash');
 
 // makeConfig creates a new configuration file based on the passed options.
 // Keys are:
@@ -19,7 +19,7 @@ module.exports = function makeConfig(grunt, opts) {
         appConfigPath = path.join(process.cwd(), grunt.option('config'));
     }
 
-    var sdConfig = _.defaultsDeep(require(appConfigPath)(grunt), getDefaults(grunt, opts));
+    var sdConfig = lodash.defaultsDeep(require(appConfigPath)(grunt), getDefaults(grunt, opts));
 
     return {
         cache: true,
