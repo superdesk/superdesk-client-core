@@ -1408,7 +1408,7 @@
             };
         }])
 
-        .directive('sdItemPreview', ['asset', function(asset) {
+        .directive('sdItemPreview', ['asset', 'storage', function(asset, storage) {
             /**
              * @description Closes the preview panel if the currently previewed
              * item is spiked or unspiked.
@@ -1435,6 +1435,19 @@
                 },
                 link: function(scope) {
                     scope.tab = 'content';
+
+                    scope.toggleLeft = JSON.parse(storage.getItem('shiftLeft'));
+
+                    /**
+                     * Toggle preview pane position - left or right
+                     * available only when screen size is smaller and authoring is open.
+                     */
+                    scope.shiftPreview = function () {
+                        scope.$applyAsync(function() {
+                            scope.toggleLeft = !scope.toggleLeft;
+                            storage.setItem('shiftLeft', scope.toggleLeft);
+                        });
+                    };
 
                     scope.$watch('item', function(item) {
                         scope.selected = {preview: item || null};
