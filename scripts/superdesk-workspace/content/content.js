@@ -55,8 +55,7 @@
     });
 
     var CV_ALIAS = Object.freeze({
-        locators: 'place',
-        categories: 'anpa_category'
+        locators: 'place'
     });
 
     angular.module('superdesk.workspace.content', [
@@ -589,6 +588,10 @@
 
                 metadata.initialize().then(function() {
                     scope.options = {subject: metadata.values.subjectcodes};
+                    scope.terms = {
+                        subject: metadata.values.subjectcodes,
+                        anpa_category: metadata.values.categories
+                    };
                     metadata.cvs.forEach(function(cv) {
                         var cvId = CV_ALIAS[cv._id] || cv._id;
                         if (scope.schema[cvId]) {
@@ -617,6 +620,18 @@
                 scope.toggle = function(id) {
                     scope.model.schema[id] = scope.model.schema[id] ? null : angular.extend({}, DEFAULT_SCHEMA[id]);
                     scope.model.editor[id] = !scope.model.schema[id] ? null : angular.extend({}, DEFAULT_EDITOR[id]);
+                    form.$dirty = true;
+                };
+
+                /**
+                 * Copy value from `id` key into `default` within schema
+                 *
+                 * it's a workaround for meta-* directives, those have specific logic based on `id`
+                 *
+                 * @param {String} id
+                 */
+                scope.setdefault = function(id) {
+                    scope.model.schema[id].default = scope.model.schema[id][id];
                     form.$dirty = true;
                 };
             }
