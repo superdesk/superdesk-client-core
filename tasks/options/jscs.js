@@ -10,7 +10,10 @@ files.push(['!**/google-tracking.js']);
 files.push(['!**/piwik-tracking.js']);
 
 module.exports = {
-    options: {config: path.join(root, '.jscs.json')},
+    options: {
+        config: path.join(root, '.jscs.json'),
+        excludeFiles: ['**/*.generated.js']
+    },
     all: {src: files},
     docs: {src: ['<%= appDir %>/docs/**/*.js']}
 };
