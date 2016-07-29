@@ -1,13 +1,13 @@
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
 
-// Styles
-import 'index.less';
+// styles
+import 'styles/index.less';
 
-// Vendor
+// vendor
 import 'jquery-jcrop';
 
-// Core
+// core
 import 'superdesk/gettext';
 import 'superdesk/activity';
 import 'superdesk/analytics';
@@ -32,8 +32,9 @@ import 'superdesk/notify';
 import 'superdesk/ui';
 import 'superdesk/upload';
 import 'superdesk/superdesk';
+import 'superdesk/lang';
 
-// Modules
+// modules
 import 'superdesk-workspace';
 import 'superdesk-dashboard';
 import 'superdesk-users';
@@ -58,9 +59,6 @@ import 'superdesk-monitoring';
 import 'superdesk-settings';
 import 'superdesk-ingest';
 import 'superdesk-search-providers';
-
-// Translations
-import 'app/scripts/translations';
 
 // load spellcheckers
 if (appConfig.spellcheckers.indexOf('tansa') > -1) {
