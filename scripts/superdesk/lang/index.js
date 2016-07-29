@@ -1,3 +1,15 @@
-// this file should be generated from PO files using grunt
-// task `nggettext_compile`
+/* globals __SUPERDESK_CONFIG__: true */
+const appConfig = __SUPERDESK_CONFIG__;
+
+// this file is generated using `grunt nggettext_compile`
 import './lang.generated';
+
+let lang = appConfig.langOverride;
+
+if (Object.keys(lang).length > 0) {
+    angular.module('gettext').run(['gettextCatalog', catalog => {
+        for (let k of Object.keys(lang)) {
+            catalog.setStrings(k, lang[k]);
+        }
+    }]);
+}
