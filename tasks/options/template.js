@@ -1,3 +1,4 @@
+var path = require('path');
 
 module.exports = function(grunt) {
 
@@ -66,7 +67,8 @@ module.exports = function(grunt) {
         }};
     }
 
-    var files = {'<%= distDir %>/index.html': '<%= appDir %>/index.html'};
+    var indexSrc = path.join('<%= coreDir %>', '<%= appDir %>/index.html');
+    var files = {'<%= distDir %>/index.html': indexSrc};
 
     return {
         mock: {
@@ -75,7 +77,7 @@ module.exports = function(grunt) {
         },
         dev: {
             options: data('http://localhost:5000/api'),
-            files: {'index.html': '<%= appDir %>/index.html'}
+            files: {'index.html': indexSrc}
         },
         travis: {
             options: data('http://localhost:5000/api'),
