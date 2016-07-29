@@ -2189,6 +2189,16 @@
                 link: function(scope) {
                     scope.multi = multi;
                     scope.$watch(multi.getItems, detectType);
+                    scope.$on('item:lock', function(_e, data) {
+                        if (_.contains(multi.getIds(), data.item)) {
+                            // locked item is in the selections so update lock info
+                            var selectedItems = multi.getItems();
+                            _.find(selectedItems, function(_item) {
+                                return _item._id === data.item;
+                            }).lock_user = data.user;
+                            detectType(selectedItems);
+                        }
+                    });
 
                     scope.isOpenItemType = function(type) {
                         var openItem = authoringWorkspace.getItem();
