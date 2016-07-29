@@ -720,18 +720,27 @@
 .authoring-header__item {
   display: flex;
   flex-grow: 1;
-  padding-bottom: 12px;
+  padding: 0 10px 12px;
   min-height: 24px;
   position: relative;
     label {
         display: inline-block;
-        width: 105px;
+        min-width: 75px;
         font-size: 11px;
+        line-height: 12px;
         margin: 0;
         color: @sd-text-label;
         padding-right: 5px;
         padding-top: 4px;
         font-weight: 500;
+    }
+
+    &.template-schedule {
+      padding: 0 0 12px;
+      label {
+        width: 105px;
+        line-height: inherit;
+      }
     }
 
     input.slugline {

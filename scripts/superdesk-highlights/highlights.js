@@ -204,7 +204,6 @@
             templateUrl: 'scripts/superdesk-highlights/views/mark_highlights_dropdown_directive.html',
             link: function(scope) {
 
-                scope.multiMark = true;
                 scope.markItem = function(highlight) {
                     angular.forEach(multi.getItems(), function(item) {
                         item.multiSelect = true;
@@ -223,7 +222,12 @@
                 };
 
                 highlightsService.get(desks.getCurrentDeskId()).then(function(result) {
-                    scope.highlights = result._items;
+                    scope.highlights = [];
+                    result._items.forEach(function(item) {
+                        if (!item.desks.length) {
+                            scope.highlights.push(item);
+                        }
+                    });
                 });
             }
         };
