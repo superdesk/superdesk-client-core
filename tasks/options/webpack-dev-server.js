@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = function(grunt) {
     var isModule = require('fs').existsSync('./node_modules/superdesk-core');
     var rewrite = {
@@ -24,6 +26,21 @@ module.exports = function(grunt) {
                 '/images/*': rewrite
             } : {},
             webpack: {
+                devtool: 'eval',
+                debug: true
+            }
+        },
+        docs: {
+            keepAlive: true,
+            contentBase: './docs',
+            webpack: {
+                entry: {
+                    index: 'docs/index'
+                },
+                output: {
+                    path: path.join(process.cwd(), 'docs'),
+                    publicPath: 'docs/'
+                },
                 devtool: 'eval',
                 debug: true
             }

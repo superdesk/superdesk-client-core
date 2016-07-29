@@ -43,13 +43,8 @@ module.exports = function(grunt) {
 
     grunt.registerTask('docs', [
         'clean',
-        'less:docs',
-        'cssmin',
-        'template:docs',
-        'connect:test',
-        'open:docs',
-        'ngtemplates:core',
-        'watch'
+        'ngtemplates:docs',
+        'webpack-dev-server:docs'
     ]);
 
     grunt.registerTask('server', [
