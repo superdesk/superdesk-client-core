@@ -235,11 +235,11 @@
             delete template.hasCrops;
             template.data.headline = trimSpaces(template.data.headline);
             template.data.body_html = trimSpaces(template.data.body_html);
+            template.data = this.pickItemData(template.data);
             // certain field are not required for kill template
             if (template && template.template_type === 'kill') {
                 template = _.omit(template, KILL_TEMPLATE_IGNORE_FIELDS);
             }
-
             return api.save('content_templates', orig, template);
         };
 
