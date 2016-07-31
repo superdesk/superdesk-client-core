@@ -3093,7 +3093,8 @@ import 'angular-history/history.js';
             link: function (scope) {
                 if (scope.action === 'kill') {
                     // kill template is applied on the item.
-                    var fields = _.union(_.keys(CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated']);
+                    // task is required to get the desk name.
+                    var fields = _.union(_.keys(CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated', 'task']);
                     var item = {
                         template_name: 'kill', item: _.pick(scope.item, fields)
                     };
