@@ -1269,6 +1269,31 @@
         };
     }
 
+    function MultipleEmailsValidation() {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, elem, attrs, ctrl) {
+                /* jshint maxlen:250 */
+                var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+                /* jshint maxlen:250 */
+                ctrl.$validators.multipleEmails = function(modelValue, viewValue) {
+                    if (ctrl.$isEmpty(modelValue)) {
+                        return true;
+                    }
+
+                    var emails = modelValue.split(',');
+
+                    var validity = emails.map(function(email) {
+                        return EMAIL_REGEXP.test(email);
+                    });
+
+                    return validity.every(valid => valid === true);
+                };
+            }
+        };
+    }
+
     /**
      * Loading indicator directive
      *
@@ -1324,5 +1349,6 @@
         .directive('sdMediaQuery', mediaQuery)
         .directive('sdFocusElement', focusElement)
         .directive('sdValidationError', validationDirective)
-        .directive('sdLoading', LoadingDirective);
+        .directive('sdLoading', LoadingDirective)
+        .directive('sdMultipleEmails', MultipleEmailsValidation);
 })();
