@@ -231,4 +231,39 @@ describe('superdesk ui', function() {
             expect(config.ui.italicAbstract).toBeTruthy();
         }));
     });
+
+    describe('multiple emails', function() {
+        var scope, form, html;
+        html = '<form name="form">' +
+                    '<input type="text" name="email" ng-model="model.email" required sd-multiple-emails> ' +
+               '</form>';
+        beforeEach(inject(function($compile, $rootScope) {
+            scope = $rootScope.$new();
+            scope.model = {'email': null};
+            $compile(html)(scope);
+            scope.$digest();
+            form = scope.form;
+        }));
+
+        it('validates single email address', function() {
+            form.email.$setViewValue('test@test.com');
+            scope.$digest();
+            expect(scope.model.email).toEqual('test@test.com');
+            expect(form.email.$valid).toBe(true);
+        });
+
+        it('validates multiple email address', function() {
+            form.email.$setViewValue('test@test.com,test@test.com');
+            scope.$digest();
+            expect(scope.model.email).toEqual('test@test.com,test@test.com');
+            expect(form.email.$valid).toBe(true);
+        });
+
+        it('should not validate if one of the email address is wrong', function() {
+            form.email.$setViewValue('test@test.com,test');
+            scope.$digest();
+            expect(form.email.$valid).toBe(false);
+            expect(scope.model.email).toBe(undefined);
+        });
+    });
 });
