@@ -8,18 +8,25 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
     var vm = this;
     function Block(attrs) {
         var self = this;
-        angular.extend(self, {
-            body: attrs && attrs.body || '',
-            loading: attrs && attrs.loading || false,
-            caption: attrs && attrs.caption || undefined,
-            blockType: attrs && attrs.blockType || 'text',
-            embedType: attrs && attrs.embedType || undefined,
-            association: attrs && attrs.association || undefined,
+        if (!angular.isDefined(attrs)) {
+            attrs = {};
+        }
+        angular.extend(self, _.defaults({
+            body: attrs.body,
+            loading: attrs.loading,
+            caption: attrs.caption,
+            blockType: attrs.blockType,
+            embedType: attrs.embedType,
+            association: attrs.association,
             lowerAddEmbedIsExtended: undefined,
             showAndFocusLowerAddAnEmbedBox: function() {
                 self.lowerAddEmbedIsExtended = true;
-            },
-        });
+            }
+        }, {
+            body: '<p><br></p>',
+            loading: false,
+            blockType: 'text'
+        }));
     }
     /**
     * For the given blocks, merge text blocks when there are following each other and add empty text block arround embeds if needed
@@ -100,7 +107,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 // if it's not a paragraph or an embed, we update the current block
             } else {
                 if (block === undefined) {
-                    block = new Block();
+                    block = new Block({body: ''});
                 }
                 // we want the outerHTML (ex: '<b>text</b>') or the node value for text and comment
                 block.body += (element.outerHTML || element.nodeValue || '').trim();
