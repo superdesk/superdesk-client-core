@@ -279,7 +279,8 @@ function Monitoring() {
     };
 
     this.unspikeMultipleItems = function() {
-        return element(by.css('[ng-click="action.unspikeItems()"]')).click();
+        element(by.css('[ng-click="action.unspikeItems()"]')).click();
+        return element(by.partialButtonText('send')).click();
     };
 
     this.unspikeItem = function(item) {
@@ -287,7 +288,8 @@ function Monitoring() {
         browser.actions().mouseMove(itemElem).perform();
         itemElem.element(by.className('icon-dots-vertical')).click();
         var menu = element(by.css('.dropdown-menu.open'));
-        return menu.element(by.partialLinkText('Unspike')).click();
+        menu.element(by.partialLinkText('Unspike')).click();
+        return element(by.partialButtonText('send')).click();
     };
 
     this.openItemMenu = function(group, item) {

@@ -97,8 +97,8 @@ import BaseListController from './controllers/baseList';
         //ToDo: Track upcoming item:move event as well for updateCount.
     }
 
-    SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', '$q'];
-    function SpikeService($location, api, notify, gettext, $q) {
+    SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', 'send', '$q'];
+    function SpikeService($location, api, notify, gettext, send, $q) {
         var SPIKE_RESOURCE = 'archive_spike',
             UNSPIKE_RESOURCE = 'archive_unspike';
 
@@ -140,7 +140,24 @@ import BaseListController from './controllers/baseList';
          * @param {Object} item
          */
         this.unspike = function(item) {
-            return api.update(UNSPIKE_RESOURCE, item, {})
+            return getUnspikeDestination().then(config => {
+                return unspike(item, config);
+            });
+        };
+
+        function getUnspikeDestination() {
+            return send.startConfig();
+        }
+
+        function unspike(item, config) {
+            var data = {
+                task: {
+                    desk: config.desk || null,
+                    stage: config.stage || null
+                }
+            };
+
+            return api.update(UNSPIKE_RESOURCE, item, data)
                 .then(function() {
                     if ($location.search()._id === item._id) {
                         $location.search('_id', null);
@@ -149,7 +166,7 @@ import BaseListController from './controllers/baseList';
                 }, function(response) {
                     item.error = response;
                 });
-        };
+        }
 
         /**
          * Unspike given items.
@@ -157,7 +174,11 @@ import BaseListController from './controllers/baseList';
          * @param {Object} items
          */
         this.unspikeMultiple = function unspikeMultiple(items) {
-            items.forEach(this.unspike);
+            getUnspikeDestination().then(config => {
+                items.forEach(item => {
+                    unspike(item, config);
+                });
+            });
         };
     }
 

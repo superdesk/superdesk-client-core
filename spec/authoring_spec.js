@@ -251,7 +251,7 @@ describe('authoring', function() {
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(3);
         expect(authoring.getHistoryItem(1).getText()).toMatch(/Spiked from Politic Desk\/one by .*/);
-        expect(authoring.getHistoryItem(2).getText()).toMatch(/Unspiked to Politic Desk\/one by .*/);
+        expect(authoring.getHistoryItem(2).getText()).toMatch(/Unspiked to Politic Desk\/two by .*/);
         authoring.close();
 
         //view item history duplicate operation

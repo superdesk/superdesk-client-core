@@ -1587,6 +1587,7 @@ import BaseListController from 'superdesk-archive/controllers/baseList';
 
         this.config = null;
         this.getConfig = getConfig;
+        this.startConfig = startConfig;
 
         var vm = this;
 
@@ -1701,6 +1702,19 @@ import BaseListController from 'superdesk-archive/controllers/baseList';
          */
         function getConfig() {
             return vm.config;
+        }
+
+        /**
+         * Start config via send item sidebar
+         *
+         * @return {Promise}
+         */
+        function startConfig() {
+            vm.config = $q.defer();
+            return vm.config.promise.then(function(val) {
+                vm.config = null;
+                return val;
+            });
         }
     }
 

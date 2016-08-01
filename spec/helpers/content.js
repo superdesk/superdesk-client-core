@@ -136,10 +136,11 @@ function Content() {
 
     this.unspikeItems = function() {
         element(by.css('[ng-click="action.unspikeItems()"]')).click();
+        element(by.partialButtonText('send')).click();
     };
 
     this.selectSpikedList = function() {
-        element(by.css('[ng-click="toggleSpike()"')).click();
+        nav('workspace/spike-monitoring');
     };
 
     this.createPackageFromItems = function() {

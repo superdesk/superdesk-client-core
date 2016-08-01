@@ -3,7 +3,8 @@
 
 var openUrl = require('./helpers/utils').open,
     workspace = require('./helpers/pages').workspace,
-    content = require('./helpers/pages').content;
+    content = require('./helpers/pages').content,
+    monitoring = require('./helpers/monitoring');
 
 describe('spike', function() {
 
@@ -31,52 +32,20 @@ describe('spike', function() {
     });
 
     it('can spike and unspike multiple items', function() {
-        workspace.switchToDesk('PERSONAL');
-        content.setListView();
+        monitoring.openMonitoring();
 
-        var personalCount;
-        content.getItems().count().then(function(count) {
-            personalCount = count;
-        });
+        monitoring.selectItem(2, 2);
+        monitoring.selectItem(2, 3);
 
-        content.selectItem(0);
-        content.selectItem(1);
         content.spikeItems();
 
-        // check that there are 2 fewer items than before
-        browser.wait(function() {
-            return content.getItems().count().then(function(count) {
-                return count === (personalCount - 2);
-            });
-        }, 3000);
-
-        content.selectSpikedList();
-
-        // check that there are 2 items
-        browser.wait(function() {
-            return content.getItems().count().then(function(count) {
-                return count === 2;
-            });
-        }, 3000);
+        monitoring.showSpiked();
+        expect(monitoring.getAllItems().count()).toBe(2);
 
         content.selectItem(0);
         content.selectItem(1);
         content.unspikeItems();
 
-        // check that there are 0 items
-        browser.wait(function() {
-            return content.getItems().count().then(function(count) {
-                return count === 0;
-            });
-        }, 3000);
-
-        content.selectSpikedList();
-
-        // check that there are personalCount items
-        browser.wait(function() {
-            return content.getItems().count().then(function(count) {
-                return count === personalCount;
-            });
-        }, 3000);
+        expect(monitoring.getAllItems().count()).toBe(0);
     });
 });

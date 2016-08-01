@@ -2163,7 +2163,8 @@ import 'angular-history/history.js';
                         return scope.mode === 'ingest' ||
                                 scope.mode === 'personal' ||
                                 scope.mode === 'monitoring' ||
-                                (scope.mode === 'authoring' && scope.isSendEnabled() && scope.itemActions.send);
+                                (scope.mode === 'authoring' && scope.isSendEnabled() && scope.itemActions.send) ||
+                                scope.mode === 'spike';
                     }
                 };
 
@@ -2330,7 +2331,7 @@ import 'angular-history/history.js';
                         itemType = typesList.length === 1 ? typesList[0] : null;
                     }
 
-                    return scope.mode === 'authoring' || itemType === 'archive';
+                    return scope.mode === 'authoring' || itemType === 'archive' || scope.mode === 'spike';
                 };
 
                 /**
