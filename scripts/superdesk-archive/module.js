@@ -277,7 +277,7 @@ import BaseListController from './controllers/baseList';
          * @return boolean if the state of the item is in one of the published states, false otherwise.
          */
         this.isPublished = function(item) {
-            return _.contains(['published', 'killed', 'scheduled', 'corrected'], item.state);
+            return _.includes(['published', 'killed', 'scheduled', 'corrected'], item.state);
         };
 
         /***

@@ -3,7 +3,7 @@
 
 describe('superdesk.features module', function() {
 
-    beforeEach(module('superdesk.features'));
+    beforeEach(window.module('superdesk.features'));
     beforeEach(inject(function(urls, $q) {
         spyOn(urls, 'links').and.returnValue($q.when({users: 'http://users'}));
     }));

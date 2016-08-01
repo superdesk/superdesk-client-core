@@ -173,7 +173,7 @@
                 var termsFileType = {terms: {'type': JSON.parse(card.fileType)}};
 
                 // Normal package
-                if (_.contains(JSON.parse(card.fileType), 'composite')) {
+                if (_.includes(JSON.parse(card.fileType), 'composite')) {
                     termsFileType = {and: [
                         {bool: {must_not: {'exists':{'field': 'highlight'}}}},
                         {bool: {must_not: {term: {'package_type': 'takes'}}}},
@@ -181,19 +181,19 @@
                     ]};
                 }
 
-                if (_.contains(JSON.parse(card.fileType), 'highlightsPackage') &&
-                    _.contains(JSON.parse(card.fileType), 'takesPackage')) {
+                if (_.includes(JSON.parse(card.fileType), 'highlightsPackage') &&
+                    _.includes(JSON.parse(card.fileType), 'takesPackage')) {
                     query.filter({or: [
                         termsHighlightsPackage,
                         termsTakesPackage,
                         termsFileType
                     ]});
-                } else if (_.contains(JSON.parse(card.fileType), 'takesPackage')) {
+                } else if (_.includes(JSON.parse(card.fileType), 'takesPackage')) {
                     query.filter({or: [
                         termsTakesPackage,
                         termsFileType
                     ]});
-                } else if (_.contains(JSON.parse(card.fileType), 'highlightsPackage')) {
+                } else if (_.includes(JSON.parse(card.fileType), 'highlightsPackage')) {
                     query.filter({or: [
                         termsHighlightsPackage,
                         termsFileType

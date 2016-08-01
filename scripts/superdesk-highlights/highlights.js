@@ -8,6 +8,8 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
+import React from 'react';
+
 (function() {
 
     'use strict';

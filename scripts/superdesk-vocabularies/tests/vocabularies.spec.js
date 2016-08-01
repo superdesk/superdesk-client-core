@@ -2,10 +2,10 @@
 describe('vocabularies', function() {
     'use strict';
 
-    beforeEach(module('superdesk.publish'));
-    beforeEach(module('superdesk.vocabularies'));
-    beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.vocabularies'));
+    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     it('can fetch vocabularies', inject(function(api, vocabularies, $q, $rootScope) {
         var fixture = {foo: 'bar'};

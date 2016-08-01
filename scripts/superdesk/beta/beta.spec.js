@@ -3,7 +3,7 @@
 
     describe('beta service', function() {
 
-        beforeEach(module('superdesk.services.beta'));
+        beforeEach(window.module('superdesk.services.beta'));
 
         it('can filter out sd-beta from html when beta is off',
         inject(function(betaService, $rootScope, $http, $httpBackend) {

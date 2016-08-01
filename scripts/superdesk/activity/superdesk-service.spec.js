@@ -36,9 +36,9 @@
                 });
             });
 
-        beforeEach(module('superdesk.activity'));
-        beforeEach(module('superdesk.activity.test'));
-        beforeEach(module('superdesk.mocks'));
+        beforeEach(window.module('superdesk.activity'));
+        beforeEach(window.module('superdesk.activity.test'));
+        beforeEach(window.module('superdesk.mocks'));
 
         it('exists', inject(function(superdesk) {
             expect(superdesk).toBeDefined();

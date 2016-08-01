@@ -1,9 +1,9 @@
 describe('templates', function() {
     'use strict';
 
-    beforeEach(module('superdesk.session'));
-    beforeEach(module('superdesk.templates'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.session'));
+    beforeEach(window.module('superdesk.templates'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     describe('templates widget', function() {
 

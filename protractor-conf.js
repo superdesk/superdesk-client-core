@@ -55,7 +55,7 @@ var config = {
             this.specDone = function(result) {
                 if (result.failedExpectations.length > 0) {
                     var name = result.fullName.split(' ');
-                    console.log('at Object.<anonymous> (spec/' + name[0] + '_spec.js:0:0)');
+                    console.log('at ' + name[0] + ': ' + result.description);
                 }
             };
         }

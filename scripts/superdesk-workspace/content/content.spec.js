@@ -3,10 +3,10 @@
 
 describe('superdesk.workspace.content', function() {
 
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.desks'));
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.workspace.content'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.workspace.content'));
 
     describe('content service', function() {
         var done;
@@ -177,8 +177,8 @@ describe('superdesk.workspace.content', function() {
     });
 
     describe('content profiles controller', function() {
-        beforeEach(module('superdesk.mocks'));
-        beforeEach(module('superdesk.workspace.content'));
+        beforeEach(window.module('superdesk.mocks'));
+        beforeEach(window.module('superdesk.workspace.content'));
 
         it('should load profiles on start', inject(function($controller, content, $q, $rootScope) {
             spyOn(content, 'getTypes').and.returnValue($q.when('list'));
@@ -219,7 +219,7 @@ describe('superdesk.workspace.content', function() {
     describe('content profiles schema editor', function() {
         var compile;
 
-        beforeEach(module('superdesk.workspace.content'));
+        beforeEach(window.module('superdesk.workspace.content'));
 
         beforeEach(inject(function(_$compile_, _$rootScope_) {
             compile = function(props) {

@@ -4,8 +4,8 @@ describe('ingest', function() {
 
     describe('send service', function() {
 
-        beforeEach(module('superdesk.ingest.send'));
-        beforeEach(module('superdesk.templates-cache'));
+        beforeEach(window.module('superdesk.ingest.send'));
+        beforeEach(window.module('superdesk.templates-cache'));
 
         it('can send an item', inject(function(send, api, $q, $rootScope) {
             spyOn(api, 'save').and.returnValue($q.when({_created: 'now'}));
@@ -67,7 +67,7 @@ describe('ingest', function() {
 
     describe('registering activities in superdesk.ingest module', function () {
 
-        beforeEach(module('superdesk.ingest'));
+        beforeEach(window.module('superdesk.ingest'));
 
         describe('the "archive" activity', function () {
             var activity;

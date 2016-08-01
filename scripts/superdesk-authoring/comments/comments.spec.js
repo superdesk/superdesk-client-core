@@ -2,7 +2,7 @@
 
 describe('item comments', function() {
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.provider('api', function() {
             this.api = function() {};
             this.$get = function() {
@@ -17,7 +17,7 @@ describe('item comments', function() {
         });
     }));
 
-    beforeEach(module('superdesk.authoring.comments'));
+    beforeEach(window.module('superdesk.authoring.comments'));
 
     it('can fetch comments for an item', inject(function(commentsService, api, $rootScope, $q) {
 

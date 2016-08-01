@@ -9,14 +9,14 @@ describe('Tag Service', function() {
 
     var fakeMetadata;
 
-    beforeEach(module('superdesk.search'));
-    beforeEach(module('superdesk.desks'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.search'));
+    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(module(function ($provide) {
+    beforeEach(window.module(function ($provide) {
         fakeMetadata = {
             values: {subjectcodes: []},
             fetchSubjectcodes: jasmine.createSpy()

@@ -3,8 +3,8 @@
 describe('content filters', function() {
 
     var $scope;
-    beforeEach(module('superdesk.content_filters'));
-    beforeEach(module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.content_filters'));
+    beforeEach(window.module('superdesk.mocks'));
 
     beforeEach(inject(function($rootScope, $controller, contentFilters,
         $q, api, $location, $window, notify) {

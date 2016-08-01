@@ -4,8 +4,8 @@
 
     describe('superdesk.datetime module', function() {
 
-        beforeEach(module('superdesk.mocks'));
-        beforeEach(module('superdesk.datetime'));
+        beforeEach(window.module('superdesk.mocks'));
+        beforeEach(window.module('superdesk.datetime'));
 
         describe('reldate filter', function() {
             it('can convert js Date into a string', inject(function($filter) {

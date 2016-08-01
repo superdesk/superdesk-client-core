@@ -8,6 +8,8 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
+import React from 'react';
+
 (function() {
 
     'use strict';
@@ -527,12 +529,12 @@
                     var url = '';
                     var endpoint = '';
 
-                    if (_.contains(['archive', 'legal_archive'], scope.item.location)) {
+                    if (_.includes(['archive', 'legal_archive'], scope.item.location)) {
                         url = scope.item.location + '/' + scope.item.residRef;
                         url += scope.item._current_version ? '?version=' + scope.item._current_version: '';
                         endpoint = scope.item.location;
                     } else {
-                        if (_.contains('ingest', scope.item.location)) {
+                        if (_.includes('ingest', scope.item.location)) {
                             url = scope.item.location + '/' + scope.item.residRef;
                             endpoint = 'ingest';
                         } else {
@@ -548,7 +550,7 @@
                             scope.data.abstract = $sce.trustAsHtml(scope.data.abstract);
                         }
                         scope.isLocked = lock.isLocked(scope.data);
-                        scope.isPublished = _.contains(['published', 'corrected'], scope.data.state);
+                        scope.isPublished = _.includes(['published', 'corrected'], scope.data.state);
                         scope.isKilled =  scope.data.state === 'killed';
                     }, function(response) {
                         scope.error = true;

@@ -13,3 +13,7 @@ if (Object.keys(lang).length > 0) {
         }
     }]);
 }
+
+import map from './language-mapping-list';
+
+export default map;

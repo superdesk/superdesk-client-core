@@ -13,9 +13,9 @@ var template = [
 describe('sdUserUnique Directive', function() {
     var scope;
 
-    beforeEach(module('superdesk.users'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module(function($provide) {
+    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module(function($provide) {
         $provide.service('api', function($q) {
             this.users = {
                 // make it find foo but not any other
@@ -100,10 +100,10 @@ describe('sdUserUnique Directive', function() {
 describe('user edit directive', function() {
     var noop = angular.noop;
 
-    beforeEach(module('superdesk.users'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.service('gettext', noop);
         $provide.service('api', noop);
         $provide.service('notify', noop);

@@ -3,8 +3,8 @@
 
     describe('analytics', function() {
 
-        beforeEach(module('superdesk.analytics'));
-        beforeEach(module(function($provide) {
+        beforeEach(window.module('superdesk.analytics'));
+        beforeEach(window.module(function($provide) {
             $provide.constant('config', {
                 analytics: {piwik: {}, ga: {}}
             });

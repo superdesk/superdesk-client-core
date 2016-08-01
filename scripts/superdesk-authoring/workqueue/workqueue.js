@@ -73,7 +73,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
             var updateItems = _.keys(data.items);
             if (updateItems.length) {
                 var item = _.find(workqueue.items, function(item) {
-                    return _.contains(updateItems, item._id);
+                    return _.includes(updateItems, item._id);
                 });
 
                 if (item) {

@@ -12,8 +12,8 @@
 
         beforeEach(function() {
             localStorage.clear();
-            module('superdesk.services.storage');
-            module('superdesk.session');
+            window.module('superdesk.services.storage');
+            window.module('superdesk.session');
         });
 
         it('has identity and token property', inject(function (session) {

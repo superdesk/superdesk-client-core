@@ -142,7 +142,7 @@
         };
 
         // try to reproduce data model of vocabulary:
-        var model = _.mapValues(_.indexBy(
+        var model = _.mapValues(_.keyBy(
             _.uniq(_.flatten(
                 _.map($scope.vocabulary.items, function(o) { return _.keys(o); })
             ))

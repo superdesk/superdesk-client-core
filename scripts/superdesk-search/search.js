@@ -131,7 +131,7 @@
          */
         this.setFilters = function(search) {
             _.forOwn(search, function(value, key) {
-                if (_.contains(['priority', 'urgency'], key)) {
+                if (_.includes(['priority', 'urgency'], key)) {
                     search[key] = JSON.stringify(value);
                 }
             });
@@ -1381,7 +1381,7 @@
                      */
                     function getFilters(search) {
                         _.forOwn(search, function(value, key) {
-                            if (_.contains(['priority', 'urgency'], key)) {
+                            if (_.includes(['priority', 'urgency'], key)) {
                                 search[key] = JSON.parse(value);
                             }
                         });
@@ -2218,7 +2218,7 @@
                     scope.multi = multi;
                     scope.$watch(multi.getItems, detectType);
                     scope.$on('item:lock', function(_e, data) {
-                        if (_.contains(multi.getIds(), data.item)) {
+                        if (_.includes(multi.getIds(), data.item)) {
                             // locked item is in the selections so update lock info
                             var selectedItems = multi.getItems();
                             _.find(selectedItems, function(_item) {
@@ -2365,7 +2365,7 @@
             var canPackage = true;
             multi.getItems().forEach(function(item) {
                 canPackage = canPackage && item._type !== 'archived' && !item.lock_user &&
-                    !_.contains(['ingested', 'spiked', 'killed', 'draft'], item.state);
+                    !_.includes(['ingested', 'spiked', 'killed', 'draft'], item.state);
             });
             return canPackage;
         };

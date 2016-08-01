@@ -1,8 +1,8 @@
 'use strict';
 
 describe('search service', function() {
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.search'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.search'));
 
     it('can create base query', inject(function(search, session) {
         session.identity = {_id: 'foo'};
@@ -110,9 +110,9 @@ describe('search service', function() {
 
         var scope;
 
-        beforeEach(module('superdesk.archive'));
-        beforeEach(module('superdesk.packaging'));
-        beforeEach(module('superdesk.authoring.multiedit'));
+        beforeEach(window.module('superdesk.archive'));
+        beforeEach(window.module('superdesk.packaging'));
+        beforeEach(window.module('superdesk.authoring.multiedit'));
 
         beforeEach(inject(function($rootScope, $compile) {
             var elem = $compile('<div sd-multi-action-bar></div>')($rootScope.$new());
@@ -152,7 +152,7 @@ describe('sdSearchFacets directive', function () {
         isoScope,
         $element;  // directive's DOM element
 
-    beforeEach(module(
+    beforeEach(window.module(
         'superdesk.authoring.metadata',
         'superdesk.searchProviders',
         'superdesk.search',
@@ -163,7 +163,7 @@ describe('sdSearchFacets directive', function () {
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(module(function ($provide) {
+    beforeEach(window.module(function ($provide) {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',

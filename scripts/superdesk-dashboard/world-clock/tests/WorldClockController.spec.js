@@ -12,7 +12,7 @@ describe('WorldClockController', function () {
         fakeTzdata,
         scope;
 
-    beforeEach(module('superdesk.dashboard.world-clock'));
+    beforeEach(window.module('superdesk.dashboard.world-clock'));
 
     beforeEach(inject(function ($controller, $rootScope, $q) {
         scope = $rootScope.$new();

@@ -7,21 +7,21 @@ describe('authoring', function() {
     var USER = 'user:1';
     var ITEM = {guid: GUID};
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('lodash', _);
     }));
 
-    beforeEach(module('superdesk.publish'));
-    beforeEach(module('superdesk.editor'));
-    beforeEach(module('superdesk.preferences'));
-    beforeEach(module('superdesk.archive'));
-    beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.auth'));
-    beforeEach(module('superdesk.workspace.content'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.privileges'));
-    beforeEach(module('superdesk.desks'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.editor'));
+    beforeEach(window.module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.archive'));
+    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.auth'));
+    beforeEach(window.module('superdesk.workspace.content'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.privileges'));
+    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function($window) {
         $window.onbeforeunload = angular.noop;
@@ -372,10 +372,10 @@ describe('authoring', function() {
 });
 
 describe('cropImage', function() {
-    beforeEach(module('superdesk.publish'));
-    beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     it('can change button label for apply/edit crop',
     inject(function($rootScope, $compile, $q, metadata) {
@@ -423,9 +423,9 @@ describe('cropImage', function() {
 });
 
 describe('autosave', function() {
-    beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     it('can fetch an autosave for item locked by user and is editable',
         inject(function(autosave, api, $q, $rootScope) {
@@ -486,9 +486,9 @@ describe('autosave', function() {
 });
 
 describe('lock service', function() {
-    beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     var user = {_id: 'user'};
     var sess = {_id: 'sess'};
@@ -553,7 +553,7 @@ describe('authoring actions', function() {
      */
     function allowedActions(actions, keys) {
         _.forOwn(actions, function(value, key) {
-            if (_.contains(keys, key)) {
+            if (_.includes(keys, key)) {
                 expect(value).toBeTruthy();
             } else {
                 expect(value).toBeFalsy();
@@ -561,10 +561,10 @@ describe('authoring actions', function() {
         });
     }
 
-    beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.desks'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function(desks, $q) {
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: userDesks}));
@@ -1716,7 +1716,7 @@ describe('authoring workspace', function() {
         lockedItem = {_id: item._id, _editable: true};
     });
 
-    beforeEach(module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.authoring'));
 
     beforeEach(inject(function($q, authoring) {
         spyOn(authoring, 'open').and.returnValue($q.when(lockedItem));
@@ -1811,8 +1811,8 @@ describe('authoring workspace', function() {
 
 describe('authoring container directive', function() {
 
-    beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function($templateCache) {
         // avoid loading of authoring
@@ -1906,8 +1906,8 @@ describe('authoring container directive', function() {
 });
 
 describe('authoring themes', function () {
-    beforeEach(module('superdesk.preferences'));
-    beforeEach(module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.authoring'));
 
     beforeEach(inject(function ($q, preferencesService) {
         spyOn(preferencesService, 'get').and.returnValue($q.when({'editor:theme': ['theme:proofreadTheme']}));
@@ -1956,10 +1956,10 @@ describe('authoring themes', function () {
 });
 
 describe('send item directive', function() {
-    beforeEach(module('superdesk.editor'));
-    beforeEach(module('superdesk.preferences'));
-    beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.editor'));
+    beforeEach(window.module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function($templateCache) {
         $templateCache.put('scripts/superdesk-authoring/views/send-item.html', '');

@@ -2,14 +2,14 @@
 
 describe('text editor', function() {
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}});
     }));
 
-    beforeEach(module('superdesk.publish'));
-    beforeEach(module('superdesk.config'));
-    beforeEach(module('superdesk.editor2'));
-    beforeEach(module('superdesk.editor.spellcheck'));
+    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.config'));
+    beforeEach(window.module('superdesk.editor2'));
+    beforeEach(window.module('superdesk.editor.spellcheck'));
 
     beforeEach(function() {
         // remove all elements from body

@@ -11,7 +11,7 @@
     describe('timeout http interceptor', function() {
         var service;
 
-        beforeEach(module(function($provide) {
+        beforeEach(window.module(function($provide) {
             $provide.service('request', RequestService);
             $provide.service('upload', function() {
                 this.isUpload = function() {
