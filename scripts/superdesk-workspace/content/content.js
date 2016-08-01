@@ -311,8 +311,6 @@
             scope: true,
             templateUrl: 'scripts/superdesk-workspace/content/views/sd-content-create.html',
             link: function(scope) {
-                var NUM_ITEMS = 5;
-
                 /**
                  * Start editing given item in sidebar editor
                  *
@@ -320,6 +318,14 @@
                  */
                 function edit(item) {
                     authoringWorkspace.edit(item);
+                }
+
+                function getRecentTemplates(deskId) {
+                    var NUM_ITEMS = 5;
+
+                    return templates.getRecentTemplates(desks.activeDeskId, NUM_ITEMS).then(function(result) {
+                        scope.contentTemplates = result._items;
+                    });
                 }
 
                 /**
@@ -352,10 +358,7 @@
                  */
                 scope.createFromTemplate = function(template) {
                     content.createItemFromTemplate(template).then(edit).then(function() {
-                        templates.getRecentTemplates(desks.activeDeskId, NUM_ITEMS)
-                        .then(function(result) {
-                            scope.contentTemplates = result;
-                        });
+                        getRecentTemplates(desks.activeDeskId);
                     });
                 };
 
@@ -372,9 +375,7 @@
                     scope.$watch(function() {
                         return desks.active.desk;
                     }, function(activeDeskId) {
-                        templates.getRecentTemplates(activeDeskId, NUM_ITEMS).then(function(result) {
-                            scope.contentTemplates = result;
-                        });
+                        getRecentTemplates(activeDeskId);
 
                         content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null)
                             .then(function(profiles) {

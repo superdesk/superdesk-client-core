@@ -98,7 +98,8 @@
         this.fetchAllTemplates = function(page, pageSize, type, templateName) {
             var params = {
                 page: page || 1,
-                max_results: pageSize || PAGE_SIZE
+                max_results: pageSize || PAGE_SIZE,
+                sort: 'template_name'
             };
 
             var criteria = {};
@@ -128,7 +129,8 @@
         this.fetchTemplatesByUserDesk = function (user, desk, page, pageSize, type, templateName) {
             var params = {
                 page: page || 1,
-                max_results: pageSize || PAGE_SIZE
+                max_results: pageSize || PAGE_SIZE,
+                sort: 'template_name'
             };
 
             var criteria = {};

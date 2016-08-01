@@ -80,6 +80,7 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 25,
                 page: 2,
+                sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[' +
                 '{"template_desks":{"$exists":false},"is_public":true},' +
                 '{"template_desks":{"$eq":[]},"is_public":true}]},' +
@@ -91,6 +92,7 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
                 page: 1,
+                sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
                        '{"template_desks":{"$eq":[]},"is_public":true}]},' +
                        '{"user":"foo","is_public":false}],"template_type":"create"}]}'
@@ -101,6 +103,7 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
                 page: 2,
+                sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
                 '{"template_desks":{"$eq":[]},"is_public":true},' +
                 '{"template_desks":{"$in":["desk1"]},"is_public":true}]},' +
@@ -112,6 +115,7 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
                 max_results: 10,
+                sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
                 '{"template_desks":{"$eq":[]},"is_public":true}]},' +
                 '{"user":"foo","is_public":false}],' +
@@ -165,6 +169,7 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
                 max_results: 10,
+                sort: 'template_name',
                 where: '{"$and":[{"$or":[{"user":"foo"}]}]}'
             });
         }));
@@ -176,6 +181,7 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
                 max_results: 50,
+                sort: 'template_name',
                 where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}]}]}'
             });
         }));
@@ -187,6 +193,7 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
                 max_results: 50,
+                sort: 'template_name',
                 where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}],"template_type":"create"}]}'
             });
         }));
@@ -197,6 +204,7 @@ describe('templates', function() {
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
                 max_results: 50,
+                sort: 'template_name',
                 where: '{"$and":[{"$or":[{"user":"foo"}],' +
                 '"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}'
             });
