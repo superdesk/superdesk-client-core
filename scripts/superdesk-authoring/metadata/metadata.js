@@ -345,7 +345,7 @@ function MetaDropdownDirective($filter, keyboardManager) {
                 }
 
                 _.extend(scope.item, o);
-                scope.change({item: scope.item});
+                scope.change({item: scope.item, field: scope.field});
 
                 //retain focus on same dropdown control after selection.
                 _.defer (function() {
@@ -764,7 +764,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     $timeout(function() {
                         scope.$applyAsync(function () {
                             scope.postprocessing();
-                            scope.change({item: scope.item});
+                            scope.change({item: scope.item, field: scope.field});
                         });
                     }, 50, false);
 
@@ -810,7 +810,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 }
 
                 scope.terms = $filter('sortByName')(scope.terms);
-                scope.change({item: scope.item});
+                scope.change({item: scope.item, field: scope.field});
                 elem.find('.dropdown-toggle').focus(); // retain focus
             };
 
