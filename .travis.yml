@@ -25,6 +25,7 @@ cache:
         - $HOME/.npm
 
 before_install:
+    - rm -f .npm/*.lock
     - npm config set loglevel warn
     - npm install -g bower grunt-cli
     - export DISPLAY=:99.0 && /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x24
@@ -53,4 +54,3 @@ script:
 
 after_script:
     - killall -9 python
-    - rm .npm/*.lock

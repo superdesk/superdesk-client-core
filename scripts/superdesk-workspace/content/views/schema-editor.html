@@ -33,6 +33,9 @@
                            <span class="error"
                                 ng-show="model.schema[id].minlength > model.schema[id].maxlength && model.schema[id].maxlength"
                                 translate>Min length shouldn't be bigger than max length.</span>
+                           <span class="error"
+                                ng-show="model.schema[id].maxlength === 0"
+                                translate>Max length should be bigger than 0 or empty.</span>
                        </div>
                        <div class="field" ng-show="specs.type === 'string' || specs.type === 'integer' || options[id] || terms[id]">
                            <span translate>Default value:</span>
@@ -67,7 +70,7 @@
                                 type="text"
                                 class="input-medium"
                                 placeholder="{{ :: 'Not set' | translate }}"
-                                ng-model="model.editor[id].default" />
+                                ng-model="model.schema[id].default" />
                        </div>
                        <div class="field">
                            <span translate>Width:</span> <select class="input-medium" ng-model="model.editor[id].sdWidth">
