@@ -100,9 +100,15 @@
 
             <div class="text abstract" ng-show="selected.preview.abstract" sd-html-preview="selected.preview.abstract"></div>
 
+            <div class="text byline" ng-show="selected.preview.byline" sd-html-preview="selected.preview.byline"></div>
+            
+            <div class="text dateline" ng-show="selected.preview.dateline" sd-html-preview="selected.preview.dateline.text"></div>
+
             <div class="text body-text" ng-show="selected.preview.body_html" sd-html-preview="selected.preview.body_html"></div>
 
             <div class="text body-footer" ng-show="selected.preview.body_footer" sd-html-preview="selected.preview.body_footer"></div>
+           
+            <div class="text sign-off" ng-show="selected.preview.sign_off" sd-html-preview="selected.preview.sign_off"></div>
 
             <div class="composite-preview" ng-if="selected.preview.type === 'composite'">
                 <div sd-package data-item="selected.preview" data-setitem="openSingleItem(selected)"></div>
