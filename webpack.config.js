@@ -161,6 +161,12 @@ function getDefaults(grunt, buildParams) {
         spellcheckers: [],
 
         // override language translations
-        langOverride: {}
+        langOverride: {},
+
+        // app features
+        features: {
+            // tansa spellchecker
+            useTansaProofing: false
+        }
     };
 }

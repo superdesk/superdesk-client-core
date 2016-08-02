@@ -61,7 +61,7 @@ import 'superdesk-ingest';
 import 'superdesk-search-providers';
 
 // load spellcheckers
-if (appConfig.spellcheckers.indexOf('tansa') > -1) {
+if (appConfig.features.useTansaProofing) {
     require('superdesk-tansa');
 }
 
