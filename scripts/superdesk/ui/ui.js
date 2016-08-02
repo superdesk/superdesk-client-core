@@ -1284,11 +1284,11 @@
 
                     var emails = modelValue.split(',');
 
-                    var validity = emails.map(function(email) {
+                    function testEmail (email) {
                         return EMAIL_REGEXP.test(email);
-                    });
+                    }
 
-                    return validity.every(valid => valid === true);
+                    return emails.every(testEmail);
                 };
             }
         };
