@@ -1,13 +1,10 @@
-/* globals __SUPERDESK_CONFIG__: true */
-const appConfig = __SUPERDESK_CONFIG__;
+// Styles
+import 'index.less';
 
-// styles
-import 'styles/index.less';
-
-// vendor
+// Vendor
 import 'jquery-jcrop';
 
-// core
+// Core
 import 'superdesk/gettext';
 import 'superdesk/activity';
 import 'superdesk/analytics';
@@ -32,9 +29,8 @@ import 'superdesk/notify';
 import 'superdesk/ui';
 import 'superdesk/upload';
 import 'superdesk/superdesk';
-import 'superdesk/lang';
 
-// modules
+// Modules
 import 'superdesk-workspace';
 import 'superdesk-dashboard';
 import 'superdesk-users';
@@ -60,12 +56,6 @@ import 'superdesk-settings';
 import 'superdesk-ingest';
 import 'superdesk-search-providers';
 
-// load spellcheckers
-if (appConfig.features.useTansaProofing) {
-    require('superdesk-tansa');
-}
-
-// don't bootstrap in unit tests
-if (appConfig.buildParams.noBootstrap !== true) {
-    require('superdesk/bootstrap');
-}
+// App
+import 'app/scripts/translations';
+import 'app/main';

@@ -1,9 +1,6 @@
 
 module.exports = {
-    options: {
-        jshintrc: '.jshintrc',
-        ignores: '!../../scripts/superdesk/lang/lang.generated.js'
-    },
+    options: {jshintrc: '.jshintrc'},
     all: require('./files').scripts,
     docs: ['<%= appDir %>/docs/**/*.js']
 };

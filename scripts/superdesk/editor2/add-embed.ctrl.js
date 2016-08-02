@@ -4,9 +4,9 @@
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
 SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash',
-'EMBED_PROVIDERS', '$scope', 'editor', 'config', '$injector', 'api'];
+'EMBED_PROVIDERS', '$scope', 'editor', 'config', '$injector'];
 function SdAddEmbedController (embedService, $element, $timeout, $q, _,
-EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
+EMBED_PROVIDERS, $scope, editor, config, $injector) {
     var vm = this;
     angular.extend(vm, {
         editorCtrl: undefined,  // defined in link method
@@ -71,13 +71,9 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                         name: EMBED_PROVIDERS.youtube
                     }
                 ];
-                if (config.editor.vidible) {
-                    knownProviders.push({
-                        pattern: /src=".*vidible\.tv.*pid=(.+)\/(.+).js/g,
-                        name: EMBED_PROVIDERS.vidible,
-                        callback: match => api.get(`vidible/bcid/${match[2]}/pid/${match[1]}`)
-                            .then(data => ({association: data}))
-                    });
+                // prepend with custom handlers from config
+                if (config.editorEmbedCodeParsers) {
+                    knownProviders = $injector.invoke(config.editorEmbedCodeParsers).concat(knownProviders);
                 }
                 function updateEmbedBlock(partialUpdate) {
                     angular.extend(embedBlock, partialUpdate);

@@ -48,6 +48,7 @@
     <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
     <script src="bower_components/ng-file-upload/ng-file-upload-shim.js"></script>
     <script src="bower_components/raven-js/dist/raven.js"></script>
+    <script src="bower_components/angular-history/history.js"></script>
 
     <script src="bower_components/angular-embed/dist/angular-embed.js"></script>
     <script src="bower_components/angular-contenteditable/angular-contenteditable.js"></script>
@@ -65,5 +66,45 @@
     <!-- build:dev-only -->
     <script src='http://localhost:9000/webpack-dev-server.js' /></script>
     <!-- endbuild -->
+
+    <script>
+        var modules = [
+            'superdesk',
+            'superdesk.settings',
+            'superdesk.dashboard',
+            'superdesk.users',
+            'superdesk.archive',
+            'superdesk.archive.directives',
+            'superdesk.ingest',
+            'superdesk.desks',
+            'superdesk.groups',
+            'superdesk.products',
+            'superdesk.authoring',
+            'superdesk.authoring.multiedit',
+            'superdesk.packaging',
+            'superdesk.editor2',
+            'superdesk.editor.spellcheck',
+            'superdesk.notification',
+            'superdesk.highlights',
+            'superdesk.content_filters',
+            'superdesk.dictionaries',
+            'superdesk.vocabularies',
+            'superdesk.searchProviders',
+
+            'superdesk.users.import',
+            'superdesk.users.profile',
+            'superdesk.users.activity',
+            'superdesk.stream',
+            'superdesk.publish',
+            'superdesk.templates',
+            'superdesk.monitoring',
+
+            'superdesk.profiling',
+
+            'superdesk.loading',
+            'superdesk.templates-cache'
+        ];
+        window.bootstrapSuperdesk(<%= grunt.toJSON(config) %>, modules);
+    </script>
   </body>
 </html>

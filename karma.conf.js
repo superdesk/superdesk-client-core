@@ -1,11 +1,8 @@
 'use strict';
 
-var grunt = require('grunt');
-var makeConfig = require('./webpack.config.js');
+var webpackConfig = require('./webpack.config.js');
 
 module.exports = function(config) {
-    var webpackConfig = makeConfig(grunt, {noBootstrap: true});
-
     config.set({
         frameworks: [
             'jasmine'
