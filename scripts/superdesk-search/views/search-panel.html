@@ -1,0 +1,45 @@
+<div>
+    <div class="header">
+      <div class="backlink-toolbar" ng-show="editingSearch && !activateSearchPane">
+        <button ng-click="cancel()" class="backlink"><span translate>Back / Cancel</span></button>
+      </div>
+        <ul ng-show="!editingSearch || activateSearchPane">
+            <li ng-class="{active: sTab === 'advancedSearch'}" ng-click="changeTab('advancedSearch')" translate>Advanced Search</li>
+            <li id="saved_searches_tab" 
+                ng-show="privileges.saved_searches == 1" 
+                ng-class="{active: sTab === 'savedSearches'}" 
+                ng-click="changeTab('savedSearches')" translate>Saved
+            </li>
+        </ul>
+        <div class="doopen" ng-click="closeFacets()"><i class="icon-close-small"></i></div>
+    </div>
+
+    <div class="content" ng-if="sTab==='advancedSearch'" ng-class="{pull: showSaveSearch}">
+
+        <div id="edit-search-name" class="edit-search" ng-show="editingSearch && !activateSearchPane">
+            <form name="viewsForm">
+                <div ng-include="'scripts/superdesk-search/views/save-search-dialog.html'"></div>
+            </form>
+        </div>
+
+        <div sd-item-repo data-repo="repo" data-context="context"></div>
+
+        <div class="btn-group pull-left panel-selector" role="group">
+            <button id="parameters-tab" type="button" class="toggle-button" ng-class="{'toggle-button--active': innerTab==='parameters'}" ng-click="display('parameters')" translate>Parameters</button>
+            <button id="filters-tab" type="button" class="toggle-button" ng-class="{'toggle-button--active': innerTab==='filters'}" ng-click="display('filters')" translate>Filters</button>
+        </div>
+
+        <div sd-search-parameters ng-if="innerTab==='parameters'" data-repo="repo" data-context="context"></div>
+
+        <div ng-include="'scripts/superdesk-search/views/search-filters.html'" ng-if="innerTab==='filters'" ></div>
+
+    </div>
+
+    <div sd-save-search></div>
+
+    
+
+    <div class="content views" ng-if="sTab==='savedSearches'">
+        <div sd-saved-searches></div>
+    </div>
+</div>

@@ -73,6 +73,7 @@ describe('package', function() {
         monitoring.showSearch();
         search.setListView();
         search.showCustomSearch();
+        search.toggleSearchTabs('filters');
         search.toggleByType('text');
         expect(search.getTextItem(0)).toBe('item5');
         search.actionOnItem('Create package', 0);

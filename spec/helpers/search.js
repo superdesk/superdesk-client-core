@@ -9,7 +9,7 @@ function GlobalSearch() {
     this.archiveRepo = element(by.id('archive-collection'));
     this.publishedRepo = element(by.id('published-collection'));
     this.archivedRepo = element(by.id('archived-collection'));
-    this.goButton = element(by.buttonText('Go'));
+    this.goButton = element(by.buttonText('Search'));
     this.searchInput = element(by.id('search-input'));
     this.subject = element.all(by.css('.dropdown-terms')).first();
 
@@ -140,6 +140,22 @@ function GlobalSearch() {
     };
 
     /**
+     * Switch between Parameters and Filters tabs
+     * given 'title'
+     *
+     * @param {string} title: parameters or filters
+     */
+    this.toggleSearchTabs = function(title) {
+        if (title === 'parameters') {
+            element(by.id('parameters-tab')).click();
+        } else {
+            element(by.id('filters-tab')).click();
+            // wait until the aggregations are loaded
+            browser.sleep(300);
+        }
+    };
+
+    /**
      * Opens Subject metadata dropdown
      */
     this.toggleSubjectMetadata = function () {
@@ -243,7 +259,7 @@ function GlobalSearch() {
      * Open the search Parameters from
      */
     this.openParameters = function() {
-        element(by.id('search-parameters')).click();
+        this.toggleSearchTabs('parameters');
     };
 
     /**
@@ -270,7 +286,6 @@ function GlobalSearch() {
      * @return {promise} headline element
      */
     this.getHeadlineElement = function(index) {
-        element(by.id('search-parameters')).click();
         return this.getItem(index).element(by.className('item-heading'));
     };
 
@@ -313,10 +328,8 @@ function GlobalSearch() {
      */
     this.getArchivedContent = function() {
         this.openFilterPanel();
-        this.openParameters();
         this.ingestRepo.click();
         this.archiveRepo.click();
         this.publishedRepo.click();
-        this.goButton.click();
     };
 }
