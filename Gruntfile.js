@@ -43,34 +43,22 @@ module.exports = function(grunt) {
 
     grunt.registerTask('docs', [
         'clean',
-        'less:docs',
-        'cssmin',
-        'template:docs',
-        'connect:test',
-        'open:docs',
-        'ngtemplates:core',
-        'watch'
+        'ngtemplates:docs',
+        'webpack-dev-server:docs'
     ]);
 
     grunt.registerTask('server', [
         'clean',
-        'template:dev',
+        'copy:index',
         'ngtemplates:dev',
         'webpack-dev-server:start'
-    ]);
-
-    grunt.registerTask('bower', [
-        'build',
-        'copy:bower',
-        'concat:bowerCore',
-        'uglify:bower',
-        'clean:bower'
     ]);
 
     grunt.registerTask('build', [
         'clean',
         'ngtemplates:core',
         'webpack:build',
+        'copy:index',
         'useminPrepare',
         'concat:generated',
         'uglify:generated',
@@ -78,7 +66,6 @@ module.exports = function(grunt) {
         'copy:assets',
         'copy:js',
         'copy:docs',
-        'template:test',
         'template:docs',
         'filerev',
         'usemin'

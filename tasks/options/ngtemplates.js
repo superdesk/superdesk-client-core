@@ -25,6 +25,12 @@ module.exports = {
         src: src,
         options: options
     },
+    docs: {
+        cwd: '<%= coreDir %>',
+        dest: 'docs/templates-cache.js',
+        src: src,
+        options: options
+    },
     dev: {
         cwd: '<%= coreDir %>',
         dest: 'templates-cache.js',

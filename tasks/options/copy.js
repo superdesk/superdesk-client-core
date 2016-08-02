@@ -1,4 +1,21 @@
+var path = require('path');
+var appRoot = path.dirname(path.dirname(__dirname));
+
 module.exports = {
+    index: {
+        files: [
+            {
+                cwd: process.cwd(),
+                src: path.join(appRoot, 'index.html'),
+                dest: '<%= distDir %>/index.html'
+            },
+            {
+                cwd: process.cwd(),
+                src: path.join(appRoot, 'index.html'),
+                dest: './index.html'
+            }
+        ]
+    },
     assets: {
         files: [
             {
@@ -55,28 +72,6 @@ module.exports = {
             src: [
                 'scripts/config.js',
                 'scripts/bower_components/**/*.js'
-            ]
-        }]
-    },
-    bower: {
-        files: [{
-            expand: true,
-            dot: true,
-            cwd: '<%= distDir %>',
-            dest: '<%= bowerDir %>',
-            src: [
-                'images/**',
-                'styles/css/bootstrap.css',
-                'styles/css/app.css',
-                'fonts/sd_icons.woff',
-                'fonts/sd_icons.ttf',
-                'scripts/vendor.js',
-                'scripts/superdesk-core.js',
-                'scripts/templates-cache.js',
-                'scripts/superdesk-apps.js',
-                'scripts/vendor-docs.js',
-                'scripts/superdesk-docs-core.js',
-                'scripts/superdesk-docs-main.js'
             ]
         }]
     }
