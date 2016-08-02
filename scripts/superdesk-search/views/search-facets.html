@@ -4,18 +4,19 @@
         <button ng-click="cancel()" class="backlink"><span translate>Back / Cancel</span></button>
       </div>
         <ul ng-show="!editingSearch || activateSearchPane">
-            <li ng-class="{active: sTab}" ng-click="sTab = true" translate>Advanced Search</li>
+            <li ng-class="{active: sTab === 'parameters'}" ng-click="changeTab('parameters')" translate>Parameters</li>
+            <li ng-class="{active: sTab === 'filters'}" ng-click="changeTab('filters')" translate>Filters</li>
             <li id="saved_searches_tab" 
                 ng-show="privileges.saved_searches == 1" 
-                ng-class="{active: !sTab}" 
-                ng-click="sTab = false" translate>Saved
+                ng-class="{active: sTab === 'savedSearches'}" 
+                ng-click="changeTab('savedSearches')" translate>Saved
             </li>
         </ul>
-        <div class="doopen" ng-click="flags.facets = false"><i class="icon-close-small"></i></div>
+        <div class="doopen" ng-click="closeFacets()"><i class="icon-close-small"></i></div>
     </div>
-    <div class="content" ng-if="sTab" ng-class="{pull: showSaveSearch}">
+    
 
-        <!--<div sd-search-within></div>-->
+    <div class="content" ng-if="sTab==='parameters'" ng-class="{pull: showSaveSearch}">
 
         <div id="edit-search-name" class="edit-search" ng-show="editingSearch && !activateSearchPane">
           <form name="viewsForm">
@@ -34,8 +35,29 @@
           </form>
         </div>
 
-        <div id="search-parameters" sd-toggle-box data-title="{{:: 'Parameters' | translate }}" data-open="{{repo.search.indexOf('scanpix') == 0}}">
-            <div sd-item-search data-repo="repo" data-context="context"></div>
+        <div sd-item-search data-repo="repo" data-context="context"></div>
+
+    </div>
+
+
+    <div class="content" ng-if="sTab==='filters'" ng-class="{pull: showSaveSearch}">
+
+
+        <div id="edit-search-name" class="edit-search" ng-show="editingSearch && !activateSearchPane">
+          <form name="viewsForm">
+            <fieldset>
+              <div class="field">
+                <input id="search_name" type="text" class="fullwidth-input line-input" ng-model="edit.name" placeholder="{{:: 'Name' | translate}}" required>
+              </div>
+              <div class="field">
+                <textarea id="search_description" class="line-input" sd-auto-height ng-model="edit.description" placeholder="{{:: 'Description' | translate}}"></textarea>
+              </div>
+              <div class="field">
+                <span id="search_global" sd-switch ng-model="edit.is_global"></span>
+                <label class="label--inline" translate>Make global</label>
+              </div>
+            </fieldset>
+          </form>
         </div>
 
         <div sd-toggle-box data-title="{{:: 'Content types' | translate }}" ng-hide="isEmpty('type')" data-open="true">
@@ -86,6 +108,7 @@
             </ul>
         </div>
 
+
         <div sd-toggle-box data-title="{{:: 'Genres' | translate }}" ng-hide="isEmpty('genre')" data-open="true">
             <ul class="filter-box">
                 <li ng-repeat="(key,value) in aggregations.genre" ng-click="toggleFilter('genre', key)">
@@ -127,8 +150,7 @@
         </div>
 
         <div sd-toggle-box data-title="{{:: 'Dates' | translate }}" data-open="true">
-
-           <form class="date-filter">
+            <form class="date-filter">
                 <div class="predefined-dates">
                         <button ng-click="toggleFilter('date', 'Last Day')" 
                                 class="btn btn-mini" 
@@ -176,8 +198,8 @@
                 </fieldset>
            </form>
         </div>
-        <div sd-toggle-box data-title="{{:: 'Scheduled' | translate }}" data-open="false"
-                ng-show="search_config.scheduled">
+
+        <div sd-toggle-box data-title="{{:: 'Scheduled' | translate }}" data-open="true" ng-show="search_config.scheduled">
             <form class="date-filter">
                 <div class="predefined-dates">
                     <button id="search_scheduled_24h" ng-click="toggleFilter('date', 'Scheduled Last Day')" class="btn btn-mini" 
@@ -192,7 +214,7 @@
 
     <div sd-save-search ng-show="showSaveSearch && sTab"></div>
 
-    <div class="content views" ng-if="!sTab">
+    <div class="content views" ng-if="sTab==='savedSearches'">
         <div sd-saved-searches></div>
     </div>
 </div>
