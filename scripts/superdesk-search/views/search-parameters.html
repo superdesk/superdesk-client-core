@@ -1,0 +1,184 @@
+<form>
+    <fieldset class="search-parameters" ng-show="repo.search === 'local'">
+        <div class="multiple">
+            <div class="field" ng-if="search_config.slugline">
+                <label for="search-slugline">
+                    {{:: 'Slugline' | translate}}
+                </label>
+                <input type="text" id="search-slugline" ng-model="meta.slugline">
+            </div>
+            
+            <div class="field" ng-if="search_config.headline">
+                <label for="search-headline">
+                    {{:: 'Headline' | translate}}
+                </label>
+                <input type="text" id="search-headline" ng-model="meta.headline">
+            </div>
+        </div>
+
+        <div class="field" ng-if="search_config.story_text">
+            <label for="search-storytext">
+                {{:: 'Story Text' | translate}}
+            </label>
+            <div class="control">
+                <input type="text" id="search-storytext" ng-model="meta.body_html">
+            </div>
+        </div>
+
+        <div class="multiple">
+            <div class="field" ng-if="search_config.unique_name">
+                <label for="search-storyname">
+                    {{:: 'Unique Name' | translate}}
+                </label>
+                <input type="text" id="search-storyname" ng-model="fields.unique_name">
+            </div>
+            <div class="field" ng-if="search_config.byline">
+                <label for="search-byline">
+                    {{:: 'Byline' | translate}}
+                </label>
+                <input type="text" id="search-byline" ng-model="meta.byline">
+            </div>
+        </div>
+
+        <div class="field" ng-repeat="cv in cvs track by cv.id">
+            <label for="search-{{cv.name}}">
+                {{cv.name | translate}}
+            </label>
+            <div id="search-{{cv.name}}">
+                <div id="{{cv.name}}" sd-meta-terms
+                    data-item="selecteditems"
+                    data-field="{{cv.field}}"
+                    data-unique="qcode"
+                    data-list="metadata[cv.list]"
+                    data-reload-list="true"
+                    data-header="true"
+                    data-change="itemSearch(selecteditems, cv.field)"></div>
+            </div>
+        </div>
+
+        <div class="field keywords" ng-if="search_config.keywords">
+            <label for="search-keywords">
+                {{:: 'Keywords' | translate}}
+            </label>
+            <div id="search-keywords"
+                 sd-meta-words-list
+                 data-field="keywords"
+                 data-header="true"
+                 data-list="keywords"
+                 data-item="meta"
+            ></div>
+        </div>
+
+        <div class="multiple">
+            <div class="field" ng-if="search_config.from_desk">
+                <label for="from-desk">
+                    {{:: 'From Desk' | translate}}
+                </label>
+                <select
+                    id="from-desk" name="from-desk"
+                    ng-options="d._id as d.name for d in desks._items"
+                    ng-model="fields.from_desk">
+                    <option value="" label=""></option>
+                </select>
+            </div>
+            <div class="field" ng-if="search_config.to_desk">
+                <label for="to-desk">
+                    {{:: 'To Desk' | translate}}
+                </label>
+                <select
+                    id="to-desk" name="to-desk"
+                    ng-options="d._id as d.name for d in desks._items"
+                    ng-model="fields.to_desk">
+                    <option value="" label=""></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="multiple">
+            <div class="field" ng-if="repo.archive && search_config.creator">
+                <label for="search-creator">
+                    {{:: 'Creator' | translate}}
+                </label>
+                <select id="search-creator"
+                        ng-model="fields.original_creator"
+                        ng-options="user._id  as user.display_name for user in userList track by user._id">
+                <option value="" label=""></option>
+                </select>
+            </div>
+
+            <div class="field" ng-if="search_config.spike">
+                <label for="search-spike">
+                {{:: 'In Spiked' | translate}}
+                </label>
+                <span sd-switch ng-model="fields.spike"></span>
+            </div>
+        </div>
+        
+    </fieldset>
+    <fieldset ng-show="repo.search === 'aapmm'">
+        <div class="field">
+            <label for="search-slugline">
+                {{:: 'Slugline' | translate}}
+            </label>
+            <div class="control">
+                <input type="text" id="search-slugline" ng-model="meta.slugline">
+            </div>
+        </div>
+        <div class="field">
+            <label for="search-description">
+                {{:: 'Description' | translate}}
+            </label>
+            <div class="control">
+                <input type="text" id="search-description" ng-model="meta.description_text">
+            </div>
+        </div>
+            <div class="field">
+            <label for="search-aapkeyword">
+                {{:: 'AAP Image Keyword' | translate}}
+            </label>
+            <div class="control">
+                <input type="text" id="search-aapkeyword" ng-model="meta.aapkeyword">
+            </div>
+        </div>
+    </fieldset>
+    <fieldset ng-show="repo.search === 'paimg' || repo.search.indexOf('scanpix') === 0">
+        <div class="field">
+            <label class="search-label" for="search-text" translate>Search</label>
+            <div class="control">
+                <input type="text" id="search-text" ng-model="meta.text">
+            </div>
+            <div ng-show="repo.search.indexOf('scanpix') === 0">
+                <label class="search-label" for="search-id" translate>Scanpix ID(s)</label>
+                <div class="control">
+                    <input type="text" id="search-id" ng-model="meta.id">
+                </div>
+            </div>
+            <div ng-show="repo.search === 'paimg'">
+                <label class="search-label" ng-show="repo.search === 'paimg'" for="search-starred" translate>Editor's Choice</label>
+                <div class="control">
+                    <input type="checkbox" id="search-starred" ng-model="meta.starred">
+                </div>
+            </div>
+            <div ng-if="repo.search.indexOf('scanpix') === 0" >
+                <div class="checkbox">
+                    <label class="search-label">
+                        <input type="checkbox" id="search-bw" ng-model="meta.bw">{{:: 'Black&White' | translate}}
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label class="search-label">
+                        <input type="checkbox" id="search-clear_edge" ng-model="meta.clear_edge">{{:: 'Clear Edge' | translate}}
+                    </label>
+                </div>
+                <label class="search-label" for="from-desk">
+                    {{:: 'Subscription' | translate}}
+                </label>
+                <select
+                    id="subscription" name="subscription"
+                    ng-options="s.name as s.label | translate for s in scanpix_subscriptions"
+                    ng-model="meta.scanpix_subscription">
+                </select>
+            </div>
+        </div>
+    </fieldset>
+</form>

@@ -85,7 +85,7 @@ function Authoring() {
      * function to set embargo date and time inside sendTo panel
      */
     this.setEmbargo = function() {
-        var embargoDate = '09/25/' + ((new Date()).getFullYear() + 1);
+        var embargoDate = '09/09/' + ((new Date()).getFullYear() + 1);
         var embargoTime = '04:00';
 
         element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
@@ -213,7 +213,7 @@ function Authoring() {
             return this.publish_button.isDisplayed();
         }.bind(this), 1000);
 
-        var scheduleDate = '09/25/' + ((new Date()).getFullYear() + 1);
+        var scheduleDate = '09/09/' + ((new Date()).getFullYear() + 1);
         var scheduleTime = '04:00';
 
         element(by.model('item.publish_schedule_date')).element(by.tagName('input')).sendKeys(scheduleDate);
