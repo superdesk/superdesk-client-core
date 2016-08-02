@@ -9,3 +9,4 @@ templates-cache.js
 test-server/env
 test-server/__pycache__
 e2e-test-results
+.env
