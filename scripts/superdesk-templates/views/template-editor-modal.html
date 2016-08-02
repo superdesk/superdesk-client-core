@@ -157,7 +157,7 @@
                     </div>
                 </div>
 
-                <div class="authoring-header__item" ng-if="showScheduling() && template.schedule.is_active" sd-width="full">
+                <div class="authoring-header__item template-schedule" ng-if="showScheduling() && template.schedule.is_active" sd-width="full">
                     <label for="schedule-desk" translate>Schedule Desk</label>
                     <div class="authoring-header__input-holder">
                         <select id="schedule-desk" ng-model="template.schedule_desk"
@@ -169,7 +169,7 @@
                         <span class="arrow-down"><b class="caret"></b></span>
                     </div>
                 </div>
-                <div class="authoring-header__item" ng-if="showStages() && template.schedule.is_active" sd-width="full">
+                <div class="authoring-header__item template-schedule" ng-if="showStages() && template.schedule.is_active" sd-width="full">
                     <label for="template-stage" translate>Schedule Stage</label>
                     <div class="authoring-header__input-holder">
                         <select id="template-stage" ng-model="template.schedule_stage" class="dropdown-toggle line-input">

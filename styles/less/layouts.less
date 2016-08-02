@@ -715,7 +715,8 @@ a:hover {
 
 
 //color variables
-@main-item-color:        #607d8b;
+@main-item-color: #607d8b;
+@main-item-color-inactive: #aaa;
 
 .card-box {
     .box-sizing(border-box);
@@ -964,7 +965,9 @@ a:hover {
         position: relative;
 
         &.inactive {
-            opacity: 0.8;
+            .card-box__header {
+                background-color: @main-item-color-inactive;
+            }
         }
     }
     &.wrap-items {

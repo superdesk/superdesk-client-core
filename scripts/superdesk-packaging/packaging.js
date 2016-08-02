@@ -755,8 +755,9 @@
                 filters: [
                     {action: 'list', type: 'archive'}
                 ],
-                additionalCondition:['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).package_item;
+                additionalCondition:['authoring', 'item', '$rootScope', function(authoring, item, $rootScope) {
+                    return authoring.itemActions(item).package_item &&
+                        !($rootScope.config && $rootScope.config.features && $rootScope.config.features.hideCreatePackage);
                 }],
                 group: 'packaging'
             })
