@@ -157,9 +157,6 @@ function getDefaults(grunt, buildParams) {
         // route to be redirected to from '/'
         defaultRoute: '/workspace',
 
-        // array of spellcheckers (ie. ["tansa"])
-        spellcheckers: [],
-
         // override language translations
         langOverride: {},
 
