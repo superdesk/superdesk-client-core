@@ -1,5 +1,8 @@
 'use strict';
 
+var path = require('path');
+var rootDir = path.dirname(path.dirname(__dirname));
+
 var src = [
     'scripts/**/*.html',
     'scripts/**/*.svg'
@@ -21,7 +24,7 @@ var options = {
 module.exports = {
     core: {
         cwd: '<%= coreDir %>',
-        dest: '<%= distDir %>/templates-cache.js',
+        dest: path.join(rootDir, 'templates-cache.generated.js'),
         src: src,
         options: options
     },
@@ -33,7 +36,7 @@ module.exports = {
     },
     dev: {
         cwd: '<%= coreDir %>',
-        dest: 'templates-cache.js',
+        dest: path.join(rootDir, 'templates-cache.generated.js'),
         src: [],
         options: {
             bootstrap: function() {
