@@ -508,6 +508,11 @@ body, html {
             opacity: 0.5;
             color: rgba(0, 0, 0, 0) !important;
             border-bottom-color: rgba(0, 0, 0, 0) !important;
+            .sderror {
+                font-size: inherit;
+                line-height: inherit;
+                font-weight: inherit;
+            }
         }
     }
 
@@ -596,6 +601,7 @@ body, html {
     .sderror {
         border-bottom-color: #FF3D3D;
         background-color: rgba(255, 61, 61, 0.25);
+        color: @dark-theme-bg !important;
     }
 }
 
@@ -622,6 +628,7 @@ body, html {
     .sderror {
         border-bottom-color: #FF3D3D;
         background-color: rgba(255, 61, 61, 0.25);
+        color: @dark-theme-bg !important;
     }
 }
 
@@ -646,6 +653,7 @@ body, html {
     .sderror {
         border-bottom-color: #FF3D3D;
         background-color: rgba(255, 61, 61, 0.25);
+        color: @dark-blue-theme-bg !important;
     }
 }
 
@@ -661,6 +669,10 @@ body, html {
             color: @natural-theme-text !important;
         }
     }
+
+    .sderror {
+        color: @natural-theme-bg !important;
+    }
 }
 
 .dark-khaki-theme {
@@ -674,6 +686,10 @@ body, html {
         input {
             color: @dark-khaki-theme-text !important;
         }
+    }
+
+   .sderror {
+        color: @dark-khaki-theme-bg !important;
     }
 }
 
@@ -689,6 +705,10 @@ body, html {
             color: @dark-turquoise-theme-text !important;
         }
     }
+
+   .sderror {
+        color: @dark-turquoise-theme-bg !important;
+    }
 }
 
 .pale-yellow-theme {
@@ -702,5 +722,9 @@ body, html {
         input {
             color: @pale-yellow-theme-text !important;
         }
+    }
+
+   .sderror {
+        color: @pale-yellow-theme-bg !important;
     }
 }
