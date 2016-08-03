@@ -6,7 +6,7 @@
             ng-class="{disabled: !model.schema[id]}">
 
             <div class="header">
-                <span class="title">{{ :: label(id) }}</span>
+                <span class="title">{{ :: label(id) | translate }}</span>
                 <div class="pull-right">
                     <span class="sd-toggle"
                         ng-class="{'checked': !!model.schema[id]}"
@@ -20,10 +20,10 @@
                 <form>
                     <fieldset>
                        <div class="field">
-                           <span translate>Required:</span>&nbsp;<div sd-check ng-model="model.schema[id].required"></div>
+                           <span translate>Required</span>:&nbsp;<div sd-check ng-model="model.schema[id].required"></div>
                        </div>
                        <div class="field">
-                           <span translate>Order:</span>&nbsp;<input placeholder="{{ 'Default' | translate }}" type="number" class="input-small" ng-model="model.editor[id].order" min="1" max="99" />
+                           <span translate>Order</span>:&nbsp;<input placeholder="{{ 'Default' | translate }}" type="number" class="input-small" ng-model="model.editor[id].order" min="1" max="99" />
                        </div>
                        <div class="field" ng-show="specs.type === 'string'">
                            <span translate>Length min:</span>
