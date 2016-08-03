@@ -283,12 +283,20 @@ function Monitoring() {
         return element(by.partialButtonText('send')).click();
     };
 
-    this.unspikeItem = function(item) {
+    this.unspikeItem = function(item, desk, stage) {
         var itemElem = this.getSpikedItem(item);
         browser.actions().mouseMove(itemElem).perform();
         itemElem.element(by.className('icon-dots-vertical')).click();
+
         var menu = element(by.css('.dropdown-menu.open'));
         menu.element(by.partialLinkText('Unspike')).click();
+
+        var sidebar = element.all(by.css('.slide-pane')).last();
+
+        if (stage) {
+            sidebar.element(by.buttonText(stage)).click();
+        }
+
         return element(by.partialButtonText('send')).click();
     };
 

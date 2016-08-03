@@ -222,6 +222,7 @@ function GlobalSearch() {
      */
     this.openFilterPanel = function() {
         element(by.css('.filter-trigger')).click();
+        browser.sleep(200); // animation
     };
 
     /**
