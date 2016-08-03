@@ -35,15 +35,15 @@
 <li>
     <div class="menu-label" translate>From template</div>
 </li>
-<div ng-show="contentTemplates._items.length">
-    <li ng-repeat="template in contentTemplates._items">
+<div ng-show="contentTemplates.length">
+    <li ng-repeat="template in contentTemplates | orderBy:'template_name'">
         <button ng-click="createFromTemplate(template)">
             <i class="icon-plus-small icon-round icon-white"></i> {{ :: template.template_name }}
         </button>
     </li>
 </div>
 
-<div ng-hide="contentTemplates._items.length">
+<div ng-hide="contentTemplates.length">
     <li translate>No recent templates.</li>
 </div>
 
