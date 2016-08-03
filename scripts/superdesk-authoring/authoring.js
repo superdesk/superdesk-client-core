@@ -130,7 +130,7 @@ import 'angular-history/history.js';
          * Open an item
          */
         this.open = function openAutosave(item) {
-            if (item._locked || !item._editable) {
+            if (!item._locked || !item._editable) {
                 // no way to get autosave
                 return $q.when(item);
             }
@@ -165,7 +165,7 @@ import 'angular-history/history.js';
                         var orig = Object.getPrototypeOf(item);
                         orig._autosave = _autosave;
                     });
-                }, AUTOSAVE_TIMEOUT);
+                }, AUTOSAVE_TIMEOUT, false);
 
                 return timeouts[item._id];
             }
@@ -236,13 +236,23 @@ import 'angular-history/history.js';
             } else {
                 return api.find('archive', _id, {embedded: {lock_user: 1}})
                 .then(function _lock(item) {
-                    if (!read_only && lock.isLocked(item)) {  // Check if item is still editable
-                        item._locked = true;
+                    if (read_only) {
+                        item._locked = lock.isLockedInCurrentSession(item);
                         item._editable = false;
                         return $q.when(item);
-                    } else {
-                        item._editable = !read_only;
-                        return lock.lock(item);
+                    } else { // we want to lock
+                        if (lock.isLocked(item)) { // is locked by someone else
+                            item._locked = false;
+                            item._editable = false;
+                            return $q.when(item);
+                        } else if (lock.isLockedInCurrentSession(item)) { // we have lock
+                            item._locked = true;
+                            item._editable = true;
+                            return $q.when(item);
+                        } else { // not locked at all, try to lock
+                            item._editable = true;
+                            return lock.lock(item);
+                        }
                     }
                 })
                 .then(function _autosave(item) {
@@ -433,7 +443,7 @@ import 'angular-history/history.js';
                 return api.save('archive', item, diff).then(function(_item) {
                     item._autosave = null;
                     item._autosaved = false;
-                    item._locked = lock.isLocked(item);
+                    item._locked = lock.isLockedInCurrentSession(item);
                     $injector.get('authoringWorkspace').update(item);
                     return item;
                 });
@@ -464,7 +474,7 @@ import 'angular-history/history.js';
          * @param {Object} item
          */
         this.isEditable = function isEditable(item) {
-            return !!item.lock_user && !lock.isLocked(item);
+            return lock.isLockedInCurrentSession(item);
         };
 
         /**
@@ -736,7 +746,7 @@ import 'angular-history/history.js';
                     return item;
                 });
             } else {
-                item._locked = this.isLocked(item);
+                item._locked = this.isLockedInCurrentSession(item);
                 return $q.when(item);
             }
         };
@@ -750,42 +760,47 @@ import 'angular-history/history.js';
                 item._locked = false;
                 return item;
             }, function(err) {
-                item._locked = true;
                 return item;
             });
         };
 
         /**
-         * Test if an item is locked, it can be locked by other user or you in different session.
+         * Test if an item is locked by some other session, so not editable
+         *
+         * @param {Object} item
+         * @return {Boolean}
          */
         this.isLocked = function isLocked(item) {
-            var userId = getLockedUserId(item);
-
-            if (!userId) {
+            if (!item) {
                 return false;
             }
 
-            if (userId !== session.identity._id) {
-                return true;
-            }
-
-            if (!!item.lock_session && item.lock_session !== session.sessionId) {
-                return true;
-            }
-
-            return false;
+            return !!item.lock_user && !this.isLockedInCurrentSession(item);
         };
 
         function getLockedUserId(item) {
-            return item.lock_user && item.lock_user._id || item.lock_user;
+            return !!item.lock_user && item.lock_user._id || item.lock_user;
         }
 
         /**
-        * Test if an item is locked by me in another session
-        */
+         * Test if an item is locked in current session
+         *
+         * @param {Object} item
+         * @return {Boolean}
+         */
+        this.isLockedInCurrentSession = function(item) {
+            return !!item.lock_session && item.lock_session === session.sessionId;
+        };
+
+        /**
+         * Test if an item is locked by me, different session session
+         *
+         * @param {Object} item
+         * @return {Boolean}
+         */
         this.isLockedByMe = function isLockedByMe(item) {
             var userId = getLockedUserId(item);
-            return userId && userId === session.identity._id;
+            return !!userId && userId === session.identity._id;
         };
 
         /**
@@ -795,7 +810,7 @@ import 'angular-history/history.js';
             if (this.isLockedByMe(item)) {
                 return true;
             } else {
-                return item.state === 'draft'? false : privileges.privileges.unlock;
+                return item.state === 'draft' ? false : privileges.privileges.unlock;
             }
         };
     }
@@ -1596,8 +1611,7 @@ import 'angular-history/history.js';
                  * Checks if the item can be unlocked or not.
                  */
                 $scope.can_unlock = function() {
-                    return $scope.item._locked && !$scope.item.sendTo && lock.can_unlock($scope.item) &&
-                        ($scope.itemActions.save || _.contains(['published', 'scheduled', 'corrected'], $scope.item.state));
+                    return !$scope.item.sendTo && lock.can_unlock($scope.item);
                 };
 
                 $scope.save_enabled = function() {

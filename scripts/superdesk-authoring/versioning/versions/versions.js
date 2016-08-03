@@ -28,7 +28,7 @@ function VersioningController($scope, authoring, api, notify, lock, desks, archi
                         $scope.canRevert =  false;
                         $scope.openVersion($scope.last);
                     } else {
-                        $scope.canRevert =  authoring.isEditable($scope.item) && !authoring.isPublished($scope.item);
+                        $scope.canRevert = authoring.isEditable($scope.item) && !authoring.isPublished($scope.item);
 
                         if ($scope.item._autosave) {
                             $scope.selected = $scope.item._autosave;

@@ -68,12 +68,13 @@ describe('authoring', function() {
     inject(function(superdesk, api, lock, autosave, session, $injector, $q, $rootScope) {
         var lockedItem = ITEM;
         lockedItem.lock_user = USER;
+        lockedItem.lock_session = session.sessionId;
 
         spyOn(api, 'find').and.returnValue($q.when(lockedItem));
 
         $injector.invoke(superdesk.activity('authoring').resolve.item);
         $rootScope.$digest();
-        expect(ITEM._locked).toBe(false);
+        expect(ITEM._locked).toBe(true);
     }));
 
     it('unlocks a locked item and locks by current user',
@@ -429,7 +430,7 @@ describe('autosave', function() {
     it('can fetch an autosave for item locked by user and is editable',
         inject(function(autosave, api, $q, $rootScope) {
         spyOn(api, 'find').and.returnValue($q.when({}));
-        autosave.open({_locked: false, _editable: true, _id: 1});
+        autosave.open({_locked: true, _editable: true, _id: 1});
         $rootScope.$digest();
         expect(api.find).toHaveBeenCalledWith('archive_autosave', 1);
     }));
@@ -503,12 +504,13 @@ describe('lock service', function() {
     }));
 
     it('can detect lock by same user and different session', inject(function(lock) {
-        expect(lock.isLocked({lock_user: 'user'})).toBe(false);
+        expect(lock.isLocked({lock_user: 'user'})).toBe(true);
         expect(lock.isLocked({lock_user: 'user', lock_session: 'other_sess'})).toBe(true);
     }));
 
-    it('can use lock_user dict', inject(function(lock) {
-        expect(lock.isLocked({lock_user: {_id: 'user'}})).toBe(false);
+    it('can use lock_user dict', inject(function(lock, session) {
+        expect(lock.isLocked({lock_user: {_id: 'user'}})).toBe(true);
+        expect(lock.isLocked({lock_user: {_id: 'user'}, lock_session: session.sessionId})).toBe(false);
     }));
 
     it('can unlock the item if user has unlock privileges', inject(function(lock, privileges, $rootScope) {
