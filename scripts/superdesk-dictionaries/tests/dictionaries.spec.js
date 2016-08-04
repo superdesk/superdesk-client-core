@@ -108,7 +108,9 @@ describe('dictionaries', function() {
 
         beforeEach(inject(function($rootScope, $controller) {
             scope = $rootScope.$new();
-            scope.dictionary = {content: {foo: 1, bar: 1}};
+            scope.origDictionary = {content: {foo: 1, bar: 1}};
+            scope.dictionary = Object.create(scope.origDictionary);
+            scope.dictionary.content = Object.create(scope.origDictionary.content || {});
             $controller('DictionaryEdit', {$scope: scope});
         }));
 
