@@ -169,7 +169,7 @@
 
         this.fetchTemplatesByIds = function(templateIds) {
             if (!templateIds.length) {
-                return $q.when();
+                return $q.when([]);
             }
 
             var params = {
