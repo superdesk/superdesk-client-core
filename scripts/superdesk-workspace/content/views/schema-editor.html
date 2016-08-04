@@ -6,11 +6,11 @@
             ng-class="{disabled: !model.schema[id]}">
 
             <div class="header">
-                <span class="title">{{ :: label(id) | translate }}</span>
+                <span class="title">{{ :: label(id) | translate}}</span>
                 <div class="pull-right">
                     <span class="sd-toggle"
-                        ng-class="{'checked': !!model.schema[id]}"
-                        ng-click="toggle(id)">
+                          ng-class="{'checked': !!model.schema[id]}"
+                          ng-click="toggle(id)">
                         <span class="inner"></span>
                     </span>
                 </div>
@@ -18,69 +18,81 @@
 
             <div class="body" ng-if="model.schema[id]">
                 <form>
-                    <fieldset>
-                       <div class="field">
-                           <span translate>Required</span>:&nbsp;<div sd-check ng-model="model.schema[id].required"></div>
-                       </div>
-                       <div class="field">
-                           <span translate>Order</span>:&nbsp;<input placeholder="{{ 'Default' | translate }}" type="number" class="input-small" ng-model="model.editor[id].order" min="1" max="99" />
-                       </div>
-                       <div class="field" ng-show="specs.type === 'string'">
-                           <span translate>Length min:</span>
-                           <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small" ng-model="model.schema[id].minlength" min="0" />
-                           <span translate>max</span>:
-                           <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small" ng-model="model.schema[id].maxlength" min="0" />
-                           <span class="error"
-                                ng-show="model.schema[id].minlength > model.schema[id].maxlength && model.schema[id].maxlength"
-                                translate>Min length shouldn't be bigger than max length.</span>
-                           <span class="error"
-                                ng-show="model.schema[id].maxlength === 0"
-                                translate>Max length should be bigger than 0 or empty.</span>
-                       </div>
-                       <div class="field" ng-show="specs.type === 'string' || specs.type === 'integer' || options[id] || terms[id]">
-                           <span translate>Default value:</span>
-                           <input ng-if="specs.type === 'integer' && !options[id]"
-                                type="number"
-                                class="input-medium"
-                                placeholder="{{ 'Not set' | translate }}"
-                                ng-model="model.schema[id].default" />
-                           <select ng-if="specs.type === 'integer' && options[id]"
-                                class="input-medium"
-                                ng-model="model.schema[id].default"
-                                ng-options="item.qcode as item.name for item in options[id]">
+                    <fieldset class="fieldset-flex">
+                        <div class="field">
+                            <label translate>Required</label>
+                            <div sd-check ng-model="model.schema[id].required"></div>
+                        </div>
+                        <div class="field">
+                            <label translate>Order</label>
+                            <input class="input-small line-input" placeholder="{{ 'Default' | translate }}" type="number" ng-model="model.editor[id].order" min="1" max="99" />
+                        </div>
+                        <div class="field" ng-show="specs.type === 'string'">
+                            <label translate>Length</label>
+                            <div class="controls">
+                                <span translate>min</span>:
+                                <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].minlength" min="0" />
+                                <span translate>max</span>:
+                                <input placeholder="{{ :: 'Not set' | translate }}" type="number" class="input-small line-input" ng-model="model.schema[id].maxlength" min="0" />
+                                <span class="error"
+                                      ng-show="model.schema[id].minlength > model.schema[id].maxlength && model.schema[id].maxlength"
+                                      translate>Min length shouldn't be bigger than max length.</span>
+                                <span class="error"
+                                      ng-show="model.schema[id].maxlength === 0"
+                                      translate>Max length should be bigger than 0 or empty.</span>
+                            </div>
+                        </div>
+                        <div class="field" ng-show="specs.type === 'string' || specs.type === 'integer' || options[id] || terms[id]">
+                            <label translate>Default value</label>
+                            <input ng-if="specs.type === 'integer' && !options[id]"
+                                   type="number"
+                                   class="input-medium line-input"
+                                   placeholder="{{ 'Not set' | translate }}"
+                                   ng-model="model.schema[id].default" />
+                            <select ng-if="specs.type === 'integer' && options[id]"
+                                    class="input-medium line-input"
+                                    ng-model="model.schema[id].default"
+                                    ng-options="item.qcode as item.name for item in options[id]">
                                 <option translate>none</option>
-                           </select>
-                           <div class="input-medium"
-                                ng-if="specs.type === 'list' && options[id] && !terms[id]"
-                                sd-meta-dropdown
-                                data-item="model.schema[id]"
-                                data-field="{{ id }}"
-                                data-list="options[id]"
-                                data-change="setdefault(field)">
-                           </div>
-                           <div class="input-medium"
-                                ng-if="terms[id]"
-                                sd-meta-terms
-                                data-item="model.schema[id]"
-                                data-field="{{ id }}"
-                                data-list="terms[id]"
-                                data-change="setdefault(field)"
-                            ></div>
+                            </select>
+                            <div class="input-medium"
+                                 ng-if="specs.type === 'list' && options[id] && !terms[id]"
+                                 sd-meta-dropdown
+                                 data-item="model.schema[id]"
+                                 data-field="{{ id}}"
+                                 data-list="options[id]"
+                                 data-change="setdefault(field)">
+                            </div>
+                            <div class="input-medium"
+                                 ng-if="terms[id]"
+                                 sd-meta-terms
+                                 data-item="model.schema[id]"
+                                 data-field="{{ id}}"
+                                 data-list="terms[id]"
+                                 data-change="setdefault(field)"
+                                 ></div>
                             <input ng-if="specs.type === 'string'"
-                                type="text"
-                                class="input-medium"
-                                placeholder="{{ :: 'Not set' | translate }}"
-                                ng-model="model.schema[id].default" />
-                       </div>
-                       <div class="field">
-                           <span translate>Width:</span> <select class="input-medium" ng-model="model.editor[id].sdWidth">
-                              <option value="full" translate>Full</option>
-                              <option value="half" translate>Half</option>
-                              <option value="quarter" translate>Quarter</option>
+                                   type="text"
+                                   class="input-medium line-input"
+                                   placeholder="{{ :: 'Not set' | translate }}"
+                                   ng-model="model.schema[id].default" />
+                        </div>
+                        <div class="field">
+                            <label translate>Width</label>
+                            <select class="dropdown-toggle line-input" ng-model="model.editor[id].sdWidth">
+                                <option value="full" translate>Full</option>
+                                <option value="half" translate>Half</option>
+                                <option value="quarter" translate>Quarter</option>
                             </select>
                         </div>
                         <div class="field">
-                            <span translate>Format options:</span> <input placeholder="{{ 'ie. h1, h2, strong, embed' | translate }}" type="text" class="input-large" ng-model="model.editor[id].formatOptions" string-to-array />
+                            <label translate>Format options</label>
+                            <div class="controls"
+                                 sd-multi-select
+                                 data-item="model.editor[id].formatOptions"
+                                 data-list="formatingOptions"
+                                 data-change="setDirty(true)">
+                            </div>
                         </div>
                     </fieldset>
                 </form>

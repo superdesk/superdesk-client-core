@@ -578,7 +578,7 @@
             templateUrl: 'scripts/superdesk-workspace/content/views/schema-editor.html',
             require: '^form',
             scope: {
-                model: '=ngModel',
+                model: '=ngModel'
             },
             link: function(scope, elem, attr, form) {
 
@@ -600,6 +600,14 @@
                         }
                     });
                 });
+                
+                scope.formatingOptions = [
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                    'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull',
+                    'outdent', 'indent', 'unorderedlist', 'orderedlist',
+                    'pre', 'quote', 'image', 'anchor', 'superscript', 'subscript', 'strikethrough',
+                    'underline', 'italic', 'bold'
+                ];
 
                 /**
                  * @description label returns the display name for a key.
@@ -634,6 +642,10 @@
                 scope.setdefault = function(id) {
                     scope.model.schema[id].default = scope.model.schema[id][id];
                     form.$dirty = true;
+                };
+                
+                scope.setDirty = function(dirty) {
+                    form.$dirty = !!dirty;
                 };
             }
         };

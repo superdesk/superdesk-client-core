@@ -263,7 +263,7 @@
                 var tolerance = 300,
                     isRightOriented = null,
                     isInlineOriented = null,
-                    menu = null, authoring = null;
+                    menu = null, workspace = null;
 
                 element.bind('click', function() {
                     if (!element.hasClass('open')) {
@@ -274,13 +274,13 @@
                         checkOrientation();
                     }
 
-                    if (authoring === null) {
-                        checkAuthoring();
+                    if (workspace === null) {
+                        checkWorkspace();
                     }
 
-                    if (closeToBottom()) {
+                    if (closeToBottom() && !isInlineOriented) {
                         element.addClass('dropup');
-                    } else {
+                    } else if(!isInlineOriented) {
                         element.removeClass('dropup');
                     }
 
@@ -304,7 +304,7 @@
                         } else if (closeToRight() && !closeToLeft()) {
                             element.removeClass('dropright').addClass('dropleft');
                         } else {
-                            element.removeClass('dropright dropleft');
+                            element.removeClass('dropright dropleft').addClass('dropdown-noarrow');
                         }
                     }
                 });
@@ -315,9 +315,11 @@
                     isInlineOriented = element.hasClass('dropright') || element.hasClass('dropleft');
                 }
 
-                // In authoring, make dropdown's relative to edge of authoring screens
-                function checkAuthoring() {
-                    authoring = element.closest('#authoring-container');
+                // In authoring or modal, make dropdown's relative to theirs edge
+                function checkWorkspace() {
+                    workspace = element.closest('.modal').length ?
+                            element.closest('.modal') :
+                            element.closest('#authoring-container');
                 }
 
                 function closeToBottom() {
@@ -326,8 +328,8 @@
                 }
 
                 function closeToLeft() {
-                    var leftEdge = authoring.length ?
-                            element.offset().left - authoring.offset().left :
+                    var leftEdge = workspace.length ?
+                            workspace.offset().left :
                             element.offset().left;
 
                     return leftEdge < tolerance;
@@ -1313,6 +1315,79 @@
         };
     }
 
+    multiSelectDirective.$inject = [];
+    function multiSelectDirective() {
+        return {
+            scope: {
+                item: '=',
+                list: '=',
+                change: '&',
+                output: '@',
+                disabled: '='
+            },
+            templateUrl: 'scripts/superdesk/ui/views/sd-multi-select.html',
+            link: function (scope) {
+                scope.selectedItems = [];
+                scope.list = _.sortBy(scope.list);
+                scope.activeList = false;
+
+                scope.selectItem = function (item) {
+                    scope.list = _.without(scope.list, item);
+                    scope.activeList = false;
+                    scope.selectedTerm = '';
+                    scope.selectedItems.push(item);
+
+                    updateItem();
+                };
+
+                scope.removeItem = function (item) {
+                    scope.list.push(item);
+                    scope.list = _.sortBy(scope.list);
+                    scope.selectedItems = _.without(scope.selectedItems, item);
+
+                    updateItem();
+                };
+
+                scope.$watch('item', function (item) {
+                    if (!item) {
+                        return false;
+                    }
+
+                    scope.selectedItems = _.union(scope.item, scope.selectedItems);
+                    scope.list = _.sortBy(_.difference(scope.list, scope.item));
+                });
+
+                function updateItem() {
+                    switch (scope.output) {
+                        case 'string':
+                            scope.item = scope.selectedItems.join(', ');
+                            break;
+
+                        default:
+                            scope.item = scope.selectedItems;
+                    }
+
+                    scope.change(scope.item);
+                }
+
+                // Typeahead search
+                scope.searchTerms = function (term) {
+                    if (!term) {
+                        scope.$applyAsync(function () {
+                            scope.activeList = false;
+                        });
+                    }
+
+                    scope.terms = _.filter(scope.list, function (t) {
+                        return t.toLowerCase().indexOf(term.toLowerCase()) !== -1;
+                    });
+
+                    scope.activeList = true;
+                };
+            }
+        };
+    }
+
     return angular.module('superdesk.ui', [
         'superdesk.config',
         'superdesk.datetime',
@@ -1350,5 +1425,6 @@
         .directive('sdFocusElement', focusElement)
         .directive('sdValidationError', validationDirective)
         .directive('sdLoading', LoadingDirective)
-        .directive('sdMultipleEmails', MultipleEmailsValidation);
+        .directive('sdMultipleEmails', MultipleEmailsValidation)
+        .directive('sdMultiSelect', multiSelectDirective);
 })();
