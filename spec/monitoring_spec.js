@@ -511,7 +511,8 @@ describe('monitoring', function() {
         monitoring.openMonitoring();
 
         monitoring.openAction(0, 3); // creates new item
-        expect(monitoring.getTextItem(0, 3)).toBe('ingest1');
+
+        expect(monitoring.getTextItem(0, 0)).toBe('ingest1');
         expect(monitoring.getTextItem(0, 4)).toBe('ingest1');
     });
 

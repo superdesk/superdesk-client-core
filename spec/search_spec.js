@@ -96,7 +96,7 @@ describe('search', function() {
         expect(globalSearch.getGenreElements().count()).toBe(2);
         var genre = globalSearch.getGenreElementByIndex(0);
         genre.click();
-        expect(globalSearch.getItems().count()).toBe(9);
+        expect(globalSearch.getItems().count()).toBe(10);
         globalSearch.clickClearFilters();
 
         //search by from desk field

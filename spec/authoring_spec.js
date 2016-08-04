@@ -244,14 +244,14 @@ describe('authoring', function() {
         monitoring.actionOnItem('Spike', 2, 2);
         monitoring.showSpiked();
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
-        monitoring.unspikeItem(0);
+        monitoring.unspikeItem(0, 'Politic desk', 'Incoming Stage');
         monitoring.showMonitoring();
         expect(monitoring.getTextItem(1, 0)).toBe('item7');
         monitoring.actionOnItem('Edit', 1, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(3);
         expect(authoring.getHistoryItem(1).getText()).toMatch(/Spiked from Politic Desk\/one by .*/);
-        expect(authoring.getHistoryItem(2).getText()).toMatch(/Unspiked to Politic Desk\/two by .*/);
+        expect(authoring.getHistoryItem(2).getText()).toMatch(/Unspiked to Politic Desk\/Incoming Stage by .*/);
         authoring.close();
 
         //view item history duplicate operation
