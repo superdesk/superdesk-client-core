@@ -390,6 +390,13 @@
             });
         };
 
+        this.reload = function() {
+            $timeout(function() {
+                self.search(self.searchQuery);
+            }, 1, false);
+            self.search();
+        };
+
         this.state = storage.getItem('agg:state') || {};
         this.state.expanded = this.state.expanded || {};
 
@@ -418,6 +425,10 @@
 
         $scope.$on('open:resend', function(evt, item) {
             $scope.resend = item;
+        });
+
+        $scope.$on('item:fetch', function(evt, item) {
+            self.reload();
         });
     }
 

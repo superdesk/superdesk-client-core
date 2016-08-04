@@ -2415,6 +2415,7 @@ import 'angular-history/history.js';
                         })
                         .then(function(value) {
                             notify.success(gettext('Item sent.'));
+                            $rootScope.$broadcast('item:fetch');
 
                             // Remember last destination desk and stage
                             if (scope.destination_last &&
@@ -3252,7 +3253,7 @@ import 'angular-history/history.js';
                  * displayed.
                  */
                 function initAnpaCategories() {
-                    if (scope.schema.subject !== null && scope.schema.subject.mandatory_in_list !== null) {
+                    if (!!scope.schema.subject && !!scope.schema.subject.mandatory_in_list) {
                         _.forEach(scope.schema.subject.mandatory_in_list.scheme, function(subjectName) {
                             if (!_.startsWith(subjectName, 'subservice_')) {
                                 return;
