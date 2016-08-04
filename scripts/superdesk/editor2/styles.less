@@ -17,16 +17,31 @@
     span, p, h1, h2, h3, h4 {
         background-color: transparent;
     }
+
     span, h3 {
         font-size: 16px; line-height: 24px;
     }
 
     pre {
+        font-size: 13px;
+        line-height: 18px;
+
         span, h3 {
             font-size: 13px; line-height: 18px;
         }
     }
 }
+
+.headline {
+    .editor-type-html {
+        span {
+            font-size: 28px;
+            line-height: 120%;
+            font-weight: 500;
+        }
+    }
+}
+
 .medium-editor-toolbar {
     // disabled state for toolbar button
     li .medium-editor-button-disabled {
