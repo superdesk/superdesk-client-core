@@ -401,8 +401,8 @@
         };
     }
 
-    TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search'];
-    function TagService($location, desks, userList, metadata, search) {
+    TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search', 'gettextCatalog'];
+    function TagService($location, desks, userList, metadata, search, gettextCatalog) {
         var tags = {};
         tags.selectedFacets = {};
         tags.selectedParameters = [];
@@ -448,7 +448,10 @@
                 }
 
                 if (!added) {
-                    tags.selectedParameters.push(parameter);
+                    //work with param to add translation
+                    var paramArr = parameter.split(':');
+                    var parameterTranslated = gettextCatalog.getString(paramArr[0]) + ':' + paramArr[1];
+                    tags.selectedParameters.push(parameterTranslated);
                 }
 
                 parameters = parameters.replace(parameter, '');

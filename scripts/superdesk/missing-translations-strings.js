@@ -24,5 +24,5 @@ gettext('6th update');gettext('7th update');gettext('8th update');gettext('9th u
 gettext('12th update');gettext('13th update');gettext('14th update');gettext('15th update');gettext('16th update');gettext('17th update');
 gettext('18th update');gettext('19th update');gettext('20th update');gettext('\'PLACE is a required field\'');
 gettext('Content Profiles');gettext('ANPA Take Key');gettext('Body HTML');gettext('By');gettext('Date');gettext('Located');
-gettext('\'DATELINE is a required field\'');
+gettext('\'DATELINE is a required field\'');gettext('\"GENRE \'null value not allowed\'');gettext('slugline');gettext('subscription');
 
