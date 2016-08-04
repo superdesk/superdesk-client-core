@@ -50,7 +50,7 @@ function PublishQueue() {
 
     this.getPreviewTitle = function() {
         return element(by.css('.content-container'))
-        .element(by.binding('selected.preview.headline'))
+        .element(by.css('.preview-headline'))
         .getText();
     };
 

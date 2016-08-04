@@ -74,6 +74,7 @@
          */
         function getCriteria(card, queryString, queryParam) {
             var params = {};
+            var criteria = {};
 
             if (card.type === 'search' && card.search && card.search.filter.query) {
                 angular.copy(card.search.filter.query, params);
@@ -86,6 +87,7 @@
                 }
             } else {
                 params.q = card.query;
+                criteria.es_highlight = params.q ? 1 : 0;
             }
 
             params.spike = (card.type === 'spike' || card.type === 'spike-personal' ||
@@ -203,9 +205,10 @@
 
             if (queryString) {
                 query.filter({query: {query_string: {query: queryString, lenient: false}}});
+                criteria.es_highlight = 1;
             }
 
-            var criteria = {source: query.getCriteria()};
+            criteria.source = query.getCriteria();
             if (card.type === 'search' && card.search && card.search.filter.query.repo) {
                 criteria.repo = card.search.filter.query.repo;
             } else if (desks.isPublishType(card.type)) {
@@ -693,14 +696,7 @@
                 }
 
                 function merge(items, next) {
-                    if (next && scope.items) {
-                        var prevItems = scope.items._items;
-                        return angular.extend(items, {
-                            _items: prevItems.concat(items._items)
-                        });
-                    } else {
-                        return items;
-                    }
+                    return search.mergeItems(items, scope.items, next);
                 }
             }
         };

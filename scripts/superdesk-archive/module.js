@@ -832,6 +832,7 @@ class ArchiveListController extends BaseListController {
             }
             $scope.loading = true;
             criteria.aggregations = 1;
+            criteria.es_highlight = 1;
             resource.query(criteria).then(function(items) {
                 $scope.loading = false;
                 $scope.items = search.mergeItems(items, $scope.items, next);
