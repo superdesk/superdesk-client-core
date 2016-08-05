@@ -1,6 +1,8 @@
 (function() {
 'use strict';
 
+var embedCodeHandlers = require('./embedCodeHandlers.js');
+
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
 SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash',
@@ -61,30 +63,17 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                     body: vm.input,
                     provider: EMBED_PROVIDERS.custom
                 };
-                var knownProviders = [
-                    {
-                        pattern: /twitter\.com\/widgets\.js/g,
-                        name: EMBED_PROVIDERS.twitter
-                    },
-                    {
-                        pattern: /www\.youtube\.com/g,
-                        name: EMBED_PROVIDERS.youtube
-                    }
-                ];
-                if (config.editor.vidible) {
-                    knownProviders.push({
-                        pattern: /src=".*vidible\.tv.*pid=(.+)\/(.+).js/g,
-                        name: EMBED_PROVIDERS.vidible,
-                        callback: match => api.get(`vidible/bcid/${match[2]}/pid/${match[1]}`)
-                            .then(data => ({association: data}))
-                    });
-                }
                 function updateEmbedBlock(partialUpdate) {
                     angular.extend(embedBlock, partialUpdate);
                 }
                 // try to guess the provider of the custom embed
-                for (var i = 0; i < knownProviders.length; i++) {
-                    var provider = knownProviders[i];
+                for (var i = 0; i < embedCodeHandlers.length; i++) {
+                    var provider = $injector.invoke(embedCodeHandlers[i]);
+                    if (angular.isDefined(provider.condition)) {
+                        if (!provider.condition()) {
+                            continue;
+                        }
+                    }
                     var match = provider.pattern.exec(vm.input);
                     if (match) {
                         updateEmbedBlock({provider: provider.name});
