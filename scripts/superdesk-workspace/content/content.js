@@ -600,7 +600,7 @@
                         }
                     });
                 });
-                
+
                 scope.formatingOptions = [
                     'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
                     'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull',
@@ -643,7 +643,7 @@
                     scope.model.schema[id].default = scope.model.schema[id][id];
                     form.$dirty = true;
                 };
-                
+
                 scope.setDirty = function(dirty) {
                     form.$dirty = !!dirty;
                 };

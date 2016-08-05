@@ -280,7 +280,7 @@
 
                     if (closeToBottom() && !isInlineOriented) {
                         element.addClass('dropup');
-                    } else if(!isInlineOriented) {
+                    } else if (!isInlineOriented) {
                         element.removeClass('dropup');
                     }
 
