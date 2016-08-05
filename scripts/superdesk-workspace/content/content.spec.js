@@ -243,7 +243,8 @@ describe('superdesk.workspace.content', function() {
 
             el.scope().$digest();
 
-            var fields = el.find('li');
+            var fields = el.find('li.schema-item');
+
             expect(fields.length).toBe(Object.keys(content.schema()).length);
             expect($(fields[0]).find('span.sd-toggle').hasClass('checked')).toBeFalsy();
             expect($(fields[11]).find('span.sd-toggle').hasClass('checked')).toBeTruthy();
