@@ -490,7 +490,21 @@ function Authoring() {
 
     this.cleanBodyHtmlElement = function() {
         bodyHtml.clear();
-        bodyHtml.sendKeys(protractor.Key.BACK_SPACE);
+        this.backspaceBodyHtml();
+    };
+
+    this.backspaceBodyHtml = function(count) {
+        if (!count) {
+            count = 1;
+        }
+
+        var sequence = '';
+
+        for (var i = 0; i < count; i++) {
+            sequence += protractor.Key.BACK_SPACE;
+        }
+
+        bodyHtml.sendKeys(sequence);
     };
 
     this.getHeadlineText = function() {

@@ -105,7 +105,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
         return macros.call(macro, item).then(function(res) {
             if (!res.diff) {
                 angular.extend($scope.item, res.item);
-                autosave.save($scope.item);
+                autosave.save($scope.item, $scope.origItem);
             } else {
                 $rootScope.$broadcast('macro:diff', res.diff);
             }

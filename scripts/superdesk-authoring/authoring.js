@@ -156,13 +156,12 @@ import 'angular-history/history.js';
         /**
          * Auto-saves an item
          */
-        this.save = function saveAutosave(item) {
+        this.save = function saveAutosave(item, orig) {
             if (item._editable && item._locked) {
                 this.stop(item);
                 timeouts[item._id] = $timeout(function() {
                     var diff = extendItem({_id: item._id}, item);
                     return api.save(RESOURCE, {}, diff).then(function(_autosave) {
-                        var orig = Object.getPrototypeOf(item);
                         orig._autosave = _autosave;
                     });
                 }, AUTOSAVE_TIMEOUT, false);
@@ -414,9 +413,10 @@ import 'angular-history/history.js';
          * Autosave the changes
          *
          * @param {Object} item
+         * @param {Object} orig
          */
-        this.autosave = function autosaveAuthoring(item) {
-            return autosave.save(item);
+        this.autosave = function autosaveAuthoring(item, orig) {
+            return autosave.save(item, orig);
         };
 
         /**
@@ -1650,15 +1650,22 @@ import 'angular-history/history.js';
                 };
 
                 $scope.autosave = function(item) {
+                    if (item !== $scope.item) {
+                        // keep items in sync
+                        $scope.item = item;
+                    }
+
                     $scope.dirty = true;
+
                     if ($rootScope.config) {
                         $rootScope.config.isCheckedByTansa = false;
                     }
+
                     if (tryPublish) {
-                        validate($scope.origItem, item);
+                        validate($scope.origItem, $scope.item);
                     }
 
-                    var autosavedItem = authoring.autosave(item);
+                    var autosavedItem = authoring.autosave($scope.item, $scope.origItem);
                     authoringWorkspace.addAutosave();
                     return autosavedItem;
                 };
@@ -2668,11 +2675,23 @@ import 'angular-history/history.js';
                 // ONLY for editor2 (with blocks)
                 try {
                     angular.module('superdesk.editor2');
-                    history.watch('item', scope);
+                    history.watch('item', mainEditScope || scope);
                 } catch (e) {}
 
-                scope.$watch('item', function(item) {
+                scope.$on('History.undone', triggerAutosave);
+                scope.$on('History.redone', triggerAutosave);
+
+                function triggerAutosave() {
+                    if (mainEditScope) {
+                        mainEditScope.$applyAsync(function() {
+                            mainEditScope.autosave(mainEditScope.item);
+                        });
+                    }
+                }
+
+                var stopWatch = scope.$watch('item', function(item) {
                     if (item) {
+                        stopWatch();
                         /* Creates a copy of dateline object from item.__proto__.dateline */
                         if (item.dateline) {
                             var updates = {dateline: {}};
@@ -2767,7 +2786,7 @@ import 'angular-history/history.js';
                 scope.modifySignOff = function(user) {
                     var signOffMapping = config.user.sign_off_mapping;
                     scope.item.sign_off = user[signOffMapping];
-                    autosave.save(scope.item);
+                    autosave.save(scope.item, scope.origItem);
                 };
 
                 /**
@@ -2775,7 +2794,7 @@ import 'angular-history/history.js';
                  */
                 scope.searchSignOff = function(search) {
                     scope.item.sign_off = search;
-                    autosave.save(scope.item);
+                    autosave.save(scope.item, scope.origItem);
                 };
 
                 /**
@@ -2805,7 +2824,7 @@ import 'angular-history/history.js';
                             ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
                             scope.datelineDay, scope.item.dateline.source);
 
-                        autosave.save(scope.item);
+                        autosave.save(scope.item, scope.origItem);
                     }
                 };
 
@@ -2837,7 +2856,7 @@ import 'angular-history/history.js';
                     if (scope.extra.body_footer_value) {
                         scope.item.body_footer = scope.item.body_footer + scope.extra.body_footer_value.value;
                         mainEditScope.dirty = true;
-                        autosave.save(scope.item);
+                        autosave.save(scope.item, scope.origItem);
                     }
 
                     //first option should always be selected, as multiple helplines could be added in footer

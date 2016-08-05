@@ -218,7 +218,7 @@
 
                 scope.autosave = function(item) {
                     scope.dirty = true;
-                    authoring.autosave(item);
+                    authoring.autosave(item, scope.origItem);
                 };
 
                 scope.save = function(item, form) {
