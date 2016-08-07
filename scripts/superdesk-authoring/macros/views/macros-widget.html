@@ -1,7 +1,7 @@
 <div class="widget" ng-controller="Macros">
     <ul class="link-list" sd-loading="loading">
         <li ng-repeat="macro in macros">
-            <button class="btn" ng-click="call(macro)">{{ macro.label }}</button>
+            <button class="btn" ng-click="call(macro)">{{ macro.label | translate }}</button>
         </li>
     </ul>
 </div>

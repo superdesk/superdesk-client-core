@@ -15,7 +15,7 @@
                 <span ng-if="activity.name == 'user:mention' || activity.name == 'desk:mention'">
                     <div class="activity-content">
                         <p><b>{{ :: activity.user_name || 'System' }}</b>
-                            <span translate>{{activity.name == 'user:mention'? 'mentioned you' : 'commented on'}}</span>
+                            <span>{{activity.name == 'user:mention'? 'mentioned you' : 'commented on' | translate}}</span>
                             <i>
                                 <a ng-click="openArticle(activity)"
                                    title="{{ :: activity.item_slugline }}">{{ :: activity.item_slugline }}</a>
