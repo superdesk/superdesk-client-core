@@ -8,47 +8,47 @@ msgstr ""
 msgid "\" sent at:"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:27
+#: scripts/superdesk/lang/missing-translations-strings.js:27
 msgid "\"GENRE 'null value not allowed'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:18
+#: scripts/superdesk/lang/missing-translations-strings.js:18
 msgid "'ABSTRACT is a required field'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:19
+#: scripts/superdesk/lang/missing-translations-strings.js:19
 msgid "'ANPA_CATEGORY is a required field'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:18
+#: scripts/superdesk/lang/missing-translations-strings.js:18
 msgid "'BYLINE is a required field'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:27
+#: scripts/superdesk/lang/missing-translations-strings.js:27
 msgid "'DATELINE is a required field'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:17
+#: scripts/superdesk/lang/missing-translations-strings.js:17
 msgid "'GENRE is a required field'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:20
+#: scripts/superdesk/lang/missing-translations-strings.js:20
 msgid "'GENRE null value not allowed'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:19
+#: scripts/superdesk/lang/missing-translations-strings.js:19
 msgid "'HEADLINE is a required field'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:25
+#: scripts/superdesk/lang/missing-translations-strings.js:25
 msgid "'PLACE is a required field'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:19
+#: scripts/superdesk/lang/missing-translations-strings.js:19
 msgid "'SLUGLINE is a required field'"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:18
+#: scripts/superdesk/lang/missing-translations-strings.js:18
 msgid "'SUBJECT is a required field'"
 msgstr ""
 
@@ -78,43 +78,43 @@ msgstr ""
 msgid "--- Not selected ---"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/lang/missing-translations-strings.js:23
 msgid "10th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/lang/missing-translations-strings.js:23
 msgid "11th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:24
+#: scripts/superdesk/lang/missing-translations-strings.js:24
 msgid "12th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:24
+#: scripts/superdesk/lang/missing-translations-strings.js:24
 msgid "13th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:24
+#: scripts/superdesk/lang/missing-translations-strings.js:24
 msgid "14th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:24
+#: scripts/superdesk/lang/missing-translations-strings.js:24
 msgid "15th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:24
+#: scripts/superdesk/lang/missing-translations-strings.js:24
 msgid "16th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:24
+#: scripts/superdesk/lang/missing-translations-strings.js:24
 msgid "17th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:25
+#: scripts/superdesk/lang/missing-translations-strings.js:25
 msgid "18th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:25
+#: scripts/superdesk/lang/missing-translations-strings.js:25
 msgid "19th update"
 msgstr ""
 
@@ -122,43 +122,43 @@ msgstr ""
 msgid "2 character limit"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:25
+#: scripts/superdesk/lang/missing-translations-strings.js:25
 msgid "20th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:22
+#: scripts/superdesk/lang/missing-translations-strings.js:22
 msgid "2nd update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:22
+#: scripts/superdesk/lang/missing-translations-strings.js:22
 msgid "3rd update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:20
+#: scripts/superdesk/lang/missing-translations-strings.js:20
 msgid "412: Can't publish as item state is draft"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:22
+#: scripts/superdesk/lang/missing-translations-strings.js:22
 msgid "4th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:22
+#: scripts/superdesk/lang/missing-translations-strings.js:22
 msgid "5th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/lang/missing-translations-strings.js:23
 msgid "6th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/lang/missing-translations-strings.js:23
 msgid "7th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/lang/missing-translations-strings.js:23
 msgid "8th update"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:23
+#: scripts/superdesk/lang/missing-translations-strings.js:23
 msgid "9th update"
 msgstr ""
 
@@ -195,7 +195,7 @@ msgstr ""
 msgid "ANPA Category"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:26
+#: scripts/superdesk/lang/missing-translations-strings.js:26
 msgid "ANPA Take Key"
 msgstr ""
 
@@ -478,7 +478,7 @@ msgstr ""
 msgid "Applied Global Block Filters"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:10
+#: scripts/superdesk/lang/missing-translations-strings.js:10
 msgid "Archive"
 msgstr ""
 
@@ -490,7 +490,7 @@ msgstr ""
 msgid "Archived Block"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:10
+#: scripts/superdesk/lang/missing-translations-strings.js:10
 msgid "Archived Management"
 msgstr ""
 
@@ -672,7 +672,7 @@ msgid "Body"
 msgstr ""
 
 #: scripts/superdesk-workspace/content/content.js:551
-#: scripts/superdesk/missing-translations-strings.js:26
+#: scripts/superdesk/lang/missing-translations-strings.js:26
 msgid "Body HTML"
 msgstr ""
 
@@ -684,11 +684,11 @@ msgstr ""
 msgid "Both"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:10
+#: scripts/superdesk/lang/missing-translations-strings.js:10
 msgid "Broadcast"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:26
+#: scripts/superdesk/lang/missing-translations-strings.js:26
 msgid "By"
 msgstr ""
 
@@ -979,7 +979,7 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:21
+#: scripts/superdesk/lang/missing-translations-strings.js:21
 msgid "Content Expiry"
 msgstr ""
 
@@ -1015,7 +1015,7 @@ msgstr ""
 #: scripts/superdesk-desks/views/desk-config-modal.html:60
 #: scripts/superdesk-workspace/content/content.js:77
 #: scripts/superdesk-workspace/content/views/profile-settings.html:4
-#: scripts/superdesk/missing-translations-strings.js:26
+#: scripts/superdesk/lang/missing-translations-strings.js:26
 msgid "Content Profiles"
 msgstr ""
 
@@ -1023,7 +1023,7 @@ msgstr ""
 msgid "Content Type"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:10
+#: scripts/superdesk/lang/missing-translations-strings.js:10
 msgid "Content Types"
 msgstr ""
 
@@ -1075,7 +1075,7 @@ msgstr ""
 msgid "Correct item"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:11
+#: scripts/superdesk/lang/missing-translations-strings.js:11
 msgid "Correction"
 msgstr ""
 
@@ -1236,7 +1236,7 @@ msgstr ""
 msgid "Dashboard is empty."
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:26
+#: scripts/superdesk/lang/missing-translations-strings.js:26
 msgid "Date"
 msgstr ""
 
@@ -1318,7 +1318,7 @@ msgstr ""
 msgid "Desk"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:11
+#: scripts/superdesk/lang/missing-translations-strings.js:11
 msgid "Desk Management"
 msgstr ""
 
@@ -1401,7 +1401,7 @@ msgstr ""
 msgid "Dictionaries"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:11
+#: scripts/superdesk/lang/missing-translations-strings.js:11
 msgid "Dictionaries List Management"
 msgstr ""
 
@@ -1521,7 +1521,7 @@ msgstr ""
 msgid "Duplicate"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:11
+#: scripts/superdesk/lang/missing-translations-strings.js:11
 msgid "Duplicate Content within a Desk"
 msgstr ""
 
@@ -1627,7 +1627,7 @@ msgstr ""
 msgid "Edit Template"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:12
+#: scripts/superdesk/lang/missing-translations-strings.js:12
 msgid "Edit Unique Name"
 msgstr ""
 
@@ -1768,7 +1768,7 @@ msgstr ""
 msgid "Enable / Disable"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:9
+#: scripts/superdesk/lang/missing-translations-strings.js:9
 msgid "Enable Feature Preview"
 msgstr ""
 
@@ -2030,7 +2030,7 @@ msgstr ""
 msgid "Feature Image"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:12
+#: scripts/superdesk/lang/missing-translations-strings.js:12
 msgid "Feature Preview"
 msgstr ""
 
@@ -2065,7 +2065,7 @@ msgstr ""
 msgid "Fetch"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:12
+#: scripts/superdesk/lang/missing-translations-strings.js:12
 msgid "Fetch Content To a Desk"
 msgstr ""
 
@@ -2325,7 +2325,7 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:17
+#: scripts/superdesk/lang/missing-translations-strings.js:17
 msgid "Groups Management"
 msgstr ""
 
@@ -2397,11 +2397,11 @@ msgstr ""
 msgid "Highlights configurations"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:12
+#: scripts/superdesk/lang/missing-translations-strings.js:12
 msgid "Highlights/Summary List Management"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:13
+#: scripts/superdesk/lang/missing-translations-strings.js:13
 msgid "Hold"
 msgstr ""
 
@@ -2509,7 +2509,7 @@ msgstr ""
 msgid "Ingest"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:13
+#: scripts/superdesk/lang/missing-translations-strings.js:13
 msgid "Ingest Channels"
 msgstr ""
 
@@ -2719,7 +2719,7 @@ msgid "Last 8 Hours"
 msgstr ""
 
 #: scripts/superdesk-search/views/search-facets.html:135
-#: scripts/superdesk/missing-translations-strings.js:15
+#: scripts/superdesk/lang/missing-translations-strings.js:15
 msgid "Last Day"
 msgstr ""
 
@@ -2732,7 +2732,7 @@ msgid "Last Modified"
 msgstr ""
 
 #: scripts/superdesk-search/views/search-facets.html:141
-#: scripts/superdesk/missing-translations-strings.js:16
+#: scripts/superdesk/lang/missing-translations-strings.js:16
 msgid "Last Month"
 msgstr ""
 
@@ -2741,7 +2741,7 @@ msgid "Last Time Updated"
 msgstr ""
 
 #: scripts/superdesk-search/views/search-facets.html:138
-#: scripts/superdesk/missing-translations-strings.js:21
+#: scripts/superdesk/lang/missing-translations-strings.js:21
 msgid "Last Week"
 msgstr ""
 
@@ -2824,8 +2824,8 @@ msgid "Local Readonly"
 msgstr ""
 
 #: scripts/superdesk-workspace/content/content.js:554
-#: scripts/superdesk/missing-translations-strings.js:26
-#: scripts/superdesk/missing-translations-strings.js:9
+#: scripts/superdesk/lang/missing-translations-strings.js:26
+#: scripts/superdesk/lang/missing-translations-strings.js:9
 msgid "Located"
 msgstr ""
 
@@ -2877,11 +2877,11 @@ msgstr ""
 msgid "Make sure you're looking the best"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:13
+#: scripts/superdesk/lang/missing-translations-strings.js:13
 msgid "Manage Global Saved Searches"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:13
+#: scripts/superdesk/lang/missing-translations-strings.js:13
 msgid "Manage Search Providers"
 msgstr ""
 
@@ -2905,7 +2905,7 @@ msgstr ""
 msgid "Mark item for"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:14
+#: scripts/superdesk/lang/missing-translations-strings.js:14
 msgid "Mark items for Highlights/Summary Lists"
 msgstr ""
 
@@ -3029,7 +3029,7 @@ msgstr ""
 msgid "Motoring Subservice"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:14
+#: scripts/superdesk/lang/missing-translations-strings.js:14
 msgid "Move Content to another desk"
 msgstr ""
 
@@ -3072,7 +3072,7 @@ msgstr ""
 msgid "NO SUGGESTIONS."
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:28
+#: scripts/superdesk/lang/missing-translations-strings.js:28
 msgid "NTB currency macro"
 msgstr ""
 
@@ -3591,7 +3591,7 @@ msgstr ""
 msgid "Place"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:7
+#: scripts/superdesk/lang/missing-translations-strings.js:7
 msgid "Places"
 msgstr ""
 
@@ -3603,7 +3603,7 @@ msgstr ""
 msgid "Planning"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:14
+#: scripts/superdesk/lang/missing-translations-strings.js:14
 msgid "Planning Management"
 msgstr ""
 
@@ -3640,7 +3640,7 @@ msgstr ""
 msgid "Point of interest outside the crop  limits"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:28
+#: scripts/superdesk/lang/missing-translations-strings.js:28
 msgid "Populate Abstract"
 msgstr ""
 
@@ -3656,7 +3656,7 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:10
+#: scripts/superdesk/lang/missing-translations-strings.js:10
 msgid "Preferred Categories"
 msgstr ""
 
@@ -4085,7 +4085,7 @@ msgstr ""
 msgid "Resource URL"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:15
+#: scripts/superdesk/lang/missing-translations-strings.js:15
 msgid "Restore"
 msgstr ""
 
@@ -4114,7 +4114,7 @@ msgstr ""
 msgid "Roles"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:15
+#: scripts/superdesk/lang/missing-translations-strings.js:15
 msgid "Roles Management"
 msgstr ""
 
@@ -4126,7 +4126,7 @@ msgstr ""
 msgid "Routing"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:15
+#: scripts/superdesk/lang/missing-translations-strings.js:15
 msgid "Routing Rules Management"
 msgstr ""
 
@@ -4372,8 +4372,8 @@ msgstr ""
 #: scripts/superdesk-workspace/views/workspace-sidenav-items.html:38
 #: scripts/superdesk/itemList/views/item-list-widget.html:11
 #: scripts/superdesk/itemList/views/relatedItem-list-widget.html:9
+#: scripts/superdesk/lang/missing-translations-strings.js:21
 #: scripts/superdesk/list/views/searchbar.html:4
-#: scripts/superdesk/missing-translations-strings.js:21
 #: scripts/superdesk/views/sdSearchList.html:43
 msgid "Search"
 msgstr ""
@@ -4483,7 +4483,7 @@ msgstr ""
 msgid "Selected items"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:9
+#: scripts/superdesk/lang/missing-translations-strings.js:9
 msgid "Send notifications via email"
 msgstr ""
 
@@ -4497,7 +4497,7 @@ msgstr ""
 msgid "Send to / Publish"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:17
+#: scripts/superdesk/lang/missing-translations-strings.js:17
 msgid "Sending"
 msgstr ""
 
@@ -4571,7 +4571,7 @@ msgid "Shows search modal"
 msgstr ""
 
 #: scripts/superdesk-workspace/content/content.js:555
-#: scripts/superdesk/missing-translations-strings.js:13
+#: scripts/superdesk/lang/missing-translations-strings.js:13
 msgid "Sign Off"
 msgstr ""
 
@@ -4797,7 +4797,7 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:7
+#: scripts/superdesk/lang/missing-translations-strings.js:7
 msgid "Subjects"
 msgstr ""
 
@@ -4945,7 +4945,7 @@ msgstr ""
 msgid "Tasks"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:15
+#: scripts/superdesk/lang/missing-translations-strings.js:15
 msgid "Tasks Management"
 msgstr ""
 
@@ -5239,7 +5239,7 @@ msgstr ""
 msgid "Total:"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:16
+#: scripts/superdesk/lang/missing-translations-strings.js:16
 msgid "Transformation Rules Management"
 msgstr ""
 
@@ -5290,7 +5290,7 @@ msgstr ""
 msgid "URL for Authentication"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:16
+#: scripts/superdesk/lang/missing-translations-strings.js:16
 msgid "Un Spike"
 msgstr ""
 
@@ -5344,7 +5344,7 @@ msgstr ""
 msgid "Unlock"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:16
+#: scripts/superdesk/lang/missing-translations-strings.js:16
 msgid "Unlock content"
 msgstr ""
 
@@ -5456,7 +5456,7 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:16
+#: scripts/superdesk/lang/missing-translations-strings.js:16
 msgid "User Management"
 msgstr ""
 
@@ -5532,7 +5532,7 @@ msgstr ""
 msgid "Users Profile"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:8
+#: scripts/superdesk/lang/missing-translations-strings.js:8
 msgid "Users archive view format"
 msgstr ""
 
@@ -5574,7 +5574,7 @@ msgstr ""
 msgid "Vocabularies"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:17
+#: scripts/superdesk/lang/missing-translations-strings.js:17
 msgid "Vocabularies Management"
 msgstr ""
 
@@ -5720,7 +5720,7 @@ msgstr ""
 msgid "any"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:8
+#: scripts/superdesk/lang/missing-translations-strings.js:8
 msgid "archive"
 msgstr ""
 
@@ -5733,7 +5733,7 @@ msgstr ""
 msgid "at"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:4
+#: scripts/superdesk/lang/missing-translations-strings.js:4
 msgid "audio"
 msgstr ""
 
@@ -5741,7 +5741,7 @@ msgstr ""
 msgid "authentication url"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:22
+#: scripts/superdesk/lang/missing-translations-strings.js:22
 msgid "authoring"
 msgstr ""
 
@@ -5767,7 +5767,7 @@ msgstr ""
 msgid "byline"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:9
+#: scripts/superdesk/lang/missing-translations-strings.js:9
 msgid "categories"
 msgstr ""
 
@@ -5783,11 +5783,11 @@ msgstr ""
 msgid "commented on"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:8
+#: scripts/superdesk/lang/missing-translations-strings.js:8
 msgid "compact"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:4
+#: scripts/superdesk/lang/missing-translations-strings.js:4
 msgid "composite"
 msgstr ""
 
@@ -5795,11 +5795,11 @@ msgstr ""
 msgid "confirm"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:5
+#: scripts/superdesk/lang/missing-translations-strings.js:5
 msgid "content"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:7
+#: scripts/superdesk/lang/missing-translations-strings.js:7
 msgid "corrected"
 msgstr ""
 
@@ -5829,7 +5829,7 @@ msgstr ""
 msgid "default template"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:21
+#: scripts/superdesk/lang/missing-translations-strings.js:21
 msgid "desk Output"
 msgstr ""
 
@@ -5847,7 +5847,7 @@ msgstr ""
 msgid "done"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:6
+#: scripts/superdesk/lang/missing-translations-strings.js:6
 msgid "draft"
 msgstr ""
 
@@ -5861,7 +5861,7 @@ msgstr ""
 msgid "embargo"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:5
+#: scripts/superdesk/lang/missing-translations-strings.js:5
 msgid "error"
 msgstr ""
 
@@ -5872,11 +5872,11 @@ msgstr ""
 msgid "expires"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:6
+#: scripts/superdesk/lang/missing-translations-strings.js:6
 msgid "failed"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:9
+#: scripts/superdesk/lang/missing-translations-strings.js:9
 msgid "feature"
 msgstr ""
 
@@ -5888,7 +5888,7 @@ msgstr ""
 msgid "fetch and open"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:6
+#: scripts/superdesk/lang/missing-translations-strings.js:6
 msgid "fetched"
 msgstr ""
 
@@ -5950,11 +5950,11 @@ msgstr ""
 msgid "in the last 24 hours."
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:5
+#: scripts/superdesk/lang/missing-translations-strings.js:5
 msgid "in-progress"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:5
+#: scripts/superdesk/lang/missing-translations-strings.js:5
 msgid "in_progress"
 msgstr ""
 
@@ -5963,7 +5963,7 @@ msgstr ""
 msgid "inactive"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:6
+#: scripts/superdesk/lang/missing-translations-strings.js:6
 msgid "ingested"
 msgstr ""
 
@@ -5987,7 +5987,7 @@ msgstr ""
 msgid "item metadata associated."
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:7
+#: scripts/superdesk/lang/missing-translations-strings.js:7
 msgid "killed"
 msgstr ""
 
@@ -6038,7 +6038,7 @@ msgstr ""
 msgid "mentioned you"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:8
+#: scripts/superdesk/lang/missing-translations-strings.js:8
 msgid "mgrid"
 msgstr ""
 
@@ -6069,7 +6069,7 @@ msgstr ""
 msgid "none"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:8
+#: scripts/superdesk/lang/missing-translations-strings.js:8
 msgid "notifications"
 msgstr ""
 
@@ -6122,7 +6122,7 @@ msgstr ""
 msgid "phone number"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:4
+#: scripts/superdesk/lang/missing-translations-strings.js:4
 msgid "picture"
 msgstr ""
 
@@ -6146,7 +6146,7 @@ msgstr ""
 msgid "previous"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:20
+#: scripts/superdesk/lang/missing-translations-strings.js:20
 msgid "production"
 msgstr ""
 
@@ -6154,11 +6154,11 @@ msgstr ""
 msgid "profile"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:4
+#: scripts/superdesk/lang/missing-translations-strings.js:4
 msgid "publish"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:7
+#: scripts/superdesk/lang/missing-translations-strings.js:7
 msgid "published"
 msgstr ""
 
@@ -6174,7 +6174,7 @@ msgstr ""
 msgid "replace"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:6
+#: scripts/superdesk/lang/missing-translations-strings.js:6
 msgid "retrying"
 msgstr ""
 
@@ -6186,19 +6186,19 @@ msgstr ""
 msgid "role"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:6
+#: scripts/superdesk/lang/missing-translations-strings.js:6
 msgid "routed"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:7
+#: scripts/superdesk/lang/missing-translations-strings.js:7
 msgid "scheduled"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:21
+#: scripts/superdesk/lang/missing-translations-strings.js:21
 msgid "scheduled Desk Output"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:20
+#: scripts/superdesk/lang/missing-translations-strings.js:20
 msgid "search"
 msgstr ""
 
@@ -6218,7 +6218,7 @@ msgstr ""
 msgid "selected"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:4
+#: scripts/superdesk/lang/missing-translations-strings.js:4
 msgid "send"
 msgstr ""
 
@@ -6242,11 +6242,11 @@ msgstr ""
 msgid "single value is required"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:27
+#: scripts/superdesk/lang/missing-translations-strings.js:27
 msgid "slugline"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:5
+#: scripts/superdesk/lang/missing-translations-strings.js:5
 msgid "sluglines"
 msgstr ""
 
@@ -6271,11 +6271,11 @@ msgstr ""
 msgid "source of the search provider"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:7
+#: scripts/superdesk/lang/missing-translations-strings.js:7
 msgid "spiked"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:21
+#: scripts/superdesk/lang/missing-translations-strings.js:21
 msgid "stage"
 msgstr ""
 
@@ -6283,15 +6283,15 @@ msgstr ""
 msgid "stage:"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:6
+#: scripts/superdesk/lang/missing-translations-strings.js:6
 msgid "submitted"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:27
+#: scripts/superdesk/lang/missing-translations-strings.js:27
 msgid "subscription"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:5
+#: scripts/superdesk/lang/missing-translations-strings.js:5
 msgid "success"
 msgstr ""
 
@@ -6303,7 +6303,7 @@ msgstr ""
 msgid "switch to list view"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:4
+#: scripts/superdesk/lang/missing-translations-strings.js:4
 msgid "text"
 msgstr ""
 
@@ -6311,7 +6311,7 @@ msgstr ""
 msgid "underline"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:22
+#: scripts/superdesk/lang/missing-translations-strings.js:22
 msgid "update"
 msgstr ""
 
@@ -6335,7 +6335,7 @@ msgstr ""
 msgid "username"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:5
+#: scripts/superdesk/lang/missing-translations-strings.js:5
 msgid "users"
 msgstr ""
 
@@ -6343,7 +6343,7 @@ msgstr ""
 msgid "version"
 msgstr ""
 
-#: scripts/superdesk/missing-translations-strings.js:4
+#: scripts/superdesk/lang/missing-translations-strings.js:4
 msgid "video"
 msgstr ""
 
