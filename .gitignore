@@ -8,4 +8,5 @@ templates-cache.generated.js
 test-server/env
 test-server/__pycache__
 e2e-test-results
+templates-cache.generated.js
 .env
