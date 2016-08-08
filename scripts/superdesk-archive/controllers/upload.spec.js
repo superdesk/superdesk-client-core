@@ -95,8 +95,11 @@ describe('Upload controller', function() {
     }));
 
     it('can display error message if any of metadata field missing',
-        inject(function($controller, $rootScope, $q, api, upload) {
+        inject(function($controller, $rootScope, $q, api, upload, config) {
         var scope = $rootScope.$new(true);
+
+        // explicitly set required fields
+        //scope.requiredFields = config.requiredMediaMetadata;
 
         $controller('UploadController', {$scope: scope});
         $rootScope.$digest();
