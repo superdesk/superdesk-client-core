@@ -230,15 +230,16 @@
 
                 var container = elem[0];
                 var offsetY = 0;
+                var itemHeight = 0;
                 elem.bind('scroll', function() {
                     scope.$apply(function() {
                         if (container.scrollTop + container.offsetHeight >= container.scrollHeight - 3) {
-                            container.scrollTop = container.scrollTop - 3;
+                            container.scrollTop -= 3;
                             scope.fetchNext();
                         }
                         if (container.scrollTop <= 2) {
                             offsetY = 2 - container.scrollTop;
-                            container.scrollTop = container.scrollTop + offsetY;
+                            container.scrollTop += offsetY;
                             scope.fetchPrevious();
                         }
                     });
@@ -247,7 +248,7 @@
                     if (!scope.fetching) {
                         if (scope.cacheNextItems.length > 0) {
                             scope.fetching = true;
-                            scope.page = scope.page + 1;
+                            scope.page += 1;
 
                             criteria.source.from = (scope.page) * criteria.source.size;
                             scope.loading = true;
@@ -260,14 +261,12 @@
                                 if (!_.isEqual(scope.items, scope.cacheNextItems)) {
                                     scope.items = scope.items.concat(scope.cacheNextItems);
                                 }
+                                scope.fetching = false;
                             }, 100);
 
                             api(getProvider()).query(criteria)
                             .then(function(items) {
                                 scope.cacheNextItems = items._items;
-                                scope.fetching = false;
-                            }, function() {
-                                //
                             })
                             ['finally'](function() {
                                 scope.loading = false;
@@ -280,31 +279,27 @@
                 scope.fetchPrevious = function() {
                     if (!scope.fetching && scope.page > 2) {
                         scope.fetching = true;
-                        scope.page = scope.page - 1;
-                        if (scope.page > 2) {
-                            criteria.source.from = (scope.page - 3) * criteria.source.size;
-                        } else {
-                            criteria.source.from = 0;
-                        }
+                        scope.page -= 1;
+                        criteria.source.from = scope.page > 3 ? (scope.page - 3) * criteria.source.size : 0;
                         scope.loading = true;
 
                         if (scope.items.length > criteria.source.size) {
-                            scope.cacheNextItems = _.slice(scope.items,
-                                scope.items.length - (scope.items.length - criteria.source.size), scope.items.length);
-                            scope.items.splice(scope.items.length - (scope.items.length - criteria.source.size), criteria.source.size);
+                            scope.cacheNextItems = _.slice(scope.items, criteria.source.size, scope.items.length);
+                            scope.items.splice(criteria.source.size, scope.items.length - criteria.source.size);
                         }
 
                         $timeout(function() {
                             scope.items.unshift.apply(scope.items, scope.cachePreviousItems);
-                            if (scope.items.length > 0) {
-                                scrollList(scope.items[parseInt(((scope.items.length - 1) / 2), scope.maxItems || 10)]._id);
-                            }
-                        }, 100);
+                            scope.fetching = false;
+                        }, 100)
+                        .then($timeout(function() {
+                            // when load previous items, scroll back to focus selected item
+                            container.scrollTop += scope.cachePreviousItems.length * itemHeight;
+                        }, 100));
 
                         api(getProvider()).query(criteria)
                         .then(function(items) {
                             scope.cachePreviousItems = items._items;
-                            scope.fetching = false;
                         })
                         ['finally'](function() {
                             scope.loading = false;
@@ -320,37 +315,42 @@
                             scope.cacheNextItems = items._items;
                         });
                 }
-                function scrollList(id) {
-                    $location.hash(id);
-                    $anchorScroll();
-                }
 
                 var UP = -1,
                     DOWN = 1;
 
                 var code;
-                elem.on('keyup', function(e) {
+                elem.on('keydown', function(e) {
                     scope.$apply(function() {
                         if (e.keyCode) {
                             code = e.keyCode;
                         } else if (e.which) {
                             code = e.which;
                         }
-                        if (code === 38) { scope.move(UP, e); }
+                        if (code === 38) {
+                            scope.move(UP, e);
+                        }
                         if (code === 40) {
-                            e.preventDefault();
                             scope.move(DOWN, e);
                         }
-                        if (code === 13 && scope.selected) { scope.edit(scope.selected); }
+                        if (code === 13 && scope.selected) {
+                            scope.edit(scope.selected);
+                        }
                     });
                 });
 
                 scope.move = function (diff, event) {
-                    if (scope.selected != null && $rootScope.config &&
-                        $rootScope.config.features && $rootScope.config.features.customMonitoringWidget) {
+                    if (scope.selected != null && $rootScope.config.features.customMonitoringWidget) {
                         if (scope.items) {
                             var index = _.findIndex(scope.items, {_id: scope.selected._id});
+                            if (!itemHeight) {
+                                var containerItems = container.getElementsByTagName('li');
+                                if (containerItems.length) {
+                                    itemHeight = containerItems[0].offsetHeight;
+                                }
+                            }
                             if (index === -1) { // selected not in current items, select first
+                                container.scrollTop = 0;
                                 clickItem(_.first(scope.items), event);
                             }
                             var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
@@ -358,6 +358,16 @@
                                 clickItem(_.last(scope.items), event);
                             }
                             if (index !== nextIndex) {
+                                // scrolling in monitoring widget for ntb is done by keyboard
+                                // when we select next item if item is out of focus (not visible) it will scroll 2 items down
+                                if ((nextIndex + 2) * itemHeight > _.min([5, criteria.source.size]) * itemHeight + container.scrollTop &&
+                                    nextIndex > index) {
+                                    container.scrollTop += itemHeight * 2;
+                                }
+                                // when we select previous item if item is out of focus (not visible) it will scroll 2 items up
+                                if (nextIndex * itemHeight < container.scrollTop && nextIndex < index) {
+                                    container.scrollTop -= itemHeight * 2;
+                                }
                                 clickItem(scope.items[nextIndex], event);
                             } else {
                                 if (event) {

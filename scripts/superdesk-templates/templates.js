@@ -169,7 +169,7 @@
 
         this.fetchTemplatesByIds = function(templateIds) {
             if (!templateIds.length) {
-                return $q.when();
+                return $q.when([]);
             }
 
             var params = {
@@ -586,7 +586,7 @@
                     case 'All':
                         return all;
                     case 'None':
-                        return item.is_public && typeof item.template_desks === 'undefined';
+                        return item.is_public && (typeof item.template_desks === 'undefined' || !item.template_desks.length);
                     case 'Personal':
                         return !item.is_public;
                     default:

@@ -53,7 +53,7 @@
 
             // pick own properties
             angular.forEach(data, function(val, key) {
-                if (key !== 'content') {
+                if (key !== 'content' && key[0] !== '_') {
                     sendData[key] = val === null ? val: val.toString();
                 }
             });
@@ -82,8 +82,11 @@
         this.update = function (dictionary, data, success, error) {
             var sendData = {};
             angular.forEach(data, function(val, key) {
-                sendData[key] = key === 'is_active' ? val.toString() : val;
+                if (key[0] !== '_') {
+                    sendData[key] = key === 'is_active' ? val.toString() : val;
+                }
             });
+
             setPersonalName(sendData);
             return api.save('dictionaries', dictionary, sendData).then(success, error);
         };
@@ -254,9 +257,13 @@
             $scope.loading = true;
             dictionaries.open(dictionary, function(result) {
                 $scope.origDictionary = result;
-                $scope.dictionary = _.cloneDeep(result);
-                $scope.dictionary.content = $scope.dictionary.content || {};
-                $scope.dictionary.is_active = $scope.dictionary.is_active !== 'false';
+                $scope.dictionary = Object.create(result);
+                $scope.dictionary.content = Object.create(result.content || {});
+                $scope.dictionary.is_active = result.is_active !== 'false';
+
+                if ($scope.isAbbreviations(result)) {
+                    $scope.dictionary.content = result.content || {};
+                }
             });
         };
 
@@ -396,10 +403,7 @@
         }
 
         function generateTrie() {
-            var content = $scope.dictionary.content;
-            if ($scope.origDictionary && $scope.origDictionary.content) {
-                content = $scope.dictionary.content;
-            }
+            var content = $scope.origDictionary.content || $scope.dictionary.content;
             var words = Object.keys(content || {});
             $scope.wordsCount = words.length;
             for (var i = 0; i < $scope.wordsCount; i++) {

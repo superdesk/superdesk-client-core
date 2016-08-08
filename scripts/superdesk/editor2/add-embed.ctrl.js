@@ -1,12 +1,14 @@
 (function() {
 'use strict';
 
+var embedCodeHandlers = require('./embedCodeHandlers.js');
+
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
 SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash',
-'EMBED_PROVIDERS', '$scope', 'editor', 'config', '$injector'];
+'EMBED_PROVIDERS', '$scope', 'editor', 'config', '$injector', 'api'];
 function SdAddEmbedController (embedService, $element, $timeout, $q, _,
-EMBED_PROVIDERS, $scope, editor, config, $injector) {
+EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
     var vm = this;
     angular.extend(vm, {
         editorCtrl: undefined,  // defined in link method
@@ -61,26 +63,17 @@ EMBED_PROVIDERS, $scope, editor, config, $injector) {
                     body: vm.input,
                     provider: EMBED_PROVIDERS.custom
                 };
-                var knownProviders = [
-                    {
-                        pattern: /twitter\.com\/widgets\.js/g,
-                        name: EMBED_PROVIDERS.twitter
-                    },
-                    {
-                        pattern: /www\.youtube\.com/g,
-                        name: EMBED_PROVIDERS.youtube
-                    }
-                ];
-                // prepend with custom handlers from config
-                if (config.editorEmbedCodeParsers) {
-                    knownProviders = $injector.invoke(config.editorEmbedCodeParsers).concat(knownProviders);
-                }
                 function updateEmbedBlock(partialUpdate) {
                     angular.extend(embedBlock, partialUpdate);
                 }
                 // try to guess the provider of the custom embed
-                for (var i = 0; i < knownProviders.length; i++) {
-                    var provider = knownProviders[i];
+                for (var i = 0; i < embedCodeHandlers.length; i++) {
+                    var provider = $injector.invoke(embedCodeHandlers[i]);
+                    if (angular.isDefined(provider.condition)) {
+                        if (!provider.condition()) {
+                            continue;
+                        }
+                    }
                     var match = provider.pattern.exec(vm.input);
                     if (match) {
                         updateEmbedBlock({provider: provider.name});

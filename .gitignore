@@ -3,9 +3,10 @@ node_modules
 nbproject
 bower
 dist
-index.html
-templates-cache.js
+templates-cache.generated.js
 .tmp
 test-server/env
 test-server/__pycache__
 e2e-test-results
+templates-cache.generated.js
+.env

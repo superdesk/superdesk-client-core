@@ -1,7 +1,7 @@
 module.exports = {
     all: {
         files: {
-            '<%= appDir %>/scripts/translations.js': '<%= poDir %>/*.po'
+            'scripts/superdesk/lang/lang.generated.js': '<%= poDir %>/*.po'
         }
     }
 };
