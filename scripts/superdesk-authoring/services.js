@@ -36,6 +36,10 @@ function HistoryFactory(History, $window, $timeout) {
             };
             angular.element($window).on('keydown', onHistoryKeydown);
             angular.element($window).on('keyup', onHistoryKeyup);
+            // Because something can update the item a 2nd time after a user change (like an update of the associations
+            // array after an embed has been created), a new history version can be stored.
+            // This code removes all the previous history versions which are less than 1 second old.
+            // This prevent the user to have to press `ctrl`+`z` more than once in order to revert his last change.
             scope.$on('History.archived', function(evt, data) {
                 var newDate = new Date();
                 if (lastArchive) {
