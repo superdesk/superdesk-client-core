@@ -98,9 +98,6 @@ describe('Upload controller', function() {
         inject(function($controller, $rootScope, $q, api, upload, config) {
         var scope = $rootScope.$new(true);
 
-        // explicitly set required fields
-        //scope.requiredFields = config.requiredMediaMetadata;
-
         $controller('UploadController', {$scope: scope});
         $rootScope.$digest();
         expect(scope.items.length).toBe(0);
