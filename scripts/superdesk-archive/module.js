@@ -371,6 +371,7 @@ import BaseListController from './controllers/baseList';
         $scope.enableSave = false;
         $scope.currentUser =  session.identity;
         $scope.uniqueUpload = $scope.locals && $scope.locals.data && $scope.locals.data.uniqueUpload === true;
+        $scope.requiredFields = config.requiredMediaMetadata;
 
         var uploadFile = function(item) {
             var handleError = function(reason) {
@@ -410,7 +411,7 @@ import BaseListController from './controllers/baseList';
             $scope.errorMessage = null;
             if (!_.isEmpty($scope.items)) {
                 _.each($scope.items, function(item) {
-                    _.each(config.requiredMediaMetadata, function(key) {
+                    _.each($scope.requiredFields, function(key) {
                         if (item.meta[key] == null || _.isEmpty(item.meta[key])) {
                             $scope.errorMessage = 'Required field(s) are missing';
                             return false;

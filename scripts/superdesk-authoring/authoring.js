@@ -919,6 +919,7 @@ import 'angular-history/history.js';
     function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $rootScope, config) {
         $scope.data = $scope.locals.data;
         $scope.data.cropData = {};
+        $scope.data.requiredFields = config.requiredMediaMetadata;
         var sizes = {};
 
         $scope.data.renditions.forEach(function(rendition) {
@@ -942,7 +943,7 @@ import 'angular-history/history.js';
 
         var validateMediaFields = function () {
             $scope.errorMessage = null;
-            _.each(config.requiredMediaMetadata, function (key) {
+            _.each($scope.data.requiredFields, function (key) {
                 if ($scope.data.metadata[key] == null || _.isEmpty($scope.data.metadata[key])) {
                     $scope.errorMessage = 'Required field(s) missing';
                     return false;
