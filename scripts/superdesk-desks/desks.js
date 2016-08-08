@@ -360,7 +360,8 @@
                             if (index !== nextIndex) {
                                 // scrolling in monitoring widget for ntb is done by keyboard
                                 // when we select next item if item is out of focus (not visible) it will scroll 2 items down
-                                if ((nextIndex + 2) * itemHeight > container.offsetHeight / 2 + container.scrollTop && nextIndex > index) {
+                                if ((nextIndex + 2) * itemHeight > _.min([5, criteria.source.size]) * itemHeight + container.scrollTop &&
+                                    nextIndex > index) {
                                     container.scrollTop += itemHeight * 2;
                                 }
                                 // when we select previous item if item is out of focus (not visible) it will scroll 2 items up
