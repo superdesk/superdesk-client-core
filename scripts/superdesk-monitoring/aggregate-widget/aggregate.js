@@ -9,7 +9,7 @@ angular.module('superdesk.aggregate.widgets', ['superdesk.aggregate', 'superdesk
                 multiple: true,
                 icon: 'archive',
                 max_sizex: 2,
-                max_sizey: 2,
+                max_sizey: 3,
                 sizex: 1,
                 sizey: 2,
                 thumbnail: 'scripts/superdesk-monitoring/aggregate-widget/thumbnail.svg',
