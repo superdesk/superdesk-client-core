@@ -949,7 +949,7 @@ import 'angular-history/history.js';
                     return false;
                 }
             });
-        }
+        };
 
         /*
         * Records the coordinates for each crop sizes available and
