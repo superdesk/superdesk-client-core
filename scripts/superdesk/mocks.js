@@ -20,7 +20,8 @@ angular.module('superdesk.mocks', [])
         model: {
             dateformat: 'DD/MM/YYYY',
             timeformat: 'HH:mm:ss'
-        }
+        },
+        requiredMediaMetadata: ['headline', 'description_text', 'alt_text']
     })
     .service('features', function() {})
     .service('preferencesService', function($q) {

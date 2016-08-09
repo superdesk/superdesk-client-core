@@ -38,24 +38,24 @@
                     </div>
 
                     <div class="row">
-                        <label><span translate>Title</span> *</label>
+                        <label ng-class="{'label-asterisk':(requiredFields.indexOf('headline') > -1)}" translate>Title</label>
                         <div ng-model="item.meta.headline" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                     </div>
                     <div class="other-info">
                         <div class="row">
-                            <label><span translate>Caption</span> *</label>
+                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('description_text') > -1)}" translate>Caption</label>
                             <div ng-model="item.meta.description_text" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
                         <div class="row">
-                            <label><span translate>Alt text</span> *</label>
+                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('alt_text') > -1)}" translate>Alt text</label>
                             <div ng-model="item.meta.alt_text" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
                         <div class="row">
-                            <label><span translate>Credit</span></label>
+                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('byline') > -1)}" translate>Credit</label>
                             <div ng-model="item.meta.byline" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
                         <div class="row">
-                            <label><span translate>Copyright holder</span></label>
+                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('copyrightholder') > -1)}" translate>Copyright holder</label>
                             <div ng-model="item.meta.copyrightholder" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
                         <div class="row">
@@ -68,7 +68,7 @@
                             </select>
                         </div>
                         <div class="row">
-                            <label><span translate>Copyright notice</span></label>
+                            <label ng-class="{'label-asterisk':(requiredFields.indexOf('copyrightnotice') > -1)}" translate>Copyright notice</label>
                             <div ng-model="item.meta.copyrightnotice" contenteditable="true" class="contenteditable-input contenteditable-input--side-padding"></div>
                         </div>
                         <div class="row" ng-if="item.cssType === 'image'">

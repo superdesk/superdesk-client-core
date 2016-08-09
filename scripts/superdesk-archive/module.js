@@ -363,15 +363,15 @@ import BaseListController from './controllers/baseList';
         };
     }
 
-    UploadController.$inject = ['$scope', '$q', 'upload', 'api', 'archiveService', 'session'];
-    function UploadController($scope, $q, upload, api, archiveService, session) {
+    UploadController.$inject = ['$scope', '$q', 'upload', 'api', 'archiveService', 'session', 'config'];
+    function UploadController($scope, $q, upload, api, archiveService, session, config) {
         $scope.items = [];
         $scope.saving = false;
         $scope.failed = false;
         $scope.enableSave = false;
         $scope.currentUser =  session.identity;
         $scope.uniqueUpload = $scope.locals && $scope.locals.data && $scope.locals.data.uniqueUpload === true;
-        var requiredFields = ['headline', 'description_text', 'alt_text'];
+        $scope.requiredFields = config.requiredMediaMetadata;
 
         var uploadFile = function(item) {
             var handleError = function(reason) {
@@ -411,7 +411,7 @@ import BaseListController from './controllers/baseList';
             $scope.errorMessage = null;
             if (!_.isEmpty($scope.items)) {
                 _.each($scope.items, function(item) {
-                    _.each(requiredFields, function(key) {
+                    _.each($scope.requiredFields, function(key) {
                         if (item.meta[key] == null || _.isEmpty(item.meta[key])) {
                             $scope.errorMessage = 'Required field(s) are missing';
                             return false;

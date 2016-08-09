@@ -915,11 +915,13 @@ import 'angular-history/history.js';
         };
     }
 
-    ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash', 'api', '$rootScope'];
-    function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $rootScope) {
+    ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash', 'api', '$rootScope', 'config'];
+    function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $rootScope, config) {
         $scope.data = $scope.locals.data;
         $scope.data.cropData = {};
+        $scope.data.requiredFields = config.requiredMediaMetadata;
         var sizes = {};
+
         $scope.data.renditions.forEach(function(rendition) {
             sizes[rendition.name] = {width: rendition.width, height: rendition.height};
             $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
@@ -937,6 +939,16 @@ import 'angular-history/history.js';
             } else if ($scope.selectedRendition === null || $scope.selectedRendition.name !== rendition.name) {
                 $scope.selectedRendition = rendition;
             }
+        };
+
+        var validateMediaFields = function () {
+            $scope.errorMessage = null;
+            _.each($scope.data.requiredFields, function (key) {
+                if ($scope.data.metadata[key] == null || _.isEmpty($scope.data.metadata[key])) {
+                    $scope.errorMessage = 'Required field(s) missing';
+                    return false;
+                }
+            });
         };
 
         /*
@@ -966,12 +978,18 @@ import 'angular-history/history.js';
                 return false;
             }
             if ($scope.data.showMetadataEditor) {
-                // update metadata in `item`
-                angular.extend($scope.data.item, $scope.data.metadata);
+                validateMediaFields();
+                if ($scope.errorMessage == null) {
+                    // update metadata in `item`
+                    angular.extend($scope.data.item, $scope.data.metadata);
+                    $scope.data.item.poi = $scope.data.poi;
+                    notify.success(gettext('Crop changes have been recorded'));
+                    $scope.resolve({cropData: $scope.data.cropData, poi: $scope.data.poi});
+                } else {
+                    notify.error($scope.errorMessage);
+                    return false;
+                }
             }
-            $scope.data.item.poi = $scope.data.poi;
-            notify.success(gettext('Crop changes have been recorded'));
-            $scope.resolve({cropData: $scope.data.cropData, poi: $scope.data.poi});
         };
 
         $scope.close = function() {
