@@ -9,6 +9,7 @@ module.exports.waitForSuperdesk = waitForSuperdesk;
 module.exports.nav = nav;
 module.exports.getListOption = getListOption;
 module.exports.ctrlKey = ctrlKey;
+module.exports.commandKey = commandKey;
 module.exports.ctrlShiftKey = ctrlShiftKey;
 module.exports.altKey = altKey;
 module.exports.assertToastMsg = assertToastMsg;
@@ -182,6 +183,16 @@ function getListOption(dropdown, n) {
 function ctrlKey(key) {
     var Key = protractor.Key;
     browser.actions().sendKeys(Key.chord(Key.CONTROL, key)).perform();
+}
+
+/**
+ * Performs COMMAND + key action
+ *
+ * @param {char} key
+ */
+function commandKey(key) {
+    var Key = protractor.Key;
+    browser.actions().sendKeys(Key.chord(Key.COMMAND, key)).perform();
 }
 
 /**

@@ -3,6 +3,7 @@
 var monitoring = require('./helpers/monitoring'),
     authoring = require('./helpers/authoring'),
     ctrlKey = require('./helpers/utils').ctrlKey,
+    commandKey = require('./helpers/utils').commandKey,
     ctrlShiftKey = require('./helpers/utils').ctrlShiftKey,
     assertToastMsg = require('./helpers/utils').assertToastMsg,
     openUrl = require('./helpers/utils').open,
@@ -62,9 +63,9 @@ describe('authoring', function() {
         authoring.addEmbed('Embed');
         authoring.blockContains(1, 'Embed');
         authoring.blockContains(2, 'to be undone');
-        ctrlKey('z');
+        commandKey('z');
         authoring.blockContains(0, 'to be undone');
-        ctrlKey('y');
+        commandKey('y');
         authoring.blockContains(1, 'Embed');
         authoring.blockContains(2, 'to be undone');
         authoring.cutBlock(1);

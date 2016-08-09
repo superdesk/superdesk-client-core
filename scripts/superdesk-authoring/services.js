@@ -22,17 +22,23 @@ function HistoryFactory(History, $window, $timeout) {
                 History.watch(expression, scope);
                 lastArchive = new Date();
             }, 0, false);
-            var onHistoryKeydown = function(event) {
-                if (event.ctrlKey && KeyOperations[event.keyCode]) {
-                    event.preventDefault();
+            var onHistoryKey = function(event, cb) {
+                var modifier = event.ctrlKey || event.metaKey;
+                if (modifier && KeyOperations[event.keyCode]) {
+                    cb();
                 }
             };
+            var onHistoryKeydown = function(event) {
+                onHistoryKey(event, function() {
+                    event.preventDefault();
+                });
+            };
             var onHistoryKeyup = function(event) {
-                if (event.ctrlKey && KeyOperations[event.keyCode]) {
+                onHistoryKey(event, function() {
                     scope.$apply(function() {
                         KeyOperations[event.keyCode].bind(History)(expression, scope);
                     });
-                }
+                });
             };
             angular.element($window).on('keydown', onHistoryKeydown);
             angular.element($window).on('keyup', onHistoryKeyup);
