@@ -132,6 +132,10 @@
                         superdesk.intent('preview', 'item', item);
                     };
 
+                    scope.getCompanyCodes = function() {
+                        return _.map(scope.item.company_codes, 'qcode').join(', ');
+                    };
+
                     desks.initialize().then(function() {
                         scope.userLookup = desks.userLookup;
                     });
