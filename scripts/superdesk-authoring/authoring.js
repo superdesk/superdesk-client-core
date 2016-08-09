@@ -439,13 +439,17 @@ import 'angular-history/history.js';
             stripHtml(diff);
             autosave.stop(item);
 
+            if (diff._etag) { // make sure we use orig item etag
+                delete diff._etag;
+            }
+
             if (_.size(diff) > 0) {
-                return api.save('archive', item, diff).then(function(_item) {
+                return api.save('archive', origItem, diff).then(function(_item) {
                     item._autosave = null;
                     item._autosaved = false;
                     item._locked = lock.isLockedInCurrentSession(item);
                     $injector.get('authoringWorkspace').update(item);
-                    return item;
+                    return origItem;
                 });
             } else {
                 if (origItem) {
@@ -1162,9 +1166,7 @@ import 'angular-history/history.js';
                  */
                 $scope.save = function() {
                     return authoring.save($scope.origItem, $scope.item).then(function(res) {
-                        $scope.origItem = res;
                         $scope.dirty = false;
-                        $scope.item = _.create($scope.origItem);
 
                         if (res.cropData) {
                             $scope.item.hasCrops = true;
@@ -1175,6 +1177,7 @@ import 'angular-history/history.js';
                         }
 
                         notify.success(gettext('Item updated.'));
+
                         return $scope.origItem;
                     }, function(response) {
                         if (angular.isDefined(response.data._issues)) {
@@ -1660,7 +1663,6 @@ import 'angular-history/history.js';
                         $scope.item = item;
                     }
 
-                    $scope.item._etag = $scope.origItem._etag;
                     $scope.dirty = true;
 
                     if ($rootScope.config) {
@@ -2045,6 +2047,7 @@ import 'angular-history/history.js';
             scope: {
                 item: '=',
                 view: '=',
+                orig: '=',
                 _beforeSend: '&beforeSend',
                 _editable: '=editable',
                 _publish: '&publish',
@@ -2617,8 +2620,13 @@ import 'angular-history/history.js';
                  * hierarchy.
                  */
                 function initializeItemActions() {
-                    scope.itemActions = authoring.itemActions(scope.item);
+                    if (scope.orig || scope.item) {
+                        scope.itemActions = authoring.itemActions(scope.orig || scope.item);
+                    }
                 }
+
+                // update actions on item save
+                scope.$watch('orig._current_version', initializeItemActions);
             }
         };
     }
