@@ -22,7 +22,7 @@
     <span ng-if="item.flags.marked_for_sms" sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
     <div ng-if="item.flags.marked_for_sms">
         <label translate>SMS Message</label>
-        <input tabindex="{{editor.sms.order}}" type="text"
+        <input tabindex="{{editor.sms.order}}" type="text" sd-remove-tags
          class="byline"
          id="sms_message"
          ng-model="item.sms_message"
