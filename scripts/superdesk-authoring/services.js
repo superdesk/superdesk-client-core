@@ -31,13 +31,16 @@ function HistoryFactory(History, $window, $timeout) {
             var onHistoryKeydown = function(event) {
                 onHistoryKey(event, function() {
                     event.preventDefault();
+                    // action is on keydown becuase command key (event.metakey) on OSX is not detected on keyup events
+                    // for some reason.
+                    scope.$apply(function() {
+                        KeyOperations[event.keyCode].bind(History)(expression, scope);
+                    });
                 });
             };
             var onHistoryKeyup = function(event) {
                 onHistoryKey(event, function() {
-                    scope.$apply(function() {
-                        KeyOperations[event.keyCode].bind(History)(expression, scope);
-                    });
+                    event.preventDefault();
                 });
             };
             angular.element($window).on('keydown', onHistoryKeydown);
