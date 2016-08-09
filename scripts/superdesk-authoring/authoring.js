@@ -448,6 +448,11 @@ import 'angular-history/history.js';
                     return item;
                 });
             } else {
+                if (origItem) {
+                    // if there is nothing to save. No diff.
+                    origItem._autosave = null;
+                    origItem._autosaved = false;
+                }
                 return $q.when(origItem);
             }
         };
@@ -1655,6 +1660,7 @@ import 'angular-history/history.js';
                         $scope.item = item;
                     }
 
+                    $scope.item._etag = $scope.origItem._etag;
                     $scope.dirty = true;
 
                     if ($rootScope.config) {
