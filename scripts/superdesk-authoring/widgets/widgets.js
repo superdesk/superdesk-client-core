@@ -82,7 +82,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
     $scope.isWidgetLocked = function(widget) {
         if (widget) {
             var locked = lock.isLocked($scope.item) && !lock.can_unlock($scope.item);
-            var isReadOnlyStage = desks.isReadOnlyStage($scope.item.task.stage);
+            var isReadOnlyStage = $scope.item.task && $scope.item.task.stage && desks.isReadOnlyStage($scope.item.task.stage);
 
             return (widget.needUnlock && (locked || isReadOnlyStage)) ||
             (widget.needEditable && (!$scope.item._editable || isReadOnlyStage));

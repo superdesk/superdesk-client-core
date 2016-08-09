@@ -1,13 +1,13 @@
 <div class="slide-pane slide-pane--dark content-item-preview" ng-show="isActive" ng-class="{open: isActive, 'slide-pane--inset': mode === 'authoring'}">
 
     <div class="slide-pane__header">
-        <h3 ng-show="canSendItem() && itemActions.publish" translate>Send to / Publish</h3>
-        <h3 ng-show="canSendItem() && !itemActions.publish" translate>Send to</h3>
-        <h3 ng-show="!canSendItem()" translate>Fetch To</h3>
+        <h3 class="panel-header {{userAction === 'send_to'?'panel-header-active':''}}" ng-show="canSendItem() && showSendButtonAndDestination()" ng-click="updateUserAction('send_to')" translate>Send To</h3>
+        <h3 class="panel-header {{userAction === 'publish'?'panel-header-active':''}}" ng-show="canPublishItem()" ng-click="updateUserAction('publish')" translate>Publish</h3>
+        <h3 class="panel-header {{userAction === 'send_to'?'.panel-header-active':''}}" ng-show="!canSendItem() && !canPublishItem() && showSendButtonAndDestination()" ng-click="updateUserAction('send_to')" translate>Fetch To</h3>
         <div class="close" ng-click="close()"><i class="icon-close-small icon-white"></i></div>
     </div>
 
-    <div class="slide-pane__content">
+    <div class="slide-pane__content" ng-show="userAction === 'send_to'">
         <div sd-toggle-box ng-if="showSendButtonAndDestination()" data-title="{{ :: 'Destination' | translate }}" data-open="true" data-style="dark">
             <div class="dropdown dropdown-noarrow dropdown--dark" dropdown>
                 <button class="dropdown-toggle" dropdown-toggle>
@@ -32,6 +32,9 @@
                 </li>
             </ul>
         </div>
+    </div>
+
+    <div class="slide-pane__content" ng-show="userAction === 'publish'">
         <div sd-toggle-box id="embargoTimestamp" ng-if="mode === 'authoring' && showEmbargo()" data-title="Embargo" data-open="true" data-style="dark">
             <label class="label--lite" translate>Embargo</label>
             <ul class="btn-list">
@@ -62,7 +65,7 @@
 
     </div>
 
-    <div class="slide-pane__footer" sd-loading="loading">
+    <div class="slide-pane__footer" sd-loading="loading" ng-show="userAction === 'send_to'">
         <ul class="btn-list">
             <li ng-if="mode === 'authoring' && canSendAndContinue() && itemActions.send && itemActions.new_take">
                 <button class="btn btn-info"
@@ -88,6 +91,11 @@
                     fetch and open
                 </button>
             </li>
+        </ul>
+    </div>
+
+    <div class="slide-pane__footer" sd-loading="loading" ng-show="userAction === 'publish'">
+        <ul class="btn-list">
             <li class="full-width" ng-if="canSendItem() && canPublishItem()">
                 <button type="submit"
                         class="btn btn-info"

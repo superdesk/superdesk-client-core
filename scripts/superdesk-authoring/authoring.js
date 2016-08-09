@@ -2009,11 +2009,11 @@ import 'angular-history/history.js';
     SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
         'superdeskFlags', '$location', 'macros', '$rootScope',
         'authoring', 'send', 'editor', 'confirm', 'archiveService',
-        'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges'];
+        'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage'];
     function SendItem($q, api, desks, notify, authoringWorkspace,
                       superdeskFlags, $location, macros, $rootScope,
                       authoring, send, editor, confirm, archiveService,
-                      preferencesService, multi, datetimeHelper, config, privileges) {
+                      preferencesService, multi, datetimeHelper, config, privileges, storage) {
         return {
             scope: {
                 item: '=',
@@ -2043,6 +2043,7 @@ import 'angular-history/history.js';
                 scope.$watch('item', activateItem);
                 scope.$watch(send.getConfig, activateConfig);
 
+                
                 scope.publish = function() {
                     scope.loading = true;
                     var result = scope._publish();
@@ -2066,6 +2067,7 @@ import 'angular-history/history.js';
                 function activateItem(item) {
                     if (scope.mode === 'monitoring') {
                         superdeskFlags.flags.fetching = !!item;
+                        scope.userAction = 'send_to';
                     }
 
                     scope.isActive = !!item;
@@ -2590,8 +2592,37 @@ import 'angular-history/history.js';
                  * hierarchy.
                  */
                 function initializeItemActions() {
-                    scope.itemActions = authoring.itemActions(scope.item);
+                    if (scope.item) {
+                        scope.itemActions = authoring.itemActions(scope.item);
+                    }
                 }
+
+                function initializeUserAction() {
+                    scope.userAction = storage.getItem('sendto_action') || 'send_to';
+                    
+                    if (scope.item) {
+                        initializeItemActions();
+
+                        if(scope.userAction === 'send_to' && scope.canPublishItem() &&
+                            (!scope.canSendItem() || !scope.showSendButtonAndDestination())) {
+                            scope.userAction = 'publish';
+                            return;
+                        }
+
+                        if(scope.userAction === 'publish' && !scope.canPublishItem() && scope.showSendButtonAndDestination()) {
+                            scope.userAction = 'send_to';
+                            return;
+                        }
+                    }
+                }
+
+                scope.updateUserAction = function(actionName) {
+                    scope.userAction = actionName;
+                    storage.setItem('sendto_action', actionName);
+                }
+
+                initializeUserAction();
+                
             }
         };
     }
