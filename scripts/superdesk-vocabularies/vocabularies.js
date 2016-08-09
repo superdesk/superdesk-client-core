@@ -35,8 +35,8 @@
         };
     }
 
-    VocabularyConfigController.$inject = ['$scope', 'vocabularies'];
-    function VocabularyConfigController($scope, vocabularies) {
+    VocabularyConfigController.$inject = ['$scope', 'vocabularies', '$timeout'];
+    function VocabularyConfigController($scope, vocabularies, $timeout) {
 
         /**
          * Opens vocabulary in the edit modal.
@@ -44,8 +44,14 @@
          * @param {Object} vocabulary
          */
         $scope.openVocabulary = function(vocabulary) {
-            $scope.vocabulary = vocabulary;
+            $scope.loading = true;
+            $timeout(function() {  $scope.vocabulary = vocabulary;
+            }, 200, true);
         };
+
+        $scope.$on('vocabularies:loaded', function() {
+            $scope.loading = false;
+        });
 
         // load the list of vocabularies into component:
         vocabularies.getVocabularies().then(function(vocabularies) {
@@ -60,9 +66,10 @@
       'api',
       'vocabularies',
       'metadata',
-      'cvSchema'
+      'cvSchema',
+      '$rootScope'
     ];
-    function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema) {
+    function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema, $rootScope) {
 
         var origVocabularyItems = _.cloneDeep($scope.vocabulary.items);
 
@@ -70,6 +77,7 @@
          * Unload vocabulary/close modal.
          */
         function closeVocabulary() {
+            $rootScope.$broadcast('vocabularies:loaded');
             $scope.vocabulary = null;
         }
 
@@ -130,7 +138,7 @@
             _.extend(newVocabulary, $scope.model);
             newVocabulary.is_active = true;
 
-            $scope.vocabulary.items.push(newVocabulary);
+            $scope.vocabulary.items.unshift(newVocabulary);
         };
 
         // try to reproduce data model of vocabulary:
