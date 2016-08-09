@@ -87,6 +87,7 @@ describe('takes', function() {
         browser.actions().sendKeys('campaign finance').perform();
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
         browser.actions().sendKeys(protractor.Key.ENTER).perform(); // selects subject term
+        browser.sleep(100);
         expect(authoring.getSelectedSubjects().first().getText()).toBe('campaign finance');
 
         authoring.setHeaderEdNoteText('reopens ednote');

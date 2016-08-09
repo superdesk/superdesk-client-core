@@ -130,7 +130,7 @@ import 'angular-history/history.js';
          * Open an item
          */
         this.open = function openAutosave(item) {
-            if (item._locked || !item._editable) {
+            if (!item._locked || !item._editable) {
                 // no way to get autosave
                 return $q.when(item);
             }
@@ -156,16 +156,15 @@ import 'angular-history/history.js';
         /**
          * Auto-saves an item
          */
-        this.save = function saveAutosave(item) {
+        this.save = function saveAutosave(item, orig) {
             if (item._editable && item._locked) {
                 this.stop(item);
                 timeouts[item._id] = $timeout(function() {
                     var diff = extendItem({_id: item._id}, item);
                     return api.save(RESOURCE, {}, diff).then(function(_autosave) {
-                        var orig = Object.getPrototypeOf(item);
                         orig._autosave = _autosave;
                     });
-                }, AUTOSAVE_TIMEOUT);
+                }, AUTOSAVE_TIMEOUT, false);
 
                 return timeouts[item._id];
             }
@@ -236,13 +235,23 @@ import 'angular-history/history.js';
             } else {
                 return api.find('archive', _id, {embedded: {lock_user: 1}})
                 .then(function _lock(item) {
-                    if (!read_only && lock.isLocked(item)) {  // Check if item is still editable
-                        item._locked = true;
+                    if (read_only) {
+                        item._locked = lock.isLockedInCurrentSession(item);
                         item._editable = false;
                         return $q.when(item);
-                    } else {
-                        item._editable = !read_only;
-                        return lock.lock(item);
+                    } else { // we want to lock
+                        if (lock.isLocked(item)) { // is locked by someone else
+                            item._locked = false;
+                            item._editable = false;
+                            return $q.when(item);
+                        } else if (lock.isLockedInCurrentSession(item)) { // we have lock
+                            item._locked = true;
+                            item._editable = true;
+                            return $q.when(item);
+                        } else { // not locked at all, try to lock
+                            item._editable = true;
+                            return lock.lock(item);
+                        }
                     }
                 })
                 .then(function _autosave(item) {
@@ -404,9 +413,10 @@ import 'angular-history/history.js';
          * Autosave the changes
          *
          * @param {Object} item
+         * @param {Object} orig
          */
-        this.autosave = function autosaveAuthoring(item) {
-            return autosave.save(item);
+        this.autosave = function autosaveAuthoring(item, orig) {
+            return autosave.save(item, orig);
         };
 
         /**
@@ -429,15 +439,24 @@ import 'angular-history/history.js';
             stripHtml(diff);
             autosave.stop(item);
 
+            if (diff._etag) { // make sure we use orig item etag
+                delete diff._etag;
+            }
+
             if (_.size(diff) > 0) {
-                return api.save('archive', item, diff).then(function(_item) {
+                return api.save('archive', origItem, diff).then(function(_item) {
                     item._autosave = null;
                     item._autosaved = false;
-                    item._locked = lock.isLocked(item);
+                    item._locked = lock.isLockedInCurrentSession(item);
                     $injector.get('authoringWorkspace').update(item);
-                    return item;
+                    return origItem;
                 });
             } else {
+                if (origItem) {
+                    // if there is nothing to save. No diff.
+                    origItem._autosave = null;
+                    origItem._autosaved = false;
+                }
                 return $q.when(origItem);
             }
         };
@@ -464,7 +483,7 @@ import 'angular-history/history.js';
          * @param {Object} item
          */
         this.isEditable = function isEditable(item) {
-            return !!item.lock_user && !lock.isLocked(item);
+            return lock.isLockedInCurrentSession(item);
         };
 
         /**
@@ -736,7 +755,7 @@ import 'angular-history/history.js';
                     return item;
                 });
             } else {
-                item._locked = this.isLocked(item);
+                item._locked = this.isLockedInCurrentSession(item);
                 return $q.when(item);
             }
         };
@@ -750,42 +769,47 @@ import 'angular-history/history.js';
                 item._locked = false;
                 return item;
             }, function(err) {
-                item._locked = true;
                 return item;
             });
         };
 
         /**
-         * Test if an item is locked, it can be locked by other user or you in different session.
+         * Test if an item is locked by some other session, so not editable
+         *
+         * @param {Object} item
+         * @return {Boolean}
          */
         this.isLocked = function isLocked(item) {
-            var userId = getLockedUserId(item);
-
-            if (!userId) {
+            if (!item) {
                 return false;
             }
 
-            if (userId !== session.identity._id) {
-                return true;
-            }
-
-            if (!!item.lock_session && item.lock_session !== session.sessionId) {
-                return true;
-            }
-
-            return false;
+            return !!item.lock_user && !this.isLockedInCurrentSession(item);
         };
 
         function getLockedUserId(item) {
-            return item.lock_user && item.lock_user._id || item.lock_user;
+            return !!item.lock_user && item.lock_user._id || item.lock_user;
         }
 
         /**
-        * Test if an item is locked by me in another session
-        */
+         * Test if an item is locked in current session
+         *
+         * @param {Object} item
+         * @return {Boolean}
+         */
+        this.isLockedInCurrentSession = function(item) {
+            return !!item.lock_session && item.lock_session === session.sessionId;
+        };
+
+        /**
+         * Test if an item is locked by me, different session session
+         *
+         * @param {Object} item
+         * @return {Boolean}
+         */
         this.isLockedByMe = function isLockedByMe(item) {
             var userId = getLockedUserId(item);
-            return userId && userId === session.identity._id;
+            return !!userId && userId === session.identity._id;
         };
 
         /**
@@ -795,7 +819,7 @@ import 'angular-history/history.js';
             if (this.isLockedByMe(item)) {
                 return true;
             } else {
-                return item.state === 'draft'? false : privileges.privileges.unlock;
+                return item.state === 'draft' ? false : privileges.privileges.unlock;
             }
         };
     }
@@ -1160,9 +1184,7 @@ import 'angular-history/history.js';
                  */
                 $scope.save = function() {
                     return authoring.save($scope.origItem, $scope.item).then(function(res) {
-                        $scope.origItem = res;
                         $scope.dirty = false;
-                        $scope.item = _.create($scope.origItem);
 
                         if (res.cropData) {
                             $scope.item.hasCrops = true;
@@ -1173,6 +1195,7 @@ import 'angular-history/history.js';
                         }
 
                         notify.success(gettext('Item updated.'));
+
                         return $scope.origItem;
                     }, function(response) {
                         if (angular.isDefined(response.data._issues)) {
@@ -1614,8 +1637,7 @@ import 'angular-history/history.js';
                  * Checks if the item can be unlocked or not.
                  */
                 $scope.can_unlock = function() {
-                    return $scope.item._locked && !$scope.item.sendTo && lock.can_unlock($scope.item) &&
-                        ($scope.itemActions.save || _.contains(['published', 'scheduled', 'corrected'], $scope.item.state));
+                    return !$scope.item.sendTo && lock.can_unlock($scope.item);
                 };
 
                 $scope.save_enabled = function() {
@@ -1654,15 +1676,22 @@ import 'angular-history/history.js';
                 };
 
                 $scope.autosave = function(item) {
+                    if (item !== $scope.item) {
+                        // keep items in sync
+                        $scope.item = item;
+                    }
+
                     $scope.dirty = true;
+
                     if ($rootScope.config) {
                         $rootScope.config.isCheckedByTansa = false;
                     }
+
                     if (tryPublish) {
-                        validate($scope.origItem, item);
+                        validate($scope.origItem, $scope.item);
                     }
 
-                    var autosavedItem = authoring.autosave(item);
+                    var autosavedItem = authoring.autosave($scope.item, $scope.origItem);
                     authoringWorkspace.addAutosave();
                     return autosavedItem;
                 };
@@ -2036,6 +2065,7 @@ import 'angular-history/history.js';
             scope: {
                 item: '=',
                 view: '=',
+                orig: '=',
                 _beforeSend: '&beforeSend',
                 _editable: '=editable',
                 _publish: '&publish',
@@ -2608,8 +2638,13 @@ import 'angular-history/history.js';
                  * hierarchy.
                  */
                 function initializeItemActions() {
-                    scope.itemActions = authoring.itemActions(scope.item);
+                    if (scope.orig || scope.item) {
+                        scope.itemActions = authoring.itemActions(scope.orig || scope.item);
+                    }
                 }
+
+                // update actions on item save
+                scope.$watch('orig._current_version', initializeItemActions);
             }
         };
     }
@@ -2672,11 +2707,23 @@ import 'angular-history/history.js';
                 // ONLY for editor2 (with blocks)
                 try {
                     angular.module('superdesk.editor2');
-                    history.watch('item', scope);
+                    history.watch('item', mainEditScope || scope);
                 } catch (e) {}
 
-                scope.$watch('item', function(item) {
+                scope.$on('History.undone', triggerAutosave);
+                scope.$on('History.redone', triggerAutosave);
+
+                function triggerAutosave() {
+                    if (mainEditScope) {
+                        mainEditScope.$applyAsync(function() {
+                            mainEditScope.autosave(mainEditScope.item);
+                        });
+                    }
+                }
+
+                var stopWatch = scope.$watch('item', function(item) {
                     if (item) {
+                        stopWatch();
                         /* Creates a copy of dateline object from item.__proto__.dateline */
                         if (item.dateline) {
                             var updates = {dateline: {}};
@@ -2771,7 +2818,7 @@ import 'angular-history/history.js';
                 scope.modifySignOff = function(user) {
                     var signOffMapping = config.user.sign_off_mapping;
                     scope.item.sign_off = user[signOffMapping];
-                    autosave.save(scope.item);
+                    autosave.save(scope.item, scope.origItem);
                 };
 
                 /**
@@ -2779,7 +2826,7 @@ import 'angular-history/history.js';
                  */
                 scope.searchSignOff = function(search) {
                     scope.item.sign_off = search;
-                    autosave.save(scope.item);
+                    autosave.save(scope.item, scope.origItem);
                 };
 
                 /**
@@ -2809,7 +2856,7 @@ import 'angular-history/history.js';
                             ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
                             scope.datelineDay, scope.item.dateline.source);
 
-                        autosave.save(scope.item);
+                        autosave.save(scope.item, scope.origItem);
                     }
                 };
 
@@ -2841,7 +2888,7 @@ import 'angular-history/history.js';
                     if (scope.extra.body_footer_value) {
                         scope.item.body_footer = scope.item.body_footer + scope.extra.body_footer_value.value;
                         mainEditScope.dirty = true;
-                        autosave.save(scope.item);
+                        autosave.save(scope.item, scope.origItem);
                     }
 
                     //first option should always be selected, as multiple helplines could be added in footer

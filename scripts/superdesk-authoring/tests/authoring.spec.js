@@ -68,12 +68,13 @@ describe('authoring', function() {
     inject(function(superdesk, api, lock, autosave, session, $injector, $q, $rootScope) {
         var lockedItem = ITEM;
         lockedItem.lock_user = USER;
+        lockedItem.lock_session = session.sessionId;
 
         spyOn(api, 'find').and.returnValue($q.when(lockedItem));
 
         $injector.invoke(superdesk.activity('authoring').resolve.item);
         $rootScope.$digest();
-        expect(ITEM._locked).toBe(false);
+        expect(ITEM._locked).toBe(true);
     }));
 
     it('unlocks a locked item and locks by current user',
@@ -429,7 +430,7 @@ describe('autosave', function() {
     it('can fetch an autosave for item locked by user and is editable',
         inject(function(autosave, api, $q, $rootScope) {
         spyOn(api, 'find').and.returnValue($q.when({}));
-        autosave.open({_locked: false, _editable: true, _id: 1});
+        autosave.open({_locked: true, _editable: true, _id: 1});
         $rootScope.$digest();
         expect(api.find).toHaveBeenCalledWith('archive_autosave', 1);
     }));
@@ -451,18 +452,18 @@ describe('autosave', function() {
     }));
 
     it('can create an autosave', inject(function(autosave, api, $q, $timeout, $rootScope) {
-        var item = {_id: 1, _etag: 'x', _locked: true, _editable: true};
-        var edit = Object.create(item);
-        edit.headline = 'test';
+        var orig = {_id: 1, _etag: 'x', _locked: true, _editable: true};
+        var item = Object.create(orig);
+        item.headline = 'test';
         spyOn(api, 'save').and.returnValue($q.when({_id: 2}));
-        autosave.save(edit);
+        autosave.save(item, orig);
         $rootScope.$digest();
         expect(api.save).not.toHaveBeenCalled();
         $timeout.flush(5000);
         expect(api.save).toHaveBeenCalledWith('archive_autosave', {}, {_id: 1, headline: 'test'});
-        expect(item._autosave._id).toBe(2);
-        expect(edit.headline).toBe('test');
-        expect(item.headline).not.toBe('test');
+        expect(orig._autosave._id).toBe(2);
+        expect(item.headline).toBe('test');
+        expect(orig.headline).not.toBe('test');
     }));
 
     it('can save multiple items', inject(function(autosave, api, $q, $timeout, $rootScope) {
@@ -470,10 +471,10 @@ describe('autosave', function() {
             item2 = {_id: 2, _etag: '2', _locked: true, _editable: true};
         spyOn(api, 'save').and.returnValue($q.when({}));
 
-        autosave.save(_.create(item1));
+        autosave.save(_.create(item1), item1);
         $timeout.flush(1500);
 
-        autosave.save(_.create(item2));
+        autosave.save(_.create(item2), item2);
         $timeout.flush(2500);
 
         expect(api.save).toHaveBeenCalled();
@@ -503,12 +504,13 @@ describe('lock service', function() {
     }));
 
     it('can detect lock by same user and different session', inject(function(lock) {
-        expect(lock.isLocked({lock_user: 'user'})).toBe(false);
+        expect(lock.isLocked({lock_user: 'user'})).toBe(true);
         expect(lock.isLocked({lock_user: 'user', lock_session: 'other_sess'})).toBe(true);
     }));
 
-    it('can use lock_user dict', inject(function(lock) {
-        expect(lock.isLocked({lock_user: {_id: 'user'}})).toBe(false);
+    it('can use lock_user dict', inject(function(lock, session) {
+        expect(lock.isLocked({lock_user: {_id: 'user'}})).toBe(true);
+        expect(lock.isLocked({lock_user: {_id: 'user'}, lock_session: session.sessionId})).toBe(false);
     }));
 
     it('can unlock the item if user has unlock privileges', inject(function(lock, privileges, $rootScope) {

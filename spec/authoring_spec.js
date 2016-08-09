@@ -509,4 +509,19 @@ describe('authoring', function() {
         authoring.sendToButton.click();
         expect(authoring.kill_button.isDisplayed()).toBe(true);
     });
+
+    it('after undo/redo save last version', function() {
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        authoring.writeText('one\ntwo\nthree');
+        browser.sleep(1000); // wait for autosave
+        authoring.backspaceBodyHtml(5);
+        browser.sleep(1000);
+        ctrlKey('z');
+        browser.sleep(1000);
+        authoring.save();
+        authoring.close();
+        monitoring.actionOnItem('Edit', 2, 0);
+        expect(authoring.getBodyText()).toBe('one\ntwo\nthree');
+    });
 });

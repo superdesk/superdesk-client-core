@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Fix undo/redo changes not being saved or autosaved
+
 ## [1.0.0-beta1] 2016-04-26
 
 - initial "public" release

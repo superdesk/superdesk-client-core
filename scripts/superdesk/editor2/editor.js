@@ -978,6 +978,7 @@ angular.module('superdesk.editor2', [
 
                     spellcheck.setLanguage(scope.language);
                     editorElem = elem.find(scope.type === 'preformatted' ?  '.editor-type-text' : '.editor-type-html');
+                    editorElem.off(); // events could be attached already
                     editorElem.empty();
                     editorElem.html(ngModel.$viewValue || '');
                     scope.node = editorElem[0];
