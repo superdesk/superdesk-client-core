@@ -10,10 +10,19 @@ describe('package', function() {
     });
 
     it('performs package operations', function() {
-        // increment package version.
+        // Increment package version.
         monitoring.actionOnItem('Edit', 3, 0);
+
+        // Add item to current package.
         monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 0);
+
+        // Save package
         authoring.save();
+
+        // Check if 'add to current' item menu option is removed.
+        var submenu = monitoring.getMenuActionElement('Add to current', 'main', 2);
+        expect(submenu.isPresent()).toBeFalsy();
+
         authoring.showVersions();
         expect(element.all(by.repeater('version in versions')).count()).toBe(2);
 
