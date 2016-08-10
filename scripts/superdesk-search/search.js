@@ -392,6 +392,16 @@
          * @return {Object}
          */
         this.mergeItems = function(newItems, oldItems, append) {
+            newItems._items = _.map(newItems._items, function(item) {
+                if (item.es_highlight) {
+                    _.forEach(_.keys(item.es_highlight), function (key) {
+                        item[key] = item.es_highlight[key][0];
+                    });
+                }
+
+                return item;
+            });
+
             if (!oldItems || !append) {
                 return newItems;
             } else {
@@ -1128,6 +1138,7 @@
                         scope.total = null;
                         scope.items = null;
                         criteria.aggregations = 1;
+                        criteria.es_highlight = 1;
                         return api.query(getProvider(criteria), criteria).then(function (items) {
                             scope.total = items._meta.total;
                             scope.$applyAsync(function() {
@@ -1177,6 +1188,7 @@
                             criteria.source.from = 0;
                             criteria.source.size = 50;
                             criteria.aggregations = 1;
+                            criteria.es_highlight = 1;
                             api.query(getProvider(criteria), criteria).then(setScopeItems);
                             oldQuery = query;
                         }

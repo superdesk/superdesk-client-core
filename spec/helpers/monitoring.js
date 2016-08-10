@@ -192,7 +192,7 @@ function Monitoring() {
     };
 
     this.getPreviewTitle = function() {
-        var headline = element(by.css('.content-container')).element(by.binding('selected.preview.headline'));
+        var headline = element(by.css('.content-container')).element(by.css('.preview-headline'));
         return headline.getText();
     };
 
