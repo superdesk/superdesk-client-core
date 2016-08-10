@@ -277,7 +277,7 @@ import BaseListController from './controllers/baseList';
          * @return boolean if the state of the item is in one of the published states, false otherwise.
          */
         this.isPublished = function(item) {
-            return _.contains(['published', 'killed', 'scheduled', 'corrected'], item.state);
+            return _.includes(['published', 'killed', 'scheduled', 'corrected'], item.state);
         };
 
         /***
@@ -832,6 +832,7 @@ class ArchiveListController extends BaseListController {
             }
             $scope.loading = true;
             criteria.aggregations = 1;
+            criteria.es_highlight = 1;
             resource.query(criteria).then(function(items) {
                 $scope.loading = false;
                 $scope.items = search.mergeItems(items, $scope.items, next);

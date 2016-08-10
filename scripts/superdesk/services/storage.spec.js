@@ -2,7 +2,7 @@
 
 describe('Storage', function() {
     beforeEach(function() {
-        module('superdesk.services.storage');
+        window.module('superdesk.services.storage');
         localStorage.clear();
     });
 

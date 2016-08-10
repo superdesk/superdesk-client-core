@@ -12,7 +12,7 @@
             <span class="state-label updated" ng-if="item.rewritten_by" translate>Updated</span>
         </div>
 
-        <p class="title" ng-if="item.headline">{{ item.headline }}</p>
+        <p class="title" ng-if="item.headline" sd-html-preview="item.headline"></p>
 
         <div class="core-content">
                 <p ng-if="item.is_spiked" class="alert alert-warning expires">

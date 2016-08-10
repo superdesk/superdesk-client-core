@@ -1,8 +1,8 @@
 describe('monitoring', function() {
     'use strict';
 
-    beforeEach(module('superdesk.monitoring'));
-    beforeEach(module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.monitoring'));
+    beforeEach(window.module('superdesk.mocks'));
 
     it('can preview an item', inject(function($controller, $rootScope) {
         var scope = $rootScope.$new(),
@@ -159,8 +159,8 @@ describe('monitoring', function() {
 
     describe('monitoring group directive', function() {
 
-        beforeEach(module('superdesk.templates-cache'));
-        beforeEach(module('superdesk.searchProviders'));
+        beforeEach(window.module('superdesk.templates-cache'));
+        beforeEach(window.module('superdesk.searchProviders'));
 
         beforeEach(inject(function($templateCache) {
             // change template not to require aggregate config but rather render single group
@@ -209,7 +209,7 @@ describe('monitoring', function() {
 
     describe('desk notification directive', function() {
 
-        beforeEach(module('superdesk.templates-cache'));
+        beforeEach(window.module('superdesk.templates-cache'));
 
         beforeEach(inject(function(desks, api, $q) {
             desks.stageLookup = {'1': {'desk': 'desk1', 'default_incoming': true}};

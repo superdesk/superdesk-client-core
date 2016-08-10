@@ -74,6 +74,7 @@
          */
         function getCriteria(card, queryString, queryParam) {
             var params = {};
+            var criteria = {};
 
             if (card.type === 'search' && card.search && card.search.filter.query) {
                 angular.copy(card.search.filter.query, params);
@@ -86,6 +87,7 @@
                 }
             } else {
                 params.q = card.query;
+                criteria.es_highlight = params.q ? 1 : 0;
             }
 
             params.spike = (card.type === 'spike' || card.type === 'spike-personal' ||
@@ -171,7 +173,7 @@
                 var termsFileType = {terms: {'type': JSON.parse(card.fileType)}};
 
                 // Normal package
-                if (_.contains(JSON.parse(card.fileType), 'composite')) {
+                if (_.includes(JSON.parse(card.fileType), 'composite')) {
                     termsFileType = {and: [
                         {bool: {must_not: {'exists':{'field': 'highlight'}}}},
                         {bool: {must_not: {term: {'package_type': 'takes'}}}},
@@ -179,19 +181,19 @@
                     ]};
                 }
 
-                if (_.contains(JSON.parse(card.fileType), 'highlightsPackage') &&
-                    _.contains(JSON.parse(card.fileType), 'takesPackage')) {
+                if (_.includes(JSON.parse(card.fileType), 'highlightsPackage') &&
+                    _.includes(JSON.parse(card.fileType), 'takesPackage')) {
                     query.filter({or: [
                         termsHighlightsPackage,
                         termsTakesPackage,
                         termsFileType
                     ]});
-                } else if (_.contains(JSON.parse(card.fileType), 'takesPackage')) {
+                } else if (_.includes(JSON.parse(card.fileType), 'takesPackage')) {
                     query.filter({or: [
                         termsTakesPackage,
                         termsFileType
                     ]});
-                } else if (_.contains(JSON.parse(card.fileType), 'highlightsPackage')) {
+                } else if (_.includes(JSON.parse(card.fileType), 'highlightsPackage')) {
                     query.filter({or: [
                         termsHighlightsPackage,
                         termsFileType
@@ -203,9 +205,10 @@
 
             if (queryString) {
                 query.filter({query: {query_string: {query: queryString, lenient: false}}});
+                criteria.es_highlight = 1;
             }
 
-            var criteria = {source: query.getCriteria()};
+            criteria.source = query.getCriteria();
             if (card.type === 'search' && card.search && card.search.filter.query.repo) {
                 criteria.repo = card.search.filter.query.repo;
             } else if (desks.isPublishType(card.type)) {
@@ -693,14 +696,7 @@
                 }
 
                 function merge(items, next) {
-                    if (next && scope.items) {
-                        var prevItems = scope.items._items;
-                        return angular.extend(items, {
-                            _items: prevItems.concat(items._items)
-                        });
-                    } else {
-                        return items;
-                    }
+                    return search.mergeItems(items, scope.items, next);
                 }
             }
         };

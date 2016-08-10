@@ -1,18 +1,14 @@
-(function() {
-'use strict';
-
-beforeEach(module(function($provide) {
+beforeEach(window.module(function($provide) {
     $provide.constant('lodash', window._);
-    $provide.constant('langmap', window.languageMappingList);
 }));
 
-beforeEach(module('superdesk.mocks'));
-beforeEach(module('superdesk.services.storage'));
+beforeEach(window.module('superdesk.mocks'));
+beforeEach(window.module('superdesk.session'));
+beforeEach(window.module('superdesk.services.storage'));
 
 /**
  * Mock services that call server on init and thus would require mocking all the time
  */
-angular.module('superdesk.preferences', []);
 angular.module('superdesk.mocks', [])
     .constant('config', {
         server: {url: null},
@@ -48,4 +44,3 @@ angular.module('superdesk.mocks', [])
             return $q.when(false);
         };
     });
-})();

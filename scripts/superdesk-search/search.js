@@ -131,7 +131,7 @@
          */
         this.setFilters = function(search) {
             _.forOwn(search, function(value, key) {
-                if (_.contains(['priority', 'urgency'], key)) {
+                if (_.includes(['priority', 'urgency'], key)) {
                     search[key] = JSON.stringify(value);
                 }
             });
@@ -392,6 +392,16 @@
          * @return {Object}
          */
         this.mergeItems = function(newItems, oldItems, append) {
+            newItems._items = _.map(newItems._items, function(item) {
+                if (item.es_highlight) {
+                    _.forEach(_.keys(item.es_highlight), function (key) {
+                        item[key] = item.es_highlight[key][0];
+                    });
+                }
+
+                return item;
+            });
+
             if (!oldItems || !append) {
                 return newItems;
             } else {
@@ -1128,6 +1138,7 @@
                         scope.total = null;
                         scope.items = null;
                         criteria.aggregations = 1;
+                        criteria.es_highlight = 1;
                         return api.query(getProvider(criteria), criteria).then(function (items) {
                             scope.total = items._meta.total;
                             scope.$applyAsync(function() {
@@ -1177,6 +1188,7 @@
                             criteria.source.from = 0;
                             criteria.source.size = 50;
                             criteria.aggregations = 1;
+                            criteria.es_highlight = 1;
                             api.query(getProvider(criteria), criteria).then(setScopeItems);
                             oldQuery = query;
                         }
@@ -1369,7 +1381,7 @@
                      */
                     function getFilters(search) {
                         _.forOwn(search, function(value, key) {
-                            if (_.contains(['priority', 'urgency'], key)) {
+                            if (_.includes(['priority', 'urgency'], key)) {
                                 search[key] = JSON.parse(value);
                             }
                         });
@@ -2206,7 +2218,7 @@
                     scope.multi = multi;
                     scope.$watch(multi.getItems, detectType);
                     scope.$on('item:lock', function(_e, data) {
-                        if (_.contains(multi.getIds(), data.item)) {
+                        if (_.includes(multi.getIds(), data.item)) {
                             // locked item is in the selections so update lock info
                             var selectedItems = multi.getItems();
                             _.find(selectedItems, function(_item) {
@@ -2353,7 +2365,7 @@
             var canPackage = true;
             multi.getItems().forEach(function(item) {
                 canPackage = canPackage && item._type !== 'archived' && !item.lock_user &&
-                    !_.contains(['ingested', 'spiked', 'killed', 'draft'], item.state);
+                    !_.includes(['ingested', 'spiked', 'killed', 'draft'], item.state);
             });
             return canPackage;
         };

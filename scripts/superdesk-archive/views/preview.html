@@ -23,7 +23,7 @@
           </div>
           <div class="preview-header__main-block">
             <div class="preview-header__flex-row">
-              <span ng-if="selected.preview.slugline" class="keyword" title="{{selected.preview.slugline}}">{{selected.preview.slugline}}</span>
+              <span ng-if="selected.preview.slugline" class="keyword" title="{{selected.preview.slugline}}" sd-html-preview="selected.preview.slugline"></span>
             </div>
             <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="selected.preview.anpa_take_key">
               <span class="inline-label">takekey:</span><span class="takekey">{{selected.preview.anpa_take_key | translate}}</span>
@@ -72,7 +72,9 @@
         <div class="rewrite" ng-if="selected.preview.rewrite_id">{{ :: 'This story has been rewritten by: ' | translate }}<a ng-click="previewRewriteStory()"
             class="open-item"><i class="icon-external"></i></a></div>
 
-        <p class="title preview-headline" ng-if="selected.preview.headline && selected.preview.type !== 'composite'" ng-class="{condensed: !lock}">{{ selected.preview.headline }}</p>
+        <p class="title preview-headline"
+           ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
+           ng-class="{condensed: !lock}" sd-html-preview="selected.preview.headline"></p>
 
         <p class="nav-space" ng-if="!selected.preview.headline && !lock"></p>
 

@@ -30,7 +30,7 @@
         }
 
         // reload notifications
-        this.reload = function() {
+        this.reload = () => {
             if (!session.identity) {
                 this._items = null;
                 this.unread = 0;
@@ -43,16 +43,16 @@
             };
 
             return api.query('activity', criteria)
-                .then(angular.bind(this, function(response) {
+                .then(response => {
                     this._items = response._items;
                     this.unread = 0;
                     var identity = session.identity || {};
-                    _.each(this._items, function(item) {
+                    _.each(this._items, item => {
                         var recipients = item.recipients || {};
                         item._unread = !isRead(recipients, identity._id, true);
                         this.unread += item._unread ? 1 : 0;
-                    }, this);
-                }));
+                    });
+                });
         };
 
         // mark an item as read
@@ -62,10 +62,10 @@
             var recipient = _.find(recipients, {'user_id': session.identity._id});
             if (recipient && !recipient.read) {
                 recipient.read = true;
-                return api('activity').save(_notification, {'recipients': recipients}).then(angular.bind(this, function() {
+                return api('activity').save(_notification, {'recipients': recipients}).then(() => {
                     this.unread = _.max([0, this.unread - 1]);
                     notification._unread = null;
-                }));
+                });
             }
         };
 
@@ -87,22 +87,21 @@
         }
 
         this.reload();
-        var reload = angular.bind(this, this.reload);
-        session.getIdentity().then(function() {
+        session.getIdentity().then(() => {
             $rootScope.$on('user:mention', function(_e, extras) {
                 if (isCurrentUser(extras)) {
-                    $timeout(reload, UPDATE_TIMEOUT, false);
+                    $timeout(this.reload, UPDATE_TIMEOUT, false);
                 }
             });
 
-            $rootScope.$on('activity', function(_e, extras) {
+            $rootScope.$on('activity', (_e, extras) => {
                 if (isCurrentUser(extras)) {
-                    $timeout(reload, UPDATE_TIMEOUT, false);
+                    $timeout(this.reload, UPDATE_TIMEOUT, false);
                 }
             });
         });
 
-        $rootScope.$on(SESSION_EVENTS.LOGIN, reload);
+        $rootScope.$on(SESSION_EVENTS.LOGIN, this.reload);
     }
 
     DeskNotificationsService.$inject = ['$rootScope', 'api', 'session'];
@@ -139,12 +138,12 @@
             };
 
             return api.query('activity', criteria)
-                .then(angular.bind(this, function(response) {
+                .then(response => {
                     this._items = {};
                     this.unread = {};
-                    _.each(response._items, function(item) {
+                    _.each(response._items, item => {
                         var recipients = item.recipients || {};
-                        _.each(recipients, function(recipient) {
+                        _.each(recipients, recipient => {
                             if (recipient.desk_id) {
                                 if (!(recipient.desk_id in this.unread)) {
                                     this._items[recipient.desk_id] = [];
@@ -154,9 +153,9 @@
                                 this._items[recipient.desk_id].push(item);
                                 this.unread[recipient.desk_id] += !isRead(recipients, recipient.desk_id, true) ? 1 : 0;
                             }
-                        }, this);
-                    }, this);
-                }));
+                        });
+                    });
+                });
         };
 
         // mark an item as read
@@ -167,10 +166,10 @@
             if (recipient && !recipient.read) {
                 recipient.read = true;
                 recipient.user_id = session.identity._id;
-                return api('activity').save(_notification, {'recipients': recipients}).then(angular.bind(this, function() {
+                return api('activity').save(_notification, {'recipients': recipients}).then(() => {
                     this.unread = _.max([0, this.unread - 1]);
                     notification._unread = null;
-                }));
+                });
             }
         };
 

@@ -11,8 +11,8 @@ describe('sdIngestRoutingFilter directive', function () {
         $compile,
         $rootScope;
 
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.ingest'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.ingest'));
 
     beforeEach(inject(function (_$compile_, _$rootScope_) {
         $compile = _$compile_;
@@ -116,7 +116,7 @@ describe('sdIngestRoutingFilter directive', function () {
                 scope.matchingFilters = [];
                 scope.searchFilters('foo+1');
 
-                matchIds = _.pluck(scope.matchingFilters, 'id').sort();
+                matchIds = _.map(scope.matchingFilters, 'id').sort();
                 expectedIds = [2, 5].sort();
                 expect(matchIds).toEqual(expectedIds);
             }

@@ -4,7 +4,11 @@ var grunt = require('grunt');
 var makeConfig = require('./webpack.config.js');
 
 module.exports = function(config) {
-    var webpackConfig = makeConfig(grunt, {noBootstrap: true});
+    var webpackConfig = makeConfig(grunt);
+
+    // in karma, entry is read from files prop
+    webpackConfig.entry = {};
+    webpackConfig.devtool = 'inline-source-map';
 
     config.set({
         frameworks: [
@@ -17,57 +21,29 @@ module.exports = function(config) {
             'karma-chrome-launcher',
             'karma-phantomjs-launcher',
             'karma-ng-html2js-preprocessor',
+            'karma-sourcemap-loader',
             'karma-webpack'
         ],
 
         preprocessors: {
             '**/*.html': ['ng-html2js'],
-            'scripts/index.js': ['webpack']
+            'scripts/tests.js': ['webpack', 'sourcemap']
         },
 
         webpack: webpackConfig,
 
-        // list of files / patterns to load in the browser
+        webpackMiddleware: {
+            chunks: false,
+            modules: false,
+            stats: false,
+            debug: false,
+            progress: false
+            //quiet: true
+        },
+
         files: [
-            'bower_components/bind-polyfill/index.js',
-            'bower_components/jquery/dist/jquery.js',
-            'bower_components/lodash/lodash.js',
-            'bower_components/bootstrap/dist/js/bootstrap.min.js',
-            'bower_components/angular/angular.js',
-            'bower_components/angular-route/angular-route.js',
-            'bower_components/angular-mocks/angular-mocks.js',
-            'bower_components/angular-resource/angular-resource.js',
-            'bower_components/angular-gettext/dist/angular-gettext.js',
-            'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-            'bower_components/ng-file-upload/ng-file-upload.js',
-            'bower_components/exif-js/exif.js',
-
-            'bower_components/gridster/dist/jquery.gridster.with-extras.js',
-            'bower_components/medium-editor/dist/js/medium-editor.js',
-            'bower_components/ment.io/dist/mentio.js',
-            'bower_components/rangy/rangy-core.js',
-            'bower_components/rangy/rangy-selectionsaverestore.js',
-            'bower_components/angular-embed/dist/angular-embed.js',
-            'bower_components/angular-contenteditable/angular-contenteditable.js',
-            'bower_components/angular-vs-repeat/src/angular-vs-repeat.js',
-
-            'bower_components/momentjs/moment.js',
-            'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
-            'bower_components/langmap/language-mapping-list.js',
-            'bower_components/angular-moment/angular-moment.js',
-            'bower_components/d3/d3.js',
-            'bower_components/jcrop/js/jquery.Jcrop.js',
-
-            'bower_components/react/react.js',
-            'bower_components/react/react-dom.js',
-            'bower_components/classnames/index.js',
-
-            'scripts/superdesk/mocks.js',
-            'scripts/superdesk/editor/editor.js',
-            'scripts/index.js',
-
-            'scripts/**/*.html',
-            'scripts/**/*[Ss]pec.js'
+            'scripts/tests.js',
+            'scripts/**/*.html'
         ],
 
         ngHtml2JsPreprocessor: {

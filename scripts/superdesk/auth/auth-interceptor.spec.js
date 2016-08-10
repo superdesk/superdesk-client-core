@@ -4,9 +4,9 @@
 
     describe('auth interceptor', function() {
 
-        beforeEach(module('superdesk.auth.interceptor'));
+        beforeEach(window.module('superdesk.auth.interceptor'));
 
-        beforeEach(module(function($provide) {
+        beforeEach(window.module(function($provide) {
             $provide.constant('lodash', _);
             $provide.constant('config', {server: {url: 'http://localhost:5000'}});
         }));

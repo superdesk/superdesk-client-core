@@ -8,8 +8,8 @@
                 file: '=',
                 sdImagePreview: '=',
                 progressWidth: '=',
-                width: '=',
-                height: '='
+                width: '=?',
+                height: '=?'
             },
             link: function(scope, elem) {
 

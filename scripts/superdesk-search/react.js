@@ -1,3 +1,7 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import classNames from 'classnames';
+
 (function() {
     'use strict';
 
@@ -914,17 +918,20 @@
                         return contents.length ? React.createElement('div', elemProps, contents) : null;
                     }
 
+                    function createMarkUp (html) {
+                        return {__html: html};
+                    }
+
                     /**
                      * Fields specified via list config
                      */
                     var fields = {
                         headline: function(props) {
+                            var headline = props.item.headline ? props.item.headline : props.item.type;
                             return React.createElement(
                                 'span',
-                                {className: 'item-heading', key: 'headline'},
-                                props.item.headline ?
-                                    props.item.headline.substr(0, 90) :
-                                    props.item.type
+                                {className: 'item-heading', key: 'headline',
+                                 dangerouslySetInnerHTML:createMarkUp(headline)}
                             );
                         },
 
@@ -932,8 +939,8 @@
                             if (props.item.slugline) {
                                 return React.createElement(
                                     'span',
-                                    {className: 'keyword', key: 'slugline'},
-                                    props.item.slugline.substr(0, 40)
+                                    {className: 'keyword', key: 'slugline',
+                                     dangerouslySetInnerHTML:createMarkUp(props.item.slugline)}
                                 );
                             }
                         },
@@ -1741,7 +1748,32 @@
                          */
                         function isSameVersion(a, b) {
                             return a._etag === b._etag && a._current_version === b._current_version &&
-                                a._updated === b._updated;
+                                a._updated === b._updated && isSameElasticHighlights(a, b);
+                        }
+
+                        /**
+                         * Test if item a and item b have same elastic highlights
+                         *
+                         * @param {Object} a
+                         * @param {Object} b
+                         * @return {Boolean}
+                         */
+                        function isSameElasticHighlights(a, b) {
+                            if (!a.es_highlight && !b.es_highlight) {
+                                return true;
+                            }
+
+                            if ((!a.es_highlight && b.es_highlight) || (a.es_highlight && !b.es_highlight)) {
+                                return false;
+                            }
+
+                            function getEsHighlight(item) {
+                                return item[0];
+                            }
+
+                            return (_.map(a.es_highlight, getEsHighlight)).join('-') ===
+                                (_.map(b.es_highlight, getEsHighlight)).join('-');
+
                         }
 
                         /**
@@ -1792,7 +1824,8 @@
                                 var itemId = search.generateTrackByIdentifier(item);
                                 var oldItem = itemsById[itemId] || null;
 
-                                if (!oldItem || !isSameVersion(oldItem, item) || !isArchiveItemSameVersion(oldItem, item)) {
+                                if (!oldItem || !isSameVersion(oldItem, item) ||
+                                    !isArchiveItemSameVersion(oldItem, item)) {
                                     itemsById[itemId] = angular.extend({}, oldItem, item);
                                 }
 

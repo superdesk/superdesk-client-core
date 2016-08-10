@@ -62,7 +62,6 @@ module.exports = function(grunt) {
         'useminPrepare',
         'concat:generated',
         'uglify:generated',
-        'cssmin:generated',
         'copy:assets',
         'copy:js',
         'copy:docs',

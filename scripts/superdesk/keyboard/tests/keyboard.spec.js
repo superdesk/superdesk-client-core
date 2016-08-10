@@ -2,7 +2,7 @@
 
 describe('keyboardManager', function() {
 
-    beforeEach(module('superdesk.keyboard'));
+    beforeEach(window.module('superdesk.keyboard'));
 
     var km, elem, $timeout,
         options = {inputDisabled: false};

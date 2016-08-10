@@ -12,7 +12,7 @@ describe('superdesk.config', function() {
             defaultConfigProvider.set('editor', false);
         });
 
-    beforeEach(module('test.config'));
+    beforeEach(window.module('test.config'));
 
     it('can set default config', inject(function(config) {
         expect(config.foo).toBe('bar');

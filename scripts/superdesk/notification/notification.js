@@ -59,7 +59,7 @@
             ws.onmessage = function(event) {
                 var msg = angular.fromJson(event.data);
                 $rootScope.$broadcast(msg.event, msg.extra);
-                if (_.contains(ReloadEvents, msg.event)) {
+                if (_.includes(ReloadEvents, msg.event)) {
                     $rootScope.$broadcast('reload', msg);
                 }
             };

@@ -1,10 +1,10 @@
 'use strict';
 
 describe('macros', function() {
-    beforeEach(module('superdesk.desks'));
-    beforeEach(module('superdesk.authoring.macros'));
-    beforeEach(module('superdesk.authoring.autosave'));
-    beforeEach(module('superdesk.editor'));
+    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.authoring.macros'));
+    beforeEach(window.module('superdesk.authoring.autosave'));
+    beforeEach(window.module('superdesk.editor'));
 
     var $controller;
 

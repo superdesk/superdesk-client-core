@@ -2,11 +2,11 @@
 
 describe('PermissionsService', function() {
 
-    beforeEach(module('superdesk.services.entity'));
-    beforeEach(module('superdesk.services.server'));
-    beforeEach(module('superdesk.services.permissions'));
+    beforeEach(window.module('superdesk.services.entity'));
+    beforeEach(window.module('superdesk.services.server'));
+    beforeEach(window.module('superdesk.services.permissions'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {server: {url: 'http://localhost'}});
     }));
 

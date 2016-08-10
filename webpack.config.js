@@ -5,8 +5,7 @@ var lodash = require('lodash');
 // makeConfig creates a new configuration file based on the passed options.
 // Keys are:
 // {
-//     dev: bool  // indicates dev server is running (non-prod)
-//     unit: bool // indicates unit tests are running
+//     isDev: bool // indicates dev env
 // }
 module.exports = function makeConfig(grunt, opts) {
     opts = opts || {};
@@ -34,8 +33,12 @@ module.exports = function makeConfig(grunt, opts) {
         },
         plugins: [
             new webpack.ProvidePlugin({
-                jQuery: 'jquery',
-                $: 'jquery'
+                '$': 'jquery',
+                'window.$': 'jquery',
+                'jQuery': 'jquery',
+                'window.jQuery': 'jquery',
+                'moment': 'moment',
+                'MediumEditor': 'medium-editor'
             }),
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig)
@@ -47,6 +50,12 @@ module.exports = function makeConfig(grunt, opts) {
                 path.join(__dirname, '/scripts'),
                 path.join(__dirname, '/styles/less')
             ],
+            alias: {
+                'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-2010-2020',
+                'rangy-saverestore': 'rangy/lib/rangy-selectionsaverestore',
+                'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
+                'jquery-gridster': 'gridster/dist/jquery.gridster.min'
+            },
             extensions: ['', '.js']
         },
         module: {
@@ -67,6 +76,10 @@ module.exports = function makeConfig(grunt, opts) {
                         cacheDirectory: true,
                         presets: ['es2015']
                     }
+                },
+                {
+                    test: /\.css/,
+                    loader: 'style!css'
                 },
                 {
                     test: /\.less$/,

@@ -1,8 +1,8 @@
 'use strict';
 
 describe('users api', function() {
-    beforeEach(module('superdesk.users'));
-    beforeEach(module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.mocks'));
 
     it('can create user', inject(function(usersService, api, $q, $rootScope) {
 
@@ -49,10 +49,10 @@ describe('users api', function() {
 });
 
 describe('userlist service', function() {
-    beforeEach(module('superdesk.users'));
-    beforeEach(module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.mocks'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.service('api', function($q) {
             return function(resource) {
                 return {
@@ -112,9 +112,9 @@ describe('userlist service', function() {
 
 describe('mentio directive', function() {
 
-    beforeEach(module('superdesk.users'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     var deskList = {
         desk1: {title: 'desk1'},
@@ -129,7 +129,7 @@ describe('mentio directive', function() {
         _items: [{'_id': 'desk1'}]
     };
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.service('api', function($q) {
             return function(resource) {
                 return {
@@ -171,12 +171,12 @@ describe('mentio directive', function() {
 });
 
 describe('user edit form', function() {
-    beforeEach(module('superdesk.desks'));
-    beforeEach(module('superdesk.users'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.service('session', function($q) {
             return {
                 identity: {_id: 1},

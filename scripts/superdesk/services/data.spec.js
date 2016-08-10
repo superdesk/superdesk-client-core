@@ -2,12 +2,12 @@
 
 describe('DataService', function() {
     beforeEach(function() {
-        module('superdesk.services.data');
-        module('superdesk.services.entity');
-        module('superdesk.services.server');
+        window.module('superdesk.services.data');
+        window.module('superdesk.services.entity');
+        window.module('superdesk.services.server');
     });
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {server: {url: 'http://localhost'}});
     }));
 

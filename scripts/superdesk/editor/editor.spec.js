@@ -2,10 +2,10 @@
 
 describe('text editor', function() {
 
-    beforeEach(module('superdesk.publish'));
-    beforeEach(module('superdesk.editor'));
-    beforeEach(module('superdesk.editor.spellcheck'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.editor'));
+    beforeEach(window.module('superdesk.editor.spellcheck'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(function() {
         // remove all elements from body

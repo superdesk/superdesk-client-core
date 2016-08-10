@@ -1,7 +1,9 @@
 'use strict';
 describe('Reload Service', function() {
-    beforeEach(module('superdesk.notification'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.notification'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.preferences'));
 
     var USER_URL = '/users/1';
     var USER = {
@@ -68,9 +70,10 @@ describe('Reload Service', function() {
         expect(reloadService.result.reload).toBe(true);
     }));
 });
+
 describe('Notify Connection Service', function() {
-    beforeEach(module('superdesk.notification'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.notification'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     var rootScope, msg;
     beforeEach(function() {

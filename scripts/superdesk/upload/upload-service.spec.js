@@ -2,9 +2,9 @@
 
 describe('upload service', function() {
 
-    beforeEach(module('superdesk.upload'));
+    beforeEach(window.module('superdesk.upload'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.service('$upload', ['$q', function($q) {
             // angular-file-upload api
             this.upload = function() {

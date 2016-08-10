@@ -6,13 +6,13 @@ describe('MetadataWidgetCtrl controller', function () {
         prefsGet,  //deferred result of the preferences service's get() method
         scope;
 
-    beforeEach(module('superdesk.publish'));
-    beforeEach(module('superdesk.desks'));
-    beforeEach(module('superdesk.ui'));
-    beforeEach(module('superdesk.filters'));
-    beforeEach(module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.ui'));
+    beforeEach(window.module('superdesk.filters'));
+    beforeEach(window.module('superdesk.authoring.metadata'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
@@ -126,11 +126,11 @@ describe('metadata terms directive', function() {
     ];
     itemSubjects = [{'name': 'b', 'qcode': '456', 'parent': '123'}, {'name': 'test', 'qcode': '111'}];
 
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.api'));
-    beforeEach(module('superdesk.filters'));
-    beforeEach(module('superdesk.publish'));
-    beforeEach(module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.filters'));
+    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.authoring.metadata'));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {
         $rootScope = _$rootScope_;
@@ -436,9 +436,9 @@ describe('dateline dropdown', function() {
         }
     ];
 
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.publish'));
-    beforeEach(module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.authoring.metadata'));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {
         $rootScope = _$rootScope_;

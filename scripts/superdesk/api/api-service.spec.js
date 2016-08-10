@@ -47,12 +47,12 @@
         .config(['apiProvider', function(_apiProvider_) {
             apiProvider = _apiProvider_;
         }]);
-        module('superdesk.api', 'superdesk.api.tests');
+        window.module('superdesk.api', 'superdesk.api.tests');
         inject(function() {});
     }
 
     describe('API Provider', function() {
-        beforeEach(module(doConfig));
+        beforeEach(window.module(doConfig));
 
         beforeEach(doTestModule());
 

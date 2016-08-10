@@ -3,8 +3,8 @@
 
 describe('superdesk.asset module', function() {
 
-    beforeEach(module('superdesk.asset'));
-    beforeEach(module(function($provide) {
+    beforeEach(window.module('superdesk.asset'));
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {paths: {superdesk: 'scripts/bower_components/superdesk/app/'}});
     }));
 
