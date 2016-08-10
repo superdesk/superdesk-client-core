@@ -58,7 +58,7 @@ describe('vocabularies', function() {
             it('can add items', function() {
                 scope.addItem();
                 expect(scope.vocabulary.items.length).toBe(2);
-                expect(scope.vocabulary.items[1]).toEqual({foo: null, bar: null, is_active: true});
+                expect(scope.vocabulary.items[0]).toEqual({foo: null, bar: null, is_active: true});
             });
 
             it('can save vocabulary', inject(function(api, $q, $rootScope, metadata) {
