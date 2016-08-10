@@ -2422,9 +2422,13 @@ import 'angular-history/history.js';
                             authoringWorkspace.close(false);
                             notify.success(gettext('New take created.'));
                             authoringWorkspace.edit(item);
-                        }, function(err) {
+                        })
+                        .catch(function() {
+                            scope.item.more_coming = false;
+                            scope.item.sendTo = false;
                             notify.error(gettext('Failed to send and continue.'));
-                        }).finally(function() {
+                        })
+                        .finally(function() {
                             scope.loading = false;
                         });
                 }
