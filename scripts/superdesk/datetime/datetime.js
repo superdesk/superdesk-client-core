@@ -33,6 +33,7 @@
         var TIME_FORMAT = config.shortTimeFormat || 'hh:mm';
         var DATE_FORMAT = config.shortDateFormat || 'MM/DD';
         var WEEK_FORMAT = config.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
+        var ARCHIVE_FORMAT = config.ArchivedDateFormat || DATE_FORMAT;
 
         /**
          * Get short representation of given datetime
@@ -50,6 +51,8 @@
                 return m.format(TIME_FORMAT);
             } else if (isSameWeek(m, now)) {
                 return m.format(WEEK_FORMAT);
+            } else if (isArchiveYear(m, now)) {
+                return m.format(ARCHIVE_FORMAT);
             } else {
                 return m.format(DATE_FORMAT);
             }
@@ -71,6 +74,10 @@
 
         function isSameWeek(a, b) {
             return a.format(ISO_WEEK_FORMAT) === b.format(ISO_WEEK_FORMAT);
+        }
+
+        function isArchiveYear(a, b) {
+            return b.diff(a, 'years') >= 1;
         }
     }
 

@@ -82,7 +82,11 @@ function MetadataCtrl(
             filtered,
             itemCompanyCodes;  // existing company codes assigned to the article
 
-        all = metadata.values.company_codes || [];
+        all =  _.cloneDeep(metadata.values.company_codes || []);
+
+        all.forEach(function (companyCode) {
+            companyCode.name = companyCode.name + ' (' + companyCode.qcode + ')';
+        });
 
         // gather article's existing company codes
         itemCompanyCodes = $scope.item.company_codes || [];

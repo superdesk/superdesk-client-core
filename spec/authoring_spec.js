@@ -3,6 +3,7 @@
 var monitoring = require('./helpers/monitoring'),
     authoring = require('./helpers/authoring'),
     ctrlKey = require('./helpers/utils').ctrlKey,
+    commandKey = require('./helpers/utils').commandKey,
     ctrlShiftKey = require('./helpers/utils').ctrlShiftKey,
     assertToastMsg = require('./helpers/utils').assertToastMsg,
     openUrl = require('./helpers/utils').open,
@@ -62,9 +63,9 @@ describe('authoring', function() {
         authoring.addEmbed('Embed');
         authoring.blockContains(1, 'Embed');
         authoring.blockContains(2, 'to be undone');
-        ctrlKey('z');
+        commandKey('z');
         authoring.blockContains(0, 'to be undone');
-        ctrlKey('y');
+        commandKey('y');
         authoring.blockContains(1, 'Embed');
         authoring.blockContains(2, 'to be undone');
         authoring.cutBlock(1);
@@ -508,5 +509,20 @@ describe('authoring', function() {
 
         authoring.sendToButton.click();
         expect(authoring.kill_button.isDisplayed()).toBe(true);
+    });
+
+    it('after undo/redo save last version', function() {
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        authoring.writeText('one\ntwo\nthree');
+        browser.sleep(1000); // wait for autosave
+        authoring.backspaceBodyHtml(5);
+        browser.sleep(1000);
+        ctrlKey('z');
+        browser.sleep(1000);
+        authoring.save();
+        authoring.close();
+        monitoring.actionOnItem('Edit', 2, 0);
+        expect(authoring.getBodyText()).toBe('one\ntwo\nthree');
     });
 });

@@ -22,17 +22,26 @@ function HistoryFactory(History, $window, $timeout) {
                 History.watch(expression, scope);
                 lastArchive = new Date();
             }, 0, false);
-            var onHistoryKeydown = function(event) {
-                if (event.ctrlKey && KeyOperations[event.keyCode]) {
-                    event.preventDefault();
+            var onHistoryKey = function(event, cb) {
+                var modifier = event.ctrlKey || event.metaKey;
+                if (modifier && KeyOperations[event.keyCode]) {
+                    cb();
                 }
             };
-            var onHistoryKeyup = function(event) {
-                if (event.ctrlKey && KeyOperations[event.keyCode]) {
+            var onHistoryKeydown = function(event) {
+                onHistoryKey(event, function() {
+                    event.preventDefault();
+                    // action is on keydown becuase command key (event.metakey) on OSX is not detected on keyup events
+                    // for some reason.
                     scope.$apply(function() {
                         KeyOperations[event.keyCode].bind(History)(expression, scope);
                     });
-                }
+                });
+            };
+            var onHistoryKeyup = function(event) {
+                onHistoryKey(event, function() {
+                    event.preventDefault();
+                });
             };
             angular.element($window).on('keydown', onHistoryKeydown);
             angular.element($window).on('keyup', onHistoryKeyup);

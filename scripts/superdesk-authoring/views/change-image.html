@@ -69,23 +69,23 @@
              ng-if="data.showMetadataEditor">
             <div class="header" translate>Metadata</div>
             <div>
-                <label translate>Title *</label>
+                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('headline') > -1)}" translate>Title</label>
                 <div ng-model="data.metadata.headline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
-                <label translate>Caption *</label>
+                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('description_text') > -1)}" translate>Caption</label>
                 <div ng-model="data.metadata.description_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
-                <label translate>Alt Text</label>
+                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('alt_text') > -1)}" translate>Alt Text</label>
                 <div ng-model="data.metadata.alt_text" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
-                <label translate>Credit</label>
+                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('byline') > -1)}" translate>Credit</label>
                 <div ng-model="data.metadata.byline" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
-                <label translate>Copyright holder</label>
+                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('copyrightholder') > -1)}" translate>Copyright holder</label>
                 <div ng-model="data.metadata.copyrightholder" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
             <div>
@@ -98,7 +98,7 @@
                 </select>
             </div>
             <div>
-                <label translate>Copyright notice</label>
+                <label ng-class="{'label-asterisk':(data.requiredFields.indexOf('copyrightnotice') > -1)}" translate>Copyright notice</label>
                 <div ng-model="data.metadata.copyrightnotice" ng-change="data.isDirty = true" contenteditable="true" class="contenteditable-input"></div>
             </div>
         </div>
