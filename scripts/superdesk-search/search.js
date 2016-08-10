@@ -344,7 +344,7 @@
 
             // remove other users drafts.
             this.filter({or:[{and: [{term: {state: 'draft'}},
-                                   {term: {'task.user': session.identity._id}}]},
+                                   {term: {'original_creator': session.identity._id}}]},
                              {not: {terms: {state: ['draft']}}}]});
 
             //remove the digital package from production view.
