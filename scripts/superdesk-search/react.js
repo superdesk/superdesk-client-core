@@ -417,7 +417,7 @@ angular.module('superdesk.search.react', [
                         if (isCheckAllowed(this.props.item))
                         {
                             var selected = !this.props.item.selected;
-                            this.props.onMultiSelect(this.props.item, selected);
+                            this.props.onMultiSelect([this.props.item], selected);
                         }
                     },
 
@@ -1400,9 +1400,9 @@ angular.module('superdesk.search.react', [
                             nextState !== this.state;
                     },
 
-                    select: function() {
+                    select: function(event) {
                         if (!this.props.item.gone) {
-                            this.props.onSelect(this.props.item);
+                            this.props.onSelect(this.props.item, event);
                         }
                     },
 
@@ -1560,18 +1560,30 @@ angular.module('superdesk.search.react', [
                         return {itemsList: [], itemsById: {}, selected: null, view: 'mgrid'};
                     },
 
-                    multiSelect: function(item, selected) {
-                        var itemId = search.generateTrackByIdentifier(item);
+                    multiSelect: function(items, selected) {
                         var itemsById = angular.extend({}, this.state.itemsById);
-                        itemsById[itemId] = angular.extend({}, item, {selected: selected});
-                        this.setState({itemsById: itemsById});
-                        scope.$applyAsync(function() {
-                            multi.toggle(itemsById[itemId]);
+                        items.forEach(function (item) {
+                            var itemId = search.generateTrackByIdentifier(item);
+                            itemsById[itemId] = angular.extend({}, item, {selected: selected});
+                            scope.$applyAsync(function () {
+                                multi.toggle(itemsById[itemId]);
+                            });
                         });
+
+                        this.setState({itemsById: itemsById});
                     },
 
-                    select: function(item) {
+                    select: function(item, event) {
+                        if (event.shiftKey) {
+                            return this.selectMultipleItems(item);
+                        }
+
                         this.setSelectedItem(item);
+
+                        if (event.ctrlKey) {
+                            return this.selectItem(item);
+                        }
+
                         $timeout.cancel(this.updateTimeout);
                         this.updateTimeout = $timeout(function() {
                             if (item && scope.preview) {
