@@ -324,6 +324,7 @@
             //uncheck all
             _.each($scope.multiSelected, function(item) {
                 item.multi = false;
+                packages.addPackageGroupItem(group, item, false);
             });
 
             //clear items
@@ -384,6 +385,9 @@
                         }
                     }
                     autosave();
+                });
+                scope.$on('$destroy', function() {
+                    packages.packageGroupItems = {};
                 });
 
                 ngModel.$render = function() {
@@ -791,8 +795,8 @@
             .activity('addtopackage', {
                 label: gettext('Add to current'),
                 priority: 5,
-                dropdown: ['item', 'className', 'authoringWorkspace', 'packages', 'api', 'translatedLabel', '$rootScope',
-                function(item, className, authoringWorkspace, packages, api, translatedLabel, $rootScope) {
+                dropdown: ['item', 'className', 'authoringWorkspace', 'packages', 'api', '$rootScope',
+                function(item, className, authoringWorkspace, packages, api, $rootScope) {
                     var PackageGroup = React.createClass({
                         select: function() {
                             packages.addPackageGroupItem(this.props.group, item);
@@ -853,7 +857,7 @@
                 function(authoringWorkspace, item, authoring, packages) {
                     var pkg = authoringWorkspace.getItem();
                     var actions = authoring.itemActions(item);
-                    var added = pkg ? packages.isAdded(pkg, item): false;
+                    var added = pkg ? packages.isAdded(pkg, item) : false;
                     return pkg && pkg.type === 'composite' && pkg._id !== item._id && actions.add_to_current && ! added;
                 }],
                 group: 'packaging'

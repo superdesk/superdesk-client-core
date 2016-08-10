@@ -20,12 +20,15 @@ describe('package', function() {
         authoring.save();
 
         // Check if 'add to current' item menu option is removed.
-        var submenu = monitoring.getMenuActionElement('Add to current', 'main', 2);
-        expect(submenu.isPresent()).toBeFalsy();
+        var menu = monitoring.openItemMenu(2, 0);
+        var header = menu.element(by.partialLinkText('Add to current'));
+        expect(header.isPresent()).toBeFalsy();
+        // Close menu.
+        monitoring.openItemMenu(2, 0);
 
+        // Check version number.
         authoring.showVersions();
         expect(element.all(by.repeater('version in versions')).count()).toBe(2);
-
         authoring.showVersions(); // close version panel
 
         // reorder item on package
@@ -37,6 +40,7 @@ describe('package', function() {
         // remove both items one by one to initialize
         authoring.removeGroupItem('STORY', 0);
         authoring.removeGroupItem('STORY', 0);
+        authoring.save();
 
         // create package from multiple items
         monitoring.selectItem(2, 0);
@@ -48,16 +52,7 @@ describe('package', function() {
         authoring.removeGroupItem('MAIN', 0);
         authoring.removeGroupItem('MAIN', 0);
 
-        // can add an item to an existing package only once
-        monitoring.actionOnItem('Edit', 3, 0);
-        monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 0);
-        monitoring.actionOnItemSubmenu('Add to current', 'story', 2, 0);
-        authoring.save();
-        expect(authoring.getGroupItems('MAIN').count()).toBe(1);
-        expect(authoring.getGroupItems('STORY').count()).toBe(0);
-
-        // remove item and unselect to initialize
-        authoring.removeGroupItem('MAIN', 0);
+        // Unselect selected items.
         monitoring.selectItem(2, 0);
         monitoring.selectItem(2, 1);
 
@@ -68,6 +63,7 @@ describe('package', function() {
         browser.sleep(500);
         monitoring.actionOnItem('Combine with current', 3, 0);
         expect(authoring.getGroupItems('MAIN').count()).toBe(2);
+
         // remove both items one by one to initialize
         authoring.removeGroupItem('MAIN', 0);
         authoring.removeGroupItem('MAIN', 0);
