@@ -384,6 +384,14 @@ import 'angular-history/history.js';
             });
         };
 
+        this.validateBeforeTansa = function (orig, diff) {
+            diff = extendItem({}, diff);
+
+            this.cleanUpdatesBeforePublishing(orig, diff);
+
+            return api.save('validate', {'act': 'publish', 'type': orig.type, 'validate': diff});
+        };
+
         this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {
             var promise = $q.when();
             if (isDirty) {
@@ -1464,8 +1472,18 @@ import 'angular-history/history.js';
                  */
                 $scope.publish = function() {
                     if ($scope.useTansaProofing() && $scope.item.urgency > 3 && !$rootScope.config.isCheckedByTansa) {
-                        $scope.runTansa();
-                        onlyTansaProof = false;
+                        authoring.validateBeforeTansa($scope.origItem, $scope.item)
+                        .then(function(response) {
+                            if (response.errors.length) {
+                                validate($scope.origItem, $scope.item);
+                                for (var i = 0; i < response.errors.length; i++) {
+                                    notify.error(_.trim(response.errors[i]));
+                                }
+                            } else {
+                                $scope.runTansa();
+                                onlyTansaProof = false;
+                            }
+                        });
                     } else if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                         var message = 'publish';
                         if ($scope.action && $scope.action !== 'edit') {
