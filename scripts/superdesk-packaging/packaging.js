@@ -145,17 +145,20 @@ import React from 'react';
             broadcast = (typeof broadcast === 'undefined') ? true : false;
             var pkg = authoringWorkspace.getItem();
             var pkg_id = pkg._id;
-            if (typeof this.packageGroupItems[pkg_id] === 'undefined')
+            if (typeof this.packageGroupItems[pkg_id] === 'undefined') {
                 this.packageGroupItems[pkg_id] = [];
-            if (_.indexOf(this.packageGroupItems[pkg_id], item._id) === -1)
+            }
+            if (_.indexOf(this.packageGroupItems[pkg_id], item._id) === -1) {
                 this.packageGroupItems[pkg_id].unshift(item._id);
-            if (broadcast)
+            }
+            if (broadcast) {
                 $rootScope.$broadcast('package:addItems', {items: [item], group: group});
+            }
         };
 
         this.removePackageGroupItem = function(group, item) {
-          var pkg = authoringWorkspace.getItem();
-          _.remove(this.packageGroupItems[pkg._id], item._id);
+            var pkg = authoringWorkspace.getItem();
+            _.remove(this.packageGroupItems[pkg._id], item._id);
         };
 
         this.isAddedToPackage = function(pkg, item) {
@@ -722,7 +725,7 @@ import React from 'react';
                 scope.groupList = scope.groupList || packages.groupList;
 
                 scope.select = function(group) {
-                    packages.addPackageGroupItem(group, item);
+                    packages.addPackageGroupItem(group, scope.item);
                 };
             }
         };
