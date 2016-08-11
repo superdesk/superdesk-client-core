@@ -2694,8 +2694,10 @@ import 'angular-history/history.js';
                 scope.monthNames = {'Jan': '0', 'Feb': '1', 'Mar': '2', 'Apr': '3', 'May': '4', 'Jun': '5',
                                     'Jul': '6', 'Aug': '7', 'Sep': '8', 'Oct': '9', 'Nov': '10', 'Dec': '11'};
 
-                scope.datelineMonth = '';
-                scope.datelineDay = '';
+                scope.dateline = {
+                    month: '',
+                    day: ''
+                };
 
                 scope.preview = function(item) {
                     superdesk.intent('preview', 'item', item);
@@ -2730,8 +2732,8 @@ import 'angular-history/history.js';
                             updates.dateline = _.pick(item.dateline, ['source', 'date', 'located', 'text']);
                             if (item.dateline.located) {
                                 var monthAndDay = $filter('parseDateline')(item.dateline.date, item.dateline.located);
-                                scope.datelineMonth = monthAndDay.month;
-                                scope.datelineDay = monthAndDay.day;
+                                scope.dateline.month = monthAndDay.month;
+                                scope.dateline.day = monthAndDay.day;
                                 scope.resetNumberOfDays(false);
                             }
                             _.extend(item, updates);
@@ -2762,19 +2764,19 @@ import 'angular-history/history.js';
                         item.dateline.located = null;
                         item.dateline.text = '';
 
-                        scope.datelineMonth = '';
-                        scope.datelineDay = '';
+                        scope.dateline.month = '';
+                        scope.dateline.day = '';
                     } else {
                         var monthAndDay = $filter('parseDateline')(item.dateline.date, item.dateline.located);
 
-                        scope.datelineMonth = monthAndDay.month;
-                        scope.datelineDay = monthAndDay.day;
+                        scope.dateline.month = monthAndDay.month;
+                        scope.dateline.day = monthAndDay.day;
                         scope.resetNumberOfDays(false);
 
                         item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
                             $interpolate('{{ month | translate }}')
-                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
-                            scope.datelineDay, item.dateline.source);
+                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.dateline.month; })}),
+                            scope.dateline.day, item.dateline.source);
                     }
                 };
 
@@ -2786,19 +2788,19 @@ import 'angular-history/history.js';
                  * @param {String} datelineMonth - the selected month
                  */
                 scope.resetNumberOfDays = function(resetDatelineDate, datelineMonth) {
-                    if (scope.datelineMonth !== '') {
-                        scope.daysInMonth = $filter('daysInAMonth')(parseInt(scope.datelineMonth));
+                    if (scope.dateline.month !== '') {
+                        scope.daysInMonth = $filter('daysInAMonth')(parseInt(scope.dateline.month));
 
                         if (resetDatelineDate) {
                             if (datelineMonth) {
-                                scope.datelineMonth = datelineMonth;
+                                scope.dateline.month = datelineMonth;
                             }
 
-                            scope.modifyDatelineDate(scope.datelineDay);
+                            scope.modifyDatelineDate(scope.dateline.day);
                         }
                     } else {
                         scope.daysInMonth = [];
-                        scope.datelineDay = '';
+                        scope.dateline.day = '';
                     }
                 };
 
@@ -2843,19 +2845,20 @@ import 'angular-history/history.js';
                  * @param {String} datelineDay - the selected day
                  */
                 scope.modifyDatelineDate = function(datelineDay) {
-                    if (scope.datelineMonth !== '' && scope.datelineDay !== '') {
+                    if (scope.dateline.month !== '' && scope.dateline.day !== '') {
                         if (datelineDay) {
-                            scope.datelineDay = datelineDay;
+                            scope.dateline.day = datelineDay;
                         }
 
                         scope.item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
-                                parseInt(scope.datelineMonth), parseInt(scope.datelineDay));
+                                parseInt(scope.dateline.month), parseInt(scope.dateline.day));
 
                         scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
                             $interpolate('{{ month | translate }}')
-                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
-                            scope.datelineDay, scope.item.dateline.source);
+                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.dateline.month; })}),
+                            scope.dateline.day, scope.item.dateline.source);
 
+                        mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);
                     }
                 };
