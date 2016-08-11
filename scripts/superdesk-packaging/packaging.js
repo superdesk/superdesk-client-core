@@ -162,7 +162,7 @@ import React from 'react';
         };
 
         this.isAddedToPackage = function(pkg, item) {
-          return pkg ? (_.indexOf(this.packageGroupItems[pkg._id], item._id) !== -1) : false;
+            return pkg ? (_.indexOf(this.packageGroupItems[pkg._id], item._id) !== -1) : false;
         };
 
         function getGroupFor(item, idRef) {
@@ -863,7 +863,7 @@ import React from 'react';
                     var pkg = authoringWorkspace.getItem();
                     var actions = authoring.itemActions(item);
                     var added = pkg ? packages.isAdded(pkg, item) : false;
-                    return pkg && pkg.type === 'composite' && pkg._id !== item._id && actions.add_to_current && ! added;
+                    return pkg && pkg.type === 'composite' && pkg._id !== item._id && actions.add_to_current && !added;
                 }],
                 group: 'packaging'
             })
