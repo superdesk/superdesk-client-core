@@ -444,10 +444,16 @@ import 'angular-history/history.js';
             }
 
             if (_.size(diff) > 0) {
-                return api.save('archive', origItem, diff).then(function(_item) {
-                    item._autosave = null;
-                    item._autosaved = false;
-                    item._locked = lock.isLockedInCurrentSession(item);
+                // workaround for undo/redo:
+                // it needs to keep origItem without content changes,
+                // otherwise due to inheritance those new changes could be seen after undo
+                var _orig = angular.copy(origItem);
+                return api.save('archive', _orig, diff).then(function(_item) {
+                    origItem._autosave = null;
+                    origItem._autosaved = false;
+                    origItem._locked = lock.isLockedInCurrentSession(item);
+                    origItem._etag = _item._etag;
+                    origItem._current_version = _item._current_version;
                     $injector.get('authoringWorkspace').update(item);
                     return origItem;
                 });
@@ -2721,9 +2727,8 @@ import 'angular-history/history.js';
                     }
                 }
 
-                var stopWatch = scope.$watch('item', function(item) {
+                scope.$watch('item', function(item) {
                     if (item) {
-                        stopWatch();
                         /* Creates a copy of dateline object from item.__proto__.dateline */
                         if (item.dateline) {
                             var updates = {dateline: {}};
