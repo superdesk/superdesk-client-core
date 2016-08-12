@@ -392,15 +392,17 @@
          * @return {Object}
          */
         this.mergeItems = function(newItems, oldItems, append) {
-            newItems._items = _.map(newItems._items, function(item) {
-                if (item.es_highlight) {
-                    _.forEach(_.keys(item.es_highlight), function (key) {
-                        item[key] = item.es_highlight[key][0];
-                    });
-                }
+            if (this.getElasticHighlight()) {
+                newItems._items = _.map(newItems._items, function(item) {
+                    if (item.es_highlight) {
+                        _.forEach(_.keys(item.es_highlight), function (key) {
+                            item[key] = item.es_highlight[key][0];
+                        });
+                    }
 
-                return item;
-            });
+                    return item;
+                });
+            }
 
             if (!oldItems || !append) {
                 return newItems;
@@ -408,6 +410,10 @@
                 var nextItems = oldItems._items.concat(newItems._items);
                 return angular.extend({}, newItems, {_items: nextItems});
             }
+        };
+
+        this.getElasticHighlight = function() {
+            return config.feature && config.feature.elasticHighlight ? 1 : 0;
         };
     }
 
@@ -1138,7 +1144,7 @@
                         scope.total = null;
                         scope.items = null;
                         criteria.aggregations = 1;
-                        criteria.es_highlight = 1;
+                        criteria.es_highlight = search.getElasticHighlight();
                         return api.query(getProvider(criteria), criteria).then(function (items) {
                             scope.total = items._meta.total;
                             scope.$applyAsync(function() {
@@ -1188,7 +1194,7 @@
                             criteria.source.from = 0;
                             criteria.source.size = 50;
                             criteria.aggregations = 1;
-                            criteria.es_highlight = 1;
+                            criteria.es_highlight = search.getElasticHighlight();
                             api.query(getProvider(criteria), criteria).then(setScopeItems);
                             oldQuery = query;
                         }

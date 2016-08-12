@@ -377,6 +377,8 @@
                     var MediaPreview = function(props) {
                         var item = props.item;
                         var headline = item.headline || item.slugline || item.type;
+                        // headline could contains html tags hence stripping for tooltips
+                        var headlineText = headline.replace(/(<([^>]+)>)/ig, '');
                         var preview;
 
                         if (hasThumbnail(props.item)) {
@@ -399,8 +401,8 @@
                                 {className: 'text'},
                                 React.createElement(
                                     'small',
-                                    {title: headline,
-                                        dangerouslySetInnerHTML:createMarkUp(headline.substr(0, 90))}
+                                    {title: headlineText,
+                                        dangerouslySetInnerHTML:createMarkUp(headline)}
                                 ),
                                 React.createElement(ItemContainer, {item: item, desk: props.desk})
                             ),
