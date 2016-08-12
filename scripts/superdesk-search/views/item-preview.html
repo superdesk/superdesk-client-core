@@ -1,4 +1,7 @@
 <div id="item-preview" class="preview-pane content-item-preview" ng-if="item" ng-class="{shift: toggleLeft}">
+    <button class="shift-preview__toggle" ng-class="{shift: toggleLeft}" ng-click="shiftPreview()">
+        <i class="icon-chevron-left-thin"></i>
+    </button>
     <header>
         <ul class="nav nav-tabs">
             <li ng-class="{active: tab === 'content'}">
@@ -14,9 +17,6 @@
                 <button ng-click="tab = 'history'" translate>Item history</button>
             </li>
         </ul>
-        <button class="shift-preview__toggle" ng-class="{shift: toggleLeft}" ng-click="shiftPreview()">
-            <i class="icon-chevron-left-thin"></i>
-        </button>
         <button ng-click="close()" class="close-preview">
             <i class="icon-close-small"></i>
         </button>
