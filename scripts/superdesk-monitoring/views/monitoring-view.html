@@ -57,7 +57,7 @@
 
     <section class="main-section" ng-class="monitoring.state">
 
-        <div sd-media-query min-width="450" class="subnav">
+        <div sd-media-query min-width="560" class="subnav">
 
             <ul class="filter-type filter-type--padded" ng-if="!elementState || elementState === 'comfort'">
                 <li ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
