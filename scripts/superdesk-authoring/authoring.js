@@ -1409,7 +1409,7 @@ import 'angular-history/history.js';
                 function validate(orig, item) {
                     $scope.error = {};
                     tryPublish = true;
-                    _.extend(orig, item);
+                    extendItem(orig, item);
                     angular.forEach(authoring.editor, function (editor, key) {
                         if (!authoring.schema[key]) {
                             var found = false;
