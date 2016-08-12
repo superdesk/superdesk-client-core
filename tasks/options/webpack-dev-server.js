@@ -29,14 +29,15 @@ module.exports = function(grunt) {
         },
         docs: {
             keepAlive: true,
-            contentBase: './docs',
+            contentBase: './docs/dist',
+            port: 9100,
             webpack: {
                 entry: {
-                    index: 'docs/index'
+                    docs: ['webpack-dev-server/client?http://localhost:9100/', 'docs/index']
                 },
                 output: {
-                    path: path.join(process.cwd(), 'docs'),
-                    publicPath: 'docs/'
+                    path: path.join(process.cwd(), 'docs/dist'),
+                    publicPath: 'docs/dist'
                 },
                 devtool: 'eval',
                 debug: true

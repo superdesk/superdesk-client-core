@@ -7,11 +7,9 @@ import 'jquery-ui/themes/smoothness/jquery-ui.css';
 import 'jquery-jcrop/css/jquery.Jcrop.css';
 
 // vendor
-import 'jquery';
 import 'jquery-ui/jquery-ui';
 import 'jquery-jcrop';
 import 'jquery-gridster';
-import 'moment';
 import 'moment-timezone';
 import 'lodash';
 import 'bootstrap';
@@ -30,7 +28,6 @@ import 'angular-vs-repeat';
 import 'ng-file-upload';
 import 'exif-js';
 import 'raven-js';
-import 'medium-editor';
 import 'rangy';
 import 'rangy-saverestore';
 import 'ment.io';

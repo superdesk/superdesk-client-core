@@ -41,7 +41,9 @@ module.exports = function(grunt) {
 
     grunt.registerTask('docs', [
         'clean',
+        'ngtemplates:dev',
         'ngtemplates:docs',
+        'copy:assets-docs',
         'webpack-dev-server:docs'
     ]);
 
