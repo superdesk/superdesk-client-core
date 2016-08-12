@@ -156,6 +156,20 @@ describe('authoring', function() {
         expect(reloadService.forceReload).toHaveBeenCalled();
     }));
 
+    it('can populate content metadata for undo', inject(function($rootScope) {
+        var orig = {headline: 'foo'};
+        var scope = startAuthoring(orig, 'edit');
+        expect(scope.origItem.headline).toBe('foo');
+        expect(scope.item.headline).toBe('foo');
+        expect(scope.item.slugline).toBe('');
+        scope.$apply(function() {
+            scope.origItem.headline = 'bar';
+            scope.origItem.slugline = 'slug';
+        });
+        expect(scope.item.headline).toBe('foo');
+        expect(scope.item.slugline).toBe('');
+    }));
+
     /**
      * Start authoring ctrl for given item.
      *
@@ -369,7 +383,7 @@ describe('authoring', function() {
             )).toBeFalsy();
         }));
 
-        it('can keep origItem etag updated without content changes',
+        it('updates orig item on save',
         inject(function(authoring, $rootScope, $httpBackend, api, $q, urls) {
             var item = {headline: 'foo'};
             var orig = {_links: {self: {href: 'archive/foo'}}};
@@ -381,7 +395,6 @@ describe('authoring', function() {
             $httpBackend.flush();
             expect(orig._etag).toBe('new');
             expect(orig._current_version).toBe(2);
-            expect(orig.headline).toBe(undefined);
         }));
     });
 });

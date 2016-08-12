@@ -33,7 +33,7 @@ before_install:
       export CHROME_BIN=`pwd`/chrome-linux/chrome && $CHROME_BIN --version ;
 
 install:
-    - npm install --python=python2.7
+    - npm install
     - bower install --quiet
     - cd test-server && pip install -q -r requirements.txt && cd ..
     - ./node_modules/.bin/webdriver-manager update
