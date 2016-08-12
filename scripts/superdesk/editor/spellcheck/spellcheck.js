@@ -39,6 +39,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
         if (language && language.indexOf('-') > 0) {
             return language.split('-')[0];
         }
+
         return null;
     }
 
@@ -100,7 +101,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
                 }
 
                 angular.forEach(items, function(item) {
-                    angular.extend(self.abbreviationsDict.content, item.content || {});
+                    angular.extend(self.abbreviationsDict.content, JSON.parse(item.content) || {});
                 });
 
                 return self.abbreviationsDict.content;
