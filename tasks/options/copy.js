@@ -23,56 +23,8 @@ module.exports = {
                 dot: true,
                 cwd: '<%= coreDir %>',
                 dest: '<%= distDir %>',
-                src: [
-                    'fonts/*',
-                    'images/**/*',
-                    'scripts/**/*.{css,jpg,jpeg,png,gif,svg,json}'
-                ]
-            },
-            {
-                expand: true,
-                dot: true,
-                cwd: '<%= appDir %>',
-                dest: '<%= distDir %>',
-                src: [
-                    'fonts/*',
-                    'images/**/*',
-                    'styles/css/*.css',
-                    'scripts/**/*.{html,css,jpg,jpeg,png,gif,svg,json}'
-                ]
+                src: ['images/**/*', 'scripts/**/*.json']
             }
         ]
-    },
-    docs: {
-        files: [{
-            expand: true,
-            dot: true,
-            cwd: '<%= appDir %>/docs',
-            dest: '<%= distDir %>',
-            src: [
-                'views/**/*.{html,css,jpg,jpeg,png,gif,svg,json}'
-            ]
-        },
-        {
-            expand: true,
-            dot: true,
-            cwd: '<%= appDir %>',
-            dest: '<%= distDir %>',
-            src: [
-                'docs/images/**/*.{jpg,jpeg,png,gif,svg}'
-            ]
-        }]
-    },
-    js: {
-        files: [{
-            expand: true,
-            dot: true,
-            cwd: '<%= appDir %>',
-            dest: '<%= distDir %>',
-            src: [
-                'scripts/config.js',
-                'scripts/bower_components/**/*.js'
-            ]
-        }]
     }
 };

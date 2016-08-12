@@ -109,7 +109,7 @@ describe('ingest_settings', function() {
         utils.assertToastMsg('success', 'Routing scheme saved');
     });
 
-    it('cannot add blank rule', function() {
+    xit('cannot add blank rule', function() {
         ingestSettings.tabs.routingTab.click();
         ingestSettings.newSchemeBtn.click();
         ingestSettings.writeTextToSchemeName('Test Scheme');
