@@ -25,6 +25,7 @@ For installation instructions, please refer to the README file at: [https://gith
 
 - `feature.preview`: `false` - enables print preview in authoring
 - `feature.alchemy`: `false` - allow alchemy widget for keywords
+- `feature.elasticHighlight`: `false` - allow highlighting of search terms by elasticsearch
 
 ##### Workspace
 - `workspace.content`: `false` - enable content view in workspace (obsolete)

@@ -92,7 +92,7 @@
         ng-change="autosave(item)"
         ng-if="_editable"
         ng-trim="false"></div>
-  <div ng-if="!_editable">{{item.byline}}</div>
+  <div ng-if="!_editable" sd-html-preview="item.byline"></div>
 </div>
 
 <!--This article-edit view is used by templates as well.
