@@ -371,6 +371,10 @@ import classNames from 'classnames';
                         );
                     };
 
+                    function createMarkUp (html) {
+                        return {__html: html};
+                    }
+
                     /**
                      * Media Preview - renders item thumbnail
                      */
@@ -399,8 +403,8 @@ import classNames from 'classnames';
                                 {className: 'text'},
                                 React.createElement(
                                     'small',
-                                    {title: headline},
-                                    headline.substr(0, 90)
+                                    {title: headline,
+                                        dangerouslySetInnerHTML:createMarkUp(headline.substr(0, 90))}
                                 ),
                                 React.createElement(ItemContainer, {item: item, desk: props.desk})
                             ),
@@ -498,8 +502,9 @@ import classNames from 'classnames';
 
                         info.push(React.createElement(
                             'h5',
-                            {key: 1},
-                            item.headline || item.slugline || item.type
+                            {key: 1,
+                             dangerouslySetInnerHTML:createMarkUp(item.headline || item.slugline || item.type)}
+
                         ));
 
                         info.push(React.createElement(
@@ -916,10 +921,6 @@ import classNames from 'classnames';
                         }).filter(angular.identity);
                         var elemProps = angular.extend({key: area}, props);
                         return contents.length ? React.createElement('div', elemProps, contents) : null;
-                    }
-
-                    function createMarkUp (html) {
-                        return {__html: html};
                     }
 
                     /**
