@@ -1,7 +1,9 @@
 <div class="stage">
-    <div sd-monitoring-group-header ng-if="group.header && group.singleViewType == null"></div>
+    <div sd-monitoring-group-header 
+    	ng-if="group.header && viewType !== 'single_monitoring'">
+    </div>
     <div class="stage-content group"
-        ng-class="{limited: limited}"
+        ng-class="{limited: limited, refresh: showRefresh}"
         ng-style="style"
         sd-items-list>
     </div>
