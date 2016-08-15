@@ -27,7 +27,7 @@
         this.deskLookup = {};
         this.stageLookup = {};
         this.fileTypes = ['all', 'text', 'picture', 'composite', 'takesPackage', 'highlightsPackage', 'video', 'audio'];
-        this.selectedFileType = [];
+        this.selectedFileType = $scope.type === 'monitoring' ? storage.getItem('selectedFileType') || [] : [];
         this.monitoringSearch = false;
         this.searchQuery = null;
 
@@ -294,6 +294,9 @@
                 } else {
                     this.selectedFileType.push(fileType);
                 }
+            }
+            if ($scope.type === 'monitoring') {
+                storage.setItem('selectedFileType', this.selectedFileType);
             }
             updateFileTypeCriteria();
         };
