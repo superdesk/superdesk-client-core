@@ -1,18 +1,12 @@
 var path = require('path');
+var makeConfig = require('../../webpack.config.js');
 
 module.exports = function(grunt) {
-    var isModule = require('fs').existsSync('./node_modules/superdesk-core');
-    var rewrite = {
-        target: 'http://localhost:9000',
-        rewrite: function(req) {
-            'use strict';
-            req.url = 'node_modules/superdesk-core' + req.url;
-        }
-    };
+    var webpackConfig = makeConfig(grunt);
 
     return {
         options: {
-            webpack: require('../../webpack.config.js')(grunt, {isDev: true}),
+            webpack: webpackConfig,
             publicPath: '/dist',
             port: 9000,
             headers: {
@@ -21,25 +15,29 @@ module.exports = function(grunt) {
         },
         start: {
             keepAlive: true,
-            proxy: isModule ? {
-                '/scripts/*': rewrite,
-                '/images/*': rewrite
-            } : {},
+            proxy: getProxy(),
             webpack: {
                 devtool: 'eval',
-                debug: true
+                debug: true,
+                entry: {
+                    app: ['webpack-dev-server/client?http://localhost:9000/'].concat(webpackConfig.entry.app)
+                },
+                output: {
+                    publicPath: 'dist'
+                }
             }
         },
         docs: {
             keepAlive: true,
-            contentBase: './docs',
+            contentBase: './docs/dist',
+            port: 9100,
             webpack: {
                 entry: {
-                    index: 'docs/index'
+                    docs: ['webpack-dev-server/client?http://localhost:9100/', 'docs/index']
                 },
                 output: {
-                    path: path.join(process.cwd(), 'docs'),
-                    publicPath: 'docs/'
+                    path: path.join(process.cwd(), 'docs/dist'),
+                    publicPath: 'docs/dist'
                 },
                 devtool: 'eval',
                 debug: true
@@ -47,3 +45,32 @@ module.exports = function(grunt) {
         }
     };
 };
+
+// getProxy returns the proxy configuration for the dev server. In the dev
+// environment, some paths need to be rewritten.
+function getProxy() {
+    // isEmbedded will be true when the app is embedded into the main repo as a
+    // node module.
+    var isEmbedded = require('fs').existsSync('./node_modules/superdesk-core');
+
+    // prepend returns a proxy configuration that prepends the passed URL with
+    // the given parameter.
+    var prepend = function(loc) {
+        return {
+            target: 'http://localhost:9000',
+            rewrite: function(req) {
+                req.url = loc + req.url;
+            }
+        };
+    };
+
+    var proxy = isEmbedded ? {
+        '/scripts/*': prepend('node_modules/superdesk-core'),
+        '/images/*': prepend('node_modules/superdesk-core')
+    } : {};
+
+    // on the dev server the bundle is in the dist folder
+    proxy['/app.bundle.js'] = prepend('dist');
+
+    return proxy;
+}

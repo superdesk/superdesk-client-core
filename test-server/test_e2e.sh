@@ -2,7 +2,7 @@
 
 # prepare server
 grunt clean
-grunt server:travis &
+grunt server &
 
 # wait for server to be ready
 while [ ! -f $(dirname "$0")/../dist/index.html ]; do
@@ -11,7 +11,7 @@ done
 
 # run tests
 ./node_modules/protractor/bin/webdriver-manager update
-./node_modules/protractor/bin/protractor protractor-conf.js --baseUrl 'http://localhost:9000'
+./node_modules/protractor/bin/protractor protractor.conf.js --baseUrl 'http://localhost:9000'
 TEST_STATUS=$?
 
 # stop server

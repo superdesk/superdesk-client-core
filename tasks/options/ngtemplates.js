@@ -30,7 +30,7 @@ module.exports = {
     },
     docs: {
         cwd: '<%= coreDir %>',
-        dest: 'docs/templates-cache.js',
+        dest: 'docs/dist/templates-cache-docs.generated.js',
         src: src,
         options: options
     },

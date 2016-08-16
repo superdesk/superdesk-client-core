@@ -10,38 +10,30 @@
 
 import './index.less';
 
-import 'bower_components/jquery/dist/jquery.js';
-import 'bower_components/lodash/lodash.js';
-import 'bower_components/jquery-ui/jquery-ui.js';
-import 'bower_components/bootstrap/dist/js/bootstrap.js';
-import 'bower_components/react/react.js';
-import 'bower_components/react/react-dom.js';
-import 'bower_components/classnames/index.js';
-import 'bower_components/angular/angular.js';
-import 'bower_components/gridster/dist/jquery.gridster.with-extras.js';
-import 'bower_components/medium-editor/dist/js/medium-editor.js';
-import 'bower_components/ment.io/dist/mentio.js';
-import 'bower_components/rangy/rangy-core.js';
-import 'bower_components/rangy/rangy-selectionsaverestore.js';
-import 'bower_components/momentjs/moment.js';
-import 'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js';
-import 'bower_components/langmap/language-mapping-list.js';
-import 'bower_components/angular-moment/angular-moment.js';
-import 'bower_components/d3/d3.js';
-import 'bower_components/jcrop/js/jquery.Jcrop.js';
-import 'bower_components/angular-bootstrap/ui-bootstrap-tpls.js';
-import 'bower_components/angular-resource/angular-resource.js';
-import 'bower_components/angular-route/angular-route.js';
-import 'bower_components/angular-gettext/dist/angular-gettext.js';
-import 'bower_components/angular-mocks/angular-mocks.js';
-import 'bower_components/angular-animate/angular-animate.js';
-import 'bower_components/ng-file-upload/ng-file-upload.js';
-import 'bower_components/ng-file-upload/ng-file-upload-shim.js';
-import 'bower_components/raven-js/dist/raven.js';
-import 'bower_components/angular-embed/dist/angular-embed.js';
-import 'bower_components/angular-contenteditable/angular-contenteditable.js';
-import 'bower_components/angular-vs-repeat/src/angular-vs-repeat.js';
-import 'bower_components/exif-js/exif.js';
+import 'jquery-ui/jquery-ui';
+import 'jquery-jcrop';
+import 'jquery-gridster';
+import 'moment-timezone';
+import 'lodash';
+import 'bootstrap';
+import 'angular';
+import 'angular-moment';
+import 'angular-bootstrap-npm';
+import 'angular-resource';
+import 'angular-route';
+import 'angular-gettext';
+import 'angular-mocks';
+import 'angular-animate';
+import 'angular-embedly';
+import 'angular-embed';
+import 'angular-contenteditable';
+import 'angular-vs-repeat';
+import 'ng-file-upload';
+import 'exif-js';
+import 'raven-js';
+import 'rangy';
+import 'rangy-saverestore';
+import 'ment.io';
 
 import 'superdesk/keyboard';
 import 'superdesk/auth';
@@ -52,93 +44,102 @@ import 'superdesk/services';
 import 'superdesk/superdesk-docs';
 import 'superdesk/superdesk';
 
-(function() {
+import './dist/templates-cache-docs.generated';
 
-    'use strict';
+var app = angular.module('superdesk.docs', []);
 
-    var app = angular.module('superdesk.docs', []);
+MainDocsView.$inject = ['$location', '$anchorScroll', 'asset'];
+function MainDocsView($location, $anchorScroll) {
+    return {
+        templateUrl: 'main.html',
+        link: function(scope, elem, attrs) {
+            scope.scrollTo = function(id) {
+                $location.hash(id);
+                $anchorScroll();
+            };
 
-    MainDocsView.$inject = ['$location', '$anchorScroll', 'asset'];
-    function MainDocsView($location, $anchorScroll) {
-        return {
-            templateUrl: 'main.html',
-            link: function(scope, elem, attrs) {
-                scope.scrollTo = function(id) {
-                    $location.hash(id);
-                    $anchorScroll();
-                };
+            //Modals
+            scope.modalActive = false;
 
-                //Modals
+            scope.openModal = function() {
+                scope.modalActive = true;
+            };
+
+            scope.closeModal = function() {
                 scope.modalActive = false;
+            };
 
-                scope.openModal = function() {
-                    scope.modalActive = true;
-                };
+            //Select boxes
+            scope.opts = ['Serbia', 'Czech Republic', 'Germany', 'Australia'];
 
-                scope.closeModal = function() {
-                    scope.modalActive = false;
-                };
+            //Typeahead
+            scope.taTerms = ['Serbia', 'Czech Republic', 'Germany', 'Australia', 'Canada', 'Russia', 'Italy', 'Egypt', 'China'];
+            scope.taSelected = null;
+            scope.taItems = [];
 
-                //Select boxes
-                scope.opts = ['Serbia', 'Czech Republic', 'Germany', 'Australia'];
-
-                //Typeahead
-                scope.taTerms = ['Serbia', 'Czech Republic', 'Germany', 'Australia', 'Canada', 'Russia', 'Italy', 'Egypt', 'China'];
-                scope.taSelected = null;
-                scope.taItems = [];
-
-                scope.taSearch = function(term) {
-                    scope.taItems = _.filter(scope.taTerms, function(t) {
-                        return t.toLowerCase().indexOf(term.toLowerCase()) !== -1;
-                    });
-                    return scope.taItems;
-                };
-
-                scope.taSelect = function(term) {
-                    scope.taSelected = term;
-                };
-
-                //datepicker
-                scope.dateNow = moment().utc().format();
-
-                //timepicker
-                scope.timeNow = moment().utc().format('HH:mm:ss');
-            }
-        };
-    }
-
-    app.directive('sdDocs', MainDocsView);
-    app.directive('prettyprint', function() {
-        return {
-            restrict: 'C',
-            link: function postLink(scope, element, attrs) {
-
-                //remove leading whitespaces
-                var str = element[0].innerHTML;
-                var pos = 0; var sum = 0;
-                while (str.charCodeAt(pos) === 32) {
-                    sum = sum + 1;
-                    pos = pos + 1;
-                }
-                var pattern = '\\s{' + sum + '}';
-                var spaces = new RegExp(pattern, 'g');
-                element[0].innerHTML = str.replace(spaces, '\n');
-
-                //remove ng-non-bindable from code
-                element.find('[ng-non-bindable=""]').each(function(i, val) {
-                    $(val).removeAttr('ng-non-bindable');
+            scope.taSearch = function(term) {
+                scope.taItems = _.filter(scope.taTerms, function(t) {
+                    return t.toLowerCase().indexOf(term.toLowerCase()) !== -1;
                 });
+                return scope.taItems;
+            };
 
-                var langExtension = attrs['class'].match(/\blang(?:uage)?-([\w.]+)(?!\S)/);
-                if (langExtension) {
-                    langExtension = langExtension[1];
-                }
-                element.html(window.prettyPrintOne(_.escape(element.html()), langExtension, true));
+            scope.taSelect = function(term) {
+                scope.taSelected = term;
+            };
+
+            //datepicker
+            scope.dateNow = moment().utc().format();
+
+            //timepicker
+            scope.timeNow = moment().utc().format('HH:mm:ss');
+        }
+    };
+}
+
+app.directive('sdDocs', MainDocsView);
+app.directive('prettyprint', function() {
+    return {
+        restrict: 'C',
+        link: function postLink(scope, element, attrs) {
+
+            //remove leading whitespaces
+            var str = element[0].innerHTML;
+            var pos = 0; var sum = 0;
+            while (str.charCodeAt(pos) === 32) {
+                sum = sum + 1;
+                pos = pos + 1;
             }
+            var pattern = '\\s{' + sum + '}';
+            var spaces = new RegExp(pattern, 'g');
+            element[0].innerHTML = str.replace(spaces, '\n');
 
-        };
-    });
+            //remove ng-non-bindable from code
+            element.find('[ng-non-bindable=""]').each(function(i, val) {
+                $(val).removeAttr('ng-non-bindable');
+            });
 
-    return app;
+            var langExtension = attrs['class'].match(/\blang(?:uage)?-([\w.]+)(?!\S)/);
+            if (langExtension) {
+                langExtension = langExtension[1];
+            }
+            element.html(window.prettyPrintOne(_.escape(element.html()), langExtension, true));
+        }
 
-})();
+    };
+});
+
+/* globals __SUPERDESK_CONFIG__: true */
+angular.module('superdesk.config').constant('config', __SUPERDESK_CONFIG__);
+
+var body = angular.element('body');
+body.ready(function () {
+    angular.bootstrap(body, [
+        'superdesk.docs.core',
+        'superdesk.docs',
+        'superdesk.templates-cache',
+        'superdesk.config'
+    ]);
+});
+
+export default app;
