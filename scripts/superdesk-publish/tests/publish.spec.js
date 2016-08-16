@@ -114,14 +114,14 @@ describe('publish queue', function() {
 
     var $scope;
 
-    beforeEach(module('superdesk.authoring'));
-    beforeEach(module('superdesk.users'));
-    beforeEach(module('superdesk.content_filters'));
-    beforeEach(module('superdesk.publish'));
-    beforeEach(module('superdesk.ingest'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.searchProviders'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.content_filters'));
+    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.ingest'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.searchProviders'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function($rootScope, $controller, subscribersService, $q, api, ingestSources) {
         spyOn(subscribersService, 'fetchSubscribers').and.returnValue($q.when(subscribers));

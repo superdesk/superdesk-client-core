@@ -14,10 +14,10 @@ describe('sdUserPrivileges directive', function() {
         $compile,
         $rootScope;
 
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.users'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.users'));
 
-    beforeEach(module(function ($provide) {
+    beforeEach(window.module(function ($provide) {
         fakeEndpoints = {};
 
         function fakeApi() {

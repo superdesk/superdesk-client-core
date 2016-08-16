@@ -2,7 +2,7 @@
 
 describe('elastic query builder', function() {
 
-    beforeEach(module('superdesk.elastic'));
+    beforeEach(window.module('superdesk.elastic'));
 
     it('generates query string query for q param', inject(function(es) {
         var body = es({q: 'test'});

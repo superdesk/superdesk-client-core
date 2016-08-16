@@ -20,9 +20,9 @@ describe('spellcheck', function() {
         LANG = 'en-US',
         errors = [];
 
-    beforeEach(module('superdesk.editor'));
-    beforeEach(module('superdesk.editor.spellcheck'));
-    beforeEach(module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.editor'));
+    beforeEach(window.module('superdesk.editor.spellcheck'));
+    beforeEach(window.module('superdesk.preferences'));
 
     beforeEach(inject(function(dictionaries, spellcheck, $q, preferencesService) {
 

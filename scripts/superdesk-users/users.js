@@ -218,7 +218,7 @@
         $scope.online_users = false;
 
         api('roles').query().then(function(result) {
-            $scope.roles = _.indexBy(result._items, '_id');
+            $scope.roles = _.keyBy(result._items, '_id');
             $scope.noRolesWarning = result._items.length === 0;
         });
 
@@ -1721,7 +1721,7 @@
 
                     // Returns the next set of results
                     function fetchItems(prefix, page) {
-                        if (!scope.fetching && !_.contains(fetchedPages, page)) {
+                        if (!scope.fetching && !_.includes(fetchedPages, page)) {
                             var promises = [];
                             scope.fetching = true;
 

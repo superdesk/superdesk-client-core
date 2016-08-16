@@ -7,11 +7,11 @@ describe('sdUserPreferences directive', function() {
 
     var user = {'_id': 1};
 
-    beforeEach(module('superdesk.users'));
-    beforeEach(module('superdesk.authoring.metadata'));
-    beforeEach(module('superdesk.filters'));
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.publish'));
+    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.filters'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.publish'));
 
     beforeEach(inject(function (
         $rootScope, $compile, $q, metadata, preferencesService, session, userList

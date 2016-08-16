@@ -1,10 +1,10 @@
 'use strict';
 
 describe('itemListService', function() {
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.itemList'));
-    beforeEach(module(function($provide) {
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.itemList'));
+    beforeEach(window.module(function($provide) {
         $provide.service('api', function($q) {
             return function ApiService(endpoint, endpointParam) {
                 return {

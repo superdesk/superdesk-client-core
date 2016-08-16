@@ -11,7 +11,7 @@
                 dashboardWidgetsProvider = _dashboardWidgetsProvider_;
             }]);
 
-            module('superdesk.dashboard.widgets', 'superdesk.dashboard.widgets.tests');
+            window.module('superdesk.dashboard.widgets', 'superdesk.dashboard.widgets.tests');
 
             // init the tests module to get the actual provider
             inject(function() {});

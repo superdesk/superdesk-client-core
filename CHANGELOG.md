@@ -7,6 +7,7 @@
 - Fix undo/redo changes not being saved or autosaved
 - Fix undo/redo for new item not reverting to empty body after save
 - Fix undo/redo not working properly with complex fields (dateline, category, subject)
+- Fix images uploaded into private space are not visible
 
 ## [1.0.0-beta1] 2016-04-26
 

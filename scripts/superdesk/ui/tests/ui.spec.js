@@ -3,7 +3,7 @@
 
 describe('superdesk ui', function() {
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
@@ -18,8 +18,8 @@ describe('superdesk ui', function() {
         });
     }));
 
-    beforeEach(module('superdesk.ui'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.ui'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
     var datetimeHelper;
 
@@ -58,8 +58,8 @@ describe('superdesk ui', function() {
             getTzDataDeferred,
             isoScope;  // the directive's isolate scope
 
-        beforeEach(module('superdesk.ingest'));
-        beforeEach(module(function($provide) {
+        beforeEach(window.module('superdesk.ingest'));
+        beforeEach(window.module(function($provide) {
             var childDirectives = [
                 'sdWeekdayPicker', 'sdTimepickerAlt', 'sdTypeahead'
             ];

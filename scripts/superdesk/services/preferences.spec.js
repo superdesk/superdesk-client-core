@@ -2,8 +2,8 @@
 
 describe('Preferences Service', function() {
 
-    beforeEach(module('superdesk.preferences'));
-    beforeEach(module('superdesk.api'));
+    beforeEach(window.module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.api'));
 
     var preferencesService,
         testPreferences = {
@@ -148,8 +148,8 @@ describe('Preferences Service', function() {
 
 describe('preferences error handling', function() {
 
-    beforeEach(module('superdesk.preferences'));
-    beforeEach(module('superdesk.api'));
+    beforeEach(window.module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.api'));
 
     beforeEach(inject(function(session, urls, $q, $httpBackend) {
         spyOn(session, 'getIdentity').and.returnValue($q.when());

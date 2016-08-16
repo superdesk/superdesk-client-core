@@ -64,6 +64,10 @@
                 .compact-view, .mlist-view {
                     box-shadow: none;
                 }
+                &.refresh {
+                    border: solid thin @blue;
+                    .box-shadow(0px 0px 10px 0px rgba(93,155,192,1));
+                }
                 .list-view {
                     margin-bottom: 0;
                     &.list-without-items {
@@ -133,61 +137,71 @@
 
 
 .workspace.authoring {
-  .main-section {
-    .content-item-preview {
-      width: @sidepreview-width;
-      @media only screen and (max-width : 1630px) {
-        width: @sidepreview-width - 40;
-      }
-      @media only screen and (max-width : 1430px) {
-        width: @sidepreview-width - 80;
-        right: -324px;
-      }
-      &.shift {
-        @media only screen and (max-width : 1430px) {
-            width: @sidepreview-width - 80;
-            right: 0px;
-        }
-      }
-      .shift-preview__toggle {
-            position: absolute;
-            width: 21px;
-            height: 21px;
-            border: 0;
-            padding: 0;
-            left: 50%;
-            margin-left: -10.5px;
-            bottom: -11px;
-            background-color: @white;
-            z-index: 3;
-            line-height: 0;
-            .border-radius(50%);
-            .box-shadow(0px 0px 3px 0px rgba(0,0,0,0.4));
-            .transition(transform 0.5s);
-            i { height: 15px; }
-            &.shift {
-            .rotate(180deg);
+    .main-section {
+        .content-item-preview {
+            width: @sidepreview-width;
+            @media only screen and (max-width : 1630px) {
+                width: @sidepreview-width - 40;
             }
             @media only screen and (max-width : 1430px) {
-                display: inline !important;
+                width: @sidepreview-width - 80;
+                overflow: visible;
+                right: -324px;
             }
-            @media only screen and (max-width : 1630px) {
-                display: none;
+            &.shift {
+                @media only screen and (max-width : 1430px) {
+                    width: @sidepreview-width - 80;
+                    right: 0px;
+                    .box-shadow(inset 2px 0 3px -1px #d8d8d8);
+                }
+            }
+            .shift-preview__toggle {
+                position: absolute;
+                width: 24px;
+                height: 48px;
+                padding: 0;
+                top: 0;
+                right: -24px;
+                border: 0;
+                line-height: 0;
+                opacity: .5;
+                background-color: @white;
+                .border-radius(0 2px 2px 0);
+                .box-shadow(2px 0px 10px 0px rgba(0, 0, 0, 0.3));
+
+                i { height: 15px; }
+
+                &:hover {
+                    opacity: 1;
+                    background-color: @sd-blue;
+                    i { color: @white; }
+                }          
+                &.shift {
+                    top: 1px;
+                    .border-radius(2px 0 0 2px);
+                    .box-shadow(-1px 0px 7px 0px rgba(0, 0, 0, 0.3));
+                    .rotate(180deg);
+                }
+                @media only screen and (max-width : 1430px) {
+                    display: inline !important;
+                }
+                @media only screen and (max-width : 1630px) {
+                    display: none;
+                }
+            }
+        }
+        &.with-preview {
+            .content-list {
+                right: @sidepreview-width;
+                @media only screen and (max-width : 1630px) {
+                    right: @sidepreview-width - 40;
+                }
+                @media only screen and (max-width : 1430px) {
+                    right: 0;
+                }
             }
         }
     }
-    &.with-preview {
-      .content-list {
-        right: @sidepreview-width;
-        @media only screen and (max-width : 1630px) {
-          right: @sidepreview-width - 40;
-        }
-        @media only screen and (max-width : 1430px) {
-          right: 0;
-        }
-      }
-    }
-  }
 }
 
 .search-page-container

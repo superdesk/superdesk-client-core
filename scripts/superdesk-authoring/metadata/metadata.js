@@ -362,7 +362,7 @@ function MetaDropdownDirective($filter, keyboardManager) {
             };
 
             scope.$watch(':: list', function() {
-                scope.values = _.indexBy(scope.list, 'qcode');
+                scope.values = _.keyBy(scope.list, 'qcode');
             });
 
             scope.$applyAsync(function() {
@@ -454,7 +454,7 @@ function MetaTagsDirective(api, $timeout) {
                 if (body) {
                     api.save('keywords', {text: body})
                         .then(function(result) {
-                            scope.extractedTags = _.pluck(result.keywords, 'text');
+                            scope.extractedTags = _.map(result.keywords, 'text');
                             scope.tags = _.uniq(scope.extractedTags.concat(scope.item[scope.field]));
                             scope.refreshing = false;
                         });
@@ -965,11 +965,11 @@ function MetadataService(api, $q, subscribersService, config) {
                 );
 
                 if (self.values.urgency) {
-                    self._urgencyByValue = _.indexBy(self.values.urgency, 'qcode');
+                    self._urgencyByValue = _.keyBy(self.values.urgency, 'qcode');
                 }
 
                 if (self.values.priority) {
-                    self._priorityByValue = _.indexBy(self.values.priority, 'qcode');
+                    self._priorityByValue = _.keyBy(self.values.priority, 'qcode');
                 }
             });
         },

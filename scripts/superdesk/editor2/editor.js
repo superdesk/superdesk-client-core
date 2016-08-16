@@ -7,9 +7,8 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-(function() {
-
-'use strict';
+import MediumEditor from 'medium-editor';
+import MediumEditorTable from 'medium-editor-tables';
 
 var TYPING_CLASS = 'typing';
 
@@ -969,9 +968,9 @@ angular.module('superdesk.editor2', [
                         if (scope.config.multiBlockEdition) {
                             // this dummy imageDragging stop preventing drag & drop events
                             editorConfig.extensions = {'imageDragging': {}};
-                            if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(window.MediumEditorTable)) {
+                            if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(MediumEditorTable)) {
                                 editorConfig.extensions.table =
-                                new window.MediumEditorTable({aria:gettextCatalog.getString('insert table')});
+                                new MediumEditorTable({aria:gettextCatalog.getString('insert table')});
                             }
                         }
                     }
@@ -989,7 +988,7 @@ angular.module('superdesk.editor2', [
                     }
 
                     // create a new instance of the medium editor binded to this node
-                    scope.medium = new window.MediumEditor(scope.node, editorConfig);
+                    scope.medium = new MediumEditor(scope.node, editorConfig);
                     // restore the selection if exist
                     if (scope.sdTextEditorBlockText.caretPosition) {
                         scope.node.focus();
@@ -1553,4 +1552,3 @@ function EditorUtilsFactory() {
 
 angular.module('superdesk.editor.utils', [])
     .factory('editorUtils', EditorUtilsFactory);
-})();

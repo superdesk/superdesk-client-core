@@ -8,15 +8,18 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
+import React from 'react';
+
 (function() {
 
     'use strict';
 
-    PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring', 'desks'];
-    function PackagesService(api, $q, archiveService, lock, autosave, authoring, desks) {
+    PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring', 'authoringWorkspace', 'desks', '$rootScope'];
+    function PackagesService(api, $q, archiveService, lock, autosave, authoring, authoringWorkspace, desks, $rootScope) {
         var self = this;
 
         this.groupList = ['main', 'story', 'sidebars', 'fact box'];
+        this.packageGroupItems = {};
 
         this.fetch = function fetch(_id) {
             return api.find('archive', _id).then(function(result) {
@@ -83,7 +86,6 @@
         };
 
         this.addItemsToPackage = function(current, group_id, items) {
-
             var origGroups = _.cloneDeep(current.groups);
 
             var targetGroup = _.find(origGroups, function(group) {
@@ -107,11 +109,13 @@
         };
 
         this.isAdded = function(pkg, item) {
-            return pkg.groups.some(function(group) {
+            var added = pkg.groups ? pkg.groups.some(function(group) {
                 return group.refs.some(function(ref) {
                     return ref.guid === item._id;
                 });
-            });
+            }) : false;
+            var addedToPkg = this.isAddedToPackage(pkg, item);
+            return added || addedToPkg;
         };
 
         this.fetchItem = function(packageItem) {
@@ -135,6 +139,30 @@
                 renditions: item.renditions || {},
                 itemClass: item.type ? ('icls:' + item.type) : ''
             };
+        };
+
+        this.addPackageGroupItem = function(group, item, broadcast) {
+            broadcast = (typeof broadcast === 'undefined') ? true : false;
+            var pkg = authoringWorkspace.getItem();
+            var pkg_id = pkg._id;
+            if (typeof this.packageGroupItems[pkg_id] === 'undefined') {
+                this.packageGroupItems[pkg_id] = [];
+            }
+            if (_.indexOf(this.packageGroupItems[pkg_id], item._id) === -1) {
+                this.packageGroupItems[pkg_id].unshift(item._id);
+            }
+            if (broadcast) {
+                $rootScope.$broadcast('package:addItems', {items: [item], group: group});
+            }
+        };
+
+        this.removePackageGroupItem = function(group, item) {
+            var pkg = authoringWorkspace.getItem();
+            _.remove(this.packageGroupItems[pkg._id], item._id);
+        };
+
+        this.isAddedToPackage = function(pkg, item) {
+            return pkg ? (_.indexOf(this.packageGroupItems[pkg._id], item._id) !== -1) : false;
         };
 
         function getGroupFor(item, idRef) {
@@ -301,6 +329,7 @@
             //uncheck all
             _.each($scope.multiSelected, function(item) {
                 item.multi = false;
+                packages.addPackageGroupItem(group, item, false);
             });
 
             //clear items
@@ -361,6 +390,9 @@
                         }
                     }
                     autosave();
+                });
+                scope.$on('$destroy', function() {
+                    packages.packageGroupItems = {};
                 });
 
                 ngModel.$render = function() {
@@ -429,7 +461,9 @@
 
                 scope.remove = function(group_id, residRef) {
                     var group = _.find(scope.list, {id: group_id});
+                    var item = _.find(group.items, {residRef: residRef});
                     _.remove(group.items, {residRef: residRef});
+                    packages.removePackageGroupItem(group, item);
                     autosave();
                 };
 
@@ -437,7 +471,9 @@
                     var src = _.find(scope.list, {id: start.group});
                     var dest = _.find(scope.list, {id: end.group});
                     if (start.index !== end.index || start.group !== end.group) {
-                        dest.items.splice(end.index, 0, src.items.splice(start.index, 1)[0]);
+                        var item = src.items.splice(start.index, 1)[0];
+                        dest.items.splice(end.index, 0, item);
+                        packages.addPackageGroupItem(dest, item, false);
                     } else {
                         //just change the address
                         dest.items = _.cloneDeep(dest.items);
@@ -527,12 +563,12 @@
                     var url = '';
                     var endpoint = '';
 
-                    if (_.contains(['archive', 'legal_archive'], scope.item.location)) {
+                    if (_.includes(['archive', 'legal_archive'], scope.item.location)) {
                         url = scope.item.location + '/' + scope.item.residRef;
                         url += scope.item._current_version ? '?version=' + scope.item._current_version: '';
                         endpoint = scope.item.location;
                     } else {
-                        if (_.contains('ingest', scope.item.location)) {
+                        if (_.includes('ingest', scope.item.location)) {
                             url = scope.item.location + '/' + scope.item.residRef;
                             endpoint = 'ingest';
                         } else {
@@ -548,7 +584,7 @@
                             scope.data.abstract = $sce.trustAsHtml(scope.data.abstract);
                         }
                         scope.isLocked = lock.isLocked(scope.data);
-                        scope.isPublished = _.contains(['published', 'corrected'], scope.data.state);
+                        scope.isPublished = _.includes(['published', 'corrected'], scope.data.state);
                         scope.isKilled =  scope.data.state === 'killed';
                     }, function(response) {
                         scope.error = true;
@@ -689,7 +725,7 @@
                 scope.groupList = scope.groupList || packages.groupList;
 
                 scope.select = function(group) {
-                    $rootScope.$broadcast('package:addItems', {items: [scope.item], group: group});
+                    packages.addPackageGroupItem(group, scope.item);
                 };
             }
         };
@@ -768,7 +804,7 @@
                 function(item, className, authoringWorkspace, packages, api, $rootScope) {
                     var PackageGroup = React.createClass({
                         select: function() {
-                            $rootScope.$broadcast('package:addItems', {items: [item], group: this.props.group});
+                            packages.addPackageGroupItem(this.props.group, item);
                         },
                         render: function() {
                             var group = this.props.group;
@@ -815,7 +851,6 @@
                             );
                         }
                     });
-
                     return React.createElement(PackageGroupList, {item: item, package: authoringWorkspace.getItem()});
                 }],
                 icon: 'package-plus',
@@ -823,11 +858,12 @@
                 filters: [
                     {action: 'list', type: 'archive'}
                 ],
-                additionalCondition:['authoringWorkspace', 'item', 'authoring',
-                function(authoringWorkspace, item, authoring) {
+                additionalCondition:['authoringWorkspace', 'item', 'authoring', 'packages',
+                function(authoringWorkspace, item, authoring, packages) {
                     var pkg = authoringWorkspace.getItem();
                     var actions = authoring.itemActions(item);
-                    return pkg && pkg.type === 'composite' && pkg._id !== item._id && actions.add_to_current;
+                    var added = pkg ? packages.isAdded(pkg, item) : false;
+                    return pkg && pkg.type === 'composite' && pkg._id !== item._id && actions.add_to_current && !added;
                 }],
                 group: 'packaging'
             })

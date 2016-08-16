@@ -1,15 +1,15 @@
 'use strict';
 
 describe('superdesk.list module', function() {
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.list'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.list'));
 
     describe('pagination', function() {
 
         var TEMPLATE = '<div sd-pagination items="items"></div>';
 
-        beforeEach(module('superdesk.templates-cache'));
-        beforeEach(module(function($provide) {
+        beforeEach(window.module('superdesk.templates-cache'));
+        beforeEach(window.module(function($provide) {
             $provide.provider('translateFilter', function() {
                 this.$get = function() {
                     return function(text) {

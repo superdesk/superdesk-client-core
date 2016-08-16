@@ -15,11 +15,11 @@ describe('familyService', function() {
         _items: [{'_id': 'desk1'}]
     };
 
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.archive.directives'));
-    beforeEach(module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.archive.directives'));
+    beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.service('api', function($q) {
             return function() {
                 return {

@@ -198,12 +198,12 @@
 
         promises.push(subscribersService.fetchSubscribers().then(function(items) {
             $scope.subscribers = items;
-            $scope.subscriberLookup = _.indexBy(items, '_id');
+            $scope.subscriberLookup = _.keyBy(items, '_id');
         }));
 
         promises.push(ingestSources.fetchAllIngestProviders().then(function(items) {
             $scope.ingestProviders = items;
-            $scope.ingestProvidersLookup = _.indexBy($scope.ingestProviders, '_id');
+            $scope.ingestProvidersLookup = _.keyBy($scope.ingestProviders, '_id');
         }));
 
         /*
@@ -369,7 +369,7 @@
 
             /* look for any items in states that cannot be resent */
             var idx = _.findIndex($scope.selectedQueueItems, function(item) {
-                return _.contains(['pending', 'in-progress', 'retrying'], item.state);
+                return _.includes(['pending', 'in-progress', 'retrying'], item.state);
             });
 
             /* All selected items can be resent */

@@ -2,7 +2,7 @@
 'use strict';
 
 describe('related item widget', function() {
-    beforeEach(module('superdesk.widgets.relatedItem'));
+    beforeEach(window.module('superdesk.widgets.relatedItem'));
 
     it('can open item', inject(function($rootScope, $controller, superdesk) {
         var scope = $rootScope.$new();

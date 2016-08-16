@@ -131,7 +131,7 @@
          */
         this.setFilters = function(search) {
             _.forOwn(search, function(value, key) {
-                if (_.contains(['priority', 'urgency'], key)) {
+                if (_.includes(['priority', 'urgency'], key)) {
                     search[key] = JSON.stringify(value);
                 }
             });
@@ -344,7 +344,7 @@
 
             // remove other users drafts.
             this.filter({or:[{and: [{term: {state: 'draft'}},
-                                   {term: {'task.user': session.identity._id}}]},
+                                   {term: {'original_creator': session.identity._id}}]},
                              {not: {terms: {state: ['draft']}}}]});
 
             //remove the digital package from production view.
@@ -383,15 +383,55 @@
             return version ? (id + ':' + version) : id;
         };
 
+        /*
+         * helper to compare if items in 'a' are different with 'b' on _id and _current_version, if type is published.
+         */
+        function compareWith(a, b) {
+            return _.filter(a._items, function(item) {
+                if (item._type === 'published') {
+                    return !_.find(b._items, {_id: item._id, _current_version: item._current_version});
+                } else {
+                    return !_.find(b._items, {_id: item._id});
+                }
+            });
+        }
+
+        /*
+         * To determine if refresh button needs to be shown, i-e:
+         * when any difference found in scopeItems and recently fetched newItems
+         *
+         * @param {Object} data - {newItems, scopeItems, scrollTop, isItemPreviewing}
+         */
+        this.canShowRefresh = function(data) {
+            var _showRefresh, diff = [];
+
+            if (data.scopeItems) {
+                // determine if items are different (in terms of added or removed) in scope items from
+                // fetched new items or vice versa.
+                diff = compareWith(data.scopeItems, data.newItems);
+                if (_.isEmpty(diff)) {
+                    diff = compareWith(data.newItems, data.scopeItems);
+                }
+            }
+
+            if (!_.isEmpty(diff)) {
+                // if different, then determine _showReferesh, such that, if item is previewing or scroll in not on top.
+                _showRefresh = (data.isItemPreviewing || !!data.scrollTop);
+            }
+
+            return _showRefresh;
+        };
+
         /**
-         * Merge newItems list with oldItems list if any
+         * Merge newItems list with scopeItems list if any
          *
          * @param {Object} newItems
-         * @param {Object} oldItems
+         * @param {Object} scopeItems
          * @param {boolean} append
+         * @param {boolean} force
          * @return {Object}
          */
-        this.mergeItems = function(newItems, oldItems, append) {
+        this.mergeItems = function(newItems, scopeItems, append, force) {
             if (this.getElasticHighlight()) {
                 newItems._items = _.map(newItems._items, function(item) {
                     if (item.es_highlight) {
@@ -404,16 +444,67 @@
                 });
             }
 
-            if (!oldItems || !append) {
+            if (force || !scopeItems) {
                 return newItems;
-            } else {
-                var nextItems = oldItems._items.concat(newItems._items);
+            } else if (append && scopeItems) {
+                var nextItems = scopeItems._items.concat(newItems._items);
                 return angular.extend({}, newItems, {_items: nextItems});
+            } else {
+                // items in scopeItem, which are no longer exist in fetched newItems. i-e; need to remove from scopeItems
+                var diffToMinus = _.map(compareWith(scopeItems, newItems), '_id');
+
+                // items in fetched newItems, which are new for scopeItems. i-e; need to include in scopeItems
+                var diffToAdd = _.map(compareWith(newItems, scopeItems), '_id');
+
+                // if fetched items are new or removed then update current scope.items
+                // by adding or removing items found in diffToAdd or diffToMinus respectively.
+                if (!_.isEmpty(diffToMinus)) {
+                    _.remove(scopeItems._items, function (item) {
+                        return _.includes(diffToMinus, item._id);
+                    });
+                }
+
+                if (!_.isEmpty(diffToAdd)) {
+                    var index = 0;
+                    _.map(newItems._items, function(item) {
+                        if (_.includes(diffToAdd, item._id)) {
+                            // insert item at its place from the fetched sorted items
+                            scopeItems._items.splice(index, 0, item);
+                        }
+
+                        index++;
+                    });
+                }
+                // update scope.item item-wise with matching fetched items to maintain
+                // item's current position in scope.
+                scopeItems = this.updateItems(newItems, scopeItems);
+
+                return scopeItems; // i.e. updated scope.items
             }
         };
 
         this.getElasticHighlight = function() {
             return config.feature && config.feature.elasticHighlight ? 1 : 0;
+        };
+
+        /**
+         * Update scope items only with the matching fetched newItems
+         *
+         * @param {Object} newItems
+         * @param {Object} scopeItems
+         * @return {Object}
+         */
+        this.updateItems = function(newItems, scopeItems) {
+            _.map(scopeItems._items, function(item) {
+                if (item._type === 'published') {
+                    return _.extend(item, _.find(newItems._items,
+                        {_id: item._id, _current_version: item._current_version}));
+                } else {
+                    return _.extend(item, _.find(newItems._items, {_id: item._id}));
+                }
+            });
+
+            return scopeItems;
         };
     }
 
@@ -1075,10 +1166,19 @@
                     scope.$on('item:fetch', queryItems);
                     scope.$on('item:update', updateItem);
                     scope.$on('item:deleted', queryItems);
-                    scope.$on('item:spike', queryItems);
-                    scope.$on('item:unspike', queryItems);
+                    scope.$on('item:spike', scheduleIfShouldUpdate);
+                    scope.$on('item:unspike', scheduleIfShouldUpdate);
                     scope.$on('item:duplicate', queryItems);
                     scope.$on('ingest:update', queryItems);
+                    scope.$on('content:update', queryItems);
+                    scope.$on('item:move', scheduleIfShouldUpdate);
+
+                    scope.$on('$routeUpdate', function(event, data) {
+                        scope.scrollTop = 0;
+                        data.force = true;
+                        scope.showRefresh = false;
+                        queryItems(event, data);
+                    });
 
                     scope.$on('broadcast:preview', function(event, args) {
                         scope.previewingBroadcast = true;
@@ -1122,38 +1222,101 @@
                     /**
                      * Schedule an update if it's not there yet
                      */
-                    function queryItems() {
+                    function queryItems(event, data) {
                         if (!nextUpdate) {
                             nextUpdate = $timeout(function() {
-                                _queryItems();
+                                _queryItems(event, data);
                                 scope.$applyAsync(function() {
                                     nextUpdate = null; // reset for next $digest
                                 });
-                            }, 3000, false);
+                            }, 1000, false);
                         }
                     }
 
                     /**
                      * Function for fetching total items and filling scope for the first time.
                      */
-                    function _queryItems() {
-                        scope.loading = true;
+                    function _queryItems(event, data) {
                         criteria = search.query($location.search()).getCriteria(true);
                         criteria.source.size = 50;
+
+                        // To compare current scope of items, consider fetching same number of items.
+                        if (scope.items && scope.items._items.length > 50) {
+                            criteria.source.size = scope.items._items.length;
+                        }
                         criteria.source.from = 0;
                         scope.total = null;
-                        scope.items = null;
                         criteria.aggregations = 1;
                         criteria.es_highlight = search.getElasticHighlight();
                         return api.query(getProvider(criteria), criteria).then(function (items) {
-                            scope.total = items._meta.total;
-                            scope.$applyAsync(function() {
-                                render(items);
-                                scope.loading = false;
-                            });
-                        });
+                            if (!scope.showRefresh && data && !data.force && (data.user !== session.identity._id)) {
 
+                                var isItemPreviewing = !!scope.selected.preview;
+                                var _data = {
+                                    newItems: items,
+                                    scopeItems: scope.items,
+                                    scrollTop: scope.scrollTop,
+                                    isItemPreviewing: isItemPreviewing
+                                };
+
+                                scope.showRefresh = search.canShowRefresh(_data);
+                            }
+
+                            if (!scope.showRefresh || (data && data.force)) {
+                                scope.total = items._meta.total;
+                                scope.$applyAsync(function() {
+                                    render(items, null, (data && data.force));
+                                });
+                            } else {
+                                // update scope items only with the matching fetched items
+                                scope.items = search.updateItems(items, scope.items);
+                            }
+                        });
                     }
+
+                    function scheduleIfShouldUpdate(event, data) {
+                        if (data && data.item && _.includes(['item:spike', 'item:unspike'], event.name)) {
+                            // item was spiked/unspikes from the list
+                            extendItem(data.item, {
+                                gone: true,
+                                _etag: data.item
+                            });
+                            queryItems(event, data);
+                        } else if (data && data.from_stage) {
+                            // item was moved from current stage
+                            extendItem(data.item, {
+                                gone: true,
+                                _etag: data.from_stage // this must change to make it re-render
+                            });
+                            queryItems(event, data);
+                        }
+                    }
+
+                    function extendItem(itemId, updates) {
+                        scope.$apply(function() {
+                            scope.items._items = scope.items._items.map(function(item) {
+                                if (item._id === itemId) {
+                                    return angular.extend(item, updates);
+                                }
+
+                                return item;
+                            });
+
+                            scope.items = angular.extend({}, scope.items); // trigger a watch
+                        });
+                    }
+
+                    scope.$on('refresh:list', function(event, group) {
+                        scope.refreshList();
+                    });
+
+                    scope.refreshList = function() {
+                        scope.$applyAsync(function () {
+                            scope.scrollTop = 0;
+                        });
+                        scope.showRefresh = false;
+                        queryItems(null, {force: true});
+                    };
 
                     /*
                      * Function to get the search endpoint name based on the criteria
@@ -1177,9 +1340,10 @@
                      *
                      * @param {items}
                      */
-                    function render(items, next) {
+                    function render(items, next, force) {
+                        scope.loading = true;
                         if (items) {
-                            setScopeItems(items);
+                            setScopeItems(items, force);
                         } else if (next) {
                             criteria.source.from = (criteria.source.from || 0) + criteria.source.size;
                             api.query(getProvider(criteria), criteria).then(setScopeItems);
@@ -1199,9 +1363,10 @@
                             oldQuery = query;
                         }
 
-                        function setScopeItems(items) {
-                            scope.items = search.mergeItems(items, scope.items, next);
+                        function setScopeItems(items, force) {
+                            scope.items = search.mergeItems(items, scope.items, next, force);
                             scope.total_records = items._meta.total;
+                            scope.loading = false;
                         }
                     }
 
@@ -1387,7 +1552,7 @@
                      */
                     function getFilters(search) {
                         _.forOwn(search, function(value, key) {
-                            if (_.contains(['priority', 'urgency'], key)) {
+                            if (_.includes(['priority', 'urgency'], key)) {
                                 search[key] = JSON.parse(value);
                             }
                         });
@@ -1432,14 +1597,17 @@
         .directive('sdItemPreview', ['asset', 'storage', function(asset, storage) {
             /**
              * @description Closes the preview panel if the currently previewed
-             * item is spiked or unspiked.
+             * item is spiked / unspiked or moved.
              * @param {Object} scope - angular scope
              * @param {Object} _ - event data (unused)
-             * @param {Object=} args - the item that was spiked/unspiked
+             * @param {Object=} args - the item that was spiked/unspiked/moved
              */
-            function onSpikeAndUnspike(scope, _, args) {
+            function shouldClosePreview(scope, _, args) {
                 // if preview pane currently previewed then close
-                if (scope.item && args && args.item === scope.item._id) {
+                if (_.name === 'content:update' && scope.item && args &&
+                        Object.keys(args.items)[0] === scope.item._id) {
+                    scope.close();
+                } else if (scope.item && args && args.item === scope.item._id) {
                     scope.close();
                 }
             }
@@ -1474,8 +1642,10 @@
                         scope.selected = {preview: item || null};
                     });
 
-                    scope.$on('item:spike', onSpikeAndUnspike.bind(this, scope));
-                    scope.$on('item:unspike', onSpikeAndUnspike.bind(this, scope));
+                    scope.$on('item:spike', shouldClosePreview.bind(this, scope));
+                    scope.$on('item:unspike', shouldClosePreview.bind(this, scope));
+                    scope.$on('item:move', shouldClosePreview.bind(this, scope));
+                    scope.$on('content:update', shouldClosePreview.bind(this, scope));
 
                     /**
                      * Return true if the menu actions from
@@ -1706,7 +1876,6 @@
                             scope.flags = false;
                             scope.meta = {};
                             scope.fields = {};
-                            scope.searchProviderTypes = searchProviderService.getProviderTypes();
                             scope.cvs = metadata.search_cvs;
                             scope.search_config = metadata.search_config;
                             scope.scanpix_subscriptions = [{
@@ -1719,6 +1888,10 @@
                             scope.lookupCvs = {};
                             angular.forEach(scope.cvs, function(cv) {
                                 scope.lookupCvs[cv.id] = cv;
+                            });
+
+                            searchProviderService.getAllowedProviderTypes().then(function(providerTypes) {
+                                scope.searchProviderTypes = providerTypes;
                             });
 
                             if (params.repo) {
@@ -2224,7 +2397,7 @@
                     scope.multi = multi;
                     scope.$watch(multi.getItems, detectType);
                     scope.$on('item:lock', function(_e, data) {
-                        if (_.contains(multi.getIds(), data.item)) {
+                        if (_.includes(multi.getIds(), data.item)) {
                             // locked item is in the selections so update lock info
                             var selectedItems = multi.getItems();
                             _.find(selectedItems, function(_item) {
@@ -2371,7 +2544,7 @@
             var canPackage = true;
             multi.getItems().forEach(function(item) {
                 canPackage = canPackage && item._type !== 'archived' && !item.lock_user &&
-                    !_.contains(['ingested', 'spiked', 'killed', 'draft'], item.state);
+                    !_.includes(['ingested', 'spiked', 'killed', 'draft'], item.state);
             });
             return canPackage;
         };

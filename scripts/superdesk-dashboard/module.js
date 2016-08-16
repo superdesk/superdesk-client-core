@@ -100,7 +100,7 @@
         this.save = function() {
             this.edit = false;
             var diff = angular.extend({}, this.current);
-            this.widgets = _.where(this.widgets, {active: true});
+            this.widgets = _.filter(this.widgets, {active: true});
             diff.widgets = pickWidgets(this.widgets);
             api.save('workspaces', this.current, diff);
         };

@@ -241,7 +241,7 @@ import 'angular-history/history.js';
             if ($location.$$path !== '/multiedit') {
                 superdeskFlags.flags.authoring = true;
             }
-            if (_.contains(['legal_archive', 'archived'], repo)) {
+            if (_.includes(['legal_archive', 'archived'], repo)) {
                 return api.find(repo, _id).then(function(item) {
                     item._editable = false;
                     return item;
@@ -309,7 +309,7 @@ import 'angular-history/history.js';
             var promise = $q.when();
             if (this.isEditable(diff)) {
                 if (isDirty) {
-                    if (!_.contains(['published', 'corrected'], orig.state)) {
+                    if (!_.includes(['published', 'corrected'], orig.state)) {
                         promise = confirm.confirm()
                             .then(angular.bind(this, function save() {
                                 return this.save(orig, diff);
@@ -404,6 +404,14 @@ import 'angular-history/history.js';
             }, function(response) {
                 return response;
             });
+        };
+
+        this.validateBeforeTansa = function (orig, diff) {
+            diff = extendItem({}, diff);
+
+            this.cleanUpdatesBeforePublishing(orig, diff);
+
+            return api.save('validate', {'act': 'publish', 'type': orig.type, 'validate': diff});
         };
 
         this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {
@@ -507,7 +515,7 @@ import 'angular-history/history.js';
          * @param {Object} item
          */
         this.isPublished = function isPublished(item) {
-            return _.contains(['published', 'killed', 'scheduled', 'corrected'], item.state);
+            return _.includes(['published', 'killed', 'scheduled', 'corrected'], item.state);
         };
 
         /**
@@ -581,14 +589,14 @@ import 'angular-history/history.js';
 
             var digital_package = (angular.isDefined(current_item.package_type) &&
                                 current_item.package_type === 'takes');
-            var is_read_only_state = _.contains(['spiked', 'scheduled', 'killed'], current_item.state) ||
+            var is_read_only_state = _.includes(['spiked', 'scheduled', 'killed'], current_item.state) ||
                                     digital_package;
 
             var lockedByMe = !lock.isLocked(current_item);
             action.view = !lockedByMe;
 
             var isBroadcast = current_item.genre && current_item.genre.length > 0 &&
-                              _.contains(['text', 'preformatted'], current_item.type) &&
+                              _.includes(['text', 'preformatted'], current_item.type) &&
                               current_item.genre.some(nameIsBroadcast);
 
             function nameIsBroadcast(genre) {
@@ -644,14 +652,14 @@ import 'angular-history/history.js';
                 action.send = current_item._current_version > 0 && user_privileges.move;
             }
 
-            action.re_write = !is_read_only_state && _.contains(['text'], current_item.type) &&
+            action.re_write = !is_read_only_state && _.includes(['text'], current_item.type) &&
                 !current_item.embargo && !current_item.rewritten_by && action.new_take &&
                 (!current_item.broadcast || !current_item.broadcast.master_id) &&
                 (!current_item.rewrite_of || (current_item.rewrite_of && this.isPublished(current_item)));
             var re_write = action.re_write;
 
-            action.resend = _.contains(['text'], current_item.type) &&
-                _.contains(['published', 'corrected', 'killed'], current_item.state);
+            action.resend = _.includes(['text'], current_item.type) &&
+                _.includes(['published', 'corrected', 'killed'], current_item.state);
 
             //mark item for highlights
             action.mark_item = (current_item.task && current_item.task.desk &&
@@ -659,12 +667,12 @@ import 'angular-history/history.js';
                  user_privileges.mark_for_highlights);
 
             // allow all stories to be packaged if it doesn't have Embargo
-            action.package_item = !_.contains(['spiked', 'scheduled', 'killed'], current_item.state) &&
+            action.package_item = !_.includes(['spiked', 'scheduled', 'killed'], current_item.state) &&
                 !current_item.embargo && current_item.package_type !== 'takes' &&
                 (this.isPublished(current_item) || !current_item.publish_schedule);
 
-            action.create_broadcast = (_.contains(['published', 'corrected'], current_item.state)) &&
-                _.contains(['text', 'preformatted'], current_item.type) &&
+            action.create_broadcast = (_.includes(['published', 'corrected'], current_item.state)) &&
+                _.includes(['text', 'preformatted'], current_item.type) &&
                 !isBroadcast && user_privileges.archive_broadcast;
 
             action.multi_edit = !is_read_only_state;
@@ -674,10 +682,10 @@ import 'angular-history/history.js';
                 // in production
 
                 action.duplicate = user_privileges.duplicate &&
-                    !_.contains(['spiked', 'killed'], current_item.state) &&
+                    !_.includes(['spiked', 'killed'], current_item.state) &&
                     (angular.isUndefined(current_item.package_type) || current_item.package_type !== 'takes');
 
-                action.add_to_current = !_.contains(['spiked', 'scheduled', 'killed'], current_item.state);
+                action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed'], current_item.state);
 
                 var desk = _.find(self.userDesks, {'_id': current_item.task.desk});
                 if (!desk) {
@@ -704,7 +712,7 @@ import 'angular-history/history.js';
          * @returns {boolean} True if a "Valid Take" else False
          */
         this.isTakeItem = function(item) {
-            return (_.contains(['text'], item.type) &&
+            return (_.includes(['text'], item.type) &&
                 item.takes && item.takes.sequence > 1);
         };
 
@@ -1138,7 +1146,7 @@ import 'angular-history/history.js';
                 $scope.views = {send: false};
                 $scope.stage = null;
                 $scope._editable = !!$scope.origItem._editable;
-                $scope.isMediaType = _.contains(['audio', 'video', 'picture'], $scope.origItem.type);
+                $scope.isMediaType = _.includes(['audio', 'video', 'picture'], $scope.origItem.type);
                 $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
                 $scope.itemActions = authoring.itemActions($scope.origItem);
                 $scope.highlight = !!$scope.origItem.highlight;
@@ -1356,7 +1364,7 @@ import 'angular-history/history.js';
                     }
 
                     if (item.publish_schedule_date || item.publish_schedule_time) {
-                        if (_.contains(['published', 'killed', 'corrected'], item.state)) {
+                        if (_.includes(['published', 'killed', 'corrected'], item.state)) {
                             return true;
                         }
 
@@ -1520,8 +1528,18 @@ import 'angular-history/history.js';
                  */
                 $scope.publish = function() {
                     if ($scope.useTansaProofing() && $scope.item.urgency > 3 && !$rootScope.config.isCheckedByTansa) {
-                        $scope.runTansa();
-                        onlyTansaProof = false;
+                        authoring.validateBeforeTansa($scope.origItem, $scope.item)
+                        .then(function(response) {
+                            if (response.errors.length) {
+                                validate($scope.origItem, $scope.item);
+                                for (var i = 0; i < response.errors.length; i++) {
+                                    notify.error(_.trim(response.errors[i]));
+                                }
+                            } else {
+                                $scope.runTansa();
+                                onlyTansaProof = false;
+                            }
+                        });
                     } else if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                         var message = 'publish';
                         if ($scope.action && $scope.action !== 'edit') {
@@ -2343,7 +2361,7 @@ import 'angular-history/history.js';
                     if (config.ui && config.ui.publishSendAdnContinue === false) {
                         return false;
                     }
-                    return !authoring.isPublished(scope.item) && _.contains(['text'], scope.item.type);
+                    return !authoring.isPublished(scope.item) && _.includes(['text'], scope.item.type);
                 };
 
                 /**
@@ -2715,8 +2733,10 @@ import 'angular-history/history.js';
                 scope.monthNames = {'Jan': '0', 'Feb': '1', 'Mar': '2', 'Apr': '3', 'May': '4', 'Jun': '5',
                                     'Jul': '6', 'Aug': '7', 'Sep': '8', 'Oct': '9', 'Nov': '10', 'Dec': '11'};
 
-                scope.datelineMonth = '';
-                scope.datelineDay = '';
+                scope.dateline = {
+                    month: '',
+                    day: ''
+                };
 
                 scope.preview = function(item) {
                     superdesk.intent('preview', 'item', item);
@@ -2750,8 +2770,8 @@ import 'angular-history/history.js';
                             updates.dateline = _.pick(item.dateline, ['source', 'date', 'located', 'text']);
                             if (item.dateline.located) {
                                 var monthAndDay = $filter('parseDateline')(item.dateline.date, item.dateline.located);
-                                scope.datelineMonth = monthAndDay.month;
-                                scope.datelineDay = monthAndDay.day;
+                                scope.dateline.month = monthAndDay.month;
+                                scope.dateline.day = monthAndDay.day;
                                 scope.resetNumberOfDays(false);
                             }
                             _.extend(item, updates);
@@ -2782,19 +2802,19 @@ import 'angular-history/history.js';
                         item.dateline.located = null;
                         item.dateline.text = '';
 
-                        scope.datelineMonth = '';
-                        scope.datelineDay = '';
+                        scope.dateline.month = '';
+                        scope.dateline.day = '';
                     } else {
                         var monthAndDay = $filter('parseDateline')(item.dateline.date, item.dateline.located);
 
-                        scope.datelineMonth = monthAndDay.month;
-                        scope.datelineDay = monthAndDay.day;
+                        scope.dateline.month = monthAndDay.month;
+                        scope.dateline.day = monthAndDay.day;
                         scope.resetNumberOfDays(false);
 
                         item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
                             $interpolate('{{ month | translate }}')
-                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
-                            scope.datelineDay, item.dateline.source);
+                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.dateline.month; })}),
+                            scope.dateline.day, item.dateline.source);
                     }
                 };
 
@@ -2806,19 +2826,19 @@ import 'angular-history/history.js';
                  * @param {String} datelineMonth - the selected month
                  */
                 scope.resetNumberOfDays = function(resetDatelineDate, datelineMonth) {
-                    if (scope.datelineMonth !== '') {
-                        scope.daysInMonth = $filter('daysInAMonth')(parseInt(scope.datelineMonth));
+                    if (scope.dateline.month !== '') {
+                        scope.daysInMonth = $filter('daysInAMonth')(parseInt(scope.dateline.month));
 
                         if (resetDatelineDate) {
                             if (datelineMonth) {
-                                scope.datelineMonth = datelineMonth;
+                                scope.dateline.month = datelineMonth;
                             }
 
-                            scope.modifyDatelineDate(scope.datelineDay);
+                            scope.modifyDatelineDate(scope.dateline.day);
                         }
                     } else {
                         scope.daysInMonth = [];
-                        scope.datelineDay = '';
+                        scope.dateline.day = '';
                     }
                 };
 
@@ -2863,19 +2883,20 @@ import 'angular-history/history.js';
                  * @param {String} datelineDay - the selected day
                  */
                 scope.modifyDatelineDate = function(datelineDay) {
-                    if (scope.datelineMonth !== '' && scope.datelineDay !== '') {
+                    if (scope.dateline.month !== '' && scope.dateline.day !== '') {
                         if (datelineDay) {
-                            scope.datelineDay = datelineDay;
+                            scope.dateline.day = datelineDay;
                         }
 
                         scope.item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
-                                parseInt(scope.datelineMonth), parseInt(scope.datelineDay));
+                                parseInt(scope.dateline.month), parseInt(scope.dateline.day));
 
                         scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
                             $interpolate('{{ month | translate }}')
-                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.datelineMonth; })}),
-                            scope.datelineDay, scope.item.dateline.source);
+                            ({month: _.findKey(scope.monthNames, function(m) { return m === scope.dateline.month; })}),
+                            scope.dateline.day, scope.item.dateline.source);
 
+                        mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);
                     }
                 };
@@ -3363,14 +3384,14 @@ import 'angular-history/history.js';
 
                 metadata.initialize().then(function() {
                     scope.$watch('item.anpa_category', function(services) {
-                        var qcodes = lodash.pluck(services, 'qcode');
+                        var qcodes = _.map(services, 'qcode');
                         var cvs = [];
 
                         metadata.filterCvs(qcodes, cvs);
 
                         scope.cvs = _.sortBy(cvs, 'priority');
-                        scope.genreInCvs = _.pluck(cvs, 'schema_field').indexOf('genre') !== -1;
-                        scope.placeInCvs = _.pluck(cvs, 'schema_field').indexOf('place') !== -1;
+                        scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
+                        scope.placeInCvs = _.map(cvs, 'schema_field').indexOf('place') !== -1;
 
                         scope.shouldDisplayCompanyCodes();
                     });

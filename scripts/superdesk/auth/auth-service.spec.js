@@ -4,13 +4,13 @@
 
     describe('auth service', function() {
         beforeEach(function() {
-            module('superdesk.preferences');
-            module('superdesk.services.storage');
-            module('superdesk.auth');
-            module('superdesk.session');
-            module('superdesk.menu');
-            module('superdesk.authoring');
-            module(function($provide) {
+            window.module('superdesk.preferences');
+            window.module('superdesk.services.storage');
+            window.module('superdesk.auth');
+            window.module('superdesk.session');
+            window.module('superdesk.menu');
+            window.module('superdesk.authoring');
+            window.module(function($provide) {
                 $provide.service('api', function($q) {
                     this.users = {
                         getById: function(id) {

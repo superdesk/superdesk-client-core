@@ -2,8 +2,8 @@
 
 describe('Image Crop', function() {
 
-    beforeEach(module('superdesk.upload'));
-    beforeEach(module('superdesk.imageFactory'));
+    beforeEach(window.module('superdesk.upload'));
+    beforeEach(window.module('superdesk.imageFactory'));
 
     describe('sdImageCrop directive', function() {
         var scope, isoScope, fakeImg, $elm;
@@ -58,16 +58,10 @@ describe('Image Crop', function() {
         describe('onload handler', function() {
             var mySpy;
             beforeEach(inject(function() {
-                mySpy = jasmine.createSpy('mySpy');
-                spyOn(window, '$').and.callFake(function () {
-                    var fakeObj = {
-                        'Jcrop': mySpy
-                    };
-                    return fakeObj;
-                });
+                mySpy = spyOn($.fn, 'Jcrop');
             }));
 
-            xit('executes with validation passed for default aspect-ratio(4:3)', inject(function() {
+            it('executes with validation passed for default aspect-ratio(4:3)', inject(function() {
                 scope.$digest();
 
                 isoScope = $elm.isolateScope();

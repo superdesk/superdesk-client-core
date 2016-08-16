@@ -122,9 +122,9 @@
                     tabindex="{{editor.dateline.order}}"
                     ng-options="monthName | translate for (monthName, monthValue) in monthNames"
                     ng-disabled="!item.dateline.located || !_editable"
-                    ng-change="resetNumberOfDays(true, datelineMonth)"
+                    ng-change="resetNumberOfDays(true, dateline.month)"
                     placeholder="Choose month"
-                    ng-model="datelineMonth"
+                    ng-model="dateline.month"
                     sd-focus-element
                     data-append-element=".field"
                     data-append-class="active">
@@ -135,9 +135,9 @@
                     tabindex="{{editor.dateline.order}}"
                     ng-options="day for day in daysInMonth"
                     ng-disabled="!item.dateline.located || !_editable"
-                    ng-change="modifyDatelineDate(datelineDay)"
+                    ng-change="modifyDatelineDate(dateline.day)"
                     placeholder="Choose day"
-                    ng-model="datelineDay"
+                    ng-model="dateline.day"
                     sd-focus-element
                     data-append-element=".field"
                     data-append-class="active">

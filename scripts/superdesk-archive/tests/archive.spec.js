@@ -3,12 +3,12 @@
 describe('content', function() {
     var item = {_id: 1};
 
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.mocks'));
-    beforeEach(module('superdesk.archive'));
-    beforeEach(module('superdesk.publish'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.archive'));
+    beforeEach(window.module('superdesk.publish'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',

@@ -1,13 +1,13 @@
 'use strict';
 
 describe('legal archive service', function() {
-    beforeEach(module('superdesk.api'));
-    beforeEach(module('superdesk.legal_archive'));
+    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.legal_archive'));
 
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(module(function ($provide) {
+    beforeEach(window.module(function ($provide) {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',

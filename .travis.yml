@@ -20,21 +20,22 @@ addons:
 
 cache:
     directories:
-        - $HOME/.cache/bower
         - $HOME/.cache/pip
         - $HOME/.npm
 
 before_install:
     - rm -f .npm/*.lock
+    - npm install -g npm@latest
     - npm config set loglevel warn
-    - npm install -g bower grunt-cli
+    - npm install -g grunt-cli
     - export DISPLAY=:99.0 && /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x24
     - wget -N --no-verbose 'https://storage.googleapis.com/chromium-browser-continuous/Linux_x64/353893/chrome-linux.zip' && unzip chrome-linux.zip &&
       export CHROME_BIN=`pwd`/chrome-linux/chrome && $CHROME_BIN --version ;
 
+bundler_args: --retry 3
+
 install:
-    - npm install
-    - bower install --quiet
+    - travis_retry npm install --python=python2.7
     - cd test-server && pip install -q -r requirements.txt && cd ..
     - ./node_modules/.bin/webdriver-manager update
 

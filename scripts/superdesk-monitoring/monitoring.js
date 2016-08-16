@@ -173,7 +173,7 @@
                 var termsFileType = {terms: {'type': JSON.parse(card.fileType)}};
 
                 // Normal package
-                if (_.contains(JSON.parse(card.fileType), 'composite')) {
+                if (_.includes(JSON.parse(card.fileType), 'composite')) {
                     termsFileType = {and: [
                         {bool: {must_not: {'exists':{'field': 'highlight'}}}},
                         {bool: {must_not: {term: {'package_type': 'takes'}}}},
@@ -181,19 +181,19 @@
                     ]};
                 }
 
-                if (_.contains(JSON.parse(card.fileType), 'highlightsPackage') &&
-                    _.contains(JSON.parse(card.fileType), 'takesPackage')) {
+                if (_.includes(JSON.parse(card.fileType), 'highlightsPackage') &&
+                    _.includes(JSON.parse(card.fileType), 'takesPackage')) {
                     query.filter({or: [
                         termsHighlightsPackage,
                         termsTakesPackage,
                         termsFileType
                     ]});
-                } else if (_.contains(JSON.parse(card.fileType), 'takesPackage')) {
+                } else if (_.includes(JSON.parse(card.fileType), 'takesPackage')) {
                     query.filter({or: [
                         termsTakesPackage,
                         termsFileType
                     ]});
-                } else if (_.contains(JSON.parse(card.fileType), 'highlightsPackage')) {
+                } else if (_.includes(JSON.parse(card.fileType), 'highlightsPackage')) {
                     query.filter({or: [
                         termsHighlightsPackage,
                         termsFileType
@@ -278,6 +278,7 @@
         this.editItem = null;
 
         this.totalItems = '';
+        this.showRefresh = false;
 
         this.isDeskChanged = function () {
             return desks.changeDesk;
@@ -344,6 +345,11 @@
                     }
                 }
 
+                // force refresh on refresh button click when in specific view such as single, highlights or spiked.
+                scope.refreshGroup = function(group) {
+                    $rootScope.$broadcast('refresh:list', group);
+                };
+
                 scope.$on('$destroy', function() {
                     containerElem.off('scroll');
                 });
@@ -365,9 +371,9 @@
         };
     }
 
-    MonitoringGroupDirective.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk',
+    MonitoringGroupDirective.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
         'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi', 'archiveService', '$rootScope'];
-    function MonitoringGroupDirective(cards, api, authoringWorkspace, $timeout, superdesk, activityService,
+    function MonitoringGroupDirective(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
             workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope) {
 
         var ITEM_HEIGHT = 57;
@@ -412,7 +418,7 @@
                 });
 
                 scope.$on('task:stage', scheduleQuery);
-                scope.$on('item:spike', scheduleQuery);
+                scope.$on('item:spike', scheduleIfShouldUpdate);
                 scope.$on('item:copy', scheduleQuery);
                 scope.$on('item:duplicate', scheduleQuery);
                 scope.$on('broadcast:created', function(event, args) {
@@ -420,9 +426,13 @@
                     queryItems();
                     preview(args.item);
                 });
-                scope.$on('item:unspike', scheduleQuery);
-                scope.$on('item:move', scheduleQuery);
-                scope.$on('$routeUpdate', scheduleQuery);
+                scope.$on('item:unspike', scheduleIfShouldUpdate);
+                scope.$on('$routeUpdate', function(event, data) {
+                    scope.scrollTop = 0;
+                    data.force = true;
+                    scope.showRefresh = false;
+                    scheduleQuery(event, data);
+                });
                 scope.$on('broadcast:preview', function(event, args) {
                     scope.previewingBroadcast = true;
                     if (args.item != null) {
@@ -440,17 +450,25 @@
                 }
 
                 function scheduleIfShouldUpdate(event, data) {
-                    if (data.from_stage && data.from_stage === scope.group._id) {
+                    if (data && data.from_stage && data.from_stage === scope.group._id) {
                         // item was moved from current stage
                         extendItem(data.item, {
                             gone: true,
                             _etag: data.from_stage // this must change to make it re-render
                         });
-                    } else if (data.to_stage && data.to_stage === scope.group._id) {
+                        scheduleQuery(event, data);
+                    } else if (data && data.item && _.includes(['item:spike', 'item:unspike'], event.name)) {
+                        // item was spiked/unspiked from the list
+                        extendItem(data.item, {
+                            gone: true,
+                            _etag: data.item
+                        });
+                        scheduleQuery(event, data);
+                    } else if (data && data.to_stage && data.to_stage === scope.group._id) {
                         // new item in current stage
-                        scheduleQuery();
+                        scheduleQuery(event, data);
                     } else if (data && cards.shouldUpdate(scope.group, data)) {
-                        scheduleQuery();
+                        scheduleQuery(event, data);
                     }
                 }
 
@@ -493,6 +511,16 @@
                     }
                 });
 
+                // refreshes the list for matching group or view type only
+                scope.$on('refresh:list', function(event, group) {
+                    var _viewType = event.currentScope.viewType || '';
+
+                    if (group && group._id === scope.group._id ||
+                            _.includes(['highlights', 'spiked'], _viewType)) {
+                        scope.refreshGroup();
+                    }
+                });
+
                 /*
                  * Change between single desk view and grouped view by keyboard
                  * Keyboard shortcut: Ctrl + g
@@ -506,6 +534,15 @@
                         }
                     }
                 });
+
+                // forced refresh on refresh button click or on refresh:list
+                scope.refreshGroup = function() {
+                    scope.$applyAsync(function () {
+                        scope.scrollTop = 0;
+                    });
+                    monitoring.showRefresh = scope.showRefresh = false;
+                    scheduleQuery(null, {force: true});
+                };
 
                 function updateGroupStyle() {
                     scope.style.maxHeight = scope.group.max_items ? scope.group.max_items * ITEM_HEIGHT : null;
@@ -576,10 +613,10 @@
                  *
                  * In case it gets called multiple times it will query only once
                  */
-                function scheduleQuery() {
+                function scheduleQuery(event, data) {
                     if (!queryTimeout) {
                         queryTimeout = $timeout(function() {
-                            queryItems();
+                            queryItems(event, data);
                             scope.$applyAsync(function() {
                                 // ignore any updates requested in current $digest
                                 queryTimeout = null;
@@ -629,10 +666,15 @@
                     return items;
                 }
 
-                function queryItems() {
+                function queryItems(event, data) {
                     criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                     criteria.source.from = 0;
                     criteria.source.size = 25;
+
+                    // To compare current scope of items, consider fetching same number of items.
+                    if (scope.items && scope.items._items.length > 25) {
+                        criteria.source.size = scope.items._items.length;
+                    }
 
                     if (desks.changeDesk) {
                         desks.changeDesk = false;
@@ -641,10 +683,27 @@
                     }
 
                     return apiquery().then(function(items) {
-                        scope.total = items._meta.total;
-                        items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
-                        monitoring.totalItems = items._meta.total;
-                        scope.items = merge(items);
+                        if (!scope.showRefresh && data && !data.force && (data.user !== session.identity._id)) {
+                            var isItemPreviewing = (monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id);
+                            var _data = {
+                                newItems: items,
+                                scopeItems: scope.items,
+                                scrollTop: scope.scrollTop,
+                                isItemPreviewing: isItemPreviewing
+                            };
+
+                            monitoring.showRefresh = scope.showRefresh = search.canShowRefresh(_data);
+                        }
+
+                        if (!scope.showRefresh || (data && data.force)) {
+                            scope.total = items._meta.total;
+                            items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
+                            monitoring.totalItems = items._meta.total;
+                            scope.items = search.mergeItems(items, scope.items, null, (data && data.force));
+                        } else {
+                            // update scope items only with the matching fetched items
+                            scope.items = search.updateItems(items, scope.items);
+                        }
                     });
                 }
 
@@ -655,7 +714,7 @@
                                 scope.total = items._meta.total;
                             }
                             items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
-                            scope.items = merge(items, next);
+                            scope.items = search.mergeItems(items, scope.items, next);
                         });
                     });
                 }
@@ -695,9 +754,6 @@
                     monitoring.viewSingleGroup(group, type);
                 }
 
-                function merge(items, next) {
-                    return search.mergeItems(items, scope.items, next);
-                }
             }
         };
     }

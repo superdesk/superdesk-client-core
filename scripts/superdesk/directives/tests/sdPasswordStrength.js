@@ -3,8 +3,8 @@
 describe('sdPasswordStrength', function() {
     var $compile, $rootScope, compileDirective;
 
-    beforeEach(module('gettext'));
-    beforeEach(module('superdesk.directives.passwordStrength'));
+    beforeEach(window.module('gettext'));
+    beforeEach(window.module('superdesk.directives.passwordStrength'));
 
     beforeEach(inject(function (_$compile_, _$rootScope_) {
         $compile = _$compile_;

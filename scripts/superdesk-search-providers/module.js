@@ -11,7 +11,7 @@
 (function() {
     'use strict';
 
-    var app = angular.module('superdesk.searchProviders', ['superdesk.activity']);
+    var app = angular.module('superdesk.searchProviders', ['superdesk.activity', 'superdesk.api']);
 
     app.value('providerTypes', {
         aapmm: 'AAP Multimedia',
@@ -24,11 +24,11 @@
         'scanpix(npk)': 'ScanPix (npk)',
     });
 
-    SearchProviderService.$inject = ['providerTypes', '$filter', 'api'];
-    function SearchProviderService(providerTypes, $filter, api) {
-        var service = {
-            getProviderTypes: function () {
-                return providerTypes;
+    SearchProviderService.$inject = ['providerTypes', '$filter', 'api', 'allowed'];
+    function SearchProviderService(providerTypes, $filter, api, allowed) {
+        return {
+            getAllowedProviderTypes: function() {
+                return allowed.filterKeys(providerTypes, 'search_providers', 'search_provider');
             },
             getSearchProviders: function() {
                 return api.search_providers.query({}).then(
@@ -38,8 +38,6 @@
                 );
             }
         };
-
-        return service;
     }
 
     SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
@@ -58,7 +56,11 @@
                 $scope.origProvider = null;
                 $scope.providers = null;
                 $scope.newDestination = null;
-                $scope.providerTypes = searchProviderService.getProviderTypes();
+
+                searchProviderService.getAllowedProviderTypes().then(function(providerTypes) {
+                    $scope.providerTypes = providerTypes;
+                    $scope.noProvidersAllowed = !Object.keys($scope.providerTypes).length;
+                });
 
                 /**
                  * Fetches all search providers from backend

@@ -13,12 +13,12 @@ describe('sdIngestRoutingContent directive', function () {
         getTzDataDeferred,
         scope;
 
-    beforeEach(module('superdesk.templates-cache'));
-    beforeEach(module('superdesk.ingest'));
-    beforeEach(module('superdesk.content_filters'));
-    beforeEach(module('superdesk.editor'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.ingest'));
+    beforeEach(window.module('superdesk.content_filters'));
+    beforeEach(window.module('superdesk.editor'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(window.module(function($provide) {
         fakeTzData = {
             $promise: null,
             zones: {},

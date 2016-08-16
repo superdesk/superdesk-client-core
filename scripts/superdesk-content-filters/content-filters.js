@@ -155,7 +155,7 @@
         };
 
         $scope.isListValue = function() {
-            return _.contains(['in', 'nin'], $scope.filterCondition.operator) && $scope.valueLookup[$scope.filterCondition.field];
+            return _.includes(['in', 'nin'], $scope.filterCondition.operator) && $scope.valueLookup[$scope.filterCondition.field];
         };
 
         $scope.cancel = function() {
@@ -625,7 +625,7 @@
 
         $scope.isListValue = function() {
             if ($scope.filterCondition != null) {
-                return _.contains(['in', 'nin'], $scope.filterCondition.operator) && $scope.valueLookup[$scope.filterCondition.field];
+                return _.includes(['in', 'nin'], $scope.filterCondition.operator) && $scope.valueLookup[$scope.filterCondition.field];
             }
         };
 

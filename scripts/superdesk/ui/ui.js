@@ -129,7 +129,7 @@
                     if (!stopWatch) {
                         stopWatch = $scope.$watch('currentStep', function(stepCode) {
                             if (stepCode && (($scope.selectedStep && $scope.selectedStep.code !== stepCode) || !$scope.selectedStep)) {
-                                $scope.goTo(_.findWhere($scope.steps, {code: stepCode}));
+                                $scope.goTo(_.find($scope.steps, {code: stepCode}));
                             }
                         });
                     }
@@ -156,7 +156,7 @@
                     if (_.isNumber(step)) {
                         stepTo = $scope.steps[step];
                     } else {
-                        stepTo = _.findWhere($scope.steps, {code: step});
+                        stepTo = _.find($scope.steps, {code: step});
                     }
                     $scope.goTo(stepTo);
                 };
