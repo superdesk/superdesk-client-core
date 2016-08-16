@@ -580,7 +580,6 @@ import BaseListController from './controllers/baseList';
                         }],
                     filters: [{action: 'list', type: 'archive'}],
                     action: 'spike',
-                    keyboardShortcut: 'ctrl+x',
                     condition: function(item) {
                         return (item.lock_user === null || angular.isUndefined(item.lock_user));
                     },
