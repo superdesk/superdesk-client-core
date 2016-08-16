@@ -1,4 +1,5 @@
 import BaseListController from './controllers/baseList';
+import EXIF from 'exif-js';
 
 (function() {
     'use strict';
