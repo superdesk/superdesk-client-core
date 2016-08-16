@@ -978,7 +978,8 @@ angular.module('superdesk.editor2', [
 
                     spellcheck.setLanguage(scope.language);
                     editorElem = elem.find(scope.type === 'preformatted' ?  '.editor-type-text' : '.editor-type-html');
-                    editorElem.off(); // events could be attached already
+                    // events could be attached already, so remove these
+                    editorElem.off('mouseup keydown keyup click contextmenu');
                     editorElem.empty();
                     editorElem.html(ngModel.$viewValue || '');
                     scope.node = editorElem[0];
@@ -1032,8 +1033,6 @@ angular.module('superdesk.editor2', [
                             toolbar.positionStaticToolbar(scope.medium.getFocusedElement());
                         }
                     });
-                    scope.$on('spellcheck:run', render);
-                    scope.$on('key:ctrl:shift:s', render);
 
                     function cancelTimeout(event) {
                         $timeout.cancel(updateTimeout);
@@ -1176,6 +1175,9 @@ angular.module('superdesk.editor2', [
                 scope.removeBlock = function() {
                     sdTextEditor.removeBlock(scope.sdTextEditorBlockText);
                 };
+
+                scope.$on('spellcheck:run', render);
+                scope.$on('key:ctrl:shift:s', render);
 
                 function render($event, event, preventStore) {
                     stopTyping();
