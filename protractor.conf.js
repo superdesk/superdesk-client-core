@@ -24,9 +24,9 @@ var config = {
     },
 
     suites: {
-        a: path.join(__dirname, '/spec/**/ingest_settings_spec.js')
-        //b: path.join(__dirname, '/spec/**/[g-m]*[Ss]pec.js'),
-        //c: path.join(__dirname, '/spec/**/[n-z]*[Ss]pec.js')
+        a: path.join(__dirname, '/spec/**/[a-f]*[Ss]pec.js'),
+        b: path.join(__dirname, '/spec/**/[g-m]*[Ss]pec.js'),
+        c: path.join(__dirname, '/spec/**/[n-z]*[Ss]pec.js')
     },
 
     framework: 'jasmine2',
