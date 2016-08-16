@@ -71,8 +71,10 @@ function LegalArchiveService($q, api, notify, $location, gettext, config) {
     this.updateSearchQuery = function updateSearchQuery(search) {
         var where = [];
 
-        function prepareDate(val) {
-            return moment(val, config.view.dateformat).format('YYYY-MM-DD');
+        function prepareDate(val, time_suffix) {
+            var local = moment(val, config.view.dateformat).format('YYYY-MM-DD') + time_suffix +
+            moment.tz(config.defaultTimezone).format('ZZ');
+            return moment(local, 'YYYY-MM-DDTHH:mm:ssZZ').utc().format('YYYY-MM-DDTHH:mm:ssZZ');
         }
 
         var hasId = false;
@@ -82,9 +84,9 @@ function LegalArchiveService($q, api, notify, $location, gettext, config) {
             if (val) {
                 var clause = {};
                 if (key === 'published_after') {
-                    clause.versioncreated = {'$gte': prepareDate(val) + 'T00:00:00+0000'};
+                    clause.versioncreated = {'$gte': prepareDate(val, 'T00:00:00')};
                 } else if (key === 'published_before') {
-                    clause.versioncreated = {'$lte': prepareDate(val) + 'T23:59:59+0000'};
+                    clause.versioncreated = {'$lte': prepareDate(val, 'T23:59:59')};
                 } else if (key === '_id') {
                     clause._id = val;
                     hasId = true;
