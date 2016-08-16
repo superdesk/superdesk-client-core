@@ -5,6 +5,7 @@
 ### Fixed
 
 - Fix undo/redo changes not being saved or autosaved
+- Fix images uploaded into private space are not visible
 
 ## [1.0.0-beta1] 2016-04-26
 

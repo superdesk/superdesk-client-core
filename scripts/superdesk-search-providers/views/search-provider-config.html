@@ -1,7 +1,7 @@
 <div ng-hide="hideList" class="split-content">
     <div class="header">
         <h2 translate>Search Providers</h2>
-        <button id="addSearchProvider" class="btn btn-info pull-right" ng-click="edit()">
+        <button id="addSearchProvider" class="btn btn-info pull-right" ng-click="edit()" ng-disabled="noProvidersAllowed" title="{{ noProvidersAllowed ? 'There are no providers available.' : 'Add New Search Provider' | translate }}">
             <i class="icon-plus-sign icon-white"></i> <span translate>Add New Search Provider</span>
         </button>
     </div>
