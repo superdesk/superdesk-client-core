@@ -1871,7 +1871,6 @@
                             scope.flags = false;
                             scope.meta = {};
                             scope.fields = {};
-                            scope.searchProviderTypes = searchProviderService.getProviderTypes();
                             scope.cvs = metadata.search_cvs;
                             scope.search_config = metadata.search_config;
                             scope.scanpix_subscriptions = [{
@@ -1884,6 +1883,10 @@
                             scope.lookupCvs = {};
                             angular.forEach(scope.cvs, function(cv) {
                                 scope.lookupCvs[cv.id] = cv;
+                            });
+
+                            searchProviderService.getAllowedProviderTypes().then(function(providerTypes) {
+                                scope.searchProviderTypes = providerTypes;
                             });
 
                             if (params.repo) {
