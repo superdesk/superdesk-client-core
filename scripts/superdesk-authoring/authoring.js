@@ -1834,16 +1834,18 @@ import 'angular-history/history.js';
         };
     }
 
-    PreviewFormattedDirective.$inject = ['api', 'config', 'notify'];
-    function PreviewFormattedDirective(api, config, notify) {
+    PreviewFormattedDirective.$inject = ['api', 'config', 'notify', 'storage'];
+    function PreviewFormattedDirective(api, config, notify, storage) {
         return {
             templateUrl: 'scripts/superdesk-authoring/views/preview-formatted.html',
             link: function(scope) {
                 scope.formatters = config.previewFormats;
                 scope.loading = false;
+                scope.selectedFormatter = storage.getItem('selectedFormatter') || JSON.stringify(scope.formatters[0]);
 
                 scope.format = function(formatterString) {
                     scope.loading = true;
+                    storage.setItem('selectedFormatter', formatterString);
                     var formatter = JSON.parse(formatterString);
                     api.save('formatters', {}, {'article_id': scope.item._id, 'formatter_name': formatter.name})
                     .then(function(item) {
