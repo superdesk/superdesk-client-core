@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.0] 2016-08-17
+
 ### Fixed
 
 - Fix undo/redo changes not being saved or autosaved
