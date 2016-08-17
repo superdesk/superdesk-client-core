@@ -28,4 +28,15 @@ describe('url resolver', function() {
     it('can resolve item urls', inject(function(urls) {
         expect(urls.item('/users/1')).toBe(SERVER_URL + '/users/1');
     }));
+
+    it('can warn if there is missing endpoint', inject(function(urls, $log, $httpBackend, $rootScope) {
+        $httpBackend.expectGET(SERVER_URL).respond(RESOURCES);
+
+        urls.resource('foo');
+        $httpBackend.flush();
+        $rootScope.$digest();
+
+        expect($log.warn.logs.length).toBe(1);
+        expect($log.warn.logs[0]).toEqual(['resource url not found', 'foo']);
+    }));
 });
