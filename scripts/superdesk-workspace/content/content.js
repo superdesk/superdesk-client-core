@@ -77,7 +77,7 @@ angular.module('superdesk.workspace.content', [
                 templateUrl: 'scripts/superdesk-workspace/content/views/profile-settings.html',
                 category: superdesk.MENU_SETTINGS,
                 priority: 100,
-                privileges: {} // todo(petr): pick something
+                privileges: {content_type: 1}
             });
     }])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
