@@ -803,7 +803,7 @@
                         if (!this.activeDeskId || !_.find(this.userDesks._items, {_id: this.activeDeskId})) {
                             if (session.identity.desk) {
                                 var defaultDesk = _.find(this.userDesks._items, {_id: session.identity.desk});
-                                return defaultDesk._id || this.userDesks._items[0]._id;
+                                return (defaultDesk && defaultDesk._id) || this.userDesks._items[0]._id;
                             }
                             return this.userDesks._items[0]._id;
                         }

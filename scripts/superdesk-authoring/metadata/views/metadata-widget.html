@@ -140,7 +140,7 @@
             <ul class="basic-list task-info">
                 <li ng-if="item.slugline" class="auto">
                     <label translate>Title</label>
-                    <div class="data">{{item.slugline}}</div>
+                    <div class="data" sd-html-preview="item.slugline"></div>
                 </li>
                 <li ng-if="item.description_text" class="auto">
                     <label translate>Description</label>

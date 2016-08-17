@@ -83,8 +83,9 @@ function CardsService(api, search, session, desks, config) {
             }
         } else {
             params.q = card.query;
-            criteria.es_highlight = params.q ? search.getElasticHighlight() : 0;
         }
+
+        criteria.es_highlight = card.query ? search.getElasticHighlight() : 0;
 
         params.spike = (card.type === 'spike' || card.type === 'spike-personal' ||
             (card.type === 'search' && params.spike === true));
