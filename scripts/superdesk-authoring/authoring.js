@@ -985,16 +985,6 @@ function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $root
         }
     };
 
-    var validateMediaFields = function () {
-        $scope.errorMessage = null;
-        _.each($scope.data.requiredFields, function (key) {
-            if ($scope.data.metadata[key] == null || _.isEmpty($scope.data.metadata[key])) {
-                $scope.errorMessage = 'Required field(s) missing';
-                return false;
-            }
-        });
-    };
-
     /*
     * Records the coordinates for each crop sizes available and
     * notify the user and then resolve the activity.
@@ -1013,27 +1003,31 @@ function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $root
                 }
             });
         }
+        /* Throw an exception if a required metadata field is missing */
+        function validateMediaFields() {
+            _.each($scope.data.requiredFields, function (key) {
+                if ($scope.data.metadata[key] == null || _.isEmpty($scope.data.metadata[key])) {
+                    throw gettext('Required field(s) missing');
+                }
+            });
+        }
         // check if data are valid
         try {
             poiIsInsideEachCrop();
+            if ($scope.data.showMetadataEditor) {
+                validateMediaFields();
+            }
         } catch (e) {
             // show an error and stop the "done" operation
             notify.error(e);
             return false;
         }
-        if ($scope.data.showMetadataEditor) {
-            validateMediaFields();
-            if ($scope.errorMessage == null) {
-                // update metadata in `item`
-                angular.extend($scope.data.item, $scope.data.metadata);
-                $scope.data.item.poi = $scope.data.poi;
-                notify.success(gettext('Crop changes have been recorded'));
-                $scope.resolve({cropData: $scope.data.cropData, poi: $scope.data.poi});
-            } else {
-                notify.error($scope.errorMessage);
-                return false;
-            }
-        }
+
+        // update metadata in `item`
+        angular.extend($scope.data.item, $scope.data.metadata);
+        $scope.data.item.poi = $scope.data.poi;
+        notify.success(gettext('Crop changes have been recorded'));
+        $scope.resolve({cropData: $scope.data.cropData, poi: $scope.data.poi});
     };
 
     $scope.close = function() {
