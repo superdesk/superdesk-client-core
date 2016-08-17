@@ -603,7 +603,7 @@ function ContentProfileSchemaEditor(gettext, metadata) {
                 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull',
                 'outdent', 'indent', 'unorderedlist', 'orderedlist',
                 'pre', 'quote', 'image', 'anchor', 'superscript', 'subscript', 'strikethrough',
-                'underline', 'italic', 'bold'
+                'underline', 'italic', 'bold', 'table'
             ];
 
             /**
