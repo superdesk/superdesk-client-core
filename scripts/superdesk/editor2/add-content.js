@@ -1,6 +1,3 @@
-(function() {
-'use strict';
-
 angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window',
 function($window) {
     return {
@@ -158,4 +155,3 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
         }
     });
 }
-})();

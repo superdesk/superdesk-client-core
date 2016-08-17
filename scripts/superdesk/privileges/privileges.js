@@ -1,7 +1,3 @@
-(function() {
-
-'use strict';
-
 PrivilegesService.$inject = ['$rootScope', '$q', 'preferencesService'];
 function PrivilegesService($rootScope, $q, preferencesService) {
     var _privileges = {};
@@ -46,5 +42,3 @@ function PrivilegesService($rootScope, $q, preferencesService) {
 
 angular.module('superdesk.privileges', ['superdesk.preferences'])
     .service('privileges', PrivilegesService);
-
-})();

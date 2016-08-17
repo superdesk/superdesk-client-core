@@ -1,7 +1,3 @@
-(function() {
-
-'use strict';
-
 angular.module('superdesk.authoring.versioning', [])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
@@ -20,5 +16,3 @@ angular.module('superdesk.authoring.versioning', [])
                 }
             });
     }]);
-
-})();

@@ -1,7 +1,3 @@
-(function() {
-
-'use strict';
-
 function AuthoringWidgetsProvider() {
 
     var widgets = [];
@@ -177,4 +173,3 @@ angular.module('superdesk.authoring.widgets', ['superdesk.keyboard'])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         keyboardManager.register('Authoring', 'ctrl + #', gettext('Toggles widget #'));
     }]);
-})();

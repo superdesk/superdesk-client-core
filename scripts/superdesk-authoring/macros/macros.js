@@ -1,7 +1,3 @@
-(function() {
-
-'use strict';
-
 MacrosService.$inject = ['api', 'notify', '$filter'];
 function MacrosService(api, notify, $filter) {
 
@@ -199,4 +195,3 @@ angular.module('superdesk.authoring.macros', [
                 display: {authoring: true, packages: true, killedItem: false, legalArchive: false, archived: false}
             });
     }]);
-})();

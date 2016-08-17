@@ -1,148 +1,144 @@
-(function() {
-    'use strict';
+var SESSION = {
+    token: 'abcd',
+    _links: {
+        self: {href: 'delete_session_url'}
+    }
+};
 
-    var SESSION = {
-        token: 'abcd',
-        _links: {
-            self: {href: 'delete_session_url'}
-        }
-    };
+describe('session service', function() {
 
-    describe('session service', function() {
+    beforeEach(function() {
+        localStorage.clear();
+        window.module('superdesk.services.storage');
+        window.module('superdesk.session');
+    });
 
-        beforeEach(function() {
-            localStorage.clear();
-            window.module('superdesk.services.storage');
-            window.module('superdesk.session');
+    it('has identity and token property', inject(function (session) {
+        expect(session.token).toBe(null);
+        expect(session.identity).toBe(null);
+    }));
+
+    it('can be started', inject(function (session, $q) {
+        session.start(SESSION, {name: 'user'});
+        expect(session.token).toBe(SESSION.token);
+        expect(session.identity.name).toBe('user');
+    }));
+
+    it('can be set expired', inject(function (session, $rootScope) {
+        spyOn($rootScope, '$broadcast');
+        session.start(SESSION, {name: 'foo'});
+        expect($rootScope.$broadcast).toHaveBeenCalledWith('login');
+        session.expire();
+        expect(session.token).toBe(null);
+        expect(session.identity.name).toBe('foo');
+        expect($rootScope.$broadcast).toHaveBeenCalledWith('logout');
+    }));
+
+    it('can resolve identity on start', inject(function (session, $rootScope) {
+        var identity;
+
+        session.getIdentity().then(function (_identity) {
+            identity = _identity;
         });
 
-        it('has identity and token property', inject(function (session) {
-            expect(session.token).toBe(null);
-            expect(session.identity).toBe(null);
-        }));
+        session.getIdentity().then(function (i2) {
+            expect(identity).toBe(i2);
+        });
 
-        it('can be started', inject(function (session, $q) {
-            session.start(SESSION, {name: 'user'});
-            expect(session.token).toBe(SESSION.token);
-            expect(session.identity.name).toBe('user');
-        }));
+        session.start(SESSION, {name: 'foo'});
 
-        it('can be set expired', inject(function (session, $rootScope) {
-            spyOn($rootScope, '$broadcast');
-            session.start(SESSION, {name: 'foo'});
-            expect($rootScope.$broadcast).toHaveBeenCalledWith('login');
-            session.expire();
-            expect(session.token).toBe(null);
-            expect(session.identity.name).toBe('foo');
-            expect($rootScope.$broadcast).toHaveBeenCalledWith('logout');
-        }));
+        $rootScope.$apply();
+        expect(identity.name).toBe('foo');
+    }));
 
-        it('can resolve identity on start', inject(function (session, $rootScope) {
-            var identity;
+    it('can store state for future requests', inject(function (session, $rootScope) {
+        session.start(SESSION, {name: 'bar'});
 
-            session.getIdentity().then(function (_identity) {
-                identity = _identity;
-            });
+        var nextInjector = angular.injector(['superdesk.session', 'superdesk.services.storage', 'ng']);
+        var nextSession = nextInjector.get('session');
+        nextInjector.get('$rootScope').$digest();
+        $rootScope.$digest();
 
-            session.getIdentity().then(function (i2) {
-                expect(identity).toBe(i2);
-            });
+        expect(nextSession.token).toBe(SESSION.token);
+        expect(nextSession.identity.name).toBe('bar');
 
-            session.start(SESSION, {name: 'foo'});
+        nextSession.expire();
+        $rootScope.$digest();
 
-            $rootScope.$apply();
-            expect(identity.name).toBe('foo');
-        }));
+        expect(session.token).toBe(null);
+        expect(session.identity.name).toBe('bar');
+    }));
 
-        it('can store state for future requests', inject(function (session, $rootScope) {
-            session.start(SESSION, {name: 'bar'});
+    it('can set test user with given id', inject(function (session) {
+        session.testUser('1234id');
 
-            var nextInjector = angular.injector(['superdesk.session', 'superdesk.services.storage', 'ng']);
-            var nextSession = nextInjector.get('session');
-            nextInjector.get('$rootScope').$digest();
-            $rootScope.$digest();
+        expect(session.token).toBe(1);
+        expect(session.identity._id).toBe('1234id');
+        expect(session.sessionId).toBe('s1234id');
+    }));
 
-            expect(nextSession.token).toBe(SESSION.token);
-            expect(nextSession.identity.name).toBe('bar');
+    it('can filter blacklisted fields from indentity', inject(function(session) {
+        session.start(SESSION, {
+            name: 'foo',
+            session_preferences: ['session'],
+            user_preferences: ['user'],
+            workspace: ['workspace'],
+            allowed_actions: ['actions']
+        });
+        expect(session.identity.name).not.toBeUndefined();
+        expect(session.identity.session_preferences).toBeUndefined();
+        expect(session.identity.user_preferences).toBeUndefined();
+        expect(session.identity.workspace).toBeUndefined();
+        expect(session.identity.allowed_actions).toBeUndefined();
+    }));
 
-            nextSession.expire();
-            $rootScope.$digest();
+    it('can clear session', inject(function (session) {
+        session.start(SESSION, {name: 'bar'});
+        session.clear();
+        expect(session.token).toBe(null);
+        expect(session.identity).toBe(null);
+    }));
 
-            expect(session.token).toBe(null);
-            expect(session.identity.name).toBe('bar');
-        }));
+    it('can persist session delete href', inject(function (session) {
+        session.start(SESSION, {name: 'bar'});
+        expect(session.getSessionHref()).toBe(SESSION._links.self.href);
+    }));
 
-        it('can set test user with given id', inject(function (session) {
-            session.testUser('1234id');
+    it('can update identity', inject(function (session, $rootScope) {
+        session.start(SESSION, {name: 'bar'});
+        session.updateIdentity({name: 'baz'});
+        expect(session.identity.name).toBe('baz');
 
-            expect(session.token).toBe(1);
-            expect(session.identity._id).toBe('1234id');
-            expect(session.sessionId).toBe('s1234id');
-        }));
+        var nextInjector = angular.injector(['superdesk.session', 'superdesk.services.storage', 'ng']);
+        var nextSession = nextInjector.get('session');
+        nextInjector.get('$rootScope').$digest();
 
-        it('can filter blacklisted fields from indentity', inject(function(session) {
-            session.start(SESSION, {
-                name: 'foo',
-                session_preferences: ['session'],
-                user_preferences: ['user'],
-                workspace: ['workspace'],
-                allowed_actions: ['actions']
-            });
-            expect(session.identity.name).not.toBeUndefined();
-            expect(session.identity.session_preferences).toBeUndefined();
-            expect(session.identity.user_preferences).toBeUndefined();
-            expect(session.identity.workspace).toBeUndefined();
-            expect(session.identity.allowed_actions).toBeUndefined();
-        }));
+        $rootScope.$apply();
+        expect(nextSession.identity.name).toBe('baz');
+    }));
 
-        it('can clear session', inject(function (session) {
-            session.start(SESSION, {name: 'bar'});
-            session.clear();
-            expect(session.token).toBe(null);
-            expect(session.identity).toBe(null);
-        }));
+    it('can return identity after session start', inject(function(session, $rootScope) {
+        session.start(SESSION, {name: 'bar'});
+        $rootScope.$digest();
 
-        it('can persist session delete href', inject(function (session) {
-            session.start(SESSION, {name: 'bar'});
-            expect(session.getSessionHref()).toBe(SESSION._links.self.href);
-        }));
+        var success = jasmine.createSpy('success');
+        session.getIdentity().then(success);
 
-        it('can update identity', inject(function (session, $rootScope) {
-            session.start(SESSION, {name: 'bar'});
-            session.updateIdentity({name: 'baz'});
-            expect(session.identity.name).toBe('baz');
+        $rootScope.$digest();
+        expect(success).toHaveBeenCalled();
+    }));
 
-            var nextInjector = angular.injector(['superdesk.session', 'superdesk.services.storage', 'ng']);
-            var nextSession = nextInjector.get('session');
-            nextInjector.get('$rootScope').$digest();
+    it('should not resolve identity after expiry', inject(function(session, $rootScope) {
+        session.start(SESSION, {name: 'bar'});
+        $rootScope.$digest();
 
-            $rootScope.$apply();
-            expect(nextSession.identity.name).toBe('baz');
-        }));
+        session.expire();
+        $rootScope.$digest();
 
-        it('can return identity after session start', inject(function(session, $rootScope) {
-            session.start(SESSION, {name: 'bar'});
-            $rootScope.$digest();
+        var success = jasmine.createSpy('success');
+        session.getIdentity().then(success);
 
-            var success = jasmine.createSpy('success');
-            session.getIdentity().then(success);
-
-            $rootScope.$digest();
-            expect(success).toHaveBeenCalled();
-        }));
-
-        it('should not resolve identity after expiry', inject(function(session, $rootScope) {
-            session.start(SESSION, {name: 'bar'});
-            $rootScope.$digest();
-
-            session.expire();
-            $rootScope.$digest();
-
-            var success = jasmine.createSpy('success');
-            session.getIdentity().then(success);
-
-            $rootScope.$digest();
-            expect(success).not.toHaveBeenCalled();
-        }));
-    });
-})();
+        $rootScope.$digest();
+        expect(success).not.toHaveBeenCalled();
+    }));
+});

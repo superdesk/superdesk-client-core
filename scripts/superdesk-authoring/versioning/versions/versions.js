@@ -1,7 +1,3 @@
-(function() {
-
-'use strict';
-
 VersioningController.$inject = ['$scope', 'authoring', 'api', 'notify', 'lock', 'desks', 'archiveService'];
 function VersioningController($scope, authoring, api, notify, lock, desks, archiveService) {
 
@@ -82,4 +78,3 @@ function versioningVersionDirective() {
 angular.module('superdesk.authoring.versioning.versions', [])
     .directive('sdVersioningVersion', versioningVersionDirective)
     .controller('VersioningWidgetCtrl', VersioningController);
-})();

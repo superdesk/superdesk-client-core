@@ -1,8 +1,3 @@
-
-(function() {
-
-'use strict';
-
 var ENTER = 13;
 
 CommentsService.$inject = ['api'];
@@ -148,5 +143,3 @@ angular.module('superdesk.authoring.comments', ['superdesk.authoring.widgets', '
     .controller('CommentsWidgetCtrl', CommentsCtrl)
     .service('commentsService', CommentsService)
     .directive('sdCommentText', CommentTextDirective);
-
-})();

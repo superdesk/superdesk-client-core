@@ -1,7 +1,3 @@
-(function() {
-
-'use strict';
-
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', '$filter', 'privileges', 'datetimeHelper',
     'preferencesService', 'archiveService', 'config', 'moment', 'content'
@@ -1097,4 +1093,3 @@ angular.module('superdesk.authoring.metadata', ['superdesk.authoring.widgets', '
     .directive('sdMetaWordsList', MetaWordsListDirective)
     .directive('sdMetadropdownFocus', MetadropdownFocusDirective)
     .directive('sdMetaLocators', MetaLocatorsDirective);
-})();

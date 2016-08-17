@@ -1,6 +1,3 @@
-(function() {
-'use strict';
-
 UserImportService.$inject = ['api', '$q'];
 function UserImportService(api, $q) {
 
@@ -56,5 +53,3 @@ angular.module('superdesk.users.import', ['superdesk.activity', 'superdesk.api']
                 features: {import_profile: 1}
             });
     }]);
-
-})();

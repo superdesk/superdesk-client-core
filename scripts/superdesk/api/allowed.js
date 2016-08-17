@@ -1,66 +1,61 @@
-(function() {
-    'use strict';
+angular.module('superdesk.api.allowed', [])
+    .service('allowed', AllowedService);
 
-    angular.module('superdesk.api.allowed', [])
-        .service('allowed', AllowedService);
+AllowedService.$inject = ['lodash', 'api', '$q'];
+function AllowedService(_, api, $q) {
 
-    AllowedService.$inject = ['lodash', 'api', '$q'];
-    function AllowedService(_, api, $q) {
+    var values;
 
-        var values;
-
-        function fetch() {
-            if (values) {
-                return $q.when(values);
-            }
-
-            return api.get('allowed_values')
-                .then(function(response) {
-                    values = {};
-                    response._items.forEach(item => {
-                        values[item._id] = item.items;
-                    });
-                    return values;
-                });
+    function fetch() {
+        if (values) {
+            return $q.when(values);
         }
 
-        /**
-         * Get allowed values for resource.field
-         *
-         * @param {String} resource
-         * @param {String} field
-         * @return {Promise}
-         */
-        this.get = (resource, field) => {
-            return fetch().then(() => {
-                return values[resource + '.' + field] || [];
-            });
-        };
-
-        /**
-         * Filter object keys using allowed values
-         *
-         * @param {Object} all
-         * @param {String} resource
-         * @param {String} field
-         * @return {Promise}
-         */
-        this.filterKeys = (all, resource, field) => {
-            return this.get(resource, field).then(allowed => {
-                var filtered = {};
-                Object.keys(all).forEach(key => {
-                    var isAllowed = _.find(allowed, val => {
-                        return key.indexOf(val) === 0;
-                    });
-
-                    if (isAllowed) {
-                        filtered[key] = all[key];
-                    }
+        return api.get('allowed_values')
+            .then(function(response) {
+                values = {};
+                response._items.forEach(item => {
+                    values[item._id] = item.items;
                 });
-
-                return filtered;
+                return values;
             });
-        };
     }
 
-})();
+    /**
+     * Get allowed values for resource.field
+     *
+     * @param {String} resource
+     * @param {String} field
+     * @return {Promise}
+     */
+    this.get = (resource, field) => {
+        return fetch().then(() => {
+            return values[resource + '.' + field] || [];
+        });
+    };
+
+    /**
+     * Filter object keys using allowed values
+     *
+     * @param {Object} all
+     * @param {String} resource
+     * @param {String} field
+     * @return {Promise}
+     */
+    this.filterKeys = (all, resource, field) => {
+        return this.get(resource, field).then(allowed => {
+            var filtered = {};
+            Object.keys(all).forEach(key => {
+                var isAllowed = _.find(allowed, val => {
+                    return key.indexOf(val) === 0;
+                });
+
+                if (isAllowed) {
+                    filtered[key] = all[key];
+                }
+            });
+
+            return filtered;
+        });
+    };
+}

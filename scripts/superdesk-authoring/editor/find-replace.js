@@ -7,10 +7,6 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-(function() {
-
-'use strict';
-
 FindReplaceDirective.$inject = ['$timeout', '$rootScope', 'editor', 'macros'];
 /**
  * using directive here so that it can return focus
@@ -99,5 +95,3 @@ angular.module('superdesk.authoring.find-replace', ['superdesk.authoring.widgets
                 display: {authoring: true, packages: false, killedItem: false, legalArchive: false, archived: false}
             });
     }]);
-
-})();

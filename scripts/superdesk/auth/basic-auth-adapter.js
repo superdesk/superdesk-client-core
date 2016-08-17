@@ -1,6 +1,3 @@
-(function() {
-    'use strict';
-
     angular.module('superdesk.auth.basic', []).service('authAdapter', ['$http', '$q', 'urls',
     function ($http, $q, urls) {
 
@@ -25,5 +22,3 @@
             });
         };
     }]);
-
-})();
