@@ -26,7 +26,6 @@ import 'angular-embed';
 import 'angular-contenteditable';
 import 'angular-vs-repeat';
 import 'ng-file-upload';
-import 'exif-js';
 import 'raven-js';
 import 'rangy';
 import 'rangy-saverestore';
