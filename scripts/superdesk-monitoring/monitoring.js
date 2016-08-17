@@ -87,7 +87,7 @@
                 }
             } else {
                 params.q = card.query;
-                criteria.es_highlight = params.q ? 1 : 0;
+                criteria.es_highlight = params.q ? search.getElasticHighlight() : 0;
             }
 
             params.spike = (card.type === 'spike' || card.type === 'spike-personal' ||
@@ -205,7 +205,7 @@
 
             if (queryString) {
                 query.filter({query: {query_string: {query: queryString, lenient: false}}});
-                criteria.es_highlight = 1;
+                criteria.es_highlight = search.getElasticHighlight();
             }
 
             criteria.source = query.getCriteria();

@@ -431,17 +431,18 @@
          * @param {boolean} force
          * @return {Object}
          */
-
         this.mergeItems = function(newItems, scopeItems, append, force) {
-            newItems._items = _.map(newItems._items, function(item) {
-                if (item.es_highlight) {
-                    _.forEach(_.keys(item.es_highlight), function (key) {
-                        item[key] = item.es_highlight[key][0];
-                    });
-                }
+            if (this.getElasticHighlight()) {
+                newItems._items = _.map(newItems._items, function(item) {
+                    if (item.es_highlight) {
+                        _.forEach(_.keys(item.es_highlight), function (key) {
+                            item[key] = item.es_highlight[key][0];
+                        });
+                    }
 
-                return item;
-            });
+                    return item;
+                });
+            }
 
             if (force || !scopeItems) {
                 return newItems;
@@ -480,6 +481,10 @@
 
                 return scopeItems; // i.e. updated scope.items
             }
+        };
+
+        this.getElasticHighlight = function() {
+            return config.feature && config.feature.elasticHighlight ? 1 : 0;
         };
 
         /**
@@ -1242,7 +1247,7 @@
                         criteria.source.from = 0;
                         scope.total = null;
                         criteria.aggregations = 1;
-                        criteria.es_highlight = 1;
+                        criteria.es_highlight = search.getElasticHighlight();
                         return api.query(getProvider(criteria), criteria).then(function (items) {
                             if (!scope.showRefresh && data && !data.force && (data.user !== session.identity._id)) {
 
@@ -1353,7 +1358,7 @@
                             criteria.source.from = 0;
                             criteria.source.size = 50;
                             criteria.aggregations = 1;
-                            criteria.es_highlight = 1;
+                            criteria.es_highlight = search.getElasticHighlight();
                             api.query(getProvider(criteria), criteria).then(setScopeItems);
                             oldQuery = query;
                         }

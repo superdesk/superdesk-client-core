@@ -6,21 +6,20 @@ import 'angular-history/history.js';
     var CONTENT_FIELDS_DEFAULTS = Object.freeze({
         headline: '',
         slugline: '',
-        body_html: null,
-        'abstract': null,
+        body_html: '',
+        'abstract': '',
         anpa_take_key: null,
-        byline: null,
+        byline: '',
         urgency: null,
         priority: null,
         subject: [],
         'anpa_category': [],
-        genre: [],
-        groups: [],
+        genre: null,
+        groups: null,
         usageterms: null,
         ednote: null,
         place: [],
-        located: null,
-        dateline: null,
+        dateline: {},
         language: null,
         unique_name: '',
         keywords: [],
@@ -34,9 +33,9 @@ import 'angular-history/history.js';
         target_types: [],
         target_subscribers: [],
         embargo: null,
-        renditions: null,
-        associations: null,
-        body_footer: null,
+        renditions: {},
+        associations: {},
+        body_footer: '',
         company_codes: [],
         schedule_settings: null,
         sms_message: null,
@@ -76,6 +75,20 @@ import 'angular-history/history.js';
      */
     function extendItem(dest, src) {
         return angular.extend(dest, _.pick(src, _.keys(CONTENT_FIELDS_DEFAULTS)));
+    }
+
+    /**
+     * Filter out default values from diff
+     *
+     * @param {Object} diff
+     * @param {Object} orig
+     */
+    function filterDefaultValues(diff, orig) {
+        Object.keys(CONTENT_FIELDS_DEFAULTS).forEach(function(key) {
+            if (diff.hasOwnProperty(key) && angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key]) && !orig.hasOwnProperty(key)) {
+                delete diff[key];
+            }
+        });
     }
 
     function stripHtmlRaw(content) {
@@ -161,6 +174,7 @@ import 'angular-history/history.js';
                 this.stop(item);
                 timeouts[item._id] = $timeout(function() {
                     var diff = extendItem({_id: item._id}, item);
+                    filterDefaultValues(diff, orig);
                     return api.save(RESOURCE, {}, diff).then(function(_autosave) {
                         orig._autosave = _autosave;
                     });
@@ -378,9 +392,8 @@ import 'angular-history/history.js';
         this.publish = function publish(orig, diff, action) {
             action = action || 'publish';
             diff = extendItem({}, diff);
-
             this.cleanUpdatesBeforePublishing(orig, diff);
-
+            filterDefaultValues(diff, orig);
             var endpoint = 'archive_' + action;
             return api.update(endpoint, orig, diff)
             .then(function(result) {
@@ -451,12 +464,14 @@ import 'angular-history/history.js';
                 delete diff._etag;
             }
 
+            filterDefaultValues(diff, origItem);
+
             if (_.size(diff) > 0) {
                 return api.save('archive', origItem, diff).then(function(_item) {
-                    item._autosave = null;
-                    item._autosaved = false;
-                    item._locked = lock.isLockedInCurrentSession(item);
-                    $injector.get('authoringWorkspace').update(item);
+                    origItem._autosave = null;
+                    origItem._autosaved = false;
+                    origItem._locked = lock.isLockedInCurrentSession(item);
+                    $injector.get('authoringWorkspace').update(origItem);
                     return origItem;
                 });
             } else {
@@ -1411,7 +1426,7 @@ import 'angular-history/history.js';
                 function validate(orig, item) {
                     $scope.error = {};
                     tryPublish = true;
-                    _.extend(orig, item);
+                    extendItem(orig, item);
                     angular.forEach(authoring.editor, function (editor, key) {
                         if (!authoring.schema[key]) {
                             var found = false;
@@ -1647,8 +1662,14 @@ import 'angular-history/history.js';
                  */
                 $scope.closePreview = function() {
                     $scope.item = _.create($scope.origItem);
-                    extendItem($scope.item, $scope.item._autosave || {});
                     $scope._editable = $scope.action !== 'view' && authoring.isEditable($scope.origItem);
+
+                    // populate content fields so that it can undo to initial (empty) version later
+                    var autosave = $scope.origItem._autosave || {};
+                    Object.keys(CONTENT_FIELDS_DEFAULTS).forEach(function(key) {
+                        var value = autosave[key] || $scope.origItem[key] || CONTENT_FIELDS_DEFAULTS[key];
+                        $scope.item[key] = angular.copy(value);
+                    });
                 };
 
                 /**
@@ -2743,9 +2764,8 @@ import 'angular-history/history.js';
                     }
                 }
 
-                var stopWatch = scope.$watch('item', function(item) {
+                scope.$watch('item', function(item) {
                     if (item) {
-                        stopWatch();
                         /* Creates a copy of dateline object from item.__proto__.dateline */
                         if (item.dateline) {
                             var updates = {dateline: {}};

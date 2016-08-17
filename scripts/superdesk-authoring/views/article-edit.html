@@ -7,6 +7,7 @@
         data-editorformat="editor.headline.formatOptions"
         data-language="item.language"
         ng-model="item.headline"
+        ng-model-options="{debounce: 100}"
         ng-change="autosave(item)"
         ng-if="_editable"
         ng-trim="false"></div>
@@ -26,6 +27,7 @@
          class="byline"
          id="sms_message"
          ng-model="item.sms_message"
+         ng-model-options="{debounce: 100}"
          ng-change="autosave(item)"
          ng-if="_editable"
          placeholder="Add sms message here"
@@ -70,6 +72,7 @@
         data-editorformat="editor.abstract.formatOptions"
         data-language="item.language"
         ng-model="item.abstract"
+        ng-model-options="{debounce: 100}"
         ng-change="autosave(item)"
         ng-if="_editable"
         ng-trim="false"></div>
@@ -85,15 +88,16 @@
         data-editorformat="editor.byline.formatOptions"
         data-language="item.language"
         ng-model="item.byline"
+        ng-model-options="{debounce: 100}"
         ng-change="autosave(item)"
         ng-if="_editable"
         ng-trim="false"></div>
-  <div ng-if="!_editable">{{item.byline}}</div>
+  <div ng-if="!_editable" sd-html-preview="item.byline"></div>
 </div>
 
 <!--This article-edit view is used by templates as well.
     ng-if is used to hide dateline for the template create/edit screen.-->
-<div class="field" ng-if="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" order="{{editor.dateline.order}}" sd-validation-error="error.dateline" data-required="schema.dateline.required" sd-width="{{editor.dateline.sdWidth || 'full'}}">
+<div class="field" ng-show="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline" order="{{editor.dateline.order}}" sd-validation-error="error.dateline" data-required="schema.dateline.required" sd-width="{{editor.dateline.sdWidth || 'full'}}">
     <label translate>Dateline</label>
     <div class="dateline">
         <div sd-meta-locators
@@ -154,6 +158,7 @@
          ng-model="item.body_html"
          ng-if="_editable"
          ng-change="autosave(item)"
+         ng-model-options="{debounce: 100}"
          data-associations="item.associations"
          data-language="item.language"
          data-type="item.type">
@@ -192,6 +197,7 @@
         data-editorformat="editor.description_text.formatOptions"
         data-language="item.language"
         ng-model="item.description_text"
+        ng-model-options="{debounce: 100}"
         ng-change="autosave(item)"
         ng-if="_editable"
         ng-trim="false"></div>
@@ -225,6 +231,7 @@
         data-config="{disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order}"
         data-language="item.language"
         ng-model="item.body_footer"
+        ng-model-options="{debounce: 100}"
         ng-change="autosave(item)"
         ng-if="_editable"
         ng-trim="false"

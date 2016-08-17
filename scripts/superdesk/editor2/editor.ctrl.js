@@ -222,10 +222,17 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     associations[key] = null;
                 }
             });
-            // update associations with the ones stored in blocks
-            vm.associations = angular.extend({}, associations, vm.getAssociations());
+
+            if (Object.keys(associations).length || vm.associations) {
+                // update associations with the ones stored in blocks
+                vm.associations = angular.extend({}, associations, vm.getAssociations());
+            }
+
             // save model with latest state of blocks
-            vm.model.$setViewValue(vm.serializeBlock());
+            var serialized = vm.serializeBlock();
+            if (serialized !== vm.model.$viewValue) {
+                vm.model.$setViewValue(vm.serializeBlock());
+            }
         },
         /**
         * Return an object that contains the embedded images in the story

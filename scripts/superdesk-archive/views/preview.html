@@ -60,7 +60,9 @@
 
         <div class="composite-nav" ng-if="selected.preview.type === 'composite'">
           <i class="filetype-icon-large-composite"></i>
-          <p class="title preview-headline" ng-if="selected.preview.headline" ng-class="{condensed: !lock}">{{ selected.preview.headline }}</p>
+          <p class="title preview-headline"
+             ng-if="selected.preview.headline"
+             ng-class="{condensed: !lock}" sd-html-preview="selected.preview.headline"></p>
         </div>
 
         <div ng-hide="hideActions()" class="action-menu">
