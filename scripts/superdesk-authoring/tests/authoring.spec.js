@@ -44,7 +44,7 @@ describe('authoring', function() {
     }));
 
     it('can open an item',
-    inject(function(superdesk, api, lock, autosave, $injector, $q, $rootScope, $httpBackend) {
+    inject(function(superdesk, api, lock, autosave, $injector, $q, $rootScope) {
         var _item,
             lockedItem = angular.extend({_locked: false}, ITEM);
 
@@ -154,6 +154,20 @@ describe('authoring', function() {
         expect($location.search().item).toBe(undefined);
         expect($location.search().action).toBe(undefined);
         expect(reloadService.forceReload).toHaveBeenCalled();
+    }));
+
+    it('can populate content metadata for undo', inject(function($rootScope) {
+        var orig = {headline: 'foo'};
+        var scope = startAuthoring(orig, 'edit');
+        expect(scope.origItem.headline).toBe('foo');
+        expect(scope.item.headline).toBe('foo');
+        expect(scope.item.slugline).toBe('');
+        scope.$apply(function() {
+            scope.origItem.headline = 'bar';
+            scope.origItem.slugline = 'slug';
+        });
+        expect(scope.item.headline).toBe('foo');
+        expect(scope.item.slugline).toBe('');
     }));
 
     /**
@@ -367,6 +381,20 @@ describe('authoring', function() {
                 timestamp,
                 'America/Toronto' // anything before utc
             )).toBeFalsy();
+        }));
+
+        it('updates orig item on save',
+        inject(function(authoring, $rootScope, $httpBackend, api, $q, urls) {
+            var item = {headline: 'foo'};
+            var orig = {_links: {self: {href: 'archive/foo'}}};
+            spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
+            $httpBackend.expectPATCH(orig._links.self.href, item)
+                .respond(200, {_etag: 'new', _current_version: 2});
+            authoring.save(orig, item);
+            $rootScope.$digest();
+            $httpBackend.flush();
+            expect(orig._etag).toBe('new');
+            expect(orig._current_version).toBe(2);
         }));
     });
 });

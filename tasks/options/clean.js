@@ -4,7 +4,8 @@ module.exports = {
             dot: true,
             src: [
                 '<%= tmpDir %>',
-                '<%= distDir %>/*',
+                '<%= distDir %>',
+                'docs/<%= distDir %>',
                 'templates-cache.generated.js',
                 '!<%= distDir %>/.git*'
             ]

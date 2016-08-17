@@ -3,12 +3,7 @@ var webpack = require('webpack');
 var lodash = require('lodash');
 
 // makeConfig creates a new configuration file based on the passed options.
-// Keys are:
-// {
-//     isDev: bool // indicates dev env
-// }
-module.exports = function makeConfig(grunt, opts) {
-    opts = opts || {};
+module.exports = function makeConfig(grunt) {
     var appConfigPath = path.join(process.cwd(), 'superdesk.config.js');
 
     if (process.env.SUPERDESK_CONFIG) {
@@ -18,17 +13,16 @@ module.exports = function makeConfig(grunt, opts) {
         appConfigPath = path.join(process.cwd(), grunt.option('config'));
     }
 
-    var sdConfig = lodash.defaultsDeep(require(appConfigPath)(grunt), getDefaults(grunt, opts));
+    var sdConfig = lodash.defaultsDeep(require(appConfigPath)(grunt), getDefaults(grunt));
 
     return {
         cache: true,
         entry: {
-            index: 'scripts/index.js'
+            app: ['scripts/index.js']
         },
         output: {
             path: path.join(process.cwd(), 'dist'),
             filename: '[name].bundle.js',
-            publicPath: opts.isDev ? 'dist' : '',
             chunkFilename: '[id].bundle.js'
         },
         plugins: [
@@ -38,6 +32,8 @@ module.exports = function makeConfig(grunt, opts) {
                 'jQuery': 'jquery',
                 'window.jQuery': 'jquery',
                 'moment': 'moment',
+                // MediumEditor needs to be globally available, because
+                // its plugins will not be able to find it otherwise.
                 'MediumEditor': 'medium-editor'
             }),
             new webpack.DefinePlugin({
@@ -64,12 +60,10 @@ module.exports = function makeConfig(grunt, opts) {
                     test: /\.js$/,
                     exclude: function(p) {
                         'use strict';
-                        // exclude parsing bower components and node modules,
-                        // but allow the 'superdesk-core' node module, because
-                        // it will be used when building in the main 'superdesk'
-                        // repository.
-                        return p.indexOf('bower_components') > -1 ||
-                            p.indexOf('node_modules') > -1 && p.indexOf('superdesk-core') < 0;
+                        // exclude parsing node modules, but allow the 'superdesk-core'
+                        // node module, because it will be used when building in the
+                        // main 'superdesk' repository.
+                        return p.indexOf('node_modules') > -1 && p.indexOf('superdesk-core') < 0;
                     },
                     loader: 'babel',
                     query: {
@@ -95,7 +89,7 @@ module.exports = function makeConfig(grunt, opts) {
 };
 
 // getDefaults returns the default configuration for the app
-function getDefaults(grunt, buildParams) {
+function getDefaults(grunt) {
     var version;
 
     try {
@@ -162,10 +156,6 @@ function getDefaults(grunt, buildParams) {
 
         // environment name
         environmentName: grunt.option('environmentName'),
-
-        // the params used to generate the webpack configuration file
-        // see webpack.config.js
-        buildParams: buildParams,
 
         // route to be redirected to from '/'
         defaultRoute: '/workspace',

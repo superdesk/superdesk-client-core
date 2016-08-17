@@ -400,7 +400,7 @@ function(ItemList, notify, itemPinService, gettext, $timeout) {
             scope.$watch('options.similar', function() {
                 if (scope.options.similar && scope.options.item) {
                     if (!scope.options.item.slugline) {
-                        notify.error(gettext('Error: Keywords required.'));
+                        notify.error(gettext('Error: Slugline required.'));
                         scope.options.similar = false;
                     } else {
                         oldSearch = scope.itemListOptions.search;
@@ -509,7 +509,7 @@ function(ItemList, notify, itemPinService, gettext) {
             scope.$watch('options.related', function() {
                 if (scope.options.related && scope.options.item) {
                     if (!scope.options.item.slugline) {
-                        notify.error(gettext('Error: Keywords required.'));
+                        notify.error(gettext('Error: Slugline required.'));
                         scope.options.related = false;
                     } else {
                         oldSearch = scope.itemListOptions.keyword;

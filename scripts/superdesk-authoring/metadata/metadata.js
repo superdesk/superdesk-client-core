@@ -621,7 +621,11 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             });
 
             scope.$watch('item[field]', function(selected) {
-                if (!selected) { return; }
+                if (!selected) {
+                    scope.selectedItems = [];
+                    return;
+                }
+
                 scope.terms = filterSelected(scope.list);
                 if (scope.cv) { // filter out items from current cv
                     scope.selectedItems = _.filter(selected, function(term) {
@@ -860,6 +864,11 @@ function MetaLocatorsDirective() {
                 scope.locators = list.slice(0, 10);
                 scope.total = list.length;
             }
+
+            // update visible city on some external change, like after undo/redo
+            scope.$watch('item[fieldprefix][field].city || item[field].city', function(located) {
+                scope.selectedTerm = located;
+            });
 
             /**
              * sdTypeahead directive invokes this method and is responsible for searching located object(s) where the

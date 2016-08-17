@@ -31,8 +31,6 @@ module.exports = function(grunt) {
         configPath: path.join(__dirname, 'tasks', 'options')
     });
 
-    grunt.registerTask('style', ['less:dev', 'cssmin']);
-
     grunt.registerTask('test', ['ngtemplates:dev', 'karma:unit']);
     grunt.registerTask('hint', ['jshint', 'jscs', 'eslint:specs', 'eslint:tasks', 'eslint:root']);
     grunt.registerTask('hint:docs', ['jshint:docs', 'jscs:docs']);
@@ -43,7 +41,9 @@ module.exports = function(grunt) {
 
     grunt.registerTask('docs', [
         'clean',
+        'ngtemplates:dev',
         'ngtemplates:docs',
+        'copy:assets-docs',
         'webpack-dev-server:docs'
     ]);
 
@@ -56,18 +56,10 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', [
         'clean',
-        'ngtemplates:core',
-        'webpack:build',
         'copy:index',
-        'useminPrepare',
-        'concat:generated',
-        'uglify:generated',
         'copy:assets',
-        'copy:js',
-        'copy:docs',
-        'template:docs',
-        'filerev',
-        'usemin'
+        'ngtemplates:core',
+        'webpack:build'
     ]);
 
     grunt.registerTask('package', ['ci', 'build']);

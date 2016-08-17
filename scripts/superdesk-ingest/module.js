@@ -233,6 +233,7 @@ class IngestListController extends BaseListController {
         this.fetchItems = function(criteria, next) {
             $scope.loading = true;
             criteria.aggregations = 1;
+            criteria.es_highlight = search.getElasticHighlight();
             api.query('ingest', criteria).then(function(items) {
                 $scope.items = search.mergeItems(items, $scope.items, next);
                 $scope.total = items._meta.total;

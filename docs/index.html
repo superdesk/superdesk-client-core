@@ -6,11 +6,6 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-        <link rel="stylesheet" href="app.css">
-        <link rel="stylesheet" href="bootstrap.css">
-        <link rel="stylesheet" href="docs.css">
-
     </head>
     <body>
         <div sd-docs></div>
@@ -622,7 +617,7 @@
 
                     <div class="docs-preview">
                         <div class="preview-area clearfix">
-                            <div sd-typeahead items="taItems" term="taSelected" search="taSearch(term)" select="taSelect(item)" style="width:200px; float: left; margin-right: 10px;">
+                            <div sd-typeahead items="taItems" term="taSelected" search="taSearch(term)" select="taSelect(item)">
                                 <ul>
                                     <li typeahead-item="taItem" ng-repeat="taItem in taItems">{{ taItem}}</li>
                                 </ul>
@@ -1637,26 +1632,7 @@
     </div>
 </div>
 </script>
-        <script src="index.bundle.js"></script>
-        <script src="templates-cache.js"></script>
-	   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+        <script src="dist/docs.bundle.js"></script>
 	   <script src="//cdn.rawgit.com/google/code-prettify/master/loader/prettify.js"></script>
-
-        <script>
-            angular.module('superdesk.config').constant('config', <%= grunt.toJSON(config) %>);
-
-            var modules = [
-                'superdesk.docs.core',
-                'superdesk.docs',
-                'superdesk.templates-cache',
-                'superdesk.config'
-            ];
-
-            var body = angular.element('body');
-            body.ready(function () {
-                angular.bootstrap(body, modules);
-            });
-
-        </script>
     </body>
 </html>
