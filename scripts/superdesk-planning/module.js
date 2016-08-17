@@ -1,3 +1,5 @@
+import './styles/planning.less';
+
 var coverageTypes = ['story', 'photo', 'video', 'graphics', 'live-blogging'];
 
 function PlanningItem(deskId) {

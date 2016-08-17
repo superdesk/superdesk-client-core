@@ -2,9 +2,7 @@
 const appConfig = __SUPERDESK_CONFIG__;
 
 // styles
-import 'styles/index.less';
-import 'jquery-ui/themes/smoothness/jquery-ui.css';
-import 'jquery-jcrop/css/jquery.Jcrop.css';
+import 'bootstrap.less';
 
 // vendor
 import 'jquery-ui/jquery-ui';
