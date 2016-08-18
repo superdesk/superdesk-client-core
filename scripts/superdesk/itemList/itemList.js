@@ -5,6 +5,77 @@ var DEFAULT_OPTIONS = {
     sort: [{_updated: 'desc'}]
 };
 
+function extendScope(scope, itemList, itemPinService) {
+    scope.view = function(item) {
+        scope.selected = item;
+    };
+
+    scope.toggleItemType = function(itemType) {
+        if (scope.itemListOptions.types.indexOf(itemType) > -1) {
+            scope.itemListOptions.types = _.without(scope.itemListOptions.types, itemType);
+        } else {
+            scope.itemListOptions.types.push(itemType);
+        }
+    };
+
+    scope.isItemTypeEnabled = function(itemType) {
+        return scope.itemListOptions.types.indexOf(itemType) > -1;
+    };
+
+    scope.pin = function(item) {
+        itemPinService.add(scope.options.pinMode, _.clone(item));
+    };
+
+    scope.unpin = function(item) {
+        itemPinService.remove(item);
+    };
+
+    scope.isPinned = function(item) {
+        return itemPinService.isPinned(scope.options.pinMode, item);
+    };
+
+    scope.filetypeIcon = function(item) {
+        var prefix = 'filetype-icon-'
+        if (item.package_type) {
+            return prefix + 'takes-pack';
+        } else if (item.type === 'composite' && item.highlight) {
+            return prefix + 'highlight-pack';
+        } else {
+            return prefix + item.type;
+        }
+    };
+
+    var processItems = function() {
+        if (scope.items) {
+            if (scope.options.pinEnabled) {
+                scope.processedItems = scope.pinnedItems.concat(scope.items._items);
+            } else {
+                scope.processedItems = scope.items._items;
+            }
+        }
+    };
+
+    var itemListListener = function() {
+        scope.maxPage = itemList.maxPage;
+        scope.items = itemList.result;
+        processItems();
+    };
+    var pinListener = function(pinnedItems) {
+        scope.pinnedItems = pinnedItems;
+        _.each(scope.pinnedItems, function(item) {
+            item.pinnedInstance = true;
+        });
+        processItems();
+    };
+
+    itemList.addListener(itemListListener);
+    itemPinService.addListener(scope.options.pinMode, pinListener);
+    scope.$on('$destroy', function() {
+        itemList.removeListener(itemListListener);
+        itemPinService.removeListener(pinListener);
+    });
+}
+
 angular.module('superdesk.itemList', ['superdesk.search'])
 .service('itemListService', ['api', '$q', 'search', function(api, $q, search) {
     function getQuery(options) {
@@ -330,63 +401,7 @@ function(ItemList, notify, itemPinService, gettext, $timeout) {
                 }, 100, false);
             }
 
-            scope.view = function(item) {
-                scope.selected = item;
-            };
-
-            scope.toggleItemType = function(itemType) {
-                if (scope.itemListOptions.types.indexOf(itemType) > -1) {
-                    scope.itemListOptions.types = _.without(scope.itemListOptions.types, itemType);
-                } else {
-                    scope.itemListOptions.types.push(itemType);
-                }
-            };
-
-            scope.isItemTypeEnabled = function(itemType) {
-                return scope.itemListOptions.types.indexOf(itemType) > -1;
-            };
-
-            scope.pin = function(item) {
-                itemPinService.add(scope.options.pinMode, _.clone(item));
-            };
-
-            scope.unpin = function(item) {
-                itemPinService.remove(item);
-            };
-
-            scope.isPinned = function(item) {
-                return itemPinService.isPinned(scope.options.pinMode, item);
-            };
-
-            var processItems = function() {
-                if (scope.items) {
-                    if (scope.options.pinEnabled) {
-                        scope.processedItems = scope.pinnedItems.concat(scope.items._items);
-                    } else {
-                        scope.processedItems = scope.items._items;
-                    }
-                }
-            };
-
-            var itemListListener = function() {
-                scope.maxPage = itemList.maxPage;
-                scope.items = itemList.result;
-                processItems();
-            };
-            var pinListener = function(pinnedItems) {
-                scope.pinnedItems = pinnedItems;
-                _.each(scope.pinnedItems, function(item) {
-                    item.pinnedInstance = true;
-                });
-                processItems();
-            };
-
-            itemList.addListener(itemListListener);
-            itemPinService.addListener(scope.options.pinMode, pinListener);
-            scope.$on('$destroy', function() {
-                itemList.removeListener(itemListListener);
-                itemPinService.removeListener(pinListener);
-            });
+            extendScope(scope, itemList, itemPinService);
 
             scope.$watch('itemListOptions', function() {
                 itemList.setOptions(scope.itemListOptions);
@@ -438,63 +453,7 @@ function(ItemList, notify, itemPinService, gettext) {
             };
             var refresh = _.debounce(_refresh, 100);
 
-            scope.view = function(item) {
-                scope.selected = item;
-            };
-
-            scope.toggleItemType = function(itemType) {
-                if (scope.itemListOptions.types.indexOf(itemType) > -1) {
-                    scope.itemListOptions.types = _.without(scope.itemListOptions.types, itemType);
-                } else {
-                    scope.itemListOptions.types.push(itemType);
-                }
-            };
-
-            scope.isItemTypeEnabled = function(itemType) {
-                return scope.itemListOptions.types.indexOf(itemType) > -1;
-            };
-
-            scope.pin = function(item) {
-                itemPinService.add(scope.options.pinMode, _.clone(item));
-            };
-
-            scope.unpin = function(item) {
-                itemPinService.remove(item);
-            };
-
-            scope.isPinned = function(item) {
-                return itemPinService.isPinned(scope.options.pinMode, item);
-            };
-
-            var processItems = function() {
-                if (scope.items) {
-                    if (scope.options.pinEnabled) {
-                        scope.processedItems = scope.pinnedItems.concat(scope.items._items);
-                    } else {
-                        scope.processedItems = scope.items._items;
-                    }
-                }
-            };
-
-            var itemListListener = function() {
-                scope.maxPage = itemList.maxPage;
-                scope.items = itemList.result;
-                processItems();
-            };
-            var pinListener = function(pinnedItems) {
-                scope.pinnedItems = pinnedItems;
-                _.each(scope.pinnedItems, function(item) {
-                    item.pinnedInstance = true;
-                });
-                processItems();
-            };
-
-            itemList.addListener(itemListListener);
-            itemPinService.addListener(scope.options.pinMode, pinListener);
-            scope.$on('$destroy', function() {
-                itemList.removeListener(itemListListener);
-                itemPinService.removeListener(pinListener);
-            });
+            extendScope(scope, itemList, itemPinService);
 
             scope.$watch('itemListOptions', function() {
                 itemList.setOptions(scope.itemListOptions);

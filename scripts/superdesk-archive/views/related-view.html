@@ -2,7 +2,7 @@
     <ul>
         <li ng-repeat="relatedItem in relatedItems._items">
             <div class="related-item" ng-click="open(relatedItem)">
-                <i class="type-icon filetype-icon-{{relatedItem.type}}"></i>
+                <i class="{{filetypeIcon(relatedItem)}}"></i>
                 <span class="keyword" ng-if="relatedItem.slugline">{{ relatedItem.slugline }}</span>
                 <span sd-item-container data-item="relatedItem" class="container"></span>
                 <span class="state-label state-{{relatedItem.state}}">{{ relatedItem.state }}</span>
