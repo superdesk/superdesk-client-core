@@ -968,7 +968,7 @@ angular.module('superdesk.search.react', [
                         if (props.item.profile) {
                             return React.createElement(
                                 'div',
-                                {className: 'label label--' + props.item.profile, key: 'profile'},
+                                {className: 'profile-label profile-label--' + props.item.profile, key: 'profile'},
                                 props.profilesById[props.item.profile] ?
                                     props.profilesById[props.item.profile].label :
                                     props.item.profile
