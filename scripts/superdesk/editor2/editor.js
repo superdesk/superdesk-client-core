@@ -743,8 +743,9 @@ angular.module('superdesk.editor2', [
                 updateOnEmptySelection: true
             },
             paste: {
-                forcePlainText: false,
-                cleanPastedHTML: false
+                forcePlainText: true,
+                cleanPastedHTML: true,
+                cleanTags: ['meta', 'i', 'u', 'h1', 'h2', 'b']
             },
             anchor: {
                 placeholderText: gettext('Paste or type a full link'),
