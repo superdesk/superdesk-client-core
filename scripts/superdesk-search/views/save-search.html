@@ -1,7 +1,8 @@
-<div class="save-search" ng-hide="editSearch || edit && !editingSearch">
+<div class="save-search" ng-if="searching() || innerTab==='parameters'">
     <div ng-if="!editingSearch">
-        <a id="clear_filters" class="save-search__link" ng-click="clear()" translate>Clear filters</a>
-        <button id="save_search_init" class="btn btn-info" ng-click="editItem()" translate>Save Search</button>
+        <button class="btn btn-info btn-full search" ng-click="search()" ng-if="innerTab==='parameters'" translate>Search</button>
+        <a id="clear_filters" class="save-search__link" ng-click="clear()" ng-if="searching()" translate>Clear filters</a>
+        <button id="save_search_init" class="btn btn-info" ng-click="editItem()" ng-if="searching() && !editingSearch"  translate>Save Search</button>
     </div>
     <div ng-if="editingSearch">
         <button id="saveas_search_init" class="btn" ng-click="saveas()" translate ng-if="editingSearch">Save As</button>
@@ -14,18 +15,7 @@
     <div class="save-search-panel__title" translate>Save search</div>
     <div class="search-content">
         <form name="viewsForm">
-            <fieldset>
-                <div class="field">
-            <input id="search_name" type="text" class="fullwidth-input line-input" ng-model="edit.name" placeholder="{{:: 'Name' | translate}}" required>
-                </div>
-                <div class="field">
-                    <textarea id="search_description" class="line-input" sd-auto-height ng-model="edit.description" placeholder="{{:: 'Description' | translate}}"></textarea>
-                </div>
-                <div class="field">
-            <span id="search_global" sd-switch ng-model="edit.is_global"></span>
-            <label class="label--inline" translate>Make global</label>
-        </div>
-            </fieldset>
+            <div ng-include="'scripts/superdesk-search/views/save-search-dialog.html'"></div>
         </form>
     </div>
     <div class="pull-right">

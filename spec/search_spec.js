@@ -26,7 +26,7 @@ describe('search', function() {
 
         //can navigate/filter subject field and search by selected subject term
         expect(globalSearch.getItems().count()).toBe(14);
-        globalSearch.openToggleBox('Parameters');
+        globalSearch.toggleSearchTabs('parameters');
         globalSearch.toggleSubjectMetadata(); // opens subject drop-down
         browser.sleep(100);
         browser.actions().sendKeys('archa').perform();
@@ -34,6 +34,7 @@ describe('search', function() {
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
         browser.actions().sendKeys(protractor.Key.ENTER).perform(); // selects subject term
         browser.sleep(200);
+        globalSearch.goButton.click();
         // expect selected term in filter pane
         expect(globalSearch.getSelectedSubjectsInFilter().count()).toBe(1);
         // expect selected term in tag list, at top of search list
@@ -44,6 +45,7 @@ describe('search', function() {
 
         //can search by priority field
         expect(globalSearch.getItems().count()).toBe(14);
+        globalSearch.toggleSearchTabs('filters');
         expect(globalSearch.getPriorityElements().count()).toBe(3);
         var priority = globalSearch.getPriorityElementByIndex(0);
         priority.click();
@@ -81,7 +83,6 @@ describe('search', function() {
         expect(element.all(by.repeater('parameter in tags.selectedParameters')).count()).toBe(1);
         element(by.css('.icon-close-small.icon-white')).click();
         expect(globalSearch.getItems().count()).toBe(14);
-        globalSearch.clickClearFilters();
 
         //can search by original creator
         expect(globalSearch.getItems().count()).toBe(14);
@@ -93,13 +94,14 @@ describe('search', function() {
 
         //can search by genre field
         expect(globalSearch.getItems().count()).toBe(14);
+        globalSearch.toggleSearchTabs('filters');
         expect(globalSearch.getGenreElements().count()).toBe(2);
         var genre = globalSearch.getGenreElementByIndex(0);
         genre.click();
         expect(globalSearch.getItems().count()).toBe(10);
         globalSearch.clickClearFilters();
 
-        //search by from desk field
+        //initialize for search by from desk field and company
         monitoring.openMonitoring();
         monitoring.switchToDesk('SPORTS DESK').then(authoring.createTextItem());
         authoring.writeTextToHeadline('From-Sports-To-Politics');
@@ -110,6 +112,8 @@ describe('search', function() {
         authoring.confirmSendTo();
         monitoring.switchToDesk('POLITIC DESK');
         expect(monitoring.getTextItem(1, 0)).toBe('From-Sports-To-Politics');
+
+        //search by from desk field
         globalSearch.openGlobalSearch();
         globalSearch.setListView();
         expect(globalSearch.getItems().count()).toBe(15);
@@ -130,7 +134,6 @@ describe('search', function() {
         globalSearch.selectDesk('to-desk', '');
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(15);
-        globalSearch.clickClearFilters();
 
         //can dynamically update items in related tab when item duplicated
         expect(globalSearch.getItems().count()).toBe(15);
@@ -142,17 +145,18 @@ describe('search', function() {
         globalSearch.itemClick(0);
         monitoring.tabAction('related');
         expect(globalSearch.getRelatedItems().count()).toBe(2);
-        globalSearch.clickClearFilters();
 
-        //can disable when no repo is selected and enable if at lease one repo is selected
+        //can search with different repos
         globalSearch.openParameters();
         globalSearch.ingestRepo.click();
+        browser.sleep(200);
+        expect(globalSearch.getItems().count()).toBe(16);
         globalSearch.archiveRepo.click();
-        globalSearch.publishedRepo.click();
+        browser.sleep(200);
+        expect(globalSearch.getItems().count()).toBe(3);
         globalSearch.archivedRepo.click();
-        expect(globalSearch.goButton.isEnabled()).toBe(false);
-        globalSearch.ingestRepo.click();
-        expect(globalSearch.goButton.isEnabled()).toBe(true);
+        browser.sleep(200);
+        expect(globalSearch.getItems().count()).toBe(0);
     });
 
     it('can action on items', function() {
@@ -227,11 +231,10 @@ describe('search', function() {
         globalSearch.actionOnItem('Edit', 4);
         authoring.sendToButton.click();
         authoring.setEmbargo();
-        authoring.sendToButton.click();
         authoring.save();
         authoring.close();
-        expect(globalSearch.getItem(4).element(by.className('state_embargo')).isDisplayed()).toBe(true);
-        expect(globalSearch.getItem(4).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
+        expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
+        expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
 
         //can search scheduled
         expect(globalSearch.getItems().count()).toBe(14);
@@ -239,7 +242,7 @@ describe('search', function() {
         authoring.schedule(false);
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
-        globalSearch.openToggleBox('Scheduled');
+        globalSearch.toggleSearchTabs('filters');
         var scheduleDay = element(by.id('search_scheduled_24h'));
         scheduleDay.click();
         expect(globalSearch.getItems().count()).toBe(2);

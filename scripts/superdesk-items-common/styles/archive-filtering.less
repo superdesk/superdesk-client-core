@@ -74,9 +74,6 @@
         padding: 20px;
         overflow: auto;
         padding-bottom: @bottom-view-padding;
-        &.pull {
-            bottom: 60px;
-        }
     }
 
     .edit-search {
@@ -455,6 +452,9 @@
     padding: 16px 24px;
     text-align: right;
     box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.12);
+    .search {
+        margin-bottom: 5px;
+    }
 }
 .save-search-panel {
     text-align: left;
@@ -472,8 +472,9 @@
 
 .save-search__link {
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 32px;
     cursor: pointer;
+    font-size: 14px;
     &:hover {
         text-decoration: underline;
     }
