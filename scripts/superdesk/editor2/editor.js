@@ -684,7 +684,7 @@ angular.module('superdesk.editor2', [
     }])
     .directive('sdTextEditor', ['$timeout', 'lodash', function ($timeout, _) {
         return {
-            scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '='},
+            scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?'},
             require: ['sdTextEditor', 'ngModel'],
             templateUrl: 'scripts/superdesk/editor2/views/editor.html',
             controllerAs: 'vm',

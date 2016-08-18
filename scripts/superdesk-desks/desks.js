@@ -1331,7 +1331,7 @@
         .directive('sdUserSelectList', ['$filter', 'api', function($filter, api) {
             return {
                 scope: {
-                    exclude: '=',
+                    exclude: '=?',
                     onchoose: '&',
                     onsearch: '&',
                     displayUser: '@',
