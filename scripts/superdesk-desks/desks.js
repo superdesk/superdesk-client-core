@@ -172,7 +172,7 @@
                 }
 
                 scope.$watch('filter', queryItems);
-                scope.$on('task:stage', function(event, data) {
+                scope.$on('task:stage', function($event, data) {
                     if (scope.stage && (data.new_stage === scope.stage || data.old_stage === scope.stage)) {
                         scheduleQuery();
                     }
@@ -185,9 +185,9 @@
                 });
 
                 scope.$on('item:move', function($event, data) {
-                    if ((data.to_stage && data.to_stage === scope.stage) ||
-                        (data.from_stage && data.from_stage === scope.stage)) {
-                        scheduleQuery();
+                    if ((data.to_desk && data.from_desk !== data.to_desk) ||
+                        (data.to_stage && data.from_stage !== data.to_stage))  {
+                        scheduleQuery(1000); // smaller delay.
                     }
                 });
 
@@ -216,7 +216,10 @@
                  *
                  * In case it gets called multiple times it will query only once
                  */
-                function scheduleQuery() {
+                function scheduleQuery(delay) {
+                    if (typeof delay === 'undefined') {
+                        delay = 5000;
+                    }
                     if (!queryTimeout) {
                         queryTimeout = $timeout(function() {
                             queryItems();
@@ -224,7 +227,7 @@
                                 // ignore any updates requested in current $digest
                                 queryTimeout = null;
                             });
-                        }, 5000, false);
+                        }, delay, false);
                     }
                 }
 

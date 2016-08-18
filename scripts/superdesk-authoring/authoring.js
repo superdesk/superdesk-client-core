@@ -2507,15 +2507,15 @@ import 'angular-history/history.js';
                             return api.save('move', {}, {task: {desk: deskId, stage: stageId}}, scope.item);
                         })
                         .then(function(value) {
+                            $rootScope.$broadcast('item:move', {
+                                item: scope.item,
+                                to_desk: deskId,
+                                from_desk: scope.destination_last.desk,
+                                to_stage: stageId,
+                                from_stage: scope.destination_last.stage
+                            });
                             notify.success(gettext('Item sent.'));
-
-                            // Remember last destination desk and stage
-                            if (scope.destination_last &&
-                                    (scope.destination_last.desk !== deskId && scope.destination_last.stage !== stageId)) {
-                                updateLastDestination(deskId, stageId);
-                            } else {
-                                updateLastDestination(deskId, stageId);
-                            }
+                            updateLastDestination(deskId, stageId);
 
                             if (sendAndContinue) {
                                 deferred.resolve();
@@ -2573,6 +2573,13 @@ import 'angular-history/history.js';
                         });
                     })
                     .then(function() {
+                        $rootScope.$broadcast('item:move', {
+                            item: scope.item,
+                            to_desk: deskId,
+                            from_desk: scope.destination_last.desk,
+                            to_stage: stageId,
+                            from_stage: scope.destination_last.stage
+                        });
                         notify.success(gettext('Item sent.'));
                         scope.close();
                         if (open) {
