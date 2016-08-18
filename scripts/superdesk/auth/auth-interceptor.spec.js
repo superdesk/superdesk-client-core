@@ -1,56 +1,51 @@
-(function() {
+describe('auth interceptor', function() {
 
-    'use strict';
+    beforeEach(window.module('superdesk.auth.interceptor'));
 
-    describe('auth interceptor', function() {
+    beforeEach(window.module(function($provide) {
+        $provide.constant('lodash', _);
+        $provide.constant('config', {server: {url: 'http://localhost:5000'}});
+    }));
 
-        beforeEach(window.module('superdesk.auth.interceptor'));
+    it('should intercept 401 response, run auth and resend request',
+    inject(function($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) {
 
-        beforeEach(window.module(function($provide) {
-            $provide.constant('lodash', _);
-            $provide.constant('config', {server: {url: 'http://localhost:5000'}});
-        }));
+        var interceptor = AuthExpiredInterceptor,
+            config = {method: 'GET', url: 'http://localhost:5000/test', headers: {}},
+            response = {status: 401, config: config};
 
-        it('should intercept 401 response, run auth and resend request',
-        inject(function($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) {
+        spyOn(session, 'expire');
+        spyOn(session, 'getIdentity').and.returnValue($q.when());
+        spyOn(request, 'resend');
 
-            var interceptor = AuthExpiredInterceptor,
-                config = {method: 'GET', url: 'http://localhost:5000/test', headers: {}},
-                response = {status: 401, config: config};
+        interceptor.responseError(response);
+        $rootScope.$digest();
 
-            spyOn(session, 'expire');
-            spyOn(session, 'getIdentity').and.returnValue($q.when());
-            spyOn(request, 'resend');
+        expect(session.expire).toHaveBeenCalled();
+        expect(request.resend).toHaveBeenCalled();
+    }));
 
-            interceptor.responseError(response);
-            $rootScope.$digest();
+    it('should intercept 401 response and reject the request if payload has credentials 1',
+    inject(function($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) {
 
-            expect(session.expire).toHaveBeenCalled();
-            expect(request.resend).toHaveBeenCalled();
-        }));
+        var interceptor = AuthExpiredInterceptor,
+            config = {method: 'POST', url: 'http://localhost:5000/auth', headers: {}},
+            response = {status: 401, config: config, data: {_issues: {credentials: 1}}};
 
-        it('should intercept 401 response and reject the request if payload has credentials 1',
-        inject(function($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) {
+        spyOn(session, 'expire');
+        spyOn(session, 'getIdentity').and.returnValue($q.when());
+        spyOn(request, 'resend');
 
-            var interceptor = AuthExpiredInterceptor,
-                config = {method: 'POST', url: 'http://localhost:5000/auth', headers: {}},
-                response = {status: 401, config: config, data: {_issues: {credentials: 1}}};
+        var result;
+        interceptor.responseError(response).then(function(success) {
+            result = success;
+        }, function(rejection) {
+            result = rejection;
+        });
 
-            spyOn(session, 'expire');
-            spyOn(session, 'getIdentity').and.returnValue($q.when());
-            spyOn(request, 'resend');
-
-            var result;
-            interceptor.responseError(response).then(function(success) {
-                result = success;
-            }, function(rejection) {
-                result = rejection;
-            });
-
-            $rootScope.$digest();
-            expect(result.data._issues.credentials).toBe(1);
-            expect(session.expire).not.toHaveBeenCalled();
-            expect(request.resend).not.toHaveBeenCalled();
-        }));
-    });
-})();
+        $rootScope.$digest();
+        expect(result.data._issues.credentials).toBe(1);
+        expect(session.expire).not.toHaveBeenCalled();
+        expect(request.resend).not.toHaveBeenCalled();
+    }));
+});

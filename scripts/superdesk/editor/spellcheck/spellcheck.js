@@ -1,10 +1,6 @@
 /**
  * Spellcheck module
  */
-(function() {
-
-'use strict';
-
 SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location'];
 function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
     var lang,
@@ -421,4 +417,3 @@ function SpellcheckMenuController(editor, preferencesService) {
 angular.module('superdesk.editor.spellcheck', ['superdesk.dictionaries'])
     .service('spellcheck', SpellcheckService)
     .controller('SpellcheckMenu', SpellcheckMenuController);
-})();

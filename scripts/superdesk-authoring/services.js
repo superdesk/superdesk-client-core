@@ -1,6 +1,3 @@
-(function() {
-'use strict';
-
 angular.module('superdesk.authoring')
     .service('renditions', RenditionsService)
     .factory('history', HistoryFactory);
@@ -126,5 +123,3 @@ function RenditionsService(metadata, $q, api, superdesk, _) {
         });
     };
 }
-
-})();

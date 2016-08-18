@@ -1,6 +1,3 @@
-(function() {
-'use strict';
-
 var embedCodeHandlers = require('./embedCodeHandlers.js');
 
 angular.module('superdesk.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
@@ -146,4 +143,3 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
         }
     });
 }
-})();

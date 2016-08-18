@@ -1,18 +1,13 @@
-(function() {
-    'use strict';
+angular.module('superdesk.dashboard.widgets', [])
+.provider('dashboardWidgets', function() {
 
-    angular.module('superdesk.dashboard.widgets', [])
-    .provider('dashboardWidgets', function() {
+    var privateWidgets = {};
 
-        var privateWidgets = {};
+    this.addWidget = function(id, widget, debug) {
+        privateWidgets[id] = _.extend({_id: id}, widget);
+    };
 
-        this.addWidget = function(id, widget, debug) {
-            privateWidgets[id] = _.extend({_id: id}, widget);
-        };
-
-        this.$get = function() {
-            return _.values(privateWidgets);
-        };
-    });
-
-})();
+    this.$get = function() {
+        return _.values(privateWidgets);
+    };
+});

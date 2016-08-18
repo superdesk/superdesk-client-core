@@ -1,4 +1,4 @@
-# superdesk-client-core
+# Superdesk Client
 
 [![Build Status](https://travis-ci.org/superdesk/superdesk-client-core.svg?branch=master)](https://travis-ci.org/superdesk/superdesk-client-core)
 [![Code Climate](https://codeclimate.com/github/superdesk/superdesk-client-core/badges/gpa.svg)](https://codeclimate.com/github/superdesk/superdesk-client-core)
@@ -6,7 +6,9 @@
 
 For installation instructions, please refer to the README file at: [https://github.com/superdesk/superdesk/](https://github.com/superdesk/superdesk/ "")
 
-### Config options
+### Build configuration
+
+To configure the build, the `superdesk.config.js` file must export a function that returns the configuration object. The configuration object can contain the keys described belowed. Dot-notation is used to illustrate the depth and group of a certain key. We use a function instead of a simple JSON object to allow the convenience of using grunt flags, as well as give access to environment variables for more diverse configurations.
 
 ##### Server
 
@@ -35,6 +37,7 @@ For installation instructions, please refer to the README file at: [https://gith
 
 - `editor.toolbar`: `object|false` - editor toolbar configuration, set to `false` to disable toolbar
 - `editor.embeds`: `true` - enable embedding in article body
+- `editor.vidible`: `false` - enables Vidible as embed provider
 
 ##### Date & Time
 
@@ -82,13 +85,8 @@ You can configure what will be displayed in list views, there are 3 areas in lis
     - `expiry` - expiry of spiked items
     - `desk` - where an item was fetched for ingested, where an item is for others
 
-###### Single line config example
+##### Miscellaneous
 
-Use this for "minimal" view with only slugline and headline, state and timestamp.
-
-```
-config.list = {
-    priority: ['urgency'],
-    firstLine: ['slugline', 'headline', 'state', 'versioncreated']
-}
-```
+- `defaultRoute` - sets the route that the app will go to upon logging in (home route).
+- `langOverride` - allows to override some labels in the UI (breaking, not recommended). It should be an object containing keys for language identifier and values as objects mapping labels to their translation. Example value: `{'en': {'Category':'Service'}}` would display _Service_ in place of _Category_ for the english (_en_) version.
+- `requiredMediaMetadata`: `array` - describes a list of fields that are required for media items (images/video)

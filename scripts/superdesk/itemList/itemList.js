@@ -1,7 +1,3 @@
-(function() {
-
-'use strict';
-
 var DEFAULT_OPTIONS = {
     endpoint: 'search',
     pageSize: 25,
@@ -522,5 +518,3 @@ function(ItemList, notify, itemPinService, gettext) {
         }
     };
 }]);
-
-})();

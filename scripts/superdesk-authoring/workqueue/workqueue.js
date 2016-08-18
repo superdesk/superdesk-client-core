@@ -7,10 +7,6 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-(function() {
-
-'use strict';
-
 WorkqueueService.$inject = ['session', 'api'];
 function WorkqueueService(session, api) {
 
@@ -273,4 +269,3 @@ angular.module('superdesk.authoring.workqueue', [
     .controller('Workqueue', WorkqueueCtrl)
     .directive('sdWorkqueue', WorkqueueListDirective)
     .directive('sdDashboardArticles', ArticleDashboardDirective);
-})();

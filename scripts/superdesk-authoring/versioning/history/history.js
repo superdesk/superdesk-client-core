@@ -1,7 +1,3 @@
-(function() {
-
-'use strict';
-
 HistoryController.$inject = ['$scope', 'authoring', 'api', 'notify', 'desks', 'archiveService'];
 function HistoryController($scope, authoring, api, notify, desks, archiveService) {
     $scope.last = null;
@@ -133,4 +129,3 @@ angular.module('superdesk.authoring.versioning.history', [])
     .directive('sdVersioningHistory', VersioningHistoryDirective)
     .directive('sdTransmissionDetails', TransmissionDetailsDirective)
     .controller('HistoryWidgetCtrl', HistoryController);
-})();

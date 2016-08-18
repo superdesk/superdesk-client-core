@@ -7,10 +7,6 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-(function() {
-
-'use strict';
-
 var TYPING_CLASS = 'typing';
 
 /**
@@ -933,5 +929,3 @@ angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         keyboardManager.register('Authoring', 'ctrl + shift + d', gettext('Runs spellchecker'));
     }]);
-
-})();

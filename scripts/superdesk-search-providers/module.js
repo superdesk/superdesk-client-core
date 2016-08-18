@@ -8,165 +8,161 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-(function() {
-    'use strict';
+var app = angular.module('superdesk.searchProviders', ['superdesk.activity', 'superdesk.api']);
 
-    var app = angular.module('superdesk.searchProviders', ['superdesk.activity', 'superdesk.api']);
+app.value('providerTypes', {
+    aapmm: 'AAP Multimedia',
+    paimg: 'PA Images',
+    // quick fix to have several scanpix instance (needed for SDNTB-237)
+    // FIXME: temporary fix, need to be refactored (SD-4448)
+    'scanpix(ntbtema)': 'ScanPix (ntbtema)',
+    'scanpix(ntbkultur)': 'ScanPix (ntbkultur)',
+    'scanpix(desk)': 'ScanPix (desk)',
+    'scanpix(npk)': 'ScanPix (npk)',
+});
 
-    app.value('providerTypes', {
-        aapmm: 'AAP Multimedia',
-        paimg: 'PA Images',
-        // quick fix to have several scanpix instance (needed for SDNTB-237)
-        // FIXME: temporary fix, need to be refactored (SD-4448)
-        'scanpix(ntbtema)': 'ScanPix (ntbtema)',
-        'scanpix(ntbkultur)': 'ScanPix (ntbkultur)',
-        'scanpix(desk)': 'ScanPix (desk)',
-        'scanpix(npk)': 'ScanPix (npk)',
-    });
+SearchProviderService.$inject = ['providerTypes', '$filter', 'api', 'allowed'];
+function SearchProviderService(providerTypes, $filter, api, allowed) {
+    return {
+        getAllowedProviderTypes: function() {
+            return allowed.filterKeys(providerTypes, 'search_providers', 'search_provider');
+        },
+        getSearchProviders: function() {
+            return api.search_providers.query({}).then(
+                function(result) {
+                    return $filter('sortByName')(result._items, 'search_provider');
+                }
+            );
+        }
+    };
+}
 
-    SearchProviderService.$inject = ['providerTypes', '$filter', 'api', 'allowed'];
-    function SearchProviderService(providerTypes, $filter, api, allowed) {
-        return {
-            getAllowedProviderTypes: function() {
-                return allowed.filterKeys(providerTypes, 'search_providers', 'search_provider');
-            },
-            getSearchProviders: function() {
-                return api.search_providers.query({}).then(
+SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
+/**
+ * Controller for the Search Provider Settings.
+ */
+function SearchProviderSettingsController($scope, privileges) {
+}
+
+SearchProviderConfigDirective.$inject = ['searchProviderService', 'gettext', 'notify', 'api', 'modal'];
+function SearchProviderConfigDirective(searchProviderService, gettext, notify, api, modal) {
+    return {
+        templateUrl: 'scripts/superdesk-search-providers/views/search-provider-config.html',
+        link: function ($scope) {
+            $scope.provider = null;
+            $scope.origProvider = null;
+            $scope.providers = null;
+            $scope.newDestination = null;
+
+            searchProviderService.getAllowedProviderTypes().then(function(providerTypes) {
+                $scope.providerTypes = providerTypes;
+                $scope.noProvidersAllowed = !Object.keys($scope.providerTypes).length;
+            });
+
+            /**
+             * Fetches all search providers from backend
+             */
+            function fetchSearchProviders() {
+                searchProviderService.getSearchProviders().then(
                     function(result) {
-                        return $filter('sortByName')(result._items, 'search_provider');
+                        $scope.providers = result;
                     }
                 );
             }
-        };
-    }
 
-    SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
-    /**
-     * Controller for the Search Provider Settings.
-     */
-    function SearchProviderSettingsController($scope, privileges) {
-    }
-
-    SearchProviderConfigDirective.$inject = ['searchProviderService', 'gettext', 'notify', 'api', 'modal'];
-    function SearchProviderConfigDirective(searchProviderService, gettext, notify, api, modal) {
-        return {
-            templateUrl: 'scripts/superdesk-search-providers/views/search-provider-config.html',
-            link: function ($scope) {
-                $scope.provider = null;
-                $scope.origProvider = null;
-                $scope.providers = null;
-                $scope.newDestination = null;
-
-                searchProviderService.getAllowedProviderTypes().then(function(providerTypes) {
-                    $scope.providerTypes = providerTypes;
-                    $scope.noProvidersAllowed = !Object.keys($scope.providerTypes).length;
-                });
-
-                /**
-                 * Fetches all search providers from backend
-                 */
-                function fetchSearchProviders() {
-                    searchProviderService.getSearchProviders().then(
-                        function(result) {
-                            $scope.providers = result;
-                        }
-                    );
-                }
-
-                /**
-                 * Upserts the selected search provider.
-                 */
-                $scope.save = function() {
-                    api.search_providers.save($scope.origProvider, $scope.provider)
-                        .then(
-                            function() {
-                                notify.success(gettext('Search Provider saved.'));
-                                $scope.cancel();
-                            },
-                            function(response) {
-                                if (angular.isDefined(response.data._issues)) {
-                                    if (angular.isDefined(response.data._issues['validator exception'])) {
-                                        notify.error(gettext('Error: ' + response.data._issues['validator exception']));
-                                    } else if (angular.isDefined(response.data._issues.search_provider) &&
-                                        angular.isDefined(response.data._issues.search_provider.unique)) {
-                                        notify.error(gettext('Error: A Search Provider with type ' +
-                                            $scope.providerTypes[$scope.provider.search_provider] + ' already exists.'));
-                                    }
-                                } else {
-                                    notify.error(gettext('Error: Failed to save Search Provider.'));
+            /**
+             * Upserts the selected search provider.
+             */
+            $scope.save = function() {
+                api.search_providers.save($scope.origProvider, $scope.provider)
+                    .then(
+                        function() {
+                            notify.success(gettext('Search Provider saved.'));
+                            $scope.cancel();
+                        },
+                        function(response) {
+                            if (angular.isDefined(response.data._issues)) {
+                                if (angular.isDefined(response.data._issues['validator exception'])) {
+                                    notify.error(gettext('Error: ' + response.data._issues['validator exception']));
+                                } else if (angular.isDefined(response.data._issues.search_provider) &&
+                                    angular.isDefined(response.data._issues.search_provider.unique)) {
+                                    notify.error(gettext('Error: A Search Provider with type ' +
+                                        $scope.providerTypes[$scope.provider.search_provider] + ' already exists.'));
                                 }
+                            } else {
+                                notify.error(gettext('Error: Failed to save Search Provider.'));
                             }
-                        ).then(fetchSearchProviders);
-                };
-
-                /**
-                 * Either initializes a new provider object for adding a new provider or initializes the provider object
-                 * with the selected provider allowing user to update the provider details.
-                 */
-                $scope.edit = function(provider) {
-                    $scope.origProvider = provider || {};
-                    $scope.provider = _.create($scope.origProvider);
-                    $scope.provider.config = _.create($scope.origProvider.config || {});
-                };
-
-                /**
-                 * Removes the selected search provider.
-                 */
-                $scope.remove = function(provider) {
-                    modal.confirm(gettext('Are you sure you want to delete Search Provider?')).then(
-                        function removeSearchProvider() {
-                            api.search_providers.remove(provider)
-                                .then(
-                                    function () {
-                                        notify.success(gettext('Search Provider deleted.'));
-                                    },
-                                    function(response) {
-                                        if (angular.isDefined(response.data._message)) {
-                                            notify.error(response.data._message);
-                                        } else {
-                                            notify.error(gettext('Error: Unable to delete Search Provider.'));
-                                        }
-                                    }
-                                ).then(fetchSearchProviders);
                         }
-                    );
-                };
+                    ).then(fetchSearchProviders);
+            };
 
-                /**
-                 * Reverts any changes made to the provider
-                 */
-                $scope.cancel = function() {
-                    $scope.origProvider = null;
-                    $scope.provider = null;
-                };
+            /**
+             * Either initializes a new provider object for adding a new provider or initializes the provider object
+             * with the selected provider allowing user to update the provider details.
+             */
+            $scope.edit = function(provider) {
+                $scope.origProvider = provider || {};
+                $scope.provider = _.create($scope.origProvider);
+                $scope.provider.config = _.create($scope.origProvider.config || {});
+            };
 
-                fetchSearchProviders();
-            }
-        };
-    }
+            /**
+             * Removes the selected search provider.
+             */
+            $scope.remove = function(provider) {
+                modal.confirm(gettext('Are you sure you want to delete Search Provider?')).then(
+                    function removeSearchProvider() {
+                        api.search_providers.remove(provider)
+                            .then(
+                                function () {
+                                    notify.success(gettext('Search Provider deleted.'));
+                                },
+                                function(response) {
+                                    if (angular.isDefined(response.data._message)) {
+                                        notify.error(response.data._message);
+                                    } else {
+                                        notify.error(gettext('Error: Unable to delete Search Provider.'));
+                                    }
+                                }
+                            ).then(fetchSearchProviders);
+                    }
+                );
+            };
 
-    app
-        .directive('sdSearchProviderConfig', SearchProviderConfigDirective)
-        .service('searchProviderService', SearchProviderService)
-        .config(['superdeskProvider', function(superdesk) {
-            superdesk
-                .activity('/settings/searchProviders', {
-                    label: gettext('Search Providers'),
-                    templateUrl: 'scripts/superdesk-search-providers/views/settings.html',
-                    controller: SearchProviderSettingsController,
-                    category: superdesk.MENU_SETTINGS,
-                    privileges: {search_providers: 1},
-                    priority: 2000
-                });
-        }])
-        .config(['apiProvider', function(apiProvider) {
-            apiProvider.api('search_providers', {
-                type: 'http',
-                backend: {
-                    rel: 'search_providers'
-                }
+            /**
+             * Reverts any changes made to the provider
+             */
+            $scope.cancel = function() {
+                $scope.origProvider = null;
+                $scope.provider = null;
+            };
+
+            fetchSearchProviders();
+        }
+    };
+}
+
+app
+    .directive('sdSearchProviderConfig', SearchProviderConfigDirective)
+    .service('searchProviderService', SearchProviderService)
+    .config(['superdeskProvider', function(superdesk) {
+        superdesk
+            .activity('/settings/searchProviders', {
+                label: gettext('Search Providers'),
+                templateUrl: 'scripts/superdesk-search-providers/views/settings.html',
+                controller: SearchProviderSettingsController,
+                category: superdesk.MENU_SETTINGS,
+                privileges: {search_providers: 1},
+                priority: 2000
             });
-        }]);
+    }])
+    .config(['apiProvider', function(apiProvider) {
+        apiProvider.api('search_providers', {
+            type: 'http',
+            backend: {
+                rel: 'search_providers'
+            }
+        });
+    }]);
 
-    return app;
-})();
+export default app;

@@ -1,7 +1,3 @@
-(function() {
-
-'use strict';
-
 TasksService.$inject = ['desks', '$rootScope', 'api', 'datetimeHelper'];
 function TasksService(desks, $rootScope, api, datetimeHelper) {
 
@@ -404,5 +400,3 @@ angular.module('superdesk.workspace.tasks', [])
         filters: [{action: superdesk.ACTION_EDIT, type: 'task'}]
     });
 }]);
-
-})();
