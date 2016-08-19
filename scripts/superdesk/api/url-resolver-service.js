@@ -1,5 +1,6 @@
-URLResolver.$inject = ['$http', '$q', 'config'];
-function URLResolver($http, $q, config) {
+
+URLResolver.$inject = ['$http', '$q', '$log', 'config'];
+function URLResolver($http, $q, $log, config) {
 
     var _links, baseUrl = config.server.url;
 
@@ -15,7 +16,12 @@ function URLResolver($http, $q, config) {
      */
     this.resource = function(resource) {
         return this.links().then(function() {
-            return _links[resource] ? _links[resource] : $q.reject({status: 404, resource: resource});
+            if (_links[resource]) {
+                return _links[resource];
+            }
+
+            $log.warn('resource url not found', resource);
+            return $q.reject({status: 404, resource: resource});
         });
     };
 
