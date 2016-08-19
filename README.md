@@ -25,9 +25,9 @@ To configure the build, the `superdesk.config.js` file must export a function th
 
 ##### Features
 
-- `feature.preview`: `false` - enables print preview in authoring
-- `feature.alchemy`: `false` - allow alchemy widget for keywords
-- `feature.elasticHighlight`: `false` - allow highlighting of search terms by elasticsearch
+- `features.preview`: `false` - enables print preview in authoring
+- `features.alchemy`: `false` - allow alchemy widget for keywords
+- `features.elasticHighlight`: `false` - allow highlighting of search terms by elasticsearch
 
 ##### Workspace
 - `workspace.content`: `false` - enable content view in workspace (obsolete)
