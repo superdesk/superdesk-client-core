@@ -351,7 +351,7 @@
                             }
                             if (index === -1) { // selected not in current items, select first
                                 container.scrollTop = 0;
-                                clickItem(_.first(scope.items), event);
+                                clickItem(_.head(scope.items), event);
                             }
                             var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
                             if (nextIndex < 0) {

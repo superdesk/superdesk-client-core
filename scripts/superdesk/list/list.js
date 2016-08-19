@@ -58,7 +58,7 @@ mod.directive('sdListView', ['$location', 'keyboardManager', 'asset', function($
                     if (scope.items) {
                         var index = _.indexOf(scope.items, scope.selected);
                         if (index === -1) { // selected not in current items, select first
-                            return scope.clickItem(_.first(scope.items));
+                            return scope.clickItem(_.head(scope.items));
                         }
 
                         var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
@@ -152,7 +152,7 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll', fun
                     if (scope.items) {
                         var index = _.findIndex(scope.items, {_id: $location.search()._id});
                         if (index === -1) { // selected not in current items, select first
-                            return clickItem(_.first(scope.items));
+                            return clickItem(_.head(scope.items));
                         }
                         var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
                         if (nextIndex < 0) {
