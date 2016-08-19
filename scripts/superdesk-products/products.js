@@ -215,7 +215,8 @@ function ProductsConfigController ($scope, gettext, notify, api, products, modal
                 }
             });
         }, function(response) {
-            notify.error(gettext('Error: ' + JSON.stringify(response)));
+            var msg = (response.data && response.data._message) ? response.data._message : JSON.stringify(response);
+            notify.error(gettext('Error: ' + msg));
         }).finally(function() {
             $scope.loading = false;
         });
