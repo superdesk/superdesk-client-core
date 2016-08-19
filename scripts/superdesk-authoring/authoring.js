@@ -2900,7 +2900,12 @@ function ArticleEditDirective(
 
             scope.applyCrop = function() {
                 var poi = {x: 0.5, y: 0.5};
-                superdesk.intent('edit', 'crop', {item: scope.item, renditions: scope.metadata.crop_sizes, poi: scope.item.poi || poi})
+                superdesk.intent('edit', 'crop', {
+                        item: scope.item,
+                        renditions: scope.metadata.crop_sizes,
+                        poi: scope.item.poi || poi,
+                        showMetadataEditor: true
+                    })
                     .then(function(result) {
                         var renditions = _.create(scope.item.renditions || {});
                         angular.forEach(result.cropData, function(crop, rendition) {
