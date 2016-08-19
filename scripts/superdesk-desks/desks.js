@@ -172,19 +172,19 @@
                 }
 
                 scope.$watch('filter', queryItems);
-                scope.$on('task:stage', function($event, data) {
+                scope.$on('task:stage', function(event, data) {
                     if (scope.stage && (data.new_stage === scope.stage || data.old_stage === scope.stage)) {
                         scheduleQuery();
                     }
                 });
 
-                scope.$on('content:update', function($event, data) {
+                scope.$on('content:update', function(event, data) {
                     if (cards.shouldUpdate(scope.stage, data)) {
                         scheduleQuery();
                     }
                 });
 
-                scope.$on('item:move', function($event, data) {
+                scope.$on('item:move', function(event, data) {
                     if ((data.to_desk && data.from_desk !== data.to_desk) ||
                         (data.to_stage && data.from_stage !== data.to_stage))  {
                         scheduleQuery(1000); // smaller delay.
@@ -193,7 +193,7 @@
 
                 scope.$on('content:expired', scheduleQuery);
 
-                scope.$on('item:lock', function($event, data) {
+                scope.$on('item:lock', function(event, data) {
                     _.each(scope.items, function(item) {
                         if (item._id === data.item) {
                             item.lock_user = data.user;
@@ -201,7 +201,7 @@
                     });
                 });
 
-                scope.$on('item:unlock', function($event, data) {
+                scope.$on('item:unlock', function(event, data) {
                     _.each(scope.items, function(item) {
                         if (item._id === data.item) {
                             item.lock_user = null;
@@ -216,7 +216,7 @@
                  *
                  * In case it gets called multiple times it will query only once
                  */
-                function scheduleQuery(delay=5000) {
+                function scheduleQuery(delay = 5000) {
                     if (!queryTimeout) {
                         queryTimeout = $timeout(function() {
                             queryItems();
@@ -1114,7 +1114,7 @@
                         }
                     }
 
-                    scope.handleEdit = function($event) {
+                    scope.handleEdit = function(event) {
                         clearErrorMessages();
                         if (scope.desk.edit.name != null) {
                             scope._errorLimits = scope.desk.edit.name.length > scope.limits.desk ? true : null;
@@ -1279,7 +1279,7 @@
                         }
                     }
 
-                    scope.handleEdit = function($event) {
+                    scope.handleEdit = function(event) {
                         clearErrorMessages();
                         if (scope.editStage.name != null) {
                             scope._errorLimits = scope.editStage.name.length > scope.limits.stage ? true : null;
