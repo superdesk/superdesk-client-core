@@ -193,7 +193,7 @@
 
                 scope.$on('content:expired', scheduleQuery);
 
-                scope.$on('item:lock', function(_e, data) {
+                scope.$on('item:lock', function($event, data) {
                     _.each(scope.items, function(item) {
                         if (item._id === data.item) {
                             item.lock_user = data.user;
@@ -201,7 +201,7 @@
                     });
                 });
 
-                scope.$on('item:unlock', function(_e, data) {
+                scope.$on('item:unlock', function($event, data) {
                     _.each(scope.items, function(item) {
                         if (item._id === data.item) {
                             item.lock_user = null;
@@ -216,10 +216,7 @@
                  *
                  * In case it gets called multiple times it will query only once
                  */
-                function scheduleQuery(delay) {
-                    if (typeof delay === 'undefined') {
-                        delay = 5000;
-                    }
+                function scheduleQuery(delay=5000) {
                     if (!queryTimeout) {
                         queryTimeout = $timeout(function() {
                             queryItems();

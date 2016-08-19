@@ -2498,13 +2498,6 @@ function SendItem($q, api, desks, notify, authoringWorkspace,
                         return api.save('move', {}, {task: {desk: deskId, stage: stageId}}, scope.item);
                     })
                     .then(function(value) {
-                        $rootScope.$broadcast('item:move', {
-                            item: scope.item,
-                            to_desk: deskId,
-                            from_desk: scope.destination_last.desk,
-                            to_stage: stageId,
-                            from_stage: scope.destination_last.stage
-                        });
                         notify.success(gettext('Item sent.'));
 
                         // Remember last destination desk and stage
@@ -2571,13 +2564,6 @@ function SendItem($q, api, desks, notify, authoringWorkspace,
                     });
                 })
                 .then(function() {
-                    $rootScope.$broadcast('item:move', {
-                        item: scope.item,
-                        to_desk: deskId,
-                        from_desk: scope.destination_last.desk,
-                        to_stage: stageId,
-                        from_stage: scope.destination_last.stage
-                    });
                     notify.success(gettext('Item sent.'));
                     scope.close();
                     if (open) {
