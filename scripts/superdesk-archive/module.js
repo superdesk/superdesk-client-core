@@ -677,8 +677,8 @@ export default angular.module('superdesk.archive', [
                 filters: [{action: 'list', type: 'archive'}],
                 keyboardShortcut: 'ctrl+alt+t',
                 privileges: {archive: 1},
-                additionalCondition:['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).new_take;
+                additionalCondition:['authoring', 'item', 'config', function(authoring, item, config) {
+                    return authoring.itemActions(item).new_take && !(config.features && config.features.noTakes);
                 }],
                 controller: ['data', '$rootScope', 'desks', 'authoring', 'authoringWorkspace', 'notify', 'superdesk',
                     function(data, $rootScope, desks, authoring, authoringWorkspace, notify) {
