@@ -74,7 +74,7 @@ export default angular.module('superdesk.filters', []).
     })
     .filter('truncateString', function() {
         return function(inputString, limit, postfix) {
-            return _.trunc(inputString, {'length': limit, 'omission': postfix || '...'});
+            return _.truncate(inputString, {'length': limit, 'omission': postfix || '...'});
         };
     })
     .filter('formatDateTimeString', [function() {

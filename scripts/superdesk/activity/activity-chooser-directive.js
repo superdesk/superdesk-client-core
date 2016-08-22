@@ -20,7 +20,7 @@ function(activityChooser, keyboardManager, asset, _) {
             scope.$watch(function watchActivities() {
                 return activityChooser.activities;
             }, function(activities, prev) {
-                scope.selected = activities ? _.first(activities) : null;
+                scope.selected = activities ? _.head(activities) : null;
 
                 if (activities) {
                     keyboardManager.push('up', function() {

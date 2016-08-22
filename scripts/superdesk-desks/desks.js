@@ -172,22 +172,22 @@
                 }
 
                 scope.$watch('filter', queryItems);
-                scope.$on('task:stage', function(event, data) {
+                scope.$on('task:stage', function(_e, data) {
                     if (scope.stage && (data.new_stage === scope.stage || data.old_stage === scope.stage)) {
                         scheduleQuery();
                     }
                 });
 
-                scope.$on('content:update', function($event, data) {
+                scope.$on('content:update', function(_e, data) {
                     if (cards.shouldUpdate(scope.stage, data)) {
                         scheduleQuery();
                     }
                 });
 
-                scope.$on('item:move', function($event, data) {
-                    if ((data.to_stage && data.to_stage === scope.stage) ||
-                        (data.from_stage && data.from_stage === scope.stage)) {
-                        scheduleQuery();
+                scope.$on('item:move', function(_e, data) {
+                    if ((data.to_desk && data.from_desk !== data.to_desk) ||
+                        (data.to_stage && data.from_stage !== data.to_stage))  {
+                        scheduleQuery(2000); // smaller delay.
                     }
                 });
 
@@ -216,7 +216,7 @@
                  *
                  * In case it gets called multiple times it will query only once
                  */
-                function scheduleQuery() {
+                function scheduleQuery(delay = 5000) {
                     if (!queryTimeout) {
                         queryTimeout = $timeout(function() {
                             queryItems();
@@ -224,7 +224,7 @@
                                 // ignore any updates requested in current $digest
                                 queryTimeout = null;
                             });
-                        }, 5000, false);
+                        }, delay, false);
                     }
                 }
 
@@ -351,7 +351,7 @@
                             }
                             if (index === -1) { // selected not in current items, select first
                                 container.scrollTop = 0;
-                                clickItem(_.first(scope.items), event);
+                                clickItem(_.head(scope.items), event);
                             }
                             var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
                             if (nextIndex < 0) {
@@ -803,7 +803,7 @@
                         if (!this.activeDeskId || !_.find(this.userDesks._items, {_id: this.activeDeskId})) {
                             if (session.identity.desk) {
                                 var defaultDesk = _.find(this.userDesks._items, {_id: session.identity.desk});
-                                return defaultDesk._id || this.userDesks._items[0]._id;
+                                return (defaultDesk && defaultDesk._id) || this.userDesks._items[0]._id;
                             }
                             return this.userDesks._items[0]._id;
                         }
@@ -1331,7 +1331,7 @@
         .directive('sdUserSelectList', ['$filter', 'api', function($filter, api) {
             return {
                 scope: {
-                    exclude: '=',
+                    exclude: '=?',
                     onchoose: '&',
                     onsearch: '&',
                     displayUser: '@',

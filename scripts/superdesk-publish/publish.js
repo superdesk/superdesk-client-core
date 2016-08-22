@@ -282,7 +282,7 @@ function PublishQueueController($scope, subscribersService, api, $q, notify, $lo
 
     $scope.buildNewSchedule = function (item) {
         var pick_fields = ['item_id', 'item_version', 'publishing_action', 'formatted_item', 'headline',
-            'content_type', 'subscriber_id', 'unique_name', 'destination', 'ingest_provider'];
+            'content_type', 'subscriber_id', 'unique_name', 'destination', 'ingest_provider', 'item_encoding', 'encoded_item_id'];
 
         var newItem = _.pick(item, pick_fields);
         return newItem;

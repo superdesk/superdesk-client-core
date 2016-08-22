@@ -91,8 +91,9 @@ function MultiService($rootScope) {
     $rootScope.$on('item:publish', function(e, data) {
         self.remove(data.item);
     });
-
-    //ToDo: Track upcoming item:move event as well for updateCount.
+    $rootScope.$on('item:move', function(e, data) {
+        self.remove(data.item);
+    });
 }
 
 SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', 'send', '$q'];
