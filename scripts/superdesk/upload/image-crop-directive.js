@@ -145,7 +145,7 @@
                 });
 
                 scope.$watch('cropData', function() {
-                    cropData = scope.cropData;
+                    cropData = scope.cropData || {};
                     if (cropData && cropData.CropBottom) {
                         refreshImage(img.src, [
                             cropData.CropLeft,
