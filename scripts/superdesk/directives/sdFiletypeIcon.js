@@ -10,7 +10,6 @@ export default angular.module('superdesk.directives.filetypeIcon', [])
             }, true);
 
             function initIcon(item) {
-                console.log(item, element);
                 var cls = 'filetype-icon-';
                 if (item.package_type) {
                     cls += 'takes-pack';
@@ -24,4 +23,3 @@ export default angular.module('superdesk.directives.filetypeIcon', [])
         }
     };
 });
-console.log('sdFiletypeIcon');
