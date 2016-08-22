@@ -66,7 +66,7 @@
                         </div>
                     </div>
                     <div ng-if="options.mode === 'basic'" class="basic item-block urgency-{{ item.urgency }}" ng-class="{pinned: options.pinEnabled && isPinned(item), 'pinned-instance': options.pinEnabled && item.pinnedInstance}" ng-click="view(item)">
-                        <i class="{{filetypeIcon(item)}}"></i>
+                        <i sd-filetype-icon data-item=item></i>
                         <div class="content">
                             <span class="keyword" ng-if="item.slugline">{{ item.slugline }}</span>
                             <span class="headline">{{item.headline || item.type}}</span>
@@ -79,7 +79,7 @@
                         <div class="content">
                             <ul class="top-line clearfix">
                                 <li>
-                                    <span class="{{filetypeIcon(item)}}"></span>
+                                    <span class="type-icon" sd-filetype-icon data-item=item></span>
                                     <span class="urgency-label">{{ item.urgency }}</span>
                                 </li>
                                 <li><time sd-datetime data-date="item.versioncreated"></time></li>

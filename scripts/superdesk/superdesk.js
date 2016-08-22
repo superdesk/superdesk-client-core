@@ -42,6 +42,7 @@ var modules = [
     'superdesk.typeahead.directives',
     'superdesk.slider.directives',
     'superdesk.directives.searchList',
+    'superdesk.directives.filetypeIcon',
     'superdesk.config'
 ];
 

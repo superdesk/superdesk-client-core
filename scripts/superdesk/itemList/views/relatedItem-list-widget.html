@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="basic item-block" ng-click="view(item)">
-                        <i class="{{filetypeIcon(item)}}"></i>
+                        <i sd-filetype-icon data-item=item></i>
                         <div class="content">
                             <span class="keyword" ng-if="item.slugline">{{ item.slugline }}</span>
                             <span class="headline">{{item.headline || item.type}}</span>

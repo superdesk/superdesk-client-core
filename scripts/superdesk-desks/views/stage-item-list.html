@@ -9,7 +9,7 @@
             ng-class="{'content-item--locked': item.lock_user, shifted: allowed, 
                 active: item._id === selected._id, 'custom-monitoring': $root.config.features.customMonitoringWidget}">
             <div class="content-item__type">
-                <i class="{{filetypeIcon(item)}}"></i>
+                <i sd-filetype-icon data-item=item></i>
             </div>
             <div class="content-item__urgency-field" sd-item-urgency data-urgency="item.urgency"></div>
             <div class="content-item__text">

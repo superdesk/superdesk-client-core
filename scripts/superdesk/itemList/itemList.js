@@ -34,17 +34,6 @@ function extendScope(scope, itemList, itemPinService) {
         return itemPinService.isPinned(scope.options.pinMode, item);
     };
 
-    scope.filetypeIcon = function(item) {
-        var prefix = 'filetype-icon-'
-        if (item.package_type) {
-            return prefix + 'takes-pack';
-        } else if (item.type === 'composite' && item.highlight) {
-            return prefix + 'highlight-pack';
-        } else {
-            return prefix + item.type;
-        }
-    };
-
     var processItems = function() {
         if (scope.items) {
             if (scope.options.pinEnabled) {
