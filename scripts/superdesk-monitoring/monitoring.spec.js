@@ -176,14 +176,15 @@ describe('monitoring', function() {
             scope.$digest();
 
             spyOn(api, 'query').and.returnValue($q.when({_items: [], _meta: {total: 0}}));
-            scope.$broadcast('item:move', {to_stage: 'bar'});
+
+            scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'bar'});
             scope.$digest();
             $timeout.flush(500);
             expect(api.query).not.toHaveBeenCalled();
 
-            scope.$broadcast('item:move', {to_stage: 'foo'});
+            scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'foo'});
             scope.$digest();
-            $timeout.flush(1000);
+            $timeout.flush(2000);
             expect(api.query).toHaveBeenCalled();
         }));
 
