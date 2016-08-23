@@ -663,6 +663,19 @@ function MonitoringGroupDirective(cards, api, authoringWorkspace, $timeout, supe
                 return items;
             }
 
+            // Determine if item is previewing for its respective view type.
+            function isItemPreviewing() {
+                if (scope.group.type === 'spike') {
+                    return (monitoring.previewItem &&
+                        monitoring.previewItem.task.desk === scope.group._id);
+                } else if (scope.group.type === 'highlights') {
+                    return (monitoring.previewItem &&
+                        _.includes(monitoring.previewItem.highlights, monitoring.queryParam.highlight));
+                } else {
+                    return (monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id);
+                }
+            }
+
             function queryItems(event, data) {
                 criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                 criteria.source.from = 0;
@@ -681,12 +694,12 @@ function MonitoringGroupDirective(cards, api, authoringWorkspace, $timeout, supe
 
                 return apiquery().then(function(items) {
                     if (!scope.showRefresh && data && !data.force && (data.user !== session.identity._id)) {
-                        var isItemPreviewing = (monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id);
+                        var itemPreviewing = isItemPreviewing();
                         var _data = {
                             newItems: items,
                             scopeItems: scope.items,
                             scrollTop: scope.scrollTop,
-                            isItemPreviewing: isItemPreviewing
+                            isItemPreviewing: itemPreviewing
                         };
 
                         monitoring.showRefresh = scope.showRefresh = search.canShowRefresh(_data);
