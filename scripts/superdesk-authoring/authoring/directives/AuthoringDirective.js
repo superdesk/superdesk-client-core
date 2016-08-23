@@ -47,6 +47,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
             $scope.itemActions = authoring.itemActions($scope.origItem);
             $scope.highlight = !!$scope.origItem.highlight;
+            $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
 
             $scope.$watch('origItem', function(new_value, old_value) {
                 $scope.itemActions = null;
