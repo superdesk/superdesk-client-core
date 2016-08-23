@@ -86,5 +86,18 @@ describe('highlights', function() {
             highlightsService.removeConfig(config);
             expect(api.highlights.remove).toHaveBeenCalledWith(config);
         }));
+
+        it('timedelta is in item auto_insert date range', inject(function(highlightsService, api, $q) {
+            var post = {
+                auto_insert: 'now-1h',
+                desks: [],
+                groups: ['main'],
+                name: 'Hourly highlight'
+            };
+            expect(highlightsService.isInDateRange(post, 0)).toEqual(true);
+            expect(highlightsService.isInDateRange(post, 0.5)).toEqual(true);
+            expect(highlightsService.isInDateRange(post, 2)).toEqual(false);
+        }));
+
     });
 });
