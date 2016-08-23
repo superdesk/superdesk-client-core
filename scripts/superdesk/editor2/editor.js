@@ -734,12 +734,14 @@ angular.module('superdesk.editor2', [
     }])
     .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog', 'config',
     function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog, config) {
+        var TOP_OFFSET = 134; // header height
+
         var EDITOR_CONFIG = {
             toolbar: {
                 static: true,
                 align: 'left',
                 sticky: true,
-                stickyTopOffset: 134, // header height
+                stickyTopOffset: TOP_OFFSET,
                 updateOnEmptySelection: true
             },
             paste: {
@@ -1030,6 +1032,15 @@ angular.module('superdesk.editor2', [
                         var toolbar = scope.medium.getExtensionByName('toolbar');
                         if (toolbar) {
                             toolbar.positionStaticToolbar(scope.medium.getFocusedElement());
+                        }
+                    });
+
+                    // hide toolbar if element is under header
+                    scope.medium.subscribe('positionedToolbar', function(e, elem) {
+                        var toolbar = scope.medium.getExtensionByName('toolbar'),
+                            elemPosition = elem.getBoundingClientRect();
+                        if (toolbar) {
+                            toolbar.toolbar.hidden = elemPosition.top < TOP_OFFSET;
                         }
                     });
 
