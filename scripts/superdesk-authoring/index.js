@@ -12,7 +12,6 @@ import './widgets/widgets-article.less';
 
 // scripts
 import './authoring';
-import './services';
 import './widgets/widgets';
 import './comments/comments';
 import './versioning/versioning';
