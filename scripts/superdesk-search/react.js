@@ -1420,6 +1420,12 @@ angular.module('superdesk.search.react', [
                         }
                     },
 
+                    dbClick: function(event) {
+                        if (!this.props.item.gone) {
+                            this.props.onDbClick(this.props.item);
+                        }
+                    },
+
                     getInitialState: function() {
                         return {hover: false};
                     },
@@ -1537,7 +1543,7 @@ angular.module('superdesk.search.react', [
                                 onMouseLeave: this.unsetHoverState,
                                 onDragStart: this.onDragStart,
                                 onClick: this.select,
-                                onDoubleClick: this.edit,
+                                onDoubleClick: this.dbClick,
                                 draggable: true,
                                 tabIndex: '0'
                             },
@@ -1574,6 +1580,24 @@ angular.module('superdesk.search.react', [
                                 });
                             }
                         }, 500, false);
+                    },
+
+                    dbClick: function(item) {
+                        var activities = superdesk.findActivities({action: 'list', type: 'archive'}, item);
+                        var canEdit = _.reduce(activities, (result, value) => result || value._id === 'edit.item', false);
+
+                        this.setSelectedItem(item);
+                        $timeout.cancel(this.updateTimeout);
+
+                        if (canEdit && scope.edit) {
+                            scope.$apply(function() {
+                                scope.edit(item);
+                            });
+                        } else {
+                            scope.$apply(function() {
+                                authoringWorkspace.open(item);
+                            });
+                        }
                     },
 
                     edit: function(item) {
@@ -1705,6 +1729,7 @@ angular.module('superdesk.search.react', [
                                 view: this.state.view,
                                 flags: {selected: this.state.selected === itemId},
                                 onEdit: this.edit,
+                                onDbClick: this.dbClick,
                                 onSelect: this.select,
                                 onMultiSelect: this.multiSelect,
                                 ingestProvider: this.props.ingestProvidersById[item.ingest_provider] || null,
