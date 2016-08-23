@@ -10,7 +10,7 @@ export default angular.module('superdesk.directives.filetypeIcon', [])
  */
 .directive('sdFiletypeIcon', function() {
     return {
-        scope: {item: '@'},
+        scope: {item: '='},
         link: function(scope, element, attrs) {
             scope.$watch('item', function(item) {
                 if (item) {
