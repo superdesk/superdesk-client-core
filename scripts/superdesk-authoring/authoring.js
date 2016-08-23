@@ -967,8 +967,14 @@ function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $root
     var sizes = {};
 
     $scope.data.renditions.forEach(function(rendition) {
-        sizes[rendition.name] = {width: rendition.width, height: rendition.height};
-        $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
+        var original = $scope.data.item.renditions.original;
+        // only extend the item renditions if the original image can fit the rendition dimensions
+        // otherwise we will get an error saving
+        if ((original.height >= rendition.height) &&
+            (original.width >= rendition.width)) {
+            sizes[rendition.name] = {width: rendition.width, height: rendition.height};
+            $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
+        }
     });
     var poiOrig = angular.extend({}, $scope.data.poi);
     $scope.data.isDirty = false;
@@ -1079,7 +1085,6 @@ function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $root
             if (angular.isDefined(renditionName)) {
                 $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
             }
-            $scope.data.isDirty = true;
         });
     };
 }
@@ -2913,10 +2918,13 @@ function ArticleEditDirective(
                     })
                     .then(function(result) {
                         var renditions = _.create(scope.item.renditions || {});
+                        // always mark dirty as poi could have changed with no
+                        // cropData changes
+                        mainEditScope.dirty = true;
                         angular.forEach(result.cropData, function(crop, rendition) {
-                            mainEditScope.dirty = true;
                             renditions[rendition] = angular.extend({}, renditions[rendition] || {}, crop);
                         });
+
                         scope.item.renditions = renditions;
                     });
             };
