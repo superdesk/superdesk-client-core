@@ -5,6 +5,14 @@ var DEFAULT_OPTIONS = {
     sort: [{_updated: 'desc'}]
 };
 
+/**
+ * Common part for sdItemListWidget and sdRelatedItemListWidget directives.
+ *
+ * Params:
+ * @param {Object} scope
+ * @param {Object} itemList
+ * @param {Object} itemPinService
+ */
 function extendScope(scope, itemList, itemPinService) {
     scope.view = function(item) {
         scope.selected = item;
