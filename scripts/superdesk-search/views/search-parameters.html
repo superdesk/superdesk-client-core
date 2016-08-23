@@ -5,14 +5,14 @@
                 <label for="search-slugline">
                     {{:: 'Slugline' | translate}}
                 </label>
-                <input type="text" id="search-slugline" ng-model="meta.slugline">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-slugline" ng-model="meta.slugline">
             </div>
             
             <div class="field" ng-if="search_config.headline">
                 <label for="search-headline">
                     {{:: 'Headline' | translate}}
                 </label>
-                <input type="text" id="search-headline" ng-model="meta.headline">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-headline" ng-model="meta.headline">
             </div>
         </div>
 
@@ -21,7 +21,7 @@
                 {{:: 'Story Text' | translate}}
             </label>
             <div class="control">
-                <input type="text" id="search-storytext" ng-model="meta.body_html">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-storytext" ng-model="meta.body_html">
             </div>
         </div>
 
@@ -30,13 +30,13 @@
                 <label for="search-storyname">
                     {{:: 'Unique Name' | translate}}
                 </label>
-                <input type="text" id="search-storyname" ng-model="fields.unique_name">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-storyname" ng-model="fields.unique_name">
             </div>
             <div class="field" ng-if="search_config.byline">
                 <label for="search-byline">
                     {{:: 'Byline' | translate}}
                 </label>
-                <input type="text" id="search-byline" ng-model="meta.byline">
+                <input type="text" ng-keypress="keyPressed($event)" id="search-byline" ng-model="meta.byline">
             </div>
         </div>
 
