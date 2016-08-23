@@ -2351,9 +2351,14 @@ function SendItem($q, api, desks, notify, authoringWorkspace,
             }
 
             scope.canSendAndContinue = function() {
-                if (config.ui && config.ui.publishSendAdnContinue === false) {
+                if (config.ui && config.ui.publishSendAndContinue === false) {
                     return false;
                 }
+
+                if (config.features && config.features.noTakes) {
+                    return false;
+                }
+
                 return !authoring.isPublished(scope.item) && _.includes(['text'], scope.item.type);
             };
 

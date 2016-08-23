@@ -243,6 +243,10 @@ function SearchService($location, gettext, config, session) {
             if (params.sms) {
                 query.post_filter({terms: {'flags.marked_for_sms': JSON.parse(params.sms)}});
             }
+
+            if (config.features && config.features.noTakes) {
+                query.post_filter({bool: {must_not: {term: {package_type: 'takes'}}}});
+            }
         }
 
         /**

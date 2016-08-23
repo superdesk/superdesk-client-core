@@ -2,16 +2,25 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add `noTakes` config option to disable takes in ui
+
+### Fixed
+
+- Fix desk selection is monitoring if not default desk
+- Fix elastic highlight config to use `features` key.
+- Fix metadataview for slugline to display elastic highlight
+- Fix elastic highlight for saved searches.
+
+## [1.0.0] 2016-08-17
+
 ### Fixed
 
 - Fix undo/redo changes not being saved or autosaved
 - Fix undo/redo for new item not reverting to empty body after save
 - Fix undo/redo not working properly with complex fields (dateline, category, subject)
 - Fix images uploaded into private space are not visible
-- Fix desk selection is monitoring if not default desk
-- Fix elastic highlight config to use `features` key.
-- Fix metadataview for slugline to display elastic highlight
-- Fix elastic highlight for saved searches.
 
 ## [1.0.0-beta1] 2016-04-26
 

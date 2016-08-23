@@ -31,6 +31,10 @@
         this.monitoringSearch = false;
         this.searchQuery = null;
 
+        if (config.features && config.features.noTakes) {
+            this.fileTypes = this.fileTypes.filter(type => type !== 'takesPackage');
+        }
+
         this.isOutputType = desks.isOutputType;
 
         desks.initialize()
