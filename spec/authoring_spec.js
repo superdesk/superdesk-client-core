@@ -132,6 +132,8 @@ describe('authoring', function() {
 
         //publish & correct item
         monitoring.openMonitoring();
+        // reset filters
+        monitoring.filterAction('all');
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.publish();
@@ -155,6 +157,8 @@ describe('authoring', function() {
 
         //update(rewrite) item
         monitoring.openMonitoring();
+        // reset filters
+        monitoring.filterAction('all');
         expect(monitoring.getTextItem(2, 1)).toBe('item7');
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.publish();
