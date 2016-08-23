@@ -13,3 +13,4 @@ import './sdSort';
 import './sdTypeahead';
 import './sdUserAvatar';
 import './sdWithParams';
+import './sdFiletypeIcon';
