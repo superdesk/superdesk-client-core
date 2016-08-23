@@ -224,6 +224,10 @@ export function ArticleEditDirective(
                         // always mark dirty as poi could have changed with no
                         // cropData changes
                         mainEditScope.dirty = true;
+                        // mark dirty in multiedit mode
+                        if (scope.articleEdit) {
+                            scope.articleEdit.$setDirty();
+                        }
                         angular.forEach(result.cropData, function(crop, rendition) {
                             renditions[rendition] = angular.extend({}, renditions[rendition] || {}, crop);
                         });
