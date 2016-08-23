@@ -12,11 +12,12 @@ export default angular.module('superdesk.directives.filetypeIcon', [])
     return {
         scope: {item: '='},
         link: function(scope, element, attrs) {
-            scope.$watch('item', function(item) {
+            var stopWatch = scope.$watch('item', function(item) {
                 if (item) {
                     initIcon(item);
+                    stopWatch();
                 }
-            }, true);
+            });
 
             function initIcon(item) {
                 var cls = 'filetype-icon-';
