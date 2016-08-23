@@ -1087,12 +1087,25 @@ angular.module('superdesk.search', [
 
                 scope.removeParameter = function(param) {
                     var searchParameters = $location.search();
-                    var parameterValue = param.substring(param.indexOf('(') + 1, param.lastIndexOf(')'));
 
                     if (searchParameters.q && searchParameters.q.indexOf(param) >= 0) {
                         searchParameters.q = searchParameters.q.replace(param, '').trim();
                         $location.search('q', searchParameters.q || null);
                         return;
+                    }
+
+                    var parameterValue = '';
+
+                    if (param.indexOf('(') >= 0) {
+                        parameterValue = param.substring(param.indexOf('(') + 1, param.lastIndexOf(')'));
+                    } else {
+                        var type = param.split(':')[0];
+                        _.each(PARAMETERS, function(value, key) {
+                            if (type === value && searchParameters[key]) {
+                                $location.search(key, null);
+                                return;
+                            }
+                        });
                     }
 
                     angular.forEach(scope.cvs, function(cv) {
@@ -2002,17 +2015,14 @@ angular.module('superdesk.search', [
                 templateUrl: asset.templateUrl('superdesk-search/views/search-parameters.html'),
                 link: function(scope, elem) {
 
-                    var input = elem.find('#search-input');
-
                     var ENTER = 13;
 
-                    var inputField = elem.find('input[type="text"]');
-
-                    inputField.on('keydown', function(event) {
+                    scope.keyPressed = function(event) {
                         if (event.keyCode === ENTER) {
+                            searchParameters();
                             event.preventDefault();
                         }
-                    });
+                    };
 
                     /*
                      * init function to setup the directive initial state and called by $locationChangeSuccess event
@@ -2100,18 +2110,18 @@ angular.module('superdesk.search', [
                     function initializeItems() {
                         angular.forEach(scope.cvs, function(cv) {
                             if ($location.search()[cv.field]) {
-                                scope.selecteditems[cv.id] = [];
+                                scope.selecteditems[cv.field] = [];
                                 var itemList = JSON.parse($location.search()[cv.field]);
                                 angular.forEach(itemList, function(qcode) {
                                     var match = _.find(scope.metadata[cv.list], function(m) {
                                         return m.qcode === qcode;
                                     });
-                                    scope.selecteditems[cv.id].push(match);
+                                    scope.selecteditems[cv.field].push(match);
                                     scope.fields[cv.field] = [];
                                     scope.fields[cv.field].push(match);
                                 });
                             } else {
-                                scope.selecteditems[cv.id] = [];
+                                scope.selecteditems[cv.field] = [];
                             }
                         });
                     }
@@ -2244,19 +2254,12 @@ angular.module('superdesk.search', [
 
                     }
 
-                    scope.$on('search:parameters', function openSearch() {
+                    scope.$on('search:parameters', searchParameters);
+
+                    function searchParameters() {
                         $location.search('q', getQuery() || null);
                         scope.meta = {};
-                    });
-
-                    scope.$on('key:s', function openSearch() {
-                        scope.$apply(function() {
-                            scope.flags = {extended: true};
-                            $timeout(function() { // call focus when input will be visible
-                                input.focus();
-                            }, 0, false);
-                        });
-                    });
+                    }
 
                     /*
                      * Get the Desk Type
@@ -2288,9 +2291,6 @@ angular.module('superdesk.search', [
                         }
                     };
 
-                    scope.$on('$destroy', function() {
-                        inputField.off('keydown');
-                    });
                 }
             };
         }
