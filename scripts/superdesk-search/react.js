@@ -1574,13 +1574,13 @@ angular.module('superdesk.search.react', [
                     },
 
                     select: function(item, event) {
-                        if (event.shiftKey) {
+                        if (event && event.shiftKey) {
                             return this.selectMultipleItems(item);
                         }
 
                         this.setSelectedItem(item);
 
-                        if (event.ctrlKey) {
+                        if (event && event.ctrlKey) {
                             return this.selectItem(item);
                         }
 
