@@ -1,3 +1,16 @@
+// styles
+import './comments/comments.less';
+import './metadata/metadata.less';
+import './packages/packages.less';
+import './styles/authoring.less';
+import './styles/multiedit.less';
+import './styles/themes.less';
+import './styles/unused.less';
+import './versioning/history/history.less';
+import './versioning/versions/versions.less';
+import './widgets/widgets-article.less';
+
+// scripts
 import './authoring';
 import './services';
 import './widgets/widgets';

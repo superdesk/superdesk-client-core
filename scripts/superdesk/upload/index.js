@@ -1,3 +1,6 @@
+import './styles/upload.less';
+
+// scripts
 import './upload';
 import './upload-service';
 import './image-preview-directive';
