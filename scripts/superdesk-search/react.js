@@ -1538,7 +1538,8 @@ angular.module('superdesk.search.react', [
                             {
                                 id: item._id,
                                 key: item._id,
-                                className: classNames('list-item-view', {active: this.props.flags.selected}),
+                                className: classNames('list-item-view',
+                                                        {active: this.props.flags.selected}, {selected: this.props.item.selected}),
                                 onMouseEnter: this.setHoverState,
                                 onMouseLeave: this.unsetHoverState,
                                 onDragStart: this.onDragStart,
