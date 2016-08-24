@@ -1,13 +1,14 @@
 DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces',
-'modal', 'gettext', 'privileges'];
+'modal', 'gettext', 'privileges', 'pageTitle'];
 export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces,
-    modal, gettext, privileges) {
+    modal, gettext, privileges, pageTitle) {
     var vm = this;
 
     $scope.edited = null;
     $scope.workspaces = workspaces;
     $scope.$watch('workspaces.active', setupWorkspace);
     workspaces.getActive();
+    pageTitle.setPageUrl(gettext('Dashboard'));
 
     function setupWorkspace(workspace) {
         vm.current = null;

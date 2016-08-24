@@ -10,3 +10,4 @@ import './modalService';
 import './workflowService';
 import './asset';
 import './image-factory';
+import './pageTitle';

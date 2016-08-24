@@ -3,6 +3,7 @@
 describe('search service', function() {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.search'));
+    beforeEach(window.module('superdesk.core.services.pageTitle'));
 
     it('can create base query', inject(function(search, session) {
         session.identity = {_id: 'foo'};
@@ -230,6 +231,7 @@ describe('sdSearchPanel directive', function () {
         'superdesk.authoring.metadata',
         'superdesk.searchProviders',
         'superdesk.search',
+        'superdesk.core.services.pageTitle',
         'superdesk.templates-cache'  // needed so that directive's template is placed into
                      // $templateCache, avoiding the "Unexpected request" error
     ));

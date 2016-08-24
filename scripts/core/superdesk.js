@@ -27,6 +27,7 @@ var modules = [
     'superdesk.preferences',
     'superdesk.translate',
     'superdesk.workflow',
+    'superdesk.core.services.pageTitle',
     // directives/
     'superdesk.directives.autofocus',
     'superdesk.directives.throttle',

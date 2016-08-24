@@ -161,6 +161,7 @@ describe('monitoring', function() {
 
         beforeEach(window.module('superdesk.templates-cache'));
         beforeEach(window.module('superdesk.searchProviders'));
+        beforeEach(window.module('superdesk.core.services.pageTitle'));
 
         beforeEach(inject(function($templateCache) {
             // change template not to require aggregate config but rather render single group

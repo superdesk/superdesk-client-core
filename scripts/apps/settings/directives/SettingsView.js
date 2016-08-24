@@ -1,5 +1,5 @@
-SettingsView.$inject = ['$route', 'superdesk'];
-export function SettingsView($route, superdesk) {
+SettingsView.$inject = ['$route', 'superdesk', 'pageTitle'];
+export function SettingsView($route, superdesk, pageTitle) {
     return {
         scope: {},
         transclude: true,
@@ -10,6 +10,12 @@ export function SettingsView($route, superdesk) {
             });
 
             scope.currentRoute = $route.current;
+            pageTitle.setPageUrl(_.capitalize(gettext('Settings')));
+            if (scope.currentRoute.$$route.label !== 'Settings') {
+                pageTitle.setPageWorkspace(_.capitalize(gettext(scope.currentRoute.$$route.label)));
+            } else {
+                pageTitle.setPageWorkspace(null);
+            }
         }
     };
 }
