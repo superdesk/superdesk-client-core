@@ -235,7 +235,7 @@ describe('search', function() {
 
         //can search scheduled
         expect(globalSearch.getItems().count()).toBe(14);
-        globalSearch.actionOnItem('Edit', 4);
+        globalSearch.actionOnItem('Edit', 2);
         authoring.schedule(false);
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
