@@ -155,7 +155,7 @@ function HighlightsService(api, $q, $cacheFactory, packages, privileges) {
                 return hourDifference <= 168; //24*7
             } else if (_.startsWith(highlight.auto_insert, 'now-')) {
                 var trimmedValue = _.trimStart(highlight.auto_insert, 'now-');
-                trimmedValue = _.trimEnd(highlight.auto_insert, 'h');
+                trimmedValue = _.trimEnd(trimmedValue, 'h');
                 return hourDifference <= _.parseInt(trimmedValue);
             }
         }
