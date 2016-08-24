@@ -1,10 +1,11 @@
 <div class="save-search" ng-if="searching() || innerTab==='parameters'">
-    <div ng-if="!editingSearch">
+    <div ng-if="!editingSearch && sTab !== 'savedSearches'">
         <button class="btn btn-info btn-full search" ng-click="search()" ng-if="innerTab==='parameters'" translate>Search</button>
         <a id="clear_filters" class="save-search__link" ng-click="clear()" ng-if="searching()" translate>Clear filters</a>
         <button id="save_search_init" class="btn btn-info" ng-click="editItem()" ng-if="searching() && !editingSearch"  translate>Save Search</button>
     </div>
     <div ng-if="editingSearch">
+        <button class="btn btn-info btn-full search" ng-click="search()" ng-if="innerTab==='parameters'" translate>Search</button>
         <button id="saveas_search_init" class="btn" ng-click="saveas()" translate ng-if="editingSearch">Save As</button>
         <button id="save_search_init" class="btn btn-info" ng-click="editItem()" ng-if="!editingSearch" translate>Save Changes</button>
         <button id="save_search_init" class="btn btn-info" ng-click="save(edit)" ng-if="editingSearch" translate>Save Changes</button>
