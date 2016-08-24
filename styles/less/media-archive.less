@@ -774,7 +774,7 @@
                 white-space: nowrap;
             }
             .highlights-box {
-        margin-top: -2px;
+                margin-top: -2px;
                 margin-right: 5px;
             }
             .item-heading {
@@ -897,7 +897,7 @@
 }
 
 .mgrid-view, #scratchpad {
-    .active {
+    .active:not(.selected) {
         .media-box {
             border-color: #787878;
             .box-shadow-both(0 0px 6px 1px rgba(0,0,0,0.75), 0 0 0 1px rgba(0,0,0,0.12));
@@ -905,7 +905,7 @@
     }
 }
 .mlist-view, .compact-view  {
-    .active {
+    .active:not(.selected) {
         .more-activity-toggle {
             background: linear-gradient(to right, rgba(239,247,250,0) 0%,rgba(239,247,250,0) 0%,rgba(239,247,250,1) 40%) !important;
         }
