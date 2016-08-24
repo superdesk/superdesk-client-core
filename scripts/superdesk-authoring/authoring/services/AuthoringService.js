@@ -434,6 +434,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             action.save = current_item.state !== 'spiked';
             action.publish = (!current_item.flags || !current_item.flags.marked_for_not_publication) &&
                     current_item.task && current_item.task.desk &&
+                    (!current_item.highlight || current_item.type !== 'composite') &&
                     user_privileges.publish && current_item.state !== 'draft';
 
             action.edit = !(current_item.type === 'composite' && current_item.package_type === 'takes') &&
