@@ -23,7 +23,7 @@ module.exports = {
                 dot: true,
                 cwd: '<%= coreDir %>',
                 dest: '<%= distDir %>',
-                src: ['images/**/*', 'scripts/**/*.json']
+                src: ['images/**/*', 'scripts/**/*.{json,svg}']
             }
         ]
     },
