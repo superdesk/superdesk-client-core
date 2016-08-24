@@ -379,13 +379,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             }
 
             function validateForPublish(item) {
-                var requiredFields = config.requiredMediaMetadata;
+                var requiredFields = $rootScope.config.requiredMediaMetadata;
                 if (item.type === 'picture') {
                     // required media metadata fields are defined in superdesk.config.js
                     _.each(requiredFields, function (key) {
                         if (item[key] == null || _.isEmpty(item[key])) {
-                            notify.error(gettext('Required field ' + key + ' is missing. ' +
-                                'Edit crops to fill in the ' + key + '.'));
+                            notify.error($interpolate(gettext(
+                                'Required field {{ key }} is missing. ...'))({key: key}));
                             return false;
                         }
                     });
