@@ -1166,20 +1166,13 @@ angular.module('superdesk.search', [
                 scope.$on('item:deleted:archived', itemDelete);
                 scope.$on('item:fetch', queryItems);
                 scope.$on('item:update', updateItem);
-                scope.$on('item:deleted', queryItems);
+                scope.$on('item:deleted', scheduleIfShouldUpdate);
                 scope.$on('item:spike', scheduleIfShouldUpdate);
                 scope.$on('item:unspike', scheduleIfShouldUpdate);
                 scope.$on('item:duplicate', queryItems);
                 scope.$on('ingest:update', queryItems);
                 scope.$on('content:update', queryItems);
                 scope.$on('item:move', scheduleIfShouldUpdate);
-
-                scope.$on('$routeUpdate', function(event, data) {
-                    scope.scrollTop = 0;
-                    data.force = true;
-                    scope.showRefresh = false;
-                    queryItems(event, data);
-                });
 
                 scope.$on('broadcast:preview', function(event, args) {
                     scope.previewingBroadcast = true;
@@ -1276,7 +1269,7 @@ angular.module('superdesk.search', [
                 }
 
                 function scheduleIfShouldUpdate(event, data) {
-                    if (data && data.item && _.includes(['item:spike', 'item:unspike'], event.name)) {
+                    if (data && data.item && _.includes(['item:spike', 'item:unspike', 'item:deleted'], event.name)) {
                         // item was spiked/unspikes from the list
                         extendItem(data.item, {
                             gone: true,
@@ -1643,10 +1636,11 @@ angular.module('superdesk.search', [
                     scope.selected = {preview: item || null};
                 });
 
-                scope.$on('item:spike', shouldClosePreview.bind(this, scope));
-                scope.$on('item:unspike', shouldClosePreview.bind(this, scope));
-                scope.$on('item:move', shouldClosePreview.bind(this, scope));
-                scope.$on('content:update', shouldClosePreview.bind(this, scope));
+                var closePreviewEvents = ['item:deleted', 'item:spike', 'item:unspike', 'item:move', 'content:update'];
+
+                angular.forEach(closePreviewEvents, function (event) {
+                    scope.$on(event, shouldClosePreview.bind(this, scope));
+                });
 
                 /**
                  * Return true if the menu actions from
