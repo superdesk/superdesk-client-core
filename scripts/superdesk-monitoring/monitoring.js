@@ -780,22 +780,25 @@ function DeskNotificationsDirective(desks, deskNotifications, authoringWorkspace
         link: function(scope) {
 
             function init() {
+                // Update the figures if there's a desk mention message
+                init_notifications();
+                if (scope.default_incoming) {
+                    scope.$on('desk:mention', function() {$timeout(reload, 5000, true);});
+                }
+            }
+
+            function init_notifications () {
                 scope.desk = desks.stageLookup[scope.stage].desk;
                 scope.notifications = deskNotifications.getNotifications(scope.desk);
                 scope.default_incoming = desks.stageLookup[scope.stage].default_incoming;
                 scope.notificationCount = deskNotifications.getUnreadCount(scope.desk) || 0;
                 scope.deskLookup = desks.deskLookup;
                 scope.stageLookup = desks.stageLookup;
-
-                // Update the figures if there's a desk mention message
-                if (scope.default_incoming) {
-                    scope.$on('desk:mention', function() {$timeout(reload, 5000, true);});
-                }
             }
 
             function reload() {
                 deskNotifications.reload();
-                init();
+                init_notifications();
             }
 
             /**
@@ -815,7 +818,7 @@ function DeskNotificationsDirective(desks, deskNotifications, authoringWorkspace
              */
             scope.acknowledge = function(notification) {
                 deskNotifications.markAsRead(notification, scope.desk);
-                $timeout(init, 5000);
+                $timeout(reload, 5000);
             };
 
             function getRecipient(notification) {

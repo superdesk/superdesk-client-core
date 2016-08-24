@@ -20,7 +20,7 @@
             </div>
 
             <div class="sender">
-                 <span>{{:: n.user.display_name }}:</span><blockquote>{{:: n.data.comment }}</blockquote>
+                 <span>{{:: n.user_name }}:</span><blockquote>{{:: n.data.comment }}</blockquote>
             </div>
             <div class="pull-right read-by" ng-if="isRead(n)">
                  {{ :: 'Opened by' | translate }}  <i>"{{ :: readBy(n) }}"</i>

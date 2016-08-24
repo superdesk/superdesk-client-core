@@ -130,7 +130,7 @@ function DeskNotificationsService($rootScope, api, session) {
     this.reload = function() {
         var criteria = {
             where: getFilter(),
-            embedded: {user: 1, item: 1},
+            embedded: {item: 1},
             max_results: 20
         };
 
