@@ -189,7 +189,7 @@
   </div>
 </div>
 
-<div ng-if="isMediaType" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text" sd-width="{{editor.media_description.sdWidth || 'full'}}">
+<div ng-if="isMediaType" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text" sd-width="{{editor.media_description.sdWidth || 'full'}}" data-required="schema.media_description.required">
   <label translate>Description</label>
   <div id="title" class="abstract"
         sd-text-editor
@@ -224,7 +224,12 @@
     </select>
 </div>
 
-<div class="field" ng-if="item.body_footer" order="{{editor.body_footer.order}}" sd-validation-error="error.body_footer" sd-width="{{editor.body_footer.sdWidth || 'full'}}">
+<div class="field" 
+    ng-if="schema.body_footer" 
+    order="{{editor.body_footer.order}}" 
+    sd-validation-error="error.body_footer"
+    data-required="schema.body_footer.required"
+    sd-width="{{editor.body_footer.sdWidth || 'full'}}">
     <label translate>Footer</label>
     <div id="body_footer" class="body"
         sd-text-editor
@@ -247,7 +252,7 @@
   <div sd-package data-item="item" class="composite-preview" ng-if="!_editable"></div>
 </div>
 
-<div class="field pull-left" ng-if="item.sign_off && schema.sign_off" order="{{editor.sign_off.order}}" sd-width="{{editor.sign_off.sdWidth || 'full'}}">
+<div class="field pull-left" ng-if="schema.sign_off" order="{{editor.sign_off.order}}" sd-width="{{editor.sign_off.sdWidth || 'full'}}">
     <label translate>Sign-Off</label>
     <button class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="canEditSignOff && _editable">
       <i class="icon-lock" ng-hide="editSignOff"></i>
