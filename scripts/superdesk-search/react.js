@@ -1595,6 +1595,33 @@ angular.module('superdesk.search.react', [
                         }, 500, false);
                     },
 
+                    selectItem: function (item) {
+                        if (isCheckAllowed(item)) {
+                            var selected = !item.selected;
+                            this.multiSelect([item], selected);
+                        }
+                    },
+
+                    selectMultipleItems: function (lastItem) {
+                        var itemId = search.generateTrackByIdentifier(lastItem),
+                            positionStart = 0,
+                            positionEnd = _.indexOf(this.state.itemsList, itemId),
+                            selectedItems = [];
+                        if (this.state.selected) {
+                            positionStart = _.indexOf(this.state.itemsList, this.state.selected);
+                        }
+
+                        for (var i = positionStart; i <= positionEnd; i++) {
+                            var item = this.state.itemsById[this.state.itemsList[i]];
+                            if (isCheckAllowed(item)) {
+                                selectedItems.push(item);
+                            }
+                        }
+
+                        multi.reset();
+                        this.multiSelect(selectedItems, true);
+                    },
+
                     dbClick: function(item) {
                         var activities = superdesk.findActivities({action: 'list', type: 'archive'}, item);
                         var canEdit = _.reduce(activities, (result, value) => result || value._id === 'edit.item', false);
