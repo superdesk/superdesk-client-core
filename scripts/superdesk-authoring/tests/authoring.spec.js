@@ -682,6 +682,36 @@ describe('authoring actions', function() {
                     'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
         }));
 
+    it('cannot perform publish if the item is highlight package',
+        inject(function(privileges, desks, authoring, $q, $rootScope) {
+            var item = {
+                '_id': 'test',
+                'state': 'submitted',
+                'type': 'composite',
+                'highlight': 1,
+                'task': {
+                    'desk': 'desk1'
+                },
+                '_current_version': 1
+            };
+
+            var userPrivileges = {
+                'duplicate': true,
+                'mark_item': false,
+                'spike': true,
+                'unspike': true,
+                'mark_for_highlights': true,
+                'unlock': true,
+                'publish': true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
+                    'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
+        }));
+
     it('cannot publish if user does not have publish privileges on the desk',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
