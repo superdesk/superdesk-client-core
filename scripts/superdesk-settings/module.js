@@ -40,6 +40,10 @@ export default angular.module('superdesk.settings', [])
                         $location.search(attrs.location, date);
                     }
                 });
+
+                scope.$on('$routeUpdate', function(event, route) {
+                    scope.date = route.params[attrs.location];
+                });
             }
         };
     }])
