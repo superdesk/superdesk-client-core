@@ -226,21 +226,21 @@
                                 <label>{{ :: 'Incoming Rule' | translate }}</label>
                                 <select ng-model="editStage.incoming_macro">
                                     <option value=""></option>
-                                    <option ng-repeat="macro in macros" ng-selected="editStage.incoming_macro === macro.name" value="{{macro.name}}">{{macro.name}}</option>
+                                    <option ng-repeat="macro in macros" ng-selected="editStage.incoming_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
                                 </select>
                             </div>
                             <div class="field">
                                 <label>{{ :: 'Moved onto stage Rule' | translate }}</label>
                                 <select ng-model="editStage.onstage_macro">
                                     <option value=""></option>
-                                    <option ng-repeat="macro in macros" ng-selected="editStage.onstage_macro === macro.name" value="{{macro.name}}">{{macro.name}}</option>
+                                    <option ng-repeat="macro in macros" ng-selected="editStage.onstage_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
                                 </select>
                             </div>
                             <div class="field">
                                 <label>{{ :: 'Outgoing Rule' | translate }}</label>
                                 <select ng-model="editStage.outgoing_macro">
                                     <option value=""></option>
-                                    <option ng-repeat="macro in macros" ng-selected="editStage.outgoing_macro === macro.name" value="{{macro.name}}">{{macro.name}}</option>
+                                    <option ng-repeat="macro in macros" ng-selected="editStage.outgoing_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
                                 </select>
                             </div>
                         </div>
