@@ -289,7 +289,7 @@ function ArchiveService(desks, session, api, $q, search, $location, config) {
      */
     this.getVersionHistory = function(item, desks, historyType) {
         if (this.isLegal(item)) {
-            return api.find('legal_archive', item._id, {version: 'all'})
+            return api.find('legal_archive', item._id, {version: 'all', max_results: 200})
                 .then(function(result) {
                     _.each(result._items, function(version) {
                         version.desk = version.task && version.task.desk ? version.task.desk : '';
@@ -310,7 +310,7 @@ function ArchiveService(desks, session, api, $q, search, $location, config) {
                     }
                 });
         } else {
-            return api.find('archive', item._id, {version: 'all', embedded: {user: 1}})
+            return api.find('archive', item._id, {version: 'all', embedded: {user: 1}, max_results: 200})
                 .then(function(result) {
                     _.each(result._items, function(version) {
                         if (version.task) {
