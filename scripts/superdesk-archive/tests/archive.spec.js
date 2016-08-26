@@ -132,12 +132,13 @@ describe('content', function() {
 
             item._links = {_id: '123'};
             archiveService.getVersionHistory(item, {}, 'versions');
-            expect(api.find).toHaveBeenCalledWith('archive', '123', {version: 'all', embedded: {user: 1}});
+            expect(api.find).toHaveBeenCalledWith('archive', '123',
+                {version: 'all', embedded: {user: 1}, max_results: 200});
 
             item._type = 'legal_archive';
             item._links = {collection: {href: '/legal_archive'}};
             archiveService.getVersionHistory(item, {}, 'versions');
-            expect(api.find).toHaveBeenCalledWith('legal_archive', '123', {version: 'all'});
+            expect(api.find).toHaveBeenCalledWith('legal_archive', '123', {version: 'all', max_results: 200});
         }));
     });
 
