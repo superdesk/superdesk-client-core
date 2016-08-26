@@ -1,5 +1,5 @@
 <div class="refresh-box pull-right">
-    <button ng-if="showRefresh" ng-click="refreshGroup()"
+    <button ng-if="showRefresh" ng-click="refreshGroup()" ng-class="{btnRefresh: viewType === 'monitoring'}"
         tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
         <i class="icon-repeat blue"></i>
     </button>

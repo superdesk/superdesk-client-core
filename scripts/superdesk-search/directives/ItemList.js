@@ -1322,38 +1322,6 @@ export function ItemList(
                     dragitem.start(event, this.props.item);
                 },
 
-                componentDidUpdate: function() {
-                    if (this.props.flags.selected) {
-                        var elem = ReactDOM.findDOMNode(this);
-                        var list = elem.offsetParent;
-                        var factor = this.props.view === 'mgrid' ? 1 : 3;
-
-                        if (elem.offsetTop < list.scrollTop) {
-                            // move up
-                            if (list.scrollTop - elem.offsetTop <= elem.clientHeight) {
-                                // only a bit
-                                list.scrollTop -= elem.clientHeight * factor;
-                            } else {
-                                // we need more, put it on top
-                                list.scrollTop = elem.offsetTop;
-                            }
-                        }
-
-                        if (elem.offsetTop + elem.offsetHeight > list.scrollTop + list.clientHeight) {
-                            // move down
-                            if (elem.offsetTop + elem.offsetHeight - list.scrollTop - list.clientHeight <= elem.clientHeight) {
-                                // only a bit
-                                list.scrollTop += elem.clientHeight * factor;
-                            } else {
-                                // put it on top
-                                list.scrollTop = elem.offsetTop;
-                            }
-                        }
-
-                        this.props.setSelectedComponent(this);
-                    }
-                },
-
                 render: function() {
                     var item = this.props.item;
                     var contents = [
