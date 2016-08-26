@@ -217,6 +217,14 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
                 authoring.autosave(item, scope.origItem);
             };
 
+            scope.$watch('item.flags', function (newValue, oldValue) {
+                if (newValue !== oldValue) {
+                    scope.item.flags = newValue;
+                    scope.origItem.flags = oldValue;
+                    scope.dirty = true;
+                }
+            }, true);
+
             scope.save = function(item, form) {
                 return authoring.save(scope.origItem, item).then(function(res) {
                     if (form) {
