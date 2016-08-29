@@ -1,6 +1,6 @@
 # Superdesk Client Changelog
 
-## [Unreleased]
+## [1.1] 2016-08-29
 
 ### Added
 
