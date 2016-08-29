@@ -250,26 +250,86 @@
         border-top: 1px dotted #9b9b9b;
         border-bottom: 0;
     }
-    li {
-        text-align: center;
-        line-height: @sidebar-width;
-        a, i {
-            opacity: .5;
-            &.big-icon-view {
-                background-size: 24px;
-            }
-        }
-        &.active {
-            a, i {
-                opacity: 1;
-            }
-        }
-        .dropright {
-            .dropdown-menu {
-                top: -10px;
-            }
-        }
+    i {
+      opacity: 1;
     }
+    li {
+      text-align: center;
+      line-height: @sidebar-width;
+    }
+    a, .dropdown-toggle {
+      display: block;
+      margin: 6px auto;
+      border-radius: 50%;
+      height:36px;
+      width: 36px;
+      opacity: .5;
+      overflow: hidden;
+      transition: opacity 0.2s, background-color 0.2s;
+
+      position: relative;
+      i.big-icon-view {
+         background-size: 24px;
+      }
+    }
+    a:hover, .dropdown-toggle:hover {
+      opacity: 1;
+      background-color: rgba(255, 255, 255, .6);
+    }
+    a:active, .dropdown-toggle:active {
+      background-color: @sd-blue;
+      opacity: 1;
+    }
+    .main-icon {
+      position: absolute;
+      top: 6px;
+      left: 4px;
+      transition: left 0.2s ease-out;
+    }
+    .helper-icon {
+      position: absolute;
+      top: 6px;
+      left: 30px;
+      transition: left 0.2s ease-out, transform 0.2s;
+    }
+    .active {
+      a, .dropdown-toggle {
+        background-color: @sd-blue;
+        opacity: 1;
+      }
+    }
+    .dropright {
+      display: block;
+      .dropdown-menu {
+        top: -10px;
+      }
+    }
+
+}
+#side-menu {
+  .authoring-active {
+    .active {
+      a:hover, .dropdown-toggle:hover {
+        .main-icon {
+          left: -30px;
+        }
+        .helper-icon {
+          left: 4px;
+        }
+      }
+    }
+    &.list-hidden {
+      .active {
+        .main-icon {
+          left: 4px;
+        }
+        .helper-icon {
+          transform: rotate(180deg);
+          left: -30px;
+        }
+      }
+    }
+  }
 }
 
 #main-menu {
