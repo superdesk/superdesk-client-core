@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+## [1.1] 2016-08-29
+
 ### Added
 
 - Add `noTakes` config option to disable takes in ui
+- Display more versions in history panel.
+- Add config to hide takes related controls.
 
 ### Fixed
 
@@ -12,8 +16,15 @@
 - Fix elastic highlight config to use `features` key.
 - Fix metadataview for slugline to display elastic highlight
 - Fix elastic highlight for saved searches.
+- Hide publish button for highlights packages.
+- Fix layout issue with action menu in preview pane.
+- Fix recursive calling of desk mentions query.
+- Fix dashboard widget thumnails not being visible.
+- Fix apply crop button not activating save button in authoring.
+- Fix hyperlink plugin in authoring.
+- Fix missing pagination buttons in publish queue.
 
-## [1.0.0] 2016-08-17
+## [1.0] 2016-08-17
 
 ### Fixed
 
@@ -47,4 +58,3 @@
 - **scratchpad**: drag ingest items into scratchpad
 - **desks**: create and list desks, assign members
 - **dashboard**: list available widgets, save user dashboard
-
