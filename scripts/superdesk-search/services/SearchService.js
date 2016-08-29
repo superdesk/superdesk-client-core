@@ -12,8 +12,9 @@ export function SearchService($location, gettext, config, session) {
         {field: 'genre.name', label: gettext('Genre')}
     ];
 
-    this.cvs = config.search_cvs || [{'id': 'subject', 'name': 'Subject',
-            'field': 'subject', 'list': 'subjectcodes'}];
+    this.cvs = config.search_cvs ||
+    [{'id': 'subject', 'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'},
+    {'id': 'companycodes', 'name': 'Company Codes', 'field': 'company_codes', 'list': 'company_codes'}];
 
     function getSort() {
         var sort = ($location.search().sort || 'versioncreated:desc').split(':');
@@ -67,6 +68,12 @@ export function SearchService($location, gettext, config, session) {
                     case 'spike':
                         // Will get set in the base filters
                         break;
+                    case 'subject':
+                        filters.push({'terms': {'subject.qcode': JSON.parse(params[key])}});
+                        break;
+                    case 'company_codes':
+                        filters.push({'terms': {'company_codes.qcode': JSON.parse(params[key])}});
+                        break;
                     default:
                         var filter = {'term': {}};
                         filter.term[key] = params[key];
@@ -106,6 +113,13 @@ export function SearchService($location, gettext, config, session) {
      */
     this.getSubjectCodes = function (currentTags, subjectcodes) {
         return this.getSelectedCodes(currentTags, subjectcodes, 'subject');
+    };
+
+    /*
+     * Function for finding object by string array for company codes
+     */
+    this.getCompanyCodes = function (currentTags, codes) {
+        return this.getSelectedCodes(currentTags, codes, 'company_codes');
     };
 
     // sort public api
@@ -426,6 +440,7 @@ export function SearchService($location, gettext, config, session) {
      * @param {boolean} force
      * @return {Object}
      */
+
     this.mergeItems = function(newItems, scopeItems, append, force) {
         if (this.getElasticHighlight()) {
             newItems._items = _.map(newItems._items, function(item) {
@@ -479,7 +494,7 @@ export function SearchService($location, gettext, config, session) {
     };
 
     this.getElasticHighlight = function() {
-        return config.features && config.features.elasticHighlight ? 1 : 0;
+        return config.feature && config.feature.elasticHighlight ? 1 : 0;
     };
 
     /**

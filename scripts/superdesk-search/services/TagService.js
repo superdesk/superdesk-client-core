@@ -97,6 +97,25 @@ export function TagService($location, desks, userList, metadata, search, gettext
                         tags.selectedParameters.push(value + ':' +
                             desks.deskLookup[params[key].split('-')[0]].name);
                         break;
+                    case 'company_codes':
+                    case 'subject':
+                        var processSelectedItems = function (selectedItems, codeList) {
+                            _.forEach(selecteditems, function(selecteditem) {
+                                var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
+                                if (name) {
+                                    tags.selectedParameters.push(value + ':(' + name + ')');
+                                }
+                            });
+                        };
+                        for (var i = 0; i < cvs.length; i++) {
+                            var cv = cvs[i];
+                            if (cv.field === key) {
+                                var codeList = metadata.values[cv.list];
+                                var selecteditems = JSON.parse(params[key]);
+                                processSelectedItems(selecteditems, codeList);
+                            }
+                        }
+                        break;
                     case 'spike':
                         if (params[key]) {
                             tags.selectedParameters.push(value);
@@ -110,7 +129,7 @@ export function TagService($location, desks, userList, metadata, search, gettext
     }
 
     function removeFacet (type, key) {
-        if (key.indexOf('Last') >= 0) {
+        if (String(key).indexOf('Last') >= 0) {
             removeDateFacet();
         } else {
             var search = $location.search();

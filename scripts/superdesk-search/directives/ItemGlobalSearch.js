@@ -1,14 +1,12 @@
 ItemGlobalSearch.$inject = [
-    'superdesk', 'session', '$location', 'search', 'api', 'notify', 'gettext',
-    'keyboardManager', 'asset', 'authoringWorkspace', 'authoring'
+    'session', 'api', 'notify', 'gettext', 'keyboardManager', 'asset', 'authoringWorkspace', 'authoring'
 ];
 
 /**
  * Open Item dialog
  */
 export function ItemGlobalSearch(
-    superdesk, session, $location, search, api, notify, gettext, keyboardManager,
-    asset, authoringWorkspace, authoring
+    session, api, notify, gettext, keyboardManager, asset, authoringWorkspace, authoring
 ) {
     return {
         scope: {repo: '=', context: '='},

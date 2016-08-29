@@ -7,38 +7,22 @@ SearchResults.$inject = [
     'api',
     'search',
     'session',
-    'moment',
-    'gettext',
-    'superdesk',
-    'workflowService',
-    'archiveService',
-    'activityService',
-    'multi',
-    'desks',
-    'familyService'
-];
+    '$rootScope'
+    ];
 
 /**
  * Item list with sidebar preview
  */
 export function SearchResults(
-    $location,
-    preferencesService,
-    packages,
-    asset,
-    $timeout,
-    api,
-    search,
-    session,
-    moment,
-    gettext,
-    superdesk,
-    workflowService,
-    archiveService,
-    activityService,
-    multi,
-    desks,
-    familyService
+        $location,
+        preferencesService,
+        packages,
+        asset,
+        $timeout,
+        api,
+        search,
+        session,
+        $rootScope
 ) { // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
@@ -157,7 +141,7 @@ export function SearchResults(
                         scope.$applyAsync(function() {
                             nextUpdate = null; // reset for next $digest
                         });
-                    }, 1000, false);
+                    }, 300, false);
                 }
             }
 
@@ -174,7 +158,8 @@ export function SearchResults(
                 }
                 criteria.source.from = 0;
                 scope.total = null;
-                criteria.aggregations = 1;
+                scope.items = null;
+                criteria.aggregations = $rootScope.aggregations;
                 criteria.es_highlight = search.getElasticHighlight();
                 return api.query(getProvider(criteria), criteria).then(function (items) {
                     if (!scope.showRefresh && data && !data.force && (data.user !== session.identity._id)) {
@@ -199,11 +184,13 @@ export function SearchResults(
                         // update scope items only with the matching fetched items
                         scope.items = search.updateItems(items, scope.items);
                     }
+                }).finally(function() {
+                    scope.loading = false;
                 });
             }
 
             function scheduleIfShouldUpdate(event, data) {
-                if (data && data.item && _.includes(['item:spike', 'item:unspike', 'item:deleted'], event.name)) {
+                if (data && data.item && _.includes(['item:spike', 'item:unspike'], event.name)) {
                     // item was spiked/unspikes from the list
                     extendItem(data.item, {
                         gone: true,
@@ -273,8 +260,11 @@ export function SearchResults(
                 if (items) {
                     setScopeItems(items, force);
                 } else if (next) {
+                    scope.loading = true;
                     criteria.source.from = (criteria.source.from || 0) + criteria.source.size;
-                    api.query(getProvider(criteria), criteria).then(setScopeItems);
+                    api.query(getProvider(criteria), criteria).then(setScopeItems).finally(function() {
+                        scope.loading = false;
+                    });
                 } else {
                     var query = _.omit($location.search(), '_id');
 
@@ -285,9 +275,12 @@ export function SearchResults(
                     criteria = search.query($location.search()).getCriteria(true);
                     criteria.source.from = 0;
                     criteria.source.size = 50;
-                    criteria.aggregations = 1;
+                    criteria.aggregations = $rootScope.aggregations;
                     criteria.es_highlight = search.getElasticHighlight();
-                    api.query(getProvider(criteria), criteria).then(setScopeItems);
+                    scope.loading = true;
+                    api.query(getProvider(criteria), criteria).then(setScopeItems).finally(function() {
+                        scope.loading = false;
+                    });
                     oldQuery = query;
                 }
 
@@ -372,6 +365,7 @@ export function SearchResults(
             };
 
             // init
+            $rootScope.aggregations = 0;
             _queryItems();
         }
     };

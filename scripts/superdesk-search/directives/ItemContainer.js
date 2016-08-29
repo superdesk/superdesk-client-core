@@ -1,5 +1,5 @@
-ItemContainer.$inject = ['$filter', 'desks', 'api'];
-export function ItemContainer($filter, desks, api) {
+ItemContainer.$inject = ['desks'];
+export function ItemContainer(desks) {
     return {
         scope: {
             item: '='

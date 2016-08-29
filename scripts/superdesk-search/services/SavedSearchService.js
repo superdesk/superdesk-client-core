@@ -1,4 +1,5 @@
 SavedSearchService.$inject = ['api', '$filter', '$q'];
+
 export function SavedSearchService(api, $filter, $q){
 
     var _getAll = function(endPoint, page, items, params) {
