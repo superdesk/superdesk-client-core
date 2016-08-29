@@ -20,6 +20,7 @@
 - Fix dashboard widget thumnails not being visible.
 - Fix apply crop button not activating save button in authoring.
 - Fix hyperlink plugin in authoring.
+- Fix missing pagination buttons in publish queue.
 
 ## [1.0] 2016-08-17
 
