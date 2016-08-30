@@ -10,6 +10,8 @@
 import MediumEditor from 'medium-editor';
 import MediumEditorTable from 'medium-editor-tables';
 
+import './customAnchor';
+
 var TYPING_CLASS = 'typing';
 
 /**
