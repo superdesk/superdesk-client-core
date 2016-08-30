@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------------------
 @import '~mixins.less';
 @import '~variables.less';
+@import '~animation.less';
 
 .search-page-container {
     .archive-content {
@@ -99,6 +100,15 @@
     }
 }
 
+.multi-action-bar--container {
+  height:48px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .multi-action-bar {
     .border-box();
     position: absolute;
@@ -110,6 +120,9 @@
     line-height: 48px;
     background-color: #fff;
     padding: 0 16px;
+    animation: dropOut2 .3s cubic-bezier(0.695, 0.105, 0.285, 1.275) 1;
+    background-color: #d2e5ed;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
     .navbtn {
         border: none;
     }

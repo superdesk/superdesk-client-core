@@ -10,8 +10,13 @@
             </div>
         </li>
 
-        <li class="alert alert-info" ng-show="comments.length === 0" translate>No comments so far. Be the first...</li>
-        <li class="alert alert-info" ng-show="comments === null" translate>Loading...</li>
+        <li class="no-comments" ng-show="comments.length === 0" translate>
+          <div class="round-box">
+            <i class="big-icon-comments"></i>
+          </div>
+          <h3>No comments so far.</h3><span>Be the first...</span>
+        </li>
+        <li class="loading-info" ng-show="comments === null" translate>Loading...</li>
     </ul>
     <div class="add-comment">
         <form name="commentsForm">
