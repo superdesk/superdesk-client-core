@@ -107,7 +107,7 @@ function PackagesService(api, $q, archiveService, lock, autosave, authoring, aut
     this.isAdded = function(pkg, item) {
         var added = pkg.groups ? pkg.groups.some(function(group) {
             return group.refs.some(function(ref) {
-                return ref.guid === item._id;
+                return (ref.guid === item._id) || (ref.residRef === item._id);
             });
         }) : false;
         var addedToPkg = this.isAddedToPackage(pkg, item);
