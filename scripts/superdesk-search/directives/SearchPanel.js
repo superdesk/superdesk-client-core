@@ -1,14 +1,14 @@
-SearchFacets.$inject = ['$location', 'desks', 'privileges', 'tags', 'asset', 'metadata'];
+SearchPanel.$inject = ['$location', 'desks', 'privileges', 'tags', 'asset', 'metadata', '$rootScope'];
 
 /**
  * A directive that generates the sidebar containing search results
  * filters (so-called "aggregations" in Elastic's terms).
  */
-export function SearchFacets($location, desks, privileges, tags, asset, metadata) {
+export function SearchPanel($location, desks, privileges, tags, asset, metadata, $rootScope) {
     desks.initialize();
     return {
         require: '^sdSearchContainer',
-        templateUrl: asset.templateUrl('superdesk-search/views/search-facets.html'),
+        templateUrl: asset.templateUrl('superdesk-search/views/search-panel.html'),
         scope: {
             items: '=',
             desk: '=',
@@ -17,7 +17,8 @@ export function SearchFacets($location, desks, privileges, tags, asset, metadata
         },
         link: function(scope, element, attrs, controller) {
             scope.flags = controller.flags;
-            scope.sTab = true;
+            scope.sTab = 'advancedSearch';
+            scope.innerTab = 'parameters';
             scope.editingSearch = false;
             scope.showSaveSearch = false;
 
@@ -26,16 +27,34 @@ export function SearchFacets($location, desks, privileges, tags, asset, metadata
             scope.search_config = metadata.search_config;
 
             scope.$on('edit:search', function(event, args)  {
-                scope.sTab = true;
+                scope.sTab = 'advancedSearch';
+                scope.innerTab = 'parameters';
+                scope.activateSearchPane = false;
+                scope.editingSearch = args;
+                scope.edit = _.create(scope.editingSearch) || {};
             });
 
-            scope.changeTab = function() {
-                scope.sTab = !scope.sTab;
+            scope.changeTab = function(tabName) {
+                scope.sTab = tabName;
             };
 
-            scope.resetEditingSearch = function() {
-                scope.editingSearch = false;
-                metadata.removeSubjectTerm(null);
+            scope.display = function(tabName) {
+                scope.innerTab = tabName;
+                if (tabName === 'filters') {
+                    $rootScope.aggregations = 1;
+                    $rootScope.$broadcast('aggregations:changed');
+                } else {
+                    $rootScope.aggregations = 0;
+                }
+            };
+
+            scope.searching = function() {
+                return !_.isEmpty($location.search());
+            };
+
+            scope.closeFacets = function() {
+                scope.flags.facets = false;
+                $rootScope.aggregations = 0;
             };
 
             var initAggregations = function () {

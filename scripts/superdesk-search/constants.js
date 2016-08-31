@@ -3,5 +3,7 @@ export const PARAMETERS = Object.freeze({
     original_creator: 'Creator',
     from_desk: 'From Desk',
     to_desk: 'To Desk',
-    spike: 'In Spiked'
+    spike: 'In Spiked',
+    subject: 'Subject',
+    company_codes: 'Company Codes'
 });

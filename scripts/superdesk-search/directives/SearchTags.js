@@ -1,7 +1,7 @@
 import { PARAMETERS } from 'superdesk-search/constants';
 
-SearchTags.$inject = ['$location', '$route', 'tags', 'asset', 'metadata'];
-export function SearchTags($location, $route, tags, asset, metadata) {
+SearchTags.$inject = ['$location', 'tags', 'asset', 'metadata'];
+export function SearchTags($location, tags, asset, metadata) {
     return {
         scope: {},
         templateUrl: asset.templateUrl('superdesk-search/views/search-tags.html'),
@@ -39,42 +39,42 @@ export function SearchTags($location, $route, tags, asset, metadata) {
             };
 
             scope.removeParameter = function(param) {
-                var params = $location.search();
-                if (params.q) {
-                    var found = false;
-                    angular.forEach(scope.cvs, function(cv) {
-                        // If it is subject code, remove it from left bar, too
-                        if (param.indexOf(cv.id + '.name:') !== -1) {
-                            var elementName = param.substring(
-                                param.indexOf('(') + 1,
-                                param.lastIndexOf(')')
-                            );
+                var searchParameters = $location.search();
 
-                            var codeList = scope.metadata[cv.list];
-                            var qcode = _.result(_.find(codeList, function(item) {
-                                                    return item.name === elementName;
-                                                }), 'qcode');
-                            if (qcode) {
-                                found = true;
-                                params.q = params.q.replace(cv.id + '.qcode:(' + qcode + ')', '').trim();
-                                $location.search('q', params.q || null);
-
-                                if (metadata.subjectScope != null) {
-                                    metadata.removeSubjectTerm(elementName);
-                                }
-                            }
-                        }
-                    });
-
-                    if (!found) {
-                        params.q = params.q.replace(param, '').trim();
-                        $location.search('q', params.q || null);
-                    }
+                if (searchParameters.q && searchParameters.q.indexOf(param) >= 0) {
+                    searchParameters.q = searchParameters.q.replace(param, '').trim();
+                    $location.search('q', searchParameters.q || null);
+                    return;
                 }
 
-                _.each(PARAMETERS, function(val, key) {
-                    if (param.indexOf(val) !== -1) {
-                        $location.search(key, null);
+                var parameterValue = '';
+
+                if (param.indexOf('(') >= 0) {
+                    parameterValue = param.substring(param.indexOf('(') + 1, param.lastIndexOf(')'));
+                } else {
+                    var type = param.split(':')[0];
+                    _.each(PARAMETERS, function(value, key) {
+                        if (type === value && searchParameters[key]) {
+                            $location.search(key, null);
+                            return;
+                        }
+                    });
+                }
+
+                angular.forEach(scope.cvs, function(cv) {
+                    if (param.indexOf(cv.name) !== -1) {
+                        var codeList = scope.metadata[cv.list];
+                        var qcode = _.result(_.find(codeList, function(code) {
+                                                return code.name === parameterValue;
+                                            }), 'qcode');
+                        if (qcode) {
+                            if (searchParameters[cv.field]) {
+                                tags.removeFacet(cv.field, qcode);
+                            } else {
+                                searchParameters.q = searchParameters.q.replace(cv.id + '.qcode:(' + qcode + ')', '').trim();
+                                $location.search('q', searchParameters.q || null);
+                            }
+                        }
                     }
                 });
             };

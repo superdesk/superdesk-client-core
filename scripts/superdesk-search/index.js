@@ -26,20 +26,20 @@ angular.module('superdesk.search', [
 
     .controller('MultiActionBar', MultiActionBarController)
 
-    .directive('sdSearchFacets', directive.SearchFacets)
+    .directive('sdSearchPanel', directive.SearchPanel)
     .directive('sdSearchTags', directive.SearchTags)
     .directive('sdSearchResults', directive.SearchResults)
-    .directive('sdSearchWithin',  directive.SearchWithin)
     .directive('sdSaveSearch', directive.SaveSearch)
     .directive('sdItemContainer', directive.ItemContainer)
     .directive('sdItemPreview', directive.ItemPreview)
     .directive('sdItemGlobalsearch', directive.ItemGlobalSearch)
     .directive('sdItemSearchbar', directive.ItemSearchbar)
-    .directive('sdItemSearch', directive.ItemSearch)
+    .directive('sdItemRepo', directive.ItemRepo)
     .directive('sdItemSortbar', directive.ItemSortbar)
     .directive('sdSavedSearchSelect', directive.SavedSearchSelect)
     .directive('sdSavedSearches', directive.SavedSearches)
     .directive('sdSearchContainer', directive.SearchContainer)
+    .directive('sdSearchParameters', directive.SearchParameters)
     .directive('sdMultiActionBar', directive.MultiActionBar)
 
     .config(['superdeskProvider', 'assetProvider', function(superdesk, asset) {

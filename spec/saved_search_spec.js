@@ -17,6 +17,7 @@ describe('saved_search', function() {
     it('can save a private search', function() {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openFilterPanel();
+        globalSearch.toggleSearchTabs('filters');
         expect(globalSearch.getItems().count()).toBe(14);
         expect(globalSearch.getPriorityElements().count()).toBe(3);
         var priority = globalSearch.getPriorityElementByIndex(0);
@@ -34,6 +35,7 @@ describe('saved_search', function() {
     it('can save a global search and another user sees it', function() {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openFilterPanel();
+        globalSearch.toggleSearchTabs('filters');
         expect(globalSearch.getItems().count()).toBe(14);
         expect(globalSearch.getPriorityElements().count()).toBe(3);
         var priority = globalSearch.getPriorityElementByIndex(0);

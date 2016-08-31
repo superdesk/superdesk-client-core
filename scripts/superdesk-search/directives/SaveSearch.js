@@ -1,9 +1,9 @@
-SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', 'gettext'];
+SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', 'gettext', '$rootScope'];
 
 /**
  * Opens and manages save search panel
  */
-export function SaveSearch($location, asset, api, session, notify, gettext) {
+export function SaveSearch($location, asset, api, session, notify, gettext, $rootScope) {
     return {
         templateUrl: asset.templateUrl('superdesk-search/views/save-search.html'),
         link: function(scope, elem) {
@@ -30,16 +30,20 @@ export function SaveSearch($location, asset, api, session, notify, gettext) {
             };
 
             scope.cancel = function () {
-                scope.sTab = scope.editingSearch ? false : true;
-                scope.resetEditingSearch();
+                scope.sTab = scope.editingSearch ? 'savedSearches' : 'advancedSearch';
+                scope.editingSearch = false;
                 scope.edit = null;
                 scope.activateSearchPane = false;
             };
 
             scope.clear = function() {
-                scope.resetEditingSearch();
+                scope.editingSearch = false;
                 scope.edit = null;
                 $location.url($location.path());
+            };
+
+            scope.search = function() {
+                $rootScope.$broadcast('search:parameters');
             };
 
             /**
@@ -50,7 +54,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext) {
                 function onSuccess() {
                     notify.success(gettext('Search was saved successfully'));
                     scope.cancel();
-                    scope.sTab = false;
+                    scope.sTab = 'savedSearches';
                     scope.edit = null;
                 }
 

@@ -146,8 +146,7 @@ function getDefaults(grunt) {
 
         // view formats for datepickers/timepickers
         view: {
-            // keep defaults different from model (for testing purposes)
-            dateformat: process.env.VIEW_DATE_FORMAT || 'MM/DD/YYYY',
+            dateformat: process.env.VIEW_DATE_FORMAT || 'DD/MM/YYYY',
             timeformat: process.env.VIEW_TIME_FORMAT || 'HH:mm'
         },
 

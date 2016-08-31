@@ -32,16 +32,39 @@ const DEFAULT_LIST_CONFIG = {
     ]
 };
 
+ItemList.$inject = [
+    '$location',
+    '$timeout',
+    '$injector',
+    '$filter',
+    'search',
+    'datetime',
+    'gettext',
+    'superdesk',
+    'workflowService',
+    'archiveService',
+    'activityService',
+    'multi',
+    'desks',
+    'familyService',
+    'Keys',
+    'dragitem',
+    'highlightsService',
+    'monitoringState',
+    'authoringWorkspace',
+    'gettextCatalog',
+    '$rootScope',
+    'config',
+    '$interpolate',
+    'metadata'
+];
+
 export function ItemList(
     $location,
     $timeout,
     $injector,
     $filter,
-    packages,
-    asset,
-    api,
     search,
-    session,
     datetime,
     gettext,
     superdesk,
@@ -1903,34 +1926,3 @@ export function ItemList(
         }
     };
 }
-
-ItemList.$inject = [
-    '$location',
-    '$timeout',
-    '$injector',
-    '$filter',
-    'packages',
-    'asset',
-    'api',
-    'search',
-    'session',
-    'datetime',
-    'gettext',
-    'superdesk',
-    'workflowService',
-    'archiveService',
-    'activityService',
-    'multi',
-    'desks',
-    'familyService',
-    'Keys',
-    'dragitem',
-    'highlightsService',
-    'monitoringState',
-    'authoringWorkspace',
-    'gettextCatalog',
-    '$rootScope',
-    'config',
-    '$interpolate',
-    'metadata'
-];
