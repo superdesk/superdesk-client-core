@@ -54,7 +54,7 @@
                         </div>
 
                         <div class="field">
-                            <label for="subType" translate>Subscriber Type</label>
+                            <label for="subType" translate>Target Type</label>
                             <select id="subType" ng-model="subscriber.subscriber_type" ng-options="s.qcode as s.name for s in subTypes" ng-change="changeFormats(subscriber.subscriber_type)" required>
                                 <option value=""></option>
                             </select>
@@ -94,7 +94,7 @@
                                 data-list="availableProducts"
                                 data-header="true">
                             </div>
-                        </div>    
+                        </div>
 
                         <div class="field">
                             <label translate>Sequence Number Settings</label>
