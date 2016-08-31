@@ -20,7 +20,7 @@ var DEFAULT_SCHEMA = Object.freeze({
     sign_off: {type: 'string'},
     footer: {},
     body_footer: {type: 'string'},
-    media: {},
+    feature_media: {},
     media_description: {}
 });
 
@@ -47,7 +47,7 @@ var DEFAULT_EDITOR = Object.freeze({
     footer: {order: 17},
     body_footer: {order: 18},
     sign_off: {order: 19},
-    media: {},
+    feature_media: {},
     media_description: {}
 });
 
