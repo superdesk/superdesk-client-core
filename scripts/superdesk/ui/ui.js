@@ -281,14 +281,17 @@ function DropdownPositionDirective($document) {
                     element.removeClass('dropup');
                 }
 
-                if (closeToLeft()) {
+                var isCloseToLeft = closeToLeft(),
+                    isCloseToRight = closeToRight();
+
+                if (isCloseToLeft) {
                     menu.removeClass('pull-right');
                 } else {
                     menu.addClass('pull-right');
                 }
 
                 if (isRightOriented) {
-                    if (closeToRight()) {
+                    if (isCloseToRight) {
                         menu.addClass('pull-right');
                     } else {
                         menu.removeClass('pull-right');
@@ -296,9 +299,9 @@ function DropdownPositionDirective($document) {
                 }
 
                 if (isInlineOriented) {
-                    if (closeToLeft() && !closeToRight()) {
+                    if (isCloseToLeft && !isCloseToRight) {
                         element.removeClass('dropleft').addClass('dropright');
-                    } else if (closeToRight() && !closeToLeft()) {
+                    } else if (isCloseToRight && !isCloseToLeft) {
                         element.removeClass('dropright').addClass('dropleft');
                     } else {
                         element.removeClass('dropright dropleft').addClass('dropdown-noarrow');
@@ -314,8 +317,8 @@ function DropdownPositionDirective($document) {
 
             // In authoring or modal, make dropdown's relative to theirs edge
             function checkWorkspace() {
-                workspace = element.closest('.modal').length ?
-                        element.closest('.modal') :
+                workspace = element.closest('.modal-content').length ?
+                        element.closest('.modal-content') :
                         element.closest('#authoring-container');
             }
 
@@ -326,7 +329,7 @@ function DropdownPositionDirective($document) {
 
             function closeToLeft() {
                 var leftEdge = workspace.length ?
-                        workspace.offset().left :
+                        element.offset().left - workspace.offset().left :
                         element.offset().left;
 
                 return leftEdge < tolerance;
@@ -334,7 +337,7 @@ function DropdownPositionDirective($document) {
 
             function closeToRight() {
                 var docWidth = $document.width(),
-                    elemPosition = element.offset().left + element.width();
+                    elemPosition = element.offset().left + element.find('.dropdown-menu').width();
 
                 return (docWidth - elemPosition) < tolerance;
             }

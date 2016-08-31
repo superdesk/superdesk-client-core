@@ -734,8 +734,8 @@ angular.module('superdesk.editor2', [
             controller: SdTextEditorBlockEmbedController
         };
     }])
-    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog', 'config',
-    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog, config) {
+    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog', 'config', '$rootScope',
+    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog, config, $rootScope) {
         var TOP_OFFSET = 134; // header height
 
         var EDITOR_CONFIG = {
@@ -1192,10 +1192,12 @@ angular.module('superdesk.editor2', [
                 scope.$on('key:ctrl:shift:s', render);
 
                 function render($event, event, preventStore) {
-                    stopTyping();
-                    editor.renderScope(scope, $event, preventStore);
-                    if (event) {
-                        event.preventDefault();
+                    if (!$rootScope.config.features || !$rootScope.config.features.useTansaProofing) {
+                        stopTyping();
+                        editor.renderScope(scope, $event, preventStore);
+                        if (event) {
+                            event.preventDefault();
+                        }
                     }
                 }
 
