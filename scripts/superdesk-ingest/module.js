@@ -1,4 +1,4 @@
-import BaseListController from 'superdesk-archive/controllers/baseList';
+import { BaseListController } from 'superdesk-archive/controllers';
 import d3 from 'd3';
 
 angular.module('superdesk.ingest.send', [

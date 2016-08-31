@@ -1,8 +1,8 @@
-import BaseListController from './baseList';
+import { BaseListController } from './BaseListController';
 
-class ArchiveListController extends BaseListController {
+export class ArchiveListController extends BaseListController {
     constructor($scope, $injector, $location, $q, $timeout, superdesk, session, api, desks, content,
-        StagesCtrl, notify, multi, search) {
+    StagesCtrl, notify, multi, search) {
         super($scope, $location, search, desks);
 
         var resource,
@@ -55,14 +55,17 @@ class ArchiveListController extends BaseListController {
             multi.reset();
         };
 
-        this.fetchItems = function fetchItems(criteria) {
+        this.fetchItems = function fetchItems(criteria, next) {
             if (resource == null) {
                 return;
             }
             $scope.loading = true;
+            criteria.aggregations = 1;
+            criteria.es_highlight = search.getElasticHighlight();
             resource.query(criteria).then(function(items) {
                 $scope.loading = false;
-                $scope.items = items;
+                $scope.items = search.mergeItems(items, $scope.items, next);
+                $scope.total = items._meta.total;
             }, function() {
                 $scope.loading = false;
             });
@@ -152,8 +155,5 @@ class ArchiveListController extends BaseListController {
 
 ArchiveListController.$inject = [
     '$scope', '$injector', '$location', '$q', '$timeout', 'superdesk',
-    'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi',
-    'search'
+    'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi', 'search'
 ];
-
-angular.module('superdesk.archive.list', []).controller('ArchiveListController', ArchiveListController);

@@ -1,4 +1,4 @@
-export default class BaseListController {
+export class BaseListController {
     constructor($scope, $location, search, desks) {
         this.lastQueryParams = {};
         this.$location = $location;
