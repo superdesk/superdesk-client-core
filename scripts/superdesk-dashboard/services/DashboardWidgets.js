@@ -1,6 +1,4 @@
-angular.module('superdesk.dashboard.widgets', [])
-.provider('dashboardWidgets', function() {
-
+export function DashboardWidgets() {
     var privateWidgets = {};
 
     this.addWidget = function(id, widget, debug) {
@@ -10,4 +8,4 @@ angular.module('superdesk.dashboard.widgets', [])
     this.$get = function() {
         return _.values(privateWidgets);
     };
-});
+}
