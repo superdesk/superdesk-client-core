@@ -1,13 +1,6 @@
-ConfigController.$inject = ['$scope'];
-function ConfigController($scope) {
-    $scope.configuration = _.clone($scope.widget.configuration);
+import { ConfigController } from 'superdesk-dashboard/controllers';
 
-    $scope.saveConfig = function() {
-        $scope.widget.configuration = $scope.configuration;
-        $scope.save();
-        $scope.$close();
-    };
-}
+Widget.$inject = ['$modal', 'asset'];
 
 /**
  * sdWidget give appropriate template to data assgined to it
@@ -18,8 +11,7 @@ function ConfigController($scope) {
  * Params:
  * @scope {Object} widget
  */
-angular.module('superdesk.dashboard').directive('sdWidget', [
-    '$modal', 'asset', function($modal, asset) {
+export function Widget($modal, asset) {
     return {
         templateUrl: asset.templateUrl('superdesk-dashboard/views/widget.html'),
         restrict: 'A',
@@ -36,4 +28,4 @@ angular.module('superdesk.dashboard').directive('sdWidget', [
             };
         }
     };
-}]);
+}

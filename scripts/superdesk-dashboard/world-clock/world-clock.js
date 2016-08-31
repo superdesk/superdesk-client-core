@@ -1,3 +1,4 @@
+import './world-clock.less';
 import d3 from 'd3';
 
 angular.module('superdesk.dashboard.world-clock', [

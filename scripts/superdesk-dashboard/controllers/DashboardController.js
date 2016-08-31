@@ -1,5 +1,7 @@
-DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces', 'modal', 'gettext', 'privileges'];
-function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces, modal, gettext, privileges) {
+DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces',
+'modal', 'gettext', 'privileges'];
+export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces,
+    modal, gettext, privileges) {
     var vm = this;
 
     $scope.edited = null;
@@ -128,37 +130,3 @@ function DashboardController($scope, desks, dashboardWidgets, api, session, work
         workspaces.getActive();
     };
 }
-
-export default angular.module('superdesk.dashboard', [
-    'superdesk.activity',
-    'superdesk.dashboard.widgets',
-    'superdesk.dashboard.grid',
-    'superdesk.dashboard.world-clock',
-    'superdesk.workspace.tasks',
-    'superdesk.itemList',
-    'superdesk.legal_archive',
-    'superdesk.workspace'
-])
-
-.controller('DashboardController', DashboardController)
-
-.filter('wcodeFilter', function() {
-    return function(input, values) {
-        return _.pick(input, _.difference(_.keys(input), _.keys(values)));
-    };
-})
-
-.config(['superdeskProvider', function(superdesk) {
-    superdesk.activity('/workspace', {
-        label: gettext('Workspace'),
-        description: gettext('Customize your widgets and views'),
-        controller: 'DashboardController',
-        controllerAs: 'dashboard',
-        templateUrl: 'scripts/superdesk-dashboard/views/workspace.html',
-        topTemplateUrl: 'scripts/superdesk-dashboard/views/workspace-topnav.html',
-        sideTemplateUrl: 'scripts/superdesk-workspace/views/workspace-sidenav.html',
-        priority: -1000,
-        adminTools: false,
-        category: superdesk.MENU_MAIN
-    });
-}]);
