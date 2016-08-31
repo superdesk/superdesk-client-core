@@ -168,6 +168,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             delete updates.renditions;
         }
 
+        // Remove sign off from update (if it is not mapped), it will get the publishing user appended in the backend
+        if (updates.sign_off && !(config.user && config.user.sign_off_mapping)) {
+            delete updates.sign_off;
+        }
+
         helpers.stripHtml(updates);
 
         // If the text equivalent of the body_html is empty then set the body empty

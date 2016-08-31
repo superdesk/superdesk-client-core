@@ -32,7 +32,7 @@ export function ArticleEditDirective(
             scope.toggleDetails = true;
             scope.errorMessage = null;
             scope.contentType = null;
-            scope.canEditSignOff = config.user && config.user.sign_off_mapping ? true: false;
+            scope.canListEditSignOff = config.user && config.user.sign_off_mapping ? true: false;
             scope.editSignOff = false;
 
             var mainEditScope = scope.$parent.$parent;

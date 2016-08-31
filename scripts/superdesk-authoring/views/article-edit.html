@@ -254,12 +254,23 @@
 
 <div class="field pull-left" ng-if="schema.sign_off" order="{{editor.sign_off.order}}" sd-width="{{editor.sign_off.sdWidth || 'full'}}">
     <label translate>Sign-Off</label>
-    <button class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="canEditSignOff && _editable">
+    <button class="btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
       <i class="icon-lock" ng-hide="editSignOff"></i>
       <i class="icon-unlocked" ng-show="editSignOff"></i>
     </button>
     <div ng-hide="editSignOff">{{item.sign_off}}</div>
-    <div ng-if="canEditSignOff && _editable"
+    <input type="text" sd-remove-tags
+         class="byline"
+         id="sign_off"
+         ng-model="item.sign_off"
+         ng-model-options="{debounce: 100}"
+         ng-change="autosave(item)"
+         ng-if="_editable && editSignOff"
+         placeholder="Sign off"
+         sd-focus-element
+         data-append-element=".field"
+         data-append-class="active">
+    <div ng-if="canListEditSignOff && _editable"
          ng-show="editSignOff"
          sd-user-select-list
          data-tabindex="editor.sign_off.order"
