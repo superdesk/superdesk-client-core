@@ -1,0 +1,26 @@
+<div>
+    <fieldset>
+        <div class="field">
+            <label translate>Slugline Match</label>
+            <div class="control">
+                <select ng-model="configuration.sluglineMatch" class="input-small">
+                    <option value="EXACT" selected translate>Exact</option>
+                    <option value="ANY" translate>Match Any</option>
+                    <option value="PREFIX" translate>Match Prefix</option>
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <label translate>Last Updated</label>
+            <div class="control">
+                <select ng-model="configuration.modificationDateAfter" class="input-small">
+                    <option value="now-6h" translate>6 Hours</option>
+                    <option value="now-12h" translate>12 Hours</option>
+                    <option value="today" selected translate>Today</option>
+                    <option value="now-24h" translate>24 Hours</option>
+                    <option value="now-48h" translate>48 Hours</option>
+                </select>
+            </div>
+        </div>
+    </fieldset>
+</div>

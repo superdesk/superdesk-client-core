@@ -130,7 +130,7 @@ angular.module('superdesk.itemList', ['superdesk.search'])
             query.source.query.filtered.filter.and.push({or: stateQuery});
         }
         // process creation date
-        var dateKeys = {creationDate: '_created', modificationDate: '_updated'};
+        var dateKeys = {creationDate: '_created', modificationDate: 'versioncreated'};
         var dateQuery = null;
         _.each(dateKeys, function(key, field) {
             if (options[field + 'Before'] || options[field + 'After']) {
@@ -175,35 +175,6 @@ angular.module('superdesk.itemList', ['superdesk.search'])
             };
         }
 
-        // Process related items only search
-        if (options.related === true && options.keyword) {
-            var queryRelatedItem = [];
-            var queryWords = [];
-            var sanitizedKeyword = options.keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
-            queryWords = sanitizedKeyword.split(' ');
-            var length = queryWords.length;
-
-            if (options.keyword.indexOf(' ') >= 0) {
-                queryRelatedItem.push('slugline' + ':("' + sanitizedKeyword + '")');
-            }
-
-            for (var i = 0; i < length; i++) {
-                if (queryWords[i]) {
-                    queryRelatedItem.push('slugline' + ':(' + queryWords[i] + ')');
-                }
-            }
-
-            if (queryRelatedItem.length) {
-                query.source.query.filtered.query = {
-                    query_string: {
-                        query: queryRelatedItem.join(' '),
-                        lenient: false,
-                        default_operator: 'OR'
-                    }
-                };
-            }
-        }
-
         // process search
         if (options.search) {
             var queryContentAny = [];
@@ -217,6 +188,55 @@ angular.module('superdesk.itemList', ['superdesk.search'])
                     default_operator: 'OR'
                 }
             };
+        }
+
+        // Process related items only search
+        if (options.related === true && options.keyword) {
+            var queryRelatedItem = [];
+            var sanitizedKeyword = options.keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
+            var queryWords = sanitizedKeyword.split(' ');
+            var length = queryWords.length;
+            options.sluglineMatch = options.sluglineMatch || '';
+
+            switch (options.sluglineMatch) {
+                case 'ANY': //any words in the slugline
+                    if (options.keyword.indexOf(' ') >= 0) {
+                        queryRelatedItem.push('slugline' + ':("' + sanitizedKeyword + '")');
+                    }
+
+                    for (var i = 0; i < length; i++) {
+                        if (queryWords[i]) {
+                            queryRelatedItem.push('slugline' + ':(' + queryWords[i] + ')');
+                        }
+                    }
+
+                    if (queryRelatedItem.length) {
+                        query.source.query.filtered.query = {
+                            query_string: {
+                                query: queryRelatedItem.join(' '),
+                                lenient: false,
+                                default_operator: 'OR'
+                            }
+                        };
+                    }
+
+                    break;
+                case 'PREFIX': //phrase prefix
+                    query.source.query.filtered.query = {
+                        match_phrase_prefix: {
+                            'slugline.phrase': sanitizedKeyword
+                        }
+                    };
+                    break;
+                default:
+                    // exact match on slugline
+                    query.source.query.filtered.query = {
+                        query_string: {
+                            query: 'slugline.phrase:("' + sanitizedKeyword + '")',
+                            lenient: false
+                        }
+                    };
+            }
         }
 
         // process saved search
@@ -233,7 +253,6 @@ angular.module('superdesk.itemList', ['superdesk.search'])
                 return query;
             });
         }
-
         return query;
     }
 
@@ -395,7 +414,7 @@ function(ItemList, notify, itemPinService, gettext, $timeout) {
                 $timeout.cancel(timeout);
                 timeout = $timeout(function() {
                     itemList.fetch();
-                }, 100, false);
+                }, 300, false);
             }
 
             extendScope(scope, itemList, itemPinService);
@@ -448,7 +467,7 @@ function(ItemList, notify, itemPinService, gettext) {
                     itemList.fetch();
                 }
             };
-            var refresh = _.debounce(_refresh, 100);
+            var refresh = _.debounce(_refresh, 300);
 
             extendScope(scope, itemList, itemPinService);
 

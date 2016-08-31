@@ -3,8 +3,13 @@
 ## [Unreleased]
 
 ### Added
-
 - Hightlight multiple spaces in spellcheck and suggest a single space instead.
+- Added related item configuration to search slugline using exact match, prefix match or any word match.
+- Added `useDefaultTimezone` for global search queries.
+
+### Fixed
+- Fix global search to include time part for date search.
+- Fix related item search to look for exact slugline search.
 
 ## [1.1] 2016-08-29
 

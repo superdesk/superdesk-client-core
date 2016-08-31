@@ -63,20 +63,26 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
     };
 
     /**
-     *  Returns the list of items having the same slugline in the last day
+     *  Returns the list of items having the same slugline from datetime
      *  @param {String} slugline
+     *  @fromDateTime {DateTime} fromDateTime
      *  @return {Object} the list of archive items
      */
-    this.getRelatedItems = function(slugline) {
-        var before24HrDateTime = moment().subtract(1, 'days').format(config.view.dateformat);
+    this.getRelatedItems = function(slugline, fromDateTime, item_id) {
+        var beforeDateTime = fromDateTime || moment().subtract(1, 'days').format(config.view.dateformat);
         var params = {};
-        params.q = 'slugline:(' + slugline + ')';
+        params.q = 'slugline.phrase:"' + slugline + '"'; // exact match
         params.ignoreKilled = true;
         params.ignoreDigital = true;
-        params.afterversioncreated = before24HrDateTime;
+        params.afterversioncreated = beforeDateTime;
 
         var query = search.query(params);
         query.size(200);
+
+        if (item_id) {
+            query.filter({not: {term: {_id: item_id}}});
+        }
+
         var criteria = query.getCriteria(true);
         criteria.repo = 'archive,published';
 

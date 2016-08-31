@@ -10,7 +10,13 @@ angular.module('superdesk.widgets.relatedItem', [
             template: 'scripts/superdesk-archive/related-item-widget/widget-relatedItem.html',
             order: 7,
             side: 'right',
-            display: {authoring: true, packages: false, killedItem: true, legalArchive: false, archived: false}
+            display: {authoring: true, packages: false, killedItem: true, legalArchive: false, archived: false},
+            configurationTemplate: 'scripts/superdesk-archive/related-item-widget/relatedItem-configuration.html',
+            configurable: true,
+            configuration: {
+                sluglineMatch: 'EXACT',
+                modificationDateAfter: 'today'
+            }
         });
     }]);
 
@@ -18,7 +24,6 @@ RelatedItemController.$inject = [
     '$scope',
     'api',
     'BaseWidgetController',
-    '$location',
     'notify',
     'superdesk',
     '$q',
@@ -32,7 +37,6 @@ function RelatedItemController (
     $scope,
     api,
     BaseWidgetController,
-    $location,
     notify,
     superdesk,
     $q,
@@ -46,9 +50,10 @@ function RelatedItemController (
         endpoint: 'search',
         repo: ['archive', 'published'],
         notStates: ['spiked'],
-        types: ['text', 'picture', 'audio', 'video', 'composite', 'preformatted'],
+        types: ['text', 'composite'],
         page: 1,
-        modificationDateAfter: 'now-1d'
+        modificationDateAfter: today(),
+        sluglineMatch: 'EXACT'
     };
     $scope.options = {
         pinEnabled: true,
@@ -58,8 +63,18 @@ function RelatedItemController (
         mode: 'basic',
         pinMode: 'archive',
         related: true,
-        itemTypes: ['text', 'picture', 'audio', 'video', 'composite']
+        itemTypes: ['text', 'composite'],
+        sort: [{versioncreated: 'desc'}]
     };
+
+    function today() {
+        if (config.search && config.search.useDefaultTimezone) {
+            return moment().tz(config.defaultTimezone).format('YYYY-MM-DD') +
+                'T00:00:00' + moment.tz(config.defaultTimezone).format('ZZ');
+        }
+        return moment().format('YYYY-MM-DD') + 'T00:00:00' + moment().format('ZZ');
+    }
+
     $scope.actions = {
         apply: {
             title: 'Associate metadata',
@@ -170,4 +185,28 @@ function RelatedItemController (
     }
 
     BaseWidgetController.call(this, $scope);
+
+    $scope.$watch('widget.configuration', function(config) {
+        if (config && config.sluglineMatch && config.sluglineMatch !== $scope.itemListOptions.sluglineMatch) {
+            $scope.itemListOptions.sluglineMatch = config.sluglineMatch;
+        }
+
+        if (config && config.modificationDateAfter &&
+            config.modificationDateAfter !== $scope.itemListOptions.modificationDateAfter) {
+            if (config.modificationDateAfter === 'today') {
+                $scope.itemListOptions.modificationDateAfter = today();
+            } else {
+                $scope.itemListOptions.modificationDateAfter = config.modificationDateAfter;
+            }
+        }
+    }, true);
+
+    function reset() {
+        if ($scope.widget && $scope.widget.configuration) {
+            $scope.widget.configuration.modificationDateAfter = 'today';
+            $scope.widget.configuration.sluglineMatch = 'EXACT';
+        }
+    }
+
+    reset();
 }

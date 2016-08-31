@@ -344,11 +344,23 @@ describe('authoring', function() {
     });
 
     it('related item widget', function() {
+        monitoring.actionOnItem('Duplicate', 2, 1); // duplicate item9 text published item
+        monitoring.actionOnItem('Edit', 0, 0);
+        authoring.writeTextToHeadline('Duplicate Item 9');
+        authoring.save();
+        authoring.close();
         monitoring.actionOnItem('Edit', 2, 1);
+        expect(authoring.missing_link.getText()).toBe('MISSING LINK');
         authoring.openRelatedItem();
-        expect(authoring.getRelatedItems().count()).toBe(7);
-        authoring.searchRelatedItems('item3');
         expect(authoring.getRelatedItems().count()).toBe(1);
+        authoring.searchRelatedItems('slugline');
+        expect(authoring.getRelatedItems().count()).toBe(0);
+        authoring.openRelatedItemConfiguration();
+        authoring.setRelatedItemConfigurationSlugline('ANY');
+        authoring.setRelatedItemConfigurationLastUpdate('now-48h');
+        authoring.saveRelatedItemConfiguration();
+        browser.sleep(500);
+        expect(authoring.getRelatedItems().count()).toBe(2);
     });
 
     it('related item widget can open published item', function() {

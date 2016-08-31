@@ -35,6 +35,7 @@
             <div class="data">{{item.correction_sequence}}</div>
         </div>
         <div>
+            <span class="state-label missing-link" ng-if="missing_link && schema.relatedItems" translate>Missing Link</span>
             <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
             <span class="state-label sms" ng-if="item.flags.marked_for_sms" translate>Sms</span>
             <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>

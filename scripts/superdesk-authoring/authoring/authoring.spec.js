@@ -49,7 +49,6 @@ describe('authoring', function() {
 
         $compile('<div sd-authoring-header></div>')(scope);
         scope.$digest();
-
         expect(scope.item.anpa_category.length).toBe(1);
         expect(scope.item.anpa_category[0].name).toBe('Motoring');
         expect(scope.item.anpa_category[0].qcode).toBe('paservice:motoring');
