@@ -578,7 +578,8 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             cv: '=',
             includeParent: '@',
             tabindex: '=',
-            searchUnique: '@'
+            searchUnique: '@',
+            setLanguage: '@'
         },
         templateUrl: 'scripts/superdesk-authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem, attrs) {
@@ -731,7 +732,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         }
                     }
 
-                    if (term.language) {
+                    if (term.language && scope.setLanguage) {
                         o.language = term.language;
                     }
 
