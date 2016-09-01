@@ -35,7 +35,7 @@
                                 <label class="inline-label sd-radio"><input type="radio" ng-model="product.edit.content_filter.filter_type" value="blocking">{{ :: 'Blocking' | translate }}<span class="check"></span></label>
                             </div>
                             <div class="field">
-                                <label for="geoRestrictions" translate>Geographical Restrictions</label>
+                                <label for="geoRestrictions" translate>Target Regions</label>
                                 <select id="geoRestrictions" ng-model="product.edit.geo_restrictions" ng-options="g.qcode as g.name for g in geoRestrictions">
                                     <option value=""></option>
                                 </select>
