@@ -394,12 +394,9 @@ function MonitoringGroupDirective(cards, api, authoringWorkspace, $timeout, supe
             scope.loading = false;
             scope.cacheNextItems = [];
             scope.cachePreviousItems = [];
-            scope.limited = (monitoring.singleGroup || scope.group.type === 'highlights') ? false : true;
+            scope.limited = !(monitoring.singleGroup || scope.group.type === 'highlights' || scope.group.type === 'spike');
 
             scope.style = {};
-            if (scope.limited) {
-                updateGroupStyle();
-            }
 
             scope.edit = edit;
             scope.select = select;
@@ -411,6 +408,7 @@ function MonitoringGroupDirective(cards, api, authoringWorkspace, $timeout, supe
                 if (scope.limited) {
                     updateGroupStyle();
                 }
+
                 queryItems();
             });
 
@@ -542,7 +540,7 @@ function MonitoringGroupDirective(cards, api, authoringWorkspace, $timeout, supe
             };
 
             function updateGroupStyle() {
-                scope.style.maxHeight = scope.group.max_items ? scope.group.max_items * ITEM_HEIGHT : null;
+                scope.style.maxHeight = (scope.group.max_items || 10) * ITEM_HEIGHT;
             }
             /*
              * Bind item actions on keyboard shortcuts
