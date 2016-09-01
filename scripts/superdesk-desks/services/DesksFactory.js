@@ -2,16 +2,13 @@ DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify',
 export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter) {
     var userDesks, userDesksPromise;
 
-    var _fetchAll = function(endpoint, page, items) {
-        page = page || 1;
-        items = items || [];
-
-        return api.query(endpoint, {max_results: 200, page: page})
+    var _fetchAll = function(endpoint, parent, page=1, items=[]) {
+        return api.query(endpoint, {max_results: 25, page: page}, parent)
         .then(function(result) {
             items = items.concat(result._items);
             if (result._links.next) {
                 page++;
-                return _fetchAll(endpoint, page, items);
+                return _fetchAll(endpoint, parent, page, items);
             }
             return items;
         });
@@ -128,9 +125,9 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             return $q.when();
         },
         fetchUserDesks: function(user) {
-            return api.get(user._links.self.href + '/desks').then(function(response) {
-                if (response && response._items) {
-                    response._items = $filter('sortByName')(response._items);
+            return _fetchAll('user_desks', {'_id': user._id}).then(function(response) {
+                if (response) {
+                    response = $filter('sortByName')(response);
                 }
 
                 return $q.when(response);
@@ -186,15 +183,15 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             });
         },
         getCurrentDeskId: function() {
-            if (!this.userDesks || !this.userDesks._items || this.userDesks._items.length === 0) {
+            if (!this.userDesks || this.userDesks.length === 0) {
                 return null;
             }
-            if (!this.activeDeskId || !_.find(this.userDesks._items, {_id: this.activeDeskId})) {
+            if (!this.activeDeskId || !_.find(this.userDesks, {_id: this.activeDeskId})) {
                 if (session.identity.desk) {
-                    var defaultDesk = _.find(this.userDesks._items, {_id: session.identity.desk});
-                    return (defaultDesk && defaultDesk._id) || this.userDesks._items[0]._id;
+                    var defaultDesk = _.find(this.userDesks, {_id: session.identity.desk});
+                    return (defaultDesk && defaultDesk._id) || this.userDesks[0]._id;
                 }
-                return this.userDesks._items[0]._id;
+                return this.userDesks[0]._id;
             }
             return this.activeDeskId;
         },

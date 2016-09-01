@@ -28,7 +28,7 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
         }
 
         desks.fetchCurrentUserDesks().then(function(desks) {
-            vm.desks = desks._items;
+            vm.desks = desks;
         });
     }
 
