@@ -1,0 +1,1 @@
+export { DictionaryService } from './DictionaryService';
