@@ -23,7 +23,6 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     publish_schedule: null,
     flags: null,
     pubstatus: null,
-    more_coming: false,
     target_regions: [],
     target_types: [],
     target_subscribers: [],

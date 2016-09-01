@@ -405,7 +405,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             !current_item.embargo && current_item._current_version > 0 &&
             (this.isPublished(current_item) || !current_item.publish_schedule) &&
             (angular.isUndefined(current_item.takes) || current_item.takes.last_take === current_item._id) &&
-            (angular.isUndefined(current_item.more_coming) || !current_item.more_coming) && !isBroadcast &&
+            !isBroadcast &&
             !current_item.rewritten_by;
 
         action.new_take = new_take;

@@ -351,7 +351,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 var deskId = scope.selectedDesk._id;
                 var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
 
-                scope.item.more_coming = true;
                 scope.item.sendTo = true;
                 return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
                     .then(function() {
@@ -369,7 +368,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         authoringWorkspace.edit(item);
                     })
                     .catch(function() {
-                        scope.item.more_coming = false;
                         scope.item.sendTo = false;
                         notify.error(gettext('Failed to send and continue.'));
                     })
