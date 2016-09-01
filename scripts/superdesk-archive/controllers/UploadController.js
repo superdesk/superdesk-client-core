@@ -158,4 +158,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         }
         checkFail();
     };
+
+    if ($scope.locals && $scope.locals.data) {
+        $scope.addFiles($scope.locals.data);
+    }
 }
