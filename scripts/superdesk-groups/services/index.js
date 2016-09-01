@@ -1,0 +1,1 @@
+export { GroupsFactory } from './GroupsFactory';
