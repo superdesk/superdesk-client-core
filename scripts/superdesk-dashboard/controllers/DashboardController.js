@@ -1,5 +1,7 @@
-DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces', 'modal', 'gettext', 'privileges'];
-export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces, modal, gettext, privileges) {
+DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces',
+'modal', 'gettext', 'privileges'];
+export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces,
+    modal, gettext, privileges) {
     var vm = this;
 
     $scope.edited = null;
