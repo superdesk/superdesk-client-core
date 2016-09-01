@@ -1,0 +1,1 @@
+export { HighlightsService } from './HighlightsService';
