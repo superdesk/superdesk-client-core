@@ -71,7 +71,7 @@ angular.module('superdesk.archive', [
                 label: gettext('Upload media'),
                 modal: true,
                 cssClass: 'upload-media modal-responsive',
-                controller: 'UploadController',
+                controller: ctrl.UploadController,
                 templateUrl: 'scripts/superdesk-archive/views/upload.html',
                 filters: [
                     {action: 'upload', type: 'media'}
