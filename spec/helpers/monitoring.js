@@ -268,7 +268,7 @@ function Monitoring() {
 
     this.selectGivenItem = function(item) {
         var itemTypeIcon = item.element(by.css('.type-icon'));
-        browser.actions().mouseMove(itemTypeIcon, {x: -50, y: -50}).mouseMove(itemTypeIcon).perform();
+        browser.actions().mouseMove(itemTypeIcon, {x: -100, y: -100}).mouseMove(itemTypeIcon).perform();
         var checkbox = item.element(by.className('sd-checkbox'));
         waitFor(checkbox, 500);
         return checkbox.click();
@@ -495,7 +495,7 @@ function Monitoring() {
     };
 
     this.showHideList = function() {
-        element(by.className('big-icon-view')).click();
+        element(by.css('[href="#/workspace/monitoring"]')).click();
     };
 
     this.openCreateMenu = function() {

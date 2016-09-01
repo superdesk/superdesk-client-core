@@ -1,10 +1,16 @@
 <li ng-class="{active: currentRoute.href === '/workspace'}">
-    <a href="#/workspace" class="big-icon-dashboard" ng-click="hideMonitoring(currentRoute.href === '/workspace', $event)"
-       title="{{ :: 'Dashboard' | translate }}" sd-hotkey="alt+h" sd-hotkey-options="{global: true}"></a>
+    <a href="#/workspace" ng-click="hideMonitoring(currentRoute.href === '/workspace', $event)"
+       title="{{ :: 'Dashboard' | translate }}" sd-hotkey="alt+h" sd-hotkey-options="{global: true}">
+        <i class="big-icon-dashboard main-icon"></i>
+        <i class="big-icon-chevron-left helper-icon"></i>
+    </a>
 </li>
 <li ng-class="{active: currentRoute.href === '/workspace/monitoring'}">
-    <a href="#/workspace/monitoring" class="big-icon-view" ng-click="hideMonitoring(currentRoute.href === '/workspace/monitoring', $event)"
-       title="{{ :: 'Monitoring' | translate }}" sd-hotkey="alt+m" sd-hotkey-options="{global: true}"></a>
+    <a href="#/workspace/monitoring" ng-click="hideMonitoring(currentRoute.href === '/workspace/monitoring', $event)"
+       title="{{ :: 'Monitoring' | translate }}" sd-hotkey="alt+m" sd-hotkey-options="{global: true}">
+        <i class="big-icon-view main-icon"></i>
+        <i class="big-icon-chevron-left helper-icon"></i>
+    </a>
 </li>
 <li ng-class="{active: currentRoute.href === '/workspace/highlights'}">
     <div class="dropdown dropright dropdown-hover highlights-dropdown"
@@ -14,30 +20,42 @@
     </div>
 </li>
 <li ng-class="{active: currentRoute.href === '/workspace/tasks'}" ng-if="privileges.tasks && workspaceConfig.tasks">
-    <a href="#/workspace/tasks" class="big-icon-tasks" ng-click="hideMonitoring(currentRoute.href === '/workspace/tasks', $event)"
-       title="{{ :: 'Tasks' | translate }}" sd-hotkey="alt+t" sd-hotkey-options="{global: true}"></a>
+    <a href="#/workspace/tasks" ng-click="hideMonitoring(currentRoute.href === '/workspace/tasks', $event)"
+       title="{{ :: 'Tasks' | translate }}" sd-hotkey="alt+t" sd-hotkey-options="{global: true}">
+        <i class="big-icon-tasks main-icon"></i>
+        <i class="big-icon-chevron-left helper-icon"></i>
+    </a>
 </li>
 <li ng-class="{active: currentRoute.href === '/workspace/spike-monitoring'}">
-    <a href="#/workspace/spike-monitoring" class="big-icon-spiked" ng-click="hideMonitoring(currentRoute.href === '/workspace/spike-monitoring', $event)"
-       title="{{ :: 'Spike' | translate }}" sd-hotkey="alt+x" sd-hotkey-options="{global: true}"></a>
+    <a href="#/workspace/spike-monitoring" ng-click="hideMonitoring(currentRoute.href === '/workspace/spike-monitoring', $event)"
+       title="{{ :: 'Spike' | translate }}" sd-hotkey="alt+x" sd-hotkey-options="{global: true}">
+        <i class="big-icon-spiked main-icon"></i>
+        <i class="big-icon-chevron-left helper-icon"></i>
+    </a>
 </li>
-<li ng-if="workspaceConfig.content && privileges.archive"
-    ng-class="{active: currentRoute.href === '/workspace/content'}">
-    <a href="#/workspace/content" class="big-icon-archive"
-       title="{{ :: 'Content' | translate }}"></a>
+<li ng-class="{active: currentRoute.href === '/workspace/content'}" ng-if="workspaceConfig.content && privileges.archive">
+    <a href="#/workspace/content" title="{{ :: 'Content' | translate }}">
+      <i class="big-icon-archive main-icon"></i>
+      <i class="big-icon-chevron-left helper-icon"></i>
+    </a>
 </li>
 
 <hr>
 <li ng-class="{active: currentRoute.href === '/workspace/personal'}">
-    <a href="#/workspace/personal" class="big-icon-personal" ng-click="hideMonitoring(currentRoute.href === '/workspace/personal', $event)"
-       title="{{ :: 'Personal' | translate }}" sd-hotkey="alt+p" sd-hotkey-options="{global: true}"></a>
+    <a href="#/workspace/personal" ng-click="hideMonitoring(currentRoute.href === '/workspace/personal', $event)"
+       title="{{ :: 'Personal' | translate }}" sd-hotkey="alt+p" sd-hotkey-options="{global: true}">
+        <i class="big-icon-personal main-icon"></i>
+        <i class="big-icon-chevron-left helper-icon"></i>
+    </a>
 </li>
 <li ng-class="{active: currentRoute.href === '/search'}">
    <div class="dropdown dropright dropdown-hover highlights-dropdown" dropdown>
-      <a href="#/search" class="dropdown-toggle big-icon-global-search" 
+      <a href="#/search" class="dropdown-toggle"
         title="{{ :: 'Search' | translate }}"
         sd-hotkey="alt+f" sd-hotkey-options="{global: true}"
         ng-click="hideMonitoring(currentRoute.href === '/search', $event)">
+          <i class="big-icon-global-search main-icon"></i>
+          <i class="big-icon-chevron-left helper-icon"></i>
       </a>
       <ul ng-if="$root.config.features.scanpixSearchShortcut && providers.length > 0" class="dropdown-menu pull-left">
         <li ng-repeat="provider in providers track by provider._id">
