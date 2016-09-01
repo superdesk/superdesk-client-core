@@ -858,8 +858,7 @@ describe('authoring actions', function() {
                 'type': 'text',
                 'task': {
                     'desk': 'desk1'
-                },
-                'more_coming': true
+                }
             };
 
             var userPrivileges = {
@@ -906,7 +905,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 1
             };
 
@@ -968,7 +966,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 10,
                 'archive_item': {
                     '_id': 'test',
@@ -978,7 +975,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 10
                 }
             };
@@ -1014,7 +1010,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 10,
                 'archive_item': {
                     '_id': 'test',
@@ -1024,7 +1019,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 10
                 }
             };
@@ -1066,7 +1060,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 10,
                 'archive_item': {
                     '_id': 'test',
@@ -1076,7 +1069,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 10
                 }
             };
@@ -1110,7 +1102,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 8,
                 'archive_item': {
                     '_id': 'test',
@@ -1120,7 +1111,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 10
                 }
             };
@@ -1153,7 +1143,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 8,
                 'archive_item': {
                     '_id': 'test',
@@ -1163,7 +1152,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 8
                 }
             };
@@ -1196,7 +1184,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 8,
                 'archive_item': {
                     '_id': 'test',
@@ -1206,7 +1193,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 8
                 }
             };
@@ -1241,7 +1227,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 0
             };
 
@@ -1276,7 +1261,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 0
             };
 
@@ -1311,7 +1295,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 1
             };
 
@@ -1346,7 +1329,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 1
             };
 
@@ -1381,7 +1363,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 1,
                 'embargo': Date()
             };
@@ -1417,7 +1398,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 1,
                 'publish_schedule': Date()
             };
@@ -1456,7 +1436,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 2,
                 'publish_schedule': pastTimestamp
             };
@@ -1492,7 +1471,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 10,
                 'genre': [],
                 'archive_item': {
@@ -1503,7 +1481,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 10,
                     'genre': []
                 }
@@ -1539,7 +1516,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 10,
                 'genre': [{'name': 'Article', 'value': 'Article'}],
                 'archive_item': {
@@ -1550,7 +1526,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 10,
                     'genre': [{'name': 'Article', 'value': 'Article'}]
                 }
@@ -1586,7 +1561,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 10,
                 'genre': [
                     {'name': 'Interview', 'value': 'Interview'},
@@ -1600,7 +1574,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 10,
                     'genre': [
                         {'name': 'Interview', 'value': 'Interview'},
@@ -1640,7 +1613,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 1,
                 'genre': [
                     {'name': 'Interview', 'value': 'Interview'}
@@ -1654,7 +1626,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 1,
                     'genre': [
                         {'name': 'Interview', 'value': 'Interview'}
@@ -1683,7 +1654,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 1,
                 'genre': [],
                 'archive_item': {
@@ -1695,7 +1665,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 1,
                     'genre': []
                 }
@@ -1721,7 +1690,6 @@ describe('authoring actions', function() {
                 'task': {
                     'desk': 'desk1'
                 },
-                'more_coming': false,
                 '_current_version': 10,
                 'rewritten_by': '123',
                 'genre': [
@@ -1735,7 +1703,6 @@ describe('authoring actions', function() {
                     'task': {
                         'desk': 'desk1'
                     },
-                    'more_coming': false,
                     '_current_version': 10,
                     'rewritten_by': '123',
                     'genre': [
