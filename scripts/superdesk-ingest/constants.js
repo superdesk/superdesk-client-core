@@ -45,7 +45,8 @@ export const feedParsers = [
     {value: 'zczc', name: 'ZCZC Parser'},
     {value: 'ap_anpa1312', name: 'AP ANPA parser'},
     {value: 'text_file', name: 'Text File'},
-    {value: 'News Bites', name: 'News Bites'}
+    {value: 'News Bites', name: 'News Bites'},
+    {value: 'pa_nitf', name: 'PA NITF'}
 ];
 
 export const PROVIDER_DASHBOARD_DEFAULTS = {
