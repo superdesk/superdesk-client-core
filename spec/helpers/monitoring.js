@@ -610,7 +610,8 @@ function Monitoring() {
         dropdownMenu = element(by.id('select-desk-menu'));
 
         // open dropdown
-        dropdownBtn.click();
+        browser.actions().mouseMove(dropdownBtn, {x: -50, y: -50}).
+        mouseMove(dropdownBtn).click().perform();
 
         function textFilter(elem) {
             return elem.element(by.tagName('button')).getText()
