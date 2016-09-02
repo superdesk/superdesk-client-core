@@ -110,7 +110,7 @@ function getDefaults(grunt) {
         // backend server URLs configuration
         server: {
             url: grunt.option('server') || process.env.SUPERDESK_URL || 'http://localhost:5000/api',
-            ws: grunt.option('ws') || process.env.SUPERDESK_WS_URL || 'ws://localhost:5100'
+            ws: grunt.option('ws') || process.env.SUPERDESK_WS_URL || 'ws://0.0.0.0:5100'
         },
 
         // iframely settings
