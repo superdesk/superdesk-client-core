@@ -1,0 +1,1 @@
+export { LegalArchiveController } from './LegalArchiveController';
