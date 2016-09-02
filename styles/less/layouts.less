@@ -542,6 +542,7 @@ a:hover {
             float:none;
             .btn {
                 display:block;
+                position: relative;
                 box-sizing: border-box;
                 width: @tablist-width;
                 height: @tablist-width;
@@ -558,6 +559,26 @@ a:hover {
                     border: 1px solid #898989;
                     border-width: 0 0 1px 0 !important;
                 }
+                .helper-icon, .main-icon {
+                  position: absolute;
+                  top: 10px;
+                  left: 10px;
+                }
+                .helper-icon {
+                  opacity: 0;
+                  margin: 0;
+                  left: 12px;
+                  width: 24px;
+                  height: 24px;
+                  font-size: 24px;
+                  line-height: 24px;
+                  z-index: 2;
+                  transition: all 0.4s 0s, transform 0.3s 0s;
+                }
+                .main-icon {
+                  opacity: 1;
+                  transition: all 0.2s, transform 0.2s;
+                }
             }
             .label--info {
                 position: absolute;
@@ -570,7 +591,23 @@ a:hover {
                 .btn {
                     background: #b8b8b8;
                 }
+                .btn:hover {
+                  .helper-icon {
+                    opacity: 1;
+                    transform: rotate(180deg);
+                    transition: all 0.3s 0.2s, transform 0.2s 0.2s;
+                  }
+                  .main-icon {
+                    opacity: 0;
+                    height:8px;
+                    width:8px;
+                    top: 20px;
+                    left: 20px;
+                    background-size: 100%;
+                  }
+                }
             }
+
         }
     }
 }
