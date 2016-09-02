@@ -92,6 +92,8 @@ export function SearchResults(
                 }
             });
 
+            scope.$on('aggregations:changed', queryItems);
+
             scope.$on('broadcast:preview', function(event, args) {
                 scope.previewingBroadcast = true;
                 scope.preview(args.item);

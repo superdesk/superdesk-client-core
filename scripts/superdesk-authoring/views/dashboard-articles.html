@@ -1,14 +1,14 @@
-<div sd-modal data-model="active" class="modal--fullscreen">
+<div sd-modal data-model="active" class="modal--fullscreen animate-zoom__from-bottom-left">
     <div class="modal-header">
         <h3 class="pull-left" translate>Currently working on</h3>
         <div class="btn-group pull-right">
-            <button ng-click="closeDashboard()" title="{{ :: 'Close'|translate}}"><i class="icon-close-small"></i></button>
+            <button ng-click="closeDashboard()" title="{{ :: 'Close'|translate}}" class="animate-slide-in__from-right"><i class="icon-close-small"></i></button>
         </div>
     </div>
 
     <div class="modal-body">
         <div class="flex-grid box wrap-items small-2 medium-3 large-5 xlarge-6">
-            <div class="flex-item card-box card-box--with-click card-box--flex" ng-repeat="article in items track by article._id"  ng-class="{active: article === active}"> 
+            <div class="flex-item card-box card-box--with-click card-box--flex" ng-repeat="article in items track by article._id"  ng-class="{active: article === active}">
                 <a class="card-box__full-click" ng-click="edit(article, $event)" ng-href="{{ :: link(article)}}"></a>
                 <span class="close cardbox__close" ng-click="closeItem(article)"><i class="icon-close-small white"></i></span>
                 <div class="card-box__header card-box__header--padded-flex">
