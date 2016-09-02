@@ -20,10 +20,13 @@ angular.module('superdesk.menu', [
     // set flags for other directives
     .directive('sdSuperdeskView', ['asset', function(asset) {
 
-        SuperdeskViewController.$inject = ['superdeskFlags'];
-
-        function SuperdeskViewController(superdeskFlags) {
+        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk'];
+        function SuperdeskViewController(superdeskFlags, superdesk) {
             this.flags = superdeskFlags.flags;
+
+            this.openUpload = function openUpload(files) {
+                superdesk.intent('upload', 'media', files);
+            };
         }
 
         return {
