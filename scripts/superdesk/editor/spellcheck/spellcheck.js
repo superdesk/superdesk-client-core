@@ -264,7 +264,6 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
             while (tree.nextNode()) {
                 // TODO: check double space before looping on each words
                 while ((dblSpacesMatch = dblSpacesRegExp.exec(tree.currentNode.textContent)) != null) {
-                    console.log('dbspaces?', tree.currentNode.textContent, dblSpacesMatch);
                     var dblSpace = dblSpacesMatch[1];
 
                     errors.push({
