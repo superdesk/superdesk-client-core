@@ -10,3 +10,10 @@ test-server/__pycache__
 e2e-test-results
 templates-cache.generated.js
 .env
+npm-debug.log
+
+# VIM related files
+*.swo
+*.swp
+*.swn
+*.swm
