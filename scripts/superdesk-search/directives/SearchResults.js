@@ -160,7 +160,6 @@ export function SearchResults(
                 }
                 criteria.source.from = 0;
                 scope.total = null;
-                scope.items = null;
                 criteria.aggregations = $rootScope.aggregations;
                 criteria.es_highlight = search.getElasticHighlight();
                 return api.query(getProvider(criteria), criteria).then(function (items) {
@@ -192,7 +191,7 @@ export function SearchResults(
             }
 
             function scheduleIfShouldUpdate(event, data) {
-                if (data && data.item && _.includes(['item:spike', 'item:unspike'], event.name)) {
+                if (data && data.item && _.includes(['item:spike', 'item:unspike', 'item:deleted'], event.name)) {
                     // item was spiked/unspikes from the list
                     extendItem(data.item, {
                         gone: true,
