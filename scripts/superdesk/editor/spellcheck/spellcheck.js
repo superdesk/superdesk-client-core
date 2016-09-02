@@ -253,13 +253,27 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
         return getDict().then(function(d) {
             var errors = [],
                 regexp = /[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]+/g,
+                dblSpacesRegExp = /\S(\s{2,})\S/g,
                 match,
+                dblSpacesMatch,
                 currentOffset = 0,
                 tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
 
             var objSentenceWords = getSentenceWords(node.textContent, currentOffset);
 
             while (tree.nextNode()) {
+                // TODO: check double space before looping on each words
+                while ((dblSpacesMatch = dblSpacesRegExp.exec(tree.currentNode.textContent)) != null) {
+                    console.log('dbspaces?', tree.currentNode.textContent, dblSpacesMatch);
+                    var dblSpace = dblSpacesMatch[1];
+
+                    errors.push({
+                        word: dblSpace,
+                        index: currentOffset + dblSpacesMatch.index + 1,
+                        sentenceWord: false
+                    });
+                }
+
                 while ((match = regexp.exec(tree.currentNode.textContent)) != null) {
                     var word = match[0];
                     var isSentenceWord = !!objSentenceWords[currentOffset + match.index];
