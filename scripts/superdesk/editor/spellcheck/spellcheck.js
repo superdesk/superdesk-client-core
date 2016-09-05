@@ -313,7 +313,6 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
                 });
                 angular.extend(result.corrections, Object.keys(wordFoundInDict));
 
-                console.log('result corrections', result.corrections);
                 return result.corrections.map(function(key) {
                     return {key: key, value: key};
                 });
