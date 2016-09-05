@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Hightlight multiple spaces in spellcheck and suggest a single space instead.
+
 ## [1.1] 2016-08-29
 
 ### Added
