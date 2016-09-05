@@ -262,7 +262,6 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
             var objSentenceWords = getSentenceWords(node.textContent, currentOffset);
 
             while (tree.nextNode()) {
-                // TODO: check double space before looping on each words
                 while ((dblSpacesMatch = dblSpacesRegExp.exec(tree.currentNode.textContent)) != null) {
                     var dblSpace = dblSpacesMatch[1];
 
@@ -298,19 +297,26 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
      * @param {string} word
      */
     this.suggest = function suggest(word) {
-        return api.save('spellcheck', {
-            word: word,
-            language_id: lang
-        }).then(function(result) {
-            var allDict = getDict();
-            var wordFoundInDict = _.pick(allDict.content, function(value, key) {
-                if (key.toLowerCase() === word.toLowerCase()) {
-                    return key;
-                }
+        if (word.match(/^\s+$/i))
+            return Promise.resolve([{key: ' ', value: 'Add single space'}]);
+        else
+            return api.save('spellcheck', {
+                word: word,
+                language_id: lang
+            }).then(function(result) {
+                var allDict = getDict();
+                var wordFoundInDict = _.pick(allDict.content, function(value, key) {
+                    if (key.toLowerCase() === word.toLowerCase()) {
+                        return key;
+                    }
+                });
+                angular.extend(result.corrections, Object.keys(wordFoundInDict));
+
+                console.log('result corrections', result.corrections);
+                return result.corrections.map(function(key) {
+                    return {key: key, value: key};
+                });
             });
-            angular.extend(result.corrections, Object.keys(wordFoundInDict));
-            return result.corrections || [];
-        });
     };
 
     /**
