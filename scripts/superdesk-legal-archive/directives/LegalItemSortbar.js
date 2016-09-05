@@ -18,10 +18,7 @@ export function LegalItemSortbar(legal, asset) {
                 legal.toggleSortDir();
             };
 
-            scope.canSort = function canSort()
-            {
-                return true;
-            };
+            scope.canSort = () => true;
 
             scope.$on('$routeUpdate', getActive);
             getActive();
