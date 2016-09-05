@@ -299,8 +299,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
     this.suggest = function suggest(word) {
         if (word.match(/^\s+$/i)) {
             return Promise.resolve([{key: ' ', value: 'Add single space'}]);
-        }
-        else {
+        } else {
             return api.save('spellcheck', {
                 word: word,
                 language_id: lang
