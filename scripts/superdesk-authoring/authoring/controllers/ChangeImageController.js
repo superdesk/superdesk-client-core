@@ -51,7 +51,8 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         function validateMediaFields() {
             _.each($scope.data.requiredFields, function (key) {
                 var value = $scope.data.metadata[key];
-                if (value == null || _.isEmpty(value) || value === '<br>') {
+                var regex = new RegExp('\^<*br\/*\>*$', 'i');
+                if (!!!value || value.match(regex)) {
                     throw gettext('Required field(s) missing');
                 }
             });
