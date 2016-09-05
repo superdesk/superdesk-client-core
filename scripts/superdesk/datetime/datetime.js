@@ -150,11 +150,12 @@ export default angular.module('superdesk.datetime', [
 
     .directive('sdDatetime', DateTimeDirective)
 
-    .filter('reldate', function reldateFactory() {
+    .filter('reldate', ['gettextCatalog', function reldateFactory(gettextCatalog) {
         return function reldate(date) {
+            moment.locale(gettextCatalog.currentLanguage);
             return moment(date).fromNow();
         };
-    })
+    }])
 
     /**
      * Returns the difference between given date and the

@@ -37,7 +37,7 @@
                                 class="dropdown-toggle line-input"
                                 ng-model="template.template_type"
                                 ng-change="resetDesks()"
-                                ng-options="type._id as type.label for type in types| filter:templatesFilter"
+                                ng-options="type._id as type.label | translate for type in types| filter:templatesFilter"
                                 required>
                         </select>
                         <span class="arrow-down"><b class="caret"></b></span>

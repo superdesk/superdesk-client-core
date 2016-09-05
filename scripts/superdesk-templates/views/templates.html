@@ -40,7 +40,7 @@
               <div class="card-box__content">
                   <ul class="card-box__content-list">
                       <li>
-                          <h4 class="with-value">{{ :: 'Template type' | translate }} <span class="value-label">{{ template.template_type }}</span></h4>
+                          <h4 class="with-value">{{ :: 'Template type' | translate }} <span class="value-label">{{ template.template_type | translate }}</span></h4>
                       </li>
                       <li ng-if="getTemplateDesks(template)">
                           <h4>{{ :: 'Desk(s)' | translate }}</h4>
@@ -54,7 +54,7 @@
                       <li ng-if="template.schedule.is_active">
                           <h4>{{ :: 'Automated item creation' | translate }}</h4>
                           <span ng-repeat="day in template.schedule.day_of_week">
-                              {{ :: weekdays[day] }}
+                              {{ :: weekdays[day] | translate }}
                               <span ng-if="$index < template.schedule.day_of_week.length-1">, </span>
                           </span>
                           <span class="creation-time"> <i class="icon-time"></i> at {{ template.schedule.create_at | time }}<span>
