@@ -50,7 +50,8 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         /* Throw an exception if a required metadata field is missing */
         function validateMediaFields() {
             _.each($scope.data.requiredFields, function (key) {
-                if ($scope.data.metadata[key] == null || _.isEmpty($scope.data.metadata[key])) {
+                var value = $scope.data.metadata[key];
+                if (value == null || _.isEmpty(value) || value === '<br>') {
                     throw gettext('Required field(s) missing');
                 }
             });
