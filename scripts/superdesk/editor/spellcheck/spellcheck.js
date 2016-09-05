@@ -297,9 +297,10 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
      * @param {string} word
      */
     this.suggest = function suggest(word) {
-        if (word.match(/^\s+$/i))
+        if (word.match(/^\s+$/i)) {
             return Promise.resolve([{key: ' ', value: 'Add single space'}]);
-        else
+        }
+        else {
             return api.save('spellcheck', {
                 word: word,
                 language_id: lang
@@ -317,6 +318,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
                     return {key: key, value: key};
                 });
             });
+        }
     };
 
     /**
