@@ -1763,6 +1763,7 @@ export function ItemList(
 
                         if (!oldItem || !isSameVersion(oldItem, item) ||
                             !isArchiveItemSameVersion(oldItem, item)) {
+
                             itemsById[itemId] = angular.extend({}, oldItem, item);
                         }
 

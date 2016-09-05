@@ -448,8 +448,9 @@ export function SearchService($location, gettext, config, session) {
                     _.forEach(_.keys(item.es_highlight), function (key) {
                         item[key] = item.es_highlight[key][0];
                     });
+                } else {
+                    item.es_highlight = [];
                 }
-
                 return item;
             });
         }
@@ -510,6 +511,11 @@ export function SearchService($location, gettext, config, session) {
                 return _.extend(item, _.find(newItems._items,
                     {_id: item._id, _current_version: item._current_version}));
             } else {
+                // remove gone flag to prevent item remaining grey, if gone item moves back to this stage.
+                if (angular.isDefined(item.gone)) {
+                    item = _.omit(item, 'gone');
+                }
+
                 return _.extend(item, _.find(newItems._items, {_id: item._id}));
             }
         });
