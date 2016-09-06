@@ -18,6 +18,8 @@ export function LegalItemSortbar(legal, asset) {
                 legal.toggleSortDir();
             };
 
+            scope.canSort = () => true;
+
             scope.$on('$routeUpdate', getActive);
             getActive();
         }

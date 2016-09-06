@@ -63,6 +63,8 @@ export function LegalArchiveService($q, api, notify, $location, gettext, config)
         if (params.sort) {
             var sort = params.sort.split(':');
             criteria.sort = formatSort(sort[0], sort[1]);
+        } else {
+            criteria.sort = formatSort('versioncreated', 'desc');
         }
 
         return criteria;
