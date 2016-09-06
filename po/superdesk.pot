@@ -2485,7 +2485,7 @@ msgstr ""
 msgid "Formatters"
 msgstr ""
 
-#: scripts/superdesk/datetime/datetime.js:193
+#: scripts/superdesk/datetime/datetime.js:192
 msgid "Friday"
 msgstr ""
 
@@ -3428,7 +3428,7 @@ msgstr ""
 msgid "Modified:"
 msgstr ""
 
-#: scripts/superdesk/datetime/datetime.js:189
+#: scripts/superdesk/datetime/datetime.js:188
 msgid "Monday"
 msgstr ""
 
@@ -4742,7 +4742,7 @@ msgstr ""
 msgid "Runs spellchecker"
 msgstr ""
 
-#: scripts/superdesk/datetime/datetime.js:194
+#: scripts/superdesk/datetime/datetime.js:193
 msgid "Saturday"
 msgstr ""
 
@@ -5512,7 +5512,7 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#: scripts/superdesk/datetime/datetime.js:195
+#: scripts/superdesk/datetime/datetime.js:194
 msgid "Sunday"
 msgstr ""
 
@@ -5846,7 +5846,7 @@ msgstr ""
 msgid "This week"
 msgstr ""
 
-#: scripts/superdesk/datetime/datetime.js:192
+#: scripts/superdesk/datetime/datetime.js:191
 msgid "Thursday"
 msgstr ""
 
@@ -5866,6 +5866,10 @@ msgstr ""
 #: scripts/superdesk-archive/views/metadata-view.html:135
 #: scripts/superdesk/ui/views/sd-timezone.html:1
 msgid "Time Zone"
+msgstr ""
+
+#: scripts/superdesk/lang/missing-translations-strings.js:29
+msgid "Timezone"
 msgstr ""
 
 #: scripts/superdesk-archive/views/upload.html:41
@@ -5944,7 +5948,7 @@ msgstr ""
 msgid "Trying to reconnect...<br>Please wait."
 msgstr ""
 
-#: scripts/superdesk/datetime/datetime.js:190
+#: scripts/superdesk/datetime/datetime.js:189
 msgid "Tuesday"
 msgstr ""
 
@@ -6332,7 +6336,7 @@ msgstr ""
 msgid "Weak"
 msgstr ""
 
-#: scripts/superdesk/datetime/datetime.js:191
+#: scripts/superdesk/datetime/datetime.js:190
 msgid "Wednesday"
 msgstr ""
 

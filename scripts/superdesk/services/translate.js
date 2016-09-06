@@ -21,7 +21,10 @@ export default angular.module('superdesk.translate', ['gettext', 'superdesk.sess
                         gettextCatalog.setCurrentLanguage(gettextCatalog.baseLanguage);
                     }
                 }
+                //set locale for date/time management
+                moment.locale(gettextCatalog.currentLanguage);
             });
+
             var params = $location.search();
             if ('lang' in params) {
                 gettextCatalog.currentLanguage = params.lang;
