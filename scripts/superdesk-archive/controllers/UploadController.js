@@ -77,6 +77,9 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     };
 
     $scope.addFiles = function(files) {
+        if (!files.length) {
+            return false;
+        }
         _.each(files, function(file) {
             if (/^image/.test(file.type)) {
                 EXIF.getData(file, function() {
