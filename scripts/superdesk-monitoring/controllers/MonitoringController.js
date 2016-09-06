@@ -1,0 +1,59 @@
+MonitoringController.$inject = ['$location', 'desks'];
+export function MonitoringController($location, desks) {
+    this.state = {};
+
+    this.preview = preview;
+    this.closePreview = closePreview;
+    this.previewItem = null;
+
+    this.selectedGroup = null;
+    this.bindedItems = [];
+
+    this.singleGroup = null;
+    this.viewSingleGroup = viewSingleGroup;
+    this.viewMonitoringHome = viewMonitoringHome;
+
+    this.queryParam = $location.search();
+
+    this.edit = edit;
+    this.editItem = null;
+
+    this.totalItems = '';
+    this.showRefresh = false;
+
+    this.isDeskChanged = function () {
+        return desks.changeDesk;
+    };
+
+    this.highlightsDeskChanged = function () {
+        if (desks.changeDesk) {
+            $location.url('/workspace/monitoring');
+        }
+    };
+
+    var vm = this;
+
+    function preview(item) {
+        vm.previewItem = item;
+        vm.state['with-preview'] = !!item;
+    }
+
+    function closePreview() {
+        preview(null);
+    }
+
+    function edit(item) {
+        vm.editItem = item;
+        vm.state['with-authoring'] = !!item;
+    }
+
+    function viewSingleGroup(group, type) {
+        group.singleViewType = type;
+        vm.singleGroup = group;
+    }
+
+    function viewMonitoringHome() {
+        vm.singleGroup.singleViewType = null;
+        vm.singleGroup = null;
+    }
+}

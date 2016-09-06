@@ -652,8 +652,9 @@ angular.module('superdesk.editor2', [
                     return;
                 }
                 var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.video'];
-                element.on('drop', function(event) {
+                element.on('drop dragdrop', function(event) {
                     event.preventDefault();
+                    event.stopPropagation();
                     var media_type = event.originalEvent.dataTransfer.types[0];
                     var item = angular.fromJson(event.originalEvent.dataTransfer.getData(media_type));
                     var paragraph = angular.element(event.target);
@@ -669,6 +670,7 @@ angular.module('superdesk.editor2', [
                     if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
                         // allow to overwite the drop binder (see above)
                         event.preventDefault();
+                        event.stopPropagation();
                         // if dragged element is a picture and if the paragraph is empty, highlight the paragraph
                         if (paragraph.text() === '') {
                             return paragraph.addClass(dragOverClass);

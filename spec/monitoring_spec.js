@@ -477,11 +477,13 @@ describe('monitoring', function() {
 
         expect(monitoring.getGroupItems(1).count()).toBe(4);
         monitoring.selectItem(1, 2);
+        browser.sleep(1000); //Wait for animation
         monitoring.spikeMultipleItems();
         expect(monitoring.getGroupItems(1).count()).toBe(3);
         monitoring.showSpiked();
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
         monitoring.selectSpikedItem(0);
+        browser.sleep(1000); //Wait for animation
         monitoring.unspikeMultipleItems();
         expect(monitoring.getSpikedItems().count()).toBe(0);
     });

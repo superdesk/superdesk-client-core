@@ -41,7 +41,7 @@
         </h3>
         <div sd-multi-action-bar></div>
         <div class="subnav__button-stack--square-buttons">
-             <div class="refresh-box pull-right">                
+             <div class="refresh-box pull-right">
                 <button ng-if="monitoring.showRefresh &&
                     (monitoring.singleGroup || type === 'spike' || type === 'highlights')"
                 ng-click="refreshGroup(monitoring.singleGroup)"
@@ -69,9 +69,9 @@
                 <li ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                     <a href="" ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
                     <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
-                    <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack" 
+                    <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack"
                     title="{{ :: 'Takes Package' | translate }}"></i>
-                    <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack" 
+                    <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack"
                     title="{{ :: 'Highlight Package' | translate }}"></i>
                 </li>
             </ul>
@@ -88,9 +88,9 @@
                             <div ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                                 <a ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
                                 <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
-                                <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack" 
+                                <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack"
                                 title="{{ :: 'Takes Package' | translate }}"></i>
-                                <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack" 
+                                <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack"
                                 title="{{ :: 'Highlight Package' | translate }}"></i>
                             </div>
                         </li>
@@ -119,7 +119,7 @@
                     <div sd-monitoring-group data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"></div>
                 </div>
                 <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()">
-                    <div sd-monitoring-group class="single-group" 
+                    <div sd-monitoring-group class="single-group"
                     data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
                     data-view-type="'highlights'"></div>
                 </div>

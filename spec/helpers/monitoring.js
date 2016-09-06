@@ -504,6 +504,7 @@ function Monitoring() {
     };
 
     this.openSendMenu = function() {
+        browser.sleep(500);
         element(by.className('svg-icon-sendto')).click();
         browser.sleep(100);
     };

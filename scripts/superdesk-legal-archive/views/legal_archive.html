@@ -1,9 +1,9 @@
 <div class="subnav subnav--plain">
     <header class="search-page-header">
         <div class="filter-trigger" ng-click="openAdvanceSearch = !openAdvanceSearch" ng-class="{'filter-trigger--active': openAdvanceSearch}"><i class="icon-filter-large"></i></div>
-        <div sd-legal-item-sortbar></div>
         <div sd-pagination data-items="items"></div>
         <div class="searchbar-flex-handler"></div>
+        <div sd-legal-item-sortbar></div>
 
         <div class="view-select">
             <button tooltip="{{ :: 'switch to grid view' | translate }}" tooltip-placement="left"  ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-th"></i></button>
@@ -58,14 +58,13 @@
                                 <input type="text" id="search-storytext" ng-model="criteria.body_html" tabindex="4">
                             </div>
                         </div>
-
-                        <div class="field" sd-date-param data-location="criteria.published_before">
-                            <label for="published_before" translate>Published before</label>
-                            <div sd-datepicker id="published_before" ng-model="criteria.published_before"></div>
-                        </div>
                         <div class="field" sd-date-param data-location="criteria.published_after">
-                            <label for="published_after" translate>Published after</label>
+                            <label for="published_after" translate>Published From</label>
                             <div sd-datepicker id="published_after" ng-model="criteria.published_after"></div>
+                        </div>
+                        <div class="field" sd-date-param data-location="criteria.published_before">
+                            <label for="published_before" translate>Published Until</label>
+                            <div sd-datepicker id="published_before" ng-model="criteria.published_before"></div>
                         </div>
                     </fieldset>
                 </form>
