@@ -29,12 +29,14 @@ export function ItemAssociationDirective(superdesk, renditions, $timeout, api, $
             elem.on('dragover', function(event) {
                 if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
                     event.preventDefault();
+                    event.stopPropagation();
                 }
             });
 
             // update item associations on drop
-            elem.on('drop', function(event) {
+            elem.on('drop dragdrop', function(event) {
                 event.preventDefault();
+                event.stopPropagation();
                 var item = getItem(event, event.originalEvent.dataTransfer.types[0]);
                 // ingest picture if it comes from an external source (create renditions)
                 if (scope.isEditable()) {
