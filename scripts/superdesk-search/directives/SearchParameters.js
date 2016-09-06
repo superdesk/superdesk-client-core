@@ -1,7 +1,7 @@
 SearchParameters.$inject = [
-    '$location', 'asset', 'tags', 'metadata', 'desks', 'userList', 'gettext'
+    '$location', 'asset', 'tags', 'metadata', 'desks', 'userList', 'gettext', 'gettextCatalog'
 ];
-export function SearchParameters($location, asset, tags, metadata, desks, userList, gettext) {
+export function SearchParameters($location, asset, tags, metadata, desks, userList, gettext, gettextCatalog) {
     return {
         scope: {
             repo: '=',
@@ -208,12 +208,12 @@ export function SearchParameters($location, asset, tags, metadata, desks, userLi
                             }
                             if (typeof(val) === 'string'){
                                 if (val) {
-                                    metas.push(key + ':(' + val + ')');
+                                    metas.push(gettextCatalog.getString(key) + ':(' + gettextCatalog.getString(val) + ')');
                                 }
                             } else if (angular.isArray(val)) {
                                 angular.forEach(val, function(value) {
                                     value = value.replace(pattern, '');
-                                    metas.push(key + ':(' + value + ')');
+                                    metas.push(gettextCatalog.getString(key) + ':(' + gettextCatalog.getString(value) + ')');
                                 });
                             } else {
                                 var subkey = getFirstKey(val);

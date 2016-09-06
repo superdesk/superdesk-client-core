@@ -1,7 +1,7 @@
 import { PARAMETERS } from 'superdesk-search/constants';
 
-TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search', 'gettextCatalog'];
-export function TagService($location, desks, userList, metadata, search, gettextCatalog) {
+TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search'];
+export function TagService($location, desks, userList, metadata, search) {
     var tags = {};
     tags.selectedFacets = {};
     tags.selectedParameters = [];
@@ -47,10 +47,7 @@ export function TagService($location, desks, userList, metadata, search, gettext
             }
 
             if (!added) {
-                //work with param to add translation
-                var paramArr = parameter.split(':');
-                var parameterTranslated = gettextCatalog.getString(paramArr[0]) + ':' + paramArr[1];
-                tags.selectedParameters.push(parameterTranslated);
+                tags.selectedParameters.push(parameter);
             }
 
             parameters = parameters.replace(parameter, '');

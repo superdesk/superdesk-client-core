@@ -25,5 +25,6 @@ gettext('12th update');gettext('13th update');gettext('14th update');gettext('15
 gettext('18th update');gettext('19th update');gettext('20th update');gettext('\'PLACE is a required field\'');
 gettext('Content Profiles');gettext('ANPA Take Key');gettext('Body HTML');gettext('By');gettext('Date');gettext('Located');
 gettext('\'DATELINE is a required field\'');gettext('\"GENRE \'null value not allowed\'');gettext('slugline');gettext('subscription');
-gettext('Populate Abstract');gettext('NTB currency macro');
+gettext('Populate Abstract');gettext('NTB Currency Macro');gettext('\'CATEGORY is a required field\'');
+gettext('\'must be of list type\'\"');gettext('create');gettext('highlights');gettext('Timezone');
 
