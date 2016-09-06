@@ -111,6 +111,22 @@ describe('spellcheck', function() {
         expect(errors.length).toBe(4);
     }));
 
+    it('can report if text contains multiple spaces', inject(function(spellcheck, api, $rootScope) {
+        // Test with existing words in dictionary
+        var p = createParagraph('Foo what? Foo is foo.');
+
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(0);
+
+        // now test if existing word comes after .|?|!|: starts with small letter.
+        p = createParagraph('Foo  what? Foo is   foo.');
+
+        spellcheck.errors(p).then(assignErrors);
+        $rootScope.$digest();
+        expect(errors.length).toBe(2);
+    }));
+
     it('can report error for sentences beginning with any quotes and starts with small letter',
     inject(function(spellcheck, api, $rootScope) {
         // Test with existing words in dictionary.
