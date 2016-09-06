@@ -299,8 +299,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
     this.suggest = function suggest(word) {
         if (word.match(/^\s+$/i)) {
             return Promise.resolve([{key: ' ', value: 'Add single space'}]);
-        }
-        else {
+        } else {
             return api.save('spellcheck', {
                 word: word,
                 language_id: lang
@@ -311,12 +310,10 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
                         return key;
                     }
                 });
+
                 angular.extend(result.corrections, Object.keys(wordFoundInDict));
 
-                console.log('result corrections', result.corrections);
-                return result.corrections.map(function(key) {
-                    return {key: key, value: key};
-                });
+                return result.corrections.map(key => ({key: key, value: key}));
             });
         }
     };

@@ -1153,8 +1153,14 @@ angular.module('superdesk.editor2', [
 
                         spellcheck.suggest(node.textContent).then(function(suggestions) {
                             if (scope.sentenceWord) {
-                                suggestions.push(scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1));
-                                scope.suggestions = _.unique(suggestions);
+                                suggestions.push({
+                                    key: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1),
+                                    value: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1)
+                                });
+
+                                scope.suggestions = suggestions.filter(suggestion => {
+                                    return suggestion.key !== scope.replaceWord;
+                                });
                             } else {
                                 scope.suggestions = suggestions;
                             }
