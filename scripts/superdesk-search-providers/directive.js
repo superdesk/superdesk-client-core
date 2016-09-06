@@ -1,51 +1,4 @@
-/**
- * This file is part of Superdesk.
- *
- * Copyright 2013, 2014 Sourcefabric z.u. and contributors.
- *
- * For the full copyright and license information, please see the
- * AUTHORS and LICENSE files distributed with this source code, or
- * at https://www.sourcefabric.org/superdesk/license
- */
-
-var app = angular.module('superdesk.searchProviders', ['superdesk.activity', 'superdesk.api']);
-
-app.value('providerTypes', {
-    aapmm: 'AAP Multimedia',
-    paimg: 'PA Images',
-    // quick fix to have several scanpix instance (needed for SDNTB-237)
-    // FIXME: temporary fix, need to be refactored (SD-4448)
-    'scanpix(ntbtema)': 'ScanPix (ntbtema)',
-    'scanpix(ntbkultur)': 'ScanPix (ntbkultur)',
-    'scanpix(desk)': 'ScanPix (desk)',
-    'scanpix(npk)': 'ScanPix (npk)',
-});
-
-SearchProviderService.$inject = ['providerTypes', '$filter', 'api', 'allowed'];
-function SearchProviderService(providerTypes, $filter, api, allowed) {
-    return {
-        getAllowedProviderTypes: function() {
-            return allowed.filterKeys(providerTypes, 'search_providers', 'search_provider');
-        },
-        getSearchProviders: function() {
-            return api.search_providers.query({}).then(
-                function(result) {
-                    return $filter('sortByName')(result._items, 'search_provider');
-                }
-            );
-        }
-    };
-}
-
-SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
-/**
- * Controller for the Search Provider Settings.
- */
-function SearchProviderSettingsController($scope, privileges) {
-}
-
-SearchProviderConfigDirective.$inject = ['searchProviderService', 'gettext', 'notify', 'api', 'modal'];
-function SearchProviderConfigDirective(searchProviderService, gettext, notify, api, modal) {
+export default function SearchProviderConfigDirective(searchProviderService, gettext, notify, api, modal) {
     return {
         templateUrl: 'scripts/superdesk-search-providers/views/search-provider-config.html',
         link: function ($scope) {
@@ -142,27 +95,4 @@ function SearchProviderConfigDirective(searchProviderService, gettext, notify, a
     };
 }
 
-app
-    .directive('sdSearchProviderConfig', SearchProviderConfigDirective)
-    .service('searchProviderService', SearchProviderService)
-    .config(['superdeskProvider', function(superdesk) {
-        superdesk
-            .activity('/settings/searchProviders', {
-                label: gettext('Search Providers'),
-                templateUrl: 'scripts/superdesk-search-providers/views/settings.html',
-                controller: SearchProviderSettingsController,
-                category: superdesk.MENU_SETTINGS,
-                privileges: {search_providers: 1},
-                priority: 2000
-            });
-    }])
-    .config(['apiProvider', function(apiProvider) {
-        apiProvider.api('search_providers', {
-            type: 'http',
-            backend: {
-                rel: 'search_providers'
-            }
-        });
-    }]);
-
-export default app;
+SearchProviderConfigDirective.$inject = ['searchProviderService', 'gettext', 'notify', 'api', 'modal'];
