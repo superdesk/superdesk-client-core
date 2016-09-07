@@ -579,7 +579,9 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
             var clipboardData = e.originalEvent.clipboardData || window.clipboardData;
             var pastedData = clipboardData.getData('Text');
 
-            document.execCommand("insertHTML", false, pastedData);
+            $timeout(function() {
+                document.execCommand('insertHTML', false, pastedData);
+            });
         },
         isEditable: function(picture) {
             return picture._type !== 'externalsource';
