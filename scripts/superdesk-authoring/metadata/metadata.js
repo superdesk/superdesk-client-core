@@ -567,7 +567,6 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
         scope: {
             item: '=',
             field: '@',
-            resetDependent: '&',
             disabled: '=ngDisabled',
             list: '=',
             unique: '@',
@@ -601,7 +600,11 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     return;
                 }
 
-                var tree = {};
+                var tree = {}, updates = {};
+                if (scope.cv && scope.cv.dependent) {
+                    updates[scope.field] = [];
+                }
+
                 angular.forEach(items, function(item) {
                     var parent = item.parent || null;
                     if (!tree.hasOwnProperty(parent)) {
@@ -609,7 +612,23 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     } else {
                         tree[parent].push(item);
                     }
+
+                    // checks for dependent dropdowns to remain selected items if new list has them (not to reset)
+                    angular.forEach(scope.item[scope.field], function(selectedItem) {
+                        if (scope.cv && scope.cv.dependent) {
+                            if (selectedItem.scheme === scope.cv._id){
+                                if (item.name === selectedItem.name){
+                                    updates[scope.field].push(selectedItem);
+                                }
+                            // this is for subject (which is not dependent)
+                            } else if (updates[scope.field].indexOf(selectedItem) === -1){
+                                updates[scope.field].push(selectedItem);
+                            }
+                        }
+                    });
                 });
+
+                _.extend(scope.item, updates);
 
                 scope.terms = filterSelected(items);
                 scope.tree = tree;
@@ -689,14 +708,6 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 });
             }
 
-            function resetDependent (update) {
-                if (scope.resetDependent) {
-                    return scope.resetDependent({item: scope.item}) || {};
-                } else {
-                    return {};
-                }
-            }
-
             function addTerm(term) {
                 // Only select terms that are not already selected
                 if (!_.find(scope.item[scope.field], function(i) {return i[scope.uniqueField] === term[scope.uniqueField];})) {
@@ -715,22 +726,6 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                     //build object
                     var o = {};
-
-                    // dependent is set only for category
-                    if ('resetDependent' in attrs) {
-                        if (term.single_value) {
-                            // if only single selection supported -> reset all selected values on dependent CVs
-                            o = resetDependent();
-                        } else {
-                            //delete if already selected a service with single value
-                            _.forEach(scope.item[scope.field], function(service) {
-                                if (service.single_value) {
-                                    o = resetDependent();
-                                    t = [];
-                                }
-                            });
-                        }
-                    }
 
                     if (term.language && scope.setLanguage) {
                         o.language = term.language;
@@ -763,7 +758,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     if (!reloadList) {
                         // Remove the selected term from the terms
                         scope.terms = _.without(scope.terms, term);
-                        scope.activeTree = _.without(scope.activeTree, term);
+                        scope.activeTree = scope.terms;
                     }
 
                     $timeout(function() {
@@ -794,10 +789,6 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 var tempItem = {},
                     subjectCodesArray = scope.item[scope.field],
                     filteredArray = _.without(subjectCodesArray, term);
-
-                if ('resetDependent' in attrs && term.single_value) {
-                    tempItem = resetDependent();
-                }
 
                 if (subjectCodesArray && filteredArray.length === subjectCodesArray.length) {
                     _.remove(filteredArray, {name: term});
