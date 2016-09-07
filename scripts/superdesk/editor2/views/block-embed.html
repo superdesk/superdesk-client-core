@@ -19,6 +19,7 @@
         ng-model="vm.caption"
         ng-model-options="{debounce: 1000}"
         ng-change="vm.saveCaption(vm.caption)"
+        ng-paste="vm.handlePasta($event)"
         contenteditable="true"
         class="image-caption contenteditable-input">
     </div>
