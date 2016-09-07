@@ -1,7 +1,7 @@
 AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata',
-            'content', 'lodash', 'authoring', 'vocabularies'];
+            'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config'];
 export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content,
-    lodash, authoring, vocabularies) {
+    lodash, authoring, vocabularies, $timeout, config) {
     return {
         templateUrl: 'scripts/superdesk-authoring/views/authoring-header.html',
         require: '?^sdAuthoringWidgets',
@@ -78,6 +78,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 }
 
                 scope.loaded = true;
+                scope.missing_link = false;
 
                 if (!archiveService.isLegal(scope.item)) {
                     if (item.profile) {
@@ -91,13 +92,6 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     } else {
                         scope.editor = authoring.editor = content.editor();
                         scope.schema = authoring.schema = content.schema();
-                    }
-
-                    // Related Items
-                    if (scope.item.slugline) {
-                        archiveService.getRelatedItems(scope.item.slugline).then(function(items) {
-                            scope.relatedItems = items;
-                        });
                     }
 
                     var relatedItemWidget = _.filter(authoringWidgets, function (widget) {
@@ -117,6 +111,33 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     };
                 }
             });
+
+            function getRelatedItems() {
+                // Related Items
+                scope.missing_link = false;
+                if (scope.item.slugline && scope.item.type === 'text') {
+                    //get the midnight based on the defaultTimezone not the user timezone.
+                    var fromDateTime = moment().tz(config.defaultTimezone).format(config.view.dateformat);
+                    archiveService.getRelatedItems(scope.item.slugline, fromDateTime, scope.item._id)
+                        .then(function(items) {
+                            scope.relatedItems = items;
+                            if (items && items._items.length) {
+                                var takes_package = _.find(scope.item.linked_in_packages, function(linked_package) {
+                                    return linked_package && linked_package.package_type === 'takes';
+                                });
+                                // if takes package is missing or not rewrite of.
+                                scope.missing_link = !takes_package && !scope.item.rewrite_of &&
+                                    !scope.item.rewritten_by;
+                            }
+                        });
+                }
+            }
+
+            if (!archiveService.isLegal(scope.item)) {
+                scope.$watch('item.slugline', function() {
+                    $timeout(getRelatedItems, 800);
+                });
+            }
 
             /**
              * Sets the anpa category corresponding to the required subservice: if a subservice

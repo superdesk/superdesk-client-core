@@ -199,7 +199,7 @@ describe('takes', function() {
         authoring.save();
 
         authoring.openRelatedItem(); // opens related item widget
-        authoring.searchRelatedItems('Story1');
+        authoring.searchRelatedItems('Story1 slugline');
         browser.sleep(100);
         authoring.actionRelatedItem(0, 'Associate as take');
         browser.sleep(100);

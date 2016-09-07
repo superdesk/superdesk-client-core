@@ -145,13 +145,36 @@ export function SearchService($location, gettext, config, session) {
     };
 
     /**
+     * Prepares the date based on the timezone settings.
+     * If useDefaultTimezone is used then all search are based on the server timezone else users browser timezone
+     * @param {String} date - Date selected by the User
+     * @param {String} time_suffix - time part
+     * @return {String} date
+     */
+    function formatDate(date, time_suffix) {
+        var local = moment(date, config.view.dateformat).format('YYYY-MM-DD') + time_suffix;
+        if (config.search && config.search.useDefaultTimezone) {
+            // use the default timezone of the server.
+            local += moment.tz(config.defaultTimezone).format('ZZ');
+        } else {
+            // use the client timezone of the server.
+            local += moment().format('ZZ');
+        }
+        return local;
+    }
+
+    this.formatDate = formatDate;
+
+    /**
      * Single query instance
      */
     function Query(_params) {
         var size,
             filters = [],
             post_filters = [],
-            params = {};
+            params = {},
+            zero_hour_suffix = 'T00:00:00',
+            midnight_suffix = 'T23:59:59';
 
         angular.forEach(_params, function(value, key) {
             params[key] = value;
@@ -165,11 +188,6 @@ export function SearchService($location, gettext, config, session) {
             });
         }
 
-        // Prepares search date in YYYY-MM-DD format
-        function formatDate(date) {
-            return moment(date, config.view.dateformat).format('YYYY-MM-DD');
-        }
-
         function buildFilters(params, query) {
 
             //created & modified date filters
@@ -178,19 +196,19 @@ export function SearchService($location, gettext, config, session) {
                 var range = {firstcreated: {}, versioncreated: {}};
 
                 if (params.beforefirstcreated) {
-                    range.firstcreated.lte = formatDate(params.beforefirstcreated);
+                    range.firstcreated.lte = formatDate(params.beforefirstcreated, midnight_suffix);
                 }
 
                 if (params.afterfirstcreated) {
-                    range.firstcreated.gte = formatDate(params.afterfirstcreated);
+                    range.firstcreated.gte = formatDate(params.afterfirstcreated, zero_hour_suffix);
                 }
 
                 if (params.beforeversioncreated) {
-                    range.versioncreated.lte = formatDate(params.beforeversioncreated);
+                    range.versioncreated.lte = formatDate(params.beforeversioncreated, midnight_suffix);
                 }
 
                 if (params.afterversioncreated) {
-                    range.versioncreated.gte = formatDate(params.afterversioncreated);
+                    range.versioncreated.gte = formatDate(params.afterversioncreated, zero_hour_suffix);
                 }
 
                 query.post_filter({range: range});

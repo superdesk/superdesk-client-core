@@ -159,7 +159,7 @@ describe('itemListService', function() {
         $rootScope.$digest();
         expect(queryParams.source.query.filtered.filter.and).toEqual([
             {range: {_created: {lte: 1, gte: 2}}},
-            {range: {_updated: {lte: 3, gte: 4}}}
+            {range: {versioncreated: {lte: 3, gte: 4}}}
         ]);
     }));
 
@@ -257,9 +257,8 @@ describe('itemListService', function() {
 
         expect(queryParams.source.query.filtered.query).toEqual({
             query_string: {
-                query: 'slugline:(kilo)',
-                lenient: false,
-                default_operator: 'OR'
+                query: 'slugline.phrase:("kilo")',
+                lenient: false
             }
         });
     }));
@@ -278,9 +277,8 @@ describe('itemListService', function() {
 
         expect(queryParams.source.query.filtered.query).toEqual({
             query_string: {
-                query: 'slugline:("kilo gram") slugline:(kilo) slugline:(gram)',
-                lenient: false,
-                default_operator: 'OR'
+                query: 'slugline.phrase:("kilo gram")',
+                lenient: false
             }
         });
     }));
@@ -299,9 +297,8 @@ describe('itemListService', function() {
 
         expect(queryParams.source.query.filtered.query).toEqual({
             query_string: {
-                query: 'slugline:("kilo\\/ gram\\/") slugline:(kilo\\/) slugline:(gram\\/)',
-                lenient: false,
-                default_operator: 'OR'
+                query: 'slugline.phrase:("kilo\\/ gram\\/")',
+                lenient: false
             }
         });
     }));
@@ -320,9 +317,8 @@ describe('itemListService', function() {
 
         expect(queryParams.source.query.filtered.query).toEqual({
             query_string: {
-                query: 'slugline:("kilo gram") slugline:(kilo) slugline:(gram)',
-                lenient: false,
-                default_operator: 'OR'
+                query: 'slugline.phrase:("kilo gram")',
+                lenient: false
             }
         });
     }));

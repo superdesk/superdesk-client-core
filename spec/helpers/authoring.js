@@ -44,6 +44,7 @@ function Authoring() {
     this.anpa_category = element(by.className('authoring-header__detailed')).
                             all(by.css('[data-field="anpa_category"]'));
     this.subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
+    this.missing_link = element(by.className('missing-link'));
 
     /**
      * Find all file type icons in the item's info icons box matching the
@@ -573,6 +574,27 @@ function Authoring() {
 
     this.getRelatedItems = function() {
         return element.all(by.repeater('item in processedItems'));
+    };
+
+    this.openRelatedItemConfiguration = function() {
+        element(by.className('related-item'))
+            .element(by.className('widget-settings'))
+            .element(by.className('single-btn')).click();
+    };
+
+    this.setRelatedItemConfigurationSlugline = function(matchValue) {
+        element(by.model('configuration.sluglineMatch'))
+            .element(by.css('option[value="' + matchValue + '"]')).click();
+    };
+
+    this.setRelatedItemConfigurationLastUpdate = function(lastUpdate) {
+        element(by.model('configuration.modificationDateAfter'))
+            .element(by.css('option[value="' + lastUpdate + '"]')).click();
+    };
+
+    this.saveRelatedItemConfiguration = function() {
+        element(by.className('modal-footer'))
+            .element(by.buttonText('Save')).click();
     };
 
     this.getRelatedItemBySlugline = function(item) {

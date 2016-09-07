@@ -23,7 +23,7 @@
     <div class="tabpane right-tabpane open-tabpane widget-{{active._id}}"
         ng-if="active && !isWidgetLocked(active)">
         <section class="tabcontent" ng-init="widget=active">
-            <div sd-widget data-widget="active">
+            <div sd-widget data-widget="active" data-configurable="active.configurable">
                 <div ng-include="active.template"></div>
             </div>
         </section>
