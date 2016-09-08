@@ -1,5 +1,5 @@
-MonitoringController.$inject = ['$location', 'desks'];
-export function MonitoringController($location, desks) {
+MonitoringController.$inject = ['$rootScope', '$location', 'desks'];
+export function MonitoringController($rootScope, $location, desks) {
     this.state = {};
 
     this.preview = preview;
@@ -40,6 +40,7 @@ export function MonitoringController($location, desks) {
 
     function closePreview() {
         preview(null);
+        $rootScope.$broadcast('item:unselect');
     }
 
     function edit(item) {
