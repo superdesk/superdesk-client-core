@@ -11,6 +11,10 @@ msgstr ""
 "Language: en_GB\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: scripts/superdesk/lang/missing-translations-strings.js:19
+msgid "'SLUGLINE is a required field'"
+msgstr "'KEYWORD is a required field'"
+
 #: scripts/superdesk-dictionaries/views/dictionary-config-modal.html:44
 #: scripts/superdesk-dictionaries/views/dictionary-config-modal.html:45
 msgid "\" already exists."
