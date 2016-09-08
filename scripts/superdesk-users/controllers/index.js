@@ -2,7 +2,7 @@ export { UserEditController } from './UserEditController';
 export { UserListController } from './UserListController';
 export { ChangeAvatarController } from './ChangeAvatarController';
 export { UserEnableCommand } from './UserEnableCommand';
-export { UserDeleteCommand } from './UserEnableCommand';
+export { UserDeleteCommand } from './UserDeleteCommand';
 export { SessionsDeleteCommand } from './SessionsDeleteCommand';
 export { UserResolver } from './UserResolver';
 

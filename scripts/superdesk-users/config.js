@@ -6,7 +6,7 @@ import {
     UserDeleteCommand,
     UserResolver,
     UserRolesController,
-    SessionDeleteCommand
+    SessionsDeleteCommand
 } from './controllers';
 
 API.$inject = ['apiProvider'];
@@ -90,7 +90,7 @@ export function Activities(superdesk, asset) {
             label: gettext('Clear sessions'),
             icon: 'kill',
             confirm: gettext('Please confirm that you want to delete all the sessions for this user.'),
-            controller: SessionDeleteCommand,
+            controller: SessionsDeleteCommand,
             filters: [
                 {
                     action: superdesk.ACTION_EDIT,
