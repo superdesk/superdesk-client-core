@@ -572,9 +572,9 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
                 vm.onBlockChange();
             });
         },
-        handlePasta: function(e) {
+        handlePaste: function(e) {
             e.preventDefault();
-            e.stopPropagation;
+            e.stopPropagation();
 
             var clipboardData = e.originalEvent.clipboardData || window.clipboardData;
             var pastedData = clipboardData.getData('Text');
