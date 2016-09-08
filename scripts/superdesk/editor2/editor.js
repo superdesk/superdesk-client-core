@@ -1020,7 +1020,10 @@ angular.module('superdesk.editor2', [
                         scope.medium.subscribe(eventName, updateAddContentButton);
                     });
                     // listen updates by medium editor to update the model
-                    scope.medium.subscribe('editableInput', function() {
+                    scope.medium.subscribe('editableInput', function(e, elem) {
+                        elem.querySelectorAll('span[style]')
+                            .forEach(span => span.removeAttribute('style'));
+
                         cancelTimeout();
                         updateTimeout = $timeout(vm.updateModel, 800, false);
                     });
