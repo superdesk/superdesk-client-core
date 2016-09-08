@@ -14,7 +14,7 @@ document.write(`
                 // need to populate dynamically
                 tansaUserId: 'tansa',
                 checkboxPreference: false,
-                parentAppName: window.testPageParentAppName
+                parentAppName: 'superdesk'
             }
         };
 
@@ -39,7 +39,6 @@ document.write(script.outerHTML);
 document.write(`
      <script type="text/javascript">
         var pgwBrowser = tansaJQuery.pgwBrowser();
-        window.tansa.settings.parentAppName = window.testPageParentAppName;
         window.tansa.settings.platformName = pgwBrowser.os.name;
         window.tansa.settings.platformVersion = pgwBrowser.os.fullVersion;
      </script>

@@ -414,8 +414,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     default:
                         window.tansa.settings.profileId = 507;
                 }
+                if (window.RunTansaProofing){
+                    window.RunTansaProofing();
+                } else {
+                    $rootScope.config.isCheckedByTansa = true;
+                    notify.error(gettext('Tansa is not working. You can continue editing or publish the story.'));
+                }
 
-                window.RunTansaProofing();
             };
 
             $rootScope.publishAfterTansa = function () {
