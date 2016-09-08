@@ -366,7 +366,7 @@ describe('authoring', function() {
     it('related item widget can open published item', function() {
         expect(monitoring.getGroups().count()).toBe(6);
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
-        expect(monitoring.getTextItemBySlugline(2, 1)).toBe('ITEM9 SLUGLINE');
+        expect(monitoring.getTextItemBySlugline(2, 1)).toContain('ITEM9 SLUGLINE');
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.publish(); // item9 published
 
@@ -376,9 +376,9 @@ describe('authoring', function() {
         monitoring.actionOnItem('Edit', 0, 0);
 
         authoring.openRelatedItem(); // opens related item widget
-        expect(authoring.getRelatedItemBySlugline(0).getText()).toBe('item9 slugline');
+        expect(authoring.getRelatedItemBySlugline(0).getText()).toContain('item9 slugline');
         authoring.actionOpenRelatedItem(0); // Open item
-        expect(authoring.getHeaderSluglineText()).toBe('item9 slugline');
+        expect(authoring.getHeaderSluglineText()).toContain('item9 slugline');
     });
 
     it('Kill Template apply', function() {

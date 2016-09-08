@@ -1,3 +1,7 @@
+//styles
+import './styles/related-item.less';
+
+//scripts
 import './related-item-widget/relatedItem';
 
 import * as directive from './directives';
