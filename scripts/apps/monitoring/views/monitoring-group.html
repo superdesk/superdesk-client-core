@@ -1,9 +1,12 @@
-<div class="stage">
-    <div sd-monitoring-group-header 
-    	ng-if="group.header && viewType !== 'single_monitoring'">
+<div class="stage"
+	ng-class="{swimlane: (viewColumn && (viewType === 'monitoring' || viewType === 'deskOutput' || viewType === 'scheduledDeskOutput'))}">
+
+    <div sd-monitoring-group-header class="column-header" ng-class="{swimlane: viewColumn}" ng-if="group.header && viewType !== 'single_monitoring'">
     </div>
+
     <div class="stage-content group"
-        ng-class="{limited: limited, refresh: showRefresh}"
+        ng-class="{limited: limited, refresh: showRefresh, 
+         swimlane: (viewColumn && (viewType === 'monitoring' || viewType === 'deskOutput' || viewType === 'scheduledDeskOutput'))}"
         ng-style="style"
         sd-items-list>
     </div>

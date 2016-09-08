@@ -4,6 +4,37 @@ describe('monitoring', function() {
     beforeEach(window.module('superdesk.apps.monitoring'));
     beforeEach(window.module('superdesk.mocks'));
 
+    it('can switch between list and swimlane view', inject(function($controller, $rootScope, storage, config) {
+        config.features = {
+            swimlane: {columnsLimit: 4}
+        };
+
+        var scope = $rootScope.$new(),
+            ctrl = $controller('Monitoring', {$scope: scope});
+
+        expect(ctrl.hasSwimlaneView).toBe(1);
+
+        // Default will be list view
+        storage.clear();
+        expect(ctrl.viewColumn).toBe(null);       // no swimlane
+        // display all groups for list view, i.e. limitTo: null when no swimlane
+        expect(ctrl.columnsLimit).toBe(null);
+
+        // Switch to swimlane view, via switch view button or returning back to monitoring
+        // view while swimlane view was already ON
+        ctrl.switchView(true);
+        expect(storage.getItem('displaySwimlane')).toBe(true);
+        expect(ctrl.viewColumn).toBe(true);     // swimlane
+        expect(ctrl.columnsLimit).toBe(4);
+
+        // Switch back to list view
+        ctrl.switchView(false);
+        expect(storage.getItem('displaySwimlane')).toBe(false);
+        expect(ctrl.viewColumn).toBe(false);
+        expect(ctrl.columnsLimit).toBe(null);
+
+    }));
+
     it('can preview an item', inject(function($controller, $rootScope) {
         var scope = $rootScope.$new(),
             ctrl = $controller('Monitoring', {$scope: scope}),

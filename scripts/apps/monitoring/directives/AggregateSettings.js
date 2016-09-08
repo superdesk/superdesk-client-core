@@ -14,7 +14,10 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             editGroups: '=',
             onclose: '&',
             widget: '=',
-            settings: '='
+            settings: '=',
+            currentStep: '=',
+            displayOnlyCurrentStep: '=',
+            columnsLimit: '='
         },
         link: function(scope, elem) {
 
@@ -26,13 +29,10 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             scope.privateSavedSearches = [];
             scope.globalSavedSearches = [];
 
-            scope.step = {
-                current: 'desks'
-            };
-
             desks.initialize()
             .then(function() {
                 scope.userLookup = desks.userLookup;
+                scope.setCurrentStep();
             });
 
             scope.$watch('step.current', function(step) {
@@ -64,6 +64,25 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
 
             scope.next = function() {
                 WizardHandler.wizard('aggregatesettings').next();
+            };
+
+            /**
+             * @description Returns true if this step in wizard should need to hide, false otherwise.
+             * Only current step will be shown when displayOnlyCurrentStep is defined.
+             * @param {String} code name of this step in wizard, i.e: desks, searches, reorder, maxitems
+             * @returns {Boolean}
+             */
+            scope.shouldHideStep = function(code) {
+                return (scope.displayOnlyCurrentStep != null && !(scope.displayOnlyCurrentStep && scope.currentStep === code));
+            };
+
+            /**
+             * @description Sets current step in wizard, default is 'desks'.
+             */
+            scope.setCurrentStep = function() {
+                scope.step = {
+                    current: scope.currentStep || 'desks'
+                };
             };
 
             scope.cancel = function() {
@@ -207,7 +226,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 return values;
             };
 
-            scope.reorder = function(start, end) {
+            scope.reorder = function(start, end, uiItem) {
                 var values = scope.getValues();
                 if (end.index !== start.index) {
                     values.splice(end.index, 0, values.splice(start.index, 1)[0]);
@@ -256,7 +275,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 } else {
                     workspaces.getActiveId()
                     .then(function(activeWorkspace) {
-                        if (activeWorkspace.type === 'workspace') {
+                        if (activeWorkspace.type === 'workspace' || activeWorkspace.type === 'desk') {
                             preferencesService.get(PREFERENCES_KEY)
                             .then(function(preferences) {
                                 var updates = {};
@@ -268,11 +287,6 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                                 .then(function() {
                                     WizardHandler.wizard('aggregatesettings').finish();
                                 });
-                            });
-                        } else if (activeWorkspace.type === 'desk') {
-                            desks.save(scope.deskLookup[activeWorkspace.id], {monitoring_settings: groups})
-                            .then(function() {
-                                WizardHandler.wizard('aggregatesettings').finish();
                             });
                         }
                     });

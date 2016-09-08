@@ -22,6 +22,7 @@ describe('saved_search', function() {
         expect(globalSearch.getPriorityElements().count()).toBe(3);
         var priority = globalSearch.getPriorityElementByIndex(0);
         priority.click();
+        browser.sleep(100);
         expect(globalSearch.getItems().count()).toBe(1);
         element(by.id('save_search_init')).click();
         var searchPanel = element(by.className('save-search-panel'));

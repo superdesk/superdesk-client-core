@@ -1874,6 +1874,21 @@ header .sortbar {
             border: 2px dashed #ebebeb;
         }
     }
+
+}
+.draggable-list.serial-decimal {
+    list-style-type: decimal !important;
+    padding-top: 0px;
+    margin-left: 5px;
+    > li {
+        word-spacing: 2px;
+        line-height: 10px;
+    }
+    .sort-item {
+        &.active {
+            background-color: #eee;
+        }
+    }
 }
 
 // HANDLE FOR SPLITTER

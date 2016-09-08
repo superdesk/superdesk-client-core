@@ -616,6 +616,10 @@ $rightfield-width:60px;
             opacity: 0.5;
         }
 
+        &.swimlane {
+            padding-left: 0px !important;
+        }
+
         .list-field {
             border-right: 1px solid rgba(0,0,0,0.06);
             float: left;
@@ -623,6 +627,10 @@ $rightfield-width:60px;
 
             &.no-border {
                 border:0;
+            }
+
+            &.swimlane {
+                width: 25px !important;
             }
         }
 
