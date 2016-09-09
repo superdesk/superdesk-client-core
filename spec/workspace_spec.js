@@ -14,10 +14,6 @@ describe('workspace', function () {
         altKey('m');
         expect(browser.getLocationAbsUrl()).toMatch('/workspace/monitoring');
 
-        // Can switch to tasks view by pressing alt + t
-        altKey('t');
-        expect(browser.getLocationAbsUrl()).toMatch('/workspace/tasks');
-
         // Can switch to spiked view by pressing alt + x
         altKey('x');
         expect(browser.getLocationAbsUrl()).toMatch('/workspace/spike-monitoring');
