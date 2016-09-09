@@ -32,10 +32,8 @@ before_install:
     - wget -N --no-verbose 'https://storage.googleapis.com/chromium-browser-continuous/Linux_x64/353893/chrome-linux.zip' && unzip chrome-linux.zip &&
       export CHROME_BIN=`pwd`/chrome-linux/chrome && $CHROME_BIN --version ;
 
-bundler_args: --retry 2
-
 install:
-    - travis_retry npm install --python=python2.7
+    - npm install --python=python2.7
     - cd test-server && pip install -q -r requirements.txt && cd ..
     - ./node_modules/.bin/webdriver-manager update
 
@@ -51,7 +49,7 @@ script:
       (nohup honcho start & ) ;
       sleep 5 ;
       cd ..;
-    - travis_retry ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose
+    - ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose
 
 after_script:
     - killall -9 python
