@@ -29,7 +29,8 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 renditions: renditions,
                 poi: picture.poi || poi,
                 showAoISelectionButton: true,
-                showMetadataEditor: true
+                showMetadataEditor: true,
+                isNew: true
             })
             .then(function(result) {
                 var renditionNames = [];

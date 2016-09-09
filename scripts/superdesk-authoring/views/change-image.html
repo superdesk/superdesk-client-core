@@ -10,7 +10,7 @@
         <button type="button"
         class="btn btn-primary"
         ng-click="done()"
-        ng-disabled="!data.isDirty || isAoISelectionModeEnabled"
+        ng-disabled="!saveIsEnabled()"
         translate>Save</button>
     </div>
 </div>

@@ -217,7 +217,8 @@ export function ArticleEditDirective(
                         item: scope.item,
                         renditions: scope.metadata.crop_sizes,
                         poi: scope.item.poi || poi,
-                        showMetadataEditor: true
+                        showMetadataEditor: true,
+                        isNew: false
                     })
                     .then(function(result) {
                         var renditions = _.create(scope.item.renditions || {});
