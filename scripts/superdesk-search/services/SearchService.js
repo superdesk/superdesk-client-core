@@ -538,6 +538,9 @@ export function SearchService($location, gettext, config, session) {
             }
         });
 
-        return scopeItems;
+        // update aggregations
+        scopeItems._aggregations = newItems._aggregations;
+
+        return angular.extend({}, scopeItems);
     };
 }
