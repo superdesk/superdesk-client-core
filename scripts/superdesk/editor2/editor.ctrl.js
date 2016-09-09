@@ -366,7 +366,8 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 }
                 return hash;
             }
-            return String(Math.abs(hashCode(block.body))) + String(vm.getBlockPosition(block));
+
+            return String(Math.abs(hashCode(block.body)));
         }
     });
 }
