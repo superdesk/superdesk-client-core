@@ -15,7 +15,7 @@ describe('authoring', function() {
         monitoring.openMonitoring();
     });
 
-    fit('add an embed and respect the order', function() {
+    it('add an embed and respect the order', function() {
         // try with same block content
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.cleanBodyHtmlElement();
