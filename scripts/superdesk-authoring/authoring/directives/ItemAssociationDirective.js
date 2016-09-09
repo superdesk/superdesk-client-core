@@ -72,20 +72,33 @@ export function ItemAssociationDirective(superdesk, renditions, $timeout, api, $
             renditions.get();
 
             scope.edit = function(item) {
-                scope.loading = true;
-                return renditions.crop(item).then(function(updatedItem) {
-                    var data = updateItemAssociation(updatedItem);
+                if (item.renditions && item.renditions.original && scope.isImage(item.renditions.original)) {
+                    scope.loading = true;
+                    return renditions.crop(item).then(function(updatedItem) {
+                        var data = updateItemAssociation(updatedItem);
+                        scope.onchange({item: scope.item, data: data});
+                    })
+                    .finally(function() {
+                        scope.loading = false;
+                    });
+                } else {
+                    var data = updateItemAssociation(item);
                     scope.onchange({item: scope.item, data: data});
-                })
-                .finally(function() {
-                    scope.loading = false;
-                });
+                }
             };
 
             scope.isVideo = function(rendition) {
-                return _.some(['.mp4', '.webm', '.ogv'], function(ext) {
-                    return _.endsWith(rendition.href, ext);
-                });
+                if (_.startsWith(rendition.mimetype, 'video')) {
+                    return true;
+                } else {
+                    return _.some(['.mp4', '.webm', '.ogv', '.ogg'], function(ext) {
+                        return _.endsWith(rendition.href, ext);
+                    });
+                }
+            };
+
+            scope.isImage = function(rendition) {
+                return _.startsWith(rendition.mimetype, 'image');
             };
 
             scope.isEditable = function() {
