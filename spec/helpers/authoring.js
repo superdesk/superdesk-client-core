@@ -10,7 +10,7 @@ function Authoring() {
     this.correct_button = element(by.buttonText('correct'));
     this.kill_button = element(by.buttonText('kill'));
     this.close_button = element(by.buttonText('Close'));
-    this.add_content_button = element(by.className('add-content__plus-btn'));
+    this.add_content_button = by.className('add-content__plus-btn');
     this.ignore_button = element(by.buttonText('Ignore'));
     this.save_publish_button = element(by.buttonText('Save and publish'));
     this.save_button = element(by.buttonText('Save'));
@@ -141,14 +141,17 @@ function Authoring() {
         return this.close_button.click();
     };
 
-    this.addEmbed = function(embedCode) {
+    this.addEmbed = function(embedCode, context) {
+        if (!context) {
+            context = element(by.tagName('body'));
+        }
         browser.wait(function() {
-            return this.add_content_button.isDisplayed();
+            return context.element(this.add_content_button).isDisplayed();
         }.bind(this), 1000);
-        this.add_content_button.click();
-        element(by.css('[ng-click="vm.triggerAction(\'addEmbed\')"]')).click();
-        element(by.css('.add-embed__input input')).sendKeys(embedCode || 'embed code');
-        element(by.css('[ng-click="vm.createBlockFromEmbed()"]')).click();
+        context.element(this.add_content_button).click();
+        context.element(by.css('[ng-click="vm.triggerAction(\'addEmbed\')"]')).click();
+        context.element(by.css('.add-embed__input input')).sendKeys(embedCode || 'embed code');
+        context.element(by.css('[ng-click="vm.createBlockFromEmbed()"]')).click();
     };
 
     this.getBlock = function(position) {

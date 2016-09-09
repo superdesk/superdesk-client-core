@@ -15,22 +15,36 @@ describe('authoring', function() {
         monitoring.openMonitoring();
     });
 
-    it('add an embed and respect the order', function() {
+    fit('add an embed and respect the order', function() {
+        // try with same block content
+        monitoring.actionOnItem('Edit', 2, 0);
+        authoring.cleanBodyHtmlElement();
+        authoring.writeText('line\n');
+        authoring.addEmbed('embed');
+        let thirdBlockContext = element(by.model('item.body_html')).all(by.repeater('block in vm.blocks')) .get(2);
+        thirdBlockContext.element(by.css('.editor-type-html')).sendKeys('line\n');
+        authoring.addEmbed('embed', thirdBlockContext);
+        authoring.blockContains(0, 'line');
+        authoring.blockContains(1, 'embed');
+        authoring.blockContains(2, 'line');
+        authoring.blockContains(3, 'embed');
+        authoring.close();
+        authoring.ignore();
+        // with different block content
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.cleanBodyHtmlElement();
         function generateLines(from, to) {
-            var i;
-            var lines = '';
-            for (i = from; i < to; i++) {
+            let lines = '';
+            for (let i = from; i < to; i++) {
                 lines += 'line ' + i + '\n';
             }
             return lines;
         }
-        var body1 = generateLines(0, 8);
-        var body2 = generateLines(8, 15);
-        var body3 = generateLines(15, 20);
+        let body1 = generateLines(0, 8);
+        let body2 = generateLines(8, 15);
+        let body3 = generateLines(15, 20);
         authoring.writeText(body1 + body2 + body3);
-        for (var i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
             authoring.writeText(protractor.Key.UP);
         }
         authoring.writeText(protractor.Key.ENTER);
