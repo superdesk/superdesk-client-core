@@ -1526,6 +1526,10 @@ export function ItemList(
                     }
                 },
 
+                deselectAll: function() {
+                    this.setState({selected: null});
+                },
+
                 updateAllItems: function(itemId, changes) {
                     var itemsById = angular.extend({}, this.state.itemsById);
                     _.forOwn(itemsById, function(value, key) {
@@ -1550,6 +1554,12 @@ export function ItemList(
                 },
 
                 setSelectedItem: function(item) {
+                    if (monitoringState.selectedGroup !== scope.$id) {
+                        //If selected item is from another group, deselect all
+                        $rootScope.$broadcast('item:unselect');
+                        monitoringState.selectedGroup = scope.$id;
+                    }
+
                     this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
                 },
 
@@ -1858,6 +1868,8 @@ export function ItemList(
                         listComponent.setState({itemsById: itemsById});
                     }
                 });
+
+                scope.$on('item:unselect', listComponent.deselectAll);
 
                 var updateTimeout;
 
