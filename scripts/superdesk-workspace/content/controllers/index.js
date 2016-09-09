@@ -1,0 +1,1 @@
+export { ContentProfilesController } from './ContentProfilesController';
