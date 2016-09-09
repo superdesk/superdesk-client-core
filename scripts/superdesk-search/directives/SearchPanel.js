@@ -42,7 +42,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 scope.innerTab = tabName;
                 if (tabName === 'filters') {
                     $rootScope.aggregations = 1;
-                    $rootScope.$broadcast('aggregations:changed');
+                    $rootScope.$broadcast('aggregations:changed', {force: true});
                 } else {
                     $rootScope.aggregations = 0;
                 }
