@@ -357,19 +357,20 @@
             left: 0;
             right: 0;
             bottom: 55px;
-            padding: 21px 21px 0 21px;
+            padding: 21px;
             overflow-y: scroll;
 
             .sd-typeahead {
                 background-color: #fff;
             }
 
-            .content-profiles-list > li {
-                max-width: 630px;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-            } 
+            .content-profiles-list {
+              padding-top: 10px;
+              & > li {
+                display: inline-block;
+                padding: 0 0 6px;
+              }
+            }
         }
 
         .char-count-holder {
@@ -861,5 +862,3 @@
         font-size: 11px;
     }
 }
-
-

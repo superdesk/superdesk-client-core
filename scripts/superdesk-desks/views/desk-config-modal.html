@@ -16,17 +16,17 @@
                             <span class="pull-right" sd-character-count data-item="desk.edit.name" data-limit="limits.desk"></span>
                             <div class="field">
                                 <label translate>Desk name</label>
-                                <input type="text" class="fullwidth-input"
+                                <input type="text" class="line-input fullwidth-input"
                                        ng-model="desk.edit.name"
                                        ng-keyup="handleEdit($event);" required>
                             </div>
                             <div class="field">
                                 <label translate>Desk description</label>
-                                <textarea class="fullwidth-input" ng-model="desk.edit.description"></textarea>
+                                <textarea class="line-input fullwidth-input" ng-model="desk.edit.description"></textarea>
                             </div>
                             <div class="field">
                                 <label translate>Source for User Created Articles</label>
-                                <input type="text" class="fullwidth-input"
+                                <input type="text" class="line-input fullwidth-input"
                                        ng-model="desk.edit.source"
                                        ng-keyup="handleEdit($event);" required>
                             </div>
@@ -39,11 +39,13 @@
                             </div>
                             <div class="field desk-type">
                                 <label translate>Desk Type</label>
-                                <select id="deskType" ng-model="desk.edit.desk_type" required>
-                                    <option value=""></option>
-                                    <option id="{{type.qcode}}" ng-repeat="type in deskTypes" value="{{type.qcode}}" ng-selected="desk.edit.desk_type === type.qcode"
-                                    >{{ type.name | translate}}</option>
-                                </select>
+                                <div class="line-select">
+                                  <select id="deskType" ng-model="desk.edit.desk_type" required>
+                                      <option value=""></option>
+                                      <option id="{{type.qcode}}" ng-repeat="type in deskTypes" value="{{type.qcode}}" ng-selected="desk.edit.desk_type === type.qcode"
+                                      >{{ type.name | translate}}</option>
+                                  </select>
+                                </div>
                             </div>
                             <div class="field">
                                 <label translate>SERVICE</label>
@@ -58,18 +60,20 @@
                             </div>
                             <div class="field" ng-show="profiles.length">
                                 <label translate>Content Profiles</label>
-                                <ul class="content-profiles-list pills">
+                                <ul class="content-profiles-list">
                                     <li ng-repeat="profile in profiles track by profile._id">
-                                        <span sd-check ng-model="desk.edit.content_profiles[profile._id]"></span>{{ profile.label }}
+                                        <span sd-check class="sd-checkbox--button-style" ng-model="desk.edit.content_profiles[profile._id]">{{:: profile.label}}</span>
                                     </li>
                                 </ul>
                             </div>
                             <div class="field" ng-show="profiles.length">
                                 <label translate>Default Content Profile</label>
-                                <select
-                                    ng-model="desk.edit.default_content_profile"
-                                    ng-options="profile._id as profile.label for profile in profiles">
-                                </select>
+                                <div class="line-select">
+                                  <select
+                                      ng-model="desk.edit.default_content_profile"
+                                      ng-options="profile._id as profile.label for profile in profiles">
+                                  </select>
+                                </div>
                             </div>
                         </fieldset>
 
@@ -212,7 +216,7 @@
                         <div class="row" ng-if="editStage">
                             <div class="field">
                                 <label>{{ :: 'Stage description' | translate }}</label>
-                                <textarea class="fullwidth-input" ng-model="editStage.description"></textarea>
+                                <textarea class="fullwidth-input line-input" ng-model="editStage.description"></textarea>
                             </div>
                         </div>
                         <div class="row" ng-if="editStage">
@@ -224,24 +228,30 @@
                         <div class="row" ng-if="editStage">
                             <div class="field">
                                 <label>{{ :: 'Incoming Rule' | translate }}</label>
-                                <select ng-model="editStage.incoming_macro">
-                                    <option value=""></option>
-                                    <option ng-repeat="macro in macros" ng-selected="editStage.incoming_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
-                                </select>
+                                <div class="line-select">
+                                    <select ng-model="editStage.incoming_macro">
+                                        <option value=""></option>
+                                        <option ng-repeat="macro in macros" ng-selected="editStage.incoming_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="field">
                                 <label>{{ :: 'Moved onto stage Rule' | translate }}</label>
-                                <select ng-model="editStage.onstage_macro">
-                                    <option value=""></option>
-                                    <option ng-repeat="macro in macros" ng-selected="editStage.onstage_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
-                                </select>
+                                <div class="line-select">
+                                    <select ng-model="editStage.onstage_macro">
+                                        <option value=""></option>
+                                        <option ng-repeat="macro in macros" ng-selected="editStage.onstage_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="field">
                                 <label>{{ :: 'Outgoing Rule' | translate }}</label>
-                                <select ng-model="editStage.outgoing_macro">
-                                    <option value=""></option>
-                                    <option ng-repeat="macro in macros" ng-selected="editStage.outgoing_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
-                                </select>
+                                <div class="line-select">
+                                    <select ng-model="editStage.outgoing_macro">
+                                        <option value=""></option>
+                                        <option ng-repeat="macro in macros" ng-selected="editStage.outgoing_macro === macro.name" value="{{macro.name}}">{{macro.label}}</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -286,11 +296,14 @@
         </div>
         <div sd-wizard-step data-title="{{ 'Macros' | translate }}" data-code="macros">
             <div class="content macros" sd-deskedit-macros>
-                <ul class="pills-list">
-                    <li ng-repeat="macro in macros">
-                        <h6 class="pull-left">{{:: macro.name }}</h6><span>[{{:: macro.access_type }}]</span><span>[{{:: macro.action_type }}]</span>
-                    </li>
-                </ul>
+              <ul class="pills-list">
+                <li ng-repeat="macro in macros">
+                  <h6 class="pull-left">{{:: macro.name }}</h6>
+                  <div class="label-group label-group--right">
+                    <span class="label default">{{:: macro.access_type }}</span><span class="label default">{{:: macro.action_type }}</span>
+                  </div>
+                </li>
+              </ul>
             </div>
             <div class="modal-footer-relative">
                 <button id="save" class="btn btn-primary" ng-click="save()" translate>Done</button>

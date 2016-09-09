@@ -404,6 +404,31 @@
             background-position: 0 -30px !important;
         }
     }
+    &--button-style {
+      width: auto;
+      box-sizing: border-box;
+      height: 26px;
+      padding: 4px 12px;
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.2);
+      color: #5a5a5a;
+      transition: color 0.3s, background 0.3s;
+      border-radius: 2px;
+      &:hover {
+        border: 1px solid rgba(0,0,0,0.6);
+      }
+      &.checked, &[checked="checked"] {
+        border: none;
+        background: @sd-blue;
+        box-shadow: inset 0 2px 0 rgba(0,0,0,0.3);
+        color: @white;
+        padding: 5px 13px 3px;
+        &:hover {
+          background-color: @sd-blue-text;
+          //border: 1px solid rgba(0,0,0,0);
+        }
+      }
+    }
 }
 
 
@@ -1473,6 +1498,12 @@ header .sortbar {
             white-space: nowrap;
             text-overflow: ellipsis;
         }
+        .label-group {
+          display: inline-block;
+          &.label-group--right {
+            float: right;
+          }
+        }
         .label {
             font-size: 9px;
             .text-bold();
@@ -1481,6 +1512,7 @@ header .sortbar {
             margin-left: 5px;
             letter-spacing: 0.1em;
             text-transform: uppercase;
+            font-weight: 400;
         }
         &:hover {
             .actions {

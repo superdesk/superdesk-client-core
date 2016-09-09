@@ -17,7 +17,8 @@ export default angular.module('superdesk.check.directives', [])
         return {
             require: 'ngModel',
             replace: true,
-            template: '<span class="sd-checkbox"></span>',
+            transclude: true,
+            template: '<span class="sd-checkbox" ng-transclude></span>',
             link: function($scope, element, attrs, ngModel) {
                 ngModel.$render = function() {
                     render(element, ngModel.$viewValue);
