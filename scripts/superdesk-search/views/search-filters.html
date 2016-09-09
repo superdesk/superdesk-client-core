@@ -1,5 +1,4 @@
 <div class="filter-content" ng-if="innerTab==='filters'" ng-class="{pull: showSaveSearch}">
-
     <div sd-toggle-box data-title="{{:: 'Content types' | translate }}" ng-hide="isEmpty('type')" data-open="true">
         <ul class="filter-box content-type-filters">
             <li ng-repeat="(key,value) in aggregations.type" ng-click="toggleFilter('type', key)" ng-class="{checked: hasFilter('type',key)}">

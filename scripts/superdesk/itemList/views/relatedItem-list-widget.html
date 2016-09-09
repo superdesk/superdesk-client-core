@@ -1,7 +1,3 @@
-<div class="widget-mode" ng-show="options.modeEnabled">
-    <time sd-datetime data-date="itemListOptions.creationDateBefore"></time>
-</div>
-
 <div class="main-list" ng-class="{wrap: selected}">
 
     <div class="search-box" ng-class="{blank: related}" ng-show="options.searchEnabled">
@@ -16,14 +12,15 @@
 
     <div class="ingest-list-holder" ng-class="{'mode-detailed': options.mode === 'detailed'}">
         <div sd-shadow>
-            <ul class="ingest-list list-view">
-                <li ng-repeat="item in processedItems track by $index" class="list-item-view" ng-if="options.item._id !== item._id">
+            <ul class="ingest-list list-view related-item-list">
+                <li ng-repeat="item in processedItems track by $index"
+                    class="list-item-view" ng-if="options.item._id !== item._id">
                     <div class="dropdown more-actions" dropdown>
                         <button class="dropdown-toggle" dropdown-toggle><i class="icon-dots-vertical"></i></button>
                         <div class="dropdown-menu pull-right">
                             <ul>
                                  <li ng-repeat="action in actions">
-                                    <button id="{{action.title}}" ng-if="action.condition(item)" ng-click="action.method(item)">{{ :: action.title | translate }}</button>
+                                    <button id="{{action.title | translate}}" ng-if="action.condition(item)" ng-click="action.method(item)">{{ :: action.title | translate }}</button>
                                 </li>
                             </ul>
                         </div>
@@ -31,9 +28,15 @@
                     <div class="basic item-block" ng-click="view(item)">
                         <i sd-filetype-icon data-item="item"></i>
                         <div class="content">
-                            <span class="keyword" ng-if="item.slugline">{{ item.slugline }}</span>
+                            <span class="keyword" ng-if="item.slugline">
+                                <span class="relate-item-label" ng-if="actions.update && actions.update.condition(item)"
+                                      ng-class="{'update-item': actions.update && actions.update.condition(item)}">U</span>
+                                <span class="relate-item-label" ng-if="actions.addTake && actions.addTake.condition(item)"
+                                      ng-class="{'take-item': actions.addTake && actions.addTake.condition(item)}">T</span>
+                                {{ item.slugline }}</span>
                             <span class="headline">{{item.headline || item.type}}</span>
                             <span class="takekey">{{item.anpa_take_key}}</span>
+                            <time sd-datetime data-date="item.versioncreated"></time>
                             <span ng-if="item.package_type" class="state-label takes" translate>Takes</span>
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                             <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>

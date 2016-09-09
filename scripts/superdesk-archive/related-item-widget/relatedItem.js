@@ -128,7 +128,8 @@ function RelatedItemController (
                 return (item.package_type === 'takes' || canHaveNewTake) &&
                         $scope.item.type === 'text' &&
                         !$scope.item.takes &&
-                        $scope.item._current_version >= 1;
+                        $scope.item._current_version >= 1 &&
+                        !$scope.item.rewrite_of && !$scope.item.rewritten_by;
             }
         },
         update: {
@@ -156,9 +157,8 @@ function RelatedItemController (
 
                 var canBeRewrite = !authoring.isPublished($scope.item) &&
                 _.includes(['text', 'preformatted'], $scope.item.type) &&
-                !$scope.item.rewrite_of &&
-                authoring.itemActions($scope.item).new_take &&
-                (!$scope.item.broadcast || !$scope.item.broadcast.master_id);
+                !$scope.item.rewrite_of && authoring.itemActions($scope.item).new_take &&
+                (!$scope.item.broadcast || !$scope.item.broadcast.master_id) && !authoring.isTakeItem($scope.item);
 
                 var canBeRewritten = authoring.itemActions(item).re_write;
 
