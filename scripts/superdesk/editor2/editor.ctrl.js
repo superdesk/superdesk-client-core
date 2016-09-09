@@ -96,7 +96,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                         }
                     }
                     // create the embed block
-                    block = new Block({blockType: 'embed', embedType: embedType, association: association});
+                    block = new Block({blockType: 'embed', embedType: embedType, association: association, body: ''});
                 }
                 if (element.nodeValue.indexOf('EMBED END') > -1) {
                     commitBlock();
