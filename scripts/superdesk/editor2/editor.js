@@ -566,9 +566,21 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
             vm.model.caption = caption;
             // update the caption in the view
             vm.caption = caption;
+
             // on change callback
             $timeout(function() {
                 vm.onBlockChange();
+            });
+        },
+        handlePaste: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var clipboardData = e.originalEvent.clipboardData || window.clipboardData;
+            var pastedData = clipboardData.getData('Text');
+
+            $timeout(function() {
+                document.execCommand('insertHTML', false, pastedData);
             });
         },
         isEditable: function(picture) {
