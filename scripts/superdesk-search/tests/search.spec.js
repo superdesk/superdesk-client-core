@@ -64,6 +64,14 @@ describe('search service', function() {
         expect(filters).toContain({term: {'original_creator': '123'}});
     }));
 
+    it('can create query for ingest provider', inject(function($rootScope, search, session) {
+        // only to desk is specified
+        session.identity = {_id: 'foo'};
+        var criteria = search.query({ingest_provider: '123'}).getCriteria();
+        var filters = criteria.query.filtered.filter.and;
+        expect(filters).toContain({term: {'ingest_provider': '123'}});
+    }));
+
     it('can create query for unique_name', inject(function($rootScope, search, session) {
         // only to desk is specified
         session.identity = {_id: 'foo'};

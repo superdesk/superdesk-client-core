@@ -92,6 +92,14 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(10);
         globalSearch.clickClearFilters();
 
+        //can search by ingest provider
+        expect(globalSearch.getItems().count()).toBe(14);
+        globalSearch.openParameters();
+        globalSearch.selectProvider('search-ingest-provider', 'aap');
+        globalSearch.goButton.click();
+        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.clickClearFilters();
+
         //can search by genre field
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.toggleSearchTabs('filters');

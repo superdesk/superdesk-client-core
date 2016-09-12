@@ -5,5 +5,6 @@ export const PARAMETERS = Object.freeze({
     to_desk: 'To Desk',
     spike: 'In Spiked',
     subject: 'Subject',
-    company_codes: 'Company Codes'
+    company_codes: 'Company Codes',
+    ingest_provider: 'Provider'
 });

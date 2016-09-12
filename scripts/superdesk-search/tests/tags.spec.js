@@ -12,6 +12,8 @@ describe('Tag Service', function() {
     beforeEach(window.module('superdesk.search'));
     beforeEach(window.module('superdesk.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.ingest'));
+    beforeEach(window.module('superdesk.searchProviders'));
 
     /**
      * Mock some of the dependencies of the parent directives.
@@ -201,5 +203,26 @@ describe('Tag Service', function() {
         $rootScope.$digest();
         expect(tagsList.selectedParameters.length).toEqual(1);
         expect(tagsList.selectedParameters[0]).toEqual('Unique Name:123');
+    }));
+
+    it('create tags for ingest provider', inject(function($location, $rootScope, $q, tags, desks, ingestSources) {
+        var providers = [{
+            'name': 'Test Provider',
+            '_id': 123
+        }];
+
+        ingestSources.providersLookup = _.keyBy(providers, '_id');
+        spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
+        $location.search('ingest_provider', '123');
+
+        var tagsList = null;
+        tags.initSelectedFacets()
+            .then(function(value) {
+                tagsList = value;
+            });
+
+        $rootScope.$digest();
+        expect(tagsList.selectedParameters.length).toEqual(1);
+        expect(tagsList.selectedParameters[0]).toEqual('Provider:Test Provider');
     }));
 });
