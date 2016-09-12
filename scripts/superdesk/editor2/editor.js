@@ -720,22 +720,6 @@ angular.module('superdesk.editor2', [
                 }
                 // init editor based on model
                 init();
-                // when the model changes from outside, updates the editor
-                scope.$watch(function outsideModelChange() {
-                    return ngModel.$viewValue;
-                }, function() {
-                    $timeout(function() {
-                        // if controller is ready and the value has changed
-                        if (controller.blocks.length > 0 && ngModel.$viewValue !== controller.serializeBlock()) {
-                            // if blocks are not loading
-                            if (!_.some(controller.blocks, function(block) {
-                                return block.loading;
-                            })) {
-                                init();
-                            }
-                        }
-                    }, 250, false);
-                });
             }
         };
     }])
