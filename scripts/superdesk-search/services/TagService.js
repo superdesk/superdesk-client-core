@@ -1,7 +1,7 @@
 import { PARAMETERS } from 'superdesk-search/constants';
 
-TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search'];
-export function TagService($location, desks, userList, metadata, search) {
+TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search', 'ingestSources'];
+export function TagService($location, desks, userList, metadata, search, ingestSources) {
     var tags = {};
     tags.selectedFacets = {};
     tags.selectedParameters = [];
@@ -117,6 +117,9 @@ export function TagService($location, desks, userList, metadata, search) {
                         if (params[key]) {
                             tags.selectedParameters.push(value);
                         }
+                        break;
+                    case 'ingest_provider':
+                        tags.selectedParameters.push(value + ':' + ingestSources.providersLookup[params[key]].name);
                         break;
                     default:
                         tags.selectedParameters.push(value + ':' + params[key]);

@@ -113,6 +113,19 @@
                 <span sd-switch ng-model="fields.spike"></span>
             </div>
         </div>
+
+        <div class="multiple" ng-if="search_config.ingest_provider">
+            <div class="field">
+                <label for="search-ingest-provider">
+                    {{:: 'Provider' | translate}}
+                </label>
+                <select id="search-ingest-provider"
+                        ng-model='fields.ingest_provider'
+                        ng-options="provider._id as provider.name for provider in providers">
+                <option value="" label=""></option>
+                </select>
+            </div>
+        </div>
         
     </fieldset>
     <fieldset ng-show="repo.search === 'aapmm'">

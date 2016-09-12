@@ -1,7 +1,7 @@
 SearchParameters.$inject = [
-    '$location', 'asset', 'tags', 'metadata', 'desks', 'userList', 'gettext', 'gettextCatalog'
+    '$location', 'asset', 'tags', 'metadata', 'desks', 'userList', 'gettext', 'gettextCatalog', 'ingestSources'
 ];
-export function SearchParameters($location, asset, tags, metadata, desks, userList, gettext, gettextCatalog) {
+export function SearchParameters($location, asset, tags, metadata, desks, userList, gettext, gettextCatalog, ingestSources) {
     return {
         scope: {
             repo: '=',
@@ -55,9 +55,11 @@ export function SearchParameters($location, asset, tags, metadata, desks, userLi
                     fetchMetadata();
                     fetchUsers();
                     fetchDesks();
+                    fetchProviders();
                 } else {
                     initializeDesksDropDown();
                     initializeItems();
+                    initializeProviders();
                 }
             }
 
@@ -90,6 +92,22 @@ export function SearchParameters($location, asset, tags, metadata, desks, userLi
                         scope.desks = desks.desks;
                         initializeDesksDropDown();
                     });
+            }
+
+            /*
+             * Initialize the provider dropdown
+             */
+            function fetchProviders() {
+                ingestSources.fetchAllIngestProviders().then(function(items) {
+                    scope.providers = items;
+                    initializeProviders();
+                });
+            }
+
+            function initializeProviders() {
+                if ($location.search().ingest_provider) {
+                    scope.fields.ingest_provider = $location.search().ingest_provider;
+                }
             }
 
             /*
@@ -165,7 +183,8 @@ export function SearchParameters($location, asset, tags, metadata, desks, userLi
                     scope.fields.original_creator !== $location.search().original_creator ||
                     scope.fields.subject !== $location.search().subject ||
                     scope.fields.company_codes !== $location.search().company_codes ||
-                    scope.fields.spike !== $location.search().spike) {
+                    scope.fields.spike !== $location.search().spike ||
+                    scope.fields.ingest_provider !== $location.search().ingest_provider) {
                     init();
                 }
             });

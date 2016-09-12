@@ -281,6 +281,15 @@ function GlobalSearch() {
     };
 
     /**
+     * Select the provider passed provider name from the passed <select> element
+     * @param {string} selectId - Id of the <select> element
+     * @param {string} provider - Name ingest provider.
+     */
+    this.selectProvider = function(selectId, provider) {
+        element(by.id(selectId)).element(by.css('option[label="' + provider + '"]')).click();
+    };
+
+    /**
      * Get the Element Heading by index
      * @param {number} index
      * @return {promise} headline element
