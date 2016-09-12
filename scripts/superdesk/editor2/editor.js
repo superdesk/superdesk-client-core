@@ -698,7 +698,7 @@ angular.module('superdesk.editor2', [
             }
         };
     }])
-    .directive('sdTextEditor', ['$timeout', 'lodash', function ($timeout, _) {
+    .directive('sdTextEditor', ['$timeout', 'lodash', 'History', function ($timeout, _, History) {
         return {
             scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?'},
             require: ['sdTextEditor', 'ngModel'],
@@ -709,6 +709,7 @@ angular.module('superdesk.editor2', [
             link: function(scope, element, attr, controllers) {
                 var controller = controllers[0];
                 var ngModel = controllers[1];
+
                 function init() {
                     scope.$applyAsync(function() {
                         if (controller.config.multiBlockEdition) {
@@ -720,6 +721,18 @@ angular.module('superdesk.editor2', [
                 }
                 // init editor based on model
                 init();
+
+                scope.$on('History.undone', function() {
+                    $timeout(function() {
+                        console.log('outside model change');
+                        // if blocks are not loading
+                        if (!_.some(controller.blocks, function(block) {
+                            return block.loading;
+                        })) {
+                            init();
+                        }
+                    });
+                });
             }
         };
     }])
