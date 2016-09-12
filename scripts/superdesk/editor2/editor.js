@@ -719,10 +719,8 @@ angular.module('superdesk.editor2', [
                         }
                     });
                 }
-                // init editor based on model
-                init();
 
-                scope.$on('History.undone', function() {
+                function onHistoryAction() {
                     $timeout(function() {
                         console.log('outside model change');
                         // if blocks are not loading
@@ -732,7 +730,13 @@ angular.module('superdesk.editor2', [
                             init();
                         }
                     });
-                });
+                }
+
+                // init editor based on model
+                init();
+
+                scope.$on('History.redone', onHistoryAction);
+                scope.$on('History.undone', onHistoryAction);
             }
         };
     }])
