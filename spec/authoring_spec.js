@@ -21,7 +21,7 @@ describe('authoring', function() {
         authoring.cleanBodyHtmlElement();
         authoring.writeText('line\n');
         authoring.addEmbed('embed');
-        let thirdBlockContext = element(by.model('item.body_html')).all(by.repeater('block in vm.blocks')) .get(2);
+        var thirdBlockContext = element(by.model('item.body_html')).all(by.repeater('block in vm.blocks')) .get(2);
         thirdBlockContext.element(by.css('.editor-type-html')).sendKeys('line\n');
         authoring.addEmbed('embed', thirdBlockContext);
         authoring.blockContains(0, 'line');
@@ -34,17 +34,17 @@ describe('authoring', function() {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.cleanBodyHtmlElement();
         function generateLines(from, to) {
-            let lines = '';
-            for (let i = from; i < to; i++) {
+            var lines = '';
+            for (var i = from; i < to; i++) {
                 lines += 'line ' + i + '\n';
             }
             return lines;
         }
-        let body1 = generateLines(0, 8);
-        let body2 = generateLines(8, 15);
-        let body3 = generateLines(15, 20);
+        var body1 = generateLines(0, 8);
+        var body2 = generateLines(8, 15);
+        var body3 = generateLines(15, 20);
         authoring.writeText(body1 + body2 + body3);
-        for (let i = 0; i < 5; i++) {
+        for (var i = 0; i < 5; i++) {
             authoring.writeText(protractor.Key.UP);
         }
         authoring.writeText(protractor.Key.ENTER);
