@@ -1,7 +1,7 @@
 import { PARAMETERS } from 'superdesk-search/constants';
 
-TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search', 'ingestSources'];
-export function TagService($location, desks, userList, metadata, search, ingestSources) {
+TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search', 'ingestSources', 'gettextCatalog'];
+export function TagService($location, desks, userList, metadata, search, ingestSources, gettextCatalog) {
     var tags = {};
     tags.selectedFacets = {};
     tags.selectedParameters = [];
@@ -23,6 +23,13 @@ export function TagService($location, desks, userList, metadata, search, ingestS
 
     var cvs = search.cvs;
 
+    function tag(label, value) {
+        return {
+            label: label,
+            value: value || label
+        };
+    }
+
     function initSelectedParameters (parameters) {
         tags.selectedParameters = [];
         while (parameters.indexOf(':') > 0 &&
@@ -33,21 +40,22 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             var parameter = parameters.substring(parameters.lastIndexOf(' ', colonIndex), parameters.indexOf(')', colonIndex) + 1);
             var added = false;
 
-            for (var i = 0; i < cvs.length; i++) {
-                var cv = cvs[i];
+            cvs.forEach(cv => {
                 if (parameter.indexOf(cv.id + '.qcode') !== -1) {
                     var value = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')),
                         codeList = metadata.values[cv.list],
                         name = _.result(_.find(codeList, {qcode: value}), 'name');
                     if (name) {
-                        tags.selectedParameters.push(cv.id + '.name:(' + name + ')');
+                        tags.selectedParameters.push(tag(cv.id + '.name:(' + name + ')'));
                         added = true;
                     }
                 }
-            }
+            });
 
             if (!added) {
-                tags.selectedParameters.push(parameter);
+                var paramArr = parameter.split(':');
+                var parameterTranslated = gettextCatalog.getString(paramArr[0]) + ':' + paramArr[1];
+                tags.selectedParameters.push(tag(parameterTranslated, paramArr.join(':')));
             }
 
             parameters = parameters.replace(parameter, '');
@@ -84,15 +92,15 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 switch (key) {
                     case 'original_creator':
                         userList.getUser(params[key]).then(function(user) {
-                            tags.selectedParameters.push(value + ':' + user.display_name);
+                            tags.selectedParameters.push(tag(value + ':' + user.display_name));
                         }, function(error) {
-                            tags.selectedParameters.push(value + ':Unknown');
+                            tags.selectedParameters.push(tag(value + ':Unknown'));
                         });
                         break;
                     case 'from_desk':
                     case 'to_desk':
-                        tags.selectedParameters.push(value + ':' +
-                            desks.deskLookup[params[key].split('-')[0]].name);
+                        tags.selectedParameters.push(tag(value + ':' +
+                            desks.deskLookup[params[key].split('-')[0]].name));
                         break;
                     case 'company_codes':
                     case 'subject':
@@ -100,7 +108,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                             _.forEach(selecteditems, function(selecteditem) {
                                 var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
                                 if (name) {
-                                    tags.selectedParameters.push(value + ':(' + name + ')');
+                                    tags.selectedParameters.push(tag(value + ':(' + name + ')'));
                                 }
                             });
                         };
@@ -115,14 +123,14 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                         break;
                     case 'spike':
                         if (params[key]) {
-                            tags.selectedParameters.push(value);
+                            tags.selectedParameters.push(tag(value));
                         }
                         break;
                     case 'ingest_provider':
                         tags.selectedParameters.push(value + ':' + ingestSources.providersLookup[params[key]].name);
                         break;
                     default:
-                        tags.selectedParameters.push(value + ':' + params[key]);
+                        tags.selectedParameters.push(tag(value + ':' + params[key]));
                 }
             }
         });

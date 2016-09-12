@@ -62,11 +62,12 @@ export function SearchTags($location, tags, asset, metadata) {
                 }
 
                 angular.forEach(scope.cvs, function(cv) {
-                    if (param.indexOf(cv.name) !== -1) {
+                    if (param.toLowerCase().indexOf(cv.field) !== -1) {
                         var codeList = scope.metadata[cv.list];
                         var qcode = _.result(_.find(codeList, function(code) {
-                                                return code.name === parameterValue;
-                                            }), 'qcode');
+                            return code.name === parameterValue || code.qcode === parameterValue;
+                        }), 'qcode');
+
                         if (qcode) {
                             if (searchParameters[cv.field]) {
                                 tags.removeFacet(cv.field, qcode);
