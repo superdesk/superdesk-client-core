@@ -156,6 +156,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
     angular.extend(vm, {
         configuration: angular.extend({embeds: true}, config.editor || {}),
         blocks: [],
+        blockIds: [],
         initEditorWithOneBlock: function(model) {
             vm.model = model;
             vm.blocks = [new Block({body: model.$modelValue})];
@@ -352,7 +353,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         * Compute an id for the block with its content and its position.
         * Used as `track by` value, it allows the blocks to be well rendered.
         */
-        generateBlockId: function(block) {
+        generateBlockId: function(block, i) {
             function hashCode(string) {
                 var hash = 0, i, chr, len;
                 if (string.length === 0) {
@@ -367,7 +368,19 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 return hash;
             }
 
-            return String(Math.abs(hashCode(block.body)));
+            var blockId = String(Math.abs(hashCode(block.body)));
+
+            if (vm.blockIds.indexOf(blockId) != -1)
+                blockId = `${vm.blockIds[vm.blockIds.indexOf(blockId)]}${blockId.slice(-2)}`;
+
+            if (i == vm.blocks.length - 1)
+                while(vm.blockIds.length > 0)
+                    vm.blockIds.pop();
+
+            else if (blockId && blockId !== '0' && vm.config.multiBlockEdition)
+                vm.blockIds.push(blockId);
+
+            return blockId;
         }
     });
 }
