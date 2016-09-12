@@ -418,7 +418,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     window.RunTansaProofing();
                 } else {
                     $rootScope.config.isCheckedByTansa = true;
-                    notify.error(gettext('Tansa is not working. You can continue editing or publish the story.'));
+                    notify.error(gettext('Tansa is not responding. You can continue editing or publish the story.'));
                 }
 
             };
