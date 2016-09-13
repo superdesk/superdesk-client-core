@@ -6,7 +6,7 @@
     </li>
     <li ng-repeat="parameter in tags.selectedParameters">
         <div>
-            <span>{{parameter}}</span><button ng-click="removeParameter(parameter)"><i class="icon-close-small icon-white"></i></button>
+            <span>{{parameter.label}}</span><button ng-click="removeParameter(parameter.value)"><i class="icon-close-small icon-white"></i></button>
         </div>
     </li>
     <li ng-repeat="parameter in tags.selectedKeywords">

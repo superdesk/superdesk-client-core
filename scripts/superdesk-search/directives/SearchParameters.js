@@ -123,15 +123,19 @@ export function SearchParameters($location, asset, tags, metadata, desks, userLi
             function initializeItems() {
                 angular.forEach(scope.cvs, function(cv) {
                     if ($location.search()[cv.field]) {
-                        scope.selecteditems[cv.field] = [];
+                        scope.fields[cv.field] = [];
+                        scope.selecteditems[cv.field] = scope.selecteditems[cv.field] || [];
                         var itemList = JSON.parse($location.search()[cv.field]);
                         angular.forEach(itemList, function(qcode) {
                             var match = _.find(scope.metadata[cv.list], function(m) {
                                 return m.qcode === qcode;
                             });
-                            scope.selecteditems[cv.field].push(match);
-                            scope.fields[cv.field] = [];
-                            scope.fields[cv.field].push(match);
+                            if (match) {
+                                scope.selecteditems[cv.field].push(angular.extend(match, {
+                                    scheme: cv.id
+                                }));
+                                scope.fields[cv.field].push(match);
+                            }
                         });
                     } else {
                         scope.selecteditems[cv.field] = [];
@@ -227,12 +231,12 @@ export function SearchParameters($location, asset, tags, metadata, desks, userLi
                             }
                             if (typeof(val) === 'string'){
                                 if (val) {
-                                    metas.push(gettextCatalog.getString(key) + ':(' + gettextCatalog.getString(val) + ')');
+                                    metas.push(key + ':(' + val + ')');
                                 }
                             } else if (angular.isArray(val)) {
                                 angular.forEach(val, function(value) {
                                     value = value.replace(pattern, '');
-                                    metas.push(gettextCatalog.getString(key) + ':(' + gettextCatalog.getString(value) + ')');
+                                    metas.push(key + ':(' + value + ')');
                                 });
                             } else {
                                 var subkey = getFirstKey(val);

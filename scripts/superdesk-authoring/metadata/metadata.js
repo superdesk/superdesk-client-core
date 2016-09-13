@@ -645,7 +645,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.terms = filterSelected(scope.list);
                 if (scope.cv) { // filter out items from current cv
                     scope.selectedItems = _.filter(selected, function(term) {
-                        return term.scheme === scope.cv._id;
+                        return term.scheme === (scope.cv._id || scope.cv.id);
                     });
                 } else {
                     scope.selectedItems = selected;
@@ -700,17 +700,25 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             function filterSelected(terms) {
                 var selected = {};
                 angular.forEach(scope.item[scope.field], function(term) {
-                    selected[term[scope.uniqueField]] = 1;
+                    if (term) {
+                        selected[term[scope.uniqueField]] = 1;
+                    }
                 });
 
                 return _.filter(terms, function(term) {
-                    return !selected[term[scope.uniqueField]];
+                    return term && !selected[term[scope.uniqueField]];
                 });
             }
 
             function addTerm(term) {
+                if (!term) {
+                    return;
+                }
+
+                let isSelected = filterSelected([term]).length === 0;
+
                 // Only select terms that are not already selected
-                if (!_.find(scope.item[scope.field], function(i) {return i[scope.uniqueField] === term[scope.uniqueField];})) {
+                if (!isSelected) {
                     //instead of simple push, extend the item[field] in order to trigger dirty $watch
                     var t = [];
 

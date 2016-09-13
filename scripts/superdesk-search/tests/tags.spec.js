@@ -47,12 +47,14 @@ describe('Tag Service', function() {
         expect(members.selectedKeywords.length).toBe(1);
     }));
 
-    it('can populate parameters from location', inject(function($location, tags, $rootScope, desks, $q) {
+    it('can populate parameters from location',
+    inject(function($location, tags, $rootScope, desks, $q, gettextCatalog) {
         var members = null;
         $location.search('q=headline:(Obama)');
         $rootScope.$apply();
 
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
+        gettextCatalog.setStrings(gettextCatalog.getCurrentLanguage(), {headline: 'foo'});
 
         tags.initSelectedFacets()
             .then(function(currentTags) {
@@ -61,6 +63,8 @@ describe('Tag Service', function() {
 
         $rootScope.$digest();
         expect(members.selectedParameters.length).toBe(1);
+        expect(members.selectedParameters[0].label).toBe('foo:(Obama)');
+        expect(members.selectedParameters[0].value).toBe('headline:(Obama)');
     }));
 
     it('can populate type facet from location', inject(function($location, tags, $rootScope, desks, $q) {
@@ -142,8 +146,8 @@ describe('Tag Service', function() {
 
         $rootScope.$digest();
         expect(tagsList.selectedParameters.length).toEqual(2);
-        expect(tagsList.selectedParameters[0]).toEqual('From Desk:National');
-        expect(tagsList.selectedParameters[1]).toEqual('To Desk:Sport');
+        expect(tagsList.selectedParameters[0].label).toEqual('From Desk:National');
+        expect(tagsList.selectedParameters[1].label).toEqual('To Desk:Sport');
     }));
 
     it('create tags original creator', inject(function ($location, $rootScope, $q, tags, desks, _userList_) {
@@ -167,7 +171,7 @@ describe('Tag Service', function() {
 
         $rootScope.$digest();
         expect(tagsList.selectedParameters.length).toEqual(1);
-        expect(tagsList.selectedParameters[0]).toEqual('Creator:Test User');
+        expect(tagsList.selectedParameters[0].label).toEqual('Creator:Test User');
     }));
 
     it('create tags if creator is not known', inject(function ($location, $rootScope, $q, tags, desks, _userList_) {
@@ -186,7 +190,7 @@ describe('Tag Service', function() {
 
         $rootScope.$digest();
         expect(tagsList.selectedParameters.length).toEqual(1);
-        expect(tagsList.selectedParameters[0]).toEqual('Creator:Unknown');
+        expect(tagsList.selectedParameters[0].label).toEqual('Creator:Unknown');
     }));
 
     it('create tags for unique name', inject(function ($location, $rootScope, $q, tags, desks) {
@@ -202,7 +206,7 @@ describe('Tag Service', function() {
 
         $rootScope.$digest();
         expect(tagsList.selectedParameters.length).toEqual(1);
-        expect(tagsList.selectedParameters[0]).toEqual('Unique Name:123');
+        expect(tagsList.selectedParameters[0].label).toEqual('Unique Name:123');
     }));
 
     it('create tags for ingest provider', inject(function($location, $rootScope, $q, tags, desks, ingestSources) {
