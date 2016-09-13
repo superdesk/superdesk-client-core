@@ -513,7 +513,7 @@ export function SearchService($location, gettext, config, session) {
     };
 
     this.getElasticHighlight = function() {
-        return config.feature && config.feature.elasticHighlight ? 1 : 0;
+        return config.features && config.features.elasticHighlight ? 1 : 0;
     };
 
     /**
