@@ -619,7 +619,7 @@ form, ng-form {
     fieldset, .fieldset {
         .clearfix();
         .field {
-            margin-bottom: 15px;
+            margin-bottom: 24px;
             width: 100%;
             .border-box();
             > .inline-label {
@@ -1051,6 +1051,73 @@ textarea {
   }
 }
 
+.line-select {
+  position: relative;
+  select {
+    position: relative;
+    z-index: 2;
+    padding: 0 15px 0 0 !important;
+    line-height: 24px;
+    text-align: left;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    width: 100%;
+    border-radius: 0 !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(0,0,0,0.15)!important;
+    background-color: transparent;
+    padding: 0;
+    height:24px;
+    &:hover {
+        border-color: rgba(0,0,0,0.3) !important;
+        background-color: transparent !important;
+    }
+    &:focus {
+        box-shadow: 0 1px 0 0 @sd-blue !important;
+        border-color: @sd-blue !important;
+        background-color: transparent !important;
+    }
+  }
+  &::after {
+    position: absolute;
+    top: 12px;
+    right: 4px;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    margin-top: -2px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #000;
+    opacity: 0.3;
+    filter: alpha(opacity=30);
+    content: "";
+    z-index: 0;
+  }
+  &:hover {
+    &::after {
+      opacity: 0.6;
+      filter: alpha(opacity=60);
+    }
+  }
+}
+input {
+  &.line-input--inline-mini {
+    text-align: center;
+    width: 40px;
+
+  }
+}
+.helper-text {
+  display: inline-block;
+  color: #747474;
+}
+.helper-text--padded {
+  padding: 0 10px;
+}
+
 .label--inline {
   text-transform: none;
   color: #333;
@@ -1060,6 +1127,11 @@ textarea {
   margin-bottom: 0;
   vertical-align: top;
 }
+
+.input-group {
+  padding-top: 6px;
+}
+
 
 // line input for contenteditable div
 .contenteditable-input {
