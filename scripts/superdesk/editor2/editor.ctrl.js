@@ -370,15 +370,18 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
 
             var blockId = String(Math.abs(hashCode(block.body)));
 
-            if (vm.blockIds.indexOf(blockId) != -1)
+            if (vm.blockIds.indexOf(blockId) !== -1) {
                 blockId = `${vm.blockIds[vm.blockIds.indexOf(blockId)]}${blockId.slice(-2)}`;
+            }
 
-            if (i == vm.blocks.length - 1)
-                while(vm.blockIds.length > 0)
+            if (i === vm.blocks.length - 1) {
+                while (vm.blockIds.length > 0) {
                     vm.blockIds.pop();
+                }
 
-            else if (blockId && blockId !== '0' && vm.config.multiBlockEdition)
+            } else if (blockId && blockId !== '0' && vm.config.multiBlockEdition) {
                 vm.blockIds.push(blockId);
+            }
 
             return blockId;
         }
