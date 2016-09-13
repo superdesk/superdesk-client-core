@@ -720,9 +720,8 @@ angular.module('superdesk.editor2', [
                     });
                 }
 
-                function onHistoryAction() {
+                function reRenderBlocks() {
                     $timeout(function() {
-                        console.log('outside model change');
                         // if blocks are not loading
                         if (!_.some(controller.blocks, function(block) {
                             return block.loading;
@@ -735,8 +734,9 @@ angular.module('superdesk.editor2', [
                 // init editor based on model
                 init();
 
-                scope.$on('History.redone', onHistoryAction);
-                scope.$on('History.undone', onHistoryAction);
+                scope.$on('added:helpline', reRenderBlocks);
+                scope.$on('History.redone', reRenderBlocks);
+                scope.$on('History.undone', reRenderBlocks);
             }
         };
     }])
