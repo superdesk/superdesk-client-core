@@ -260,4 +260,20 @@ describe('search', function() {
         element(by.css('.icon-close-small.icon-white')).click();
         expect(globalSearch.getItems().count()).toBe(15);
     });
+
+    it('can search by facet and exclude facet', function() {
+        expect(globalSearch.getItems().count()).toBe(14);
+        globalSearch.openFilterPanel();
+        globalSearch.toggleSearchTabs('filters');
+        browser.sleep(200);
+        expect(globalSearch.getDeskElements().count()).toBe(2);
+        globalSearch.excludeDeskFacet(0);
+        expect(globalSearch.getDeskElements().count()).toBe(1);
+        expect(globalSearch.getItems().count()).toBe(6);
+        expect(globalSearch.getExcludedFacetTags().count()).toBe(1);
+        globalSearch.deleteExcludedFacetTagByIndex(0);
+        expect(globalSearch.getExcludedFacetTags().count()).toBe(0);
+        expect(globalSearch.getDeskElements().count()).toBe(2);
+        expect(globalSearch.getItems().count()).toBe(14);
+    });
 });

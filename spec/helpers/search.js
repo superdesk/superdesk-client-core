@@ -341,4 +341,59 @@ function GlobalSearch() {
         this.archiveRepo.click();
         this.publishedRepo.click();
     };
+
+    /**
+     * Get the Desk Elements
+     * @return {promise} Desk elements
+     */
+    this.getDeskElements = function() {
+        return element.all(by.repeater('(key,value) in aggregations.desk'));
+    };
+
+    /**
+     * Get the Desk Element by index
+     * @param {number} index
+     * @return {promise} Desk Element
+     */
+    this.getDeskElementByIndex = function(index) {
+        return this.getDeskElements().get(index);
+    };
+
+    /**
+     * Click Remove button of the Desk Element
+     * @param {number} index
+     */
+    this.excludeDeskFacet = function(index) {
+        var deskFacet = this.getDeskElementByIndex(index);
+        browser.actions()
+            .mouseMove(deskFacet)
+            .perform();
+        deskFacet.element(by.className('remove-aggregate')).click();
+    };
+
+    /**
+     * Get list of excluded facet tags
+     *
+     * @return {promise} list of elements
+     */
+    this.getExcludedFacetTags = function () {
+        return element.all(by.repeater('(type,keys) in tags.removedFacets'));
+    };
+
+    /**
+     * Get list of excluded facet tags
+     * @param {number} index
+     * @return {promise} element
+     */
+    this.getExcludedFacetTagByIndex = function (index) {
+        return this.getExcludedFacetTags().get(index);
+    };
+
+    /**
+     * Delete the excluded facet tag by index
+     * @param {number} index
+     */
+    this.deleteExcludedFacetTagByIndex = function (index) {
+        this.getExcludedFacetTagByIndex(index).element(by.tagName('button')).click();
+    };
 }

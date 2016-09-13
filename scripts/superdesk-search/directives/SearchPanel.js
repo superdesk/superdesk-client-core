@@ -187,28 +187,64 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 }
             };
 
+            /**
+             * Removes the facets from the list of facets by changing the url
+             * It adds the parameters to the url as: notdesk=['123','456']&nottype=['type','composite']
+             * Change in location triggers request to 'search' endpoint.
+             * @param {String} type - facet type
+             * @param {String} key - facet value
+             * @param {object} evt - click event
+             */
+            scope.excludeFacet = function(type, key, evt) {
+                if (scope.hasFilter(type, key)) {
+                    // If the filter is selected then the filter is unselected and filter is removed.
+                    scope.removeFilter(type, key);
+                }
+
+                type = 'not' + type;
+                setUrlParameter(type, key);
+                evt.stopPropagation();
+            };
+
             scope.removeFilter = function(type, key) {
                 tags.removeFacet(type, key);
             };
 
+            /*
+             * Filter the results further using the facets.
+             * It changes the url based on the facet selected: desk=['123,'456']&type=['type','composite']
+             * Change in location triggers request to 'search' endpoint.
+             * @param {String} type - facet type
+             * @param {String} key - facet value
+             */
             scope.setFilter = function(type, key) {
                 if (!scope.isEmpty(type) && key) {
-                    var currentKeys = $location.search()[type];
-                    if (currentKeys) {
-                        currentKeys = JSON.parse(currentKeys);
-                        currentKeys.push(key);
-                        $location.search(type, JSON.stringify(currentKeys));
-                    } else {
-                        if (type === 'credit') {
-                            $location.search('creditqcode',
-                                JSON.stringify([scope.aggregations.credit[key].qcode]));
-                        }
-                        $location.search(type, JSON.stringify([key]));
-                    }
+                    setUrlParameter(type, key);
                 } else {
                     $location.search(type, null);
                 }
             };
+
+            /*
+             * Add parameter to the url.
+             * @param {String} type - facet type
+             * @param {String} key - facet value
+             */
+            function setUrlParameter(type, key) {
+                var currentKeys = $location.search()[type];
+                if (currentKeys) {
+                    currentKeys = JSON.parse(currentKeys);
+                    currentKeys.push(key);
+                    $location.search(type, JSON.stringify(currentKeys));
+                } else {
+                    if (type === 'credit') {
+                        $location.search('creditqcode',
+                            JSON.stringify([scope.aggregations.credit[key].qcode]));
+                    } else {
+                        $location.search(type, JSON.stringify([key]));
+                    }
+                }
+            }
 
             scope.setDateFilter = function(key) {
                 if (key === 'Last Day') {
@@ -238,10 +274,11 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
             scope.hasFilter = function(type, key) {
                 if (type === 'desk') {
                     return scope.tags.selectedFacets[type] &&
-                    scope.tags.selectedFacets[type].indexOf(desks.deskLookup[key].name) >= 0;
+                        _.find(scope.tags.selectedFacets[type], facet => facet.value === key);
                 }
 
-                return scope.tags && scope.tags.selectedFacets[type] && scope.tags.selectedFacets[type].indexOf(key) >= 0;
+                return scope.tags && scope.tags.selectedFacets[type] &&
+                    scope.tags.selectedFacets[type].indexOf(key) >= 0;
             };
         }
     };
