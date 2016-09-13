@@ -27,7 +27,7 @@ describe('Image Crop', function() {
             $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
                 ' data-original="original" ' +
                 ' data-rendition="rendition" data-box-width="boxWidth"' +
-                ' data-box-height="boxHeight" crop-data="cropData"></div>')(scope);
+                ' data-box-height="boxHeight" crop-data="cropData" data-on-change="onChange()"></div>')(scope);
         }));
 
         it('invokes watch', inject(function() {
@@ -97,6 +97,26 @@ describe('Image Crop', function() {
                 expect($elm.text())
                     .toBe('Sorry, but image must be at least ' + scope.rendition.width + 'x' + scope.rendition.height +
                           ', (it is 500x600).');
+            }));
+
+            it('calls onChange callback on change only', inject(function($timeout) {
+                scope.onChange = jasmine.createSpy('onchange');
+                scope.$digest();
+
+                var handler = fakeImg.onload;
+                handler.apply(fakeImg);
+
+                var coords = {x: 0, x2: 100, y: 0, y2: 100};
+                var retObj = mySpy.calls.argsFor(0);
+
+                retObj[0].onSelect(coords);
+                $timeout.flush(10);
+                scope.$digest();
+                expect(scope.onChange.calls.count()).toBe(1);
+
+                retObj[0].onSelect(coords);
+                $timeout.flush(10);
+                expect(scope.onChange.calls.count()).toBe(1);
             }));
         });
     });

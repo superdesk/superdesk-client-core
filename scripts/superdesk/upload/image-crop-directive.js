@@ -93,6 +93,21 @@
                 var img, cropData, jcropApi, selectionWidth, selectionHeight;
 
                 /**
+                 * Test if crop data a equals to crop data b
+                 *
+                 * @param {Object} a
+                 * @param {Object} b
+                 * @return {Boolean}
+                 */
+                function isEqualCrop(a, b) {
+                    return a && b &&
+                        a.CropLeft === b.CropLeft &&
+                        a.CropRight === b.CropRight &&
+                        a.CropTop === b.CropTop &&
+                        a.CropBottom === b.CropBottom;
+                }
+
+                /**
                  * Updates crop coordinates scope
                  *
                  * @param {Array} cords
@@ -101,10 +116,12 @@
                     var nextData = formatCoordinates(cords);
                     selectionWidth = nextData.CropRight - nextData.CropLeft;
                     selectionHeight = nextData.CropBottom - nextData.CropTop;
-                    $timeout(function() {
-                        angular.extend(scope.cropData, nextData);
-                        scope.onChange({renditionName: scope.rendition && scope.rendition.name || undefined, cropData: nextData});
-                    });
+                    if (!isEqualCrop(nextData, scope.cropData)) {
+                        $timeout(function() {
+                            angular.extend(scope.cropData, nextData);
+                            scope.onChange({renditionName: scope.rendition && scope.rendition.name || undefined, cropData: nextData});
+                        });
+                    }
                 }
 
                 /**
