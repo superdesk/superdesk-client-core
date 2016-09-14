@@ -135,9 +135,10 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
     };
 
     $scope.onChange = function(renditionName, cropData) {
-        $scope.$apply(function() {
+        $scope.$applyAsync(function() {
             if (angular.isDefined(renditionName)) {
                 $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
+                $scope.data.isDirty = true;
             }
         });
     };
