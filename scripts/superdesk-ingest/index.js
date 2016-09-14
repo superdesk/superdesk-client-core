@@ -17,7 +17,8 @@ angular.module('superdesk.ingest', [
     'superdesk.dashboard',
     'superdesk.widgets.base',
     'superdesk.widgets.ingeststats',
-    'superdesk.ingest.send'
+    'superdesk.ingest.send',
+    'superdesk.config'
 ])
     .value('feedingServices', constant.feedingServices)
     .value('feedParsers', constant.feedParsers)
