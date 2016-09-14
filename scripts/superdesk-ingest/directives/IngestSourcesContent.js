@@ -1,8 +1,8 @@
 import * as constant from 'superdesk-ingest/constants';
 
 IngestSourcesContent.$inject = ['feedingServices', 'feedParsers', 'gettext', 'notify', 'api', '$location',
-    'modal', '$filter'];
-export function IngestSourcesContent(feedingServices, feedParsers, gettext, notify, api, $location, modal, $filter) {
+    'modal', '$filter', 'config'];
+export function IngestSourcesContent(feedingServices, feedParsers, gettext, notify, api, $location, modal, $filter, config) {
     return {
         templateUrl: 'scripts/superdesk-ingest/views/settings/ingest-sources-content.html',
         link: function($scope) {
@@ -10,7 +10,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             $scope.origProvider = null;
 
             $scope.feedingServices = $filter('sortByName')(feedingServices, 'label');
-            $scope.feedParsers = $filter('sortByName')(feedParsers);
+            $scope.feedParsers = $filter('sortByName')(_.concat(feedParsers, config.feedParsers || []));
             $scope.fileTypes = ['text', 'picture', 'composite', 'video', 'audio'];
             $scope.minutes = [0, 1, 2, 3, 4, 5, 8, 10, 15, 30, 45];
             $scope.seconds = [0, 5, 10, 15, 30, 45];
