@@ -84,6 +84,7 @@ import 'superdesk-monitoring';
 import 'superdesk-settings';
 import 'superdesk-ingest';
 import 'superdesk-search-providers';
+import 'superdesk-web-publisher';
 
 // load spellcheckers
 if (appConfig.features.useTansaProofing) {
