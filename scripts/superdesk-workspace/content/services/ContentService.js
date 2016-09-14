@@ -1,4 +1,4 @@
-import { DEFAULT_SCHEMA, DEFAULT_EDITOR } from '../constants';
+import * as constant from '../constants';
 
 ContentService.$inject = ['api', 'superdesk', 'templates', 'desks', 'packages', 'archiveService', '$filter'];
 export function ContentService(api, superdesk, templates, desks, packages, archiveService, $filter) {
@@ -185,7 +185,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Object}
      */
     this.schema = function(contentType) {
-        return contentType && contentType.schema ? angular.extend({}, contentType.schema) : DEFAULT_SCHEMA;
+        return contentType && contentType.schema ? angular.extend({}, contentType.schema) : constant.DEFAULT_SCHEMA;
     };
 
     /**
@@ -195,7 +195,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Object}
      */
     this.editor = function(contentType) {
-        return contentType && contentType.editor ? angular.extend({}, contentType.editor) : DEFAULT_EDITOR;
+        return contentType && contentType.editor ? angular.extend({}, contentType.editor) : constant.DEFAULT_EDITOR;
     };
 
     /**
@@ -214,4 +214,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             );
         });
     };
+
+    this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);
+    this.contentProfileEditor = angular.extend({}, constant.DEFAULT_EDITOR, constant.EXTRA_EDITOR_FIELDS);
 }
