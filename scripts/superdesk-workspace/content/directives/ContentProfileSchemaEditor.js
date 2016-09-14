@@ -1,7 +1,7 @@
 import * as constant from '../constants';
 
-ContentProfileSchemaEditor.$inject = ['gettext', 'metadata'];
-export function ContentProfileSchemaEditor(gettext, metadata) {
+ContentProfileSchemaEditor.$inject = ['gettext', 'metadata', 'content'];
+export function ContentProfileSchemaEditor(gettext, metadata, content) {
     // labelMap maps schema entry keys to their display names.
     var labelMap = {
         'headline': gettext('Headline'),
@@ -39,7 +39,8 @@ export function ContentProfileSchemaEditor(gettext, metadata) {
         'territory': gettext('Territory'),
         'topic_news': gettext('Topic (News)'),
         'topic_sport': gettext('Topic (Sport)'),
-        'company_codes': gettext('Company Codes')
+        'company_codes': gettext('Company Codes'),
+        'feature_media': gettext('Feature Media')
     };
 
     return {
@@ -53,8 +54,8 @@ export function ContentProfileSchemaEditor(gettext, metadata) {
 
             scope.model.schema = scope.model.schema || {};
             scope.model.editor = scope.model.editor || {};
-            scope.schema = angular.extend({}, constant.DEFAULT_SCHEMA);
-            scope.editor = angular.extend({}, constant.DEFAULT_EDITOR);
+            scope.schema = angular.extend({}, content.contentProfileSchema);
+            scope.editor = angular.extend({}, content.contentProfileEditor);
 
             metadata.initialize().then(function() {
                 scope.options = {subject: metadata.values.subjectcodes};
@@ -98,8 +99,10 @@ export function ContentProfileSchemaEditor(gettext, metadata) {
              * @param {String} id the key of the field to toggle.
              */
             scope.toggle = function(id) {
-                scope.model.schema[id] = scope.model.schema[id] ? null : angular.extend({}, constant.DEFAULT_SCHEMA[id]);
-                scope.model.editor[id] = !scope.model.schema[id] ? null : angular.extend({}, constant.DEFAULT_EDITOR[id]);
+                scope.model.schema[id] = scope.model.schema[id] ?
+                    null : angular.extend({}, content.contentProfileSchema[id]);
+                scope.model.editor[id] = !scope.model.schema[id] ?
+                    null : angular.extend({}, content.contentProfileEditor[id]);
                 form.$dirty = true;
             };
 

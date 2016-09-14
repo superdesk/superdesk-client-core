@@ -20,8 +20,6 @@ export const DEFAULT_SCHEMA = Object.freeze({
     sign_off: {type: 'string'},
     footer: {},
     body_footer: {type: 'string'},
-    feature_media: {},
-    media_description: {}
 });
 
 export const DEFAULT_EDITOR = Object.freeze({
@@ -47,11 +45,18 @@ export const DEFAULT_EDITOR = Object.freeze({
     footer: {order: 17},
     body_footer: {order: 18},
     sign_off: {order: 19},
-    feature_media: {},
-    media_description: {}
 });
 
 export const CV_ALIAS = Object.freeze({
     locators: 'place'
 });
 
+export const EXTRA_SCHEMA_FIELDS = Object.freeze({
+    feature_media: {},
+    media_description: {}
+});
+
+export const EXTRA_EDITOR_FIELDS = Object.freeze({
+    feature_media: {},
+    media_description: {}
+});
