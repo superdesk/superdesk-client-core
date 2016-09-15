@@ -11,7 +11,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
         scope: {
             group: '=',
             numItems: '=',
-            viewType: '='
+            viewType: '=',
+            forceLimited: '@'
         },
         link: function(scope, elem, attrs, ctrls) {
 
@@ -25,6 +26,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.cacheNextItems = [];
             scope.cachePreviousItems = [];
             scope.limited = !(monitoring.singleGroup || scope.group.type === 'highlights' || scope.group.type === 'spike');
+
+            if (scope.forceLimited != null) {
+                scope.limited = scope.forceLimited;
+            }
 
             scope.style = {};
 
