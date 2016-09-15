@@ -1061,7 +1061,7 @@ angular.module('superdesk.editor2', [
                         var toolbar = scope.medium.getExtensionByName('toolbar'),
                             elemPosition = elem.getBoundingClientRect();
                         if (toolbar) {
-                            toolbar.toolbar.hidden = elemPosition.top < TOP_OFFSET;
+                            toolbar.toolbar.hidden = elemPosition.top + elemPosition.height < TOP_OFFSET;
                         }
                     });
 
