@@ -245,7 +245,7 @@ describe('superdesk.workspace.content', function() {
 
             var fields = el.find('li.schema-item');
 
-            expect(fields.length).toBe(Object.keys(content.schema()).length);
+            expect(fields.length).toBe(Object.keys(content.contentProfileSchema).length);
             expect($(fields[0]).find('span.sd-toggle').hasClass('checked')).toBeFalsy();
             expect($(fields[11]).find('span.sd-toggle').hasClass('checked')).toBeTruthy();
         }));
