@@ -353,14 +353,14 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         * Compute an id for the block with its content and its position.
         * Used as `track by` value, it allows the blocks to be well rendered.
         */
-        generateBlockId: function(block, i) {
-            function hashCode(string) {
+        generateBlockId: function(block, index) {
+            function hashCode(str) {
                 var hash = 0, i, chr, len;
-                if (string.length === 0) {
+                if (str.length === 0) {
                     return hash;
                 }
-                for (i = 0, len = string.length; i < len; i++) {
-                    chr   = string.charCodeAt(i);
+                for (i = 0, len = str.length; i < len; i++) {
+                    chr   = str.charCodeAt(i);
                     /*jshint bitwise: false */
                     hash  = ((hash << 5) - hash) + chr;
                     hash |= 0; // Convert to 32bit integer
@@ -371,19 +371,23 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             // Here we strip the html attributes that have an empty assignment
             var bodyToHash = block.body.replace(/=""/g, '');
 
-            if (block.body.match(/^<p><br><\/p>$/))
+            if (block.body.match(/^<p><br><\/p>$/)) {
                 bodyToHash = bodyToHash;
-            else
+            } else {
                 bodyToHash = bodyToHash.replace(/^<p><br><\/p>/, '');
+            }
 
             var blockId = String(Math.abs(hashCode(bodyToHash)));
 
+            // If block id is already present in the blockIds array, we generate a new id
             if (vm.blockIds.indexOf(blockId) !== -1) {
                 let blockOccurence = 0;
 
                 if ((blockId.length > 1)) {
                     vm.blockIds.forEach(id => {
-                        if (id.indexOf(blockId) != -1) blockOccurence++;
+                        if (id.indexOf(blockId) !== -1) {
+                            blockOccurence++;
+                        }
                     });
                 }
 
@@ -391,15 +395,15 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 blockId += (blockId.length > 1) ? blockId.slice(-blockOccurence) : blockId;
             }
 
-            if (i === vm.blocks.length - 1) {
+            // Once the ng-repeat is complete, we empty the blocksIds array
+            if (index === vm.blocks.length - 1) {
                 while (vm.blockIds.length > 0) {
                     vm.blockIds.pop();
                 }
 
-            } else if (blockId && blockId !== '0' && vm.config.multiBlockEdition) {
+            } else if (blockId && vm.config.multiBlockEdition) {
                 vm.blockIds.push(blockId);
             }
-
 
             return blockId;
         }

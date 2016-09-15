@@ -723,9 +723,7 @@ angular.module('superdesk.editor2', [
                 function reRenderBlocks() {
                     $timeout(function() {
                         // if blocks are not loading
-                        if (!_.some(controller.blocks, function(block) {
-                            return block.loading;
-                        })) {
+                        if (!_.some(controller.blocks, block => block.loading)) {
                             init();
                         }
                     });
