@@ -1,5 +1,5 @@
-ItemAssociationDirective.$inject = ['superdesk', 'renditions', '$timeout', 'api', '$q', 'config'];
-export function ItemAssociationDirective(superdesk, renditions, $timeout, api, $q, config) {
+ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'api', '$q', 'config'];
+export function ItemAssociationDirective(superdesk, renditions, api, $q, config) {
     return {
         scope: {
             rel: '=',
@@ -47,21 +47,17 @@ export function ItemAssociationDirective(superdesk, renditions, $timeout, api, $
                         scope.loading = false;
                     });
                 } else {
-                    var data = updateItemAssociation(item);
-                    scope.onchange({item: scope.item, data: data});
+                    scope.$apply(function() {
+                        updateItemAssociation(item);
+                    });
                 }
             });
 
             function updateItemAssociation(updated) {
                 var data = {};
                 data[scope.rel] = updated;
-                scope.item.associations = angular.extend(
-                    {},
-                    scope.item.associations,
-                    data
-                );
-                scope.$apply();
-                return data;
+                scope.item.associations = angular.extend({}, scope.item.associations, data);
+                scope.onchange({item: scope.item, data: data});
             }
 
             // init associated item for preview
@@ -74,16 +70,13 @@ export function ItemAssociationDirective(superdesk, renditions, $timeout, api, $
             scope.edit = function(item) {
                 if (item.renditions && item.renditions.original && scope.isImage(item.renditions.original)) {
                     scope.loading = true;
-                    return renditions.crop(item).then(function(updatedItem) {
-                        var data = updateItemAssociation(updatedItem);
-                        scope.onchange({item: scope.item, data: data});
-                    })
+                    return renditions.crop(item)
+                    .then(updateItemAssociation)
                     .finally(function() {
                         scope.loading = false;
                     });
                 } else {
-                    var data = updateItemAssociation(item);
-                    scope.onchange({item: scope.item, data: data});
+                    updateItemAssociation(item);
                 }
             };
 
@@ -111,8 +104,7 @@ export function ItemAssociationDirective(superdesk, renditions, $timeout, api, $
             };
 
             scope.remove = function(item) {
-                var data = updateItemAssociation(null);
-                scope.onchange({item: scope.item, data: data});
+                updateItemAssociation(null);
             };
 
             scope.upload = function() {
@@ -120,9 +112,9 @@ export function ItemAssociationDirective(superdesk, renditions, $timeout, api, $
                     superdesk.intent('upload', 'media', {uniqueUpload: true}).then(function(images) {
                         // open the view to edit the PoI and the cropping areas
                         if (images) {
-                            $timeout(function() {
+                            scope.$applyAsync(function() {
                                 scope.edit(images[0]);
-                            }, 0, false);
+                            });
                         }
                     });
                 }
