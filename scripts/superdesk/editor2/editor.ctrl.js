@@ -368,10 +368,27 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 return hash;
             }
 
-            var blockId = String(Math.abs(hashCode(block.body)));
+            // Here we strip the html attributes that have an empty assignment
+            var bodyToHash = block.body.replace(/=""/g, '');
+
+            if (block.body.match(/^<p><br><\/p>$/))
+                bodyToHash = bodyToHash;
+            else
+                bodyToHash = bodyToHash.replace(/^<p><br><\/p>/, '');
+
+            var blockId = String(Math.abs(hashCode(bodyToHash)));
 
             if (vm.blockIds.indexOf(blockId) !== -1) {
-                blockId = `${vm.blockIds[vm.blockIds.indexOf(blockId)]}${blockId.slice(-2)}`;
+                let blockOccurence = 0;
+
+                if ((blockId.length > 1)) {
+                    vm.blockIds.forEach(id => {
+                        if (id.indexOf(blockId) != -1) blockOccurence++;
+                    });
+                }
+
+                blockId = vm.blockIds[vm.blockIds.indexOf(blockId)];
+                blockId += (blockId.length > 1) ? blockId.slice(-blockOccurence) : blockId;
             }
 
             if (i === vm.blocks.length - 1) {
@@ -382,6 +399,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             } else if (blockId && blockId !== '0' && vm.config.multiBlockEdition) {
                 vm.blockIds.push(blockId);
             }
+
 
             return blockId;
         }
