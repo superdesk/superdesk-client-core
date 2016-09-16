@@ -50,7 +50,8 @@ module.exports = function makeConfig(grunt) {
                 'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-2010-2020',
                 'rangy-saverestore': 'rangy/lib/rangy-selectionsaverestore',
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
-                'jquery-gridster': 'gridster/dist/jquery.gridster.min'
+                'jquery-gridster': 'gridster/dist/jquery.gridster.min',
+                'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js')
             },
             extensions: ['', '.js']
         },
@@ -59,11 +60,13 @@ module.exports = function makeConfig(grunt) {
                 {
                     test: /\.js$/,
                     exclude: function(p) {
-                        'use strict';
-                        // exclude parsing node modules, but allow the 'superdesk-core'
-                        // node module, because it will be used when building in the
-                        // main 'superdesk' repository.
-                        return p.indexOf('node_modules') > -1 && p.indexOf('superdesk-core') < 0;
+                        // don't exclude anything outside node_modules
+                        if (p.indexOf('node_modules') === -1) {
+                            return false;
+                        }
+                        // include only 'superdesk-core' and valid modules inside node_modules
+                        let validModules = ['superdesk-core'].concat(sdConfig.apps);
+                        return !validModules.some(app => p.indexOf(app) > -1);
                     },
                     loader: 'babel',
                     query: {

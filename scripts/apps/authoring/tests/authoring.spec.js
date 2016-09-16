@@ -1985,7 +1985,7 @@ describe('send item directive', function() {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.core.api'));
 
     beforeEach(inject(function($templateCache) {
         $templateCache.put('scripts/apps/authoring/views/send-item.html', '');

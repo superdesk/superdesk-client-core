@@ -7,6 +7,10 @@ import 'apps';
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
 
+// external-apps is alias for dist/app-importer.generated.js, which is generated
+// by the grunt ngtemplates task 'gen-importer'
+import externalApps from 'external-apps';
+
 if (appConfig.features.useTansaProofing) {
     require('apps/tansa');
 }
@@ -21,7 +25,7 @@ body.ready(function() {
         'superdesk.config',
         'superdesk.core',
         'superdesk.apps'
-    ], {strictDi: true});
+    ].concat(externalApps), {strictDi: true});
 
     window.superdeskIsReady = true;
 });
