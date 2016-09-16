@@ -1,0 +1,27 @@
+<ul>
+  <li ng-class="{active: currentRoute.href === '/web_publisher'}">
+      <a href="#/web_publisher" class="big-icon-dashboard"
+         title="{{ :: 'Dashboard' | translate }}" sd-hotkey="alt+h" sd-hotkey-options="{global: true}"></a>
+  </li>
+  <li ng-class="{active: currentRoute.href === '/web_publisher/monitoring'}">
+      <a href="#/web_publisher/monitoring" class="big-icon-view"
+         title="{{ :: 'Web Monitoring' | translate }}" sd-hotkey="alt+m" sd-hotkey-options="{global: true}"></a>
+  </li>
+  <li ng-class="{active: currentRoute.href === '/workspace/spike-monitoring'}">
+      <a href="#/workspace/spike-monitoring" class="big-icon-spiked" 
+         title="{{ :: 'Spike' | translate }}" sd-hotkey="alt+x" sd-hotkey-options="{global: true}"></a>
+  </li>
+
+  <hr>
+  <li ng-class="{active: currentRoute.href === '/workspace/personal'}">
+      <a href="#/workspace/personal" class="big-icon-personal"
+         title="{{ :: 'Personal' | translate }}" sd-hotkey="alt+p" sd-hotkey-options="{global: true}"></a>
+  </li>
+  <li ng-class="{active: currentRoute.href === '/search'}">
+        <a href="#/search" class="big-icon-global-search" 
+          title="{{ :: 'Search' | translate }}"
+          sd-hotkey="alt+f" sd-hotkey-options="{global: true}">
+        </a>
+  </li>
+</ul>
+
