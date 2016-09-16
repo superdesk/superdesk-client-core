@@ -154,10 +154,14 @@ export function SearchResults(
                 criteria = search.query($location.search()).getCriteria(true);
                 criteria.source.size = 50;
 
-                // To compare current scope of items, consider fetching same number of items.
-                if (scope.items && scope.items._items.length > 50) {
-                    criteria.source.size = scope.items._items.length;
+                // when forced refresh or query then keep query size default as set 50 above.
+                if (!(data && data.force)) {
+                    // To compare current scope of items, consider fetching same number of items.
+                    if (scope.items && scope.items._items.length > 50) {
+                        criteria.source.size = scope.items._items.length;
+                    }
                 }
+
                 criteria.source.from = 0;
                 scope.total = null;
                 criteria.aggregations = $rootScope.aggregations;
