@@ -9,7 +9,8 @@ export default angular.module('superdesk.keyboard', ['gettext'])
     down: 40,
     enter: 13,
     escape: 27,
-    space: 32
+    space: 32,
+    backspace: 8
 }))
 
 // unbind all keyboard shortcuts when switching route
