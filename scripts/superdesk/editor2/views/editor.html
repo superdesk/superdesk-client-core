@@ -1,4 +1,4 @@
-<div ng-repeat="block in vm.blocks"
+<div ng-repeat="block in vm.blocks track by vm.generateBlockId(block, $index)"
      class="block__container"
      ng-class="{'block--not-alone-and-empty': vm.blocks.length > 1 && !block.body}">
     <div class="block__actions" ng-if="vm.config.multiBlockEdition && vm.configuration.embeds">

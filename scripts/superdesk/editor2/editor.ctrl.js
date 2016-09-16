@@ -96,7 +96,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                         }
                     }
                     // create the embed block
-                    block = new Block({blockType: 'embed', embedType: embedType, association: association});
+                    block = new Block({blockType: 'embed', embedType: embedType, association: association, body: ''});
                 }
                 if (element.nodeValue.indexOf('EMBED END') > -1) {
                     commitBlock();
@@ -156,6 +156,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
     angular.extend(vm, {
         configuration: angular.extend({embeds: true}, config.editor || {}),
         blocks: [],
+        blockIds: [],
         initEditorWithOneBlock: function(model) {
             vm.model = model;
             vm.blocks = [new Block({body: model.$modelValue})];
@@ -352,21 +353,59 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         * Compute an id for the block with its content and its position.
         * Used as `track by` value, it allows the blocks to be well rendered.
         */
-        generateBlockId: function(block) {
-            function hashCode(string) {
+        generateBlockId: function(block, index) {
+            function hashCode(str) {
                 var hash = 0, i, chr, len;
-                if (string.length === 0) {
+                if (str.length === 0) {
                     return hash;
                 }
-                for (i = 0, len = string.length; i < len; i++) {
-                    chr   = string.charCodeAt(i);
+                for (i = 0, len = str.length; i < len; i++) {
+                    chr   = str.charCodeAt(i);
                     /*jshint bitwise: false */
                     hash  = ((hash << 5) - hash) + chr;
                     hash |= 0; // Convert to 32bit integer
                 }
                 return hash;
             }
-            return String(Math.abs(hashCode(block.body))) + String(vm.getBlockPosition(block));
+
+            // Here we strip the html attributes that have an empty assignment
+            var bodyToHash = block.body.replace(/=""/g, '');
+
+            if (block.body.match(/^<p><br><\/p>$/)) {
+                bodyToHash = bodyToHash;
+            } else {
+                bodyToHash = bodyToHash.replace(/^<p><br><\/p>/, '');
+            }
+
+            var blockId = String(Math.abs(hashCode(bodyToHash)));
+
+            // If block id is already present in the blockIds array, we generate a new id
+            if (vm.blockIds.indexOf(blockId) !== -1) {
+                let blockOccurence = 0;
+
+                if ((blockId.length > 1)) {
+                    vm.blockIds.forEach(id => {
+                        if (id.indexOf(blockId) !== -1) {
+                            blockOccurence++;
+                        }
+                    });
+                }
+
+                blockId = vm.blockIds[vm.blockIds.indexOf(blockId)];
+                blockId += (blockId.length > 1) ? blockId.slice(-blockOccurence) : blockId;
+            }
+
+            // Once the ng-repeat is complete, we empty the blocksIds array
+            if (index === vm.blocks.length - 1) {
+                while (vm.blockIds.length > 0) {
+                    vm.blockIds.pop();
+                }
+
+            } else if (blockId && vm.config.multiBlockEdition) {
+                vm.blockIds.push(blockId);
+            }
+
+            return blockId;
         }
     });
 }

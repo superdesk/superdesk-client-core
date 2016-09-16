@@ -709,6 +709,7 @@ angular.module('superdesk.editor2', [
             link: function(scope, element, attr, controllers) {
                 var controller = controllers[0];
                 var ngModel = controllers[1];
+
                 function init() {
                     scope.$applyAsync(function() {
                         if (controller.config.multiBlockEdition) {
@@ -718,24 +719,22 @@ angular.module('superdesk.editor2', [
                         }
                     });
                 }
+
+                function reRenderBlocks() {
+                    $timeout(function() {
+                        // if blocks are not loading
+                        if (!_.some(controller.blocks, block => block.loading)) {
+                            init();
+                        }
+                    });
+                }
+
                 // init editor based on model
                 init();
-                // when the model changes from outside, updates the editor
-                scope.$watch(function outsideModelChange() {
-                    return ngModel.$viewValue;
-                }, function() {
-                    $timeout(function() {
-                        // if controller is ready and the value has changed
-                        if (controller.blocks.length > 0 && ngModel.$viewValue !== controller.serializeBlock()) {
-                            // if blocks are not loading
-                            if (!_.some(controller.blocks, function(block) {
-                                return block.loading;
-                            })) {
-                                init();
-                            }
-                        }
-                    }, 250, false);
-                });
+
+                scope.$on('added:helpline', reRenderBlocks);
+                scope.$on('History.redone', reRenderBlocks);
+                scope.$on('History.undone', reRenderBlocks);
             }
         };
     }])
