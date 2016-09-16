@@ -64,6 +64,7 @@ import 'superdesk-desks';
 import 'superdesk-authoring';
 import 'superdesk-search';
 import 'superdesk-legal-archive';
+import 'superdesk-web-publisher';
 import 'superdesk-stream';
 import 'superdesk-packaging';
 import 'superdesk-highlights';
