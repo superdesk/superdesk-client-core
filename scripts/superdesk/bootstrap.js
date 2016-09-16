@@ -38,6 +38,9 @@ var apps = [
 
 angular.module('superdesk.config').constant('config', appConfig);
 
+var bootstrapModule = angular.module('superdesk-bootstrap', apps);
+window.RegisterSuperdeskApplication = name => { bootstrapModule.requires.push(name); };
+
 angular.module('superdesk')
     .constant('lodash', _)
     .config(['$routeProvider', function($routeProvider) {
@@ -45,6 +48,6 @@ angular.module('superdesk')
     }]);
 
 body.ready(function() {
-    angular.bootstrap(body, apps, {strictDi: true});
+    angular.bootstrap(body, ['superdesk-bootstrap'], {strictDi: true});
     window.superdeskIsReady = true;
 });
