@@ -17,17 +17,6 @@ angular.module('superdesk.apps.dashboard.widgets', [])
 angular.module('superdesk.apps.dashboard.widgets.base', ['superdesk.core.itemList'])
     .factory('BaseWidgetController', svc.BaseWidgetFactory);
 
-<<<<<<< e780d4f85219cfa14f66466c66dda69adb38fede:scripts/apps/dashboard/index.js
-angular.module('superdesk.apps.dashboard', [
-    'superdesk.core.activity',
-    'superdesk.apps.dashboard.widgets',
-    'superdesk.apps.dashboard.grid',
-    'superdesk.apps.dashboard.world-clock',
-    'superdesk.apps.workspace.tasks',
-    'superdesk.core.itemList',
-    'superdesk.apps.legal_archive',
-    'superdesk.apps.workspace'
-=======
 angular.module('superdesk.dashboard', [
     'superdesk.activity',
     'superdesk.dashboard.widgets',
@@ -38,7 +27,7 @@ angular.module('superdesk.dashboard', [
     'superdesk.legal_archive',
     'superdesk.web_publisher',
     'superdesk.workspace'
->>>>>>> Rebased:scripts/superdesk-dashboard/index.js
+
 ])
     .controller('DashboardController', DashboardController)
     .filter('wcodeFilter', () => (input, values) => _.pick(input, _.difference(_.keys(input), _.keys(values))))
