@@ -1,0 +1,33 @@
+<div class="subnav">
+    <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
+        <div class="search-handler">
+            <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
+            <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
+            ng-keyup="aggregate.searchOnEnter($event, query)">
+            <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
+            <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
+                <i class="svg-icon-right"></i>
+            </button>
+        </div>
+    </div>
+    <h3 class="page-nav-title"><span translate>Web Monitoring</span></h3>
+    <div class="subnav__button-stack--square-buttons">
+         <div class="refresh-box pull-right">
+            <button ng-if="monitoring.showRefresh &&
+                (monitoring.singleGroup || type === 'spike' || type === 'highlights')"
+            ng-click="refreshGroup(monitoring.singleGroup)"
+                tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+                <i class="icon-repeat blue"></i>
+            </button>
+        </div>
+        <div class="pull-left-10x" ng-if="type === 'highlights'" sd-create-highlights-button data-highlight="monitoring.queryParam.highlight"></div>
+        <button class="navbtn strict" ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'" ng-click="aggregate.edit()">
+            <i class="icon-settings"></i>
+        </button>
+
+        <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
+            <button class="dropdown-toggle sd-create-btn" dropdown-toggle></button>
+            <ul class="dropdown-menu scrollable pull-right" sd-content-create></ul>
+        </div>
+    </div>
+</div>

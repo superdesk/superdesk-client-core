@@ -32,6 +32,7 @@ angular.module('superdesk.apps.dashboard', [
     'superdesk.apps.workspace.tasks',
     'superdesk.core.itemList',
     'superdesk.apps.legal_archive',
+    'superdesk.web_publisher',
     'superdesk.apps.workspace'
 ])
     .controller('DashboardController', DashboardController)
