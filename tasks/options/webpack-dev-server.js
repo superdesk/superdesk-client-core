@@ -21,7 +21,7 @@ module.exports = function(grunt) {
                 devtool: 'eval',
                 debug: true,
                 entry: {
-                    app: ['webpack-dev-server/client?http://localhost:9000/'].concat(webpackConfig.entry.app)
+                    core: ['webpack-dev-server/client?http://localhost:9000/'].concat(webpackConfig.entry.core)
                 },
                 output: {
                     publicPath: 'dist'
@@ -71,7 +71,7 @@ function getProxy() {
     } : {};
 
     // on the dev server the bundle is in the dist folder
-    proxy['/app.bundle.js'] = prepend('dist');
+    proxy['/*.bundle.js'] = prepend('dist');
 
     return proxy;
 }

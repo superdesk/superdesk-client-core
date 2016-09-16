@@ -18,7 +18,10 @@ module.exports = function makeConfig(grunt) {
     return {
         cache: true,
         entry: {
-            app: ['scripts/index.js']
+            core: ['scripts/index.js'],
+            apps: (sdConfig.apps || []).map(function(app) {
+                return path.join(process.cwd(), 'node_modules', app);
+            })
         },
         output: {
             path: path.join(process.cwd(), 'dist'),
@@ -59,11 +62,15 @@ module.exports = function makeConfig(grunt) {
                 {
                     test: /\.js$/,
                     exclude: function(p) {
-                        'use strict';
-                        // exclude parsing node modules, but allow the 'superdesk-core'
-                        // node module, because it will be used when building in the
-                        // main 'superdesk' repository.
-                        return p.indexOf('node_modules') > -1 && p.indexOf('superdesk-core') < 0;
+                        // don't exclude anything outside node_modules
+                        if (p.indexOf('node_modules') === -1) {
+                            return false;
+                        }
+                        // include only 'superdesk-core' and valid modules inside node_modules
+                        var validModules = ['superdesk-core'].concat(sdConfig.apps);
+                        return !validModules.some(function(app) {
+                            return p.indexOf(app) > -1;
+                        });
                     },
                     loader: 'babel',
                     query: {
@@ -99,6 +106,10 @@ function getDefaults(grunt) {
     }
 
     return {
+        // list of strings representing names of folders inside <cwd>/node_modules
+        // which superdesk will load
+        apps: [],
+
         // application version
         version: version || grunt.file.readJSON(path.join(__dirname, 'package.json')).version,
 
