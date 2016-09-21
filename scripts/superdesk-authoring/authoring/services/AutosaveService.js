@@ -1,71 +1,81 @@
 import * as helpers from 'superdesk-authoring/authoring/helpers';
 
-AutosaveService.$inject = ['$q', '$timeout', 'api'];
-export function AutosaveService($q, $timeout, api) {
-    var RESOURCE = 'archive_autosave',
-        AUTOSAVE_TIMEOUT = 3000,
-        timeouts = {},
-        self = this;
+const RESOURCE = 'archive_autosave',
+    AUTOSAVE_TIMEOUT = 3000;
+
+let $q, $timeout, api;
+
+export class AutosaveService {
+
+    constructor(_$q, _$timeout, _api) {
+        $q = _$q;
+        $timeout = _$timeout;
+        api = _api;
+
+        this.timeouts = {};
+    }
 
     /**
-     * Open an item
+     * Open an item.
      */
-    this.open = function openAutosave(item) {
+    open(item) {
         if (!item._locked || !item._editable) {
             // no way to get autosave
             return $q.when(item);
         }
 
-        return self.get(item)
-            .then(function(result) {
-                return result;
-            }, function(err) {
-                return item;
-            });
-    };
+        return this.get(item);
+    }
 
     /**
-     * Get the resource
+     * Get the resource.
      */
-    this.get = function(item) {
+    get(item) {
         return api.find(RESOURCE, item._id).then(function(autosave) {
             item._autosave = autosave;
             return item;
         });
-    };
+    }
 
     /**
      * Auto-saves an item
      */
-    this.save = function saveAutosave(item, orig) {
-        if (item._editable && item._locked) {
-            this.stop(item);
-            timeouts[item._id] = $timeout(function() {
-                var diff = helpers.extendItem({_id: item._id}, item);
-                helpers.filterDefaultValues(diff, orig);
-                return api.save(RESOURCE, {}, diff).then(function(_autosave) {
-                    orig._autosave = _autosave;
-                });
-            }, AUTOSAVE_TIMEOUT, false);
-
-            return timeouts[item._id];
+    save(item, orig, timeout = AUTOSAVE_TIMEOUT) {
+        if (!item._editable || !item._locked) {
+            return $q.reject('item not ' + item._editable ? 'locked' : 'editable');
         }
-    };
+
+        this.stop(item);
+
+        let id = item._id;
+        this.timeouts[id] = $timeout(function() {
+            var diff = helpers.extendItem({_id: id}, item);
+            helpers.filterDefaultValues(diff, orig);
+            return api.save(RESOURCE, {}, diff).then(_autosave => {
+                orig._autosave = _autosave;
+                return _autosave;
+            });
+        }, timeout, false);
+
+        return this.timeouts[id];
+    }
 
     /**
      * Stop pending autosave
      */
-    this.stop = function stopAutosave(item) {
-        if (timeouts[item._id]) {
-            $timeout.cancel(timeouts[item._id]);
-            timeouts[item._id] = null;
+    stop(item) {
+        let id = item._id;
+
+        if (this.timeouts[id]) {
+            $timeout.cancel(this.timeouts[id]);
+            this.timeouts[id] = null;
         }
-    };
+    }
 
     /**
      * Drop autosave
      */
-    this.drop = function dropAutosave(item) {
+    drop(item) {
         this.stop(item);
 
         if (angular.isDefined(item._autosave) && item._autosave !== null) {
@@ -73,5 +83,7 @@ export function AutosaveService($q, $timeout, api) {
         }
 
         item._autosave = null;
-    };
+    }
 }
+
+AutosaveService.$inject = ['$q', '$timeout', 'api'];
