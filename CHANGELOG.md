@@ -6,12 +6,13 @@
 
 ### Added
 
-- Hightlight multiple spaces in spellcheck and suggest a single space instead.
+- Highlight multiple spaces in spellcheck and suggest a single space instead.
 - Add related item configuration to search slugline using exact match, prefix match or any word match.
 - Add `useDefaultTimezone` for global search queries.
 - Add ingest provider to search
 - Add image metadata validation on publish
 - Add url validation to editor anchor button
+- Added `Send and Publish` so that item can be first send and published from different desk.
 
 ### Fixed
 

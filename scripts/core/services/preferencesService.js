@@ -15,7 +15,7 @@ export default angular.module('superdesk.preferences', ['superdesk.notify', 'sup
                     'agg:view': 1,
                     'workspace:active': 1,
                     'categories:preferred': 1,
-                    'destination:active': 1,
+                    'destination:active': 1, // key to store last desk/stage for send to/fetch to.
                     'spellchecker:status': 1
                 },
                 preferences,

@@ -22,7 +22,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
     /**
      * Called from workqueue in case of unsaved changes.
      */
-    this.reopen = function () {
+    this.reopen = function() {
         return modal.confirm(
             gettextCatalog.getString('There are some unsaved changes, re-open the article to save changes?'),
             gettextCatalog.getString('Save changes?'),
@@ -80,10 +80,18 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
         );
     };
 
-    this.confirmSpellcheck = function confirmSpellcheck(msg) {
-        var mistakes = msg > 1?'mistakes':'mistake';
-        var confirmMessage = 'You have {{ message }} spelling {{ mistakes }}. Are you sure you want to continue?';
-        return modal.confirm($interpolate(gettextCatalog.getString(confirmMessage))({message: msg, mistakes: mistakes}));
+    /**
+     * If there are spelling errors ask the user that if the user wants to save changes or not.
+     */
+    this.confirmSpellcheck = function(spellingErrors) {
+        if (spellingErrors === 0) {
+            return $q.resolve();
+        }
+        var mistakes = spellingErrors > 1?'mistakes':'mistake';
+        var confirmMessage = 'You have {{ spellingErrors }} spelling {{ mistakes }}. ' +
+            'Are you sure you want to continue?';
+        return modal.confirm($interpolate(gettextCatalog.getString(confirmMessage))({
+            message: spellingErrors, mistakes: mistakes}));
     };
 
     /**

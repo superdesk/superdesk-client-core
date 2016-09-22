@@ -74,21 +74,33 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
 
-            if ($scope.origItem.task && $scope.origItem.task.stage) {
-                if (archiveService.isLegal($scope.origItem)) {
-                    $scope.deskName = $scope.origItem.task.desk;
-                    $scope.stage = $scope.origItem.task.stage;
-                } else {
-                    api('stages').getById($scope.origItem.task.stage)
-                        .then(function(result) {
-                            $scope.stage = result;
-                        });
+            /**
+             * Get the Desk and Stage for the item.
+             */
+            function getDeskStage() {
+                if ($scope.origItem.task && $scope.origItem.task.stage) {
+                    if (archiveService.isLegal($scope.origItem)) {
+                        $scope.deskName = $scope.origItem.task.desk;
+                        $scope.stage = $scope.origItem.task.stage;
+                    } else {
+                        api('stages').getById($scope.origItem.task.stage)
+                            .then(function(result) {
+                                $scope.stage = result;
+                            });
 
-                    desks.fetchDeskById($scope.origItem.task.desk).then(function (desk) {
-                        $scope.deskName = desk.name;
-                    });
+                        desks.fetchDeskById($scope.origItem.task.desk).then(function(desk) {
+                            $scope.deskName = desk.name;
+                        });
+                    }
                 }
             }
+
+            getDeskStage();
+            /**
+             * `desk_stage:change` event from send and publish action.
+             * If send action succeeds but publish fails then we need change item location.
+             */
+            $scope.$on('desk_stage:change', getDeskStage);
 
             /**
              * Start editing current item
@@ -326,7 +338,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 $scope.error = {};
                 tryPublish = true;
                 helpers.extendItem(orig, item);
-                angular.forEach(authoring.editor, function (editor, key) {
+                angular.forEach(authoring.editor, function(editor, key) {
                     if (!authoring.schema[key]) {
                         var found = false;
                         var cv = _.find(metadata.cvs, function(item) {
@@ -383,7 +395,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 var requiredFields = $rootScope.config.requiredMediaMetadata;
                 if (item.type === 'picture') {
                     // required media metadata fields are defined in superdesk.config.js
-                    _.each(requiredFields, function (key) {
+                    _.each(requiredFields, function(key) {
                         if (item[key] == null || _.isEmpty(item[key])) {
                             notify.error($interpolate(gettext(
                                 'Required field {{ key }} is missing. ...'))({key: key}));
@@ -394,7 +406,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return true;
             }
 
-            $scope.useTansaProofing = function () {
+            $scope.useTansaProofing = function() {
                 return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
             };
 
@@ -422,7 +434,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * continueAfterPublish is passed only from $scope.publishAndContinue as bool,
              * in other cases this is object (don't use parameter in those cases)
              */
-            $rootScope.publishAfterTansa = function () {
+            $rootScope.publishAfterTansa = function() {
                 if (!onlyTansaProof) {
                     $scope.saveTopbar().then(continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish);
                 }
@@ -504,7 +516,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              */
             $scope.close = function() {
                 _closing = true;
-                authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(function () {
+                authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(function() {
                     authoringWorkspace.close(true);
                 });
             };
@@ -512,7 +524,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             /*
              * Minimize an item
              */
-            $scope.minimize = function () {
+            $scope.minimize = function() {
                 authoringWorkspace.close(true);
             };
 
@@ -527,6 +539,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Called by the sendItem directive before send.
              * If the $scope is dirty then upon confirmation save the item and then unlock the item.
              * If the $scope is not dirty then unlock the item.
+             * @param {String} action - action to display in confirmation dialog
+             * @return {Object} promise
              */
             $scope.beforeSend = function(action) {
                 $scope.sending = true;
@@ -534,8 +548,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     return confirm.confirmSendTo(action)
                     .then(function() {
                         return $scope.save().then(function() {
-                                   return lock.unlock($scope.origItem);
-                               });
+                            return lock.unlock($scope.origItem);
+                        });
                     }, function() { // cancel
                         return $q.reject();
                     });
