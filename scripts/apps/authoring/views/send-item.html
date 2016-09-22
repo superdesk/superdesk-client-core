@@ -1,21 +1,35 @@
 <div class="slide-pane slide-pane--dark content-item-preview" ng-show="isActive" ng-class="{open: isActive, 'slide-pane--inset': mode === 'authoring'}">
-
     <div class="slide-pane__header">
-        <h3 ng-show="canSendItem() && itemActions.publish" translate>Send to / Publish</h3>
-        <h3 ng-show="canSendItem() && !itemActions.publish" translate>Send to</h3>
-        <h3 ng-show="!canSendItem()" translate>Fetch To</h3>
+        <h3 id="panel-send"
+            class="panel-header {{currentUserAction === vm.userActions.send_to ? 'panel-header-active' : ''}}"
+            ng-show="canSendItem() && isSendEnabled()"
+            ng-click="setUserAction(vm.userActions.send_to)"
+            translate>Send to</h3>
+        <h3 id="panel-publish"
+            class="panel-header {{currentUserAction === vm.userActions.publish ? 'panel-header-active' : ''}}"
+            ng-show="canPublishItem()"
+            ng-click="setUserAction(vm.userActions.publish)"
+            translate>Publish</h3>
+        <h3 id="panel-fetch"
+            class="panel-header {{currentUserAction === vm.userActions.send_to ? 'panel-header-active' : ''}}"
+            ng-show="!canSendItem() && !canPublishItem() && currentUserAction === vm.userActions.send_to"
+            translate>Fetch To</h3>
         <div class="close" ng-click="close()"><i class="icon-close-small icon-white"></i></div>
     </div>
 
     <div class="slide-pane__content">
-        <div sd-toggle-box ng-if="showSendButtonAndDestination()" data-title="{{ :: 'Destination' | translate }}" data-open="true" data-style="dark">
+        <div sd-toggle-box
+             ng-if="showSendButtonAndDestination()"
+             data-title="{{ :: 'Destination' | translate }}"
+             data-open="true" data-style="dark">
 
             <div sd-desk-select
                 data-desks="desks._items"
                 data-selected-desk="selectedDesk"
+                data-default-desk="defaultDesk"
                 on-change="selectDesk(desk)"></div>
 
-            <ul class="btn-list" ng-if="stages">
+            <ul class="btn-list" ng-if="stages && vm.userActions.send_to === currentUserAction">
                 <li ng-repeat="stage in stages track by stage._id">
                     <button class="btn__check"
                             ng-class="{active: stage._id === selectedStage._id}"
@@ -26,6 +40,7 @@
                 </li>
             </ul>
         </div>
+
         <div sd-toggle-box id="embargoTimestamp" ng-if="mode === 'authoring' && showEmbargo()" data-title="Embargo" data-open="true" data-style="dark">
             <label class="label--lite" translate>Embargo</label>
             <ul class="btn-list">
@@ -53,20 +68,28 @@
         <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="dark">
             <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
         </div>
-
     </div>
 
-    <div class="slide-pane__footer" sd-loading="loading">
+    <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.send_to">
         <ul class="btn-list">
-            <li ng-if="mode === 'authoring' && canSendAndContinue() && itemActions.send && itemActions.new_take">
-                <button class="btn btn-info"
+            <li class="full-width"
+                ng-if="mode === 'authoring' && canSendAndContinue() && itemActions.send && itemActions.new_take">
+                <button class="btn btn-light-gray"
                         ng-click="sendAndContinue()"
                         ng-disabled="item.embargo || disableSendButton()"
                         translate>
                     send and continue
                 </button>
             </li>
-            <li ng-if="showSendButtonAndDestination()">
+            <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
+                <button class="btn btn-light-gray"
+                        ng-click="send(true)"
+                        ng-disabled="disableFetchAndOpenButton()"
+                        translate>
+                    fetch and open
+                </button>
+            </li>
+            <li class="full-width" ng-if="showSendButtonAndDestination()">
                 <button class="btn btn-info"
                         ng-click="send()"
                         ng-disabled="disableSendButton()"
@@ -74,17 +97,24 @@
                     {{!canSendItem() ? 'fetch' : 'send' | translate}}
                 </button>
             </li>
-            <li ng-if="showSendButtonAndDestination() && !canSendItem()">
-                <button class="btn btn-info"
-                        ng-click="send(true)"
-                        ng-disabled="disableFetchAndOpenButton()"
+        </ul>
+    </div>
+
+    <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.publish">
+        <ul class="btn-list">
+            <li class="full-width" ng-if="isSendEnabled() && showSendButtonAndDestination()">
+                <button type="submit"
+                        class="btn btn-light-gray"
+                        ng-show="_editable"
+                        ng-click="sendAndPublish()"
+                        ng-disabled="!canSendAndPublish()"
                         translate>
-                    fetch and open
+                    publish from
                 </button>
             </li>
             <li class="full-width" ng-if="canSendItem() && canPublishItem()">
                 <button type="submit"
-                        class="btn btn-info"
+                        class="btn btn-publish-plus"
                         ng-show="_editable"
                         ng-click="publish()"
                         >
@@ -93,5 +123,4 @@
             </li>
         </ul>
     </div>
-
 </div>

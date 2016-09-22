@@ -7,7 +7,8 @@ var monitoring = require('./helpers/monitoring'),
     ctrlShiftKey = require('./helpers/utils').ctrlShiftKey,
     assertToastMsg = require('./helpers/utils').assertToastMsg,
     openUrl = require('./helpers/utils').open,
-    dictionaries = require('./helpers/dictionaries');
+    dictionaries = require('./helpers/dictionaries'),
+    workspace = require('./helpers/workspace');
 
 describe('authoring', function() {
 
@@ -556,4 +557,25 @@ describe('authoring', function() {
         monitoring.actionOnItem('Edit', 2, 0);
         expect(authoring.getBodyText()).toBe('one\ntwo\nthree');
     });
+
+    it('can send and publish', function() {
+        workspace.selectDesk('Sports Desk');
+        expect(monitoring.getGroupItems(0).count()).toBe(0);
+        expect(monitoring.getGroupItems(1).count()).toBe(0);
+        expect(monitoring.getGroupItems(2).count()).toBe(1);
+        expect(monitoring.getGroupItems(3).count()).toBe(0);
+        expect(monitoring.getGroupItems(4).count()).toBe(1);
+        expect(monitoring.getGroupItems(5).count()).toBe(0); // no published content.
+        workspace.selectDesk('Politic Desk');
+        expect(monitoring.getGroupItems(5).count()).toBe(0); //desk output
+        expect(monitoring.getTextItem(3, 2)).toBe('item6');
+        monitoring.actionOnItem('Edit', 3, 2);
+        authoring.writeText('Testing');
+        authoring.save();
+        authoring.sendAndpublish('Sports Desk');
+        //desk output count zero as content publish from sport desk
+        expect(monitoring.getGroupItems(5).count()).toBe(0);
+        workspace.selectDesk('Sports Desk');
+        expect(monitoring.getGroupItems(5).count()).toBe(2);
+    }, 600000);
 });

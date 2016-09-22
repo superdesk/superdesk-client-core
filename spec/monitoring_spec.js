@@ -59,6 +59,8 @@ describe('monitoring', function() {
         monitoring.openMonitoring();
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
+        authoring.writeText('Two');
+        authoring.save();
         authoring.schedule();
         expect(monitoring.getTextItem(5, 0)).toBe('item6');
     });
