@@ -24,6 +24,9 @@ cache:
         - $HOME/.npm
 
 before_install:
+    - nvm install 0.12
+    - nvm use 0.12
+    - node --version
     - rm -f .npm/*.lock
     - npm install -g npm@latest
     - npm config set loglevel warn
