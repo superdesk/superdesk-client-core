@@ -155,6 +155,22 @@ describe('search service', function() {
 
     }));
 
+    it('can create query for notdesk facet', inject(function($rootScope, search, session) {
+        // only to desk is specified
+        session.identity = {_id: 'foo'};
+        var criteria = search.query({notdesk: '["123"]'}).getCriteria();
+        var filters = criteria.query.filtered.filter.and;
+        expect(filters).toContain({not: {terms: {'task.desk': ['123']}}});
+    }));
+
+    it('can create query for noturgency facet', inject(function($rootScope, search, session) {
+        // only to desk is specified
+        session.identity = {_id: 'foo'};
+        var criteria = search.query({noturgency: '["1"]'}).getCriteria();
+        var filters = criteria.query.filtered.filter.and;
+        expect(filters).toContain({not: {terms: {urgency: ['1']}}});
+    }));
+
     function prepareData(newItems, scopeItems, scrollTop, isItemPreviewing) {
         return {
             newItems: newItems,

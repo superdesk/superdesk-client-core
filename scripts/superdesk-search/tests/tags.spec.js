@@ -3,8 +3,8 @@
 describe('Tag Service', function() {
 
     var deskList = {
-        desk1: {id: '123', title: 'desk1'},
-        desk2: {id: '456', title: 'desk2'}
+        '123': {_id: '123', name: 'desk1'},
+        '456': {_id: '456', name: 'desk2'}
     };
 
     var fakeMetadata;
@@ -227,6 +227,79 @@ describe('Tag Service', function() {
 
         $rootScope.$digest();
         expect(tagsList.selectedParameters.length).toEqual(1);
-        expect(tagsList.selectedParameters[0]).toEqual('Provider:Test Provider');
+        expect(tagsList.selectedParameters[0]).toEqual(
+            {label: 'Provider:Test Provider', value: 'Provider:Test Provider'}
+        );
+    }));
+
+    it('create tags for remove source facet', inject(function($location, $rootScope, $q, tags, desks) {
+        spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
+        $location.search('notsource', '["REUTERS", "NTB"]');
+
+        var tagsList = null;
+        tags.initSelectedFacets()
+            .then(function(value) {
+                tagsList = value;
+            });
+
+        $rootScope.$digest();
+        expect(tagsList.removedFacets.notsource.length).toEqual(2);
+        expect(tagsList.removedFacets.notsource).toEqual([
+            {label: 'Not Source', displayValue: 'REUTERS', value: 'REUTERS'},
+            {label: 'Not Source', displayValue: 'NTB', value: 'NTB'}
+        ]);
+    }));
+
+    it('create tags for remove desk facet', inject(function($location, $rootScope, $q, tags, desks) {
+        spyOn(desks, 'initialize').and.returnValue($q.when({}));
+        $location.search('notdesk', '["123"]');
+        desks.deskLookup = deskList;
+        var tagsList = null;
+        tags.initSelectedFacets()
+            .then(function(value) {
+                tagsList = value;
+            });
+
+        $rootScope.$digest();
+        expect(tagsList.removedFacets.notdesk.length).toEqual(1);
+        expect(tagsList.removedFacets.notdesk[0]).toEqual(
+            {label: 'Not Desk', displayValue: 'desk1', value: '123'}
+        );
+    }));
+
+    it('create tags for remove category facet', inject(function($location, $rootScope, $q, tags, desks) {
+        spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
+        $location.search('notcategory', '["International Sports", "Domestic Sports"]');
+
+        var tagsList = null;
+        tags.initSelectedFacets()
+            .then(function(value) {
+                tagsList = value;
+            });
+
+        $rootScope.$digest();
+        expect(tagsList.removedFacets.notcategory.length).toEqual(2);
+        expect(tagsList.removedFacets.notcategory).toEqual([
+            {label: 'Not Category', displayValue: 'International Sports', value: 'International Sports'},
+            {label: 'Not Category', displayValue: 'Domestic Sports', value: 'Domestic Sports'}
+        ]);
+    }));
+
+    it('create tags for remove urgency facet', inject(function($location, $rootScope, $q, tags, desks) {
+        spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
+        $location.search('noturgency', '["1", "2"]');
+
+        var tagsList = null;
+        tags.initSelectedFacets()
+            .then(function(value) {
+                tagsList = value;
+            });
+
+        $rootScope.$digest();
+        expect(tagsList.removedFacets.noturgency.length).toEqual(2);
+        expect(tagsList.removedFacets.noturgency).toEqual([
+            {label: 'Not Urgency', displayValue: '1', value: '1'},
+            {label: 'Not Urgency', displayValue: '2', value: '2'}
+        ]);
     }));
 });

@@ -1,4 +1,4 @@
-import { PARAMETERS } from 'superdesk-search/constants';
+import { PARAMETERS, EXCLUDE_FACETS } from 'superdesk-search/constants';
 
 TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search', 'ingestSources', 'gettextCatalog'];
 export function TagService($location, desks, userList, metadata, search, ingestSources, gettextCatalog) {
@@ -7,6 +7,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     tags.selectedParameters = [];
     tags.selectedKeywords = [];
     tags.currentSearch = {};
+    tags.removedFacets = {};
 
     var FacetKeys = {
         'type': 1,
@@ -86,56 +87,91 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         }
     }
 
+    /**
+     * Parse $location.search and initialise tags for fields defined in the PARAMETERS.
+     * @param {object} params - $location.search
+     */
     function initParameters(params) {
         _.each(PARAMETERS, function(value, key) {
-            if (angular.isDefined(params[key])) {
-                switch (key) {
-                    case 'original_creator':
-                        userList.getUser(params[key]).then(function(user) {
-                            tags.selectedParameters.push(tag(value + ':' + user.display_name));
-                        }, function(error) {
-                            tags.selectedParameters.push(tag(value + ':Unknown'));
-                        });
-                        break;
-                    case 'from_desk':
-                    case 'to_desk':
-                        tags.selectedParameters.push(tag(value + ':' +
-                            desks.deskLookup[params[key].split('-')[0]].name));
-                        break;
-                    case 'company_codes':
-                    case 'subject':
-                        var processSelectedItems = function (selectedItems, codeList) {
-                            _.forEach(selecteditems, function(selecteditem) {
-                                var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
-                                if (name) {
-                                    tags.selectedParameters.push(tag(value + ':(' + name + ')'));
-                                }
-                            });
-                        };
-                        for (var i = 0; i < cvs.length; i++) {
-                            var cv = cvs[i];
-                            if (cv.field === key) {
-                                var codeList = metadata.values[cv.list];
-                                var selecteditems = JSON.parse(params[key]);
-                                processSelectedItems(selecteditems, codeList);
+            if (!angular.isDefined(params[key])) {
+                return;
+            }
+
+            switch (key) {
+                case 'original_creator':
+                    userList.getUser(params[key]).then(function(user) {
+                        tags.selectedParameters.push(tag(value + ':' + user.display_name));
+                    }, function(error) {
+                        tags.selectedParameters.push(tag(value + ':Unknown'));
+                    });
+                    break;
+                case 'from_desk':
+                case 'to_desk':
+                    tags.selectedParameters.push(tag(value + ':' +
+                        desks.deskLookup[params[key].split('-')[0]].name));
+                    break;
+                case 'company_codes':
+                case 'subject':
+                    var processSelectedItems = function (selectedItems, codeList) {
+                        _.forEach(selecteditems, function(selecteditem) {
+                            var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
+                            if (name) {
+                                tags.selectedParameters.push(tag(value + ':(' + name + ')'));
                             }
+                        });
+                    };
+                    for (var i = 0; i < cvs.length; i++) {
+                        var cv = cvs[i];
+                        if (cv.field === key) {
+                            var codeList = metadata.values[cv.list];
+                            var selecteditems = JSON.parse(params[key]);
+                            processSelectedItems(selecteditems, codeList);
                         }
-                        break;
-                    case 'spike':
-                        if (params[key]) {
-                            tags.selectedParameters.push(tag(value));
-                        }
-                        break;
-                    case 'ingest_provider':
-                        tags.selectedParameters.push(value + ':' + ingestSources.providersLookup[params[key]].name);
-                        break;
-                    default:
-                        tags.selectedParameters.push(tag(value + ':' + params[key]));
-                }
+                    }
+                    break;
+                case 'spike':
+                    if (params[key]) {
+                        tags.selectedParameters.push(tag(value));
+                    }
+                    break;
+                case 'ingest_provider':
+                    tags.selectedParameters.push(tag(value + ':' + ingestSources.providersLookup[params[key]].name));
+                    break;
+                default:
+                    tags.selectedParameters.push(tag(value + ':' + params[key]));
             }
         });
     }
 
+    /**
+     * Parses search parameters object and initialise tags for fields defined in the EXCLUDE_FACETS.
+     * @param {object} params - $location.search
+     */
+    function initExcludedFacets(params) {
+        _.each(EXCLUDE_FACETS, function(label, key) {
+            if (!angular.isDefined(params[key])) {
+                return;
+            }
+
+            tags.removedFacets[key] = [];
+            var removedFacets = JSON.parse(params[key]);
+            _.each(removedFacets, function(facet) {
+                // Tags will display the desk name but the $location.search object has desk id.
+                var displayValue = key === 'notdesk' ? desks.deskLookup[facet].name : facet;
+                tags.removedFacets[key].push({
+                    label: label,
+                    displayValue: displayValue,
+                    value: facet
+                });
+            });
+        });
+    }
+
+    /**
+     * Removes the tags by modifying the $location.search
+     * @param {String} type
+     * @param {String} key
+     */
     function removeFacet (type, key) {
         if (String(key).indexOf('Last') >= 0) {
             removeDateFacet();
@@ -150,6 +186,8 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 } else {
                     $location.search(type, null);
                 }
+
+                // Used by aap multimedia datalayer.
                 if (type === 'credit') {
                     $location.search('creditqcode', null);
                 }
@@ -157,6 +195,9 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         }
     }
 
+    /**
+     * Removes the date search related tags by modifying the $location.search
+     */
     function removeDateFacet () {
         var search = $location.search();
         if (search.after) {
@@ -166,11 +207,16 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         }
     }
 
+    /**
+     * Parses search parameters object and create tags.
+     * @returns {*}
+     */
     function initSelectedFacets () {
         return desks.initialize().then(function(result) {
             tags.selectedFacets = {};
             tags.selectedParameters = [];
             tags.selectedKeywords = [];
+            tags.removedFacets = {};
             tags.currentSearch = $location.search();
 
             var parameters = tags.currentSearch.q;
@@ -180,15 +226,18 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             }
 
             initParameters(tags.currentSearch);
+            initExcludedFacets(tags.currentSearch);
 
             _.forEach(tags.currentSearch, function(type, key) {
-                if (key !== 'q') {
+                if (key !== 'q' && !EXCLUDE_FACETS[key]) {
                     tags.selectedFacets[key] = [];
 
                     if (key === 'desk') {
                         var selectedDesks = JSON.parse(type);
                         _.forEach(selectedDesks, function(selectedDesk) {
-                            tags.selectedFacets[key].push(desks.deskLookup[selectedDesk].name);
+                            tags.selectedFacets[key].push({
+                                label: desks.deskLookup[selectedDesk].name,
+                                value: selectedDesk});
                         });
                     } else if (key === 'after') {
 

@@ -194,9 +194,16 @@
             &:hover {
                 cursor: pointer;
                 background: #ddd;
+                .remove-aggregate {
+                    display: inline;
+                }
             }
             &:active {
                 background: #ccc;
+            }
+            .remove-aggregate {
+                display: none;
+                margin-top: 3px;
             }
         }
     }
@@ -235,6 +242,9 @@
                 .sd-checkbox {
                     visibility: visible;
                 }
+            }
+            .remove-aggregate {
+                margin-top: 0px;
             }
         }
     }
