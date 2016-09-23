@@ -60,9 +60,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     }
                 }
             })
-            .then(function _autosave(item) {
-                return autosave.open(item);
-            });
+            .then(item => autosave.open(item).then(null, err => item));
         }
     };
 
