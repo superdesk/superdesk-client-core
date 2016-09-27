@@ -187,12 +187,12 @@ function Authoring() {
 
     this.publish = function(skipConfirm) {
         browser.wait(function() {
-            return this.sendToButton.isDisplayed();
+            return this.sendToButton.isPresent();
         }.bind(this), 1000);
         this.sendToButton.click();
 
         browser.wait(function() {
-            return this.publish_button.isDisplayed();
+            return this.publish_button.isPresent();
         }.bind(this), 1000);
 
         this.publish_button.click();
@@ -209,12 +209,12 @@ function Authoring() {
 
     this.schedule = function(skipConfirm) {
         browser.wait(function() {
-            return this.sendToButton.isDisplayed();
+            return this.sendToButton.isPresent();
         }.bind(this), 1000);
         this.sendToButton.click();
 
         browser.wait(function() {
-            return this.publish_button.isDisplayed();
+            return this.publish_button.isPresent();
         }.bind(this), 1000);
 
         var scheduleDate = '09/09/' + ((new Date()).getFullYear() + 1);

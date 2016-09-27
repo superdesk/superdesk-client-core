@@ -37,6 +37,8 @@ angular.module('superdesk.desks', [
     .directive('sdDeskeditMacros', directive.DeskeditMacros)
     .directive('sdActionPicker', directive.ActionPicker)
     .directive('sdStageHeader', directive.StageHeaderDirective)
+    .directive('sdDeskSelect', directive.DeskSelect)
+    .directive('sdDeskSelectItem', directive.DeskSelectItem)
 
     .config(['superdeskProvider', function(superdesk) {
         superdesk

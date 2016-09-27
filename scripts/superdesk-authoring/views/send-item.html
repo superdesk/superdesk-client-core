@@ -9,18 +9,12 @@
 
     <div class="slide-pane__content">
         <div sd-toggle-box ng-if="showSendButtonAndDestination()" data-title="{{ :: 'Destination' | translate }}" data-open="true" data-style="dark">
-            <div class="dropdown dropdown-noarrow dropdown--dark" dropdown>
-                <button class="dropdown-toggle" dropdown-toggle>
-                    <span ng-show="!selectedDesk" translate>Select desk</span>
-                    <span ng-show="selectedDesk">{{selectedDesk.name}}</span>
-                    <b class="caret white"></b>
-                </button>
-                <ul class="dropdown-menu">
-                    <li ng-repeat="desk in desks._items track by desk._id">
-                        <button ng-click="selectDesk(desk)">{{::desk.name}}</button>
-                    </li>
-                </ul>
-            </div>
+
+            <div sd-desk-select
+                data-desks="desks._items"
+                data-selected-desk="selectedDesk"
+                on-change="selectDesk(desk)"></div>
+
             <ul class="btn-list" ng-if="stages">
                 <li ng-repeat="stage in stages track by stage._id">
                     <button class="btn__check"

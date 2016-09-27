@@ -12,3 +12,5 @@ export { UserSelectList } from './UserSelectList';
 export { DeskeditPeople } from './DeskeditPeople';
 export { DeskeditMacros } from './DeskeditMacros';
 export { ActionPicker } from './ActionPicker';
+export { DeskSelect } from './DeskSelect';
+export { DeskSelectItem } from './DeskSelectItem';
