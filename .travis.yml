@@ -40,6 +40,17 @@ install:
     - cd test-server && pip install -q -r requirements.txt && cd ..
     - ./node_modules/.bin/webdriver-manager update
 
+before_script: >
+    df -h
+    && mkdir /tmp/es-backups
+    && sudo chown elasticsearch:elasticsearch /tmp/es-backups
+    && echo "path.repo: ['/tmp/es-backups']" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+    && echo "index.store.type: memory" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+    && sudo service elasticsearch restart
+    && tail -n1 /etc/elasticsearch/elasticsearch.yml
+    && sleep 10
+    && curl -XPUT 'http://localhost:9200/_snapshot/backups' -d '{"type": "fs", "settings": {"location": "/tmp/es-backups"}}'
+
 script:
     - grunt ci:travis
     - grunt build ;
