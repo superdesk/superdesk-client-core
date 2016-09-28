@@ -14,7 +14,8 @@ document.write(`
                 // need to populate dynamically
                 tansaUserId: 'tansa',
                 checkboxPreference: false,
-                parentAppName: 'superdesk'
+                parentAppId = ‘02d65e3e-f62d-41f9-92c6-ffaf16bf209e’,
+                licenseKey = ‘10747a8a5016-95b1-4d4c-846b-f34347e8f288’
             }
         };
 
