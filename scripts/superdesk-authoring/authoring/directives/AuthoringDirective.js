@@ -34,6 +34,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var _closing;
             var tryPublish = false;
             var onlyTansaProof = true;
+            var continueAfterPublish = false;
             if ($rootScope.config) {
                 $rootScope.config.isCheckedByTansa = false;
             }
@@ -367,7 +368,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     }
                 }
 
-                return false;
+                return target.length === 0;
             }
 
             function notifyPreconditionFailed() {
@@ -394,11 +395,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             }
 
             $scope.useTansaProofing = function () {
-                if ($rootScope.config.features && $rootScope.config.features.useTansaProofing) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
             };
 
             $scope.runTansa = function() {
@@ -423,7 +420,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $rootScope.publishAfterTansa = function () {
                 if (!onlyTansaProof) {
-                    $scope.saveTopbar().then($scope.publish);
+                    $scope.saveTopbar().then(continueAfterPublish ? $scope.publishAndContinue : $scope.publish);
                 }
             };
 
@@ -431,10 +428,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Depending on the item state one of the publish, correct, kill actions will be executed on the item
              * in $scope.
              */
-            $scope.publish = function() {
+            $scope.publish = function(continueOnPublish) {
                 if ($scope.useTansaProofing() && $scope.item.urgency > 3 && !$rootScope.config.isCheckedByTansa) {
-                    authoring.validateBeforeTansa($scope.origItem, $scope.item)
+                    return authoring.validateBeforeTansa($scope.origItem, $scope.item)
                     .then(function(response) {
+                        continueAfterPublish = continueOnPublish;
                         if (response.errors.length) {
                             validate($scope.origItem, $scope.item);
                             for (var i = 0; i < response.errors.length; i++) {
@@ -471,11 +469,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             $scope.showCustomButtons = function(item) {
-                if (!(item.task && item.task.desk) || item.state === 'draft' && !$scope.dirty) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return (item.task && item.task.desk) && item.state !== 'draft' || $scope.dirty;
             };
 
             $scope.saveAndContinue = function(customButtonAction) {
@@ -487,7 +481,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             $scope.publishAndContinue = function() {
-                $scope.publish().then(function(published) {
+                $scope.publish(true).then(function(published) {
                     if (published) {
                         authoring.rewrite($scope.item);
                     }
