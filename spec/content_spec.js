@@ -22,7 +22,7 @@ describe('content', function() {
 
     beforeEach(function() {
         openUrl('/#/workspace');
-        workspace.switchToDesk('PERSONAL');
+        workspace.switchToDesk('POLITIC DESK');
         expect(element.all(by.css('.media-box')).count()).toBe(2);
     });
 
