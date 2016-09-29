@@ -14,4 +14,4 @@ ARCHIVED_DBNAME = 'superdesk_e2e_archived'
 LEGAL_ARCHIVE_DBNAME = 'superdesk_e2e_legal_archive'
 
 ELASTICSEARCH_INDEX = 'superdesk_e2e'
-ELASTICSEARCH_BACKUPS_PATH = '/tmp/es-backups/'
+# ELASTICSEARCH_BACKUPS_PATH = '/tmp/es-backups/'
