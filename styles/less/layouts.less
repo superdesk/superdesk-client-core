@@ -1436,3 +1436,31 @@ body.prepare-print {
         z-index: 1000;
     }
 }
+
+.tab-box {
+    display: flex;
+    padding-bottom: 20px;
+
+    &__item {
+        flex: 1;
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 33px;
+        text-transform: uppercase;
+        color: @gray;
+        background-color: transparent;
+        border: 0;
+        border-bottom: 1px solid #c2c2c2;
+        border-right: 1px solid #c2c2c2;
+        
+        &:last-of-type {
+            border-right: 0;
+        }
+        
+        &--active {
+            color: @sd-blue;
+            border-top: 1px solid #c2c2c2;
+            border-bottom: 0;
+        }
+    }
+}
