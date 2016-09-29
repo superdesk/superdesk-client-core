@@ -26,6 +26,7 @@
     "Tolga Akin",
     "Yauhen 'actionless' Kirylau"
   ],
+  "main": "scripts/index.js",
   "dependencies": {
     "angular-history": "git+https://github.com/decipherinc/angular-history.git#v0.8.0",
     "btoa": "1.1.2",
