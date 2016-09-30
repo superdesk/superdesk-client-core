@@ -406,13 +406,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 switch ($scope.item.language){
                     case 'nb-NO':
-                        window.tansa.settings.profileId = 446;
+                        window.tansa.settings.profileId = 1;
                         break;
                     case 'nn-NO':
-                        window.tansa.settings.profileId = 448;
+                        window.tansa.settings.profileId = 2;
                         break;
-                    default:
-                        window.tansa.settings.profileId = 507;
                 }
                 if (window.RunTansaProofing){
                     window.RunTansaProofing();
