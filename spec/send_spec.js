@@ -20,8 +20,12 @@ describe('send', function() {
         }, 500);
     }
 
-    it('can submit item to a desk', function() {
+    beforeEach(function() {
         workspace.open();
+        workspace.createWorkspace('Personal');
+    });
+
+    it('can submit item to a desk', function() {
         workspace.editItem(1);
         authoring.sendTo('Sports Desk');
         // modal for the incorrect spelling.
@@ -32,7 +36,6 @@ describe('send', function() {
     });
 
     it('warns that there are spelling mistakes', function () {
-        workspace.open();
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -40,7 +43,6 @@ describe('send', function() {
     });
 
     it('can submit item to a desk although there are spelling mistakes', function () {
-        workspace.open();
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -57,7 +59,6 @@ describe('send', function() {
     });
 
     it('can cancel submit request because there are spelling mistakes', function () {
-        workspace.open();
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');

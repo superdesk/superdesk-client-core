@@ -65,7 +65,7 @@ script:
       (nohup honcho start & ) ;
       sleep 5 ;
       cd ..;
-    - ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose --specs spec/content_spec.js
+    - ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose --specs spec/content_spec.js,spec/send_spec.js
     - ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose
 
 after_script:
