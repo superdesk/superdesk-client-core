@@ -54,8 +54,6 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             }));
     }));
 
-    $scope.$on('savedsearch:update', angular.bind(savedSearch, savedSearch.resetSavedSearches));
-
     /**
      * If view showed as widget set the current widget
      *

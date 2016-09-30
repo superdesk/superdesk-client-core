@@ -1,14 +1,13 @@
-SavedSearchService.$inject = ['api', '$filter', '$q'];
+SavedSearchService.$inject = ['api', '$filter', '$q', '$rootScope'];
 
-export function SavedSearchService(api, $filter, $q){
+export function SavedSearchService(api, $filter, $q, $rootScope) {
 
     var _getAll = function(endPoint, page, items, params) {
         page = page || 1;
         items = items || [];
-        params = params || {};
+        params = params || null;
 
-        return api(endPoint, params)
-        .query({max_results: 200, page: page})
+        return api.query(endPoint, {max_results: 200, page: page}, params)
         .then(function(result) {
             items = items.concat(result._items);
             if (result._links.next) {
@@ -48,4 +47,7 @@ export function SavedSearchService(api, $filter, $q){
         this.savedSearches = null;
         this.savedSearchLookup = null;
     };
+
+    // reset cache on update
+    $rootScope.$on('savedsearch:update', angular.bind(this, this.resetSavedSearches));
 }
