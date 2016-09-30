@@ -1345,6 +1345,22 @@ export function ItemList(
                     dragitem.start(event, this.props.item);
                 },
 
+                componentDidUpdate: function() {
+                    // If content-list is present in the dom, we can update its scroll position
+                    // in case the current element is outside of the viewport.
+                    if (this.props.flags.selected && document.getElementsByClassName('content-list')) {
+                        let itemRect = this.refs.item.getBoundingClientRect();
+                        let contentList = document.getElementsByClassName('content-list')[0];
+                        let contentListRect = contentList.getBoundingClientRect();
+
+                        if (itemRect.bottom > contentListRect.bottom) {
+                            contentList.scrollTop += itemRect.bottom - contentListRect.bottom;
+                        } else if (itemRect.top < contentListRect.top) {
+                            contentList.scrollTop -= contentListRect.top - itemRect.top;
+                        }
+                    }
+                },
+
                 render: function() {
                     var item = this.props.item;
                     var contents = [
@@ -1409,6 +1425,7 @@ export function ItemList(
                         {
                             id: item._id,
                             key: item._id,
+                            ref: 'item',
                             className: classNames('list-item-view',
                                                     {active: this.props.flags.selected}, {selected: this.props.item.selected}),
                             onMouseEnter: this.setHoverState,
