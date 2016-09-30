@@ -3,6 +3,7 @@ const appConfig = __SUPERDESK_CONFIG__;
 
 // styles
 import 'bootstrap.less';
+import 'app.scss';
 
 // vendor
 import 'jquery-ui/jquery-ui';
