@@ -20,7 +20,7 @@ describe('fetch', function() {
             expect(menu.element(by.partialLinkText('Duplicate')).isDisplayed()).toBe(true);
             expect(menu.element(by.partialLinkText('Copy')).isPresent()).toBe(false);
 
-            workspace.openPersonal();
+            workspace.switchToDesk('PERSONAL');
             content.setListView();
 
             menu = content.openItemMenu('item1');

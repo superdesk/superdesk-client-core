@@ -1,7 +1,8 @@
 
 'use strict';
 
-var workspace = require('./helpers/pages').workspace,
+var openUrl = require('./helpers/utils').open,
+    workspace = require('./helpers/pages').workspace,
     content = require('./helpers/content'),
     authoring = require('./helpers/authoring');
 
@@ -20,7 +21,8 @@ describe('content', function() {
     }
 
     beforeEach(function() {
-        workspace.openPersonal();
+        openUrl('/#/workspace');
+        workspace.switchToDesk('PERSONAL');
         expect(element.all(by.css('.media-box')).count()).toBe(2);
     });
 
