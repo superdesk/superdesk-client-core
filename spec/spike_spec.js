@@ -13,7 +13,7 @@ describe('spike', function() {
     });
 
     it('can spike item', function() {
-        workspace.switchToDesk('PERSONAL');
+        workspace.openPersonal();
         content.setListView();
 
         var personalCount;
