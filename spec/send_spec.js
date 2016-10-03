@@ -19,9 +19,13 @@ describe('send', function() {
             });
         }, 500);
     }
-    it('can submit item to a desk', function() {
+
+    beforeEach(function() {
         workspace.open();
         workspace.createWorkspace('Personal');
+    });
+
+    it('can submit item to a desk', function() {
         workspace.editItem(1);
         authoring.sendTo('Sports Desk');
         // modal for the incorrect spelling.
@@ -32,8 +36,6 @@ describe('send', function() {
     });
 
     it('warns that there are spelling mistakes', function () {
-        workspace.open();
-        workspace.createWorkspace('Personal');
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -41,8 +43,6 @@ describe('send', function() {
     });
 
     it('can submit item to a desk although there are spelling mistakes', function () {
-        workspace.open();
-        workspace.createWorkspace('Personal');
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -59,8 +59,6 @@ describe('send', function() {
     });
 
     it('can cancel submit request because there are spelling mistakes', function () {
-        workspace.open();
-        workspace.createWorkspace('Personal');
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -70,7 +68,6 @@ describe('send', function() {
 
     it('can open send to panel when monitoring list is hidden', function() {
         monitoring.openMonitoring();
-        workspace.selectDesk('Sports Desk');
         monitoring.openAction(2, 0);
         monitoring.showHideList();
         expect(monitoring.hasClass(element(by.id('main-container')), 'hideMonitoring')).toBe(true);
@@ -138,8 +135,6 @@ describe('send', function() {
 
     it('can remember last sent destination desk and stage on multi selection sendTo panel', function() {
         monitoring.openMonitoring();
-        workspace.createWorkspace('Personal');
-        workspace.selectDesk('Personal');
 
         monitoring.selectItem(2, 0);
         monitoring.expectIsChecked(2, 0);
