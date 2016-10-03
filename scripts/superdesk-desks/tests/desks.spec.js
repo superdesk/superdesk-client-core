@@ -11,26 +11,22 @@ describe('desks service', function() {
     it('can fetch current user desks',
     inject(function(desks, session, api, preferencesService, $rootScope, $q) {
         spyOn(session, 'getIdentity').and.returnValue($q.when({_links: {self: {href: USER_URL}}}));
-        spyOn(api, 'get').and.returnValue($q.when({_items: [{name: 'sport'}, {name: 'news'}]}));
+        spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([{name: 'sport'}, {name: 'news'}]));
         spyOn(preferencesService, 'get').and.returnValue($q.when([]));
         spyOn(preferencesService, 'update');
 
-        var userDesks;
-        desks.fetchCurrentUserDesks().then(function(_userDesks) {
-            userDesks = _userDesks._items;
-        });
-
+        desks.fetchCurrentUserDesks();
         $rootScope.$apply();
-
-        expect(userDesks.length).toBe(2);
+        expect(desks.userDesks.length).toBe(2);
     }));
 
     it('can pick personal desk if user has no current desk selected',
         inject(function(desks, session, api, preferencesService, $q, $rootScope) {
             spyOn(preferencesService, 'get').and.returnValue($q.when('missing'));
             spyOn(preferencesService, 'update');
-            spyOn(desks, 'fetchUserDesks').and.returnValue($q.when({_items: []}));
-            desks.userDesks = desks.fetchCurrentUserDesks();
+            spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([]));
+
+            desks.fetchCurrentUserDesks();
             $rootScope.$digest();
             expect(desks.getCurrentDeskId()).toBe(null);
             expect(preferencesService.update).not.toHaveBeenCalled();
@@ -41,8 +37,9 @@ describe('desks service', function() {
         inject(function(desks, session, api, preferencesService, $q, $rootScope) {
             spyOn(preferencesService, 'get').and.returnValue($q.when('missing'));
             spyOn(preferencesService, 'update');
-            spyOn(desks, 'fetchUserDesks').and.returnValue($q.when({_items: []}));
-            desks.userDesks = desks.fetchCurrentUserDesks();
+            spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([]));
+
+            desks.fetchCurrentUserDesks();
             $rootScope.$digest();
             expect(desks.getCurrentDeskId()).toBe(null);
             expect(preferencesService.update).not.toHaveBeenCalled();
@@ -127,9 +124,7 @@ describe('desks service', function() {
         it('returns null if user desks list is empty', function () {
             var result;
 
-            desks.userDesks = {
-                _items: []
-            };
+            desks.userDesks = [];
 
             result = desks.getCurrentDeskId();
             expect(result).toBe(null);

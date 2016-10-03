@@ -19,7 +19,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     };
 
     desks.fetchCurrentUserDesks().then(function(desks_list) {
-        self.userDesks = desks_list._items;
+        self.userDesks = desks_list;
     });
 
     /**

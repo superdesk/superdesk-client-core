@@ -222,13 +222,13 @@ function Workspace() {
     };
 
     this.editItem = function(item, desk) {
-        this.switchToDesk(desk || 'PERSONAL');
+        this.switchToDesk(desk || 'POLITIC DESK');
         content.setListView();
         return content.editItem(item);
     };
 
     this.duplicateItem = function(item, desk) {
-        return this.switchToDesk(desk || 'PERSONAL')
+        return this.switchToDesk(desk || 'POLITIC DESK')
         .then(content.setListView)
         .then(function() {
             return content.actionOnItem('Duplicate', item);

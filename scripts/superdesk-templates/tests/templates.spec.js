@@ -10,7 +10,7 @@ describe('templates', function() {
         var existingTemplate = {template_name: 'template1', template_desks: ['sports']};
 
         beforeEach(inject(function(desks, api, $q) {
-            spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: []}));
+            spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when([]));
             spyOn(api, 'save').and.returnValue($q.when({}));
             spyOn(api, 'find').and.returnValue($q.when(existingTemplate));
         }));

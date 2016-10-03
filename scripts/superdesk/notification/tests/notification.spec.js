@@ -2,7 +2,7 @@
 describe('Reload Service', function() {
     beforeEach(window.module('superdesk.notification'));
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.desks'));
     beforeEach(window.module('superdesk.preferences'));
 
     var USER_URL = '/users/1';
@@ -14,21 +14,21 @@ describe('Reload Service', function() {
 
     var rootScope, reloadService, msg;
     beforeEach(function() {
-        inject(function($rootScope, _reloadService_, session, $q, api, preferencesService, desks, $window) {
+        inject(function($rootScope, _reloadService_, session, $q, preferencesService, desks, $window) {
             rootScope = $rootScope;
             reloadService = _reloadService_;
             session.start({}, USER);
 
             spyOn(session, 'getIdentity').and.returnValue($q.when({_links: {self: {href: USER_URL}}}));
-            spyOn(api, 'get').and.returnValue($q.when({_items: [
+            spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([
                 {_id: '5567ff31102454c7bac47644', name: 'Desk One'},
                 {_id: '55394997102454b5ea111bd5', name: 'Desk Two'}
-            ]}));
+            ]));
             spyOn(preferencesService, 'get').and.returnValue($q.when([]));
             spyOn(preferencesService, 'update');
 
             desks.fetchCurrentUserDesks().then(function(_userDesks) {
-                reloadService.userDesks = _userDesks._items;
+                reloadService.userDesks = _userDesks;
             });
 
             rootScope.$apply();

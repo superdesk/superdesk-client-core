@@ -31,7 +31,7 @@ describe('authoring', function() {
         spyOn(preferencesService, 'get').and.returnValue($q.when({'items': ['urn:tag:superdesk-1']}));
         spyOn(preferencesService, 'update').and.returnValue($q.when({}));
         spyOn(preferencesService, 'getPrivileges').and.returnValue($q.when({}));
-        spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: []}));
+        spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when([]));
     }));
 
     beforeEach(inject(function($route) {
@@ -595,7 +595,7 @@ describe('authoring actions', function() {
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function(desks, $q) {
-        spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: userDesks}));
+        spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));
     }));
 
     it('can perform actions if the item is located on the personal workspace',
