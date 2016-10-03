@@ -119,7 +119,7 @@ function waitForAngular(_description) {
 function waitForSuperdesk() {
     return browser.driver.wait(function() {
         return browser.driver.executeScript('return window.superdeskIsReady || false');
-    }, 5000, '"window.superdeskIsReady" is not here').then(function() {
+    }, 3000, '"window.superdeskIsReady" is not here').then(function() {
         return waitForAngular();
     }).then(
         function() {

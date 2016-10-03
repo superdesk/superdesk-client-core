@@ -1,4 +1,5 @@
 gunicorn==19.6.0
 honcho==0.6.6
 newrelic>=2.66,<2.67
-superdesk-core==1.1
+git+https://github.com/eliben/pycparser@release_v2.14
+git+git://github.com/superdesk/superdesk-core.git@b79733d#egg=Superdesk-Core

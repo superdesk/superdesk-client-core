@@ -2,7 +2,7 @@ language: python
 
 python: 3.5
 
-sudo: false
+sudo: required
 
 services:
     - mongodb
@@ -40,6 +40,19 @@ install:
     - cd test-server && pip install -r requirements.txt && cd ..
     - ./node_modules/.bin/webdriver-manager update
 
+before_script: >
+    df -h
+    && sudo sed -i 's\enabled: true\enabled: false\' /etc/mongod.conf
+    && sudo service mongod restart
+    && mkdir /tmp/es-backups
+    && sudo chown elasticsearch:elasticsearch /tmp/es-backups
+    && echo "path.repo: ['/tmp/es-backups']" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+    && echo "index.store.type: memory" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+    && sudo service elasticsearch restart
+    && tail -n1 /etc/elasticsearch/elasticsearch.yml
+    && sleep 10
+    && curl -XPUT 'http://localhost:9200/_snapshot/backups' -d '{"type": "fs", "settings": {"location": "/tmp/es-backups"}}'
+
 script:
     - grunt ci:travis
     - grunt build ;
@@ -52,6 +65,8 @@ script:
       (nohup honcho start & ) ;
       sleep 5 ;
       cd ..;
+    - curl -XPOST http://localhost:5000/api/prepopulate
+    - ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose --specs spec/content_spec.js,spec/send_spec.js
     - ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose
 
 after_script:
