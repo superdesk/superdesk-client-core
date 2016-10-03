@@ -135,6 +135,7 @@ describe('send', function() {
 
     it('can remember last sent destination desk and stage on multi selection sendTo panel', function() {
         monitoring.openMonitoring();
+        workspace.selectDesk('Sports Desk');
 
         monitoring.selectItem(2, 0);
         monitoring.expectIsChecked(2, 0);
