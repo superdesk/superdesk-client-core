@@ -65,7 +65,7 @@ script:
       (nohup honcho start & ) ;
       sleep 5 ;
       cd ..;
-    - curl -XPOST http://localhost/api/prepopulate
+    - curl -XPOST http://localhost:5000/api/prepopulate
     - ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose --specs spec/content_spec.js,spec/send_spec.js
     - ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose
 
