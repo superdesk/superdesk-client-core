@@ -1,8 +1,9 @@
 
 'use strict';
 
-var openUrl = require('./utils').open;
-var waitFor = require('./utils').wait;
+var openUrl = require('./utils').open,
+    nav = require('./utils').nav,
+    waitFor = require('./utils').wait;
 module.exports = new Monitoring();
 
 function Monitoring() {
@@ -10,8 +11,12 @@ function Monitoring() {
     this.config = element(by.className('aggregate-settings'));
     this.label = element(by.model('widget.configuration.label'));
 
-    this.openMonitoring = function() {
-        return openUrl('/#/workspace/monitoring');
+    this.openMonitoring = function(useNav) {
+        if (useNav === true) {
+            return nav('/workspace/monitoring');
+        } else {
+            return openUrl('/#/workspace/monitoring');
+        }
     };
 
     this.showMonitoring = function() {
