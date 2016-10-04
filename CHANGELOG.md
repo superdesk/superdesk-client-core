@@ -10,6 +10,7 @@
 ### Fixed
 - Fix global search to include time part for date search.
 - Fix related item search to look for exact slugline search.
+- Fix refs in package were missing type.
 
 ## [1.1] 2016-08-29
 
