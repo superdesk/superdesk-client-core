@@ -29,7 +29,7 @@ There are 2 main areas - `superdesk core modules` and `superdesk apps`.
 
 ### Superdesk core module structure
 
-In `superdesk core` we split by feature into submodules like `superdesk/upload` where there is an `upload.js` file which defines `superdesk.upload` angular module. This file can via require load its components (directives, controllers, services) but all the angular registration should happen in `upload.js`.
+In `superdesk core` we split by feature into submodules like `core/upload` where there is an `upload.js` file which defines `superdesk.upload` angular module. This file can via require load its components (directives, controllers, services) but all the angular registration should happen in `upload.js`.
 
 We put most of components into root submodule dir with a type suffix - `upload-service.js` - and with unit tests next to with a `_spec.js` suffix - `upload-service_spec.js`.
 

@@ -35,14 +35,14 @@ import 'rangy';
 import 'rangy-saverestore';
 import 'ment.io';
 
-import 'superdesk/keyboard';
-import 'superdesk/auth';
-import 'superdesk/datetime';
-import 'superdesk/directives';
-import 'superdesk/ui';
-import 'superdesk/services';
-import 'superdesk/superdesk-docs';
-import 'superdesk/superdesk';
+import 'core/keyboard';
+import 'core/auth';
+import 'core/datetime';
+import 'core/directives';
+import 'core/ui';
+import 'core/services';
+import 'core/superdesk-docs';
+import 'core/superdesk';
 
 import './dist/templates-cache-docs.generated';
 
