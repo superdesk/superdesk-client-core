@@ -61,7 +61,7 @@ describe('superdesk.workspace.content', function() {
                 groups: [
                 {role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
                 {refs: [{headline: '', residRef: undefined, location: 'archive',
-                slugline: '', renditions: {}, itemClass: ''}],
+                slugline: '', renditions: {}, itemClass: '', type: ''}],
                 id: 'main', role: 'grpRole:main'}]});
         }));
 

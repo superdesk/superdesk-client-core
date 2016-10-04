@@ -116,6 +116,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
 
     this.getReferenceFor = function(item) {
         return {
+            type: item.type || '',
             headline: item.headline || '',
             residRef: item._id,
             location: 'archive',
