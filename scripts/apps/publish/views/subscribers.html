@@ -120,7 +120,7 @@
                     </tab>
 
                     <tab heading="{{ 'Critical Errors' | translate }}" class="TabContent">
-                        <div ng-repeat="(key, val) in all_errors | orderBy:name" class="field">
+                        <div ng-repeat="(key, val) in all_errors" class="field">
                             <label>
                                 {{::key}}: {{::val}}
                                 <span sd-switch ng-model="subscriber.critical_errors[key]"></span>
