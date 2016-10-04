@@ -155,7 +155,7 @@
                         <div class="content privileges-settings">
                             <div class="horizontal">
                                 <div class="roles-list">
-                                    <div ng-repeat="(key, val) in provider.source_errors | orderBy:name" class="field">
+                                    <div ng-repeat="(key, val) in provider.source_errors" class="field">
                                         <label>
                                             {{key}}: {{val}}
                                             <span sd-switch ng-model="provider.critical_errors[key]"></span>
