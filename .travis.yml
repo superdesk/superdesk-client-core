@@ -40,6 +40,11 @@ install:
     - cd test-server && pip install -r requirements.txt && cd ..
     - ./node_modules/.bin/webdriver-manager update
 
+# Enable snapshot feature in elasticsearch (uses for prepopulation step)
+#
+# Some other optimizations
+# - disable journal for mongodb storage
+# - in memory indexes for elasticsearch
 before_script: >
     df -h
     && sudo sed -i 's\enabled: true\enabled: false\' /etc/mongod.conf

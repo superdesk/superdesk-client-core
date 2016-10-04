@@ -12,11 +12,10 @@ function Monitoring() {
     this.label = element(by.model('widget.configuration.label'));
 
     this.openMonitoring = function(useNav) {
-        if (useNav === true) {
+        if (useNav) {
             return nav('/workspace/monitoring');
-        } else {
-            return openUrl('/#/workspace/monitoring');
         }
+        return openUrl('/#/workspace/monitoring');
     };
 
     this.showMonitoring = function() {
