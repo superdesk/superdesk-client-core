@@ -418,9 +418,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             };
 
+            /**
+             * continueAfterPublish is passed only from $scope.publishAndContinue as bool,
+             * in other cases this is object (don't use parameter in those cases)
+             */
             $rootScope.publishAfterTansa = function () {
                 if (!onlyTansaProof) {
-                    $scope.saveTopbar().then(continueAfterPublish ? $scope.publishAndContinue : $scope.publish);
+                    $scope.saveTopbar().then(continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish);
                 }
             };
 
