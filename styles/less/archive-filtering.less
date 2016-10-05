@@ -70,10 +70,16 @@
 
     .content {
         position: absolute;
-        top:@nav-height; left:0px; bottom:80px; right:0px;
+        top:@nav-height; left:0px; bottom:0px; right:0px;
         padding: 20px;
         overflow: auto;
         padding-bottom: @bottom-view-padding;
+        &.pull { bottom: 60px; }
+        &.pull-heigher { bottom: 120; }
+    }
+    
+    .tab-box {
+        margin: 30px -20px 0 -20px;
     }
 
     .edit-search {
@@ -403,7 +409,6 @@
                 }
 
             }
-
         }
         .edit-saved-searches {
             position: absolute;
@@ -452,6 +457,7 @@
 }
 
 .save-search,
+.float-search-btn,
 .save-search-panel {
     position: absolute;
     bottom: 0;
@@ -488,4 +494,11 @@
     &:hover {
         text-decoration: underline;
     }
+}
+.float-search-btn {
+    background-color: #f6f6f6;
+    .search { margin-bottom: 0; }
+}
+.float-search-btn--shift {
+    bottom: 60px;
 }
