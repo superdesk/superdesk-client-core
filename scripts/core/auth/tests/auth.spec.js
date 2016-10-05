@@ -6,7 +6,7 @@ describe('auth', function() {
     beforeEach(window.module('superdesk.activity'));
     beforeEach(window.module('superdesk.auth'));
     beforeEach(window.module('superdesk.menu'));
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
 
     it('can use routes with auth=false without identity', inject(function($rootScope, $location, $route) {
         $location.path('/reset-password/');

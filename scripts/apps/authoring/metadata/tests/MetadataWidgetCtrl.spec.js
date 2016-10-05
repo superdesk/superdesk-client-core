@@ -6,11 +6,11 @@ describe('MetadataWidgetCtrl controller', function () {
         prefsGet,  //deferred result of the preferences service's get() method
         scope;
 
-    beforeEach(window.module('superdesk.publish'));
-    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.apps.publish'));
+    beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.ui'));
     beforeEach(window.module('superdesk.filters'));
-    beforeEach(window.module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.apps.authoring.metadata'));
 
     beforeEach(window.module(function($provide) {
         $provide.constant('config', {
@@ -129,8 +129,8 @@ describe('metadata terms directive', function() {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.api'));
     beforeEach(window.module('superdesk.filters'));
-    beforeEach(window.module('superdesk.publish'));
-    beforeEach(window.module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.apps.publish'));
+    beforeEach(window.module('superdesk.apps.authoring.metadata'));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {
         $rootScope = _$rootScope_;
@@ -437,8 +437,8 @@ describe('dateline dropdown', function() {
     ];
 
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.publish'));
-    beforeEach(window.module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.apps.publish'));
+    beforeEach(window.module('superdesk.apps.authoring.metadata'));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {
         $rootScope = _$rootScope_;

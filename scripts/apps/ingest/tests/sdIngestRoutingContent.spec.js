@@ -14,9 +14,9 @@ describe('sdIngestRoutingContent directive', function () {
         scope;
 
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.ingest'));
-    beforeEach(window.module('superdesk.content_filters'));
-    beforeEach(window.module('superdesk.editor'));
+    beforeEach(window.module('superdesk.apps.ingest'));
+    beforeEach(window.module('superdesk.apps.content_filters'));
+    beforeEach(window.module('superdesk.apps.editor'));
 
     beforeEach(window.module(function($provide) {
         fakeTzData = {

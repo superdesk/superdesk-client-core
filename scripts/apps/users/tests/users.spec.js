@@ -1,7 +1,7 @@
 'use strict';
 
 describe('users api', function() {
-    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
 
     it('can create user', inject(function(usersService, api, $q, $rootScope) {
@@ -49,7 +49,7 @@ describe('users api', function() {
 });
 
 describe('userlist service', function() {
-    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
 
     beforeEach(window.module(function($provide) {
@@ -112,7 +112,7 @@ describe('userlist service', function() {
 
 describe('mentio directive', function() {
 
-    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
@@ -171,8 +171,8 @@ describe('mentio directive', function() {
 });
 
 describe('user edit form', function() {
-    beforeEach(window.module('superdesk.desks'));
-    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.apps.desks'));
+    beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
 

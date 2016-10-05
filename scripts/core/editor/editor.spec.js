@@ -2,9 +2,9 @@
 
 describe('text editor', function() {
 
-    beforeEach(window.module('superdesk.publish'));
-    beforeEach(window.module('superdesk.editor'));
-    beforeEach(window.module('superdesk.editor.spellcheck'));
+    beforeEach(window.module('superdesk.apps.publish'));
+    beforeEach(window.module('superdesk.apps.editor'));
+    beforeEach(window.module('superdesk.apps.editor.spellcheck'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(function() {

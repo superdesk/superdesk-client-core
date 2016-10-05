@@ -14,7 +14,7 @@ import { FilterTemplatesFilter } from './filters';
 import * as directive from './directives';
 import * as ctrl from './controllers';
 
-angular.module('superdesk.templates', ['superdesk.activity', 'superdesk.authoring', 'superdesk.preferences'])
+angular.module('superdesk.apps.templates', ['superdesk.activity', 'superdesk.apps.authoring', 'superdesk.preferences'])
     .service('templates', TemplatesService)
 
     .filter('templatesBy', FilterTemplatesFilter)

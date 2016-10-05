@@ -12,7 +12,7 @@ import * as svc from './services';
 import * as directive from './directives';
 import * as config from './config';
 
-export default angular.module('superdesk.users', [
+export default angular.module('superdesk.apps.users', [
     'superdesk.activity',
     'superdesk.asset'
 ])
@@ -67,7 +67,7 @@ export default angular.module('superdesk.users', [
 
     .run(config.KeyboardShortcuts);
 
-angular.module('superdesk.users.profile', ['superdesk.api', 'superdesk.users'])
+angular.module('superdesk.apps.users.profile', ['superdesk.api', 'superdesk.apps.users'])
     .directive('sdUserActivity', directive.UserActivityDirective)
     .service('profileService', svc.ProfileService)
     .config(['superdeskProvider', 'assetProvider', function(superdeskProvider, asset) {

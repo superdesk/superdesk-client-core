@@ -1,4 +1,4 @@
-angular.module('superdesk.users.activity', ['superdesk.users', 'superdesk.dashboard.widgets', 'superdesk.asset'])
+angular.module('superdesk.apps.users.activity', ['superdesk.apps.users', 'superdesk.apps.dashboard.widgets', 'superdesk.asset'])
     .config(['dashboardWidgetsProvider', 'assetProvider', function(dashboardWidgets, asset) {
         dashboardWidgets.addWidget('activity', {
             label: 'Activity Stream',

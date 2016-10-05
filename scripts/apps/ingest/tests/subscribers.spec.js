@@ -3,7 +3,7 @@
 describe('subscribers service', function() {
 
     beforeEach(window.module('superdesk.filters'));
-    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.apps.publish'));
 
     beforeEach(inject(function(subscribersService, $q, api) {
         spyOn(api, 'query').and.returnValue($q.when({

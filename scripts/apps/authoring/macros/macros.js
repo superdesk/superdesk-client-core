@@ -172,11 +172,11 @@ function MacrosReplaceDirective(macros, editor) {
     };
 }
 
-angular.module('superdesk.authoring.macros', [
+angular.module('superdesk.apps.authoring.macros', [
     'superdesk.api',
     'superdesk.notify',
-    'superdesk.authoring.widgets',
-    'superdesk.authoring.autosave'
+    'superdesk.apps.authoring.widgets',
+    'superdesk.apps.authoring.autosave'
 ])
 
     .service('macros', MacrosService)

@@ -11,16 +11,16 @@ describe('authoring', function() {
         $provide.constant('lodash', _);
     }));
 
-    beforeEach(window.module('superdesk.publish'));
-    beforeEach(window.module('superdesk.editor'));
+    beforeEach(window.module('superdesk.apps.publish'));
+    beforeEach(window.module('superdesk.apps.editor'));
     beforeEach(window.module('superdesk.preferences'));
-    beforeEach(window.module('superdesk.archive'));
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.archive'));
+    beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.auth'));
     beforeEach(window.module('superdesk.workspace.content'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.privileges'));
-    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function($window) {
@@ -400,8 +400,8 @@ describe('authoring', function() {
 });
 
 describe('cropImage', function() {
-    beforeEach(window.module('superdesk.publish'));
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.publish'));
+    beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
@@ -451,7 +451,7 @@ describe('cropImage', function() {
 });
 
 describe('autosave', function() {
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
@@ -514,7 +514,7 @@ describe('autosave', function() {
 });
 
 describe('lock service', function() {
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
@@ -589,9 +589,9 @@ describe('authoring actions', function() {
         });
     }
 
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.mocks'));
-    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function(desks, $q) {
@@ -1741,7 +1741,7 @@ describe('authoring workspace', function() {
         lockedItem = {_id: item._id, _editable: true};
     });
 
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
 
     beforeEach(inject(function($q, authoring) {
         spyOn(authoring, 'open').and.returnValue($q.when(lockedItem));
@@ -1836,7 +1836,7 @@ describe('authoring workspace', function() {
 
 describe('authoring container directive', function() {
 
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function($templateCache) {
@@ -1932,7 +1932,7 @@ describe('authoring container directive', function() {
 
 describe('authoring themes', function() {
     beforeEach(window.module('superdesk.preferences'));
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
 
     beforeEach(inject(function($q, preferencesService) {
         spyOn(preferencesService, 'get').and.returnValue($q.when({'editor:theme': ['theme:proofreadTheme']}));
@@ -1981,10 +1981,9 @@ describe('authoring themes', function() {
 });
 
 describe('send item directive', function() {
-    beforeEach(window.module('superdesk.editor'));
+    beforeEach(window.module('superdesk.apps.editor'));
     beforeEach(window.module('superdesk.preferences'));
-    beforeEach(window.module('superdesk.authoring'));
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.api'));
 

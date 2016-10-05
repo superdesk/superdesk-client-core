@@ -1,5 +1,5 @@
 describe('desk select directive', function() {
-    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     var scope, elem, iscope;

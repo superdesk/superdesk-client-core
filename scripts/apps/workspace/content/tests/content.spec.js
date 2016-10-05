@@ -4,7 +4,7 @@
 describe('superdesk.workspace.content', function() {
 
     beforeEach(window.module('superdesk.mocks'));
-    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.workspace.content'));
 

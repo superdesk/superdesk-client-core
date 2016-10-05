@@ -9,7 +9,7 @@
  */
 import { ProfilingController } from './controllers';
 
-export default angular.module('superdesk.profiling', [])
+export default angular.module('superdesk.apps.profiling', [])
     .controller('profilingCtrl', ProfilingController)
 
     .config(['superdeskProvider', function(superdesk) {

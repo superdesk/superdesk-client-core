@@ -11,7 +11,7 @@ describe('WorldClockConfigController', function () {
         fakeTzdata,
         scope;
 
-    beforeEach(window.module('superdesk.dashboard.world-clock'));
+    beforeEach(window.module('superdesk.apps.dashboard.world-clock'));
 
     beforeEach(inject(function ($controller, $rootScope, $q) {
         scope = $rootScope.$new();

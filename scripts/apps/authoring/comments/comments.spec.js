@@ -17,7 +17,7 @@ describe('item comments', function() {
         });
     }));
 
-    beforeEach(window.module('superdesk.authoring.comments'));
+    beforeEach(window.module('superdesk.apps.authoring.comments'));
 
     it('can fetch comments for an item', inject(function(commentsService, api, $rootScope, $q) {
 

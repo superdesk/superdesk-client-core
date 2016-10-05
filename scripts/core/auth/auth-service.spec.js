@@ -5,7 +5,7 @@ describe('auth service', function() {
         window.module('superdesk.auth');
         window.module('superdesk.session');
         window.module('superdesk.menu');
-        window.module('superdesk.authoring');
+        window.module('superdesk.apps.authoring');
         window.module(function($provide) {
             $provide.service('api', function($q) {
                 this.users = {

@@ -297,7 +297,7 @@ function MultieditFloatMenuDirective($document) {
     };
 }
 
-angular.module('superdesk.authoring.multiedit', ['superdesk.activity', 'superdesk.authoring'])
+angular.module('superdesk.apps.authoring.multiedit', ['superdesk.activity', 'superdesk.apps.authoring'])
     .service('multiEdit', MultieditService)
     .directive('sdMultieditDropdown', MultieditDropdownDirective)
     .directive('sdMultieditInnerDropdown', MultieditDropdownInnerDirective)

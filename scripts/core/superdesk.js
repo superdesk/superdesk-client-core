@@ -43,7 +43,9 @@ var modules = [
     'superdesk.slider.directives',
     'superdesk.directives.searchList',
     'superdesk.directives.filetypeIcon',
-    'superdesk.config'
+    'superdesk.loading',
+    'superdesk.config',
+    'superdesk.templates-cache'
 ];
 
 angular.module('superdesk.loading', [])

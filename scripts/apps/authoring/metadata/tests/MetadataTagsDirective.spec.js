@@ -6,7 +6,7 @@ describe('MetadataTags directive', function () {
     var bodyHtml = '<div x="1"><span y="2">realBody</span></div>';
 
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.apps.authoring.metadata'));
     beforeEach(window.module(function($provide) {
         $provide.service('api', function($q) {
             return {

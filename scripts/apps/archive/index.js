@@ -8,10 +8,10 @@ import * as directive from './directives';
 import * as svc from './services';
 import * as ctrl from './controllers';
 
-angular.module('superdesk.archive.directives', [
+angular.module('superdesk.apps.archive.directives', [
     'superdesk.filters',
-    'superdesk.authoring',
-    'superdesk.ingest',
+    'superdesk.apps.authoring',
+    'superdesk.apps.ingest',
     'superdesk.workflow'
 ])
     .directive('sdItemLock', directive.ItemLock)
@@ -42,10 +42,10 @@ angular.module('superdesk.archive.directives', [
     .service('familyService', svc.FamilyService)
     .service('dragitem', svc.DragItemService);
 
-angular.module('superdesk.archive', [
+angular.module('superdesk.apps.archive', [
     'superdesk.search',
-    'superdesk.archive.directives',
-    'superdesk.dashboard',
+    'superdesk.apps.archive.directives',
+    'superdesk.apps.dashboard',
     'superdesk.widgets.base',
     'superdesk.widgets.relatedItem'
 ])

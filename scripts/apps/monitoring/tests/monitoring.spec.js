@@ -1,7 +1,7 @@
 describe('monitoring', function() {
     'use strict';
 
-    beforeEach(window.module('superdesk.monitoring'));
+    beforeEach(window.module('superdesk.apps.monitoring'));
     beforeEach(window.module('superdesk.mocks'));
 
     it('can preview an item', inject(function($controller, $rootScope) {
@@ -160,7 +160,7 @@ describe('monitoring', function() {
     describe('monitoring group directive', function() {
 
         beforeEach(window.module('superdesk.templates-cache'));
-        beforeEach(window.module('superdesk.searchProviders'));
+        beforeEach(window.module('superdesk.apps.searchProviders'));
 
         beforeEach(inject(function($templateCache) {
             // change template not to require aggregate config but rather render single group

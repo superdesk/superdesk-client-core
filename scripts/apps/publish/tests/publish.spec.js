@@ -114,13 +114,13 @@ describe('publish queue', function() {
 
     var $scope;
 
-    beforeEach(window.module('superdesk.authoring'));
-    beforeEach(window.module('superdesk.users'));
-    beforeEach(window.module('superdesk.content_filters'));
-    beforeEach(window.module('superdesk.publish'));
-    beforeEach(window.module('superdesk.ingest'));
+    beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.apps.users'));
+    beforeEach(window.module('superdesk.apps.content_filters'));
+    beforeEach(window.module('superdesk.apps.publish'));
+    beforeEach(window.module('superdesk.apps.ingest'));
     beforeEach(window.module('superdesk.mocks'));
-    beforeEach(window.module('superdesk.searchProviders'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function($rootScope, $controller, subscribersService, $q, api, ingestSources) {

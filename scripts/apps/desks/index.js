@@ -13,10 +13,10 @@ import * as ctrl from './controllers';
 import * as directive from './directives';
 import { DesksFactory } from './services';
 
-angular.module('superdesk.desks', [
+angular.module('superdesk.apps.desks', [
     'superdesk.ui',
-    'superdesk.users',
-    'superdesk.authoring.widgets',
+    'superdesk.apps.users',
+    'superdesk.apps.authoring.widgets',
     'superdesk.aggregate.widgets',
     'superdesk.aggregate'
 ])

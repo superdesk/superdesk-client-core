@@ -18,7 +18,7 @@ import * as directive from './directives';
 import { CardsService } from './services';
 import { SplitFilter } from './filters';
 
-angular.module('superdesk.monitoring', ['superdesk.api', 'superdesk.aggregate', 'superdesk.search', 'superdesk.ui'])
+angular.module('superdesk.apps.monitoring', ['superdesk.api', 'superdesk.aggregate', 'superdesk.search', 'superdesk.ui'])
     .controller('Monitoring', ctrl.MonitoringController)
 
     .service('cards', CardsService)
@@ -40,7 +40,7 @@ angular.module('superdesk.monitoring', ['superdesk.api', 'superdesk.aggregate', 
         keyboardManager.register('Monitoring', 'ctrl + alt + g', gettext('Switches between single/grouped desk view'));
     }]);
 
-angular.module('superdesk.aggregate', ['superdesk.authoring.widgets', 'superdesk.desks', 'superdesk.workspace'])
+angular.module('superdesk.aggregate', ['superdesk.apps.authoring.widgets', 'superdesk.apps.desks', 'superdesk.workspace'])
     .controller('AggregateCtrl', ctrl.AggregateCtrl)
     .directive('sdAggregateSettings', directive.AggregateSettings)
     .directive('sdSortGroups', directive.SortGroups);

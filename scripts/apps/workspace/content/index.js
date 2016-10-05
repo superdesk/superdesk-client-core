@@ -5,9 +5,9 @@ import * as ctrl from './controllers';
 angular.module('superdesk.workspace.content', [
     'superdesk.api',
     'superdesk.menu',
-    'superdesk.archive',
-    'superdesk.templates',
-    'superdesk.packaging'
+    'superdesk.apps.archive',
+    'superdesk.apps.templates',
+    'superdesk.apps.packaging'
 ])
     .service('content', ContentService)
 

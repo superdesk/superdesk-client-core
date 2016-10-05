@@ -1,9 +1,9 @@
 describe('authoring', function() {
     'use strict';
 
-    beforeEach(window.module('superdesk.vocabularies'));
-    beforeEach(window.module('superdesk.archive'));
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.archive'));
+    beforeEach(window.module('superdesk.apps.authoring'));
 
     it('set anpa category value for required subservice',
     inject(function($httpBackend, $q, $rootScope, $compile, vocabularies, archiveService, content, $templateCache) {

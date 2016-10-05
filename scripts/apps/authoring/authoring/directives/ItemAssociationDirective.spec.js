@@ -1,6 +1,6 @@
 
 describe('item association directive', function() {
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     var elem, scope, item = {};

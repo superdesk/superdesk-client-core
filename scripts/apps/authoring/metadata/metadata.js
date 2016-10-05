@@ -1071,7 +1071,7 @@ function MetadataService(api, $q, subscribersService, config) {
     return service;
 }
 
-angular.module('superdesk.authoring.metadata', ['superdesk.authoring.widgets', 'superdesk.publish', 'vs-repeat'])
+angular.module('superdesk.apps.authoring.metadata', ['superdesk.apps.authoring.widgets', 'superdesk.apps.publish', 'vs-repeat'])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
             .widget('metadata', {

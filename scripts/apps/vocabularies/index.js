@@ -13,9 +13,9 @@ import { VocabularyService, SchemaFactory } from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 
-angular.module('superdesk.vocabularies', [
+angular.module('superdesk.apps.vocabularies', [
     'superdesk.activity',
-    'superdesk.authoring.metadata'
+    'superdesk.apps.authoring.metadata'
 ])
     .service('vocabularies', VocabularyService)
 

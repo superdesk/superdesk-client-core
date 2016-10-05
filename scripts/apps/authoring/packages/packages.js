@@ -26,7 +26,7 @@ function PackagesCtrl($scope, $location, superdesk, api, search) {
     }
 }
 
-export default angular.module('superdesk.authoring.packages', ['superdesk.authoring.widgets'])
+export default angular.module('superdesk.apps.authoring.packages', ['superdesk.apps.authoring.widgets'])
 .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
     authoringWidgetsProvider
     .widget('packages', {

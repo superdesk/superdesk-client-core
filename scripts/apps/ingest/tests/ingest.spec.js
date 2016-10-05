@@ -4,7 +4,7 @@ describe('ingest', function() {
 
     describe('send service', function() {
 
-        beforeEach(window.module('superdesk.ingest.send'));
+        beforeEach(window.module('superdesk.apps.ingest.send'));
         beforeEach(window.module('superdesk.templates-cache'));
 
         it('can send an item', inject(function(send, api, $q, $rootScope) {
@@ -65,9 +65,9 @@ describe('ingest', function() {
         }));
     });
 
-    describe('registering activities in superdesk.ingest module', function () {
+    describe('registering activities in superdesk.apps.ingest module', function () {
 
-        beforeEach(window.module('superdesk.ingest'));
+        beforeEach(window.module('superdesk.apps.ingest'));
 
         describe('the "archive" activity', function () {
             var activity;

@@ -6,10 +6,10 @@ describe('text editor', function() {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}});
     }));
 
-    beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.config'));
-    beforeEach(window.module('superdesk.editor2'));
-    beforeEach(window.module('superdesk.editor.spellcheck'));
+    beforeEach(window.module('superdesk.apps.editor2'));
+    beforeEach(window.module('superdesk.apps.editor.spellcheck'));
 
     beforeEach(function() {
         // remove all elements from body

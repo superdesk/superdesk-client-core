@@ -1,7 +1,7 @@
 import handleError from '../helpers';
 
 /**
- * @memberof superdesk.users
+ * @memberof superdesk.apps.users
  * @ngdoc directive
  * @name sdUserPrivileges
  * @description

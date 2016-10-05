@@ -13,9 +13,9 @@ import { HighlightsService } from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 
-export default angular.module('superdesk.highlights', [
-    'superdesk.desks',
-    'superdesk.packaging',
+export default angular.module('superdesk.apps.highlights', [
+    'superdesk.apps.desks',
+    'superdesk.apps.packaging',
     'superdesk.activity',
     'superdesk.api'
 ])

@@ -9,15 +9,15 @@ import * as svc from './services';
 import * as directive from './directives';
 import { InsertFilter, ScheduleFilter } from './filters';
 
-angular.module('superdesk.ingest.send', ['superdesk.api', 'superdesk.desks'])
+angular.module('superdesk.apps.ingest.send', ['superdesk.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);
 
-angular.module('superdesk.ingest', [
+angular.module('superdesk.apps.ingest', [
     'superdesk.search',
-    'superdesk.dashboard',
+    'superdesk.apps.dashboard',
     'superdesk.widgets.base',
     'superdesk.widgets.ingeststats',
-    'superdesk.ingest.send',
+    'superdesk.apps.ingest.send',
     'superdesk.config'
 ])
     .value('feedingServices', constant.feedingServices)

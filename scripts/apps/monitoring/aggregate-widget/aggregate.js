@@ -1,4 +1,4 @@
-angular.module('superdesk.aggregate.widgets', ['superdesk.aggregate', 'superdesk.dashboard.widgets'])
+angular.module('superdesk.aggregate.widgets', ['superdesk.aggregate', 'superdesk.apps.dashboard.widgets'])
     .config(['dashboardWidgetsProvider', function(dashboardWidgets) {
         dashboardWidgets.addWidget('aggregate', {
             label: 'Monitoring',

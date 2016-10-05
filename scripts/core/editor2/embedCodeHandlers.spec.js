@@ -6,7 +6,7 @@ describe('Embed Code Handlers', function() {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
     }));
 
-    beforeEach(window.module('superdesk.editor2'));
+    beforeEach(window.module('superdesk.apps.editor2'));
 
     beforeEach(inject(function($controller, $rootScope) {
         var element = angular.element('<div></div>');

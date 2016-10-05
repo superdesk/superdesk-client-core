@@ -3,7 +3,7 @@ describe('tasks', function() {
 
     'use strict';
 
-    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.filters'));
     beforeEach(window.module('superdesk.ui'));
     beforeEach(window.module('superdesk.workspace.tasks'));

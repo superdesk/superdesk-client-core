@@ -40,7 +40,7 @@ function UserImportController($scope, userImport) {
     };
 }
 
-angular.module('superdesk.users.import', ['superdesk.activity', 'superdesk.api'])
+angular.module('superdesk.apps.users.import', ['superdesk.activity', 'superdesk.api'])
     .service('userImport', UserImportService)
     .config(['superdeskProvider', function(superdeskProvider) {
         superdeskProvider

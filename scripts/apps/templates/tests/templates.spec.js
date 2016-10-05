@@ -2,7 +2,7 @@ describe('templates', function() {
     'use strict';
 
     beforeEach(window.module('superdesk.session'));
-    beforeEach(window.module('superdesk.templates'));
+    beforeEach(window.module('superdesk.apps.templates'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     describe('templates widget', function() {

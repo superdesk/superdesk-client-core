@@ -184,9 +184,9 @@ describe('search service', function() {
 
         var scope;
 
-        beforeEach(window.module('superdesk.archive'));
-        beforeEach(window.module('superdesk.packaging'));
-        beforeEach(window.module('superdesk.authoring.multiedit'));
+        beforeEach(window.module('superdesk.apps.archive'));
+        beforeEach(window.module('superdesk.apps.packaging'));
+        beforeEach(window.module('superdesk.apps.authoring.multiedit'));
 
         beforeEach(inject(function($rootScope, $compile) {
             var elem = $compile('<div sd-multi-action-bar></div>')($rootScope.$new());
@@ -227,8 +227,8 @@ describe('sdSearchPanel directive', function () {
         $element;  // directive's DOM element
 
     beforeEach(window.module(
-        'superdesk.authoring.metadata',
-        'superdesk.searchProviders',
+        'superdesk.apps.authoring.metadata',
+        'superdesk.apps.searchProviders',
         'superdesk.search',
         'superdesk.templates-cache'  // needed so that directive's template is placed into
                      // $templateCache, avoiding the "Unexpected request" error
