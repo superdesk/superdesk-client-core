@@ -1993,7 +1993,7 @@ describe('send item directive', function() {
     }));
 
     it('can hide embargo and publish schedule if take items more than one',
-        inject(function($compile, $rootScope) {
+        inject(function($compile, $rootScope, privileges) {
 
             var scope, elem, iscope;
             scope = $rootScope.$new();
@@ -2005,6 +2005,12 @@ describe('send item directive', function() {
                     sequence: 2
                 }
             };
+            var userPrivileges = {
+                'embargo': true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
             scope.action = 'edit';
             elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
                 'data-action="action"></div>')(scope);
@@ -2015,7 +2021,7 @@ describe('send item directive', function() {
         }));
 
     it('can show embargo and publish schedule if only one take item',
-        inject(function($compile, $rootScope) {
+        inject(function($compile, $rootScope, privileges) {
 
             var scope, elem, iscope;
             scope = $rootScope.$new();
@@ -2027,6 +2033,12 @@ describe('send item directive', function() {
                     sequence: 1
                 }
             };
+            var userPrivileges = {
+                'embargo': true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
             scope.action = 'edit';
             elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
                 'data-action="action"></div>')(scope);
@@ -2036,8 +2048,36 @@ describe('send item directive', function() {
             expect(iscope.showEmbargo()).toBe(true);
         }));
 
+    it('can hide embargo if user does not have the privilege',
+        inject(function($compile, $rootScope, privileges) {
+
+            var scope, elem, iscope;
+            scope = $rootScope.$new();
+            scope.item = {
+                _id: 'foo',
+                type: 'text',
+                state: 'in-progress',
+                takes: {
+                    sequence: 1
+                }
+            };
+            var userPrivileges = {
+                'embargo': false
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            scope.action = 'edit';
+            elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
+                'data-action="action"></div>')(scope);
+            scope.$digest();
+            iscope = elem.isolateScope();
+            expect(iscope.showPublishSchedule()).toBe(true);
+            expect(iscope.showEmbargo()).toBe(false);
+        }));
+
     it('can show embargo and publish schedule if not a take item',
-        inject(function($compile, $rootScope) {
+        inject(function($compile, $rootScope, privileges) {
 
             var scope, elem, iscope;
             scope = $rootScope.$new();
@@ -2046,6 +2086,12 @@ describe('send item directive', function() {
                 type: 'text',
                 state: 'in-progress'
             };
+            var userPrivileges = {
+                'embargo': true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
             scope.action = 'edit';
             elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
                 'data-action="action"></div>')(scope);
@@ -2056,7 +2102,7 @@ describe('send item directive', function() {
         }));
 
     it('can show embargo date',
-        inject(function($compile, $rootScope) {
+        inject(function($compile, $rootScope, privileges) {
 
             var scope, elem, iscope;
             scope = $rootScope.$new();
@@ -2066,6 +2112,12 @@ describe('send item directive', function() {
                 state: 'in-progress',
                 embargo_date: Date()
             };
+            var userPrivileges = {
+                'embargo': true
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
             scope.action = 'edit';
             elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
                 'data-action="action"></div>')(scope);
