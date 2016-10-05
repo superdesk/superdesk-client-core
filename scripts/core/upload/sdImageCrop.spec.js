@@ -2,7 +2,7 @@
 
 describe('Image Crop', function() {
 
-    beforeEach(window.module('superdesk.upload'));
+    beforeEach(window.module('superdesk.core.upload'));
     beforeEach(window.module('superdesk.imageFactory'));
 
     describe('sdImageCrop directive', function() {

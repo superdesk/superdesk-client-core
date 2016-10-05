@@ -18,7 +18,7 @@ angular.module('superdesk.widgets.base', ['superdesk.itemList'])
     .factory('BaseWidgetController', svc.BaseWidgetFactory);
 
 angular.module('superdesk.apps.dashboard', [
-    'superdesk.activity',
+    'superdesk.core.activity',
     'superdesk.apps.dashboard.widgets',
     'superdesk.apps.dashboard.grid',
     'superdesk.apps.dashboard.world-clock',

@@ -1,4 +1,4 @@
-export default angular.module('superdesk.confirm.directives', [])
+export default angular.module('superdesk.core.directives.confirm', [])
     .directive('sdConfirm', ['$window', function($window) {
         return {
             scope: {

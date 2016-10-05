@@ -2,7 +2,7 @@
 
 describe('subscribers service', function() {
 
-    beforeEach(window.module('superdesk.filters'));
+    beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.apps.publish'));
 
     beforeEach(inject(function(subscribersService, $q, api) {

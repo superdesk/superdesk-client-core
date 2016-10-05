@@ -18,7 +18,7 @@ describe('superdesk ui', function() {
         });
     }));
 
-    beforeEach(window.module('superdesk.ui'));
+    beforeEach(window.module('superdesk.core.ui'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     var datetimeHelper;

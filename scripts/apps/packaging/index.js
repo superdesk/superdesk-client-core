@@ -14,8 +14,8 @@ import * as directive from './directives';
 import { PackagesService } from './services';
 
 angular.module('superdesk.apps.packaging', [
-    'superdesk.api',
-    'superdesk.activity',
+    'superdesk.core.api',
+    'superdesk.core.activity',
     'superdesk.apps.authoring'
 ])
     .service('packages', PackagesService)

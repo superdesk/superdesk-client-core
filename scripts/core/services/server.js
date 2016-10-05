@@ -1,4 +1,4 @@
-export default angular.module('superdesk.services.server', [])
+export default angular.module('superdesk.core.services.server', [])
 .service('server', ['$q', '$http', 'config', function($q, $http, config) {
     return {
         _makeUrl: function() {

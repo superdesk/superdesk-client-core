@@ -3,8 +3,8 @@ import * as directive from './directives';
 import * as ctrl from './controllers';
 
 angular.module('superdesk.workspace.content', [
-    'superdesk.api',
-    'superdesk.menu',
+    'superdesk.core.api',
+    'superdesk.core.menu',
     'superdesk.apps.archive',
     'superdesk.apps.templates',
     'superdesk.apps.packaging'

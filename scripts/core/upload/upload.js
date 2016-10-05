@@ -56,13 +56,13 @@ function FileValidatorDirective() {
     };
 }
 
-angular.module('superdesk.upload', [
+angular.module('superdesk.core.upload', [
     'ngFileUpload',
     'superdesk.imageFactory',
-    'superdesk.upload.crop',
-    'superdesk.upload.imagecrop',
-    'superdesk.upload.imagepreview',
-    'superdesk.upload.upload'
+    'superdesk.core.upload.crop',
+    'superdesk.core.upload.imagecrop',
+    'superdesk.core.upload.imagepreview',
+    'superdesk.core.upload.upload'
 ])
 .directive('sdSources', SourcesDirective)
 .directive('sdFileTypeValidator', FileValidatorDirective);

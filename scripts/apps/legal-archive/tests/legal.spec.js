@@ -1,7 +1,7 @@
 'use strict';
 
 describe('legal archive service', function() {
-    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.legal_archive'));
 
     /**

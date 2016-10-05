@@ -1,4 +1,4 @@
-export default angular.module('superdesk.directives.autofocus', [])
+export default angular.module('superdesk.core.directives.autofocus', [])
     /**
      * sdAutoFocus automatically focuses on an element on page render.
      *

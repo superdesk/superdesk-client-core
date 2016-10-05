@@ -12,24 +12,24 @@ var modules = [
     'ngResource',
     'ui.bootstrap',
 
-    'superdesk.datetime',
-    'superdesk.ui',
-    'superdesk.services.modal',
+    'superdesk.core.datetime',
+    'superdesk.core.ui',
+    'superdesk.core.services.modal',
 
     'superdesk.keyboard',
-    'superdesk.directives.autofocus',
-    'superdesk.directives.throttle',
-    'superdesk.directives.sort',
-    'superdesk.links',
-    'superdesk.check.directives',
-    'superdesk.confirm.directives',
-    'superdesk.select.directives',
-    'superdesk.permissions.directives',
-    'superdesk.avatar',
-    'superdesk.dragdrop.directives',
-    'superdesk.typeahead.directives',
-    'superdesk.slider.directives',
-    'superdesk.directives.searchList'
+    'superdesk.core.directives.autofocus',
+    'superdesk.core.directives.throttle',
+    'superdesk.core.directives.sort',
+    'superdesk.core.links',
+    'superdesk.core.directives.check',
+    'superdesk.core.directives.confirm',
+    'superdesk.core.directives.select',
+    'superdesk.core.directives.permissions',
+    'superdesk.core.avatar',
+    'superdesk.core.directives.dragdrop',
+    'superdesk.core.directives.typeahead',
+    'superdesk.core.directives.slider',
+    'superdesk.core.directives.searchList'
 ];
 
 export default angular.module('superdesk.docs.core', modules);

@@ -3,7 +3,7 @@ var render = function(element, value) {
     element.attr('checked', !!value);
 };
 
-export default angular.module('superdesk.check.directives', [])
+export default angular.module('superdesk.core.directives.check', [])
     /**
      * sdCheck creates a custom-styled checkbox.
      *

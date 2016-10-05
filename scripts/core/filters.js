@@ -1,4 +1,4 @@
-export default angular.module('superdesk.filters', []).
+export default angular.module('superdesk.core.filters', []).
     filter('any', function() {
         return function(data, key) {
             return _.any(data, key);

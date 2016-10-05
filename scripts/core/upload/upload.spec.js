@@ -3,7 +3,7 @@
 
 describe('upload module', function() {
 
-    beforeEach(window.module('superdesk.upload'));
+    beforeEach(window.module('superdesk.core.upload'));
 
     describe('file type validator directive', function() {
         it('can check', inject(function($rootScope, $compile) {

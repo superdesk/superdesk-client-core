@@ -2,7 +2,7 @@
 
 describe('upload service', function() {
 
-    beforeEach(window.module('superdesk.upload'));
+    beforeEach(window.module('superdesk.core.upload'));
 
     beforeEach(window.module(function($provide) {
         $provide.service('$upload', ['$q', function($q) {

@@ -1,4 +1,4 @@
-    angular.module('superdesk.auth.basic', []).service('authAdapter', ['$http', '$q', 'urls',
+    angular.module('superdesk.core.auth.basic', []).service('authAdapter', ['$http', '$q', 'urls',
     function ($http, $q, urls) {
 
         /**

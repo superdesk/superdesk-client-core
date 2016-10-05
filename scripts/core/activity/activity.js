@@ -1,8 +1,8 @@
 import langmap from 'core/lang';
 
 var constants = {
-    MENU_MAIN: 'superdesk.menu.main',
-    MENU_SETTINGS: 'superdesk.menu.settings',
+    MENU_MAIN: 'superdesk.core.menu.main',
+    MENU_SETTINGS: 'superdesk.core.menu.settings',
     ACTION_EDIT: 'edit',
     ACTION_LIST: 'list',
     ACTION_VIEW: 'view',
@@ -279,19 +279,19 @@ function SuperdeskProvider($routeProvider, _) {
         }];
 }
 
-angular.module('superdesk.activity', [
+angular.module('superdesk.core.activity', [
     'ngRoute',
-    'superdesk.notify',
+    'superdesk.core.notify',
     'superdesk.features',
-    'superdesk.translate',
-    'superdesk.services.beta',
-    'superdesk.services.modal',
+    'superdesk.core.translate',
+    'superdesk.core.services.beta',
+    'superdesk.core.services.modal',
     'superdesk.privileges',
     'superdesk.keyboard',
 
-    'superdesk.activity.chooser',
-    'superdesk.activity.list',
-    'superdesk.activity.modal'
+    'superdesk.core.activity.chooser',
+    'superdesk.core.activity.list',
+    'superdesk.core.activity.modal'
 ])
 .constant('lodash', window._)
 .constant('langmap', langmap)

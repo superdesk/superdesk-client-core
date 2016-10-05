@@ -44,7 +44,7 @@ function GoogleTracking(config) {
     };
 }
 
-angular.module('superdesk.analytics', [])
+angular.module('superdesk.core.analytics', [])
 
 .service('analytics', ['config', function(config) {
     if (config.analytics.piwik.url) {

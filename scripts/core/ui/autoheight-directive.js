@@ -8,7 +8,7 @@
  * https://github.com/monospaced/angular-elastic/blob/master/elastic.js
  *
  */
-angular.module('superdesk.ui.autoheight', []).directive('sdAutoHeight', ['$window', function($window) {
+angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$window', function($window) {
     return {
         require: 'ngModel',
         restrict: 'A, C',

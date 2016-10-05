@@ -9,10 +9,10 @@ import * as svc from './services';
 import * as ctrl from './controllers';
 
 angular.module('superdesk.apps.archive.directives', [
-    'superdesk.filters',
+    'superdesk.core.filters',
     'superdesk.apps.authoring',
     'superdesk.apps.ingest',
-    'superdesk.workflow'
+    'superdesk.core.workflow'
 ])
     .directive('sdItemLock', directive.ItemLock)
     .directive('sdItemState', directive.ItemState)

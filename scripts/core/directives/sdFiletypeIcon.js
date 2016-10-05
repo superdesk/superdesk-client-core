@@ -1,4 +1,4 @@
-export default angular.module('superdesk.directives.filetypeIcon', [])
+export default angular.module('superdesk.core.directives.filetypeIcon', [])
 /**
  * sdFiletypeIcon adds the "filetype-icon-*" class based on the item.
  *

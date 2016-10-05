@@ -135,14 +135,14 @@ function DateTimeHelperService(moment, config) {
     };
 }
 
-export default angular.module('superdesk.datetime', [
+export default angular.module('superdesk.core.datetime', [
     'superdesk.config',
     'ngResource',
-    'superdesk.datetime.absdate',
-    'superdesk.datetime.groupdates',
-    'superdesk.datetime.reldatecomplex',
-    'superdesk.datetime.reldate',
-    'superdesk.translate'
+    'superdesk.core.datetime.absdate',
+    'superdesk.core.datetime.groupdates',
+    'superdesk.core.datetime.reldatecomplex',
+    'superdesk.core.datetime.reldate',
+    'superdesk.core.translate'
 ])
     .config(['defaultConfigProvider', function(defaultConfig) {
         defaultConfig.set('shortTimeFormat', 'HH:mm'); // 24h format

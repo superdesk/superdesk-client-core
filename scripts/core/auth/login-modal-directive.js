@@ -1,7 +1,7 @@
 /**
  * Login modal is watching session token and displays modal when needed
  */
-angular.module('superdesk.auth.login', []).directive('sdLoginModal', [
+angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
 'session',
 'auth',
 'features',

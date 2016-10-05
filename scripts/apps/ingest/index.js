@@ -9,7 +9,7 @@ import * as svc from './services';
 import * as directive from './directives';
 import { InsertFilter, ScheduleFilter } from './filters';
 
-angular.module('superdesk.apps.ingest.send', ['superdesk.api', 'superdesk.apps.desks'])
+angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);
 
 angular.module('superdesk.apps.ingest', [

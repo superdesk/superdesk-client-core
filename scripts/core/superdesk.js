@@ -1,54 +1,61 @@
+/* globals __SUPERDESK_CONFIG__: true */
+const appConfig = __SUPERDESK_CONFIG__;
+
 var modules = [
     'ngRoute',
     'ngResource',
-    'ui.bootstrap',
     'ngFileUpload',
-    'superdesk.activity',
-    'superdesk.analytics',
-    'superdesk.api',
-    'superdesk.auth',
-    'superdesk.services.beta',
-    'superdesk.datetime',
-    'superdesk.elastic',
-    'superdesk.error',
-    'superdesk.notify',
-    'superdesk.ui',
-    'superdesk.upload',
-    'superdesk.menu',
-    'superdesk.filters',
+
+    'ui.bootstrap',
+
+    'superdesk.core.activity',
+    'superdesk.core.analytics',
+    'superdesk.core.api',
+    'superdesk.core.auth',
+    'superdesk.core.datetime',
+    'superdesk.core.elastic',
+    'superdesk.core.error',
+    'superdesk.core.notify',
+    'superdesk.core.ui',
+    'superdesk.core.upload',
+    'superdesk.core.menu',
+    'superdesk.core.filters',
+    'superdesk.core.preferences',
+    'superdesk.core.translate',
+    'superdesk.core.workflow',
+    'superdesk.core.loading',
+    'superdesk.core.links',
+    'superdesk.core.avatar',
+
     // services/
-    'superdesk.services.data',
-    'superdesk.services.modal',
-    'superdesk.services.dragdrop',
-    'superdesk.services.server',
-    'superdesk.services.entity',
-    'superdesk.services.permissions',
-    'superdesk.services.storage',
-    'superdesk.preferences',
-    'superdesk.translate',
-    'superdesk.workflow',
+    'superdesk.core.services.beta',
+    'superdesk.core.services.data',
+    'superdesk.core.services.modal',
+    'superdesk.core.services.dragdrop',
+    'superdesk.core.services.server',
+    'superdesk.core.services.entity',
+    'superdesk.core.services.permissions',
+    'superdesk.core.services.storage',
+
     // directives/
-    'superdesk.directives.autofocus',
-    'superdesk.directives.throttle',
-    'superdesk.directives.sort',
-    'superdesk.directives.passwordStrength',
-    'superdesk.links',
-    'superdesk.check.directives',
-    'superdesk.confirm.directives',
-    'superdesk.select.directives',
-    'superdesk.permissions.directives',
-    'superdesk.avatar',
-    'superdesk.dragdrop.directives',
-    'superdesk.typeahead.directives',
-    'superdesk.slider.directives',
-    'superdesk.directives.searchList',
-    'superdesk.directives.filetypeIcon',
-    'superdesk.loading',
-    'superdesk.config',
+    'superdesk.core.directives.autofocus',
+    'superdesk.core.directives.throttle',
+    'superdesk.core.directives.sort',
+    'superdesk.core.directives.passwordStrength',
+    'superdesk.core.directives.searchList',
+    'superdesk.core.directives.filetypeIcon',
+    'superdesk.core.directives.check',
+    'superdesk.core.directives.confirm',
+    'superdesk.core.directives.select',
+    'superdesk.core.directives.permissions',
+    'superdesk.core.directives.dragdrop',
+    'superdesk.core.directives.typeahead',
+    'superdesk.core.directives.slider',
+
     'superdesk.templates-cache'
 ];
 
-angular.module('superdesk.loading', [])
+angular.module('superdesk.core.loading', [])
 
     // prevent routing before there is auth token
     .run(['$rootScope', '$route', '$location', '$http', 'session', 'preferencesService',
@@ -128,4 +135,9 @@ angular.module('superdesk.config', [])
     }]);
 
 angular.module('superdesk.templates-cache', []);
-angular.module('superdesk', modules);
+
+angular.module('superdesk.core', modules)
+    .constant('lodash', _)
+    .config(['$routeProvider', function($routeProvider) {
+        $routeProvider.when('/', {redirectTo: appConfig.defaultRoute || '/workspace'});
+    }]);

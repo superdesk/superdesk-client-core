@@ -8,8 +8,8 @@ describe('MetadataWidgetCtrl controller', function () {
 
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.desks'));
-    beforeEach(window.module('superdesk.ui'));
-    beforeEach(window.module('superdesk.filters'));
+    beforeEach(window.module('superdesk.core.ui'));
+    beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
 
     beforeEach(window.module(function($provide) {
@@ -127,8 +127,8 @@ describe('metadata terms directive', function() {
     itemSubjects = [{'name': 'b', 'qcode': '456', 'parent': '123'}, {'name': 'test', 'qcode': '111'}];
 
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.api'));
-    beforeEach(window.module('superdesk.filters'));
+    beforeEach(window.module('superdesk.core.api'));
+    beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
 

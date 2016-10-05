@@ -18,7 +18,7 @@ import * as directive from './directives';
 import { CardsService } from './services';
 import { SplitFilter } from './filters';
 
-angular.module('superdesk.apps.monitoring', ['superdesk.api', 'superdesk.aggregate', 'superdesk.search', 'superdesk.ui'])
+angular.module('superdesk.apps.monitoring', ['superdesk.core.api', 'superdesk.aggregate', 'superdesk.search', 'superdesk.core.ui'])
     .controller('Monitoring', ctrl.MonitoringController)
 
     .service('cards', CardsService)

@@ -15,8 +15,8 @@ import * as directive from './directives';
 
 angular.module('superdesk.apps.dictionaries', [
     'vs-repeat',
-    'superdesk.activity',
-    'superdesk.upload'
+    'superdesk.core.activity',
+    'superdesk.core.upload'
 ])
     .config(['superdeskProvider', function(superdesk) {
         superdesk.activity('/settings/dictionaries', {

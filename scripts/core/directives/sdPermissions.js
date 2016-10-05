@@ -1,4 +1,4 @@
-export default angular.module('superdesk.permissions.directives', [])
+export default angular.module('superdesk.core.directives.permissions', [])
     /**
      * sdPermissions checks if user has specified permissions and assigns
      * to specified model to use in displaying/hiding/disabling elements.

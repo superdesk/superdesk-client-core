@@ -2,7 +2,7 @@ import './world-clock.less';
 import d3 from 'd3';
 
 angular.module('superdesk.apps.dashboard.world-clock', [
-    'superdesk.apps.dashboard', 'superdesk.datetime'
+    'superdesk.apps.dashboard', 'superdesk.core.datetime'
 ])
     .directive('sdWorldclock', [function() {
         return {

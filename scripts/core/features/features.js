@@ -9,5 +9,5 @@ function Features(urls) {
 /**
  * Provides info what features are available on server
  */
-angular.module('superdesk.features', ['superdesk.api'])
+angular.module('superdesk.features', ['superdesk.core.api'])
     .service('features', Features);

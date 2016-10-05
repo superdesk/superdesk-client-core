@@ -4,7 +4,7 @@ beforeEach(window.module(function($provide) {
 
 beforeEach(window.module('superdesk.mocks'));
 beforeEach(window.module('superdesk.session'));
-beforeEach(window.module('superdesk.services.storage'));
+beforeEach(window.module('superdesk.core.services.storage'));
 
 /**
  * Mock services that call server on init and thus would require mocking all the time

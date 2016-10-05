@@ -8,8 +8,8 @@ import * as filter from './filters';
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 
 angular.module('superdesk.apps.authoring', [
-        'superdesk.menu',
-        'superdesk.activity',
+        'superdesk.core.menu',
+        'superdesk.core.activity',
         'superdesk.apps.authoring.widgets',
         'superdesk.apps.authoring.metadata',
         'superdesk.apps.authoring.comments',

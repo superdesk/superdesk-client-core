@@ -2,8 +2,8 @@
 describe('Reload Service', function() {
     beforeEach(window.module('superdesk.apps.notification'));
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.api'));
-    beforeEach(window.module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.core.api'));
+    beforeEach(window.module('superdesk.core.preferences'));
 
     var USER_URL = '/users/1';
     var USER = {

@@ -1,4 +1,4 @@
-export default angular.module('superdesk.links', [])
+export default angular.module('superdesk.core.links', [])
     /**
      * sdWithParams manipulates href attribute to include current parameters.
      *

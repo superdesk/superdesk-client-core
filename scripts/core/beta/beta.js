@@ -1,4 +1,4 @@
-angular.module('superdesk.services.beta', ['superdesk.preferences'])
+angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
 
 /**
  * Superdesk service for enabling/disabling beta preview in app

@@ -3,8 +3,8 @@ import { LegalArchiveController } from './controllers';
 import { LegalItemSortbar } from './directives';
 
 export default angular.module('superdesk.legal_archive', [
-    'superdesk.activity',
-    'superdesk.api'
+    'superdesk.core.activity',
+    'superdesk.core.api'
 ])
     .service('legal', LegalArchiveService)
     .directive('sdLegalItemSortbar', LegalItemSortbar)

@@ -1,10 +1,10 @@
 describe('auth service', function() {
     beforeEach(function() {
-        window.module('superdesk.preferences');
-        window.module('superdesk.services.storage');
-        window.module('superdesk.auth');
+        window.module('superdesk.core.preferences');
+        window.module('superdesk.core.services.storage');
+        window.module('superdesk.core.auth');
         window.module('superdesk.session');
-        window.module('superdesk.menu');
+        window.module('superdesk.core.menu');
         window.module('superdesk.apps.authoring');
         window.module(function($provide) {
             $provide.service('api', function($q) {

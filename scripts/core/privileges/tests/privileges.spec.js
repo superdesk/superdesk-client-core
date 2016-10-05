@@ -2,7 +2,7 @@
 
 describe('privileges', function() {
 
-    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.privileges'));
 
     beforeEach(inject(function(preferencesService, api, $q) {

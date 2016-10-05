@@ -4,7 +4,7 @@
  * This module provides localization support.
  * It's using angular-gettext.
  */
-export default angular.module('superdesk.translate', ['gettext', 'superdesk.session'])
+export default angular.module('superdesk.core.translate', ['gettext', 'superdesk.session'])
     .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS',
         function(gettextCatalog, $location, $rootScope, SESSION_EVENTS) {
 

@@ -102,5 +102,5 @@ function PasswordStrength(gettext, $interpolate) {
 }
 
 export default angular
-    .module('superdesk.directives.passwordStrength', [])
+    .module('superdesk.core.directives.passwordStrength', [])
     .directive('sdPasswordStrength', PasswordStrength);

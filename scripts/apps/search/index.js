@@ -6,16 +6,16 @@ import { MultiActionBarController } from './controllers';
 
 angular.module('superdesk.search.react', [
     'superdesk.apps.highlights',
-    'superdesk.datetime',
+    'superdesk.core.datetime',
     'superdesk.apps.authoring.metadata'
 ])
     .service('monitoringState', svc.MonitoringState)
     .directive('sdItemsList', directive.ItemList);
 
 angular.module('superdesk.search', [
-    'superdesk.api',
+    'superdesk.core.api',
     'superdesk.apps.desks',
-    'superdesk.activity',
+    'superdesk.core.activity',
     'superdesk.list',
     'superdesk.keyboard',
     'superdesk.search.react'

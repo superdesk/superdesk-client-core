@@ -210,7 +210,7 @@ function MarkAsReadDirective(userNotifications, $timeout) {
     };
 }
 
-angular.module('superdesk.menu.notifications', ['superdesk.asset', 'superdesk.session'])
+angular.module('superdesk.core.menu.notifications', ['superdesk.asset', 'superdesk.session'])
 
     .service('userNotifications', UserNotificationsService)
     .service('deskNotifications', DeskNotificationsService)

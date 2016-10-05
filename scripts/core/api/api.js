@@ -1,10 +1,10 @@
-angular.module('superdesk.api', [
-    'superdesk.api.http',
-    'superdesk.api.service',
-    'superdesk.api.request',
-    'superdesk.api.urls',
-    'superdesk.api.timeout',
-    'superdesk.api.allowed'
+angular.module('superdesk.core.api', [
+    'superdesk.core.api.http',
+    'superdesk.core.api.service',
+    'superdesk.core.api.request',
+    'superdesk.core.api.urls',
+    'superdesk.core.api.timeout',
+    'superdesk.core.api.allowed'
 ])
 
     .config(['$httpProvider', function($httpProvider) {

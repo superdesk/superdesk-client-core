@@ -173,8 +173,8 @@ function MacrosReplaceDirective(macros, editor) {
 }
 
 angular.module('superdesk.apps.authoring.macros', [
-    'superdesk.api',
-    'superdesk.notify',
+    'superdesk.core.api',
+    'superdesk.core.notify',
     'superdesk.apps.authoring.widgets',
     'superdesk.apps.authoring.autosave'
 ])

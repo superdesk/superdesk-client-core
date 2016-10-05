@@ -16,8 +16,8 @@ import * as directive from './directives';
 export default angular.module('superdesk.apps.highlights', [
     'superdesk.apps.desks',
     'superdesk.apps.packaging',
-    'superdesk.activity',
-    'superdesk.api'
+    'superdesk.core.activity',
+    'superdesk.core.api'
 ])
     .service('highlightsService', HighlightsService)
 

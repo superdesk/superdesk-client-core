@@ -8,7 +8,7 @@
  * @scope {object} ngModel
  * @scope {string} sdGroupDates - model field to group by
  */
-angular.module('superdesk.datetime.groupdates', []).directive('sdGroupDates', [ function() {
+angular.module('superdesk.core.datetime.groupdates', []).directive('sdGroupDates', [ function() {
     var lastDate = null;
     var COMPARE_FORMAT = 'YYYY-M-D';
     var DISPLAY_DATE_FORMAT = 'D. MMMM YYYY';

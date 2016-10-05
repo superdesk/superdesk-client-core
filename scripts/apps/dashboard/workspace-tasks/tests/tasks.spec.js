@@ -4,8 +4,8 @@ describe('tasks', function() {
     'use strict';
 
     beforeEach(window.module('superdesk.apps.desks'));
-    beforeEach(window.module('superdesk.filters'));
-    beforeEach(window.module('superdesk.ui'));
+    beforeEach(window.module('superdesk.core.filters'));
+    beforeEach(window.module('superdesk.core.ui'));
     beforeEach(window.module('superdesk.workspace.tasks'));
 
     describe('task controller', function() {

@@ -1,4 +1,4 @@
-angular.module('superdesk.services.storage', [])
+angular.module('superdesk.core.services.storage', [])
     /**
      * LocalStorage wrapper
      *

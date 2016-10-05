@@ -261,7 +261,7 @@ function ArticleDashboardDirective() {
 }
 
 angular.module('superdesk.apps.authoring.workqueue', [
-    'superdesk.activity',
+    'superdesk.core.activity',
     'superdesk.apps.notification',
     'superdesk.apps.authoring.multiedit'
 ])

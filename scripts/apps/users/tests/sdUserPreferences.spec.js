@@ -9,7 +9,7 @@ describe('sdUserPreferences directive', function() {
 
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
-    beforeEach(window.module('superdesk.filters'));
+    beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.publish'));
 

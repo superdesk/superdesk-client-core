@@ -13,10 +13,10 @@ describe('authoring', function() {
 
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.editor'));
-    beforeEach(window.module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.authoring'));
-    beforeEach(window.module('superdesk.auth'));
+    beforeEach(window.module('superdesk.core.auth'));
     beforeEach(window.module('superdesk.workspace.content'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.privileges'));
@@ -1930,8 +1930,8 @@ describe('authoring container directive', function() {
 
 });
 
-describe('authoring themes', function() {
-    beforeEach(window.module('superdesk.preferences'));
+describe('authoring themes', function () {
+    beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));
 
     beforeEach(inject(function($q, preferencesService) {
@@ -1982,7 +1982,7 @@ describe('authoring themes', function() {
 
 describe('send item directive', function() {
     beforeEach(window.module('superdesk.apps.editor'));
-    beforeEach(window.module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.api'));
