@@ -8,7 +8,7 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-import './index.less';
+import './index.scss';
 
 import 'jquery-ui/jquery-ui';
 import 'jquery-jcrop';

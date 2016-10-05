@@ -1,0 +1,528 @@
+// menu.scss
+// Styling for the superdesk top menu and sidebar main menu
+// ----------------------------------------------------------------------------------------
+@import '~variables.scss';
+@import '~mixins.scss';
+
+
+/*
+====================================================
+    Main navigation
+====================================================
+*/
+
+//beta switch button
+.beta-switch {
+    background: none !important;
+    border-right: none !important;
+    span {
+        height: 10px;
+        font-size: 10px;
+        padding: 2px 5px;
+        @include border-radius(2px);
+        &.stable {
+            background: #111;
+            color: #777;
+        }
+        &.beta {
+            background: #009360;
+            color: #fff;
+        }
+    }
+}
+
+// top menu
+#top-menu {
+    background: #2c2c2c;
+    height: $nav-height;
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 0;
+    z-index: $zindexFixedNavbar;
+    margin-bottom: 0; // remove 18px margin for static navbar
+
+    @include transition( all 0.3s ease);
+    &.menu-open {
+        left: $sf-main-menu-width !important;
+        right: 0 !important;
+    }
+
+    &.test-environment {
+        background: #ff0000;
+        &:after {
+            content: attr(data-text);
+            color: black;
+            font-size: 47px;
+            color: black;
+            top: 13px;
+            position: absolute;
+        }
+    }
+
+    a, button {
+        height: $nav-height;
+        display: inline-block;
+        line-height: $nav-height;
+        padding: 0 25px;
+        background: #202020;
+        border:0;
+        border-right: 1px solid #333;
+        //.box-shadow(inset -1px 0 0 #111);
+        @include text-normal();
+
+        &:hover {
+            text-decoration: none;
+            background: #000;
+        }
+
+        &.main-link {
+            font-size: 15px;
+            color: #aaa;
+        }
+
+        //main nav toggle button
+        &.collapse-nav {
+            width: $nav-height !important;
+            text-align: center;
+            padding: 0;
+            line-height: 0;
+            &:hover {
+                background: #101010;
+                cursor: pointer;
+            }
+        }
+
+        &.current-user {
+            width: $nav-height;
+            position: relative;
+            padding: 0 10px;
+            box-sizing: border-box;
+            width: 48px;
+            @include box-shadow(none);
+            .avatar {
+                @include border-radius(50%);
+            }
+            .label {
+                position: absolute;
+                top: 3px;
+                left: 3px;
+                text-shadow: none;
+            }
+        }
+    }
+
+    .top-nav {
+        height: $nav-height;
+        float: left;
+    }
+        .dropdown {
+            position: relative;
+            float: left;
+            &.navbtn, button {
+                @include box-shadow(none);
+                border: none;
+                                width: auto;
+                .name {
+                    display: block;
+                    float: left;
+                    min-width: 155px;
+                    max-width: 200px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    text-align: left;
+                    text-transform: uppercase;
+                }
+            }
+            &.open {
+                .dropdown-toggle {
+                    background-color: $white;
+                    color: #5aa1bf;
+                    .caret {
+                        border-top-color: #595959;
+                    }
+                    &.workspace {
+                        background-color: $white;
+                        color: $purple;
+                    }
+                }
+            }
+            .dropdown-toggle {
+                background-color: $sd-blue;
+                color: $white;
+                padding: 0 15px;
+                font-size: 12px;
+                overflow: hidden;
+                .caret {
+                    border-top-color: $white;
+                }
+                &.workspace {
+                    background-color: $purple;
+                }
+            }
+            .dropdown-menu {
+                min-width: 295px;
+                max-height: 550px;
+                overflow: auto;
+                margin: 0;
+                padding: 0;
+                z-index: 4;
+                .menu-label {
+                    font-size: 10px;
+                    color: $grayLight;
+                    padding: 5px 15px;
+                    margin-top: 9px;
+                    border-top: 1px solid #ebebeb;
+                    &:first-of-type {
+                        margin-top: 0;
+                        border-top: 0;
+                    }
+                }
+                .no-desk {
+                    width: 100%;
+                    background-color: $white;
+                    color: $grayLight;
+                    border: none;
+                    height: auto;
+                    font-size: 12px;
+                    line-height: 1.3em;
+                    margin: 0;
+                    padding: 10px 15px;
+                    border-radius: 0;
+                }
+                button {
+                    width: 100%;
+                    background-color: $white;
+                    color: $sd-blue-text;
+                    border: none;
+                    height: auto;
+                    font-size: 12px;
+                    line-height: 1.3em;
+                    margin: 0;
+                    padding: 10px 15px;
+                    border-radius: 0;
+                    text-transform: uppercase;
+                    &[disabled] {
+                        &:hover {
+                            cursor: default;
+                            background-color: $white;
+                        }
+                    }
+                    &.action-btn {
+                        font-size: 13px;
+                        margin-top: 9px;
+                        padding: 12px 15px;
+                        text-transform: none;
+                        color: #757676;
+                        border-top: 1px solid #ebebeb;
+                    }
+                    &:hover {
+                        background-color: #eef5f8;
+                    }
+                }
+                .workspace-item {
+                    button {
+                        color: $purple;
+                    }
+                }
+            }
+        }
+}
+
+#side-menu {
+    position: absolute;
+    width: $sidebar-width;
+    top: $nav-height;
+    left: 0;
+    bottom: $authoring-opened-articles;
+    background-color: $sidebar-background;
+    z-index: $zindexFixedNavbar - 1;
+    @include box-shadow(2px 0 5px 0 rgba(0,0,0,0.25));
+    @include transition( all 0.3s ease);
+    &.menu-open {
+        left: $sf-main-menu-width !important;
+        right: 0 !important;
+    }
+    hr {
+        width: $sidebar-width / 2;
+        margin: 18px $sidebar-width / 4;
+        border-top: 1px dotted #9b9b9b;
+        border-bottom: 0;
+    }
+    i {
+      opacity: 1;
+    }
+    li {
+      text-align: center;
+      line-height: $sidebar-width;
+    }
+    a, .dropdown-toggle {
+      display: block;
+      margin: 6px auto;
+      border-radius: 50%;
+      height:36px;
+      width: 36px;
+      opacity: .5;
+      overflow: hidden;
+      transition: opacity 0.2s, background-color 0.2s;
+
+      position: relative;
+      i.big-icon-view {
+         background-size: 24px;
+      }
+    }
+    a:hover, .dropdown-toggle:hover {
+      opacity: 1;
+      background-color: rgba(255, 255, 255, .6);
+    }
+    a:active, .dropdown-toggle:active {
+      background-color: $sd-blue;
+      opacity: 1;
+    }
+    .main-icon {
+      position: absolute;
+      top: 6px;
+      left: 4px;
+      transition: left 0.2s ease-out;
+    }
+    .helper-icon {
+      position: absolute;
+      top: 6px;
+      left: 30px;
+      transition: left 0.2s ease-out, transform 0.2s;
+    }
+    .active {
+      a, .dropdown-toggle {
+        background-color: $sd-blue;
+        opacity: 1;
+      }
+    }
+    .dropright {
+      display: block;
+      .dropdown-menu {
+        top: -10px;
+      }
+    }
+
+}
+#side-menu {
+  .authoring-active {
+    .active {
+      a:hover, .dropdown-toggle:hover {
+        .main-icon {
+          left: -30px;
+        }
+        .helper-icon {
+          left: 4px;
+        }
+      }
+    }
+    &.list-hidden {
+      .active {
+        .main-icon {
+          left: 4px;
+        }
+        .helper-icon {
+          transform: rotate(180deg);
+          left: -30px;
+        }
+      }
+    }
+  }
+}
+
+#main-menu {
+    position: fixed;
+    top: 0;
+    left:0;
+    bottom: 0;
+    width: $sf-main-menu-width;
+    background: #272727;
+    @include user-select(none);
+    @include box-shadow(inset -5px 0 6px -0px #181818);
+    .header {
+        height: $nav-height;
+        width: 100%;
+        @include box-sizing(border-box);
+        @include box-shadow(0 2px 3px 0px #202020);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    }
+    .content {
+        position: absolute;
+        bottom: 190px;
+        left:0; right: 0;
+        top:$nav-height;
+        @include box-sizing(border-box);
+        overflow: auto;
+        > ul {
+            list-style-type: none;
+            margin:0;
+            padding: 0;
+            > li {
+                > a {
+                    @include user-select(none);
+                    display: block;
+                    position: relative;
+                    height: 100%;
+                    @include box-sizing(border-box);
+                    padding-left: 35px;
+                    height: 37px;
+                    line-height: 36px;
+                    font-size: 14px;
+                    color: #f0f0f0;
+                    text-decoration: none;
+                    text-transform: capitalize;
+                    i {
+                        position: absolute;
+                        top:8px;
+                        right:10px;
+                        @include opacity(30);
+                    }
+                    &:hover {
+                        background: #283032;
+                        border-top-color: #283032;
+                        color:#3299b7;
+                        cursor: pointer;
+                    }
+                }
+                ul {
+                    display: none;
+                }
+                &.open {
+                    > a {
+                        border-bottom:1px solid #1b1b1b;
+                        @include box-shadow(none);
+                        i {
+                            background-position: -313px -119px;
+                        }
+                    }
+                    ul {
+                        display: block;
+                        list-style-type: none;
+                        margin:0;
+                        padding: 0;
+                        @include box-shadow(inset 0 7px 5px -5px #202020);
+                        @include user-select(none);
+                        li a {
+                            color: #9e9e9e;
+                            font-size: 13px;
+                            line-height: 32px;
+                            height: 32px;
+                            padding-left: 30px;
+                            text-decoration: none;
+                            display: block;
+                            &:hover {
+                                color: #c8c8c8;
+                            }
+                        }
+                    }
+                    + li {
+                        > a {
+                            border-top-color: #353535;
+                            @include box-shadow-both(inset 0 -1px 0px 0px #1b1b1b,0 -2px 2px 0px #202020);
+                        }
+                        &.open {
+                            > a {
+                                @include box-shadow(0 -2px 2px 0px #202020);
+                            }
+                        }
+                    }
+                }
+
+                &.active > a {
+                    background: #1f1f1f;
+                    color:#3299b7;
+                }
+            }
+            > li.main-menu_group-header {
+                font-size: 11px;
+                text-transform: uppercase;
+                padding: 20px 0 6px 20px;
+                color: rgba(255, 255, 255, 0.5);
+                letter-spacing: 0.06em;
+            }
+        }
+    }
+    .footer {
+        position: absolute;
+        height: 190px;
+        @include box-sizing(border-box);
+        left:0; right:0; bottom: 0;
+        border-top: 1px solid #1f1f1f;
+        @include box-shadow-both(inset 0 1px 0px 0px #353535,0 -2px 3px 0px #232323);
+        text-align: center;
+        .icon-superdesk {
+            background: url(~images/superdesk-logo.svg) no-repeat 0 0;
+            width: 154px;
+            height: 48px;
+            margin-top: 20px;
+        }
+        .powered {
+            display: block;
+            color: rgba(255,255,255,0.3);
+            font-size: 11px;
+            margin-top: 8px;
+            font-weight: 300;
+        }
+        .about {
+            display: block;
+            @include box-sizing(border-box);
+            color: rgba(255,255,255,0.9);
+            background-color: rgba(0,0,0,0.3);
+            //border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 12px;
+            margin-top: 12px;
+            font-weight: 00;
+            padding: 16px 20px;
+            font-weight: 500;
+            letter-spacing:0.1em;
+            a {
+              color: rgba(255,255,255,0.9);
+              cursor: pointer;
+            }
+
+        }
+    }
+}
+
+// About modal content
+
+.about-content {
+  position: relative;
+  .sf-logo {
+    width: 110px;
+    background-size: 110px;
+    opacity: 0.5;
+    position: absolute;
+    top:0;
+    right:0;
+  }
+}
+
+
+
+@media screen and (max-width: 1180px) {
+    .top-menu {
+        &.menu-open {
+            left: $sf-main-menu-width !important;
+            right: -$sf-main-menu-width !important;
+        }
+    }
+
+}
+
+@media screen and (max-width: 320px) {
+
+    .sf-main-menu {
+        width:260px;
+    }
+    .top-menu {
+        max-height: 40px;
+        overflow: hidden;
+        &.menu-open {
+            left: 260px !important;
+            right: -260px !important;
+        }
+    }
+}

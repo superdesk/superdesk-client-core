@@ -1,8 +1,8 @@
 // styles
-import './activity-widget/widget-activity.less';
-import './styles/change-avatar.less';
-import './styles/settings.less';
-import './styles/users.less';
+import './activity-widget/widget-activity.scss';
+import './styles/change-avatar.scss';
+import './styles/settings.scss';
+import './styles/users.scss';
 
 import './activity-widget/activity';
 import './import/import';

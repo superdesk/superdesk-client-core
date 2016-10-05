@@ -1,4 +1,4 @@
-import './styles/planning.less';
+import './styles/planning.scss';
 
 var coverageTypes = ['story', 'photo', 'video', 'graphics', 'live-blogging'];
 

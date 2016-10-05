@@ -7,7 +7,7 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-import './styles/vocabularies.less';
+import './styles/vocabularies.scss';
 
 import { VocabularyService, SchemaFactory } from './services';
 import * as ctrl from './controllers';

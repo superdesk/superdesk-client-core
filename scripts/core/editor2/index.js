@@ -1,4 +1,4 @@
-import './styles.less';
+import './styles.scss';
 
 import './editor';
 import './editor.ctrl';

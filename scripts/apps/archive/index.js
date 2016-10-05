@@ -1,5 +1,5 @@
 //styles
-import './styles/related-item.less';
+import './styles/related-item.scss';
 
 //scripts
 import './related-item-widget/relatedItem';

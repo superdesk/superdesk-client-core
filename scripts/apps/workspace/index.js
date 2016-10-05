@@ -1,5 +1,5 @@
 // styles
-import './content/styles/profiles.less';
+import './content/styles/profiles.scss';
 
 // scripts
 import './content';

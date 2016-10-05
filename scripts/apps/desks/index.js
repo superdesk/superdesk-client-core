@@ -7,7 +7,7 @@
 * AUTHORS and LICENSE files distributed with this source code, or
 * at https://www.sourcefabric.org/superdesk/license
 */
-import './styles/desks.less';
+import './styles/desks.scss';
 
 import * as ctrl from './controllers';
 import * as directive from './directives';

@@ -1,5 +1,5 @@
 // styles
-import './styles/notify.less';
+import './styles/notify.scss';
 
 // scripts
 import './notify';

@@ -1,4 +1,4 @@
-import './styles/tasks.less';
+import './styles/tasks.scss';
 
 TasksService.$inject = ['desks', '$rootScope', 'api', 'datetimeHelper'];
 function TasksService(desks, $rootScope, api, datetimeHelper) {

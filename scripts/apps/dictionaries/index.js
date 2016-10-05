@@ -7,7 +7,7 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-import './styles/dictionaries.less';
+import './styles/dictionaries.scss';
 
 import { DictionaryService } from './services';
 import { DictionaryEditController, DictionaryConfigController } from './controllers';

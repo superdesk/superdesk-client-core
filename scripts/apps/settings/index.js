@@ -1,5 +1,5 @@
 // styles
-import './styles/settings.less';
+import './styles/settings.scss';
 
 import * as directive from './directives';
 

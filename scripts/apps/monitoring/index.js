@@ -7,8 +7,8 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-import './styles/aggregate.less';
-import './styles/monitoring.less';
+import './styles/aggregate.scss';
+import './styles/monitoring.scss';
 
 import './aggregate-widget/aggregate';
 
