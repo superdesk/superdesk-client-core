@@ -2,14 +2,27 @@
 
 ## [Unreleased]
 
+## [1.2] 2016-10-05
+
 ### Added
+
 - Hightlight multiple spaces in spellcheck and suggest a single space instead.
-- Added related item configuration to search slugline using exact match, prefix match or any word match.
-- Added `useDefaultTimezone` for global search queries.
+- Add related item configuration to search slugline using exact match, prefix match or any word match.
+- Add `useDefaultTimezone` for global search queries.
+- Add ingest provider to search
+- Add image metadata validation on publish
+- Add url validation to editor anchor button
 
 ### Fixed
+
 - Fix global search to include time part for date search.
 - Fix related item search to look for exact slugline search.
+- Fix refs in package were missing type.
+- Fix spike view for custom workspace
+- Activate save button after editing crops
+- Fix aggregations not updating
+- Disable crop editing for audio/video
+- Fix image drag&drop in chrome
 
 ## [1.1] 2016-08-29
 
