@@ -63,6 +63,8 @@ export function SearchResults(
                 search: 'local'
             };
 
+            scope.showHistoryTab = true;
+
             if ($location.search().repo &&
                 !_.intersection($location.search().repo.split(','),
                     ['archive', 'published', 'ingest', 'archived']).length) {
