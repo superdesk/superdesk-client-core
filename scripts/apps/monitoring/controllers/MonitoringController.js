@@ -37,7 +37,9 @@ export function MonitoringController($rootScope, $location, desks) {
     function preview(item) {
         vm.previewItem = item;
         vm.state['with-preview'] = !!item;
-        vm.showHistoryTab = vm.previewItem.state !== 'ingested';
+        if (vm.previewItem != null){
+            vm.showHistoryTab = vm.previewItem.state !== 'ingested';
+        }
     }
 
     function closePreview() {
