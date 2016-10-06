@@ -134,7 +134,9 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
             };
 
             function errorMessage(response) {
-                if (response.data && response.data._issues) {
+                if (response.status === 412) {
+                    notify.error(gettext('Stage has been modified elsewhere. Please reload the desks'));
+                } else if (response.data && response.data._issues) {
                     if (response.data._issues.name && response.data._issues.name.unique) {
                         scope._errorUniqueness = true;
                     } else if (response.data._issues['validator exception']) {

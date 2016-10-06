@@ -261,7 +261,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
         },
         save: function(dest, diff) {
             return api.save('desks', dest, diff)
-                .then(reset);
+                .then(reset, handleSaveError);
         },
         remove: function(desk) {
             return api.remove(desk)
@@ -301,5 +301,12 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
         userDesksPromise = null;
         desksService.loading = null;
         return res;
+    }
+
+    function handleSaveError(response) {
+        if (response.status === 412) {
+            notify.error(gettext('Desk has been modified elsewhere. Please reload the desks.'));
+        }
+        return $q.reject(response);
     }
 }
