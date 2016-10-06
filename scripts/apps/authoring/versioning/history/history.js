@@ -30,9 +30,7 @@ function HistoryController($scope, authoring, api, notify, desks, archiveService
                             $scope.openVersion($scope.last);
                         }
                     }
-                }, function(err) {
-                    $scope.versions = null;
-                } );
+                });
             });
     }
 
@@ -61,7 +59,7 @@ VersioningHistoryDirective.$inject = [];
 function VersioningHistoryDirective() {
     return {
         templateUrl: 'scripts/apps/authoring/versioning/history/views/history.html',
-	scope: {
+	    scope: {
             item: '='
         }
     };

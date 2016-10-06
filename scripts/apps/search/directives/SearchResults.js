@@ -318,6 +318,10 @@ export function SearchResults(
                 }
                 scope.selected.preview = item;
                 scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
+                if (scope.selected.preview != null){
+                    scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
+                }
+
                 $location.search('_id', item ? item._id : null);
             };
 
