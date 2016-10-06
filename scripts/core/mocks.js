@@ -3,7 +3,7 @@ beforeEach(window.module(function($provide) {
 }));
 
 beforeEach(window.module('superdesk.mocks'));
-beforeEach(window.module('superdesk.session'));
+beforeEach(window.module('superdesk.core.auth.session'));
 beforeEach(window.module('superdesk.core.services.storage'));
 
 /**

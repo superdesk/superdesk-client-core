@@ -1,4 +1,4 @@
-export default angular.module('superdesk.core.preferences', ['superdesk.core.notify', 'superdesk.session'])
+export default angular.module('superdesk.core.preferences', ['superdesk.core.notify', 'superdesk.core.auth.session'])
 
     .service('preferencesService', ['$injector', '$rootScope', '$q', 'session', 'notify', 'gettext',
         function PreferencesService($injector, $rootScope, $q, session, notify, gettext) {

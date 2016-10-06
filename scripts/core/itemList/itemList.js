@@ -73,7 +73,7 @@ function extendScope(scope, itemList, itemPinService) {
     });
 }
 
-angular.module('superdesk.itemList', ['superdesk.search'])
+angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 .service('itemListService', ['api', '$q', 'search', function(api, $q, search) {
     function getQuery(options) {
         var query = {source: {query: {filtered: {}}}};

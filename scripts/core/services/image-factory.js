@@ -3,7 +3,7 @@
 *
 * @class imageFactory
 */
-export default angular.module('superdesk.imageFactory' , []).factory('imageFactory',
+export default angular.module('superdesk.core.services.imageFactory' , []).factory('imageFactory',
     function () {
         return {
             makeInstance: function () {

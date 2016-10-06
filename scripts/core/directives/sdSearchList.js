@@ -1,4 +1,4 @@
-export default angular.module('superdesk.core.directives.searchList', ['superdesk.asset'])
+export default angular.module('superdesk.core.directives.searchList', ['superdesk.core.services.asset'])
     /**
      * SearchList directive displays a searchable paginated list of items from
      * given endpoint, allows selecting multiple items.

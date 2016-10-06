@@ -1,4 +1,4 @@
-angular.module('superdesk.widgets.ingeststats', [])
+angular.module('superdesk.apps.dashboard.widgets.ingeststats', [])
     .factory('colorSchemes', ['$resource', function($resource) {
         return $resource('scripts/apps/ingest/static-resources/color-schemes.json');
     }])

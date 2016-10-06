@@ -40,5 +40,5 @@ function PrivilegesService($rootScope, $q, preferencesService) {
     this.loaded = preferencesService.getPrivileges().then(this.setUserPrivileges);
 }
 
-angular.module('superdesk.privileges', ['superdesk.core.preferences'])
+angular.module('superdesk.core.privileges', ['superdesk.core.preferences'])
     .service('privileges', PrivilegesService);

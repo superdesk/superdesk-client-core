@@ -124,7 +124,7 @@ angular.module('superdesk.apps.authoring.comments', [
     'superdesk.apps.authoring.widgets',
     'mentio',
     'superdesk.core.api',
-    'superdesk.keyboard'
+    'superdesk.core.keyboard'
 ])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider

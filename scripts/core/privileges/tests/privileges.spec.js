@@ -3,7 +3,7 @@
 describe('privileges', function() {
 
     beforeEach(window.module('superdesk.core.api'));
-    beforeEach(window.module('superdesk.privileges'));
+    beforeEach(window.module('superdesk.core.privileges'));
 
     beforeEach(inject(function(preferencesService, api, $q) {
         spyOn(preferencesService, 'getPrivileges').and.returnValue($q.when({tests: 1}));

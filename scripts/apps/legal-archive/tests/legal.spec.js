@@ -2,7 +2,7 @@
 
 describe('legal archive service', function() {
     beforeEach(window.module('superdesk.core.api'));
-    beforeEach(window.module('superdesk.legal_archive'));
+    beforeEach(window.module('superdesk.apps.legal_archive'));
 
     /**
      * Mock some of the dependencies of the parent directives.

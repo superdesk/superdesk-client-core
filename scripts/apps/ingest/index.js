@@ -13,10 +13,10 @@ angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.a
     .service('send', svc.SendService);
 
 angular.module('superdesk.apps.ingest', [
-    'superdesk.search',
+    'superdesk.apps.search',
     'superdesk.apps.dashboard',
-    'superdesk.widgets.base',
-    'superdesk.widgets.ingeststats',
+    'superdesk.apps.dashboard.widgets.base',
+    'superdesk.apps.dashboard.widgets.ingeststats',
     'superdesk.apps.ingest.send',
     'superdesk.config'
 ])

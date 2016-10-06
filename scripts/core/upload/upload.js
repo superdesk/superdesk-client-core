@@ -58,7 +58,7 @@ function FileValidatorDirective() {
 
 angular.module('superdesk.core.upload', [
     'ngFileUpload',
-    'superdesk.imageFactory',
+    'superdesk.core.services.imageFactory',
     'superdesk.core.upload.crop',
     'superdesk.core.upload.imagecrop',
     'superdesk.core.upload.imagepreview',

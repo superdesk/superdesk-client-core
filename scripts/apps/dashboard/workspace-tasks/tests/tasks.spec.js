@@ -6,7 +6,7 @@ describe('tasks', function() {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.core.ui'));
-    beforeEach(window.module('superdesk.workspace.tasks'));
+    beforeEach(window.module('superdesk.apps.workspace.tasks'));
 
     describe('task controller', function() {
 
@@ -66,7 +66,7 @@ describe('tasks', function() {
     });
 
     describe('pick task controller', function() {
-        beforeEach(window.module('superdesk.workspace.tasks'));
+        beforeEach(window.module('superdesk.apps.workspace.tasks'));
 
         it('can pick task', inject(function(superdesk) {
             spyOn(superdesk, 'intent');

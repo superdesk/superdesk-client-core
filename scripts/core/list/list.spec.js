@@ -1,8 +1,8 @@
 'use strict';
 
-describe('superdesk.list module', function() {
+describe('superdesk.core.list module', function() {
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.list'));
+    beforeEach(window.module('superdesk.core.list'));
 
     describe('pagination', function() {
 

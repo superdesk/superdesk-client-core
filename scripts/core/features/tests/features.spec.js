@@ -1,9 +1,9 @@
 
 'use strict';
 
-describe('superdesk.features module', function() {
+describe('superdesk.core.features module', function() {
 
-    beforeEach(window.module('superdesk.features'));
+    beforeEach(window.module('superdesk.core.features'));
     beforeEach(inject(function(urls, $q) {
         spyOn(urls, 'links').and.returnValue($q.when({users: 'http://users'}));
     }));

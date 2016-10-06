@@ -1,9 +1,9 @@
 
 'use strict';
 
-describe('superdesk.asset module', function() {
+describe('superdesk.core.services.asset module', function() {
 
-    beforeEach(window.module('superdesk.asset'));
+    beforeEach(window.module('superdesk.core.services.asset'));
     beforeEach(window.module(function($provide) {
         $provide.constant('config', {paths: {superdesk: 'scripts/bower_components/superdesk/app/'}});
     }));

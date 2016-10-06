@@ -282,12 +282,12 @@ function SuperdeskProvider($routeProvider, _) {
 angular.module('superdesk.core.activity', [
     'ngRoute',
     'superdesk.core.notify',
-    'superdesk.features',
+    'superdesk.core.features',
     'superdesk.core.translate',
     'superdesk.core.services.beta',
     'superdesk.core.services.modal',
-    'superdesk.privileges',
-    'superdesk.keyboard',
+    'superdesk.core.privileges',
+    'superdesk.core.keyboard',
 
     'superdesk.core.activity.chooser',
     'superdesk.core.activity.list',

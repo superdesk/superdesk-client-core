@@ -2,7 +2,7 @@ import { ContentService } from './services';
 import * as directive from './directives';
 import * as ctrl from './controllers';
 
-angular.module('superdesk.workspace.content', [
+angular.module('superdesk.apps.workspace.content', [
     'superdesk.core.api',
     'superdesk.core.menu',
     'superdesk.apps.archive',

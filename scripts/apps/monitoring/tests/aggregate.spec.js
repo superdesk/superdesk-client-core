@@ -1,7 +1,7 @@
 describe('templates', function() {
     'use strict';
 
-    beforeEach(window.module('superdesk.aggregate'));
+    beforeEach(window.module('superdesk.apps.aggregate'));
 
     describe('aggregate widget controller', function() {
         var scope, ctrl;
@@ -47,7 +47,7 @@ describe('templates', function() {
     describe('Aggregate Widget', function() {
         var fakeEndpoints = {};
         var queryDeferred;
-        beforeEach(window.module('superdesk.aggregate', 'superdesk.templates-cache'));
+        beforeEach(window.module('superdesk.apps.aggregate', 'superdesk.templates-cache'));
 
         beforeEach(window.module(function($provide) {
 

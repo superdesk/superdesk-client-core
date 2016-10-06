@@ -362,7 +362,7 @@ function DeskStagesDirective() {
     };
 }
 
-angular.module('superdesk.workspace.tasks', [])
+angular.module('superdesk.apps.workspace.tasks', [])
 
 .factory('StagesCtrl', StagesCtrlFactory)
 

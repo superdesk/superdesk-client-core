@@ -43,11 +43,11 @@ angular.module('superdesk.apps.archive.directives', [
     .service('dragitem', svc.DragItemService);
 
 angular.module('superdesk.apps.archive', [
-    'superdesk.search',
+    'superdesk.apps.search',
     'superdesk.apps.archive.directives',
     'superdesk.apps.dashboard',
-    'superdesk.widgets.base',
-    'superdesk.widgets.relatedItem'
+    'superdesk.apps.dashboard.widgets.base',
+    'superdesk.apps.dashboard.widgets.relatedItem'
 ])
 
     .service('spike', svc.SpikeService)

@@ -10,7 +10,7 @@ describe('session service', function() {
     beforeEach(function() {
         localStorage.clear();
         window.module('superdesk.core.services.storage');
-        window.module('superdesk.session');
+        window.module('superdesk.core.auth.session');
     });
 
     it('has identity and token property', inject(function (session) {
@@ -54,7 +54,7 @@ describe('session service', function() {
     it('can store state for future requests', inject(function (session, $rootScope) {
         session.start(SESSION, {name: 'bar'});
 
-        var nextInjector = angular.injector(['superdesk.session', 'superdesk.core.services.storage', 'ng']);
+        var nextInjector = angular.injector(['superdesk.core.auth.session', 'superdesk.core.services.storage', 'ng']);
         var nextSession = nextInjector.get('session');
         nextInjector.get('$rootScope').$digest();
         $rootScope.$digest();
@@ -109,7 +109,7 @@ describe('session service', function() {
         session.updateIdentity({name: 'baz'});
         expect(session.identity.name).toBe('baz');
 
-        var nextInjector = angular.injector(['superdesk.session', 'superdesk.core.services.storage', 'ng']);
+        var nextInjector = angular.injector(['superdesk.core.auth.session', 'superdesk.core.services.storage', 'ng']);
         var nextSession = nextInjector.get('session');
         nextInjector.get('$rootScope').$digest();
 

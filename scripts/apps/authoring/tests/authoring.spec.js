@@ -17,9 +17,9 @@ describe('authoring', function() {
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.core.auth'));
-    beforeEach(window.module('superdesk.workspace.content'));
+    beforeEach(window.module('superdesk.apps.workspace.content'));
     beforeEach(window.module('superdesk.mocks'));
-    beforeEach(window.module('superdesk.privileges'));
+    beforeEach(window.module('superdesk.core.privileges'));
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
 

@@ -10,8 +10,8 @@ function SuperdeskFlagsService(config) {
 
 angular.module('superdesk.core.menu', [
     'superdesk.core.menu.notifications',
-    'superdesk.privileges',
-    'superdesk.asset',
+    'superdesk.core.privileges',
+    'superdesk.core.services.asset',
     'superdesk.core.api'
 ])
 

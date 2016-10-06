@@ -1,5 +1,5 @@
-angular.module('superdesk.widgets.relatedItem', [
-    'superdesk.widgets.base',
+angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
+    'superdesk.apps.dashboard.widgets.base',
     'superdesk.apps.authoring.widgets'
 ])
     .controller('relatedItemController', RelatedItemController)

@@ -16,7 +16,7 @@ var modules = [
     'superdesk.core.ui',
     'superdesk.core.services.modal',
 
-    'superdesk.keyboard',
+    'superdesk.core.keyboard',
     'superdesk.core.directives.autofocus',
     'superdesk.core.directives.throttle',
     'superdesk.core.directives.sort',

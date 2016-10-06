@@ -17,8 +17,8 @@ angular.module('superdesk.apps.desks', [
     'superdesk.core.ui',
     'superdesk.apps.users',
     'superdesk.apps.authoring.widgets',
-    'superdesk.aggregate.widgets',
-    'superdesk.aggregate'
+    'superdesk.apps.aggregate.widgets',
+    'superdesk.apps.aggregate'
 ])
     .factory('desks', DesksFactory)
 

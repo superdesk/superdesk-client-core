@@ -4,7 +4,7 @@ import * as svc from './services';
 import * as directive from './directives';
 import { MultiActionBarController } from './controllers';
 
-angular.module('superdesk.search.react', [
+angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
     'superdesk.core.datetime',
     'superdesk.apps.authoring.metadata'
@@ -12,13 +12,13 @@ angular.module('superdesk.search.react', [
     .service('monitoringState', svc.MonitoringState)
     .directive('sdItemsList', directive.ItemList);
 
-angular.module('superdesk.search', [
+angular.module('superdesk.apps.search', [
     'superdesk.core.api',
     'superdesk.apps.desks',
     'superdesk.core.activity',
-    'superdesk.list',
-    'superdesk.keyboard',
-    'superdesk.search.react'
+    'superdesk.core.list',
+    'superdesk.core.keyboard',
+    'superdesk.apps.search.react'
 ])
     .service('search', svc.SearchService)
     .service('savedSearch', svc.SavedSearchService)

@@ -3,7 +3,7 @@ describe('auth service', function() {
         window.module('superdesk.core.preferences');
         window.module('superdesk.core.services.storage');
         window.module('superdesk.core.auth');
-        window.module('superdesk.session');
+        window.module('superdesk.core.auth.session');
         window.module('superdesk.core.menu');
         window.module('superdesk.apps.authoring');
         window.module(function($provide) {

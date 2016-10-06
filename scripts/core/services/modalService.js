@@ -1,4 +1,4 @@
-export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 'superdesk.asset'])
+export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 'superdesk.core.services.asset'])
     .service('modal', ['$q', '$modal', '$sce', 'asset', function($q, $modal, $sce, asset) {
         this.confirm = function(bodyText, headerText, okText, cancelText, additionalCancelText) {
             headerText = headerText || gettext('Confirm');
