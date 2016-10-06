@@ -12,6 +12,7 @@
 @btnCustomColor: #666;
 @btnPublishColor: #01579B;
 @btnPublishPlusColor: #623b7a;
+@btnLightGray: @grayLight;
 
 
 
@@ -100,6 +101,11 @@
 }
 .btn-publish-plus {
     .buttonStates(@btnPublishPlusColor, @white);
+    white-space: nowrap;
+}
+
+.btn-light-gray {
+    .buttonStates(@btnLightGray, @white);
     white-space: nowrap;
 }
 

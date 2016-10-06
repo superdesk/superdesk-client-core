@@ -57,6 +57,7 @@ To configure the build, the `superdesk.config.js` file must export a function th
 ##### UI
 
 - `ui.italicAbstract`: `true` - render abstract using italics
+- `ui.sendAndPublish`: `true` - display the send and publish button.
 
 ##### List
 

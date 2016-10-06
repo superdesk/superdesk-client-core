@@ -18,6 +18,7 @@ export function DeskSelect(Keys, _) {
         scope: {
             allDesks: '=desks',
             selectedDesk: '=',
+            defaultDesk: '=',
             onChange: '&'
         },
         controller: DeskSelectController,
