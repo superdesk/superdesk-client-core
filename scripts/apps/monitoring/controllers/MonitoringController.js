@@ -20,6 +20,7 @@ export function MonitoringController($rootScope, $location, desks) {
 
     this.totalItems = '';
     this.showRefresh = false;
+    this.showHistoryTab = true;
 
     this.isDeskChanged = function () {
         return desks.changeDesk;
