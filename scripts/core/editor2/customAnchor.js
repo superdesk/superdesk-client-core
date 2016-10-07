@@ -3,13 +3,9 @@
  * malformed URLs when the 'linkValidation: true' option is set.
  *
  * It additionally introduces the possibility to set the validation pattern
- * using the 'pattern' option when configuring the editor. By default it will
- * use the expression specified in RFC3986: Uniform Resource Identifier (URI):
- * Generic Syntax from http://www.ietf.org/rfc/rfc3986.txt.
+ * using the 'pattern' option when configuring the editor.
  */
 import MediumEditor from 'medium-editor';
-
-const uriPattern = '^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?';
 
 class CustomAnchorButton extends MediumEditor.extensions.anchor {
     createForm() {
@@ -22,7 +18,9 @@ class CustomAnchorButton extends MediumEditor.extensions.anchor {
         let input = form.getElementsByTagName('input')[0];
         input.setAttribute('type', 'url');
         input.setAttribute('required', '');
-        input.setAttribute('pattern', this.pattern || uriPattern);
+        if (this.pattern) {
+            input.setAttribute('pattern', this.pattern);
+        }
 
         return form;
     }
