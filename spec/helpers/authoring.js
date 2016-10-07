@@ -305,7 +305,7 @@ function Authoring() {
 
     this.showHistory = function() {
         this.showVersions();
-        return element(by.css('[ng-click="tab = \'history\'"]')).click();
+        return (element(by.id('authoring-container'))).element(by.css('[ng-click="tab = \'history\'"]')).click();
     };
 
     this.showInfo = function() {
