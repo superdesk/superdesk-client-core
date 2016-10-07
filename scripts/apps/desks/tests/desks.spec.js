@@ -5,7 +5,7 @@ describe('desks service', function() {
 
     var USER_URL = 'users/1';
 
-    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     it('can fetch current user desks',

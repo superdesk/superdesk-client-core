@@ -1,4 +1,4 @@
-angular.module('superdesk.editor2.ctrl', []).controller('SdTextEditorController', SdTextEditorController);
+angular.module('superdesk.apps.editor2.ctrl', []).controller('SdTextEditorController', SdTextEditorController);
 
 SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element', 'editor', 'config', '$q'];
 function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, config, $q) {

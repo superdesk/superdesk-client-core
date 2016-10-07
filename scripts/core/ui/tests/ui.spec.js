@@ -18,7 +18,7 @@ describe('superdesk ui', function() {
         });
     }));
 
-    beforeEach(window.module('superdesk.ui'));
+    beforeEach(window.module('superdesk.core.ui'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     var datetimeHelper;
@@ -58,7 +58,7 @@ describe('superdesk ui', function() {
             getTzDataDeferred,
             isoScope;  // the directive's isolate scope
 
-        beforeEach(window.module('superdesk.ingest'));
+        beforeEach(window.module('superdesk.apps.ingest'));
         beforeEach(window.module(function($provide) {
             var childDirectives = [
                 'sdWeekdayPicker', 'sdTimepickerAlt', 'sdTypeahead'

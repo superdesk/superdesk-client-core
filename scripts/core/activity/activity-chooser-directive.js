@@ -1,4 +1,4 @@
-angular.module('superdesk.activity.chooser', [])
+angular.module('superdesk.core.activity.chooser', [])
 .directive('sdActivityChooser', ['activityChooser', 'keyboardManager', 'asset', 'lodash',
 function(activityChooser, keyboardManager, asset, _) {
     return {

@@ -1,7 +1,7 @@
 /**
  * Session Service stores current user data
  */
-angular.module('superdesk.session').service('session', [
+angular.module('superdesk.core.auth.session').service('session', [
 '$q',
 '$rootScope',
 'storage',

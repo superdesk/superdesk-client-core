@@ -741,7 +741,7 @@ function EditorService(spellcheck, $rootScope, $timeout, $q) {
     }
 }
 
-angular.module('superdesk.editor', ['superdesk.editor.spellcheck'])
+angular.module('superdesk.apps.editor', ['superdesk.apps.editor.spellcheck'])
 
     .service('editor', EditorService)
 

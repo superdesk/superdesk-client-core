@@ -1,4 +1,4 @@
-angular.module('superdesk.api.allowed', [])
+angular.module('superdesk.core.api.allowed', [])
     .service('allowed', AllowedService);
 
 AllowedService.$inject = ['lodash', 'api', '$q'];

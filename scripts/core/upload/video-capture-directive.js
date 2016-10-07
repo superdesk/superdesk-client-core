@@ -1,4 +1,4 @@
-angular.module('superdesk.upload').directive('sdVideoCapture', [ function() {
+angular.module('superdesk.core.upload').directive('sdVideoCapture', [ function() {
 
     var URL = window.URL || window.webkitURL;
 

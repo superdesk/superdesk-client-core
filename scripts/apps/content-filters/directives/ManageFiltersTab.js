@@ -1,7 +1,7 @@
 import { ManageContentFiltersController } from 'apps/content-filters/controllers';
 
 /**
- * @memberof superdesk.content_filters
+ * @memberof superdesk.apps.content_filters
  * @ngdoc directive
  * @name sdManageFiltersTab
  * @description

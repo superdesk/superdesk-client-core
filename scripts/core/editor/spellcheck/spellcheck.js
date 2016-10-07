@@ -432,6 +432,6 @@ function SpellcheckMenuController(editor, preferencesService) {
     });
 }
 
-angular.module('superdesk.editor.spellcheck', ['superdesk.dictionaries'])
+angular.module('superdesk.apps.editor.spellcheck', ['superdesk.apps.dictionaries'])
     .service('spellcheck', SpellcheckService)
     .controller('SpellcheckMenu', SpellcheckMenuController);

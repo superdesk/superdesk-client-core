@@ -1,5 +1,5 @@
 /**
- * @memberof superdesk.content_filters
+ * @memberof superdesk.apps.content_filters
  * @ngdoc controller
  * @name ProductionTestCtrl
  * @description

@@ -1,1 +1,1 @@
-export default angular.module('superdesk.elastic', []);
+export default angular.module('superdesk.core.elastic', []);

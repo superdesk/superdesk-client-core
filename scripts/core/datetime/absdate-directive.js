@@ -7,7 +7,7 @@
  * Params:
  * param {object} ngModel - datetime string in utc
  */
-angular.module('superdesk.datetime.absdate', []).directive('sdAbsdate', [ 'gettextCatalog', function(gettextCatalog) {
+angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', [ 'gettextCatalog', function(gettextCatalog) {
     var COMPARE_FORMAT = 'YYYY-M-D';
     var DISPLAY_DATE_FORMAT = 'D. MMMM YYYY HH:mm';
     var DISPLAY_CDATE_FORMAT = 'D. MMMM HH:mm';

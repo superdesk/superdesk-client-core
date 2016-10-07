@@ -12,7 +12,7 @@ describe('sdIngestRoutingFilter directive', function () {
         $rootScope;
 
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.ingest'));
+    beforeEach(window.module('superdesk.apps.ingest'));
 
     beforeEach(inject(function (_$compile_, _$rootScope_) {
         $compile = _$compile_;

@@ -1,4 +1,4 @@
-export default angular.module('superdesk.directives.sort', ['superdesk.asset'])
+export default angular.module('superdesk.core.directives.sort', ['superdesk.core.services.asset'])
     /**
      * sdSort inserts sort links based on current sort field and direction.
      *

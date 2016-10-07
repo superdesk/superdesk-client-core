@@ -260,10 +260,10 @@ function ArticleDashboardDirective() {
     };
 }
 
-angular.module('superdesk.authoring.workqueue', [
-    'superdesk.activity',
-    'superdesk.notification',
-    'superdesk.authoring.multiedit'
+angular.module('superdesk.apps.authoring.workqueue', [
+    'superdesk.core.activity',
+    'superdesk.apps.notification',
+    'superdesk.apps.authoring.multiedit'
 ])
     .service('workqueue', WorkqueueService)
     .controller('Workqueue', WorkqueueCtrl)

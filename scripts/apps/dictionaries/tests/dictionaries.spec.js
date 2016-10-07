@@ -5,7 +5,7 @@ describe('dictionaries', function() {
     var USER_ID = 'foo',
         LANG = 'en';
 
-    beforeEach(window.module('superdesk.dictionaries'));
+    beforeEach(window.module('superdesk.apps.dictionaries'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(inject(function(session, $q) {

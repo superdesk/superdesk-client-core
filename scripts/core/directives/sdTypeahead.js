@@ -1,4 +1,4 @@
-export default angular.module('superdesk.typeahead.directives', []).
+export default angular.module('superdesk.core.directives.typeahead', []).
     /**
      * Typeahead direcitve
      *

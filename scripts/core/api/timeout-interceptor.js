@@ -53,4 +53,4 @@ function TimeoutInterceptor($timeout, $q, $rootScope, request) {
     };
 }
 
-angular.module('superdesk.api.timeout', []).factory('timeoutInterceptor', TimeoutInterceptor);
+angular.module('superdesk.core.api.timeout', []).factory('timeoutInterceptor', TimeoutInterceptor);

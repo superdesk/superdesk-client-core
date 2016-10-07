@@ -225,7 +225,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     };
 }
 
-export default angular.module('superdesk.notification', ['superdesk.desks', 'superdesk.menu'])
+export default angular.module('superdesk.apps.notification', ['superdesk.apps.desks', 'superdesk.core.menu'])
     .service('reloadService', ReloadService)
     .service('notifyConnectionService', NotifyConnectionService)
     .run(WebSocketProxy);

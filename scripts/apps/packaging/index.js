@@ -13,10 +13,10 @@ import * as ctrl from './controllers';
 import * as directive from './directives';
 import { PackagesService } from './services';
 
-angular.module('superdesk.packaging', [
-    'superdesk.api',
-    'superdesk.activity',
-    'superdesk.authoring'
+angular.module('superdesk.apps.packaging', [
+    'superdesk.core.api',
+    'superdesk.core.activity',
+    'superdesk.apps.authoring'
 ])
     .service('packages', PackagesService)
 

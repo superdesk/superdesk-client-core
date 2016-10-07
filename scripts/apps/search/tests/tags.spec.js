@@ -9,11 +9,11 @@ describe('Tag Service', function() {
 
     var fakeMetadata;
 
-    beforeEach(window.module('superdesk.search'));
-    beforeEach(window.module('superdesk.desks'));
+    beforeEach(window.module('superdesk.apps.search'));
+    beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.ingest'));
-    beforeEach(window.module('superdesk.searchProviders'));
+    beforeEach(window.module('superdesk.apps.ingest'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     /**
      * Mock some of the dependencies of the parent directives.

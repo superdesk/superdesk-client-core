@@ -3,12 +3,12 @@ describe('widgets provider', function() {
 
     beforeEach(function() {
 
-        angular.module('superdesk.dashboard.widgets.tests', [])
+        angular.module('superdesk.apps.dashboard.widgets.tests', [])
         .config(['dashboardWidgetsProvider', function(_dashboardWidgetsProvider_) {
             dashboardWidgetsProvider = _dashboardWidgetsProvider_;
         }]);
 
-        window.module('superdesk.dashboard.widgets', 'superdesk.dashboard.widgets.tests');
+        window.module('superdesk.apps.dashboard.widgets', 'superdesk.apps.dashboard.widgets.tests');
 
         // init the tests module to get the actual provider
         inject(function() {});

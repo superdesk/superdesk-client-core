@@ -76,5 +76,5 @@ function URLResolver($http, $q, $log, config) {
     }
 }
 
-angular.module('superdesk.api.urls', [])
+angular.module('superdesk.core.api.urls', [])
 .service('urls', URLResolver);

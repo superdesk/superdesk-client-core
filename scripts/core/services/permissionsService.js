@@ -30,7 +30,7 @@
  * @param {object} role - role object as returned from server.
  *
  */
-export default angular.module('superdesk.services.permissions', [])
+export default angular.module('superdesk.core.services.permissions', [])
     .service('permissionsService', ['$q', '$rootScope', 'em', function($q, $rootScope, em) {
 
         this.isUserAllowed = function(permissions, user) {

@@ -4,7 +4,7 @@ describe('url resolver', function() {
         USERS_URL = '/users',
         RESOURCES = {_links: {child: [{title: 'users', href: USERS_URL}]}};
 
-    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.core.api'));
 
     beforeEach(window.module(function($provide) {
         // $provide.service('urls', URLResolver);

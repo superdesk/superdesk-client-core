@@ -1,4 +1,4 @@
-angular.module('superdesk.auth.auth', []).service('auth', ['$q', 'api', 'session', 'authAdapter',
+angular.module('superdesk.core.auth.auth', []).service('auth', ['$q', 'api', 'session', 'authAdapter',
 function ($q, api, session, authAdapter) {
 
     /**

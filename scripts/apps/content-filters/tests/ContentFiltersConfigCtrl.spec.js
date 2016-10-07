@@ -3,7 +3,7 @@
 describe('ContentFiltersConfigCtrl', function() {
     var ctrl;
 
-    beforeEach(window.module('superdesk.content_filters'));
+    beforeEach(window.module('superdesk.apps.content_filters'));
 
     beforeEach(inject(function($controller) {
         ctrl = $controller('ContentFiltersConfigCtrl', {});

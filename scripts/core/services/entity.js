@@ -1,4 +1,4 @@
-export default angular.module('superdesk.services.entity', [])
+export default angular.module('superdesk.core.services.entity', [])
     /**
      * Location Params service holds default params for given page
      * and combines those with current params.

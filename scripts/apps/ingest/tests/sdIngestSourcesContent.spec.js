@@ -9,7 +9,7 @@ describe('sdIngestSourcesContent directive', function () {
 
     var scope;
 
-    beforeEach(window.module('superdesk.ingest'));
+    beforeEach(window.module('superdesk.apps.ingest'));
 
     beforeEach(inject(function ($compile, $rootScope, $templateCache) {
         var html,

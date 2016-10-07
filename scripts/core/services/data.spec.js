@@ -2,9 +2,9 @@
 
 describe('DataService', function() {
     beforeEach(function() {
-        window.module('superdesk.services.data');
-        window.module('superdesk.services.entity');
-        window.module('superdesk.services.server');
+        window.module('superdesk.core.services.data');
+        window.module('superdesk.core.services.entity');
+        window.module('superdesk.core.services.server');
     });
 
     beforeEach(window.module(function($provide) {

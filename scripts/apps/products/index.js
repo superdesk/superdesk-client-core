@@ -4,7 +4,7 @@ import './styles/products.less';
 import { ProductsFactory } from './services';
 import { ProductsConfigController } from './controllers';
 
-export default angular.module('superdesk.products', ['superdesk.users'])
+export default angular.module('superdesk.apps.products', ['superdesk.apps.users'])
     .config(['superdeskProvider', function(superdesk) {
         superdesk
             .activity('/settings/products', {

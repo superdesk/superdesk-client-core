@@ -2,9 +2,9 @@
 
 describe('highlights', function() {
 
-    beforeEach(window.module('superdesk.highlights'));
+    beforeEach(window.module('superdesk.apps.highlights'));
     beforeEach(window.module('superdesk.mocks'));
-    beforeEach(window.module('superdesk.archive'));
+    beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     xdescribe('sdPackageHighlightsDropdown directive', function() {

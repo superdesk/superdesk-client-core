@@ -1,4 +1,4 @@
-export default angular.module('superdesk.select.directives', ['superdesk.asset'])
+export default angular.module('superdesk.core.directives.select', ['superdesk.core.services.asset'])
 .factory('optionParser', ['$parse', function ($parse) {
 
     var TYPEAHEAD_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;

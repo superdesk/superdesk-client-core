@@ -1,4 +1,4 @@
-angular.module('superdesk.dashboard.grid', [])
+angular.module('superdesk.apps.dashboard.grid', [])
     /**
      * sdGrid is directive which add functionality of dashboard. It is possible
      * to add, remove, move, edit, resize widgets within dashboard. It is working with gridster.js

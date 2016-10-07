@@ -3,7 +3,7 @@
 
 describe('user import', function() {
 
-    beforeEach(window.module('superdesk.users.import'));
+    beforeEach(window.module('superdesk.apps.users.import'));
     beforeEach(window.module('superdesk.mocks'));
 
     it('can import a user', inject(function($q, userImport, api) {

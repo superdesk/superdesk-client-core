@@ -272,5 +272,5 @@ function APIProvider() {
     }
 }
 
-angular.module('superdesk.api.service', [])
+angular.module('superdesk.core.api.service', [])
 .provider('api', APIProvider);

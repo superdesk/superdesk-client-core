@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    return angular.module('superdesk.slider.directives', []).
+    return angular.module('superdesk.core.directives.slider', []).
         /**
          * Slider directive
          *

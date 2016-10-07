@@ -11,7 +11,7 @@ describe('tzdata factory', function () {
         $httpBackend,
         $rootScope;
 
-    beforeEach(window.module('superdesk.dashboard.world-clock'));
+    beforeEach(window.module('superdesk.apps.dashboard.world-clock'));
 
     beforeEach(inject(function (_$httpBackend_, _$rootScope_, _tzdata_) {
         tzdata = _tzdata_;

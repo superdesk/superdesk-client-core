@@ -1,7 +1,7 @@
 'use strict';
 
 describe('profile service', function() {
-    beforeEach(window.module('superdesk.users.profile'));
+    beforeEach(window.module('superdesk.apps.users.profile'));
 
     it('can get activity of all users', inject(function(profileService, api, $q) {
         spyOn(api, 'query').and.returnValue($q.when({}));

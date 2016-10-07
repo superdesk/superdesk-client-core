@@ -1,4 +1,4 @@
-export default angular.module('superdesk.notify', ['superdesk.translate'])
+export default angular.module('superdesk.core.notify', ['superdesk.core.translate'])
     .service('notify', ['$timeout', 'gettext', function ($timeout, gettext) {
         function NotifyService() {
 
