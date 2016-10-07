@@ -5,6 +5,8 @@ import * as directive from './directives';
 import * as ctrl from './controllers';
 import * as filter from './filters';
 
+import 'apps/authoring/suggest';
+
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 
 angular.module('superdesk.apps.authoring', [
@@ -21,6 +23,7 @@ angular.module('superdesk.apps.authoring', [
         'superdesk.apps.authoring.find-replace',
         'superdesk.apps.authoring.macros',
         'superdesk.apps.authoring.autosave',
+        'superdesk.apps.authoring.suggest',
         'superdesk.apps.desks',
         'superdesk.apps.notification',
         'contenteditable',
