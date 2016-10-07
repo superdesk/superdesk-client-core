@@ -509,4 +509,3 @@ function ActivityItemDirective(asset) {
         templateUrl: asset.templateUrl('core/activity/views/activity-item.html')
     };
 }
-
