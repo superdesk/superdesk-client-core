@@ -318,7 +318,7 @@ export function SearchResults(
                 }
                 scope.selected.preview = item;
                 scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
-                scope.selected.preview.state === 'ingested' ? scope.showHistoryTab = false : scope.showHistoryTab = true;
+                scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
 
                 $location.search('_id', item ? item._id : null);
             };

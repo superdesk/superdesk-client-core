@@ -30,9 +30,7 @@ function HistoryController($scope, authoring, api, notify, desks, archiveService
                             $scope.openVersion($scope.last);
                         }
                     }
-                }, function(err) {
-                    $scope.versions = null;
-                } );
+                });
             });
     }
 
