@@ -423,7 +423,7 @@ function Authoring() {
             .perform()
             .then(function() {
                 browser.actions()
-                    .mouseMove(dst, {x: 10, y: -3})
+                    .mouseMove(dst, {x: 10, y: 1})
                     .mouseUp()
                     .perform();
             });
