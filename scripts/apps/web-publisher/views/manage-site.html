@@ -1,0 +1,23 @@
+<div sd-modal data-model="true" data-full="true" class="modal--fullscreen">
+    <div class="modal-header">
+        <h3 class="pull-left" translate>Manage</h3>
+        <div class="pull-right">
+            <button class="btn" ng-click="toogleCreateSite()" translate>Cancel</button>
+            <button class="btn btn-info" ng-disabled="createForm.$invalid" ng-click="save()" translate>Save</button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <form name="createForm">
+            <fieldset>
+                <div class="field">
+                    <label for="siteName" translate>Web Site Name:</label>
+                    <input type="text" name="siteName" ng-model="new.siteName" required />
+                </div>
+                <div class="field">
+                    <label for="subdomainName" translate>Subdomain Name:</label>
+                    <input type="text" name="subdomainName" ng-model="new.subdomainName" required />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

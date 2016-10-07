@@ -1,0 +1,30 @@
+<div class="subnav">
+    <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
+        <div class="search-handler">
+            <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
+            <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
+            ng-keyup="aggregate.searchOnEnter($event, query)">
+            <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
+            <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
+                <i class="svg-icon-right"></i>
+            </button>
+        </div>
+    </div>
+    <h3 class="page-nav-title"><span translate>Web Site Management</span></h3>
+    <div class="subnav__button-stack--square-buttons">
+        <button class="navbtn sd-create-btn" ng-click="toogleCreateSite()">
+            <i class="svg-icon-plus"></i>
+            <span class="circle"></span>
+        </button>
+    </div>
+</div>
+
+<section class="main-section master-desk-view">
+    <div class="main-desk-container">
+        <div class="desk-container" ng-repeat="site in sites | orderBy: 'name'">
+            <div class="desk" ng-include="'scripts/apps/web-publisher/views/site.html'"></div>
+        </div>
+    </div>
+
+    <div ng-include="'scripts/apps/web-publisher/views/manage-site.html'" ng-if="manageSite"></div>
+</section>
