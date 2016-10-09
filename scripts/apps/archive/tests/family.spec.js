@@ -16,7 +16,7 @@ describe('familyService', function() {
     };
 
     beforeEach(window.module('superdesk.mocks'));
-    beforeEach(window.module('superdesk.archive.directives'));
+    beforeEach(window.module('superdesk.apps.archive.directives'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(window.module(function($provide) {

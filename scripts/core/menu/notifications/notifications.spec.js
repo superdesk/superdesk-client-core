@@ -8,9 +8,9 @@ describe('user notifications', function() {
         {recipients: [{'user_id': 'foo', 'read': 1}, {'user_id': 'bar', 'read': 0}]}
     ]};
 
-    beforeEach(window.module('superdesk.session'));
-    beforeEach(window.module('superdesk.api'));
-    beforeEach(window.module('superdesk.menu.notifications'));
+    beforeEach(window.module('superdesk.core.auth.session'));
+    beforeEach(window.module('superdesk.core.api'));
+    beforeEach(window.module('superdesk.core.menu.notifications'));
 
     beforeEach(inject(function(api, $q) {
         spyOn(api, 'query').and.returnValue($q.when(notifications));
@@ -61,9 +61,9 @@ describe('desk notifications', function() {
         {recipients: [{'desk_id': 'desk1', 'read': 1}, {'desk_id': 'desk2', 'read': 0}]}
     ]};
 
-    beforeEach(window.module('superdesk.session'));
-    beforeEach(window.module('superdesk.api'));
-    beforeEach(window.module('superdesk.menu.notifications'));
+    beforeEach(window.module('superdesk.core.auth.session'));
+    beforeEach(window.module('superdesk.core.api'));
+    beforeEach(window.module('superdesk.core.menu.notifications'));
 
     beforeEach(inject(function(api, $q) {
         spyOn(api, 'query').and.returnValue($q.when(notifications));

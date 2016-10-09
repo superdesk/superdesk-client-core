@@ -5,7 +5,7 @@ describe('multiedit', function() {
         localStorage.clear();
     });
 
-    beforeEach(window.module('superdesk.authoring.multiedit'));
+    beforeEach(window.module('superdesk.apps.authoring.multiedit'));
 
     it('can open an item', inject(function(multiEdit) {
         var items = multiEdit.items;

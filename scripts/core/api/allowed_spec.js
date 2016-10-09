@@ -1,9 +1,9 @@
 
-describe('superdesk.api.allowed', function() {
+describe('superdesk.core.api.allowed', function() {
 
     'use strict';
 
-    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.core.api'));
 
     beforeEach(inject(function(api, $q) {
         spyOn(api, 'get').and.returnValue($q.when({

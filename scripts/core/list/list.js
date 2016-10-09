@@ -27,7 +27,7 @@ function ListItemDirectiveFactory() {
     };
 }
 
-var mod = angular.module('superdesk.list', ['superdesk.keyboard', 'superdesk.asset']);
+var mod = angular.module('superdesk.core.list', ['superdesk.core.keyboard', 'superdesk.core.services.asset']);
 mod.directive('sdListView', ['$location', 'keyboardManager', 'asset', function($location, keyboardManager, asset) {
     return {
         scope: {

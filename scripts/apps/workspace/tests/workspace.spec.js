@@ -5,7 +5,7 @@ describe('workspace', function() {
     var DESK = 1;
 
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.dashboard'));
+    beforeEach(window.module('superdesk.apps.dashboard'));
 
     beforeEach(inject(function(session) {
         session.identity = {_id: 'u1'};

@@ -3,7 +3,7 @@
 
 describe('packaging', function() {
 
-    beforeEach(window.module('superdesk.packaging'));
+    beforeEach(window.module('superdesk.apps.packaging'));
 
     describe('package-items-edit directive', function() {
 

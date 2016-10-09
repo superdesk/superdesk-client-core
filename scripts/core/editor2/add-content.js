@@ -1,4 +1,4 @@
-angular.module('superdesk.editor2.content', []).directive('sdAddContent', ['$window',
+angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', ['$window',
 function($window) {
     return {
         // the scope is not isolated because we require the medium instance

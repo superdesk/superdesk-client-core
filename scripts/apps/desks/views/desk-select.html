@@ -1,7 +1,7 @@
 <div class="dropdown dropdown-noarrow dropdown--dark" dropdown is-open="isOpen" tabindex="">
     <button class="dropdown-toggle" dropdown-toggle>
         <span ng-show="!selectedDesk" translate>Select desk</span>
-        <span ng-show="selectedDesk">{{ selectedDesk.name }}</span>
+        <span ng-show="selectedDesk">{{ defaultDesk && defaultDesk._id === selectedDesk._id ? 'Default' : selectedDesk.name | translate}}</span>
         <b class="caret white"></b>
     </button>
     <ul class="dropdown-menu">

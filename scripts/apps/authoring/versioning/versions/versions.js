@@ -75,6 +75,6 @@ function versioningVersionDirective() {
     };
 }
 
-angular.module('superdesk.authoring.versioning.versions', [])
+angular.module('superdesk.apps.authoring.versioning.versions', [])
     .directive('sdVersioningVersion', versioningVersionDirective)
     .controller('VersioningWidgetCtrl', VersioningController);

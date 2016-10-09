@@ -1,4 +1,4 @@
-export default angular.module('superdesk.search.dir', [])
+export default angular.module('superdesk.apps.search.dir', [])
 /**
  * Search directive wraps locationParams for search
  *

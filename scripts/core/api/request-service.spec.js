@@ -1,6 +1,6 @@
 describe('request service', function() {
     beforeEach(window.module('superdesk.mocks'));
-    beforeEach(window.module('superdesk.api'));
+    beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module(function($provide) {
         $provide.service('$upload', ['$q', function($q) {
             this.upload = function() {
@@ -8,7 +8,7 @@ describe('request service', function() {
             };
         }]);
     }));
-    beforeEach(window.module('superdesk.upload'));
+    beforeEach(window.module('superdesk.core.upload'));
 
     it('can resend $http request', inject(function(request, $httpBackend) {
         var config = {url: 'test', method: 'GET'};

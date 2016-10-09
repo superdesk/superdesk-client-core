@@ -14,9 +14,9 @@ import SearchProviderConfigDirective from './directive';
 SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
 function SearchProviderSettingsController($scope, privileges) {}
 
-export default angular.module('superdesk.searchProviders', [
-    'superdesk.activity',
-    'superdesk.api'
+export default angular.module('superdesk.apps.searchProviders', [
+    'superdesk.core.activity',
+    'superdesk.core.api'
 ])
     .value('providerTypes', providerTypes)
     .directive('sdSearchProviderConfig', SearchProviderConfigDirective)

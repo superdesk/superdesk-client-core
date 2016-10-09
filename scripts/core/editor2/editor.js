@@ -613,13 +613,13 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
     });
 }
 
-angular.module('superdesk.editor2', [
-        'superdesk.editor2.ctrl',
-        'superdesk.editor2.embed',
-        'superdesk.editor2.content',
-        'superdesk.editor.spellcheck',
-        'superdesk.editor.utils',
-        'superdesk.authoring',
+angular.module('superdesk.apps.editor2', [
+        'superdesk.apps.editor2.ctrl',
+        'superdesk.apps.editor2.embed',
+        'superdesk.apps.editor2.content',
+        'superdesk.apps.editor.spellcheck',
+        'superdesk.apps.editor.utils',
+        'superdesk.apps.authoring',
         'angular-embed'
     ])
     .service('editor', EditorService)
@@ -1592,5 +1592,5 @@ function EditorUtilsFactory() {
     };
 }
 
-angular.module('superdesk.editor.utils', [])
+angular.module('superdesk.apps.editor.utils', [])
     .factory('editorUtils', EditorUtilsFactory);

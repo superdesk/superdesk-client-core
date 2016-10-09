@@ -1,6 +1,6 @@
-angular.module('superdesk.widgets.relatedItem', [
-    'superdesk.widgets.base',
-    'superdesk.authoring.widgets'
+angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
+    'superdesk.apps.dashboard.widgets.base',
+    'superdesk.apps.authoring.widgets'
 ])
     .controller('relatedItemController', RelatedItemController)
     .config(['authoringWidgetsProvider', function(authoringWidgets) {

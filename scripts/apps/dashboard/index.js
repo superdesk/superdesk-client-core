@@ -11,21 +11,21 @@ import { DashboardController } from './controllers';
 import * as directive from './directives';
 import * as svc from './services';
 
-angular.module('superdesk.dashboard.widgets', [])
+angular.module('superdesk.apps.dashboard.widgets', [])
     .provider('dashboardWidgets', svc.DashboardWidgets);
 
-angular.module('superdesk.widgets.base', ['superdesk.itemList'])
+angular.module('superdesk.apps.dashboard.widgets.base', ['superdesk.core.itemList'])
     .factory('BaseWidgetController', svc.BaseWidgetFactory);
 
-angular.module('superdesk.dashboard', [
-    'superdesk.activity',
-    'superdesk.dashboard.widgets',
-    'superdesk.dashboard.grid',
-    'superdesk.dashboard.world-clock',
-    'superdesk.workspace.tasks',
-    'superdesk.itemList',
-    'superdesk.legal_archive',
-    'superdesk.workspace'
+angular.module('superdesk.apps.dashboard', [
+    'superdesk.core.activity',
+    'superdesk.apps.dashboard.widgets',
+    'superdesk.apps.dashboard.grid',
+    'superdesk.apps.dashboard.world-clock',
+    'superdesk.apps.workspace.tasks',
+    'superdesk.core.itemList',
+    'superdesk.apps.legal_archive',
+    'superdesk.apps.workspace'
 ])
     .controller('DashboardController', DashboardController)
     .filter('wcodeFilter', () => (input, values) => _.pick(input, _.difference(_.keys(input), _.keys(values))))
@@ -44,4 +44,4 @@ angular.module('superdesk.dashboard', [
         });
     }]);
 
-angular.module('superdesk.dashboard').directive('sdWidget', directive.Widget);
+angular.module('superdesk.apps.dashboard').directive('sdWidget', directive.Widget);

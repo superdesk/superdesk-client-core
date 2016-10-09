@@ -6,7 +6,7 @@ import './content';
 import { WorkspaceService } from './services';
 import * as directive from './directives';
 
-angular.module('superdesk.workspace', ['superdesk.workspace.content'])
+angular.module('superdesk.apps.workspace', ['superdesk.apps.workspace.content'])
     .service('workspaces', WorkspaceService)
 
     .directive('sdDeskDropdown', directive.WorkspaceDropdownDirective)

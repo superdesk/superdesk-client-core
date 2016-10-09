@@ -1,7 +1,7 @@
 'use strict';
 
 describe('list directives', function() {
-    beforeEach(window.module('superdesk.list'));
+    beforeEach(window.module('superdesk.core.list'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module(function($provide) {
         $provide.provider('translateFilter', function() {

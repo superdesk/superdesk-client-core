@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    return angular.module('superdesk.avatar', [])
+    return angular.module('superdesk.core.avatar', [])
         .directive('sdUserAvatar', function() {
             return {
                 scope: {user: '='},

@@ -12,9 +12,9 @@ describe('workqueue', function() {
         });
 
     beforeEach(window.module('mock.route'));
-    beforeEach(window.module('superdesk.authoring.workqueue'));
+    beforeEach(window.module('superdesk.apps.authoring.workqueue'));
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.apps.authoring'));
 
     beforeEach(inject(function(session, $q) {
         spyOn(session, 'getIdentity').and.returnValue($q.when({_id: USER_ID}));

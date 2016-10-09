@@ -19,7 +19,7 @@ function ErrorHttpInterceptorFactory($q) {
     };
 }
 
-angular.module('superdesk.error', [])
+angular.module('superdesk.core.error', [])
 .config(['config', '$httpProvider', '$provide', function(config, $httpProvider, $provide) {
     if (config.raven && config.raven.dsn) {
         Raven.config(config.raven.dsn, {

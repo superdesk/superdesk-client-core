@@ -8,9 +8,9 @@ var SERVER_URL = 'http://localhost/resource',
 describe('basic auth adapter', function() {
     var $httpBackend;
 
-    beforeEach(window.module('superdesk.auth'));
-    beforeEach(window.module('superdesk.menu'));
-    beforeEach(window.module('superdesk.authoring'));
+    beforeEach(window.module('superdesk.core.auth'));
+    beforeEach(window.module('superdesk.core.menu'));
+    beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(inject(function (_$httpBackend_) {
         $httpBackend = _$httpBackend_;
     }));

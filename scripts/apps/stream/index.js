@@ -1,9 +1,9 @@
 import { StreamController } from './controllers';
 import { ActivityStream, ActivityMessage } from './directives';
 
-export default angular.module('superdesk.stream', [
-    'superdesk.activity',
-    'superdesk.asset'
+export default angular.module('superdesk.apps.stream', [
+    'superdesk.core.activity',
+    'superdesk.core.services.asset'
 ])
     .controller('StreamController', StreamController)
 

@@ -1388,10 +1388,10 @@ function multiSelectDirective() {
     };
 }
 
-export default angular.module('superdesk.ui', [
+export default angular.module('superdesk.core.ui', [
     'superdesk.config',
-    'superdesk.datetime',
-    'superdesk.ui.autoheight'
+    'superdesk.core.datetime',
+    'superdesk.core.ui.autoheight'
 ])
 
     .config(['defaultConfigProvider', function(defaultConfig) {

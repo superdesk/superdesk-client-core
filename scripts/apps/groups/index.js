@@ -5,8 +5,8 @@ import { GroupsSettingsController, GroupsConfigController } from './controllers'
 import { GroupsFactory } from './services';
 import * as directive from './directives';
 
-export default angular.module('superdesk.groups', [
-    'superdesk.users'
+export default angular.module('superdesk.apps.groups', [
+    'superdesk.apps.users'
 ])
     .config(['superdeskProvider', function(superdesk) {
         superdesk

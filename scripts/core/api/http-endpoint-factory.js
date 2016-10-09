@@ -252,5 +252,5 @@ function HttpEndpointFactory($http, $q, urls, _) {
     return HttpEndpoint;
 }
 
-angular.module('superdesk.api.http', [])
+angular.module('superdesk.core.api.http', [])
 .factory('HttpEndpointFactory', HttpEndpointFactory);

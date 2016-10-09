@@ -2,8 +2,8 @@
 
 describe('Image Crop', function() {
 
-    beforeEach(window.module('superdesk.upload'));
-    beforeEach(window.module('superdesk.imageFactory'));
+    beforeEach(window.module('superdesk.core.upload'));
+    beforeEach(window.module('superdesk.core.services.imageFactory'));
 
     describe('sdImageCrop directive', function() {
         var scope, isoScope, fakeImg, $elm;

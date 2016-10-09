@@ -22,5 +22,5 @@ function RequestService($injector) { // using $injector to avoid circular depend
     };
 }
 
-angular.module('superdesk.api.request', [])
+angular.module('superdesk.core.api.request', [])
 .service('request', RequestService);

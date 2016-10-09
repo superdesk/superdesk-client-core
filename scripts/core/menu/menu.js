@@ -8,11 +8,11 @@ function SuperdeskFlagsService(config) {
     angular.extend(this.flags, config.ui);
 }
 
-angular.module('superdesk.menu', [
-    'superdesk.menu.notifications',
-    'superdesk.privileges',
-    'superdesk.asset',
-    'superdesk.api'
+angular.module('superdesk.core.menu', [
+    'superdesk.core.menu.notifications',
+    'superdesk.core.privileges',
+    'superdesk.core.services.asset',
+    'superdesk.core.api'
 ])
 
     .service('superdeskFlags', SuperdeskFlagsService)

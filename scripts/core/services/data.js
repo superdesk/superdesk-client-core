@@ -1,4 +1,4 @@
-export default angular.module('superdesk.services.data', [])
+export default angular.module('superdesk.core.services.data', [])
     /**
      * Location State Adapter for Data Layer
      */

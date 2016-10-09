@@ -18,7 +18,7 @@ var wrapper = function(methodName) {
     };
 };
 
-export default angular.module('superdesk.directives.throttle', [])
+export default angular.module('superdesk.core.directives.throttle', [])
     /**
      * sdDebounce debounces model update.
      *

@@ -21,3 +21,32 @@ import 'apps/monitoring';
 import 'apps/settings';
 import 'apps/ingest';
 import 'apps/search-providers';
+
+export default angular.module('superdesk.apps', [
+    'superdesk.apps.settings',
+    'superdesk.apps.dashboard',
+    'superdesk.apps.users',
+    'superdesk.apps.users.import',
+    'superdesk.apps.users.profile',
+    'superdesk.apps.users.activity',
+    'superdesk.apps.archive',
+    'superdesk.apps.ingest',
+    'superdesk.apps.desks',
+    'superdesk.apps.groups',
+    'superdesk.apps.products',
+    'superdesk.apps.authoring',
+    'superdesk.apps.packaging',
+    'superdesk.apps.editor2',
+    'superdesk.apps.editor.spellcheck',
+    'superdesk.apps.notification',
+    'superdesk.apps.highlights',
+    'superdesk.apps.content_filters',
+    'superdesk.apps.dictionaries',
+    'superdesk.apps.vocabularies',
+    'superdesk.apps.searchProviders',
+    'superdesk.apps.stream',
+    'superdesk.apps.publish',
+    'superdesk.apps.templates',
+    'superdesk.apps.monitoring',
+    'superdesk.apps.profiling'
+]);

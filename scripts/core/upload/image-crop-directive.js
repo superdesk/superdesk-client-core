@@ -1,8 +1,8 @@
 (function(_) {
     'use strict';
 
-    return angular.module('superdesk.upload.imagecrop', [
-        'superdesk.translate'
+    return angular.module('superdesk.core.upload.imagecrop', [
+        'superdesk.core.translate'
     ])
 
     .directive('sdImageCropView', [function() {

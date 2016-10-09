@@ -3,7 +3,7 @@ import './styles/settings.less';
 
 import * as directive from './directives';
 
-export default angular.module('superdesk.settings', [])
+export default angular.module('superdesk.apps.settings', [])
     .config(['superdeskProvider', function(superdesk) {
         superdesk.activity('/settings', {
             label: gettext('Settings'),

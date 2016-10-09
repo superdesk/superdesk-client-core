@@ -130,7 +130,7 @@ function TransmissionDetailsDirective(api, archiveService) {
     };
 }
 
-angular.module('superdesk.authoring.versioning.history', [])
+angular.module('superdesk.apps.authoring.versioning.history', [])
     .directive('sdVersioningHistory', VersioningHistoryDirective)
     .directive('sdTransmissionDetails', TransmissionDetailsDirective)
     .controller('HistoryWidgetCtrl', HistoryController);

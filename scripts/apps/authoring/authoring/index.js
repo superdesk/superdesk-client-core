@@ -5,24 +5,24 @@ import * as directive from './directives';
 import * as ctrl from './controllers';
 import * as filter from './filters';
 
-angular.module('superdesk.authoring.autosave', []).service('autosave', svc.AutosaveService);
+angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 
-angular.module('superdesk.authoring', [
-        'superdesk.menu',
-        'superdesk.activity',
-        'superdesk.authoring.widgets',
-        'superdesk.authoring.metadata',
-        'superdesk.authoring.comments',
-        'superdesk.authoring.versioning',
-        'superdesk.authoring.versioning.versions',
-        'superdesk.authoring.versioning.history',
-        'superdesk.authoring.workqueue',
-        'superdesk.authoring.packages',
-        'superdesk.authoring.find-replace',
-        'superdesk.authoring.macros',
-        'superdesk.authoring.autosave',
-        'superdesk.desks',
-        'superdesk.notification',
+angular.module('superdesk.apps.authoring', [
+        'superdesk.core.menu',
+        'superdesk.core.activity',
+        'superdesk.apps.authoring.widgets',
+        'superdesk.apps.authoring.metadata',
+        'superdesk.apps.authoring.comments',
+        'superdesk.apps.authoring.versioning',
+        'superdesk.apps.authoring.versioning.versions',
+        'superdesk.apps.authoring.versioning.history',
+        'superdesk.apps.authoring.workqueue',
+        'superdesk.apps.authoring.packages',
+        'superdesk.apps.authoring.find-replace',
+        'superdesk.apps.authoring.macros',
+        'superdesk.apps.authoring.autosave',
+        'superdesk.apps.desks',
+        'superdesk.apps.notification',
         'contenteditable',
         'decipher.history',
         'superdesk.config'

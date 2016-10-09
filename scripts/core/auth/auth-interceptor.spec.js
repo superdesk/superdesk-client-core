@@ -1,6 +1,6 @@
 describe('auth interceptor', function() {
 
-    beforeEach(window.module('superdesk.auth.interceptor'));
+    beforeEach(window.module('superdesk.core.auth.interceptor'));
 
     beforeEach(window.module(function($provide) {
         $provide.constant('lodash', _);

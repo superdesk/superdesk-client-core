@@ -34,6 +34,7 @@ describe('master_desk', function() {
         browser.sleep(200);
         authoring.save();
         authoring.sendToButton.click();
+        authoring.publish_panel.click();
         expect(authoring.publish_button.isDisplayed()).toBe(true);
     });
 

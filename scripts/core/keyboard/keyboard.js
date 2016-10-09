@@ -1,4 +1,4 @@
-export default angular.module('superdesk.keyboard', ['gettext'])
+export default angular.module('superdesk.core.keyboard', ['gettext'])
 
 .constant('Keys', Object.freeze({
     pageup: 33,

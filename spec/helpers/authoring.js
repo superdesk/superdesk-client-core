@@ -26,6 +26,7 @@ function Authoring() {
 
     this.sendToButton = element(by.id('send-to-btn'));
     this.sendAndContinueBtn = element(by.buttonText('send and continue'));
+    this.sendAndPublishBtn = element(by.buttonText('publish from'));
     this.sendBtn = element(by.buttonText('send'));
 
     this.moreActionsButton = element(by.id('more-actions'));
@@ -45,6 +46,9 @@ function Authoring() {
                             all(by.css('[data-field="anpa_category"]'));
     this.subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
     this.missing_link = element(by.className('missing-link'));
+    this.publish_panel = element(by.css('#panel-publish:not(.ng-hide)'));
+    this.send_panel = element(by.css('#panel-send:not(.ng-hide)'));
+    this.fetch_panel = element(by.css('#panel-fetch:not(.ng-hide)'));
 
     /**
      * Find all file type icons in the item's info icons box matching the
@@ -102,6 +106,7 @@ function Authoring() {
     };
 
     this.sendToSidebarOpened = function(desk, stage, _continue) {
+        this.send_panel.click();
         var sidebar = element.all(by.css('.slide-pane')).last(),
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown-toggle'));
 
@@ -191,11 +196,40 @@ function Authoring() {
         }.bind(this), 1000);
         this.sendToButton.click();
 
+        this.publish_panel.click();
+
         browser.wait(function() {
             return this.publish_button.isPresent();
         }.bind(this), 1000);
 
+        this.publish_panel.click();
         this.publish_button.click();
+
+        if (!skipConfirm) {
+            var modal = element(by.className('modal-dialog'));
+            modal.isPresent().then(function(click) {
+                if (click) {
+                    modal.element(by.className('btn-primary')).click();
+                }
+            });
+        }
+    };
+
+    this.sendAndpublish = function(desk, skipConfirm) {
+        browser.wait(function() {
+            return this.sendToButton.isPresent();
+        }.bind(this), 1000);
+        this.sendToButton.click();
+
+        this.publish_panel.click();
+
+        browser.wait(function() {
+            return this.publish_button.isPresent();
+        }.bind(this), 1000);
+
+        this.publish_panel.click();
+        this.selectDeskforSendTo(desk);
+        this.sendAndPublishBtn.click();
 
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
@@ -223,6 +257,7 @@ function Authoring() {
         element(by.model('item.publish_schedule_date')).element(by.tagName('input')).sendKeys(scheduleDate);
         element(by.model('item.publish_schedule_time')).element(by.tagName('input')).sendKeys(scheduleTime);
 
+        this.publish_panel.click();
         this.publish_button.click();
 
         if (!skipConfirm) {

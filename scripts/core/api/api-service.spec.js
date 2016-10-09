@@ -40,11 +40,11 @@ function doConfig($provide) {
 }
 
 function doTestModule() {
-    angular.module('superdesk.api.tests', [])
+    angular.module('superdesk.core.api.tests', [])
     .config(['apiProvider', function(_apiProvider_) {
         apiProvider = _apiProvider_;
     }]);
-    window.module('superdesk.api', 'superdesk.api.tests');
+    window.module('superdesk.core.api', 'superdesk.api.tests');
     inject(function() {});
 }
 

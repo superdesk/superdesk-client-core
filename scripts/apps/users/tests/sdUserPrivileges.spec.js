@@ -15,7 +15,7 @@ describe('sdUserPrivileges directive', function() {
         $rootScope;
 
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.apps.users'));
 
     beforeEach(window.module(function ($provide) {
         fakeEndpoints = {};

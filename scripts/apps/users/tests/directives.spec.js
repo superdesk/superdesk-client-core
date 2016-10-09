@@ -13,7 +13,7 @@ var template = [
 describe('sdUserUnique Directive', function() {
     var scope;
 
-    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module(function($provide) {
         $provide.service('api', function($q) {
@@ -100,7 +100,7 @@ describe('sdUserUnique Directive', function() {
 describe('user edit directive', function() {
     var noop = angular.noop;
 
-    beforeEach(window.module('superdesk.users'));
+    beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(window.module(function($provide) {

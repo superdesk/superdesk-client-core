@@ -5,7 +5,7 @@ describe('Upload controller', function() {
     var files = [{type: 'text/plain'}],
         UPLOAD_URL = 'upload_url';
 
-    beforeEach(window.module('superdesk.archive'));
+    beforeEach(window.module('superdesk.apps.archive'));
 
     beforeEach(window.module(function($provide) {
         $provide.service('api', function($q) {

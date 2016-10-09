@@ -13,13 +13,13 @@ import { ContentFiltersService } from './services';
 import { ManageFiltersTab } from './directives';
 import * as ctrl from './controllers';
 
-// XXX: For some reason, loading the superdesk.content_filters module in
+// XXX: For some reason, loading the superdesk.apps.content_filters module in
 // tests fails to load due to "Unknown provider: superdeskProvider" error.
 // This happens if any taste case uses the inject() function.
 // Seems like something needs to be fixed in config, but for now loading
-// superdesk.publish module does the trick (FWIW, it's the module that
+// superdesk.apps.publish module does the trick (FWIW, it's the module that
 // contained the original code for the content_filters module).
-angular.module('superdesk.content_filters', ['superdesk.publish'])
+angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
 .config(['superdeskProvider', function (superdesk) {
         var templateUrl = 'scripts/apps/content-filters/' +
                           'views/settings.html';

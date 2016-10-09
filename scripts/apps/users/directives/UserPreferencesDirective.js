@@ -1,5 +1,5 @@
 /**
- * @memberof superdesk.users
+ * @memberof superdesk.apps.users
  * @ngdoc directive
  * @name sdUserPreferences
  * @description

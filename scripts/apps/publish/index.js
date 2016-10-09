@@ -14,7 +14,7 @@ import * as svc from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 
-export default angular.module('superdesk.publish', ['superdesk.users', 'superdesk.content_filters'])
+export default angular.module('superdesk.apps.publish', ['superdesk.apps.users', 'superdesk.apps.content_filters'])
     .value('transmissionTypes', transmissionTypes)
 
     .service('adminPublishSettingsService', svc.AdminPublishSettingsService)

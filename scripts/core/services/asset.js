@@ -3,7 +3,7 @@
  *
  * This module provides urls for static assets.
  */
-export default angular.module('superdesk.asset', [])
+export default angular.module('superdesk.core.services.asset', [])
 .provider('asset', [ '$injector', function ($injector) {
     this.templateUrl = function(path) {
         var config = $injector.get('config'),

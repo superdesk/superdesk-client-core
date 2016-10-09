@@ -1,4 +1,4 @@
-export default angular.module('superdesk.dragdrop.directives', [])
+export default angular.module('superdesk.core.directives.dragdrop', [])
     /**
      * sdSortable creates a container in which contained items can be sortable by drag/drop.
      *

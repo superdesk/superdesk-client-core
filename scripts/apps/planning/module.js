@@ -273,7 +273,7 @@ function CoverageTypeDirective() {
     };
 }
 
-export default angular.module('superdesk.planning', ['superdesk.elastic'])
+export default angular.module('superdesk.planning', ['superdesk.core.elastic'])
     .directive('sdPreviewItem', PreviewItemDirective)
     .directive('sdAssigneeBox', AssigneeBoxDirective)
     .directive('sdCoverageType', CoverageTypeDirective)

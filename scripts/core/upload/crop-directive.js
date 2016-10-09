@@ -1,4 +1,4 @@
-angular.module('superdesk.upload.crop', [])
+angular.module('superdesk.core.upload.crop', [])
 .directive('sdCrop', ['notify', 'gettext', '$interpolate', function(notify, gettext, $interpolate) {
     return {
         scope: {

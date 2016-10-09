@@ -1,4 +1,4 @@
-angular.module('superdesk.activity.modal', [])
+angular.module('superdesk.core.activity.modal', [])
 .directive('sdActivityModal', ['activityService', 'asset', function(activityService, asset) {
     return {
         scope: true,

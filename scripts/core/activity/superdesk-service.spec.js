@@ -9,10 +9,10 @@ describe('Superdesk service', function() {
                 return 'test';
             },
             filters: [intent],
-            category: 'superdesk.menu.main'
+            category: 'superdesk.core.menu.main'
         };
 
-    angular.module('superdesk.activity.test', ['superdesk.activity'])
+    angular.module('superdesk.core.activity.test', ['superdesk.core.activity'])
         .config(function(superdeskProvider) {
             provider = superdeskProvider;
             provider.widget('testWidget', testWidget);
@@ -33,8 +33,8 @@ describe('Superdesk service', function() {
             });
         });
 
-    beforeEach(window.module('superdesk.activity'));
-    beforeEach(window.module('superdesk.activity.test'));
+    beforeEach(window.module('superdesk.core.activity'));
+    beforeEach(window.module('superdesk.core.activity.test'));
     beforeEach(window.module('superdesk.mocks'));
 
     it('exists', inject(function(superdesk) {

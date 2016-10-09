@@ -1,7 +1,7 @@
 'use strict';
 
 describe('superdesk filters', function() {
-    beforeEach(window.module('superdesk.filters'));
+    beforeEach(window.module('superdesk.core.filters'));
 
     describe('sort items', function() {
 

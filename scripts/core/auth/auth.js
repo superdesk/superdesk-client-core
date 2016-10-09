@@ -34,7 +34,7 @@ function AuthExpiredInterceptor(session, $q, $injector, $rootScope, config, _) {
     };
 }
 
-angular.module('superdesk.auth.interceptor', ['superdesk.api', 'superdesk.session'])
+angular.module('superdesk.core.auth.interceptor', ['superdesk.core.api', 'superdesk.core.auth.session'])
     .service('AuthExpiredInterceptor', AuthExpiredInterceptor);
 
 ResetPassworController.$inject = ['$scope', '$location', 'api', 'notify', 'gettext'];
@@ -89,23 +89,23 @@ function ResetPassworController($scope, $location, api, notify, gettext) {
     }
 }
 
-angular.module('superdesk.session', [])
+angular.module('superdesk.core.auth.session', [])
     .constant('SESSION_EVENTS', {
         LOGIN: 'login',
         LOGOUT: 'logout',
         IDENTITY_LOADED: 'identity_loaded'
     });
 
-export default angular.module('superdesk.auth', [
-    'superdesk.features',
-    'superdesk.activity',
-    'superdesk.session',
-    'superdesk.asset',
+export default angular.module('superdesk.core.auth', [
+    'superdesk.core.features',
+    'superdesk.core.activity',
+    'superdesk.core.auth.session',
+    'superdesk.core.services.asset',
     'superdesk.config',
-    'superdesk.auth.auth',
-    'superdesk.auth.basic',
-    'superdesk.auth.login',
-    'superdesk.auth.interceptor'
+    'superdesk.core.auth.auth',
+    'superdesk.core.auth.basic',
+    'superdesk.core.auth.login',
+    'superdesk.core.auth.interceptor'
     ])
     .config(['$httpProvider', 'superdeskProvider', 'assetProvider', function($httpProvider, superdesk, asset) {
         $httpProvider.interceptors.push('AuthExpiredInterceptor');

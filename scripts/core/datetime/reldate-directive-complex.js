@@ -44,4 +44,4 @@ function ReldateComplex(config, gettextCatalog) {
     };
 }
 
-angular.module('superdesk.datetime.reldatecomplex', []).directive('sdReldateComplex', ReldateComplex);
+angular.module('superdesk.core.datetime.reldatecomplex', []).directive('sdReldateComplex', ReldateComplex);
