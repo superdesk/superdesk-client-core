@@ -1,25 +1,18 @@
-WebPublisherManagerController.$inject = ['$scope', 'api'];
-export function WebPublisherManagerController($scope, api) {
-	$scope.sites = ['content'];
-	$scope.manageSite = false;
-	
-    $scope.toogleCreateSite = function() {
-    	$scope.new = {};
+WebPublisherManagerController.$inject = ['$scope', 'publiser'];
+export function WebPublisherManagerController($scope, publisher) {
+    $scope.sites = ['content'];
+    $scope.manageSite = false;
+
+    $scope.toogleCreateSite = () => {
+        $scope.new = {};
         $scope.manageSite = !$scope.manageSite;
     };
 
-    $scope.save = function() {
-  //       content.createSite($scope.new)
-  //           .then(function() {
-		//             refreshSites();
-		//             $scope.toogleCreateSite();
-		//         }
-		// );
+    $scope.save = () => {
+        publisher.createSite($scope.new).then(refreshSites);
     };
 
     function refreshSites() {
-        // return content.getSites().then(function(sites) {
-        //     $scope.sites = sites;
-        // });
+        publisher.querySites().then(sites => $scope.sites = sites);
     }
 }

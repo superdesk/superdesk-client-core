@@ -1,6 +1,14 @@
 import { WebPublisherManagerController } from './controllers';
+import * as services from './services';
 
-export default angular.module('superdesk.web_publisher', ['superdesk.activity'])
+export default angular.module('superdesk.web_publisher', [
+    'superdesk.core.activity',
+    'superdesk.config'
+    ])
+
+    .factory('publisher', services.PublisherFactory)
+    .factory('pubapi', services.PubAPIFactory)
+
     .config(['superdeskProvider', 'config', function(superdesk, config) {
         if (config.features && config.features.webPublisher) {
             superdesk
