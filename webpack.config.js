@@ -53,12 +53,12 @@ module.exports = function makeConfig(grunt) {
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js')
             },
-            extensions: ['', '.js']
+            extensions: ['', '.js', '.jsx']
         },
         module: {
             loaders: [
                 {
-                    test: /\.js$/,
+                    test: /\.jsx?$/,
                     exclude: function(p) {
                         // don't exclude anything outside node_modules
                         if (p.indexOf('node_modules') === -1) {
@@ -71,8 +71,12 @@ module.exports = function makeConfig(grunt) {
                     loader: 'babel',
                     query: {
                         cacheDirectory: true,
-                        presets: ['es2015']
+                        presets: ['es2015', 'react']
                     }
+                },
+                {
+                    test: /\.html$/,
+                    loader: 'html'
                 },
                 {
                     test: /\.css/,
