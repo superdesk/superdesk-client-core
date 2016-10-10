@@ -162,6 +162,11 @@ export function SearchResults(
                     }
                 }
 
+                if (data && data.items && scope.showRefresh && !data.force) {
+                    // if we know the ids of the items then try to fetch those only
+                    criteria.source.query = search.getItemQuery(data.items);
+                }
+
                 criteria.source.from = 0;
                 scope.total = null;
                 criteria.aggregations = $rootScope.aggregations;
