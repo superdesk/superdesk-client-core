@@ -1,9 +1,9 @@
 ItemRepo.$inject = [
-    '$location', 'asset', 'metadata', 'searchProviderService', '$filter', 'gettext', 'api'
+    '$location', 'asset', 'metadata', 'meta', 'searchCommon', 'searchProviderService', '$filter', 'gettext', 'api'
 ];
 
 export function ItemRepo(
-	$location, asset, metadata, searchProviderService, $filter, gettext, api
+	$location, asset, metadata, meta, common, searchProviderService, $filter, gettext, api
 ) {
     return {
         scope: {
@@ -14,6 +14,15 @@ export function ItemRepo(
         link: function(scope, elem) {
 
             /*
+             * function to initialize default values on init or search provider change
+             */
+            function setDefaultValues() {
+                if (scope.repo && scope.repo.search && scope.repo.search.indexOf('scanpix') === 0) {
+                    meta.scanpix_subscription = common.scanpix_subscriptions[0].name;
+                }
+            }
+
+            /*
              * init function to setup the directive initial state and
              * called by $locationChangeSuccess event
              */
@@ -22,17 +31,18 @@ export function ItemRepo(
                 scope.query = params.q;
 
                 scope.search_config = metadata.search_config;
-                scope.scanpix_subscriptions = [{
+
+                searchProviderService.getAllowedProviderTypes().then(function(providerTypes) {
+                    scope.searchProviderTypes = providerTypes;
+                });
+
+                common.scanpix_subscriptions = [{
                     name: 'subscription',
                     label: gettext('inside subscription'),
                 }, {
                     name: 'all',
                     label: gettext('all photos'),
                 }];
-
-                searchProviderService.getAllowedProviderTypes().then(function(providerTypes) {
-                    scope.searchProviderTypes = providerTypes;
-                });
 
                 if (params.repo) {
                     var param_list = params.repo.split(',');
@@ -61,6 +71,7 @@ export function ItemRepo(
                 }
 
                 fetchProviders(params);
+                setDefaultValues();
             }
 
             init();
@@ -119,6 +130,7 @@ export function ItemRepo(
             };
 
             scope.toggleRepo = function(repoName) {
+                setDefaultValues();
                 scope.repo[repoName] = !scope.repo[repoName];
                 $location.search('repo', getActiveRepos());
             };
