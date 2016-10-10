@@ -1,5 +1,5 @@
 // styles
-import './styles/auth.less';
+import './styles/auth.scss';
 
 // scripts
 import './auth';

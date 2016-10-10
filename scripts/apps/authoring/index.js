@@ -1,14 +1,14 @@
 // styles
-import './comments/comments.less';
-import './metadata/metadata.less';
-import './packages/packages.less';
-import './styles/authoring.less';
-import './styles/multiedit.less';
-import './styles/themes.less';
-import './styles/unused.less';
-import './versioning/history/history.less';
-import './versioning/versions/versions.less';
-import './widgets/widgets-article.less';
+import './comments/comments.scss';
+import './metadata/metadata.scss';
+import './packages/packages.scss';
+import './styles/authoring.scss';
+import './styles/multiedit.scss';
+import './styles/themes.scss';
+import './styles/unused.scss';
+import './versioning/history/history.scss';
+import './versioning/versions/versions.scss';
+import './widgets/widgets-article.scss';
 
 // scripts
 import './authoring';

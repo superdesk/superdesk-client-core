@@ -1,5 +1,5 @@
 // styles
-import './styles/products.less';
+import './styles/products.scss';
 
 import { ProductsFactory } from './services';
 import { ProductsConfigController } from './controllers';

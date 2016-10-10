@@ -1,0 +1,47 @@
+
+@import '~mixins.scss';
+@import '~variables.scss';
+
+.words-list {
+    max-height: 10em;
+    overflow-y: scroll;
+    background-color: #fff;
+    border: 1px solid #dfdfdf;
+
+    li {
+        padding: 4px 0 4px 9px;
+        margin: 4px;
+
+        &:hover {
+            background-color: #e7f2f7;
+        }
+
+        .btn {
+            background-color: transparent;
+        }
+    }
+}
+
+#dict-file {
+    margin-bottom: 0;
+    margin-left: 5px
+}
+
+.abbreviations-field {
+    display: inline;
+
+    label {
+        width: 100px;
+        display: inline-block;
+        padding-left: 6px;
+        &.case-sensitive { text-transform: none; }
+    }
+    input {
+        width: 250px;
+        margin: 3px;
+    }
+}
+
+.divider {
+    @include nav-divider();
+}

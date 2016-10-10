@@ -1,5 +1,5 @@
 // styles
-import './styles/groups.less';
+import './styles/groups.scss';
 
 import { GroupsSettingsController, GroupsConfigController } from './controllers';
 import { GroupsFactory } from './services';

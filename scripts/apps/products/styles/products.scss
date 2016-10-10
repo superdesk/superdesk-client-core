@@ -1,0 +1,49 @@
+// product.scss
+// Styling for the superdesk product module
+// ----------------------------------------------------------------------------------------
+@import '~mixins.scss';
+@import '~variables.scss';
+
+
+/* 	============================
+		PRODUCT CONFIG
+	============================ */
+
+/* Product create/edit popup */
+
+.add-product-popup {
+
+	.modal-body {
+		bottom: 0;
+		height: 500px !important;
+		max-height:500px !important;
+		@include border-radius(0px 0px 4px 4px);
+
+		.modal-screen {
+			top: 48px;
+		}
+	}
+	
+}
+
+.product-search {
+ 	float: left;
+   	max-width: 650px;
+   	margin-left: 10px;
+   	input {
+   		width: 505px;
+   		float: left;
+   	}
+   	select {
+   		width: 100px;
+   	}
+}
+
+.pills-list {
+	.match {
+		background-color: #81efef;
+	}
+	.no-match {
+		background-color: #efc18c;
+	}
+}

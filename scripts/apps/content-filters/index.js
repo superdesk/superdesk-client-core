@@ -7,7 +7,7 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-import './styles/content-filters.less';
+import './styles/content-filters.scss';
 
 import { ContentFiltersService } from './services';
 import { ManageFiltersTab } from './directives';

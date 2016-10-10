@@ -1,5 +1,5 @@
-import './styles/dashboard.less';
-import './styles/settings.less';
+import './styles/dashboard.scss';
+import './styles/settings.scss';
 
 import './ingest-stats-widget/stats';
 

@@ -1,4 +1,4 @@
-import './styles/upload.less';
+import './styles/upload.scss';
 
 // scripts
 import './upload';

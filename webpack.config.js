@@ -44,7 +44,7 @@ module.exports = function makeConfig(grunt) {
             root: [
                 __dirname,
                 path.join(__dirname, '/scripts'),
-                path.join(__dirname, '/styles/less')
+                path.join(__dirname, '/styles/sass')
             ],
             alias: {
                 'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-2010-2020',
@@ -81,6 +81,10 @@ module.exports = function makeConfig(grunt) {
                 {
                     test: /\.less$/,
                     loader: 'style!css!less'
+                },
+                {
+                    test: /\.scss$/,
+                    loader: 'style!css!sass'
                 },
                 {
                     test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,

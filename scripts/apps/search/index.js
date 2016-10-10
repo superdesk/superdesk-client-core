@@ -1,4 +1,4 @@
-import './styles/search.less';
+import './styles/search.scss';
 
 import * as svc from './services';
 import * as directive from './directives';

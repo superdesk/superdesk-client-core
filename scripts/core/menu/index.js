@@ -1,5 +1,5 @@
 // styles
-import './styles/menu.less';
+import './styles/menu.scss';
 
 // scripts
 import './menu';
