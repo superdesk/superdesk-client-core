@@ -5,7 +5,7 @@ export function SearchContainer() {
             this.flags = $scope.flags || {};
             var query = _.omit($location.search(), '_id');
             this.flags.facets = !_.isEmpty(query);
-            pageTitle.setPageUrl(gettext('Search'));
+            pageTitle.setUrl(gettext('Search'));
         }]
     };
 }

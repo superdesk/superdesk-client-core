@@ -232,8 +232,10 @@ describe('sdSearchPanel directive', function () {
         'superdesk.searchProviders',
         'superdesk.search',
         'superdesk.core.services.pageTitle',
-        'superdesk.templates-cache'  // needed so that directive's template is placed into
-                     // $templateCache, avoiding the "Unexpected request" error
+
+        // needed so that directive's template is placed into
+        // $templateCache, avoiding the "Unexpected request" error
+        'superdesk.templates-cache'
     ));
 
     /**

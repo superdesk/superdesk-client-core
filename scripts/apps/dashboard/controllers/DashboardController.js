@@ -8,7 +8,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
     $scope.workspaces = workspaces;
     $scope.$watch('workspaces.active', setupWorkspace);
     workspaces.getActive();
-    pageTitle.setPageUrl(gettext('Dashboard'));
+    pageTitle.setUrl(gettext('Dashboard'));
 
     function setupWorkspace(workspace) {
         vm.current = null;

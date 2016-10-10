@@ -10,11 +10,11 @@ export function SettingsView($route, superdesk, pageTitle) {
             });
 
             scope.currentRoute = $route.current;
-            pageTitle.setPageUrl(_.capitalize(gettext('Settings')));
+            pageTitle.setUrl(_.capitalize(gettext('Settings')));
             if (scope.currentRoute.$$route.label !== 'Settings') {
-                pageTitle.setPageWorkspace(_.capitalize(gettext(scope.currentRoute.$$route.label)));
+                pageTitle.setWorkspace(_.capitalize(gettext(scope.currentRoute.$$route.label)));
             } else {
-                pageTitle.setPageWorkspace(null);
+                pageTitle.setWorkspace(null);
             }
         }
     };
