@@ -10,11 +10,11 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
             scope.edited = null;
 
             scope.$watch('selected', function() {
-                pageTitle.setPageWorkspace(scope.selected ? scope.selected.name || '' : '');
+                pageTitle.setWorkspace(scope.selected ? scope.selected.name || '' : '');
             });
 
             scope.$on('$destroy', function() {
-                pageTitle.setPageWorkspace('');
+                pageTitle.setWorkspace('');
             });
 
             scope.afterSave = function(workspace) {

@@ -16,7 +16,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle) {
         link: function(scope, elem) {
             var containerElem = elem.find('.content-list');
             containerElem.on('scroll', handleContainerScroll);
-            pageTitle.setPageUrl(_.capitalize(gettext(scope.type)));
+            pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
             function handleContainerScroll() {
                 if ($rootScope.itemToogle) {

@@ -7,27 +7,27 @@
  * If Url is search then there won't be desk
  *
  */
-export default angular.module('superdesk.services.pageTitle', [])
+export default angular.module('superdesk.core.services.pageTitle', [])
     .service('pageTitle', function() {
         this.title = 'Superdesk';
         this.url = '';
         this.workspace = '';
 
-        this.setPageUrl = function(url) {
+        this.setUrl = function(url) {
             this.url = url;
-            setPageTitle(this.url, this.workspace);
+            setTitle(this.url, this.workspace);
         };
 
-        this.setPageWorkspace = function(activeWorkspace) {
+        this.setWorkspace = function(activeWorkspace) {
             this.workspace = activeWorkspace;
-            setPageTitle(this.url, this.workspace);
+            setTitle(this.url, this.workspace);
         };
 
-        function setPageTitle(url, activeWorkspace) {
+        function setTitle(url, activeWorkspace) {
             document.title = 'Superdesk' + (url?' - ' + url:'') + (activeWorkspace?' - ' + activeWorkspace:'');
         }
 
-        this.clearPageTitle = function() {
+        this.clear = function() {
             document.title = this.title ;
         };
     });
