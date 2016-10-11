@@ -220,6 +220,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * Returns true if Embargo needs to be displayed, false otherwise.
              */
             scope.showEmbargo = function() {
+                // If user doesn't have embargo privilege then don't display embargo fields
+                if (!privileges.privileges.embargo) {
+                    return false;
+                }
                 if (config.ui && config.ui.publishEmbargo === false) {
                     return false;
                 }
