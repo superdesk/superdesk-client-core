@@ -10,6 +10,10 @@ describe('text editor', function() {
     beforeEach(function() {
         // remove all elements from body
         document.body = document.createElement('body');
+
+        window.MediumEditor = jasmine.createSpy('editor').and.returnValue({
+            subscribe: jasmine.createSpy('subscribe')
+        });
     });
 
     function createScope(text, $rootScope) {
@@ -213,8 +217,6 @@ describe('text editor', function() {
         scope.node = document.createElement('p');
         scope.node.innerHTML = 'test';
 
-        window.MediumEditor = jasmine.createSpy('editor');
-
         var $elm = $compile('<div sd-text-editor ng-model="item.body_html" data-type="item.type"></div>')(scope);
         scope.$digest();
 
@@ -238,8 +240,6 @@ describe('text editor', function() {
 
         scope.node = document.createElement('p');
         scope.node.innerHTML = 'test';
-
-        window.MediumEditor = jasmine.createSpy('editor');
 
         var $elm = $compile('<div sd-text-editor ng-model="item.body_html" data-type="item.type"' +
             ' data-config="{tabindex: 1}"></div>')(scope);
