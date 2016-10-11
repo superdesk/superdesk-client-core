@@ -832,6 +832,11 @@ angular.module('superdesk.apps.editor', ['superdesk.apps.editor.spellcheck'])
                             updateTimeout = $timeout(updateModel, 800, false);
                         });
 
+                        //update model on markup only changes as well
+                        scope.medium.subscribe('editableInput', function (event, editable) {
+                            updateTimeout = $timeout(updateModel, 800, false);
+                        });
+
                         editorElem.on('blur', function(event) {
                             $timeout.cancel(updateTimeout);
                             scope.node.classList.remove(TYPING_CLASS);
