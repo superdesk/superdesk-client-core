@@ -94,6 +94,9 @@
                         <li ng-class="{active: tab === 'metadata'}">
                             <button ng-click="tab = 'metadata'"><span translate>Metadata</span></button>
                         </li>
+                        <li ng-class="{active: tab === 'history'}">
+                            <button ng-click="tab = 'history'"><span translate>Item history</span></button>
+                        </li>
                     </ul>
                     <button ng-click="preview(null)" class="close-preview">
                         <i class="icon-close-small"></i>
@@ -102,6 +105,7 @@
                 <div class="content" ng-if="selected.preview">
                     <div ng-if="tab === 'content'"  sd-media-preview></div>
                     <div ng-if="tab === 'metadata'" sd-media-metadata data-item="selected.preview"></div>
+                    <div ng-if="tab === 'history'" sd-versioning-history data-item="selected.preview"></div>
                 </div>
             </div>
         </div>

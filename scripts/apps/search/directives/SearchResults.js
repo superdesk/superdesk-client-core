@@ -63,6 +63,8 @@ export function SearchResults(
                 search: 'local'
             };
 
+            scope.showHistoryTab = true;
+
             if ($location.search().repo &&
                 !_.intersection($location.search().repo.split(','),
                     ['archive', 'published', 'ingest', 'archived']).length) {
@@ -321,6 +323,10 @@ export function SearchResults(
                 }
                 scope.selected.preview = item;
                 scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
+                if (scope.selected.preview != null){
+                    scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
+                }
+
                 $location.search('_id', item ? item._id : null);
             };
 

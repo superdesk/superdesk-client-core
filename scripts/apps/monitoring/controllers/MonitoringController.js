@@ -20,6 +20,7 @@ export function MonitoringController($rootScope, $location, desks) {
 
     this.totalItems = '';
     this.showRefresh = false;
+    this.showHistoryTab = true;
 
     this.isDeskChanged = function () {
         return desks.changeDesk;
@@ -36,6 +37,9 @@ export function MonitoringController($rootScope, $location, desks) {
     function preview(item) {
         vm.previewItem = item;
         vm.state['with-preview'] = !!item;
+        if (vm.previewItem != null){
+            vm.showHistoryTab = vm.previewItem.state !== 'ingested';
+        }
     }
 
     function closePreview() {

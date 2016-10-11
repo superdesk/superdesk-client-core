@@ -58,7 +58,10 @@ function HistoryController($scope, authoring, api, notify, desks, archiveService
 VersioningHistoryDirective.$inject = [];
 function VersioningHistoryDirective() {
     return {
-        templateUrl: 'scripts/apps/authoring/versioning/history/views/history.html'
+        templateUrl: 'scripts/apps/authoring/versioning/history/views/history.html',
+        scope: {
+            item: '='
+        }
     };
 }
 
