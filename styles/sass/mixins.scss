@@ -376,17 +376,15 @@
 }
 
 // Generates the flex order based on the custom 'order' attribute added for the fields in the authoring header and authoring content
-// @include generate-orders(40);
-// @mixin generate-orders($n, $i: 1) when ($i =< $n) {
-//     [order="#{$i}"] {
-//         order: $i;
-//     }
-//     @include generate-orders($n, ($i + 1));
-// }
+@mixin generate-orders($length) {
+    @for $i from 1 through $length {
+        [order="#{$i}"] {
+            order: $i
+        }
+    }
+}
 
-// @for $i from 1 through 40
-//  .#{$class-slug}-#{$i}
-//    width: 60px + $i
+@include generate-orders(40);
 
 // Defines the width of the items in the authoring header based on the custom 'sd-width' attribute
 [sd-width="full"] {flex-basis: 100%}
