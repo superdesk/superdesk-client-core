@@ -1,13 +1,21 @@
 WorkspaceDropdownDirective.$inject = ['desks', 'workspaces', '$route', 'preferencesService', '$location', 'reloadService',
-    'notifyConnectionService', 'deskNotifications'];
+    'notifyConnectionService', 'deskNotifications', 'pageTitle'];
 export function WorkspaceDropdownDirective(desks, workspaces, $route, preferencesService, $location, reloadService,
-    notifyConnectionService, deskNotifications) {
+    notifyConnectionService, deskNotifications, pageTitle) {
     return {
         templateUrl: 'scripts/apps/workspace/views/workspace-dropdown.html',
         link: function(scope) {
             scope.workspaces = workspaces;
             scope.wsList = null;
             scope.edited = null;
+
+            scope.$watch('selected', function() {
+                pageTitle.setWorkspace(scope.selected ? scope.selected.name || '' : '');
+            });
+
+            scope.$on('$destroy', function() {
+                pageTitle.setWorkspace('');
+            });
 
             scope.afterSave = function(workspace) {
                 desks.setCurrentDeskId(null);

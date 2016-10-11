@@ -36,6 +36,7 @@ var modules = [
     'superdesk.core.services.entity',
     'superdesk.core.services.permissions',
     'superdesk.core.services.storage',
+    'superdesk.core.services.pageTitle',
 
     // directives/
     'superdesk.core.directives.autofocus',

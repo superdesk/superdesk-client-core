@@ -6,6 +6,7 @@ describe('workspace', function() {
 
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.dashboard'));
+    beforeEach(window.module('superdesk.core.services.pageTitle'));
 
     beforeEach(inject(function(session) {
         session.identity = {_id: 'u1'};
