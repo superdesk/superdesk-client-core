@@ -574,6 +574,16 @@ export function SearchService($location, gettext, config, session) {
     };
 
     /**
+     * Returns a query to search items by id
+     *
+     * @param {Object} items - {_id: 1}
+     */
+    this.getItemQuery = function(items) {
+        var updatedItems = _.keys(items);
+        return {'filtered': {'filter': {'terms': {'_id': updatedItems}}}};
+    };
+
+    /**
      * Update scope items only with the matching fetched newItems
      *
      * @param {Object} newItems

@@ -328,6 +328,11 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     multi.reset();
                 }
 
+                if (data && data.items && scope.showRefresh && !data.force) {
+                    // if we know the ids of the items then try to fetch those only
+                    criteria.source.query = search.getItemQuery(data.items);
+                }
+
                 return apiquery().then(function(items) {
                     if (!scope.showRefresh && data && !data.force && (data.user !== session.identity._id)) {
                         var itemPreviewing = isItemPreviewing();
