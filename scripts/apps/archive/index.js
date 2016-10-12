@@ -128,13 +128,7 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Duplicate'),
                 icon: 'copy',
                 monitor: true,
-                controller: ['api', 'notify', '$rootScope', 'data', function(api, notify, $rootScope, data) {
-                    api.save('duplicate', {}, {desk: data.item.task.desk}, data.item)
-                        .then(function() {
-                            $rootScope.$broadcast('item:duplicate');
-                            notify.success(gettext('Item Duplicated'));
-                        });
-                }],
+                controller: ctrl.DuplicateController,
                 filters: [{action: 'list', type: 'archive'}],
                 keyboardShortcut: 'ctrl+d',
                 privileges: {duplicate: 1},
