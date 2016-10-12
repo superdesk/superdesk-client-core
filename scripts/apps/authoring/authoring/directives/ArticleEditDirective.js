@@ -101,6 +101,10 @@ export function ArticleEditDirective(
                         return scope.item.renditions && scope.item.renditions[crop.name];
                     });
                 }
+
+                if (scope.item && !scope.item.sign_off) {
+                    scope.modifySignOff(session.identity);
+                }
             });
 
             /**
@@ -166,9 +170,10 @@ export function ArticleEditDirective(
              * Modify the sign-off with the value from sign_off_mapping field from user
              */
             scope.modifySignOff = function(user) {
-                var signOffMapping = config.user.sign_off_mapping;
-                scope.item.sign_off = user[signOffMapping];
-                autosave.save(scope.item, scope.origItem);
+                if (config.user && config.user.sign_off_mapping) {
+                    scope.item.sign_off = user[config.user.sign_off_mapping];
+                    autosave.save(scope.item, scope.origItem);
+                }
             };
 
             /**
