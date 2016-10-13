@@ -67,7 +67,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             }, true);
 
             $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
-            $scope.origItem.sign_off = $scope.origItem.sign_off || $scope.origItem.version_creator;
 
             $scope.fullPreview = false;
             $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
