@@ -37,22 +37,11 @@ $desk-width: 270px;
     background: $done-color;
 }
 
-.desk-tabs.toggle-list {
-    ul li {
-        padding-right: 15px;
-        a {
-            height: 28px !important;
-            line-height: 28px !important;
-            font-size: 12px;
-        }
-        a#users {
-            float: left;
-        }
-        .online-users {
-            margin-top: -10px;
-            margin-left: 20px;
-            border-left: 1px solid #dfdfdf;
-        }
+.desk-tabs {
+    .online-users {
+        margin-top: -10px;
+        margin-left: 20px;
+        border-left: 1px solid #dfdfdf;
     }
 }
 

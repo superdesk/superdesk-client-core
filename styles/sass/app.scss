@@ -33,6 +33,7 @@
 
 // Components: Buttons & Alerts
 @import "buttons.scss";
+@import "buttons/toggle-buttons.scss";
 @import "button-groups.scss";
 @import "alerts.scss"; // Note: alerts share common CSS with buttons and thus have styles in buttons.scss
 
