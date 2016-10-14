@@ -1,5 +1,5 @@
-TemplatesService.$inject = ['api', 'session', '$q', 'gettext', 'preferencesService'];
-export function TemplatesService(api, session, $q, gettext, preferencesService) {
+TemplatesService.$inject = ['api', 'session', '$q', 'gettext', 'preferencesService', 'privileges', 'desks'];
+export function TemplatesService(api, session, $q, gettext, preferencesService, privileges, desks) {
     var PAGE_SIZE = 10;
     var PREFERENCES_KEY = 'templates:recent';
 
@@ -72,11 +72,6 @@ export function TemplatesService(api, session, $q, gettext, preferencesService) 
         // in template management only see the templates that are create by the user
         criteria.$or = [{user: session.identity._id}];
 
-        // if you are admin then you can edit public templates
-        if (self.isAdmin()) {
-            criteria.$or.push({is_public: true});
-        }
-
         if (type !== undefined) {
             criteria.template_type = type;
         }
@@ -85,11 +80,30 @@ export function TemplatesService(api, session, $q, gettext, preferencesService) 
             criteria.template_name = {'$regex': templateName, '$options': '-i'};
         }
 
-        params.where = JSON.stringify({
-            '$and': [criteria]
-        });
+        // if you are admin then you can edit public templates
+        if (self.isAdmin(true)) {
+            criteria.$or.push({is_public: true});
+        } else if (self.isAdmin()) {
+            var _criteria = criteria;
+            criteria = desks.fetchCurrentUserDesks().then(desks => {
+                _criteria.$or.push({
+                    is_public: true,
+                    template_desks: {$in: desks._items.map(desk => desk._id)}
+                });
 
-        return api.query('content_templates', params);
+                return _criteria;
+            });
+        }
+
+        return $q.when(criteria)
+            .then(criteria => {
+                params.where = JSON.stringify({
+                    '$and': [criteria]
+                });
+                return params;
+            }).then(params => {
+                return api.query('content_templates', params);
+            });
     };
 
     this.fetchTemplatesByUserDesk = function (user, desk, page, pageSize, type, templateName) {
@@ -155,8 +169,19 @@ export function TemplatesService(api, session, $q, gettext, preferencesService) 
         });
     };
 
-    this.isAdmin = function() {
-        return session.identity.user_type === 'administrator';
+    /**
+     * Test if user is admin
+     *
+     * @param {bool} strict - if true user must be `administrator`, otherwise it's enough to have privileges
+     * @return {bool}
+     */
+    this.isAdmin = function(strict) {
+        let admin = session.identity.user_type === 'administrator';
+        if (strict) {
+            return admin;
+        } else {
+            return admin || privileges.privileges.content_templates;
+        }
     };
 
     this.addRecentTemplate = function(deskId, templateId) {
