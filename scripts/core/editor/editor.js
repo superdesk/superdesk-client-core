@@ -745,14 +745,14 @@ angular.module('superdesk.apps.editor', ['superdesk.apps.editor.spellcheck'])
 
     .service('editor', EditorService)
 
-    .directive('sdTextEditor', ['editor', 'spellcheck', '$timeout', 'config', 'keyboardManager', 'Keys',
-    function (editor, spellcheck, $timeout, config, keyboardManager, Keys) {
+    .directive('sdTextEditor', ['editor', 'spellcheck', '$timeout', 'config', 'keyboardManager', 'Keys', 'gettextCatalog',
+    function (editor, spellcheck, $timeout, config, keyboardManager, Keys, 'gettextCatalog') {
 
         var disableToolbar = config.editor.disableEditorToolbar || false;
 
         var editorConfig = {
             buttons: ['bold', 'italic', 'underline', 'quote', 'anchor'],
-            anchorInputPlaceholder: gettext('Paste or type a full link'),
+            anchorInputPlaceholder: gettextCatalog.getString('Paste or type a full link'),
             disablePlaceholders: true,
             spellcheck: false,
             disableToolbar: disableToolbar

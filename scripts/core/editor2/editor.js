@@ -765,7 +765,7 @@ angular.module('superdesk.apps.editor2', [
                 cleanPastedHTML: false
             },
             anchor: {
-                placeholderText: gettext('Paste or type a full link'),
+                placeholderText: gettextCatalog.getString('Paste or type a full link'),
                 linkValidation: true
             },
             anchorPreview: {
