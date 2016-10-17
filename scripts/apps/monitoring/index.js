@@ -15,7 +15,7 @@ import './aggregate-widget/aggregate';
 import * as ctrl from './controllers';
 import * as config from './config';
 import * as directive from './directives';
-import { CardsService } from './services';
+import * as svc from './services';
 import { SplitFilter } from './filters';
 
 angular.module('superdesk.apps.monitoring', [
@@ -26,7 +26,8 @@ angular.module('superdesk.apps.monitoring', [
 ])
     .controller('Monitoring', ctrl.MonitoringController)
 
-    .service('cards', CardsService)
+    .service('cards', svc.CardsService)
+    .service('TranslationService', svc.TranslationService)
 
     .directive('sdMonitoringView', directive.MonitoringView)
     .directive('sdMonitoringGroup', directive.MonitoringGroup)
@@ -43,6 +44,19 @@ angular.module('superdesk.apps.monitoring', [
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         keyboardManager.register('Monitoring', 'ctrl + g', gettext('Switches between single/grouped stage view'));
         keyboardManager.register('Monitoring', 'ctrl + alt + g', gettext('Switches between single/grouped desk view'));
+    }])
+
+    .config(['superdeskProvider', function (superdesk) {
+        superdesk
+            .activity('translate', {
+                label: gettext('Translate'),
+                icon: 'globe',
+                dropdown: directive.Translations,
+                keyboardShortcut: 'ctrl+t',
+                filters: [
+                    {action: 'list', type: 'archive'}
+                ]
+            });
     }]);
 
 angular.module('superdesk.apps.aggregate', [

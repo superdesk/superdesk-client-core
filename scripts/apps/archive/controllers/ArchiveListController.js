@@ -120,6 +120,7 @@ export class ArchiveListController extends BaseListController {
         $scope.$on('item:copy', refreshItems);
         $scope.$on('item:take', refreshItems);
         $scope.$on('item:duplicate', refreshItems);
+        $scope.$on('item:translate', refreshItems);
         $scope.$on('content:update', refreshItems);
         $scope.$on('item:deleted', refreshItems);
         $scope.$on('item:highlight', refreshItems);

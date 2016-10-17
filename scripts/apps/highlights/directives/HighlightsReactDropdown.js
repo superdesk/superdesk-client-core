@@ -1,7 +1,7 @@
 import React from 'react';
 
-HighlightsReactDropdown.$inject = ['item', 'className', 'highlightsService', 'desks', 'gettext', 'translatedLabel'];
-export function HighlightsReactDropdown(item, className, highlightsService, desks, gettext, translatedLabel) {
+HighlightsReactDropdown.$inject = ['item', 'className', 'highlightsService', 'desks', 'gettext', 'noHighlightsLabel'];
+export function HighlightsReactDropdown(item, className, highlightsService, desks, gettext, noHighlightsLabel) {
     var highlights = highlightsService.getSync(desks.getCurrentDeskId()) || {_items: []};
 
     var HighlightBtn = React.createClass({
@@ -37,7 +37,7 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
             React.createElement(
                 'button',
                 {disabled: true},
-                translatedLabel)
+                noHighlightsLabel)
         );
     };
 
