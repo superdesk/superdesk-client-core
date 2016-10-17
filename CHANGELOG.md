@@ -2,6 +2,35 @@
 
 ## [Unreleased]
 
+## [1.3] 2016-10-17
+
+### Added
+
+- Update browser title with info where you are in superdesk.
+- Add item history tab to preview pane.
+- Add send and publish action.
+- Add *pass throught* option to ingest providers.
+- Add typeahead into desk select in send to pane.
+- Add remove aggregate func in search.
+
+### Changed
+
+- Allow item to be duplicated to default desk or user private space.
+- Report conflicting update in desk management.
+
+### Fixed
+
+- Fix saving of an item after failed publishing.
+- Improve performance after scroll lock.
+- Embargo datetime fields require embargo privilege.
+- Fix *critical error* tabs in subscribers and ingest sources modals.
+- Make vocabulary column headers fixed.
+- Reload saved searches in monitoring config on update.
+- Enable save button when picture is dropped on featured placeholder.
+- Keep editor toolbar visible when scrolling.
+- Fix search when using non english translations.
+- Save image metadata updates when saving crop info.
+
 ## [1.2] 2016-10-05
 
 ### Added
