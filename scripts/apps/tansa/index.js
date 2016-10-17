@@ -23,12 +23,9 @@ document.write(`
         window.tansa = tansa;
 
         function afterProofing (isCancelled) {
-            var $rootScope = angular.element(document.body).injector().get('$rootScope');
-
-            $rootScope.$apply(function () {
-                $rootScope.config.isCheckedByTansa = true;
-                $rootScope.publishAfterTansa();
-            });
+            let $rootScope = angular.element(document.body).injector().get('$rootScope');
+            $rootScope.$broadcast('tansa:after', isCancelled);
+            $rootScope.$broadcast('tansa:end', isCancelled);
         }
     </script>
 `);

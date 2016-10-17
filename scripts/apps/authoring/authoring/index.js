@@ -53,6 +53,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdItemAssociation', directive.ItemAssociationDirective)
     .directive('sdFullPreview', directive.FullPreviewDirective)
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
+    .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
 
     .filter('embeddedFilter', filter.EmbeddedFilter)
 
