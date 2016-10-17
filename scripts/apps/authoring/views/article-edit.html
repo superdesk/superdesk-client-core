@@ -48,7 +48,7 @@
     data-onchange="autosave(item)"></div>
 </div>
 
-<div ng-if="schema.feature_media" sd-validation-error="error.feature_media" order="{{editor.feature_media.order}}"
+<div ng-if="schema.feature_media" sd-width="{{editor.feature_image.sdWidth || 'full'}}" sd-validation-error="error.feature_media" order="{{editor.feature_media.order}}"
     data-required="schema.feature_media.required" class="field">
   <label translate>Featured Media</label>
   <div sd-item-association

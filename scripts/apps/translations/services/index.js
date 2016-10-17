@@ -1,0 +1,1 @@
+export { TranslationService } from './TranslationService';

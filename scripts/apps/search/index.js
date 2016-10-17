@@ -6,6 +6,7 @@ import { MultiActionBarController } from './controllers';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
+    'superdesk.apps.translations',
     'superdesk.core.datetime',
     'superdesk.apps.authoring.metadata'
 ])

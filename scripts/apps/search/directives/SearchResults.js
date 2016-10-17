@@ -79,6 +79,7 @@ export function SearchResults(
             scope.$on('item:spike', scheduleIfShouldUpdate);
             scope.$on('item:unspike', scheduleIfShouldUpdate);
             scope.$on('item:duplicate', queryItems);
+            scope.$on('item:translate', queryItems);
             scope.$on('ingest:update', queryItems);
             scope.$on('content:update', queryItems);
             scope.$on('item:move', scheduleIfShouldUpdate);

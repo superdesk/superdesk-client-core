@@ -15,7 +15,7 @@ import './aggregate-widget/aggregate';
 import * as ctrl from './controllers';
 import * as config from './config';
 import * as directive from './directives';
-import { CardsService } from './services';
+import * as svc from './services';
 import { SplitFilter } from './filters';
 
 angular.module('superdesk.apps.monitoring', [
@@ -26,7 +26,7 @@ angular.module('superdesk.apps.monitoring', [
 ])
     .controller('Monitoring', ctrl.MonitoringController)
 
-    .service('cards', CardsService)
+    .service('cards', svc.CardsService)
 
     .directive('sdMonitoringView', directive.MonitoringView)
     .directive('sdMonitoringGroup', directive.MonitoringGroup)
