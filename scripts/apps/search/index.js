@@ -20,6 +20,8 @@ angular.module('superdesk.apps.search', [
     'superdesk.core.keyboard',
     'superdesk.apps.search.react'
 ])
+    .value('meta', {})
+    .value('searchCommon', {})
     .service('search', svc.SearchService)
     .service('savedSearch', svc.SavedSearchService)
     .service('tags', svc.TagService)

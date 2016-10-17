@@ -1,7 +1,7 @@
 SearchParameters.$inject = [
-    '$location', 'asset', 'tags', 'metadata', 'desks', 'userList', 'gettext', 'gettextCatalog', 'ingestSources'
+    '$location', 'asset', 'tags', 'metadata', 'meta', 'searchCommon', 'desks', 'userList', 'gettext', 'gettextCatalog', 'ingestSources'
 ];
-export function SearchParameters($location, asset, tags, metadata, desks, userList, gettext, gettextCatalog, ingestSources) {
+export function SearchParameters($location, asset, tags, metadata, meta, common, desks, userList, gettext, gettextCatalog, ingestSources) {
     return {
         scope: {
             repo: '=',
@@ -27,17 +27,11 @@ export function SearchParameters($location, asset, tags, metadata, desks, userLi
                 var params = $location.search();
                 scope.query = params.q;
                 scope.flags = false;
-                scope.meta = {};
+                scope.common = common;
+                scope.meta = meta = {};
                 scope.fields = {};
                 scope.cvs = metadata.search_cvs;
                 scope.search_config = metadata.search_config;
-                scope.scanpix_subscriptions = [{
-                    name: 'subscription',
-                    label: gettext('inside subscription'),
-                }, {
-                    name: 'all',
-                    label: gettext('all photos'),
-                }];
                 scope.lookupCvs = {};
                 angular.forEach(scope.cvs, function(cv) {
                     scope.lookupCvs[cv.id] = cv;
