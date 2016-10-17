@@ -1,9 +1,9 @@
 ItemRepo.$inject = [
-    '$location', 'asset', 'metadata', 'meta', 'searchCommon', 'searchProviderService', '$filter', 'gettext', 'api'
+    '$location', 'asset', 'metadata', 'searchCommon', 'searchProviderService', '$filter', 'gettext', 'api'
 ];
 
 export function ItemRepo(
-	$location, asset, metadata, meta, common, searchProviderService, $filter, gettext, api
+	$location, asset, metadata, common, searchProviderService, $filter, gettext, api
 ) {
     return {
         scope: {
@@ -18,7 +18,7 @@ export function ItemRepo(
              */
             function setDefaultValues() {
                 if (scope.repo && scope.repo.search && scope.repo.search.indexOf('scanpix') === 0) {
-                    meta.scanpix_subscription = common.scanpix_subscriptions[0].name;
+                    common.meta.scanpix_subscription = common.scanpix_subscriptions[0].name;
                 }
             }
 
