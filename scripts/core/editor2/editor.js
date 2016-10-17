@@ -761,6 +761,7 @@ angular.module('superdesk.apps.editor2', [
                 updateOnEmptySelection: true
             },
             paste: {
+                // Both are disabled because it overwrites the `ctrl`+`v` binding and we need it for the block paste feature
                 forcePlainText: false,
                 cleanPastedHTML: false
             },
