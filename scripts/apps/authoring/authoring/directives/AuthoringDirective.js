@@ -335,9 +335,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             }
 
             function validate(orig, item) {
+                let updated = _.cloneDeep(orig);
                 $scope.error = {};
                 tryPublish = true;
-                helpers.extendItem(orig, item);
+                helpers.extendItem(updated, item);
                 angular.forEach(authoring.editor, function(editor, key) {
                     if (!authoring.schema[key]) {
                         var found = false;
@@ -348,7 +349,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         if (cv) {
                             var field = cv.schema_field || 'subject';
                             angular.forEach(cv.items, function(row) {
-                                var element = _.find(orig[field], function(item) {
+                                var element = _.find(updated[field], function(item) {
                                        return item.qcode === row.qcode;
                                    });
                                 if (element) {
@@ -359,7 +360,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                         $scope.error[key] = !found;
                     } else {
-                        var value = orig[key];
+                        var value = updated[key];
                         if (value) {
                             if (typeof value === 'object' && hasNullValue(value)) {
                                 $scope.error[key] = true;
