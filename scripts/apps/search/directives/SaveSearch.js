@@ -75,7 +75,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                     originalSearch = scope.editingSearch;
                 }
 
-                api('saved_searches', session.identity).save(originalSearch, editSearch).then(onSuccess, onFail);
+                api('saved_searches').save(originalSearch, editSearch).then(onSuccess, onFail);
             };
 
             /**

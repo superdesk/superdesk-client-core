@@ -99,7 +99,7 @@ describe('master_desk', function() {
             .toContain('first name last name');
         expect(masterDesks.getUsersCount(0, 0)).toBe(0);
         expect(masterDesks.getUsersCount(0, 1)).toBe(1);
-        expect(masterDesks.getUsersCount(0, 2)).toBe(0);
+        expect(masterDesks.getUsersCount(0, 2)).toBe(1);
         expect(masterDesks.getUsersCount(1, 0)).toBe(0);
         expect(masterDesks.getUsersCount(1, 1)).toBe(1);
     });

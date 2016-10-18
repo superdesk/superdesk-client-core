@@ -9,7 +9,7 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
         scope: {},
         link: function(scope) {
 
-            var resource = api('saved_searches', session.identity);
+            var resource = api('saved_searches');
             scope.selected = null;
             scope.searchText = null;
             scope.userSavedSearches = [];
