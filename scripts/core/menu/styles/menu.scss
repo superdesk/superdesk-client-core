@@ -294,7 +294,7 @@
     }
     .active {
       a, .dropdown-toggle {
-        background-color: $sd-blue;
+        background-color: darken($sd-blue, 11%);
         opacity: 1;
       }
     }

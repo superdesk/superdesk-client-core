@@ -1,24 +1,24 @@
-<ul class="stages-list">
-    <li ng-click="stageSelect()" class="stage-label"
-        ng-class="{active: !stages.selected && !spike && !published}"
+<div class="button-list">
+    <a href="" ng-click="stageSelect()" class="toggle-button"
+        ng-class="{'toggle-button--active': !stages.selected && !spike && !published}"
         style="max-width:{{100/(stages.stages.length + 3)}}%"
         ng-if="stages.stages.length">
-        <a href="" translate>any</a>
-    </li>
-    <li ng-repeat="stage in stages.stages" ng-click="stageSelect(stage)"
-        ng-class="{active: stage == stages.selected && !spike && !published}" class="stage-label"
+        {{:: 'Any' | translate}}
+    </a>
+    <a href="" ng-repeat="stage in stages.stages" ng-click="stageSelect(stage)" class="toggle-button"
+        ng-class="{'toggle-button--active': stage == stages.selected && !spike && !published}"
         style="max-width:{{100/(stages.stages.length + 3)}}%"
         ng-if="stages.stages.length">
-        <a href="">{{ stage.name }}</a>
-    </li>
-    <li ng-if="type === 'archive'" class="stage-label"
-        ng-class="{active: spike}"
+        {{ stage.name }}
+    </a>
+    <a href="" ng-if="type === 'archive'" ng-click="toggleSpike()" class="toggle-button"
+        ng-class="{'toggle-button--active': spike}"
         style="max-width:{{100/(stages.stages.length + 3)}}%">
-        <a href="" ng-click="toggleSpike()" translate>Spiked</a>
-    </li>
-    <li ng-if="type === 'archive' && stages.stages.length" class="stage-label"
-        ng-class="{active: published}"
+        {{:: 'Spiked' | translate}}
+    </a>
+    <a href="" ng-if="type === 'archive' && stages.stages.length" ng-click="togglePublished()" class="toggle-button"
+        ng-class="{'toggle-button--active': published}"
         style="max-width:{{100/(stages.stages.length + 3)}}%">
-        <a href="" ng-click="togglePublished()" translate>Published</a>
-    </li>
-</ul>
+        {{:: 'Published' | translate}}
+    </a>
+</div>

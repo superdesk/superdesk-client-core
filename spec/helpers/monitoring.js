@@ -182,6 +182,8 @@ function Monitoring() {
             element(by.className('filetype-icon-highlight-pack')).click();
         } else if (fileType === 'takesPackage') {
             element(by.className('filetype-icon-takes-pack')).click();
+        } else if (fileType === 'all') {
+            element(by.className('toggle-button__text--all')).click();
         } else {
             element(by.className('filetype-icon-' + fileType)).click();
         }
