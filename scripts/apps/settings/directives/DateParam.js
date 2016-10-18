@@ -11,9 +11,8 @@ export function DateParam($location) {
             }
 
             scope.$watch('date', function(date) {
-                if (date != null) {
-                    $location.search(attrs.location, date);
-                }
+                // NOTE: null values should be allowed to reset
+                $location.search(attrs.location, date);
             });
 
             scope.$on('$routeUpdate', function(event, route) {
