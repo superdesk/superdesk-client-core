@@ -11,9 +11,7 @@ export function DateParam($location) {
             }
 
             scope.$watch('date', function(date) {
-                if (date != null) {
-                    $location.search(attrs.location, date);
-                }
+                $location.search(attrs.location, date);
             });
 
             scope.$on('$routeUpdate', function(event, route) {
