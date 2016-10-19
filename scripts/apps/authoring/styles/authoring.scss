@@ -1196,11 +1196,14 @@ feature-image {
 
 .indent-article {
     #bodyhtml, .text.body-text {
-        :header {
-            text-indent: 0;
-        }
         p:first-of-type, p+p {
             text-indent: 25px;
+        }
+        h2+p:first-of-type, 
+        h3+p:first-of-type, 
+        h4+p:first-of-type, 
+        h5+p:first-of-type {
+            text-indent: 0;
         }
     }
 }
