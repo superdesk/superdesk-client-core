@@ -83,12 +83,12 @@
                     </div>
                     <div class="modal-footer">
                         <button id="next-general"
-                                class="btn btn-primary"
+                                class="btn btn--primary"
                                 ng-click="save(desk.edit)"
                                 ng-disabled="!generalStep.$valid || _errorLimits || saving">
                             {{ 'Save & Continue' | translate }}</button>
                         <button id="done-general"
-                                class="btn btn-primary"
+                                class="btn btn--primary"
                                 ng-click="save(desk.edit, true)"
                                 ng-disabled="!generalStep.$valid || _errorLimits || saving" translate>Done</button>
                     </div>
@@ -102,7 +102,7 @@
 
                     <div class="col">
                         <div class="heading pull-left" translate>Work stages</div>
-                        <button id="new-stage" class="btn btn-info btn-circle pull-right" data-target="#insert-stage" ng-click="edit({}); selected=null" ng-disabled="editStage">
+                        <button id="new-stage" class="btn btn--primary btn--circle btn--pull-right" data-target="#insert-stage" ng-click="edit({}); selected=null" ng-disabled="editStage">
                             <i class="icon-plus-small icon-white"></i>
                         </button>
                         <div class="row">
@@ -111,7 +111,7 @@
                                     <span sd-character-count class="char-count-holder" data-item="editStage.name" data-limit="limits.stage"></span>
                                     <input type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" />
                                     <button class="btn" ng-click="cancel()" translate>Cancel</button>
-                                    <button id="save-new-stage" class="btn btn-primary" ng-click="save()" ng-disabled="!enableSave()" translate>Save</button>
+                                    <button id="save-new-stage" class="btn btn--primary" ng-click="save()" ng-disabled="!enableSave()" translate>Save</button>
                                 </li>
                                 <li ng-repeat="stage in stages track by stage._id" ng-click="select(stage)" ng-class="{active: selected === stage, editable: isActive(stage)}">
                                     <div ng-if="!isActive(stage)">
@@ -145,7 +145,7 @@
                                         ng-click="cancel()"
                                         ng-disabled="saving" translate>Cancel</button>
                                 <button id="save-edited-stage"
-                                        class="btn btn-primary"
+                                        class="btn btn--primary"
                                         ng-click="save()"
                                         ng-disabled="!enableSave() || saving" translate>Save</button>
                             </div>
@@ -257,8 +257,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="next-stages" class="btn btn-primary" ng-disabled="message != null" ng-click="next()" translate>Continue</button>
-                    <button id="done-stages" class="btn btn-primary" ng-disabled="message != null" ng-click="next(true)" translate>Done</button>
+                    <button id="next-stages" class="btn btn--primary" ng-disabled="message != null" ng-click="next()" translate>Continue</button>
+                    <button id="done-stages" class="btn btn--primary" ng-disabled="message != null" ng-click="next(true)" translate>Done</button>
                 </div>
             </div>
         </div>
@@ -283,12 +283,12 @@
                 </div>
                 <div class="modal-footer">
                     <button id="next-people"
-                            class="btn btn-primary"
+                            class="btn btn--primary"
                             ng-click="save()"
                             ng-disabled="message != null || saving">{{ 'Save & Continue' | translate }}</button>
                     <button
                             id="done-people"
-                            class="btn btn-primary"
+                            class="btn btn--primary"
                             ng-click="save(true)"
                             ng-disabled="message != null || saving" translate>Done</button>
                 </div>
@@ -306,7 +306,7 @@
               </ul>
             </div>
             <div class="modal-footer-relative">
-                <button id="save" class="btn btn-primary" ng-click="save()" translate>Done</button>
+                <button id="save" class="btn btn--primary" ng-click="save()" translate>Done</button>
             </div>
         </div>
 

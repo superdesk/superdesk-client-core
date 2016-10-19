@@ -144,7 +144,7 @@ describe('content', function() {
         element.all(by.model('item.headline')).first().sendKeys('Empty Package');
         authoring.close();
 
-        element.all(by.className('btn-warning')).first().click();
+        element.all(by.className('btn--warning')).first().click();
 
         browser.wait(function() {
             return content.count().then(function(contentCount) {

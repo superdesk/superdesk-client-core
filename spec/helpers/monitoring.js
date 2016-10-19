@@ -604,7 +604,7 @@ function Monitoring() {
         crtItem.element(by.className('icon-multi-star')).click();
         var highlightList = element(by.className('highlights-list-menu'));
         waitFor(highlightList);
-        highlightList.all(by.className('btn-mini')).first().click();
+        highlightList.all(by.className('btn--mini')).first().click();
     };
 
     /**

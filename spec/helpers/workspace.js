@@ -88,7 +88,7 @@ function Workspace() {
         var workspaceName = element(by.model('workspace.name'));
         workspaceName.sendKeys(name);
 
-        element(by.className('btn-primary')).click();
+        element(by.className('btn--primary')).click();
     };
 
     /**

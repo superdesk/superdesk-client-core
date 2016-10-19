@@ -508,7 +508,7 @@ media uploader
                         color: #999;
                     }
 
-                    .btn-mini {
+                    .btn--mini {
                         position: absolute;
                         right: 4px;
                         top: 4px;
@@ -525,7 +525,7 @@ media uploader
                         position: relative;
                         padding: 3px 0;
                         &:hover {
-                            .btn-mini {
+                            .btn--mini {
                                 display: block;
                             }
                         }
