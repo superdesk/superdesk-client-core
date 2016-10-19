@@ -1,7 +1,7 @@
 <div class="editor" ng-show="vm.editable">
     <textarea ng-model="vm.embedCode" class="editor--embed"></textarea>
-    <a class="btn btn-default btn-small" ng-click="vm.cancel(); vm.toggleEdition()" translate>Cancel</a>
-    <a class="btn btn-default btn-small" ng-click="vm.saveEmbedCode(); vm.toggleEdition()" translate>Save</a>
+    <a class="btn btn--small" ng-click="vm.cancel(); vm.toggleEdition()" translate>Cancel</a>
+    <a class="btn btn--small" ng-click="vm.saveEmbedCode(); vm.toggleEdition()" translate>Save</a>
 </div>
 <div class="preview" ng-show="!vm.editable">
     <div class="preview--embed"
@@ -10,7 +10,7 @@
          sd-html-preview="vm.model.body">
     </div>
     <!-- TODO: find a new design for that -->
-    <!-- <a class="btn btn-default btn-small" ng-click="vm.toggleEdition()" translate>Edit the code</a> -->
+    <!-- <a class="btn btn--small" ng-click="vm.toggleEdition()" translate>Edit the code</a> -->
 </div>
 <div class="editor--caption">
     <div sd-remove-tags

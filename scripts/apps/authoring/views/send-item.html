@@ -73,7 +73,7 @@
         <ul class="btn-list">
             <li class="full-width"
                 ng-if="mode === 'authoring' && canSendAndContinue() && itemActions.send && itemActions.new_take">
-                <button class="btn btn-light-gray"
+                <button class="btn btn--light-gray"
                         ng-click="sendAndContinue()"
                         ng-disabled="item.embargo || disableSendButton()"
                         translate>
@@ -81,7 +81,7 @@
                 </button>
             </li>
             <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
-                <button class="btn btn-light-gray"
+                <button class="btn btn--light-gray"
                         ng-click="send(true)"
                         ng-disabled="disableFetchAndOpenButton()"
                         translate>
@@ -89,7 +89,7 @@
                 </button>
             </li>
             <li class="full-width" ng-if="showSendButtonAndDestination()">
-                <button class="btn btn-info"
+                <button class="btn btn--primary"
                         ng-click="send()"
                         ng-disabled="disableSendButton()"
                         >
@@ -103,7 +103,7 @@
         <ul class="btn-list">
             <li class="full-width" ng-if="isSendEnabled() && showSendButtonAndDestination()">
                 <button type="submit"
-                        class="btn btn-light-gray"
+                        class="btn btn--light-gray"
                         ng-show="_editable"
                         ng-click="sendAndPublish()"
                         ng-disabled="!canSendAndPublish()"
@@ -113,7 +113,7 @@
             </li>
             <li class="full-width" ng-if="canSendItem() && canPublishItem()">
                 <button type="submit"
-                        class="btn btn-publish-plus"
+                        class="btn btn--publish-plus"
                         ng-show="_editable"
                         ng-click="publish()"
                         ng-disabled="canSendAndPublish()"

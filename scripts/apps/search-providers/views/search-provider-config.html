@@ -1,7 +1,7 @@
 <div ng-hide="hideList" class="split-content">
     <div class="header">
         <h2 translate>Search Providers</h2>
-        <button id="addSearchProvider" class="btn btn-info pull-right" ng-click="edit()" ng-disabled="noProvidersAllowed" title="{{ noProvidersAllowed ? 'There are no providers available.' : 'Add New Search Provider' | translate }}">
+        <button id="addSearchProvider" class="btn btn--primary btn--pull-right" ng-click="edit()" ng-disabled="noProvidersAllowed" title="{{ noProvidersAllowed ? 'There are no providers available.' : 'Add New Search Provider' | translate }}">
             <i class="icon-plus-sign icon-white"></i> <span translate>Add New Search Provider</span>
         </button>
     </div>
@@ -76,7 +76,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-default" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn-primary" ng-click="save()" ng-disabled="editForm.$invalid" translate>Save</button>
+        <button class="btn" ng-click="cancel()" translate>Cancel</button>
+        <button class="btn btn--primary" ng-click="save()" ng-disabled="editForm.$invalid" translate>Save</button>
     </div>
 </div>

@@ -16,7 +16,7 @@
                 </div>
             </figure>
             <div class="lock-text">{{ item.lock_user | username }}</div>
-            <button class="btn btn-medium pull-left"
+            <button class="btn btn--medium pull-left"
                     ng-show="can_unlock()"
                     ng-click="unlock()"
                     ng-disabled="unlockClicked"
@@ -35,20 +35,20 @@
 
     <div class="subnav__stretch-bar" ng-if="showCustomButtons(item)">
       <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-if="$root.config.features.customAuthoringTopbar" ng-show="_editable && itemActions.save && action === 'edit'">
-        <button class="btn btn-custom"
+        <button class="btn btn--custom"
                 ng-click="saveAndContinue(sendToNextStage)"
                 title="{{ :: 'To Desk' | translate }}">
                 <span class="btn__text" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
         </button>
-        <button class="btn btn-custom btn-publish"
+        <button class="btn btn--custom btn--publish"
                 type="submit"
                 ng-click="saveAndContinue(publish)"
                 title="{{ :: 'Publish' | translate }}">
                 <span class="btn__text" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
-        <button class="btn btn-custom btn-publish-plus"
+        <button class="btn btn--ustom btn--publish-plus"
                 ng-click="saveAndContinue(publishAndContinue)"
                 title="{{ :: 'Publish and Continue' | translate }}">
                 <span class="btn__text">{{ :: 'Publish and Continue' | translate }}</span>
@@ -57,27 +57,27 @@
       </div>
     </div>
     <div class="subnav__button-stack subnav__button-stack--default" sd-media-query min-width="180">
-      <button id="Edit" class="btn btn-medium btn-info" ng-if="item._type !== 'legal_archive'"
+      <button id="Edit" class="btn btn--medium btn--primary" ng-if="item._type !== 'legal_archive'"
         ng-show="action === 'view' && !item._editable && itemActions.edit"
         ng-click="edit()"
         translate>Edit</button>
 
-      <button class="btn btn-info"
+      <button class="btn btn--primary"
         ng-show="(action === 'view' || !item._editable) && itemActions.deschedule"
         ng-click="deschedule()"
         translate>Deschedule</button>
 
-      <button class="btn btn-info" ng-if="item._type !== 'legal_archive' && !isLocked()"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && !isLocked()"
         ng-show="(action === 'view' || !item._editable) && itemActions.re_write"
         ng-click="openAction('rewrite')"
         translate>Update</button>
 
-      <button class="btn btn-info" ng-if="item._type !== 'legal_archive'"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive'"
         ng-show="(action === 'view' || !item._editable) && itemActions.correct"
         ng-click="openAction('correct')"
         translate>Edit and Correct</button>
 
-      <button class="btn btn-info" ng-if="item._type !== 'legal_archive'"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive'"
         ng-show="(action === 'view' || !item._editable) && itemActions.kill"
         ng-click="openAction('kill')"
         translate>Edit and Kill</button>
@@ -90,7 +90,7 @@
             <span class="btn__text" translate>Close</span><i class="icon-close-small btn__text--alt-icon"></i>
         </button>
 
-      <button class="btn btn-info" type="submit"
+      <button class="btn btn--primary" type="submit"
         ng-click="saveTopbar()"
         ng-show="_editable"
         ng-if = "itemActions.save && action === 'edit'"
@@ -98,7 +98,7 @@
         sd-hotkey="ctrl+shift+s"
         translate>Save</button>
 
-      <button class="btn btn-info" type="submit"
+      <button class="btn btn--primary" type="submit"
         ng-click="previewFormattedItem()"
         ng-show="_editable"
         ng-if = "itemActions.save && previewFormattedEnabled() && action === 'edit'"
@@ -108,7 +108,7 @@
 
         <div sd-preview-formatted ng-if="previewFormatted"></div>
 
-      <button id="export" class="btn btn-info"
+      <button id="export" class="btn btn--primary"
         ng-click="exportHighlight(item)"
         ng-disabled="!_editable"
         ng-if="showExportButton"

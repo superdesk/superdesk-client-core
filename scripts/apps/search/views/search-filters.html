@@ -119,13 +119,13 @@
         <form class="date-filter">
             <div class="predefined-dates">
                     <button ng-click="toggleFilter('date', 'Last Day')" 
-                            class="btn btn-mini" 
+                            class="btn btn--mini" 
                             ng-class="{active: hasFilter('date','Last Day')}">{{'Last Day' | translate}}</button>
                     <button ng-click="toggleFilter('date', 'Last Week')" 
-                            class="btn btn-mini" 
+                            class="btn btn--mini" 
                             ng-class="{active: hasFilter('date','Last Week')}">{{'Last Week' | translate}}</button>
                     <button ng-click="toggleFilter('date', 'Last Month')" 
-                            class="btn btn-mini" 
+                            class="btn btn--mini" 
                             ng-class="{active: hasFilter('date','Last Month')}">{{'Last Month' | translate}}</button>
             </div>
             <fieldset ng-show="repo.search === 'local' || repo.search === 'paimg' || repo.search.indexOf('scanpix') === 0">
@@ -168,9 +168,9 @@
     <div sd-toggle-box data-title="{{:: 'Scheduled' | translate }}" data-open="true" ng-show="search_config.scheduled">
         <form class="date-filter">
             <div class="predefined-dates">
-                <button id="search_scheduled_24h" ng-click="toggleFilter('date', 'Scheduled Last Day')" class="btn btn-mini" 
+                <button id="search_scheduled_24h" ng-click="toggleFilter('date', 'Scheduled Last Day')" class="btn btn--mini" 
                     ng-class="{active: hasFilter('date','Scheduled Last Day')}">{{'Last 24 Hours' | translate}}</button>
-                <button id="search_scheduled_8h" ng-click="toggleFilter('date', 'Scheduled Last 8Hrs')" class="btn btn-mini" 
+                <button id="search_scheduled_8h" ng-click="toggleFilter('date', 'Scheduled Last 8Hrs')" class="btn btn--mini" 
                     ng-class="{active: hasFilter('date','Scheduled Last 8Hrs')}">{{'Last 8 Hours' | translate}}</button>
             </div>
         </form>

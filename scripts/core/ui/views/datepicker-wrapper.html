@@ -3,14 +3,14 @@
         <table>
             <tbody>
                 <tr>
-                    <td><button class="btn btn-mini" ng-click="select(0)" translate>Today</button></td>
-                    <td><button class="btn btn-mini" ng-click="select(1)" translate>Tomorrow</button></td>
-                    <td><button class="btn btn-mini" ng-click="select(2)" translate>In 2 days</button></td>
+                    <td><button class="btn btn--mini" ng-click="select(0)" translate>Today</button></td>
+                    <td><button class="btn btn--mini" ng-click="select(1)" translate>Tomorrow</button></td>
+                    <td><button class="btn btn--mini" ng-click="select(2)" translate>In 2 days</button></td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="datepicker-core" ng-transclude></div>
-    <button class="btn btn-info btn-small pull-right" ng-click="dateSelection()" translate>Confirm</button>
-    <button class="btn btn-small pull-right" ng-click="close()" translate>Cancel</button>
+    <button class="btn btn--primary btn--small btn--pull-right" ng-click="dateSelection()" translate>Confirm</button>
+    <button class="btn btn--small btn--pull-right" ng-click="close()" translate>Cancel</button>
 </div>

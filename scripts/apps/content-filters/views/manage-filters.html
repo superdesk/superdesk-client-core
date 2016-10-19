@@ -3,7 +3,7 @@
         <div class="split-content" >
         <div class="header">
             <h2 translate>Content Filters</h2>
-            <button class="btn btn-info pull-right" ng-click="editFilter()">
+            <button class="btn btn--primary btn--pull-right" ng-click="editFilter()">
                 <i class="icon-plus-sign icon-white"></i> <span translate>Add New Content Filter</span>
             </button>
         </div>
@@ -111,15 +111,15 @@
             <div class="test-row">
                 <label for="contentFilter-test" translate>Filter Test</label>
                 <input type="text" id="contentFilter-test" required ng-model="test.article_id" ng-change="test.test_result=null">
-                <button type="button" class="btn btn-default" ng-click="test()" translate>Test</button>
+                <button type="button" class="btn" ng-click="test()" translate>Test</button>
                 <span>{{test.test_result}}</span>
             </div>
         </div>
 
         <div class="modal-footer">
-            <button class="btn btn-default" type="button" ng-click="addStatement()" translate>Add Filter Statement</button>
-            <button class="btn btn-default" ng-click="close()" translate>Cancel</button>
-            <button class="btn btn-primary" ng-click="saveFilter()" ng-disabled="!editForm.$valid" translate>Save</button>
+            <button class="btn" type="button" ng-click="addStatement()" translate>Add Filter Statement</button>
+            <button class="btn" ng-click="close()" translate>Cancel</button>
+            <button class="btn btn--primary" ng-click="saveFilter()" ng-disabled="!editForm.$valid" translate>Save</button>
         </div>
     </div>
 
