@@ -447,7 +447,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              */
             $scope.publish = function(continueOnPublish) {
                 if ($scope.useTansaProofing() && $scope.item.urgency > 3 && !$rootScope.config.isCheckedByTansa) {
-                    return authoring.validateBeforeTansa($scope.origItem, $scope.item)
+                    var act = 'publish';
+                    if ($scope.origItem && $scope.origItem.state === 'published') {
+                        act = 'correct';
+                    }
+                    return authoring.validateBeforeTansa($scope.origItem, $scope.item, act)
                     .then(function(response) {
                         continueAfterPublish = continueOnPublish;
                         if (response.errors.length) {
