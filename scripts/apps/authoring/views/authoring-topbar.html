@@ -164,6 +164,20 @@
                   </li>
                 </ul>
 
+                <ul ng-if="isTranslationAvailable()">
+                  <li class="divider"></li>
+                  <li><span class="menu-label" translate>Translations</span></li>
+                  <li>
+                    <div class="dropdown highlights-toggle" dropdown>
+                      <button class="dropdown-toggle" dropdown-toggle>
+                        {{ :: 'Translate item to' | translate }}
+                        <i class="icon-chevron-right-thin submenu-icon"></i>
+                      </button>
+                      <ul class="dropdown-menu right-submenu" sd-translation-dropdown></ul>
+                    </div>
+                  </li>
+                </ul>
+
                 <ul ng-if="_editable" ng-controller="SpellcheckMenu as spellcheckMenu">
                     <li class="divider"></li>
                     <li><span class="menu-label" translate>Spell Checker</span></li>

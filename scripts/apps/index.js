@@ -13,6 +13,7 @@ import 'apps/legal-archive';
 import 'apps/stream';
 import 'apps/packaging';
 import 'apps/highlights';
+import 'apps/translations';
 import 'apps/content-filters';
 import 'apps/dictionaries';
 import 'apps/vocabularies';
@@ -40,6 +41,7 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.editor.spellcheck',
     'superdesk.apps.notification',
     'superdesk.apps.highlights',
+    'superdesk.apps.translations',
     'superdesk.apps.content_filters',
     'superdesk.apps.dictionaries',
     'superdesk.apps.vocabularies',

@@ -1,9 +1,30 @@
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.highlights
+ * @name HighlightsReactDropdown
+ *
+ * @requires React
+ * @requires item
+ * @requires className
+ * @requires highlightsService
+ * @requires desks
+ * @requires noHighlightsLabel
+ *
+ * @param {Object} [highlights] collection of highlights
+ *
+ * @description Creates dropdown react element with list of available highlights
+ */
+
 import React from 'react';
 
-HighlightsReactDropdown.$inject = ['item', 'className', 'highlightsService', 'desks', 'gettext', 'translatedLabel'];
-export function HighlightsReactDropdown(item, className, highlightsService, desks, gettext, translatedLabel) {
+HighlightsReactDropdown.$inject = ['item', 'className', 'highlightsService', 'desks', 'noHighlightsLabel'];
+export function HighlightsReactDropdown(item, className, highlightsService, desks, noHighlightsLabel) {
     var highlights = highlightsService.getSync(desks.getCurrentDeskId()) || {_items: []};
 
+    /*
+     * Creates specific highlight button in list
+     * @return {React} Language button
+     */
     var HighlightBtn = React.createClass({
         markHighlight: function(event) {
             event.stopPropagation();
@@ -22,6 +43,10 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
         }
     });
 
+    /*
+     * Creates list element for specific highlight
+     * @return {React} Single list element
+     */
     var createHighlightItem = function(highlight) {
         return React.createElement(
             'li',
@@ -30,6 +55,10 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
         );
     };
 
+    /*
+     * If there are no highlights, print none-highlights message
+     * @return {React} List element
+     */
     var noHighlights = function() {
         return React.createElement(
             'li',
@@ -37,10 +66,14 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
             React.createElement(
                 'button',
                 {disabled: true},
-                translatedLabel)
+                noHighlightsLabel)
         );
     };
 
+    /*
+     * Creates list with highlights
+     * @return {React} List element
+     */
     return React.createElement(
         'ul',
         {className: className},

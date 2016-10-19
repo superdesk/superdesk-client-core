@@ -50,6 +50,7 @@ ItemList.$inject = [
     'Keys',
     'dragitem',
     'highlightsService',
+    'TranslationService',
     'monitoringState',
     'authoringWorkspace',
     'gettextCatalog',
@@ -77,6 +78,7 @@ export function ItemList(
     Keys,
     dragitem,
     highlightsService,
+    TranslationService,
     monitoringState,
     authoringWorkspace,
     gettextCatalog,
@@ -1261,7 +1263,8 @@ export function ItemList(
                                 this.state.open ? $injector.invoke(activity.dropdown, activity, {
                                     item: this.props.item,
                                     className: 'dropdown-menu upward ' + this.state.position,
-                                    translatedLabel: gettextCatalog.getString('No available highlights')
+                                    noHighlightsLabel: gettextCatalog.getString('No available highlights'),
+                                    noLanguagesLabel: gettextCatalog.getString('No available translations')
                                 }) : null
                             )
                         );
