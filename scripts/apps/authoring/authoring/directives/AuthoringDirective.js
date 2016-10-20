@@ -35,9 +35,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var tryPublish = false;
             var onlyTansaProof = true;
             var continueAfterPublish = false;
-            if ($rootScope.config) {
-                $rootScope.config.isCheckedByTansa = false;
-            }
+            var isCheckedByTansa = false;
 
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
@@ -411,6 +409,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
             };
 
+            var deregisterTansa = $rootScope.$on('tansa:end', afterTansa);
+
             $scope.runTansa = function() {
                 onlyTansaProof = true;
 
@@ -425,28 +425,37 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if (window.RunTansaProofing){
                     window.RunTansaProofing();
                 } else {
-                    $rootScope.config.isCheckedByTansa = true;
+                    isCheckedByTansa = true;
                     notify.error(gettext('Tansa is not responding. You can continue editing or publish the story.'));
                 }
-
             };
 
-            /**
-             * continueAfterPublish is passed only from $scope.publishAndContinue as bool,
-             * in other cases this is object (don't use parameter in those cases)
-             */
-            $rootScope.publishAfterTansa = function() {
-                if (!onlyTansaProof) {
-                    $scope.saveTopbar().then(continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish);
+            function afterTansa(e, isCancelled) {
+                if (onlyTansaProof) {
+                    return;
                 }
-            };
+
+                //continueAfterPublish is passed only from $scope.publishAndContinue as bool,
+                // in other cases this is object (don't use parameter in those cases)
+                let publishFn = continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish;
+                if (isCancelled) {
+                    isCheckedByTansa = true;
+                    publishFn();
+                } else {
+                    // after changes from tansa, there is some time needed for autosave and for commiting scope in editor
+                    $timeout(() => {
+                        isCheckedByTansa = true;
+                        $scope.saveTopbar().then(publishFn);
+                    }, 1000);
+                }
+            }
 
             /**
              * Depending on the item state one of the publish, correct, kill actions will be executed on the item
              * in $scope.
              */
             $scope.publish = function(continueOnPublish) {
-                if ($scope.useTansaProofing() && $scope.item.urgency > 3 && !$rootScope.config.isCheckedByTansa) {
+                if ($scope.useTansaProofing() && $scope.item.urgency > 3 && !isCheckedByTansa) {
                     var act = 'publish';
                     if ($scope.origItem && $scope.origItem.state === 'published') {
                         act = 'correct';
@@ -644,9 +653,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 $scope.dirty = true;
 
-                if ($rootScope.config) {
-                    $rootScope.config.isCheckedByTansa = false;
-                }
+                isCheckedByTansa = false;
 
                 if (tryPublish) {
                     validate($scope.origItem, $scope.item);
@@ -743,6 +750,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     }
                 }
             });
+
+            $scope.$on('$destroy', deregisterTansa);
 
             // init
             $scope.content = content;

@@ -14,3 +14,4 @@ export { AuthoringHeaderDirective } from './AuthoringHeaderDirective';
 export { ItemAssociationDirective } from './ItemAssociationDirective';
 export { FullPreviewDirective } from './FullPreviewDirective';
 export { RemoveTagsDirective } from './RemoveTagsDirective';
+export { TansaScopeSyncDirective } from './TansaScopeSyncDirective';
