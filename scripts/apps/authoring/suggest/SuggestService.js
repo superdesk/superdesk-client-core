@@ -1,7 +1,7 @@
 /**
  * @ngdoc service
  * @module apps.authoring.suggest
- * @name SuggestService
+ * @name suggest
  * @requires api
  * @requires autosave
  * @description SuggestService handles the retrieval and synchronisation of live
@@ -15,19 +15,19 @@ export default class SuggestService {
 
         /**
          * @ngdoc property
-         * @name SuggestService#active
+         * @name suggest#active
          * @type {Boolean}
          * @private
          * @description Active reflects whether the service and panel are active
          * (visible) if true. Should not be set directly, instead, use
-         * SuggestService#setActive method.
-         * @see SuggestService#setActive
+         * suggest#setActive method.
+         * @see suggest#setActive
          */
         this.active = false;
 
         /**
          * @ngdoc property
-         * @name SuggestService#_listener
+         * @name suggest#_listener
          * @type {Function}
          * @private
          * @description Holds the function that will be called when new suggestions
@@ -38,7 +38,7 @@ export default class SuggestService {
 
      /**
       * @ngdoc method
-      * @name SuggestService#_get
+      * @name suggest#_get
       * @param {(Array|Object)} item Array of items or item.
       * @returns {Promise} If resolved, suggestions were obtained successfully,
       * and all listeners were triggered.
@@ -63,7 +63,7 @@ export default class SuggestService {
 
     /**
      * @ngdoc method
-     * @name SuggestService#_triggerListeners
+     * @name suggest#_triggerListeners
      * @param {Array} list List of items received from server.
      * @private
      * @description Triggers registered listeners.
@@ -74,7 +74,7 @@ export default class SuggestService {
 
     /**
      * @ngdoc method
-     * @name SuggestService#onUpdate
+     * @name suggest#onUpdate
      * @param {Function} func The function to trigger on update.
      * @description Registers the function to be called when new suggestions are
      * received. The current implementation will only use one function. On subsequent
@@ -86,7 +86,7 @@ export default class SuggestService {
 
     /**
      * @ngdoc method
-     * @name SuggestService#setActive
+     * @name suggest#setActive
      * @param {Boolean} active When set to true, the service is set to active.
      * @description setActive sets the active state of the service.
      */
@@ -96,9 +96,11 @@ export default class SuggestService {
 
     /**
      * @ngdoc method
-     * @name SuggestService#trigger
+     * @name suggest#trigger
      * @param {Object} item The item to trigger live suggestions for.
      * @param {Object} orig The original, unmodified item.
+     * @description Triggers the auto-suggest functionality. It will cause an autosave,
+     * followed by a request for suggestions.
      */
     trigger(item, orig) {
         if (!angular.isObject(item) || !this.active) {

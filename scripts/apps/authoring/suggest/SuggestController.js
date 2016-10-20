@@ -5,8 +5,8 @@
  * @requires desks
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
  * @description SuggestController holds a set of convenience functions used by
- * the SuggestDirective.
- * @see SuggestDirective
+ * sd-suggest.
+ * @see sd-suggest
  */
 export default class SuggestController {
     constructor(desks, scope) {
