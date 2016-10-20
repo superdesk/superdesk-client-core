@@ -297,7 +297,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 return authoring.publish(orig, item, action)
                 .then(function(response) {
-                    tryPublish = false;
                     if (response) {
                         if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
                             if (angular.isDefined(response.data._issues['validator exception'])) {
