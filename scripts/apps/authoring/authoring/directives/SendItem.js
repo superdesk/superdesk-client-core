@@ -33,7 +33,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.selectedDesk = null;
             scope.selectedStage = null;
             scope.selectedMacro = null;
-            scope.defaultDesk = null;
             scope.beforeSend = scope._beforeSend || $q.when;
             scope.destination_last = {send_to: null, publish: null};
             scope.origItem = angular.extend({}, scope.item);
@@ -46,15 +45,6 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
             scope.$watch('item', activateItem);
             scope.$watch(send.getConfig, activateConfig);
-            scope.$watch('selectedDesk', function(desk) {
-                // set the default desk if publish panel is active.
-                if (scope.currentUserAction === ctrl.userActions.publish && desk &&
-                    scope.item && scope.item.task && desk._id === scope.item.task.desk) {
-                    scope.defaultDesk = desk;
-                } else {
-                    scope.defaultDesk = null;
-                }
-            });
 
             scope.publish = function() {
                 scope.loading = true;
@@ -306,13 +296,12 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @return {Boolean}
              */
             scope.canSendAndPublish = function() {
-                if (!scope.item) {
+                if (scope.mode !== 'authoring' || !scope.item) {
                     return false;
                 }
 
-                // Selected destination (desk/stage) should be different from item current location (desk/stage)
-                var isDestinationChanged = (scope.selectedDesk && (scope.item.task.desk !== scope.selectedDesk._id) ||
-                    scope.selectedStage && (scope.item.task.stage !== scope.selectedStage._id));
+                // Selected destination desk should be different from item current location desk
+                var isDestinationChanged = scope.selectedDesk && (scope.item.task.desk !== scope.selectedDesk._id);
 
                 return scope.showSendAndPublish() && !authoring.isPublished(scope.item) &&
                     isDestinationChanged && scope.mode === 'authoring' && scope.itemActions.publish;
