@@ -81,18 +81,19 @@
 
 <div class="field" ng-if="item._type !== 'archived' && schema.byline" sd-width="{{editor.byline.sdWidth || 'full'}}" order="{{editor.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
   <label translate>Byline</label>
-   <!-- Placeholder text is temporary, ideally it should come from content type -->
-   <div id="byline" class="byline"
-        sd-text-editor
-        data-config="{disableToolbar: true, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.byline.order}"
-        data-editorformat="editor.byline.formatOptions"
-        data-language="item.language"
-        ng-model="item.byline"
-        ng-model-options="{debounce: 100}"
-        ng-change="autosave(item)"
-        ng-if="_editable"
-        ng-trim="false"></div>
-  <div ng-if="!_editable" sd-html-preview="item.byline"></div>
+  <input type="text" 
+         sd-remove-tags
+         class="byline"
+         id="byline"
+         ng-model="item.byline"
+         ng-model-options="{debounce: 100}"
+         ng-change="autosave(item)"
+         ng-if="_editable"
+         sd-focus-element
+         data-append-element=".field"
+         data-append-class="active"
+         tabindex="{{editor.byline.order}}">
+  <div ng-if="!_editable">{{item.byline}}</div>
 </div>
 
 <!--This article-edit view is used by templates as well.
