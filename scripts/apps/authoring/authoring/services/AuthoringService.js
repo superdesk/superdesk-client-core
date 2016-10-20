@@ -201,12 +201,12 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         });
     };
 
-    this.validateBeforeTansa = function (orig, diff) {
+    this.validateBeforeTansa = function (orig, diff, act) {
         diff = helpers.extendItem({}, diff);
 
         this.cleanUpdatesBeforePublishing(orig, diff);
 
-        return api.save('validate', {'act': 'publish', 'type': orig.type, 'validate': diff});
+        return api.save('validate', {'act': act, 'type': orig.type, 'validate': diff});
     };
 
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {
