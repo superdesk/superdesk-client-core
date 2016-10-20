@@ -21,6 +21,11 @@ var options = {
     }
 };
 
+// get the superdesk.config.js configuration object
+function getConfig() {
+    return require(path.join(process.cwd(), 'superdesk.config.js'))();
+}
+
 module.exports = {
     core: {
         cwd: '<%= coreDir %>',
@@ -43,19 +48,38 @@ module.exports = {
         options: {bootstrap: () => ''}
     },
 
-    // gen-importer generates a file that imports all of the external node
+    // gen-locale generates a file that imports the locale set by the
+    // 'i18n' property in the config file.
+    'gen-locale': {
+        cwd: '<%= coreDir %>',
+        dest: 'dist/locale.generated.js',
+        src: __filename, // hack to make ngtemplate work
+        options: {
+            bootstrap: function() {
+                var locale = getConfig().i18n || '';
+                if (locale === '') {
+                    return 'export default [];\r\n';
+                }
+                var f = path.join(
+                    'angular-i18n',
+                    'angular-locale_' + locale + '.js'
+                );
+                return `require('${f}');\r\n`;
+            }
+        }
+    },
+
+    // gen-apps generates a file that imports all of the external node
     // modules defined in superdesk.config.js and returns an array of their
     // exports.
-    'gen-importer': {
+    'gen-apps': {
         cwd: '<%= coreDir %>',
         dest: 'dist/app-importer.generated.js',
         src: __filename, // hack to make ngtemplate work
         options: {
             bootstrap: function() {
                 // get apps defined in config
-                var paths = require(
-                    path.join(process.cwd(), 'superdesk.config.js')
-                )().apps || [];
+                var paths = getConfig().apps || [];
 
                 if (!paths.length) {
                     return 'export default [];\r\n';

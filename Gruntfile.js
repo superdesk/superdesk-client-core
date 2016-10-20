@@ -39,6 +39,13 @@ module.exports = function(grunt) {
     grunt.registerTask('bamboo', ['karma:bamboo']);
     grunt.registerTask('lint', ['hint']);
 
+    // The gen-importer tasks generates files that import dynamic paths read from
+    // superdesk.config.js
+    grunt.registerTask('ngtemplates:gen-importer', [
+        'ngtemplates:gen-apps',
+        'ngtemplates:gen-locale'
+    ]);
+
     grunt.registerTask('docs', [
         'clean',
         'ngtemplates:dev',
