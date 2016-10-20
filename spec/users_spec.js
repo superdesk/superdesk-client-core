@@ -37,7 +37,7 @@ describe('users', function() {
 
         it('can save and use language preferences', function() {
             userPrefs.setLang('Deutsch');
-            browser.driver.wait(protractor.until.elementIsVisible(userPrefs.btnSave), 3000);
+            browser.wait(() => userPrefs.btnSave.isDisplayed(), 3000);
             userPrefs.btnSave.click();
             element(by.css('[ng-hide="currentRoute.topTemplateUrl"]')).getText().then(function(text) {
                 expect(text).toEqual('Mein Profil');
@@ -46,7 +46,8 @@ describe('users', function() {
             //go back to original lanuages
             userPrefs.setLang('English');
             var btnSave = $('.action-bar').element(by.buttonText('Speichern'));
-            browser.driver.wait(protractor.until.elementIsVisible(btnSave), 3000);
+            browser.wait(() => btnSave.isDisplayed(), 3000);
+            browser.sleep(200); // animation
             btnSave.click();
         });
     });

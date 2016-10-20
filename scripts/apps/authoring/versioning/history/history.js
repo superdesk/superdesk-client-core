@@ -43,7 +43,7 @@ function HistoryController($scope, authoring, api, notify, desks, archiveService
         if ($scope.item._editable && !$scope.dirty) {
             $scope.selected = version;
             if (version === $scope.last && !$scope.item._autosave) {
-                if (!$scope._editable) {
+                if (!$scope._editable && $scope.closePreview) {
                     $scope.closePreview();
                 }
             } else {

@@ -99,8 +99,8 @@ describe('ingest_settings', function() {
         ruleSettings.timezoneLabel.click();
         ruleSettings.timezoneDeleteBtn.click();
         ruleSettings.timezoneInput.sendKeys('Asia/Singapore');
-        tzOption = ruleSettings.timezoneList.get(0);
-        browser.driver.wait(protractor.until.elementIsVisible(tzOption), 3000);
+        tzOption = ruleSettings.timezoneList.first();
+        browser.wait(() => ruleSettings.timezoneList.first().isDisplayed(), 3000);
         tzOption.click();
 
         // save the routing scheme and check that it was successfull
