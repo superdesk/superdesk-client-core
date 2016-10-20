@@ -46,6 +46,7 @@
     "angular-resource": "^1.5.5",
     "angular-route": "^1.5.5",
     "angular-vs-repeat": "^1.1.4",
+    "angular-i18n": "^1.5.8",
     "bootstrap": "^3.1.1",
     "classnames": "^2.2.5",
     "d3": "^3.5.3",

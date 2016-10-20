@@ -92,3 +92,7 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 - `defaultRoute` - sets the route that the app will go to upon logging in (home route).
 - `langOverride` - allows to override some labels in the UI (breaking, not recommended). It should be an object containing keys for language identifier and values as objects mapping labels to their translation. Example value: `{'en': {'Category':'Service'}}` would display _Service_ in place of _Category_ for the english (_en_) version.
 - `requiredMediaMetadata`: `array` - describes a list of fields that are required for media items (images/video)
+
+##### Localisation
+
+- `i18n` - Sets the localisation language for the application by importing the file named 'angular-i18n/angular-locale_${i18n}.js'. Defaults to empty string. Example value: "no" for Norwegian.

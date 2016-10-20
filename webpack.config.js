@@ -51,7 +51,8 @@ module.exports = function makeConfig(grunt) {
                 'rangy-saverestore': 'rangy/lib/rangy-selectionsaverestore',
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
-                'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js')
+                'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
+                'i18n': path.join(process.cwd(), 'dist', 'locale.generated.js')
             },
             extensions: ['', '.js', '.jsx']
         },
