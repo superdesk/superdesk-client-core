@@ -746,7 +746,7 @@ angular.module('superdesk.apps.editor', ['superdesk.apps.editor.spellcheck'])
     .service('editor', EditorService)
 
     .directive('sdTextEditor', ['editor', 'spellcheck', '$timeout', 'config', 'keyboardManager', 'Keys', 'gettextCatalog',
-    function (editor, spellcheck, $timeout, config, keyboardManager, Keys, 'gettextCatalog') {
+    function (editor, spellcheck, $timeout, config, keyboardManager, Keys, gettextCatalog) {
 
         var disableToolbar = config.editor.disableEditorToolbar || false;
 
