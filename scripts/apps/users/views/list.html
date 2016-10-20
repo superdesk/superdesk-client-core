@@ -13,7 +13,7 @@
                 <div class="pull-left sd-pagination">
                     <select id="user-filter"
                         ng-model="userFilter"
-                        ng-options="filter.id as filter.label for filter in filterOptions">
+                        ng-options="filter.id as filter.label | translate for filter in filterOptions">
                     </select>
                 </div>
                 <div sd-pagination data-items="users"></div>
