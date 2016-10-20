@@ -2210,7 +2210,7 @@ describe('send item directive', function() {
             iscope.selectedDesk = {_id: '123'};
             iscope.selectedStage = {_id: '4566'};
             iscope.itemActions = {publish: 1};
-            expect(iscope.canSendAndPublish()).toBeTruthy();
+            expect(iscope.canSendAndPublish()).toBeFalsy();
             iscope.selectedDesk = {_id: '1234'};
             iscope.selectedStage = {_id: '456'};
             expect(iscope.canSendAndPublish()).toBeTruthy();
