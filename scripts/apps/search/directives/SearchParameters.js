@@ -28,7 +28,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 scope.query = params.q;
                 scope.flags = false;
                 scope.common = common;
-                scope.meta = common.meta = {};
+                scope.meta = {};
                 scope.fields = {};
                 scope.cvs = metadata.search_cvs;
                 scope.search_config = metadata.search_config;
