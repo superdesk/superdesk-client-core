@@ -26,7 +26,6 @@
             <div sd-desk-select
                 data-desks="desks._items"
                 data-selected-desk="selectedDesk"
-                data-default-desk="defaultDesk"
                 on-change="selectDesk(desk)"></div>
 
             <ul class="btn-list" ng-if="stages && vm.userActions.send_to === currentUserAction">
@@ -117,6 +116,7 @@
                         class="btn btn-publish-plus"
                         ng-show="_editable"
                         ng-click="publish()"
+                        ng-disabled="canSendAndPublish()"
                         >
                     {{_action === 'edit' ? 'publish' : _action | translate}}
                 </button>
