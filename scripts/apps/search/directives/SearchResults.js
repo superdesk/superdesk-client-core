@@ -80,7 +80,13 @@ export function SearchResults(
             scope.$on('item:unspike', scheduleIfShouldUpdate);
             scope.$on('item:duplicate', queryItems);
             scope.$on('item:translate', queryItems);
-            scope.$on('ingest:update', queryItems);
+
+            scope.$on('ingest:update', (event, args) => {
+                if (!scope.showRefresh) {
+                    queryItems(event, args);
+                }
+            });
+
             scope.$on('content:update', queryItems);
             scope.$on('item:move', scheduleIfShouldUpdate);
 
@@ -141,12 +147,13 @@ export function SearchResults(
              */
             function queryItems(event, data) {
                 if (!nextUpdate) {
+                    // Run the first query immediately and block the others for 1 sec
+                    _queryItems(event, data);
                     nextUpdate = $timeout(function() {
-                        _queryItems(event, data);
                         scope.$applyAsync(function() {
                             nextUpdate = null; // reset for next $digest
                         });
-                    }, 300, false);
+                    }, 1000, false);
                 }
             }
 
@@ -275,6 +282,8 @@ export function SearchResults(
                 } else if (next) {
                     scope.loading = true;
                     criteria.source.from = (criteria.source.from || 0) + criteria.source.size;
+                    criteria.source.size = 50;
+
                     api.query(getProvider(criteria), criteria).then(setScopeItems).finally(function() {
                         scope.loading = false;
                     });
