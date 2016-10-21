@@ -1,0 +1,1 @@
+export { WebPublisherManagerController } from './WebPublisherManagerController';

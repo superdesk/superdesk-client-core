@@ -1,0 +1,27 @@
+<div class="desk__header">
+    <div class="desk__name">
+        {{ site.name }}
+    </div>
+    <div class="desk__action dropdown" dropdown>
+        <button class="dropdown-toggle" dropdown-toggle><i class="icon-dots"></i></button>
+        <ul class="dropdown-menu pull-right">
+            <li><button ng-click=""><i class="icon-pencil"></i> {{ 'Manage website' | translate }}</button></li>
+        </ul>
+    </div>
+</div>
+<div class="desk__content">
+    <div class="item-group" ng-repeat="stage in siteStages[site._id]">
+        <div class="item-group__header">
+            <div class="item-group__name">{{ :: stage.name}}</div>
+            <span class="item-group__label">{{ total }}</span>
+        </div>
+<!--         <div class="item-group__content"
+            sd-stage-items
+            data-stage="stage"
+            data-total="total"
+            data-allowed="isMemberOf(desk)"
+            data-show-empty="true"
+            data-selected="selected">
+        </div> -->
+    </div>
+</div>

@@ -21,6 +21,7 @@ import 'apps/monitoring';
 import 'apps/settings';
 import 'apps/ingest';
 import 'apps/search-providers';
+import 'apps/web-publisher';
 
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
