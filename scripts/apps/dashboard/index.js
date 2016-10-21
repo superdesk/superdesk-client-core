@@ -17,15 +17,14 @@ angular.module('superdesk.apps.dashboard.widgets', [])
 angular.module('superdesk.apps.dashboard.widgets.base', ['superdesk.core.itemList'])
     .factory('BaseWidgetController', svc.BaseWidgetFactory);
 
-angular.module('superdesk.dashboard', [
-    'superdesk.activity',
+angular.module('superdesk.apps.dashboard', [
+    'superdesk.core.activity',
     'superdesk.dashboard.widgets',
     'superdesk.dashboard.grid',
     'superdesk.dashboard.world-clock',
     'superdesk.workspace.tasks',
     'superdesk.itemList',
     'superdesk.legal_archive',
-    'superdesk.web_publisher',
     'superdesk.workspace'
 
 ])
