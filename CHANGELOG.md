@@ -1,5 +1,13 @@
 # Superdesk Client Changelog
 
+## [1.3.1] 2016-10-21
+
+### Fixed
+
+- Fix search results size increasing after each scroll.
+- Fix validation for corrections.
+- Fix validation not to modify orig item.
+
 ## [1.3] 2016-10-17
 
 ### Added
