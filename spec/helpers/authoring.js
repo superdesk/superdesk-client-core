@@ -443,7 +443,9 @@ function Authoring() {
 
     function openAuthoringDropdown() {
         var toggle = element(by.id('authoring-extra-dropdown')).element(by.className('icon-dots-vertical'));
-        browser.wait(toggle.isDisplayed);
+        browser.wait(function() {
+            return toggle.isDisplayed();
+        });
         toggle.click();
     }
 
@@ -464,7 +466,7 @@ function Authoring() {
 
     this.getSuggestedItems = function() {
         return element.all(by.css('sd-suggest ul[sd-list-view] > li.list-item-view'));
-    }
+    };
 
     this.getSubnav = function() {
         return element(by.id('subnav'));
