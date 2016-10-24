@@ -10,6 +10,9 @@ describe('workspace', function () {
     });
 
     it('can switch views by keyboard', function() {
+        // wait for icons
+        browser.wait(() => element(by.className('big-icon-view')).isDisplayed(), 2000);
+
         // Can switch to monitoring view by pressing alt + m
         altKey('m');
         expect(browser.getLocationAbsUrl()).toMatch('/workspace/monitoring');

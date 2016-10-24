@@ -19,7 +19,6 @@ module.exports = function(config) {
             'karma-jasmine',
             'karma-junit-reporter',
             'karma-chrome-launcher',
-            'karma-phantomjs-launcher',
             'karma-ng-html2js-preprocessor',
             'karma-sourcemap-loader',
             'karma-webpack'

@@ -20,7 +20,6 @@ module.exports = {
         }
     },
     travis: {
-        browsers: ['PhantomJS'],
         reporters: ['dots']
     },
     bamboo: {

@@ -3,6 +3,7 @@ language: python
 python: 3.5
 
 sudo: required
+dist: trusty
 
 services:
     - mongodb
@@ -14,9 +15,11 @@ addons:
     sources:
         - mongodb-3.0-precise
         - elasticsearch-1.7
+        - google-chrome
     packages:
         - mongodb-org-server
         - elasticsearch
+        - google-chrome-stable
 
 cache:
     directories:
@@ -27,16 +30,13 @@ before_install:
     - nvm install node
     - nvm use node
     - node --version
-    - rm -f .npm/*.lock
-    - npm install -g npm@latest
     - npm config set loglevel warn
-    - npm install -g grunt-cli
+    - npm install -g npm@latest grunt-cli
     - export DISPLAY=:99.0 && /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x24
-    - wget -N --no-verbose 'https://storage.googleapis.com/chromium-browser-continuous/Linux_x64/353893/chrome-linux.zip' && unzip chrome-linux.zip &&
-      export CHROME_BIN=`pwd`/chrome-linux/chrome && $CHROME_BIN --version ;
+    - export CHROME_BIN=`which google-chrome` && $CHROME_BIN --version ;
 
 install:
-    - npm i
+    - npm install
     - cd test-server && pip install -r requirements.txt && cd ..
     - ./node_modules/.bin/webdriver-manager update
 
