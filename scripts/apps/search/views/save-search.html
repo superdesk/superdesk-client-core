@@ -2,18 +2,18 @@
      ng-if="!editingSearch && sTab !== 'savedSearches' && innerTab==='parameters'"
      ng-class="{'float-search-btn--shift': searching()}">
 
-    <button class="btn btn-info btn-full search" ng-click="search()" translate>Search</button>
+    <button class="btn btn--primary btn--full search" ng-click="search()" translate>Search</button>
 </div>
 <div ng-if="searching() || innerTab==='parameters'">
     <div class="save-search" ng-if="searching() && !editingSearch && sTab !== 'savedSearches'">
         <a id="clear_filters" class="save-search__link" ng-click="clear()" translate>Clear filters</a>
-        <button id="save_search_init" class="btn btn-info" ng-click="editItem()" ng-if="!editingSearch"  translate>Save Search</button>
+        <button id="save_search_init" class="btn btn--primary" ng-click="editItem()" ng-if="!editingSearch"  translate>Save Search</button>
     </div>
     <div class="save-search" ng-if="editingSearch">
-        <button class="btn btn-info btn-full search" ng-click="search()" ng-if="innerTab==='parameters'" translate>Search</button>
+        <button class="btn btn--primary btn--full search" ng-click="search()" ng-if="innerTab==='parameters'" translate>Search</button>
         <button id="saveas_search_init" class="btn" ng-click="saveas()" translate ng-if="editingSearch">Save As</button>
-        <button id="save_search_init" class="btn btn-info" ng-click="editItem()" ng-if="!editingSearch" translate>Save Changes</button>
-        <button id="save_search_init" class="btn btn-info" ng-click="save(edit)" ng-if="editingSearch" translate>Save Changes</button>
+        <button id="save_search_init" class="btn btn--primary" ng-click="editItem()" ng-if="!editingSearch" translate>Save Changes</button>
+        <button id="save_search_init" class="btn btn--primary" ng-click="save(edit)" ng-if="editingSearch" translate>Save Changes</button>
     </div>
 </div>
 
@@ -25,7 +25,7 @@
         </form>
     </div>
     <div class="pull-right">
-        <button class="btn btn-default" ng-click="cancel()" translate>Cancel</button>
-        <button id="search_save" class="btn btn-primary" ng-click="save(edit)" ng-disabled="!viewsForm.$valid" translate>Ok</button>
+        <button class="btn" ng-click="cancel()" translate>Cancel</button>
+        <button id="search_save" class="btn btn--primary" ng-click="save(edit)" ng-disabled="!viewsForm.$valid" translate>Ok</button>
     </div>
 </div>

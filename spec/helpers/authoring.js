@@ -209,7 +209,7 @@ function Authoring() {
             var modal = element(by.className('modal-dialog'));
             modal.isPresent().then(function(click) {
                 if (click) {
-                    modal.element(by.className('btn-primary')).click();
+                    modal.element(by.className('btn--primary')).click();
                 }
             });
         }
@@ -235,7 +235,7 @@ function Authoring() {
             var modal = element(by.className('modal-dialog'));
             modal.isPresent().then(function(click) {
                 if (click) {
-                    modal.element(by.className('btn-primary')).click();
+                    modal.element(by.className('btn--primary')).click();
                 }
             });
         }
@@ -264,7 +264,7 @@ function Authoring() {
             var modal = element(by.className('modal-dialog'));
             modal.isPresent().then(function(click) {
                 if (click) {
-                    modal.element(by.className('btn-primary')).click();
+                    modal.element(by.className('btn--primary')).click();
                 }
             });
         }
