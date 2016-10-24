@@ -1,12 +1,12 @@
 /**
  * @ngdoc controller
- * @module apps.authoring.suggest
+ * @module superdesk.apps.authoring
  * @name SuggestController
  * @requires desks
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
  * @description SuggestController holds a set of convenience functions used by
- * sd-suggest.
- * @see sd-suggest
+ * sdSuggest.
+ * @see sdSuggest
  */
 export default class SuggestController {
     constructor(desks, scope) {

@@ -1,6 +1,6 @@
 /**
  * @ngdoc service
- * @module apps.authoring.suggest
+ * @module superdesk.apps.authoring
  * @name suggest
  * @requires api
  * @requires autosave

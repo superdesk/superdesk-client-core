@@ -11,7 +11,7 @@ class LinkFunction {
 
     /**
      * @ngdoc method
-     * @name sd-suggest#init
+     * @name sdSuggest#init
      * @private
      * @description Initializes the directive with default values for the scope
      * and with necessary watchers.
@@ -26,7 +26,7 @@ class LinkFunction {
 
     /**
      * @ngdoc method
-     * @name sd-suggest#onUpdate
+     * @name sdSuggest#onUpdate
      * @param {Object} resp The list of items received after the update.
      * @private
      * @description onUpdate is the callback that will be triggered whenever the
@@ -39,7 +39,7 @@ class LinkFunction {
 
     /**
      * @ngdoc method
-     * @name sd-suggest#toggleActive
+     * @name sdSuggest#toggleActive
      * @param {Boolean} v The new value for the active state.
      * @private
      * @description Toggles the active state of the service.
@@ -50,7 +50,7 @@ class LinkFunction {
 
     /**
      * @ngdoc method
-     * @name sd-suggest#toggleVisible
+     * @name sdSuggest#toggleVisible
      * @param {Boolean} v The new value for the visible state.
      * @private
      * @description Toggles the visible state of the panel.
@@ -62,8 +62,8 @@ class LinkFunction {
 
 /**
  * @ngdoc directive
- * @module apps.authoring.suggest
- * @name sd-suggest
+ * @module superdesk.apps.authoring
+ * @name sdSuggest
  * @requires suggest
  * @param {Boolean} ngShow ngShow determines the visibility of the directive.
  * @description sd-suggest operates the live suggestions panel that appears
