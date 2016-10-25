@@ -1,64 +1,62 @@
-//Open Sans font import
-//@import url(//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800);
+// NOTE: file extension is not needed for importing .scss files
+
+// Roboto font import
 @import url(//fonts.googleapis.com/css?family=Roboto+Mono:400,300,500,700,300italic,400italic,500italic,700italic&subset=latin,latin-ext);
-//Roboto font import
 @import url(//fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic&subset=latin,latin-ext);
 
 // Core variables and mixins
-
-@import "variables.scss"; // Modify this for custom colors, font-sizes, etc
-@import "sd-icon-font.scss";
-@import "mixins.scss";
-
+@import 'variables'; // Modify this for custom colors, font-sizes, etc
+@import 'sd-icon-font';
+@import 'mixins';
 
 // CSS Reset
-@import "reset.scss";
+@import 'reset';
 
 // Grid system and page structure
-@import "utility-classes.scss";
-@import "layouts.scss";
+@import 'utility-classes';
+@import 'layouts';
 
 // Base CSS
-@import "type.scss";
-@import "forms.scss";
-@import "tables.scss";
+@import 'type';
+@import 'forms';
+@import 'tables';
 
 // Components: common
-@import "sd-typeahead.scss";
-@import "sd-password-strength.scss";
-@import "dropdowns.scss";
-@import "media-archive.scss";
-@import "archive-preview.scss";
-@import "archive-filtering.scss";
+@import 'sd-typeahead';
+@import 'sd-password-strength';
+@import 'dropdowns';
+@import 'media-archive';
+@import 'archive-preview';
+@import 'archive-filtering';
 
 // Components: Buttons & Alerts
-@import "buttons.scss";
-@import "buttons/toggle-buttons.scss";
-@import "buttons/basic-buttons.scss";
-@import "button-groups.scss";
-@import "alerts.scss"; // Note: alerts share common CSS with buttons and thus have styles in buttons.scss
+@import 'buttons';
+@import 'buttons/toggle-buttons';
+@import 'buttons/basic-buttons';
+@import 'button-groups';
+@import 'alerts'; // Note: alerts share common CSS with buttons and thus have styles in buttons.scss
 
 // Components: Nav
-@import "navs.scss";
+@import 'navs';
 
 // Components: Popovers
-@import "modals.scss";
-@import "tooltip.scss";
-@import "popovers.scss";
+@import 'modals';
+@import 'tooltip';
+@import 'popovers';
 
 // Animation
-@import "animation.scss";
+@import 'animation';
 
 // Components: Misc
-@import "labels.scss";
+@import 'labels';
 
 // Vendor
-@import "~jquery-jcrop/css/jquery.Jcrop.css";
-@import "~jquery-ui/themes/smoothness/jquery-ui.css";
-@import "~medium-editor/dist/css/medium-editor.css";
-@import "~medium-editor-tables/dist/css/medium-editor-tables.css";
+@import '~jquery-jcrop/css/jquery.Jcrop.css';
+@import '~jquery-ui/themes/smoothness/jquery-ui.css';
+@import '~medium-editor/dist/css/medium-editor.css';
+@import '~medium-editor-tables/dist/css/medium-editor-tables.css';
 
-@import "medium-editor.scss"; // custom skin for medium-editor
-@import "sf-additional.scss";
-@import "sf-icons.scss";
-@import "search-list.scss";
+@import 'medium-editor'; // custom skin for medium-editor
+@import 'sf-additional';
+@import 'sf-icons';
+@import 'search-list';

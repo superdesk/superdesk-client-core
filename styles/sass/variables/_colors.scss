@@ -1,0 +1,165 @@
+// variables/colors.scss
+// -----------------------------------------------------
+
+$superdesk-green:       rgba(30,176,108,1);
+
+// Grays
+// -------------------------
+$black:                 #000;
+$grayDarker:            #222;
+$grayDark:              #333;
+$gray:                  #666;
+$grayLight:             #999;
+$grayLighter:           #F5F5F5;
+$white:                 #fff;
+
+// Accent colors
+// -------------------------
+$blue:                  #5d9bc0;
+$blueDark:              #0064cd;
+$avatarBlue:            #005b7f;
+$green:                 #46a546;
+$red:                   #E51C23;
+$yellow:                #ffc40d;
+$orange:                #f89406;
+$purple:                #9c5e96;
+
+$sd-background:         #f8f8f8;
+$sd-text:               $grayDark;
+$sd-blue:               #5ea9c8;
+$sd-blue-text:          #3599b6;
+$sd-hover:              #eff7fa;
+$sd-keyword:            #216278;
+$sd-highlight:          #9b59b6;
+
+$label-light:           #dedede;
+$label-medium:          #bababa;
+$label-prime:           #61a9c6;
+$label-snap:            #9761A0;
+
+$sd-text-label:         #909090;
+
+$todo-color :           #b70000;
+$inprogress-color :     #cc7800;
+$done-color :           #288001;
+
+// Item state colors (borders & backgrounds)
+// -------------------------
+$state-border--locked: rgb(229, 28, 35);
+$state-border--published: rgb(94, 141, 50);
+$item-background-published: lighten($state-border--published, 60%);
+$state-border--killed: rgb(48, 48, 48);
+$item-background-killed: rgb(255, 249, 248);
+
+// Links
+// -------------------------
+$linkColor:             #5d9bc0;
+$linkColorHover:        lighten($linkColor, 15%);
+
+// Typography
+// -------------------------
+$headingsColor:         inherit; // empty to use BS default, $textColor
+
+// Tables
+// -------------------------
+$tableBackground:                   transparent; // overall background-color
+$tableBackgroundAccent:             #f9f9f9; // for striping
+$tableBackgroundHover:              #f5f5f5; // for hover
+$tableBorder:                       #ddd; // table and cell border
+
+// Forms
+// -------------------------
+$inputBackground:               $white;
+$inputBorder:                   #ccc;
+$inputDisabledBackground:       $grayLighter;
+
+// Dropdowns
+// -------------------------
+$dropdownBackground:            $white;
+$dropdownBorder:                1px solid #c6c6c6;
+$dropdownLinkColor:             $sd-text;
+$dropdownLinkColorHover:        $sd-text;
+$dropdownLinkBackgroundHover:   $sd-hover;
+
+// Input placeholder text color
+// -------------------------
+$placeholderText:         $grayLight;
+
+// Hr border color
+// -------------------------
+$hrBorder:                $grayLight;
+
+// Navbar
+// -------------------------
+$navbarBackground:                $grayDarker;
+$navbarBackgroundHighlight:       $grayDark;
+
+$navbarText:                      $grayLight;
+$navbarLinkColor:                 $grayLight;
+$navbarLinkColorHover:            $white;
+$navbarLinkColorActive:           $navbarLinkColorHover;
+$navbarLinkBackgroundHover:       transparent;
+$navbarLinkBackgroundActive:      $navbarBackground;
+
+// Form states and alerts
+// -------------------------
+$warningText:             #c09853;
+$warningBackground:       #fcf8e3;
+$warningBorder:           darken(adjust-hue($warningBackground, -10), 3%);
+
+$errorText:               #b94a48;
+$errorBackground:         #f2dede;
+$errorBorder:             darken(adjust-hue($errorBackground, -10), 3%);
+
+$successText:             #468847;
+$successBackground:       #dff0d8;
+$successBorder:           darken(adjust-hue($successBackground, -10), 5%);
+
+$infoText:                #3a87ad;
+$infoBackground:          #d9edf7;
+$infoBorder:              darken(adjust-hue($infoBackground, -10), 7%);
+
+// Theme
+// -------------------------
+$background-main: $sd-background;
+
+// Tablists and Tabpanes
+// -------------------------
+$tablist-background:          #a1a1a1;
+
+$tabpane-background:          #f5f5f5;
+$tabpane-border:              #7c7c7c;
+
+$sidebar-background:    #dedede;
+$archive-sidebar-bg: #ededed;
+
+//State colors
+$state-color-default: rgb(140, 140, 140);
+$state-color-blue: rgb(93, 155, 192);
+$state-color-green: rgb(94, 141, 50);
+$state-color-yellow: rgb(210, 168, 0);
+$state-color-orange: rgb(218, 114, 0);
+$state-color-navy: rgb(0, 0, 128);
+$state-color-magenta: rgb(139, 0, 139);
+$state-color-red: rgb(190, 22, 0);
+$state-color-embargo: rgb(255, 51, 129);
+
+//Box shadows
+$block-shadow-depth-1: 0px 1px 2px 0 rgba(0, 0, 0, 0.12);
+$block-shadow-depth-2: 0px 1px 4px 0 rgba(0, 0, 0, 0.2);
+
+// Widgets
+$widget_world-clock:           #03a9f4;
+$widget_ingest-stats:          #00bcd4;
+$widget_aggregate:             #8bc34a;
+$widget_archive:               #3f51b5;
+$widget_ingest:                #673ab7;
+$widget_activity:              #009688;
+
+// Monitoring view
+$subnav-authoring:             #dedede;
+$embeded-auth-shadow:          inset 7px 0px 9px -5px rgba(0,0,0,.25);
+
+// Monitoring view
+$subnav-authoring:              #dedede;
+$embeded-auth-shadow:           inset 7px 0px 9px -5px rgba(0,0,0,.25);

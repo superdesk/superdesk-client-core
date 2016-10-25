@@ -1,0 +1,49 @@
+// variables/dimensions.scss
+// -----------------------------------------------------
+
+// Navbar
+// -------------------------
+$navbarHeight:40px;
+
+// Superdesk special vars
+// --------------------------------------------------
+$sf-main-menu-width: 300px;
+$nav-height: 48px;
+
+// Positioning
+// -------------------------
+$topspace : $nav-height;
+$subnav-height: 48px;  /*was 65*/
+$subnav-mobile-height: 45px;
+$subnav-level2: 40px;
+$main-content-padding: 20px;
+
+// Tablists and Tabpanes
+// -------------------------
+$tablist-width: 48px;
+$tabpane-width: 330px;
+$tabpane-extended-width: 460px;
+$tabcontent-padding: 15px;
+$article-tabpane-padding: 10px;
+
+// Positioning
+// -------------------------
+$sidebar-width: 48px;
+$sidepreview-width: 400px;
+$notification-pane-width: 300px;
+
+// Scratchpad
+$scratchpad-closed: 0px;
+$scratchpad-content-height: 0px;
+
+// Article edit screen
+$authoring-opened-articles: 30px;
+
+//Layout
+$bottom-view-padding: $scratchpad-closed + $authoring-opened-articles + 20px;
+
+//Archive
+$archive-sidebar-width: 300px;
+
+//Search
+$generic-searchbar: 320px;

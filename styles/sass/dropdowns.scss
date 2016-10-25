@@ -1,4 +1,4 @@
-    // DROPDOWN MENUS
+// DROPDOWN MENUS
 // --------------
 
 // Use the .menu class on any <li> element within the topbar or ul.tabs and you'll get some superfancy dropdowns
@@ -16,8 +16,6 @@
     }
 }
 .dropdown-toggle {
-    // The caret makes the toggle a bit too tall in IE7
-    *margin-bottom: -3px;
     background: transparent;
         i { vertical-align: sub; }
         &.animate-icon {
@@ -210,13 +208,6 @@
 // Open state for the dropdown
 // ---------------------------
 .dropdown.open {
-    // IE7's z-index only goes to the nearest positioned ancestor, which would
-    // make the menu appear below buttons that appeared later on the page
-    *z-index: $zindexDropdown;
-
-    .dropdown-toggle {
-    }
-
     .dropdown-menu {
         display: block;
         &.scrollable {
