@@ -1,7 +1,7 @@
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
- * @name AuthoringTopbarDirective
+ * @name sdAuthoringTopbar
  *
  * @requires TranslationService
  *

@@ -6,6 +6,7 @@ module.exports = {
                 '<%= tmpDir %>',
                 '<%= distDir %>',
                 'docs/<%= distDir %>',
+                'docs/ui-guide/<%= distDir %>',
                 'templates-cache.generated.js',
                 '!<%= distDir %>/.git*'
             ]

@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.translations
@@ -13,9 +15,6 @@
  *
  * @description Creates dropdown react element with list of available languages
  */
-
-import React from 'react';
-
 TranslationReactDropdown.$inject = ['item', 'className', 'TranslationService', 'noLanguagesLabel'];
 export function TranslationReactDropdown(item, className, TranslationService, noLanguagesLabel) {
     var languages = TranslationService.get() || {_items: []};

@@ -1,7 +1,7 @@
 /**
  * @ngdoc directive
  * @module superdesk.apps.translations
- * @name TranslationDropdown
+ * @name sdTranslationDropdown
  *
  * @requires TranslationService
  *

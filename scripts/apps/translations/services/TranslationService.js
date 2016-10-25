@@ -15,27 +15,33 @@ TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace
 export function TranslationService(api, $rootScope, notify, authoringWorkspace) {
     var service = {};
 
-    /*
-     * Fetch languages from database
-     *
-     * @return {Object} Languages
+    /**
+     * @ngdoc method
+     * @name TranslationService#fetch
+     * @public
+     * @returns {Object} Languages
+     * @description Fetch languages from database
      */
     service.fetch = function () {
         return api.query('languages');
     };
 
-    /*
-     * Return list of langugages
-     *
+    /**
+     * @ngdoc method
+     * @name TranslationService#get
+     * @public
+     * @description Return list of langugages
      * @return {Object} list of items
      */
     service.get = function () {
         return service.languages;
     };
 
-    /*
-     * Create copy of item with new language set
-     *
+    /**
+     * @ngdoc method
+     * @name TranslationService#get
+     * @public
+     * @description Create copy of item with new language set
      * @param item {Object} item to be translated
      * @param language {Object} translate language
      */
@@ -52,9 +58,11 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace) 
         });
     };
 
-    /*
-     * Check if item is available for translating
-     *
+    /**
+     * @ngdoc method
+     * @name TranslationService#checkAvailability
+     * @public
+     * @description Check if item is available for translating
      * @return {boolean}
      */
     service.checkAvailability = function (item) {

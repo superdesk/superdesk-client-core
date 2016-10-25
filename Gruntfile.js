@@ -53,12 +53,12 @@ module.exports = function(grunt) {
     ]);
 
     // UI styling documentation
-    grunt.registerTask('style-docs', [
+    grunt.registerTask('ui-guide', [
         'clean',
         'ngtemplates:dev',
-        'ngtemplates:docs',
-        'copy:assets-docs',
-        'webpack-dev-server:docs'
+        'ngtemplates:ui-guide',
+        'copy:assets-ui-guide',
+        'webpack-dev-server:ui-guide'
     ]);
 
     // API docuemntation

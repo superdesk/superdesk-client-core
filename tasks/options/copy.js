@@ -27,19 +27,19 @@ module.exports = {
             }
         ]
     },
-    'assets-docs': {
+    'assets-ui-guide': {
         files: [
             {
                 expand: true,
                 dot: true,
                 cwd: '<%= coreDir %>',
-                dest: 'docs/dist',
+                dest: 'docs/ui-guide/dist',
                 src: ['images/**/*']
             },
             {
                 cwd: process.cwd(),
-                src: path.join(appRoot, 'docs/index.html'),
-                dest: path.join(appRoot, 'docs/dist/index.html')
+                src: path.join(appRoot, 'docs/ui-guide/index.html'),
+                dest: path.join(appRoot, 'docs/ui-guide/dist/index.html')
             }
         ]
     }

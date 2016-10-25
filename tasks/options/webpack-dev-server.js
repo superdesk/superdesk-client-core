@@ -14,6 +14,7 @@ module.exports = function(grunt) {
                 'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'
             }
         },
+
         start: {
             keepAlive: true,
             proxy: getProxy(),
@@ -28,16 +29,17 @@ module.exports = function(grunt) {
                 }
             }
         },
-        docs: {
+
+        'ui-guide': {
             keepAlive: true,
-            contentBase: './docs/dist',
+            contentBase: './docs/ui-guide/dist',
             port: 9100,
             webpack: {
                 entry: {
-                    docs: ['webpack-dev-server/client?http://localhost:9100/', 'docs/index']
+                    docs: ['webpack-dev-server/client?http://localhost:9100/', 'docs/ui-guide/index']
                 },
                 output: {
-                    path: path.join(process.cwd(), 'docs/dist'),
+                    path: path.join(process.cwd(), 'docs/ui-guide/dist'),
                     publicPath: 'docs/dist'
                 },
                 devtool: 'eval',

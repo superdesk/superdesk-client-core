@@ -23,6 +23,12 @@ angular.module('superdesk.config').constant('config', appConfig);
 
 let body = angular.element('body');
 body.ready(function() {
+    /**
+     * @ngdoc module
+     * @name superdesk
+     * @packageName superdesk
+     * @description The root superdesk module.
+     */
     angular.bootstrap(body, [
         'superdesk.config',
         'superdesk.core',
