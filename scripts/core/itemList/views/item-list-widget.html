@@ -1,7 +1,7 @@
 <div class="widget-mode" ng-show="options.modeEnabled">
     <span class="text" translate>Mode: </span>
-    <button class="btn btn-mini btn-light" ng-click="options.mode = 'detailed'" ng-show="options.mode === 'basic'" translate>Basic</button>
-    <button class="btn btn-mini btn-light" ng-click="options.mode = 'basic'" ng-show="options.mode === 'detailed'" translate>Detailed</button>
+    <button class="btn btn--mini btn--light" ng-click="options.mode = 'detailed'" ng-show="options.mode === 'basic'" translate>Basic</button>
+    <button class="btn btn--mini btn--light" ng-click="options.mode = 'basic'" ng-show="options.mode === 'detailed'" translate>Detailed</button>
 </div>
 
 <div class="main-list" ng-class="{wrap: selected}">
@@ -33,7 +33,7 @@
 
     <div class="filter-box" ng-show="options.mode === 'detailed'">
         <span class="text" translate>View</span>
-        <button class="btn btn-light pull-left"
+        <button class="btn btn--light btn--pull-left"
             ng-if="options.itemTypeEnabled"
             ng-repeat="itemType in options.itemTypes"
             ng-click="toggleItemType(itemType)"

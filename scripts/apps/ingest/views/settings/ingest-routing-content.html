@@ -1,7 +1,7 @@
 <div class="split-content">
     <div class="header">
         <h2 translate>Ingest Routing Schemes</h2>
-        <button class="btn btn-info pull-right" ng-click="edit({})">
+        <button class="btn btn--primary btn--pull-right" ng-click="edit({})">
             <i class="icon-plus-sign icon-white"></i> <span translate>Add New Routing Scheme</span>
         </button>
     </div>
@@ -57,7 +57,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <button class="btn btn-info btn-full" ng-click="addRule()" ng-disabled="!schemeForm.$valid">
+                                <button class="btn btn--primary btn--full" ng-click="addRule()" ng-disabled="!schemeForm.$valid">
                                     <i class="icon-plus-sign icon-white"></i> <span translate>Add New Rule</span>
                                 </button>
                             </div>
@@ -95,7 +95,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-default" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn-primary" ng-click="save()" ng-disabled="!schemeForm.$valid || !(editScheme.rules.length || rule)" translate>Save</button>
+        <button class="btn" ng-click="cancel()" translate>Cancel</button>
+        <button class="btn btn--primary" ng-click="save()" ng-disabled="!schemeForm.$valid || !(editScheme.rules.length || rule)" translate>Save</button>
     </div>
 </div>

@@ -679,7 +679,7 @@ $checkButtonBorderColor: #c6c6c6;
                             background: $sd-hover;
                         }
 
-                        &.btn-info, &.btn-info.active {
+                        &.btn--primary, &.btn--primary.active {
                             //selected date
                             color: #fff;
                             background: $sd-blue;
@@ -1289,7 +1289,7 @@ header .sortbar {
         &:hover {
             background: $sd-hover;
         }
-        .btn-mini {
+        .btn--mini {
             margin-top: 10px;
         }
     }

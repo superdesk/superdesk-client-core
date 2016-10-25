@@ -70,7 +70,7 @@
 
     <button
         type="button"
-        class="btn btn-small btn-remove"
+        class="btn btn--small"
         ng-click="removeFieldAlias($index)"
         tooltip="{{:: 'Remove'|translate}}"
         tooltip-placement="bottom"
@@ -82,7 +82,7 @@
   <div ng-show="fieldAliases.length < contentFields.length">
     <button
         type="button"
-        class="btn btn-info btn-small"
+        class="btn btn--primary btn--small"
         ng-click="addFieldAlias()"
         tooltip="{{:: 'Add alias'|translate}}"
         tooltip-placement="right"

@@ -3,7 +3,7 @@
         <div class="header">
             <h2 translate>Content Profiles</h2>
 
-            <button id="add-new-content-profile" class="btn btn-info pull-right" ng-click="ctrl.toggleCreate()">
+            <button id="add-new-content-profile" class="btn btn--primary btn--pull-right" ng-click="ctrl.toggleCreate()">
                 <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Content Profile' | translate }}
             </button>
         </div>
@@ -67,8 +67,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" ng-disabled="createForm.$invalid" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
-                <button class="btn btn-default" ng-click="ctrl.toggleCreate()" translate>Cancel</button>
+                <button class="btn btn--primary" ng-disabled="createForm.$invalid" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
+                <button class="btn" ng-click="ctrl.toggleCreate()" translate>Cancel</button>
             </div>
     </div>
 
@@ -102,8 +102,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" ng-disabled="editForm.$invalid || !editForm.$dirty" ng-click="ctrl.update()" translate>Save</button>
-                <button class="btn btn-default" ng-click="ctrl.toggleEdit(null)" translate>Cancel</button>
+                <button class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty" ng-click="ctrl.update()" translate>Save</button>
+                <button class="btn" ng-click="ctrl.toggleEdit(null)" translate>Cancel</button>
             </div>
     </div>
 </div>

@@ -16,7 +16,7 @@
                 <span class="stage" title="{{:: stageLookup[n.item.task.stage].name }}">{{:: stageLookup[n.item.task.stage].name }}</span>
             </div>
             <div class="buttons">
-                <button ng-if="!isRead(n)" class="acknowledge btn btn-small pull-right" ng-click="acknowledge(n)" title="{{ :: 'Acknowledge' | translate }}"class="open-item" translate>Acknowledge</button>
+                <button ng-if="!isRead(n)" class="acknowledge btn btn--small btn--pull-right" ng-click="acknowledge(n)" title="{{ :: 'Acknowledge' | translate }}"class="open-item" translate>Acknowledge</button>
             </div>
 
             <div class="sender">

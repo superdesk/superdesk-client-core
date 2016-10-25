@@ -537,7 +537,7 @@ export function ItemList(
                                 highlight.name,
                                 highlightsService.hasMarkItemPrivilege() ? React.createElement(
                                     'button',
-                                    {className: 'btn btn-mini', onClick: this.removeHighlight(highlight)},
+                                    {className: 'btn btn--mini', onClick: this.removeHighlight(highlight)},
                                     gettext('REMOVE')
                                 ):null
                             );

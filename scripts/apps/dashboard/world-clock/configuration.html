@@ -9,8 +9,8 @@
                         <label >{{'Clock type'|translate}}</label>
                         <div class="control">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default" ng-class="{active: !configuration.digital}" ng-click="configuration.digital=false">Analog</button>
-                                <button type="button" class="btn btn-default" ng-class="{active: configuration.digital}" ng-click="configuration.digital=true">Digital</button>
+                                <button type="button" class="btn" ng-class="{active: !configuration.digital}" ng-click="configuration.digital=false">Analog</button>
+                                <button type="button" class="btn" ng-class="{active: configuration.digital}" ng-click="configuration.digital=true">Digital</button>
                             </div>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                         <div class="control">
                             <div class="input-append" style="margin-bottom:10px;">
                                 <input type="text" class="input-large" ng-model="search" placeholder="{{ 'Search for clock'|translate }}">
-                                <button class="btn btn-default" ng-disabled="!search" ng-click="search=''" translate>Clear</button>
+                                <button class="btn" ng-disabled="!search" ng-click="search=''" translate>Clear</button>
                             </div>
 
                             <ul class="list-group">
