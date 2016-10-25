@@ -1,7 +1,7 @@
 /**
- * @memberof superdesk.apps.content_filters
  * @ngdoc controller
  * @name ProductionTestCtrl
+ * @packageName superdesk.apps.content_filters
  * @description
  *   Controller for the modal page used for testing a content filter
  *   against existing content items. Triggered by the action under the

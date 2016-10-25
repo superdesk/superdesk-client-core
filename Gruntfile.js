@@ -3,12 +3,6 @@
 var path = require('path');
 
 module.exports = function(grunt) {
-
-    // util for grunt.template
-    grunt.toJSON = function(input) {
-        return JSON.stringify(input);
-    };
-
     var config = {
         pkg: grunt.file.readJSON(path.join(__dirname, 'package.json')),
         appDir: 'app',
@@ -25,19 +19,31 @@ module.exports = function(grunt) {
 
     grunt.initConfig(config);
 
-    require('load-grunt-tasks')(grunt, {config: path.join(__dirname, 'package')});
+    // Auto-load tasks
+    require('load-grunt-tasks')(grunt, {
+        config: path.join(__dirname, 'package'),
+        pattern: [
+            'grunt-*',
+            '@*/grunt-*',
+            'dgeni-alive'
+        ]
+    });
+
+    // Auto-load configuration
     require('load-grunt-config')(grunt, {
         config: config,
         configPath: path.join(__dirname, 'tasks', 'options')
     });
 
-    grunt.registerTask('test', ['ngtemplates:dev', 'karma:unit']);
+    // Linting tasks and alias
     grunt.registerTask('hint', ['jshint', 'jscs', 'eslint:specs', 'eslint:tasks', 'eslint:root']);
-    grunt.registerTask('hint:docs', ['jshint:docs', 'jscs:docs']);
+    grunt.registerTask('lint', ['hint']);
+
+    // Test runner tasks and CI
+    grunt.registerTask('test', ['ngtemplates:dev', 'karma:unit']);
     grunt.registerTask('ci', ['test', 'hint']);
     grunt.registerTask('ci:travis', ['ngtemplates:dev', 'karma:travis', 'hint']);
     grunt.registerTask('bamboo', ['karma:bamboo']);
-    grunt.registerTask('lint', ['hint']);
 
     // The gen-importer tasks generates files that import dynamic paths read from
     // superdesk.config.js
@@ -46,7 +52,8 @@ module.exports = function(grunt) {
         'ngtemplates:gen-locale'
     ]);
 
-    grunt.registerTask('docs', [
+    // UI styling documentation
+    grunt.registerTask('style-docs', [
         'clean',
         'ngtemplates:dev',
         'ngtemplates:docs',
@@ -54,6 +61,10 @@ module.exports = function(grunt) {
         'webpack-dev-server:docs'
     ]);
 
+    // API docuemntation
+    grunt.registerTask('docs', ['dgeni-alive']);
+
+    // Development server
     grunt.registerTask('server', [
         'clean',
         'copy:index',
@@ -62,6 +73,7 @@ module.exports = function(grunt) {
         'webpack-dev-server:start'
     ]);
 
+    // Production build
     grunt.registerTask('build', [
         'clean',
         'copy:index',

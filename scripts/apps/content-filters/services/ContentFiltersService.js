@@ -1,5 +1,5 @@
 /**
- * @memberof superdesk.apps.content_filters
+ * @packageName superdesk.apps.content_filters
  * @ngdoc service
  * @name contentFilters
  * @description

@@ -1,7 +1,7 @@
 DeskeditMacros.$inject = ['macros', 'WizardHandler'];
 
 /**
- * @memberof superdesk.apps.desks
+ * @packageName superdesk.apps.desks
  * @ngdoc directive
  * @name sdDeskeditMacros
  * @description

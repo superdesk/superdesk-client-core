@@ -1,5 +1,5 @@
 /**
- * @memberof superdesk.apps.ingest
+ * @packageName superdesk.apps.ingest
  * @ngdoc directive
  * @name sdIngestRoutingContent
  * @description

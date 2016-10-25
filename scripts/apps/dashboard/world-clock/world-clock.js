@@ -14,7 +14,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     }])
 
     /**
-     * @memberof superdesk.apps.dashboard.world-clock
+     * @packageName superdesk.apps.dashboard.world-clock
      * @ngdoc controller
      * @name WorldClockConfigController
      * @description
@@ -47,7 +47,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     }])
 
     /**
-     * @memberof superdesk.apps.dashboard.world-clock
+     * @packageName superdesk.apps.dashboard.world-clock
      * @ngdoc controller
      * @name WorldClockController
      * @description

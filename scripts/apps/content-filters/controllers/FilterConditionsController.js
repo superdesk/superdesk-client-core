@@ -1,10 +1,9 @@
 /**
- * @memberof superdesk.apps.content_filters
  * @ngdoc controller
  * @name FilterConditionsCtrl
- * @description
- *   Controller for the Filter Conditions tab, found on the Content Filters
- *   settings page.
+ * @packageName superdesk.apps.content_filters
+ * @description Controller for the Filter Conditions tab, found on the Content Filters
+ * settings page.
  */
 FilterConditionsController.$inject = ['$scope', 'contentFilters', 'notify', 'modal', '$filter'];
 export function FilterConditionsController($scope, contentFilters, notify, modal, $filter) {
