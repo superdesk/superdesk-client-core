@@ -365,6 +365,7 @@ describe('authoring', function() {
         authoring.save();
         authoring.close();
         monitoring.actionOnItem('Edit', 2, 1);
+        browser.sleep(50);
         expect(authoring.missing_link.getText()).toBe('MISSING LINK');
         authoring.openRelatedItem();
         expect(authoring.getRelatedItems().count()).toBe(1);

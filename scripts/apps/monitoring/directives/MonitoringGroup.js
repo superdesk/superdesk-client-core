@@ -26,10 +26,19 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.cacheNextItems = [];
             scope.cachePreviousItems = [];
             scope.limited = !(monitoring.singleGroup || scope.group.type === 'highlights' || scope.group.type === 'spike');
+            scope.viewColumn = monitoring.viewColumn;
 
             if (scope.forceLimited != null) {
                 scope.limited = scope.forceLimited;
             }
+
+            scope.$on('view:column', function(event, data) {
+                scope.$applyAsync(function() {
+                    scope.viewColumn = data.viewColumn;
+                    updateGroupStyle();
+                    scheduleQuery(null, {force: true});
+                });
+            });
 
             scope.style = {};
 
@@ -63,6 +72,9 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 data.force = true;
                 scope.showRefresh = false;
                 scheduleQuery(event, data);
+                if (scope.viewColumn) {
+                    updateGroupStyle();
+                }
             });
             scope.$on('broadcast:preview', function(event, args) {
                 scope.previewingBroadcast = true;
@@ -142,14 +154,21 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 }
             });
 
-            // refreshes the list for matching group or view type only
+            // refreshes the list for matching group or view type only or if swimlane view is ON.
             scope.$on('refresh:list', function(event, group) {
                 var _viewType = event.currentScope.viewType || '';
 
                 if (group && group._id === scope.group._id ||
-                        _.includes(['highlights', 'spiked'], _viewType)) {
+                        _.includes(['highlights', 'spiked'], _viewType) ||
+                        (!group && scope.viewColumn)) {
                     scope.refreshGroup();
                 }
+            });
+
+            scope.$on('render:next', function(event) {
+                scope.$applyAsync(function() {
+                    scope.fetchNext(scope.items._items.length);
+                });
             });
 
             /*
@@ -170,13 +189,22 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.refreshGroup = function() {
                 scope.$applyAsync(function () {
                     scope.scrollTop = 0;
+                    monitoring.scrollTop = 0;
                 });
+
                 monitoring.showRefresh = scope.showRefresh = false;
                 scheduleQuery(null, {force: true});
             };
 
             function updateGroupStyle() {
-                scope.style.maxHeight = (scope.group.max_items || 10) * ITEM_HEIGHT;
+                if (scope.viewColumn) {
+                    // maxHeight is not applicable for swimlane/column view, as each stages/column don't need to have scroll bars
+                    // because container scroll bar of monitoring view will serve scrolling
+                    scope.style.maxHeight = null;
+                    $rootScope.$broadcast('resize:header');
+                } else {
+                    scope.style.maxHeight = (scope.group.max_items || 10) * ITEM_HEIGHT;
+                }
             }
             /*
              * Bind item actions on keyboard shortcuts
@@ -278,6 +306,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             }
 
             function select(item) {
+                scope.currentGroup = item.task.stage;
                 scope.selected = item;
                 monitoring.selectedGroup = scope.group;
                 monitoring.preview(item);
@@ -286,6 +315,9 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             function preview(item) {
                 select(item);
+                if (scope.viewColumn) {
+                    updateGroupStyle();
+                }
             }
 
             // For highlight page return only highlights items, i.e, include only last version if item type is published
@@ -339,7 +371,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         var _data = {
                             newItems: items,
                             scopeItems: scope.items,
-                            scrollTop: scope.scrollTop,
+                            scrollTop: scope.viewColumn ? monitoring.scrollTop : scope.scrollTop,
                             isItemPreviewing: itemPreviewing
                         };
 

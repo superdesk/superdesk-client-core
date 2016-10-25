@@ -122,7 +122,6 @@ function WizardDirective() {
             var stopWatch;
             this.addStep = function(step) {
                 $scope.steps.push(step);
-
                 if (!stopWatch) {
                     stopWatch = $scope.$watch('currentStep', function(stepCode) {
                         if (stepCode && (($scope.selectedStep && $scope.selectedStep.code !== stepCode) || !$scope.selectedStep)) {
@@ -188,7 +187,8 @@ function WizardStepDirective() {
         scope: {
             title: '@',
             code: '@',
-            disabled: '='
+            disabled: '=',
+            hide: '='
         },
         transclude: true,
         require: '^sdWizard',
@@ -1109,6 +1109,9 @@ function splitterWidget(superdesk, superdeskFlags, $timeout) {
                         remainingSpace = container.width() - workspace.outerWidth() - 48,
                         authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
 
+                    var stage = ui.element.find('.stage.swimlane');
+                    var header = stage.find('.column-header.swimlane');
+
                     if (workspace.outerWidth() < 655) {
                         workspace.addClass('ui-responsive-medium');
                     } else {
@@ -1122,17 +1125,71 @@ function splitterWidget(superdesk, superdeskFlags, $timeout) {
                     }
 
                     authoring.width(authoringWidth / container.width() * 100 + '%');
+
+                    header.width(stage.outerWidth());
                 },
                 stop: function (e, ui) {
                     var container = ui.element.parent();
 
+                    var stage = ui.element.find('.stage.swimlane');
+                    var header = stage.find('.column-header.swimlane');
+
                     superdesk.monitoringWidth = workspace.outerWidth() / container.width() * 100 + '%';
                     superdesk.authoringWidth = authoring.outerWidth() / container.width() * 100 + '%';
+
+                    superdesk.headerWidth = superdesk.stageWidth = stage.outerWidth();
 
                     ui.element.css({
                         width: superdesk.monitoringWidth
                     });
+
+                    header.css({
+                        width: superdesk.headerWidth
+                    });
                 }
+            });
+        }
+    };
+}
+
+/*
+ * Header Resize directive for swimlane view, applies the same width of
+ * stage column to its fixed positioned header in order to resize it.
+ * sd-header-resize used in monitoring-view.html with respective sd-monitoring-group
+ *
+ */
+HeaderResizeDirective.$inject = ['$rootScope', '$timeout', '$window', 'workspaces'];
+function HeaderResizeDirective($rootScope, $timeout, $window, workspaces) {
+    return {
+        link: function(scope, element) {
+            let window = angular.element($window);
+            let resize = _.debounce(calcSize, 250);
+            window.on('resize', resize);
+
+            function calcSize() {
+                let stageContainer = element.find('.stage.swimlane');
+                let headerContainer = element.find('.column-header.swimlane');
+                if (stageContainer && headerContainer) {
+                    if (headerContainer.width() !== stageContainer.width()) {
+                        scope.$applyAsync(function() {
+                            headerContainer.width(stageContainer.width());
+                        });
+                    }
+                }
+            }
+
+            scope.$watch(function() {
+                return workspaces.active;
+            }, resize);
+
+            $rootScope.$on('resize:header', function() {
+                $timeout(function () {
+                    resize();
+                }, 0, false);
+            });
+
+            scope.$on('$destroy', function() {
+                window.off('resize', resize);
             });
         }
     };
@@ -1407,6 +1464,7 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdCreateBtn', CreateButtonDirective)
     .directive('sdAutofocus', AutofocusDirective)
     .directive('sdAutoexpand', AutoexpandDirective)
+    .directive('sdHeaderResize', HeaderResizeDirective)
     .directive('sdTimezone', TimezoneDirective)
     .directive('sdDatepickerInner', DatepickerInnerDirective)
     .directive('sdDatepickerWrapper', DatepickerWrapper)

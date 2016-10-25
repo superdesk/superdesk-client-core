@@ -2,9 +2,11 @@
     <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
     <h3 translate>Monitoring settings <span ng-if="settings.desk" translate>for "{{settings.desk.name}}" Desk</span></h3>
 </div>
-<div class="modal-body aggregate-settings" sd-wizard data-name="aggregatesettings" data-current-step="step.current" data-finish="cancel()">
 
-    <div sd-wizard-step data-title="{{ :: 'Desks' | translate }}" data-code="desks">
+<div class="modal-body aggregate-settings" sd-wizard data-name="aggregatesettings"
+     data-current-step="step.current" ng-init="setCurrentStep()" data-finish="cancel()">
+    <div sd-wizard-step data-title="{{ :: 'Desks' | translate }}" data-code="desks"
+         data-hide="shouldHideStep('desks')">
         <div class="content">
             <div ng-if="widget">
                 <span class="pull-right" sd-character-count data-item="widget.configuration.label" data-limit="30"></span>
@@ -40,7 +42,8 @@
         </div>
     </div>
 
-    <div sd-wizard-step data-title="{{ :: 'Saved Searches' | translate }}" data-code="searches">
+    <div sd-wizard-step data-title="{{ :: 'Saved Searches' | translate }}" data-code="searches"
+         data-hide="shouldHideStep('searches')">
         <div class="content">
             <div class="legend"><span translate>Select global saved searches</span>
                 <span sd-switch class="pull-right" ng-model="showGlobalSavedSearches"
@@ -77,11 +80,13 @@
         </div>
     </div>
 
-    <div sd-wizard-step data-title="{{ :: 'Reorder Sections' | translate }}" data-code="reorder">
+    <div sd-wizard-step data-title="{{ :: 'Reorder Sections' | translate }}" data-code="reorder"
+         data-hide="shouldHideStep('reorder')">
         <div class="content">
             <div class="legend" translate>Reorder stages and saved searches for view</div>
-            <ul class="groups draggable-list" sd-sort-groups>
-                <li class="sort-item clearfix" ng-repeat="item in getValues()">
+            <ul class="groups draggable-list serial-decimal" sd-sort-groups>
+                <li class="sort-item clearfix" ng-class="{'active': item.order < columnsLimit}"
+                 ng-repeat="item in getValues() track by item.order">
                     <div class="group-title" ng-if="item.type === 'stage'">
                         {{deskLookup[stageLookup[item._id].desk].name}} : <span>{{stageLookup[item._id].name}}</span>
                     </div>
@@ -100,7 +105,8 @@
         </div>
     </div>
 
-    <div sd-wizard-step data-title="{{ :: 'Items Count' | translate }}" data-code="maxitems">
+    <div sd-wizard-step data-title="{{ :: 'Items Count' | translate }}" data-code="maxitems"
+         data-hide="shouldHideStep('maxitems')">
         <div class="content">
             <div class="legend" translate>Set maximum items per stages and saved searches for view</div>
             <div class="groups">
@@ -127,7 +133,7 @@
 </div>
 
 <div class="modal-footer">
-    <button id="previousBtn" class="btn pull-left" ng-if="step.current !== 'desks'" ng-click="previous()" translate>Previous</button>
-    <button id="nextBtn" class="btn" ng-if="step.current !== 'maxitems'" ng-click="next()" translate>Next</button>
+    <button id="previousBtn" class="btn pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate>Previous</button>
+    <button id="nextBtn" class="btn" ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep" ng-click="next()" translate>Next</button>
     <button class="btn btn-primary" ng-click="save()" translate>Done</button>
 </div>

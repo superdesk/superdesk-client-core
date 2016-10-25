@@ -57,7 +57,8 @@ ItemList.$inject = [
     '$rootScope',
     'config',
     '$interpolate',
-    'metadata'
+    'metadata',
+    'storage'
 ];
 
 export function ItemList(
@@ -85,7 +86,8 @@ export function ItemList(
     $rootScope,
     config,
     $interpolate,
-    metadata
+    metadata,
+    storage
 ) {
     var listConfig = config.list || DEFAULT_LIST_CONFIG;
 
@@ -452,7 +454,7 @@ export function ItemList(
             var GridTypeIcon = function(props) {
                 return React.createElement(
                     'span',
-                    {className: 'type-icon'},
+                    {className: classNames('type-icon', {swimlane: props.swimlane})},
                     React.createElement(TypeIcon, {type: props.item.type})
                 );
             };
@@ -476,7 +478,7 @@ export function ItemList(
                     var showSelect = this.state.hover || this.props.item.selected;
                     return React.createElement(
                         'div',
-                        {className: 'list-field type-icon', onMouseEnter: this.setHover, onMouseLeave: this.unsetHover},
+                        {className: classNames('list-field type-icon'), onMouseEnter: this.setHover, onMouseLeave: this.unsetHover},
                         showSelect ?
                             React.createElement(SelectBox, {item: this.props.item, onMultiSelect: this.props.onMultiSelect}) :
                             React.createElement(
@@ -1300,7 +1302,7 @@ export function ItemList(
              */
             var Item = React.createClass({
                 shouldComponentUpdate: function(nextProps, nextState) {
-                    return nextProps.item !== this.props.item ||
+                    return nextProps.swimlane !== this.props.swimlane || nextProps.item !== this.props.item ||
                         nextProps.view !== this.props.view ||
                         nextProps.flags.selected !== this.props.flags.selected ||
                         nextState !== this.state;
@@ -1377,7 +1379,8 @@ export function ItemList(
                             React.createElement(MediaPreview, {
                                 item: item,
                                 desk: this.props.desk,
-                                onMultiSelect: this.props.onMultiSelect
+                                onMultiSelect: this.props.onMultiSelect,
+                                swimlane: this.props.swimlane
                             }),
                             React.createElement(MediaInfo, {item: item, ingestProvider: this.props.ingestProvider}),
                             React.createElement(GridTypeIcon, {item: item}),
@@ -1391,7 +1394,8 @@ export function ItemList(
                             React.createElement('span', {className: 'state-border'}),
                             React.createElement(ListTypeIcon, {
                                 item: item,
-                                onMultiSelect: this.props.onMultiSelect
+                                onMultiSelect: this.props.onMultiSelect,
+                                swimlane: this.props.swimlane
                             }),
                             (item.priority || item.urgency) ? React.createElement(ListPriority, {item: item}) : null,
                             React.createElement(ListItemInfo, {
@@ -1401,7 +1405,8 @@ export function ItemList(
                                 desk: this.props.desk,
                                 ingestProvider: this.props.ingestProvider,
                                 highlightsById: this.props.highlightsById,
-                                profilesById: this.props.profilesById
+                                profilesById: this.props.profilesById,
+                                swimlane: this.props.swimlane
                             }),
                             this.state.hover && !item.gone ? React.createElement(ActionsMenu, {item: item}) : null
                         );
@@ -1652,6 +1657,7 @@ export function ItemList(
                             key: itemId,
                             item: item,
                             view: this.state.view,
+                            swimlane: this.state.swimlane || storage.getItem('displaySwimlane'),
                             flags: {selected: this.state.selected === itemId},
                             onEdit: this.edit,
                             onDbClick: this.dbClick,
@@ -1802,6 +1808,15 @@ export function ItemList(
                 scope.$watch('view', function(newValue, oldValue) {
                     if (newValue !== oldValue) {
                         listComponent.setState({view: newValue});
+                    }
+                });
+
+                scope.$watch('viewColumn', function(newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        scope.$applyAsync(function() {
+                            listComponent.setState({swimlane: newValue});
+                            scope.refreshGroup();
+                        });
                     }
                 });
 

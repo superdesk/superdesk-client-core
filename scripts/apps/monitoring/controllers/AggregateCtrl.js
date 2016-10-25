@@ -11,6 +11,9 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     this.groups = [];
     this.spikeGroups = [];
     this.modalActive = false;
+    this.displayOnlyCurrentStep = false;
+    this.columnsLimit = null;
+    this.currentStep = 'desks';
     this.searchLookup = {};
     this.deskLookup = {};
     this.stageLookup = {};
@@ -64,57 +67,139 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     };
 
     /**
-     * Read the setting for current selected workspace(desk or custom workspace)
-     * If the view is showed in a widget, read the settings from widget configuration
-     * If the current selected workspace is a desk the settings are read from desk
-     * If the current selected workspace is a custom workspace the settings are read from
-     * user preferences
+     * Read the setting for currently selected workspace(desk or custom workspace)
+     * If the view is showed in a widget, read the settings from widget configuration.
+     * If the view is showed in a desk settings, read the settings from desk's monitoring settings.
+     * If the current selected workspace is a custom workspace then settings are read from user preferences.
+     * If the current selected workspace is a desk then settings are read from user preferences first, if
+     * no user preference found then settings read from desk's monitoring settings.
      * @returns {Object} promise - when resolved return the list of settings
      */
     this.readSettings = function() {
         if (self.widget) {
-            return workspaces.readActive()
-            .then(function(workspace) {
-                var groups = [];
-                self.widget.configuration = self.widget.configuration || {groups: [], label: ''};
-                _.each(workspace.widgets, function(widget) {
-                    if (widget.configuration && self.widget._id === widget._id && self.widget.multiple_id === widget.multiple_id) {
-                        groups = widget.configuration.groups || groups;
-                        self.widget.configuration.label = widget.configuration.label || '';
-                    }
-                });
-                return {'type': 'desk', 'groups': groups};
-            });
+            // when reading from monitoring widget
+            return widgetMonitoringConfig(self.widget);
         } else {
-            return workspaces.getActiveId()
-                .then(function(activeWorkspace) {
-                    if (self.settings != null && self.settings.desk) {
-                        return deskMonitoringConfig(self.settings.desk);
-                    } else if (activeWorkspace.type === 'workspace') {
-                        return preferencesService.get(PREFERENCES_KEY)
-                            .then(function(preference) {
-                                if (preference && preference[activeWorkspace.id] && preference[activeWorkspace.id].groups) {
-                                    return {'type': 'workspace', 'groups': preference[activeWorkspace.id].groups};
-                                }
-                                return {'type': 'workspace', 'groups': []};
-                            });
-                    } else if (activeWorkspace.type === 'desk') {
-                        var desk = self.deskLookup[activeWorkspace.id];
-                        if (desk && desk.monitoring_settings) {
-                            return {'type': 'desk', 'groups': desk.monitoring_settings};
-                        }
-                    }
-                    return {'type': 'desk', 'groups': []};
-                });
+            return workspaces.getActiveId().then(function(activeWorkspace) {
+                if (self.settings != null && self.settings.desk) {
+                    // when viewing in desk's monitoring settings
+                    return deskSettingsMonitoringConfig(self.settings.desk);
+                } else {
+                    // when viewing in monitoring view
+                    return workspaceMonitoringConfig(activeWorkspace);
+                }
+                return {'type': 'desk', 'groups': []};
+            });
         }
     };
 
-    function deskMonitoringConfig(objDesk) {
-        var desk = self.deskLookup[objDesk._id];
-        if (desk && desk.monitoring_settings) {
-            return {'type': 'desk', 'groups': desk.monitoring_settings, 'desk': objDesk};
+    /**
+     * Read settings in monitoring view for custom or desk workspace
+     * according to active workspace type
+     * @param {Object} activeWorkspace - contains workspace id and type.
+     **/
+    function workspaceMonitoringConfig(activeWorkspace) {
+        if (activeWorkspace.type === 'workspace') {
+            // when custom workspace selected in monitoring view.
+            return customWorkspaceMonitoringConfig(activeWorkspace);
+        } else if (activeWorkspace.type === 'desk') {
+            // when desk selected in monitoring view.
+            return deskWorkspaceMonitoringConfig(activeWorkspace);
         }
-        return {'type': 'desk', 'groups': [], 'desk': objDesk};
+    }
+
+    /**
+     * Read aggregate settings in monitoring view for desk workspace,
+     * settings read from user preferences first, if no preferences
+     * found then settings read from desk's monitoring settings.
+     * @param {Object} activeWorkspace - contains workspace id and type.
+     * @return {Object} {type: {String}, groups: {Array}}
+     **/
+    function deskWorkspaceMonitoringConfig(activeWorkspace) {
+        // Read available groups from user preferences first
+        return preferencesService.get(PREFERENCES_KEY).then(function(preference) {
+            let groups = [];
+            let desk = self.deskLookup[activeWorkspace.id];
+            let monitoringSettings = desk ? desk.monitoring_settings || [] : [];
+            let activePrefGroups = preference[activeWorkspace.id] ? preference[activeWorkspace.id].groups || [] : [];
+
+            if (activePrefGroups.length) {
+                if (monitoringSettings.length) {
+                    // compare and determine if set of groups in desk monitoring settings & user preferences are same or changed
+                    // now, due to stages activated or deactivated in desk's monitoring settings.
+                    let diff = _.xorBy(monitoringSettings, activePrefGroups, '_id');
+
+                    if (diff.length) {
+                        // if different, that means available stages/groups are changed now in desk monitoring settings
+                        // so simply return recent desk monitoring settings.
+                        groups = monitoringSettings;
+                    } else {
+                        // update groups in preferences with any changes in desk's monitoring settings groups.
+                        activePrefGroups.forEach(function(group) {
+                            return angular.extend(group, monitoringSettings.find(grp => grp._id === group._id));
+                        });
+
+                        groups = activePrefGroups;
+                    }
+                }
+
+                groups = activePrefGroups;
+            }
+            // when no user preferences found
+            if (desk && desk.monitoring_settings) {
+                groups = desk.monitoring_settings;
+            }
+
+            return {'type': 'desk', 'groups': groups};
+        });
+    }
+
+    /**
+     * Read aggregate settings in monitoring view for custom workspace
+     * @param {Object} activeWorkspace - contains workspace id and type.
+     * @return {Object} {type: {String}, groups: {Array}}
+     **/
+    function customWorkspaceMonitoringConfig(activeWorkspace) {
+        return preferencesService.get(PREFERENCES_KEY).then(function(preference) {
+            let groups = [];
+            if (preference && preference[activeWorkspace.id] && preference[activeWorkspace.id].groups) {
+                groups = preference[activeWorkspace.id].groups;
+            }
+            return {'type': 'workspace', 'groups': groups};
+        });
+    }
+
+    /**
+     * Read aggregate settings for monitoring widget
+     * @param {Object} objWidget - contains widget configuration
+     * @return {Object} {type: {String}, groups: {Array}}
+     **/
+    function widgetMonitoringConfig(objWidget) {
+        return workspaces.readActive().then(function(workspace) {
+            let groups = [];
+            self.widget.configuration = objWidget.configuration || {groups: [], label: ''};
+            _.each(workspace.widgets, function(widget) {
+                if (widget.configuration && self.widget._id === widget._id && self.widget.multiple_id === widget.multiple_id) {
+                    groups = widget.configuration.groups || groups;
+                    self.widget.configuration.label = widget.configuration.label || '';
+                }
+            });
+            return {'type': 'desk', 'groups': groups};
+        });
+    }
+
+    /**
+     * Read aggregate settings for desk monitoring settings
+     * @param {Object} objDesk - contains desk configuration
+     * @return {Object} {type: {String}, groups: {Array}, desk: {Object}}
+     **/
+    function deskSettingsMonitoringConfig(objDesk) {
+        let groups = [];
+        let desk = self.deskLookup[objDesk._id];
+        if (desk && desk.monitoring_settings) {
+            groups = desk.monitoring_settings;
+        }
+        return {'type': 'desk', 'groups': groups, 'desk': objDesk};
     }
 
     /**
@@ -328,7 +413,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     /**
      * For edit monitoring settings add desk groups to the list
      */
-    this.edit = function() {
+    this.edit = function(currentStep, displayOnlyCurrentStep) {
         this.editGroups = {};
         var _groups = this.groups;
         this.refreshGroups().then(function() {
@@ -359,7 +444,11 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 }
             });
         });
+
         this.modalActive = true;
+
+        this.currentStep = currentStep || 'desks';
+        this.displayOnlyCurrentStep = displayOnlyCurrentStep;
     };
 
     this.searchOnEnter = function($event, query) {

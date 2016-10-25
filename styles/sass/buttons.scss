@@ -316,6 +316,10 @@ input[type="submit"].btn {
         background-color: darken($sd-highlight, 10%);
       }
     }
+    &--btn-rearrange {
+        width: auto;
+        border-right: solid thin #eee;
+    }
 }
 .navbtn--highlighted {
   &.active,

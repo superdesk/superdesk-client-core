@@ -29,6 +29,7 @@ To configure the build, the `superdesk.config.js` file must export a function th
 - `features.alchemy`: `false` - allow alchemy widget for keywords
 - `features.elasticHighlight`: `false` - allow highlighting of search terms by elasticsearch
 - `features.noTakes`: `false` - disable takes related functionality
+- `features.swimlane`: `null` - enables switch view button in monitoring view, which allows to switch between list view or swimlane view. Example: `features: {swimlane: {columnsLimit: 4}}` will enable switch view button and displays 4 columns when turned ON, set null or keep undefined to disable
 
 ##### Workspace
 - `workspace.content`: `false` - enable content view in workspace (obsolete)

@@ -307,8 +307,6 @@ $search-widget-preview-width: 440px;
                 }
             }
             .stage-name {
-                padding: 0 8px 0 0;
-                margin: auto 0;
                 font-size: 11px;
                 line-height: 100%;
                 @include text-semibold();
@@ -323,15 +321,17 @@ $search-widget-preview-width: 440px;
         .stage-content {
             margin: 5px 0 20px;
             overflow-y: auto;
-            overflow-x: hidden;
             position: relative;
+            &.swimlane {
+                overflow-y: hidden !important;
+            }
         }
     }
 }
 .label-total {
     box-sizing: border-box;
     height: 16px;
-    margin: auto 0;
+    margin: 4px 4px;
     padding: 4px 6px 3px;
     @include border-radius(8px);
     color: $white !important;
@@ -340,9 +340,13 @@ $search-widget-preview-width: 440px;
     line-height: 100%;
     letter-spacing: 0.06em;
     @include text-normal();
+    vertical-align: sub;
 }
 .refresh-box {
     display: flex;
+    &.swimlane {
+        position: relative;
+    }
     button {
         background: none;
         border: 0;
@@ -354,7 +358,16 @@ $search-widget-preview-width: 440px;
         }
         &.btnRefresh {
             border-left: 0px !important;
-            margin-right: 0px !important;
+            margin-right: 3px !important;
+            padding-left: 0px !important;
+            height: 26px;
+            position: absolute;
+            right: 12px;
+            &.swimlane {
+                right: 0;
+                top: 2px;
+                margin-right: 0px !important;
+            }
         }
     }
 }
@@ -397,6 +410,7 @@ $search-widget-preview-width: 440px;
 .aggregate-widget-config {
     .modal-body {
         padding: 0 0 50px 0;
+        overflow: scroll;
     }
     .modal-screen {
         position: relative;

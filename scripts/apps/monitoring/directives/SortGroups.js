@@ -30,8 +30,9 @@ export function SortGroups() {
                         var end = {
                             index: ui.item.parent().find('li.sort-item').index(ui.item)
                         };
+
+                        scope.reorder(start, end, ui.item);
                         ui.item.remove();
-                        scope.reorder(start, end);
                         scope.$apply();
                     }
                 },

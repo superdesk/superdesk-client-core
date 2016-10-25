@@ -31,10 +31,20 @@
             text-align: center;
             border-left: 0;
         }
+
+        .navbtn {
+            &.btnRearrange {
+                width: 80px !important;
+            }
+        }
+
+        .title {
+            text-transform: uppercase;
+        }
     }
 
-    .monitoring-preview-layout{
-        margin-top:48px;
+    .monitoring-preview-layout {
+        margin-top: 48px;
     }
 
     .main-section {
@@ -47,14 +57,105 @@
             left: 0;
             right: 0;
             bottom: 0;
-            padding: 9px 18px 18px;
             overflow-y: scroll;
             @include transition(all .3s);
             @include border-box();
+            padding: 0px 18px 18px !important;
+
+            .list {
+                padding: 9px 18px 18px !important;
+            }
+
+            .swimlane {
+                margin-top: 0px !important;
+            }
+
+            .sd-columns.swimlane {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+                @media only screen and (max-width : 1430px) {
+                    right: $sidepreview-width - 40;
+                }
+            }
+            .sd-column.swimlane {
+                display: table-cell;
+                position: relative;
+                vertical-align: top;
+            }
 
             .stage {
                 padding: 0;
                 margin: 9px 0;
+                .column-header {
+                    &:not(.swimlane) {
+                        width: 100% !important;
+                    }
+                }
+                &.swimlane {
+                    width: 98% !important;
+                    margin: 0;
+                    .header-container {
+                        width: 100%;
+                    }
+                    .column-header {
+                        position: fixed;
+                        z-index: 4;
+                    }
+                    .stage-header {
+                        background-color: #f8f8f8;
+                        background: rgba(245, 245, 245, 1);
+                        height: 55px;
+                        border-radius: 3px 3px 1px 1px;
+                        margin-left: 0px !important;
+                        padding-left: 2px;
+                        overflow: hidden;
+                        box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.5) !important;
+
+                        .stage-name {
+                            width: 100%;
+                            .group-header {
+                                display: block;
+                                position: absolute;
+                                left: 0; right: 0; top:0;
+                                padding-left: 2px;
+                                text-transform: uppercase;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                font-size: 12px;
+                                color: #333;
+                                font-weight: 700;
+                                height: 26px;
+                                line-height: 26px;
+                                border-bottom: 5px solid #4d4d4d;
+                            }
+                            .group-subheader {
+                                display: block;
+                                left: 0; right: 0; top:0;
+                                padding: 30px 0px 0px 2px;
+                                height: 26px;
+                                line-height: 26px;
+                                width: 100%;
+                                font-size: 12px;
+                                color: #777;
+                                @include text-semibold();
+                                text-transform: uppercase;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                            .link {
+                                margin-left: 10px;
+                                vertical-align: sub;
+                                i { margin-bottom: 3px; color: $grayLight; }
+                                &:hover {
+                                    i { color: $grayDark; }
+                                    cursor:pointer;
+                                }
+                            }
+
+                        }
+                    }
+                }
             }
 
             .stage-content {
@@ -79,6 +180,9 @@
                         }
                     }
                 }
+                &.swimlane {
+                    padding-top: 57px;
+                }
             }
 
             .single-group {
@@ -97,17 +201,17 @@
                 @include border-box();
                 max-height: calc(100vh - 180px) !important;
             }
+
         }
+
     }
 }
-
-
-
 
 .workspace {
   .main-section {
     .content-item-preview {
       position: absolute;
+      z-index: 4;
       top: 0;
       right: 0;
       bottom: 0;
@@ -134,7 +238,6 @@
     }
   }
 }
-
 
 .workspace.authoring {
     .main-section {
@@ -199,12 +302,42 @@
                 @media only screen and (max-width : 1430px) {
                     right: 0;
                 }
+                .sd-column.swimlane {
+                    &.inactive {
+                        display: none !important;
+                    }
+                }
+            }
+            .navbtn {
+                &.btnRearrange {
+                    width: 80px !important;
+                    @media only screen and (max-width : 1430px) {
+                        display: none !important;
+                    }
+                }
             }
         }
     }
 }
 
-.search-page-container
+.notification-container {
+    display: inline-flex !important;
+    vertical-align: sub;
+    margin-top: 2px;
+    &.swimlane {
+        position: absolute;
+        right: 0px;
+        top: 3px;
+        &.refresh {
+            right: 25px !important;
+        }
+        .monitoring-dropdown {
+            .dropdown-menu {
+                margin-top: 35px !important;
+            }
+        }
+    }
+}
 
 .notification-label {
     margin: 2px 4px;

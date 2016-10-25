@@ -54,6 +54,13 @@
                 <i class="icon-settings"></i>
             </button>
 
+            <button id="switch-view-btn" ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView"
+             class="navbtn strict" ng-click="displayColumn()" ng-class="{active: viewColumn}"
+                 tooltip="{{ viewColumn ? 'Switch to List View' : 'Switch to Swimlane View'  | translate }}"
+                 tooltip-placement="left">
+                <i class="big-icon-view"></i>
+            </button>
+
             <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
                 <button class="dropdown-toggle sd-create-btn" dropdown-toggle></button>
                 <ul class="dropdown-menu scrollable pull-right" sd-content-create></ul>
@@ -73,6 +80,10 @@
                     <i ng-if="fileType=='highlightsPackage'" class="toggle-button__icon filetype-icon-highlight-pack" title="{{ :: 'Highlight Package' | translate }}"></i>
                 </a>
             </div>
+            <button class="navbtn navbtn--btn-rearrange pull-left" tooltip="{{:: 'Re-Arrange Groups' | translate}}" tooltip-placement="right" ng-if="type === 'monitoring' && monitoring.singleGroup.singleViewType == null && viewColumn"
+                 ng-click="aggregate.edit('reorder', true)">
+                <i class="icon-move"></i> <span class="title" translate>Rearrange groups</span>
+            </button>
 
             <div class="subnav__stretch-bar"></div>
 
@@ -97,36 +108,52 @@
                     </ul>
                 </div>
             </div>
-
         </div>
+
         <div class="preview-layout monitoring-preview-layout">
             <div class="content-list" ng-show="!aggregate.loading">
-                <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
-                    <div ng-repeat="group in aggregate.groups track by group._id"
-                         sd-monitoring-group data-group="group"  data-num-items="group.max_items"
-                         data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"></div>
+                <!-- list view -->
+                <div ng-if="!viewColumn" class="list">
+                    <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
+                        <div ng-repeat="group in aggregate.groups track by group._id"
+                             sd-monitoring-group data-group="group"  data-num-items="group.max_items"
+                             data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"></div>
+                    </div>
                 </div>
-                <div ng-if="type === 'spike'">
+                <!-- swimlane view -->
+                <div ng-if="viewColumn" class="swimlane">
+                    <div class="sd-columns swimlane"
+                         ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
+                        <div class="sd-column swimlane" ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
+                             ng-repeat="group in aggregate.groups | limitTo:monitoring.columnsLimit track by group._id"
+                             sd-monitoring-group data-group="group" data-num-items="group.max_items"
+                             data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
+                             sd-header-resize>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="type === 'spike'" class="list">
                     <div ng-repeat="group in aggregate.spikeGroups track by group._id | orderBy: name"
-                        sd-monitoring-group
-                        class="{singleGroup: aggregate.spikeGroups.length === 1}"
-                        data-group="group"
-                        data-view-type="'spiked'"
-                        data-force-limited="{{ aggregate.spikeGroups.length > 1 }}"
-                        ></div>
+                    sd-monitoring-group
+                    class="{singleGroup: aggregate.spikeGroups.length === 1}"
+                    data-group="group"
+                    data-view-type="'spiked'"
+                    data-force-limited="{{ aggregate.spikeGroups.length > 1 }}"
+                    ></div>
                 </div>
-                <div ng-if="monitoring.singleGroup && !monitoring.isDeskChanged()">
-                    <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-num-items="10" data-view-type="'single_monitoring'"></div>
+                <div ng-if="monitoring.singleGroup && !monitoring.isDeskChanged()" class="list">
+                    <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-num-items="10" data-view-type="'single_monitoring'">
+                    </div>
                 </div>
-                <div ng-if="type === 'personal'">
-                    <div sd-monitoring-group data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"></div>
+                <div ng-if="type === 'personal'" class="list">
+                    <div sd-monitoring-group data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}">
+                    </div>
                 </div>
-                <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()">
+                <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
                     <div sd-monitoring-group class="single-group"
                     data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
                     data-view-type="'highlights'"></div>
                 </div>
-
             </div>
 
             <div sd-item-preview
@@ -150,7 +177,10 @@
              data-groups="aggregate.groups"
              data-edit-groups="aggregate.editGroups"
              data-settings="aggregate.settings"
-             data-onclose="aggregate.refreshGroups()">
+             data-onclose="aggregate.refreshGroups()"
+             data-current-step="aggregate.currentStep"
+             data-display-only-current-step="aggregate.displayOnlyCurrentStep"
+             data-columns-limit="monitoring.columnsLimit">
         </div>
     </section>
     <div sd-archived-item-kill ng-if="archived_kill" data-item="archived_kill"></div>

@@ -62,7 +62,7 @@ a:hover {
             box-shadow: 2px 0 10px 0 rgba(0,0,0,0.3);
             right: 44%;
             z-index:100;
-                        border-right: 3px solid #666;
+            border-right: 3px solid #666;
             @include transition(all .5s);
             @media only screen and (max-width : 1430px) {
                 right: 54%;
