@@ -1,5 +1,5 @@
-AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send'];
-export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send) {
+AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send', 'config'];
+export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send, config) {
     this.item = null;
     this.action = null;
     this.state = null;
@@ -43,6 +43,11 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
                 this.view(_item);
             }
         }.bind(this);
+
+        // disable open for external ingest sources that are not editable(fetch not available)
+        if (item._type === 'externalsource' && config.features.editFeaturedImage === false) {
+            return;
+        }
 
         if (item._type === 'ingest' || item.state === 'ingested') {
             send.one(item).then(_open);
