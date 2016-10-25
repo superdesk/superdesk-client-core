@@ -43,6 +43,7 @@ angular.module('superdesk.apps.search', [
     .directive('sdSearchContainer', directive.SearchContainer)
     .directive('sdSearchParameters', directive.SearchParameters)
     .directive('sdMultiActionBar', directive.MultiActionBar)
+    .directive('sdRawSearch', directive.RawSearch)
 
     .config(['superdeskProvider', 'assetProvider', function(superdesk, asset) {
         superdesk.activity('/search', {

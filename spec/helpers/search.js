@@ -249,6 +249,13 @@ function GlobalSearch() {
     };
 
     /**
+     * Open the raw search tab
+     */
+    this.openRawSearchTab = function() {
+        element(by.id('raw_search_tab')).click();
+    };
+
+    /**
      * Click the Clear Filters button
      */
     this.clickClearFilters = function() {

@@ -165,6 +165,16 @@ describe('search', function() {
         globalSearch.archivedRepo.click();
         browser.sleep(200);
         expect(globalSearch.getItems().count()).toBe(0);
+
+        // can do a boolean search in the raw panel
+        globalSearch.clickClearFilters();
+        globalSearch.openRawSearchTab();
+        var rawTextbox = element(by.id('raw-query'));
+        rawTextbox.clear();
+        rawTextbox.sendKeys('type:text AND (item1 OR item4)');
+        globalSearch.goButton.click();
+        expect(globalSearch.getItems().count()).toBe(2);
+
     });
 
     it('can action on items', function() {

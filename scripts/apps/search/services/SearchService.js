@@ -337,12 +337,24 @@ export function SearchService($location, gettext, config, session) {
                 criteria.post_filter = {'and': post_filters};
             }
 
-            if (search.q) {
+            var query_string = null;
+            if (search.q && !search.raw) {
+                query_string = search.q.replace(/\//g, '\\/');
+            } else {
+                if (search.raw) {
+                    query_string = search.raw.replace(/\//g, '\\/');
+                    if (search.q) {
+                        query_string = '(' + query_string + ') AND (' + search.q.replace(/\//g, '\\/') + ')';
+                    }
+                }
+            }
+
+            if (query_string) {
                 criteria.query.filtered.query = {query_string: {
-                    query: search.q.replace(/\//g, '\\/'),
-                    lenient: false,
-                    default_operator: 'AND'
-                }};
+                        query: query_string,
+                        lenient: false,
+                        default_operator: 'AND'
+                    }};
             }
 
             if (withSource) {

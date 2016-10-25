@@ -172,6 +172,12 @@ describe('search service', function() {
         expect(filters).toContain({not: {terms: {urgency: ['1']}}});
     }));
 
+    it('can create raw string query', inject(function($rootScope, search, session) {
+        session.identity = {_id: 'foo'};
+        var criteria = search.query({raw: 'slugline:item3 OR slugline:item4'}).getCriteria();
+        expect(criteria.query.filtered.query.query_string.query).toBe('slugline:item3 OR slugline:item4');
+    }));
+
     function prepareData(newItems, scopeItems, scrollTop, isItemPreviewing) {
         return {
             newItems: newItems,
