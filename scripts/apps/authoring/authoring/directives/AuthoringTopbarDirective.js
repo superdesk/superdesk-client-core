@@ -7,7 +7,6 @@
  *
  * @description Generates authoring subnav bar
  */
-
 AuthoringTopbarDirective.$inject = ['TranslationService'];
 export function AuthoringTopbarDirective(TranslationService) {
     return {

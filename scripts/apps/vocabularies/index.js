@@ -13,6 +13,13 @@ import { VocabularyService, SchemaFactory } from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.vocabularies
+ * @name superdesk.apps.vocabularies
+ * @packageName superdesk.apps
+ * @description Superdesk vocabularies module.
+ */
 angular.module('superdesk.apps.vocabularies', [
     'superdesk.core.activity',
     'superdesk.apps.authoring.metadata'

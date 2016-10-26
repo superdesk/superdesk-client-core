@@ -12,6 +12,13 @@ import { InsertFilter, ScheduleFilter } from './filters';
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.ingest
+ * @name superdesk.apps.ingest
+ * @packageName superdesk.apps
+ * @description Adds functionality to ingest items from external sources.
+ */
 angular.module('superdesk.apps.ingest', [
     'superdesk.apps.search',
     'superdesk.apps.dashboard',

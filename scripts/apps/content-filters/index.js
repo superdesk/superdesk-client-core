@@ -19,6 +19,14 @@ import * as ctrl from './controllers';
 // Seems like something needs to be fixed in config, but for now loading
 // superdesk.apps.publish module does the trick (FWIW, it's the module that
 // contained the original code for the content_filters module).
+
+/**
+ * @ngdoc module
+ * @module superdesk.apps.content_filters
+ * @name superdesk.apps.content_filters
+ * @packageName superdesk.apps
+ * @description Superdesk package containing content filters.
+ */
 angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
 .config(['superdeskProvider', function (superdesk) {
         var templateUrl = 'scripts/apps/content-filters/' +

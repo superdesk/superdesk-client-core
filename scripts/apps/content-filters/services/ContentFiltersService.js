@@ -1,7 +1,7 @@
 /**
- * @packageName superdesk.apps.content_filters
- * @ngdoc service
  * @name contentFilters
+ * @module superdesk.apps.content_filters
+ * @ngdoc service
  * @description
  *   This service implements a convenience layer on top of the server API,
  *   providing higher-level methods for fetching and modifying all content

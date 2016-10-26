@@ -2,6 +2,13 @@ import { LegalArchiveService } from './services';
 import { LegalArchiveController } from './controllers';
 import { LegalItemSortbar } from './directives';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.legal_archive
+ * @name superdesk.apps.legal_archive
+ * @packageName superdesk.apps
+ * @description Application that adds legal archive support.
+ */
 export default angular.module('superdesk.apps.legal_archive', [
     'superdesk.core.activity',
     'superdesk.core.api'

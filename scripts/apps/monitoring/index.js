@@ -18,6 +18,14 @@ import * as directive from './directives';
 import * as svc from './services';
 import { SplitFilter } from './filters';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.monitoring
+ * @name superdesk.apps.monitoring
+ * @packageName superdesk.apps
+ * @description Monitoring support for Superdesk content. Adds a new main tab
+ * to the application.
+ */
 angular.module('superdesk.apps.monitoring', [
     'superdesk.core.api',
     'superdesk.apps.aggregate',

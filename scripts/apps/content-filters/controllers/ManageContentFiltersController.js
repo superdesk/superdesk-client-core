@@ -1,7 +1,7 @@
 /**
  * @ngdoc controller
+ * @module superdesk.apps.content_filters
  * @name ManageContentFiltersCtrl
- * @packageName superdesk.apps.content_filters
  * @description
  *   Controller for the Filters tab, found on the Content Filters settings
  *   page.

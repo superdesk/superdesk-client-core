@@ -12,6 +12,13 @@ import * as svc from './services';
 import * as directive from './directives';
 import * as config from './config';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.users
+ * @name superdesk.apps.users
+ * @packageName superdesk.apps
+ * @description Superdesk user roles, privileges and profiles module.
+ */
 export default angular.module('superdesk.apps.users', [
     'superdesk.core.activity',
     'superdesk.core.services.asset'

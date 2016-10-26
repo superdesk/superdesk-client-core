@@ -1,6 +1,6 @@
 /**
- * @packageName superdesk.apps.ingest
  * @ngdoc directive
+ * @module superdesk.apps.ingest
  * @name sdIngestRoutingContent
  * @description
  *   Creates the main page for adding or editing routing rules (in the

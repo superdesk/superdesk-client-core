@@ -14,6 +14,13 @@ import * as svc from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.publish
+ * @name superdesk.apps.publish
+ * @packageName superdesk.apps
+ * @description Superdesk publishing support.
+ */
 export default angular.module('superdesk.apps.publish', ['superdesk.apps.users', 'superdesk.apps.content_filters'])
     .value('transmissionTypes', transmissionTypes)
 

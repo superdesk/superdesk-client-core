@@ -8,6 +8,13 @@ function SuperdeskFlagsService(config) {
     angular.extend(this.flags, config.ui);
 }
 
+/**
+ * @ngdoc module
+ * @module superdesk.core.menu
+ * @name superdesk.core.menu
+ * @packageName superdesk.core
+ * @description The Superdesk menu module enables a configurable left-side menu.
+ */
 angular.module('superdesk.core.menu', [
     'superdesk.core.menu.notifications',
     'superdesk.core.privileges',

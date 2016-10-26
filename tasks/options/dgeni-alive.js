@@ -21,6 +21,8 @@ module.exports = {
             'scripts/**/*.js',
             'docs/ngdoc/**/*.ngdoc',
             '!**/test/**/*spec.js'
-        ]
+        ],
+
+        templatePaths: ['docs/ngdoc/templates']
     }
 };

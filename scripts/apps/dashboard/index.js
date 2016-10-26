@@ -17,6 +17,13 @@ angular.module('superdesk.apps.dashboard.widgets', [])
 angular.module('superdesk.apps.dashboard.widgets.base', ['superdesk.core.itemList'])
     .factory('BaseWidgetController', svc.BaseWidgetFactory);
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.dashboard
+ * @name superdesk.apps.dashboard
+ * @packageName superdesk.apps
+ * @description A module that includes the dashboard component.
+ */
 angular.module('superdesk.apps.dashboard', [
     'superdesk.core.activity',
     'superdesk.apps.dashboard.widgets',

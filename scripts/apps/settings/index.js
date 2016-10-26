@@ -3,6 +3,13 @@ import './styles/settings.scss';
 
 import * as directive from './directives';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.settings
+ * @name superdesk.apps.settings
+ * @packageName superdesk.apps
+ * @description Superdesk application settings UI module.
+ */
 export default angular.module('superdesk.apps.settings', [])
     .config(['superdeskProvider', function(superdesk) {
         superdesk.activity('/settings', {

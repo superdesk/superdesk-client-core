@@ -1,6 +1,6 @@
 /**
- * @packageName superdesk.apps.users
  * @ngdoc directive
+ * @module superdesk.apps.users
  * @name sdUserPreferences
  * @description
  *   This directive creates the Preferences tab on the user profile

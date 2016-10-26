@@ -1,7 +1,7 @@
 /**
  * @ngdoc controller
+ * @module superdesk.apps.content_filters
  * @name FilterSearchCtrl
- * @packageName superdesk.apps.content_filters
  * @description Controller for the Filter Search tab, found on the Content Filters
  * settings page.
  */

@@ -42,6 +42,13 @@ angular.module('superdesk.apps.archive.directives', [
     .service('familyService', svc.FamilyService)
     .service('dragitem', svc.DragItemService);
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.archive
+ * @name superdesk.apps.archive
+ * @packageName superdesk.apps
+ * @description Superdesk archive specific application.
+ */
 angular.module('superdesk.apps.archive', [
     'superdesk.apps.search',
     'superdesk.apps.archive.directives',

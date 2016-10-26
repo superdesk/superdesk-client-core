@@ -279,6 +279,14 @@ function SuperdeskProvider($routeProvider, _) {
         }];
 }
 
+/**
+ * @ngdoc module
+ * @module superdesk.core.activity
+ * @name superdesk.core.activity
+ * @packageName superdesk.core
+ * @description Superdesk core activities module. Used to register new activities,
+ * apps and functionalities.
+ */
 angular.module('superdesk.core.activity', [
     'ngRoute',
     'superdesk.core.notify',

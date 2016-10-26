@@ -1,4 +1,7 @@
 /**
+ * @ngdoc filter
+ * @module superdesk.apps.templates
+ * @name FilterTemplatesFilter
  * @description Returns a function that allows filtering an array of
  * templates by various criteria.
  */

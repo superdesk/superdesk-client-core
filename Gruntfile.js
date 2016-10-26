@@ -25,9 +25,15 @@ module.exports = function(grunt) {
         pattern: [
             'grunt-*',
             '@*/grunt-*',
-            'dgeni-alive'
         ]
     });
+
+    // Only load dgeni if the docs task is running. This is because dgeni-alive
+    // loads additional unneeded C code which pollutes other tasks even when not
+    // using it.
+    if (grunt.cli.tasks.indexOf('docs') > -1) {
+        grunt.loadNpmTasks('dgeni-alive');
+    }
 
     // Auto-load configuration
     require('load-grunt-config')(grunt, {

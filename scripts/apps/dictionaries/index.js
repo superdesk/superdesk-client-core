@@ -13,6 +13,13 @@ import { DictionaryService } from './services';
 import { DictionaryEditController, DictionaryConfigController } from './controllers';
 import * as directive from './directives';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.dictionaries
+ * @name superdesk.apps.dictionaries
+ * @packageName superdesk.apps
+ * @description Superdesk module that adds dictionary functionality.
+ */
 angular.module('superdesk.apps.dictionaries', [
     'vs-repeat',
     'superdesk.core.activity',

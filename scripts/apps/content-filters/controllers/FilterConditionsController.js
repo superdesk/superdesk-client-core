@@ -1,7 +1,7 @@
 /**
  * @ngdoc controller
+ * @module superdesk.apps.content_filters
  * @name FilterConditionsCtrl
- * @packageName superdesk.apps.content_filters
  * @description Controller for the Filter Conditions tab, found on the Content Filters
  * settings page.
  */

@@ -13,6 +13,13 @@ import * as ctrl from './controllers';
 import * as directive from './directives';
 import { PackagesService } from './services';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.packaging
+ * @name superdesk.apps.packaging
+ * @packageName superdesk.apps
+ * @description This module adds support for packages.
+ */
 angular.module('superdesk.apps.packaging', [
     'superdesk.core.api',
     'superdesk.core.activity',
