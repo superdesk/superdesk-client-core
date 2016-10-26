@@ -5,7 +5,7 @@ export function PubAPIFactory(config, $http, $q) {
     function urljoin() {
         return Array.prototype.map.call(arguments, piece => {
             return piece.replace(/\/$/, '').replace(/^\//, '');
-        }).join('/');
+        }).join('/') + '/';
     }
 
     /**
