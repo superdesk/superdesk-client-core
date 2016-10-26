@@ -105,4 +105,3 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 
 - `publisher.server` - web publisher domain, eg. `http://example.com`
 - `publisher.base` - web publisher base url, eg. `/api/v1/`
-

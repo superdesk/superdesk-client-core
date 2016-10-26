@@ -8,6 +8,13 @@
 module.exports = function(grunt) {
     return {
         defaultRoute: '/workspace',
-        requiredMediaMetadata: ['headline', 'description_text', 'alt_text']
+        requiredMediaMetadata: ['headline', 'description_text', 'alt_text'],
+        publisher: {
+        	server: 'http://default.ljuba.s-lab.sourcefabric.org/',
+            base: '/api/v1'
+        },
+        features: {
+            webPublisher: true
+        }
     };
 };
