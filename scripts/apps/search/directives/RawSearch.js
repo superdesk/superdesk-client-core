@@ -1,4 +1,14 @@
-RawSearch.$inject = ['asset', '$location'];
+/**
+ * @memberof superdesk.apps.search
+ * @ngdoc directive
+ * @name RawSearch
+ * @requires asset
+ * @requires $location
+ * @description
+ *   This directive handles the Raw search tab in the search panel. This is a textarea
+ *   that allows the user enter a query string that will get passed to the search endpoint.
+ */
+ RawSearch.$inject = ['asset', '$location'];
 export function RawSearch(asset, $location) {
     return {
         templateUrl: asset.templateUrl('apps/search/views/raw-search.html'),
@@ -6,7 +16,7 @@ export function RawSearch(asset, $location) {
             var params = $location.search();
             scope.rawquery = params.raw;
 
-            var ENTER = 13;
+            const ENTER = 13;
 
             scope.keyPressed = function(event) {
                 if (event.keyCode === ENTER) {

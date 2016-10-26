@@ -337,16 +337,12 @@ export function SearchService($location, gettext, config, session) {
                 criteria.post_filter = {'and': post_filters};
             }
 
+            // Construct the query string by combining the q parameter and the raw parameter, if both present
             var query_string = null;
-            if (search.q && !search.raw) {
-                query_string = search.q.replace(/\//g, '\\/');
+            if (search.q && search.raw) {
+                query_string = [search.q, search.raw].filter(q => q).map(q => '(' + q.replace(/\//g, '\\/') + ')').join(' AND ');
             } else {
-                if (search.raw) {
-                    query_string = search.raw.replace(/\//g, '\\/');
-                    if (search.q) {
-                        query_string = '(' + query_string + ') AND (' + search.q.replace(/\//g, '\\/') + ')';
-                    }
-                }
+                query_string = [search.q, search.raw].filter(q => q).map(q => q.replace(/\//g, '\\/')).join('');
             }
 
             if (query_string) {
