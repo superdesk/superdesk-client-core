@@ -492,7 +492,7 @@ export function ItemList(
             });
 
             var ListPriority = function(props) {
-                var css = {className: 'list-field urgency'};
+                var css = {className: classNames('list-field urgency', {'urgency-reduced-rowheight': listConfig.thinRows})};
                 return renderArea('priority', props, css) || React.createElement('div', css);
             };
 
@@ -810,7 +810,7 @@ export function ItemList(
             var ListItemInfo = function(props) {
                 return React.createElement(
                     'div',
-                    {className: 'item-info'},
+                    {className: classNames('item-info', {'item-info-reduced-rowheight': listConfig.thinRows})},
                     renderArea('firstLine', props, {className: 'line'}),
                     renderArea('secondLine', props, {className: 'line'})
                 );
@@ -868,6 +868,14 @@ export function ItemList(
                     return React.createElement(
                         TimeElem,
                         {date: props.item.versioncreated, key: 'versioncreated'}
+                    );
+                },
+
+                versioncreator: function(props) {
+                    return React.createElement(
+                        'span',
+                        {className: 'version-creator', key: 'versioncreator'},
+                        props.versioncreator
                     );
                 },
 
@@ -933,7 +941,7 @@ export function ItemList(
 
                 takekey: function(props) {
                     if (props.item.anpa_take_key) {
-                        return React.createElement('div', {className: 'takekey', key: 'takekey'},
+                        return React.createElement('span', {className: 'takekey', key: 'takekey'},
                             gettextCatalog.getString(props.item.anpa_take_key));
                     }
                 },
@@ -1406,7 +1414,8 @@ export function ItemList(
                                 ingestProvider: this.props.ingestProvider,
                                 highlightsById: this.props.highlightsById,
                                 profilesById: this.props.profilesById,
-                                swimlane: this.props.swimlane
+                                swimlane: this.props.swimlane,
+                                versioncreator: this.props.versioncreator
                             }),
                             this.state.hover && !item.gone ? React.createElement(ActionsMenu, {item: item}) : null
                         );
@@ -1649,10 +1658,15 @@ export function ItemList(
                     this.selectedCom = com;
                 },
 
+                modifiedUserName: function(versionCreator) {
+                    return this.props.usersById[versionCreator] ? this.props.usersById[versionCreator].display_name : null;
+                },
+
                 render: function render() {
                     var createItem = function createItem(itemId) {
                         var item = this.state.itemsById[itemId];
                         var task = item.task || {desk: null};
+
                         return React.createElement(Item, {
                             key: itemId,
                             item: item,
@@ -1667,7 +1681,8 @@ export function ItemList(
                             desk: this.props.desksById[task.desk] || null,
                             highlightsById: this.props.highlightsById,
                             profilesById: this.props.profilesById,
-                            setSelectedComponent: this.setSelectedComponent
+                            setSelectedComponent: this.setSelectedComponent,
+                            versioncreator: this.modifiedUserName(item.version_creator)
                         });
                     }.bind(this);
                     var isEmpty = !this.state.itemsList.length;

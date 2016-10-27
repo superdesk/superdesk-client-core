@@ -43,6 +43,7 @@ export function MonitoringState($q, $rootScope, ingestSources, desks, highlights
                 desksById: desks.initialize().then(function() {
                     setState({desksById: desks.deskLookup});
                 }),
+                usersById: setState({usersById: desks.userLookup}),
                 highlightsById: highlightsService.get().then(function(result) {
                     var highlightsById = {};
                     result._items.forEach(function(item) {
