@@ -1,7 +1,7 @@
 /**
- * @memberof superdesk.apps.search
+ * @module superdesk.apps.search
  * @ngdoc directive
- * @name RawSearch
+ * @name sdRawSearch
  * @requires asset
  * @requires $location
  * @description
