@@ -14,6 +14,10 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      */
     this.edit = function(item, action) {
         if (item) {
+            // disable edit of external ingest sources that are not editable(fetch not available)
+            if (item._type === 'externalsource' && config.features.editFeaturedImage === false) {
+                return;
+            }
             authoringOpen(item._id, action || 'edit', item._type || null);
         } else {
             self.close();
