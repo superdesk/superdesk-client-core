@@ -144,10 +144,9 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 }
 
                 groups = activePrefGroups;
-            }
-            // when no user preferences found
-            if (desk && desk.monitoring_settings) {
-                groups = desk.monitoring_settings;
+            } else {
+                // when no user preferences found
+                groups = monitoringSettings;
             }
 
             return {'type': 'desk', 'groups': groups};
