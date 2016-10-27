@@ -10,6 +10,11 @@
                 ng-class="{active: sTab === 'savedSearches'}" 
                 ng-click="changeTab('savedSearches')" translate>Saved
             </li>
+            <li id="raw_search_tab"
+                ng-if="isAdmin()" 
+                ng-class="{active: sTab === 'rawSearch'}"
+                ng-click="changeTab('rawSearch')"
+                translate>Raw</li>
         </ul>
         <div class="doopen" ng-click="closeFacets()"><i class="icon-close-small"></i></div>
     </div>
@@ -33,6 +38,9 @@
 
         <div ng-include="'scripts/apps/search/views/search-filters.html'" ng-if="innerTab==='filters'" ></div>
 
+    </div>
+    <div class="content pull pull-heigher" ng-if="sTab==='rawSearch'">
+        <div sd-raw-search></div>
     </div>
 
     <div sd-save-search></div>

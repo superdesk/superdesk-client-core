@@ -1,10 +1,10 @@
-SearchPanel.$inject = ['$location', 'desks', 'privileges', 'tags', 'asset', 'metadata', '$rootScope'];
+SearchPanel.$inject = ['$location', 'desks', 'privileges', 'tags', 'asset', 'metadata', '$rootScope', 'session'];
 
 /**
  * A directive that generates the sidebar containing search results
  * filters (so-called "aggregations" in Elastic's terms).
  */
-export function SearchPanel($location, desks, privileges, tags, asset, metadata, $rootScope) {
+export function SearchPanel($location, desks, privileges, tags, asset, metadata, $rootScope, session) {
     desks.initialize();
     return {
         require: '^sdSearchContainer',
@@ -279,6 +279,13 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
 
                 return scope.tags && scope.tags.selectedFacets[type] &&
                     scope.tags.selectedFacets[type].indexOf(key) >= 0;
+            };
+
+            /*
+             * Checks if the user is Admin or Not.
+             */
+            scope.isAdmin = function() {
+                return session.identity.user_type === 'administrator';
             };
         }
     };
