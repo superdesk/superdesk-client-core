@@ -135,6 +135,10 @@ msgstr ""
 msgid "{{selected.local_readonly ? 'ON' : 'OFF'}}"
 msgstr ""
 
+#: scripts/core/lang/missing-translations-strings.js:35
+msgid "{{status}} Ingest Channel {{name}}"
+msgstr ""
+
 #: scripts/apps/archive/views/upload.html:96
 msgid "* fields are required"
 msgstr ""
@@ -287,7 +291,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/settings.html:22
 #: scripts/apps/monitoring/views/item-actions-menu.html:14
-#: scripts/apps/search/directives/ItemList.js:1091
+#: scripts/apps/search/directives/ItemList.js:1099
 #: scripts/apps/templates/views/templates.html:32
 #: scripts/apps/workspace/content/views/profile-settings.html:23
 msgid "Actions"
@@ -483,6 +487,18 @@ msgstr ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:62
 msgid "ADD WORD"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:30
+msgid "added new {{ type }} item about \"{{ subject }}\""
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:30
+msgid "added new {{ type }} item with empty header/title"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:33
+msgid "added new task {{ subject }} of type {{ type }}"
 msgstr ""
 
 #: scripts/apps/users/views/user-list-item.html:9
@@ -1232,12 +1248,12 @@ msgstr ""
 msgid "Correction issued by"
 msgstr ""
 
-#: scripts/apps/search/directives/ItemList.js:912
+#: scripts/apps/search/directives/ItemList.js:920
 msgid "correction sequence"
 msgstr ""
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:28
-#: scripts/apps/search/directives/ItemList.js:1094
+#: scripts/apps/search/directives/ItemList.js:1102
 msgid "Corrections"
 msgstr ""
 
@@ -1311,6 +1327,14 @@ msgstr ""
 msgid "Created from"
 msgstr ""
 
+#: scripts/core/lang/missing-translations-strings.js:34
+msgid "Created Ingest Channel {{name}}"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:31
+msgid "created new version {{ version }} for item {{ type }} about \"{{ subject }}\""
+msgstr ""
+
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "Created on"
 msgstr ""
@@ -1318,6 +1342,10 @@ msgstr ""
 #: scripts/apps/search/views/search-filters.html:138
 #: scripts/apps/search/views/search-filters.html:160
 msgid "Created until"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:37
+msgid "created user {{user}}"
 msgstr ""
 
 #: scripts/apps/archive/views/media-view.html:45
@@ -1459,6 +1487,10 @@ msgstr ""
 
 #: scripts/apps/dashboard/views/workspace.html:33
 msgid "Delete workspace"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:35
+msgid "Deleted Ingest Channel {{name}}"
 msgstr ""
 
 #: scripts/apps/publish/views/destination.html:17
@@ -1639,6 +1671,10 @@ msgstr ""
 
 #: scripts/apps/users/controllers/UserListController.js:145
 msgid "Disabled"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:31
+msgid "disabled user {{user}}"
 msgstr ""
 
 #: scripts/core/notification/notification.js:101
@@ -1966,8 +2002,8 @@ msgid "Email User"
 msgstr ""
 
 #: scripts/apps/archive/views/item-state.html:2
-#: scripts/apps/search/directives/ItemList.js:902
-#: scripts/apps/search/directives/ItemList.js:903
+#: scripts/apps/search/directives/ItemList.js:910
+#: scripts/apps/search/directives/ItemList.js:911
 msgid "embargo"
 msgstr ""
 
@@ -2201,7 +2237,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/item-preview.html:19
 #: scripts/apps/archive/views/preview.html:86
-#: scripts/apps/search/directives/ItemList.js:1031
+#: scripts/apps/search/directives/ItemList.js:1039
 #: scripts/apps/search/directives/ItemList.js:402
 msgid "expires"
 msgstr ""
@@ -2407,7 +2443,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/list.html:17
 #: scripts/apps/content-filters/views/settings.html:6
-#: scripts/apps/search/views/search-panel.html:29
+#: scripts/apps/search/views/search-panel.html:34
 #: scripts/apps/search/views/search.html:3
 msgid "Filters"
 msgstr ""
@@ -2420,7 +2456,7 @@ msgstr ""
 msgid "Find and Replace"
 msgstr ""
 
-#: scripts/apps/search/index.js:49
+#: scripts/apps/search/index.js:50
 msgid "Find live and archived content"
 msgstr ""
 
@@ -2680,7 +2716,7 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-topbar.html:155
 #: scripts/apps/highlights/index.js:53
 #: scripts/apps/monitoring/views/item-actions-menu.html:24
-#: scripts/apps/search/directives/ItemList.js:1093
+#: scripts/apps/search/directives/ItemList.js:1101
 #: scripts/apps/templates/services/TemplatesService.js:57
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:17
 msgid "Highlights"
@@ -3141,8 +3177,8 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:76
 #: scripts/apps/authoring/views/authoring-header.html:39
 #: scripts/apps/search/directives/ItemList.js:426
-#: scripts/apps/search/directives/ItemList.js:973
-#: scripts/apps/search/directives/ItemList.js:975
+#: scripts/apps/search/directives/ItemList.js:981
+#: scripts/apps/search/directives/ItemList.js:983
 #: scripts/apps/search/views/search-filters.html:103
 #: scripts/core/itemList/views/item-list-widget.html:73
 #: scripts/core/itemList/views/item-list-widget.html:90
@@ -3562,7 +3598,7 @@ msgstr ""
 
 #: scripts/apps/highlights/views/mark_highlights_dropdown_directive.html:8
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:13
-#: scripts/apps/search/directives/ItemList.js:1268
+#: scripts/apps/search/directives/ItemList.js:1276
 msgid "No available highlights"
 msgstr ""
 
@@ -3570,7 +3606,7 @@ msgstr ""
 msgid "No available languages"
 msgstr ""
 
-#: scripts/apps/search/directives/ItemList.js:1269
+#: scripts/apps/search/directives/ItemList.js:1277
 msgid "No available translations"
 msgstr ""
 
@@ -3706,8 +3742,8 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:18
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:75
 #: scripts/apps/authoring/views/authoring-header.html:41
-#: scripts/apps/search/directives/ItemList.js:965
-#: scripts/apps/search/directives/ItemList.js:967
+#: scripts/apps/search/directives/ItemList.js:973
+#: scripts/apps/search/directives/ItemList.js:975
 #: scripts/apps/templates/views/template-editor-modal.html:88
 msgid "Not For Publication"
 msgstr ""
@@ -3948,7 +3984,7 @@ msgid "Packages"
 msgstr ""
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:20
-#: scripts/apps/search/directives/ItemList.js:1092
+#: scripts/apps/search/directives/ItemList.js:1100
 msgid "Packaging"
 msgstr ""
 
@@ -3960,7 +3996,7 @@ msgstr ""
 msgid "Page Size:"
 msgstr ""
 
-#: scripts/apps/search/views/search-panel.html:28
+#: scripts/apps/search/views/search-panel.html:33
 msgid "Parameters"
 msgstr ""
 
@@ -4044,7 +4080,7 @@ msgstr ""
 
 #: scripts/apps/dictionaries/views/settings.html:26
 #: scripts/apps/monitoring/config.js:32
-#: scripts/apps/monitoring/controllers/AggregateCtrl.js:404
+#: scripts/apps/monitoring/controllers/AggregateCtrl.js:403
 #: scripts/apps/monitoring/views/aggregate-settings.html:102
 #: scripts/apps/monitoring/views/aggregate-settings.html:126
 #: scripts/apps/monitoring/views/aggregate-settings.html:37
@@ -4322,6 +4358,10 @@ msgstr ""
 msgid "Provider"
 msgstr ""
 
+#: scripts/core/lang/missing-translations-strings.js:34
+msgid "Provider {{name}} has gone strangely quiet. Last activity was on {{last}}"
+msgstr ""
+
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:46
 msgid "Provider Name"
 msgstr ""
@@ -4415,12 +4455,20 @@ msgstr ""
 msgid "Quarter"
 msgstr ""
 
+#: scripts/apps/search/views/raw-search.html:3
+msgid "Query Text"
+msgstr ""
+
 #: scripts/apps/publish/views/publish-queue.html:95
 msgid "Queued at"
 msgstr ""
 
 #: scripts/core/editor2/editor.js:939
 msgid "quote"
+msgstr ""
+
+#: scripts/apps/search/views/search-panel.html:13
+msgid "Raw"
 msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:83
@@ -4591,6 +4639,10 @@ msgstr ""
 msgid "Remove Template"
 msgstr ""
 
+#: scripts/core/lang/missing-translations-strings.js:32
+msgid "removed item {{ type }} about {{ subject }}"
+msgstr ""
+
 #: scripts/apps/dashboard/views/workspace.html:27
 msgid "Rename workspace"
 msgstr ""
@@ -4621,6 +4673,10 @@ msgstr ""
 
 #: scripts/apps/authoring/editor/views/find-replace.html:12
 msgid "Replace with"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:38
+msgid "replaced item {{ type }} about {{ subject }}"
 msgstr ""
 
 #: scripts/apps/workspace/content/views/schema-editor.html:23
@@ -4695,6 +4751,10 @@ msgstr ""
 #: scripts/apps/users/views/list.html:30
 #: scripts/apps/users/views/user-privileges.html:17
 msgid "Role"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:36
+msgid "role {{role}} is granted new privileges: Please re-login."
 msgstr ""
 
 #: scripts/apps/users/views/settings-roles.html:39
@@ -4946,7 +5006,7 @@ msgstr ""
 #: scripts/apps/packaging/views/search.html:4
 #: scripts/apps/publish/views/publish-queue.html:8
 #: scripts/apps/search/directives/SearchContainer.js:8
-#: scripts/apps/search/index.js:51
+#: scripts/apps/search/index.js:52
 #: scripts/apps/search/views/item-searchbar.html:7
 #: scripts/apps/search/views/save-search.html:13
 #: scripts/apps/search/views/save-search.html:5
@@ -5174,7 +5234,7 @@ msgstr ""
 msgid "Show sent/queued items"
 msgstr ""
 
-#: scripts/apps/search/index.js:58
+#: scripts/apps/search/index.js:59
 msgid "Shows search modal"
 msgstr ""
 
@@ -5253,7 +5313,7 @@ msgstr ""
 #: scripts/apps/archive/views/preview.html:41
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:77
 #: scripts/apps/authoring/views/authoring-header.html:40
-#: scripts/apps/search/directives/ItemList.js:982
+#: scripts/apps/search/directives/ItemList.js:990
 #: scripts/apps/search/views/search-filters.html:110
 #: scripts/core/itemList/views/item-list-widget.html:74
 #: scripts/core/itemList/views/item-list-widget.html:91
@@ -5608,7 +5668,7 @@ msgstr ""
 msgid "TAKEKEY"
 msgstr ""
 
-#: scripts/apps/search/directives/ItemList.js:1005
+#: scripts/apps/search/directives/ItemList.js:1013
 #: scripts/core/itemList/views/relatedItem-list-widget.html:40
 msgid "Takes"
 msgstr ""
@@ -5738,7 +5798,7 @@ msgstr ""
 msgid "The password has been reset."
 msgstr ""
 
-#: scripts/apps/search/directives/ItemList.js:1688
+#: scripts/apps/search/directives/ItemList.js:1703
 msgid "There are currently no items"
 msgstr ""
 
@@ -5824,7 +5884,7 @@ msgstr ""
 msgid "There was a problem, stage was not deleted."
 msgstr ""
 
-#: scripts/apps/search/directives/ItemList.js:1295
+#: scripts/apps/search/directives/ItemList.js:1303
 msgid "There was an error archiving this item"
 msgstr ""
 
@@ -5933,7 +5993,7 @@ msgstr ""
 msgid "Toggle theme"
 msgstr ""
 
-#: scripts/apps/search/index.js:59
+#: scripts/apps/search/index.js:60
 msgid "Toggles search view"
 msgstr ""
 
@@ -6113,7 +6173,7 @@ msgstr ""
 msgid "UPDATE"
 msgstr ""
 
-#: scripts/apps/search/directives/ItemList.js:913
+#: scripts/apps/search/directives/ItemList.js:921
 msgid "Update {{ seq }}"
 msgstr ""
 
@@ -6139,7 +6199,7 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:78
 #: scripts/apps/authoring/views/authoring-header.html:42
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:7
-#: scripts/apps/search/directives/ItemList.js:929
+#: scripts/apps/search/directives/ItemList.js:937
 #: scripts/apps/search/services/SearchService.js:6
 #: scripts/apps/workspace/content/views/profile-settings.html:40
 #: scripts/core/itemList/views/item-list-widget.html:92
@@ -6149,6 +6209,14 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:21
 msgid "Updated by"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:35
+msgid "updated Ingest Channel {{name}}"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:33
+msgid "updated task {{ subject }} for item {{ type }}"
 msgstr ""
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:5
@@ -6161,6 +6229,10 @@ msgstr ""
 
 #: scripts/apps/archive/index.js:75
 msgid "Upload media"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:29
+msgid "uploaded media {{ name }}"
 msgstr ""
 
 #: scripts/apps/archive/directives/ItemUrgency.js:18
@@ -6200,6 +6272,18 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/emailConfig.html:14
 #: scripts/apps/users/views/user-privileges.html:16
 msgid "User"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:32
+msgid "user {{user}} has been added to desk {{desk}}: Please re-login."
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:36
+msgid "user {{user}} is granted new privileges: Please re-login."
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:37
+msgid "user {{user}} is updated to administrator: Please re-login."
 msgstr ""
 
 #: scripts/apps/users/config.js:36
