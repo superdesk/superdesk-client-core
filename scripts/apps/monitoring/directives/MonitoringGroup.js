@@ -306,7 +306,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             }
 
             function select(item) {
-                scope.currentGroup = item.task.stage;
+                scope.currentGroup = item.task ? item.task.stage: null;
                 scope.selected = item;
                 monitoring.selectedGroup = scope.group;
                 monitoring.preview(item);
