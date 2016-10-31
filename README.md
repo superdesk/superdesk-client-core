@@ -88,6 +88,8 @@ You can configure what will be displayed in list views, there are 3 areas in lis
     - `expiry` - expiry of spiked items
     - `desk` - where an item was fetched for ingested, where an item is for others
 
+- `thinRows` - optional configuration flag to have thinner rows for each line in the list.
+
 ##### Miscellaneous
 
 - `defaultRoute` - sets the route that the app will go to upon logging in (home route).
