@@ -141,9 +141,9 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
 
                         groups = activePrefGroups;
                     }
+                } else {
+                    groups = activePrefGroups;
                 }
-
-                groups = activePrefGroups;
             } else {
                 // when no user preferences found
                 groups = monitoringSettings;
