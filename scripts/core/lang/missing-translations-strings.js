@@ -26,5 +26,13 @@ gettext('18th update');gettext('19th update');gettext('20th update');gettext('\'
 gettext('Content Profiles');gettext('ANPA Take Key');gettext('Body HTML');gettext('By');gettext('Date');gettext('Located');
 gettext('\'DATELINE is a required field\'');gettext('\"GENRE \'null value not allowed\'');gettext('slugline');gettext('subscription');
 gettext('Populate Abstract');gettext('NTB Currency Macro');gettext('\'CATEGORY is a required field\'');
-gettext('\'must be of list type\'\"');gettext('create');gettext('highlights');gettext('Timezone');
-
+gettext('\'must be of list type\'\"');gettext('create');gettext('highlights');gettext('Timezone');gettext('uploaded media {{ name }}');
+gettext('added new {{ type }} item about "{{ subject }}"');gettext('added new {{ type }} item with empty header/title');
+gettext('created new version {{ version }} for item {{ type }} about "{{ subject }}"');gettext('disabled user {{user}}');
+gettext('removed item {{ type }} about {{ subject }}');gettext('user {{user}} has been added to desk {{desk}}: Please re-login.');
+gettext('added new task {{ subject }} of type {{ type }}');gettext('updated task {{ subject }} for item {{ type }}');
+gettext('Provider {{name}} has gone strangely quiet. Last activity was on {{last}}');gettext('Created Ingest Channel {{name}}');
+gettext('updated Ingest Channel {{name}}');gettext('{{status}} Ingest Channel {{name}}');gettext('Deleted Ingest Channel {{name}}');
+gettext('role {{role}} is granted new privileges: Please re-login.');gettext('user {{user}} is granted new privileges: Please re-login.');
+gettext('user {{user}} is updated to administrator: Please re-login.');gettext('created user {{user}}');
+gettext('replaced item {{ type }} about {{ subject }}');
