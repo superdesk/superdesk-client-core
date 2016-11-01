@@ -1,54 +1,40 @@
-# Contributing to superdesk client
+## Contribution guidelines
 
-Great you got here! Please follow the guidelines to ease the process of accepting the changes.
+Before opening a pull request on the Superdesk project, please read through this document and make sure that your changes follow our contribution guidelines.
 
-## Test your code
+We accept all contributions to Superdesk. Changes containing fixes or enhancements can be opened freely, but before comitting to adding new features, please open a discussion about your intentions on our [Issues](https://github.com/superdesk/superdesk-client-core/issues) page, so we can discuss these before starting any work.
 
-Please write tests whenever it makes sense and make sure the existing tests pass. You can use `grunt` task for this:
+### Checklist
 
-```
-grunt test
-```
+* All code must be documented and checked using `grunt docs`.
+* Changes that contain functional code must be unit tested.
+* Presentational code that affects UI must come with behavioral (e2e) tests.
+* Keep commit history clean (see recommendations further down this page).
 
-will run all the existing test using `_spec.js` convetion.
+Last but not least, review your own code before submitting it for others to review, using GitHub's [compare tool](https://github.com/superdesk/superdesk-client-core/compare) or any other preferred method.
 
-## Check code style
+### Documentation
 
-We use `jshint` and `jscs` to ensure we're all on same page regarding code style. There are `grunt` tasks:
+* All code must contain documentation, especially public facing definitions (modules, components, services, methods, scope properties, functions, variables, attributes, etc).
 
-    grunt jshint
-    grunt jscs
 
-which runs those respective checkers.
+* Private identifiers that are not self-explanatory or easy to understand must also be documented.
 
-You can also use `grunt ci` which runs both + unit tests all together (used by `travis-ci`).
 
-## Use recommended modules/submodules/apps structure
+* Complex code must be augmented with inline comments to make it easily understandable to third parties and other contributors.
 
-There are 2 main areas - `superdesk core modules` and `superdesk apps`.
+In the Superdesk client application, we use a pre-configured package of the [dgeni](https://github.com/angular/dgeni) framework called [dgeni-alive](https://github.com/wingedfox/dgeni-alive). 
 
-### Superdesk core module structure
+Some examples on how to write documentation that is compatible with this framework can be found by looking at already existing modules as an example, such as the [TranslationService](https://github.com/superdesk/superdesk-client-core/blob/master/scripts/apps/translations/services/TranslationService.js), the [suggest](https://github.com/superdesk/superdesk-client-core/blob/master/scripts/apps/authoring/suggest) module or the examples provided in the [README.md](https://github.com/wingedfox/dgeni-alive/blob/master/README.md#demo-projects) file of the dgeni-alive project.
 
-In `superdesk core` we split by feature into submodules like `core/upload` where there is an `upload.js` file which defines `superdesk.upload` angular module. This file can via require load its components (directives, controllers, services) but all the angular registration should happen in `upload.js`.
+Before submitting your pull request, make sure you've checked if your documentation is displayed correctly by running the `grunt docs` task, which will open a static webpage displaying the documentation that is currently available in the repository.
 
-We put most of components into root submodule dir with a type suffix - `upload-service.js` - and with unit tests next to with a `_spec.js` suffix - `upload-service_spec.js`.
+### Commits
 
-Views are put into views subfolder and referenced using `require.toUrl`:
+To be able to track changes easily and keep our commit history human-readable, we need to follow some simple guidelines:
 
-```javascript
-// upload-directive.js
-define(['require'], function(require) {
-    'use strict';
+* Include the identifier of the issue you are solving (JIRA or GitHub) into your commit message, for example: "Adds 'Save' button to profile window (SDESK-123)".
 
-    return function() {
-        return {
-            templateUrl: require.toUrl('./views/upload-directive.html'),
-            ...
-        };
-    };
-});
-```
+* When your branch falls behind master, always use `git rebase master` instead of merge, to avoid commit message which reflect that you've done this operation.
 
-### Superdesk apps module
-
-There is always a base module file `module.js` inside of the app folder which returns an angular module which has all the app components registered. Inside of the app it should be structured like in the superdesk core modules.
+* Resort to only one commit per change. If your pull request is easier to review using multiple commits, do so, but squash before merging.
