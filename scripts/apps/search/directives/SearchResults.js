@@ -147,9 +147,8 @@ export function SearchResults(
              */
             function queryItems(event, data) {
                 if (!nextUpdate) {
-                    // Run the first query immediately and block the others for 1 sec
-                    _queryItems(event, data);
                     nextUpdate = $timeout(function() {
+                        _queryItems(event, data);
                         scope.$applyAsync(function() {
                             nextUpdate = null; // reset for next $digest
                         });

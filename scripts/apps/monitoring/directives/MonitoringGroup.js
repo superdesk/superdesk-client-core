@@ -243,9 +243,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              */
             function scheduleQuery(event, data) {
                 if (!queryTimeout) {
-                    // Run the first query immediately and block the others for 1 sec
-                    queryItems(event, data);
                     queryTimeout = $timeout(function() {
+                        queryItems(event, data);
                         scope.$applyAsync(function() {
                             // ignore any updates requested in current $digest
                             queryTimeout = null;
