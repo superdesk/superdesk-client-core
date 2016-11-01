@@ -63,11 +63,15 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 }
             };
 
-            function getProvider() {
+            function getProvider(criteria) {
                 var provider = 'archive';
 
                 if (scope.stage.type && (desks.isOutputType(scope.stage.type) || scope.stage.type === 'search')) {
                     provider = 'search';
+                }
+
+                if (criteria.repo && criteria.repo.indexOf(',') === -1) {
+                    provider = criteria.repo;
                 }
 
                 return provider;
@@ -78,7 +82,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 scope.loading = true;
                 scope.items = scope.total = null;
 
-                api(getProvider()).query(criteria).then(function(items) {
+                api(getProvider(criteria)).query(criteria).then(function(items) {
                     scope.items = items._items;
                     scope.total = items._meta.total;
 
@@ -182,7 +186,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                             scope.fetching = false;
                         }, 100);
 
-                        api(getProvider()).query(criteria)
+                        api(getProvider(criteria)).query(criteria)
                         .then(function(items) {
                             scope.cacheNextItems = items._items;
                         })
@@ -215,7 +219,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                         container.scrollTop += scope.cachePreviousItems.length * itemHeight;
                     }, 100));
 
-                    api(getProvider()).query(criteria)
+                    api(getProvider(criteria)).query(criteria)
                     .then(function(items) {
                         scope.cachePreviousItems = items._items;
                     })
@@ -228,7 +232,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             };
             function setNextItems(criteria) {
                 criteria.source.from = scope.page * criteria.source.size;
-                return api(getProvider()).query(criteria)
+                return api(getProvider(criteria)).query(criteria)
                     .then(function(items) {
                         scope.cacheNextItems = items._items;
                     });
