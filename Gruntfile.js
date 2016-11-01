@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         config: path.join(__dirname, 'package'),
         pattern: [
             'grunt-*',
-            '@*/grunt-*',
+            '@*/grunt-*'
         ]
     });
 

@@ -42,8 +42,8 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace) 
      * @name TranslationService#get
      * @public
      * @description Create copy of item with new language set
-     * @param item {Object} item to be translated
-     * @param language {Object} translate language
+     * @param {Object} item item to be translated
+     * @param {Object} language translate language
      */
     service.set = function (item, language) {
         var params = {
