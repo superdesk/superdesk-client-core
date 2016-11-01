@@ -44,7 +44,7 @@ $create-board-pane: 110px;
             background: #d8d8d8;
         }
         .multiedit-float {
-            .dropdown-menu {
+            .dropdown__menu {
                 position: fixed;
                 left: auto;
                 right: auto;
@@ -75,16 +75,16 @@ $create-board-pane: 110px;
                 position: absolute;
                 z-index: 2;
                 display: none;
-                .dropdown-toggle {
+                .dropdown__toggle {
                     padding: 0 15px;
                     i {
                         @include opacity(70);
                     }
                 }
-                &.open .dropdown-toggle {
+                &.open .dropdown__toggle {
                     box-shadow: -3px -2px 1px -2px #999999, 3px -2px 1px -2px #999999;
                 }
-                .dropdown-menu {
+                .dropdown__menu {
                     margin-top: -4px;
                 }
             }

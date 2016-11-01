@@ -11,15 +11,15 @@
         </button>
 
         <button ng-if="configurable" class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true"></button>
-        <div class="dropdown-menu pull-right" sd-multiedit-dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"></div>
+        <div class="dropdown__menu pull-right" sd-multiedit-dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"></div>
         <div class="navbtn dropdown pull-left" dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk">
-            <button class="dropdown-toggle" dropdown-toggle>
+            <button class="dropdown__toggle" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
-            <div class="dropdown-menu pull-right">
+            <div class="dropdown__menu pull-right">
                 <ul>
                     <li>
-                        <span class="menu-label" translate>Workspace</span>
+                        <span class="dropdown__menu-label" translate>Workspace</span>
                     </li>
                     <li>
                         <button type="button" ng-click="dashboard.rename()">

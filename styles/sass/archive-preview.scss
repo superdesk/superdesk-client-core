@@ -204,26 +204,7 @@
         .rewrite {
             margin-top: 15px;
         }
-        .action-menu {
-            width: 85px !important;
-            z-index: 2;
-            .fullscreen, .dropdown-toggle {
-                border: 0;
-                background: 0;
-                padding: 14px;
-                float: left;
-            }
-            .dropdown-big {
-                float: right;
-            }
-            .dropdown {
-                .dropdown-menu li {
-                    > a, > button, .dropdown-toggle {
-                        min-width: initial;
-                    }
-                }
-            }
-        }
+
         .title {
             font-size: 19px;
             line-height: 120%;

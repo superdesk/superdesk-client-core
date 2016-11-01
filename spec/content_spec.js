@@ -227,7 +227,7 @@ describe('content', function() {
         });
 
         var sidebar = element.all(by.css('.slide-pane   ')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown-toggle'));
+            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
 
         dropdown.waitReady();
         dropdown.click();

@@ -1,10 +1,10 @@
-<div class="dropdown dropdown-noarrow dropdown--dark" dropdown is-open="isOpen" tabindex="">
-    <button class="dropdown-toggle" dropdown-toggle>
+<div class="dropdown dropdown--noarrow dropdown--dark" dropdown is-open="isOpen" tabindex="">
+    <button class="dropdown__toggle" dropdown__toggle>
         <span ng-show="!selectedDesk" translate>Select desk</span>
         <span ng-show="selectedDesk">{{ defaultDesk && defaultDesk._id === selectedDesk._id ? 'Default' : selectedDesk.name | translate}}</span>
-        <b class="caret white"></b>
+        <b class="dropdown__caret white"></b>
     </button>
-    <ul class="dropdown-menu">
+    <ul class="dropdown__menu">
         <li ng-show="filter"><span translate>filter: "{{ filter }}"</span></li>
         <li ng-repeat="desk in desks track by desk._id">
             <button ng-click="onChange({desk: desk})" sd-desk-select-item>{{ :: desk.name }}</button>

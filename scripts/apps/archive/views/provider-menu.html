@@ -1,8 +1,8 @@
-<button class="dropdown-toggle" dropdown-toggle>
+<button class="dropdown__toggle" dropdown__toggle>
    {{ selected || 'Show all' | translate}}
-    <span class="caret"></span>
+    <span class="dropdown__caret"></span>
 </button>
-<ul class="dropdown-menu pull-right">
+<ul class="dropdown__menu pull-right">
     <li ng-repeat="provider in items._facets.provider.terms"><a href="" ng-click="setProvider(provider.term)">{{ provider.term }} <i>({{ provider.count }})</i></a></li>
     <li class="divider" ng-show="selected"></li>
     <li ng-show="selected">

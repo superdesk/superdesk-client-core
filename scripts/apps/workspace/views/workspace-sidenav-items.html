@@ -13,7 +13,7 @@
     </a>
 </li>
 <li ng-class="{active: currentRoute.href === '/workspace/highlights'}">
-    <div class="dropdown dropright dropdown-hover highlights-dropdown"
+    <div class="dropdown dropdown--dropright dropdown--hover highlights-dropdown"
          title="{{ :: 'Highlights' | translate }}"
          sd-hotkey="alt+d" sd-hotkey-options="{global: true}" sd-hotkey-callback="highlightsHotkey"
          dropdown sd-package-highlights-dropdown>
@@ -49,15 +49,15 @@
     </a>
 </li>
 <li ng-class="{active: currentRoute.href === '/search'}">
-   <div class="dropdown dropright dropdown-hover highlights-dropdown" dropdown>
-      <a href="#/search" class="dropdown-toggle"
+   <div class="dropdown dropdown--dropright dropdown--hover highlights-dropdown" dropdown>
+      <a href="#/search" class="dropdown__toggle"
         title="{{ :: 'Search' | translate }}"
         sd-hotkey="alt+f" sd-hotkey-options="{global: true}"
         ng-click="hideMonitoring(currentRoute.href === '/search', $event)">
           <i class="big-icon-global-search main-icon"></i>
           <i class="big-icon-chevron-left helper-icon"></i>
       </a>
-      <ul ng-if="$root.config.features.scanpixSearchShortcut && providers.length > 0" class="dropdown-menu pull-left">
+      <ul ng-if="$root.config.features.scanpixSearchShortcut && providers.length > 0" class="dropdown__menu pull-left">
         <li ng-repeat="provider in providers track by provider._id">
             <button ng-click="loadScanpixSearch(provider.source)">
               {{:: provider.source}}

@@ -21,13 +21,19 @@
 @import 'forms';
 @import 'tables';
 
+// Dropdowns
+@import 'dropdowns/basic-dropdown';
+@import 'dropdowns/nested-dropdown';
+@import 'dropdowns/navigation-dropdown';
+@import 'dropdowns/input-dropdown';
+
 // Components: common
 @import 'sd-typeahead';
 @import 'sd-password-strength';
-@import 'dropdowns';
 @import 'media-archive';
 @import 'archive-preview';
 @import 'archive-filtering';
+@import 'avatars';
 
 // Components: Buttons & Alerts
 @import 'buttons';

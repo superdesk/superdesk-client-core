@@ -24,33 +24,10 @@
         &:hover {
             cursor: default;
         }
-        .dropdown {
+        .card-list__controls {
             position: absolute;
             top: 7px;
             right: 1px;
-            .dropdown-toggle {
-                @include opacity(60);
-            }
-            .dropdown-menu{
-                &:before {
-                    display: none;
-                }
-                width: 238px;
-                .info {
-                    color: $grayLight;
-                    font-style: italic;
-                }
-                .menu-label {
-                    padding-left: 6px;
-                }
-                > li {
-                    padding-left: 10px;
-                    &:last-child {
-                        padding-left: 0;
-                    }
-                }
-            }
-
         }
         .header {
             height: 90px;

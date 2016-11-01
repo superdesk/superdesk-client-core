@@ -1,12 +1,43 @@
+// Typeahead input
+// ---------------------------------------------
 .sd-typeahead {
-	ul.item-list {
+    position: relative;
+	list-style-type: none;
+    .item-list {
 		z-index: 9999;
-		li {
-			padding: 5px 10px;
-			&.active {
-				background-color: #5ea9c8;
-				color: #fff;
-			}
-		}
-	}
+        min-width: 190px;
+        width: 100%;
+        height:auto;
+        max-height: 170px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        @include box-sizing(border-box);
+        background: #fff;
+        border: 1px #bbb;
+        @include box-shadow(0 0 3px 0 #ccc);
+        position: absolute;
+        top:24px;
+        z-index: 1;
+        font-size: 12px;
+        li {
+            padding: 5px 10px;
+            @include box-sizing(border-box);
+            width: 100%;
+            &:hover {
+                cursor: pointer;
+            }
+            &.active {
+                background-color: #5ea9c8;
+                color: #fff;
+            }
+            .country_state_info {
+                padding-left:  10px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+            em {
+                font-size: 11px;
+            }
+        }
+    }
 }

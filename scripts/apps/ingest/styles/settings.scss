@@ -155,7 +155,6 @@
 /* Scheme create/edit modal */
 
 .add-scheme-modal {
-
     .modal-body {
         flex: 1 1 auto !important;
         .split-content {
@@ -192,33 +191,7 @@
     .half-input {
         width: 60%;
     }
-    .sd-typeahead {
-        width: 60%;
-        float: left;
-        margin-right: 10px;
-        .item-list {
-            list-style-type: none;
-            padding: 0.5em 0em;
-            li {
-                padding: 0.1em 0.75em;
-                color: #333;
-                font-size: 14px;
-                @include text-normal();
-                cursor: pointer;
-                &:hover {
-                    background-color: #5e5e5e;
-                    color: white;
-                }
-                &.no-match {
-                    cursor: default;
-                    &:hover {
-                        background-color: inherit;
-                        color: inherit;
-                    }
-                }
-            }
-        }
-    }
+
     .general-tab {
         .summary {
             .field {
@@ -231,7 +204,6 @@
             }
         }
     }
-
     .pills-list {
         margin-top: 10px;
         max-width: 100%;
@@ -248,7 +220,6 @@
             }
         }
     }
-
     .filter-tab {
         .type-filter-box {
             .btn {
@@ -261,7 +232,6 @@
             margin-bottom: 10px;
         }
     }
-
     .action-tab {
         .pills-list {
             li {
@@ -269,7 +239,6 @@
             }
         }
     }
-
     .add {
         position: absolute;
         padding: 0;
@@ -282,7 +251,6 @@
             margin: 0;
         }
     }
-
     .term-editor {
         width: 400px;
         .main-list {
@@ -292,5 +260,4 @@
 }
 .shadow-list-holder > .pills-list {
     margin: 8px 0 0 5px;
-
 }

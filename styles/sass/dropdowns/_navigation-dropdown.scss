@@ -1,0 +1,110 @@
+//navigation big dropdown
+.dropdown.dropdown--big, 
+.navbtn.dropdown {
+    .dropdown__toggle {
+        padding: 0 15px;
+        display: block;
+        color:$sd-text;
+        height: $subnav-height;
+        text-align: center;
+        line-height: $subnav-height;
+        font-size: 15px;
+        position: relative;
+        z-index: 2;
+        background: transparent;
+        &:hover {
+            background: rgba(255,255,255,0);
+        }
+        &.condensed {
+            padding: 0 14px;
+        }
+    }
+    &.open {
+        .dropdown__toggle {
+            background: #fff;
+            color:$sd-text;
+            box-shadow:-3px 0px 1px -2px #999,3px 0px 1px -2px #999;
+            z-index: 3;
+            &.sd-create-btn {
+                .circle {
+                    width: 32px;
+                    height: 32px;
+                    margin-top: 8px;
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+
+    .caret {
+        margin-left: 15px;
+    }
+
+    .dropdown__menu {
+        @include border-radius(0px);
+        border:0;
+        z-index: 2;
+        margin-top: -1px;
+        min-width: 200px;
+        box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.35);
+        padding: 10px 0;
+        &:before {
+            display: none;
+        }
+        li {
+            > a, > button, > span {
+                margin: 0;
+                min-width: 225px;
+                padding: 6px 16px;
+                line-height: 19px;
+            }
+            > span {
+                display: block;
+                &:hover {
+                    background: none;
+                }
+            }
+      > .dropdown__menu-label {
+          min-width: 205px;
+      }
+            button {
+                &.full {
+                    width: 100%;
+                    margin: 0;
+                    height: 41px;
+                    padding: 10px 10px;
+                    border-top: 1px solid #e0e0e0;
+                    @include border-radius(0px);
+                    i {
+                        margin-right: 10px;
+                    }
+                    &:hover {
+                        background: $sd-blue;
+                        color: #fff;
+                    }
+                }
+            }
+            &:active {
+                > button {
+                    background: $sd-blue;
+                    color: #fff;
+                }
+            }
+        }
+        .fieldset {
+            button {
+                display: inline-block;
+                text-align: center;
+                width: auto;
+                min-width: 50px;
+                clear: none;
+                margin-right: 10px;
+                float: right;
+            }
+        }
+    }
+}
+
+.navbtn.dropdown {
+    padding: 0;
+}

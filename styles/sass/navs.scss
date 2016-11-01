@@ -202,34 +202,34 @@
 // ---------
 
 // Position the menu
-.nav-tabs .dropdown-menu,
-.nav-pills .dropdown-menu {
+.nav-tabs .dropdown__menu,
+.nav-pills .dropdown__menu {
     margin-top: 1px;
     border-width: 1px;
 }
-.nav-pills .dropdown-menu {
+.nav-pills .dropdown__menu {
     @include border-radius(4px);
 }
 
 // Default dropdown links
 // -------------------------
 // Make carets use linkColor to start
-.nav-tabs .dropdown-toggle .caret,
-.nav-pills .dropdown-toggle .caret {
+.nav-tabs .dropdown__toggle .dropdown__caret,
+.nav-pills .dropdown__toggle .dropdown__caret {
     border-top-color: $linkColor;
     border-bottom-color: $linkColor;
     margin-top: 6px;
 }
-.nav-tabs .dropdown-toggle:hover .caret,
-.nav-pills .dropdown-toggle:hover .caret {
+.nav-tabs .dropdown__toggle:hover .dropdown__caret,
+.nav-pills .dropdown__toggle:hover .dropdown__caret {
     border-top-color: $linkColorHover;
     border-bottom-color: $linkColorHover;
 }
 
 // Active dropdown links
 // -------------------------
-.nav-tabs .active .dropdown-toggle .caret,
-.nav-pills .active .dropdown-toggle .caret {
+.nav-tabs .active .dropdown__toggle .dropdown__caret,
+.nav-pills .active .dropdown__toggle .dropdown__caret {
     border-top-color: $grayDark;
     border-bottom-color: $grayDark;
 }
@@ -243,16 +243,16 @@
 
 // Open dropdowns
 // -------------------------
-.nav-tabs .open .dropdown-toggle,
-.nav-pills .open .dropdown-toggle,
+.nav-tabs .open .dropdown__toggle,
+.nav-pills .open .dropdown__toggle,
 .nav > .open.active > a:hover {
     color: $white;
     background-color: $grayLight;
     border-color: $grayLight;
 }
-.nav .open .caret,
-.nav .open.active .caret,
-.nav .open a:hover .caret {
+.nav .open .dropdown__caret,
+.nav .open.active .dropdown__caret,
+.nav .open a:hover .dropdown__caret {
     border-top-color: $white;
     border-bottom-color: $white;
     @include opacity(100);
@@ -404,7 +404,7 @@
     .navbtn {
       border-left: 1px solid rgba(0,0,0,0.1) !important;
       border-right: 0 !important;
-      .dropdown-toggle {
+      .dropdown__toggle {
           width: 100%;
       }
     }

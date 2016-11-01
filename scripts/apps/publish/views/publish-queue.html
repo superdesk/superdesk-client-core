@@ -13,12 +13,12 @@
                 <div class="sortbar pull-left">
                     <span class="lab pull-left" translate>Subscriber:</span>
                     <div class="dropdown pull-left" dropdown>
-                        <button class="dropdown-toggle" dropdown-toggle>
+                        <button class="dropdown__toggle" dropdown__toggle>
                             {{ selectedFilterSubscriber.name }}
                             <span ng-if="!selectedFilterSubscriber">none</span>
-                            <b class="caret"></b>
+                            <b class="dropdown__caret"></b>
                         </button>
-                        <ul class="dropdown-menu scrollable">
+                        <ul class="dropdown__menu dropdown__menu--scrollable">
                             <li>
                                 <a href="" ng-click="filterPublishQueue(null, 'subscriber')" translate>None</a>
                             </li>
@@ -29,12 +29,12 @@
                     </div>
                     <span class="lab pull-left" translate>Ingest Provider:</span>
                     <div class="dropdown pull-left" dropdown>
-                        <button class="dropdown-toggle" dropdown-toggle>
+                        <button class="dropdown__toggle" dropdown__toggle>
                             {{ selectedFilterIngestProvider.name }}
                             <span ng-if="!selectedFilterIngestProvider">none</span>
-                            <b class="caret"></b>
+                            <b class="dropdown__caret"></b>
                         </button>
-                        <ul class="dropdown-menu scrollable">
+                        <ul class="dropdown__menu dropdown__menu--scrollable">
                             <li>
                                 <a href="" ng-click="filterPublishQueue(null, 'ingest_provider')" translate>None</a>
                             </li>
@@ -45,12 +45,12 @@
                     </div>
                     <span class="lab pull-left" translate>Status:</span>
                     <div class="dropdown pull-left" dropdown>
-                        <button class="dropdown-toggle" dropdown-toggle>
+                        <button class="dropdown__toggle" dropdown__toggle>
                             {{ selectedFilterStatus }}
                             <span ng-if="!selectedFilterStatus">none</span>
-                            <b class="caret"></b>
+                            <b class="dropdown__caret"></b>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown__menu">
                             <li><a href="" ng-click="filterPublishQueue(null, 'status')" translate>None</a></li>
                             <li ng-repeat="status in publish_queue_statuses track by $index">
                                 <a href="" ng-click="filterPublishQueue(status, 'status')">{{ :: status | translate}}</a>

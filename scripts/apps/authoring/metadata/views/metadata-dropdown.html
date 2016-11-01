@@ -1,19 +1,19 @@
-<div class="dropdown" ng-class="{'dropright': icon, 'dropdown-noarrow': !icon}" dropdown sd-metadropdown-focus sd-dropdown-position is-open="status.isOpen">
-    <button ng-disabled="disabled" class="dropdown-toggle line-input" tabindex="{{tabindex}}" dropdown-toggle ng-if="(field !== 'place' && field !== 'genre') && !icon">
+<div class="dropdown" ng-class="{'dropdown--dropright': icon, 'dropdown--noarrow': !icon}" dropdown sd-metadropdown-focus sd-dropdown-position is-open="status.isOpen">
+    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="(field !== 'place' && field !== 'genre') && !icon">
         {{ item[field].name || item[field] ? item[field].name || item[field] : "none" | translate }}
-        <b class="caret"></b>
+        <b class="dropdown__caret"></b>
     </button>
-    <button ng-disabled="disabled" class="dropdown-toggle line-input" tabindex="{{tabindex}}" dropdown-toggle ng-if="(field === 'place' || field === 'genre') && !icon">
+    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="(field === 'place' || field === 'genre') && !icon">
         {{ item[field].length > 0 ? item[field][0].name : "none" | translate }}
-        <b class="caret"></b>
+        <b class="dropdown__caret"></b>
     </button>
-    <button ng-disabled="disabled" class="dropdown-toggle line-input" tabindex="{{tabindex}}" dropdown-toggle ng-if="icon">
+    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="icon">
         <span class="{{icon}}-{{item[field]}}"
             ng-style="{backgroundColor: values[item[field]].color}">{{ values[item[field]].short || item[field] || 0 }}</span>
-        {{ values[item[field]].name }} <b class="caret"></b>
+        {{ values[item[field]].name }} <b class="dropdown__caret"></b>
     </button>
-    <ul class="dropdown-menu" ng-if="status.isOpen">
-        <li ng-if="label"><div class="menu-label">{{ label }}</div></li>
+    <ul class="dropdown__menu" ng-if="status.isOpen">
+        <li ng-if="label"><div class="dropdown__menu-label">{{ label }}</div></li>
         <li ng-click="select()"><button ng-disabled="disabled" translate>None</button></li>
 
         <li ng-repeat="item in list" ng-click="select(item)" ng-if="field !== 'place'">

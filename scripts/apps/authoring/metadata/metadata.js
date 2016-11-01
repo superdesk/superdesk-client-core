@@ -278,7 +278,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                     _.defer(function() {
                             var keyboardOptions = {inputDisabled: false};
                             // narrow the selection to consider only dropdown list's button items
-                            var buttonList = elem.find('.dropdown-menu button');
+                            var buttonList = elem.find('.dropdown__menu button');
 
                             if (buttonList.length > 0) {
                                 buttonList[0].focus();
@@ -349,7 +349,7 @@ function MetaDropdownDirective($filter, keyboardManager) {
 
                 //retain focus on same dropdown control after selection.
                 _.defer (function() {
-                    elem.find('.dropdown-toggle').focus();
+                    elem.find('.dropdown__toggle').focus();
                 });
 
                 if (scope.values) {
@@ -667,7 +667,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.activeTree = scope.tree[term ? term.qcode : null];
                 $event.stopPropagation();
                 _.defer(function () {
-                    elem.find('button:not([disabled]):not(.dropdown-toggle)')[0].focus();
+                    elem.find('button:not([disabled]):not(.dropdown__toggle)')[0].focus();
                 });
             };
 
@@ -778,8 +778,8 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                     //retain focus and initialise activeTree on same dropdown control after selection.
                     _.defer (function() {
-                        if (!_.isEmpty(elem.find('.dropdown-toggle'))) {
-                            elem.find('.dropdown-toggle').focus();
+                        if (!_.isEmpty(elem.find('.dropdown__toggle'))) {
+                            elem.find('.dropdown__toggle').focus();
                         }
                         if (reloadList) {
                             scope.activeTerm = null;
@@ -815,7 +815,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                 scope.terms = $filter('sortByName')(scope.terms);
                 scope.change({item: scope.item, field: scope.field});
-                elem.find('.dropdown-toggle').focus(); // retain focus
+                elem.find('.dropdown__toggle').focus(); // retain focus
             };
 
         }

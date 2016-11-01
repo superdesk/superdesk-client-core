@@ -104,13 +104,13 @@
                 margin-top: 2px;
             }
         }
-        .dropdown-toggle {
+        .dropdown__toggle {
             margin-top: 4px;
             i {
                 @include opacity(70);
             }
         }
-        .dropdown-menu {
+        .dropdown__menu {
             margin-top: -7px;
             margin-right: 4px;
         }
@@ -411,9 +411,6 @@ Add new widget modal
             label {
                 display: inline-block;
                 color: #989898;
-            }
-            .dropdown {
-                display: inline-block;
             }
         }
 

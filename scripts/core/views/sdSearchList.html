@@ -3,7 +3,7 @@
         <span ng-show="selectedItems.length === 0" translate>Select</span>
         <span ng-show="selectedItems.length === 1">{{selectedItems[0][labelKey]}}</span>
         <span ng-show="selectedItems.length > 1">{{selectedItems.length}} {{:: 'selected'|translate}}</span>
-        <span class="caret"></span>
+        <span class="dropdown__caret"></span>
     </button>
     <div ng-show="open" class="search-list-content">
         <div>

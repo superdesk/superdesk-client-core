@@ -1184,7 +1184,7 @@ angular.module('superdesk.apps.editor2', [
                             }
                             scope.replaceTarget = node;
                             scope.$applyAsync(function() {
-                                var menu = elem[0].getElementsByClassName('dropdown-menu')[0];
+                                var menu = elem[0].getElementsByClassName('dropdown__menu')[0];
                                 menu.style.left = (node.offsetLeft) + 'px';
                                 menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
                                 menu.style.position = 'absolute';

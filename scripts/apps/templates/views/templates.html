@@ -4,10 +4,10 @@
     <div class="pull-right">
         <div class="sortbar pull-left">
            <span class="lab" translate>Filter:</span>
-           <div class="dropdown dropdown-noarrow" dropdown sd-dropdown-position>
-             <button id="order_button" class="dropdown-toggle" dropdown-toggle>{{ filters[activeFilter].label | translate }} <b class="caret"></b>
+           <div class="dropdown dropdown--noarrow" dropdown sd-dropdown-position>
+             <button id="order_button" class="dropdown__toggle" dropdown__toggle>{{ filters[activeFilter].label | translate }} <b class="dropdown__caret"></b>
              </button>
-             <ul class="dropdown-menu left-submenu" id="order_selector">
+             <ul class="dropdown__menu left-submenu" id="order_selector">
                 <li ng-repeat="f in filters track by $index" ng-class="{active: activeFilter === $index}">
                   <a href="" ng-click="filterBy($index)">{{ f.label | translate }}</a>
                 </li>
@@ -25,11 +25,11 @@
           <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | templatesBy:filters[activeFilter]" ng-if="desks">
               <div class="card-box__header" ng-class="{'card-box__header--dark': !template.is_public}" >
                   <div class="dropdown" dropdown>
-                      <button class="dropdown-toggle" dropdown-toggle>
+                      <button class="dropdown__toggle" dropdown__toggle>
                           <i class="icon-dots-vertical"></i>
                       </button>
-                      <ul class="dropdown-menu more-activity-menu pull-right">
-                          <li><div class="menu-label" translate>Actions</div></li>
+                      <ul class="dropdown__menu more-activity-menu pull-right">
+                          <li><div class="dropdown__menu-label" translate>Actions</div></li>
                           <li class="divider"></li>
                           <li><button ng-click="edit(template)" title="{{:: 'Edit Template' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
                           <li ng-if="template.template_type !== 'kill'"><button ng-click="remove(template)" title="{{:: 'Remove Template' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>

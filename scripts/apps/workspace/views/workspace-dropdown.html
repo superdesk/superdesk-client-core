@@ -1,13 +1,13 @@
 <div id="workspace-dropdown" class="dropdown navbtn">
-    <button id="selected-desk" data-toggle="dropdown" class="dropdown-toggle {{workspaceType}} pull-left">
+    <button id="selected-desk" data-toggle="dropdown" class="dropdown__toggle {{workspaceType}} pull-left">
         <span class="name" ng-if="selected.name">{{ selected.name | uppercase }}</span>
         <span class="name" ng-if="!selected" translate>Select Workspace</span>
         <span class="name" ng-if="selected && !selected.name && workspaceType">{{ :: 'Untitled' | translate }}</span>
-        <span class="caret"></span>
+        <span class="dropdown__caret"></span>
     </button>
 
-    <ul id="select-desk-menu" class="dropdown-menu" role="menu">
-        <li class="menu-label"><div translate>DESKS</div></li>
+    <ul id="select-desk-menu" class="dropdown__menu" role="menu">
+        <li class="dropdown__menu-label"><div translate>DESKS</div></li>
         <li class="desk-item" ng-repeat="desk in desks track by desk._id">
             <button ng-click="selectDesk(desk)"
                     ng-disabled="desk._id === selected._id">
@@ -18,7 +18,7 @@
         
 
 
-        <li class="menu-label"><div translate>CUSTOM WORKSPACES</div></li>
+        <li class="dropdown__menu-label"><div translate>CUSTOM WORKSPACES</div></li>
         <li class="workspace-item" ng-repeat="workspace in wsList track by workspace._id">
             <button ng-click="selectWorkspace(workspace)"
                     ng-disabled="workspace._id === selected._id">

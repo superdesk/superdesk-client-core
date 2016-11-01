@@ -439,7 +439,7 @@ $slide-pane-width: 400px;
 
         .dropdown {
             margin-bottom: 20px;
-            .dropdown-toggle, .dropdown-menu {
+            .dropdown__toggle, .dropdown__menu {
                 width: 100%;
             }
         }
@@ -792,10 +792,10 @@ $main-item-color-inactive: #aaa;
         .dropdown {
             float: right;
             margin-top: 8px;
-            .dropdown-menu {
+            .dropdown__menu {
                 margin-top: 0;
             }
-            .dropdown-toggle {
+            .dropdown__toggle {
                 border: none;
                 outline: none;
                 padding: 0 8px;
@@ -816,7 +816,7 @@ $main-item-color-inactive: #aaa;
                 }
             }
             &.open {
-                .dropdown-toggle {
+                .dropdown__toggle {
                     opacity: 1;
                 }
             }

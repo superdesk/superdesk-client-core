@@ -78,7 +78,7 @@ function Content() {
 
         toggle.click();
 
-        var menu = element(by.css('.dropdown-menu.open'));
+        var menu = element(by.css('.dropdown__menu.open'));
         waitFor(menu);
         return menu;
     };

@@ -242,7 +242,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              */
             function bindMarkItemShortcut() {
                 elem.find('.active .more-activity-toggle').click();
-                var highlightDropdown = angular.element('.more-activity-menu.open .dropdown-noarrow');
+                var highlightDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
 
                 highlightDropdown.addClass('open');
                 if (highlightDropdown.find('button').length > 0) {
