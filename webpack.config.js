@@ -52,7 +52,9 @@ module.exports = function makeConfig(grunt) {
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
-                'i18n': path.join(process.cwd(), 'dist', 'locale.generated.js')
+                'i18n': path.join(process.cwd(), 'dist', 'locale.generated.js'),
+                // ensure that react is loaded only once (3rd party apps can load more...)
+                'react': path.resolve('./node_modules/react')
             },
             extensions: ['', '.js', '.jsx']
         },
