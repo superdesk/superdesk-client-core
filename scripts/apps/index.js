@@ -22,6 +22,7 @@ import 'apps/monitoring';
 import 'apps/settings';
 import 'apps/ingest';
 import 'apps/search-providers';
+import 'apps/analytics';
 
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
@@ -50,5 +51,6 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.publish',
     'superdesk.apps.templates',
     'superdesk.apps.monitoring',
-    'superdesk.apps.profiling'
+    'superdesk.apps.profiling',
+    'superdesk.apps.analytics'
 ]);

@@ -1,0 +1,18 @@
+<div>
+    <h1 translate>Activity Report</h1>
+    <div ng-if="reportType === 'simple'">
+        <table>
+            <tr><th translate>Items</th></tr>
+            <tr><td>{{ activityReport.report.items }}</td></tr>
+        </table>
+    </div>
+    <div ng-if="reportType === 'groupByDesk'">
+        <table>
+            <tr><th translate>Desk</th><th translate>Items</th></tr>
+            <tr ng-repeat="desk in activityReport.report | orderBy:'name'">
+                <td>{{ desk.name }}</td>
+                <td>{{ desk.items }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

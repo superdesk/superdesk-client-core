@@ -67,6 +67,14 @@
     </div>
 </li>
 
+<hr>
+<li ng-class="{active: currentRoute.href === '/analytics'}">
+    <a href="#/analytics" title="{{ :: 'Analytics' | translate }}">
+      <i class="big-icon-archive main-icon"></i>
+      <i class="big-icon-chevron-left helper-icon"></i>
+    </a>
+</li>
+
 <!-- this is something like deprecated.. don't add, only remove -->
 <hr ng-if="workspaceConfig.ingest">
 <li ng-if="workspaceConfig.ingest && privileges.ingest"

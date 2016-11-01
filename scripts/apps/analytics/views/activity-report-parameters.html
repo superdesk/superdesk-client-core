@@ -1,0 +1,54 @@
+<!-- <form name="editReportForm"> -->
+    <fieldset class="activity-report-parameters">
+        <div ng-if="innerTab==='parameters'" ng-class="{pull: true}">
+            <div class="field">
+                <label for="parameters-operation" translate="">Operation</label>
+                <select id="parameters-operation" ng-model="activityReport.operation"
+                    selected="publish" required>
+                    <option value="publish" translate>Publish</option>
+                    <option value="correct" translate>Correct</option>
+                </select>
+            </div>
+
+            <div class="field" ng-if="!group_by.desk">
+                <label for="parameters-desk" translate="">Desk</label>
+                <select id="parameters-desk" name="desk"
+                    ng-options="d._id as d.name for d in desks"
+                    ng-model="activityReport.desk" ng-required="!group_by.desk">
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="parameters-operation_date" translate>Operation date</label>
+                <div sd-datepicker ng-model="activityReport.operation_date"
+                    id="parameters-operation_date" required></div>
+            </div>
+
+            <div class="field"
+                 sd-validation-error="error.subject">
+                <label for="parameters-subject">{{:: 'Subject' | translate}}</label>
+              <div id="parameters-subjects"
+                   sd-meta-terms
+                   class="data"
+                   data-item="activityReport"
+                   data-field="subject"
+                   data-unique="qcode"
+                   data-list="metadata.subjectcodes"
+                   data-header="true"
+                   data-reload-list="true">
+              </div>
+            </div>
+
+            <div class="field">
+                <label for="parameters-keywords">{{:: 'Keywords' | translate}}</label>
+                <div id="parameters-keywords"
+                     sd-meta-words-list
+                     data-field="keywords"
+                     data-header="true"
+                     data-list="metadata.keywords"
+                     data-item="activityReport"
+                ></div>
+            </div>
+        </div>
+    </fieldset>
+<!-- </form> -->

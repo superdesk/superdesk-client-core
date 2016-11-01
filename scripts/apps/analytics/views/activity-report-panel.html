@@ -1,0 +1,38 @@
+<div>
+    <div class="header">
+        <ul>
+            <li ng-click="changeTab('editingActivityReport')"
+                ng-class="{active: panelTab === 'editingActivityReport'}" translate>Activity Report
+            </li>
+            <li id="saved_activity_report_tab" 
+                ng-class="{active: panelTab === 'savedReports'}" 
+                ng-click="changeTab('savedReports')" translate>Saved
+            </li>
+        </ul>
+    </div>
+
+    <div class="content" ng-class="{pull: innerTab==='parameters', 'pull-heigher': innerTab==='parameters' && editReportSelected()}" ng-if="editReportSelected()">
+        <div class="tab-box">
+            <button id="parameters-tab" type="button" class="tab-box__item" ng-class="{'tab-box__item--active': innerTab==='parameters'}" ng-click="display('parameters')" translate>Parameters</button>
+            <button id="grouping-tab" type="button" class="tab-box__item" ng-class="{'tab-box__item--active': innerTab==='grouping'}" ng-click="display('grouping')" translate>Grouping</button>
+        </div>
+
+        <form name="editReportForm">
+            <div ng-include="'scripts/apps/analytics/views/activity-report-parameters.html'"
+                 ng-show="innerTab==='parameters'"></div>
+            <div ng-include="'scripts/apps/analytics/views/activity-report-grouping.html'"
+                 ng-show="innerTab==='grouping'"></div>
+        </form>
+
+        <div>
+            <button id="generate_activity_report" class="btn btn--primary"
+                ng-click="generate()" ng-disabled="!editReportForm.$valid" translate>Generate</button>
+        </div>
+
+        <div sd-save-activity-report></div>
+    </div>
+
+    <div class="content views" ng-if="panelTab==='savedReports'">
+        <div sd-saved-activity-reports></div>
+    </div>
+</div>
