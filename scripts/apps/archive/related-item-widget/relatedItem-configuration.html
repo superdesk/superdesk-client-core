@@ -3,7 +3,7 @@
         <div class="field">
             <label translate>Slugline Match</label>
             <div class="control">
-                <select ng-model="configuration.sluglineMatch" class="input-small">
+                <select ng-model="configuration.sluglineMatch" class="input-small" selected="configuration.sluglineMatch">
                     <option value="EXACT" selected translate>Exact</option>
                     <option value="ANY" translate>Match Any</option>
                     <option value="PREFIX" translate>Match Prefix</option>
@@ -13,7 +13,7 @@
         <div class="field">
             <label translate>Last Updated</label>
             <div class="control">
-                <select ng-model="configuration.modificationDateAfter" class="input-small">
+                <select ng-model="configuration.modificationDateAfter" class="input-small" selected="configuration.modificationDateAfter">
                     <option value="now-6h" translate>6 Hours</option>
                     <option value="now-12h" translate>12 Hours</option>
                     <option value="today" selected translate>Today</option>
