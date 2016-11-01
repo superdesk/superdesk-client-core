@@ -31,6 +31,7 @@ RelatedItemController.$inject = [
     'authoring',
     'privileges',
     'config',
+    'storage'
 ];
 
 function RelatedItemController (
@@ -43,7 +44,8 @@ function RelatedItemController (
     authoringWorkspace,
     authoring,
     privileges,
-    config
+    config,
+    storage
 ) {
     $scope.type = 'archiveWidget';
     $scope.itemListOptions = {
@@ -52,8 +54,8 @@ function RelatedItemController (
         notStates: ['spiked'],
         types: ['text', 'composite'],
         page: 1,
-        modificationDateAfter: today(),
-        sluglineMatch: 'EXACT'
+        modificationDateAfter: storage.getItem('modificationDateAfter') || today(),
+        sluglineMatch: storage.getItem('sluglineMatch') || 'EXACT'
     };
     $scope.options = {
         pinEnabled: true,
@@ -203,9 +205,16 @@ function RelatedItemController (
 
     function reset() {
         if ($scope.widget && $scope.widget.configuration) {
-            $scope.widget.configuration.modificationDateAfter = 'today';
-            $scope.widget.configuration.sluglineMatch = 'EXACT';
+            $scope.widget.configuration.modificationDateAfter = storage.getItem('modificationDateAfter') || 'today';
+            $scope.widget.configuration.sluglineMatch = storage.getItem('sluglineMatch') || 'EXACT';
         }
+    }
+
+    if ($scope.widget) {
+        $scope.widget.save = function() {
+            storage.setItem('sluglineMatch', $scope.widget.configuration.sluglineMatch);
+            storage.setItem('modificationDateAfter', $scope.widget.configuration.modificationDateAfter);
+        };
     }
 
     reset();
