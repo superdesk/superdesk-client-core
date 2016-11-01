@@ -34,9 +34,9 @@ module.exports = {
         options: options
     },
 
-    docs: {
+    'ui-guide': {
         cwd: '<%= coreDir %>',
-        dest: 'docs/dist/templates-cache-docs.generated.js',
+        dest: 'docs/ui-guide/dist/templates-cache-docs.generated.js',
         src: src,
         options: options
     },

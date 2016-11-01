@@ -14,6 +14,13 @@ import SearchProviderConfigDirective from './directive';
 SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
 function SearchProviderSettingsController($scope, privileges) {}
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.searchProviders
+ * @name superdesk.apps.searchProviders
+ * @packageName superdesk.apps
+ * @description Adds support for various search providers to Superesk.
+ */
 export default angular.module('superdesk.apps.searchProviders', [
     'superdesk.core.activity',
     'superdesk.core.api'

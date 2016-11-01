@@ -1,10 +1,9 @@
 /**
- * @memberof superdesk.apps.content_filters
  * @ngdoc controller
+ * @module superdesk.apps.content_filters
  * @name ContentFiltersConfigCtrl
- * @description
- *   Main controller for the Content Filters page under the system
- *   settings section.
+ * @description Main controller for the Content Filters page under the system
+ * settings section.
  */
 ContentFiltersConfigController.$inject = [];
 export function ContentFiltersConfigController () {

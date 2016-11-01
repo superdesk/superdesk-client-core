@@ -1,8 +1,8 @@
 import { ManageContentFiltersController } from 'apps/content-filters/controllers';
 
 /**
- * @memberof superdesk.apps.content_filters
  * @ngdoc directive
+ * @module superdesk.apps.content_filters
  * @name sdManageFiltersTab
  * @description
  *   A directive that simply loads the view for managing content filters and

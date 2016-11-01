@@ -1445,6 +1445,13 @@ function multiSelectDirective() {
     };
 }
 
+/**
+ * @ngdoc module
+ * @module superdesk.core.ui
+ * @name superdesk.core.ui
+ * @packageName superdesk.core
+ * @description A set of provided core UI components.
+ */
 export default angular.module('superdesk.core.ui', [
     'superdesk.config',
     'superdesk.core.datetime',

@@ -1,3 +1,10 @@
+/**
+ * @ngdoc module
+ * @module superdesk.core.api
+ * @name superdesk.core.api
+ * @packageName superdesk.core
+ * @description Superdesk core API utilities.
+ */
 angular.module('superdesk.core.api', [
     'superdesk.core.api.http',
     'superdesk.core.api.service',

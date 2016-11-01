@@ -9,6 +9,13 @@
  */
 import { ProfilingController } from './controllers';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.profiling
+ * @name superdesk.apps.profiling
+ * @packageName superdesk.apps
+ * @description Enhances the application with profiling support for the workspace.
+ */
 export default angular.module('superdesk.apps.profiling', [])
     .controller('profilingCtrl', ProfilingController)
 

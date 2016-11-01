@@ -1,6 +1,6 @@
 /**
- * @memberof superdesk.apps.ingest
  * @ngdoc directive
+ * @module superdesk.apps.ingest
  * @name sdIngestRoutingSchedule
  * @description
  *   Creates the Schedule section (tab) of the routing rule edit form.

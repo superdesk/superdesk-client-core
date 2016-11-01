@@ -1,3 +1,10 @@
+/**
+ * @ngdoc module
+ * @module superdesk.core.directives
+ * @name superdesk.core.directives
+ * @packageName superdesk.core
+ * @description Superdesk core directives collection.
+ */
 import './sdAutofocus';
 import './sdCheck';
 import './sdPasswordStrength';

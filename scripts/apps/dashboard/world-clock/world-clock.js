@@ -14,8 +14,8 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     }])
 
     /**
-     * @memberof superdesk.apps.dashboard.world-clock
      * @ngdoc controller
+     * @module superdesk.apps.dashboard
      * @name WorldClockConfigController
      * @description
      *   Controller for the world clock widget configuration modal.
@@ -47,8 +47,8 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     }])
 
     /**
-     * @memberof superdesk.apps.dashboard.world-clock
      * @ngdoc controller
+     * @module superdesk.apps.dashboard
      * @name WorldClockController
      * @description
      *   Controller for the sdWorldclock directive - the one that creates

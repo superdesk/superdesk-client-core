@@ -96,6 +96,13 @@ angular.module('superdesk.core.auth.session', [])
         IDENTITY_LOADED: 'identity_loaded'
     });
 
+/**
+ * @ngdoc module
+ * @module superdesk.core.auth
+ * @name superdesk.core.auth
+ * @packageName superdesk.core
+ * @description Superdesk core authentication and session related functionalities.
+ */
 export default angular.module('superdesk.core.auth', [
     'superdesk.core.features',
     'superdesk.core.activity',

@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.highlights
@@ -14,9 +16,6 @@
  *
  * @description Creates dropdown react element with list of available highlights
  */
-
-import React from 'react';
-
 HighlightsReactDropdown.$inject = ['item', 'className', 'highlightsService', 'desks', 'noHighlightsLabel'];
 export function HighlightsReactDropdown(item, className, highlightsService, desks, noHighlightsLabel) {
     var highlights = highlightsService.getSync(desks.getCurrentDeskId()) || {_items: []};

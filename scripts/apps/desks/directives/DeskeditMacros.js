@@ -1,8 +1,8 @@
 DeskeditMacros.$inject = ['macros', 'WizardHandler'];
 
 /**
- * @memberof superdesk.apps.desks
  * @ngdoc directive
+ * @module superdesk.apps.desks
  * @name sdDeskeditMacros
  * @description
  *   Fetches and stores a list of macros for the current desk (if set,

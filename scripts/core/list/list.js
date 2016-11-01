@@ -27,6 +27,13 @@ function ListItemDirectiveFactory() {
     };
 }
 
+/**
+ * @ngdoc module
+ * @module superdesk.core.list
+ * @name superdesk.core.list
+ * @packageName superdesk.core
+ * @description The list module provides alternative listing functionalities.
+ */
 var mod = angular.module('superdesk.core.list', ['superdesk.core.keyboard', 'superdesk.core.services.asset']);
 mod.directive('sdListView', ['$location', 'keyboardManager', 'asset', function($location, keyboardManager, asset) {
     return {

@@ -11,6 +11,13 @@
 import * as directive from './directives';
 import * as svc from './services';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.translations
+ * @name superdesk.apps.translations
+ * @packageName superdesk.apps
+ * @description Superdesk authoring application module.
+ */
 angular.module('superdesk.apps.translations', [
     'superdesk.core.api'
 ])

@@ -1,8 +1,8 @@
 import handleError from '../helpers';
 
 /**
- * @memberof superdesk.apps.users
  * @ngdoc directive
+ * @module superdesk.apps.users
  * @name sdUserPrivileges
  * @description
  *   This directive creates the Privileges tab on the user profile

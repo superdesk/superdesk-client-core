@@ -13,6 +13,14 @@ angular.module('superdesk.apps.search.react', [
     .service('monitoringState', svc.MonitoringState)
     .directive('sdItemsList', directive.ItemList);
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.search
+ * @name superdesk.apps.search
+ * @packageName superdesk.apps
+ * @description Superdesk search module. Allows searching existing and ingested
+ * content.
+ */
 angular.module('superdesk.apps.search', [
     'superdesk.core.api',
     'superdesk.apps.desks',

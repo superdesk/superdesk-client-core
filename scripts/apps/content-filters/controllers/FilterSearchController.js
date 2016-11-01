@@ -1,10 +1,9 @@
 /**
- * @memberof superdesk.apps.content_filters
  * @ngdoc controller
+ * @module superdesk.apps.content_filters
  * @name FilterSearchCtrl
- * @description
- *   Controller for the Filter Search tab, found on the Content Filters
- *   settings page.
+ * @description Controller for the Filter Search tab, found on the Content Filters
+ * settings page.
  */
 FilterSearchController.$inject = ['$scope', 'contentFilters', 'notify', '$filter'];
 export function FilterSearchController($scope, contentFilters, notify, $filter) {

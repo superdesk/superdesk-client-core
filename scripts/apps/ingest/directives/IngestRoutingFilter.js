@@ -1,6 +1,6 @@
 /**
- * @memberof superdesk.apps.ingest
  * @ngdoc directive
+ * @module superdesk.apps.ingest
  * @name sdIngestRoutingFilter
  * @description
  *   Creates the Filter tab used for defining a content filter for routing

@@ -13,6 +13,14 @@ import { HighlightsService } from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.highlights
+ * @name superdesk.apps.highlights
+ * @packageName superdesk.apps
+ * @description Superdesk module that adds highlights functionality to archive
+ * items.
+ */
 export default angular.module('superdesk.apps.highlights', [
     'superdesk.apps.desks',
     'superdesk.apps.packaging',

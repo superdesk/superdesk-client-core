@@ -1,13 +1,12 @@
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
- * @name AuthoringTopbarDirective
+ * @name sdAuthoringTopbar
  *
  * @requires TranslationService
  *
  * @description Generates authoring subnav bar
  */
-
 AuthoringTopbarDirective.$inject = ['TranslationService'];
 export function AuthoringTopbarDirective(TranslationService) {
     return {

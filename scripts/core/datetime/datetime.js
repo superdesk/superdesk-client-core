@@ -135,6 +135,13 @@ function DateTimeHelperService(moment, config) {
     };
 }
 
+/**
+ * @ngdoc module
+ * @module superdesk.core.datetime
+ * @name superdesk.core.datetime
+ * @packageName superdesk.core
+ * @description Superdesk core date & time module.
+ */
 export default angular.module('superdesk.core.datetime', [
     'superdesk.config',
     'ngResource',

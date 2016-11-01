@@ -225,6 +225,13 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     };
 }
 
+/**
+ * @ngdoc module
+ * @module superdesk.core.notification
+ * @name superdesk.core.notification
+ * @packageName superdesk.core
+ * @description The notification package holds various types of notifications.
+ */
 export default angular.module('superdesk.apps.notification', ['superdesk.apps.desks', 'superdesk.core.menu'])
     .service('reloadService', ReloadService)
     .service('notifyConnectionService', NotifyConnectionService)

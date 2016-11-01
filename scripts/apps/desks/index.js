@@ -13,6 +13,13 @@ import * as ctrl from './controllers';
 import * as directive from './directives';
 import { DesksFactory } from './services';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.desks
+ * @name superdesk.apps.desks
+ * @packageName superdesk.apps
+ * @description Superdesk app that allows managing and using desks.
+ */
 angular.module('superdesk.apps.desks', [
     'superdesk.core.ui',
     'superdesk.apps.users',

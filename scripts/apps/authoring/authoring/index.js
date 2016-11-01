@@ -7,6 +7,13 @@ import * as filter from './filters';
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.authoring
+ * @name superdesk.apps.authoring
+ * @packageName superdesk.apps
+ * @description Superdesk authoring application module.
+ */
 angular.module('superdesk.apps.authoring', [
         'superdesk.core.menu',
         'superdesk.core.activity',

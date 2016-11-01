@@ -1,0 +1,6 @@
+@ngdoc overview
+@module superdesk
+@name index
+@area api
+@title Superdesk Reference
+@description Superdesk is an extensible end-to-end news production, curation and distribution platform for newsrooms.

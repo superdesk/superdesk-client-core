@@ -6,6 +6,13 @@ import './content';
 import { WorkspaceService } from './services';
 import * as directive from './directives';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.workspaces
+ * @name superdesk.apps.workspaces
+ * @packageName superdesk.apps
+ * @description Superdesk workspaces.
+ */
 angular.module('superdesk.apps.workspace', ['superdesk.apps.workspace.content'])
     .service('workspaces', WorkspaceService)
 

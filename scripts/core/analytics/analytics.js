@@ -44,6 +44,13 @@ function GoogleTracking(config) {
     };
 }
 
+/**
+ * @ngdoc module
+ * @module superdesk.core.analytics
+ * @name superdesk.core.analytics
+ * @packageName superdesk.core
+ * @description Superdesk core analytics functions.
+ */
 angular.module('superdesk.core.analytics', [])
 
 .service('analytics', ['config', function(config) {

@@ -1,3 +1,11 @@
+/**
+ * @ngdoc module
+ * @module superdesk.core.notify
+ * @name superdesk.core.notify
+ * @packageName superdesk.core
+ * @description The notify package allows developers to display various
+ * notifications for users.
+ */
 export default angular.module('superdesk.core.notify', ['superdesk.core.translate'])
     .service('notify', ['$timeout', 'gettext', function ($timeout, gettext) {
         function NotifyService() {

@@ -4,6 +4,13 @@ import './styles/products.scss';
 import { ProductsFactory } from './services';
 import { ProductsConfigController } from './controllers';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.products
+ * @name superdesk.apps.products
+ * @packageName superdesk.apps
+ * @description Adds products support to Superdesk.
+ */
 export default angular.module('superdesk.apps.products', ['superdesk.apps.users'])
     .config(['superdeskProvider', function(superdesk) {
         superdesk

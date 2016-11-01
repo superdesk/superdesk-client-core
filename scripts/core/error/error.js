@@ -19,6 +19,13 @@ function ErrorHttpInterceptorFactory($q) {
     };
 }
 
+/**
+ * @ngdoc module
+ * @module superdesk.core.error
+ * @name superdesk.core.error
+ * @packageName superdesk.core
+ * @description Superdesk error reporting module.
+ */
 angular.module('superdesk.core.error', [])
 .config(['config', '$httpProvider', '$provide', function(config, $httpProvider, $provide) {
     if (config.raven && config.raven.dsn) {

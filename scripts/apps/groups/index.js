@@ -5,6 +5,13 @@ import { GroupsSettingsController, GroupsConfigController } from './controllers'
 import { GroupsFactory } from './services';
 import * as directive from './directives';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.groups
+ * @name superdesk.apps.groups
+ * @packageName superdesk.apps
+ * @description Superdesk module that allows user group functionalities.
+ */
 export default angular.module('superdesk.apps.groups', [
     'superdesk.apps.users'
 ])
