@@ -147,6 +147,7 @@ export function SearchResults(
              */
             function queryItems(event, data) {
                 if (!nextUpdate) {
+                    scope.loading = true;
                     nextUpdate = $timeout(function() {
                         _queryItems(event, data);
                         scope.$applyAsync(function() {
@@ -162,6 +163,7 @@ export function SearchResults(
             function _queryItems(event, data) {
                 criteria = search.query($location.search()).getCriteria(true);
                 criteria.source.size = 50;
+                var originalQuery;
 
                 // when forced refresh or query then keep query size default as set 50 above.
                 if (!(data && data.force)) {
@@ -173,6 +175,7 @@ export function SearchResults(
 
                 if (data && data.items && scope.showRefresh && !data.force) {
                     // if we know the ids of the items then try to fetch those only
+                    originalQuery = angular.extend({}, criteria.source.query);
                     criteria.source.query = search.getItemQuery(data.items);
                 }
 
@@ -205,6 +208,9 @@ export function SearchResults(
                     }
                 }).finally(function() {
                     scope.loading = false;
+                    if (originalQuery) {
+                        criteria.source.query = originalQuery;
+                    }
                 });
             }
 
