@@ -73,9 +73,24 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
              * Trigger render in case user scrolls to the very end of list
              */
             function renderIfNeeded($event) {
-                if (isListEnd($event.currentTarget)) {
-                    scope.rendering = scope.loading = true;
-                    scope.$broadcast('render:next');
+                if (scope.viewColumn && isListEnd($event.currentTarget)) {
+                    scheduleFetchNext();
+                }
+            }
+
+            let fetchNextTimeout;
+
+            /**
+             * Schedule content fetchNext after some delay
+             */
+            function scheduleFetchNext() {
+                if (!fetchNextTimeout) {
+                    fetchNextTimeout = $timeout(function() {
+                        scope.$broadcast('render:next');
+                        scope.$applyAsync(function() {
+                            fetchNextTimeout = null;
+                        });
+                    }, 1000, false);
                 }
             }
 
