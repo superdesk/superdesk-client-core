@@ -3,7 +3,7 @@ import './styles/web-publisher.scss';
 import { WebPublisherManagerController } from './controllers';
 import * as services from './services';
 
-export default angular.module('superdesk.web_publisher', [
+export default angular.module('superdesk.apps.web_publisher', [
     'superdesk.core.activity',
     'superdesk.config'
     ])
