@@ -18,6 +18,7 @@ To configure the build, the `superdesk.config.js` file must export a function th
 ##### Services
 
 - `iframely.key` - iframely api key
+- `google.key` - google api key
 - `raven.dsn` - sentry api key
 - `analytics.ga` - google analytics id
 - `analytics.piwik.url` - piwik analytics url

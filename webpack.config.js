@@ -130,6 +130,11 @@ function getDefaults(grunt) {
             key: process.env.IFRAMELY_KEY || ''
         },
 
+        // google settings
+        google: {
+            key: process.env.GOOGLE_KEY || ''
+        },
+
         // settings for various analytics
         analytics: {
             piwik: {
