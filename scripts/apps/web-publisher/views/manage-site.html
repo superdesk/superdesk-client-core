@@ -1,23 +1,54 @@
-<div sd-modal data-model="true" data-full="true" class="modal--fullscreen">
+<div sd-modal data-model="true" data-full="true" class="modal--fullscreen" ng-init="webPublisher.activeTab = 'general'">
     <div class="modal-header">
-        <h3 class="pull-left" translate>Manage</h3>
+        <h3 class="pull-left" translate>Manage {{new.name}}</h3>
         <div class="pull-right">
-            <button class="btn" ng-click="toogleCreateSite()" translate>Cancel</button>
-            <button class="btn btn-info" ng-disabled="createForm.$invalid" ng-click="save()" translate>Save</button>
+            <button class="btn" ng-click="webPublisher.toogleCreateSite()" translate>Cancel</button>
+            <button class="btn btn--primary" ng-disabled="createForm.$invalid || !createForm.$dirty" ng-click="webPublisher.save()" translate>Save</button>
         </div>
     </div>
-    <div class="modal-body">
-        <form name="createForm">
-            <fieldset>
-                <div class="field">
-                    <label for="name" translate>Web Site Name:</label>
-                    <input type="text" name="name" ng-model="new.name" required />
-                </div>
-                <div class="field">
-                    <label for="subdomain" translate>Subdomain Name:</label>
-                    <input type="text" name="subdomain" ng-model="new.subdomain" required />
-                </div>
-            </fieldset>
-        </form>
+    <div class="modal-body manage-page">
+        <ul class="nav nav-tabs nav-stacked">
+            <li ng-class="{active: webPublisher.activeTab === 'general'}">
+                <button
+                    ng-click="webPublisher.changeTab('general')"
+                    translate>General</button>
+            </li>
+
+            <li ng-class="{active: webPublisher.activeTab === 'routes'}">
+                <button
+                    ng-click="webPublisher.changeTab('routes')"
+                    translate>Routes</button>
+            </li>
+
+
+            <li ng-class="{active: webPublisher.activeTab === 'navigation'}">
+                <button
+                    ng-click="webPublisher.changeTab('navigation')"
+                    translate>Navigation</button>
+            </li>
+        </ul>
+        <div class="manage-content" ng-switch="webPublisher.activeTab">
+            <form name="createForm">
+                <fieldset ng-switch-when="general">
+                    <div class="field">
+                        <label for="name" translate>Web Site Name:</label>
+                        <input type="text" name="name" ng-model="new.name" required />
+                    </div>
+                    <div class="field">
+                        <label for="subdomain" translate>Subdomain Name:</label>
+                        <input type="text" name="subdomain" ng-model="new.subdomain" required />
+                    </div>
+                </fieldset>
+            </form>
+
+            <div ng-switch-when="routes">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/routes.html'"></div>
+            </div>
+
+            <div ng-switch-when="navigation">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation.html'"></div>
+            </div>
+
+        </div>
     </div>
 </div>

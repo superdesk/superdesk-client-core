@@ -8,10 +8,21 @@ export function PublisherFactory(pubapi) {
          * Create new site
          *
          * @param {Object} site
+         * @param {string} code
          * @return {Promise}
          */
-        createSite(site) {
-            return pubapi.save('tenants', site);
+        createSite(site, code) {
+            return pubapi.save('tenants', site, code);
+        }
+
+        /**
+         * Delete site
+         *
+         * @param {string} code
+         * @return {Promise}
+         */
+        removeSite(code) {
+            return pubapi.remove('tenants', code);
         }
 
         /**

@@ -5,7 +5,7 @@ export function PubAPIFactory(config, $http, $q) {
     function urljoin() {
         return Array.prototype.map.call(arguments, piece => {
             return piece.replace(/\/$/, '').replace(/^\//, '');
-        }).join('/') + '/';
+        }).join('/');
     }
 
     /**
@@ -41,14 +41,14 @@ export function PubAPIFactory(config, $http, $q) {
          *
          * @param {string} resource
          * @param {Object} item
-         * @param {Object} updates
+         * @param {string} code
          * @return {Promise}
          */
-        save(resource, item, updates) {
+        save(resource, item, code) {
             return this.req({
-                url: item.id ? this.selfURL(item) : this.resourceURL(resource),
-                method: item.id ? 'PATCH' : 'POST',
-                data: updates || item
+                url: this.resourceURL(resource, code),
+                method: code ? 'PATCH' : 'POST',
+                data: item
             }).then(response => {
                 angular.extend(item, response);
                 return response;
@@ -56,13 +56,28 @@ export function PubAPIFactory(config, $http, $q) {
         }
 
         /**
+         * Remove an item
+         *
+         * @param {string} resource
+         * @param {string} code
+         * @return {Promise}
+         */
+        remove(resource, code) {
+            return this.req({
+                url: this.resourceURL(resource, code),
+                method: 'DELETE'
+            });
+        }
+
+        /**
          * Get resource url
          *
          * @param {string} resource
+         * @param {string} code
          * @return {string}
          */
-        resourceURL(resource) {
-            return urljoin(this._server, this._base, resource);
+        resourceURL(resource, code) {
+            return urljoin(this._server, this._base, resource, code ? code : '');
         }
 
         /**

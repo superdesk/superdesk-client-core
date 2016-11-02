@@ -1,3 +1,5 @@
+import './styles/web-publisher.scss';
+
 import { WebPublisherManagerController } from './controllers';
 import * as services from './services';
 
@@ -25,6 +27,7 @@ export default angular.module('superdesk.web_publisher', [
                     label: gettext('Web Site Management'),
                     description: gettext('Web Site Management'),
                     controller: WebPublisherManagerController,
+                    controllerAs: 'webPublisher',
                     templateUrl: 'scripts/apps/web-publisher/views/manager.html',
                     sideTemplateUrl: 'scripts/apps/web-publisher/views/sidenav-items.html'
                 });

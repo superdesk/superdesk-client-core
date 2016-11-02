@@ -12,7 +12,7 @@
     </div>
     <h3 class="page-nav-title"><span translate>Web Site Management</span></h3>
     <div class="subnav__button-stack--square-buttons">
-        <button class="navbtn sd-create-btn" ng-click="toogleCreateSite()">
+        <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateSite()">
             <i class="svg-icon-plus"></i>
             <span class="circle"></span>
         </button>
@@ -26,5 +26,5 @@
         </div>
     </div>
 
-    <div ng-include="'scripts/apps/web-publisher/views/manage-site.html'" ng-if="manageSite"></div>
+    <div ng-include="'scripts/apps/web-publisher/views/manage-site.html'" ng-if="webPublisher.manageSite"></div>
 </section>
