@@ -41,12 +41,34 @@ import 'core/datetime';
 import 'core/directives';
 import 'core/ui';
 import 'core/services';
-import 'core/superdesk-docs';
 import 'core/superdesk';
 
 import './dist/templates-cache-docs.generated';
 
-var app = angular.module('superdesk.docs', []);
+var app = angular.module('superdesk.docs', [
+    'ngRoute',
+    'ngResource',
+    'ui.bootstrap',
+
+    'superdesk.core.datetime',
+    'superdesk.core.ui',
+    'superdesk.core.services.modal',
+
+    'superdesk.core.keyboard',
+    'superdesk.core.directives.autofocus',
+    'superdesk.core.directives.throttle',
+    'superdesk.core.directives.sort',
+    'superdesk.core.links',
+    'superdesk.core.directives.check',
+    'superdesk.core.directives.confirm',
+    'superdesk.core.directives.select',
+    'superdesk.core.directives.permissions',
+    'superdesk.core.avatar',
+    'superdesk.core.directives.dragdrop',
+    'superdesk.core.directives.typeahead',
+    'superdesk.core.directives.slider',
+    'superdesk.core.directives.searchList'
+]);
 
 MainDocsView.$inject = ['$location', '$anchorScroll', 'asset'];
 function MainDocsView($location, $anchorScroll) {
@@ -135,7 +157,6 @@ angular.module('superdesk.config').constant('config', __SUPERDESK_CONFIG__);
 var body = angular.element('body');
 body.ready(function () {
     angular.bootstrap(body, [
-        'superdesk.docs.core',
         'superdesk.docs',
         'superdesk.templates-cache',
         'superdesk.config'
