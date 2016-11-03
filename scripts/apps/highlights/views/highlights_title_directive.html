@@ -5,14 +5,14 @@
      on-toggle="toggleClass(open)"
      sd-dropdown-position-absolute>
 
-    <button class="dropdown-toggle" dropdown-toggle>
+    <button class="dropdown__toggle" dropdown__toggle>
         <i ng-class="{'icon-star red': highlights.length === 1, 'icon-multi-star red': highlights.length > 1}" class="icon-star red"></i>
     </button>
 
-    <ul class="dropdown dropdown-menu highlights-list-menu" ng-class="{open: open}" ng-click="$event.stopPropagation()">
+    <ul class="dropdown dropdown__menu highlights-list-menu" ng-class="{open: open}" ng-click="$event.stopPropagation()">
         <li>
-            <div class="menu-label" translate>Marked For</div>
-            <button class="close-button" dropdown-toggle>
+            <div class="dropdown__menu-label" translate>Marked For</div>
+            <button class="dropdown__menu-close" dropdown__toggle>
                 <i class="icon-close-small icon-white"></i>
             </button>
         </li>

@@ -101,7 +101,7 @@ function GlobalSearch() {
             .mouseMove(itemElem) // now it can mouseover for sure
             .perform();
         itemElem.element(by.className('icon-dots-vertical')).click();
-        return element(by.css('.dropdown-menu.open'));
+        return element(by.css('.dropdown__menu.open'));
     };
 
     /**
@@ -159,7 +159,7 @@ function GlobalSearch() {
      * Opens Subject metadata dropdown
      */
     this.toggleSubjectMetadata = function () {
-        this.subject.element(by.css('.dropdown-toggle')).click();
+        this.subject.element(by.css('.dropdown__toggle')).click();
     };
 
     /**

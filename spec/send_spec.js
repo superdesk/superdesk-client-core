@@ -130,7 +130,7 @@ describe('send', function() {
         authoring.sendToButton.click();
 
         var sidebar = element.all(by.css('.slide-pane')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown-toggle')),
+            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle')),
             dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
 
         expect(dropdownSelected.getText()).toEqual('Politic Desk');
@@ -157,7 +157,7 @@ describe('send', function() {
         monitoring.openSendMenu();
 
         var sidebar = element.all(by.css('.slide-pane')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown-toggle')),
+            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle')),
             dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
 
         expect(dropdownSelected.getText()).toEqual('Sports Desk'); // desk remembered

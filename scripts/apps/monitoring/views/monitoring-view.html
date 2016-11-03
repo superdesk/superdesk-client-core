@@ -62,8 +62,8 @@
             </button>
 
             <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
-                <button class="dropdown-toggle sd-create-btn" dropdown-toggle></button>
-                <ul class="dropdown-menu scrollable pull-right" sd-content-create></ul>
+                <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
+                <ul class="dropdown__menu dropdown__menu--scrollable pull-right" sd-content-create></ul>
             </div>
         </div>
     </div>
@@ -91,8 +91,8 @@
 
             <div class="button-stack right-stack" ng-if="elementState === 'compact'">
                 <div class="dropdown navbtn strict" dropdown>
-                    <button class="dropdown-toggle" dropdown-toggle><i class="icon-dots-vertical"></i></button>
-                    <ul class="dropdown-menu pull-right">
+                    <button class="dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
+                    <ul class="dropdown__menu pull-right">
                         <li class="filter-type">
                             <div ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                                 <a ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>

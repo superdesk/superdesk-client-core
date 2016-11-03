@@ -1,0 +1,14 @@
+// variables/miscs.scss
+// -----------------------------------------------------
+
+// Z-index master list
+// -------------------------
+// Used for a bird's eye view of components dependent on the z-axis
+// Try to avoid customizing these :)
+$zindexDropdown: 1000;
+$zindexPopover: 1010;
+$zindexFixedNavbar: 1030;
+$zindexSlidePane: 1035;
+$zindexTooltip: 1040;
+$zindexModalBackdrop: 1045;
+$zindexModal: 1050;

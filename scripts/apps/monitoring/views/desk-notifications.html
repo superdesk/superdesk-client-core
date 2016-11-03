@@ -1,8 +1,8 @@
 <div ng-if="notifications && default_incoming" id="deskNotifications" title="{{ :: 'Notifications' | translate }}">
-    <button class="notification-label" dropdown-toggle>
+    <button class="notification-label" dropdown__toggle>
         <span class="notification-count">{{ notificationCount }}</span>
     </button>
-    <ul class="dropdown-menu pull-left desk-notification-list">
+    <ul class="dropdown__menu pull-left desk-notification-list">
         <div class="title" translate>Notification list</div>
         <li ng-repeat="n in notifications track by n._id" >
             <div class="article">

@@ -163,7 +163,7 @@ function Workspace() {
         var itemElem = this.getItem(index);
         browser.actions().mouseMove(itemElem).perform();
         itemElem.element(by.className('icon-dots-vertical')).click();
-        return element(by.css('.dropdown-menu.open'));
+        return element(by.css('.dropdown__menu.open'));
     };
 
     /**

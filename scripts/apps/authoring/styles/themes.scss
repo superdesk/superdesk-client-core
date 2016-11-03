@@ -126,7 +126,7 @@ body, html {
         position: absolute;
         top: 12px;
         right: 30px;
-        .dropdown-toggle {
+        .dropdown__toggle {
             position: relative;
             height: 22px;
             padding: 1px 4px;
@@ -138,12 +138,12 @@ body, html {
             }
         }
         &.open {
-            .dropdown-toggle {
+            .dropdown__toggle {
                 @include box-shadow(inset 0 2px 0 rgba(55, 55, 55, 0.1));
                 background-color: rgba(152, 152, 152, 0.3);
             }
         }
-        .dropdown-menu {
+        .dropdown__menu {
             min-width: 424px;
             padding: 10px;
             right: -9px;
@@ -159,7 +159,7 @@ body, html {
                     background-color: #107401;
                 }
             }
-            .menu-label {
+            .dropdown__menu-label {
                 padding-left: 13px;
                 margin-bottom: 6px;
             }
@@ -267,14 +267,12 @@ body, html {
     min-height:100%;
     @include box-sizing(border-box);
     max-width: 900px;
-
     .main-article__fieldset {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         align-content: flex-start;
     }
-
     .field {
         margin-bottom: 20px;
         .full-preview {
@@ -305,9 +303,8 @@ body, html {
             }
         }
     }
-
-  //labels
-  .field {
+    //labels
+    .field {
         label {
         @include text-normal();
         background: rgba(0, 0, 0, 0.4);
@@ -330,8 +327,7 @@ body, html {
                 @include transition(all ease 0.6s);
             }
         }
-  }
-
+    }
     // inputs
     .text-editor, input, select {
         border: 1px solid rgba(150, 150, 150, 0) !important;
@@ -348,38 +344,31 @@ body, html {
             margin-bottom: 9px;
         }
     }
-
-  select {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-  }
-
-  .text-editor:hover, .headline:hover, .abstract:hover, input:hover, select:hover {
-    border-bottom-color: rgba(150, 150, 150, 0.55) !important;
-    cursor: text;
-  }
-
-  select:hover {
-    -moz-appearance: menulist-button;
-    -webkit-appearance: menulist-button;
-  }
-
-  .text-editor:focus, .headline:focus, .abstract:focus, input:focus, select:focus, .sms-switch:focus {
+    select {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+    }
+    .text-editor:hover, .headline:hover, .abstract:hover, input:hover, select:hover {
+        border-bottom-color: rgba(150, 150, 150, 0.55) !important;
+        cursor: text;
+    }
+    select:hover {
+        -moz-appearance: menulist-button;
+        -webkit-appearance: menulist-button;
+    }
+    .text-editor:focus, .headline:focus, .abstract:focus, input:focus, select:focus, .sms-switch:focus {
     //.box-shadow(none) !important;
         border-width: 1px !important;
-    border-color: rgba(94, 169, 200, 0.3) !important;
+        border-color: rgba(94, 169, 200, 0.3) !important;
         border-bottom-color: rgba(94, 169, 200, 1) !important;
         box-shadow: 0 1px 0 rgba(94, 169, 200, 1) !important;
-  }
-
-  &.preview {
-    .text-editor {
-      border-color: #fff !important;
     }
-  }
-
+    &.preview {
+        .text-editor {
+        border-color: #fff !important;
+        }
+    }
     // character and word counting
-
     .char-count {
         font-size: 11px;
         font-style: italic;
@@ -397,9 +386,7 @@ body, html {
         .char-count, .field label {
             @include opacity(100);
         }
-
     }
-
     .field.limit-error {
         .char-count {
             @include opacity(100);
@@ -408,12 +395,10 @@ body, html {
             border-color: rgba(210, 60, 50, 0.15) !important;
         }
     }
-
     .field.limit-error input, .field.limit-error textarea {
         @include text-semibold();
         color: #D33C30 !important;
     }
-
     // images
     figure {
         width: 100%;
@@ -421,7 +406,6 @@ body, html {
         table-layout: fixed;
         margin: 10px 0;
     }
-
     figure img {
         display: block;
         max-width: 100%;
@@ -432,16 +416,13 @@ body, html {
         padding: 8px;
         min-height: 18px;
     }
-
     // text styles
-
     color: rgba(51, 51, 51, 1);
     .text-editor, .headline, .abstract, input {
         color: rgba(51, 51, 51, 1);
         padding-left: 0;
         padding-right: 0;
     }
-
     .keyword {
         text-transform: uppercase;
         @include text-semibold();
@@ -453,36 +434,34 @@ body, html {
         .text-editor {
             min-height: 24px;
         }
-    &::-webkit-input-placeholder {
-      color: #ccc;
+        &::-webkit-input-placeholder {
+        color: #ccc;
+        }
+        &::-moz-placeholder {
+        color: #ccc;
+        opacity: 1;
+        }
+        &:focus {
+        &::-webkit-input-placeholder { color:transparent; }
+        &::-moz-placeholder { color:transparent; }
+        }
     }
-    &::-moz-placeholder {
-      color: #ccc;
-      opacity: 1;
-    }
-    &:focus {
-      &::-webkit-input-placeholder { color:transparent; }
-      &::-moz-placeholder { color:transparent; }
-    }
-    }
-
     .image-caption {
         font-size: 14px;
         text-transform: none;
         line-height: 140%;
-    &::-webkit-input-placeholder {
-      color: #ccc;
+        &::-webkit-input-placeholder {
+        color: #ccc;
+        }
+        &::-moz-placeholder {
+        color: #ccc;
+        opacity: 1;
+        }
+        &:focus {
+        &::-webkit-input-placeholder { color:transparent; }
+        &::-moz-placeholder { color:transparent; }
+        }
     }
-    &::-moz-placeholder {
-      color: #ccc;
-      opacity: 1;
-    }
-    &:focus {
-      &::-webkit-input-placeholder { color:transparent; }
-      &::-moz-placeholder { color:transparent; }
-    }
-    }
-
     .text-editor {
         //font-size: 16px;
         //line-height: 150%;
@@ -498,7 +477,6 @@ body, html {
         }
         h2 {font-size: 1.5em;}
         h3 {font-size: 1.25em;}
-
         &.clone {
             position: absolute;
             top: 0;
@@ -515,7 +493,6 @@ body, html {
             }
         }
     }
-
     #body_footer {
         .text-editor {
             padding: 0 !important;
@@ -525,7 +502,6 @@ body, html {
             @include text-light();
         }
     }
-
     .headline, .headline p,  .headline div {
         font-size:28px !important;
         line-height: 120% !important;
@@ -535,7 +511,6 @@ body, html {
                 padding: 6px 0;
         }
     }
-
     .abstract, .abstract p, .abstract div {
         min-height: 24px;
         font-weight: 400 !important;
@@ -545,14 +520,8 @@ body, html {
             min-height: 24px;
         }
     }
-
     .body {
       clear: left;
-    }
-    .sd-typeahead .item-list ul li {
-        color: #333;
-        font-size: 14px;
-        @include text-normal();
     }
 }
 

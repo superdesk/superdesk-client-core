@@ -136,10 +136,10 @@
                 }
             }
             &.open {
-                .dropdown-toggle {
+                .dropdown__toggle {
                     background-color: $white;
                     color: #5aa1bf;
-                    .caret {
+                    .dropdown__caret {
                         border-top-color: #595959;
                     }
                     &.workspace {
@@ -148,27 +148,27 @@
                     }
                 }
             }
-            .dropdown-toggle {
+            .dropdown__toggle {
                 background-color: $sd-blue;
                 color: $white;
                 padding: 0 15px;
                 font-size: 12px;
                 overflow: hidden;
-                .caret {
+                .dropdown__caret {
                     border-top-color: $white;
                 }
                 &.workspace {
                     background-color: $purple;
                 }
             }
-            .dropdown-menu {
+            .dropdown__menu {
                 min-width: 295px;
                 max-height: 550px;
                 overflow: auto;
                 margin: 0;
                 padding: 0;
                 z-index: 4;
-                .menu-label {
+                .dropdown__menu-label {
                     font-size: 10px;
                     color: $grayLight;
                     padding: 5px 15px;
@@ -257,7 +257,7 @@
       text-align: center;
       line-height: $sidebar-width;
     }
-    a, .dropdown-toggle {
+    a, .dropdown__toggle {
       display: block;
       margin: 6px auto;
       border-radius: 50%;
@@ -272,11 +272,11 @@
          background-size: 24px;
       }
     }
-    a:hover, .dropdown-toggle:hover {
+    a:hover, .dropdown__toggle:hover {
       opacity: 1;
       background-color: rgba(255, 255, 255, .6);
     }
-    a:active, .dropdown-toggle:active {
+    a:active, .dropdown__toggle:active {
       background-color: $sd-blue;
       opacity: 1;
     }
@@ -293,14 +293,14 @@
       transition: left 0.2s ease-out, transform 0.2s;
     }
     .active {
-      a, .dropdown-toggle {
+      a, .dropdown__toggle {
         background-color: darken($sd-blue, 11%);
         opacity: 1;
       }
     }
-    .dropright {
+    .dropdown--dropright {
       display: block;
-      .dropdown-menu {
+      .dropdown__menu {
         top: -10px;
       }
     }
@@ -309,7 +309,7 @@
 #side-menu {
   .authoring-active {
     .active {
-      a:hover, .dropdown-toggle:hover {
+      a:hover, .dropdown__toggle:hover {
         .main-icon {
           left: -30px;
         }

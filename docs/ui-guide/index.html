@@ -199,28 +199,28 @@
                     <a class="link-holder" id="dropdowns"></a>
                     <div class="docs-title">Dropdowns</div>
 
-                    <p>Dropdowns have it's specific class <code>dropdown</code> and consist of two parts, <code>dropdown-toggle</code> and <code>dropdown-menu</code> It is important to have those two in order to have porperly styled component.</p>
-                    <p>By default dropdown-menu is positioned left comparing to dropdown-toggle element. For right positioned menu (second example) add class <code>pull-right</code></p>
+                    <p>Dropdowns have it's specific class <code>dropdown</code> and consist of two parts, <code>dropdown__toggle</code> and <code>dropdown__menu</code> It is important to have those two in order to have porperly styled component.</p>
+                    <p>By default dropdown__menu is positioned left comparing to dropdown__toggle element. For right positioned menu (second example) add class <code>pull-right</code></p>
                     <p>Menu items should be <code>li</code> elements, containing either <code>button</code> or <code>a</code> tag.</p>
                     <div class="docs-preview">
                         <div class="preview-area clearfix">
                             <div class="dropdown pull-left" style="margin:0 10px;" dropdown>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                     Action
-                                    <span class="caret"></span>
+                                    <span class="dropdown__caret"></span>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown__menu">
                                     <li><button>Action 1</button></li>
                                     <li><button>Action 2</button></li>
                                     <li><button>Action 3</button></li>
                                 </ul>
                             </div>
                             <div class="dropdown pull-left" style="margin:0 10px;" dropdown>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                     Action
-                                    <span class="caret"></span>
+                                    <span class="dropdown__caret"></span>
                                 </button>
-                                <ul class="dropdown-menu pull-right">
+                                <ul class="dropdown__menu pull-right">
                                     <li><button>Action 1</button></li>
                                     <li><button>Action 2</button></li>
                                     <li><button>Action 3</button></li>
@@ -230,22 +230,22 @@
 
                         <pre class="prettyprint lang-html linenums">
                             <div class="dropdown" dropdown ng-non-bindable>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                     Action
-                                    <span class="caret"></span>
+                                    <span class="dropdown__caret"></span>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown__menu">
                                     <li><button>Action 1</button></li>
                                     <li><button>Action 2</button></li>
                                     <li><button>Action 3</button></li>
                                 </ul>
                             </div>
                             <div class="dropdown" dropdown ng-non-bindable>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                     Action
-                                    <span class="caret"></span>
+                                    <span class="dropdown__caret"></span>
                                 </button>
-                                <ul class="dropdown-menu pull-right">
+                                <ul class="dropdown__menu pull-right">
                                     <li><button>Action 1</button></li>
                                     <li><button>Action 2</button></li>
                                     <li><button>Action 3</button></li>
@@ -256,8 +256,8 @@
 
                     <p>Another example shows customization of dropdown</p>
                     <ol class="simple-list">
-                        <li><code>dropdown-toggle</code> item is changed with classes <code>btn btn--primary</code></li>
-                        <li>Label is added on the of menu with class <code>menu-label</code></li>
+                        <li><code>dropdown__toggle</code> item is changed with classes <code>btn btn--primary</code></li>
+                        <li>Label is added on the of menu with class <code>dropdown__menu-label</code></li>
                         <li>There is a use of divder</li>
                         <li>Items used in the menu have different tags (both <code>button</code> and <code>a</code>)</li>
                         <li>Item can be <code>disabled</code></li>
@@ -266,12 +266,12 @@
                     <div class="docs-preview">
                         <div class="preview-area clearfix">
                             <div class="dropdown pull-left" dropdown>
-                                <button class="btn btn--primary dropdown-toggle" dropdown-toggle>
+                                <button class="btn btn--primary dropdown__toggle" dropdown__toggle>
                                     Special choice
-                                    <span class="caret white"></span>
+                                    <span class="dropdown__caret white"></span>
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li><div class="menu-label">Choose one of items</div></li>
+                                <ul class="dropdown__menu">
+                                    <li><div class="dropdown__menu-label">Choose one of items</div></li>
                                     <li class="divider"></li>
                                     <li><button>Action Button</button></li>
                                     <li><button disabled>Disabled Button</button></li>
@@ -284,12 +284,12 @@
 
                         <pre class="prettyprint lang-html linenums">
                             <div class="dropdown" dropdown ng-non-bindable>
-                                <button class="btn btn--primary dropdown-toggle" dropdown-toggle>
+                                <button class="btn btn--primary dropdown__toggle" dropdown__toggle>
                                     Special choice
-                                    <span class="caret white"></span>
+                                    <span class="dropdown__caret white"></span>
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li><div class="menu-label">Choose one of items</div></li>
+                                <ul class="dropdown__menu">
+                                    <li><div class="dropdown__menu-label">Choose one of items</div></li>
                                     <li class="divider"></li>
                                     <li><button>Action Button</button></li>
                                     <li><button disabled>Disabled Button</button></li>
@@ -301,16 +301,16 @@
                         </pre>
                     </div>
 
-                    <p>To get upside positioned menu, add class <code>dropup</code> near <code>dropdown</code>. Example:</p>
+                    <p>To get upside positioned menu, add class <code>dropdown--dropup</code> near <code>dropdown</code>. Example:</p>
 
                     <div class="docs-preview">
                         <div class="preview-area clearfix">
-                            <div class="dropdown dropup" dropdown>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                            <div class="dropdown dropdown--dropup" dropdown>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                     Dropup menu
-                                    <span class="caret"></span>
+                                    <span class="dropdown__caret"></span>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown__menu">
                                     <li><button><i class="icon-trash"></i>Delete</button></li>
                                     <li><button><i class="icon-pencil"></i>Edit</button></li>
                                 </ul>
@@ -318,12 +318,12 @@
                         </div>
 
                         <pre class="prettyprint lang-html linenums">
-                            <div class="dropdown dropup" dropdown ng-non-bindable>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                            <div class="dropdown dropdown--dropup" dropdown ng-non-bindable>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                     Dropup menu
-                                    <span class="caret"></span>
+                                    <span class="dropdown__caret"></span>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown__menu">
                                     <li><button><i class="icon-trash"></i>Delete</button></li>
                                     <li><button><i class="icon-pencil"></i>Edit</button></li>
                                 </ul>
@@ -331,15 +331,15 @@
                         </pre>
                     </div>
 
-                    <p>There is another style for big dropdowns, mainly used for important dropdowns (top level buttons), and this is achieved with the class<code>dropdown-big</code> near <code>dropdown</code>. Example:</p>
+                    <p>There is another style for big dropdowns, mainly used for important dropdowns (top level buttons), and this is achieved with the class<code>dropdown--big</code> near <code>dropdown</code>. Example:</p>
 
                     <div class="docs-preview">
                         <div class="preview-area clearfix" style="padding:0;height:48px">
-                            <div class="dropdown dropdown-big pull-left" dropdown>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                            <div class="dropdown dropdown--big pull-left" dropdown>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                     <i class="svg-icon-settings"></i>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown__menu">
                                     <li><button><i class="icon-external"></i>Open link</button></li>
                                     <li><button><i class="icon-trash"></i>Remove item</button></li>
                                     <li><button><i class="icon-list-plus"></i>Add list of items</button></li>
@@ -349,11 +349,11 @@
                         </div>
 
                         <pre class="prettyprint lang-html linenums">
-                            <div class="dropdown dropdown-big" dropdown ng-non-bindable>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                            <div class="dropdown dropdown--big" dropdown ng-non-bindable>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                     <i class="svg-icon-settings"></i>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown__menu">
                                     <li><button><i class="icon-external"></i>Open link</button></li>
                                     <li><button><i class="icon-trash"></i>Remove item</button></li>
                                     <li><button><i class="icon-list-plus"></i>Add list of items</button></li>
@@ -363,24 +363,24 @@
                         </pre>
                     </div>
 
-                    <p>For creating nested dropdown menus, create same structure for dropdown in <code>li</code> where you want nested dropdown, and add class <code>left-submenu</code> or <code>right-submenu</code> near<code>dropdown-menu</code>. Example:</p>
+                    <p>For creating nested dropdown menus, create same structure for dropdown in <code>li</code> where you want nested dropdown, and add class <code>left-submenu</code> or <code>right-submenu</code> near<code>dropdown__menu</code>. Example:</p>
 
                     <div class="docs-preview">
                         <div class="preview-area clearfix" style="padding:0;height:48px">
-                            <div class="dropdown dropdown-big" dropdown>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                            <div class="dropdown dropdown--big" dropdown>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                     <i class="svg-icon-settings"></i>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown__menu">
                                     <li><button>Action 1</button></li>
                                     <li><button>Action 2</button></li>
                                     <li>
                                         <div class="dropdown" dropdown>
-                                            <button class="dropdown-toggle" dropdown-toggle>
+                                            <button class="dropdown__toggle" dropdown__toggle>
                                                 Action 3
-                                                <i class="icon-chevron-right-thin submenu-icon"></i>
+                                                <i class="icon-chevron-right-thin dropdown__submenu-icon"></i>
                                             </button>
-                                            <ul class="dropdown-menu left-submenu">
+                                            <ul class="dropdown__menu left-submenu">
                                                 <li><button>Action Submenu 1</button></li>
                                                 <li><button>Action Submenu 2</button></li>
                                             </ul>
@@ -391,20 +391,20 @@
 
                         </div>
                         <pre class="prettyprint lang-html linenums">
-                            <div class="dropdown dropdown-big" dropdown ng-non-bindable>
-                                <button class="dropdown-toggle" dropdown-toggle>
+                            <div class="dropdown dropdown--big" dropdown ng-non-bindable>
+                                <button class="dropdown__toggle" dropdown__toggle>
                                      <i class="svg-icon-settings"></i>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown__menu">
                                     <li><button>Action 1</button></li>
                                     <li><button>Action 2</button></li>
                                     <li>
                                         <div class="dropdown" dropdown>
-                                            <button class="dropdown-toggle" dropdown-toggle>
+                                            <button class="dropdown__toggle" dropdown__toggle>
                                                 Action 3
-                                                <i class="icon-chevron-right-thin submenu-icon"></i>
+                                                <i class="icon-chevron-right-thin dropdown__submenu-icon"></i>
                                             </button>
-                                            <ul class="dropdown-menu left-submenu">
+                                            <ul class="dropdown__menu left-submenu">
                                                 <li><button>Action Submenu 1</button></li>
                                                 <li><button>Action Submenu 2</button></li>
                                             </ul>

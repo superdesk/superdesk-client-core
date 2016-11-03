@@ -1,5 +1,5 @@
 <li>
-    <div class="menu-label" translate>Create new item</div>
+    <div class="dropdown__menu-label" translate>Create new item</div>
 </li>
 
 <li ng-if="profiles.length === 0">
@@ -33,7 +33,7 @@
 <li class="divider"></li>
 
 <li>
-    <div class="menu-label" translate>From template</div>
+    <div class="dropdown__menu-label" translate>From template</div>
 </li>
 <div ng-show="contentTemplates.length">
     <li ng-repeat="template in contentTemplates | orderBy:'template_name'">

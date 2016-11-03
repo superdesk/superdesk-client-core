@@ -276,9 +276,9 @@ function DropdownPositionDirective($document) {
                 }
 
                 if (closeToBottom() && !isInlineOriented) {
-                    element.addClass('dropup');
+                    element.addClass('dropdown--dropup');
                 } else if (!isInlineOriented) {
-                    element.removeClass('dropup');
+                    element.removeClass('dropdown--dropup');
                 }
 
                 var isCloseToLeft = closeToLeft(),
@@ -300,19 +300,19 @@ function DropdownPositionDirective($document) {
 
                 if (isInlineOriented) {
                     if (isCloseToLeft && !isCloseToRight) {
-                        element.removeClass('dropleft').addClass('dropright');
+                        element.removeClass('dropdown--dropleft').addClass('dropdown--dropright');
                     } else if (isCloseToRight && !isCloseToLeft) {
-                        element.removeClass('dropright').addClass('dropleft');
+                        element.removeClass('dropdown--dropright').addClass('dropdown--dropleft');
                     } else {
-                        element.removeClass('dropright dropleft').addClass('dropdown-noarrow');
+                        element.removeClass('dropdown--dropright dropdown--dropleft').addClass('dropdown--noarrow');
                     }
                 }
             });
 
             function checkOrientation() {
-                menu = element.children('.dropdown-menu');
+                menu = element.children('.dropdown__menu');
                 isRightOriented = menu.hasClass('pull-right');
-                isInlineOriented = element.hasClass('dropright') || element.hasClass('dropleft');
+                isInlineOriented = element.hasClass('dropdown--dropright') || element.hasClass('dropdown--dropleft');
             }
 
             // In authoring or modal, make dropdown's relative to theirs edge
@@ -337,7 +337,7 @@ function DropdownPositionDirective($document) {
 
             function closeToRight() {
                 var docWidth = $document.width(),
-                    elemPosition = element.offset().left + element.find('.dropdown-menu').width();
+                    elemPosition = element.offset().left + element.find('.dropdown__menu').width();
 
                 return (docWidth - elemPosition) < tolerance;
             }
@@ -418,7 +418,7 @@ function DropdownFocus(Keys) {
 
                 if (isOpen) {
                     _.defer(function() {
-                        var buttonList = elem.find('button:not([disabled]):not(.dropdown-toggle)');
+                        var buttonList = elem.find('button:not([disabled]):not(.dropdown__toggle)');
                         var handlers = {};
 
                         /**
@@ -468,7 +468,7 @@ function DropdownFocus(Keys) {
                              * but exclude category button
                              */
                             if (categoryButton.length > 0) {
-                                var newList = elem.find('button:not([disabled]):not(.dropdown-toggle)');
+                                var newList = elem.find('button:not([disabled]):not(.dropdown__toggle)');
                                 buttonList = _.without(newList, categoryButton[0]);
                             }
 
@@ -479,7 +479,7 @@ function DropdownFocus(Keys) {
                                         mainList[0].focus();
                                     }
                                 } else {
-                                    var buttonSet = elem.find('button:not([disabled]):not(.dropdown-toggle)');
+                                    var buttonSet = elem.find('button:not([disabled]):not(.dropdown__toggle)');
                                     if (buttonSet[0] !== undefined) {
                                         buttonSet[0].focus();
                                     }

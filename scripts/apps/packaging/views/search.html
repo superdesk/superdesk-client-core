@@ -7,8 +7,8 @@
 
         <div class="filter-list">
             <div class="dropdown group-select pull-right" ng-if="multiSelected.length" dropdown>
-                <div class="btn dropdown-toggle" dropdown-toggle><i class="icon-package-plus"></i> {{'Add items' | translate}}</div>
-                <ul class="dropdown-menu pull-right">
+                <div class="btn dropdown__toggle" dropdown__toggle><i class="icon-package-plus"></i> {{'Add items' | translate}}</div>
+                <ul class="dropdown__menu pull-right">
                     <li ng-repeat="t in groupList">
                         <button option="{{ t | uppercase  }}" ng-click="addMultiItemsToGroup(t);">{{ t | uppercase | translate }}</button>
                     </li>
@@ -31,10 +31,10 @@
                     <p><span class="keyword" ng-if="pitem.slugline">{{ pitem.slugline }}</span>{{pitem.headline || pitem.type}}</p>
                     <ul class="item-functions" ng-if="!itemInPackage(pitem) && !pitem.multi">
                     <li class="dropdown group-select" dropdown>
-                        <button title="Add to package" class="dropdown-toggle" dropdown-toggle>
+                        <button title="Add to package" class="dropdown__toggle" dropdown__toggle>
                             <i class="icon-package-plus"></i>
                         </button>
-                        <ul class="dropdown-menu pull-right">
+                        <ul class="dropdown__menu pull-right">
                             <li ng-repeat="t in groupList">
                                 <button option="{{ t | uppercase  }}" ng-click="addItemToGroup(t, pitem);">{{ t | uppercase  }}</button>
                             </li>

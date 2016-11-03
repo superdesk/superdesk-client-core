@@ -16,7 +16,7 @@ export function MarkHighlightsDropdown(desks, highlightsService, $timeout) {
             highlightsService.get(desks.getCurrentDeskId()).then(function(result) {
                 scope.highlights = result._items;
                 $timeout(function () {
-                    var highlightDropdown = angular.element('.more-activity-menu.open .dropdown-noarrow');
+                    var highlightDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
                     var buttons = highlightDropdown.find('button:not([disabled])');
                     if (buttons.length > 0) {
                         buttons[0].focus();

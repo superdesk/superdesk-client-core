@@ -1,4 +1,4 @@
-<div class="multiedit-menu">
+<div class="dropdown__menu--multiedit">
     <ul>
         <li ng-repeat="item in items">
             <button ng-click="toggle(item._id); $event.stopPropagation();" ng-class="{disabled: item._id === current}">
@@ -10,7 +10,7 @@
         <li ng-if="items.length === 0"><button translate>NO SUGGESTIONS.</button></li>
     </ul>
 </div>
-<div class="fieldset dropdown-menu__footer">
+<div class="fieldset dropdown__menu-footer">
     <button class="btn btn--primary" ng-click="open(); $event.stopPropagation();" translate>Ok</button>
     <button class="btn" translate>Cancel</button>
 </div>

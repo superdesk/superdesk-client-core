@@ -44,18 +44,18 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
              *
              */
             scope.highlightsHotkey = function () {
-                elem.find('.highlights-dropdown .dropdown-toggle').click();
-                elem.find('.dropdown-menu button')[0].focus();
+                elem.find('.highlights-dropdown .dropdown__toggle').click();
+                elem.find('.dropdown__menu button')[0].focus();
             };
 
             elem.on('keydown', function WorkspaceKeyboard(event) {
                 if (event.which === Keys.up) {
-                    elem.find('.dropdown-menu button:focus').parent('li').prev().children('button').focus();
+                    elem.find('.dropdown__menu button:focus').parent('li').prev().children('button').focus();
                     return false;
                 }
 
                 if (event.which === Keys.down) {
-                    elem.find('.dropdown-menu button:focus').parent('li').next().children('button').focus();
+                    elem.find('.dropdown__menu button:focus').parent('li').next().children('button').focus();
                     return false;
                 }
             });

@@ -29,7 +29,7 @@ describe('package', function() {
         var header = menu.element(by.partialLinkText('Add to current'));
         expect(header.isPresent()).toBeFalsy();
         // Close menu.
-        menu.element(by.css('.close-button')).click();
+        menu.element(by.css('.dropdown__menu-close')).click();
     });
 
     it('reorder group package items', function() {

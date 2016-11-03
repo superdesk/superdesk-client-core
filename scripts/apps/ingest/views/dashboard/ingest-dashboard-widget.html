@@ -48,10 +48,10 @@
     </ul>
 </div>
 
-<div class="dropdown strict" dropdown>
-    <button class="dropdown-toggle" dropdown-toggle><i class="icon-white icon-dots-vertical"></i></button>
-        <ul class="dropdown-menu pull-right">
-            <li class="menu-label" translate> Show</li>
+<div class="dropdown dropdown--bigger dropdown--noarrow dropdown--no-scroll card-list__controls" dropdown>
+    <button class="dropdown__toggle" dropdown__toggle><i class="icon-white icon-dots-vertical"></i></button>
+        <ul class="dropdown__menu pull-right dropdown__menu--padded-l10">
+            <li class="dropdown__menu-label" translate> Show</li>
             <li class="divider"></li>
             <li>
                 <div>
@@ -64,7 +64,7 @@
                 <div>
                     <span class="pull-right" sd-switch ng-model="item.show_ingest_count" ng-click="setUserPreferences()"></span>
                     <label translate>Number of items</label>
-                    <span class="info" translate>in the last 24 hours.</span>
+                    <span class="dropdown__menu-info" translate>in the last 24 hours.</span>
                 </div>
             </li>
             <li class="divider"></li>
@@ -72,7 +72,7 @@
                 <div>
                     <span class="pull-right" sd-switch ng-model="item.show_time" ng-click="setUserPreferences()"></span>
                     <label translate>Time</label>
-                    <span class="info" translate>last update and last item arrived.</span>
+                    <span class="dropdown__menu-info" translate>last update and last item arrived.</span>
                 </div>
             </li>
             <li class="divider"></li>
@@ -101,7 +101,7 @@
                 </div>
             </li>
             <li class="divider"></li>
-            <li ng-if="showIngest"><a class="uppercase" ng-href="#/settings/ingest?_id={{item._id}}"><i class="icon-pencil"></i><span translate>Edit Ingest Source</span></a></li>
+            <li class="dropdown__menu-item" ng-if="showIngest"><a class="uppercase" ng-href="#/settings/ingest?_id={{item._id}}"><i class="icon-pencil"></i><span translate>Edit Ingest Source</span></a></li>
         </ul>
 </div>
 

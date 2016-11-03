@@ -989,7 +989,7 @@ form.flat, .form-flat {
 
 
 
-input, textarea, .dropdown-toggle {
+input, textarea, .dropdown__toggle {
     &.line-input {
         width: 100%;
         border-radius: 0 !important;
@@ -1010,7 +1010,7 @@ input, textarea, .dropdown-toggle {
     }
 }
 
-input, textarea, .dropdown-toggle {
+input, textarea, .dropdown__toggle {
     &.line-input {
         width: 100%;
         border-radius: 0 !important;
@@ -1036,7 +1036,7 @@ textarea {
     }
 }
 
-.dropdown-toggle {
+.dropdown__toggle {
   &.line-input {
       position: relative;
       padding: 0 15px 0 0 !important;

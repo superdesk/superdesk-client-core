@@ -19,7 +19,7 @@ function Authoring() {
     this.edit_correct_button = element(by.buttonText('Edit and Correct'));
     this.edit_kill_button = element(by.buttonText('Edit and Kill'));
 
-    this.navbarMenuBtn = element(by.css('.dropdown-toggle.sd-create-btn'));
+    this.navbarMenuBtn = element(by.css('.dropdown__toggle.sd-create-btn'));
     this.newPlainArticleLink = element(by.id('create_text_article'));
     this.newEmptyPackageLink = element(by.id('create_package'));
     this.infoIconsBox = element(by.css('.info-icons'));
@@ -108,7 +108,7 @@ function Authoring() {
     this.sendToSidebarOpened = function(desk, stage, _continue) {
         this.send_panel.click();
         var sidebar = element.all(by.css('.slide-pane')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown-toggle'));
+            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
 
         dropdown.waitReady();
         dropdown.click();
@@ -125,7 +125,7 @@ function Authoring() {
 
     this.selectDeskforSendTo = function(desk) {
         var sidebar = element.all(by.css('.slide-pane')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown-toggle'));
+            dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
 
         dropdown.waitReady();
         dropdown.click();
@@ -137,7 +137,7 @@ function Authoring() {
     };
 
     this.createTextItem = function() {
-        return element(by.css('[class="dropdown-toggle sd-create-btn"]')).click().then(function() {
+        return element(by.css('[class="dropdown__toggle sd-create-btn dropdown-toggle"]')).click().then(function() {
             return element(by.id('create_text_article')).click();
         });
     };
@@ -451,7 +451,7 @@ function Authoring() {
 
     this.markForHighlights = function() {
         openAuthoringDropdown();
-        browser.actions().mouseMove(element(by.css('.highlights-toggle .dropdown-toggle'))).perform();
+        browser.actions().mouseMove(element(by.css('.highlights-toggle .dropdown__toggle'))).perform();
     };
 
     this.toggleAutoSpellCheck = function() {
@@ -475,7 +475,7 @@ function Authoring() {
     this.checkMarkedForHighlight = function(highlight, item) {
         expect(element(by.className('icon-star')).isDisplayed()).toBeTruthy();
         browser.actions().click(element(by.className('icon-star'))).perform();
-        element.all(by.css('.dropdown-menu.open li')).then(function (items) {
+        element.all(by.css('.dropdown__menu.open li')).then(function (items) {
             expect(items[1].getText()).toContain(highlight);
         });
     };
@@ -565,7 +565,7 @@ function Authoring() {
 
     this.changeNormalTheme = function (theme) {
         element(by.className('theme-select'))
-                .element(by.className('dropdown-toggle')).click();
+                .element(by.className('dropdown__toggle')).click();
 
         element(by.className('normal-theme-list'))
                 .all(by.className(theme)).first().click();
@@ -574,7 +574,7 @@ function Authoring() {
     this.changeProofreadTheme = function (theme) {
         element(by.className('proofread-toggle')).click();
         element(by.className('theme-select'))
-                .element(by.className('dropdown-toggle')).click();
+                .element(by.className('dropdown__toggle')).click();
 
         element(by.className('proofread-theme-list'))
                 .all(by.className(theme)).first().click();
@@ -694,7 +694,7 @@ function Authoring() {
     };
 
     this.getSubjectMetadataDropdownOpened = function() {
-        return this.subject.all(by.className('dropdown-toggle')).click();
+        return this.subject.all(by.className('dropdown__toggle')).click();
     };
 
     this.getSelectedSubjects = function () {
@@ -702,7 +702,7 @@ function Authoring() {
     };
 
     this.getCategoryMetadataDropdownOpened = function() {
-        return this.anpa_category.all(by.className('dropdown-toggle')).click();
+        return this.anpa_category.all(by.className('dropdown__toggle')).click();
     };
 
     this.getSelectedCategories = function () {
@@ -737,7 +737,7 @@ function Authoring() {
 
     this.getGenreDropdown = function() {
         var genre = element(by.className('authoring-header__detailed')).all(by.css('[data-field="genre"]'));
-        return genre.all(by.className('dropdown-toggle'));
+        return genre.all(by.className('dropdown__toggle'));
     };
 
     this.getPackageItems = function(group) {

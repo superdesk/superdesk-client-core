@@ -550,12 +550,12 @@ export function ItemList(
                             {key: 'item-highlight-label'},
                             React.createElement(
                                 'div',
-                                {className: 'menu-label'},
+                                {className: 'dropdown__menu-label'},
                                 gettext('Marked For')
                             ),
                             React.createElement(
                                 'button',
-                                {className: 'close-button', onClick: closeActionsMenu},
+                                {className: 'dropdown__menu-close', onClick: closeActionsMenu},
                                 React.createElement(
                                     'i',
                                     {className: 'icon-close-small icon-white'}
@@ -567,7 +567,7 @@ export function ItemList(
                     return React.createElement(
                         'ul',
                         {
-                            className: 'dropdown dropdown-menu highlights-list-menu open',
+                            className: 'dropdown dropdown__menu highlights-list-menu open',
                             onMouseEnter: this.stopTimeout,
                             onMouseLeave: this.close
                         },
@@ -645,7 +645,7 @@ export function ItemList(
                             {className: 'highlights-list dropdown'},
                             React.createElement(
                                 'button',
-                                {className: 'dropdown-toggle'},
+                                {className: 'dropdown__toggle'},
                                 React.createElement('i', {
                                     className: classNames({
                                         'icon-star': highlights.length === 1,
@@ -699,9 +699,9 @@ export function ItemList(
 
                 render: function () {
                     return React.createElement('dd',
-                            {className: 'dropdown dropup more-actions'},
+                            {className: 'dropdown dropdown--dropup more-actions'},
                             React.createElement('button', {
-                                className: 'dropdown-toggle',
+                                className: 'dropdown__toggle',
                                 onMouseOver: this.toggle,
                                 onMouseLeave: this.close
                             },
@@ -725,14 +725,14 @@ export function ItemList(
 
                     var elem = React.createElement('div',
                             {
-                                className: 'dropdown-menu more-activity-menu',
+                                className: 'dropdown__menu more-activity-menu',
                                 onMouseOver: this.toggle,
                                 onMouseLeave: this.close
                             },
                             React.createElement('ul', {}, desks)
                             );
 
-                    var icon = ReactDOM.findDOMNode(this).getElementsByClassName('dropdown-toggle')[0];
+                    var icon = ReactDOM.findDOMNode(this).getElementsByClassName('dropdown__toggle')[0];
 
                     renderToBody(elem, icon);
                 }
@@ -1146,7 +1146,7 @@ export function ItemList(
                     return React.createElement(
                         'ul',
                         {
-                            className: 'dropdown dropdown-menu more-activity-menu open',
+                            className: 'dropdown dropdown__menu more-activity-menu open',
                             style: {display: 'block', minWidth: 200}
                         },
                         menu
@@ -1160,11 +1160,11 @@ export function ItemList(
 
                         React.createElement(
                             'div',
-                            {className: 'item-actions-menu dropdown-big open'},
+                            {className: 'item-actions-menu dropdown--big open'},
                             React.createElement(
                                 'button',
                                 {
-                                    className: 'more-activity-toggle condensed dropdown-toggle',
+                                    className: 'more-activity-toggle condensed dropdown__toggle',
                                     onClick: this.toggle,
                                     onDoubleClick: this.stopEvent
                                 },
@@ -1179,10 +1179,10 @@ export function ItemList(
                 return React.createElement(
                     'li',
                     null,
-                    React.createElement('div', {className: 'menu-label'}, gettextCatalog.getString(props.label),
+                    React.createElement('div', {className: 'dropdown__menu-label'}, gettextCatalog.getString(props.label),
                         props.label === 'Actions' ? React.createElement(
                             'button',
-                            {className: 'close-button', onClick: closeActionsMenu},
+                            {className: 'dropdown__menu-close', onClick: closeActionsMenu},
                             React.createElement(
                                 'i',
                                 {className: 'icon-close-small'}
@@ -1262,17 +1262,17 @@ export function ItemList(
                             {onMouseEnter: this.open, onMouseLeave: this.close, onClick: this.closeMenu},
                             React.createElement(
                                 'div',
-                                {className: 'dropdown dropdown-noarrow' + (this.state.open ? ' open' : '')},
+                                {className: 'dropdown dropdown--noarrow' + (this.state.open ? ' open' : '')},
                                 React.createElement(
                                     'a',
-                                    {className: 'dropdown-toggle', title: gettextCatalog.getString(activity.label)},
+                                    {className: 'dropdown__toggle', title: gettextCatalog.getString(activity.label)},
                                     activity.icon ? React.createElement('i', {className: 'icon-' + activity.icon}, '') : null,
                                     gettextCatalog.getString(activity.label),
-                                    React.createElement('i', {className: 'icon-chevron-right-thin submenu-icon'})
+                                    React.createElement('i', {className: 'icon-chevron-right-thin dropdown__submenu-icon'})
                                 ),
                                 this.state.open ? $injector.invoke(activity.dropdown, activity, {
                                     item: this.props.item,
-                                    className: 'dropdown-menu upward ' + this.state.position,
+                                    className: 'dropdown__menu upward ' + this.state.position,
                                     noHighlightsLabel: gettextCatalog.getString('No available highlights'),
                                     noLanguagesLabel: gettextCatalog.getString('No available translations')
                                 }) : null

@@ -1,12 +1,12 @@
 <div class="dropdown theme-select pull-right" dropdown>
-    <button class="dropdown-toggle" dropdown-toggle>
+    <button class="dropdown__toggle" dropdown__toggle>
         <i class="icon-chevron-down-thin"></i>
     </button>
-    <div class="dropdown-menu pull-right" ng-click="$event.stopPropagation()">
+    <div class="dropdown__menu pull-right" ng-click="$event.stopPropagation()">
         <ul class="normal-theme-list">
             <li>
                 <i class="theme-status" ng-class="{active: key === 'theme'}"></i>
-                <div class="menu-label" translate>Choose Normal Theme</div>
+                <div class="dropdown__menu-label" translate>Choose Normal Theme</div>
             </li>
             <li>
                 <div class="btn-group">
@@ -24,7 +24,7 @@
         <ul class="proofread-theme-list">
             <li>
                 <i class="theme-status" ng-class="{active: key === 'proofreadTheme'}"></i>
-                <div class="menu-label" translate>Choose Proofread Theme</div>
+                <div class="dropdown__menu-label" translate>Choose Proofread Theme</div>
             </li>
             <li>
                 <div class="btn-group">

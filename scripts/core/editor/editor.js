@@ -846,8 +846,8 @@ export default angular.module('superdesk.apps.editor', ['superdesk.apps.editor.s
                         editorElem.on('contextmenu', function(event) {
                             if (editor.isErrorNode(event.target)) {
                                 event.preventDefault();
-                                var menu = elem[0].getElementsByClassName('dropdown-menu')[0],
-                                    toggle = elem[0].getElementsByClassName('dropdown-toggle')[0];
+                                var menu = elem[0].getElementsByClassName('dropdown__menu')[0],
+                                    toggle = elem[0].getElementsByClassName('dropdown__toggle')[0];
                                 if (elem.find('.dropdown.open').length) {
                                     click(toggle);
                                 }

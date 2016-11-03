@@ -1,15 +1,15 @@
 <div id="subnav" class="subnav subnav--authoring" ng-class="{'auth-sendto': views.send}" sd-media-query min-width="900">
 
-    <div class="dropdown dropright lock-avatar pull-left" ng-show="isLocked()" dropdown>
-        <figure class="avatar small avatar-with-info" dropdown-toggle>
+    <div class="dropdown dropdown--dropright lock-avatar pull-left" ng-show="isLocked()" dropdown>
+        <figure class="avatar small avatar-with-info" dropdown__toggle>
             <div class="logged-info"></div>
             <div class="user-image">
                 <img sd-user-avatar data-user="item.lock_user">
             </div>
         </figure>
 
-        <div class="dropdown-menu">
-            <div class="menu-label" translate>Locked by</div>
+        <div class="dropdown__menu">
+            <div class="dropdown__menu-label" translate>Locked by</div>
             <figure class="avatar large">
                 <div class="user-image">
                     <img sd-user-avatar data-user="item.lock_user">
@@ -126,10 +126,10 @@
         <div id="authoring-extra-dropdown"
              ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight"
              class="navbtn dropdown pull-left strict" dropdown>
-            <button id="more-actions" class="dropdown-toggle" title="{{ :: 'More actions' | translate }}" dropdown-toggle>
+            <button id="more-actions" class="dropdown__toggle" title="{{ :: 'More actions' | translate }}" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
-            <div class="dropdown-menu pull-right">
+            <div class="dropdown__menu pull-right">
                 <ul ng-controller="TemplateMenu as templateMenu" ng-show="canSaveTemplate()">
                   <li>
                     <button type="button"
@@ -149,46 +149,46 @@
                 <ul id="multiedit" ng-if="item.task.desk && itemActions.multi_edit && !isLocked()" ng-show="action !== 'kill'">
                     <li>
                     <div class="dropdown multiedit-toggle" dropdown>
-                      <button class="dropdown-toggle" dropdown-toggle>
+                      <button class="dropdown__toggle" dropdown__toggle>
                         {{ :: 'Multiedit' | translate }}
-                        <i class="icon-chevron-right-thin submenu-icon"></i>
+                        <i class="icon-chevron-right-thin dropdown__submenu-icon"></i>
                       </button>
-                      <ul class="dropdown-menu right-submenu" sd-multiedit-dropdown></ul>
+                      <ul class="dropdown__menu right-submenu" sd-multiedit-dropdown></ul>
                     </div>
                   </li>
                 </ul>
 
                 <ul ng-if="item.task.desk && itemActions.mark_item">
                   <li class="divider"></li>
-                  <li><span class="menu-label" translate>Highlights</span></li>
+                  <li><span class="dropdown__menu-label" translate>Highlights</span></li>
                   <li>
                     <div class="dropdown highlights-toggle" dropdown>
-                      <button class="dropdown-toggle" dropdown-toggle>
+                      <button class="dropdown__toggle" dropdown__toggle>
                         {{ :: 'Mark item for' | translate }}
-                        <i class="icon-chevron-right-thin submenu-icon"></i>
+                        <i class="icon-chevron-right-thin dropdown__submenu-icon"></i>
                       </button>
-                      <ul class="dropdown-menu right-submenu" sd-mark-highlights-dropdown></ul>
+                      <ul class="dropdown__menu right-submenu" sd-mark-highlights-dropdown></ul>
                     </div>
                   </li>
                 </ul>
 
                 <ul ng-if="isTranslationAvailable()">
                   <li class="divider"></li>
-                  <li><span class="menu-label" translate>Translations</span></li>
+                  <li><span class="dropdown__menu-label" translate>Translations</span></li>
                   <li>
                     <div class="dropdown highlights-toggle" dropdown>
-                      <button class="dropdown-toggle" dropdown-toggle>
+                      <button class="dropdown__toggle" dropdown__toggle>
                         {{ :: 'Translate item to' | translate }}
-                        <i class="icon-chevron-right-thin submenu-icon"></i>
+                        <i class="icon-chevron-right-thin dropdown__submenu-icon"></i>
                       </button>
-                      <ul class="dropdown-menu right-submenu" sd-translation-dropdown></ul>
+                      <ul class="dropdown__menu right-submenu" sd-translation-dropdown></ul>
                     </div>
                   </li>
                 </ul>
 
                 <ul ng-if="_editable" ng-controller="SpellcheckMenu as spellcheckMenu">
                     <li class="divider"></li>
-                    <li><span class="menu-label" translate>Spell Checker</span></li>
+                    <li><span class="dropdown__menu-label" translate>Spell Checker</span></li>
                     <li ng-if="!useTansaProofing()">
                       <span>
                         <span class="pull-right"

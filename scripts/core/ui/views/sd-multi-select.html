@@ -1,10 +1,10 @@
-<div class="dropdown dropright dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position>
+<div class="dropdown dropdown--dropright dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position>
 
-    <button class="dropdown-toggle" dropdown-toggle ng-disabled="disabled" ng-if="!disabled">
+    <button class="dropdown__toggle" dropdown__toggle ng-disabled="disabled" ng-if="!disabled">
         <i class="icon-white icon-plus-large"></i>
     </button>
 
-    <ul class="dropdown-menu nested-menu pull-right">
+    <ul class="dropdown__menu nested-menu pull-right">
         <li>
             <div sd-typeahead items="list" term="selectedTerm" search="searchTerms(term)" select="selectItem(item)" data-disabled="disabled">
                 <ul class="item-list" vs-repeat vs-scroll-parent=".item-list" ng-if="activeList">

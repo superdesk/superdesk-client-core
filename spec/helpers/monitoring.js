@@ -294,7 +294,7 @@ function Monitoring() {
         browser.actions().mouseMove(itemElem).perform();
         itemElem.element(by.className('icon-dots-vertical')).click();
 
-        var menu = element(by.css('.dropdown-menu.open'));
+        var menu = element(by.css('.dropdown__menu.open'));
         menu.element(by.partialLinkText('Unspike')).click();
 
         var sidebar = element.all(by.css('.slide-pane')).last();
@@ -315,7 +315,7 @@ function Monitoring() {
         var dotsElem = itemElem.element(by.className('icon-dots-vertical'));
         waitFor(dotsElem, 1000);
         dotsElem.click();
-        return element(by.css('.dropdown-menu.open'));
+        return element(by.css('.dropdown__menu.open'));
     };
 
     this.showMonitoringSettings = function() {

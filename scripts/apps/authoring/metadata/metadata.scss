@@ -6,7 +6,6 @@
 
 
 .sd-widget.metadata {
-
     .widget-content {
         background: $sd-background;
         padding: 0;
@@ -14,10 +13,8 @@
         overflow: auto;
         margin: 5px 0 20px;
     }
-
     .basic-list {
         margin-bottom: 20px;
-
         &.top-border {
             border-top: 1px dotted #ddd;
             margin-bottom: 30px;
@@ -61,50 +58,6 @@
                 &.visible {
                     overflow: visible;
                 }
-                .dropdown {
-                    margin-right: -5px;
-                    .dropdown-toggle {
-                        display: inline-block;
-                        max-width: 100%;
-                        min-width: 40px;
-                        @include border-box();
-                        height: 28px;
-                        margin-top: -5px;
-                        border-radius: 2px;
-                        border: 1px solid #f8f8f8;
-                        padding: 4px 10px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        &:hover {
-                            cursor: pointer;
-                        }
-                    }
-                    .dropdown-menu {
-                        &:before {
-                            display: none;
-                        }
-                        margin: 0;
-                        margin-top: -5px;
-                        @include border-box();
-                        @include border-radius(0);
-                        max-width: $tabpane-width - 40px;
-                        button {
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                        }
-                    }
-                }
-                &.small {
-                    .dropdown {
-                        .dropdown-toggle {
-                            width: 40px;
-                        }
-                        .dropdown-menu    {
-                            width: 70px;
-                            min-width: 0;
-                        }
-                    }
-                }
             }
             &.wider {
                 .data {
@@ -143,19 +96,15 @@
     .terms-box {
         @include clearfix();
         height: auto !important;
-
         .term-editor {
           input[type="text"] {
             padding-right: 25px;
             text-align: left;
           }
-
           .item-list {
             max-width: $tabpane-width - 40px;
           }
-
         }
-
         .terms {
             @include user-select(none);
             clear: both;
@@ -198,23 +147,13 @@
                 }
             }
         }
-
-        .dropdown-nested {
-            position: absolute;
-            right: 0px;
-            margin-top: 0px;
-        }
-
           select {
           width: 120px;
         }
-
           .sd-checkbox {
           vertical-align: middle;
         }
-
     }
-
     .ednote {
         @include clearfix();
         height: auto !important;
@@ -225,8 +164,6 @@
             width: 100% !important;
         }
     }
-
-
 
 }
 

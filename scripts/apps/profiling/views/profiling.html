@@ -5,12 +5,12 @@
                 <div class="sortbar pull-left">
                     <span class="lab pull-left" translate>Profile:</span>
                     <div class="dropdown pull-left" dropdown>
-                        <button class="dropdown-toggle" dropdown-toggle>
+                        <button class="dropdown__toggle" dropdown__toggle>
                             {{ profile_names[current_profile] }}
                             <span ng-if="!current_profile">{{ :: 'none' | translate }}</span>
-                            <b class="caret"></b>
+                            <b class="dropdown__caret"></b>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown__menu">
                             <li ng-repeat="profile in profiles">
                                 <a href="" ng-click="loadProfile(profile)">{{ profile_names[profile] }}</a>
                             </li>
