@@ -441,26 +441,31 @@ function Authoring() {
         });
     };
 
-    this.markForHighlights = function() {
+    function openAuthoringDropdown() {
         var toggle = element(by.id('authoring-extra-dropdown')).element(by.className('icon-dots-vertical'));
-
         browser.wait(function() {
             return toggle.isDisplayed();
         });
-
         toggle.click();
+    }
+
+    this.markForHighlights = function() {
+        openAuthoringDropdown();
         browser.actions().mouseMove(element(by.css('.highlights-toggle .dropdown-toggle'))).perform();
     };
 
     this.toggleAutoSpellCheck = function() {
-        var toggle = element(by.id('authoring-extra-dropdown')).element(by.className('icon-dots-vertical'));
-
-        browser.wait(function() {
-            return toggle.isDisplayed();
-        });
-
-        toggle.click();
+        openAuthoringDropdown();
         element(by.model('spellcheckMenu.isAuto')).click();
+    };
+
+    this.openLiveSuggest = function() {
+        openAuthoringDropdown();
+        element(by.css('.live-suggest-menu-item')).click();
+    };
+
+    this.getSuggestedItems = function() {
+        return element.all(by.css('sd-suggest ul[sd-list-view] > li.list-item-view'));
     };
 
     this.getSubnav = function() {

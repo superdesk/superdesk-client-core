@@ -10,7 +10,8 @@ ArticleEditDirective.$inject = [
     'session',
     'gettext',
     'history',
-    '$interpolate'
+    '$interpolate',
+    'suggest'
 ];
 export function ArticleEditDirective(
     autosave,
@@ -24,7 +25,8 @@ export function ArticleEditDirective(
     session,
     gettext,
     history,
-    $interpolate
+    $interpolate,
+    suggest
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/article-edit.html',
@@ -266,6 +268,8 @@ export function ArticleEditDirective(
                     ddlHelpline[0].options[0].selected = true;
                 });
             };
+
+            scope.$watch('item.body_html', () => suggest.trigger(scope.item, scope.origItem));
 
             scope.$watch('item.flags.marked_for_sms', function(isMarked) {
                 if (isMarked) {

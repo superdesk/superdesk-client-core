@@ -303,7 +303,7 @@ describe('authoring', function() {
         ctrlShiftKey('e');
         browser.sleep(300);
 
-        expect(element(by.className('authoring-embedded')).isDisplayed()).toBe(false);
+        expect(element.all(by.css('.authoring-embedded .embedded-auth-view')).count()).toBe(0);
     });
 
     it('can display monitoring after publishing an item using full view of authoring', function () {

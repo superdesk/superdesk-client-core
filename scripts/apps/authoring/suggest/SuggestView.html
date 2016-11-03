@@ -1,0 +1,80 @@
+<div class="live-suggest">
+	<div ng-show="showItem === null" class="item-list">
+		<div class="live-suggest__header subnav">
+			<h3 class="subnav__page-title">Live Suggestions</h3>
+			<a class="close" ng-click="ctrl.close()"><i class="icon-close-small"></i></a>
+		</div>
+		<div class="live-suggest__body">
+			<h6 class="no-suggestions" ng-hide="items">Suggestions will appear here once the article's body starts changing...</h6>
+			<ul sd-list-view class="list-view compact-view" data-items="items" ng-show="items">
+				<li class="media-box" ng-click="ctrl.showItem(item)">
+					<div class="line item-info">
+						<i sd-filetype-icon data-item="item"></i>
+						<span class="keyword">{{ item.slugline || '-' }}</span>
+						<span class="word-count">
+							<b>{{ item.word_count || 0 }}</b>
+							<span translate translate-n="item.word_count" translate-plural="WORDS">
+								WORD
+							</span>
+						</span>
+						<div class="item-info__right">
+							<label translate>Created</label>&nbsp;
+							<span class="date" sd-datetime data="item.firstcreated"></span>&nbsp;
+							<label translate>by</label>
+							&nbsp;{{ctrl.displayName(item.original_creator)}}
+						</div>
+					</div>
+					<div class="info">
+						<b>{{ item.headline }}</b>
+						<span ng-show="item.duedate">
+							<i class="icon-desk-time"></i>{{item.duedate}}
+						</span>
+						<span ng-show="item.tasks">
+							<i class="icon-desk-task"></i>{{item.tasks}}
+						</span>
+						<span ng-show="item.attachments">
+							<i class="icon-desk-attach"></i>{{item.attachments}}
+						</span>
+						<span ng-show="item.links">
+							<i class="icon-desk-link"></i>{{item.links}}
+						</span>
+						<span ng-show="item.comments">
+							<i class="icon-desk-comments"></i>{{item.comments}}
+						</span>
+						<div sd-html-preview="item.body_html"></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div ng-show="showItem !== null" class="item-details">
+		<div class="live-suggest__header subnav">
+			<h3 class="subnav__page-title" ng-click="ctrl.hideItem()">
+				<i class="backlink black">Back</i>
+			</h3>
+			<a class="close" ng-click="ngShow = false"><i class="icon-close-small"></i></a>
+		</div>
+		<div class="item-details__body">
+			<div class="line item-info">
+				<i sd-filetype-icon data-item="showItem"></i>
+				<span class="keyword">{{ showItem.slugline || '-' }}</span>
+				<span class="word-count">
+					<b>{{ showItem.word_count || 0 }}</b>
+					<span translate translate-n="showItem.word_count" translate-plural="WORDS">
+						WORD
+					</span>
+				</span>
+				<div class="item-info__right">
+					<label translate>Created</label>
+					<span class="date" sd-datetime data="showItem.firstcreated"></span>
+					<label translate>by</label>
+					{{ctrl.displayName(showItem.original_creator)}}
+				</div>
+			</div>
+			<h3 class="headline">{{ showItem.headline }}</h3>
+			<div class="abstract" sd-html-preview="showItem.abstract"></div>
+			<div class="body" sd-html-preview="showItem.body_html"></div>
+		</div>
+	</div>
+</div>

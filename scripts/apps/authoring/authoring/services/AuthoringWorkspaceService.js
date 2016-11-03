@@ -1,5 +1,5 @@
-AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send', 'config'];
-export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send, config) {
+AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send', 'config', 'suggest'];
+export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send, config, suggest) {
     this.item = null;
     this.action = null;
     this.state = null;
@@ -66,6 +66,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      * @param {boolean} showMonitoring when true shows the monitoring if monitoring is hidden.
      */
     this.close = function(showMonitoring) {
+        suggest.setActive(false);
         self.item = null;
         self.action = null;
         if (showMonitoring && superdeskFlags.flags.hideMonitoring) {

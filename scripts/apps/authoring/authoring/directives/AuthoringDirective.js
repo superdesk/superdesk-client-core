@@ -24,11 +24,12 @@ AuthoringDirective.$inject = [
     'reloadService',
     '$rootScope',
     '$interpolate',
-    'metadata'
+    'metadata',
+    'suggest'
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
     privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope,
-    $interpolate, metadata) {
+    $interpolate, metadata, suggest) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -47,6 +48,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.itemActions = authoring.itemActions($scope.origItem);
             $scope.highlight = !!$scope.origItem.highlight;
             $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
+            $scope.openSuggestions = () => suggest.setActive();
 
             $scope.$watch('origItem', function(new_value, old_value) {
                 $scope.itemActions = null;
