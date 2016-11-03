@@ -6,6 +6,10 @@
 
 For installation instructions, please refer to the README file at: [https://github.com/superdesk/superdesk/](https://github.com/superdesk/superdesk/ "")
 
+### Contributing
+
+Before considering contributions to the Superdesk client, please make sure to read our [contribution guidelines](https://github.com/superdesk/superdesk-client-core/blob/master/CONTRIBUTING.md).
+
 ### Build configuration
 
 To configure the build, the `superdesk.config.js` file must export a function that returns the configuration object. The configuration object can contain the keys described belowed. Dot-notation is used to illustrate the depth and group of a certain key. We use a function instead of a simple JSON object to allow the convenience of using grunt flags, as well as give access to environment variables for more diverse configurations.
