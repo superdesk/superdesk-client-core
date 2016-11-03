@@ -2,5 +2,43 @@
 @module superdesk
 @name index
 @area api
-@title Superdesk Reference
-@description Superdesk is an extensible end-to-end news production, curation and distribution platform for newsrooms.
+@title Getting started
+@description The Superdesk client is a JavaScript package that contains the application 
+running on the Superdesk server. For documentation on the server, please see 
+[this page](http://superdesk.readthedocs.io/en/latest/).
+
+The client is divided into two main parts, as can be seen by the folder structure 
+of the `scripts` folder:
+
+* `core` - holds a set of modules that are used for building functionality on top 
+of Superdesk, such as `api`, `auth`, `privileges`, generic user interface components 
+and many other tools.
+
+
+* `apps` - holds a set of modules that represent the application's functionalities, 
+built on top of the core.
+
+### Extending Superdesk
+
+External functionality can be added on top of Superdesk and can be stored in separate 
+repositories. For example, loading an external module called `my-app` that is installed 
+into superdesk via `npm` can be done by adding the following line to `superdesk.config.js`:
+
+```
+	apps: ['my-app']
+```
+
+Since this is an array, multiple modules can be loaded. This will cause the Superdesk 
+client to load this module into itself, automatically exposing all libraries and 
+functionality, making it part of the whole ecosystem.
+
+An external application needs to export a default angular module. This angular 
+module will automatically be loaded into the app. For example:
+
+```js
+    export default angular.module('my.superdesk.app', ['api', 'auth']);
+```
+
+The above module will be loaded into the app. As you can see in the above example, 
+no extra code or configuration is needed to gain access to `core` modules. They 
+simply work by default.
