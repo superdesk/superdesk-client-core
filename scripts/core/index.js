@@ -55,8 +55,6 @@ let core = angular.module('superdesk.core', [
     'superdesk.core.translate',
     'superdesk.core.workflow',
     'superdesk.core.loading',
-    'superdesk.core.links',
-    'superdesk.core.avatar',
 
     // services/
     'superdesk.core.services.beta',
@@ -69,20 +67,7 @@ let core = angular.module('superdesk.core', [
     'superdesk.core.services.storage',
     'superdesk.core.services.pageTitle',
 
-    // directives/
-    'superdesk.core.directives.autofocus',
-    'superdesk.core.directives.throttle',
-    'superdesk.core.directives.sort',
-    'superdesk.core.directives.passwordStrength',
-    'superdesk.core.directives.searchList',
-    'superdesk.core.directives.filetypeIcon',
-    'superdesk.core.directives.check',
-    'superdesk.core.directives.confirm',
-    'superdesk.core.directives.select',
-    'superdesk.core.directives.permissions',
-    'superdesk.core.directives.dragdrop',
-    'superdesk.core.directives.typeahead',
-    'superdesk.core.directives.slider',
+    'superdesk.core.directives',
 
     'superdesk.templates-cache'
 ]);
