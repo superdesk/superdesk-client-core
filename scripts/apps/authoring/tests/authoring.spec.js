@@ -12,7 +12,6 @@ describe('authoring', function() {
     }));
 
     beforeEach(window.module('superdesk.apps.publish'));
-    beforeEach(window.module('superdesk.apps.editor'));
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.authoring'));
@@ -1981,13 +1980,17 @@ describe('authoring themes', function () {
 });
 
 describe('send item directive', function() {
-    beforeEach(window.module('superdesk.apps.editor'));
+    beforeEach(window.module(function ($provide) {
+        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
+    }));
+
+    beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.api'));
 
-    beforeEach(inject(function($templateCache) {
+    beforeEach(inject(function ($templateCache) {
         $templateCache.put('scripts/apps/authoring/views/send-item.html', '');
     }));
 

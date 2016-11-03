@@ -5,7 +5,7 @@
  * @packageName superdesk.core
  * @description Superdesk core editor version 2.
  */
-import './styles.scss';
+import './styles/editor.scss';
 
 import './editor';
 import './editor.ctrl';

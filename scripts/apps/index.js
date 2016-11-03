@@ -38,7 +38,7 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.authoring',
     'superdesk.apps.packaging',
     'superdesk.apps.editor2',
-    'superdesk.apps.editor.spellcheck',
+    'superdesk.apps.spellcheck',
     'superdesk.apps.notification',
     'superdesk.apps.highlights',
     'superdesk.apps.translations',

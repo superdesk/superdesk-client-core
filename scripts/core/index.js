@@ -11,7 +11,7 @@ import 'core/filters';
 import 'core/services';
 import 'core/directives';
 import 'core/editor2';
-import 'core/editor/spellcheck/spellcheck';
+import 'core/spellcheck';
 import 'core/features';
 import 'core/list';
 import 'core/keyboard';
