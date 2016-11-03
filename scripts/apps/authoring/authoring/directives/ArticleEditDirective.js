@@ -269,7 +269,7 @@ export function ArticleEditDirective(
 
             scope.$watch('item.flags.marked_for_sms', function(isMarked) {
                 if (isMarked) {
-                    scope.item.sms_message = scope.item.sms_message || scope.item.headline || '';
+                    scope.item.sms_message = scope.item.sms_message || scope.item.abstract || '';
                 } else if (scope.item) {
                     scope.item.sms_message = '';
                 }
