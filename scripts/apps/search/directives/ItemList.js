@@ -28,7 +28,8 @@ const DEFAULT_LIST_CONFIG = {
         'category',
         'provider',
         'expiry',
-        'desk'
+        'desk',
+        'fetchedDesk'
     ]
 };
 
@@ -1042,10 +1043,14 @@ export function ItemList(
                 },
 
                 desk: function(props) {
+                    if (!props.item.archived) {
+                        return React.createElement(ItemContainer, {item: props.item, desk: props.desk, key: 'desk'});
+                    }
+                },
+
+                fetchedDesk: function(props) {
                     if (props.item.archived) {
                         return React.createElement(FetchedDesksInfo, {item: props.item, key: 'desk'});
-                    } else {
-                        return React.createElement(ItemContainer, {item: props.item, desk: props.desk, key: 'desk'});
                     }
                 },
 
