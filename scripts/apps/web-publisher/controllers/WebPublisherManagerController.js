@@ -22,6 +22,9 @@ export function WebPublisherManagerController($scope, publisher, modal) {
     self.editSite = (site) => {
         $scope.new = site;
         self.manageSite = !self.manageSite;
+
+        publisher.setTenant(site.subdomain)
+            .queryMenus().then(menus => $scope.menus = menus);
     };
 
     self.save = () => {

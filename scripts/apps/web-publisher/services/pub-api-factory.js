@@ -17,6 +17,19 @@ export function PubAPIFactory(config, $http, $q) {
             let pubConfig = config.publisher || {};
             this._server = pubConfig.server || '';
             this._base = pubConfig.base || '';
+            this._protocol = pubConfig.protocol || 'http';
+            this._tenant = pubConfig.tenant || 'default';
+            this._domain = pubConfig.domain || '';
+        }
+
+        /**
+         * Change the tenant we are using the api for
+         *
+         * @param {string} tenant
+         * @return void
+         */
+        setTenant(tenant) {
+            this._tenant = tenant;
         }
 
         /**
@@ -76,8 +89,8 @@ export function PubAPIFactory(config, $http, $q) {
          * @param {string} code
          * @return {string}
          */
-        resourceURL(resource, code) {
-            return urljoin(this._server, this._base, resource, code ? code : '');
+        resourceURL(resource, code='') {
+            return `${this._protocol}://${this._tenant}.${this._domain}/${this._base}/${resource}/${code}`
         }
 
         /**

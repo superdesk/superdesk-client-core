@@ -5,6 +5,17 @@ export function PublisherFactory(pubapi) {
     class Publisher {
 
         /**
+         * Change the tenant we are using the api for
+         *
+         * @param {string} tenant
+         * @return this
+         */
+        setTenant(tenant) {
+            pubapi.setTenant(tenant);
+            return this;
+        }
+
+        /**
          * Create new site
          *
          * @param {Object} site
@@ -33,6 +44,16 @@ export function PublisherFactory(pubapi) {
          */
         querySites(params) {
             return pubapi.query('tenants', params);
+        }
+
+        /**
+         * Query menus
+         *
+         * @param {Object} params
+         * @return {Promise}
+         */
+        queryMenus(params) {
+            return pubapi.query('menus', params);
         }
     }
 

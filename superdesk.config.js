@@ -11,7 +11,10 @@ module.exports = function(grunt) {
         requiredMediaMetadata: ['headline', 'description_text', 'alt_text'],
         publisher: {
         	server: 'http://default.ljuba.s-lab.sourcefabric.org/',
-            base: '/api/v1'
+            base: 'api/v1',
+            domain: 'ljuba.s-lab.sourcefabric.org',
+            protocol: 'http',
+            tenant: 'default'
         },
         features: {
             webPublisher: true
