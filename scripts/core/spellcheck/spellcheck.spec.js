@@ -20,8 +20,12 @@ describe('spellcheck', function() {
         LANG = 'en-US',
         errors = [];
 
-    beforeEach(window.module('superdesk.apps.editor'));
-    beforeEach(window.module('superdesk.apps.editor.spellcheck'));
+    beforeEach(window.module(function ($provide) {
+        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
+    }));
+
+    beforeEach(window.module('superdesk.apps.editor2'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
     beforeEach(window.module('superdesk.core.preferences'));
 
     beforeEach(inject(function(dictionaries, spellcheck, $q, preferencesService) {

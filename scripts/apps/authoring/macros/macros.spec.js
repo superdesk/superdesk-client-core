@@ -4,7 +4,6 @@ describe('macros', function() {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.apps.authoring.macros'));
     beforeEach(window.module('superdesk.apps.authoring.autosave'));
-    beforeEach(window.module('superdesk.apps.editor'));
 
     var $controller;
 

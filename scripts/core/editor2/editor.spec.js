@@ -9,7 +9,7 @@ describe('text editor', function() {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.config'));
     beforeEach(window.module('superdesk.apps.editor2'));
-    beforeEach(window.module('superdesk.apps.editor.spellcheck'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(function() {
         // remove all elements from body
@@ -41,6 +41,8 @@ describe('text editor', function() {
 
     it('can spellcheck', inject(function(editor, spellcheck, $q, $rootScope) {
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
+        spyOn(spellcheck, 'getDictionary').and.returnValue($q.when([{language_id: 'en'}]));
+
         var scope = createScope('test', $rootScope);
         editor.registerScope(scope);
         editor.renderScope(scope);
@@ -60,6 +62,8 @@ describe('text editor', function() {
 
     it('can findreplace', inject(function(editor, spellcheck, $q, $rootScope) {
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
+        spyOn(spellcheck, 'getDictionary').and.returnValue($q.when([{language_id: 'en'}]));
+
         var scope = createScope('test foo and foo', $rootScope);
         editor.registerScope(scope);
 

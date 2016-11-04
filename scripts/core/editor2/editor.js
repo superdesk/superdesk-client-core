@@ -179,7 +179,11 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         if (self.settings.findreplace) {
             renderFindreplace(scope.node);
         } else if (self.settings.spellcheck || force) {
-            renderSpellcheck(scope.node, preventStore);
+            spellcheck.getDictionary(scope.language).then(function (dictionaries) {
+                if (dictionaries && dictionaries.length) {
+                    renderSpellcheck(scope.node, preventStore);
+                }
+            });
         } else {
             utils.removeHilites(scope.node);
         }
@@ -617,8 +621,8 @@ angular.module('superdesk.apps.editor2', [
         'superdesk.apps.editor2.ctrl',
         'superdesk.apps.editor2.embed',
         'superdesk.apps.editor2.content',
-        'superdesk.apps.editor.spellcheck',
-        'superdesk.apps.editor.utils',
+        'superdesk.apps.editor2.utils',
+        'superdesk.apps.spellcheck',
         'superdesk.apps.authoring',
         'angular-embed'
     ])
@@ -1593,5 +1597,5 @@ function EditorUtilsFactory() {
     };
 }
 
-angular.module('superdesk.apps.editor.utils', [])
+angular.module('superdesk.apps.editor2.utils', [])
     .factory('editorUtils', EditorUtilsFactory);

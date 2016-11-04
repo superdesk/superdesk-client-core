@@ -73,6 +73,18 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
         return dict;
     }
 
+    /*
+     * Return dictionaries for requested language
+     *
+     * @param {Object} lang
+     * @returns {Object} List of dictionaries
+     */
+    this.getDictionary = function (lang) {
+        return dictionaries.getActive(lang, getBaseLanguage(lang)).then(function (items) {
+            return items;
+        });
+    };
+
     /**
      * Get abbreviations for replacement
      *
@@ -432,6 +444,6 @@ function SpellcheckMenuController(editor, preferencesService) {
     });
 }
 
-angular.module('superdesk.apps.editor.spellcheck', ['superdesk.apps.dictionaries'])
+angular.module('superdesk.apps.spellcheck', ['superdesk.apps.dictionaries'])
     .service('spellcheck', SpellcheckService)
     .controller('SpellcheckMenu', SpellcheckMenuController);
