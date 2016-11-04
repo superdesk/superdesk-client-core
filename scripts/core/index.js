@@ -11,6 +11,7 @@ import 'core/services';
 import 'core/directives';
 import 'core/editor2';
 import 'core/spellcheck';
+import 'core/editor3';
 import 'core/features';
 import 'core/list';
 import 'core/keyboard';
@@ -55,6 +56,7 @@ let core = angular.module('superdesk.core', [
     'superdesk.core.translate',
     'superdesk.core.workflow',
     'superdesk.core.loading',
+    'superdesk.core.editor3',
 
     // services/
     'superdesk.core.services.beta',

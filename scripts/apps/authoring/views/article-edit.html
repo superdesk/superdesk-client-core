@@ -1,4 +1,4 @@
-<div class="field" sd-width="{{editor.headline.sdWidth || 'full'}}" ng-if="schema.headline" ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}" order="{{editor.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
+<div class="field" sd-width="{{editor.headline.sdWidth || 'full'}}" ng-if="schema.headline && !editor.headline.editor3" ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}" order="{{editor.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
   <label translate>Headline</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
@@ -12,6 +12,19 @@
         ng-if="_editable"
         ng-trim="false"></div>
   <div class="headline" ng-if="!_editable">{{item.headline}}</div>
+</div>
+
+<div class="field" sd-width="{{editor.headline.sdWidth || 'full'}}" ng-if="schema.headline && editor.headline.editor3" ng-class="{'limit-error': item.headline.length > schema.headline.maxlength}" order="{{editor.headline.order}}" sd-validation-error="error.headline" data-required="schema.headline.required">
+  <label translate>Headline</label>
+    <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <div id="title" class="headline"
+        sd-editor3
+        data-editor-format="editor.headline.formatOptions"
+        data-language="item.language"
+        data-value="item.headline"
+        data-on-change="autosave(item)"
+        data-read-only="!_editable"
+        data-trim="false"></div>
 </div>
 
 <div class="field" ng-if="schema.sms && item._type !== 'archived'" sd-width="{{editor.sms.sdWidth || 'full'}}" order="{{editor.sms.order}}">
@@ -59,7 +72,7 @@
     data-onchange="autosave(item)"></div>
 </div>
 
-<div class="field abstract" sd-width="{{editor.abstract.sdWidth || 'full'}}" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
+<div class="field abstract" sd-width="{{editor.abstract.sdWidth || 'full'}}" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract && !editor.abstract.editor3" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
   <label translate>Abstract</label>
     <span sd-character-count
           data-item="item.abstract"
@@ -77,6 +90,23 @@
         ng-if="_editable"
         ng-trim="false"></div>
   <div class="abstract" ng-if="!_editable" sd-html-preview="item.abstract"></div>
+</div>
+
+<div class="field abstract" sd-width="{{editor.abstract.sdWidth || 'full'}}" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract && editor.abstract.editor3" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
+  <label translate>Abstract</label>
+    <span sd-character-count
+          data-item="item.abstract"
+          data-html="true"
+          data-limit="schema.abstract.maxlength"></span>
+    <span sd-word-count data-item="item.abstract" data-html="true"></span>
+    <div id="abstract" class="abstract"
+        sd-editor3
+        data-editor-format="editor.abstract.formatOptions"
+        data-language="item.language"
+        data-value="item.abstract"
+        data-on-change="autosave(item)"
+        data-read-only="!_editable"
+        data-trim="false"></div>
 </div>
 
 <div class="field" ng-if="item._type !== 'archived' && schema.byline" sd-width="{{editor.byline.sdWidth || 'full'}}" order="{{editor.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
@@ -148,7 +178,7 @@
     </div>
 </div>
 
-<div class="field body" ng-if="!isMediaType && schema.body_html" order="{{editor.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required" sd-width="{{editor.body_html.sdWidth || 'full'}}">
+<div class="field body" ng-if="!isMediaType && schema.body_html && !editor.body_html.editor3" order="{{editor.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required" sd-width="{{editor.body_html.sdWidth || 'full'}}">
   <label translate>Body</label>
     <span sd-character-count data-item="item.body_html" data-html="true"></span>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
@@ -165,6 +195,20 @@
          data-type="item.type">
     </div>
     <div class="text-editor" sd-html-preview="item.body_html" ng-if="!_editable"></div>
+</div>
+
+<div class="field body" ng-if="!isMediaType && schema.body_html && editor.body_html.editor3" order="{{editor.body_html.order}}" sd-validation-error="error.body_html" data-required="schema.body_html.required" sd-width="{{editor.body_html.sdWidth || 'full'}}">
+  <label translate>Body</label>
+    <span sd-character-count data-item="item.body_html" data-html="true"></span>
+    <span sd-word-count data-item="item.body_html" data-html="true"></span>
+    <div id="bodyhtml"
+         sd-editor3
+         data-editor-format="editor.body_html.formatOptions"
+         data-value="item.body_html"
+         data-read-only="!_editable"
+         data-on-change="autosave(item)"
+         data-language="item.language">
+    </div>
 </div>
 
 <div class="field" ng-if="isMediaType" order="{{editor.media.order}}" sd-width="{{editor.media.sdWidth || 'full'}}">
@@ -190,7 +234,7 @@
   </div>
 </div>
 
-<div ng-if="isMediaType" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text" sd-width="{{editor.media_description.sdWidth || 'full'}}" data-required="schema.media_description.required">
+<div ng-if="isMediaType && !editor.description_text.editor3" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text" sd-width="{{editor.media_description.sdWidth || 'full'}}" data-required="schema.media_description.required">
   <label translate>Description</label>
   <div id="title" class="abstract"
         sd-text-editor
@@ -203,6 +247,17 @@
         ng-if="_editable"
         ng-trim="false"></div>
   <div class="abstract" ng-if="!_editable">{{item.description_text}}</div>
+</div>
+
+<div ng-if="isMediaType && editor.description_text.editor3" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text" sd-width="{{editor.media_description.sdWidth || 'full'}}" data-required="schema.media_description.required">
+  <label translate>Description</label>
+  <div id="title" class="abstract"
+        sd-editor3
+        data-editor-format="editor.description_text.formatOptions"
+        data-value="item.description_text"
+        data-read-only="!_editable"
+        data-on-change="autosave(item)"
+        data-language="item.language"></div>
 </div>
 
 <div class="field"
@@ -226,7 +281,7 @@
 </div>
 
 <div class="field" 
-    ng-if="schema.body_footer" 
+    ng-if="schema.body_footer && !editor.body_footer.editor3"
     order="{{editor.body_footer.order}}" 
     sd-validation-error="error.body_footer"
     data-required="schema.body_footer.required"
@@ -246,6 +301,22 @@
         data-append-class="active">
     </div>
     <div id="body_footer_preview" class="abstract" ng-if="!_editable"  sd-html-preview="item.body_footer"></div>
+</div>
+
+<div class="field"
+    ng-if="schema.body_footer && editor.body_footer.editor3"
+    order="{{editor.body_footer.order}}"
+    sd-validation-error="error.body_footer"
+    data-required="schema.body_footer.required"
+    sd-width="{{editor.body_footer.sdWidth || 'full'}}">
+    <label translate>Footer</label>
+    <div id="body_footer" class="body"
+        sd-editor3
+        data-editor-format="editor.body_footer.formatOptions"
+        data-value="item.body_footer"
+        data-read-only="!_editable"
+        data-on-change="autosave(item)"
+        data-language="item.language"></div>
 </div>
 
 <div class="composite-preview" ng-if="item.type === 'composite'">
