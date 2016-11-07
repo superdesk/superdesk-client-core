@@ -1,36 +1,43 @@
 export default angular.module('superdesk.core.directives.searchList', ['superdesk.core.services.asset'])
     /**
-     * SearchList directive displays a searchable paginated list of items from
-     * given endpoint, allows selecting multiple items.
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdSearchList
      *
-     * Usage:
-     * <div sd-search-list
-     * data-endpoint="subscribers"
-     * data-page-size="5"
-     * data-label-key="name"
-     * data-search-key="name"
-     * data-criteria="criteria"
-     * data-max-selected-items="1"
-     * data-disabled-items="disabledItems"
-     * data-selected-items="selectedItems"
-     * data-selected-items-helper-template="helperTemplate.html"
-     * data-selected-items-helper-data="data"
-     * ></div>
+     * @requires asset
+     * @requires api
      *
-     * Params:
-     * @scope {String} endpoint - api endpoint to send queries
-     * @scope {Integer} pageSize - number of items per page
-     * @scope {String} labelKey - object key to display items by
-     * @scope {String} searchKey - object key to search keyword in
-     * @scope {Object} criteria - base criteria object to use in queries
-     * @scope {Integer} maxSelectedItems - maximum number of items to select
-     * @scope {Array} disabledItems - items that will be disabled
-     * @scope {Array} selectedItems - target to populate with selected items
-     * @scope {String} selectedItemsHelperTemplate - additional template to
+     * @param {String} endpoint API endpoint to send queries
+     * @param {Integer} pageSize Number of items per page
+     * @param {String} labelKey Object key to display items by
+     * @param {String} searchKey Object key to search keyword in
+     * @param {Object} criteria Base criteria object to use in queries
+     * @param {Integer} maxSelectedItems Maximum number of items to select
+     * @param {Array} disabledItems Items that will be disabled
+     * @param {Array} selectedItems Target to populate with selected items
+     * @param {String} selectedItemsHelperTemplate Additional template to
      *      display for each selected item
-     * @scope {Object} selectedItemsHelperData - additional data to use in
+     * @param {Object} selectedItemsHelperData Additional data to use in
      *      helper template, which can be accessed by data variable
      *
+     * @description Displays a searchable paginated list of items from
+     * given endpoint, allows selecting multiple items.
+     *
+     * Example:
+     * ```html
+     * <div sd-search-list
+     *     data-endpoint="subscribers"
+     *     data-page-size="5"
+     *     data-label-key="name"
+     *     data-search-key="name"
+     *     data-criteria="criteria"
+     *     data-max-selected-items="1"
+     *     data-disabled-items="disabledItems"
+     *     data-selected-items="selectedItems"
+     *     data-selected-items-helper-template="helperTemplate.html"
+     *     data-selected-items-helper-data="data">
+     * </div>
+     * ```
      */
     .directive('sdSearchList', ['asset', 'api', function(asset, api) {
         var defaults = {
@@ -116,30 +123,37 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
         };
     }])
     /**
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdSearchListSingle
+     *
+     * @requires asset
+     *
+     * @param {String} endpoint API endpoint to send queries.
+     * @param {Integer} pageSize Number of items per page.
+     * @param {String} labelKey Object key to display items by.
+     * @param {String} searchKey Object key to search keyword in.
+     * @param {Object} criteria Base criteria object to use in queries.
+     * @param {Integer} maxSelectedItems Maximum number of items to select.
+     * @param {Array} disabledItems Items that will be disabled.
+     * @param {Object} selectedItem Target to populate with selected item.
+     *
+     * @description
      * SearchListSingle directive is a proxy directive for SearchList,
      * limiting it to a single item for ease of use.
      *
-     * Usage:
+     * Example:
+     * ```html
      * <div sd-search-list
-     * data-endpoint="subscribers"
-     * data-page-size="5"
-     * data-label-key="name"
-     * data-search-key="name"
-     * data-criteria="criteria"
-     * data-disabled-items="disabledItems"
-     * data-selected-item="selectedItem"
-     * ></div>
-     *
-     * Params:
-     * @scope {String} endpoint - api endpoint to send queries
-     * @scope {Integer} pageSize - number of items per page
-     * @scope {String} labelKey - object key to display items by
-     * @scope {String} searchKey - object key to search keyword in
-     * @scope {Object} criteria - base criteria object to use in queries
-     * @scope {Integer} maxSelectedItems - maximum number of items to select
-     * @scope {Array} disabledItems - items that will be disabled
-     * @scope {Object} selectedItem - target to populate with selected item
-     *
+     *     data-endpoint="subscribers"
+     *     data-page-size="5"
+     *     data-label-key="name"
+     *     data-search-key="name"
+     *     data-criteria="criteria"
+     *     data-disabled-items="disabledItems"
+     *     data-selected-item="selectedItem">
+     * </div>
+     * ```
      */
     .directive('sdSearchListSingle', ['asset', function(asset) {
         return {

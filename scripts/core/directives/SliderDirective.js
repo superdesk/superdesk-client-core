@@ -1,18 +1,16 @@
 export default angular.module('superdesk.core.directives.slider', []).
     /**
-     * Slider directive
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdSlider
      *
-     * Usage:
-     *  <div sd-slider data-value="urgency" data-list="newsvalue" data-unique="value" data-invert="true" data-update="update(item)">
-     *  </div>
+     * @param {Object} value Current selected value, if nothing is selected it will use min value
+     * @param {Object} list List of options
+     * @param {Boolen} disabled Disable or enable slider functionality
+     * @param {Object} invert Inverts min and max value
+     * @param {Function} update Callback when slider value is changed
      *
-     * Params:
-     * @scope {Object} value - current selected value, if nothing is selected it will use min value
-     * @scope {Object} list - list of options
-     * @scope {Boolen} disabled - disable or enable slider functionality
-     * @scope {Object} invert - inverts min and max value
-     * @scope {Function} update - callback when slider value is changed
-     *
+     * @description Regular slider.
      */
     directive('sdSlider', function () {
         return {

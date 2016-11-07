@@ -1,9 +1,9 @@
 export default angular.module('superdesk.core.directives.autofocus', [])
     /**
-     * sdAutoFocus automatically focuses on an element on page render.
-     *
-     * Usage:
-     * <input sd-auto-focus>
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdAutoFocus
+     * @description sdAutoFocus automatically focuses on an element on page render.
      */
     .directive('sdAutoFocus', function() {
         return {

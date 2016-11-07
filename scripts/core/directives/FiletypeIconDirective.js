@@ -1,12 +1,12 @@
 export default angular.module('superdesk.core.directives.filetypeIcon', [])
 /**
- * sdFiletypeIcon adds the "filetype-icon-*" class based on the item.
+ * @ngdoc directive
+ * @module superdesk.core.directives
+ * @name sdFiletypeIcon
  *
- * Usage:
- * <i sd-filetype-icon data-item="item"></i>
+ * @param {Object} item Item from ItemList provider.
  *
- * Params:
- * @scope {Object} item - item from ItemList provider
+ * @description Adds the "filetype-icon-*" class based on the item.
  */
 .directive('sdFiletypeIcon', function() {
     return {

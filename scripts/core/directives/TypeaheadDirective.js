@@ -1,21 +1,29 @@
 export default angular.module('superdesk.core.directives.typeahead', []).
     /**
-     * Typeahead direcitve
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdTypeahead
      *
-     * Usage:
+     * @requires https://docs.angularjs.org/api/ng/service/$timeout $timeout
+     * @requires Keys
+     * @requires https://docs.angularjs.org/api/ng/service/$document $document
+     *
+     * @param {Object} items Choice list.
+     * @param {Object} term Search term.
+     * @param {Boolen} alwaysVisible List of posible choices always stay visible.
+     * @param {Function} search Callback for filtering choice action.
+     * @param {Function} select Callback for select item aciton.
+     *
+     * @description Typeahead directive.
+     *
+     * Example:
+     * ```html
      *  <ul sd-typeahead items="subjects" term="subjectTerm" search="searchSubjects(term)" select="selectSubject(item)">
      *      <li typeahead-item="s" ng-repeat="s in subjects">
      *          {{s.term}}
      *      </li>
      *  </ul>
-     *
-     * Params:
-     * @scope {Object} items - choice list
-     * @scope {Object} term - search term
-     * @scope {Boolen} alwaysVisible - list of posible choices always stay visible
-     * @scope {Function} search - callback for filtering choice action
-     * @scope {Function} select - callback for select item aciton
-     *
+     * ```
      */
     directive('sdTypeahead', ['$timeout', 'Keys', '$document', function($timeout, Keys, $document) {
         return {

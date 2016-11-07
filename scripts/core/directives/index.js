@@ -19,7 +19,8 @@ import './WithParamsDirective';
  * @module superdesk.core.directives
  * @name superdesk.core.directives
  * @packageName superdesk.core
- * @description Superdesk core directives collection.
+ * @description Superdesk core directives collection. Contains a set of modules 
+ * that implement various UI components and helpers.
  */
 export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.autofocus',

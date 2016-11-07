@@ -20,28 +20,28 @@ var wrapper = function(methodName) {
 
 export default angular.module('superdesk.core.directives.throttle', [])
     /**
-     * sdDebounce debounces model update.
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdDebounce
      *
-     * Usage:
-     * <input sd-debounce data-interval="1500" ng-model="keyword">
+     * @param {Number} interval
+     * @param {Object} ngModel
      *
-     * Params:
-     * @scope {number} interval
-     * @scope {object} ngModel
+     * @description Debounces model update.
      */
     .directive('sdDebounce', function() {
         return wrapper('debounce');
     })
 
     /**
-     * sdThrottle throttles model update.
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdThrottle
      *
-     * Usage:
-     * <input sd-throttle data-interval="1500" ng-model="keyword">
+     * @param {Number} interval
+     * @param {Object} ngModel
      *
-     * Params:
-     * @scope {number} interval
-     * @scope {object} ngModel
+     * @description Throttles model update.
      */
     .directive('sdThrottle', function() {
         return wrapper('throttle');

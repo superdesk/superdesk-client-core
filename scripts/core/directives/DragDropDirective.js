@@ -1,16 +1,15 @@
 export default angular.module('superdesk.core.directives.dragdrop', [])
     /**
-     * sdSortable creates a container in which contained items can be sortable by drag/drop.
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdSortable
      *
-     * Usage:
-     * <div sd-sortable data-update="update" data-placeholder="placeholder"></div>
-     *
-     * Params:
-     * @scope {function} update - function to call when sort is updated.
+     * @param {Function} update Function to call when sort is updated.
      * This function should accept an array of item indexes.
-     *
-     * @scope {string} placeholder - css class name for placeholder box
+     * @param {String} placeholder CSS class name for placeholder box
      * displayed during sorting.
+     *
+     * @desctription Creates a container in which contained items can be sortable by drag/drop.
      */
     .directive('sdSortable', [function() {
         return {
@@ -30,18 +29,17 @@ export default angular.module('superdesk.core.directives.dragdrop', [])
             }
         };
     }])
+
     /**
-     * sdDraggable creates a draggable item. Works with sdDroppable.
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdDraggable
      *
-     * Usage:
-     * <div sd-draggable data-item="item" data-container="'.container'"></div>
+     * @param {Object} item Data to be carried.
+     * @param {String} container css selector to attach dragged item to.
+     * @param {Boolean} cursor - enable/disable stucking drag object to cursor
      *
-     * Params:
-     * @scope {object} item - data to be carried.
-     *
-     * @scope {string} container - css selector to attach dragged item to.
-     *
-     * @scope {boolean} cursor - enable/disable stucking drag object to cursor
+     * @description Creates a draggable item. Works with sdDroppable.
      */
     .directive('sdDraggable', ['dragDropService', function(dragDropService) {
         return {
@@ -67,14 +65,15 @@ export default angular.module('superdesk.core.directives.dragdrop', [])
             }
         };
     }])
+
     /**
-     * sdDroppable marks a drop area for sdDraggable items.
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdDroppable
      *
-     * Usage:
-     * <div sd-droppable data-update="update"></div>
+     * @param {Function} update Function to be called when an item is dropped.
      *
-     * Params:
-     * @scope {function} update - function to be called when an item is dropped.
+     * @description Marks a drop area for sdDraggable items.
      */
     .directive('sdDroppable', ['dragDropService', function(dragDropService) {
         return {

@@ -1,15 +1,21 @@
 export default angular.module('superdesk.core.directives.withParams', [])
     /**
-     * sdWithParams manipulates href attribute to include current parameters.
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdWithParams
      *
-     * Usage:
+     * @requires locationParams
+     *
+     * @param {String} exclude URL parameters to exclude (separated by comma).
+     *
+     * @description Manipulates href attribute to include current parameters.
+     *
+     * Example:
+     * ```html
      * <a href="#/users/{{ user._id }}" sd-with-params data-exclude="id,date"></a>
-     *
-     * Params:
-     * @attr {String} exclude - url parameters to exclude (separated by comma).
+     * ```
      */
     .directive('sdWithParams', ['locationParams', function(locationParams) {
-
         return {
             compile: function(element, attrs, transclude) {
                 if (attrs.exclude) {
