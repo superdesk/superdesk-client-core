@@ -3,27 +3,39 @@ var render = function(element, value) {
     element.attr('checked', !!value);
 };
 
-export default angular.module('superdesk.core.directives.check', [])
+export default angular.module('superdesk.core.directives.switchInverted', [])
     /**
      * @ngdoc directive
      * @module superdesk.core.directives
-     * @name sdCheck
-     * @param {Boolean} ngModel model for checkbox value
-     * @description Creates a custom-styled checkbox.
+     * @name sdSwitchInverted
+     *
+     * @param {Boolean} ngModel Model for checkbox value.
+     *
+     * @description sdSwitchInverted is sdCheck directive with inverted functionality.
+     * e.g: useful in case when we want to display switch ON (means provider is open)
+     *  for model like `provider.is_closed = false` and vice versa.
+     *
+     * Example:
+     * ```html
+     * <input sd-switch-inverted ng-model="provider.is_closed">
+     * ```
      */
-    .directive('sdCheck', function() {
+    .directive('sdSwitchInverted', function() {
         return {
             require: 'ngModel',
             replace: true,
-            transclude: true,
-            template: '<span class="sd-checkbox" ng-transclude></span>',
+            template: [
+                '<span class="sd-toggle">',
+                '<span class="inner"></span>',
+                '</span>'
+            ].join(''),
             link: function($scope, element, attrs, ngModel) {
                 ngModel.$render = function() {
                     render(element, ngModel.$viewValue);
                 };
 
                 $scope.$watch(attrs.ngModel, function() {
-                    render(element, ngModel.$viewValue);
+                    render(element, !ngModel.$viewValue);
                 });
 
                 element.on('click', function(e) {
