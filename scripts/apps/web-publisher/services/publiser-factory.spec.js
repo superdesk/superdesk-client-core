@@ -1,6 +1,6 @@
 fdescribe('publisher service', () => {
 
-    beforeEach(window.module('superdesk.web_publisher'));
+    beforeEach(window.module('superdesk.apps.web_publisher'));
 
     it('can create site', inject((publisher, pubapi, $q, $rootScope) => {
         let data = {name: 'foo'};

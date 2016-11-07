@@ -3,7 +3,7 @@ fdescribe('pubapi', () => {
     const ITEM_URL = RESOURCE_URL + '/123';
     const ITEM_SELF_HREF = '/api/v1/tenants/123';
 
-    beforeEach(window.module('superdesk.web_publisher'));
+    beforeEach(window.module('superdesk.apps.web_publisher'));
 
     beforeEach(inject(config => {
         config.publisher = {
