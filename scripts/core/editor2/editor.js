@@ -233,13 +233,16 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
             var node = nodes.item(i);
             if (node.classList.contains(ACTIVE_CLASS)) {
                 node.classList.remove(ACTIVE_CLASS);
-                nodes.item((i + 1) % nodes.length).classList.add(ACTIVE_CLASS);
+                var nextNode = nodes.item((i + 1) % nodes.length);
+                nextNode.classList.add(ACTIVE_CLASS);
+                angular.element('.page-content-container').scrollTop(nextNode.offsetTop);
                 return node;
             }
         }
 
         if (nodes.length) {
             nodes.item(0).classList.add(ACTIVE_CLASS);
+            angular.element('.page-content-container').scrollTop(nodes.item(0).offsetTop);
         }
     };
 
