@@ -3,13 +3,18 @@ fdescribe('pubapi', () => {
     const ITEM_URL = RESOURCE_URL + '/123';
     const ITEM_SELF_HREF = '/api/v1/tenants/123';
 
-    beforeEach(window.module('superdesk.web_publisher'));
+    beforeEach(window.module('superdesk.apps.web_publisher'));
 
     beforeEach(inject(config => {
         config.publisher = {
-            server: 'http://example.com',
+            domain: 'example.com'
             base: '/api/v1'
         };
+    }));
+
+    it('can build a resource url', inject((pubapi) => {
+        let url = pubapi.resourceURL('menus');
+        expect(url).toBe('http://default.example.com/api/v1/menus');
     }));
 
     it('it can query', inject((pubapi, $httpBackend) => {

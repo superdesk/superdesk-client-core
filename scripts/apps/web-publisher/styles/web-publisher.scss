@@ -3,32 +3,40 @@
 // ----------------------------------------------------------------------------------------
 
 .manage-page {
-	.nav-stacked {
-	    width: 180px;
-	    bottom: 0;
-	    border-right: 1px solid #ddd;
-	    box-shadow: inset -3px 0 8px -3px rgba(0, 0, 0, 0.1);
+    padding: 0;
+
+    .nav-stacked {
+        width: 180px;
+        bottom: 0;
+        border-right: 1px solid #ddd;
+        box-shadow: inset -3px 0 8px -3px rgba(0, 0, 0, 0.1);
         height: auto;
         background: inherit;
 
         li {
-    		> button {
-        		margin-left: 10px;
-			}
+            > button {
+                margin-left: 10px;
+            }
 
-	    	.active {
-	    		> button {
-	    		    cursor: default;
-					border-bottom-color: #5ea9c8;
-				    color: #333;
-				}
-			}
-		}
+            .active {
+                > button {
+                    cursor: default;
+                    border-bottom-color: #5ea9c8;
+                    color: #333;
+                }
+            }
+        }
     }
     .manage-content {
-    	padding: 20px;
-	    position: absolute;
-	    left: 180px;
-	    width: 30%;
-	}
+        position: absolute;
+        left: 180px;
+
+        .subnav {
+            top: 0;
+        }
+
+        .navigation-main {
+            margin-top: 48px;
+        }
+    }
 }
