@@ -7,9 +7,14 @@ fdescribe('pubapi', () => {
 
     beforeEach(inject(config => {
         config.publisher = {
-            server: 'http://example.com',
+            domain: 'example.com'
             base: '/api/v1'
         };
+    }));
+
+    it('can build a resource url', inject((pubapi) => {
+        let url = pubapi.resourceURL('menus');
+        expect(url).toBe('http://default.example.com/api/v1/menus');
     }));
 
     it('it can query', inject((pubapi, $httpBackend) => {

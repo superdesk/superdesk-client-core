@@ -1,13 +1,6 @@
 
 PubAPIFactory.$inject = ['config', '$http', '$q'];
 export function PubAPIFactory(config, $http, $q) {
-
-    function urljoin() {
-        return Array.prototype.map.call(arguments, piece => {
-            return piece.replace(/\/$/, '').replace(/^\//, '');
-        }).join('/');
-    }
-
     /**
      * Publisher API service
      */
@@ -15,7 +8,6 @@ export function PubAPIFactory(config, $http, $q) {
 
         constructor() {
             let pubConfig = config.publisher || {};
-            this._server = pubConfig.server || '';
             this._base = pubConfig.base || '';
             this._protocol = pubConfig.protocol || 'http';
             this._tenant = pubConfig.tenant || 'default';
@@ -90,7 +82,7 @@ export function PubAPIFactory(config, $http, $q) {
          * @return {string}
          */
         resourceURL(resource, code='') {
-            return `${this._protocol}://${this._tenant}.${this._domain}/${this._base}/${resource}/${code}`
+            return `${this._protocol}://${this._tenant}.${this._domain}/${this._base}/${resource}/${code}`;
         }
 
         /**
@@ -100,7 +92,7 @@ export function PubAPIFactory(config, $http, $q) {
          * @return {string}
          */
         selfURL(item) {
-            return urljoin(this._server, item._links.self.href);
+            return `${this._protocol}://${this._tenant}.${this._domain}${item._links.self.href}`;
         }
 
         /**
