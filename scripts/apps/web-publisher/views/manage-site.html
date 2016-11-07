@@ -6,30 +6,32 @@
             <button class="btn btn--primary" ng-disabled="createForm.$invalid || !createForm.$dirty" ng-click="webPublisher.save()" translate>Save</button>
         </div>
     </div>
-    <div class="modal-body manage-page">
-        <ul class="nav nav-tabs nav-stacked">
-            <li ng-class="{active: webPublisher.activeTab === 'general'}">
-                <button
-                    ng-click="webPublisher.changeTab('general')"
-                    translate>General</button>
-            </li>
+    <div class="modal-body sidebarLayout">
+        <div class="sidebarLayout__sidebar">
+            <ul class="nav nav--stackedPublisher">
+                <li ng-class="{active: webPublisher.activeTab === 'general'}">
+                    <button
+                        ng-click="webPublisher.changeTab('general')"
+                        translate>General</button>
+                </li>
 
-            <li ng-class="{active: webPublisher.activeTab === 'routes'}">
-                <button
-                    ng-click="webPublisher.changeTab('routes')"
-                    translate>Routes</button>
-            </li>
+                <li ng-class="{active: webPublisher.activeTab === 'routes'}">
+                    <button
+                        ng-click="webPublisher.changeTab('routes')"
+                        translate>Routes</button>
+                </li>
 
 
-            <li ng-class="{active: webPublisher.activeTab === 'navigation'}">
-                <button
-                    ng-click="webPublisher.changeTab('navigation')"
-                    translate>Navigation</button>
-            </li>
-        </ul>
-        <div class="manage-content" ng-switch="webPublisher.activeTab">
-            <form name="createForm">
-                <fieldset ng-switch-when="general">
+                <li ng-class="{active: webPublisher.activeTab === 'navigation'}">
+                    <button
+                        ng-click="webPublisher.changeTab('navigation')"
+                        translate>Navigation</button>
+                </li>
+            </ul>
+        </div>
+        <div class="sidebarLayout__content" ng-switch="webPublisher.activeTab">
+            <form name="createForm" class="contentPadding" ng-switch-when="general">
+                <fieldset>
                     <div class="field">
                         <label for="name" translate>Web Site Name:</label>
                         <input type="text" name="name" ng-model="new.name" required />

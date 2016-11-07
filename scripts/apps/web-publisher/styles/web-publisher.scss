@@ -1,34 +1,11 @@
 // web-publisher.scss
 // Styling for the web publisher module
 // ----------------------------------------------------------------------------------------
+@import '~mixins.scss';
+@import '~variables.scss';
 
-.manage-page {
-	.nav-stacked {
-	    width: 180px;
-	    bottom: 0;
-	    border-right: 1px solid #ddd;
-	    box-shadow: inset -3px 0 8px -3px rgba(0, 0, 0, 0.1);
-        height: auto;
-        background: inherit;
+@import '_helpers_variables.sass';
+@import 'sidebarLayout.sass';
+@import 'nav.sass';
 
-        li {
-    		> button {
-        		margin-left: 10px;
-			}
 
-	    	.active {
-	    		> button {
-	    		    cursor: default;
-					border-bottom-color: #5ea9c8;
-				    color: #333;
-				}
-			}
-		}
-    }
-    .manage-content {
-    	padding: 20px;
-	    position: absolute;
-	    left: 180px;
-	    width: 30%;
-	}
-}
