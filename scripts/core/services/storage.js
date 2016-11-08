@@ -1,5 +1,10 @@
 angular.module('superdesk.core.services.storage', [])
     /**
+     * @ngdoc service
+     * @module superdesk.core.services
+     * @name storage
+     *
+     * @description
      * LocalStorage wrapper
      *
      * it stores data as json to keep its type
@@ -7,36 +12,52 @@ angular.module('superdesk.core.services.storage', [])
     .service('storage', function() {
 
         /**
-         * Get item from storage
+         * @ngdoc method
+         * @name storage#getItem
+         * @public
          *
-         * @param {string} key
-         * @returns {mixed}
+         * @param {String} key
+         * @returns {Object}
+         *
+         * @description Get item from storage
          */
         this.getItem = function(key) {
             return angular.fromJson(localStorage.getItem(key));
         };
 
         /**
-         * Set storage item
+         * @ngdoc method
+         * @name storage#setItem
+         * @public
          *
-         * @param {string} key
-         * @param {mixed} data
+         * @param {String} key
+         * @param {Object} data
+         *
+         * @description Set storage item
          */
         this.setItem = function(key, data) {
             localStorage.setItem(key, angular.toJson(data));
         };
 
         /**
-         * Remove item from storage
+         * @ngdoc method
+         * @name storage#removeItem
+         * @public
          *
-         * @param {string} key
+         * @param {String} key
+         *
+         * @description Remove item from storage.
          */
         this.removeItem = function(key) {
             localStorage.removeItem(key);
         };
 
         /**
-         * Remove all items from storage
+         * @ngdoc method
+         * @name storage#clear
+         * @public
+         *
+         * @description Remove all items from storage.
          */
         this.clear = function() {
             localStorage.clear();
