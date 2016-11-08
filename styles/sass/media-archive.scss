@@ -67,20 +67,9 @@
 #content-list {
     display: flex;
     flex-direction: column;
-    margin-right: 15px;
-    margin-left: 15px;
-    padding: 5px;
-
-    .search-tags {
-        flex: 0 1 auto;
-        padding-bottom: 10px;
-    }
-
     .shadow-list-holder {
         flex: 1 1 auto;
-        padding: 0px !important;
-        box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
-        &.refresh {
+        &.refresh .list-view {
             border: solid thin $blue;
             @include box-shadow(0px 0px 10px 0px rgba(93,155,192,1));
         }

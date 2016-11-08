@@ -1,9 +1,23 @@
-SearchPanel.$inject = ['$location', 'desks', 'privileges', 'tags', 'asset', 'metadata', '$rootScope', 'session'];
-
 /**
- * A directive that generates the sidebar containing search results
- * filters (so-called "aggregations" in Elastic's terms).
+ * @ngdoc directive
+ * @module superdesk.apps.search
+ * @name sdSearchPanel
+ *
+ * @requires $location
+ * @requires desks
+ * @requires privileges
+ * @requires tags
+ * @requires asset
+ * @requires metadata
+ * @requires $rootScope
+ * @requires session
+ *
+ * @description
+ *   A directive that generates the sidebar containing search results
+ *   filters (so-called "aggregations" in Elastic's terms).
  */
+
+SearchPanel.$inject = ['$location', 'desks', 'privileges', 'tags', 'asset', 'metadata', '$rootScope', 'session'];
 export function SearchPanel($location, desks, privileges, tags, asset, metadata, $rootScope, session) {
     desks.initialize();
     return {
@@ -246,20 +260,40 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 }
             }
 
+            /**
+             * @ngdoc method
+             * @name sdSearchPanel#set
+             * @public
+             * @description Set location url for date filters
+             * @param {string} key Date key
+             */
             scope.setDateFilter = function(key) {
-                if (key === 'Last Day') {
-                    $location.search('after', 'now-24H');
-                } else if (key === 'Last Week'){
-                    $location.search('after', 'now-1w');
-                } else if (key === 'Last Month'){
-                    $location.search('after', 'now-1M');
-                } else if (key === 'Scheduled Last Day'){
-                    $location.search('scheduled_after', 'now-24H');
-                } else if (key === 'Scheduled Last 8Hrs') {
-                    $location.search('scheduled_after', 'now-8H');
-                } else {
-                    $location.search('after', null);
-                    $location.search('scheduled_after', null);
+                // Clean other date filters
+                $location.search('afterfirstcreated', null);
+                $location.search('beforefirstcreated', null);
+                $location.search('afterversioncreated', null);
+                $location.search('beforeversioncreated', null);
+
+                switch (key) {
+                    case 'Last Day':
+                        $location.search('after', 'now-24H');
+                        break;
+                    case 'Last Week':
+                        $location.search('after', 'now-1w');
+                        break;
+                    case 'Last Month':
+                        $location.search('after', 'now-1M');
+                        break;
+                    case 'Scheduled Last Day':
+                        $location.search('scheduled_after', 'now-24H');
+                        break;
+                    case 'Scheduled Last 8Hrs':
+                        $location.search('scheduled_after', 'now-8H');
+                        break;
+
+                    default:
+                        $location.search('after', null);
+                        $location.search('scheduled_after', null);
                 }
             };
 
