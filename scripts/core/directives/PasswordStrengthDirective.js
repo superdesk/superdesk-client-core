@@ -9,7 +9,16 @@ var config = {
 };
 
 /**
- * sdPasswordStrength appends a strength indicator to the input that it is
+ * @ngdoc directive
+ * @module superdesk.core.directives
+ * @name sdPasswordStrength
+ *
+ * @requires gettext
+ * @requires https://docs.angularjs.org/api/ng/service/$interpolate $interpolate
+ *
+ * @param {Object} ngModel - model that the input is bound to
+ *
+ * @description Appends a strength indicator to the input that it is
  * added to. Strength is computed in the following way:
  *
  *   - If the length of the password is less than 8, strength will be set
@@ -20,12 +29,6 @@ var config = {
  *        - an upper-case letter
  *        - a number
  *        - another character
- *
- * Usage:
- * <input type="password" sd-password-strength ng-model="pass">
- *
- * Params:
- * @scope {Object} ngModel - model that the input is bound to
  */
 PasswordStrength.$inject = ['gettext', '$interpolate'];
 function PasswordStrength(gettext, $interpolate) {

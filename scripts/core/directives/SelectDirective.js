@@ -24,10 +24,21 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
 }])
 
 /**
- * sdSelect renders custom inpu type select with ability to select multiple items
+ * @ngdoc directive
+ * @module superdesk.core.directives
+ * @name sdSelect
  *
- * Usage:
+ * @requires https://docs.angularjs.org/api/ng/service/$parse $parse
+ * @requires https://docs.angularjs.org/api/ng/service/$document $document
+ * @requires https://docs.angularjs.org/api/ng/service/$compile $compile
+ * @requires optionParser
+ *
+ * @description Renders custom input type select with ability to select multiple items.
+ *
+ * Example:
+ * ```html
  * <sd-select multiple="true" ng-model="model" options="c.name for c in collection" change="action()"></sd-multiselect>
+ * ```
  */
 .directive('sdSelect', ['$parse', '$document', '$compile', 'optionParser',
 
@@ -226,31 +237,6 @@ function ($parse, $document, $compile, optionParser) {
                 } else {
                     selectMultiple(item);
                 }
-            };
-        }
-    };
-}])
-
-.directive('sdSelectPopup', ['$document', 'asset', function ($document, asset) {
-    return {
-        restrict: 'A',
-        scope: false,
-        replace: true,
-        templateUrl: asset.templateUrl('core/views/sdselect.html'),
-        link: function (scope, element, attrs) {
-
-            scope.open = false;
-
-            scope.toggleSelect = function () {
-                scope.open = !scope.open;
-                if (scope.open) {
-                    scope.focus();
-                }
-            };
-
-            scope.focus = function focus() {
-                var searchBox = element.find('input')[0];
-                searchBox.focus();
             };
         }
     };

@@ -1,23 +1,31 @@
 export default angular.module('superdesk.core.directives.permissions', [])
     /**
-     * sdPermissions checks if user has specified permissions and assigns
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdPermissions
+     *
+     * @param {Object} dataModel Model to assign permission to
+     * @param {String} dataPermission ID of required permission.
+     * @param {Object} dataRole Role to check.
+     * @param {Object} dataUser User to check.
+     *
+     * @description Checks if user has specified permissions and assigns
      * to specified model to use in displaying/hiding/disabling elements.
      *
-     * Usage:
      * Checking for a user:
+     * ```js
      * <div sd-permissions data-permission="users-manage" data-user="user" data-model="model" ng-show="model"></div>
+     * ```
      *
      * Checking for a role:
+     * ```js
      * <div sd-permissions data-permission="users-manage" data-role="role" data-model="model" ng-show="model"></div>
+     * ```
      *
      * Checking for current user (default if no user/role specified):
+     * ```js
      * <div sd-permissions data-permission="users-manage" data-model="model" ng-show="model"></div>
-     *
-     * Params:
-     * @scope {Object} dataModel - model to assign permission to
-     * @scope {String} dataPermission - id of required permission.
-     * @scope {Object} dataRole - role to check
-     * @scope {Object} dataUser - user to check
+     * ```
      */
     .directive('sdPermissions', ['permissions', 'permissionsService', function(permissions, permissionsService) {
         return {

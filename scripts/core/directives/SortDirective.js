@@ -1,17 +1,16 @@
 export default angular.module('superdesk.core.directives.sort', ['superdesk.core.services.asset'])
     /**
-     * sdSort inserts sort links based on current sort field and direction.
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdSort
      *
-     * Usage:
-     * <a href=""
-     *      sd-sort
-     *      data-label="{{ 'Name'|translate }}"
-     *      data-field="display_name"
-     * ></a>
+     * @requires https://docs.angularjs.org/api/ng/service/$location $location
+     * @requires asset
      *
-     * Params:
-     * @scope {string} label - user friendly text for sort field
-     * @scope {string} field - field name for sort field
+     * @param {String} label User friendly text for sort field.
+     * @param {String} field Field name for sort field.
+     *
+     * @description Inserts sort links based on current sort field and direction.
      */
     .directive('sdSort', ['$location', 'asset', function($location, asset) {
         return {
