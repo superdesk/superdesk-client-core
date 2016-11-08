@@ -75,8 +75,12 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('item:highlight', scheduleQuery);
             scope.$on('content:update', scheduleIfShouldUpdate);
 
-            if (scope.group.type !== 'stage') {
-                scope.$on('ingest:update', scheduleQuery);
+            if (scope.group.type === 'search' && search.doesSearchAgainstRepo(scope.group.search, 'ingest')) {
+                scope.$on('ingest:update', (event, data) => {
+                    if (!scope.showRefresh) {
+                        scheduleQuery(event, data);
+                    }
+                });
             }
 
             function scheduleIfShouldUpdate(event, data) {
@@ -311,6 +315,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                 criteria.source.from = 0;
                 criteria.source.size = 25;
+                var originalQuery;
 
                 // when forced refresh or query then keep query size default as set 25 above.
                 if (!(data && data.force)) {
@@ -326,9 +331,17 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     multi.reset();
                 }
 
-                if (data && data.items && scope.showRefresh && !data.force) {
+                if (data && (data.item || data.items || data.item_id) && scope.showRefresh && !data.force) {
                     // if we know the ids of the items then try to fetch those only
-                    criteria.source.query = search.getItemQuery(data.items);
+                    originalQuery = angular.extend({}, criteria.source.query);
+
+                    let items = data.items || {};
+
+                    if (data.item || data.item_id) {
+                        items[data.item || data.item_id] = 1;
+                    }
+
+                    criteria.source.query = search.getItemQuery(items);
                 }
 
                 return apiquery().then(function(items) {
@@ -348,10 +361,14 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         scope.total = items._meta.total;
                         items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
                         monitoring.totalItems = items._meta.total;
-                        scope.items = search.mergeItems(items, scope.items, null, (data && data.force));
+                        scope.items = search.mergeItems(items, scope.items, null, true);
                     } else {
                         // update scope items only with the matching fetched items
                         scope.items = search.updateItems(items, scope.items);
+                    }
+                }).finally(function() {
+                    if (originalQuery) {
+                        criteria.source.query = originalQuery;
                     }
                 });
             }

@@ -241,12 +241,12 @@ describe('search', function() {
         authoring.setEmbargo();
         authoring.save();
         authoring.close();
-        expect(globalSearch.getItem(4).element(by.className('state_embargo')).isDisplayed()).toBe(true);
-        expect(globalSearch.getItem(4).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
+        expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
+        expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
 
         //can search scheduled
         expect(globalSearch.getItems().count()).toBe(14);
-        globalSearch.actionOnItem('Edit', 2);
+        globalSearch.actionOnItem('Edit', 1);
         authoring.schedule(false);
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
