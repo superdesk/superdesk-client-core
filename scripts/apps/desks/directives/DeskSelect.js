@@ -1,5 +1,12 @@
-DeskSelect.$inject = ['Keys', 'lodash'];
-export function DeskSelect(Keys, _) {
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.desks
+ * @name sdDeskSelect
+ * @requires preferencesService
+ * @description Directive to handle desk selection functionality in drop-downs/menus
+ */
+DeskSelect.$inject = ['Keys', 'lodash', 'preferencesService'];
+export function DeskSelect(Keys, _, preferencesService) {
     const UP = -1;
     const DOWN = 1;
 
@@ -28,6 +35,23 @@ export function DeskSelect(Keys, _) {
             elem[0].tabIndex = 0; // make elem recieve keyboard events
 
             scope.filter = '';
+
+            preferencesService.get('desks:preferred').then(function(result) {
+                scope.preferredDesks = result;
+            });
+
+            /**
+             * @ngdoc property
+             * @name sdDeskSelect#deskPreferenceOrdering
+             * @type {function}
+             * @private
+             * @param {object} desk in the list of desks to be sorted
+             * @returns {bool} false if desk is preferred and true if not (false < true for sorting)
+             * @description Determines if a desk is a preferred desk.
+             */
+            scope.deskPreferenceOrdering = function(desk) {
+                return scope.preferredDesks ? !scope.preferredDesks.selected[desk._id] : true;
+            };
 
             /**
              * Reset state

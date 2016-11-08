@@ -8,10 +8,10 @@
  *   themselves.
  */
 UserPreferencesDirective.$inject = ['api', 'session', 'preferencesService', 'notify', 'asset',
-    'metadata', 'modal', '$timeout', '$q', 'userList', 'lodash'];
+    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash'];
 
 export function UserPreferencesDirective(
-    api, session, preferencesService, notify, asset, metadata, modal,
+    api, session, preferencesService, notify, asset, metadata, desks, modal,
     $timeout, $q, userList, _
 ) {
     return {
@@ -172,7 +172,9 @@ export function UserPreferencesDirective(
                 });
 
                 if (initNeeded) {
-                    metadata.initialize().then(function () {
+                    var initPromises = [];
+                    initPromises.push(metadata.initialize(), desks.initialize());
+                    $q.all(initPromises).then(function () {
                         updateScopeData(metadata.values, data);
                     });
                 } else {
@@ -211,6 +213,24 @@ export function UserPreferencesDirective(
                         selectedCats = userPrefs['categories:preferred'].selected;
                     newObj.selected = !!selectedCats[cat.qcode];
                     scope.categories.push(newObj);
+                });
+
+                /**
+                 * @ngdoc property
+                 * @name sdUserPreferences#desks
+                 * @type {array}
+                 * @private
+                 * @description Create a list of desks for the UI widgets to
+                 * work on. New desk objects are created so that
+                 * objects in the existing desk list are protected
+                 * from modifications on ng-model changes.
+                 */
+                scope.desks = [];
+                _.each(desks.deskLookup, function (desk) {
+                    var newObj = _.create(desk),
+                        selectedDesks = userPrefs['desks:preferred'].selected;
+                    newObj.selected = !!selectedDesks[desk._id];
+                    scope.desks.push(newObj);
                 });
 
                 scope.locators = helperData.locators;
@@ -279,6 +299,13 @@ export function UserPreferencesDirective(
                         val.selected = {};
                         scope.categories.forEach(function (cat) {
                             val.selected[cat.qcode] = !!cat.selected;
+                        });
+                    }
+
+                    if (key === 'desks:preferred') {
+                        val.selected = {};
+                        scope.desks.forEach(function (desk) {
+                            val.selected[desk._id] = !!desk.selected;
                         });
                     }
 

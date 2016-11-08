@@ -81,6 +81,24 @@
               </div>
             </li>
 
+            <li class="fieldset">
+              <div class="legend">
+                {{ :: preferences['desks:preferred'].category | translate }}
+              </div>
+              <div sd-info-item>
+                <label>
+                    {{ :: preferences['desks:preferred'].label | translate}}
+                  </label>
+                <div ng-repeat="desk in desks track by desk._id">
+                  <input
+                    type="checkbox"
+                    name="desks" id="{{desk._id}}"
+                    value="{{desk._id}}" ng-model="desk.selected"/>
+                  <label for="{{desk._id}}">
+                    {{desk.name}}</label>
+                </div>
+              </div>
+            </li>
         </ul>
 
     </div>

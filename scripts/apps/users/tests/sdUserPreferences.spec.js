@@ -9,12 +9,13 @@ describe('sdUserPreferences directive', function() {
 
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
+    beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.publish'));
 
     beforeEach(inject(function (
-        $rootScope, $compile, $q, metadata, preferencesService, session, userList
+        $rootScope, $compile, $q, metadata, preferencesService, session, userList, desks
     ) {
         var html = '<div sd-user-preferences data-user="user"></div>';
 
@@ -31,6 +32,9 @@ describe('sdUserPreferences directive', function() {
                 located: null
             },
             'categories:preferred': {
+                selected: {}
+            },
+            'desks:preferred': {
                 selected: {}
             },
             'article:default:place': {
@@ -51,6 +55,7 @@ describe('sdUserPreferences directive', function() {
         spyOn(preferencesService, 'get').and.returnValue($q.when(fetchedPreferences));
         spyOn(userList, 'getUser').and.returnValue($q.when(user));
         spyOn(metadata, 'initialize').and.returnValue($q.when(metadata));
+        spyOn(desks, 'initialize').and.returnValue($q.when(desks));
 
         // compile the directive and run it
         scope = $rootScope.$new(true);

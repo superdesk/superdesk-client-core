@@ -18,6 +18,10 @@ export function DeskSelectItem() {
                     });
                 }
             });
+
+            if (scope.preferredDesks && scope.preferredDesks.selected[scope.desk._id] === true) {
+                elem.addClass('preferred-desk');
+            }
         }
     };
 }
