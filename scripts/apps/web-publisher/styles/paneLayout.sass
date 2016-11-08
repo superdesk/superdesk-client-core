@@ -1,0 +1,28 @@
+.paneLayout
+    display: flex
+    position: absolute
+    left: 0
+    right: 0
+    bottom: 0
+    top: 0
+    overflow-x: hidden
+    &--headerMargin
+        top: 48px
+    &--twoHeadersMargin
+        top: 96px
+
+    &__content
+        background-color: $sd-background
+        width: 100%
+        overflow-y: scroll
+
+    &__pane
+        background-color: #fff
+        border-left: 1px solid $tableBorder
+        flex: 0 0 400px
+        // margin instead of translateX because of automatic __content size
+        margin-right: -500px
+        overflow-y: scroll
+        transition: all .3s
+        &--open
+            margin-right: 0

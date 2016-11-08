@@ -1,0 +1,28 @@
+<div class="treeList__element">
+    <div class="treeList__icon">
+        <li class="icon-chevron-down-thin"></li>
+        <!-- OR <li class="icon-chevron-right-thin"></li> -->
+    </div>
+    <div class="treeList__icon">
+        <i class="icon-align-justify"></i>
+        <!-- OR <i class="icon-text"></i> -->
+    </div>
+    <!-- type content goes without --bold -->
+    <div class="treeList__name treeList__name--bold">
+        Sports
+    </div>
+    <div class="pull-right">
+        <span class="treeList__label">123</span>
+        <div class="dropdown pull-right" dropdown>
+            <button class="dropdown-toggle" dropdown-toggle>
+                <i class="icon-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu more-activity-menu pull-right">
+                <li><div class="menu-label" translate>Actions</div></li>
+                <li class="divider"></li>
+                <li><button ng-click="" title=""><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                <li><button ng-click="" title=""><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+            </ul>
+        </div>
+    </div>
+</div>
