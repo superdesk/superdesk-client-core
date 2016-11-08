@@ -1,6 +1,12 @@
 export default angular.module('superdesk.core.services.data', [])
     /**
-     * Location State Adapter for Data Layer
+     * @ngdoc service
+     * @module superdesk.core.services
+     * @name LocationStateAdapter
+     *
+     * @requires https://docs.angularjs.org/api/ng/service/$location $location
+     *
+     * @description Location State Adapter for Data Layer.
      */
     .service('LocationStateAdapter', ['$location', function($location) {
         this.get = function(key) {
@@ -11,10 +17,22 @@ export default angular.module('superdesk.core.services.data', [])
             return $location.search(key, val);
         };
     }])
+
+    /**
+     * @ngdoc factory
+     * @module superdesk.core.services
+     * @name DataAdapter
+     *
+     * @requires em
+     * @requires https://docs.angularjs.org/api/ng/service/$rootScope $rootScope
+     * @requires LocationStateAdapter
+     *
+     * @param {Object} resource Resource.
+     * @param {Object} params Paramters.
+     *
+     * @description Returns a data provider for a given resource.
+     */
     .factory('DataAdapter', ['$rootScope', 'em', 'LocationStateAdapter', function($rootScope, em, LocationStateAdapter) {
-        /**
-         * Data Provider for given resource
-         */
         return function DataAdapter(resource, params) {
             var _this = this;
             var state = LocationStateAdapter; // @todo implement storage state adapter
@@ -49,9 +67,14 @@ export default angular.module('superdesk.core.services.data', [])
             }
 
             /**
-             * Execute query
+             * @ngdoc method
+             * @name DataAdapter#query
+             * @public
+             * @returns {Promise} Promise.
              *
              * @param {Object} criteria
+             *
+             * @description Execute query.
              */
             this.query = function(criteria) {
                 _this.loading = true;
@@ -67,9 +90,13 @@ export default angular.module('superdesk.core.services.data', [])
             };
 
             /**
-             * Get/set current page
+             * @ngdoc method
+             * @name DataAdapter#page
+             * @public
              *
-             * @param {integer} page
+             * @param {Integer} page
+             *
+             * @description Get/set current page.
              */
             this.page = function(page) {
                 switch (arguments.length) {
@@ -84,10 +111,15 @@ export default angular.module('superdesk.core.services.data', [])
             };
 
             /**
-             * Get/set current search query
+             * @ngdoc method
+             * @name DataAdapter#search
+             * @public
+             * @returns {Object} chainable
              *
-             * @param {string} q
-             * @param {string} df
+             * @param {String} q
+             * @param {String} df
+             *
+             * @description Get/set current search query.
              */
             this.search = function(q, df) {
                 switch (arguments.length) {
@@ -106,10 +138,14 @@ export default angular.module('superdesk.core.services.data', [])
             };
 
             /**
-             * Get/set filter
+             * @ngdoc method
+             * @name DataAdapter#where
+             * @public
              *
-             * @param {string} key
-             * @param {string} val
+             * @param {String} key
+             * @param {String} val
+             *
+             * @description Get/set filter
              */
             this.where = function(key, val) {
                 switch (arguments.length) {
@@ -125,7 +161,13 @@ export default angular.module('superdesk.core.services.data', [])
             };
 
             /**
-             * Get single item by id
+             * @ngdoc method
+             * @name DataAdapter#find
+             * @public
+             *
+             * @param {Object} id ID
+             *
+             * @description Get single item by ID.
              */
             this.find = function(id) {
                 console.info('find', resource, id);
@@ -133,7 +175,13 @@ export default angular.module('superdesk.core.services.data', [])
             };
 
             /**
-             * Reset default params
+             * @ngdoc method
+             * @name DataAdapter#reset
+             * @public
+             *
+             * @param {Object} params Paramters.
+             *
+             * @description Reset default params
              */
             this.reset = function(params) {
                 cancelWatch();
@@ -156,7 +204,11 @@ export default angular.module('superdesk.core.services.data', [])
             };
 
             /**
-             * Force reload with same params
+             * @ngdoc method
+             * @name DataAdapter#reset
+             * @public
+             *
+             * @description Force reload with same params
              */
             this.reload = function() {
                 _this.query(getQueryCriteria());

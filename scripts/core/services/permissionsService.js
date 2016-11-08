@@ -1,5 +1,10 @@
 /**
- * Permissions service
+ * @ngdoc service
+ * @module superdesk.core.services
+ * @name permissionsService
+ *
+ * @description
+ * #### Permissions service
  *
  * Permissions service checks if a given user or role is able to perform given actions.
  *
@@ -7,28 +12,29 @@
  *
  * Checking user/permissions:
  *
+ * ```js
  * permissionsService.isUserAllowed(permissions, user);
+ * ```
  *
  * Params:
  *
- * @param {object} permissions - permissions object in {resource: {action: true/false, ...}, ...}
+ * {Object} permissions - permissions object in {resource: {action: true/false, ...}, ...}
  * format.
  *
- * @param {object} user - user object as returned from server.
+ * {Object} user - user object as returned from server.
  *
  * If no user is given, current logged in user will be assumed.
  *
  * Checking role/permissions:
  *
+ * ```js
  * permissionsService.isRoleAllowed(permissions, role);
+ * ```
  *
- * Params:
- *
- * @param {object} permissions - permissions object in {resource: {action: true/false, ...}, ...}
+ * {Object} permissions - permissions object in {resource: {action: true/false, ...}, ...}
  * format.
  *
- * @param {object} role - role object as returned from server.
- *
+ * {Object} role - role object as returned from server.
  */
 export default angular.module('superdesk.core.services.permissions', [])
     .service('permissionsService', ['$q', '$rootScope', 'em', function($q, $rootScope, em) {

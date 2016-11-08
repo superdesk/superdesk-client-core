@@ -1,5 +1,18 @@
 export default angular.module('superdesk.core.preferences', ['superdesk.core.notify', 'superdesk.core.auth.session'])
-
+    /**
+     * @ngdoc service
+     * @module superdesk.core.services
+     * @name preferencesService
+     *
+     * @requires https://docs.angularjs.org/api/ng/service/$injector $injector
+     * @requires https://docs.angularjs.org/api/ng/service/$rootScope $rootScope
+     * @requires https://docs.angularjs.org/api/ng/service/$q $q
+     * @requires session
+     * @requires notify
+     * @requires gettext
+     *
+     * @description Preferences Service (TODO)
+     */
     .service('preferencesService', ['$injector', '$rootScope', '$q', 'session', 'notify', 'gettext',
         function PreferencesService($injector, $rootScope, $q, session, notify, gettext) {
             var USER_PREFERENCES = 'user_preferences',
@@ -26,9 +39,12 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
             }, resetPreferences);
 
             /**
-             * Get privileges for current user.
-             *
+             * @ngdoc method
+             * @name preferencesService#getPrivileges
+             * @public
              * @returns {Promise}
+             *
+             * @description Get privileges for current user.
              */
             this.getPrivileges = function getPrivileges() {
                 return this.get().then(function() {
@@ -37,9 +53,13 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
             };
 
             /**
-             * Get available content actions for current user.
+             * @ngdoc method
+             * @name preferencesService#getActions
+             * @public
              *
              * @returns {Promise}
+             *
+             * @description Get available content actions for current user.
              */
             this.getActions = function getActions() {
                 return this.get().then(function() {
@@ -48,7 +68,11 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
             };
 
             /**
-             * Fetch preferences from server and store local copy.
+             * @ngdoc method
+             * @name preferencesService#getPreferences
+             * @private
+             *
+             * @description Fetch preferences from server and store local copy.
              * On next call it will remove local copy and fetch again.
              */
             function getPreferences(cached) {
@@ -100,11 +124,17 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
             }
 
             /**
-             * Get preference value, in case preferences are not loaded yet it will fetch it.
-             * Parameter force is used to  bypass the cache
+             * @ngdoc method
+             * @name preferencesService#get
+             * @private
+             * @returns {Promise}
+             *
              * @param {string} key
              * @param {boolean} force
-             * @returns {Promise}
+             *
+             * @description Get preference value, in case preferences are not
+             * loaded yet it will fetch it. Parameter force is used to bypass
+             * the cache.
              */
             this.get = function(key, force) {
                 if (!preferencesPromise || force) {
@@ -119,15 +149,20 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
             };
 
             /**
+             * @ngdoc method
+             * @name preferencesService#update
+             * @private
+             *
+             * @param {object} updates
+             * @param {string} key
+             *
+             * @description
              * Update preferences
              *
              * It's done in 2 steps - schedule and commit. Schedule caches the changes
              * and calls commit async. Following calls to update in same $digest will
              * only cache changes. In next $digest those changes are pushed to api.
              * This way we can update multiple preferences without getting etag conflicts.
-             *
-             * @param {object} updates
-             * @param {string} key
              */
             this.update = function(updates, key) {
                 if (!key){
