@@ -60,7 +60,7 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
                 })
                 .then(angular.bind(desks, desks.fetchCurrentUserDesks))
                 .then(function(userDesks) {
-                    scope.desks = userDesks._items;
+                    scope.desks = userDesks;
                 })
                 .then(workspaces.queryUserWorkspaces)
                 .then(function(_workspaces) {

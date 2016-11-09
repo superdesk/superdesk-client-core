@@ -11,9 +11,7 @@ describe('familyService', function() {
         desk3: {title: 'desk3'}
     };
 
-    var userDesks = {
-        _items: [{'_id': 'desk1'}]
-    };
+    var userDesks = [{'_id': 'desk1'}];
 
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.archive.directives'));
