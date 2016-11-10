@@ -1,5 +1,19 @@
 import { PARAMETERS, EXCLUDE_FACETS } from 'apps/search/constants';
-
+/**
+ * @ngdoc service
+ * @module superdesk.apps.search
+ * @name tags
+ *
+ * @requires $location
+ * @requires desks
+ * @requires userList
+ * @requires metadata
+ * @requires search
+ * @requires ingestSources
+ * @requires gettextCatalog
+ *
+ * @description Provides set of methods to manipulate with tags in search bar
+ */
 TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search', 'ingestSources', 'gettextCatalog'];
 export function TagService($location, desks, userList, metadata, search, ingestSources, gettextCatalog) {
     var tags = {};
@@ -173,7 +187,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @param {String} key
      */
     function removeFacet (type, key) {
-        if (String(key).indexOf('Last') >= 0) {
+        if (String(key).indexOf('Last') >= 0 || String(key).indexOf('after') >= 0 || String(key).indexOf('before') >= 0) {
             removeDateFacet();
         } else {
             var search = $location.search();
@@ -196,20 +210,32 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     }
 
     /**
-     * Removes the date search related tags by modifying the $location.search
+     * @ngdoc method
+     * @name tags#initSelectedFacets
+     * @private
+     * @description Removes the date search related tags by modifying the $location.search
      */
     function removeDateFacet () {
         var search = $location.search();
-        if (search.after) {
+        if (search.after || search.afterfirstcreated || search.beforefirstcreated ||
+                search.afterversioncreated || search.beforeversioncreated) {
             $location.search('after', null);
+            $location.search('afterfirstcreated', null);
+            $location.search('beforefirstcreated', null);
+            $location.search('afterversioncreated', null);
+            $location.search('beforeversioncreated', null);
+
         } else if (search.scheduled_after) {
             $location.search('scheduled_after', null);
         }
     }
 
     /**
-     * Parses search parameters object and create tags.
-     * @returns {*}
+     * @ngdoc method
+     * @name tags#initSelectedFacets
+     * @private
+     * @description Parses search parameters object and create tags
+     * @return {Promise} List of items
      */
     function initSelectedFacets () {
         return desks.initialize().then(function(result) {
@@ -232,30 +258,58 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 if (key !== 'q' && !EXCLUDE_FACETS[key]) {
                     tags.selectedFacets[key] = [];
 
-                    if (key === 'desk') {
-                        var selectedDesks = JSON.parse(type);
-                        _.forEach(selectedDesks, function(selectedDesk) {
-                            tags.selectedFacets[key].push({
-                                label: desks.deskLookup[selectedDesk].name,
-                                value: selectedDesk});
-                        });
-                    } else if (key === 'after') {
+                    switch (key) {
+                        case 'desk':
+                            var selectedDesks = JSON.parse(type);
+                            _.forEach(selectedDesks, function (selectedDesk) {
+                                tags.selectedFacets[key].push({
+                                    label: desks.deskLookup[selectedDesk].name,
+                                    value: selectedDesk});
+                            });
+                            break;
 
-                        if (type === 'now-24H') {
-                            tags.selectedFacets.date = ['Last Day'];
-                        } else if (type === 'now-1w'){
-                            tags.selectedFacets.date = ['Last Week'];
-                        } else if (type === 'now-1M'){
-                            tags.selectedFacets.date = ['Last Month'];
-                        }
-                    } else if (key === 'scheduled_after') {
-                        if (type === 'now-8H') {
-                            tags.selectedFacets.date = ['Scheduled in the Last 8 Hours'];
-                        } else {
-                            tags.selectedFacets.date = ['Scheduled in the Last Day'];
-                        }
-                    } else if (FacetKeys[key]) {
-                        tags.selectedFacets[key] = JSON.parse(type);
+                        case 'after':
+                            if (type === 'now-24H') {
+                                tags.selectedFacets.date = ['Last Day'];
+                            } else if (type === 'now-1w') {
+                                tags.selectedFacets.date = ['Last Week'];
+                            } else if (type === 'now-1M') {
+                                tags.selectedFacets.date = ['Last Month'];
+                            }
+                            break;
+
+                        case 'scheduled_after':
+                            if (type === 'now-8H') {
+                                tags.selectedFacets.date = ['Scheduled in the Last 8 Hours'];
+                            } else {
+                                tags.selectedFacets.date = ['Scheduled in the Last Day'];
+                            }
+                            break;
+
+                        case 'afterfirstcreated':
+                            $location.search('after', null);
+                            tags.selectedFacets.date = ['Created after ' + type];
+                            break;
+
+                        case 'beforefirstcreated':
+                            $location.search('after', null);
+                            tags.selectedFacets.date = ['Created before ' + type];
+                            break;
+
+                        case 'afterversioncreated':
+                            $location.search('after', null);
+                            tags.selectedFacets.date = ['Modified before ' + type];
+                            break;
+
+                        case 'beforeversioncreated':
+                            $location.search('after', null);
+                            tags.selectedFacets.date = ['Modified before ' + type];
+                            break;
+
+                        default:
+                            if (FacetKeys[key]) {
+                                tags.selectedFacets[key] = JSON.parse(type);
+                            }
                     }
                 }
             });
