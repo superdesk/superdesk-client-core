@@ -1,6 +1,18 @@
 import { PARAMETERS, EXCLUDE_FACETS } from 'apps/search/constants';
 
 SearchService.$inject = ['$location', 'gettext', 'config', 'session'];
+/**
+ * @ngdoc service
+ * @module superdesk.apps.search
+ * @name search
+ *
+ * @requires https://docs.angularjs.org/api/ng/service/$injector $location
+ * @requires gettext
+ * @requires config
+ * @requires session
+ *
+ * @description Search Service is responsible for creation and manipulation of Query object
+ */
 export function SearchService($location, gettext, config, session) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
@@ -581,6 +593,19 @@ export function SearchService($location, gettext, config, session) {
     this.getItemQuery = function(items) {
         var updatedItems = _.keys(items);
         return {'filtered': {'filter': {'terms': {'_id': updatedItems}}}};
+    };
+
+    /**
+     * @ngdoc method
+     * @name search#doesSearchAgainstRepo
+     * @public
+     * @return {bool}
+     * @description Checks if the given search object will do the search agains the given repo
+     * @param {Object} search search criteria
+     * @param {string} repo name of the repo: ingest, archive, published, archived
+     */
+    this.doesSearchAgainstRepo = function(search, repo) {
+        return !search.filter.query.repo || search.filter.query.repo.toLowerCase().indexOf(repo.toLowerCase());
     };
 
     /**

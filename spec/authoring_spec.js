@@ -277,8 +277,8 @@ describe('authoring', function() {
         //view item history duplicate operation
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Duplicate', 2, 0);
-        expect(monitoring.getTextItem(0, 1)).toBe('item5');
-        monitoring.actionOnItem('Edit', 0, 1);
+        expect(monitoring.getTextItem(0, 0)).toBe('item5');
+        monitoring.actionOnItem('Edit', 0, 0);
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
         expect(authoring.getHistoryItem(1).getText()).toMatch(/Copied to \d+ \(Politic Desk\/Working Stage\) by .*/);
