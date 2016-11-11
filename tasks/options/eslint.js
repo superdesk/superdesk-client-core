@@ -19,7 +19,10 @@ module.exports = {
         envs: ['node', 'jasmine']
     },
     tasks: {
-        src: path.join(root, 'tasks/**/*.js'),
+        src: [
+            path.join(root, 'tasks/**/*.js'),
+            '!' + path.join(root, 'tasks/dgeni/**/*.js')
+        ],
         envs: ['node']
     },
     root: {

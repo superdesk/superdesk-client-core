@@ -12,7 +12,7 @@ files.push(['!**/piwik-tracking.js']);
 module.exports = {
     options: {
         config: path.join(root, '.jscs.json'),
-        excludeFiles: ['**/*.generated.js']
+        excludeFiles: ['**/*.generated.js', 'tasks/dgeni/**/*.js']
     },
     all: {src: files},
     docs: {src: ['<%= appDir %>/docs/**/*.js']}

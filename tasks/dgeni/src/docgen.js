@@ -26,8 +26,14 @@ function configurePackage(p) {
     // append services
     p.factory(require('./services/transforms/errorTagTransform'))
 
+     .factory(require('./jsxFileReader'))
+
      // build navigation
      .processor(require('./processors/structuredParam'))
+
+     .config(function (readFilesProcessor, jsxFileReader) {
+         readFilesProcessor.fileReaders.unshift(jsxFileReader);
+     })
 
      // generate website
      .config(function(generateWebsiteProcessor) {
@@ -83,6 +89,12 @@ function configurePackage(p) {
         });
 
         computeIdsProcessor.idTemplates.push({
+            docTypes: ['React'],
+            idTemplate: 'module:${module}.${docType}:${name}',
+            getAliases: getAliases
+        });
+
+        computeIdsProcessor.idTemplates.push({
             docTypes: ['error'],
             idTemplate: 'module:${module}.${docType}:${name}',
             getAliases: getAliases
@@ -108,6 +120,12 @@ function configurePackage(p) {
 
         computePathsProcessor.pathTemplates.push({
             docTypes: ['factory'],
+            pathTemplate: '${area}/${module}/${docType}/${name}',
+            outputPathTemplate: 'partials/${area}/${module}/${docType}/${name}.html'
+        });
+
+        computePathsProcessor.pathTemplates.push({
+            docTypes: ['React'],
             pathTemplate: '${area}/${module}/${docType}/${name}',
             outputPathTemplate: 'partials/${area}/${module}/${docType}/${name}.html'
         });
