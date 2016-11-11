@@ -16,8 +16,7 @@
             //border-left: 1px solid #dfdfdf;
         }
         .sortbar {
-            margin: 0 0 0 15px;
-            padding: 3px 0 0 10px;
+            padding: 3px 0 0 0;
             height: 25px;
             .lab {
                 line-height: 20px;
@@ -30,16 +29,25 @@
             padding: 0;
             text-align: center;
             border-left: 0;
+            padding-left: 10px !important;
         }
-
         .navbtn {
             &.btnRearrange {
                 width: 80px !important;
             }
         }
-
         .title {
             text-transform: uppercase;
+        }
+        .subnav__stretch-bar.swimlane {
+            margin: 0 2px !important;
+        }
+        .filter-tabs {
+            display: flex;
+            overflow: initial;
+        }
+        .level-compact {
+            display: flex !important;
         }
     }
 
@@ -201,42 +209,62 @@
                 @include border-box();
                 max-height: calc(100vh - 180px) !important;
             }
-
         }
-
     }
 }
 
 .workspace {
-  .main-section {
-    .content-item-preview {
-      position: absolute;
-      z-index: 4;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: $sidepreview-width + 160;
-      @media only screen and (max-width : 1430px) {
-          width: $sidepreview-width - 40;
-      }
-      .shift-preview__toggle {
-        display: none;
-      }
-    }
-    &.with-preview {
-      .content-list {
-        right: $sidepreview-width + 160;
-        @media only screen and (max-width : 1430px) {
-            right: $sidepreview-width - 40;
+    .main-section {
+        .content-item-preview {
+            position: absolute;
+            z-index: 3;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: $sidepreview-width + 160;
+            @media only screen and (max-width : 1430px) {
+              width: $sidepreview-width - 40;
+            }
+            .shift-preview__toggle {
+                display: none;
+            }
         }
-      }
+        &.with-preview {
+            .content-list {
+                right: $sidepreview-width + 160;
+                @media only screen and (max-width : 1430px) {
+                    right: $sidepreview-width - 40;
+                }
+            }
+        }
+        &.search-page-container {
+            .content-item-preview {
+                top: $nav-height;
+            }
+        }
     }
-    &.search-page-container {
-      .content-item-preview {
-        top: $nav-height;
-      }
+    &:not(.authoring) {
+        .main-section {
+            &:not(.with-preview) {
+                .content-list {
+                    .sd-column.swimlane {
+                        &.last {
+                            .monitoring-dropdown {
+                                .dropdown__menu {
+                                    position: relative;
+                                    left: 15px !important;
+                                    top: 20px !important;
+                                }
+                            }
+                            .notification-label {
+                                float: right !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-  }
 }
 
 .workspace.authoring {
@@ -332,7 +360,7 @@
             right: 25px !important;
         }
         .monitoring-dropdown {
-            .dropdown-menu {
+            .dropdown__menu {
                 margin-top: 35px !important;
             }
         }
