@@ -1,0 +1,128 @@
+{% macro typeList(types) -%}
+  {#
+     Renders list of type hints and links to the types
+   #}
+  {%- for typeName in types %}<span class="{$ typeName | typeClass $}">{$ typeName | typeLink $}</span>{% endfor -%}
+{%- endmacro -%}
+
+{%- macro paramTable(params) %}
+<table class="variables-matrix input-arguments {% if param.level %}level-{$ param.level $}{% endif %}">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for param in params %}
+    <tr>
+      <td>
+        {$ param.name $}
+        {% if param.alias %}| {$ param.alias $}{% endif %}
+        {% if param.type.optional %}<div><em>(optional)</em></div>{% endif %}
+      </td>
+      <td>
+        {$ typeList(param.typeList) $}
+      </td>
+      <td>
+        {$ param.description | marked $}
+        {% if param.defaultValue %}<p><em>(default: {$ param.defaultValue $})</em></p>{% endif %}
+        {% if param.nestedParams %}{$ paramTable(param.nestedParams) $}{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endmacro -%}
+
+
+{%- macro directiveParam(param, join, sep, css, name) -%}
+  {#
+     boolean params are treated as flags and values are stripped for element and attribute
+     when they are either optional or param name equals to attribute name
+     @name value + @param {boolean} value  -> value
+     @param {boolean} value                -> value="boolean"
+     @param {boolean=} value               -> [value]
+     @param {boolean} [value]              -> [value]
+     @param {boolean} [value=false]        -> [value="boolean(false)"]
+     @param {string|boolean} [value]       -> [value="string|boolean"]
+     @param {string|boolean} [value=test]  -> [value="string|boolean(test)"]
+  #}
+  {%- if (param.type.name == "boolean" or param.type.name == "Boolean") and param.name == name and not css -%}
+    {$ param.name | dashCase $}
+  {%- else -%}
+    {%- if param.optional or param.type.optional -%}[{%- endif -%}
+    {%- if (param.type.name == "boolean" or param.type.name == "Boolean") and (param.optional or param.type.optional) and not param.defaultValue and not css -%}
+      {$ param.name | dashCase $}
+    {%- else -%}
+      {$ param.name | dashCase $}{$ join $}
+      {%- if (param.type.name) -%}
+        {$ param.type.name $}
+      {%- elif param.type.elements -%}
+        {%- for type in param.type.elements -%}
+          {%- if not loop.first -%}|{%- endif -%}
+          {$ type.name $}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- if param.defaultValue -%}
+        ({$ param.defaultValue $})
+      {%- else -%}
+        {%- if css and (param.optional or param.type.optional) -%}
+          {# css representation for boolean value
+             @param {boolean} [value] -> [value: false;]     #}(false)
+        {%- endif -%}
+      {%- endif -%}
+      {$ sep $}
+    {%- endif -%}
+    {%- if param.optional or param.type.optional %}]{%- endif -%}
+  {%- endif -%}
+{%- endmacro -%}
+
+{%- macro functionSyntax(fn) %}
+  {%- set sep = joiner(', ') -%}
+  {% marked -%}
+    `{$ fn.name $}({%- for param in fn.params %}{$ sep() $}
+    {%- if param.type.optional %}[{% endif -%}
+    {$ param.name $}
+    {%- if param.type.optional %}]{% endif -%}
+    {% endfor %});`
+  {%- endmarked %}
+{% endmacro -%}
+
+{%- macro typeInfo(fn) -%}
+<table class="variables-matrix return-arguments">
+  <tr>
+    <td>{$ typeList(fn.typeList or fn.type.typeList) $}</td>
+    <td>{$ fn.description | marked $}</td>
+  </tr>
+</table>
+{%- endmacro -%}
+
+{# takes tags @deprecated and @since #}
+{# Renders one of  #}
+{#  "Deprecated {reason} since {comment}" e.g. "Deprecated since v1.2.3", "Deprecated in favor of [new feature] since 21.12.12" #}
+{#  "Since {comment}", e.g. "Since v2.3" #}
+{%- macro deprecatedOrSince(member) -%}
+  {% if member.deprecated != null %}
+  <span class="label label-hint hint-deprecated">
+    Deprecated {$ member.deprecated $}
+    {%- if member.since %}
+      since {$ member.since $}
+    {%- endif %}
+  </span>
+  {% else %}
+    {%- if member.since != null %}
+    <span class="label label-hint hint-since">Since {$ member.since $}</span>
+    {%- endif %}
+  {% endif %}
+{%- endmacro -%}
+
+{# takes tags @access or its' aliases and renders access label #}
+{%- macro memberAccess(member) -%}
+  {% if member.access != null %}
+  <span class="label label-hint hint-access access-{$ member.access $}">
+    {$ member.access $}
+  </span>
+  {% endif %}
+{%- endmacro -%}

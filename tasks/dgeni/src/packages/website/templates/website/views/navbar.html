@@ -1,0 +1,20 @@
+<nav
+  class="md-toolbar-tools"
+  flex
+  layout="row"
+  layout-align="space-between center"
+  ng-controller="NavbarCtrl as navbar">
+  <div
+    flex="grow"
+    layout="row"
+    layout-align="start center"
+    >
+    <div flex="none">{$ doc.locals.productTitle $} {$ doc.locals.productVersion $}</div>
+    <md-button
+      ng-class="{'md-active': isActive(area)}"
+      ng-repeat="area in navbar.areas"
+      ng-href="{{area.href}}"
+      aria-label="{{area.title}}">{{area.title}}</md-button>
+  </div>
+  <div ng-include="'views/searchbox.html'"></div>
+</nav>

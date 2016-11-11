@@ -1,0 +1,20 @@
+<div
+  flex="initial"
+  ng-controller="SearchCtrl as search" ng-cloak>
+    <form ng-submit="$event.preventDefault()">
+      <md-autocomplete
+          md-delay="100"
+          md-no-cache="false"
+          md-search-text="search.term"
+          md-selected-item="search.item"
+          md-selected-item-change="search.change(item)"
+          md-items="item in search.query(search.term)"
+          md-min-length="0"
+          placeholder="Quick lookup"
+        <md-item-template>
+          <span class="autocomplete-item__title">{{item.name}}</span>
+          <span class="autocomplete-item__metadata">{{item.type}}</span>
+        </md-item-template>
+      </md-autocomplete>
+    </form>
+</div>

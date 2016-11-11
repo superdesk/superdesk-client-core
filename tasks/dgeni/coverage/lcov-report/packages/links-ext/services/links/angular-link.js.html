@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for packages/links-ext/services/links/angular-link.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../index.html">all files</a> / <a href="index.html">packages/links-ext/services/links/</a> angular-link.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">52.38% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>11/21</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">25% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/4</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">52.38% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>11/21</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var _ = require('lodash');
+&nbsp;
+/**
+ * @dgService angular-link
+ * @description checks link for applicability and produces link to angularjs doc
+ */
+module.exports = function angularLink (log) {
+    /**
+     * ng.service.$q
+     * ng.service.$q@1.2.29
+     * ngRoute.provider.$routeProvider
+     */
+    var MATCH_REGEX = /^(ng[^\.]*)\.(\w+)\.(\$*[\w.\[\]]+)(?:@((?:\d+\.){2}\d+))?$/;
+                      // ngModule    type   name               version
+&nbsp;
+    var BASE_URL = 'https://docs.angularjs.org/api/${module}/${group}/${component}';
+    var VERSIONED_URL = 'https://code.angularjs.org/${version}/docs/api/${module}/${group}/${component}';
+&nbsp;
+    var BASE_COMPONENT_URL = 'https://docs.angularjs.org/partials/api/${module}/${group}/${component}.html';
+    var VERSIONED_COMPONENT_URL = 'https://code.angularjs.org/1.2.29/docs/partials/api/${module}/${group}/${component}.html';
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function checkApplicability (component) {</span>
+<span class="cstat-no" title="statement not covered" >        return MATCH_REGEX.test(component);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function makeUrl (component) {</span>
+<span class="cstat-no" title="statement not covered" >        var matches = component.match(MATCH_REGEX);</span>
+<span class="cstat-no" title="statement not covered" >        var version =  matches[4] || this.version;</span>
+<span class="cstat-no" title="statement not covered" >        return version ? _.template(this.versionedUrl)({ version: version, module: matches[1], group: matches[2], component: matches[3] })</span>
+                       : _.template(this.baseUrl)({ module: matches[1], group: matches[2], component: matches[3] })
+    }
+&nbsp;
+    /**
+     * @name makeTitle
+     * @param {String} component component to build title for
+     * @param {String} [title] optional title, is not used
+     * @description creates title from component
+     */
+<span class="fstat-no" title="function not covered" >    function makeTitle (component, title) {</span>
+<span class="cstat-no" title="statement not covered" >        var matches = component.match(MATCH_REGEX);</span>
+<span class="cstat-no" title="statement not covered" >        var res = matches[3];</span>
+<span class="cstat-no" title="statement not covered" >        var version = matches[4] || this.version;</span>
+<span class="cstat-no" title="statement not covered" >        if (version) {</span>
+<span class="cstat-no" title="statement not covered" >            res += ' (v' + version + ')';</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return res;</span>
+    }
+&nbsp;
+    return {
+        version: void(null),
+        baseUrl: BASE_URL,
+        versionedUrl: VERSIONED_URL,
+        test: checkApplicability,
+        url: makeUrl,
+        title: makeTitle
+    }
+};</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Aug 18 2016 17:08:09 GMT+0300 (MSK)
+</div>
+</div>
+<script src="../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../sorter.js"></script>
+</body>
+</html>

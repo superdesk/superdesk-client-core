@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for packages/links-ext/services/link-info.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">all files</a> / <a href="index.html">packages/links-ext/services/</a> link-info.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">8.51% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>4/47</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/35</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/4</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">8.51% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>4/47</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var _ = require('lodash');
+var path = require('path');
+&nbsp;
+/**
+ * @dgService getLinkInfo
+ * @description
+ * Get link information to a document that matches the given url
+ * @kind function
+ * @param  {String} url   The url to match
+ * @param  {String} title An optional title to return in the link information
+ * @return {Object}       The link information
+ *
+ * @property {boolean} relativeLinks Whether we expect the links to be relative to the originating doc
+ */
+module.exports = <span class="fstat-no" title="function not covered" >function getLinkInfo(getDocFromAlias, encodeCodeBlock, log) {</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  function getLinkInfoImpl(url, title, currentDoc) {</span>
+<span class="cstat-no" title="statement not covered" >    var linkInfo = {</span>
+      url: url,
+      type: 'url',
+      valid: true,
+      title: title || url
+    };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if ( !url ) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new Error('Invalid url');</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    var docs = getDocFromAlias(url, currentDoc);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if ( !getLinkInfoImpl.useFirstAmbiguousLink &amp;&amp; docs.length &gt; 1 ) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      linkInfo.valid = false;</span>
+<span class="cstat-no" title="statement not covered" >      linkInfo.errorType = 'ambiguous';</span>
+<span class="cstat-no" title="statement not covered" >      linkInfo.error = 'Ambiguous link: "' + url + '".\n' +</span>
+        docs.reduce(<span class="fstat-no" title="function not covered" >function(msg, doc) {</span> <span class="cstat-no" title="statement not covered" >return msg + '\n  "' + doc.id + '" ('+ doc.docType + ') : (' + doc.path + ' / ' + doc.fileInfo.relativePath + ')'; </span>}, 'Matching docs: ');
+&nbsp;
+    } else <span class="cstat-no" title="statement not covered" >if ( docs.length &gt;= 1 ) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      linkInfo.url = docs[0].path;</span>
+<span class="cstat-no" title="statement not covered" >      linkInfo.title = title || docs[0].name;</span>
+<span class="cstat-no" title="statement not covered" >      linkInfo.type = 'doc';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if ( getLinkInfoImpl.relativeLinks &amp;&amp; currentDoc &amp;&amp; currentDoc.path ) {</span>
+<span class="cstat-no" title="statement not covered" >        var currentFolder = path.dirname(currentDoc.path);</span>
+<span class="cstat-no" title="statement not covered" >        var docFolder = path.dirname(linkInfo.url);</span>
+<span class="cstat-no" title="statement not covered" >        var relativeFolder = path.relative(path.join('/', currentFolder), path.join('/', docFolder));</span>
+<span class="cstat-no" title="statement not covered" >        linkInfo.url = path.join(relativeFolder, path.basename(linkInfo.url));</span>
+<span class="cstat-no" title="statement not covered" >        log.debug(currentDoc.path, docs[0].path, linkInfo.url);</span>
+      }
+&nbsp;
+    } else <span class="cstat-no" title="statement not covered" >if ( url.indexOf('#') &gt; 0 ) {</span>
+<span class="cstat-no" title="statement not covered" >      var pathAndHash = url.split('#');</span>
+<span class="cstat-no" title="statement not covered" >      linkInfo = getLinkInfoImpl(pathAndHash[0], title, currentDoc);</span>
+<span class="cstat-no" title="statement not covered" >      linkInfo.url = linkInfo.url + '#' + pathAndHash[1];</span>
+<span class="cstat-no" title="statement not covered" >      return linkInfo;</span>
+&nbsp;
+    } else <span class="cstat-no" title="statement not covered" >if ( url.indexOf('/') === -1 &amp;&amp; url.indexOf('#') !== 0 ) {</span>
+<span class="cstat-no" title="statement not covered" >      var valid = false;</span>
+&nbsp;
+      // extension point, check url against externals
+<span class="cstat-no" title="statement not covered" >      if (getLinkInfoImpl.externalLinks) {</span>
+<span class="cstat-no" title="statement not covered" >        var link = _.find(getLinkInfoImpl.externalLinks, <span class="fstat-no" title="function not covered" >function (link) {</span></span>
+<span class="cstat-no" title="statement not covered" >          return link.test(url);</span>
+        });
+<span class="cstat-no" title="statement not covered" >        if (link) {</span>
+<span class="cstat-no" title="statement not covered" >          linkInfo.url = link.url(url);</span>
+<span class="cstat-no" title="statement not covered" >          linkInfo.title = title || link.title(url);</span>
+<span class="cstat-no" title="statement not covered" >          linkInfo.type = 'doc';</span>
+<span class="cstat-no" title="statement not covered" >          linkInfo.external = true;</span>
+<span class="cstat-no" title="statement not covered" >          valid = true;</span>
+        }
+      }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      if (!valid) {</span>
+<span class="cstat-no" title="statement not covered" >        linkInfo.valid = false;</span>
+<span class="cstat-no" title="statement not covered" >        linkInfo.errorType = 'missing';</span>
+<span class="cstat-no" title="statement not covered" >        linkInfo.error = 'Invalid link (does not match any doc): "' + url + '"';</span>
+      }
+    } else {
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      linkInfo.title = title || (( url.indexOf('#') === 0 ) ? url.substring(1) : path.basename(url, '.html'));</span>
+&nbsp;
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return linkInfo;</span>
+  };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  getLinkInfoImpl.externalLinks = [];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return getLinkInfoImpl;</span>
+};</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Aug 18 2016 17:08:09 GMT+0300 (MSK)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>
