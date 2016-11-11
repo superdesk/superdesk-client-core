@@ -1,0 +1,37 @@
+<section
+  layout="column"
+  layout-padding
+  flex="grow"
+  ng-cloak>
+<!--
+  <md-content flex="grow" ayout-fill>
+-->
+    <section ng-repeat="navGroup in docs.currentArea.navGroups">
+      <subheader class="md-primary">
+        <a class="nav-index-group-heading" ng-href="#{{navGroup.href}}"><span>{{navGroup.name}}</span></a>
+      </subheader>
+      <md-list style="padding: 0">
+        <md-list-item
+          layout="column"
+          layout-align="center start"
+          ng-repeat="navItem in navGroup.navItems track by navItem.href"
+          style="min-height: auto;">
+          <subheader class="md-primary"
+            ng-class="{'nav-index-section': navItem.type === 'section', 'current': docs.isCurrent(navItem)}">
+            <a ng-href="#{{navItem.href}}"><span>{{navItem.title || navItem.name}}</span></a>
+          </subheader>
+          <md-list style="padding: 0">
+            <md-list-item
+              ng-repeat="item in navItem.navItems track by item.href"
+              ng-class="{'current': docs.isCurrent(item)}"
+              style="min-height: auto;">
+              <a ng-href="#{{item.href}}"><span>{{navItem.title || item.name}}</span></a>
+            </md-list-item>
+          </md-list>
+        </md-list-item>
+      </md-list>
+    </section>
+<!--
+  </md-content>
+-->
+</section>

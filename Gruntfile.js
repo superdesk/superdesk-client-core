@@ -32,7 +32,7 @@ module.exports = function(grunt) {
     // loads additional unneeded C code which pollutes other tasks even when not
     // using it.
     if (grunt.cli.tasks.indexOf('docs') > -1) {
-        grunt.loadNpmTasks('dgeni-alive');
+        grunt.loadTasks('./tasks/dgeni/tasks');
     }
 
     // Auto-load configuration

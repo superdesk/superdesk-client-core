@@ -6,7 +6,8 @@ module.exports = {
         jshintrc: '.jshintrc'
     },
     all: require('./files').scripts.concat(
-        '!' + path.join(root, '**/*.generated.js')
+        '!' + path.join(root, '**/*.generated.js'),
+        '!' + path.join(root, 'tasks/dgeni/**/*.js')
     ),
     docs: ['<%= appDir %>/docs/**/*.js']
 };

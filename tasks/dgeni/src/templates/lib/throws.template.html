@@ -1,0 +1,10 @@
+{%- if doc.throws -%}
+<h3>Throws</h3>
+<ul class="throws">
+  {%- for throw in doc.throws %}
+  <li id="{$ throw.name $}">
+    {$ typeInfo(throw) $}
+  </li>
+  {% endfor -%}
+</ul>
+{%- endif -%}

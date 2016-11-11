@@ -1,0 +1,29 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "dependencies": {
+    "modernizr": "3.3.x",
+    "angular": "1.5.x",
+    "jquery": "2.x.x",
+    "bootstrap": "3.3.x",
+    "google-code-prettify": "1.0.1",
+    "angular-material": "1.0.x",
+    "bytebuffer": "5.0.x",
+    "font-awesome": "fontawesome#~4.5.0"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "dist/css/bootstrap.css"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "css/font-awesome.css"
+      ]
+    }
+  },
+  "resolutions": {
+    "angular": "1.5.x"
+  }
+}

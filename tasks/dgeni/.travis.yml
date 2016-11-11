@@ -1,0 +1,14 @@
+
+language: "node_js"
+
+node_js:
+  - "stable"
+  - "4.3.1"
+
+script: "npm run travis"
+
+cache:
+  directories:
+  - "node_modules"
+
+sudo: false

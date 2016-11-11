@@ -1,0 +1,51 @@
+<!doctype html>
+<html ng-app="docApp">
+  <head>
+    <!-- <base href="/" ></base> -->
+    <title>Documents</title>
+    <meta charset="utf-8"></meta>
+
+    <!-- build:css({app,.tmp,src}) styles/vendor.css -->
+      <!-- bower:css -->
+      <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css({.tmp,src,app}) styles/app.css -->
+      <link rel="stylesheet" href="styles/docs.css" />
+      <link rel="stylesheet" href="styles/runnableExample.css" />
+      <link rel="stylesheet" href="styles/github.css" />
+    <!-- endbuild -->
+
+  </head>
+  <body flex layout-fill>
+    <div flex-md
+     layout="row"
+     layout-align="center end"
+     layout-fill
+     ng-controller="DocsCtrl as docs"
+     ng-include="'views/main.html'"></div>
+
+    <!-- build:js({app,.tmp}) scripts/vendor.js -->
+      <!-- bower:js -->
+      <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({app,.tmp}) scripts/app.js -->
+      <!-- inject:env_ignore -->
+      <!-- endinject -->
+      <script src="scripts/index.js"></script>
+      <script src="scripts/pre.directive.js"></script>
+      <script src="scripts/a.directive.js"></script>
+      <script src="scripts/docs.controller.js"></script>
+      <script src="scripts/main.controller.js"></script>
+      <script src="scripts/navbar.controller.js"></script>
+      <script src="scripts/search.controller.js"></script>
+      <script src="scripts/bloomfilter.js"></script>
+      <script src="data/config.js"></script>
+      <script src="data/area-data.js"></script>
+      <script src="data/nav-data.js"></script>
+      <!-- inject:partials -->
+      <!-- angular templates will be automaticaly converted in js and inserted here -->
+      <!-- endinject -->
+    <!-- endbuild -->
+  </body>
+</html>
