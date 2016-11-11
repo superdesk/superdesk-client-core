@@ -173,9 +173,16 @@ export function SearchResults(
                     }
                 }
 
-                if (data && data.items && scope.showRefresh && !data.force) {
+                if (data && (data.item || data.items || data.item_id) && scope.showRefresh && !data.force) {
                     // if we know the ids of the items then try to fetch those only
                     originalQuery = angular.extend({}, criteria.source.query);
+
+                    let items = data.items || {};
+
+                    if (data.item || data.item_id) {
+                        items[data.item || data.item_id] = 1;
+                    }
+
                     criteria.source.query = search.getItemQuery(data.items);
                 }
 
@@ -200,7 +207,7 @@ export function SearchResults(
                     if (!scope.showRefresh || (data && data.force)) {
                         scope.total = items._meta.total;
                         scope.$applyAsync(function() {
-                            render(items, null, (data && data.force));
+                            render(items, null, true);
                         });
                     } else {
                         // update scope items only with the matching fetched items
