@@ -19,10 +19,11 @@ module.exports = {
 
         src: [
             'scripts/**/*.js',
-            'docs/ngdoc/**/*.ngdoc',
+            'scripts/**/*.jsx',
+            'scripts/**/*.ngdoc',
             '!**/test/**/*spec.js'
         ],
 
-        templatePaths: ['docs/ngdoc/templates']
+        templatePaths: ['docs/templates']
     }
 };

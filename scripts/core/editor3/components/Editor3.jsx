@@ -1,4 +1,5 @@
 /**
+ * @ngdoc React
  * @module superdesk.core.editor3
  * @name Editor3
  * @param {Array} editorFormat the formating settings available for editor,
