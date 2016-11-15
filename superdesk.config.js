@@ -9,6 +9,12 @@ module.exports = function(grunt) {
     return {
         defaultRoute: '/workspace',
         requiredMediaMetadata: ['headline', 'description_text', 'alt_text'],
+        publisher: {
+            protocol: 'http',
+            tenant: 'default',
+            domain: 'ljuba.s-lab.sourcefabric.org',
+            base: 'api/v1'
+        },
         features: {
             swimlane: {columnsLimit: 4}
         }

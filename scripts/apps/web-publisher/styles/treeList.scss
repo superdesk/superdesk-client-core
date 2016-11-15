@@ -1,0 +1,43 @@
+.treeList {
+    &__element {
+        border: 1px solid $tableBorder;
+        border-left: 2px solid #4d646f;
+        border-top: 0;
+        padding: 0 15px;
+        line-height: 3em;
+        background-color: #fff;
+    }
+
+    &__label {
+        display: inline-block;
+        background-color: #90bccf;
+        color: #fff;
+        border-radius: 55px;
+        line-height: 1em;
+        height: 1em;
+        margin: 1em 1em 0 0;
+        font-size: 11px;
+        padding: 4px 6px;
+        font-family: arial, sans-serif;
+    }
+
+    &__icon {
+        display: flex;
+        height: 3em;
+        float: left;
+        padding-right: 10px;
+        align-items: center;
+
+        i {
+            color: $grayLight;
+        }
+    }
+
+    &__name {
+        display: inline-block;
+
+        &--bold {
+            font-weight: 500;
+        }
+    }
+}
