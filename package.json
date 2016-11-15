@@ -103,12 +103,14 @@
     "webpack-dev-server": "1.14.1"
   },
   "devDependencies": {
-    "dgeni-alive": "^0.3.4",
+    "dgeni-alive": "gbbr/dgeni-alive#react",
     "dgeni-packages": "^0.16.0",
+    "enzyme": "^2.4.1",
     "grunt-karma": "0.12.0",
     "grunt-karma-coveralls": "2.5.4",
     "jasmine-core": "^2.4.1",
     "jasmine-reporters": "^2.2.0",
+    "json-loader": "^0.5.4",
     "karma": "^0.13.9",
     "karma-chrome-launcher": "^0.2.0",
     "karma-coverage": "^0.5.5",
@@ -118,10 +120,8 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
     "protractor": "^4.0.9",
-    "enzyme": "^2.4.1",
     "react-addons-test-utils": "^15.3.2",
-    "sinon": "^2.0.0-pre.2",
-    "json-loader": "^0.5.4"
+    "sinon": "^2.0.0-pre.2"
   },
   "scripts": {
     "test": "grunt ci:travis"
