@@ -1,0 +1,67 @@
+<div class="modal-header">
+    <h3 class="pull-left" translate>Routes</h3>
+</div>
+
+<div class="subnav">
+    <ul class="filter-type filter-type--padded rightPadding">
+        <li title="all" class="filter-type__item filter-type__item--active">
+            <a href="" translate>all</a>
+        </li>
+        <li title="collection" class="filter-type__item">
+            <a href="" translate>collection</a>
+        </li>
+        <li title="content" class="filter-type__item">
+            <a href="" translate>content</a>
+        </li>
+    </ul>
+
+    <div sd-item-searchbar="" data-repo="repo" data-context="context" class=""></div>
+
+    <div class="subnav__stretch-bar"></div>
+
+    <div class="subnav__button-stack--square-buttons">
+        <button class="navbtn sd-create-btn" ng-click="paneOpen = !paneOpen">
+            <i class="svg-icon-plus"></i><span class="circle"></span>
+        </button>
+    </div>
+</div>
+<div class="paneLayout paneLayout--twoHeadersMargin">
+    <div class="paneLayout__content">
+        <div class="contentPadding ">
+            <ul class="treeList">
+                <li>
+                    <div ng-include="'scripts/apps/web-publisher/views/treeList__element.html'"></div>
+                    <ul class="treeList">
+                        <li>
+                            <div ng-include="'scripts/apps/web-publisher/views/treeList__element.html'"></div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="paneLayout__pane" ng-class="{'paneLayout__pane--open': paneOpen}">
+        <div class="modal-header">
+            <h3 class="pull-left" translate>Add Route</h3>
+            <div class="pull-right">
+                <button class="btn" ng-click="paneOpen = !paneOpen" translate>Cancel</button>
+                <button class="btn btn--primary" ng-disabled="" ng-click="" translate>Save</button>
+            </div>
+        </div>
+        <div class="contentPadding">
+            <form name="" class="flat">
+                <fieldset class="label-light">
+                    <div sd-info-item>
+                        <label for="name" translate>name</label>
+                        <input type="text" name="name" id="name" ng-model="something.name" required>
+                    </div>
+
+                    <div sd-info-item>
+                        <label for="template" translate>template name</label>
+                        <input type="text" name="template" id="template" ng-model="something.template">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
