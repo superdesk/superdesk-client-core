@@ -14,11 +14,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Editor, EditorState, RichUtils, ContentState} from 'draft-js';
+import {stateToHTML} from 'draft-js-export-html';
+import {stateFromHTML} from 'draft-js-import-html';
 
 export class Editor3 extends React.Component {
     constructor(props) {
         super(props);
-        var initialContentState = ContentState.createFromText(props.value);
+
+        const initialContentState = stateFromHTML(props.value);
         this.state = {editorState: EditorState.createWithContent(initialContentState)};
 
         this.readOnly = props.readOnly || false;
@@ -44,7 +47,7 @@ export class Editor3 extends React.Component {
     /** Handle the editor state has been changed event*/
     onChange(editorState) {
         this.setState({editorState});
-        this.parentOnChange(editorState.getCurrentContent().getPlainText());
+        this.parentOnChange(stateToHTML(editorState.getCurrentContent()));
     }
 
     /** Handle the editor key pressed event */

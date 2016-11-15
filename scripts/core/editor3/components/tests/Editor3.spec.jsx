@@ -2,6 +2,7 @@
 import React from 'react'
 import { shallow, mount } from 'enzyme'
 import { Editor3 } from '../Editor3'
+import {stateToHTML} from 'draft-js-export-html';
 
 
 describe('<Editor3 />', () => {
@@ -20,7 +21,8 @@ describe('<Editor3 />', () => {
     })
 
     it('check initial value for text', () => {
-        const wrapper = mount(<Editor3 onChange={(x) => x} value={ 'test value' }/>)
-        expect(wrapper.find('span').at(3).text()).toBe('test value')
+        const wrapper = mount(<Editor3 onChange={(x) => x} value={ '<h1>test value</h1>' }/>)
+        const currentContent = wrapper.state().editorState.getCurrentContent();
+        expect(stateToHTML(currentContent)).toBe('<h1>test value</h1>')
     })
 })
