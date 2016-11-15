@@ -35,6 +35,18 @@ if (appConfig.features && appConfig.features.useTansaProofing) {
     require('apps/tansa');
 }
 
+/* globals __SUPERDESK_CONFIG__: true */
+const appConfig = __SUPERDESK_CONFIG__;
+const withPublisher = typeof appConfig.publisher !== 'undefined';
+
+if (withPublisher) {
+    require('apps/web-publisher');
+}
+
+if (appConfig.features && appConfig.features.useTansaProofing) {
+    require('apps/tansa');
+}
+
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
     'superdesk.apps.dashboard',
