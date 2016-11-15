@@ -1,6 +1,28 @@
 # Superdesk Client Changelog
 
-## [Unreleased]
+## [1.4] 2016-11-15
+
+### Added
+
+- Related item search preference added to session.
+- Allow complex boolean queries in search.
+- Add `thinkRows` configuration for more condensed monitoring view.
+- Add swimlane view to monitoring.
+
+### Changed
+
+- SMS message is populated using abstract.
+- Disable formatting for byline field.
+
+### Fixed
+
+- Monitoring queries optimizations.
+- Preview in monitoring with ingest.
+- Link to revisions on about modal are clickable.
+- Date fields in search don't reset when value is cleared.
+- Let user with `templates` privilege edit desk templates.
+- Show `sign_off` field for routed items and items create from template.
+- Fix url validation for links in editor.
 
 ## [1.3] 2016-10-17
 
