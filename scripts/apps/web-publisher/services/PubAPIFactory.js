@@ -9,6 +9,7 @@
  *
  * @description Publisher API service
  */
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
 PubAPIFactory.$inject = ['config', '$http', '$q', 'session'];
 export function PubAPIFactory(config, $http, $q, session) {
     class PubAPI {
@@ -33,6 +34,19 @@ export function PubAPIFactory(config, $http, $q, session) {
                     this._token = response.token.api_key;
                     return response;
                 });
+=======
+PubAPIFactory.$inject = ['config', '$http', '$q'];
+export function PubAPIFactory(config, $http, $q) {
+
+    class PubAPI {
+
+        constructor() {
+            let pubConfig = config.publisher || {};
+            this._base = pubConfig.base || '';
+            this._protocol = pubConfig.protocol || 'http';
+            this._tenant = pubConfig.tenant || 'default';
+            this._domain = pubConfig.domain || '';
+>>>>>>> Added web publisher module
         }
 
         /**
@@ -43,6 +57,7 @@ export function PubAPIFactory(config, $http, $q, session) {
          */
         setTenant(tenant) {
             this._tenant = tenant;
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             this._server = this.buildServerURL();
         }
 
@@ -56,6 +71,8 @@ export function PubAPIFactory(config, $http, $q, session) {
             let subdomain = this._tenant === 'default' ? '' : `${this._tenant}.`;
 
             return `${this._protocol}://${subdomain}${this._domain}`;
+=======
+>>>>>>> Added web publisher module
         }
 
         /**
@@ -71,6 +88,7 @@ export function PubAPIFactory(config, $http, $q, session) {
                 url: this.resourceURL(resource),
                 method: 'GET',
                 params: params
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             }).then((response) => response._embedded._items);
         }
 
@@ -86,6 +104,10 @@ export function PubAPIFactory(config, $http, $q, session) {
             return this.req({
                 url: this.resourceURL(resource, id),
                 method: 'GET'
+=======
+            }).then(response => {
+                return response._embedded._items;
+>>>>>>> Added web publisher module
             });
         }
 
@@ -103,7 +125,11 @@ export function PubAPIFactory(config, $http, $q, session) {
                 url: this.resourceURL(resource, id),
                 method: id ? 'PATCH' : 'POST',
                 data: item
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             }).then((response) => {
+=======
+            }).then(response => {
+>>>>>>> Added web publisher module
                 angular.extend(item, response);
                 return response;
             });
@@ -128,12 +154,21 @@ export function PubAPIFactory(config, $http, $q, session) {
          * @ngdoc method
          * @name pubapi#resourceURL
          * @param {String} resource
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
          * @param {String} id
          * @returns {String}
          * @description Get resource url
          */
         resourceURL(resource, id = '') {
             return `${this._server}/${this._base}/${resource}/${id}`;
+=======
+         * @param {String} code - code of site
+         * @returns {String}
+         * @description Get resource url
+         */
+        resourceURL(resource, code = '') {
+            return `${this._protocol}://${this._tenant}.${this._domain}/${this._base}/${resource}/${code}`;
+>>>>>>> Added web publisher module
         }
 
         /**
@@ -144,6 +179,7 @@ export function PubAPIFactory(config, $http, $q, session) {
         * @description API Request - Adds basic error reporting, eventually authentication
         */
         req(config) {
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             config.headers = {Authorization: 'Basic ' + this._token};
             return $http(config).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
@@ -152,6 +188,15 @@ export function PubAPIFactory(config, $http, $q, session) {
 
                 console.error('publisher api error', response);
                 return $q.reject(response);
+=======
+            return $http(config).then(response => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.data;
+                } else {
+                    console.error('publisher api error', response);
+                    return $q.reject(response);
+                }
+>>>>>>> Added web publisher module
             });
         }
     }
