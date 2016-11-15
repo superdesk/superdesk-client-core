@@ -34,6 +34,12 @@ module.exports = function(grunt) {
                 required: false
             }
         },
+        publisher: {
+            protocol: 'http',
+            tenant: 'default',
+            domain: 'ljuba.s-lab.sourcefabric.org',
+            base: 'api/v1'
+        },
         features: {
             swimlane: {columnsLimit: 4}
         },
