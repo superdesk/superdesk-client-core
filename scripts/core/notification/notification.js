@@ -130,7 +130,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     _this.result = null;
     _this.activeDesk = null;
     desks.fetchCurrentUserDesks().then(function (desk_list) {
-        _this.userDesks = desk_list._items;
+        _this.userDesks = desk_list;
         _this.activeDesk = desks.active.desk;
     });
 
