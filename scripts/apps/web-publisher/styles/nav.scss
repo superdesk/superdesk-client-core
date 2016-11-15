@@ -1,17 +1,27 @@
 .nav--stackedPublisher {
     li {
         border-left: 7px solid transparent;
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
+=======
+        padding: 12px 0 12px 24px;
+        font-size: 1.05em;
+>>>>>>> Added web publisher module
 
         &.active {
             border-color: $sd-blue;
         }
 
         &.active, &:hover {
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             a {
+=======
+            button {
+>>>>>>> Added web publisher module
                 color: $sd-blue;
             }
         }
 
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
         &.group-header {
             text-transform: uppercase;
             padding-left: 12px;
@@ -26,6 +36,11 @@
             padding: 12px 0 12px 24px;
             font-size: 1.05em;
             color:#333;
+=======
+        button {
+            background: transparent;
+            border: none;
+>>>>>>> Added web publisher module
         }
     }
 }

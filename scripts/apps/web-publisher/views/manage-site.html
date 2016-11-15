@@ -1,5 +1,6 @@
 <div sd-modal data-model="true" data-full="true" class="modal--fullscreen publisherManager" ng-init="webPublisher.activeTab = 'general'">
     <div class="modal-header">
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
         <h3 class="pull-left"><span translate>Manage:</span> <b>{{newSite.name}}</b></h3>
         <div class="pull-right">
             <button class="btn" ng-click="webPublisher.toogleCreateSite()" translate>Close</button>
@@ -14,6 +15,15 @@
                 ng-disabled="webPublisher.siteForm.$invalid || !webPublisher.siteForm.$dirty"
                 ng-show="webPublisher.activeTab === 'general'"
                 ng-click="webPublisher.saveSite()"
+=======
+        <h3 class="pull-left"><span translate>Manage:</span> <b>{{new.name}}</b></h3>
+        <div class="pull-right">
+            <button class="btn" ng-click="webPublisher.toogleCreateSite()" translate>Close</button>
+            <button 
+                class="btn btn--primary"
+                ng-disabled="webPublisher.createForm.$invalid || !webPublisher.createForm.$dirty"
+                ng-click="webPublisher.save()"
+>>>>>>> Added web publisher module
                 translate>Save</button>
         </div>
     </div>
@@ -21,6 +31,7 @@
         <div class="sidebarLayout__sidebar">
             <ul class="nav nav--stackedPublisher">
                 <li ng-class="{active: webPublisher.activeTab === 'general'}">
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
                     <a ng-click="webPublisher.changeTab('general')">{{:: 'General'| translate}}</a>
                 </li>
                 <li ng-class="{active: webPublisher.activeTab === 'routes'}">
@@ -43,10 +54,24 @@
                     <a ng-click="webPublisher.changeTab('content-bucket')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
                         translate>Content Buckets</a>
+=======
+                    <button ng-click="webPublisher.changeTab('general')" translate>General</button>
+                </li>
+                <li ng-class="{active: webPublisher.activeTab === 'routes'}">
+                    <button ng-click="webPublisher.changeTab('routes')"
+                        ng-disabled="!webPublisher.siteCode || webPublisher.createForm.$dirty"
+                        translate>Routes</button>
+                </li>
+                <li ng-class="{active: webPublisher.activeTab === 'navigation'}">
+                    <button ng-click="webPublisher.changeTab('navigation')"
+                        ng-disabled="!webPublisher.siteCode || webPublisher.createForm.$dirty"
+                        translate>Navigation</button>
+>>>>>>> Added web publisher module
                 </li>
             </ul>
         </div>
         <div class="sidebarLayout__content" ng-switch="webPublisher.activeTab">
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             <div ng-if="webPublisher.activeTab === 'general'" class="modal-header modal-header--padding-20 ng-scope">
                 <h3 class="pull-left" translate="">General</h3>
             </div>
@@ -59,12 +84,24 @@
                     <div class="field">
                         <label for="subdomain" translate>Subdomain Name:</label>
                         <input type="text" name="subdomain" ng-model="newSite.subdomain" class="line-input" required/>
+=======
+            <form name="webPublisher.createForm">
+                <fieldset ng-switch-when="general" class="mainContentPadding">
+                    <div class="field">
+                        <label for="name" translate>Web Site Name:</label>
+                        <input type="text" name="name" ng-model="new.name" required/>
+                    </div>
+                    <div class="field">
+                        <label for="subdomain" translate>Subdomain Name:</label>
+                        <input type="text" name="subdomain" ng-model="new.subdomain" required/>
+>>>>>>> Added web publisher module
                     </div>
                 </fieldset>
             </form>
             <div ng-switch-when="routes">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/routes.html'"></div>
             </div>
+<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             <div ng-switch-when="navigation">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation.html'"></div>
             </div>
@@ -83,6 +120,11 @@
             <div ng-switch-when="content-list-bucket">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/content-list-bucket.html'"></div>
             </div>
+=======
+            <div ng-switch-when="navigation" class="navigation-main">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation.html'"></div>
+            </div>
+>>>>>>> Added web publisher module
         </div>
     </div>
 </div>
