@@ -104,3 +104,8 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 ##### Localisation
 
 - `i18n` - Sets the localisation language for the application by importing the file named 'angular-i18n/angular-locale_${i18n}.js'. Defaults to empty string. Example value: "no" for Norwegian.
+
+##### Web Publisher
+
+- `publisher.server` - web publisher domain, eg. `http://example.com`
+- `publisher.base` - web publisher base url, eg. `/api/v1/`

@@ -1,0 +1,12 @@
+// web-publisher.scss
+// Styling for the web publisher module
+// ----------------------------------------------------------------------------------------
+
+@import '~mixins.scss';
+@import '~variables.scss';
+
+@import '_helpers_variables.scss';
+@import 'sidebarLayout.scss';
+@import 'nav.scss';
+@import 'paneLayout.scss';
+@import 'treeList.scss';

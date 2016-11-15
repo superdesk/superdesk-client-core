@@ -1,0 +1,20 @@
+<div class="subnav">
+    <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
+        <div class="search-handler">
+            <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
+            <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
+            ng-keyup="aggregate.searchOnEnter($event, query)">
+            <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
+            <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
+                <i class="svg-icon-right"></i>
+            </button>
+        </div>
+    </div>
+    <h3 class="page-nav-title"><span translate>Web Monitoring</span></h3>
+    <div class="subnav__button-stack--square-buttons">
+        <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
+            <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
+            <ul class="dropdown__menu scrollable pull-right" sd-content-create></ul>
+        </div>
+    </div>
+</div>
