@@ -89,7 +89,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
      * Mark an item for a highlight
      */
     service.markItem = function(highlight, marked_item) {
-        return api.save('marked_for_highlights', {highlights: highlight, marked_item: marked_item.guid});
+        return api.save('marked_for_highlights', {highlights: highlight, marked_item: marked_item._id});
     };
 
     /**

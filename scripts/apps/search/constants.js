@@ -27,3 +27,78 @@ export const EXCLUDE_FACETS = Object.freeze({
     notlegal: 'Not Legal',
     notsms: 'Not Sms'
 });
+
+/**
+ * Default list of fields
+ */
+export const DEFAULT_LIST_CONFIG = {
+    'priority': [
+        'priority',
+        'urgency'
+    ],
+    'firstLine': [
+        'wordcount',
+        'slugline',
+        'highlights',
+        'headline',
+        'versioncreated'
+    ],
+    'secondLine': [
+        'profile',
+        'state',
+        'embargo',
+        'update',
+        'takekey',
+        'takepackage',
+        'signal',
+        'broadcast',
+        'flags',
+        'updated',
+        'category',
+        'provider',
+        'expiry',
+        'desk',
+        'fetchedDesk'
+    ]
+};
+
+/**
+ * Default list of fields to be returned in search results
+ */
+export const DEFAULT_PROJECTED_FIELDS = {
+    'fields': [
+        'priority',
+        'urgency',
+        'word_count',
+        'slugline',
+        'highlights',
+        'headline',
+        'versioncreated',
+        '_created',
+        '_updated',
+        '_etag',
+        'profile',
+        'state',
+        'embargo',
+        'publish_schedule',
+        'signal',
+        'broadcast',
+        'flags',
+        'rewrite_of',
+        'rewritten_by',
+        'source',
+        'expiry',
+        'task',
+        'anpa_take_key',
+        'type',
+        'linked_in_packages',
+        'renditions',
+        'package_type',
+        'correction_sequence',
+        'item_id',
+        '_current_version',
+        'lock_user',
+        'lock_session',
+        'genre'
+    ]
+};

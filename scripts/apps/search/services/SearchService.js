@@ -516,6 +516,23 @@ export function SearchService($location, gettext, config, session) {
     };
 
     /**
+     * Merges the highlighted fields to the item
+     *
+     * @param {Object} item - story
+     * @return {Object} item
+     */
+    this.mergeHighlightFields = function(item) {
+        if (item.es_highlight) {
+            _.forEach(_.keys(item.es_highlight), function (key) {
+                item[key] = item.es_highlight[key][0];
+            });
+        } else {
+            item.es_highlight = [];
+        }
+        return item;
+    };
+
+    /**
      * Merge newItems list with scopeItems list if any
      *
      * @param {Object} newItems
@@ -527,16 +544,7 @@ export function SearchService($location, gettext, config, session) {
 
     this.mergeItems = function(newItems, scopeItems, append, force) {
         if (this.getElasticHighlight()) {
-            newItems._items = _.map(newItems._items, function(item) {
-                if (item.es_highlight) {
-                    _.forEach(_.keys(item.es_highlight), function (key) {
-                        item[key] = item.es_highlight[key][0];
-                    });
-                } else {
-                    item.es_highlight = [];
-                }
-                return item;
-            });
+            newItems._items = _.map(newItems._items, this.mergeHighlightFields);
         }
 
         if (force || !scopeItems) {
@@ -593,6 +601,31 @@ export function SearchService($location, gettext, config, session) {
     this.getItemQuery = function(items) {
         var updatedItems = _.keys(items);
         return {'filtered': {'filter': {'terms': {'_id': updatedItems}}}};
+    };
+
+    /**
+     * Returns the query criteria for a single item while keeping
+     * keywords or q values so that the results will have highlights
+     *
+     * @param {Object} item - story
+     * @param {Object} criteria - search criteria
+     * @return {Object} criteria
+     */
+    this.getSingleItemCriteria = function(item, criteria) {
+        let itemCriteria = criteria || this.query($location.search()).getCriteria(true);
+        itemCriteria.source.from = 0;
+        itemCriteria.source.size = 1;
+        itemCriteria.es_highlight = this.getElasticHighlight();
+
+        let item_id = {};
+        if (item._type === 'ingest' || item._type === 'archive') {
+            item_id[item._id] = 1;
+        } else {
+            item_id[item.item_id] = 1;
+        }
+
+        itemCriteria.source.query.filtered.filter = this.getItemQuery(item_id).filtered.filter;
+        return itemCriteria;
     };
 
     /**
