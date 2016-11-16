@@ -23,6 +23,7 @@ describe('spellcheck', function() {
     beforeEach(window.module('superdesk.editor'));
     beforeEach(window.module('superdesk.editor.spellcheck'));
     beforeEach(window.module('superdesk.preferences'));
+    beforeEach(window.module('superdesk.vocabularies'));
 
     beforeEach(inject(function(dictionaries, spellcheck, $q, preferencesService) {
 

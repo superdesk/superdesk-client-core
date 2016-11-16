@@ -11,6 +11,7 @@ describe('MetadataWidgetCtrl controller', function () {
     beforeEach(window.module('superdesk.ui'));
     beforeEach(window.module('superdesk.filters'));
     beforeEach(window.module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.vocabularies'));
 
     beforeEach(window.module(function($provide) {
         $provide.constant('config', {
@@ -131,6 +132,7 @@ describe('metadata terms directive', function() {
     beforeEach(window.module('superdesk.filters'));
     beforeEach(window.module('superdesk.publish'));
     beforeEach(window.module('superdesk.authoring.metadata'));
+    beforeEach(window.module('superdesk.vocabularies'));
 
     beforeEach(inject(function (_$rootScope_, _$compile_) {
         $rootScope = _$rootScope_;

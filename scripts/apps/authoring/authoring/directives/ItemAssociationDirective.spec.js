@@ -2,6 +2,7 @@
 describe('item association directive', function() {
     beforeEach(window.module('superdesk.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.vocabularies'));
 
     var elem, scope, item = {};
 
