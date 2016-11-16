@@ -1,3 +1,5 @@
+import { DEFAULT_PROJECTED_FIELDS } from 'apps/search/constants';
+
 SearchResults.$inject = [
     '$location',
     'preferencesService',
@@ -7,7 +9,8 @@ SearchResults.$inject = [
     'api',
     'search',
     'session',
-    '$rootScope'
+    '$rootScope',
+    'config'
     ];
 
 /**
@@ -22,7 +25,8 @@ export function SearchResults(
         api,
         search,
         session,
-        $rootScope
+        $rootScope,
+        config
 ) { // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
@@ -46,6 +50,7 @@ export function SearchResults(
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
 
+            var projections = config.projected_fields || DEFAULT_PROJECTED_FIELDS.fields;
             var multiSelectable = (attr.multiSelectable === undefined) ? false : true;
 
             scope.previewingBroadcast = false;
@@ -190,6 +195,8 @@ export function SearchResults(
                 scope.total = null;
                 criteria.aggregations = $rootScope.aggregations;
                 criteria.es_highlight = search.getElasticHighlight();
+                criteria.projections = JSON.stringify(projections);
+
                 return api.query(getProvider(criteria), criteria).then(function (items) {
                     if (!scope.showRefresh && data && !data.force && (data.user !== session.identity._id)) {
 
@@ -295,6 +302,7 @@ export function SearchResults(
                     scope.loading = true;
                     criteria.source.from = (criteria.source.from || 0) + criteria.source.size;
                     criteria.source.size = 50;
+                    criteria.projections = JSON.stringify(projections);
 
                     api.query(getProvider(criteria), criteria).then(setScopeItems).finally(function() {
                         scope.loading = false;
@@ -312,6 +320,8 @@ export function SearchResults(
                     criteria.aggregations = $rootScope.aggregations;
                     criteria.es_highlight = search.getElasticHighlight();
                     scope.loading = true;
+                    criteria.projections = JSON.stringify(projections);
+
                     api.query(getProvider(criteria), criteria).then(setScopeItems).finally(function() {
                         scope.loading = false;
                     });
@@ -343,13 +353,27 @@ export function SearchResults(
                         _.remove(scope.selectedList, {_id: item._id});
                     }
                 }
-                scope.selected.preview = item;
-                scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
-                if (scope.selected.preview != null){
-                    scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
-                }
 
-                $location.search('_id', item ? item._id : null);
+                if (item) {
+                    scope.loading = true;
+                    let previewCriteria = search.getSingleItemCriteria(item);
+
+                    api.query(getProvider(previewCriteria), previewCriteria).then(function(completeItems) {
+                        let completeItem = search.mergeHighlightFields(completeItems._items[0]);
+                        scope.selected.preview = completeItem;
+                        scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
+
+                        if (scope.selected.preview != null){
+                            scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
+                        }
+
+                        $location.search('_id', item ? item._id : null);
+                    }).finally(function() {
+                        scope.loading = false;
+                    });
+                } else {
+                    delete scope.selected.preview;
+                }
             };
 
             scope.openLightbox = function openLightbox() {
