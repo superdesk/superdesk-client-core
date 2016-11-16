@@ -7,6 +7,7 @@ describe('Embed Code Handlers', function() {
     }));
 
     beforeEach(window.module('superdesk.editor2'));
+    beforeEach(window.module('superdesk.vocabularies'));
 
     beforeEach(inject(function($controller, $rootScope) {
         var element = angular.element('<div></div>');

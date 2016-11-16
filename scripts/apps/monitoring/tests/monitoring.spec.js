@@ -3,6 +3,7 @@ describe('monitoring', function() {
 
     beforeEach(window.module('superdesk.monitoring'));
     beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.vocabularies'));
 
     it('can preview an item', inject(function($controller, $rootScope) {
         var scope = $rootScope.$new(),

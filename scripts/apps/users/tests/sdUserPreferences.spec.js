@@ -12,6 +12,7 @@ describe('sdUserPreferences directive', function() {
     beforeEach(window.module('superdesk.filters'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.vocabularies'));
 
     beforeEach(inject(function (
         $rootScope, $compile, $q, metadata, preferencesService, session, userList

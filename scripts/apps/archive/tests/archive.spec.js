@@ -7,6 +7,7 @@ describe('content', function() {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.archive'));
     beforeEach(window.module('superdesk.publish'));
+    beforeEach(window.module('superdesk.vocabularies'));
 
     beforeEach(window.module(function($provide) {
         $provide.constant('config', {
