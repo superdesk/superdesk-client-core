@@ -25,8 +25,8 @@ let body = angular.element('body');
 body.ready(function() {
     /**
      * @ngdoc module
-     * @name superdesk
-     * @packageName superdesk
+     * @name superdesk-client
+     * @packageName superdesk-client
      * @description The root superdesk module.
      */
     angular.bootstrap(body, [

@@ -9,6 +9,15 @@ var constants = {
     ACTION_PREVIEW: 'preview'
 };
 
+/**
+ * @ngdoc provider
+ * @module superdesk.core.activity
+ * @name superdeskProvider
+ * @requires $routeProvider
+ * @requires lodash
+ * @description The superdesk provider exposes an API for registering new
+ * application components, such as activities, widgets, etc.
+ */
 SuperdeskProvider.$inject = ['$routeProvider', 'lodash'];
 function SuperdeskProvider($routeProvider, _) {
     var widgets = {};
@@ -19,11 +28,13 @@ function SuperdeskProvider($routeProvider, _) {
     angular.extend(this, constants);
 
     /**
-     * Register widget.
-     *
+     * @ngdoc method
+     * @name superdeskProvider#widget
+     * @public
      * @param {string} id
      * @param {Object} data
      * @returns {Object} self
+     * @description Register widget.
      */
     this.widget = function(id, data) {
         widgets[id] = angular.extend({_id: id, wcode: id}, data);
@@ -31,7 +42,10 @@ function SuperdeskProvider($routeProvider, _) {
     };
 
     /**
-     * Register widget.
+     * @ngdoc method
+     * @name superdeskProvider#pane
+     * @public
+     * @description Register a pane.
      */
     this.pane = function(key, data) {
         panes[key] = angular.extend({_id: key}, data);
@@ -39,8 +53,9 @@ function SuperdeskProvider($routeProvider, _) {
     };
 
     /**
-     * Register an activity.
-     *
+     * @ngdoc method
+     * @name superdeskProvider#activity
+     * @public
      * @param {string} id Activity ID. Can be used for later lookup.
      * @param {Object} activityData Activity definition.
      *
@@ -57,7 +72,8 @@ function SuperdeskProvider($routeProvider, _) {
      *    - `condition` - `{Function}` - method used to check if the activity is enabled for a specific item.
      *
      * @returns {Object} self
-     */
+     * @description Register a new activity.
+    */
     this.activity = function(id, activityData) {
         var activity = angular.extend({
             _id: id,
@@ -90,17 +106,37 @@ function SuperdeskProvider($routeProvider, _) {
     };
 
     /**
-     * Register permission.
+     * @ngdoc method
+     * @name superdeskProvider#permission
+     * @public
      *
      * @param {string} id
      * @param {Object} data
      * @returns {Object} self
+     *
+     * @description Register permission.
      */
     this.permission = function(id, data) {
         permissions[id] = angular.extend({_id: id}, data);
         return this;
     };
 
+    /**
+     * @ngdoc service
+     * @module superdesk.core.activity
+     * @name superdesk
+     * @requires $q
+     * @requires $route
+     * @requires $rootScope
+     * @requires activityService
+     * @requires activityChoose
+     * @requires betaService
+     * @requires features
+     * @requires privileges
+     * @requires $injector
+     * @requires lodash
+     * @description This service allows interacting with registered activities.
+     */
     this.$get = ['$q', '$route', '$rootScope', 'activityService', 'activityChooser',
         'betaService', 'features', 'privileges', '$injector', 'lodash',
         function superdeskFactory($q, $route, $rootScope, activityService, activityChooser, betaService,
@@ -137,10 +173,14 @@ function SuperdeskProvider($routeProvider, _) {
             }
 
             /**
-             * Test if user is allowed to use given activity.
-             *   Testing is based on current server setup (features) and user privileges.
+             * @ngdoc method
+             * @name superdesk#isAllowed
+             * @private
              *
              * @param {Object} activity
+             *
+             * @description Test if user is allowed to use given activity.
+             * Testing is based on current server setup (features) and user privileges.
              */
             function isAllowed(activity) {
                 return checkFeatures(activity) && checkPrivileges(activity);
@@ -153,14 +193,20 @@ function SuperdeskProvider($routeProvider, _) {
                 panes: panes,
 
                 /**
-                 * Return activity by given id
+                 * @ngdoc method
+                 * @name superdesk#activity
+                 * @public
+                 * @description Return activity by given id
                  */
                 activity: function(id) {
                     return activities[id] || null;
                 },
 
                 /**
-                 * Resolve an intent to a single activity
+                 * @ngdoc method
+                 * @name superdesk#resolve
+                 * @public
+                 * @description Resolve an intent to a single activity
                  */
                 resolve: function(intent) {
                     var activities = this.findActivities(intent);
@@ -177,6 +223,10 @@ function SuperdeskProvider($routeProvider, _) {
                 },
 
                 /**
+                 * @ngdoc method
+                 * @name superdesk#findActivities
+                 * @public
+                 * @description
                  * Find all available activities for given intent
                  */
                 findActivities: function(intent, item) {
@@ -203,14 +253,15 @@ function SuperdeskProvider($routeProvider, _) {
                 },
 
                 /**
-                 * Intent factory
-                 *
-                 * starts an activity for given action and data
-                 *
+                 * @ngdoc method
+                 * @name superdesk#intent
                  * @param {string} action
                  * @param {string} type
                  * @param {Object} data
                  * @returns {Object} promise
+                 * @public
+                 * @description
+                 * Starts an activity for given action and data
                  */
                 intent: function(action, type, data) {
 
@@ -235,32 +286,43 @@ function SuperdeskProvider($routeProvider, _) {
                 },
 
                 /**
-                 * Get a link for given activity
+                 * @ngdoc method
+                 * @name superdesk#link
                  *
                  * @param {string} activity
                  * @param {Object} data
                  * @returns {string}
+                 *
+                 * @description
+                 * Get a link for given activity
                  */
                 link: function getSuperdeskLink(activity, data) {
                     return activityService.getLink(this.activity(activity), data);
                 },
 
                 /**
-                 * Start activity
+                 * @ngdoc method
+                 * @name superdesk#start
                  *
                  * @param {Object} activity
                  * @param {Object} locals
-                 * @alias {activityService.start}
                  * @return {Promise}
+                 *
+                 * @description Start activity
+                 *
                  */
                 start: function(activity, locals) {
                     return activityService.start(activity, locals);
                 },
 
                 /**
-                 * Get activities based on menu category
+                 * @ngdoc method
+                 * @name superdesk#getMenu
                  *
                  * @param {string} category
+                 *
+                 * @description
+                 * Get activities based on menu category
                  */
                 getMenu: function getMenu(category) {
                     return privileges.loaded.then(function() {
@@ -305,6 +367,19 @@ angular.module('superdesk.core.activity', [
 .constant('langmap', langmap)
 .provider('superdesk', SuperdeskProvider)
 
+/**
+ * @ngdoc service
+ * @module superdesk.core.activity
+ * @name activityService
+ * @requires $location
+ * @requires $injector
+ * @requires $q
+ * @requires $timeout
+ * @requires gettext
+ * @requires modal
+ * @requires lodash
+ * @description The service allows choosing activities to perform.
+ */
 .service('activityService', ['$location', '$injector', '$q', '$timeout', 'gettext', 'modal', 'lodash',
 function($location, $injector, $q, $timeout, gettext, modal, _) {
     var activityStack = [];
@@ -336,20 +411,30 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
     }
 
     /**
-     * Get URL for given activity
+     * @ngdoc method
+     * @name activityService#getLink
+     * @public
      *
      * @param {Object} activity
      * @param {Object} locals
      * @returns {string}
+     *
+     * @description
+     * Get URL for given activity
      */
     this.getLink = getPath;
 
     /**
-     * Start given activity
+     * @ngdoc method
+     * @name activityService#start
+     * @public
      *
      * @param {object} activity
      * @param {object} locals
      * @returns {object} promise
+     *
+     * @description
+     * Start given activity
      */
     this.start = function startActivity(activity, locals) {
         function execute(activity, locals) {
@@ -400,6 +485,10 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
 }])
 
 /**
+ * @ngdoc service
+ * @module superdesk.core.activity
+ * @name activityChooser
+ * @description
  * Activity chooser service - bridge between superdesk and activity chooser directive
  */
 .service('activityChooser', ['$q', function($q) {
@@ -423,17 +512,26 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
 }])
 
 /**
+ * @ngdoc service
+ * @module superdesk.core.activity
+ * @name referrer
+ * @description
  * Referrer service to set/get the referrer Url
  */
 .service('referrer', ['lodash', function(_) {
     /**
-     * Serving for the purpose of setting referrer url via referrer service, also setting url in localStorage. which is utilized to
-     * get last working screen on authoring page if referrer url is unidentified
-     * direct link(i.e from notification pane)
+     * @ngdoc method
+     * @name referrer#setReferrer
+     * @public
      *
      * @param {Object} currentRoute
      * @param {Object} previousRoute
      * @returns {string}
+     *
+     * @description
+     * Serving for the purpose of setting referrer url via referrer service, also setting url in localStorage. which is utilized to
+     * get last working screen on authoring page if referrer url is unidentified
+     * direct link(i.e from notification pane)
      */
     this.setReferrer = function(currentRoute, previousRoute) {
         if (currentRoute && previousRoute) {
@@ -472,11 +570,16 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
     };
 
     /**
-     * Prepares complete Referrer Url from previous route href and querystring params(if exist),
-     * e.g /workspace/content?q=test$repo=archive
+     * @ngdoc method
+     * @name referrer#prepareUrl
+     * @private
      *
      * @param {Object} refRoute
      * @returns {string}
+     *
+     * @description
+     * Prepares complete Referrer Url from previous route href and querystring params(if exist),
+     * e.g /workspace/content?q=test$repo=archive
      */
     function prepareUrl(refRoute) {
         var completeUrl;

@@ -1,25 +1,36 @@
 /**
- * Http endpoint factory
+ * @ngdoc factory
+ * @name HttpEndpointFactory
+ * @module superdesk.core.api
+ * @description Http endpoint factory
  */
 HttpEndpointFactory.$inject = ['$http', '$q', 'urls', 'lodash'];
 function HttpEndpointFactory($http, $q, urls, _) {
 
     /**
-     * Get url for given resource
+     * @ngdoc method
+     * @name HttpEndpointFactory#getUrl
+     * @private
      *
      * @param {Object} resource
      * @returns {Promise}
+     *
+     * @description Get url for given resource
      */
     function getUrl(resource) {
         return urls.resource(resource.rel);
     }
 
     /**
-     * Get headers for given resource
+     * @ngdoc method
+     * @name HttpEndpointFactory#getHeaders
+     * @private
      *
      * @param {Object} resource
      * @param {Object} item
      * @returns {Object}
+     *
+     * @description Get headers for given resource
      */
     function getHeaders(resource, item) {
         var headers = _.extend({}, resource.config.headers || {});
@@ -30,10 +41,14 @@ function HttpEndpointFactory($http, $q, urls, _) {
     }
 
     /**
-     * Wrap $http call
+     * @ngdoc method
+     * @name HttpEndpointFactory#http
+     * @private
      *
      * @param {Object} config
      * @returns {Promise}
+     *
+     * @description Wrap $http call
      */
     function http(config) {
         return $q.when(config.url)
@@ -52,6 +67,10 @@ function HttpEndpointFactory($http, $q, urls, _) {
     }
 
     /**
+     * @ngdoc method
+     * @name HttpEndpointFactory#clean
+     * @private
+     * @description
      * Remove keys prefixed with '_'
      */
     function clean(data, keepId) {
@@ -75,6 +94,10 @@ function HttpEndpointFactory($http, $q, urls, _) {
     }
 
     /**
+     * @ngdoc method
+     * @name HttpEndpointFactory#HttpEndpoint
+     * @private
+     * @description
      * Http Endpoint
      */
     function HttpEndpoint(name, config) {
@@ -84,10 +107,15 @@ function HttpEndpointFactory($http, $q, urls, _) {
     }
 
     /**
-     * Get entity by url
+     * @ngdoc method
+     * @name HttpEndpointFactory#getByUrl
+     * @public
      *
      * @param {string} url
      * @returns {Promise}
+     *
+     * @description
+     * Get entity by url
      */
     HttpEndpoint.prototype.getByUrl = function(url, cache) {
         return http({
@@ -100,10 +128,15 @@ function HttpEndpointFactory($http, $q, urls, _) {
     };
 
     /**
-     * Get entity by given id
+     * @ngdoc method
+     * @name HttpEndpointFactory#getById
+     * @public
      *
      * @param {string} id
      * @returns {Promise}
+     *
+     * @description
+     * Get entity by given id
      */
     HttpEndpoint.prototype.getById = function(id, params, cache) {
         return getUrl(this).then(_.bind(function(resourceUrl) {
@@ -120,9 +153,14 @@ function HttpEndpointFactory($http, $q, urls, _) {
     };
 
     /**
-     * Resource query method
+     * @ngdoc method
+     * @name HttpEndpointFactory#query
+     * @public
      *
      * @param {Object} params
+     *
+     * @description
+     * Resource query method
      */
     HttpEndpoint.prototype.query = function(params, cache) {
         return http({
@@ -137,12 +175,17 @@ function HttpEndpointFactory($http, $q, urls, _) {
     };
 
     /**
-     * Update item
+     * @ngdoc method
+     * @name HttpEndpointFactory#update
+     * @public
      *
      * @param {Object} item
      * @param {Object} diff
      * @param {Object} params
      * @returns {Promise}
+     *
+     * @description
+     * Update item
      */
     HttpEndpoint.prototype.update = function(item, diff, params) {
         if (diff && diff._etag) {
@@ -167,10 +210,15 @@ function HttpEndpointFactory($http, $q, urls, _) {
     };
 
     /**
-     * Create new item
+     * @ngdoc method
+     * @name HttpEndpointFactory#create
+     * @public
      *
      * @param {Object} itemData
      * @returns {Promise}
+     *
+     * @description
+     * Create new item
      */
     HttpEndpoint.prototype.create = function(itemData) {
         return http({
@@ -186,22 +234,32 @@ function HttpEndpointFactory($http, $q, urls, _) {
     };
 
     /**
-     * Save item
+     * @ngdoc method
+     * @name HttpEndpointFactory#save
+     * @public
      *
      * @param {Object} item
      * @param {Object} diff
      * @returns {Promise}
+     *
+     * @description
+     * Save item
      */
     HttpEndpoint.prototype.save = function(item, diff) {
         return item._id ? this.update(item, diff) : this.create(_.extend(item, diff));
     };
 
     /**
-     * Replace item
+     * @ngdoc method
+     * @name HttpEndpointFactory#replace
+     * @public
      *
      * @param {Object} dest
      * @param {Object} item
      * @returns {Promise}
+     *
+     * @description
+     * Replace item
      */
     HttpEndpoint.prototype.replace = function(dest, item) {
         return http({
@@ -216,10 +274,15 @@ function HttpEndpointFactory($http, $q, urls, _) {
     };
 
     /**
-     * Remove item
+     * @ngdoc method
+     * @name HttpEndpointFactory#remove
+     * @public
      *
      * @param {Object} item
      * @returns {Promise}
+     *
+     * @description
+     * Remove item
      */
     HttpEndpoint.prototype.remove = function(item) {
         return http({
@@ -232,18 +295,28 @@ function HttpEndpointFactory($http, $q, urls, _) {
     };
 
     /**
-     * Get resource url
+     * @ngdoc method
+     * @name HttpEndpointFactory#getUrl
+     * @public
      *
      * @returns {Promise}
+     *
+     * @description
+     * Get resource url
      */
     HttpEndpoint.prototype.getUrl = function() {
         return getUrl(this);
     };
 
     /**
-     * Get headers
+     * @ngdoc method
+     * @name HttpEndpointFactory#getHeaders
+     * @public
      *
      * @return {Object}
+     *
+     * @description
+     * Get headers
      */
     HttpEndpoint.prototype.getHeaders = function() {
         return getHeaders(this) || {};
@@ -253,4 +326,4 @@ function HttpEndpointFactory($http, $q, urls, _) {
 }
 
 angular.module('superdesk.core.api.http', [])
-.factory('HttpEndpointFactory', HttpEndpointFactory);
+    .factory('HttpEndpointFactory', HttpEndpointFactory);
