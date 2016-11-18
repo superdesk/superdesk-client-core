@@ -914,9 +914,17 @@ $main-item-color-inactive: #aaa;
         margin: -16px;
         padding: 0;
         list-style: none;
-        li {
+        li, .card-box__content-list-item {
             padding: 16px;
             border-bottom: 1px solid #ebebeb;
+            &--inline {
+                display: flex;
+                h4 { flex: 1 1; }
+                span { 
+                    flex: 1 1; 
+                    text-align: right;
+                }
+            }
             &:last-child {
                 border: none;
             }
