@@ -48,6 +48,17 @@
                                 </div>
                             </div>
                             <div class="field">
+                                <label translate>Desk language</label>
+                                <div class="line-select">
+                                    <select id="deskLanguage" ng-model="desk.edit.desk_language">
+                                        <option value=""></option>
+                                        <option ng-repeat="language in languages" value="{{language.language}}" ng-selected="desk.edit.desk_language === language.language">
+                                            {{ language.label | translate}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field">
                                 <label translate>SERVICE</label>
                                 <div sd-meta-terms
                                     class="data"
