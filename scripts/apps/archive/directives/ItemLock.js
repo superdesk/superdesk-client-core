@@ -36,7 +36,7 @@ export function ItemLock(api, lock, privileges, desks) {
             scope.can_unlock = function() {
                 if (lock.can_unlock(scope.item)) {
                     if (scope.item.task && scope.item.task.desk && desks.userDesks) {
-                        return _.find(desks.userDesks._items, {_id: scope.item.task.desk});
+                        return _.find(desks.userDesks, {_id: scope.item.task.desk});
                     }
 
                     return true;

@@ -19,7 +19,7 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
         $scope.deskStages = desks.deskStages;
 
         desks.fetchCurrentUserDesks().then(function (desk_list) {
-            userDesks = desk_list._items;
+            userDesks = desk_list;
         });
     });
 

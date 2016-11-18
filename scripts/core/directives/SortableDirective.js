@@ -9,7 +9,7 @@ export default angular.module('superdesk.core.directives.sortable', [])
      * @param {String} placeholder CSS class name for placeholder box
      * displayed during sorting.
      *
-     * @desctription Creates a container in which contained items can be sortable by drag/drop.
+     * @description Creates a container in which contained items can be sortable by drag/drop.
      */
     .directive('sdSortable', [function() {
         return {

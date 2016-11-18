@@ -82,6 +82,10 @@ module.exports = function makeConfig(grunt) {
                     loader: 'html'
                 },
                 {
+                    test: /\.json$/,
+                    loader: 'json-loader'
+                },
+                {
                     test: /\.css/,
                     loader: 'style!css'
                 },

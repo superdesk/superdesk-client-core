@@ -88,7 +88,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
             criteria = desks.fetchCurrentUserDesks().then(desks => {
                 _criteria.$or.push({
                     is_public: true,
-                    template_desks: {$in: desks._items.map(desk => desk._id)}
+                    template_desks: {$in: desks.map(desk => desk._id)}
                 });
 
                 return _criteria;

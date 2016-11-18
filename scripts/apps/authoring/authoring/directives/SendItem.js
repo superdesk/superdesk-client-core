@@ -184,7 +184,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              * @returns {Boolean}
              */
             scope.disableFetchAndOpenButton = function() {
-                var _isNonMember = _.isEmpty(_.find(desks.userDesks._items, {_id: scope.selectedDesk._id}));
+                var _isNonMember = _.isEmpty(_.find(desks.userDesks, {_id: scope.selectedDesk._id}));
                 return _isNonMember;
             };
 

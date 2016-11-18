@@ -86,7 +86,9 @@ module.exports = function(grunt) {
         'copy:assets',
         'ngtemplates:gen-importer',
         'ngtemplates:core',
-        'webpack:build'
+        'webpack:build',
+        'filerev',
+        'usemin'
     ]);
 
     grunt.registerTask('package', ['ci', 'build']);

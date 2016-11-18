@@ -158,7 +158,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                         scope.userDesks = [];
                         if (angular.isDefined(u) && angular.isDefined(u._links)) {
                             desks.fetchUserDesks(u).then(function(response) {
-                                scope.userDesks = response._items;
+                                scope.userDesks = response;
                             });
                         }
                     });

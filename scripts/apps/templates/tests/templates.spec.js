@@ -178,10 +178,10 @@ describe('templates', function() {
         it('can fetch templates all templates with user type user with privileges',
         inject((api, templates, privileges, desks, $q, $rootScope) => {
             privileges.privileges.content_templates = 1;
-            spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: [
+            spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when([
                 {_id: 'finance'},
                 {_id: 'sports'}
-            ]}));
+            ]));
 
             templates.fetchAllTemplates();
             $rootScope.$digest();

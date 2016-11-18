@@ -31,11 +31,19 @@ export default angular.module('superdesk.core.translate', ['gettext', 'superdesk
                 gettextCatalog.debug = true;
             }
         }])
+
     /**
+     * @ngdoc factory
+     * @module superdesk.core.services
+     * @name gettext
+     *
+     * @description
      * Gettext service to be used in controllers/services/directives.
      *
      * Usage:
+     * ```js
      * function($scope, gettext) { $scope.translatedMessage = gettext("Translate Me"); }
+     * ```
      *
      * This way "Translate Me" can be found by the string extractor and it will return
      * translated string if appropriet.
