@@ -21,6 +21,7 @@ describe('authoring', function() {
     beforeEach(window.module('superdesk.core.privileges'));
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
     beforeEach(inject(function($window) {
         $window.onbeforeunload = angular.noop;
@@ -403,6 +404,7 @@ describe('cropImage', function() {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
     it('can change button label for apply/edit crop',
     inject(function($rootScope, $compile, $q, metadata) {
@@ -1989,6 +1991,7 @@ describe('send item directive', function() {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.api'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
     beforeEach(inject(function ($templateCache) {
         $templateCache.put('scripts/apps/authoring/views/send-item.html', '');

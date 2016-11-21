@@ -7,6 +7,7 @@ describe('superdesk.apps.workspace.content', function() {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.workspace.content'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
     describe('content service', function() {
         var done;

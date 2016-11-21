@@ -3,6 +3,7 @@ describe('monitoring', function() {
 
     beforeEach(window.module('superdesk.apps.monitoring'));
     beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
     it('can switch between list and swimlane view', inject(function($controller, $rootScope, storage, config) {
         config.features = {
