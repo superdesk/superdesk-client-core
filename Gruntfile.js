@@ -42,8 +42,7 @@ module.exports = function(grunt) {
     });
 
     // Linting tasks and alias
-    grunt.registerTask('hint', ['jshint', 'jscs', 'eslint:specs', 'eslint:tasks', 'eslint:root']);
-    grunt.registerTask('lint', ['hint']);
+    grunt.registerTask('hint', ['eslint:specs', 'eslint:tasks', 'eslint:root']);
 
     // Test runner tasks and CI
     grunt.registerTask('test', ['ngtemplates:dev', 'karma:unit']);
