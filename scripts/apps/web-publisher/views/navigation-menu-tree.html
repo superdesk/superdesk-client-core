@@ -1,0 +1,43 @@
+<div class="subnav paneLayout">
+    <h3 class="page-nav-title"><span translate=""><span class="ng-scope">{{menu.label}}</span></span></h3>
+    <div class="subnav__button-stack--square-buttons dropdown open">
+        <button class="navbtn sd-create-btn" ng-click="paneOpen = !paneOpen"><i class="svg-icon-plus"></i><span class="circle"></span></button>
+        <ul class="dropdown__menu dropdown__menu--scrollable pull-right">
+            <li><button><i class="icon-plus-small icon-round icon-white"></i>Single Menu Item</button></li>
+        </ul>
+    </div>
+</div>
+<div class="paneLayout paneLayout--headerMargin">
+    <div class="paneLayout__content">
+        <ul class="treeList">
+            <li ng-repeat="data in menu.children" ng-include="webPublisher.TEMPLATES_DIR + '/navigation-tree-renderer.html'"></li>
+        </ul>
+    </div>
+    <div class="paneLayout__pane" ng-class="{'paneLayout__pane--open': paneOpen}">
+        <button ng-click="paneOpen = !paneOpen" class="btn">Cancel</button>
+        <button ng-click="webPublisher.saveMenu()" class="btn btn--primary" ng-disabled="webPublisher.menuForm.$invalid">Save</button>
+        <form name="webPublisher.menuForm">
+            <input type="hidden" name="id" ng-model="menuObj.id">
+            <div class="field">
+                <label>Name</label>
+                <input type="text" name="name" ng-model="menuObj.name" required>
+            </div>
+            <div class="field">
+                <label>Label</label>
+                <input type="text" name="label" ng-model="menuObj.label" required>
+            </div>
+            <div class="field">
+                <label>Parent</label>
+                <select ng-options="parent.id as parent.label for parent in menusInTree" ng-model="menuObj.parent" required></select>
+            </div>
+            <div class="field">
+                <label>Route</label>
+                <select ng-options="route.id as route.name for route in routes" ng-model="menuObj.route"></select>
+            </div>
+            <div class="field">
+                <label>URI</label>
+                <input type="text" name="uri" ng-model="menuObj.uri">
+            </div>
+        </form>
+    </div>
+</div>

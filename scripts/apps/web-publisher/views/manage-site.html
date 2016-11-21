@@ -44,8 +44,11 @@
             <div ng-switch-when="routes">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/routes.html'"></div>
             </div>
-            <div ng-switch-when="navigation" class="navigation-main">
+            <div ng-switch-when="navigation">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation.html'"></div>
+            </div>
+            <div ng-switch-when="navigation-menu">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation-menu-tree.html'"></div>
             </div>
         </div>
     </div>
