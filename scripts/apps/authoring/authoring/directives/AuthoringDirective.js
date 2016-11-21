@@ -465,7 +465,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         if (response.errors.length) {
                             validate($scope.origItem, $scope.item);
                             for (var i = 0; i < response.errors.length; i++) {
-                                notify.error(_.trim(response.errors[i]));
+                                notify.error('\'' + _.trim(response.errors[i]) + '\'');
                             }
                         } else {
                             $scope.runTansa();
