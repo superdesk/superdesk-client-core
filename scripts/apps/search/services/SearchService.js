@@ -1,18 +1,17 @@
 import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
-
-SearchService.$inject = ['$location', 'gettext', 'config', 'session'];
 /**
  * @ngdoc service
  * @module superdesk.apps.search
  * @name search
  *
- * @requires https://docs.angularjs.org/api/ng/service/$injector $location
+ * @requires $location
  * @requires gettext
  * @requires config
  * @requires session
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
+SearchService.$inject = ['$location', 'gettext', 'config', 'session'];
 export function SearchService($location, gettext, config, session) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
@@ -529,6 +528,25 @@ export function SearchService($location, gettext, config, session) {
     };
 
     /**
+     * @ngdoc method
+     * @name search#mergeHighlightFields
+     * @public
+     * @description Merges the highlighted fields to the item
+     * @param {Object} item
+     * @return {Object}
+     */
+    this.mergeHighlightFields = function(item) {
+        if (item.es_highlight) {
+            _.forEach(_.keys(item.es_highlight), function (key) {
+                item[key] = item.es_highlight[key][0];
+            });
+        } else {
+            item.es_highlight = [];
+        }
+        return item;
+    };
+
+    /**
      * Merge newItems list with scopeItems list if any
      *
      * @param {Object} newItems
@@ -537,19 +555,9 @@ export function SearchService($location, gettext, config, session) {
      * @param {boolean} force
      * @return {Object}
      */
-
     this.mergeItems = function(newItems, scopeItems, append, force) {
         if (this.getElasticHighlight()) {
-            newItems._items = _.map(newItems._items, function(item) {
-                if (item.es_highlight) {
-                    _.forEach(_.keys(item.es_highlight), function(key) {
-                        item[key] = item.es_highlight[key][0];
-                    });
-                } else {
-                    item.es_highlight = [];
-                }
-                return item;
-            });
+            newItems._items = _.map(newItems._items, this.mergeHighlightFields);
         }
 
         if (force || !scopeItems) {
@@ -617,6 +625,32 @@ export function SearchService($location, gettext, config, session) {
      */
     this.doesSearchAgainstRepo = function(search, repo) {
         return !search.filter.query.repo || search.filter.query.repo.toLowerCase().indexOf(repo.toLowerCase());
+    };
+
+    /**
+     * @ngdoc method
+     * @name search#getSingleItemCriteria
+     * @public
+     * @return {Object}
+     * @description Returns the query criteria for a single item while keeping keywords or q values so that the results will have highlights
+     * @param {Object} item
+     * @param {Object} criteria
+     */
+    this.getSingleItemCriteria = function(item, criteria) {
+        let itemCriteria = criteria || this.query($location.search()).getCriteria(true);
+        itemCriteria.source.from = 0;
+        itemCriteria.source.size = 1;
+        itemCriteria.es_highlight = this.getElasticHighlight();
+
+        let item_id = {};
+        if (item._type === 'ingest' || item._type === 'archive') {
+            item_id[item._id] = 1;
+        } else {
+            item_id[item.item_id] = 1;
+        }
+
+        itemCriteria.source.query.filtered.filter = this.getItemQuery(item_id).filtered.filter;
+        return itemCriteria;
     };
 
     /**

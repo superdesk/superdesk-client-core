@@ -1,8 +1,10 @@
+import { DEFAULT_PROJECTED_FIELDS } from 'apps/search/constants';
+
 MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
     'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
-    'archiveService', '$rootScope'];
+    'archiveService', '$rootScope', 'config'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope) {
+        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, config) {
 
     var ITEM_HEIGHT = 57;
 
@@ -18,6 +20,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
         link: function(scope, elem, attrs, ctrls) {
 
             var monitoring = ctrls[0];
+            var projections = config.projected_fields || DEFAULT_PROJECTED_FIELDS.fields;
 
             scope.view = 'compact';
             scope.page = 1;
@@ -325,7 +328,21 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             }
 
             function preview(item) {
-                select(item);
+                if (item) {
+                    scope.loading = true;
+                    criteria = cards.criteria(scope.group, null, monitoring.queryParam);
+                    let previewCriteria = search.getSingleItemCriteria(item, criteria);
+
+                    apiquery(previewCriteria, false).then(function(completeItems) {
+                        let completeItem = search.mergeHighlightFields(completeItems._items[0]);
+                        select(completeItem);
+                    }).finally(function() {
+                        scope.loading = false;
+                    });
+                } else {
+                    select(item);
+                }
+
                 if (scope.viewColumn) {
                     updateGroupStyle();
                 }
@@ -385,7 +402,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     criteria.source.query = search.getItemQuery(items);
                 }
 
-                return apiquery().then(function(items) {
+                return apiquery(criteria, true).then(function(items) {
                     if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
                         var itemPreviewing = isItemPreviewing();
                         var _data = {
@@ -415,7 +432,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             }
 
             function render(next) {
-                return apiquery().then(function(items) {
+                return apiquery(criteria, true).then(function(items) {
                     scope.$applyAsync(function() {
                         if (scope.total !== items._meta.total) {
                             scope.total = items._meta.total;
@@ -435,20 +452,24 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              * Request the data on search or archive endpoints
              * return {promise} list of items
              */
-            function apiquery() {
+            function apiquery(searchCriteria, applyProjections) {
                 var provider = 'search';
                 if (scope.group.type === 'search' || desks.isPublishType(scope.group.type)) {
-                    if (criteria.repo && criteria.repo.indexOf(',') === -1) {
-                        provider = criteria.repo;
-                        if (!angular.isDefined(criteria.source.size)) {
-                            criteria.source.size = 25;
+                    if (searchCriteria.repo && searchCriteria.repo.indexOf(',') === -1) {
+                        provider = searchCriteria.repo;
+                        if (!angular.isDefined(searchCriteria.source.size)) {
+                            searchCriteria.source.size = 25;
                         }
                     }
                 } else {
                     provider = 'archive';
                 }
 
-                return api.query(provider, criteria);
+                if (applyProjections) {
+                    searchCriteria.projections = JSON.stringify(projections);
+                }
+
+                return api.query(provider, searchCriteria);
             }
 
             function renderNew() {

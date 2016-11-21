@@ -1,37 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
-
-const DEFAULT_LIST_CONFIG = {
-    'priority': [
-        'priority',
-        'urgency'
-    ],
-    'firstLine': [
-        'wordcount',
-        'slugline',
-        'highlights',
-        'headline',
-        'versioncreated'
-    ],
-    'secondLine': [
-        'profile',
-        'state',
-        'embargo',
-        'update',
-        'takekey',
-        'takepackage',
-        'signal',
-        'broadcast',
-        'flags',
-        'updated',
-        'category',
-        'provider',
-        'expiry',
-        'desk',
-        'fetchedDesk'
-    ]
-};
+import { DEFAULT_LIST_CONFIG } from 'apps/search/constants';
 
 ItemList.$inject = [
     '$location',
