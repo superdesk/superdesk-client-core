@@ -6,28 +6,9 @@
     padding-right: 20px;
 }
 
-.publisherManager.modal label {
-    min-width: auto;
+.leftSpace{
+    margin-left: .5em;
 }
-
-.headerMargin {
-    margin-top: 48px;
-
-    &--two {
-        margin-top: 96px;
-    }
-}
-
-.navigation-main {
-    .subnav {
-        top: 0;
-    }
-    .flex-grid {
-        position: absolute;
-        top: 48px;
-    }
-}
-
 
 .countLabel {
     display: inline-block;
@@ -36,8 +17,32 @@
     border-radius: 55px;
     line-height: 1em;
     height: 1em;
-    margin: 1em 1em 0 0;
     font-size: 11px;
     padding: 4px 6px;
     font-family: arial, sans-serif;
+}
+
+.iconButton {
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.text{
+
+    &--light{
+        color: $gray;
+    }
+
+    &--lighter{
+        color: $grayLight;
+    }
+
+    &--italic{
+        font-style: italic;
+    }
+
+    &--bold{
+        font-weight: 500;
+    }
 }
