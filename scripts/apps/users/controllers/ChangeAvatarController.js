@@ -47,15 +47,15 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, gett
                 data: form
             }).then(function(response) {
 
-                if (response.data._status === 'ERR'){
+                if (response.data._status === 'ERR') {
                     notify.error(gettext('There was a problem with your upload'));
                     return;
                 }
 
-                var picture_url = response.data.renditions.viewImage.href;
+                var pictureUrl = response.data.renditions.viewImage.href;
                 $scope.locals.data.avatar = response.data._id;
 
-                return $scope.resolve(picture_url);
+                return $scope.resolve(pictureUrl);
             },  function(error) {
                 notify.error((error.statusText !== '') ?
                                 error.statusText :

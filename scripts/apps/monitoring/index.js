@@ -16,7 +16,7 @@ import * as ctrl from './controllers';
 import * as config from './config';
 import * as directive from './directives';
 import * as svc from './services';
-import { SplitFilter } from './filters';
+import {SplitFilter} from './filters';
 
 /**
  * @ngdoc module

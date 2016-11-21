@@ -1,1 +1,1 @@
-export { LegalItemSortbar } from './LegalItemSortbar';
+export {LegalItemSortbar} from './LegalItemSortbar';

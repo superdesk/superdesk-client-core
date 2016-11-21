@@ -14,16 +14,12 @@ export function ItemContainer(desks) {
                             scope.item.value = desks.deskLookup[scope.item.task.desk].name;
                         }
                     });
-                } else {
-                    if (scope.item._type === 'archive') {
-                        scope.item.label = 'location:';
-                        scope.item.value = 'workspace';
-                    } else {
-                        if (scope.item._type === 'archived') {
-                            scope.item.label = '';
-                            scope.item.value = 'archived';
-                        }
-                    }
+                } else if (scope.item._type === 'archive') {
+                    scope.item.label = 'location:';
+                    scope.item.value = 'workspace';
+                } else if (scope.item._type === 'archived') {
+                    scope.item.label = '';
+                    scope.item.value = 'archived';
                 }
             }
         }

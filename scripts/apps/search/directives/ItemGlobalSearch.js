@@ -63,7 +63,7 @@ export function ItemGlobalSearch(
                             {term: {_id: scope.meta.unique_name}},
                             {term: {guid: scope.meta.unique_name}},
                             {term: {item_id: scope.meta.unique_name}}
-                        ]}
+                    ]}
                     }
                 ];
                 var criteria = {

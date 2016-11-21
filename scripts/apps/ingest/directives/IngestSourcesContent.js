@@ -2,7 +2,8 @@ import * as constant from 'apps/ingest/constants';
 
 IngestSourcesContent.$inject = ['feedingServices', 'feedParsers', 'gettext', 'notify', 'api', '$location',
     'modal', '$filter', 'config'];
-export function IngestSourcesContent(feedingServices, feedParsers, gettext, notify, api, $location, modal, $filter, config) {
+export function IngestSourcesContent(feedingServices, feedParsers, gettext, notify, api, $location,
+    modal, $filter, config) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
         link: function($scope) {
@@ -41,17 +42,17 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             }
 
             function openProviderModal() {
-                var provider_id = $location.search()._id;
+                var providerId = $location.search()._id;
                 var provider;
-                if (provider_id) {
+                if (providerId) {
                     if ($scope.providers && $scope.providers._items) {
                         provider = _.find($scope.providers._items, function (item) {
-                            return item._id === provider_id;
+                            return item._id === providerId;
                         });
                     }
 
                     if (provider == null) {
-                        api.ingestProviders.getById(provider_id).then(function (result) {
+                        api.ingestProviders.getById(providerId).then(function (result) {
                             provider = result;
                         });
                     }
@@ -119,7 +120,8 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
 
                 // init the lists of field aliases and non-selected fields
                 $scope.fieldAliases = [];
-                aliases = (angular.isDefined($scope.origProvider.config) && $scope.origProvider.config.field_aliases) || [];
+                aliases = (angular.isDefined($scope.origProvider.config)
+                    && $scope.origProvider.config.field_aliases) || [];
 
                 var aliasObj = {};
                 aliases.forEach(function (item) {

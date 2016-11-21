@@ -17,26 +17,26 @@ angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.
  * @description Superdesk authoring application module.
  */
 angular.module('superdesk.apps.authoring', [
-        'superdesk.core.menu',
-        'superdesk.core.activity',
-        'superdesk.apps.authoring.widgets',
-        'superdesk.apps.authoring.metadata',
-        'superdesk.apps.authoring.comments',
-        'superdesk.apps.authoring.versioning',
-        'superdesk.apps.authoring.versioning.versions',
-        'superdesk.apps.authoring.versioning.history',
-        'superdesk.apps.authoring.workqueue',
-        'superdesk.apps.authoring.packages',
-        'superdesk.apps.authoring.find-replace',
-        'superdesk.apps.authoring.macros',
-        'superdesk.apps.authoring.autosave',
-        'superdesk.apps.authoring.suggest',
-        'superdesk.apps.desks',
-        'superdesk.apps.notification',
-        'contenteditable',
-        'decipher.history',
-        'superdesk.config'
-    ])
+    'superdesk.core.menu',
+    'superdesk.core.activity',
+    'superdesk.apps.authoring.widgets',
+    'superdesk.apps.authoring.metadata',
+    'superdesk.apps.authoring.comments',
+    'superdesk.apps.authoring.versioning',
+    'superdesk.apps.authoring.versioning.versions',
+    'superdesk.apps.authoring.versioning.history',
+    'superdesk.apps.authoring.workqueue',
+    'superdesk.apps.authoring.packages',
+    'superdesk.apps.authoring.find-replace',
+    'superdesk.apps.authoring.macros',
+    'superdesk.apps.authoring.autosave',
+    'superdesk.apps.authoring.suggest',
+    'superdesk.apps.desks',
+    'superdesk.apps.notification',
+    'contenteditable',
+    'decipher.history',
+    'superdesk.config'
+])
 
     .service('authoring', svc.AuthoringService)
     .service('confirm', svc.ConfirmDirtyService)
@@ -83,7 +83,9 @@ angular.module('superdesk.apps.authoring', [
                     item: ['$route', 'authoring', function($route, authoring) {
                         return authoring.open($route.current.params._id, false);
                     }],
-                    action: [function() {return 'edit';}]
+                    action: [function() {
+                        return 'edit';
+                    }]
                 },
                 authoring: true
             })
@@ -108,13 +110,15 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', 'api', '$rootScope', function(data, authoringWorkspace, api, $rootScope) {
-                    if (data.item._type === 'archived') {
-                        $rootScope.$broadcast('open:archived_kill', data.item);
-                    } else {
-                        authoringWorkspace.kill(data.item);
+                controller: ['data', 'authoringWorkspace', 'api', '$rootScope',
+                    function(data, authoringWorkspace, api, $rootScope) {
+                        if (data.item._type === 'archived') {
+                            $rootScope.$broadcast('open:archived_kill', data.item);
+                        } else {
+                            authoringWorkspace.kill(data.item);
+                        }
                     }
-                }],
+                ],
                 filters: [{action: 'list', type: 'archive'}, {action: 'list', type: 'archived'}],
                 additionalCondition:['authoring', 'item', 'privileges', function(authoring, item, privileges) {
                     if (item._type === 'archived') {

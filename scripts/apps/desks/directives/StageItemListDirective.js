@@ -175,7 +175,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                         criteria.source.from = (scope.page) * criteria.source.size;
                         scope.loading = true;
 
-                        if (scope.items.length > criteria.source.size){
+                        if (scope.items.length > criteria.source.size) {
                             scope.cachePreviousItems = _.slice(scope.items, 0, criteria.source.size);
                             scope.items.splice(0, criteria.source.size);
                         }
@@ -291,12 +291,10 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                                 container.scrollTop -= itemHeight * 2;
                             }
                             clickItem(scope.items[nextIndex], event);
-                        } else {
-                            if (event) {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                event.stopImmediatePropagation();
-                            }
+                        } else if (event) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            event.stopImmediatePropagation();
                         }
                     }
                 }

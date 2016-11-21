@@ -1,4 +1,4 @@
-import { ContentService } from './services';
+import {ContentService} from './services';
 import * as directive from './directives';
 import * as ctrl from './controllers';
 

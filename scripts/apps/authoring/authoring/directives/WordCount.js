@@ -7,7 +7,8 @@ export function WordCount(gettextCatalog) {
             item: '=',
             html: '@'
         },
-        template: '<span class="char-count">{{numWords}} <span translate>' + gettextCatalog.getString('words') + '</span></span>',
+        template: '<span class="char-count">{{numWords}} <span translate>'
+            + gettextCatalog.getString('words') + '</span></span>',
         link: function wordCountLink(scope, elem, attrs) {
             scope.html = scope.html || false;
             scope.numWords = 0;

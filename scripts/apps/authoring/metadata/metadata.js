@@ -187,7 +187,7 @@ function MetadataCtrl(
     function resolvePublishScheduleAndEmbargoTS() {
         var info;
         var embargo = datetimeHelper.removeTZ($scope.item.embargo);
-        var publish_schedule = datetimeHelper.removeTZ($scope.item.publish_schedule);
+        var publishSchedule = datetimeHelper.removeTZ($scope.item.publish_schedule);
 
         if ($scope.item.schedule_settings) {
             $scope.item.time_zone = $scope.item.schedule_settings.time_zone;
@@ -196,7 +196,7 @@ function MetadataCtrl(
             }
 
             if ($scope.item.schedule_settings.utc_publish_schedule) {
-                publish_schedule = $scope.item.schedule_settings.utc_publish_schedule;
+                publishSchedule = $scope.item.schedule_settings.utc_publish_schedule;
             }
         }
 
@@ -206,8 +206,8 @@ function MetadataCtrl(
             $scope.item.embargo_time = info.time;
         }
 
-        if (publish_schedule) {
-            info = datetimeHelper.splitDateTime(publish_schedule, $scope.item.time_zone);
+        if (publishSchedule) {
+            info = datetimeHelper.splitDateTime(publishSchedule, $scope.item.time_zone);
             $scope.item.publish_schedule_date = info.date;
             $scope.item.publish_schedule_time = info.time;
         }
@@ -276,40 +276,40 @@ function MetadropdownFocusDirective(keyboardManager) {
             scope.$watch(dropdown.isOpen, function(isOpen) {
                 if (isOpen) {
                     _.defer(function() {
-                            var keyboardOptions = {inputDisabled: false};
+                        var keyboardOptions = {inputDisabled: false};
                             // narrow the selection to consider only dropdown list's button items
-                            var buttonList = elem.find('.dropdown__menu button');
+                        var buttonList = elem.find('.dropdown__menu button');
 
+                        if (buttonList.length > 0) {
+                            buttonList[0].focus();
+                        }
+
+                        keyboardManager.push('up', function () {
                             if (buttonList.length > 0) {
-                                buttonList[0].focus();
-                            }
-
-                            keyboardManager.push('up', function () {
-                                if (buttonList.length > 0) {
-                                    var focusedElem = elem.find('button:focus')[0];
-                                    var indexValue = _.findIndex(buttonList, function(chr) {
-                                        return chr === focusedElem;
-                                    });
+                                var focusedElem = elem.find('button:focus')[0];
+                                var indexValue = _.findIndex(buttonList, function(chr) {
+                                    return chr === focusedElem;
+                                });
                                     // select previous item on key UP
-                                    if (indexValue > 0 && indexValue < buttonList.length) {
-                                        buttonList[indexValue - 1].focus();
-                                    }
+                                if (indexValue > 0 && indexValue < buttonList.length) {
+                                    buttonList[indexValue - 1].focus();
                                 }
-                            }, keyboardOptions);
+                            }
+                        }, keyboardOptions);
 
-                            keyboardManager.push('down', function () {
-                                if (buttonList.length > 0) {
-                                    var focusedElem = elem.find('button:focus')[0];
-                                    var indexValue = _.findIndex(buttonList, function(chr) {
-                                        return chr === focusedElem;
-                                    });
+                        keyboardManager.push('down', function () {
+                            if (buttonList.length > 0) {
+                                var focusedElem = elem.find('button:focus')[0];
+                                var indexValue = _.findIndex(buttonList, function(chr) {
+                                    return chr === focusedElem;
+                                });
                                     // select next item on key DOWN
-                                    if (indexValue < buttonList.length - 1) {
-                                        buttonList[indexValue + 1].focus();
-                                    }
+                                if (indexValue < buttonList.length - 1) {
+                                    buttonList[indexValue + 1].focus();
                                 }
-                            }, keyboardOptions);
-                        });
+                            }
+                        }, keyboardOptions);
+                    });
                 } else if (isOpen === false) {
                     keyboardManager.pop('down');
                     keyboardManager.pop('up');
@@ -490,20 +490,20 @@ function MetaWordsListDirective() {
 
             /**
              * sdTypeahead directive invokes this method and is responsible for searching word(s) where the word.name
-             * matches word_to_find.
+             * matches wordToFind.
              *
              * @return {Array} list of word(s)
              */
-            scope.search = function(word_to_find) {
-                if (!word_to_find) {
+            scope.search = function(wordToFind) {
+                if (!wordToFind) {
                     scope.words = scope.list;
                 } else {
                     scope.words = _.filter(scope.list, function (t) {
-                        return ((t.name.toLowerCase().indexOf(word_to_find.toLowerCase()) !== -1));
+                        return ((t.name.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1));
                     });
                 }
 
-                scope.selectedTerm = word_to_find;
+                scope.selectedTerm = wordToFind;
                 return scope.words;
             };
 
@@ -583,9 +583,9 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem, attrs) {
             metadata.subjectScope = scope;
-            var reloadList = scope.reloadList === 'true' ? true : false;
-            var includeParent = scope.includeParent === 'true' ? true : false;
-            var searchUnique = scope.searchUnique === 'true' ? true : false;
+            var reloadList = scope.reloadList === 'true';
+            var includeParent = scope.includeParent === 'true';
+            var searchUnique = scope.searchUnique === 'true';
             scope.combinedList = [];
 
             scope.tree = {};
@@ -616,12 +616,12 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     // checks for dependent dropdowns to remain selected items if new list has them (not to reset)
                     angular.forEach(scope.item[scope.field], function(selectedItem) {
                         if (scope.cv && scope.cv.dependent) {
-                            if (selectedItem.scheme === scope.cv._id){
-                                if (item.name === selectedItem.name){
+                            if (selectedItem.scheme === scope.cv._id) {
+                                if (item.name === selectedItem.name) {
                                     updates[scope.field].push(selectedItem);
                                 }
                             // this is for subject (which is not dependent)
-                            } else if (updates[scope.field].indexOf(selectedItem) === -1){
+                            } else if (updates[scope.field].indexOf(selectedItem) === -1) {
                                 updates[scope.field].push(selectedItem);
                             }
                         }
@@ -844,7 +844,8 @@ function MetaLocatorsDirective() {
 
             scope.$applyAsync(function() {
                 if (scope.item) {
-                    if (scope.fieldprefix && scope.item[scope.fieldprefix] && scope.item[scope.fieldprefix][scope.field]) {
+                    if (scope.fieldprefix && scope.item[scope.fieldprefix]
+                        && scope.item[scope.fieldprefix][scope.field]) {
                         scope.selectedTerm = scope.item[scope.fieldprefix][scope.field].city;
                     } else if (scope.item[scope.field]) {
                         scope.selectedTerm = scope.item[scope.field].city;
@@ -868,20 +869,20 @@ function MetaLocatorsDirective() {
 
             /**
              * sdTypeahead directive invokes this method and is responsible for searching located object(s) where the
-             * city name matches locator_to_find.
+             * city name matches locatorToFind.
              *
              * @return {Array} list of located object(s)
              */
-            scope.searchLocator = function(locator_to_find) {
-                if (!locator_to_find) {
+            scope.searchLocator = function(locatorToFind) {
+                if (!locatorToFind) {
                     setLocators(scope.list);
                 } else {
                     setLocators(_.filter(scope.list, function(t) {
-                        return ((t.city.toLowerCase().indexOf(locator_to_find.toLowerCase()) !== -1));
+                        return ((t.city.toLowerCase().indexOf(locatorToFind.toLowerCase()) !== -1));
                     }));
                 }
 
-                scope.selectedTerm = locator_to_find;
+                scope.selectedTerm = locatorToFind;
                 return scope.locators;
             };
 
@@ -908,8 +909,7 @@ function MetaLocatorsDirective() {
 
                 if (locator) {
                     if (angular.isDefined(scope.fieldprefix)) {
-                        if (!angular.isDefined(scope.item[scope.fieldprefix]))
-                        {
+                        if (!angular.isDefined(scope.item[scope.fieldprefix]))                        {
                             _.extend(scope.item, {dateline: {}});
                         }
                         updates[scope.fieldprefix] = scope.item[scope.fieldprefix];
@@ -936,11 +936,15 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
     var service = {
         values: {},
         cvs: [],
-        search_cvs: config.search_cvs || [{'id': 'subject', 'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'},
-                     {'id': 'companycodes', 'name': 'Company Codes', 'field': 'company_codes', 'list': 'company_codes'}],
-        search_config: config.search || {'slugline': 1, 'headline': 1, 'unique_name': 1, 'story_text': 1,
-            'byline': 1, 'keywords': 1, 'creator': 1, 'from_desk': 1, 'to_desk': 1, 'spike': 1, 'scheduled': 1, 'company_codes': 1,
-            'ingest_provider': 1},
+        search_cvs: config.search_cvs || [
+            {'id': 'subject', 'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'},
+            {'id': 'companycodes', 'name': 'Company Codes', 'field': 'company_codes', 'list': 'company_codes'}
+        ],
+        search_config: config.search || {
+            'slugline': 1, 'headline': 1, 'unique_name': 1, 'story_text': 1, 'byline': 1,
+            'keywords': 1, 'creator': 1, 'from_desk': 1, 'to_desk': 1, 'spike': 1,
+            'scheduled': 1, 'company_codes': 1, 'ingest_provider': 1
+        },
         subjectScope: null,
         loaded: null,
         _urgencyByValue: {},
@@ -953,12 +957,12 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
                 });
                 self.cvs = result._items;
                 self.values.regions = _.sortBy(self.values.geographical_restrictions, function(target) {
-                        return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
-                    }
+                    return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
+                }
                 );
                 self.values.subscriberTypes = _.sortBy(self.values.subscriber_types, function(target) {
-                        return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
-                    }
+                    return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
+                }
                 );
 
                 if (self.values.urgency) {
@@ -1071,7 +1075,11 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
     return service;
 }
 
-angular.module('superdesk.apps.authoring.metadata', ['superdesk.apps.authoring.widgets', 'superdesk.apps.publish', 'vs-repeat'])
+angular.module('superdesk.apps.authoring.metadata', [
+    'superdesk.apps.authoring.widgets',
+    'superdesk.apps.publish',
+    'vs-repeat'
+])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider
             .widget('metadata', {

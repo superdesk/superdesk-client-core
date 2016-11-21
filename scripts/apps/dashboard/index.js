@@ -7,7 +7,7 @@ import './workspace-tasks/tasks';
 import './world-clock/world-clock';
 import './grid/grid';
 
-import { DashboardController } from './controllers';
+import {DashboardController} from './controllers';
 import * as directive from './directives';
 import * as svc from './services';
 

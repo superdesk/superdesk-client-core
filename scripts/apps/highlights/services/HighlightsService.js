@@ -35,9 +35,9 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
                 criteria = {where: {'$or': [
                                             {'desks': desk},
                                             {'desks': {'$size': 0}}
-                                           ]
-                                    }
-                            };
+                ]
+                }
+                };
             }
 
             promise[key] = api('highlights').query(criteria)
@@ -88,15 +88,15 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
     /**
      * Mark an item for a highlight
      */
-    service.markItem = function(highlight, marked_item) {
-        return api.save('marked_for_highlights', {highlights: highlight, marked_item: marked_item.guid});
+    service.markItem = function(highlight, markedItem) {
+        return api.save('marked_for_highlights', {highlights: highlight, marked_item: markedItem.guid});
     };
 
     /**
      * Create empty highlight package
      */
     service.createEmptyHighlight = function(highlight) {
-        var pkg_defaults = {
+        var pkgDefaults = {
             headline: highlight.name,
             highlight: highlight._id
         };
@@ -107,10 +107,10 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
             group =  highlight.groups[0];
         }
         if (highlight.task) {
-            pkg_defaults.task = highlight.task;
+            pkgDefaults.task = highlight.task;
         }
 
-        return packages.createEmptyPackage(pkg_defaults, group);
+        return packages.createEmptyPackage(pkgDefaults, group);
     };
 
     /**

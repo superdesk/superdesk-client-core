@@ -9,8 +9,8 @@
  */
 import './styles/dictionaries.scss';
 
-import { DictionaryService } from './services';
-import { DictionaryEditController, DictionaryConfigController } from './controllers';
+import {DictionaryService} from './services';
+import {DictionaryEditController, DictionaryConfigController} from './controllers';
 import * as directive from './directives';
 
 /**
@@ -27,13 +27,13 @@ angular.module('superdesk.apps.dictionaries', [
 ])
     .config(['superdeskProvider', function(superdesk) {
         superdesk.activity('/settings/dictionaries', {
-                label: gettext('Dictionaries'),
-                controller: DictionaryConfigController,
-                templateUrl: 'scripts/apps/dictionaries/views/settings.html',
-                category: superdesk.MENU_SETTINGS,
-                priority: -800,
-                privileges: {dictionaries: 1}
-            });
+            label: gettext('Dictionaries'),
+            controller: DictionaryConfigController,
+            templateUrl: 'scripts/apps/dictionaries/views/settings.html',
+            category: superdesk.MENU_SETTINGS,
+            priority: -800,
+            privileges: {dictionaries: 1}
+        });
     }])
     .service('dictionaries', DictionaryService)
     .controller('DictionaryEdit', DictionaryEditController)

@@ -1,1 +1,1 @@
-export { LegalArchiveController } from './LegalArchiveController';
+export {LegalArchiveController} from './LegalArchiveController';

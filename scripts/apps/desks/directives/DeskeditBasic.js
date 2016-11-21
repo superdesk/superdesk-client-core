@@ -1,4 +1,4 @@
-import { limits } from 'apps/desks/constants';
+import {limits} from 'apps/desks/constants';
 
 DeskeditBasic.$inject = ['gettext', 'desks', 'WizardHandler', 'metadata', '$filter', '$interpolate', '$rootScope'];
 export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, $interpolate, $rootScope) {
@@ -36,7 +36,7 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
             scope.save = function(desk, done) {
                 scope.saving = true;
                 scope.message = gettext('Saving...');
-                var _new = desk._id ? false : true;
+                var _new = !!!desk._id;
                 desks.save(scope.desk.edit, desk).then(function(res) {
                     if (_new) {
                         scope.edit(scope.desk.edit);

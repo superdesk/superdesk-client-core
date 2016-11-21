@@ -7,7 +7,7 @@ import * as constant from './constants';
 import * as ctrl from './controllers';
 import * as svc from './services';
 import * as directive from './directives';
-import { InsertFilter, ScheduleFilter } from './filters';
+import {InsertFilter, ScheduleFilter} from './filters';
 
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);
@@ -149,4 +149,6 @@ angular.module('superdesk.apps.ingest', [
         });
     }])
 
-    .run(['remove', remove => { remove.fetchProviders(); }]);
+    .run(['remove', remove => {
+        remove.fetchProviders();
+    }]);

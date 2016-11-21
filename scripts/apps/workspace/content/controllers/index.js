@@ -1,1 +1,1 @@
-export { ContentProfilesController } from './ContentProfilesController';
+export {ContentProfilesController} from './ContentProfilesController';

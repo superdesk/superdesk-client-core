@@ -31,7 +31,7 @@ describe('publish queue', function() {
     ];
 
     var publishQueue = {'_items': [
-            {
+        {
             '_created': '2015-05-15T06:27:13+0000',
             '_etag': 'd18bf9f762b03815acc189fdcef633bf67f8e222',
             '_id': '555591c11d41c830e91b1f9f',
@@ -108,9 +108,9 @@ describe('publish queue', function() {
             'unique_name': '#57537'
         }
     ],
-    '_meta': {
-        total: 3
-    }};
+        '_meta': {
+            total: 3
+        }};
 
     var $scope;
 

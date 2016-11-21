@@ -4,13 +4,13 @@ describe('Superdesk service', function() {
     var testWidget = {testData: 123};
     var testPane = {testData: 123};
     var testActivity = {
-            label: 'test',
-            controller: function() {
-                return 'test';
-            },
-            filters: [intent],
-            category: 'superdesk.core.menu.main'
-        };
+        label: 'test',
+        controller: function() {
+            return 'test';
+        },
+        filters: [intent],
+        category: 'superdesk.core.menu.main'
+    };
 
     angular.module('superdesk.core.activity.test', ['superdesk.core.activity'])
         .config(function(superdeskProvider) {

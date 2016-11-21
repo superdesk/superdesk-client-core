@@ -168,8 +168,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
     };
 
     var initContentFilter = function() {
-        if (!$scope.contentFilter.content_filter || $scope.contentFilter.content_filter.length === 0)
-        {
+        if (!$scope.contentFilter.content_filter || $scope.contentFilter.content_filter.length === 0)        {
             $scope.contentFilter.content_filter = [{'expression': {}}];
         }
     };

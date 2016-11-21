@@ -1,1 +1,1 @@
-export { ProductsConfigController } from './ProductsConfigController';
+export {ProductsConfigController} from './ProductsConfigController';

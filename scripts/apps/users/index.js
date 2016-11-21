@@ -7,7 +7,7 @@ import './styles/users.scss';
 import './activity-widget/activity';
 import './import/import';
 
-import { UserEditController } from './controllers';
+import {UserEditController} from './controllers';
 import * as svc from './services';
 import * as directive from './directives';
 import * as config from './config';

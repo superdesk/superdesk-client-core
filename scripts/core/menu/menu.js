@@ -133,8 +133,7 @@ angular.module('superdesk.core.menu', [
             link: function(scope) {
 
                 api.query('backend_meta', {}).then(
-                    function(metadata)
-                    {
+                    function(metadata)                    {
                         scope.build_rev = metadata.meta_rev;
                         scope.build_rev_core = metadata.meta_rev_core;
                         scope.build_rev_client = metadata.meta_rev_client;

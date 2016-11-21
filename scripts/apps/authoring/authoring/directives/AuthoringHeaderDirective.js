@@ -1,5 +1,5 @@
 AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata',
-            'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config'];
+    'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config'];
 export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content,
     lodash, authoring, vocabularies, $timeout, config) {
     return {
@@ -37,7 +37,8 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
 
                 if (!display && scope.item.subject) {
                     financeCategory = _.find(scope.item.subject, function (category) {
-                        if (category.qcode === '04000000' || category.qcode === '04006018' || category.qcode === '04019000') {
+                        if (category.qcode === '04000000' || category.qcode === '04006018'
+                            || category.qcode === '04019000') {
                             return category;
                         }
                     });
@@ -66,9 +67,9 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     };
 
                     scope.previewMasterStory = function () {
-                        var item_id = item.broadcast.takes_package_id ?
+                        var itemId = item.broadcast.takes_package_id ?
                             item.broadcast.takes_package_id : item.broadcast.master_id;
-                        return api.find('archive', item_id).then(function(item) {
+                        return api.find('archive', itemId).then(function(item) {
                             $rootScope.$broadcast('broadcast:preview', {'item': item});
                         });
                     };
@@ -100,11 +101,11 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                         .then(function(items) {
                             scope.relatedItems = items;
                             if (items && items._items.length) {
-                                var takes_package = _.find(scope.item.linked_in_packages, function(linked_package) {
-                                    return linked_package && linked_package.package_type === 'takes';
+                                var takesPackage = _.find(scope.item.linked_in_packages, function(linkedPackage) {
+                                    return linkedPackage && linkedPackage.package_type === 'takes';
                                 });
                                 // if takes package is missing or not rewrite of.
-                                scope.missing_link = !takes_package && !scope.item.rewrite_of &&
+                                scope.missing_link = !takesPackage && !scope.item.rewrite_of &&
                                     !scope.item.rewritten_by;
                             }
                         });

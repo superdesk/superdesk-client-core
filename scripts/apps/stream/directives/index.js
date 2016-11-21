@@ -1,2 +1,2 @@
-export { ActivityStream } from './ActivityStream';
-export { ActivityMessage } from './ActivityMessage';
+export {ActivityStream} from './ActivityStream';
+export {ActivityMessage} from './ActivityMessage';

@@ -59,8 +59,8 @@ export function CardsService(api, search, session, desks, config) {
             break;
 
         case 'deskOutput':
-            var desk_id = card._id.substring(0, card._id.indexOf(':'));
-            var desk = desks.deskLookup ? desks.deskLookup[desk_id] : null;
+            var deskId = card._id.substring(0, card._id.indexOf(':'));
+            var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
             var states = ['scheduled', 'published', 'corrected', 'killed'];
             if (config.monitoring && config.monitoring.scheduled) {
                 states = ['published', 'corrected', 'killed'];
@@ -68,15 +68,15 @@ export function CardsService(api, search, session, desks, config) {
             if (desk) {
                 if (desk.desk_type === 'authoring') {
                     query.filter({or: [
-                        {term: {'task.last_authoring_desk': desk_id}},
+                        {term: {'task.last_authoring_desk': deskId}},
                         {and: [
-                            {term: {'task.desk': desk_id}},
+                            {term: {'task.desk': deskId}},
                             {terms: {state: states}}
                         ]}
                     ]});
                 } else if (desk.desk_type === 'production') {
                     query.filter({and: [
-                        {term: {'task.desk': desk_id}},
+                        {term: {'task.desk': deskId}},
                         {terms: {state: states}}
                     ]});
                 }
@@ -84,9 +84,9 @@ export function CardsService(api, search, session, desks, config) {
             break;
 
         case 'scheduledDeskOutput':
-            desk_id = card._id.substring(0, card._id.indexOf(':'));
+            deskId = card._id.substring(0, card._id.indexOf(':'));
             query.filter({and: [
-                {term: {'task.desk': desk_id}},
+                {term: {'task.desk': deskId}},
                 {term: {state: 'scheduled'}}
             ]});
             break;
@@ -170,9 +170,9 @@ export function CardsService(api, search, session, desks, config) {
             return data.user === session.identity._id;
         case 'deskOutput':
         case 'scheduledDeskOutput':
-            var desk_id = card._id.substring(0, card._id.indexOf(':'));
-            if (desk_id) {
-                return data.desks && !!data.desks[desk_id];
+            var deskId = card._id.substring(0, card._id.indexOf(':'));
+            if (deskId) {
+                return data.desks && !!data.desks[deskId];
             }
             return false;
         default:

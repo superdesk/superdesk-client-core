@@ -62,12 +62,12 @@ export function ThemeSelectDirective(authThemes) {
                 }
             }
 
-            function themeKey(theme){
+            function themeKey(theme) {
                 return theme.indexOf('-large') !== -1 ? theme.slice(0, theme.indexOf('-large')) : theme;
             }
 
-            function themeLarge(theme){
-                return theme.indexOf('-large') !== -1 ? true : false;
+            function themeLarge(theme) {
+                return theme.indexOf('-large') !== -1;
             }
         }
     };

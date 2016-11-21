@@ -65,11 +65,9 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
                             _initialized = true;
                         }
                         content.modal('show');
-                    } else {
-                        if (initialized()) {
-                            content.modal('hide');
-                            closeModal();
-                        }
+                    } else if (initialized()) {
+                        content.modal('hide');
+                        closeModal();
                     }
                 });
 

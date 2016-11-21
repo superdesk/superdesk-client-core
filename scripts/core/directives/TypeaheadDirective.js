@@ -83,7 +83,8 @@ export default angular.module('superdesk.core.directives.typeahead', []).
                 };
 
                 $scope.isVisible = function() {
-                    return !$scope.hide && ($scope.focused || $scope.mousedOver) && ($scope.items && $scope.items.length > 0);
+                    return !$scope.hide && ($scope.focused || $scope.mousedOver)
+                        && ($scope.items && $scope.items.length > 0);
                 };
 
                 $scope.query = function() {
@@ -98,7 +99,9 @@ export default angular.module('superdesk.core.directives.typeahead', []).
                 var $list = element.find('.item-list');
 
                 $input.on('focus', function() {
-                    scope.$apply(function() { scope.focused = true; });
+                    scope.$apply(function() {
+                        scope.focused = true;
+                    });
                 });
 
                 $input.on('blur', function() {
@@ -111,21 +114,29 @@ export default angular.module('superdesk.core.directives.typeahead', []).
                 });
 
                 $list.on('mouseover', function() {
-                    scope.$apply(function() { scope.mousedOver = true; });
+                    scope.$apply(function() {
+                        scope.mousedOver = true;
+                    });
                 });
 
                 $list.on('mouseleave', function() {
-                    scope.$apply(function() { scope.mousedOver = false; });
+                    scope.$apply(function() {
+                        scope.mousedOver = false;
+                    });
                 });
 
                 $input.on('keydown', function(e) {
                     if (e.keyCode === Keys.enter) {
-                        scope.$apply(function() { controller.selectActive(); });
+                        scope.$apply(function() {
+                            controller.selectActive();
+                        });
                         e.preventDefault();
                     }
 
                     if (e.keyCode === Keys.escape) {
-                        scope.$apply(function() { scope.hide = true; });
+                        scope.$apply(function() {
+                            scope.hide = true;
+                        });
                     }
 
                     var list = element.find('.item-list')[0];
@@ -169,7 +180,9 @@ export default angular.module('superdesk.core.directives.typeahead', []).
 
                 scope.$watch('focused', function(focused) {
                     if (focused) {
-                        $timeout(function() { $input.focus(); }, 0, false);
+                        $timeout(function() {
+                            $input.focus();
+                        }, 0, false);
                     } else {
                         scope.active = null;
                     }
@@ -192,7 +205,9 @@ export default angular.module('superdesk.core.directives.typeahead', []).
 
                 var item = scope.$eval(attrs.typeaheadItem);
 
-                scope.$watch(function() { return controller.isActive(item); }, function(active) {
+                scope.$watch(function() {
+                    return controller.isActive(item);
+                }, function(active) {
                     if (active) {
                         element.addClass('active');
                     } else {
@@ -201,11 +216,15 @@ export default angular.module('superdesk.core.directives.typeahead', []).
                 });
 
                 element.on('mouseenter', function(e) {
-                    scope.$apply(function() { controller.activate(item); });
+                    scope.$apply(function() {
+                        controller.activate(item);
+                    });
                 });
 
                 element.on('click', function(e) {
-                    scope.$apply(function() { controller.select(item); });
+                    scope.$apply(function() {
+                        controller.select(item);
+                    });
                 });
 
                 scope.$on('$destroy', function() {

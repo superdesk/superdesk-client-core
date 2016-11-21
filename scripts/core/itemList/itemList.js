@@ -199,43 +199,43 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             options.sluglineMatch = options.sluglineMatch || '';
 
             switch (options.sluglineMatch) {
-                case 'ANY': //any words in the slugline
-                    if (options.keyword.indexOf(' ') >= 0) {
-                        queryRelatedItem.push('slugline' + ':("' + sanitizedKeyword + '")');
-                    }
+            case 'ANY': //any words in the slugline
+                if (options.keyword.indexOf(' ') >= 0) {
+                    queryRelatedItem.push('slugline' + ':("' + sanitizedKeyword + '")');
+                }
 
-                    for (var i = 0; i < length; i++) {
-                        if (queryWords[i]) {
-                            queryRelatedItem.push('slugline' + ':(' + queryWords[i] + ')');
-                        }
+                for (var i = 0; i < length; i++) {
+                    if (queryWords[i]) {
+                        queryRelatedItem.push('slugline' + ':(' + queryWords[i] + ')');
                     }
+                }
 
-                    if (queryRelatedItem.length) {
-                        query.source.query.filtered.query = {
-                            query_string: {
-                                query: queryRelatedItem.join(' '),
-                                lenient: false,
-                                default_operator: 'OR'
-                            }
-                        };
-                    }
-
-                    break;
-                case 'PREFIX': //phrase prefix
-                    query.source.query.filtered.query = {
-                        match_phrase_prefix: {
-                            'slugline.phrase': sanitizedKeyword
-                        }
-                    };
-                    break;
-                default:
-                    // exact match on slugline
+                if (queryRelatedItem.length) {
                     query.source.query.filtered.query = {
                         query_string: {
-                            query: 'slugline.phrase:("' + sanitizedKeyword + '")',
-                            lenient: false
+                            query: queryRelatedItem.join(' '),
+                            lenient: false,
+                            default_operator: 'OR'
                         }
                     };
+                }
+
+                break;
+            case 'PREFIX': //phrase prefix
+                query.source.query.filtered.query = {
+                    match_phrase_prefix: {
+                        'slugline.phrase': sanitizedKeyword
+                    }
+                };
+                break;
+            default:
+                    // exact match on slugline
+                query.source.query.filtered.query = {
+                    query_string: {
+                        query: 'slugline.phrase:("' + sanitizedKeyword + '")',
+                        lenient: false
+                    }
+                };
             }
         }
 
@@ -326,7 +326,9 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         save: function() {
             var self = this;
 
-            this.items = _.uniq(this.items, function(item) {return item._id;});
+            this.items = _.uniq(this.items, function(item) {
+                return item._id;
+            });
             var update = {};
             update[PREF_KEY] = this.items;
             return preferencesService.update(update, PREF_KEY)
@@ -389,107 +391,107 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
     return itemPinService;
 }])
 .directive('sdItemListWidget', ['ItemList', 'notify', 'itemPinService', 'gettext', '$timeout',
-function(ItemList, notify, itemPinService, gettext, $timeout) {
-    return {
-        scope: {
-            options: '=',
-            itemListOptions: '=',
-            actions: '='
-        },
-        templateUrl: 'scripts/core/itemList/views/item-list-widget.html',
-        link: function(scope, element, attrs) {
-            scope.items = null;
-            scope.processedItems = null;
-            scope.maxPage = 1;
-            scope.pinnedItems = [];
-            scope.selected = null;
+    function(ItemList, notify, itemPinService, gettext, $timeout) {
+        return {
+            scope: {
+                options: '=',
+                itemListOptions: '=',
+                actions: '='
+            },
+            templateUrl: 'scripts/core/itemList/views/item-list-widget.html',
+            link: function(scope, element, attrs) {
+                scope.items = null;
+                scope.processedItems = null;
+                scope.maxPage = 1;
+                scope.pinnedItems = [];
+                scope.selected = null;
 
-            var oldSearch = null;
+                var oldSearch = null;
 
-            var itemList = new ItemList();
+                var itemList = new ItemList();
 
-            var timeout;
+                var timeout;
 
-            function refresh() {
-                $timeout.cancel(timeout);
-                timeout = $timeout(function() {
-                    itemList.fetch();
-                }, 300, false);
-            }
-
-            extendScope(scope, itemList, itemPinService);
-
-            scope.$watch('itemListOptions', function() {
-                itemList.setOptions(scope.itemListOptions);
-                refresh();
-            }, true);
-
-            scope.$watch('options.similar', function() {
-                if (scope.options.similar && scope.options.item) {
-                    if (!scope.options.item.slugline) {
-                        notify.error(gettext('Error: Slugline required.'));
-                        scope.options.similar = false;
-                    } else {
-                        oldSearch = scope.itemListOptions.search;
-                        scope.itemListOptions.search = scope.options.item.slugline;
-                    }
-                } else {
-                    scope.itemListOptions.search = oldSearch || null;
+                function refresh() {
+                    $timeout.cancel(timeout);
+                    timeout = $timeout(function() {
+                        itemList.fetch();
+                    }, 300, false);
                 }
-            });
-        }
-    };
-}])
+
+                extendScope(scope, itemList, itemPinService);
+
+                scope.$watch('itemListOptions', function() {
+                    itemList.setOptions(scope.itemListOptions);
+                    refresh();
+                }, true);
+
+                scope.$watch('options.similar', function() {
+                    if (scope.options.similar && scope.options.item) {
+                        if (!scope.options.item.slugline) {
+                            notify.error(gettext('Error: Slugline required.'));
+                            scope.options.similar = false;
+                        } else {
+                            oldSearch = scope.itemListOptions.search;
+                            scope.itemListOptions.search = scope.options.item.slugline;
+                        }
+                    } else {
+                        scope.itemListOptions.search = oldSearch || null;
+                    }
+                });
+            }
+        };
+    }])
 .directive('sdRelatedItemListWidget', ['ItemList', 'notify', 'itemPinService', 'gettext',
-function(ItemList, notify, itemPinService, gettext) {
-    return {
-        scope: {
-            options: '=',
-            itemListOptions: '=',
-            actions: '='
-        },
-        templateUrl: 'scripts/core/itemList/views/relatedItem-list-widget.html',
-        link: function(scope, element, attrs) {
-            scope.items = null;
-            scope.processedItems = null;
-            scope.maxPage = 1;
-            scope.pinnedItems = [];
-            scope.selected = null;
+    function(ItemList, notify, itemPinService, gettext) {
+        return {
+            scope: {
+                options: '=',
+                itemListOptions: '=',
+                actions: '='
+            },
+            templateUrl: 'scripts/core/itemList/views/relatedItem-list-widget.html',
+            link: function(scope, element, attrs) {
+                scope.items = null;
+                scope.processedItems = null;
+                scope.maxPage = 1;
+                scope.pinnedItems = [];
+                scope.selected = null;
 
-            var oldSearch = null;
+                var oldSearch = null;
 
-            var itemList = new ItemList();
+                var itemList = new ItemList();
 
-            var _refresh = function() {
-                if (scope.options.related &&
+                var _refresh = function() {
+                    if (scope.options.related &&
                     scope.itemListOptions.keyword &&
                     scope.itemListOptions.keyword.trim().length >= 2) {
-                    itemList.fetch();
-                }
-            };
-            var refresh = _.debounce(_refresh, 300);
-
-            extendScope(scope, itemList, itemPinService);
-
-            scope.$watch('itemListOptions', function() {
-                itemList.setOptions(scope.itemListOptions);
-                itemList.setOptions({related: scope.options.related});
-                refresh();
-            }, true);
-
-            scope.$watch('options.related', function() {
-                if (scope.options.related && scope.options.item) {
-                    if (!scope.options.item.slugline) {
-                        notify.error(gettext('Error: Slugline required.'));
-                        scope.options.related = false;
-                    } else {
-                        oldSearch = scope.itemListOptions.keyword;
-                        scope.itemListOptions.keyword = scope.options.item.slugline;
+                        itemList.fetch();
                     }
-                } else {
-                    scope.itemListOptions.keyword = oldSearch || null;
-                }
-            });
-        }
-    };
-}]);
+                };
+                var refresh = _.debounce(_refresh, 300);
+
+                extendScope(scope, itemList, itemPinService);
+
+                scope.$watch('itemListOptions', function() {
+                    itemList.setOptions(scope.itemListOptions);
+                    itemList.setOptions({related: scope.options.related});
+                    refresh();
+                }, true);
+
+                scope.$watch('options.related', function() {
+                    if (scope.options.related && scope.options.item) {
+                        if (!scope.options.item.slugline) {
+                            notify.error(gettext('Error: Slugline required.'));
+                            scope.options.related = false;
+                        } else {
+                            oldSearch = scope.itemListOptions.keyword;
+                            scope.itemListOptions.keyword = scope.options.item.slugline;
+                        }
+                    } else {
+                        scope.itemListOptions.keyword = oldSearch || null;
+                    }
+                });
+            }
+        };
+    }]);

@@ -205,42 +205,42 @@ describe('templates', function() {
 
         it('can fetch templates all templates with user type as administrator',
             inject(function(api, templates, session, $rootScope) {
-            session.identity = {_id: 'foo', user_type: 'administrator'};
-            templates.fetchAllTemplates(1, 50);
-            $rootScope.$digest();
-            expect(api.query).toHaveBeenCalledWith('content_templates', {
-                page: 1,
-                max_results: 50,
-                sort: 'template_name',
-                where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}]}]}'
-            });
-        }));
+                session.identity = {_id: 'foo', user_type: 'administrator'};
+                templates.fetchAllTemplates(1, 50);
+                $rootScope.$digest();
+                expect(api.query).toHaveBeenCalledWith('content_templates', {
+                    page: 1,
+                    max_results: 50,
+                    sort: 'template_name',
+                    where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}]}]}'
+                });
+            }));
 
         it('can fetch templates all templates with type parameter as administrator',
             inject(function(api, templates, session, $rootScope) {
-            session.identity = {_id: 'foo', user_type: 'administrator'};
-            templates.fetchAllTemplates(1, 50, 'create');
-            $rootScope.$digest();
-            expect(api.query).toHaveBeenCalledWith('content_templates', {
-                page: 1,
-                max_results: 50,
-                sort: 'template_name',
-                where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}],"template_type":"create"}]}'
-            });
-        }));
+                session.identity = {_id: 'foo', user_type: 'administrator'};
+                templates.fetchAllTemplates(1, 50, 'create');
+                $rootScope.$digest();
+                expect(api.query).toHaveBeenCalledWith('content_templates', {
+                    page: 1,
+                    max_results: 50,
+                    sort: 'template_name',
+                    where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}],"template_type":"create"}]}'
+                });
+            }));
 
         it('can fetch templates all templates with type parameter and template name',
             inject(function(api, templates, $rootScope) {
-            templates.fetchAllTemplates(1, 50, 'create', 'test');
-            $rootScope.$digest();
-            expect(api.query).toHaveBeenCalledWith('content_templates', {
-                page: 1,
-                max_results: 50,
-                sort: 'template_name',
-                where: '{"$and":[{"$or":[{"user":"foo"}],' +
+                templates.fetchAllTemplates(1, 50, 'create', 'test');
+                $rootScope.$digest();
+                expect(api.query).toHaveBeenCalledWith('content_templates', {
+                    page: 1,
+                    max_results: 50,
+                    sort: 'template_name',
+                    where: '{"$and":[{"$or":[{"user":"foo"}],' +
                 '"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}'
-            });
-        }));
+                });
+            }));
     });
 
     describe('template select directive', function() {

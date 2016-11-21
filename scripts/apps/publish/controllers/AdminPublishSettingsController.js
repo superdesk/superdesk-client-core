@@ -1,7 +1,7 @@
 AdminPublishSettingsController.$inject = ['$scope', 'privileges'];
 export function AdminPublishSettingsController($scope, privileges) {
-    var user_privileges = privileges.privileges;
+    var userPrivileges = privileges.privileges;
 
-    $scope.showSubscribers  = Boolean(user_privileges.subscribers);
-    $scope.showFilterConditions  = Boolean(user_privileges.publish_filters);
+    $scope.showSubscribers  = Boolean(userPrivileges.subscribers);
+    $scope.showFilterConditions  = Boolean(userPrivileges.publish_filters);
 }

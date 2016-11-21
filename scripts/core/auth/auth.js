@@ -113,7 +113,7 @@ export default angular.module('superdesk.core.auth', [
     'superdesk.core.auth.basic',
     'superdesk.core.auth.login',
     'superdesk.core.auth.interceptor'
-    ])
+])
     .config(['$httpProvider', 'superdeskProvider', 'assetProvider', function($httpProvider, superdesk, asset) {
         $httpProvider.interceptors.push('AuthExpiredInterceptor');
 
@@ -140,52 +140,53 @@ export default angular.module('superdesk.core.auth', [
     }])
 
     // watch session token, identity
-    .run([
-    '$rootScope', '$http', '$window', 'session', 'api', 'superdeskFlags', 'authoringWorkspace', 'modal', 'gettext', 'SESSION_EVENTS',
-    function($rootScope, $http, $window, session, api, superdeskFlags, authoringWorkspace, modal, gettext, SESSION_EVENTS) {
-        $rootScope.logout = function() {
+    .run(['$rootScope', '$http', '$window', 'session', 'api', 'superdeskFlags', 'authoringWorkspace',
+        'modal', 'gettext', 'SESSION_EVENTS',
+        function($rootScope, $http, $window, session, api, superdeskFlags, authoringWorkspace,
+            modal, gettext, SESSION_EVENTS) {
+            $rootScope.logout = function() {
 
-            function replace() {
-                session.clear();
-                $window.location.replace('/'); // reset page for new user
-            }
-
-            var canLogout = true;
-            if (superdeskFlags.flags.authoring) {
-                var item = authoringWorkspace.getItem();
-
-                if (item && item._autosaved) {
-                    canLogout = false;
-                    modal.confirm(gettext('There are some unsaved changes. Please save them before signing out.'),
-                        gettext('Warning'), gettext('OK'), '');
+                function replace() {
+                    session.clear();
+                    $window.location.replace('/'); // reset page for new user
                 }
-            }
 
-            if (canLogout) {
-                api.auth.getById(session.sessionId).then(function (sessionData) {
-                    api.auth.remove(sessionData).then(replace, replace);
-                });
-            }
-        };
+                var canLogout = true;
+                if (superdeskFlags.flags.authoring) {
+                    var item = authoringWorkspace.getItem();
+
+                    if (item && item._autosaved) {
+                        canLogout = false;
+                        modal.confirm(gettext('There are some unsaved changes. Please save them before signing out.'),
+                        gettext('Warning'), gettext('OK'), '');
+                    }
+                }
+
+                if (canLogout) {
+                    api.auth.getById(session.sessionId).then(function (sessionData) {
+                        api.auth.remove(sessionData).then(replace, replace);
+                    });
+                }
+            };
 
         // populate current user
-        $rootScope.$watch(function watchSessionIdentity() {
-            return session.identity;
-        }, function (identity) {
-            $rootScope.currentUser = session.identity;
-            $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
-        });
+            $rootScope.$watch(function watchSessionIdentity() {
+                return session.identity;
+            }, function (identity) {
+                $rootScope.currentUser = session.identity;
+                $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
+            });
 
         // set auth header
-        $rootScope.$watch(function watchSessionToken() {
-            return session.token;
-        }, function(token) {
-            if (token) {
-                $http.defaults.headers.common.Authorization = token;
-                $rootScope.sessionId = session.sessionId;
-            } else {
-                delete $http.defaults.headers.common.Authorization;
-                $rootScope.sessionId = null;
-            }
-        });
-    }]);
+            $rootScope.$watch(function watchSessionToken() {
+                return session.token;
+            }, function(token) {
+                if (token) {
+                    $http.defaults.headers.common.Authorization = token;
+                    $rootScope.sessionId = session.sessionId;
+                } else {
+                    delete $http.defaults.headers.common.Authorization;
+                    $rootScope.sessionId = null;
+                }
+            });
+        }]);

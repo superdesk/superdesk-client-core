@@ -9,11 +9,11 @@
  * @param {String} value the model for editor value
  * @param {String} language the current language used for spellchecker
  * @param {Function} onChange the callback executed when the editor value is changed
- * @description Editor3 is a draft.js based editor that support customizable formatting (shortly more features will come ...)
+ * @description Editor3 is a draft.js based editor that support customizable
+ *  formatting (shortly more features will come ...)
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {Editor, EditorState, RichUtils, ContentState} from 'draft-js';
+import {Editor, EditorState, RichUtils} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 import {stateFromHTML} from 'draft-js-import-html';
 
@@ -129,17 +129,17 @@ export class Editor3 extends React.Component {
                 </div>
             );
         } else {
-                return (
-                    <div onClick={this.focus} className="Editor3-editor-single-line">
-                        <Editor
-                            editorState={editorState}
-                            handleKeyCommand={this.handleKeyCommand}
-                            onChange={this.onChange}
-                            onTab={this.onTab}
-                            readOnly={this.readOnly}
-                            ref="editor"
-                        />
-                    </div>
+            return (
+                <div onClick={this.focus} className="Editor3-editor-single-line">
+                    <Editor
+                        editorState={editorState}
+                        handleKeyCommand={this.handleKeyCommand}
+                        onChange={this.onChange}
+                        onTab={this.onTab}
+                        readOnly={this.readOnly}
+                        ref="editor"
+                    />
+                </div>
             );
         }
     }
@@ -153,7 +153,7 @@ Editor3.propTypes = {
     value: React.PropTypes.string,
     language: React.PropTypes.string,
     onChange: React.PropTypes.func
-}
+};
 
 /** Set the default values of props for the editor */
 Editor3.defaultProps = {

@@ -1,12 +1,12 @@
 LegalArchiveController.$inject = ['$scope', '$location', 'legal', 'preferencesService'];
 export function LegalArchiveController($scope, $location, legal, preferencesService) {
     var viewUpdate = {'archive:view': {
-                        'allowed': ['mgrid', 'compact'],
-                        'category': 'archive',
-                        'view': 'mgrid',
-                        'default': 'mgrid',
-                        'label': 'Users archive view format',
-                        'type': 'string'}};
+        'allowed': ['mgrid', 'compact'],
+        'category': 'archive',
+        'view': 'mgrid',
+        'default': 'mgrid',
+        'label': 'Users archive view format',
+        'type': 'string'}};
     $scope.criteria = {};
     $scope.items = legal.default_items;
     $scope.loading = false;

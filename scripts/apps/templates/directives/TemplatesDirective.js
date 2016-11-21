@@ -1,7 +1,7 @@
 import notifySaveError from '../helpers';
 
 TemplatesDirective.$inject = ['gettext', 'notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
-                              'content', '$filter', 'lodash'];
+    'content', '$filter', 'lodash'];
 export function TemplatesDirective(gettext, notify, api, templates, modal, desks, weekdays, content, $filter, _) {
     return {
         templateUrl: 'scripts/apps/templates/views/templates.html',
@@ -82,7 +82,9 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                     $scope.template.template_desks = [desk._id];
                     return;
                 }
-                var deskIndex = _.findIndex($scope.template.template_desks, function(val) { return val === desk._id; });
+                var deskIndex = _.findIndex($scope.template.template_desks, function(val) {
+                    return val === desk._id;
+                });
                 if (desk.selected && deskIndex === -1) {
                     $scope.template.template_desks.push(desk._id);
                 }
@@ -107,7 +109,9 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             function selectDesks(desksIds) {
                 if (desksIds instanceof Array) {
                     _.forEach($scope.desks._items, function(desk) {
-                        var deskIndex = _.findIndex(desksIds, function(deskId) { return deskId === desk._id; });
+                        var deskIndex = _.findIndex(desksIds, function(deskId) {
+                            return deskId === desk._id;
+                        });
                         desk.selected = deskIndex !== -1;
                     });
                 }
@@ -141,11 +145,11 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                 }
             };
 
-            $scope.templatesFilter = function(template_type) {
+            $scope.templatesFilter = function(templateType) {
                 if ($scope.template._id && $scope.template.template_type === 'kill') {
-                    return template_type._id === 'kill';
+                    return templateType._id === 'kill';
                 } else {
-                    return template_type._id !== 'kill';
+                    return templateType._id !== 'kill';
                 }
             };
 

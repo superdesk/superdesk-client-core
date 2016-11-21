@@ -10,10 +10,10 @@ angular.module('superdesk.config', [])
          */
         this.set = function(key, val) {
             var dest = config;
-            var key_pieces = key.split('.');
+            var keyPieces = key.split('.');
 
-            for (var i = 0; i + 1 < key_pieces.length; i++) {
-                var k = key_pieces[i];
+            for (var i = 0; i + 1 < keyPieces.length; i++) {
+                var k = keyPieces[i];
                 if (!dest.hasOwnProperty(k)) {
                     dest[k] = {};
                 }
@@ -21,9 +21,9 @@ angular.module('superdesk.config', [])
                 dest = dest[k];
             }
 
-            var last_key = key_pieces[key_pieces.length - 1];
-            if (!dest.hasOwnProperty(last_key)) {
-                dest[last_key] = val;
+            var lastKey = keyPieces[keyPieces.length - 1];
+            if (!dest.hasOwnProperty(lastKey)) {
+                dest[lastKey] = val;
             }
         };
 

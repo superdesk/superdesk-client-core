@@ -1,4 +1,4 @@
-import { PROVIDER_DASHBOARD_DEFAULTS } from 'apps/ingest/constants';
+import {PROVIDER_DASHBOARD_DEFAULTS} from 'apps/ingest/constants';
 
 IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter', 'searchProviderService'];
 export function IngestProviderService(api, $q, preferencesService, $filter, searchProviderService) {
@@ -56,22 +56,22 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
         fetchDashboardProviders: function() {
             var deferred = $q.defer();
             _getAllIngestProviders().then(function (result) {
-                var ingest_providers = result;
-                preferencesService.get('dashboard:ingest').then(function(user_ingest_providers) {
-                    if (!_.isArray(user_ingest_providers)) {
-                        user_ingest_providers = [];
+                var ingestProviders = result;
+                preferencesService.get('dashboard:ingest').then(function(userIngestProviders) {
+                    if (!_.isArray(userIngestProviders)) {
+                        userIngestProviders = [];
                     }
 
-                    _.forEach(ingest_providers, function(provider) {
-                        var user_provider = _.find(user_ingest_providers, function(item) {
+                    _.forEach(ingestProviders, function(provider) {
+                        var userProvider = _.find(userIngestProviders, function(item) {
                             return item._id === provider._id;
                         });
 
-                        provider.dashboard_enabled = user_provider?true:false;
-                        forcedExtend(provider, user_provider?user_provider:PROVIDER_DASHBOARD_DEFAULTS);
+                        provider.dashboard_enabled = !!userProvider;
+                        forcedExtend(provider, userProvider ? userProvider : PROVIDER_DASHBOARD_DEFAULTS);
                     });
 
-                    deferred.resolve(ingest_providers);
+                    deferred.resolve(ingestProviders);
                 }, function (error) {
                     deferred.reject(error);
                 });

@@ -1,1 +1,1 @@
-export { TranslationService } from './TranslationService';
+export {TranslationService} from './TranslationService';

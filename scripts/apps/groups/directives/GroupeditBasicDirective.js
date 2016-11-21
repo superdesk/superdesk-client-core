@@ -22,7 +22,7 @@ export function GroupeditBasicDirective(gettext, api, WizardHandler) {
 
             scope.save = function(group) {
                 scope.message = gettext('Saving...');
-                var _new = group._id ? false : true;
+                var _new = !!!group._id;
                 api.groups.save(scope.group.edit, group).then(function() {
                     if (_new) {
                         scope.edit(scope.group.edit);
@@ -37,7 +37,8 @@ export function GroupeditBasicDirective(gettext, api, WizardHandler) {
             };
 
             function errorMessage(response) {
-                if (response.data && response.data._issues && response.data._issues.name && response.data._issues.name.unique) {
+                if (response.data && response.data._issues && response.data._issues.name
+                    && response.data._issues.name.unique) {
                     scope._errorUniqueness = true;
                 } else {
                     scope._error = true;

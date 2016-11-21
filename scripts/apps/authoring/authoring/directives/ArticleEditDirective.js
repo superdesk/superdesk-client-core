@@ -34,7 +34,7 @@ export function ArticleEditDirective(
             scope.toggleDetails = true;
             scope.errorMessage = null;
             scope.contentType = null;
-            scope.canListEditSignOff = config.user && config.user.sign_off_mapping ? true: false;
+            scope.canListEditSignOff = config.user && config.user.sign_off_mapping;
             scope.editSignOff = false;
 
             var mainEditScope = scope.$parent.$parent;
@@ -43,7 +43,7 @@ export function ArticleEditDirective(
             /* Start: Dateline related properties */
 
             scope.monthNames = {'Jan': '0', 'Feb': '1', 'Mar': '2', 'Apr': '3', 'May': '4', 'Jun': '5',
-                                'Jul': '6', 'Aug': '7', 'Sep': '8', 'Oct': '9', 'Nov': '10', 'Dec': '11'};
+                'Jul': '6', 'Aug': '7', 'Sep': '8', 'Oct': '9', 'Nov': '10', 'Dec': '11'};
 
             scope.dateline = {
                 month: '',
@@ -89,7 +89,8 @@ export function ArticleEditDirective(
                         _.extend(item, updates);
                     }
                     if (autopopulateByline && !item.byline) {
-                        item.byline = $interpolate(gettext('By {{ display_name }}'))({display_name: session.identity.display_name});
+                        item.byline = $interpolate(gettext('By {{ display_name }}'))
+                            ({display_name: session.identity.display_name});
                     }
                 }
             });
@@ -129,7 +130,9 @@ export function ArticleEditDirective(
 
                     item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
                         $interpolate('{{ month | translate }}')
-                        ({month: _.findKey(scope.monthNames, function(m) { return m === scope.dateline.month; })}),
+                        ({month: _.findKey(scope.monthNames, function(m) {
+                            return m === scope.dateline.month;
+                        })}),
                         scope.dateline.day, item.dateline.source);
                 }
             };
@@ -210,7 +213,9 @@ export function ArticleEditDirective(
 
                     scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
                         $interpolate('{{ month | translate }}')
-                        ({month: _.findKey(scope.monthNames, function(m) { return m === scope.dateline.month; })}),
+                        ({month: _.findKey(scope.monthNames, function(m) {
+                            return m === scope.dateline.month;
+                        })}),
                         scope.dateline.day, scope.item.dateline.source);
 
                     mainEditScope.dirty = true;
@@ -221,12 +226,12 @@ export function ArticleEditDirective(
             scope.applyCrop = function() {
                 var poi = {x: 0.5, y: 0.5};
                 superdesk.intent('edit', 'crop', {
-                        item: scope.item,
-                        renditions: scope.metadata.crop_sizes,
-                        poi: scope.item.poi || poi,
-                        showMetadataEditor: true,
-                        isNew: false
-                    })
+                    item: scope.item,
+                    renditions: scope.metadata.crop_sizes,
+                    poi: scope.item.poi || poi,
+                    showMetadataEditor: true,
+                    isNew: false
+                })
                     .then(function(result) {
                         var renditions = _.create(scope.item.renditions || {});
                         // always mark dirty as poi could have changed with no

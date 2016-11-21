@@ -526,9 +526,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
                         if (scope.currentUserAction === ctrl.userActions.send_to) {
                             // Remember last destination desk and stage for send_to.
-                            var last_destination = scope.destination_last[scope.currentUserAction];
-                            if (!last_destination ||
-                                (last_destination.desk !== deskId || last_destination.stage !== stageId)) {
+                            var lastDestination = scope.destination_last[scope.currentUserAction];
+                            if (!lastDestination ||
+                                (lastDestination.desk !== deskId || lastDestination.stage !== stageId)) {
                                 updateLastDestination(deskId, stageId, PREFERENCE_KEY);
                             }
                         }
@@ -544,10 +544,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         if (err) {
                             if (angular.isDefined(err.data._message)) {
                                 notify.error(err.data._message);
-                            } else {
-                                if (angular.isDefined(err.data._issues['validator exception'])) {
-                                    notify.error(err.data._issues['validator exception']);
-                                }
+                            } else if (angular.isDefined(err.data._issues['validator exception'])) {
+                                notify.error(err.data._issues['validator exception']);
                             }
                         }
 
@@ -652,8 +650,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         // get user desks
                         return desks.fetchCurrentUserDesks();
                     })
-                    .then(function(desk_list) {
-                        scope.userDesks = desk_list;
+                    .then(function(deskList) {
+                        scope.userDesks = deskList;
                         return preferencesService.get(PREFERENCE_KEY);
                     })
                     .then(function(result) {
@@ -686,19 +684,17 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 } else {
                     // set the last selected desk or current desk
                     var itemDesk = desks.getItemDesk(scope.item);
-                    var last_destination = scope.destination_last[scope.currentUserAction];
+                    var lastDestination = scope.destination_last[scope.currentUserAction];
                     if (itemDesk) {
-                        if (last_destination && last_destination.desk != null) {
-                            scope.selectDesk(desks.deskLookup[last_destination.desk]);
+                        if (lastDestination && lastDestination.desk != null) {
+                            scope.selectDesk(desks.deskLookup[lastDestination.desk]);
                         } else {
                             scope.selectDesk(itemDesk);
                         }
+                    } else if (lastDestination && lastDestination.desk != null) {
+                        scope.selectDesk(desks.deskLookup[lastDestination.desk]);
                     } else {
-                        if (last_destination && last_destination.desk != null) {
-                            scope.selectDesk(desks.deskLookup[last_destination.desk]);
-                        } else {
-                            scope.selectDesk(desks.getCurrentDesk());
-                        }
+                        scope.selectDesk(desks.getCurrentDesk());
                     }
                 }
             }
@@ -715,14 +711,12 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 var stage = null;
 
                 if (scope.currentUserAction === ctrl.userActions.send_to) {
-                    var last_destination = scope.destination_last[scope.currentUserAction];
+                    var lastDestination = scope.destination_last[scope.currentUserAction];
 
-                    if (last_destination) {
-                        stage = _.find(scope.stages, {_id: last_destination.stage});
-                    } else {
-                        if (scope.item.task && scope.item.task.stage) {
-                            stage = _.find(scope.stages, {_id: scope.item.task.stage});
-                        }
+                    if (lastDestination) {
+                        stage = _.find(scope.stages, {_id: lastDestination.stage});
+                    } else if (scope.item.task && scope.item.task.stage) {
+                        stage = _.find(scope.stages, {_id: scope.item.task.stage});
                     }
                 }
 

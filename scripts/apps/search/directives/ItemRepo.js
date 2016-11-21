@@ -38,18 +38,18 @@ export function ItemRepo(
 
                 common.scanpix_subscriptions = [{
                     name: 'subscription',
-                    label: gettext('inside subscription'),
+                    label: gettext('inside subscription')
                 }, {
                     name: 'all',
-                    label: gettext('all photos'),
+                    label: gettext('all photos')
                 }];
 
                 if (params.repo) {
-                    var param_list = params.repo.split(',');
-                    scope.repo.archive = param_list.indexOf('archive') >= 0;
-                    scope.repo.ingest = param_list.indexOf('ingest') >= 0;
-                    scope.repo.published = param_list.indexOf('published') >= 0;
-                    scope.repo.archived = param_list.indexOf('archived') >= 0;
+                    var paramList = params.repo.split(',');
+                    scope.repo.archive = paramList.indexOf('archive') >= 0;
+                    scope.repo.ingest = paramList.indexOf('ingest') >= 0;
+                    scope.repo.published = paramList.indexOf('published') >= 0;
+                    scope.repo.archived = paramList.indexOf('archived') >= 0;
                 } else {
                     // No repo is selected so reset the repos
                     scope.repo = {
@@ -61,13 +61,11 @@ export function ItemRepo(
 
                 if (!scope.repo) {
                     scope.repo = {'search': 'local'};
-                } else {
-                    if (!scope.repo.archive && !scope.repo.ingest &&
+                } else if (!scope.repo.archive && !scope.repo.ingest &&
                         !scope.repo.published && !scope.repo.archived) {
-                        scope.repo.search = params.repo;
-                    } else {
-                        scope.repo.search = 'local';
-                    }
+                    scope.repo.search = params.repo;
+                } else {
+                    scope.repo.search = 'local';
                 }
 
                 fetchProviders(params);

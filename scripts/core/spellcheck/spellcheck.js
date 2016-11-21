@@ -7,7 +7,6 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
         dict,
         ignored = {},
         abbreviationList = [],
-        numberOfErrors,
         self;
 
     self = this;
@@ -298,7 +297,6 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
                 currentOffset += tree.currentNode.length;
             }
 
-            numberOfErrors = errors.length;
             return errors;
         });
     };

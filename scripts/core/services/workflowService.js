@@ -4,7 +4,9 @@ export default angular.module('superdesk.core.workflow', [])
         var _actions = [];
         this.isActionAllowed = function isActionAllowed(item, actionName) {
 
-            if (_.isUndefined(actionName) || _.isUndefined(item.state)) { return true; }
+            if (_.isUndefined(actionName) || _.isUndefined(item.state)) {
+                return true;
+            }
 
             var action = _.find(_actions, function(actionItem) {
                 return actionItem.name === actionName;
@@ -12,9 +14,13 @@ export default angular.module('superdesk.core.workflow', [])
 
             if (action) {
                 if (!_.isEmpty(action.include_states)) {
-                    return (_.findIndex(action.include_states, function(state) { return item.state === state; }) >= 0);
+                    return (_.findIndex(action.include_states, function(state) {
+                        return item.state === state;
+                    }) >= 0);
                 } else if (!_.isEmpty(action.exclude_states)) {
-                    return (_.findIndex(action.exclude_states, function(state) { return item.state === state; }) === -1);
+                    return (_.findIndex(action.exclude_states, function(state) {
+                        return item.state === state;
+                    }) === -1);
                 }
             }
 

@@ -9,7 +9,7 @@
  */
 import './styles/highlights.scss';
 
-import { HighlightsService } from './services';
+import {HighlightsService} from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 

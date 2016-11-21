@@ -163,7 +163,7 @@ describe('monitoring', function() {
         it('can get criteria for saved search with search', inject(function(cards, session) {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'search', query: 'test',
-                        search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}}
+                search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}}
             };
             var criteria = cards.criteria(card);
             expect(criteria.source.query.filtered.query.query_string.query).toBe('(test) foo');
@@ -254,22 +254,22 @@ describe('monitoring', function() {
 
         it('can initiate the desk notifications',
             inject(function($rootScope, $compile, deskNotifications) {
-            var scope = $rootScope.$new();
+                var scope = $rootScope.$new();
 
-            var notifications = [{
-                name: 'desk:mention',
-                recipients: [{desk_id: 'desk1', read: false}],
-                data: {comment: 'abc', comment_id: 1}}];
+                var notifications = [{
+                    name: 'desk:mention',
+                    recipients: [{desk_id: 'desk1', read: false}],
+                    data: {comment: 'abc', comment_id: 1}}];
 
-            spyOn(deskNotifications, 'getNotifications').and.returnValue(notifications);
-            spyOn(deskNotifications, 'getUnreadCount').and.returnValue(1);
+                spyOn(deskNotifications, 'getNotifications').and.returnValue(notifications);
+                spyOn(deskNotifications, 'getUnreadCount').and.returnValue(1);
 
-            var elem = $compile('<div sd-desk-notifications data-stage="1"></div>')(scope);
-            scope.$digest();
-            expect(deskNotifications.getNotifications).toHaveBeenCalled();
+                var elem = $compile('<div sd-desk-notifications data-stage="1"></div>')(scope);
+                scope.$digest();
+                expect(deskNotifications.getNotifications).toHaveBeenCalled();
 
-            var iScope = elem.isolateScope();
-            expect(iScope.notificationCount).toBe(1);
-        }));
+                var iScope = elem.isolateScope();
+                expect(iScope.notificationCount).toBe(1);
+            }));
     });
 });

@@ -1,2 +1,2 @@
-export { DictionaryConfigController } from './DictionaryConfigController';
-export { DictionaryEditController } from './DictionaryEditController';
+export {DictionaryConfigController} from './DictionaryConfigController';
+export {DictionaryEditController} from './DictionaryEditController';

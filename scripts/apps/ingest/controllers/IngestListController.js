@@ -1,4 +1,4 @@
-import { BaseListController } from 'apps/archive/controllers';
+import {BaseListController} from 'apps/archive/controllers';
 
 export class IngestListController extends BaseListController {
     constructor($scope, $injector, $location, api, $rootScope, search, desks) {

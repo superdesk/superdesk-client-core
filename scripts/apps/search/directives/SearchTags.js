@@ -1,4 +1,4 @@
-import { PARAMETERS } from 'apps/search/constants';
+import {PARAMETERS} from 'apps/search/constants';
 
 SearchTags.$inject = ['$location', 'tags', 'asset', 'metadata'];
 export function SearchTags($location, tags, asset, metadata) {
@@ -72,7 +72,10 @@ export function SearchTags($location, tags, asset, metadata) {
                             if (searchParameters[cv.field]) {
                                 tags.removeFacet(cv.field, qcode);
                             } else {
-                                searchParameters.q = searchParameters.q.replace(cv.id + '.qcode:(' + qcode + ')', '').trim();
+                                searchParameters.q = searchParameters.q
+                                    .replace(cv.id + '.qcode:(' + qcode + ')', '')
+                                    .trim();
+
                                 $location.search('q', searchParameters.q || null);
                             }
                         }

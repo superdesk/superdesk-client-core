@@ -1,1 +1,1 @@
-export { ProfilingController } from './ProfilingController';
+export {ProfilingController} from './ProfilingController';

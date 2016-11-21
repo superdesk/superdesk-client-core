@@ -12,21 +12,21 @@ export function IngestUserDashboard (api, userList, privileges) {
 
             function getCount() {
                 var criteria = {
-                        source: {
-                            query: {
-                                filtered: {
-                                    filter: {
-                                        and: [
+                    source: {
+                        query: {
+                            filtered: {
+                                filter: {
+                                    and: [
                                             {term: {ingest_provider: scope.item._id}},
                                             {range: {versioncreated: {gte: 'now-24h'}}}
-                                        ]
-                                    }
+                                    ]
                                 }
-                            },
-                            size: 0,
-                            from: 0
-                        }
-                    };
+                            }
+                        },
+                        size: 0,
+                        from: 0
+                    }
+                };
 
                 api.ingest.query(criteria).then(function (result) {
                     scope.ingested_count = result._meta.total;
@@ -54,7 +54,7 @@ export function IngestUserDashboard (api, userList, privileges) {
                 var where = [
                         {resource: 'ingest_providers'},
                         {'data.provider_id': scope.item._id}
-                    ];
+                ];
 
                 if (scope.item.log_messages === 'error') {
                     where.push({name: 'error'});
@@ -101,13 +101,13 @@ export function IngestUserDashboard (api, userList, privileges) {
 
             scope.isIdle = function() {
                 if (scope.item.last_item_update && !scope.item.is_closed) {
-                    var idle_time =  scope.item.idle_time || constant.DEFAULT_IDLE_TIME;
-                    var last_item_update = moment(scope.item.last_item_update);
-                    if (idle_time && !angular.equals(idle_time, constant.DEFAULT_IDLE_TIME)) {
-                        last_item_update.add(idle_time.hours, 'h').add(idle_time.minutes, 'm');
-                        if (moment() > last_item_update) {
+                    var idleTime =  scope.item.idle_time || constant.DEFAULT_IDLE_TIME;
+                    var lastItemUpdate = moment(scope.item.last_item_update);
+                    if (idleTime && !angular.equals(idleTime, constant.DEFAULT_IDLE_TIME)) {
+                        lastItemUpdate.add(idleTime.hours, 'h').add(idleTime.minutes, 'm');
+                        if (moment() > lastItemUpdate) {
                             return true;
-                        }else {
+                        } else {
                             return false;
                         }
                     }

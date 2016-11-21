@@ -9,12 +9,16 @@
  */
 import './styles/templates.scss';
 
-import { TemplatesService } from './services';
-import { FilterTemplatesFilter } from './filters';
+import {TemplatesService} from './services';
+import {FilterTemplatesFilter} from './filters';
 import * as directive from './directives';
 import * as ctrl from './controllers';
 
-angular.module('superdesk.apps.templates', ['superdesk.core.activity', 'superdesk.apps.authoring', 'superdesk.core.preferences'])
+angular.module('superdesk.apps.templates', [
+    'superdesk.core.activity',
+    'superdesk.apps.authoring',
+    'superdesk.core.preferences'
+])
     .service('templates', TemplatesService)
 
     .filter('templatesBy', FilterTemplatesFilter)

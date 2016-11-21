@@ -1,5 +1,6 @@
-ContentCreateDirective.$inject = ['api', 'desks', 'templates', 'content', 'authoringWorkspace', 'superdesk', 'keyboardManager',
-    '$location'];
+ContentCreateDirective.$inject = ['api', 'desks', 'templates', 'content', 'authoringWorkspace',
+    'superdesk', 'keyboardManager', '$location'];
+
 export function ContentCreateDirective(api, desks, templates, content, authoringWorkspace, superdesk, keyboardManager,
     $location) {
     return {

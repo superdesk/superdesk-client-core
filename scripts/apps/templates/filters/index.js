@@ -20,16 +20,16 @@ export function FilterTemplatesFilter() {
     return function(all, f) {
         return (all || []).filter(function(item) {
             switch (f.value) {
-                case 'All':
-                    return all;
-                case 'None':
-                    return item.is_public && !(item.template_desks && item.template_desks.length);
-                case 'Personal':
-                    return !item.is_public;
-                default:
-                    return _.find(item.template_desks, function(desk) {
-                                return desk === f.value;
-                            });
+            case 'All':
+                return all;
+            case 'None':
+                return item.is_public && !(item.template_desks && item.template_desks.length);
+            case 'Personal':
+                return !item.is_public;
+            default:
+                return _.find(item.template_desks, function(desk) {
+                    return desk === f.value;
+                });
             }
         });
     };

@@ -1,1 +1,1 @@
-export { DesksFactory } from './DesksFactory';
+export {DesksFactory} from './DesksFactory';

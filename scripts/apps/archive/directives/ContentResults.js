@@ -28,7 +28,7 @@ export function ContentResults($location, preferencesService, packages, tags, as
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
 
-            var multiSelectable = (attr.multiSelectable === undefined) ? false : true;
+            var multiSelectable = (attr.multiSelectable !== undefined);
 
             scope.flags = controller.flags;
             scope.selected = scope.selected || {};

@@ -458,27 +458,27 @@ describe('autosave', function() {
 
     it('can fetch an autosave for item locked by user and is editable',
         inject(function(autosave, api, $q, $rootScope) {
-        spyOn(api, 'find').and.returnValue($q.when({}));
-        autosave.open({_locked: true, _editable: true, _id: 1});
-        $rootScope.$digest();
-        expect(api.find).toHaveBeenCalledWith('archive_autosave', 1);
-    }));
+            spyOn(api, 'find').and.returnValue($q.when({}));
+            autosave.open({_locked: true, _editable: true, _id: 1});
+            $rootScope.$digest();
+            expect(api.find).toHaveBeenCalledWith('archive_autosave', 1);
+        }));
 
     it('will skip autosave fetch when item is locked by user but not editable',
         inject(function(autosave, api, $q, $rootScope) {
-        spyOn(api, 'find').and.returnValue($q.when({}));
-        autosave.open({_locked: false, _editable: false, _id: 1});
-        $rootScope.$digest();
-        expect(api.find).not.toHaveBeenCalled();
-    }));
+            spyOn(api, 'find').and.returnValue($q.when({}));
+            autosave.open({_locked: false, _editable: false, _id: 1});
+            $rootScope.$digest();
+            expect(api.find).not.toHaveBeenCalled();
+        }));
 
     it('will skip autosave fetch when item is locked by another user',
         inject(function(autosave, api, $rootScope) {
-        spyOn(api, 'find');
-        autosave.open({_locked: true});
-        $rootScope.$digest();
-        expect(api.find).not.toHaveBeenCalled();
-    }));
+            spyOn(api, 'find');
+            autosave.open({_locked: true});
+            $rootScope.$digest();
+            expect(api.find).not.toHaveBeenCalled();
+        }));
 
     it('can create an autosave', inject(function(autosave, api, $q, $timeout, $rootScope) {
         var orig = {_id: 1, _etag: 'x', _locked: true, _editable: true};
@@ -650,7 +650,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
-                    'mark_item', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
+                'mark_item', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
         }));
 
     it('cannot perform publish if the item is marked for not publication',
@@ -680,7 +680,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
-                    'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
+                'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
         }));
 
     it('cannot perform publish if the item is highlight package',
@@ -710,7 +710,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
-                    'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
+                'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
         }));
 
     it('cannot publish if user does not have publish privileges on the desk',
@@ -1249,7 +1249,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    'mark_item', 'package_item', 'multi_edit', 'publish']);
+                'mark_item', 'package_item', 'multi_edit', 'publish']);
         }));
 
     it('Cannot perform new take if the version is zero',
@@ -1283,7 +1283,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    'mark_item', 'package_item', 'multi_edit', 'publish']);
+                'mark_item', 'package_item', 'multi_edit', 'publish']);
         }));
 
     it('Cannot send item if the no move privileges',
@@ -1317,7 +1317,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    're_write', 'mark_item', 'package_item', 'multi_edit', 'publish']);
+                're_write', 'mark_item', 'package_item', 'multi_edit', 'publish']);
         }));
 
     it('Can send item if the version greater then zero',
@@ -1351,7 +1351,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    're_write', 'mark_item', 'package_item', 'multi_edit', 'publish', 'send']);
+                're_write', 'mark_item', 'package_item', 'multi_edit', 'publish', 'send']);
         }));
 
     it('Cannot do new take for embargo item.',
@@ -1386,7 +1386,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    'mark_item', 'multi_edit', 'publish', 'send']);
+                'mark_item', 'multi_edit', 'publish', 'send']);
         }));
 
     it('Cannot do new take for scheduled item.',
@@ -1421,7 +1421,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
-                    'mark_item', 'multi_edit', 'publish', 'send']);
+                'mark_item', 'multi_edit', 'publish', 'send']);
         }));
 
     it('Can do new take, rewrite and package item for scheduled item after passing publish schedule.',
@@ -1504,7 +1504,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item', 'multi_edit',
-                    'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
+                'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
         }));
 
     it('Create broadcast icon is available for text item with genre Article.',
@@ -1549,7 +1549,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item', 'multi_edit',
-                    'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
+                'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
         }));
 
     it('Create broadcast icon is not available for broadcast item',
@@ -1600,7 +1600,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'mark_item', 'multi_edit',
-                    'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
+                'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
         }));
 
     it('takes package is in published state.',
@@ -1729,7 +1729,7 @@ describe('authoring actions', function() {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'mark_item', 'multi_edit', 'create_broadcast',
-                    'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
+                'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
         }));
 });
 
@@ -1911,22 +1911,22 @@ describe('authoring container directive', function() {
 
         it('applies kill template',
                 inject(function(authoringWorkspace, $rootScope, api, $compile, $q) {
-            authoringWorkspace.kill(item);
-            $rootScope.$digest();
-            $rootScope.$digest();
-            expect(iscope.authoring.item).toBe(lockedItem);
-            expect(iscope.authoring.action).toBe('kill');
+                    authoringWorkspace.kill(item);
+                    $rootScope.$digest();
+                    $rootScope.$digest();
+                    expect(iscope.authoring.item).toBe(lockedItem);
+                    expect(iscope.authoring.action).toBe('kill');
 
-            spyOn(api, 'save').and.returnValue($q.when({}));
+                    spyOn(api, 'save').and.returnValue($q.when({}));
 
-            var elemEmbed = $compile('<div sd-authoring-embedded data-item="authoring.item"' +
+                    var elemEmbed = $compile('<div sd-authoring-embedded data-item="authoring.item"' +
                 ' data-action="authoring.action"></div>')(iscope);
-            iscope.$digest();
-            var iscopeEmbed = elemEmbed.isolateScope();
-            expect(iscopeEmbed.action).toBe('kill');
-            expect(api.save).
+                    iscope.$digest();
+                    var iscopeEmbed = elemEmbed.isolateScope();
+                    expect(iscopeEmbed.action).toBe('kill');
+                    expect(api.save).
                 toHaveBeenCalledWith('content_templates_apply', {}, {template_name: 'kill', item: {_id: 'foo'}}, {});
-        }));
+                }));
     });
 
 });

@@ -9,7 +9,7 @@
  */
 import './styles/publish.scss';
 
-import { transmissionTypes } from './constants';
+import {transmissionTypes} from './constants';
 import * as svc from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';

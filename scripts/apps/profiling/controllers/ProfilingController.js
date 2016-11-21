@@ -3,7 +3,11 @@ export function ProfilingController($scope, api) {
     $scope.profiling_data = [];
     $scope.current_profile = null;
     $scope.profiles = ['rest', 'publish:enqueue', 'publish:transmit'];
-    $scope.profile_names = {'rest': 'Rest', 'publish:enqueue': 'Publish Enqueue', 'publish:transmit': 'Publish Transmit'};
+    $scope.profile_names = {
+        'rest': 'Rest',
+        'publish:enqueue': 'Publish Enqueue',
+        'publish:transmit': 'Publish Transmit'
+    };
 
     /*
     * Populates the profiling data.

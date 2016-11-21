@@ -1,7 +1,5 @@
 DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify', 'session', '$filter'];
 export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter) {
-    var userDesks, userDesksPromise;
-
     var _fetchAll = function(endpoint, parent, page, items) {
         page = page || 1;
         items = items || [];
@@ -296,8 +294,6 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
     return desksService;
 
     function reset(res) {
-        userDesks = null;
-        userDesksPromise = null;
         desksService.loading = null;
         return res;
     }

@@ -73,7 +73,8 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
              * @returns {Boolean}
              */
             scope.shouldHideStep = function(code) {
-                return (scope.displayOnlyCurrentStep != null && !(scope.displayOnlyCurrentStep && scope.currentStep === code));
+                return (scope.displayOnlyCurrentStep != null && !(scope.displayOnlyCurrentStep
+                    && scope.currentStep === code));
             };
 
             /**
@@ -218,8 +219,8 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
 
                 _.each(values, function(item) {
                     if (desks.isOutputType(item.type)) {
-                        var desk_id = item._id.substring(0, item._id.indexOf(':'));
-                        item.name = desks.deskLookup[desk_id].name;
+                        var deskId = item._id.substring(0, item._id.indexOf(':'));
+                        item.name = desks.deskLookup[deskId].name;
                     }
                 });
 

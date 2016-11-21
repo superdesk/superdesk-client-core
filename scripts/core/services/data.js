@@ -32,74 +32,75 @@ export default angular.module('superdesk.core.services.data', [])
      *
      * @description Returns a data provider for a given resource.
      */
-    .factory('DataAdapter', ['$rootScope', 'em', 'LocationStateAdapter', function($rootScope, em, LocationStateAdapter) {
-        return function DataAdapter(resource, params) {
-            var _this = this;
-            var state = LocationStateAdapter; // @todo implement storage state adapter
-            var cancelWatch = angular.noop;
-            var defaultParams = {page: 1};
+    .factory('DataAdapter', ['$rootScope', 'em', 'LocationStateAdapter',
+        function($rootScope, em, LocationStateAdapter) {
+            return function DataAdapter(resource, params) {
+                var _this = this;
+                var state = LocationStateAdapter; // @todo implement storage state adapter
+                var cancelWatch = angular.noop;
+                var defaultParams = {page: 1};
 
-            /**
-             * Get query criteria - extend default params with current search
-             */
-            function getQueryCriteria() {
-                var criteria = angular.extend({}, defaultParams, state.get());
-                angular.extend(criteria.where, _.pick(state.get(), defaultParams.filters));
+                /**
+                 * Get query criteria - extend default params with current search
+                 */
+                function getQueryCriteria() {
+                    var criteria = angular.extend({}, defaultParams, state.get());
+                    angular.extend(criteria.where, _.pick(state.get(), defaultParams.filters));
 
-                if (criteria.hasOwnProperty('_id')) {
-                    // prevent reload on preview
-                    delete criteria._id;
+                    if (criteria.hasOwnProperty('_id')) {
+                        // prevent reload on preview
+                        delete criteria._id;
+                    }
+
+                    return criteria;
                 }
 
-                return criteria;
-            }
-
-            /**
-             * Log slow query into console
-             *
-             * @param {Object} query
-             */
-            function slowQueryLog(query) {
-                query.time = Date.now() - query.start;
-                if (query.time > 500) {
-                    console.info('Slow query', query);
+                /**
+                 * Log slow query into console
+                 *
+                 * @param {Object} query
+                 */
+                function slowQueryLog(query) {
+                    query.time = Date.now() - query.start;
+                    if (query.time > 500) {
+                        console.info('Slow query', query);
+                    }
                 }
-            }
 
-            /**
-             * @ngdoc method
-             * @name DataAdapter#query
-             * @public
-             * @returns {Promise} Promise.
-             *
-             * @param {Object} criteria
-             *
-             * @description Execute query.
-             */
-            this.query = function(criteria) {
-                _this.loading = true;
-                var query = {resource: resource, criteria: criteria, start: Date.now()};
-                var promise = em.getRepository(resource).matching(criteria);
-                promise.then(function(data) {
-                    _this.loading = false;
-                    slowQueryLog(query);
-                    angular.extend(_this, data);
-                });
+                /**
+                 * @ngdoc method
+                 * @name DataAdapter#query
+                 * @public
+                 * @returns {Promise} Promise.
+                 *
+                 * @param {Object} criteria
+                 *
+                 * @description Execute query.
+                 */
+                this.query = function(criteria) {
+                    _this.loading = true;
+                    var query = {resource: resource, criteria: criteria, start: Date.now()};
+                    var promise = em.getRepository(resource).matching(criteria);
+                    promise.then(function(data) {
+                        _this.loading = false;
+                        slowQueryLog(query);
+                        angular.extend(_this, data);
+                    });
 
-                return promise;
-            };
+                    return promise;
+                };
 
-            /**
-             * @ngdoc method
-             * @name DataAdapter#page
-             * @public
-             *
-             * @param {Integer} page
-             *
-             * @description Get/set current page.
-             */
-            this.page = function(page) {
-                switch (arguments.length) {
+                /**
+                 * @ngdoc method
+                 * @name DataAdapter#page
+                 * @public
+                 *
+                 * @param {Integer} page
+                 *
+                 * @description Get/set current page.
+                 */
+                this.page = function(page) {
+                    switch (arguments.length) {
                     case 0:
                         return state.get('page') || defaultParams.page;
 
@@ -107,22 +108,22 @@ export default angular.module('superdesk.core.services.data', [])
                         if (this._items) {
                             state.set('page', page !== defaultParams.page ? page : null);
                         }
-                }
-            };
+                    }
+                };
 
-            /**
-             * @ngdoc method
-             * @name DataAdapter#search
-             * @public
-             * @returns {Object} chainable
-             *
-             * @param {String} q
-             * @param {String} df
-             *
-             * @description Get/set current search query.
-             */
-            this.search = function(q, df) {
-                switch (arguments.length) {
+                /**
+                 * @ngdoc method
+                 * @name DataAdapter#search
+                 * @public
+                 * @returns {Object} chainable
+                 *
+                 * @param {String} q
+                 * @param {String} df
+                 *
+                 * @description Get/set current search query.
+                 */
+                this.search = function(q, df) {
+                    switch (arguments.length) {
                     case 0:
                         return state.get('q');
 
@@ -132,90 +133,90 @@ export default angular.module('superdesk.core.services.data', [])
                             state.set('df', df);
                             state.set('page', null);
                         }
-                }
+                    }
 
-                return this;
-            };
+                    return this;
+                };
 
-            /**
-             * @ngdoc method
-             * @name DataAdapter#where
-             * @public
-             *
-             * @param {String} key
-             * @param {String} val
-             *
-             * @description Get/set filter
-             */
-            this.where = function(key, val) {
-                switch (arguments.length) {
+                /**
+                 * @ngdoc method
+                 * @name DataAdapter#where
+                 * @public
+                 *
+                 * @param {String} key
+                 * @param {String} val
+                 *
+                 * @description Get/set filter
+                 */
+                this.where = function(key, val) {
+                    switch (arguments.length) {
                     case 1:
                         return state.get(key) || null;
 
                     case 2:
                         state.set(key, val || null);
                         state.set('page', null);
+                    }
+
+                    return this;
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name DataAdapter#find
+                 * @public
+                 *
+                 * @param {Object} id ID
+                 *
+                 * @description Get single item by ID.
+                 */
+                this.find = function(id) {
+                    console.info('find', resource, id);
+                    return em.find(resource, id);
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name DataAdapter#reset
+                 * @public
+                 *
+                 * @param {Object} params Paramters.
+                 *
+                 * @description Reset default params
+                 */
+                this.reset = function(params) {
+                    cancelWatch();
+
+                    defaultParams = angular.extend({
+                        max_results: 25,
+                        page: 1,
+                        where: {},
+                        sort: [],
+                        filters: [],
+                        ttl: 0
+                    }, params);
+
+                    // main loop - update when query criteria change
+                    cancelWatch = $rootScope.$watchCollection(function () {
+                        return getQueryCriteria();
+                    }, function(criteria) {
+                        _this.query(criteria);
+                    });
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name DataAdapter#reset
+                 * @public
+                 *
+                 * @description Force reload with same params
+                 */
+                this.reload = function() {
+                    _this.query(getQueryCriteria());
+                };
+
+                if (params) {
+                    this.reset(params);
                 }
-
-                return this;
             };
-
-            /**
-             * @ngdoc method
-             * @name DataAdapter#find
-             * @public
-             *
-             * @param {Object} id ID
-             *
-             * @description Get single item by ID.
-             */
-            this.find = function(id) {
-                console.info('find', resource, id);
-                return em.find(resource, id);
-            };
-
-            /**
-             * @ngdoc method
-             * @name DataAdapter#reset
-             * @public
-             *
-             * @param {Object} params Paramters.
-             *
-             * @description Reset default params
-             */
-            this.reset = function(params) {
-                cancelWatch();
-
-                defaultParams = angular.extend({
-                    max_results: 25,
-                    page: 1,
-                    where: {},
-                    sort: [],
-                    filters: [],
-                    ttl: 0
-                }, params);
-
-                // main loop - update when query criteria change
-                cancelWatch = $rootScope.$watchCollection(function () {
-                    return getQueryCriteria();
-                }, function(criteria) {
-                    _this.query(criteria);
-                });
-            };
-
-            /**
-             * @ngdoc method
-             * @name DataAdapter#reset
-             * @public
-             *
-             * @description Force reload with same params
-             */
-            this.reload = function() {
-                _this.query(getQueryCriteria());
-            };
-
-            if (params) {
-                this.reset(params);
-            }
-        };
-    }]);
+        }]);

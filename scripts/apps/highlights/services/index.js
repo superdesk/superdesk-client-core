@@ -1,1 +1,1 @@
-export { HighlightsService } from './HighlightsService';
+export {HighlightsService} from './HighlightsService';

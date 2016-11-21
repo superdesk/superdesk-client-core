@@ -32,7 +32,7 @@ function ReldateComplex(config, gettextCatalog) {
                     date.local(); // switch to local time zone
                 }
 
-                if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)){
+                if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)) {
                     scope.rday = gettextCatalog.getString(date.format(DISPLAY_TODAY_FORMAT));
                 } else {
                     scope.rday = date.format(DISPLAY_DAY_FORMAT);

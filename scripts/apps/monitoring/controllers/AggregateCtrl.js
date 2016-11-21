@@ -41,11 +41,11 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     }))
     .then(angular.bind(this, function() {
         return savedSearch.getAllSavedSearches().then(angular.bind(this, function(searchesList) {
-               this.searches = searchesList;
-               _.each(this.searches, function(item) {
-                   self.searchLookup[item._id] = item;
-               });
-           }));
+            this.searches = searchesList;
+            _.each(this.searches, function(item) {
+                self.searchLookup[item._id] = item;
+            });
+        }));
     }))
     .then(angular.bind(this, function() {
         return this.readSettings()
@@ -125,8 +125,9 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
 
             if (activePrefGroups.length) {
                 if (monitoringSettings.length) {
-                    // compare and determine if set of groups in desk monitoring settings & user preferences are same or changed
-                    // now, due to stages activated or deactivated in desk's monitoring settings.
+                    // compare and determine if set of groups in desk monitoring settings &
+                    // user preferences are same or changed now, due to stages activated
+                    // or deactivated in desk's monitoring settings.
                     let diff = _.xorBy(monitoringSettings, activePrefGroups, '_id');
 
                     if (diff.length) {
@@ -178,7 +179,8 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             let groups = [];
             self.widget.configuration = objWidget.configuration || {groups: [], label: ''};
             _.each(workspace.widgets, function(widget) {
-                if (widget.configuration && self.widget._id === widget._id && self.widget.multiple_id === widget.multiple_id) {
+                if (widget.configuration && self.widget._id === widget._id
+                    && self.widget.multiple_id === widget.multiple_id) {
                     groups = widget.configuration.groups || groups;
                     self.widget.configuration.label = widget.configuration.label || '';
                 }
@@ -231,7 +233,11 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             if (currentDesk) {
                 self.groups.push({_id: currentDesk._id + ':output', type: 'deskOutput', header: currentDesk.name});
                 if (config.monitoring && config.monitoring.scheduled) {
-                    self.groups.push({_id: currentDesk._id + ':scheduled', type: 'scheduledDeskOutput', header: currentDesk.name});
+                    self.groups.push({
+                        _id: currentDesk._id + ':scheduled',
+                        type: 'scheduledDeskOutput',
+                        header: currentDesk.name
+                    });
                 }
             }
         } else if (settings && settings.groups.length === 0 && settings.desk != null) {
@@ -394,8 +400,8 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 card.header = desk.name;
                 card.subheader = stage.name;
             } else if (desks.isOutputType(card.type)) {
-                var desk_id = card._id.substring(0, card._id.indexOf(':'));
-                card.header = self.deskLookup[desk_id].name;
+                var deskId = card._id.substring(0, card._id.indexOf(':'));
+                card.header = self.deskLookup[deskId].name;
             } else if (card.type === 'search') {
                 card.search = self.searchLookup[card._id];
                 card.header = card.search.name;
@@ -433,8 +439,8 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                         order: 0
                     };
                 } else if (desks.isOutputType(item.type)) {
-                    var desk_id = item._id.substring(0, item._id.indexOf(':'));
-                    self.editGroups[desk_id] = {
+                    var deskId = item._id.substring(0, item._id.indexOf(':'));
+                    self.editGroups[deskId] = {
                         _id: item._id,
                         selected: true,
                         type: 'desk',

@@ -26,7 +26,8 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         }));
     }
     /**
-    * For the given blocks, merge text blocks when there are following each other and add empty text block arround embeds if needed
+    * For the given blocks, merge text blocks when there are following each other
+    * and add empty text block arround embeds if needed
     */
     function prepareBlocks(blocks) {
         var newBlocks = [];
@@ -71,7 +72,8 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             // for the paragraph content
             if (element.nodeName === 'P') {
                 commitBlock();
-                if (angular.isDefined(element.innerHTML) && element.textContent !== '' && element.textContent !== '\n') {
+                if (angular.isDefined(element.innerHTML) && element.textContent !== ''
+                    && element.textContent !== '\n') {
                     blocks.push(new Block({body: element.outerHTML.trim()}));
                 }
                 // detect if it's an embed
@@ -120,23 +122,16 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 // for images that come from Superdesk, we use the association
                 if (block.association && block.embedType === 'Image') {
                     block.caption = block.association.description_text;
-                    var url;
-                    // prefers "embed" for image url, otherwise "viewImage"
-                    if (block.association.renditions.embed) {
-                        url = block.association.renditions.embed.href;
-                    } else {
-                        url = block.association.renditions.viewImage.href;
-                    }
                     block.body = '';
                     editor.generateMediaTag(block.association).then(function(img) {
                         block.body = img;
                     });
                 } else {
                     // extract body and caption from embed block html
-                    var original_body = angular.element(angular.copy(block.body));
-                    if (original_body.get(0).nodeName === 'FIGURE') {
+                    var originalBody = angular.element(angular.copy(block.body));
+                    if (originalBody.get(0).nodeName === 'FIGURE') {
                         block.body = '';
-                        original_body.contents().toArray().forEach(function(element) {
+                        originalBody.contents().toArray().forEach(function(element) {
                             if (element.nodeName === 'FIGCAPTION') {
                                 block.caption = element.innerHTML;
                             } else {
@@ -175,7 +170,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             if (blocks.length === 0) {
                 return '';
             }
-            var new_body = '';
+            var newBody = '';
             if (vm.config.multiBlockEdition) {
                 blocks.forEach(function(block) {
                     if (angular.isDefined(block.body) && block.body.trim() !== '') {
@@ -185,7 +180,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                             if (block.association) {
                                 blockName += ' {id: "embedded' + vm.generateBlockId(block) + '"}';
                             }
-                            new_body += [
+                            newBody += [
                                 '<!-- EMBED START ' + blockName + ' -->\n',
                                 '<figure>',
                                 block.body,
@@ -195,17 +190,17 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                                 '</figure>',
                                 '\n<!-- EMBED END ' + blockName + ' -->\n'].join('');
                         } else {
-                            new_body += block.body + '\n';
+                            newBody += block.body + '\n';
                         }
                     }
                 });
             } else {
-                new_body = (blocks.length > 0) ? blocks[0].body : '';
+                newBody = (blocks.length > 0) ? blocks[0].body : '';
             }
             // strip <br> and <p>
-            new_body = new_body.trim().replace(/<p><br><\/p>$/, '');
-            new_body = new_body.replace(/<br>$/, '');
-            return new_body;
+            newBody = newBody.trim().replace(/<p><br><\/p>$/, '');
+            newBody = newBody.replace(/<br>$/, '');
+            return newBody;
         },
         commitChanges: function() {
             var associations = angular.copy(vm.associations);
@@ -300,19 +295,19 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         ** @returns {object} this
         */
         insertNewBlock: function(position, attrs, doNotRenderBlocks) {
-            var new_block = new Block(attrs);
+            var newBlock = new Block(attrs);
             return $q(function(resolve) {
                 $timeout(function() {
-                    vm.blocks.splice(position, 0, new_block);
+                    vm.blocks.splice(position, 0, newBlock);
                     $timeout(function() {
                         vm.commitChanges();
                         if (!doNotRenderBlocks) {
                             $timeout(function() {
                                 vm.renderBlocks();
-                                resolve(new_block);
+                                resolve(newBlock);
                             }, 0, false);
                         } else {
-                            resolve(new_block);
+                            resolve(newBlock);
                         }
                     }, 0, false);
                 });
@@ -326,9 +321,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         },
         removeBlock: function(block) {
             // remove block only if it's not the only one
-            var block_position = vm.getBlockPosition(block);
+            var blockPosition = vm.getBlockPosition(block);
             if (vm.blocks.length > 1) {
-                vm.blocks.splice(block_position, 1);
+                vm.blocks.splice(blockPosition, 1);
             } else {
                 // if it's the first block, just remove the content
                 block.body = '';

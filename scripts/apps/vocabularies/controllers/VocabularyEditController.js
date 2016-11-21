@@ -1,12 +1,12 @@
 VocabularyEditController.$inject = [
-  '$scope',
-  'gettext',
-  'notify',
-  'api',
-  'vocabularies',
-  'metadata',
-  'cvSchema',
-  '$rootScope'
+    '$scope',
+    'gettext',
+    'notify',
+    'api',
+    'vocabularies',
+    'metadata',
+    'cvSchema',
+    '$rootScope'
 ];
 
 export function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema, $rootScope) {
@@ -46,7 +46,9 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
         $scope.errorMessage = null;
 
         if ($scope.vocabulary._id === 'crop_sizes') {
-            var activeItems = _.filter($scope.vocabulary.items, function(o) { return o.is_active; });
+            var activeItems = _.filter($scope.vocabulary.items, function(o) {
+                return o.is_active;
+            });
             _.each(_.union(_.map(activeItems, 'width'), _.map(activeItems, 'height')), function (item) {
                 if (parseInt(item) < 200) {
                     $scope.errorMessage = gettext('Minimum height and width should be greater than or equal to 200');
@@ -84,9 +86,13 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
     // try to reproduce data model of vocabulary:
     var model = _.mapValues(_.keyBy(
         _.uniq(_.flatten(
-            _.map($scope.vocabulary.items, function(o) { return _.keys(o); })
+            _.map($scope.vocabulary.items, function(o) {
+                return _.keys(o);
+            })
         ))
-    ), function() { return null; });
+    ), function() {
+        return null;
+    });
 
     $scope.model = model;
     $scope.schema = $scope.vocabulary.schema || cvSchema[$scope.vocabulary._id] || null;

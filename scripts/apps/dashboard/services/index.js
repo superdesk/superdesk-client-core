@@ -1,2 +1,2 @@
-export { DashboardWidgets } from './DashboardWidgets';
-export { BaseWidgetFactory } from './BaseWidgetFactory';
+export {DashboardWidgets} from './DashboardWidgets';
+export {BaseWidgetFactory} from './BaseWidgetFactory';

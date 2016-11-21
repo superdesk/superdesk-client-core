@@ -1,1 +1,1 @@
-export { MultiActionBarController } from './MultiActionBarController';
+export {MultiActionBarController} from './MultiActionBarController';

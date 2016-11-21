@@ -35,8 +35,11 @@ export function UsersService(api, $q, notify) {
      * @returns {Promise}
      */
     usersService.changePassword = function changePassword(user, oldPassword, newPassword) {
-        return api.changePassword.create({username: user.username, old_password: oldPassword, new_password: newPassword})
-            .then(function(result) {});
+        return api.changePassword.create({
+            username: user.username,
+            old_password: oldPassword,
+            new_password: newPassword
+        }).then(function(result) {});
     };
 
     /**

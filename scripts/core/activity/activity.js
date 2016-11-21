@@ -86,7 +86,9 @@ function SuperdeskProvider($routeProvider, _) {
             auth: true,
             features: {},
             privileges: {},
-            condition: function(item) {return true;}
+            condition: function(item) {
+                return true;
+            }
         }, activityData);
 
         var actionless = _.find(activity.filters, function(filter) {
@@ -211,14 +213,14 @@ function SuperdeskProvider($routeProvider, _) {
                 resolve: function(intent) {
                     var activities = this.findActivities(intent);
                     switch (activities.length) {
-                        case 0:
-                            return $q.reject();
+                    case 0:
+                        return $q.reject();
 
-                        case 1:
-                            return $q.when(activities[0]);
+                    case 1:
+                        return $q.when(activities[0]);
 
-                        default:
-                            return chooseActivity(activities);
+                    default:
+                        return chooseActivity(activities);
                     }
                 },
 
@@ -244,7 +246,11 @@ function SuperdeskProvider($routeProvider, _) {
 
                         function testAdditionalCondition() {
                             if (activity.additionalCondition) {
-                                return $injector.invoke(activity.additionalCondition, {}, {'item': item ? item : intent.data});
+                                return $injector.invoke(
+                                    activity.additionalCondition,
+                                    {},
+                                    {'item': item ? item : intent.data}
+                                );
                             }
 
                             return true;
@@ -381,9 +387,9 @@ angular.module('superdesk.core.activity', [
  * @description The service allows choosing activities to perform.
  */
 .service('activityService', ['$location', '$injector', '$q', '$timeout', 'gettext', 'modal', 'lodash',
-function($location, $injector, $q, $timeout, gettext, modal, _) {
-    var activityStack = [];
-    this.activityStack = activityStack;
+    function($location, $injector, $q, $timeout, gettext, modal, _) {
+        var activityStack = [];
+        this.activityStack = activityStack;
 
     /**
      * Expand path using given locals, eg. with /users/:Id and locals {Id: 2} returns /users/2
@@ -392,23 +398,23 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
      * @param {Object} locals
      * @returns {string}
      */
-    function getPath(activity, locals) {
-        if (activity.href[0] === '/') { // trigger route
-            var matchAll = true,
-                path = activity.href.replace(/:([_a-zA-Z0-9]+)/, function(match, key) {
-                    matchAll = matchAll && locals[key];
-                    return locals[key] ? locals[key] : match;
-                });
+        function getPath(activity, locals) {
+            if (activity.href[0] === '/') { // trigger route
+                var matchAll = true,
+                    path = activity.href.replace(/:([_a-zA-Z0-9]+)/, function(match, key) {
+                        matchAll = matchAll && locals[key];
+                        return locals[key] ? locals[key] : match;
+                    });
 
-            path = matchAll ? path : null;
+                path = matchAll ? path : null;
 
-            if (activity.href.indexOf('_type') !== -1 && !_.isNull(path)) {
-                path = path.replace(':_type', locals._type ? locals._type : 'archive');
+                if (activity.href.indexOf('_type') !== -1 && !_.isNull(path)) {
+                    path = path.replace(':_type', locals._type ? locals._type : 'archive');
+                }
+
+                return path;
             }
-
-            return path;
         }
-    }
 
     /**
      * @ngdoc method
@@ -422,7 +428,7 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
      * @description
      * Get URL for given activity
      */
-    this.getLink = getPath;
+        this.getLink = getPath;
 
     /**
      * @ngdoc method
@@ -436,39 +442,39 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
      * @description
      * Start given activity
      */
-    this.start = function startActivity(activity, locals) {
-        function execute(activity, locals) {
-            var path = getPath(activity, locals && locals.data);
-            if (path) { // trigger route
-                $location.path(path);
-                return $q.when(locals);
+        this.start = function startActivity(activity, locals) {
+            function execute(activity, locals) {
+                var path = getPath(activity, locals && locals.data);
+                if (path) { // trigger route
+                    $location.path(path);
+                    return $q.when(locals);
+                }
+
+                if (activity.modal) {
+                    var defer = $q.defer();
+                    activityStack.push({
+                        defer: defer,
+                        activity: activity,
+                        locals: locals
+                    });
+                    return defer.promise;
+                } else {
+                    return $q.when($injector.invoke(activity.controller, {}, locals));
+                }
             }
 
-            if (activity.modal) {
-                var defer = $q.defer();
-                activityStack.push({
-                    defer: defer,
-                    activity: activity,
-                    locals: locals
+            if (activity.confirm) {
+                return modal.confirm(gettext(activity.confirm)).then(function runConfirmed() {
+                    return execute(activity, locals);
+                }, function() {
+                    return $q.reject({confirm: 1});
                 });
-                return defer.promise;
             } else {
-                return $q.when($injector.invoke(activity.controller, {}, locals));
-            }
-        }
-
-        if (activity.confirm) {
-            return modal.confirm(gettext(activity.confirm)).then(function runConfirmed() {
                 return execute(activity, locals);
-            }, function() {
-                return $q.reject({confirm: 1});
-            });
-        } else {
-            return execute(activity, locals);
-        }
-    };
+            }
+        };
 
-}])
+    }])
 
 .run(['$rootScope', 'superdesk', function($rootScope, superdesk) {
 
@@ -529,9 +535,10 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
      * @returns {string}
      *
      * @description
-     * Serving for the purpose of setting referrer url via referrer service, also setting url in localStorage. which is utilized to
-     * get last working screen on authoring page if referrer url is unidentified
-     * direct link(i.e from notification pane)
+     * Serving for the purpose of setting referrer url via referrer service, also
+     * setting url in localStorage. which is utilized to get last working screen
+     * on authoring page if referrer url is unidentified direct link
+     * (i.e from notification pane)
      */
     this.setReferrer = function(currentRoute, previousRoute) {
         if (currentRoute && previousRoute) {
@@ -540,13 +547,11 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
                     this.setReferrerUrl('/workspace');
                     localStorage.setItem('referrerUrl', '/workspace');
                     sessionStorage.removeItem('previewUrl');
-                } else {
-                    if (currentRoute.$$route.authoring && (!previousRoute.$$route.authoring ||
+                } else if (currentRoute.$$route.authoring && (!previousRoute.$$route.authoring ||
                         previousRoute.$$route._id === 'packaging')) {
-                        this.setReferrerUrl(prepareUrl(previousRoute));
-                        localStorage.setItem('referrerUrl', this.getReferrerUrl());
-                        sessionStorage.removeItem('previewUrl');
-                    }
+                    this.setReferrerUrl(prepareUrl(previousRoute));
+                    localStorage.setItem('referrerUrl', this.getReferrerUrl());
+                    sessionStorage.removeItem('previewUrl');
                 }
             }
         }
@@ -559,7 +564,8 @@ function($location, $injector, $q, $timeout, gettext, modal, _) {
 
     this.getReferrerUrl = function() {
         if (typeof (referrerURL) === 'undefined' || (referrerURL) === null) {
-            if (typeof (localStorage.getItem('referrerUrl')) === 'undefined' || (localStorage.getItem('referrerUrl')) === null){
+            if (typeof (localStorage.getItem('referrerUrl')) === 'undefined'
+                || (localStorage.getItem('referrerUrl')) === null) {
                 this.setReferrerUrl('/workspace');
             } else {
                 referrerURL = localStorage.getItem('referrerUrl');

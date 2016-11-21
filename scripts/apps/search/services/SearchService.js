@@ -1,4 +1,4 @@
-import { PARAMETERS, EXCLUDE_FACETS } from 'apps/search/constants';
+import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
 
 SearchService.$inject = ['$location', 'gettext', 'config', 'session'];
 /**
@@ -25,7 +25,7 @@ export function SearchService($location, gettext, config, session) {
     ];
 
     this.cvs = config.search_cvs ||
-    [{'id': 'subject', 'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'},
+        [{'id': 'subject', 'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'},
     {'id': 'companycodes', 'name': 'Company Codes', 'field': 'company_codes', 'list': 'company_codes'}];
 
     function getSort() {
@@ -62,39 +62,39 @@ export function SearchService($location, gettext, config, session) {
 
             var desk;
             switch (key) {
-                case 'from_desk':
-                    desk = params[key].split('-');
-                    if (desk.length === 2) {
-                        if (desk[1] === 'authoring') {
-                            filters.push({'term': {'task.last_authoring_desk': desk[0]}});
-                        } else {
-                            filters.push({'term': {'task.last_production_desk': desk[0]}});
-                        }
+            case 'from_desk':
+                desk = params[key].split('-');
+                if (desk.length === 2) {
+                    if (desk[1] === 'authoring') {
+                        filters.push({'term': {'task.last_authoring_desk': desk[0]}});
+                    } else {
+                        filters.push({'term': {'task.last_production_desk': desk[0]}});
                     }
-                    break;
-                case 'to_desk':
-                    desk = params[key].split('-');
-                    if (desk.length === 2) {
-                        filters.push({'term': {'task.desk': desk[0]}});
-                        if (!params.from_desk) {
-                            var field = desk[1] === 'authoring' ? 'task.last_production_desk' : 'task.last_authoring_desk';
-                            filters.push({'exists': {'field': field}});
-                        }
+                }
+                break;
+            case 'to_desk':
+                desk = params[key].split('-');
+                if (desk.length === 2) {
+                    filters.push({'term': {'task.desk': desk[0]}});
+                    if (!params.from_desk) {
+                        var field = desk[1] === 'authoring' ? 'task.last_production_desk' : 'task.last_authoring_desk';
+                        filters.push({'exists': {'field': field}});
                     }
-                    break;
-                case 'spike':
+                }
+                break;
+            case 'spike':
                     // Will get set in the base filters
-                    break;
-                case 'subject':
-                    filters.push({'terms': {'subject.qcode': JSON.parse(params[key])}});
-                    break;
-                case 'company_codes':
-                    filters.push({'terms': {'company_codes.qcode': JSON.parse(params[key])}});
-                    break;
-                default:
-                    var filter = {'term': {}};
-                    filter.term[key] = params[key];
-                    filters.push(filter);
+                break;
+            case 'subject':
+                filters.push({'terms': {'subject.qcode': JSON.parse(params[key])}});
+                break;
+            case 'company_codes':
+                filters.push({'terms': {'company_codes.qcode': JSON.parse(params[key])}});
+                break;
+            default:
+                var filter = {'term': {}};
+                filter.term[key] = params[key];
+                filters.push(filter);
             }
         });
 
@@ -104,33 +104,33 @@ export function SearchService($location, gettext, config, session) {
                 return;
             }
             switch (key) {
-                case 'nottype':
-                    filters.push({not: {terms: {type: JSON.parse(params[key])}}});
-                    break;
-                case 'notdesk':
-                    filters.push({not: {terms: {'task.desk': JSON.parse(params[key])}}});
-                    break;
-                case 'notgenre':
-                    filters.push({not: {terms: {'genre.name': JSON.parse(params[key])}}});
-                    break;
-                case 'notcategory':
-                    filters.push({not: {terms: {'anpa_category.name': JSON.parse(params[key])}}});
-                    break;
-                case 'noturgency':
-                    filters.push({not: {terms: {urgency: JSON.parse(params[key])}}});
-                    break;
-                case 'notpriority':
-                    filters.push({not: {terms: {priority: JSON.parse(params[key])}}});
-                    break;
-                case 'notsource':
-                    filters.push({not: {terms: {source: JSON.parse(params[key])}}});
-                    break;
-                case 'notlegal':
-                    filters.push({not: {terms: {'flags.marked_for_legal': JSON.parse(params[key])}}});
-                    break;
-                case 'notsms':
-                    filters.push({not: {terms: {'flags.marked_for_sms': JSON.parse(params[key])}}});
-                    break;
+            case 'nottype':
+                filters.push({not: {terms: {type: JSON.parse(params[key])}}});
+                break;
+            case 'notdesk':
+                filters.push({not: {terms: {'task.desk': JSON.parse(params[key])}}});
+                break;
+            case 'notgenre':
+                filters.push({not: {terms: {'genre.name': JSON.parse(params[key])}}});
+                break;
+            case 'notcategory':
+                filters.push({not: {terms: {'anpa_category.name': JSON.parse(params[key])}}});
+                break;
+            case 'noturgency':
+                filters.push({not: {terms: {urgency: JSON.parse(params[key])}}});
+                break;
+            case 'notpriority':
+                filters.push({not: {terms: {priority: JSON.parse(params[key])}}});
+                break;
+            case 'notsource':
+                filters.push({not: {terms: {source: JSON.parse(params[key])}}});
+                break;
+            case 'notlegal':
+                filters.push({not: {terms: {'flags.marked_for_legal': JSON.parse(params[key])}}});
+                break;
+            case 'notsms':
+                filters.push({not: {terms: {'flags.marked_for_sms': JSON.parse(params[key])}}});
+                break;
             }
         });
     }
@@ -200,11 +200,11 @@ export function SearchService($location, gettext, config, session) {
      * Prepares the date based on the timezone settings.
      * If useDefaultTimezone is used then all search are based on the server timezone else users browser timezone
      * @param {String} date - Date selected by the User
-     * @param {String} time_suffix - time part
+     * @param {String} timeSuffix - time part
      * @return {String} date
      */
-    function formatDate(date, time_suffix) {
-        var local = moment(date, config.view.dateformat).format('YYYY-MM-DD') + time_suffix;
+    function formatDate(date, timeSuffix) {
+        var local = moment(date, config.view.dateformat).format('YYYY-MM-DD') + timeSuffix;
         if (config.search && config.search.useDefaultTimezone) {
             // use the default timezone of the server.
             local += moment.tz(config.defaultTimezone).format('ZZ');
@@ -223,10 +223,10 @@ export function SearchService($location, gettext, config, session) {
     function Query(_params) {
         var size,
             filters = [],
-            post_filters = [],
+            postFilters = [],
             params = {},
-            zero_hour_suffix = 'T00:00:00',
-            midnight_suffix = 'T23:59:59';
+            zeroHourSuffix = 'T00:00:00',
+            midnightSuffix = 'T23:59:59';
 
         angular.forEach(_params, function(value, key) {
             params[key] = value;
@@ -253,26 +253,25 @@ export function SearchService($location, gettext, config, session) {
                 var range = {firstcreated: {}, versioncreated: {}};
 
                 if (params.beforefirstcreated) {
-                    range.firstcreated.lte = formatDate(params.beforefirstcreated, midnight_suffix);
+                    range.firstcreated.lte = formatDate(params.beforefirstcreated, midnightSuffix);
                 }
 
                 if (params.afterfirstcreated) {
-                    range.firstcreated.gte = formatDate(params.afterfirstcreated, zero_hour_suffix);
+                    range.firstcreated.gte = formatDate(params.afterfirstcreated, zeroHourSuffix);
                 }
 
                 if (params.beforeversioncreated) {
-                    range.versioncreated.lte = formatDate(params.beforeversioncreated, midnight_suffix);
+                    range.versioncreated.lte = formatDate(params.beforeversioncreated, midnightSuffix);
                 }
 
                 if (params.afterversioncreated) {
-                    range.versioncreated.gte = formatDate(params.afterversioncreated, zero_hour_suffix);
+                    range.versioncreated.gte = formatDate(params.afterversioncreated, zeroHourSuffix);
                 }
 
                 query.post_filter({range: range});
             }
 
-            if (params.after)
-            {
+            if (params.after)            {
                 var facetrange = {firstcreated: {}};
                 facetrange.firstcreated.gte = params.after;
                 query.post_filter({range: facetrange});
@@ -345,24 +344,30 @@ export function SearchService($location, gettext, config, session) {
                 sort: [_.zipObject([sort.field], [sort.dir])]
             };
 
-            if (post_filters.length > 0) {
-                criteria.post_filter = {'and': post_filters};
+            if (postFilters.length > 0) {
+                criteria.post_filter = {'and': postFilters};
             }
 
             // Construct the query string by combining the q parameter and the raw parameter, if both present
-            var query_string = null;
+            var queryString = null;
             if (search.q && search.raw) {
-                query_string = [search.q, search.raw].filter(q => q).map(q => '(' + q.replace(/\//g, '\\/') + ')').join(' AND ');
+                queryString = [search.q, search.raw]
+                    .filter(q => q)
+                    .map(q => '(' + q.replace(/\//g, '\\/') + ')')
+                    .join(' AND ');
             } else {
-                query_string = [search.q, search.raw].filter(q => q).map(q => q.replace(/\//g, '\\/')).join('');
+                queryString = [search.q, search.raw]
+                    .filter(q => q)
+                    .map(q => q.replace(/\//g, '\\/'))
+                    .join('');
             }
 
-            if (query_string) {
+            if (queryString) {
                 criteria.query.filtered.query = {query_string: {
-                        query: query_string,
-                        lenient: false,
-                        default_operator: 'AND'
-                    }};
+                    query: queryString,
+                    lenient: false,
+                    default_operator: 'AND'
+                }};
             }
 
             if (withSource) {
@@ -391,7 +396,7 @@ export function SearchService($location, gettext, config, session) {
          * @param {Object} filter
          */
         this.post_filter = function addPostFilter(filter) {
-            post_filters.push(filter);
+            postFilters.push(filter);
             return this;
         };
 
@@ -400,7 +405,7 @@ export function SearchService($location, gettext, config, session) {
          */
         this.clear_filters = function clearFilters() {
             filters = [];
-            post_filters = [];
+            postFilters = [];
             buildFilters({}, this);
             return this;
         };

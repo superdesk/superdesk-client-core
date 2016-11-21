@@ -10,13 +10,15 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
 
             function init() {
                 // Update the figures if there's a desk mention message
-                init_notifications();
+                initNotifications();
                 if (scope.default_incoming) {
-                    scope.$on('desk:mention', function() {$timeout(reload, 5000, true);});
+                    scope.$on('desk:mention', function() {
+                        $timeout(reload, 5000, true);
+                    });
                 }
             }
 
-            function init_notifications () {
+            function initNotifications() {
                 scope.desk = desks.stageLookup[scope.stage].desk;
                 scope.notifications = deskNotifications.getNotifications(scope.desk);
                 scope.default_incoming = desks.stageLookup[scope.stage].default_incoming;
@@ -27,7 +29,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
 
             function reload() {
                 deskNotifications.reload();
-                init_notifications();
+                initNotifications();
             }
 
             /**

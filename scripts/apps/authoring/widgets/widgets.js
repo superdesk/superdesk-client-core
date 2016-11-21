@@ -13,7 +13,7 @@ function AuthoringWidgetsProvider() {
 }
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService',
-                                'keyboardManager', '$location', 'desks', 'lock'];
+    'keyboardManager', '$location', 'desks', 'lock'];
 function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService,
     keyboardManager, $location, desks, lock) {
     $scope.active = null;
@@ -32,7 +32,10 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
         } else if (archiveService.isArchived(item)) {
             display = 'archived';
         } else {
-            display = item.type === 'composite' ? 'packages' : item.state === 'killed' ? 'killedItem' : 'authoring';
+            display = item.state === 'killed' ? 'killedItem' : 'authoring';
+            if (item.type === 'composite') {
+                display = 'packages';
+            }
         }
 
         $scope.widgets = authoringWidgets.filter(function(widget) {

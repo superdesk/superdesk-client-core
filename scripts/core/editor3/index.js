@@ -23,7 +23,15 @@ export default angular.module('superdesk.core.editor3', [])
     .directive('sdEditor3',
         () => ({
             scope: {},
-            bindToController: {config: '=', editorFormat: '=', language: '=', onChange: '&', value: '=', readOnly: '=', trim: '='},
+            bindToController: {
+                config: '=',
+                editorFormat: '=',
+                language: '=',
+                onChange: '&',
+                value: '=',
+                readOnly: '=',
+                trim: '='
+            },
             controllerAs: 'vm',
             controller: ctrl.Editor3Controller
         })

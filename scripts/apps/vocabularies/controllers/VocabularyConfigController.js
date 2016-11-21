@@ -8,7 +8,8 @@ export function VocabularyConfigController($scope, vocabularies, $timeout) {
      */
     $scope.openVocabulary = function(vocabulary) {
         $scope.loading = true;
-        $timeout(function() {  $scope.vocabulary = vocabulary;
+        $timeout(function() {
+            $scope.vocabulary = vocabulary;
         }, 200, true);
     };
 

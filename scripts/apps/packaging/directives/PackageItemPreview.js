@@ -19,14 +19,12 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
                     url = scope.item.location + '/' + scope.item.residRef;
                     url += scope.item._current_version ? '?version=' + scope.item._current_version: '';
                     endpoint = scope.item.location;
+                } else if (_.includes('ingest', scope.item.location)) {
+                    url = scope.item.location + '/' + scope.item.residRef;
+                    endpoint = 'ingest';
                 } else {
-                    if (_.includes('ingest', scope.item.location)) {
-                        url = scope.item.location + '/' + scope.item.residRef;
-                        endpoint = 'ingest';
-                    } else {
-                        url = scope.item.location + '/' + scope.item.residRef + ':' + scope.item._current_version;
-                        endpoint = 'archived';
-                    }
+                    url = scope.item.location + '/' + scope.item.residRef + ':' + scope.item._current_version;
+                    endpoint = 'archived';
                 }
 
                 api[endpoint].getByUrl(url)

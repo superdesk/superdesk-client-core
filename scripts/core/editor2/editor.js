@@ -77,7 +77,7 @@ function HistoryStack(initialValue) {
  * @param {string} string
  * @return {string}
  */
-function escapeRegExp(string){
+function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
@@ -394,12 +394,12 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
             return spellcheck.getAbbreviationsDict().then(function(abbreviations) {
                 if (_.keys(abbreviations).length) {
                     var pattern = '\\b(' + _.map(_.keys(abbreviations), function(item) {
-                            return escapeRegExp(item);
-                        }).join('|') + ')(\\*)';
+                        return escapeRegExp(item);
+                    }).join('|') + ')(\\*)';
                     var found = scope.node.innerText.match(new RegExp(pattern, 'g'));
                     if (found) {
                         // store old settings
-                        var old_settings = angular.extend({}, self.settings);
+                        var oldSettings = angular.extend({}, self.settings);
                         var caretPosition = scope.medium.exportSelection();
 
                         _.forEach(_.uniq(found), function(val) {
@@ -420,7 +420,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
                         scope.medium.importSelection(caretPosition);
                         // apply old settings
-                        self.setSettings({findreplace: (old_settings.findreplace ? old_settings.findreplace : null)});
+                        self.setSettings({findreplace: (oldSettings.findreplace ? oldSettings.findreplace : null)});
                     }
                 }
             });
@@ -505,8 +505,8 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 // when previous promise is finished, compose the html
                 return $q.when(promiseFinished, function(renditionsList) {
                     var html = ['<img',
-                    'src="' + url + '"',
-                    'alt="' + _.escape(altText || '') + '"'];
+                        'src="' + url + '"',
+                        'alt="' + _.escape(altText || '') + '"'];
                     // add a `srcset` attribute if renditions are availables
                     // NOTE: if renditions from renditionsService are not available For
                     // this picture, we should maybe use its own renditons
@@ -516,7 +516,8 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                             if (r.width) {
                                 var rendition = data.renditions[r.name];
                                 if (angular.isDefined(rendition)) {
-                                    renditionsHtml.push(rendition.href.replace('http://', '//') + ' ' + rendition.width + 'w');
+                                    renditionsHtml.push(rendition.href.replace('http://', '//')
+                                            + ' ' + rendition.width + 'w');
                                 }
                             }
                         });
@@ -621,14 +622,14 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
 }
 
 angular.module('superdesk.apps.editor2', [
-        'superdesk.apps.editor2.ctrl',
-        'superdesk.apps.editor2.embed',
-        'superdesk.apps.editor2.content',
-        'superdesk.apps.editor2.utils',
-        'superdesk.apps.spellcheck',
-        'superdesk.apps.authoring',
-        'angular-embed'
-    ])
+    'superdesk.apps.editor2.ctrl',
+    'superdesk.apps.editor2.embed',
+    'superdesk.apps.editor2.content',
+    'superdesk.apps.editor2.utils',
+    'superdesk.apps.spellcheck',
+    'superdesk.apps.authoring',
+    'angular-embed'
+])
     .service('editor', EditorService)
     .constant('EMBED_PROVIDERS', { // see http://noembed.com/#supported-sites
         custom: 'Custom',
@@ -661,29 +662,29 @@ angular.module('superdesk.apps.editor2', [
         };
     }])
     .directive('sdTextEditorDropZone', ['editor',
-    function (editor) {
-        var dragOverClass = 'medium-editor-dragover';
-        return {
-            require: '^sdTextEditorBlockText',
-            scope: {sdTextEditorDropZone: '@'},
-            link: function(scope, element, attrs, ctrl) {
-                if (scope.sdTextEditorDropZone === 'false') {
-                    return;
-                }
-                var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.video'];
-                element.on('drop dragdrop', function(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    var media_type = event.originalEvent.dataTransfer.types[0];
-                    var item = angular.fromJson(event.originalEvent.dataTransfer.getData(media_type));
-                    var paragraph = angular.element(event.target);
-                    paragraph.removeClass(dragOverClass);
-                    if (paragraph.text() === '') {
-                        // select paragraph element in order to know position
-                        ctrl.selectElement(paragraph.get(0));
-                        ctrl.insertMedia(item);
+        function (editor) {
+            var dragOverClass = 'medium-editor-dragover';
+            return {
+                require: '^sdTextEditorBlockText',
+                scope: {sdTextEditorDropZone: '@'},
+                link: function(scope, element, attrs, ctrl) {
+                    if (scope.sdTextEditorDropZone === 'false') {
+                        return;
                     }
-                })
+                    var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.video'];
+                    element.on('drop dragdrop', function(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        var mediaType = event.originalEvent.dataTransfer.types[0];
+                        var item = angular.fromJson(event.originalEvent.dataTransfer.getData(mediaType));
+                        var paragraph = angular.element(event.target);
+                        paragraph.removeClass(dragOverClass);
+                        if (paragraph.text() === '') {
+                        // select paragraph element in order to know position
+                            ctrl.selectElement(paragraph.get(0));
+                            ctrl.insertMedia(item);
+                        }
+                    })
                 .on('dragover', function(event) {
                     var paragraph = angular.element(event.target);
                     if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
@@ -702,9 +703,9 @@ angular.module('superdesk.apps.editor2', [
                     var paragraph = angular.element(event.target);
                     paragraph.removeClass(dragOverClass);
                 });
-            }
-        };
-    }])
+                }
+            };
+        }])
     .directive('sdTextEditor', ['$timeout', 'lodash', function ($timeout, _) {
         return {
             scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?'},
@@ -755,131 +756,135 @@ angular.module('superdesk.apps.editor2', [
             controller: SdTextEditorBlockEmbedController
         };
     }])
-    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk', '$q', 'gettextCatalog', 'config', '$rootScope',
-    function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog, config, $rootScope) {
-        var TOP_OFFSET = 134; // header height
+    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk',
+        '$q', 'gettextCatalog', 'config', '$rootScope',
+        function (editor, spellcheck, $timeout, superdesk, $q, gettextCatalog, config, $rootScope) {
+            var TOP_OFFSET = 134; // header height
 
-        var EDITOR_CONFIG = {
-            toolbar: {
-                static: true,
-                align: 'left',
-                sticky: true,
-                stickyTopOffset: TOP_OFFSET,
-                updateOnEmptySelection: true
-            },
-            paste: {
-                // Both are disabled because it overwrites the `ctrl`+`v` binding and we need it for the block paste feature
-                forcePlainText: false,
-                cleanPastedHTML: false
-            },
-            anchor: {
-                placeholderText: gettextCatalog.getString('Paste or type a full link'),
-                linkValidation: true
-            },
-            anchorPreview: {
-                showWhenToolbarIsVisible: true
-            },
-            placeholder: false,
-            disableReturn: false,
-            spellcheck: false,
-            targetBlank: true
-        };
-        if (config.editor) {
-            angular.extend(EDITOR_CONFIG, config.editor);
-        }
+            var EDITOR_CONFIG = {
+                toolbar: {
+                    static: true,
+                    align: 'left',
+                    sticky: true,
+                    stickyTopOffset: TOP_OFFSET,
+                    updateOnEmptySelection: true
+                },
+                paste: {
+                    // Both are disabled because it overwrites the `ctrl`+`v` binding
+                    // and we need it for the block paste feature
+                    forcePlainText: false,
+                    cleanPastedHTML: false
+                },
+                anchor: {
+                    placeholderText: gettextCatalog.getString(
+                        'Paste or type a full link'
+                    ),
+                    linkValidation: true
+                },
+                anchorPreview: {
+                    showWhenToolbarIsVisible: true
+                },
+                placeholder: false,
+                disableReturn: false,
+                spellcheck: false,
+                targetBlank: true
+            };
+            if (config.editor) {
+                angular.extend(EDITOR_CONFIG, config.editor);
+            }
 
         /**
          * Get number of lines for all p nodes before given node withing same parent.
          */
-        function getLinesBeforeNode(p) {
+            function getLinesBeforeNode(p) {
 
-            function getLineCount(text) {
-                return text.split('\n').length;
-            }
-
-            var lines = 0;
-            while (p) {
-                if (p.childNodes.length && p.childNodes[0].nodeType === Node.TEXT_NODE) {
-                    lines += getLineCount(p.childNodes[0].wholeText);
-                } else if (p.childNodes.length) {
-                    lines += 1; // empty paragraph
+                function getLineCount(text) {
+                    return text.split('\n').length;
                 }
-                p = p.previousSibling;
-            }
 
-            return lines;
-        }
+                var lines = 0;
+                while (p) {
+                    if (p.childNodes.length && p.childNodes[0].nodeType === Node.TEXT_NODE) {
+                        lines += getLineCount(p.childNodes[0].wholeText);
+                    } else if (p.childNodes.length) {
+                        lines += 1; // empty paragraph
+                    }
+                    p = p.previousSibling;
+                }
+
+                return lines;
+            }
 
         /**
          * Get line/column coordinates for given cursor position.
          */
-        function getLineColumn() {
-            var column, lines,
-                selection = window.getSelection();
-            if (selection.anchorNode.nodeType === Node.TEXT_NODE) {
-                var text = selection.anchorNode.wholeText.substring(0, selection.anchorOffset);
-                var node = selection.anchorNode;
-                column = text.length + 1;
-                while (node.nodeName !== 'P') {
-                    if (node.previousSibling) {
-                        column += node.previousSibling.wholeText ?
+            function getLineColumn() {
+                var column, lines,
+                    selection = window.getSelection();
+                if (selection.anchorNode.nodeType === Node.TEXT_NODE) {
+                    var text = selection.anchorNode.wholeText.substring(0, selection.anchorOffset);
+                    var node = selection.anchorNode;
+                    column = text.length + 1;
+                    while (node.nodeName !== 'P') {
+                        if (node.previousSibling) {
+                            column += node.previousSibling.wholeText ?
                             node.previousSibling.wholeText.length :
                             node.previousSibling.textContent.length;
-                        node = node.previousSibling;
-                    } else {
+                            node = node.previousSibling;
+                        } else {
+                            node = node.parentNode;
+                        }
+                    }
+
+                    lines = 0 + getLinesBeforeNode(node);
+                } else {
+                    lines = 0 + getLinesBeforeNode(selection.anchorNode);
+                    column = 1;
+                }
+
+                return {
+                    line: lines,
+                    column: column
+                };
+            }
+
+            function extractBlockContentsFromCaret() {
+                function getBlockContainer(node) {
+                    while (node) {
+                        if (node.nodeType === 1 && /^(DIV)$/i.test(node.nodeName)) {
+                            return node;
+                        }
                         node = node.parentNode;
                     }
                 }
-
-                lines = 0 + getLinesBeforeNode(node);
-            } else {
-                lines = 0 + getLinesBeforeNode(selection.anchorNode);
-                column = 1;
-            }
-
-            return {
-                line: lines,
-                column: column
-            };
-        }
-
-        function extractBlockContentsFromCaret() {
-            function getBlockContainer(node) {
-                while (node) {
-                    if (node.nodeType === 1 && /^(DIV)$/i.test(node.nodeName)) {
-                        return node;
-                    }
-                    node = node.parentNode;
-                }
-            }
-            var sel = window.getSelection();
-            if (sel.rangeCount) {
-                var selRange = sel.getRangeAt(0);
-                var blockEl = getBlockContainer(selRange.endContainer);
-                if (blockEl) {
-                    var range = selRange.cloneRange();
-                    range.selectNodeContents(blockEl);
-                    range.setStart(selRange.endContainer, selRange.endOffset);
-                    var remaining = range.extractContents();
-                    var $blockEl = $(blockEl);
+                var sel = window.getSelection();
+                if (sel.rangeCount) {
+                    var selRange = sel.getRangeAt(0);
+                    var blockEl = getBlockContainer(selRange.endContainer);
+                    if (blockEl) {
+                        var range = selRange.cloneRange();
+                        range.selectNodeContents(blockEl);
+                        range.setStart(selRange.endContainer, selRange.endOffset);
+                        var remaining = range.extractContents();
+                        var $blockEl = $(blockEl);
                     // clear if empty of text
-                    if ($blockEl.text() === '') {
-                        $blockEl.html('');
-                    }
-                    // remove empty last line
-                    $blockEl.find('p:last').each(function() {
-                        if ($(this).text() === '') {
-                            this.remove();
+                        if ($blockEl.text() === '') {
+                            $blockEl.html('');
                         }
-                    });
-                    return remaining;
+                    // remove empty last line
+                        $blockEl.find('p:last').each(function() {
+                            if ($(this).text() === '') {
+                                this.remove();
+                            }
+                        });
+                        return remaining;
+                    }
                 }
             }
-        }
 
-        function setEditorFormatOptions(editorConfig, editorFormat, scope) {
-            _.each(editorFormat, function(format) {
-                switch (format) {
+            function setEditorFormatOptions(editorConfig, editorFormat, scope) {
+                _.each(editorFormat, function(format) {
+                    switch (format) {
                     case 'h1':
                         editorConfig.toolbar.buttons.push({
                             name: 'h1',
@@ -960,384 +965,389 @@ angular.module('superdesk.apps.editor2', [
                         break;
                     default:
                         editorConfig.toolbar.buttons.push(format);
-                }
-            });
-        }
-
-        return {
-            scope: {type: '=', config: '=', language: '=', sdTextEditorBlockText: '='},
-            require: ['ngModel', '^sdTextEditor', 'sdTextEditorBlockText'],
-            templateUrl: 'scripts/core/editor2/views/block-text.html',
-            link: function(scope, elem, attrs, controllers) {
-                var ngModel = controllers[0];
-                var sdTextEditor = controllers[1];
-                scope.model = ngModel;
-                // give the block model and the editor controller to the text block controller
-                var vm = controllers[2];
-                angular.extend(vm, {
-                    block: scope.sdTextEditorBlockText,
-                    sdEditorCtrl: sdTextEditor
+                    }
                 });
-                vm.block = scope.sdTextEditorBlockText;
-                var editorElem;
-                var updateTimeout;
-                var renderTimeout;
-                ngModel.$viewChangeListeners.push(changeListener);
-                ngModel.$render = function() {
-                    editor.registerScope(scope);
-                    var editorConfig = angular.merge({}, EDITOR_CONFIG, scope.config || {});
+            }
 
-                    if (editorConfig.toolbar) {
-                        editorConfig.toolbar.buttons = [];
-                        setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
+            return {
+                scope: {type: '=', config: '=', language: '=', sdTextEditorBlockText: '='},
+                require: ['ngModel', '^sdTextEditor', 'sdTextEditorBlockText'],
+                templateUrl: 'scripts/core/editor2/views/block-text.html',
+                link: function(scope, elem, attrs, controllers) {
+                    var ngModel = controllers[0];
+                    var sdTextEditor = controllers[1];
+                    scope.model = ngModel;
+                // give the block model and the editor controller to the text block controller
+                    var vm = controllers[2];
+                    angular.extend(vm, {
+                        block: scope.sdTextEditorBlockText,
+                        sdEditorCtrl: sdTextEditor
+                    });
+                    vm.block = scope.sdTextEditorBlockText;
+                    var editorElem;
+                    var updateTimeout;
+                    var renderTimeout;
+                    ngModel.$viewChangeListeners.push(changeListener);
+                    ngModel.$render = function() {
+                        editor.registerScope(scope);
+                        var editorConfig = angular.merge({}, EDITOR_CONFIG, scope.config || {});
+
+                        if (editorConfig.toolbar) {
+                            editorConfig.toolbar.buttons = [];
+                            setEditorFormatOptions(editorConfig, sdTextEditor.editorformat, scope);
                         // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
-                        if (scope.config.multiBlockEdition) {
+                            if (scope.config.multiBlockEdition) {
                             // this dummy imageDragging stop preventing drag & drop events
-                            editorConfig.extensions = {'imageDragging': {}};
-                            if (editorConfig.toolbar.buttons.indexOf('table') !== -1 && angular.isDefined(MediumEditorTable)) {
-                                editorConfig.extensions.table =
-                                new MediumEditorTable({aria:gettextCatalog.getString('insert table')});
+                                editorConfig.extensions = {'imageDragging': {}};
+                                if (editorConfig.toolbar.buttons.indexOf('table') !== -1
+                                    && angular.isDefined(MediumEditorTable)) {
+                                    editorConfig.extensions.table = new MediumEditorTable({
+                                        aria: gettextCatalog.getString('insert table')
+                                    });
+                                }
                             }
                         }
-                    }
 
-                    spellcheck.setLanguage(scope.language);
-                    editorElem = elem.find(scope.type === 'preformatted' ?  '.editor-type-text' : '.editor-type-html');
+                        spellcheck.setLanguage(scope.language);
+                        editorElem = elem.find(scope.type === 'preformatted' ? '.editor-type-text'
+                            : '.editor-type-html');
                     // events could be attached already, so remove these
-                    editorElem.off('mouseup keydown keyup click contextmenu');
-                    editorElem.empty();
-                    editorElem.html(ngModel.$viewValue || '');
-                    scope.node = editorElem[0];
-                    scope.model = ngModel;
+                        editorElem.off('mouseup keydown keyup click contextmenu');
+                        editorElem.empty();
+                        editorElem.html(ngModel.$viewValue || '');
+                        scope.node = editorElem[0];
+                        scope.model = ngModel;
                     // destroy exiting instance
-                    if (scope.medium) {
-                        scope.medium.destroy();
-                    }
+                        if (scope.medium) {
+                            scope.medium.destroy();
+                        }
 
                     // create a new instance of the medium editor binded to this node
-                    scope.medium = new MediumEditor(scope.node, editorConfig);
+                        scope.medium = new MediumEditor(scope.node, editorConfig);
                     // restore the selection if exist
-                    if (scope.sdTextEditorBlockText.caretPosition) {
-                        scope.node.focus();
-                        vm.restoreSelection();
+                        if (scope.sdTextEditorBlockText.caretPosition) {
+                            scope.node.focus();
+                            vm.restoreSelection();
                         // clear the saved position
-                        scope.sdTextEditorBlockText.caretPosition = undefined;
-                    }
-                    // listen for paste event and insert a block if exists in clipboard
-                    scope.medium.subscribe('editablePaste', function(e) {
-                        var clipboard = vm.sdEditorCtrl.getCutBlock(true);
-                        if (clipboard) {
-                            e.preventDefault();
-                            vm.sdEditorCtrl.splitAndInsert(vm, clipboard);
+                            scope.sdTextEditorBlockText.caretPosition = undefined;
                         }
-                    });
-                    // listen caret moves in order to show or hide the (+) button beside the caret
-                    function updateAddContentButton(e) {
-                        scope.$emit('sdAddContent::updateState', e, editorElem);
-                    }
-                    editorElem.on('mouseup', updateAddContentButton);
-                    ['editableInput', 'focus', 'blur', 'editableClick', 'editableKeyup'].forEach(function(eventName) {
-                        scope.medium.subscribe(eventName, updateAddContentButton);
-                    });
-                    // listen updates by medium editor to update the model
-                    scope.medium.subscribe('editableInput', function(e, elem) {
-                        elem.querySelectorAll('span[style]').forEach(span => {
-                            span.before(span.firstChild);
-                            span.remove();
+                    // listen for paste event and insert a block if exists in clipboard
+                        scope.medium.subscribe('editablePaste', function(e) {
+                            var clipboard = vm.sdEditorCtrl.getCutBlock(true);
+                            if (clipboard) {
+                                e.preventDefault();
+                                vm.sdEditorCtrl.splitAndInsert(vm, clipboard);
+                            }
                         });
+                    // listen caret moves in order to show or hide the (+) button beside the caret
+                        function updateAddContentButton(e) {
+                            scope.$emit('sdAddContent::updateState', e, editorElem);
+                        }
+                        editorElem.on('mouseup', updateAddContentButton);
+                        ['editableInput', 'focus', 'blur', 'editableClick', 'editableKeyup']
+                            .forEach(function(eventName) {
+                                scope.medium.subscribe(eventName, updateAddContentButton);
+                            });
+                    // listen updates by medium editor to update the model
+                        scope.medium.subscribe('editableInput', function(e, elem) {
+                            elem.querySelectorAll('span[style]').forEach(span => {
+                                span.before(span.firstChild);
+                                span.remove();
+                            });
 
-                        cancelTimeout();
-                        updateTimeout = $timeout(vm.updateModel, 800, false);
-                    });
-                    scope.medium.subscribe('blur', function() {
+                            cancelTimeout();
+                            updateTimeout = $timeout(vm.updateModel, 800, false);
+                        });
+                        scope.medium.subscribe('blur', function() {
                         // save latest know caret position
-                        vm.savePosition();
+                            vm.savePosition();
 
-                        vm.updateModel();
-                    });
+                            vm.updateModel();
+                        });
                     // update the toolbar, bc it can be displayed at the
                     // wrong place if offset of block has changed
-                    scope.medium.subscribe('focus', function() {
-                        var toolbar = scope.medium.getExtensionByName('toolbar');
-                        if (toolbar) {
-                            toolbar.positionStaticToolbar(scope.medium.getFocusedElement());
-                        }
-                    });
+                        scope.medium.subscribe('focus', function() {
+                            var toolbar = scope.medium.getExtensionByName('toolbar');
+                            if (toolbar) {
+                                toolbar.positionStaticToolbar(scope.medium.getFocusedElement());
+                            }
+                        });
 
                     // hide toolbar if element is under header
-                    scope.medium.subscribe('positionedToolbar', function(e, elem) {
-                        var toolbar = scope.medium.getExtensionByName('toolbar'),
-                            elemPosition = elem.getBoundingClientRect();
-                        if (toolbar) {
-                            toolbar.toolbar.hidden = elemPosition.top + elemPosition.height < TOP_OFFSET;
-                        }
-                    });
-
-                    function cancelTimeout(event) {
-                        $timeout.cancel(updateTimeout);
-                        startTyping();
-                    }
-
-                    function changeSelectedParagraph(direction) {
-                        var selectedParagraph = angular.element(scope.medium.getSelectedParentElement());
-                        var paragraphToBeSelected = selectedParagraph[direction > 0 ? 'next' : 'prev']('p');
-                        if (paragraphToBeSelected.length > 0) {
-                            // select the paragraph
-                            scope.medium.selectElement(paragraphToBeSelected.get(0));
-                            // scroll to the paragraph
-                            var $scrollableParent = $('.page-content-container');
-                            var offset = $scrollableParent.scrollTop();
-                            offset += paragraphToBeSelected.position().top;
-                            offset += paragraphToBeSelected.closest('.block__container').offset().top;
-                            offset -= 100; //  margin to prevent the top bar to hide the selected paragraph
-                            $scrollableParent.scrollTop(offset);
-                        }
-                    }
-
-                    function toggleCase() {
-                        var selectedText = editor.getSelectedText();
-                        if (selectedText.length > 0) {
-                            // looks the first character, and inverse the case of the all selection
-                            if (selectedText[0].toUpperCase() === selectedText[0]) {
-                                selectedText = selectedText.toLowerCase();
-                            } else {
-                                selectedText = selectedText.toUpperCase();
+                        scope.medium.subscribe('positionedToolbar', function(e, elem) {
+                            var toolbar = scope.medium.getExtensionByName('toolbar'),
+                                elemPosition = elem.getBoundingClientRect();
+                            if (toolbar) {
+                                toolbar.toolbar.hidden = elemPosition.top + elemPosition.height < TOP_OFFSET;
                             }
-                            scope.medium.saveSelection();
-                            // replace the selected text
-                            scope.medium.cleanPaste(selectedText);
-                            scope.medium.restoreSelection();
-                        }
-                    }
+                        });
 
-                    var ctrlOperations = {}, shiftOperations = {};
-                    ctrlOperations[editor.KEY_CODES.UP] = changeSelectedParagraph.bind(null, -1);
-                    ctrlOperations[editor.KEY_CODES.DOWN] = changeSelectedParagraph.bind(null, 1);
-                    shiftOperations[editor.KEY_CODES.F3] = toggleCase;
-                    editorElem.on('keydown', function(event) {
-                        if (editor.shouldIgnore(event)) {
-                            return;
+                        function cancelTimeout(event) {
+                            $timeout.cancel(updateTimeout);
+                            startTyping();
                         }
+
+                        function changeSelectedParagraph(direction) {
+                            var selectedParagraph = angular.element(scope.medium.getSelectedParentElement());
+                            var paragraphToBeSelected = selectedParagraph[direction > 0 ? 'next' : 'prev']('p');
+                            if (paragraphToBeSelected.length > 0) {
+                            // select the paragraph
+                                scope.medium.selectElement(paragraphToBeSelected.get(0));
+                            // scroll to the paragraph
+                                var $scrollableParent = $('.page-content-container');
+                                var offset = $scrollableParent.scrollTop();
+                                offset += paragraphToBeSelected.position().top;
+                                offset += paragraphToBeSelected.closest('.block__container').offset().top;
+                                offset -= 100; //  margin to prevent the top bar to hide the selected paragraph
+                                $scrollableParent.scrollTop(offset);
+                            }
+                        }
+
+                        function toggleCase() {
+                            var selectedText = editor.getSelectedText();
+                            if (selectedText.length > 0) {
+                            // looks the first character, and inverse the case of the all selection
+                                if (selectedText[0].toUpperCase() === selectedText[0]) {
+                                    selectedText = selectedText.toLowerCase();
+                                } else {
+                                    selectedText = selectedText.toUpperCase();
+                                }
+                                scope.medium.saveSelection();
+                            // replace the selected text
+                                scope.medium.cleanPaste(selectedText);
+                                scope.medium.restoreSelection();
+                            }
+                        }
+
+                        var ctrlOperations = {}, shiftOperations = {};
+                        ctrlOperations[editor.KEY_CODES.UP] = changeSelectedParagraph.bind(null, -1);
+                        ctrlOperations[editor.KEY_CODES.DOWN] = changeSelectedParagraph.bind(null, 1);
+                        shiftOperations[editor.KEY_CODES.F3] = toggleCase;
+                        editorElem.on('keydown', function(event) {
+                            if (editor.shouldIgnore(event)) {
+                                return;
+                            }
                         // prevent default behaviour for ctrl or shift operations
-                        if ((event.ctrlKey && ctrlOperations[event.keyCode]) ||
+                            if ((event.ctrlKey && ctrlOperations[event.keyCode]) ||
                             (event.shiftKey && shiftOperations[event.keyCode])) {
-                            event.preventDefault();
-                        }
-                        cancelTimeout(event);
-                    });
-                    editorElem.on('keyup', function(event) {
-                        if (editor.shouldIgnore(event)) {
-                            return;
-                        }
-                        if (event.ctrlKey && ctrlOperations[event.keyCode]) {
-                            ctrlOperations[event.keyCode]();
-                            return;
-                        }
-                        if (event.shiftKey && shiftOperations[event.keyCode]) {
-                            shiftOperations[event.keyCode]();
-                            return;
-                        }
-                        cancelTimeout(event);
-                        updateTimeout = $timeout(vm.updateModel, 800, false);
-                    });
+                                event.preventDefault();
+                            }
+                            cancelTimeout(event);
+                        });
+                        editorElem.on('keyup', function(event) {
+                            if (editor.shouldIgnore(event)) {
+                                return;
+                            }
+                            if (event.ctrlKey && ctrlOperations[event.keyCode]) {
+                                ctrlOperations[event.keyCode]();
+                                return;
+                            }
+                            if (event.shiftKey && shiftOperations[event.keyCode]) {
+                                shiftOperations[event.keyCode]();
+                                return;
+                            }
+                            cancelTimeout(event);
+                            updateTimeout = $timeout(vm.updateModel, 800, false);
+                        });
 
                     /**
                      * Test if given point {x, y} is in given bouding rectangle.
                      */
-                    function isPointInRect(point, rect) {
-                        return rect.left < point.x && rect.right > point.x && rect.top < point.y && rect.bottom > point.y;
-                    }
-
-                    editorElem.on('contextmenu', function(event) {
-                        var err, pos;
-                        var point = {x: event.clientX, y: event.clientY};
-                        var errors = elem[0].parentNode.getElementsByClassName('sderror');
-                        for (var i = 0, l = errors.length; i < l; i++) {
-                            err = errors.item(i);
-                            pos = err.getBoundingClientRect();
-                            if (isPointInRect(point, pos)) {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                renderContextMenu(err);
-                                return false;
-                            }
+                        function isPointInRect(point, rect) {
+                            return rect.left < point.x && rect.right > point.x && rect.top < point.y
+                                && rect.bottom > point.y;
                         }
-                    });
 
-                    function renderContextMenu(node) {
-                        // close previous menu (if any)
-                        scope.$apply(function() {
-                            scope.suggestions = null;
-                            scope.openDropdown = false;
+                        editorElem.on('contextmenu', function(event) {
+                            var err, pos;
+                            var point = {x: event.clientX, y: event.clientY};
+                            var errors = elem[0].parentNode.getElementsByClassName('sderror');
+                            for (var i = 0, l = errors.length; i < l; i++) {
+                                err = errors.item(i);
+                                pos = err.getBoundingClientRect();
+                                if (isPointInRect(point, pos)) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    renderContextMenu(err);
+                                    return false;
+                                }
+                            }
                         });
+
+                        function renderContextMenu(node) {
+                        // close previous menu (if any)
+                            scope.$apply(function() {
+                                scope.suggestions = null;
+                                scope.openDropdown = false;
+                            });
 
                         // set data needed for replacing
-                        scope.replaceWord = node.dataset.word;
-                        scope.replaceIndex = parseInt(node.dataset.index, 10);
-                        scope.sentenceWord = node.dataset.sentenceWord === 'true';
+                            scope.replaceWord = node.dataset.word;
+                            scope.replaceIndex = parseInt(node.dataset.index, 10);
+                            scope.sentenceWord = node.dataset.sentenceWord === 'true';
 
-                        spellcheck.suggest(node.textContent).then(function(suggestions) {
-                            if (scope.sentenceWord) {
-                                suggestions.push({
-                                    key: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1),
-                                    value: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1)
-                                });
+                            spellcheck.suggest(node.textContent).then(function(suggestions) {
+                                if (scope.sentenceWord) {
+                                    suggestions.push({
+                                        key: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1),
+                                        value: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1)
+                                    });
 
-                                scope.suggestions = suggestions.filter(suggestion => {
-                                    return suggestion.key !== scope.replaceWord;
+                                    scope.suggestions = suggestions.filter(suggestion => {
+                                        return suggestion.key !== scope.replaceWord;
+                                    });
+                                } else {
+                                    scope.suggestions = suggestions;
+                                }
+                                scope.replaceTarget = node;
+                                scope.$applyAsync(function() {
+                                    var menu = elem[0].getElementsByClassName('dropdown__menu')[0];
+                                    menu.style.left = (node.offsetLeft) + 'px';
+                                    menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
+                                    menu.style.position = 'absolute';
+                                    scope.openDropdown = true;
                                 });
-                            } else {
-                                scope.suggestions = suggestions;
+                            });
+                            return false;
+                        }
+
+                        if (scope.type === 'preformatted') {
+                            editorElem.on('keydown keyup click', function() {
+                                scope.$apply(function() {
+                                    angular.extend(scope.cursor, getLineColumn());
+                                });
+                            });
+                        }
+
+                        scope.$on('$destroy', function() {
+                            scope.medium.destroy();
+                            editorElem.off();
+                        });
+                        scope.cursor = {};
+                        render(null, null, true);
+                    };
+
+                    scope.removeBlock = function() {
+                        sdTextEditor.removeBlock(scope.sdTextEditorBlockText);
+                    };
+
+                    scope.$on('spellcheck:run', render);
+                    scope.$on('key:ctrl:shift:s', render);
+
+                    function render($event, event, preventStore) {
+                        if (!$rootScope.config.features || !$rootScope.config.features.useTansaProofing) {
+                            stopTyping();
+                            editor.renderScope(scope, $event, preventStore);
+                            if (event) {
+                                event.preventDefault();
                             }
-                            scope.replaceTarget = node;
-                            scope.$applyAsync(function() {
-                                var menu = elem[0].getElementsByClassName('dropdown__menu')[0];
-                                menu.style.left = (node.offsetLeft) + 'px';
-                                menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
-                                menu.style.position = 'absolute';
-                                scope.openDropdown = true;
-                            });
-                        });
-                        return false;
-                    }
-
-                    if (scope.type === 'preformatted') {
-                        editorElem.on('keydown keyup click', function() {
-                            scope.$apply(function() {
-                                angular.extend(scope.cursor, getLineColumn());
-                            });
-                        });
-                    }
-
-                    scope.$on('$destroy', function() {
-                        scope.medium.destroy();
-                        editorElem.off();
-                    });
-                    scope.cursor = {};
-                    render(null, null, true);
-                };
-
-                scope.removeBlock = function() {
-                    sdTextEditor.removeBlock(scope.sdTextEditorBlockText);
-                };
-
-                scope.$on('spellcheck:run', render);
-                scope.$on('key:ctrl:shift:s', render);
-
-                function render($event, event, preventStore) {
-                    if (!$rootScope.config.features || !$rootScope.config.features.useTansaProofing) {
-                        stopTyping();
-                        editor.renderScope(scope, $event, preventStore);
-                        if (event) {
-                            event.preventDefault();
                         }
                     }
-                }
 
-                scope.replace = function(text) {
-                    editor.replaceWord(scope, scope.replaceIndex, scope.replaceWord.length, text);
-                    editor.commitScope(scope);
-                };
+                    scope.replace = function(text) {
+                        editor.replaceWord(scope, scope.replaceIndex, scope.replaceWord.length, text);
+                        editor.commitScope(scope);
+                    };
 
-                scope.addWordToDictionary = function() {
-                    var word = scope.replaceTarget.textContent;
-                    spellcheck.addWordToUserDictionary(word);
-                    editor.render();
-                };
+                    scope.addWordToDictionary = function() {
+                        var word = scope.replaceTarget.textContent;
+                        spellcheck.addWordToUserDictionary(word);
+                        editor.render();
+                    };
 
-                scope.ignoreWord = function() {
-                    var word = scope.replaceTarget.textContent;
-                    spellcheck.ignoreWord(word);
-                    editor.render();
-                };
+                    scope.ignoreWord = function() {
+                        var word = scope.replaceTarget.textContent;
+                        spellcheck.ignoreWord(word);
+                        editor.render();
+                    };
 
-                function changeListener() {
-                    $timeout.cancel(renderTimeout);
-                    renderTimeout = $timeout(render, 0, false);
-                }
+                    function changeListener() {
+                        $timeout.cancel(renderTimeout);
+                        renderTimeout = $timeout(render, 0, false);
+                    }
 
-                function startTyping() {
-                    scope.node.parentNode.classList.add(TYPING_CLASS);
-                }
+                    function startTyping() {
+                        scope.node.parentNode.classList.add(TYPING_CLASS);
+                    }
 
-                function stopTyping() {
-                    scope.node.parentNode.classList.remove(TYPING_CLASS);
-                }
-            },
-            controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', 'config',
-                         function(scope, editor, api , superdesk, renditions, config) {
-                var vm = this;
-                angular.extend(vm, {
-                    block: undefined, // provided in link method
-                    sdEditorCtrl: undefined, // provided in link method
-                    selectElement: function(element) {
-                        scope.medium.selectElement(element);
+                    function stopTyping() {
+                        scope.node.parentNode.classList.remove(TYPING_CLASS);
+                    }
+                },
+                controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', 'config',
+                    function(scope, editor, api , superdesk, renditions, config) {
+                        var vm = this;
+                        angular.extend(vm, {
+                            block: undefined, // provided in link method
+                            sdEditorCtrl: undefined, // provided in link method
+                            selectElement: function(element) {
+                                scope.medium.selectElement(element);
                         // save position
-                        vm.savePosition();
-                    },
-                    restoreSelection: function() {
-                        scope.medium.importSelection(vm.block.caretPosition);
+                                vm.savePosition();
+                            },
+                            restoreSelection: function() {
+                                scope.medium.importSelection(vm.block.caretPosition);
                         // put the caret at end of the selection
-                        scope.medium.options.ownerDocument.getSelection().collapseToEnd();
-                    },
-                    savePosition: function() {
-                        vm.block.caretPosition = scope.medium.exportSelection();
-                    },
-                    extractEndOfBlock: function() {
+                                scope.medium.options.ownerDocument.getSelection().collapseToEnd();
+                            },
+                            savePosition: function() {
+                                vm.block.caretPosition = scope.medium.exportSelection();
+                            },
+                            extractEndOfBlock: function() {
                         // it can happen that user lost the focus on the block when this fct in called
                         // so we restore the latest known position
-                        vm.restoreSelection();
+                                vm.restoreSelection();
                         // extract the text after the cursor
-                        var remainingElementsContainer = document.createElement('div');
-                        remainingElementsContainer.appendChild(extractBlockContentsFromCaret().cloneNode(true));
+                                var remainingElementsContainer = document.createElement('div');
+                                remainingElementsContainer.appendChild(extractBlockContentsFromCaret().cloneNode(true));
                         // remove the first line if empty
-                        $(remainingElementsContainer).find('p:first').each(function() {
-                            if ($(this).text() === '') {
-                                this.remove();
+                                $(remainingElementsContainer).find('p:first').each(function() {
+                                    if ($(this).text() === '') {
+                                        this.remove();
+                                    }
+                                });
+                                return remainingElementsContainer;
+                            },
+                            updateModel: function() {
+                                editor.commitScope(scope);
+                            },
+                            insertMedia: function(media) {
+                                var mediaType = {
+                                    'picture': 'Image',
+                                    'video': 'Video'
+                                };
+                                var imageBlock = {
+                                    blockType: 'embed',
+                                    embedType: mediaType[media.type],
+                                    caption: media.description_text,
+                                    loading: true,
+                                    association: media
+                                };
+                                vm.sdEditorCtrl.splitAndInsert(vm, imageBlock).then(function(block) {
+                            // load the media and update the block
+                                    $q.when((function() {
+                                        if (config.features && 'editFeaturedImage' in config.features &&
+                                            !config.features.editFeaturedImage && media._type === 'externalsource') {
+                                            return media;
+                                        } else {
+                                            return renditions.ingest(media);
+                                        }
+                                    })()).then(function(media) {
+                                        editor.generateMediaTag(media).then(function(imgTag) {
+                                            angular.extend(block, {
+                                                body: imgTag,
+                                                association: media,
+                                                loading: false
+                                            });
+                                            $timeout(vm.sdEditorCtrl.commitChanges);
+                                        });
+                                    });
+                                });
                             }
                         });
-                        return remainingElementsContainer;
-                    },
-                    updateModel: function() {
-                        editor.commitScope(scope);
-                    },
-                    insertMedia: function(media) {
-                        var mediaType = {
-                            'picture': 'Image',
-                            'video': 'Video'
-                        };
-                        var imageBlock = {
-                            blockType: 'embed',
-                            embedType: mediaType[media.type],
-                            caption: media.description_text,
-                            loading: true,
-                            association: media
-                        };
-                        vm.sdEditorCtrl.splitAndInsert(vm, imageBlock).then(function(block) {
-                            // load the media and update the block
-                            $q.when((function() {
-                                if (config.features && 'editFeaturedImage' in config.features &&
-                                    !config.features.editFeaturedImage && media._type === 'externalsource') {
-                                    return media;
-                                } else {
-                                    return renditions.ingest(media);
-                                }
-                            })()).then(function(media) {
-                                editor.generateMediaTag(media).then(function(imgTag) {
-                                    angular.extend(block, {
-                                        body: imgTag,
-                                        association: media,
-                                        loading: false
-                                    });
-                                    $timeout(vm.sdEditorCtrl.commitChanges);
-                                });
-                            });
-                        });
-                    }
-                });
-            }]
-        };
-    }])
+                    }]
+            };
+        }])
     .run(['embedService', 'iframelyService', function(embedService, iframelyService) {
         var playBuzzPattern = 'https?:\/\/(?:www)\.playbuzz\.com(.*)$';
         var playBuzzlLoader = '//snappa.embed.pressassociation.io/playbuzz.js';
@@ -1383,14 +1393,14 @@ angular.module('superdesk.apps.editor2', [
     }])
     .config(['embedServiceProvider', 'iframelyServiceProvider', '$injector',
         function(embedServiceProvider, iframelyServiceProvider, $injector) {
-        var config = $injector.get('config');
+            var config = $injector.get('config');
         // iframe.ly private key
-        iframelyServiceProvider.setKey(config.iframely.key);
+            iframelyServiceProvider.setKey(config.iframely.key);
         // don't use noembed as first choice
-        embedServiceProvider.setConfig('useOnlyFallback', true);
+            embedServiceProvider.setConfig('useOnlyFallback', true);
         // iframely respect the original embed for more services than 'embedly'
-        embedServiceProvider.setConfig('fallbackService', 'iframely');
-    }]);
+            embedServiceProvider.setConfig('fallbackService', 'iframely');
+        }]);
 
 function EditorUtilsFactory() {
 

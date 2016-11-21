@@ -1,7 +1,7 @@
 /**
  * Elastic search query builder service
  */
-angular.module('superdesk.core.elastic').service('es', [ function() {
+angular.module('superdesk.core.elastic').service('es', [function() {
 
     var SIZE_DEFAULT = 25;
 

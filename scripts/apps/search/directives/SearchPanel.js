@@ -121,8 +121,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                         });
                     }
 
-                    if (angular.isDefined(scope.items._aggregations.urgency))
-                    {
+                    if (angular.isDefined(scope.items._aggregations.urgency))                    {
                         _.forEach(scope.items._aggregations.urgency.buckets, function(urgency) {
                             scope.aggregations.urgency[urgency.key] = urgency.doc_count;
                         });
@@ -160,9 +159,9 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                             }
 
                             scope.aggregations.desk[lookedUpDesk.name] = {
-                                    count: desk.doc_count,
-                                    id: desk.key
-                                };
+                                count: desk.doc_count,
+                                id: desk.key
+                            };
                         });
                     }
 
@@ -186,18 +185,16 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
             });
 
             scope.$watch('tags.currentSearch', function(currentSearch) {
-                scope.showSaveSearch = _.isEmpty(currentSearch) ? false : true;
+                scope.showSaveSearch = !_.isEmpty(currentSearch);
             }, true);
 
             scope.toggleFilter = function(type, key) {
                 if (scope.hasFilter(type, key)) {
                     scope.removeFilter(type, key);
+                } else if (type === 'date') {
+                    scope.setDateFilter(key);
                 } else {
-                    if (type === 'date') {
-                        scope.setDateFilter(key);
-                    } else {
-                        scope.setFilter(type, key);
-                    }
+                    scope.setFilter(type, key);
                 }
             };
 
@@ -250,13 +247,11 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                     currentKeys = JSON.parse(currentKeys);
                     currentKeys.push(key);
                     $location.search(type, JSON.stringify(currentKeys));
-                } else {
-                    if (type === 'credit') {
-                        $location.search('creditqcode',
+                } else if (type === 'credit') {
+                    $location.search('creditqcode',
                             JSON.stringify([scope.aggregations.credit[key].qcode]));
-                    } else {
-                        $location.search(type, JSON.stringify([key]));
-                    }
+                } else {
+                    $location.search(type, JSON.stringify([key]));
                 }
             }
 
@@ -275,25 +270,25 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 $location.search('beforeversioncreated', null);
 
                 switch (key) {
-                    case 'Last Day':
-                        $location.search('after', 'now-24H');
-                        break;
-                    case 'Last Week':
-                        $location.search('after', 'now-1w');
-                        break;
-                    case 'Last Month':
-                        $location.search('after', 'now-1M');
-                        break;
-                    case 'Scheduled Last Day':
-                        $location.search('scheduled_after', 'now-24H');
-                        break;
-                    case 'Scheduled Last 8Hrs':
-                        $location.search('scheduled_after', 'now-8H');
-                        break;
+                case 'Last Day':
+                    $location.search('after', 'now-24H');
+                    break;
+                case 'Last Week':
+                    $location.search('after', 'now-1w');
+                    break;
+                case 'Last Month':
+                    $location.search('after', 'now-1M');
+                    break;
+                case 'Scheduled Last Day':
+                    $location.search('scheduled_after', 'now-24H');
+                    break;
+                case 'Scheduled Last 8Hrs':
+                    $location.search('scheduled_after', 'now-8H');
+                    break;
 
-                    default:
-                        $location.search('after', null);
-                        $location.search('scheduled_after', null);
+                default:
+                    $location.search('after', null);
+                    $location.search('scheduled_after', null);
                 }
             };
 

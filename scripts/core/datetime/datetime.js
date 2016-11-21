@@ -104,13 +104,13 @@ function DateTimeHelperService(moment, config) {
         return moment(value, dateFormat, true).isValid();
     };
 
-    this.mergeDateTime = function(date_str, time_str, timezone) {
+    this.mergeDateTime = function(dateStr, timeStr, timezone) {
         var tz = timezone || config.defaultTimezone;
-        var merge_str = date_str + ' ' + time_str;
+        var mergeStr = dateStr + ' ' + timeStr;
         var formatter = config.model.dateformat + ' ' + config.model.timeformat;
 
         // return without timezone information, which is stored separately
-        return moment.tz(merge_str, formatter, tz).format('YYYY-MM-DD[T]HH:mm:ss');
+        return moment.tz(mergeStr, formatter, tz).format('YYYY-MM-DD[T]HH:mm:ss');
     };
 
     /*
@@ -209,7 +209,7 @@ export default angular.module('superdesk.core.datetime', [
      */
     .factory('tzdata', ['$resource', function ($resource) {
         var filename = 'scripts/apps/dashboard/world-clock/timezones-all.json',
-                tzResource = $resource(filename);
+            tzResource = $resource(filename);
 
         /**
          * Returns a sorted list of all time zone names. If time zone data

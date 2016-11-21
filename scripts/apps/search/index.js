@@ -2,7 +2,7 @@ import './styles/search.scss';
 
 import * as svc from './services';
 import * as directive from './directives';
-import { MultiActionBarController } from './controllers';
+import {MultiActionBarController} from './controllers';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',

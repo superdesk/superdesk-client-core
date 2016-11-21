@@ -68,8 +68,8 @@ export function PackageItemsEdit(packages, notify) {
                     group.items = visit(group.id);
                 });
 
-                function visit(group_id) {
-                    var _group = _.find(modelValue, {id: group_id});
+                function visit(groupId) {
+                    var _group = _.find(modelValue, {id: groupId});
                     var items = [];
                     _.each(_group.refs, function(ref) {
                         if (_isNode(ref)) {
@@ -88,8 +88,8 @@ export function PackageItemsEdit(packages, notify) {
                 return firstLevelGroups;
             });
 
-            scope.remove = function(group_id, residRef) {
-                var group = _.find(scope.list, {id: group_id});
+            scope.remove = function(groupId, residRef) {
+                var group = _.find(scope.list, {id: groupId});
                 var item = _.find(group.items, {residRef: residRef});
                 _.remove(group.items, {residRef: residRef});
                 packages.removePackageGroupItem(group, item);

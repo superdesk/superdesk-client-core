@@ -1,7 +1,7 @@
-ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash', 'api', '$rootScope', 'config',
-    'authoringWorkspace', 'archiveService'];
-export function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $rootScope, config, authoringWorkspace,
-    archiveService) {
+ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash', 'api', '$rootScope',
+    'config', 'authoringWorkspace', 'archiveService'];
+export function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $rootScope, config,
+    authoringWorkspace, archiveService) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.data.requiredFields = config.requiredMediaMetadata;
@@ -84,7 +84,9 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         // update item
         archiveService.addTaskToArticle($scope.data.metadata);
         var item = authoringWorkspace.getItem();
-        var meta = _.pick($scope.data.item, ['title', 'description', 'alt_text', 'credit', 'copyrightnotice', 'copyrightholder']);
+        var meta = _.pick($scope.data.item, [
+            'title', 'description', 'alt_text', 'credit', 'copyrightnotice', 'copyrightholder'
+        ]);
         api.archive.update(item, meta).then(function() {
             notify.success(gettext('Crop changes have been recorded'));
         });

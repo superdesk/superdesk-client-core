@@ -129,8 +129,8 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     _this.userDesks = [];
     _this.result = null;
     _this.activeDesk = null;
-    desks.fetchCurrentUserDesks().then(function (desk_list) {
-        _this.userDesks = desk_list;
+    desks.fetchCurrentUserDesks().then(function (deskList) {
+        _this.userDesks = deskList;
         _this.activeDesk = desks.active.desk;
     });
 
@@ -209,12 +209,14 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
             if (msg.extra.desk_id != null) {
                 if (msg.event === 'stage_visibility_updated') {
                     if (_.find(_this.userDesks, {_id: msg.extra.desk_id}) == null &&
-                    ($window.location.hash.match('/search') != null || $window.location.hash.match('/authoring/') != null)) {
+                    ($window.location.hash.match('/search') != null
+                        || $window.location.hash.match('/authoring/') != null)) {
                         result.message = stageEvents[msg.event];
                         result.reload = true;
                     }
                 } else if (msg.event === 'stage') {
-                    if (_.find(_this.userDesks, {_id: msg.extra.desk_id}) != null && _this.activeDesk === msg.extra.desk_id) {
+                    if (_.find(_this.userDesks, {_id: msg.extra.desk_id}) != null
+                        && _this.activeDesk === msg.extra.desk_id) {
                         result.message = stageEvents[msg.event];
                         result.reload = true;
                     }
