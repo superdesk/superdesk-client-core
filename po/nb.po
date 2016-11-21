@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2016-11-02 08:22+0000\n"
+"PO-Revision-Date: 2016-11-17 20:02+0000\n"
 "Last-Translator: Helen Vogt <helen.vogt@ntb.no>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/sourcefabric/superdesk/language/nb/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,19 +100,19 @@ msgstr "[Global]"
 msgid "[none]"
 msgstr "[ingen]"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:247
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:249
 msgid "{{ field }} cannot be earlier than now!"
 msgstr "{{ field }} kan ikke være i fortiden"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:235
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:237
 msgid "{{ field }} date is required!"
 msgstr "{{ field }} dato kreves"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:243
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:245
 msgid "{{ field }} is not a valid date!"
 msgstr "{{ field }} er ikke en gyldig dato!"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:239
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:241
 msgid "{{ field }} time is required!"
 msgstr "{{ field }} tidspunkt kreves"
 
@@ -304,7 +304,7 @@ msgstr "Valg"
 
 #: scripts/apps/desks/views/settings.html:22
 #: scripts/apps/monitoring/views/item-actions-menu.html:14
-#: scripts/apps/search/directives/ItemList.js:1099
+#: scripts/apps/search/directives/ItemList.js:1104
 #: scripts/apps/templates/views/templates.html:32
 #: scripts/apps/workspace/content/views/profile-settings.html:23
 msgid "Actions"
@@ -487,7 +487,7 @@ msgstr "Bruk denne widgeten"
 msgid "Add title"
 msgstr "Legg til overskrift"
 
-#: scripts/apps/packaging/index.js:62
+#: scripts/apps/packaging/index.js:69
 msgid "Add to current"
 msgstr "Legg til her"
 
@@ -495,7 +495,6 @@ msgstr "Legg til her"
 msgid "Add to Current Package"
 msgstr "Legg til i denne pakken"
 
-#: scripts/core/editor/views/editor.html:18
 #: scripts/core/editor2/views/block-text.html:26
 msgid "Add to dictionary"
 msgstr "Legg til i ordliste"
@@ -577,7 +576,7 @@ msgstr "Alt. tekst"
 msgid "Alt Text"
 msgstr "Alt. tekst"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:258
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:260
 msgid "An Item can't have both Embargo and Publish Schedule."
 msgstr "Du må velge enten sperrefrist eller utsatt publiseringstidspunkt"
 
@@ -614,7 +613,7 @@ msgstr "arkiv"
 msgid "Archive"
 msgstr "Arkiv"
 
-#: scripts/apps/search/directives/ItemList.js:363
+#: scripts/apps/search/directives/ItemList.js:364
 msgid "archived"
 msgstr "arkivert"
 
@@ -642,7 +641,7 @@ msgstr "Er du sikker på at du vil slette innholdsfilteret?"
 msgid "Are you sure you want to delete current workspace?"
 msgstr "Er du sikker på at du vil slette dette dashbordet?"
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:75
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:74
 msgid "Are you sure you want to delete filter condition?"
 msgstr "Er du sikker på at du vil slette denne filtreringen?"
 
@@ -746,7 +745,7 @@ msgstr "autentiserings-URL"
 msgid "authoring"
 msgstr "opprinnelse"
 
-#: scripts/apps/authoring/authoring/index.js:66
+#: scripts/apps/authoring/authoring/index.js:76
 #: scripts/apps/authoring/multiedit/multiedit.js:313
 msgid "Authoring"
 msgstr "Opprinnelse"
@@ -767,7 +766,7 @@ msgstr "Legg automatisk til saker fra:"
 msgid "Available clock"
 msgstr "Tilgjengelig klokke"
 
-#: scripts/core/editor2/editor.js:908
+#: scripts/core/editor2/editor.js:915
 msgid "B"
 msgstr "F"
 
@@ -798,7 +797,7 @@ msgstr "Basic"
 msgid "Be the first..."
 msgstr "Vær først....."
 
-#: scripts/core/directives/sdPasswordStrength.js:37
+#: scripts/core/directives/PasswordStrengthDirective.js:37
 msgid "Better"
 msgstr "Bedre"
 
@@ -829,7 +828,7 @@ msgstr "Footer"
 msgid "Body HTML"
 msgstr "Brødtekst"
 
-#: scripts/core/editor2/editor.js:906
+#: scripts/core/editor2/editor.js:913
 msgid "bold"
 msgstr "fet"
 
@@ -842,6 +841,8 @@ msgid "Broadcast"
 msgstr "Broadcast"
 
 #: scripts/apps/archive/views/preview.html:7
+#: scripts/apps/authoring/suggest/SuggestView.html:23
+#: scripts/apps/authoring/suggest/SuggestView.html:71
 #: scripts/apps/authoring/versioning/history/views/history.html:17
 #: scripts/apps/authoring/versioning/history/views/history.html:42
 #: scripts/apps/authoring/versioning/versions/views/versions.html:6
@@ -855,7 +856,7 @@ msgstr "av"
 msgid "By"
 msgstr "Av"
 
-#: scripts/apps/authoring/authoring/directives/ArticleEditDirective.js:90
+#: scripts/apps/authoring/authoring/directives/ArticleEditDirective.js:92
 msgid "By {{ display_name }}"
 msgstr "Av {{ display_name }}"
 
@@ -995,8 +996,8 @@ msgstr "tegn"
 msgid "Check all"
 msgstr "Marker alle"
 
-#: scripts/apps/authoring/views/authoring-topbar.html:201
 #: scripts/apps/authoring/views/authoring-topbar.html:209
+#: scripts/apps/authoring/views/authoring-topbar.html:217
 msgid "Check spelling"
 msgstr "Sjekk for stavefeil"
 
@@ -1066,7 +1067,7 @@ msgstr "lukket"
 msgid "Closed"
 msgstr "Lukket"
 
-#: scripts/apps/authoring/authoring/index.js:190
+#: scripts/apps/authoring/authoring/index.js:200
 msgid "Closes current item"
 msgstr "Lukker denne saken"
 
@@ -1074,7 +1075,7 @@ msgstr "Lukker denne saken"
 msgid "Color"
 msgstr "Farge"
 
-#: scripts/apps/packaging/index.js:79
+#: scripts/apps/packaging/index.js:86
 msgid "Combine with current"
 msgstr "Slå sammen"
 
@@ -1102,7 +1103,7 @@ msgstr "Selskapskoder"
 msgid "composite"
 msgstr "pakke"
 
-#: scripts/apps/legal-archive/index.js:28
+#: scripts/apps/legal-archive/index.js:35
 msgid "Confidential data"
 msgstr "Konfidensielle data"
 
@@ -1193,7 +1194,7 @@ msgstr "Innholdsfilter lagret"
 msgid "Content Filter Type"
 msgstr "Innholdsfiltertype"
 
-#: scripts/apps/content-filters/index.js:28
+#: scripts/apps/content-filters/index.js:36
 #: scripts/apps/content-filters/views/filter-search-result.html:28
 #: scripts/apps/content-filters/views/manage-filters.html:5
 #: scripts/apps/content-filters/views/manage-filters.html:78
@@ -1232,7 +1233,7 @@ msgstr "Fortsett"
 msgid "Copied to"
 msgstr "Kopiert til "
 
-#: scripts/apps/archive/index.js:165
+#: scripts/apps/archive/index.js:172
 msgid "Copy"
 msgstr "Kopier"
 
@@ -1252,7 +1253,7 @@ msgstr "Copyright-eier"
 msgid "Copyright notice"
 msgstr "Copyright-merke"
 
-#: scripts/apps/authoring/authoring/index.js:119
+#: scripts/apps/authoring/authoring/index.js:129
 msgid "Correct item"
 msgstr "Foreta rettelse"
 
@@ -1268,12 +1269,12 @@ msgstr "Rettelse"
 msgid "Correction issued by"
 msgstr "Rettelse utført av"
 
-#: scripts/apps/search/directives/ItemList.js:920
+#: scripts/apps/search/directives/ItemList.js:921
 msgid "correction sequence"
 msgstr ""
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:28
-#: scripts/apps/search/directives/ItemList.js:1102
+#: scripts/apps/search/directives/ItemList.js:1107
 msgid "Corrections"
 msgstr "Oppdateringer"
 
@@ -1288,7 +1289,7 @@ msgstr "lag ny"
 msgid "Create"
 msgstr "Lag ny"
 
-#: scripts/apps/archive/index.js:143
+#: scripts/apps/archive/index.js:150
 msgid "Create Broadcast"
 msgstr "Opprett broadcast"
 
@@ -1320,7 +1321,7 @@ msgstr "Lag nytt dashbord"
 msgid "CREATE NEW WORKSPACE"
 msgstr "LAG NYTT DASHBORD"
 
-#: scripts/apps/packaging/index.js:39 scripts/apps/packaging/index.js:48
+#: scripts/apps/packaging/index.js:46 scripts/apps/packaging/index.js:55
 msgid "Create package"
 msgstr "Lag pakke"
 
@@ -1330,6 +1331,8 @@ msgstr "Lag pakke"
 
 #: scripts/apps/archive/views/metadata-view.html:88
 #: scripts/apps/archive/views/preview.html:6
+#: scripts/apps/authoring/suggest/SuggestView.html:21
+#: scripts/apps/authoring/suggest/SuggestView.html:69
 #: scripts/apps/authoring/views/authoring.html:7
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:8
 #: scripts/apps/search/services/SearchService.js:7
@@ -1428,7 +1431,7 @@ msgstr "Arbeider nå med:"
 msgid "CUSTOM WORKSPACES"
 msgstr "PERSONLIG DASHBORD"
 
-#: scripts/apps/dashboard/index.js:35
+#: scripts/apps/dashboard/index.js:42
 msgid "Customize your widgets and views"
 msgstr "Personaliser dine widgeter og visninger"
 
@@ -1572,7 +1575,7 @@ msgstr "Deskadministrasjon"
 msgid "Desk name"
 msgstr "Desknavn"
 
-#: scripts/apps/archive/index.js:206
+#: scripts/apps/archive/index.js:213
 msgid "Desk not specified. Please select Desk or configure a default desk."
 msgstr "Velg en desk, eller konfigurer en standarddesk."
 
@@ -1608,7 +1611,7 @@ msgid "Desk with name  already exists."
 msgstr "Desken finnes allerede"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:10
-#: scripts/apps/search/directives/ItemList.js:354
+#: scripts/apps/search/directives/ItemList.js:355
 msgid "desk:"
 msgstr "desk:"
 
@@ -1616,7 +1619,7 @@ msgstr "desk:"
 msgid "Desk(s)"
 msgstr "Desk(er)"
 
-#: scripts/apps/desks/index.js:59
+#: scripts/apps/desks/index.js:66
 #: scripts/apps/monitoring/views/aggregate-settings.html:8
 #: scripts/apps/search/views/search-filters.html:17
 #: scripts/apps/templates/views/template-editor-modal.html:64
@@ -1644,7 +1647,7 @@ msgstr "Detaljert"
 msgid "Details"
 msgstr "Detaljer"
 
-#: scripts/apps/dictionaries/index.js:23
+#: scripts/apps/dictionaries/index.js:30
 msgid "Dictionaries"
 msgstr "Ordlister"
 
@@ -1714,11 +1717,11 @@ msgstr "Viser lignende saker"
 msgid "Displays active keyboard shortcuts"
 msgstr "Viser aktive tastatur-kortkommandoer"
 
-#: scripts/apps/settings/index.js:10
+#: scripts/apps/settings/index.js:17
 msgid "Do some admin chores"
 msgstr "Utføre administrative oppgaver"
 
-#: scripts/apps/archive/index.js:91
+#: scripts/apps/archive/index.js:98
 msgid "Do you want to delete the item permanently?"
 msgstr "Hvis du sletter saken kan den ikke gjenopprettes. Vil du slette?"
 
@@ -1784,7 +1787,7 @@ msgstr "Publiseringsdato"
 msgid "Due time"
 msgstr "Publiseringstidspunkt"
 
-#: scripts/apps/archive/index.js:128
+#: scripts/apps/archive/index.js:135
 msgid "Duplicate"
 msgstr "Duplisèr"
 
@@ -1808,7 +1811,7 @@ msgstr "Til red:"
 msgid "ED. NOTE"
 msgstr "Til red"
 
-#: scripts/apps/authoring/authoring/index.js:81
+#: scripts/apps/authoring/authoring/index.js:91
 #: scripts/apps/authoring/views/authoring-topbar.html:60
 #: scripts/apps/desks/views/settings.html:24
 #: scripts/apps/desks/views/stage-item-list.html:24
@@ -1859,7 +1862,7 @@ msgstr "Rediger innholdsfilter"
 msgid "Edit Content Profile"
 msgstr "Rediger innholdsprofil"
 
-#: scripts/apps/authoring/authoring/index.js:151
+#: scripts/apps/authoring/authoring/index.js:161
 msgid "Edit Crop"
 msgstr "Beskjær bilde"
 
@@ -2023,12 +2026,12 @@ msgid "Email User"
 msgstr "Epostbruker"
 
 #: scripts/apps/archive/views/item-state.html:2
-#: scripts/apps/search/directives/ItemList.js:910
 #: scripts/apps/search/directives/ItemList.js:911
+#: scripts/apps/search/directives/ItemList.js:912
 msgid "embargo"
 msgstr "sperrefrist"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:267
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:269
 #: scripts/apps/authoring/views/send-item.html:44
 msgid "Embargo"
 msgstr "Sperrefrist"
@@ -2083,8 +2086,8 @@ msgstr "feil"
 msgid "Error"
 msgstr "Feil"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:183
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:193
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:185
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:195
 msgid "Error creating highlight."
 msgstr "Feil ved utvalg"
 
@@ -2092,12 +2095,12 @@ msgstr "Feil ved utvalg"
 msgid "Error sending as"
 msgstr "Feil ved sending som"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:137
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:139
 #: scripts/apps/authoring/macros/macros.js:75
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:61
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:63
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:66
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:83
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:60
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:62
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:65
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:82
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:125
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:127
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:47
@@ -2153,7 +2156,7 @@ msgstr "Feil: Kunne ikke endre utsendingstidspunkt."
 msgid "Error: Failed to save content filter."
 msgstr "Feil: Kunne ikke lagre innholdsfilter."
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:68
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:67
 msgid "Error: Failed to save filter condition."
 msgstr "Feil: Kunne ikke lagre filtreringsbetingelser."
 
@@ -2208,7 +2211,7 @@ msgstr "Feil: Kunne ikke slette kilde."
 msgid "Error: Unable to delete Search Provider."
 msgstr "Feil: Kunne ikke slette databasesøk"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:135
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:137
 msgid "Error: Unique Name is not unique."
 msgstr "Feil: ID finnes fra før."
 
@@ -2216,11 +2219,11 @@ msgstr "Feil: ID finnes fra før."
 msgid "Error. Dictionary not saved."
 msgstr "Feil. Ordliste ikke lagret."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:489
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:491
 msgid "Error. Item not published."
 msgstr "Feil. Saken ble ikke publisert."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:142
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:144
 msgid "Error. Item not updated."
 msgstr "Feil. Saken ble ikke oppdatert."
 
@@ -2259,8 +2262,8 @@ msgstr "Avslutt"
 
 #: scripts/apps/archive/views/item-preview.html:19
 #: scripts/apps/archive/views/preview.html:86
-#: scripts/apps/search/directives/ItemList.js:1039
-#: scripts/apps/search/directives/ItemList.js:402
+#: scripts/apps/search/directives/ItemList.js:1040
+#: scripts/apps/search/directives/ItemList.js:403
 msgid "expires"
 msgstr "utløper"
 
@@ -2286,15 +2289,15 @@ msgstr "feilet"
 msgid "Failed to apply kill template to the item."
 msgstr "Kunne ikke trekke meldingen"
 
-#: scripts/apps/archive/related-item-widget/relatedItem.js:147
+#: scripts/apps/archive/related-item-widget/relatedItem.js:149
 msgid "Failed to associate update:"
 msgstr "Kunne ikke oppdatere"
 
-#: scripts/apps/archive/related-item-widget/relatedItem.js:118
+#: scripts/apps/archive/related-item-widget/relatedItem.js:120
 msgid "Failed to associated as take:"
 msgstr ""
 
-#: scripts/apps/archive/index.js:218
+#: scripts/apps/archive/index.js:225
 msgid "Failed to generate new take."
 msgstr "Failed to generate new take."
 
@@ -2306,7 +2309,7 @@ msgstr "Kunne ikke lage oppdatering:"
 msgid "Failed to get a lock on the item!"
 msgstr "Kunne ikke låse saken!"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:518
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:520
 msgid "Failed to publish and continue."
 msgstr "Kunne ikke publisere og fortsette"
 
@@ -2362,7 +2365,7 @@ msgstr "Feed URL"
 msgid "Feeding Service"
 msgstr "Feeding Service"
 
-#: scripts/apps/ingest/index.js:101
+#: scripts/apps/ingest/index.js:108
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:5
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:28
 #: scripts/apps/search/views/multi-action-bar.html:42
@@ -2382,7 +2385,7 @@ msgid "Fetch to"
 msgstr "Hent til"
 
 #: scripts/apps/authoring/views/send-item.html:13
-#: scripts/apps/ingest/index.js:91
+#: scripts/apps/ingest/index.js:98
 msgid "Fetch To"
 msgstr "Hent til"
 
@@ -2395,7 +2398,7 @@ msgid "Fetched as"
 msgstr "Hentet som"
 
 #: scripts/apps/archive/views/fetched-desks.html:2
-#: scripts/apps/search/directives/ItemList.js:781
+#: scripts/apps/search/directives/ItemList.js:782
 msgid "fetched in"
 msgstr "hentet i "
 
@@ -2424,7 +2427,7 @@ msgstr "Filnavn"
 msgid "Filter"
 msgstr "Filter"
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:55
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:54
 msgid "Filter condition saved."
 msgstr "Filterbetingelser lagret"
 
@@ -2478,7 +2481,7 @@ msgstr "Finn"
 msgid "Find and Replace"
 msgstr "Søk & erstatt"
 
-#: scripts/apps/search/index.js:50
+#: scripts/apps/search/index.js:58
 msgid "Find live and archived content"
 msgstr "Finn aktuelt og arkivert innhold"
 
@@ -2536,7 +2539,7 @@ msgstr "Formatted Email Parser"
 msgid "Formatters"
 msgstr ""
 
-#: scripts/core/datetime/datetime.js:192
+#: scripts/core/datetime/datetime.js:199
 msgid "Friday"
 msgstr "Fredag"
 
@@ -2599,7 +2602,7 @@ msgstr "STOFFTYPE"
 msgid "Genres"
 msgstr "Stofftyper"
 
-#: scripts/apps/ingest/index.js:117
+#: scripts/apps/ingest/index.js:124
 msgid "Get from external source"
 msgstr "Hent fra ekstern kilde"
 
@@ -2653,7 +2656,7 @@ msgstr "Gruppenavn"
 msgid "Group with name"
 msgstr "Gruppe:"
 
-#: scripts/apps/groups/index.js:14
+#: scripts/apps/groups/index.js:21
 msgid "Groups"
 msgstr "Grupper"
 
@@ -2667,11 +2670,11 @@ msgstr "Gruppeadministrasjon"
 msgid "GUID"
 msgstr "GUID"
 
-#: scripts/core/editor2/editor.js:882
+#: scripts/core/editor2/editor.js:889
 msgid "H1"
 msgstr "O1"
 
-#: scripts/core/editor2/editor.js:895
+#: scripts/core/editor2/editor.js:902
 msgid "H2"
 msgstr "O2"
 
@@ -2683,11 +2686,11 @@ msgstr "Halv"
 msgid "Have password? Sign in."
 msgstr "Har du passord? Logg inn."
 
-#: scripts/core/editor2/editor.js:880
+#: scripts/core/editor2/editor.js:887
 msgid "header type 1"
 msgstr "Infolinje"
 
-#: scripts/core/editor2/editor.js:893
+#: scripts/core/editor2/editor.js:900
 msgid "header type 2"
 msgstr "Mellomtittel"
 
@@ -2734,10 +2737,10 @@ msgstr "Utvalg:"
 msgid "highlights"
 msgstr "utvalg"
 
-#: scripts/apps/authoring/views/authoring-topbar.html:155
-#: scripts/apps/highlights/index.js:53
+#: scripts/apps/authoring/views/authoring-topbar.html:163
+#: scripts/apps/highlights/index.js:61
 #: scripts/apps/monitoring/views/item-actions-menu.html:24
-#: scripts/apps/search/directives/ItemList.js:1101
+#: scripts/apps/search/directives/ItemList.js:1106
 #: scripts/apps/templates/services/TemplatesService.js:57
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:17
 msgid "Highlights"
@@ -2747,7 +2750,7 @@ msgstr "Utvalg"
 msgid "Highlights configurations"
 msgstr "Utvalgskonfigurasjoner"
 
-#: scripts/apps/highlights/index.js:61
+#: scripts/apps/highlights/index.js:69
 msgid "Highlights View"
 msgstr "Utvalgsvisning"
 
@@ -2782,7 +2785,7 @@ msgstr "kl"
 msgid "hrs"
 msgstr "kl"
 
-#: scripts/core/editor2/editor.js:925
+#: scripts/core/editor2/editor.js:932
 msgid "I"
 msgstr "K"
 
@@ -2900,7 +2903,7 @@ msgstr "Ubegrenset bruk"
 msgid "Info"
 msgstr "Info"
 
-#: scripts/apps/ingest/index.js:60 scripts/apps/search/views/item-repo.html:7
+#: scripts/apps/ingest/index.js:67 scripts/apps/search/views/item-repo.html:7
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:75
 msgid "Ingest"
 msgstr "Eksterne kilder"
@@ -2909,7 +2912,7 @@ msgstr "Eksterne kilder"
 msgid "Ingest Channels"
 msgstr "Importkanaler"
 
-#: scripts/apps/ingest/index.js:68
+#: scripts/apps/ingest/index.js:75
 #: scripts/apps/ingest/views/dashboard/dashboard.html:2
 msgid "Ingest Dashboard"
 msgstr "Importoversikt"
@@ -2956,7 +2959,7 @@ msgstr "Importstatistikk"
 msgid "ingested"
 msgstr "importert"
 
-#: scripts/core/editor2/editor.js:992
+#: scripts/core/editor2/editor.js:999
 msgid "insert table"
 msgstr "Sett inn tabell"
 
@@ -2984,7 +2987,7 @@ msgstr "Lager ny mal."
 msgid "It will update existing template."
 msgstr "Oppdaterer eksisterende mal."
 
-#: scripts/core/editor2/editor.js:923
+#: scripts/core/editor2/editor.js:930
 msgid "italic"
 msgstr "kursiv"
 
@@ -3008,7 +3011,7 @@ msgstr "Saken er trukket"
 msgid "Item has been resent."
 msgstr "Saken er sendt på nytt"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:385
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:387
 msgid ""
 "Item has changed since it was opened. Please close and reopen the item to "
 "continue. Regrettably, your changes cannot be saved."
@@ -3024,7 +3027,7 @@ msgstr "Sakshistorikk"
 msgid "Item is already in this package."
 msgstr "Saken ligger allerede i pakken."
 
-#: scripts/apps/archive/related-item-widget/relatedItem.js:113
+#: scripts/apps/archive/related-item-widget/relatedItem.js:115
 msgid "item is associated as a take."
 msgstr ""
 
@@ -3032,7 +3035,7 @@ msgstr ""
 msgid "Item locked"
 msgstr "Saken er låst"
 
-#: scripts/apps/archive/related-item-widget/relatedItem.js:97
+#: scripts/apps/archive/related-item-widget/relatedItem.js:99
 msgid "item metadata associated."
 msgstr "metadata"
 
@@ -3040,7 +3043,7 @@ msgstr "metadata"
 msgid "Item not found..."
 msgstr "Kunne ikke finne saken..."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:321
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:323
 msgid "Item published."
 msgstr "Saken er publisert."
 
@@ -3058,7 +3061,7 @@ msgstr "Saken er sendt til mottaker."
 msgid "Item sent."
 msgstr "Saken er sendt."
 
-#: scripts/apps/translations/services/TranslationService.js:51
+#: scripts/apps/translations/services/TranslationService.js:57
 msgid "Item Translated"
 msgstr "Sak oversatt"
 
@@ -3070,7 +3073,7 @@ msgstr "Item type stats"
 msgid "Item Unlocked"
 msgstr "Saken er låst opp"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:128
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:130
 msgid "Item updated."
 msgstr "Saken er oppdatert"
 
@@ -3098,7 +3101,7 @@ msgstr "Stikkord"
 msgid "Kill"
 msgstr "Trekk melding"
 
-#: scripts/apps/authoring/authoring/index.js:97
+#: scripts/apps/authoring/authoring/index.js:107
 msgid "Kill item"
 msgstr "Trekk saken"
 
@@ -3199,9 +3202,9 @@ msgstr "Siste uke"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:29
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:76
 #: scripts/apps/authoring/views/authoring-header.html:39
-#: scripts/apps/search/directives/ItemList.js:426
-#: scripts/apps/search/directives/ItemList.js:981
-#: scripts/apps/search/directives/ItemList.js:983
+#: scripts/apps/search/directives/ItemList.js:427
+#: scripts/apps/search/directives/ItemList.js:982
+#: scripts/apps/search/directives/ItemList.js:984
 #: scripts/apps/search/views/search-filters.html:103
 #: scripts/core/itemList/views/item-list-widget.html:73
 #: scripts/core/itemList/views/item-list-widget.html:90
@@ -3209,7 +3212,7 @@ msgstr "Siste uke"
 msgid "Legal"
 msgstr "Juss"
 
-#: scripts/apps/legal-archive/index.js:27
+#: scripts/apps/legal-archive/index.js:34
 msgid "Legal Archive"
 msgstr "Juridisk arkiv"
 
@@ -3221,7 +3224,7 @@ msgstr "Lengde"
 msgid "Line: {{ cursor.line }}, Column: {{ cursor.column }}"
 msgstr "Linje: {{ cursor.line }}, Kolonne: {{ cursor.column }}"
 
-#: scripts/core/editor2/editor.js:932
+#: scripts/core/editor2/editor.js:939
 msgid "link"
 msgstr "lenke"
 
@@ -3232,6 +3235,10 @@ msgstr "Lenke er sendt med epost."
 #: scripts/apps/vocabularies/services/SchemaFactory.js:7
 msgid "List Name"
 msgstr "Navn på liste"
+
+#: scripts/apps/authoring/views/authoring-topbar.html:143
+msgid "Live suggestions"
+msgstr ""
 
 #: scripts/apps/stream/views/activity-stream.html:30
 msgid "Load more"
@@ -3281,7 +3288,7 @@ msgstr "Bare for meg"
 msgid "Located"
 msgstr "Located"
 
-#: scripts/apps/search/directives/ItemList.js:358
+#: scripts/apps/search/directives/ItemList.js:359
 msgid "location:"
 msgstr "sted:"
 
@@ -3352,7 +3359,7 @@ msgstr "Administrer brukere"
 msgid "many"
 msgstr "mange"
 
-#: scripts/apps/highlights/index.js:38
+#: scripts/apps/highlights/index.js:46
 msgid "Mark for highlight"
 msgstr "Legg til i utvalg"
 
@@ -3360,7 +3367,7 @@ msgstr "Legg til i utvalg"
 msgid "Mark item"
 msgstr "Marker saken"
 
-#: scripts/apps/authoring/views/authoring-topbar.html:159
+#: scripts/apps/authoring/views/authoring-topbar.html:167
 msgid "Mark item for"
 msgstr "Legg til i utvalg:"
 
@@ -3369,7 +3376,7 @@ msgid "Mark items for Highlights/Summary Lists"
 msgstr "Marker saker for utvalgslister"
 
 #: scripts/apps/highlights/views/highlights_title_directive.html:14
-#: scripts/apps/search/directives/ItemList.js:554
+#: scripts/apps/search/directives/ItemList.js:555
 msgid "Marked For"
 msgstr "Markert for"
 
@@ -3377,7 +3384,7 @@ msgstr "Markert for"
 msgid "MASTER"
 msgstr "MASTER"
 
-#: scripts/apps/desks/index.js:46
+#: scripts/apps/desks/index.js:53
 msgid "Master Desk"
 msgstr "Masterdesk"
 
@@ -3494,7 +3501,7 @@ msgstr "Endret til"
 msgid "Modified:"
 msgstr "Endret:"
 
-#: scripts/core/datetime/datetime.js:188
+#: scripts/core/datetime/datetime.js:195
 msgid "Monday"
 msgstr "Mandag"
 
@@ -3543,13 +3550,13 @@ msgid "Moved to"
 msgstr "Flyttet til "
 
 #: scripts/apps/authoring/multiedit/views/multiedit.html:2
-#: scripts/apps/authoring/views/authoring-topbar.html:145
+#: scripts/apps/authoring/views/authoring-topbar.html:153
 #: scripts/apps/authoring/views/opened-articles.html:18
 #: scripts/apps/search/views/multi-action-bar.html:26
 msgid "Multiedit"
 msgstr "Rediger flere"
 
-#: scripts/core/directives/sdPasswordStrength.js:44
+#: scripts/core/directives/PasswordStrengthDirective.js:44
 msgid ""
 "Must be {{ MIN_LENGTH }} characters long and contain {{ MIN_STRENGTH }} out "
 "of 4 of the following:<ul><li>a lower case letter (a-z)</li><li>an upper "
@@ -3557,7 +3564,7 @@ msgid ""
 "(!@#$%^&...)</li></ul>"
 msgstr "Må være minst {{ MIN_LENGTH }} tegn og inneholde minst {{ MIN_STRENGTH }} av disse 4: <ul><li>små bokstaver (a-z)</li><li>store bokstaver(A-Z)</li><li>tall (0-9)</li><li>spesialtegn (!@#$%^&...)</li></ul>"
 
-#: scripts/apps/users/index.js:75
+#: scripts/apps/users/index.js:82
 msgid "My Profile"
 msgstr "Min profil"
 
@@ -3580,13 +3587,13 @@ msgstr "Mine maler"
 msgid "Name"
 msgstr "Navn"
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:61
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:60
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:50
 #: scripts/apps/products/controllers/ProductsConfigController.js:74
 msgid "Name needs to be unique"
 msgstr "Navnet må være unikt"
 
-#: scripts/apps/desks/index.js:47
+#: scripts/apps/desks/index.js:54
 msgid "Navigate through the newsroom"
 msgstr "Naviger gjennom nyhetsredaksjonen"
 
@@ -3602,11 +3609,11 @@ msgstr "Ny rolle"
 msgid "New size"
 msgstr "Ny størrelse"
 
-#: scripts/apps/archive/index.js:191
+#: scripts/apps/archive/index.js:198
 msgid "New Take"
 msgstr "New Take"
 
-#: scripts/apps/archive/index.js:213
+#: scripts/apps/archive/index.js:220
 #: scripts/apps/authoring/authoring/directives/SendItem.js:465
 msgid "New take created."
 msgstr "New Take created."
@@ -3627,7 +3634,7 @@ msgstr "Neste bruker"
 
 #: scripts/apps/highlights/views/mark_highlights_dropdown_directive.html:8
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:13
-#: scripts/apps/search/directives/ItemList.js:1276
+#: scripts/apps/search/directives/ItemList.js:1281
 msgid "No available highlights"
 msgstr "Ingen utvalg tilgjengelig."
 
@@ -3635,7 +3642,7 @@ msgstr "Ingen utvalg tilgjengelig."
 msgid "No available languages"
 msgstr "Ingen språk tilgjengelig"
 
-#: scripts/apps/search/directives/ItemList.js:1277
+#: scripts/apps/search/directives/ItemList.js:1282
 msgid "No available translations"
 msgstr "Ingen oversettelse tilgjengelig"
 
@@ -3659,7 +3666,7 @@ msgstr "Ingen feltnavn definert."
 msgid "No Filter"
 msgstr "Ingen filtre"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:736
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:738
 msgid "No formatters found for"
 msgstr "Ingen formattering funnet for "
 
@@ -3695,7 +3702,7 @@ msgstr ""
 msgid "No recent templates."
 msgstr "Ingen nylig brukte maler"
 
-#: scripts/apps/content-filters/controllers/FilterSearchController.js:110
+#: scripts/apps/content-filters/controllers/FilterSearchController.js:109
 msgid "no results found"
 msgstr "ingen resultater funnet"
 
@@ -3771,8 +3778,8 @@ msgstr "Ikke sendt til noen mottaker"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:18
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:75
 #: scripts/apps/authoring/views/authoring-header.html:41
-#: scripts/apps/search/directives/ItemList.js:973
-#: scripts/apps/search/directives/ItemList.js:975
+#: scripts/apps/search/directives/ItemList.js:974
+#: scripts/apps/search/directives/ItemList.js:976
 #: scripts/apps/templates/views/template-editor-modal.html:88
 msgid "Not For Publication"
 msgstr "Ikke for publisering"
@@ -3837,8 +3844,8 @@ msgstr "OK"
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:107
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:119
 #: scripts/apps/authoring/macros/views/macros-replace.html:3
-#: scripts/core/auth/auth.js:153
-#: scripts/core/directives/sdPasswordStrength.js:38
+#: scripts/core/auth/auth.js:160
+#: scripts/core/directives/PasswordStrengthDirective.js:38
 #: scripts/core/services/modalService.js:5
 msgid "OK"
 msgstr "OK"
@@ -3869,9 +3876,9 @@ msgstr "Ugyldig brukernavn eller passord. <br> Prøv igjen."
 #: scripts/apps/users/views/user-list-item.html:36
 #: scripts/core/list/views/list-view.html:3
 msgid "Oops! There are no items."
-msgstr "Opps! Ingen saker"
+msgstr "Ingen treff"
 
-#: scripts/apps/authoring/authoring/index.js:133
+#: scripts/apps/authoring/authoring/index.js:143
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:142
 msgid "Open"
 msgstr "Åpne"
@@ -3898,31 +3905,31 @@ msgstr "Åpnet"
 msgid "Opened by"
 msgstr "Åpnet av"
 
-#: scripts/apps/workspace/index.js:19
+#: scripts/apps/workspace/index.js:26
 msgid "Opens highlights"
 msgstr "Åpner utvalg"
 
-#: scripts/apps/workspace/index.js:18
+#: scripts/apps/workspace/index.js:25
 msgid "Opens monitoring"
 msgstr "Åpner overvåking"
 
-#: scripts/apps/workspace/index.js:22
+#: scripts/apps/workspace/index.js:29
 msgid "Opens personal"
 msgstr "Åpner personlig kladd"
 
-#: scripts/apps/workspace/index.js:23
+#: scripts/apps/workspace/index.js:30
 msgid "Opens search"
 msgstr "Åpner søk"
 
-#: scripts/apps/workspace/index.js:21
+#: scripts/apps/workspace/index.js:28
 msgid "Opens spike"
 msgstr "Åpner slettede saker"
 
-#: scripts/apps/workspace/index.js:20
+#: scripts/apps/workspace/index.js:27
 msgid "Opens tasks"
 msgstr "Åpner oppgaver"
 
-#: scripts/apps/workspace/index.js:17
+#: scripts/apps/workspace/index.js:24
 msgid "Opens workspace"
 msgstr "Åpner arbeidsområde"
 
@@ -4013,7 +4020,7 @@ msgid "Packages"
 msgstr "Pakker"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:20
-#: scripts/apps/search/directives/ItemList.js:1100
+#: scripts/apps/search/directives/ItemList.js:1105
 msgid "Packaging"
 msgstr "Pakking"
 
@@ -4059,7 +4066,7 @@ msgstr "passord"
 msgid "Password"
 msgstr "Passord"
 
-#: scripts/core/directives/sdPasswordStrength.js:71
+#: scripts/core/directives/PasswordStrengthDirective.js:71
 msgid "Password is too weak."
 msgstr "Passordet er for svakt"
 
@@ -4075,7 +4082,7 @@ msgstr "passordene må være like"
 msgid "paste a block"
 msgstr "lim inn blokk"
 
-#: scripts/core/editor/editor.js:755 scripts/core/editor2/editor.js:769
+#: scripts/core/editor2/editor.js:776
 msgid "Paste or type a full link"
 msgstr "Skriv eller lim inn en komplett URL"
 
@@ -4280,8 +4287,8 @@ msgstr "Skriv ut"
 #: scripts/apps/archive/directives/ItemPriority.js:18
 #: scripts/apps/archive/views/metadata-view.html:13
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:12
-#: scripts/apps/search/directives/ItemList.js:122
-#: scripts/apps/search/directives/ItemList.js:131
+#: scripts/apps/search/directives/ItemList.js:123
+#: scripts/apps/search/directives/ItemList.js:132
 #: scripts/apps/search/services/SearchService.js:11
 #: scripts/apps/search/views/search-filters.html:87
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:12
@@ -4351,7 +4358,7 @@ msgstr "produksjon"
 msgid "Production"
 msgstr "Produksjon"
 
-#: scripts/apps/products/index.js:11
+#: scripts/apps/products/index.js:18
 #: scripts/apps/products/views/settings.html:5
 #: scripts/apps/publish/views/subscribers.html:87
 msgid "Products"
@@ -4374,7 +4381,7 @@ msgstr "PROFIL"
 msgid "Profile:"
 msgstr "Profil:"
 
-#: scripts/apps/profiling/index.js:18
+#: scripts/apps/profiling/index.js:25
 msgid "Profiling Data"
 msgstr "Profileringsdata"
 
@@ -4422,7 +4429,7 @@ msgstr "publiser"
 #: scripts/apps/authoring/views/send-item.html:8
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:25
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:36
-#: scripts/apps/publish/index.js:31
+#: scripts/apps/publish/index.js:38
 msgid "Publish"
 msgstr "Publisering"
 
@@ -4435,12 +4442,12 @@ msgstr "Publiser og fortsett"
 msgid "publish from"
 msgstr "publiser fra"
 
-#: scripts/apps/publish/index.js:40
+#: scripts/apps/publish/index.js:47
 msgid "Publish Queue"
 msgstr "Publiseringskø"
 
 #: scripts/apps/archive/views/metadata-view.html:131
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:282
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:284
 #: scripts/apps/authoring/views/send-item.html:56
 msgid "Publish Schedule"
 msgstr "Publiseres:"
@@ -4498,7 +4505,7 @@ msgstr ""
 msgid "Queued at"
 msgstr "Lagt i kø"
 
-#: scripts/core/editor2/editor.js:939
+#: scripts/core/editor2/editor.js:946
 msgid "quote"
 msgstr "sitat"
 
@@ -4577,7 +4584,7 @@ msgstr "Relaterte saker"
 
 #: scripts/apps/desks/views/settings.html:26
 #: scripts/apps/highlights/views/highlights_title_directive.html:21
-#: scripts/apps/ingest/index.js:78
+#: scripts/apps/ingest/index.js:85
 #: scripts/apps/ingest/views/settings/rssConfig.html:75
 #: scripts/apps/search/views/multi-action-bar.html:48
 #: scripts/apps/search/views/search-filters.html:105
@@ -4594,7 +4601,7 @@ msgstr "Relaterte saker"
 msgid "Remove"
 msgstr "Fjern"
 
-#: scripts/apps/search/directives/ItemList.js:541
+#: scripts/apps/search/directives/ItemList.js:542
 msgid "REMOVE"
 msgstr "FJERN"
 
@@ -4626,7 +4633,7 @@ msgstr "Fjern filter"
 msgid "Remove Filter Condition"
 msgstr "Fjern filtreringsvalg"
 
-#: scripts/core/editor2/editor.js:946
+#: scripts/core/editor2/editor.js:953
 msgid "remove formatting"
 msgstr "fjern formattering"
 
@@ -4719,7 +4726,7 @@ msgstr "erstattet {{ type }} om {{ subject }}"
 msgid "Required"
 msgstr "Kreves"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:398
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:400
 msgid "Required field {{ key }} is missing. ..."
 msgstr "Obligatorisk felt {{ key }} mangler..."
 
@@ -4737,7 +4744,7 @@ msgstr "Krever autentisering"
 msgid "Resend"
 msgstr "Send på nytt"
 
-#: scripts/apps/archive/index.js:223
+#: scripts/apps/archive/index.js:230
 msgid "Resend item"
 msgstr "Send på nytt"
 
@@ -4857,15 +4864,11 @@ msgstr "Regelsett"
 msgid "Ruleset"
 msgstr "Regelsett"
 
-#: scripts/apps/authoring/views/authoring-topbar.html:192
+#: scripts/apps/authoring/views/authoring-topbar.html:200
 msgid "Run automatically"
 msgstr "Kjør automatisk"
 
-#: scripts/core/editor/editor.js:935
-msgid "Runs spellchecker"
-msgstr "Kjører stavekontroll"
-
-#: scripts/core/datetime/datetime.js:193
+#: scripts/core/datetime/datetime.js:200
 msgid "Saturday"
 msgstr "Lørdag"
 
@@ -4966,7 +4969,7 @@ msgstr "Lagret søk er fjernet"
 msgid "Saved Searches"
 msgstr "Lagrede søk"
 
-#: scripts/apps/authoring/authoring/index.js:191
+#: scripts/apps/authoring/authoring/index.js:201
 msgid "Saves current item"
 msgstr "Lagrer denne saken"
 
@@ -4975,7 +4978,7 @@ msgstr "Lagrer denne saken"
 #: scripts/apps/desks/directives/DeskeditStages.js:100
 #: scripts/apps/groups/directives/GroupeditBasicDirective.js:24
 #: scripts/apps/users/directives/UserEditDirective.js:84
-#: scripts/core/notify/notify.js:46
+#: scripts/core/notify/notify.js:54
 msgid "Saving..."
 msgstr "Lagrer..."
 
@@ -5041,7 +5044,7 @@ msgstr "søk"
 #: scripts/apps/packaging/views/search.html:4
 #: scripts/apps/publish/views/publish-queue.html:8
 #: scripts/apps/search/directives/SearchContainer.js:8
-#: scripts/apps/search/index.js:52
+#: scripts/apps/search/index.js:60
 #: scripts/apps/search/views/item-searchbar.html:7
 #: scripts/apps/search/views/save-search.html:13
 #: scripts/apps/search/views/save-search.html:5
@@ -5075,7 +5078,7 @@ msgstr "Databasesøk lagret"
 msgid "search provider username"
 msgstr "brukernavn for databasesøk"
 
-#: scripts/apps/search-providers/index.js:28
+#: scripts/apps/search-providers/index.js:35
 #: scripts/apps/search-providers/views/search-provider-config.html:3
 #: scripts/apps/search-providers/views/settings.html:4
 msgid "Search Providers"
@@ -5187,7 +5190,7 @@ msgstr "Send varslinger med epost"
 msgid "Send to"
 msgstr "Send til"
 
-#: scripts/apps/authoring/views/authoring-topbar.html:217
+#: scripts/apps/authoring/views/authoring-topbar.html:225
 msgid "Send to / Publish"
 msgstr "Send til / Publisér"
 
@@ -5233,11 +5236,11 @@ msgid "Set maximum items per stages and saved searches for view"
 msgstr "Sett maks antall saker for visning per stadium/lagret søk "
 
 #: scripts/apps/settings/directives/SettingsView.js:13
-#: scripts/apps/settings/index.js:9
+#: scripts/apps/settings/index.js:16
 msgid "Settings"
 msgstr "Innstillinger"
 
-#: scripts/core/directives/sdPasswordStrength.js:35
+#: scripts/core/directives/PasswordStrengthDirective.js:35
 msgid "Short"
 msgstr "Kort"
 
@@ -5269,7 +5272,7 @@ msgstr "vis bare aktive brukere"
 msgid "Show sent/queued items"
 msgstr "Vis sendte saker"
 
-#: scripts/apps/search/index.js:59
+#: scripts/apps/search/index.js:67
 msgid "Shows search modal"
 msgstr "Viser søkemodal"
 
@@ -5309,7 +5312,7 @@ msgstr "siden"
 msgid "Single Usage"
 msgstr "Engangsbruk"
 
-#: scripts/apps/content-filters/controllers/FilterSearchController.js:28
+#: scripts/apps/content-filters/controllers/FilterSearchController.js:27
 msgid "single value is required"
 msgstr "enkeltverdi kreves"
 
@@ -5348,7 +5351,7 @@ msgstr "stikkord"
 #: scripts/apps/archive/views/preview.html:41
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:77
 #: scripts/apps/authoring/views/authoring-header.html:40
-#: scripts/apps/search/directives/ItemList.js:990
+#: scripts/apps/search/directives/ItemList.js:991
 #: scripts/apps/search/views/search-filters.html:110
 #: scripts/core/itemList/views/item-list-widget.html:74
 #: scripts/core/itemList/views/item-list-widget.html:91
@@ -5399,7 +5402,6 @@ msgstr "Beklager, din brukerkonto er suspendert."
 msgid "Sorry, given workspace name is in use"
 msgstr "Navnet på arbeidsområdet er i bruk."
 
-#: scripts/core/editor/views/editor.html:16
 #: scripts/core/editor2/views/block-text.html:24
 msgid "SORRY, NO SUGGESTIONS."
 msgstr "BEKLAGER - INGEN FORSLAG"
@@ -5416,7 +5418,7 @@ msgstr "brukernavnet er opptatt"
 msgid "Sort:"
 msgstr "Sorter:"
 
-#: scripts/apps/search/directives/ItemList.js:391
+#: scripts/apps/search/directives/ItemList.js:392
 #: scripts/core/itemList/views/item-list-widget.html:87
 msgid "source"
 msgstr "kilde"
@@ -5456,7 +5458,7 @@ msgstr "Kildetype:"
 msgid "Sources"
 msgstr "Kilder"
 
-#: scripts/apps/authoring/views/authoring-topbar.html:183
+#: scripts/apps/authoring/views/authoring-topbar.html:191
 msgid "Spell Checker"
 msgstr "Stavekontroll"
 
@@ -5465,7 +5467,7 @@ msgstr "Stavekontroll"
 msgid "Spike"
 msgstr "Slett"
 
-#: scripts/apps/archive/index.js:86
+#: scripts/apps/archive/index.js:93
 msgid "Spike Item"
 msgstr "Slett sak"
 
@@ -5567,7 +5569,7 @@ msgstr "Lagret prosedyre"
 msgid "Story GUID"
 msgstr "Saks-ID"
 
-#: scripts/apps/archive/related-item-widget/relatedItem.js:143
+#: scripts/apps/archive/related-item-widget/relatedItem.js:145
 msgid "Story is associated as update."
 msgstr "Saken er registrert som oppdatering"
 
@@ -5576,11 +5578,11 @@ msgstr "Saken er registrert som oppdatering"
 msgid "Story Text"
 msgstr "Brødtekst"
 
-#: scripts/core/directives/sdPasswordStrength.js:61
+#: scripts/core/directives/PasswordStrengthDirective.js:61
 msgid "Strength"
 msgstr "Styrke"
 
-#: scripts/core/directives/sdPasswordStrength.js:39
+#: scripts/core/directives/PasswordStrengthDirective.js:39
 msgid "Strong"
 msgstr "Sterk"
 
@@ -5643,7 +5645,7 @@ msgstr "vellykket"
 msgid "Summary"
 msgstr "Oppsummering"
 
-#: scripts/core/datetime/datetime.js:194
+#: scripts/core/datetime/datetime.js:201
 msgid "Sunday"
 msgstr "Søndag"
 
@@ -5673,11 +5675,11 @@ msgstr "bytt til listevisning"
 msgid "Switch to list view"
 msgstr "Bytt til listevisning"
 
-#: scripts/apps/monitoring/index.js:45
+#: scripts/apps/monitoring/index.js:53
 msgid "Switches between single/grouped desk view"
 msgstr "Bytter mellom enkel/gruppert deskvisning"
 
-#: scripts/apps/monitoring/index.js:44
+#: scripts/apps/monitoring/index.js:52
 msgid "Switches between single/grouped stage view"
 msgstr "Bytter mellom enkel/gruppert stadiumvisning"
 
@@ -5705,7 +5707,7 @@ msgstr ""
 msgid "TAKEKEY"
 msgstr "Oppdatering"
 
-#: scripts/apps/search/directives/ItemList.js:1013
+#: scripts/apps/search/directives/ItemList.js:1014
 #: scripts/core/itemList/views/relatedItem-list-widget.html:40
 msgid "Takes"
 msgstr ""
@@ -5723,7 +5725,7 @@ msgstr "Takes cannot have Embargo"
 msgid "Takes Package"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:428
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:430
 msgid ""
 "Tansa is not responding. You can continue editing or publish the story."
 msgstr "Tansa svarer ikke. Du kan fortsette å redigere eller publisere saken."
@@ -5836,7 +5838,7 @@ msgstr "Passordet er endret."
 msgid "The password has been reset."
 msgstr "Passordet har blitt resatt"
 
-#: scripts/apps/search/directives/ItemList.js:1703
+#: scripts/apps/search/directives/ItemList.js:1708
 msgid "There are currently no items"
 msgstr "Ingen elementer"
 
@@ -5844,7 +5846,7 @@ msgstr "Ingen elementer"
 msgid "There are failed uploads."
 msgstr "Det finnes mislykkede opplastinger."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:189
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:191
 msgid "There are items locked or not published. Do you want to continue?"
 msgstr "Det finnes låste eller upubliserte saker. Vil du fortsette?"
 
@@ -5865,7 +5867,7 @@ msgstr "Noen endringer er ikke lagret. Vil du lagre nå?"
 msgid "There are some unsaved changes, re-open the article to save changes?"
 msgstr "Noen endringer er ikke lagret. Vil du gjenåpne saken for å lagre endringene?"
 
-#: scripts/core/auth/auth.js:152
+#: scripts/core/auth/auth.js:159
 msgid "There are some unsaved changes. Please save them before signing out."
 msgstr "Noen endringer er ikke lagret. Lagre dem før du logger ut."
 
@@ -5874,11 +5876,11 @@ msgid ""
 "There are unsaved changes. If you navigate away, your changes will be lost."
 msgstr "Noen endringer er ikke lagret. Hvis du navigerer bort fra siden, mister du endringene."
 
-#: scripts/apps/archive/related-item-widget/relatedItem.js:149
+#: scripts/apps/archive/related-item-widget/relatedItem.js:151
 msgid "There is an error. Failed to associate update."
 msgstr "Feilmelding: Kunne ikke registreres som oppdatering."
 
-#: scripts/apps/archive/related-item-widget/relatedItem.js:120
+#: scripts/apps/archive/related-item-widget/relatedItem.js:122
 msgid "There is an error. Failed to associated as take."
 msgstr ""
 
@@ -5924,7 +5926,7 @@ msgstr "Det oppsto et problem, stadium kunne ikke etableres/oppdateres."
 msgid "There was a problem, stage was not deleted."
 msgstr "Det oppsto et problem, stadiet kunne ikke slettes"
 
-#: scripts/apps/search/directives/ItemList.js:1303
+#: scripts/apps/search/directives/ItemList.js:1308
 msgid "There was an error archiving this item"
 msgstr "Det oppsto et problem ved arkivering av denne saken"
 
@@ -5940,7 +5942,7 @@ msgstr "Feilmelding: Innholdsfilteret kunne ikke slettes."
 msgid "There was an error. Failed to generate update."
 msgstr "Feilmelding: Kunne ikke generere oppdatering."
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:85
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:84
 msgid "There was an error. Filter condition cannot be deleted."
 msgstr "Feilmelding: Filtreringsbetingelser kan ikke slettes."
 
@@ -5980,7 +5982,7 @@ msgstr "Denne saken er blitt rewritet av:"
 msgid "This week"
 msgstr "Denne uka"
 
-#: scripts/core/datetime/datetime.js:191
+#: scripts/core/datetime/datetime.js:198
 msgid "Thursday"
 msgstr "Torsdag"
 
@@ -6033,7 +6035,7 @@ msgstr "I dag"
 msgid "Toggle theme"
 msgstr "Endre font og farge"
 
-#: scripts/apps/search/index.js:60
+#: scripts/apps/search/index.js:68
 msgid "Toggles search view"
 msgstr "Veksle mellom søkevisninger"
 
@@ -6069,15 +6071,15 @@ msgstr "Total:"
 msgid "Transformation Rules Management"
 msgstr ""
 
-#: scripts/apps/translations/index.js:25
+#: scripts/apps/translations/index.js:32
 msgid "Translate"
 msgstr "Oversett"
 
-#: scripts/apps/authoring/views/authoring-topbar.html:173
+#: scripts/apps/authoring/views/authoring-topbar.html:181
 msgid "Translate item to"
 msgstr "Oversett til"
 
-#: scripts/apps/authoring/views/authoring-topbar.html:169
+#: scripts/apps/authoring/views/authoring-topbar.html:177
 msgid "Translations"
 msgstr "Oversettelser"
 
@@ -6095,7 +6097,7 @@ msgstr "Prøv igjen"
 msgid "Trying to reconnect...<br>Please wait."
 msgstr "Forsøker å gjenopprette forbindelsen..<br> Vennligst vent."
 
-#: scripts/core/datetime/datetime.js:189
+#: scripts/core/datetime/datetime.js:196
 msgid "Tuesday"
 msgstr "Tirsdag"
 
@@ -6120,7 +6122,7 @@ msgstr "Ikke tildelt"
 msgid "Uncheck all"
 msgstr "Fjern alle"
 
-#: scripts/core/editor2/editor.js:915
+#: scripts/core/editor2/editor.js:922
 msgid "underline"
 msgstr "understrek"
 
@@ -6148,7 +6150,7 @@ msgstr "Ukjent feil: Kan ikke trekke saken"
 msgid "Unknown Error: Cannot resend the item"
 msgstr "Ukjent feil: Kan ikke sende saken på nytt"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:328
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:330
 msgid "Unknown Error: Item not published."
 msgstr "Ukjent feil: Saken ble ikke publisert"
 
@@ -6166,7 +6168,7 @@ msgstr "Lås opp"
 msgid "Unlock content"
 msgstr "Lås opp"
 
-#: scripts/apps/authoring/authoring/index.js:189
+#: scripts/apps/authoring/authoring/index.js:199
 msgid "Unlocks current item"
 msgstr "Låser opp denne saken"
 
@@ -6178,7 +6180,7 @@ msgstr "fjern flagg"
 msgid "Unspike"
 msgstr "Omgjør sletting"
 
-#: scripts/apps/archive/index.js:112
+#: scripts/apps/archive/index.js:119
 msgid "Unspike Item"
 msgstr "Omgjør sletting av denne saken"
 
@@ -6203,7 +6205,7 @@ msgstr "FORESTÅENDE"
 msgid "update"
 msgstr "Ny 1"
 
-#: scripts/apps/archive/index.js:237
+#: scripts/apps/archive/index.js:244
 #: scripts/apps/authoring/views/authoring-topbar.html:70
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:130
 msgid "Update"
@@ -6213,7 +6215,7 @@ msgstr "Oppdatering"
 msgid "UPDATE"
 msgstr "OPPDATERING"
 
-#: scripts/apps/search/directives/ItemList.js:921
+#: scripts/apps/search/directives/ItemList.js:922
 msgid "Update {{ seq }}"
 msgstr "Ny {{ seq }}"
 
@@ -6229,7 +6231,7 @@ msgstr "Oppdateringsplan"
 msgid "Update every"
 msgstr "Oppdater hver"
 
-#: scripts/apps/search/directives/ItemList.js:397
+#: scripts/apps/search/directives/ItemList.js:398
 msgid "updated"
 msgstr "oppdatert"
 
@@ -6239,7 +6241,7 @@ msgstr "oppdatert"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:78
 #: scripts/apps/authoring/views/authoring-header.html:42
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:7
-#: scripts/apps/search/directives/ItemList.js:937
+#: scripts/apps/search/directives/ItemList.js:938
 #: scripts/apps/search/services/SearchService.js:6
 #: scripts/apps/workspace/content/views/profile-settings.html:40
 #: scripts/core/itemList/views/item-list-widget.html:92
@@ -6267,7 +6269,7 @@ msgstr "Last opp fra din maskin"
 msgid "UPLOAD ITEM"
 msgstr "Last opp lokal fil"
 
-#: scripts/apps/archive/index.js:75
+#: scripts/apps/archive/index.js:82
 msgid "Upload media"
 msgstr "Last opp media"
 
@@ -6279,8 +6281,8 @@ msgstr "lastet opp mediefil {{ name }}"
 #: scripts/apps/archive/views/metadata-view.html:9
 #: scripts/apps/authoring/views/authoring-header.html:168
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:9
-#: scripts/apps/search/directives/ItemList.js:145
-#: scripts/apps/search/directives/ItemList.js:155
+#: scripts/apps/search/directives/ItemList.js:146
+#: scripts/apps/search/directives/ItemList.js:156
 #: scripts/apps/search/services/SearchService.js:8
 #: scripts/apps/search/views/search-filters.html:75
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:13
@@ -6471,7 +6473,7 @@ msgstr "Vis full profil"
 msgid "View name"
 msgstr "Vis navn"
 
-#: scripts/apps/vocabularies/index.js:32
+#: scripts/apps/vocabularies/index.js:39
 msgid "Vocabularies"
 msgstr "Vokabularer"
 
@@ -6493,7 +6495,7 @@ msgstr "vokabular er oppdatert. Logg inn på nytt for å se det oppdaterte vokab
 msgid "Vocabulary saved successfully"
 msgstr "Vokabular lagret"
 
-#: scripts/core/auth/auth.js:153
+#: scripts/core/auth/auth.js:160
 msgid "Warning"
 msgstr "Advarsel"
 
@@ -6501,11 +6503,11 @@ msgstr "Advarsel"
 msgid "was unlocked by <b></b>."
 msgstr "ble låst opp av <b></b>"
 
-#: scripts/core/directives/sdPasswordStrength.js:36
+#: scripts/core/directives/PasswordStrengthDirective.js:36
 msgid "Weak"
 msgstr "Svak"
 
-#: scripts/core/datetime/datetime.js:190
+#: scripts/core/datetime/datetime.js:197
 msgid "Wednesday"
 msgstr "Onsdag"
 
@@ -6518,6 +6520,8 @@ msgid "Width"
 msgstr "Bredde"
 
 #: scripts/apps/archive/views/preview.html:47
+#: scripts/apps/authoring/suggest/SuggestView.html:16
+#: scripts/apps/authoring/suggest/SuggestView.html:64
 #: scripts/apps/authoring/views/authoring-header.html:17
 msgid "WORD"
 msgid_plural "WORDS"
@@ -6541,14 +6545,14 @@ msgstr "Arbeidsstadier"
 msgid "Working Stage"
 msgstr "Arbeidsstadium"
 
-#: scripts/apps/search/directives/ItemList.js:359
+#: scripts/apps/search/directives/ItemList.js:360
 msgid "workspace"
 msgstr "arbeidsområde"
 
-#: scripts/apps/archive/index.js:63 scripts/apps/dashboard/index.js:34
+#: scripts/apps/archive/index.js:70 scripts/apps/dashboard/index.js:41
 #: scripts/apps/dashboard/views/workspace.html:22
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:379
-#: scripts/apps/ingest/index.js:49 scripts/apps/stream/index.js:15
+#: scripts/apps/ingest/index.js:56 scripts/apps/stream/index.js:15
 msgid "Workspace"
 msgstr "Arbeidsområde"
 
@@ -6577,7 +6581,7 @@ msgid "You don't have the privileges to perform any action"
 msgstr "Du har ikke tillatelse til å utføre noen handlinger"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:95
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:163
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:165
 msgid "You have unsaved changes, do you want to continue?"
 msgstr "Du har gjort endringer som ikke er lagret. Vil du fortsette?"
 
