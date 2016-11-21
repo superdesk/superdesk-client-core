@@ -27,6 +27,7 @@ describe('spellcheck', function() {
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
     beforeEach(window.module('superdesk.core.preferences'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
 
     beforeEach(inject(function(dictionaries, spellcheck, $q, preferencesService) {
 

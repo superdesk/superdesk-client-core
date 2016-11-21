@@ -931,8 +931,8 @@ function MetaLocatorsDirective() {
     };
 }
 
-MetadataService.$inject = ['api', '$q', 'subscribersService', 'config'];
-function MetadataService(api, $q, subscribersService, config) {
+MetadataService.$inject = ['api', '$q', 'subscribersService', 'config', 'vocabularies'];
+function MetadataService(api, $q, subscribersService, config, vocabularies) {
     var service = {
         values: {},
         cvs: [],
@@ -947,7 +947,7 @@ function MetadataService(api, $q, subscribersService, config) {
         _priorityByValue: {},
         fetchMetadataValues: function() {
             var self = this;
-            return api.query('vocabularies', {max_results: 50}).then(function(result) {
+            return vocabularies.getAllActiveVocabularies().then(function(result) {
                 _.each(result._items, function(vocabulary) {
                     self.values[vocabulary._id] = vocabulary.items;
                 });
