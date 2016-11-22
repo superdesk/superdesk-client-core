@@ -9,7 +9,7 @@
         <div class="title" translate>User settings</div>
         <ul>
             <li class="fieldset" ng-repeat="(id, p) in preferences track by id"
-                ng-if="p.category !== 'article_defaults' && p.category !== 'categories'">
+                ng-if="p.category !== 'article_defaults' && p.category !== 'categories' && p.category !== 'desks'">
                 <div class="legend">{{ p.category | translate }}</div>
                 <div sd-info-item>
                     <label>{{ :: p.label | translate }}</label>
@@ -89,6 +89,9 @@
                 <label>
                     {{ :: preferences['desks:preferred'].label | translate}}
                   </label>
+                  <p class="discreet" translate>
+                    By selecting the desks as your preferred desks, they appear first in the order when sending or publishing items.
+                  </p>
                 <div ng-repeat="desk in desks track by desk._id">
                   <input
                     type="checkbox"
