@@ -1,5 +1,3 @@
-import { DEFAULT_PROJECTED_FIELDS } from 'apps/search/constants';
-
 MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
     'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
     'archiveService', '$rootScope', 'config'];
@@ -20,7 +18,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
         link: function(scope, elem, attrs, ctrls) {
 
             var monitoring = ctrls[0];
-            var projections = config.projected_fields || DEFAULT_PROJECTED_FIELDS.fields;
+            var projections = search.getProjectedFields();
 
             scope.view = 'compact';
             scope.page = 1;

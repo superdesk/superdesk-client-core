@@ -1,4 +1,9 @@
-import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
+import {
+    PARAMETERS,
+    EXCLUDE_FACETS,
+    CORE_PROJECTED_FIELDS,
+    UI_PROJECTED_FIELD_MAPPINGS,
+    DEFAULT_LIST_CONFIG} from 'apps/search/constants';
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -533,11 +538,11 @@ export function SearchService($location, gettext, config, session) {
      * @public
      * @description Merges the highlighted fields to the item
      * @param {Object} item
-     * @return {Object}
+     * @returns {Object}
      */
     this.mergeHighlightFields = function(item) {
         if (item.es_highlight) {
-            _.forEach(_.keys(item.es_highlight), function (key) {
+            _.forEach(_.keys(item.es_highlight), function(key) {
                 item[key] = item.es_highlight[key][0];
             });
         } else {
@@ -553,7 +558,7 @@ export function SearchService($location, gettext, config, session) {
      * @param {Object} scopeItems
      * @param {boolean} append
      * @param {boolean} force
-     * @return {Object}
+     * @returns {Object}
      */
     this.mergeItems = function(newItems, scopeItems, append, force) {
         if (this.getElasticHighlight()) {
@@ -618,7 +623,7 @@ export function SearchService($location, gettext, config, session) {
      * @ngdoc method
      * @name search#doesSearchAgainstRepo
      * @public
-     * @return {Boolean}
+     * @returns {Boolean}
      * @description Checks if the given search object will do the search agains the given repo
      * @param {Object} search search criteria
      * @param {String} repo name of the repo: ingest, archive, published, archived
@@ -631,8 +636,9 @@ export function SearchService($location, gettext, config, session) {
      * @ngdoc method
      * @name search#getSingleItemCriteria
      * @public
-     * @return {Object}
-     * @description Returns the query criteria for a single item while keeping keywords or q values so that the results will have highlights
+     * @returns {Object}
+     * @description Returns the query criteria for a single item while keeping keywords or
+     * q values so that the results will have highlights
      * @param {Object} item
      * @param {Object} criteria
      */
@@ -642,14 +648,14 @@ export function SearchService($location, gettext, config, session) {
         itemCriteria.source.size = 1;
         itemCriteria.es_highlight = this.getElasticHighlight();
 
-        let item_id = {};
-        if (item._type === 'ingest' || item._type === 'archive') {
-            item_id[item._id] = 1;
+        let itemId = {};
+        if (item._type !== 'published') {
+            itemId[item._id] = 1;
         } else {
-            item_id[item.item_id] = 1;
+            itemId[item.item_id] = 1;
         }
 
-        itemCriteria.source.query.filtered.filter = this.getItemQuery(item_id).filtered.filter;
+        itemCriteria.source.query.filtered.filter = this.getItemQuery(itemId).filtered.filter;
         return itemCriteria;
     };
 
@@ -680,5 +686,25 @@ export function SearchService($location, gettext, config, session) {
         scopeItems._aggregations = newItems._aggregations;
 
         return angular.extend({}, scopeItems);
+    };
+
+    /**
+     * @ngdoc method
+     * @name search#getProjectedFields
+     * @public
+     * @returns {Array}
+     * @description Returns the list of fields to be used in projections
+     */
+    this.getProjectedFields = function() {
+        var uiConfig = config.list || DEFAULT_LIST_CONFIG;
+        var uiFields = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
+
+        let projectedFields = [];
+        uiFields.forEach(uiField => {
+            if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {
+                projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);
+            }
+        });
+        return _.union(CORE_PROJECTED_FIELDS.fields, projectedFields);
     };
 }

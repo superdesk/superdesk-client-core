@@ -1,5 +1,3 @@
-import { DEFAULT_PROJECTED_FIELDS } from 'apps/search/constants';
-
 SearchResults.$inject = [
     '$location',
     'preferencesService',
@@ -50,7 +48,7 @@ export function SearchResults(
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
 
-            var projections = config.projected_fields || DEFAULT_PROJECTED_FIELDS.fields;
+            var projections = search.getProjectedFields();
 	    var multiSelectable = attr.multiSelectable !== undefined;
 
             scope.previewingBroadcast = false;
@@ -196,7 +194,7 @@ export function SearchResults(
                 criteria.aggregations = $rootScope.aggregations;
                 criteria.es_highlight = search.getElasticHighlight();
                 criteria.projections = JSON.stringify(projections);
-                return api.query(getProvider(criteria), criteria).then(function (items) {
+                return api.query(getProvider(criteria), criteria).then(function(items) {
                     if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
 
                         var isItemPreviewing = !!scope.selected.preview;
@@ -362,7 +360,7 @@ export function SearchResults(
                         scope.selected.preview = completeItem;
                         scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
 
-                        if (scope.selected.preview != null){
+                        if (scope.selected.preview != null) {
                             scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
                         }
 

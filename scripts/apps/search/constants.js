@@ -63,42 +63,55 @@ export const DEFAULT_LIST_CONFIG = {
 };
 
 /**
- * Default list of fields to be returned in search results
+ * Core list of fields that has to be returned in search results
+ * for core functionality to work
  */
-export const DEFAULT_PROJECTED_FIELDS = {
+export const CORE_PROJECTED_FIELDS = {
     'fields': [
-        'priority',
-        'urgency',
-        'word_count',
-        'slugline',
         'highlights',
-        'headline',
-        'versioncreated',
         '_created',
         '_updated',
         '_etag',
-        'profile',
+        '_type',
         'state',
         'embargo',
         'publish_schedule',
-        'signal',
         'broadcast',
         'flags',
         'rewrite_of',
         'rewritten_by',
-        'source',
         'expiry',
         'task',
-        'anpa_take_key',
         'type',
         'linked_in_packages',
         'renditions',
         'package_type',
-        'correction_sequence',
         'item_id',
         '_current_version',
         'lock_user',
         'lock_session',
-        'genre'
+        'genre',
+        'source',
+        'last_published_version',
+        'archived'
     ]
+};
+
+/**
+ * Mappings of UI fields to schema fields for projection
+ */
+export const UI_PROJECTED_FIELD_MAPPINGS = {
+    'priority': 'priority',
+    'urgency': 'urgency',
+    'wordcount': 'word_count',
+    'slugline': 'slugline',
+    'headline': 'headline',
+    'profile': 'profile',
+    'signal': 'signal',
+    'takekey': 'anpa_take_key',
+    'update': 'correction_sequence',
+    'provider': 'ingest_provider',
+    'category': 'anpa_category',
+    'versioncreator': 'version_creator',
+    'versioncreated': 'versioncreated'
 };

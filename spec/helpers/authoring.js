@@ -168,9 +168,9 @@ function Authoring() {
 
     this.blockContains = function blockContains(position, expectedValue) {
         var block = this.getBlock(position);
-        block.element(by.css('.editor-type-html.clone')).isPresent().then(function(isText) {
+        block.element(by.css('.editor-type-html')).isPresent().then(function(isText) {
             if (isText) {
-                return block.element(by.css('.editor-type-html.clone')).getText();
+                return block.element(by.css('.editor-type-html')).getText();
             } else {
                 return block.element(by.css('.preview--embed')).getText();
             }

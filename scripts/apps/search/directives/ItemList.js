@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import { DEFAULT_LIST_CONFIG } from 'apps/search/constants';
+import {DEFAULT_LIST_CONFIG} from 'apps/search/constants';
 
 ItemList.$inject = [
     '$location',
