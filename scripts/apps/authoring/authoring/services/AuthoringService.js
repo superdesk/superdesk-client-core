@@ -1,7 +1,7 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-                    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
+    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
                     notify, session, $injector, moment, config) {
     var self = this;
@@ -18,18 +18,18 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         return helpers.CONTENT_FIELDS_DEFAULTS;
     };
 
-    desks.fetchCurrentUserDesks().then(function(desks_list) {
-        self.userDesks = desks_list;
+    desks.fetchCurrentUserDesks().then(function(desksList) {
+        self.userDesks = desksList;
     });
 
     /**
      * Open an item for editing
      *
      * @param {string} _id Item _id.
-     * @param {boolean} read_only
+     * @param {boolean} readOnly
      * @param {string} repo - repository where an item whose identifier is _id can be found.
      */
-    this.open = function openAuthoring(_id, read_only, repo) {
+    this.open = function openAuthoring(_id, readOnly, repo) {
         if ($location.$$path !== '/multiedit') {
             superdeskFlags.flags.authoring = true;
         }
@@ -41,23 +41,21 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         } else {
             return api.find('archive', _id, {embedded: {lock_user: 1}})
             .then(function _lock(item) {
-                if (read_only) {
+                if (readOnly) {
                     item._locked = lock.isLockedInCurrentSession(item);
                     item._editable = false;
                     return $q.when(item);
-                } else { // we want to lock
-                    if (lock.isLocked(item)) { // is locked by someone else
-                        item._locked = false;
-                        item._editable = false;
-                        return $q.when(item);
-                    } else if (lock.isLockedInCurrentSession(item)) { // we have lock
-                        item._locked = true;
-                        item._editable = true;
-                        return $q.when(item);
-                    } else { // not locked at all, try to lock
-                        item._editable = true;
-                        return lock.lock(item);
-                    }
+                } else if (lock.isLocked(item)) { // is locked by someone else
+                    item._locked = false;
+                    item._editable = false;
+                    return $q.when(item);
+                } else if (lock.isLockedInCurrentSession(item)) { // we have lock
+                    item._locked = true;
+                    item._editable = true;
+                    return $q.when(item);
+                } else { // not locked at all, try to lock
+                    item._editable = true;
+                    return lock.lock(item);
                 }
             })
             .then(item => autosave.open(item).then(null, err => item));
@@ -74,9 +72,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 };
                 return api.save('archive_rewrite', {}, updates, item);
             })
-            .then(function(new_item) {
+            .then(function(newItem) {
                 notify.success(gettext('Update Created.'));
-                authoringWorkspace.edit(new_item._id);
+                authoringWorkspace.edit(newItem._id);
             }, function(response) {
                 if (angular.isDefined(response.data._message)) {
                     notify.error(gettext('Failed to generate update: ' + response.data._message));
@@ -116,7 +114,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     autosave.drop(orig);
                 }
 
-                if (!closeItem){
+                if (!closeItem) {
                     return lock.unlock(diff);
                 }
             });
@@ -346,13 +344,13 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     /**
     * Link an item for takes.
     * @param {Object} item : Target Item
-    * @param {string} [link_id]: If not provider it returns the new Linked item.
+    * @param {string} [linkId]: If not provider it returns the new Linked item.
     * @param {string} [desk]: Desk for newly create item.
     */
-    this.linkItem = function link(item, link_id, desk) {
+    this.linkItem = function link(item, linkId, desk) {
         var data = {};
-        if (link_id) {
-            data.link_id = link_id;
+        if (linkId) {
+            data.link_id = linkId;
         }
 
         if (desk) {
@@ -367,49 +365,49 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     * @param {Object} item : item
     */
     this.itemActions = function(item) {
-        var current_item = item && item.archive_item && item.archive_item.state ? item.archive_item : item;
-        var user_privileges = privileges.privileges;
+        var currentItem = item && item.archive_item && item.archive_item.state ? item.archive_item : item;
+        var userPrivileges = privileges.privileges;
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
         var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
 
         // takes packages are readonly.
         // killed item and item that have last publish action are readonly
-        if ((angular.isUndefined(current_item) || angular.isUndefined(user_privileges)) ||
-            (current_item.state === 'killed') ||
+        if ((angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges)) ||
+            (currentItem.state === 'killed') ||
             itemOnReadOnlyStage ||
-            (angular.isDefined(current_item.takes) && current_item.takes.state === 'killed') ||
-            (current_item._type && current_item._type === 'archived')) {
+            (angular.isDefined(currentItem.takes) && currentItem.takes.state === 'killed') ||
+            (currentItem._type && currentItem._type === 'archived')) {
             return action;
         }
 
-        var digital_package = (angular.isDefined(current_item.package_type) &&
-                            current_item.package_type === 'takes');
-        var is_read_only_state = _.includes(['spiked', 'scheduled', 'killed'], current_item.state) ||
-                                digital_package;
+        var digitalPackage = (angular.isDefined(currentItem.package_type) &&
+                            currentItem.package_type === 'takes');
+        var isReadOnlyState = _.includes(['spiked', 'scheduled', 'killed'], currentItem.state) ||
+                                digitalPackage;
 
-        var lockedByMe = !lock.isLocked(current_item);
+        var lockedByMe = !lock.isLocked(currentItem);
         action.view = !lockedByMe;
 
-        var isBroadcast = current_item.genre && current_item.genre.length > 0 &&
-                          _.includes(['text', 'preformatted'], current_item.type) &&
-                          current_item.genre.some(nameIsBroadcast);
+        var isBroadcast = currentItem.genre && currentItem.genre.length > 0 &&
+                          _.includes(['text', 'preformatted'], currentItem.type) &&
+                          currentItem.genre.some(nameIsBroadcast);
 
         function nameIsBroadcast(genre) {
             return genre.name === 'Broadcast Script';
         }
 
         // new take should be on the text item that are closed or last take but not killed and doesn't have embargo.
-        var new_take = !is_read_only_state && current_item.type === 'text' &&
-            !current_item.embargo && current_item._current_version > 0 &&
-            (this.isPublished(current_item) || !current_item.publish_schedule) &&
-            (angular.isUndefined(current_item.takes) || current_item.takes.last_take === current_item._id) &&
+        var newTake = !isReadOnlyState && currentItem.type === 'text' &&
+            !currentItem.embargo && currentItem._current_version > 0 &&
+            (this.isPublished(currentItem) || !currentItem.publish_schedule) &&
+            (angular.isUndefined(currentItem.takes) || currentItem.takes.last_take === currentItem._id) &&
             !isBroadcast &&
-            !current_item.rewritten_by;
+            !currentItem.rewritten_by;
 
-        action.new_take = new_take;
+        action.new_take = newTake;
 
         // item is published state - corrected, published, scheduled, killed
-        if (self.isPublished(current_item)) {
+        if (self.isPublished(currentItem)) {
             //if not the last published version
             if (angular.isDefined(item.archive_item) &&
                 item._current_version !== item.archive_item._current_version) {
@@ -417,78 +415,78 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             }
 
             action.view = true;
-            if (current_item.state === 'scheduled' && !digital_package) {
+            if (currentItem.state === 'scheduled' && !digitalPackage) {
                 action.deschedule = true;
-            } else if (current_item.state === 'published' || current_item.state === 'corrected') {
-                action.kill = user_privileges.kill && lockedByMe && !is_read_only_state;
-                action.correct = user_privileges.correct && lockedByMe && !is_read_only_state;
+            } else if (currentItem.state === 'published' || currentItem.state === 'corrected') {
+                action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
+                action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState;
             }
 
         } else {
             // production states i.e in_progress, routed, fetched, submitted.
 
             //if spiked
-            if (current_item.state === 'spiked') {
+            if (currentItem.state === 'spiked') {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 action.unspike = true;
                 return action;
             }
 
-            action.save = current_item.state !== 'spiked';
-            action.publish = (!current_item.flags || !current_item.flags.marked_for_not_publication) &&
-                    current_item.task && current_item.task.desk &&
-                    (!current_item.highlight || current_item.type !== 'composite') &&
-                    user_privileges.publish && current_item.state !== 'draft';
+            action.save = currentItem.state !== 'spiked';
+            action.publish = (!currentItem.flags || !currentItem.flags.marked_for_not_publication) &&
+                    currentItem.task && currentItem.task.desk &&
+                    (!currentItem.highlight || currentItem.type !== 'composite') &&
+                    userPrivileges.publish && currentItem.state !== 'draft';
 
-            action.edit = !(current_item.type === 'composite' && current_item.package_type === 'takes') &&
-                            current_item.state !== 'spiked' && lockedByMe;
-            action.unspike = current_item.state === 'spiked' && user_privileges.unspike;
-            action.spike = current_item.state !== 'spiked' && user_privileges.spike &&
-                (angular.isUndefined(current_item.takes) || current_item.takes.last_take === current_item._id);
-            action.send = current_item._current_version > 0 && user_privileges.move;
+            action.edit = !(currentItem.type === 'composite' && currentItem.package_type === 'takes') &&
+                            currentItem.state !== 'spiked' && lockedByMe;
+            action.unspike = currentItem.state === 'spiked' && userPrivileges.unspike;
+            action.spike = currentItem.state !== 'spiked' && userPrivileges.spike &&
+                (angular.isUndefined(currentItem.takes) || currentItem.takes.last_take === currentItem._id);
+            action.send = currentItem._current_version > 0 && userPrivileges.move;
         }
 
-        action.re_write = !is_read_only_state && _.includes(['text'], current_item.type) &&
-            !current_item.embargo && !current_item.rewritten_by && action.new_take &&
-            (!current_item.broadcast || !current_item.broadcast.master_id) &&
-            (!current_item.rewrite_of || (current_item.rewrite_of && this.isPublished(current_item)));
-        var re_write = action.re_write;
+        action.re_write = !isReadOnlyState && _.includes(['text'], currentItem.type) &&
+            !currentItem.embargo && !currentItem.rewritten_by && action.new_take &&
+            (!currentItem.broadcast || !currentItem.broadcast.master_id) &&
+            (!currentItem.rewrite_of || (currentItem.rewrite_of && this.isPublished(currentItem)));
+        var reWrite = action.re_write;
 
-        action.resend = _.includes(['text'], current_item.type) &&
-            _.includes(['published', 'corrected', 'killed'], current_item.state);
+        action.resend = _.includes(['text'], currentItem.type) &&
+            _.includes(['published', 'corrected', 'killed'], currentItem.state);
 
         //mark item for highlights
-        action.mark_item = (current_item.task && current_item.task.desk &&
-            !is_read_only_state && current_item.package_type !== 'takes' &&
-             user_privileges.mark_for_highlights);
+        action.mark_item = (currentItem.task && currentItem.task.desk &&
+            !isReadOnlyState && currentItem.package_type !== 'takes' &&
+             userPrivileges.mark_for_highlights);
 
         // allow all stories to be packaged if it doesn't have Embargo
-        action.package_item = !_.includes(['spiked', 'scheduled', 'killed'], current_item.state) &&
-            !current_item.embargo && current_item.package_type !== 'takes' &&
-            (this.isPublished(current_item) || !current_item.publish_schedule);
+        action.package_item = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state) &&
+            !currentItem.embargo && currentItem.package_type !== 'takes' &&
+            (this.isPublished(currentItem) || !currentItem.publish_schedule);
 
-        action.create_broadcast = (_.includes(['published', 'corrected'], current_item.state)) &&
-            _.includes(['text', 'preformatted'], current_item.type) &&
-            !isBroadcast && user_privileges.archive_broadcast;
+        action.create_broadcast = (_.includes(['published', 'corrected'], currentItem.state)) &&
+            _.includes(['text', 'preformatted'], currentItem.type) &&
+            !isBroadcast && userPrivileges.archive_broadcast;
 
-        action.multi_edit = !is_read_only_state;
+        action.multi_edit = !isReadOnlyState;
 
         //check for desk membership for edit rights.
-        if (current_item.task && current_item.task.desk) {
+        if (currentItem.task && currentItem.task.desk) {
             // in production
 
-            action.duplicate = user_privileges.duplicate &&
-                !_.includes(['spiked', 'killed'], current_item.state) &&
-                (angular.isUndefined(current_item.package_type) || current_item.package_type !== 'takes');
+            action.duplicate = userPrivileges.duplicate &&
+                !_.includes(['spiked', 'killed'], currentItem.state) &&
+                (angular.isUndefined(currentItem.package_type) || currentItem.package_type !== 'takes');
 
-            action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed'], current_item.state);
+            action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state);
 
-            var desk = _.find(self.userDesks, {'_id': current_item.task.desk});
+            var desk = _.find(self.userDesks, {'_id': currentItem.task.desk});
             if (!desk) {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 // user can action `update` even if the user is not a member.
-                action.re_write = re_write;
-                action.new_take = new_take;
+                action.re_write = reWrite;
+                action.new_take = newTake;
             }
         } else {
             // personal

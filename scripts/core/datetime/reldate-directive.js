@@ -7,7 +7,7 @@
  * Params:
  * @param {object} ngModel - datetime string in utc
  */
-angular.module('superdesk.core.datetime.reldate', []).directive('sdReldate', [ function() {
+angular.module('superdesk.core.datetime.reldate', []).directive('sdReldate', [function() {
     return {
         require: 'ngModel',
         template: '<time datetime="{{ datetime }}" title="{{ title }}">{{ reldate }}</time>',

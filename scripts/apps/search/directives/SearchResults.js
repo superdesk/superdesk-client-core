@@ -8,7 +8,7 @@ SearchResults.$inject = [
     'search',
     'session',
     '$rootScope'
-    ];
+];
 
 /**
  * Item list with sidebar preview
@@ -46,7 +46,7 @@ export function SearchResults(
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
 
-            var multiSelectable = (attr.multiSelectable === undefined) ? false : true;
+            var multiSelectable = attr.multiSelectable !== undefined;
 
             scope.previewingBroadcast = false;
             scope.shouldRefresh = true;
@@ -345,7 +345,7 @@ export function SearchResults(
                 }
                 scope.selected.preview = item;
                 scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
-                if (scope.selected.preview != null){
+                if (scope.selected.preview != null) {
                     scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
                 }
 

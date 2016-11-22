@@ -100,7 +100,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
 
             return api.query('dictionaries', {
                 where: {$and:
-                    [{$or: languageIds},
+                [{$or: languageIds},
                     {is_active: 'true'},
                     {type: 'abbreviations'},
                     {user: identity._id}]
@@ -125,7 +125,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
             return api.query('dictionaries', {
                 projection: {content: 0},
                 where: {$and:
-                    [{$or: languageIds},
+                [{$or: languageIds},
                     {is_active: {$in: ['true', null]}},
                     {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
                     {$or: [{user: identity._id}, {user: {$exists: false}}]}]

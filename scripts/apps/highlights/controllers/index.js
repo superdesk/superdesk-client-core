@@ -1,2 +1,2 @@
-export { HighlightsSettings } from './HighlightsSettings';
-export { HighlightsConfig } from './HighlightsConfig';
+export {HighlightsSettings} from './HighlightsSettings';
+export {HighlightsConfig} from './HighlightsConfig';

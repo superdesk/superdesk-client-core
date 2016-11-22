@@ -1,2 +1,2 @@
-export { VocabularyConfigController } from './VocabularyConfigController';
-export { VocabularyEditController } from './VocabularyEditController';
+export {VocabularyConfigController} from './VocabularyConfigController';
+export {VocabularyEditController} from './VocabularyEditController';

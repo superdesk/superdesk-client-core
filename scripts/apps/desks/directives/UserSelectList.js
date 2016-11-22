@@ -73,20 +73,20 @@ export function UserSelectList($filter, api) {
             elem.bind('keydown keypress', function(event) {
                 scope.$apply(function() {
                     switch (event.which) {
-                        case ARROW_UP:
-                            event.preventDefault();
-                            previous();
-                            break;
-                        case ARROW_DOWN:
-                            event.preventDefault();
-                            next();
-                            break;
-                        case ENTER:
-                            event.preventDefault();
-                            if (getSelectedIndex() >= 0) {
-                                scope.choose(scope.selected);
-                            }
-                            break;
+                    case ARROW_UP:
+                        event.preventDefault();
+                        previous();
+                        break;
+                    case ARROW_DOWN:
+                        event.preventDefault();
+                        next();
+                        break;
+                    case ENTER:
+                        event.preventDefault();
+                        if (getSelectedIndex() >= 0) {
+                            scope.choose(scope.selected);
+                        }
+                        break;
                     }
                 });
             });

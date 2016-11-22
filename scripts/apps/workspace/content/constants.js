@@ -19,7 +19,7 @@ export const DEFAULT_SCHEMA = Object.freeze({
     dateline: {type: 'dict', required: false},
     sign_off: {type: 'string'},
     footer: {},
-    body_footer: {type: 'string'},
+    body_footer: {type: 'string'}
 });
 
 export const DEFAULT_EDITOR = Object.freeze({
@@ -44,7 +44,7 @@ export const DEFAULT_EDITOR = Object.freeze({
     },
     footer: {order: 17},
     body_footer: {order: 18},
-    sign_off: {order: 19},
+    sign_off: {order: 19}
 });
 
 export const CV_ALIAS = Object.freeze({

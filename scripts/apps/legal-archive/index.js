@@ -1,6 +1,6 @@
-import { LegalArchiveService } from './services';
-import { LegalArchiveController } from './controllers';
-import { LegalItemSortbar } from './directives';
+import {LegalArchiveService} from './services';
+import {LegalArchiveController} from './controllers';
+import {LegalItemSortbar} from './directives';
 
 /**
  * @ngdoc module

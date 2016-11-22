@@ -1,1 +1,1 @@
-export { WorkspaceService } from './WorkspaceService';
+export {WorkspaceService} from './WorkspaceService';

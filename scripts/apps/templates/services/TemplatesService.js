@@ -4,7 +4,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
     var PREFERENCES_KEY = 'templates:recent';
 
     var KILL_TEMPLATE_IGNORE_FIELDS = ['dateline', 'template_desks', 'schedule_desk',
-    'schedule_stage', 'schedule', 'next_run', 'last_run'];
+        'schedule_stage', 'schedule', 'next_run', 'last_run'];
     var self = this;
 
     this.TEMPLATE_METADATA = [
@@ -119,16 +119,16 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
             return $q.when();
         }
 
-        var desk_criteria = [
+        var deskCriteria = [
             {'template_desks': {'$exists': false}, is_public: true},
             {'template_desks': {'$eq': []}, is_public: true}
         ];
 
         if (desk) {
-            desk_criteria.push({'template_desks': {'$in': [desk]}, is_public: true});
+            deskCriteria.push({'template_desks': {'$in': [desk]}, is_public: true});
         }
 
-        criteria.$or = [{$or: desk_criteria}, {user: user, is_public: false}];
+        criteria.$or = [{$or: deskCriteria}, {user: user, is_public: false}];
 
         if (type !== undefined) {
             criteria.template_type = type;

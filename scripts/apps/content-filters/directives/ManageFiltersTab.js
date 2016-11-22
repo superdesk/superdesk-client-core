@@ -1,4 +1,4 @@
-import { ManageContentFiltersController } from 'apps/content-filters/controllers';
+import {ManageContentFiltersController} from 'apps/content-filters/controllers';
 
 /**
  * @ngdoc directive

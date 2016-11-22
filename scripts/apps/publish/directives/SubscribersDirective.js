@@ -155,8 +155,9 @@ export function SubscribersDirective(
             };
 
             /**
-             * Either initializes a new Subscriber object for adding a new subscriber or initializes the subscriber object with
-             * the selected subscriber allowing user to update the subscriber details.
+             * Either initializes a new Subscriber object for adding a new subscriber or
+             * initializes the subscriber object with the selected subscriber allowing
+             * user to update the subscriber details.
              */
             $scope.edit = function(subscriber) {
                 var promises = [];
@@ -185,7 +186,8 @@ export function SubscribersDirective(
                     $scope.subscriber.global_filters =  $scope.origSubscriber.global_filters || {};
 
                     $scope.destinations = [];
-                    if (angular.isDefined($scope.subscriber.destinations) && !_.isNull($scope.subscriber.destinations) &&
+                    if (angular.isDefined($scope.subscriber.destinations)
+                        && !_.isNull($scope.subscriber.destinations) &&
                         $scope.subscriber.destinations.length > 0) {
 
                         $scope.destinations = _.clone($scope.subscriber.destinations, true);

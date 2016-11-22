@@ -18,7 +18,7 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
             };
 
             scope.save = function(ruleset) {
-                var _new = ruleset._id ? false : true;
+                var _new = !!!ruleset._id;
                 api('rule_sets').save(_orig, ruleset)
                 .then(function() {
                     if (_new) {

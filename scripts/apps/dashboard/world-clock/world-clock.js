@@ -21,30 +21,30 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      *   Controller for the world clock widget configuration modal.
      */
     .controller('WorldClockConfigController', ['$scope', 'notify', 'tzdata',
-    function ($scope, notify, tzdata) {
+        function ($scope, notify, tzdata) {
 
-        $scope.availableZones = [];
+            $scope.availableZones = [];
 
-        tzdata.$promise.then(function () {
-            $scope.availableZones = tzdata.getTzNames();
-        });
+            tzdata.$promise.then(function () {
+                $scope.availableZones = tzdata.getTzNames();
+            });
 
-        $scope.notify = function(action, zone) {
-            if (action === 'add') {
-                notify.success(gettext('World clock added:') + ' ' + zone, 3000);
-            } else if (action === 'remove') {
-                notify.success(gettext('World clock removed:') + ' ' + zone, 3000);
-            }
-        };
-
-        $scope.notIn = function(haystack) {
-            return function(needle) {
-                return haystack.indexOf(needle) === -1;
+            $scope.notify = function(action, zone) {
+                if (action === 'add') {
+                    notify.success(gettext('World clock added:') + ' ' + zone, 3000);
+                } else if (action === 'remove') {
+                    notify.success(gettext('World clock removed:') + ' ' + zone, 3000);
+                }
             };
-        };
 
-        $scope.configuration.zones = $scope.configuration.zones || [];
-    }])
+            $scope.notIn = function(haystack) {
+                return function(needle) {
+                    return haystack.indexOf(needle) === -1;
+                };
+            };
+
+            $scope.configuration.zones = $scope.configuration.zones || [];
+        }])
 
     /**
      * @ngdoc controller
@@ -56,30 +56,30 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      *   time zones around the world.
      */
     .controller('WorldClockController', ['$scope', '$interval', 'tzdata',
-    function ($scope, $interval, tzdata) {
+        function ($scope, $interval, tzdata) {
 
-        var interval, INTERVAL_DELAY = 500;
+            var interval, INTERVAL_DELAY = 500;
 
-        function updateUTC() {
-            $scope.utc = moment();
-            $scope.$digest();
-        }
+            function updateUTC() {
+                $scope.utc = moment();
+                $scope.$digest();
+            }
 
         // XXX: a hack-ish workaround to expose the object loaded via
         // RequireJS to the testing code which does not use the latter
-        this._moment = moment;
+            this._moment = moment;
 
-        tzdata.$promise.then(function () {
-            moment.tz.add(
+            tzdata.$promise.then(function () {
+                moment.tz.add(
                 _.pick(tzdata, ['zones', 'links'])
             );
-        });
+            });
 
-        interval = $interval(updateUTC, INTERVAL_DELAY, 0, false);
-        $scope.$on('$destroy', function stopTimeout() {
-            $interval.cancel(interval);
-        });
-    }])
+            interval = $interval(updateUTC, INTERVAL_DELAY, 0, false);
+            $scope.$on('$destroy', function stopTimeout() {
+                $interval.cancel(interval);
+            });
+        }])
     /**
      * sdClock analog clock
      */

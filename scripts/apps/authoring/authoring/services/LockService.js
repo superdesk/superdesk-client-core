@@ -78,7 +78,7 @@ export function LockService($q, api, session, privileges, notify) {
     /**
     * can unlock the item or not.
     */
-    this.can_unlock = function can_unlock(item) {
+    this.can_unlock = function canUnlock(item) {
         if (this.isLockedByMe(item)) {
             return true;
         } else {

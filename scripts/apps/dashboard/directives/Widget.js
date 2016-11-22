@@ -1,4 +1,4 @@
-import { ConfigController } from 'apps/dashboard/controllers';
+import {ConfigController} from 'apps/dashboard/controllers';
 
 Widget.$inject = ['$modal', 'asset'];
 

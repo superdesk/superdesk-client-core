@@ -11,7 +11,7 @@ import './styles/desks.scss';
 
 import * as ctrl from './controllers';
 import * as directive from './directives';
-import { DesksFactory } from './services';
+import {DesksFactory} from './services';
 
 /**
  * @ngdoc module

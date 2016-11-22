@@ -53,8 +53,8 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
                     }
                     if (action.target_types && action.target_types.length > 0) {
                         var targets = [];
-                        _.forEach(action.target_types, function(target_type) {
-                            targets.push((!target_type.deny ? gettext('Not ') : '') + target_type.name);
+                        _.forEach(action.target_types, function(targetType) {
+                            targets.push((!targetType.deny ? gettext('Not ') : '') + targetType.name);
                         });
                         actionValues.push(targets.join(','));
                     }

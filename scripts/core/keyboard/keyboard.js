@@ -69,7 +69,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             'keyCode':          false,
             'global':           false
         },
-        shift_nums = {
+        shiftNums = {
             '`': '~',
             '1': '!',
             '2': '@',
@@ -90,7 +90,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             '/': '?',
             '\\': '|'
         },
-        special_keys = { // Special Keys - and their codes
+        specialKeys = { // Special Keys - and their codes
             'esc': 27,
             'escape': 27,
             'tab': 9,
@@ -175,9 +175,13 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 } else if (e.srcElement) {
                     elt = e.srcElement;
                 }
-                if (elt.nodeType === 3) { elt = elt.parentNode; }
+                if (elt.nodeType === 3) {
+                    elt = elt.parentNode;
+                }
                 if (elt.tagName === 'INPUT' || elt.tagName === 'TEXTAREA' ||
-                        elt.className.indexOf('editor-type-html') !== -1) { return; }
+                        elt.className.indexOf('editor-type-html') !== -1) {
+                    return;
+                }
             }
 
             // Find out which key is pressed
@@ -189,8 +193,12 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 
             var character = String.fromCharCode(code).toLowerCase();
 
-            if (code === 188) { character = ','; } // If the user presses , when the type is onkeydown
-            if (code === 190) { character = '.'; } // If the user presses , when the type is onkeydown
+            if (code === 188) {
+                character = ',';
+            } // If the user presses , when the type is onkeydown
+            if (code === 190) {
+                character = '.';
+            } // If the user presses , when the type is onkeydown
 
             var keys = label.split('+');
             // Key Pressed - counts the number of valid keypresses
@@ -200,51 +208,51 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             var modifiers = {
                 shift: {
                     wanted:     false,
-                    pressed:    e.shiftKey ? true : false
+                    pressed:    !!e.shiftKey
                 },
                 ctrl: {
                     wanted:     false,
-                    pressed:    e.ctrlKey ? true : false
+                    pressed:    !!e.ctrlKey
                 },
                 alt: {
                     wanted:     false,
-                    pressed:    e.altKey ? true : false
+                    pressed:    !!e.altKey
                 },
                 meta: { //Meta is Mac specific
                     wanted:     false,
-                    pressed:    e.metaKey ? true : false
+                    pressed:    !!e.metaKey
                 }
             };
             // Foreach keys in label (split on +)
             for (var i = 0, l = keys.length; k = keys[i], i < l; i++) {
                 switch (k) {
-                    case 'ctrl':
-                    case 'control':
-                        kp++;
-                        modifiers.ctrl.wanted = true;
-                        break;
-                    case 'shift':
-                    case 'alt':
-                    case 'meta':
-                        kp++;
-                        modifiers[k].wanted = true;
-                        break;
+                case 'ctrl':
+                case 'control':
+                    kp++;
+                    modifiers.ctrl.wanted = true;
+                    break;
+                case 'shift':
+                case 'alt':
+                case 'meta':
+                    kp++;
+                    modifiers[k].wanted = true;
+                    break;
                 }
 
                 if (k.length > 1) { // If it is a special key
-                    if (special_keys[k] === code) { kp++; }
+                    if (specialKeys[k] === code) {
+                        kp++;
+                    }
                 } else if (opt.keyCode) { // If a specific key is set into the config
-                    if (opt.keyCode === code) { kp++; }
-                } else { // The special keys did not match
+                    if (opt.keyCode === code) {
+                        kp++;
+                    }
+                } else if (character === k) { // The special keys did not match
+                    kp++;
+                } else if (shiftNums[character] && e.shiftKey) { // Stupid Shift key bug created by using lowercase
+                    character = shiftNums[character];
                     if (character === k) {
                         kp++;
-                    } else {
-                        if (shift_nums[character] && e.shiftKey) { // Stupid Shift key bug created by using lowercase
-                            character = shift_nums[character];
-                            if (character === k) {
-                                kp++;
-                            }
-                        }
                     }
                 }
             }
@@ -319,10 +327,12 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         label = label.toLowerCase();
         var binding = this.keyboardEvent[label];
         delete(this.keyboardEvent[label]);
-        if (!binding) { return; }
+        if (!binding) {
+            return;
+        }
         var type   = binding.event,
-        elt        = binding.target,
-        callback   = binding.callback;
+            elt        = binding.target,
+            callback   = binding.callback;
         if (elt.detachEvent) {
             elt.detachEvent('on' + type, callback);
         } else if (elt.removeEventListener) {
@@ -384,7 +394,12 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 
             keyboardManager.bind('alt+k', function() {
                 scope.enabled = false;
-            }, {global: true, type: 'keyup', group: gettext('General'), description: gettext('Displays active keyboard shortcuts')});
+            }, {
+                global: true,
+                type: 'keyup',
+                group: gettext('General'),
+                description: gettext('Displays active keyboard shortcuts')
+            });
 
             scope.close = function() {
                 scope.enabled = false;

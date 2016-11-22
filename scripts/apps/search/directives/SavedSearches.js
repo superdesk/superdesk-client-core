@@ -3,7 +3,8 @@ SavedSearches.$inject = [
     '$location', 'desks', 'privileges', 'search', 'savedSearch'
 ];
 
-export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location, desks, privileges, search, savedSearch) {
+export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
+    desks, privileges, search, savedSearch) {
     return {
         templateUrl: asset.templateUrl('apps/search/views/saved-searches.html'),
         scope: {},

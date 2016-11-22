@@ -1,7 +1,9 @@
 SearchParameters.$inject = [
-    '$location', 'asset', 'tags', 'metadata', 'searchCommon', 'desks', 'userList', 'gettext', 'gettextCatalog', 'ingestSources'
-];
-export function SearchParameters($location, asset, tags, metadata, common, desks, userList, gettext, gettextCatalog, ingestSources) {
+    '$location', 'asset', 'tags', 'metadata', 'searchCommon', 'desks', 'userList', 'gettext',
+    'gettextCatalog', 'ingestSources'];
+
+export function SearchParameters($location, asset, tags, metadata, common, desks, userList,
+    gettext, gettextCatalog, ingestSources) {
     return {
         scope: {
             repo: '=',
@@ -21,9 +23,9 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
             /*
              * init function to setup the directive initial state and called by $locationChangeSuccess event
-             * @param {boolean} load_data.
+             * @param {boolean} loadData.
              */
-            function init(load_data) {
+            function init(loadData) {
                 var params = $location.search();
                 scope.query = params.q;
                 scope.flags = false;
@@ -45,7 +47,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     scope.fields.spike = true;
                 }
 
-                if (load_data) {
+                if (loadData) {
                     fetchMetadata();
                     fetchUsers();
                     fetchDesks();
@@ -152,7 +154,8 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             }
 
             /*
-             * Converting to object and adding pre-selected subject codes, location, genre and service to list in left sidebar
+             * Converting to object and adding pre-selected subject codes, location,
+             * genre and service to list in left sidebar.
              */
             function fetchMetadata() {
                 metadata
@@ -218,25 +221,23 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
                     if (key === '_all') {
                         metas.push(val.join(' '));
-                    } else {
-                        if (val) {
-                            if (key.indexOf('scanpix_') === 0) {
-                                key = key.substring(8);
+                    } else if (val) {
+                        if (key.indexOf('scanpix_') === 0) {
+                            key = key.substring(8);
+                        }
+                        if (typeof(val) === 'string') {
+                            if (val) {
+                                metas.push(key + ':(' + val + ')');
                             }
-                            if (typeof(val) === 'string'){
-                                if (val) {
-                                    metas.push(key + ':(' + val + ')');
-                                }
-                            } else if (angular.isArray(val)) {
-                                angular.forEach(val, function(value) {
-                                    value = value.replace(pattern, '');
-                                    metas.push(key + ':(' + value + ')');
-                                });
-                            } else {
-                                var subkey = getFirstKey(val);
-                                if (val[subkey]) {
-                                    metas.push(key + '.' + subkey + ':(' + val[subkey] + ')');
-                                }
+                        } else if (angular.isArray(val)) {
+                            angular.forEach(val, function(value) {
+                                value = value.replace(pattern, '');
+                                metas.push(key + ':(' + value + ')');
+                            });
+                        } else {
+                            var subkey = getFirstKey(val);
+                            if (val[subkey]) {
+                                metas.push(key + '.' + subkey + ':(' + val[subkey] + ')');
                             }
                         }
                     }
@@ -282,11 +283,11 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 var deskId = '';
                 if (scope.fields[field]) {
                     deskId = scope.fields[field];
-                    var desk_type = _.result(_.find(scope.desks._items, function (item) {
+                    var deskType = _.result(_.find(scope.desks._items, function (item) {
                         return item._id === deskId;
                     }), 'desk_type');
 
-                    return deskId + '-' + desk_type;
+                    return deskId + '-' + deskType;
                 }
 
                 return null;

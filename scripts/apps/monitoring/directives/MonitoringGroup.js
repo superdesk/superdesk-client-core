@@ -1,5 +1,6 @@
 MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
-    'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi', 'archiveService', '$rootScope'];
+    'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
+    'archiveService', '$rootScope'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
         workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope) {
 
@@ -25,7 +26,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.loading = false;
             scope.cacheNextItems = [];
             scope.cachePreviousItems = [];
-            scope.limited = !(monitoring.singleGroup || scope.group.type === 'highlights' || scope.group.type === 'spike');
+            scope.limited = !(monitoring.singleGroup || scope.group.type === 'highlights'
+                || scope.group.type === 'spike');
             scope.viewColumn = monitoring.viewColumn;
 
             if (scope.forceLimited != null) {
@@ -204,8 +206,9 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             function updateGroupStyle() {
                 if (scope.viewColumn) {
-                    // maxHeight is not applicable for swimlane/column view, as each stages/column don't need to have scroll bars
-                    // because container scroll bar of monitoring view will serve scrolling
+                    // maxHeight is not applicable for swimlane/column view, as each stages/column
+                    // don't need to have scroll bars/ because container scroll bar of monitoring
+                    // view will serve scrolling
                     scope.style.maxHeight = null;
                     $rootScope.$broadcast('resize:header');
                 } else {
@@ -227,13 +230,16 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 var intent = {action: 'list'};
                 superdesk.findActivities(intent, item).forEach(function (activity) {
                     if (activity.keyboardShortcut && workflowService.isActionAllowed(item, activity.action)) {
-                        monitoring.bindedItems.push(scope.$on('key:' + activity.keyboardShortcut.replace('+', ':'), function () {
-                            if (activity._id === 'mark.item') {
-                                bindMarkItemShortcut();
-                            } else {
-                                activityService.start(activity, {data: {item: scope.selected}});
-                            }
-                        }));
+                        monitoring.bindedItems.push(
+                            scope.$on('key:' + activity.keyboardShortcut.replace('+', ':'),
+                            function () {
+                                if (activity._id === 'mark.item') {
+                                    bindMarkItemShortcut();
+                                } else {
+                                    activityService.start(activity, {data: {item: scope.selected}});
+                                }
+                            })
+                        );
                     }
                 });
             }
@@ -291,10 +297,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             var criteria;
 
             function edit(item) {
-                if (item.state !== 'spiked'){
+                if (item.state !== 'spiked') {
                     if (item._type === 'ingest') {
                         var intent = {action: 'list', type: 'ingest'},
-                        activity = superdesk.findActivities(intent, item)[0];
+                            activity = superdesk.findActivities(intent, item)[0];
 
                         activityService.start(activity, {data: {item: item}})
                             .then(function (item) {

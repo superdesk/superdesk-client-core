@@ -48,7 +48,8 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
         });
 
         function errorMessage(response) {
-            if (response.data && response.data._issues && response.data._issues.name && response.data._issues.name.unique) {
+            if (response.data && response.data._issues && response.data._issues.name
+                && response.data._issues.name.unique) {
                 $scope._errorUniqueness = true;
             } else {
                 $scope.message = gettext('There was a problem while saving highlights configuration');
@@ -82,7 +83,9 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
     }
 
     function isIncluded(arr, id) {
-        return _.findIndex(arr, function(c) { return c === id; }) > -1;
+        return _.findIndex(arr, function(c) {
+            return c === id;
+        }) > -1;
     }
 
     function assignedDesks() {

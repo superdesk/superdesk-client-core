@@ -1,2 +1,2 @@
-export { SubscribersService } from './SubscribersService';
-export { AdminPublishSettingsService } from './AdminPublishSettingsService';
+export {SubscribersService} from './SubscribersService';
+export {AdminPublishSettingsService} from './AdminPublishSettingsService';

@@ -614,7 +614,7 @@ function Monitoring() {
      */
     this.selectDesk = function(desk) {
         var dropdownBtn = element(by.id('selected-desk')),
-        dropdownMenu = element(by.id('select-desk-menu'));
+            dropdownMenu = element(by.id('select-desk-menu'));
 
         // open dropdown
         dropdownBtn.click();

@@ -1,1 +1,1 @@
-export { ContentFiltersService } from './ContentFiltersService';
+export {ContentFiltersService} from './ContentFiltersService';

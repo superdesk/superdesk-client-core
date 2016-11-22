@@ -94,8 +94,8 @@ function CommentTextDirective($compile) {
             html  = attrs.text.replace(/(?:\r\n|\r|\n)/g, '</p><p>');
 
             //map user mentions
-            var mentioned_users = html.match(/\@([a-zA-Z0-9-_.]\w+)/g);
-            _.each(mentioned_users, function(token) {
+            var mentionedUsers = html.match(/\@([a-zA-Z0-9-_.]\w+)/g);
+            _.each(mentionedUsers, function(token) {
                 var username = token.substring(1, token.length);
                 if (scope.comment.mentioned_users && scope.comment.mentioned_users[username]) {
                     html = html.replace(token,
@@ -104,8 +104,8 @@ function CommentTextDirective($compile) {
             });
 
             //map desk mentions
-            var mentioned_desks = html.match(/\#([a-zA-Z0-9-_.]\w+)/g);
-            _.each(mentioned_desks, function(token) {
+            var mentionedDesks = html.match(/\#([a-zA-Z0-9-_.]\w+)/g);
+            _.each(mentionedDesks, function(token) {
                 var deskname = token.substring(1, token.length);
                 if (scope.comment.mentioned_desks && scope.comment.mentioned_desks[deskname]) {
                     html = html.replace(token,

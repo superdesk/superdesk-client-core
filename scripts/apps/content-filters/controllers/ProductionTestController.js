@@ -15,11 +15,11 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
     $scope.selectedfilter = null;
     $scope.testResult = null;
     var UP = -1,
-    DOWN = 1,
-    MOVES = {
-        38: UP,
-        40: DOWN
-    };
+        DOWN = 1,
+        MOVES = {
+            38: UP,
+            40: DOWN
+        };
 
     $scope.resultType = [
         {id: 'Matching', value: 'true'},
@@ -69,14 +69,10 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
 
     function move(diff, event) {
         var index = _.findIndex($scope.testResult, $scope.selectedItem),
-            nextItem,
             nextIndex;
 
-        if (index === -1) {
-            nextItem = $scope.testResult[0];
-        } else {
+        if (index !== -1) {
             nextIndex = Math.max(0, Math.min($scope.testResult.length - 1, index + diff));
-            nextItem = $scope.testResult[nextIndex];
         }
         clickItem($scope.testResult[nextIndex], event);
     }

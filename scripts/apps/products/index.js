@@ -1,8 +1,8 @@
 // styles
 import './styles/products.scss';
 
-import { ProductsFactory } from './services';
-import { ProductsConfigController } from './controllers';
+import {ProductsFactory} from './services';
+import {ProductsConfigController} from './controllers';
 
 /**
  * @ngdoc module
@@ -15,12 +15,12 @@ export default angular.module('superdesk.apps.products', ['superdesk.apps.users'
     .config(['superdeskProvider', function(superdesk) {
         superdesk
             .activity('/settings/products', {
-                    label: gettext('Products'),
-                    controller: ProductsConfigController,
-                    templateUrl: 'scripts/apps/products/views/settings.html',
-                    category: superdesk.MENU_SETTINGS,
-                    privileges: {products: 1}
-                });
+                label: gettext('Products'),
+                controller: ProductsConfigController,
+                templateUrl: 'scripts/apps/products/views/settings.html',
+                category: superdesk.MENU_SETTINGS,
+                privileges: {products: 1}
+            });
     }])
 
     .config(['apiProvider', function(apiProvider) {

@@ -1,8 +1,9 @@
 UserEditDirective.$inject = ['api', 'gettext', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
     'desks', 'keyboardManager', 'gettextCatalog', 'config'];
-export function UserEditDirective(api, gettext, notify, usersService, userList, session, _, langmap, $location, $route, superdesk, features,
-    asset, privileges, desks, keyboardManager, gettextCatalog, config) {
+export function UserEditDirective(api, gettext, notify, usersService, userList, session, _,
+    langmap, $location, $route, superdesk, features, asset, privileges, desks, keyboardManager,
+    gettextCatalog, config) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/edit-form.html'),
         scope: {
@@ -17,7 +18,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             scope.usernamePattern = usersService.usernamePattern;
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
-            scope.hideSignOff = config.user && config.user.sign_off_mapping ? true: false;
+            scope.hideSignOff = config.user && config.user.sign_off_mapping;
 
             scope.dirty = false;
             scope.errorMessage = null;
@@ -50,16 +51,18 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 if (lang === gettextCatalog.baseLanguage) {
                     noBaseLanguage = false;
                 }
-                var lang_code = lang.replace('_', '-');
-                if (langmap[lang_code]) {
-                    return {'code': lang, 'nativeName': langmap[lang_code].nativeName};
+                var langCode = lang.replace('_', '-');
+                if (langmap[langCode]) {
+                    return {'code': lang, 'nativeName': langmap[langCode].nativeName};
                 }
             });
 
             //add baseLanguage if needed
             if (noBaseLanguage) {
-                scope.languages.unshift(
-                    {'code': gettextCatalog.baseLanguage, 'nativeName': langmap[gettextCatalog.baseLanguage].nativeName});
+                scope.languages.unshift({
+                    'code': gettextCatalog.baseLanguage,
+                    'nativeName': langmap[gettextCatalog.baseLanguage].nativeName
+                });
             }
 
             scope.cancel = function() {

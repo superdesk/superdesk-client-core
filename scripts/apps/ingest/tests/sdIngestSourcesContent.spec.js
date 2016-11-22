@@ -77,12 +77,12 @@ describe('sdIngestSourcesContent directive', function () {
         it('removes username and password from provider config if ' +
            'authenticationration is not required',
            function () {
-                fakeProvider.config.auth_required = false;
-                scope.setRssConfig(fakeProvider);
-                expect(scope.provider.config).toEqual({
-                    auth_required: false, username: null, password: null
-                });
-            }
+               fakeProvider.config.auth_required = false;
+               scope.setRssConfig(fakeProvider);
+               expect(scope.provider.config).toEqual({
+                   auth_required: false, username: null, password: null
+               });
+           }
         );
     });
 
@@ -137,7 +137,7 @@ describe('sdIngestSourcesContent directive', function () {
                 {fieldName: 'foo', alias: 'bar'},
                 {fieldName: 'foo2', alias: 'bar2'},
                 {fieldName: null, alias: ''}
-             ]);
+            ]);
         });
     });
 
@@ -156,7 +156,7 @@ describe('sdIngestSourcesContent directive', function () {
                 expect(scope.fieldAliases).toEqual([
                     {fieldName: 'foo', alias: 'bar'},
                     {fieldName: 'foo3', alias: 'bar3'}
-                 ]);
+                ]);
             }
         );
 
@@ -256,14 +256,14 @@ describe('sdIngestSourcesContent directive', function () {
         it('does not add field aliases with missing data to ' +
            ' provider configuration',
            function () {
-                scope.fieldAliases = [
+               scope.fieldAliases = [
                     {fieldName: 'headline', alias: ''},
                     {fieldName: null, alias: 'some_alias'},
                     {fieldName: null, alias: ''}
-                ];
-                scope.save();
-                expect(scope.provider.config.field_aliases).toEqual([]);
-            }
+               ];
+               scope.save();
+               expect(scope.provider.config.field_aliases).toEqual([]);
+           }
         );
     });
 

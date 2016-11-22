@@ -40,8 +40,8 @@ export function MultiActionBarController(
 
     this.createPackage = function() {
         packages.createPackageFromItems(multi.getItems())
-        .then(function(new_package) {
-            superdesk.intent('edit', 'item', new_package);
+        .then(function(newPackage) {
+            superdesk.intent('edit', 'item', newPackage);
         }, function(response) {
             if (response.status === 403 && response.data && response.data._message) {
                 notify.error(gettext(response.data._message), 3000);

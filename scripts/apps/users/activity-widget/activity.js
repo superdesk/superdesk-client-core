@@ -19,45 +19,45 @@ angular.module('superdesk.apps.users.activity', [
             icon: 'stream'
         });
     }]).controller('ActivityController', ['$scope', 'profileService',
-    function ($scope, profileService) {
-        var page = 1;
-        var current_config = null;
-        $scope.max_results = 0;
+        function ($scope, profileService) {
+            var page = 1;
+            var currentConfig = null;
+            $scope.max_results = 0;
 
-        function refresh(config) {
-            current_config = config;
-            profileService.getAllUsersActivity(config.maxItems).then(function(list) {
-                $scope.activityFeed = list;
-                $scope.max_results = parseInt(config.maxItems, 10);
+            function refresh(config) {
+                currentConfig = config;
+                profileService.getAllUsersActivity(config.maxItems).then(function(list) {
+                    $scope.activityFeed = list;
+                    $scope.max_results = parseInt(config.maxItems, 10);
+                });
+
+                $scope.loadMore = function() {
+                    page++;
+                    profileService.getAllUsersActivity(config.maxItems, page).then(function(next) {
+                        Array.prototype.push.apply($scope.activityFeed._items, next._items);
+                        $scope.activityFeed._links = next._links;
+                        $scope.max_results += parseInt(config.maxItems, 10);
+                    });
+                };
+            }
+
+            $scope.$on('changes in activity', function() {
+                if (currentConfig) {
+                    refresh(currentConfig);
+                }
             });
 
-            $scope.loadMore = function() {
-                page++;
-                profileService.getAllUsersActivity(config.maxItems, page).then(function(next) {
-                    Array.prototype.push.apply($scope.activityFeed._items, next._items);
-                    $scope.activityFeed._links = next._links;
-                    $scope.max_results += parseInt(config.maxItems, 10);
-                });
-            };
-        }
-
-        $scope.$on('changes in activity', function() {
-            if (current_config) {
-                refresh(current_config);
-            }
-        });
-
-        $scope.$watch('widget.configuration', function(config) {
-            page = 1;
-            if (config) {
-                refresh(config);
-            }
-        }, true);
-    }]).controller('ActivityConfigController', ['$scope',
-    function ($scope) {
-        $scope.notIn = function(haystack) {
-            return function(needle) {
-                return haystack.indexOf(needle) === -1;
-            };
-        };
-    }]);
+            $scope.$watch('widget.configuration', function(config) {
+                page = 1;
+                if (config) {
+                    refresh(config);
+                }
+            }, true);
+        }]).controller('ActivityConfigController', ['$scope',
+            function ($scope) {
+                $scope.notIn = function(haystack) {
+                    return function(needle) {
+                        return haystack.indexOf(needle) === -1;
+                    };
+                };
+            }]);

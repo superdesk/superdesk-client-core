@@ -114,7 +114,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * @param {string} key
              * @returns {Object}
              */
-            function getValue(key){
+            function getValue(key) {
                 if (!key) {
                     return preferences[USER_PREFERENCES];
                 } else if (userPreferences[key]) {
@@ -166,7 +166,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * This way we can update multiple preferences without getting etag conflicts.
              */
             this.update = function(updates, key) {
-                if (!key){
+                if (!key) {
                     return scheduleUpdate(USER_PREFERENCES, updates);
                 } else if (userPreferences[key]) {
                     return scheduleUpdate(USER_PREFERENCES, updates, key);
@@ -208,7 +208,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              */
             function commitUpdates() {
                 var api = $injector.get('api'),
-                serverUpdates = updates;
+                    serverUpdates = updates;
+
                 updates = null;
                 return api.save('preferences', preferences, serverUpdates)
                     .then(function(result) {

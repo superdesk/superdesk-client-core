@@ -20,9 +20,9 @@ angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
             };
 
             preferencesService.update(update, 'feature:preview').then(function() {
-                    $rootScope.beta = !$rootScope.beta;
-                    $window.location.reload();
-                });
+                $rootScope.beta = !$rootScope.beta;
+                $window.location.reload();
+            });
         };
 
         this.isBeta = function() {

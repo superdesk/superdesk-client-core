@@ -16,7 +16,8 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
 
     $scope.isListValue = function() {
         if ($scope.filterCondition != null) {
-            return _.includes(['in', 'nin'], $scope.filterCondition.operator) && $scope.valueLookup[$scope.filterCondition.field];
+            return _.includes(['in', 'nin'], $scope.filterCondition.operator)
+                && $scope.valueLookup[$scope.filterCondition.field];
         }
     };
 
@@ -67,12 +68,12 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
 
     function setFilterValues() {
         var values = $scope.filterCondition.value != null ? $scope.filterCondition.value.split(',') : [];
-        var all_values = $scope.valueLookup[$scope.filterCondition.field];
-        var value_field = $scope.valueFieldLookup[$scope.filterCondition.field];
+        var allValues = $scope.valueLookup[$scope.filterCondition.field];
+        var valueField = $scope.valueFieldLookup[$scope.filterCondition.field];
 
         _.each(values, function(value) {
-            var v = _.find(all_values, function(val) {
-                return val[value_field].toString() === value;
+            var v = _.find(allValues, function(val) {
+                return val[valueField].toString() === value;
             });
 
             $scope.filterCondition.values.push(v);

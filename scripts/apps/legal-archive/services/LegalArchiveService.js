@@ -73,8 +73,8 @@ export function LegalArchiveService($q, api, notify, $location, gettext, config)
     this.updateSearchQuery = function updateSearchQuery(search) {
         var where = [];
 
-        function prepareDate(val, time_suffix) {
-            var local = moment(val, config.view.dateformat).format('YYYY-MM-DD') + time_suffix +
+        function prepareDate(val, timeSuffix) {
+            var local = moment(val, config.view.dateformat).format('YYYY-MM-DD') + timeSuffix +
             moment.tz(config.defaultTimezone).format('ZZ');
             return moment(local, 'YYYY-MM-DDTHH:mm:ssZZ').utc().format('YYYY-MM-DDTHH:mm:ssZZ');
         }
@@ -99,23 +99,23 @@ export function LegalArchiveService($q, api, notify, $location, gettext, config)
             }
         });
 
-        var where_clause = null;
+        var whereClause = null;
 
         if (hasId && where.length === 1) {
-            where_clause = JSON.stringify(where[0]);
+            whereClause = JSON.stringify(where[0]);
         } else if (where.length > 0) {
-            where_clause = JSON.stringify({
+            whereClause = JSON.stringify({
                 '$and': where
             });
         }
 
-        $location.search('q', where_clause);
-        return where_clause;
+        $location.search('q', whereClause);
+        return whereClause;
     };
 
     // query public api
     this.query = function query() {
-        var search_criteria = this.getCriteria();
-        return api.legal_archive.query(search_criteria);
+        var searchCriteria = this.getCriteria();
+        return api.legal_archive.query(searchCriteria);
     };
 }

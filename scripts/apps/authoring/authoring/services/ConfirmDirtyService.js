@@ -7,7 +7,9 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
     this.setupWindow = function setupWindow($scope) {
         $window.onbeforeunload = function() {
             if ($scope.dirty) {
-                return gettextCatalog.getString('There are unsaved changes. If you navigate away, your changes will be lost.');
+                return gettextCatalog.getString(
+                    'There are unsaved changes. If you navigate away, your changes will ' +
+                    'be lost.');
             }
 
             $scope.$on('$destroy', function() {
@@ -50,8 +52,9 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.confirmPublish = function confirmPublish(action) {
         return modal.confirm(
-            $interpolate(gettextCatalog.getString('There are some unsaved changes, do you want to save and publish it now?'))
-            ({action: action}),
+            $interpolate(gettextCatalog.getString(
+                'There are some unsaved changes, do you want to save and publish it now?'
+            ))({action: action}),
             gettextCatalog.getString('Save changes?'),
             $interpolate(gettextCatalog.getString('Save and publish'))({action: action}),
             gettextCatalog.getString('Cancel')
@@ -63,8 +66,9 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.confirmSendTo = function confirmSendTo(action) {
         return modal.confirm(
-            $interpolate(gettextCatalog.getString('There are some unsaved changes, do you want to save and send it now?'))
-            ({action: action}),
+            $interpolate(gettextCatalog.getString(
+                'There are some unsaved changes, do you want to save and send it now?'
+            ))({action: action}),
             gettextCatalog.getString('Save changes?'),
             $interpolate(gettextCatalog.getString('Save and send'))({action: action}),
             gettextCatalog.getString('Cancel')
@@ -74,9 +78,10 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
     this.confirmSaveWork = function confirmSavework(msg) {
         return modal.confirm(
             $interpolate(
-                gettextCatalog.getString('Configuration has changed. {{ message }} Would you like to save the story to your workspace?')
-            )
-            ({message: msg})
+                gettextCatalog.getString(
+                    'Configuration has changed. {{ message }} Would you like to save the story to your workspace?'
+                )
+            )({message: msg})
         );
     };
 

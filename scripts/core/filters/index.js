@@ -78,16 +78,17 @@ export default angular.module('superdesk.core.filters', []).
         };
     })
     .filter('formatDateTimeString', [function() {
-        return function(input, format_string) {
-            var moment_timestamp = angular.isDefined(input)? moment(input).utc() : moment.utc();
-            return angular.isDefined(format_string) ? moment_timestamp.format(format_string) : moment_timestamp.format();
+        return function(input, formatString) {
+            var momentTimestamp = angular.isDefined(input)? moment(input).utc() : moment.utc();
+            return angular.isDefined(formatString) ? momentTimestamp.format(formatString)
+                : momentTimestamp.format();
         };
     }])
     .filter('formatLocalDateTimeString', [function() {
-        return function(input, format_string) {
-            var moment_timestamp = angular.isDefined(input)? moment(input).utc() : moment.utc();
-            return angular.isDefined(format_string) ? moment_timestamp.local().format(format_string) :
-            moment_timestamp.local().format();
+        return function(input, formatString) {
+            var momentTimestamp = angular.isDefined(input)? moment(input).utc() : moment.utc();
+            return angular.isDefined(formatString) ? momentTimestamp.local().format(formatString) :
+            momentTimestamp.local().format();
         };
     }])
     .filter('dateTimeString', ['$filter', function($filter) {
@@ -168,8 +169,8 @@ export default angular.module('superdesk.core.filters', []).
         };
     })
     .filter('parseDateline', function() {
-        return function (date_to_format, located) {
-            var momentizedTimestamp = moment.utc(date_to_format);
+        return function (dateToFormat, located) {
+            var momentizedTimestamp = moment.utc(dateToFormat);
 
             if (angular.isDefined(located) && located.tz !== 'UTC') {
                 momentizedTimestamp = momentizedTimestamp.tz(located.tz);

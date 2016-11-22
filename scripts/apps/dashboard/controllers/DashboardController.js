@@ -1,5 +1,5 @@
 DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces',
-'modal', 'gettext', 'privileges', 'pageTitle'];
+    'modal', 'gettext', 'privileges', 'pageTitle'];
 export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces,
     modal, gettext, privileges, pageTitle) {
     var vm = this;

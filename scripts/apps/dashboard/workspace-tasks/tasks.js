@@ -49,8 +49,8 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
             filters.push({or: allStatuses});
         }
 
-        var and_filter = {and: filters};
-        return and_filter;
+        var andFilter = {and: filters};
+        return andFilter;
     };
 
     this.fetch = function(status, filter) {
@@ -185,9 +185,9 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
         $scope.newTask = {};
         archiveService.addTaskToArticle($scope.newTask, desks.getCurrentDesk());
 
-        var task_date = new Date();
-        $scope.newTask.task.due_date = $filter('formatDateTimeString')(task_date);
-        $scope.newTask.task.due_time = $filter('formatDateTimeString')(task_date, 'HH:mm:ss');
+        var taskDate = new Date();
+        $scope.newTask.task.due_date = $filter('formatDateTimeString')(taskDate);
+        $scope.newTask.task.due_time = $filter('formatDateTimeString')(taskDate, 'HH:mm:ss');
     };
 
     $scope.save = function() {

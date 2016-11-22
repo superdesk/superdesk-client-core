@@ -1,1 +1,1 @@
-export { ManageFiltersTab } from './ManageFiltersTab';
+export {ManageFiltersTab} from './ManageFiltersTab';

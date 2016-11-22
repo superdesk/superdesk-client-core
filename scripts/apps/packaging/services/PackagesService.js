@@ -1,5 +1,7 @@
-PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring', 'authoringWorkspace', 'desks', '$rootScope'];
-export function PackagesService(api, $q, archiveService, lock, autosave, authoring, authoringWorkspace, desks, $rootScope) {
+PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring',
+    'authoringWorkspace', 'desks', '$rootScope'];
+export function PackagesService(api, $q, archiveService, lock, autosave, authoring,
+    authoringWorkspace, desks, $rootScope) {
     var self = this;
 
     this.groupList = ['main', 'story', 'sidebars', 'fact box'];
@@ -18,7 +20,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.createPackageFromItems = function (items, defaults) {
         var idRef = 'main';
         var item = items[0];
-        var new_package = {
+        var newPackage = {
             headline: item.headline || item.description_text || '',
             slugline: item.slugline || '',
             description_text: item.description_text || '',
@@ -27,24 +29,24 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             version: 0
         };
         var groups = [{
-                role: 'grpRole:NEP',
-                refs: [{idRef: idRef}],
-                id: 'root'
-            },
+            role: 'grpRole:NEP',
+            refs: [{idRef: idRef}],
+            id: 'root'
+        },
             getGroupFor(null, idRef)
         ];
-        new_package = setDefaults(new_package, defaults);
-        new_package.groups = groups;
-        if (!new_package.task || !new_package.task.desk) {
-            new_package.task = {desk: desks.getCurrentDeskId()};
+        newPackage = setDefaults(newPackage, defaults);
+        newPackage.groups = groups;
+        if (!newPackage.task || !newPackage.task.desk) {
+            newPackage.task = {desk: desks.getCurrentDeskId()};
         }
-        this.addItemsToPackage(new_package, idRef, items);
-        return api.save('archive', new_package);
+        this.addItemsToPackage(newPackage, idRef, items);
+        return api.save('archive', newPackage);
     };
 
     this.createEmptyPackage = function(defaults, idRef) {
         idRef = idRef || 'main';
-        var new_package = {
+        var newPackage = {
             headline: '',
             slugline: '',
             description_text: '',
@@ -59,30 +61,30 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
                 getGroupFor(null, idRef)
             ]
         };
-        new_package = setDefaults(new_package, defaults);
+        newPackage = setDefaults(newPackage, defaults);
 
-        if (!new_package.task || !new_package.task.desk) {
-            new_package.task = {desk: desks.getCurrentDeskId()};
+        if (!newPackage.task || !newPackage.task.desk) {
+            newPackage.task = {desk: desks.getCurrentDeskId()};
         }
 
-        return api.save('archive', new_package);
+        return api.save('archive', newPackage);
 
     };
 
-    this.addItemsToPackage = function(current, group_id, items) {
+    this.addItemsToPackage = function(current, groupId, items) {
         var origGroups = _.cloneDeep(current.groups);
 
         var targetGroup = _.find(origGroups, function(group) {
-            return group.id.toLowerCase() === group_id;
+            return group.id.toLowerCase() === groupId;
         });
 
         if (!targetGroup) {
             var rootGroup = _.find(origGroups, {id: 'root'});
-            rootGroup.refs.push({idRef: group_id});
+            rootGroup.refs.push({idRef: groupId});
             targetGroup = {
-                id: group_id,
+                id: groupId,
                 refs: [],
-                role: 'grpRole:' + group_id
+                role: 'grpRole:' + groupId
             };
             origGroups.push(targetGroup);
         }
@@ -127,14 +129,14 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     };
 
     this.addPackageGroupItem = function(group, item, broadcast) {
-        broadcast = (typeof broadcast === 'undefined') ? true : false;
+        broadcast = (typeof broadcast === 'undefined');
         var pkg = authoringWorkspace.getItem();
-        var pkg_id = pkg._id;
-        if (typeof this.packageGroupItems[pkg_id] === 'undefined') {
-            this.packageGroupItems[pkg_id] = [];
+        var pkgId = pkg._id;
+        if (typeof this.packageGroupItems[pkgId] === 'undefined') {
+            this.packageGroupItems[pkgId] = [];
         }
-        if (_.indexOf(this.packageGroupItems[pkg_id], item._id) === -1) {
-            this.packageGroupItems[pkg_id].unshift(item._id);
+        if (_.indexOf(this.packageGroupItems[pkgId], item._id) === -1) {
+            this.packageGroupItems[pkgId].unshift(item._id);
         }
         if (broadcast) {
             $rootScope.$broadcast('package:addItems', {items: [item], group: group});

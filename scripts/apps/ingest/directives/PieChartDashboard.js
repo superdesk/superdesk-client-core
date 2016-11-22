@@ -36,8 +36,12 @@ export function PieChartDashboard(colorSchemes) {
 
                 var sort = attrs.sort || null;
                 var pie = d3.layout.pie()
-                    .value(function(d) { return d.doc_count; })
-                    .sort(sort ? function(a, b) { return d3.ascending(a[sort], b[sort]); } : null);
+                    .value(function(d) {
+                        return d.doc_count;
+                    })
+                    .sort(sort ? function(a, b) {
+                        return d3.ascending(a[sort], b[sort]);
+                    } : null);
 
                 var svg = d3.select(appendTarget).append('svg')
                     .attr('width', width)
@@ -64,14 +68,20 @@ export function PieChartDashboard(colorSchemes) {
 
                         g.append('path')
                             .attr('d', arc)
-                            .style('fill', function(d) { return colorScale(d.data.key); });
+                            .style('fill', function(d) {
+                                return colorScale(d.data.key);
+                            });
 
                         g.append('text')
                             .attr('class', 'place-label')
-                            .attr('transform', function(d) { return 'translate(' + arc.centroid(d) + ')'; })
+                            .attr('transform', function(d) {
+                                return 'translate(' + arc.centroid(d) + ')';
+                            })
                             .style('text-anchor', 'middle')
                             .style('fill', colorScheme.text)
-                            .text(function(d) { return d.data.key; });
+                            .text(function(d) {
+                                return d.data.key;
+                            });
 
                         arrangeLabels();
                     }
@@ -87,7 +97,7 @@ export function PieChartDashboard(colorSchemes) {
                     function rerangeLabels() {
                         /*jshint validthis: true */
                         var self = this,
-                                a = self.getBoundingClientRect();
+                            a = self.getBoundingClientRect();
 
                         svg.selectAll('.place-label')
                                 .each(function () {
@@ -98,10 +108,10 @@ export function PieChartDashboard(colorSchemes) {
 
                                             var dx = (Math.max(0, a.right - b.left) +
                                                     Math.min(0, a.left - b.right)) * 0.01,
-                                                    dy = (Math.max(0, a.bottom - b.top) +
+                                                dy = (Math.max(0, a.bottom - b.top) +
                                                             Math.min(0, a.top - b.bottom)) * 0.02,
-                                                    tt = d3.transform(d3.select(this).attr('transform')),
-                                                    to = d3.transform(d3.select(self).attr('transform'));
+                                                tt = d3.transform(d3.select(this).attr('transform')),
+                                                to = d3.transform(d3.select(self).attr('transform'));
                                             move += Math.abs(dx) + Math.abs(dy);
                                             to.translate = [to.translate[0] + dx, to.translate[1] + dy];
                                             tt.translate = [tt.translate[0] - dx, tt.translate[1] - dy];

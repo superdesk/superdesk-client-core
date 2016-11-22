@@ -7,7 +7,7 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-import { providerTypes } from './constants';
+import {providerTypes} from './constants';
 import SearchProviderService from './service';
 import SearchProviderConfigDirective from './directive';
 

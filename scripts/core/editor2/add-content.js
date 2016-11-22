@@ -1,42 +1,42 @@
 angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', ['$window',
-function($window) {
-    return {
+    function($window) {
+        return {
         // the scope is not isolated because we require the medium instance
-        controller: AddContentCtrl,
-        require: ['sdAddContent', '^sdTextEditorBlockText', '^sdTextEditor'],
-        templateUrl: 'scripts/core/editor2/views/add-content.html',
-        controllerAs: 'vm',
-        bindToController: true,
-        link: function(scope, element, attrs, ctrls) {
-            var vm = ctrls[0];
-            angular.extend(vm, {
-                textBlockCtrl: ctrls[1],
-                sdEditorCtrl: ctrls[2]
-            });
-            if (!vm.config.embeds) {
-                return;
-            }
+            controller: AddContentCtrl,
+            require: ['sdAddContent', '^sdTextEditorBlockText', '^sdTextEditor'],
+            templateUrl: 'scripts/core/editor2/views/add-content.html',
+            controllerAs: 'vm',
+            bindToController: true,
+            link: function(scope, element, attrs, ctrls) {
+                var vm = ctrls[0];
+                angular.extend(vm, {
+                    textBlockCtrl: ctrls[1],
+                    sdEditorCtrl: ctrls[2]
+                });
+                if (!vm.config.embeds) {
+                    return;
+                }
             // initialize state
-            vm.updateState();
+                vm.updateState();
             // listen for update state signals
-            var unbindListener = scope.$parent.$on('sdAddContent::updateState', function(signal, event, editorElem) {
-                vm.updateState(event, editorElem);
-            });
+                var unbindListener = scope.$parent.$on('sdAddContent::updateState',
+                    function(signal, event, editorElem) {
+                        vm.updateState(event, editorElem);
+                    });
             // update on resize
-            angular.element($window).on('resize', vm.updateState);
-            scope.$on('$destroy', function() {
-                angular.element($window).off('resize', vm.updateState);
-                unbindListener();
-            });
-        }
-    };
-}]);
+                angular.element($window).on('resize', vm.updateState);
+                scope.$on('$destroy', function() {
+                    angular.element($window).off('resize', vm.updateState);
+                    unbindListener();
+                });
+            }
+        };
+    }]);
 
 AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout', 'config', '$q'];
 function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q) {
     var elementHolder = element.find('div:first-child').first();
     var vm = this;
-    var caretPosition = null;
     angular.extend(vm, {
         expanded: false,
         config: angular.extend({embeds: true}, config.editor || {}), // should be on by default
@@ -109,7 +109,6 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
             });
         },
         toogleExpand: function() {
-            caretPosition = scope.medium.exportSelection();
             vm.expanded = !vm.expanded;
         },
         isSomethingInClipboard: function() {
@@ -151,7 +150,7 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
                     return false;
                 }
                 vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl, vm.sdEditorCtrl.getCutBlock(true));
-            },
+            }
         }
     });
 }

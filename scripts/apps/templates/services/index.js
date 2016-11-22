@@ -1,1 +1,1 @@
-export { TemplatesService } from './TemplatesService';
+export {TemplatesService} from './TemplatesService';

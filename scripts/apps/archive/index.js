@@ -151,13 +151,13 @@ angular.module('superdesk.apps.archive', [
                 icon: 'broadcast',
                 monitor: true,
                 controller: ['api', 'notify', '$rootScope', 'data', 'desks', 'authoringWorkspace',
-                function(api, notify, $rootScope, data, desks, authoringWorkspace) {
-                    api.save('archive_broadcast', {}, {desk: desks.getCurrentDeskId()}, data.item)
+                    function(api, notify, $rootScope, data, desks, authoringWorkspace) {
+                        api.save('archive_broadcast', {}, {desk: desks.getCurrentDeskId()}, data.item)
                         .then(function(broadcastItem) {
                             authoringWorkspace.edit(broadcastItem);
                             $rootScope.$broadcast('broadcast:created', {'item': data.item});
                         });
-                }],
+                    }],
                 filters: [{action: 'list', type: 'archive'}],
                 keyboardShortcut: 'ctrl+b',
                 privileges: {archive_broadcast: 1},

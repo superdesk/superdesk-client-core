@@ -7,35 +7,37 @@
  * Params:
  * param {object} ngModel - datetime string in utc
  */
-angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', [ 'gettextCatalog', function(gettextCatalog) {
-    var COMPARE_FORMAT = 'YYYY-M-D';
-    var DISPLAY_DATE_FORMAT = 'D. MMMM YYYY HH:mm';
-    var DISPLAY_CDATE_FORMAT = 'D. MMMM HH:mm';
-    var DISPLAY_DAY_FORMAT = 'dddd, ';
-    var DISPLAY_TODAY_FORMAT = '[' + gettextCatalog.getString('Today') + '], ';
-    return {
-        require: 'ngModel',
-        template: '<time datetime="{{ datetime }}">' +
-            '<span>{{ rday }}{{ rdate }}</span></time>',
-        link: function(scope, element, attrs, ngModel) {
-            ngModel.$render = function() {
-                var date = moment.utc(ngModel.$viewValue);
-                scope.datetime = date.toISOString();
+angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['gettextCatalog',
+    function(gettextCatalog) {
+        var COMPARE_FORMAT = 'YYYY-M-D';
+        var DISPLAY_DATE_FORMAT = 'D. MMMM YYYY HH:mm';
+        var DISPLAY_CDATE_FORMAT = 'D. MMMM HH:mm';
+        var DISPLAY_DAY_FORMAT = 'dddd, ';
+        var DISPLAY_TODAY_FORMAT = '[' + gettextCatalog.getString('Today') + '], ';
+        return {
+            require: 'ngModel',
+            template: '<time datetime="{{ datetime }}">' +
+                '<span>{{ rday }}{{ rdate }}</span></time>',
+            link: function(scope, element, attrs, ngModel) {
+                ngModel.$render = function() {
+                    var date = moment.utc(ngModel.$viewValue);
+                    scope.datetime = date.toISOString();
 
-                date.local(); // switch to local time zone
+                    date.local(); // switch to local time zone
 
-                if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)){
-                    scope.rday = date.format(DISPLAY_TODAY_FORMAT);
-                } else {
-                    scope.rday = date.format(DISPLAY_DAY_FORMAT);
-                }
+                    if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)) {
+                        scope.rday = date.format(DISPLAY_TODAY_FORMAT);
+                    } else {
+                        scope.rday = date.format(DISPLAY_DAY_FORMAT);
+                    }
 
-                if (moment().format('YYYY') === date.format('YYYY')){
-                    scope.rdate = date.format(DISPLAY_CDATE_FORMAT);
-                } else {
-                    scope.rdate = date.format(DISPLAY_DATE_FORMAT);
-                }
-            };
-        }
-    };
-}]);
+                    if (moment().format('YYYY') === date.format('YYYY')) {
+                        scope.rdate = date.format(DISPLAY_CDATE_FORMAT);
+                    } else {
+                        scope.rdate = date.format(DISPLAY_DATE_FORMAT);
+                    }
+                };
+            }
+        };
+    }
+]);

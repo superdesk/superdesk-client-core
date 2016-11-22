@@ -53,7 +53,8 @@ export function AuthoringThemesService(storage, preferencesService) {
 
     service.get = function(key) {
         return preferencesService.get().then(function(result) {
-            var theme = result[PREFERENCES_KEY] && result[PREFERENCES_KEY][key] ? result[PREFERENCES_KEY][key] : THEME_DEFAULT;
+            var theme = result[PREFERENCES_KEY] && result[PREFERENCES_KEY][key] ?
+                result[PREFERENCES_KEY][key] : THEME_DEFAULT;
             return theme;
         });
     };

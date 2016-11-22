@@ -168,12 +168,12 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
 
     function _closeItem(item) {
         lock.unlock(item);
-        if (authoringWorkspace.item && item._id === authoringWorkspace.item._id){
+        if (authoringWorkspace.item && item._id === authoringWorkspace.item._id) {
             authoringWorkspace.close(true);
         }
 
         multiEdit.items = _.without(multiEdit.items, _.find(multiEdit.items, {article: item._id}));
-        if (multiEdit.items.length === 0){
+        if (multiEdit.items.length === 0) {
             $scope.redirectOnCloseMulti();
         }
     }
@@ -196,7 +196,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
      * If multi edit screen is opened, redirect to monitoring.
      */
     $scope.redirectOnCloseMulti = function() {
-        if (this.isMultiedit){
+        if (this.isMultiedit) {
             this.isMultiedit = false;
             $location.url(referrer.getReferrerUrl());
         }

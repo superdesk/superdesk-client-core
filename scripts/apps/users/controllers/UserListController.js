@@ -87,33 +87,33 @@ export function UserListController($scope, $location, api, _) {
         }
 
         switch (filter) {
-            case 'online':
-                query.session_preferences = {$exists: true, $nin: [null, {}]};
-                break;
+        case 'online':
+            query.session_preferences = {$exists: true, $nin: [null, {}]};
+            break;
 
-            case 'pending':
-                query.is_enabled = true;
-                query.is_active = true;
-                query.needs_activation = true;
-                break;
+        case 'pending':
+            query.is_enabled = true;
+            query.is_active = true;
+            query.needs_activation = true;
+            break;
 
-            case 'inactive':
-                query.is_enabled = true;
-                query.is_active = false;
-                break;
+        case 'inactive':
+            query.is_enabled = true;
+            query.is_active = false;
+            break;
 
-            case 'disabled':
-                query.is_enabled = false;
-                break;
+        case 'disabled':
+            query.is_enabled = false;
+            break;
 
-            case 'all':
-                break;
+        case 'all':
+            break;
 
-            default:
-                query.is_active = true;
-                query.is_enabled = true;
-                query.needs_activation = false;
-                break;
+        default:
+            query.is_active = true;
+            query.is_enabled = true;
+            query.needs_activation = false;
+            break;
         }
 
         return JSON.stringify(query);
@@ -130,10 +130,10 @@ export function UserListController($scope, $location, api, _) {
     function formatSort(key, dir) {
         var val = dir === 'asc' ? 1 : -1;
         switch (key) {
-            case 'full_name':
-                return '[("first_name", ' + val + '), ("last_name", ' + val + ')]';
-            default:
-                return '[("' + encodeURIComponent(key) + '", ' + val + ')]';
+        case 'full_name':
+            return '[("first_name", ' + val + '), ("last_name", ' + val + ')]';
+        default:
+            return '[("' + encodeURIComponent(key) + '", ' + val + ')]';
         }
     }
 

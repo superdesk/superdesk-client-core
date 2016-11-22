@@ -1,2 +1,2 @@
-export { TranslationReactDropdown } from './TranslationReactDropdown';
-export { TranslationDropdown } from './TranslationDropdown';
+export {TranslationReactDropdown} from './TranslationReactDropdown';
+export {TranslationDropdown} from './TranslationDropdown';

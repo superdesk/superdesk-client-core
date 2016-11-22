@@ -1,2 +1,2 @@
-export { MonitoringController } from './MonitoringController';
-export { AggregateCtrl } from './AggregateCtrl';
+export {MonitoringController} from './MonitoringController';
+export {AggregateCtrl} from './AggregateCtrl';

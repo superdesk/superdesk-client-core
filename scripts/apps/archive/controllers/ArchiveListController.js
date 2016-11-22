@@ -1,4 +1,4 @@
-import { BaseListController } from './BaseListController';
+import {BaseListController} from './BaseListController';
 
 export class ArchiveListController extends BaseListController {
     constructor($scope, $injector, $location, $q, $timeout, superdesk, session, api, desks, content,

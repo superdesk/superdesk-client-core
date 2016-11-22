@@ -153,7 +153,11 @@ export function ItemList(
 
         return React.createElement(
             'span',
-            {className: 'urgency-label urgency-label--' + urgency, title: gettextCatalog.getString('Urgency'), key: 'urgency'},
+            {
+                className: 'urgency-label urgency-label--' + urgency,
+                title: gettextCatalog.getString('Urgency'),
+                key: 'urgency'
+            },
             urgency
         );
     };
@@ -322,8 +326,7 @@ export function ItemList(
             var SelectBox = React.createClass({
                 toggle: function(event) {
                     event.stopPropagation();
-                    if (isCheckAllowed(this.props.item))
-                    {
+                    if (isCheckAllowed(this.props.item))                    {
                         var selected = !this.props.item.selected;
                         this.props.onMultiSelect([this.props.item], selected);
                     }
@@ -335,11 +338,15 @@ export function ItemList(
                     }
                     return React.createElement(
                         'div',
-                        {className: 'selectbox', title: isCheckAllowed(this.props.item) ? null : 'selection not allowed',
-                            onClick: this.toggle},
+                        {
+                            className: 'selectbox',
+                            title: isCheckAllowed(this.props.item) ? null : 'selection not allowed',
+                            onClick: this.toggle
+                        },
                         React.createElement(
-                            'span',
-                            {className: 'sd-checkbox' + (this.props.item.selected ? ' checked' : '')}
+                            'span', {
+                                className: 'sd-checkbox' + (this.props.item.selected ? ' checked' : '')
+                            }
                         )
                     );
                 }
@@ -354,16 +361,12 @@ export function ItemList(
                     if (desk) {
                         label = gettext('desk:');
                         value = desk.name;
-                    } else {
-                        if (item._type === 'archive') {
-                            label = gettext('location:');
-                            value = gettext('workspace');
-                        } else {
-                            if (item._type === 'archived') {
-                                label = '';
-                                value = gettext('archived');
-                            }
-                        }
+                    } else if (item._type === 'archive') {
+                        label = gettext('location:');
+                        value = gettext('workspace');
+                    } else if (item._type === 'archived') {
+                        label = '';
+                        value = gettext('archived');
                     }
                 }
 
@@ -385,8 +388,10 @@ export function ItemList(
             var MediaInfo = function(props) {
                 var item = props.item;
                 var meta = [];
-                var source = item.source ? item.source :
-                    (props.ingestProvider ? props.ingestProvider.source : '');
+                var source = props.ingestProvider ? props.ingestProvider.source : '';
+                if (item.source) {
+                    source = item.source;
+                }
                 if (source) {
                     meta.push(
                         React.createElement('dt', {key: 1}, gettextCatalog.getString('source')),
@@ -410,7 +415,7 @@ export function ItemList(
                 info.push(React.createElement(
                     'h5',
                     {key: 1,
-                     dangerouslySetInnerHTML:createMarkUp(item.headline || item.slugline || item.type)}
+                        dangerouslySetInnerHTML:createMarkUp(item.headline || item.slugline || item.type)}
 
                 ));
 
@@ -479,21 +484,34 @@ export function ItemList(
                     var showSelect = this.state.hover || this.props.item.selected;
                     return React.createElement(
                         'div',
-                        {className: classNames('list-field type-icon'), onMouseEnter: this.setHover, onMouseLeave: this.unsetHover},
+                        {
+                            className: classNames('list-field type-icon'),
+                            onMouseEnter: this.setHover,
+                            onMouseLeave: this.unsetHover
+                        },
                         showSelect ?
-                            React.createElement(SelectBox, {item: this.props.item, onMultiSelect: this.props.onMultiSelect}) :
+                            React.createElement(SelectBox, {
+                                item: this.props.item,
+                                onMultiSelect: this.props.onMultiSelect
+                            }) :
                             React.createElement(
                                 TypeIcon,
-                                {type: this.props.item.type,
-                                package_type: this.props.item.package_type,
-                                highlight: this.props.item.highlight}
+                                {
+                                    type: this.props.item.type,
+                                    package_type: this.props.item.package_type,
+                                    highlight: this.props.item.highlight
+                                }
                             )
                     );
                 }
             });
 
             var ListPriority = function(props) {
-                var css = {className: classNames('list-field urgency', {'urgency-reduced-rowheight': listConfig.thinRows})};
+                var css = {
+                    className: classNames('list-field urgency', {
+                        'urgency-reduced-rowheight': listConfig.thinRows
+                    })
+                };
                 return renderArea('priority', props, css) || React.createElement('div', css);
             };
 
@@ -600,7 +618,9 @@ export function ItemList(
                     var highlightsById = this.props.highlightsById;
                     _.forEach(highlights, function(highlight) {
                         var hours = $filter('hoursFromNow')(item.versioncreated);
-                        highlightStatuses[highlight] = highlightsService.isInDateRange(highlightsById[highlight], hours);
+                        highlightStatuses[highlight] = highlightsService.isInDateRange(
+                            highlightsById[highlight], hours
+                        );
                     });
 
                     return highlightStatuses;
@@ -725,11 +745,11 @@ export function ItemList(
                     }.bind(this));
 
                     var elem = React.createElement('div',
-                            {
-                                className: 'dropdown__menu more-activity-menu',
-                                onMouseOver: this.toggle,
-                                onMouseLeave: this.close
-                            },
+                        {
+                            className: 'dropdown__menu more-activity-menu',
+                            onMouseOver: this.toggle,
+                            onMouseLeave: this.close
+                        },
                             React.createElement('ul', {}, desks)
                             );
 
@@ -779,7 +799,10 @@ export function ItemList(
 
                 render: function() {
                     var items = [];
-                    items.push(React.createElement('dt', {key: 'dt', style: {paddingRight:'5px'}}, gettext('fetched in')));
+                    items.push(React.createElement('dt', {
+                        key: 'dt',
+                        style: {paddingRight:'5px'}
+                    }, gettext('fetched in')));
 
                     if (this.state.desks.length) {
                         var desk = this.state.desks[0];
@@ -839,7 +862,7 @@ export function ItemList(
                     return React.createElement(
                         'span',
                         {className: 'item-heading', key: 'headline',
-                         dangerouslySetInnerHTML:createMarkUp(headline)}
+                            dangerouslySetInnerHTML:createMarkUp(headline)}
                     );
                 },
 
@@ -848,7 +871,7 @@ export function ItemList(
                         return React.createElement(
                             'span',
                             {className: 'keyword', key: 'slugline',
-                             dangerouslySetInnerHTML:createMarkUp(props.item.slugline)}
+                                dangerouslySetInnerHTML:createMarkUp(props.item.slugline)}
                         );
                     }
                 },
@@ -918,8 +941,16 @@ export function ItemList(
                     if (props.item.correction_sequence) {
                         return React.createElement(
                             'div',
-                            {className: 'provider', key: 'update', title: gettextCatalog.getString('correction sequence')},
-                            $interpolate(gettextCatalog.getString('Update {{ seq }}'))({seq: props.item.correction_sequence})
+                            {
+                                className: 'provider',
+                                key: 'update',
+                                title: gettextCatalog.getString('correction sequence')
+                            },
+                            $interpolate(
+                                gettextCatalog.getString('Update {{ seq }}'))({
+                                    seq: props.item.correction_sequence
+                                }
+                            )
                         );
                     }
                 },
@@ -999,8 +1030,9 @@ export function ItemList(
                     var archiveItem = props.item.archive_item;
 
                     var isTake = item.type === 'text' &&
-                    ((item.takes && item.takes.sequence > 1) ||
-                        (item._type === 'published' && archiveItem && archiveItem.takes && archiveItem.takes.sequence > 1));
+                        ((item.takes && item.takes.sequence > 1) ||
+                        (item._type === 'published' && archiveItem &&
+                        archiveItem.takes && archiveItem.takes.sequence > 1));
 
                     var selectTakesPackage = function(event) {
                         event.stopPropagation();
@@ -1024,9 +1056,10 @@ export function ItemList(
                 },
 
                 provider: function(props) {
-                    var provider = props.item.source ?
-                        props.item.source
-                        : (props.ingestProvider ? props.ingestProvider.source : '');
+                    var provider = props.ingestProvider ? props.ingestProvider.source : '';
+                    if (props.item.source) {
+                        provider = props.item.source;
+                    }
                     if (provider) {
                         return React.createElement('span', {className: 'provider', key: 'provider'}, provider);
                     }
@@ -1184,7 +1217,9 @@ export function ItemList(
                 return React.createElement(
                     'li',
                     null,
-                    React.createElement('div', {className: 'dropdown__menu-label'}, gettextCatalog.getString(props.label),
+                    React.createElement('div', {
+                        className: 'dropdown__menu-label'
+                    }, gettextCatalog.getString(props.label),
                         props.label === 'Actions' ? React.createElement(
                             'button',
                             {className: 'dropdown__menu-close', onClick: closeActionsMenu},
@@ -1270,10 +1305,17 @@ export function ItemList(
                                 {className: 'dropdown dropdown--noarrow' + (this.state.open ? ' open' : '')},
                                 React.createElement(
                                     'a',
-                                    {className: 'dropdown__toggle', title: gettextCatalog.getString(activity.label)},
-                                    activity.icon ? React.createElement('i', {className: 'icon-' + activity.icon}, '') : null,
+                                    {
+                                        className: 'dropdown__toggle',
+                                        title: gettextCatalog.getString(activity.label)
+                                    },
+                                    activity.icon ? React.createElement('i', {
+                                        className: 'icon-' + activity.icon
+                                    }, '') : null,
                                     gettextCatalog.getString(activity.label),
-                                    React.createElement('i', {className: 'icon-chevron-right-thin dropdown__submenu-icon'})
+                                    React.createElement('i', {
+                                        className: 'icon-chevron-right-thin dropdown__submenu-icon'
+                                    })
                                 ),
                                 this.state.open ? $injector.invoke(activity.dropdown, activity, {
                                     item: this.props.item,
@@ -1290,8 +1332,12 @@ export function ItemList(
                             React.createElement(
                                 'a',
                                 {title: gettextCatalog.getString(activity.label), onClick: this.run},
-                                React.createElement('i', {className: 'icon-' + activity.icon}),
-                                React.createElement('span', {style: {display: 'inline'}}, gettextCatalog.getString(activity.label))
+                                React.createElement('i', {
+                                    className: 'icon-' + activity.icon
+                                }),
+                                React.createElement('span', {
+                                    style: {display: 'inline'}
+                                }, gettextCatalog.getString(activity.label))
                             )
                         );
                     }
@@ -1299,7 +1345,10 @@ export function ItemList(
             });
 
             var ProgressBar = function(props) {
-                return React.createElement('div', {className: 'archiving-progress', style: {width: props.completed + '%'}});
+                return React.createElement('div', {
+                    className: 'archiving-progress',
+                    style: {width: props.completed + '%'}
+                });
             };
 
             var ErrorBox = function(props) {
@@ -1431,8 +1480,11 @@ export function ItemList(
                         {
                             id: item._id,
                             key: item._id,
-                            className: classNames('list-item-view',
-                                                    {active: this.props.flags.selected}, {selected: this.props.item.selected}),
+                            className: classNames(
+                                'list-item-view',
+                                {active: this.props.flags.selected},
+                                {selected: this.props.item.selected}
+                            ),
                             onMouseEnter: this.setHoverState,
                             onMouseLeave: this.unsetHoverState,
                             onDragStart: this.onDragStart,
@@ -1603,33 +1655,33 @@ export function ItemList(
                     var diff;
 
                     switch (event.keyCode) {
-                        case Keys.right:
-                        case Keys.down:
-                            diff = 1;
-                            break;
+                    case Keys.right:
+                    case Keys.down:
+                        diff = 1;
+                        break;
 
-                        case Keys.left:
-                        case Keys.up:
-                            diff = -1;
-                            break;
+                    case Keys.left:
+                    case Keys.up:
+                        diff = -1;
+                        break;
 
-                        case Keys.enter:
-                            if (this.state.selected) {
-                                this.edit(this.getSelectedItem());
-                            }
+                    case Keys.enter:
+                        if (this.state.selected) {
+                            this.edit(this.getSelectedItem());
+                        }
 
-                            event.stopPropagation();
-                            return;
+                        event.stopPropagation();
+                        return;
 
-                        case Keys.pageup:
-                        case Keys.pagedown:
-                            event.preventDefault();
-                            event.stopPropagation();
-                            this.select(); // deselect active item
-                            scope.$applyAsync(function() {
-                                monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
-                            });
-                            return;
+                    case Keys.pageup:
+                    case Keys.pagedown:
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.select(); // deselect active item
+                        scope.$applyAsync(function() {
+                            monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
+                        });
+                        return;
                     }
 
                     if (diff != null) {
@@ -1664,7 +1716,8 @@ export function ItemList(
                 },
 
                 modifiedUserName: function(versionCreator) {
-                    return this.props.usersById[versionCreator] ? this.props.usersById[versionCreator].display_name : null;
+                    return this.props.usersById[versionCreator] ?
+                        this.props.usersById[versionCreator].display_name : null;
                 },
 
                 render: function render() {
@@ -1699,7 +1752,7 @@ export function ItemList(
                                 this.state.view + '-view',
                                 {'list-without-items': isEmpty}
                             ),
-                            onClick: this.closeActionsMenu,
+                            onClick: this.closeActionsMenu
                         },
                         isEmpty && !scope.loading ?
                             React.createElement(
@@ -1782,19 +1835,9 @@ export function ItemList(
                         return;
                     }
 
-                    var offsetTop = 0;
                     var itemsList = [];
                     var currentItems = {};
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
-                    var selected = listComponent.selectedCom;
-
-                    if (selected) {
-                        try {
-                            offsetTop = ReactDOM.findDOMNode(selected).offsetTop;
-                        } catch (err) {
-                            selected = null;
-                        }
-                    }
 
                     items._items.forEach(function(item) {
                         var itemId = search.generateTrackByIdentifier(item);

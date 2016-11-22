@@ -81,7 +81,12 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
         var orTerms = null;
         if (!_.isEmpty($scope.searchQuery)) {
-            orTerms = {'$or': [{'headline':{'$regex': $scope.searchQuery, '$options':'-i'}}, {'unique_name': $scope.searchQuery}]};
+            orTerms = {'$or': [
+                {'headline': {
+                    '$regex': $scope.searchQuery,
+                    '$options':'-i'}
+                }, {'unique_name': $scope.searchQuery}
+            ]};
         }
 
         var filterTerms = [];
@@ -121,10 +126,11 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     };
 
     $scope.buildNewSchedule = function (item) {
-        var pick_fields = ['item_id', 'item_version', 'publishing_action', 'formatted_item', 'headline',
-            'content_type', 'subscriber_id', 'unique_name', 'destination', 'ingest_provider', 'item_encoding', 'encoded_item_id'];
+        var pickFields = ['item_id', 'item_version', 'publishing_action', 'formatted_item', 'headline',
+            'content_type', 'subscriber_id', 'unique_name', 'destination', 'ingest_provider',
+            'item_encoding', 'encoded_item_id'];
 
-        var newItem = _.pick(item, pick_fields);
+        var newItem = _.pick(item, pickFields);
         return newItem;
     };
 
@@ -176,20 +182,20 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     };
 
     $scope.filterPublishQueue = function(item, type) {
-        switch (type){
-            case 'subscriber':
-                $scope.selectedFilterSubscriber = item;
-                break;
-            case 'ingest_provider':
-                $scope.selectedFilterIngestProvider = item;
-                break;
-            case 'status':
-                $scope.selectedFilterStatus = item;
-                break;
-            default:
-                $scope.selectedFilterSubscriber = null;
-                $scope.selectedFilterIngestProvider = null;
-                $scope.selectedFilterStatus = null;
+        switch (type) {
+        case 'subscriber':
+            $scope.selectedFilterSubscriber = item;
+            break;
+        case 'ingest_provider':
+            $scope.selectedFilterIngestProvider = item;
+            break;
+        case 'status':
+            $scope.selectedFilterStatus = item;
+            break;
+        default:
+            $scope.selectedFilterSubscriber = null;
+            $scope.selectedFilterIngestProvider = null;
+            $scope.selectedFilterStatus = null;
         }
         populatePublishQueue();
         $scope.multiSelectCount = 0;
@@ -278,6 +284,8 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
     $scope.$on('$routeUpdate', previewItem);
 
-    $scope.$on('publish_queue:update', function(evt, data) { refreshQueueState(data); });
+    $scope.$on('publish_queue:update', function(evt, data) {
+        refreshQueueState(data);
+    });
     $scope.reload();
 }

@@ -138,44 +138,44 @@ export function DeskSelect(Keys, _, preferencesService) {
                 }
 
                 switch (e.which) {
-                    case Keys.enter:
-                        e.stopPropagation();
-                        if (scope.isOpen) {
+                case Keys.enter:
+                    e.stopPropagation();
+                    if (scope.isOpen) {
                             // on enter select active or first
-                            if (scope.ctrl.active || scope.desks.length) {
-                                scope.$apply(function() {
-                                    var desk = scope.ctrl.active || scope.desks[0];
-                                    scope.onChange({desk: desk});
-                                });
-                            } else {
-                                return false;
-                            }
+                        if (scope.ctrl.active || scope.desks.length) {
+                            scope.$apply(function() {
+                                var desk = scope.ctrl.active || scope.desks[0];
+                                scope.onChange({desk: desk});
+                            });
+                        } else {
+                            return false;
                         }
-                        break;
+                    }
+                    break;
 
-                    case Keys.backspace:
+                case Keys.backspace:
+                    e.stopPropagation();
+                    backspaceAction();
+                    break;
+
+                case Keys.up:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    moveActive(UP);
+                    break;
+
+                case Keys.down:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    moveActive(DOWN);
+                    break;
+
+                default:
+                    if (charRegexp.test(e.key)) {
                         e.stopPropagation();
-                        backspaceAction();
-                        break;
-
-                    case Keys.up:
-                        e.preventDefault();
-                        e.stopPropagation();
-                        moveActive(UP);
-                        break;
-
-                    case Keys.down:
-                        e.preventDefault();
-                        e.stopPropagation();
-                        moveActive(DOWN);
-                        break;
-
-                    default:
-                        if (charRegexp.test(e.key)) {
-                            e.stopPropagation();
-                            scope.filter += e.key;
-                            scope.$apply(filterDesks);
-                        }
+                        scope.filter += e.key;
+                        scope.$apply(filterDesks);
+                    }
                 }
             });
         }

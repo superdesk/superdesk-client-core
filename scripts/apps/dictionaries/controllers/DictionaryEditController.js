@@ -1,5 +1,7 @@
-DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'gettext', 'notify', 'modal', '$rootScope', '$q'];
-export function DictionaryEditController ($scope, dictionaries, upload, gettext, notify, modal, $rootScope, $q) {
+DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'gettext', 'notify',
+    'modal', '$rootScope', '$q'];
+export function DictionaryEditController ($scope, dictionaries, upload, gettext, notify,
+    modal, $rootScope, $q) {
 
     function onSuccess(result) {
         if ($scope.isAbbreviations()) {
@@ -37,9 +39,11 @@ export function DictionaryEditController ($scope, dictionaries, upload, gettext,
         $scope._errorUniqueness = false;
         $scope.progress = {width: 1};
         if ($scope.file) {
-            dictionaries.upload($scope.origDictionary, $scope.dictionary, $scope.file, onSuccess, onError, function(update) {
-                $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
-            });
+            dictionaries.upload($scope.origDictionary, $scope.dictionary, $scope.file,
+                onSuccess, onError, function(update) {
+                    $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
+                }
+            );
         } else {
             dictionaries.update($scope.origDictionary, $scope.dictionary, onSuccess, onError);
         }

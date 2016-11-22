@@ -124,7 +124,8 @@ function WizardDirective() {
                 $scope.steps.push(step);
                 if (!stopWatch) {
                     stopWatch = $scope.$watch('currentStep', function(stepCode) {
-                        if (stepCode && (($scope.selectedStep && $scope.selectedStep.code !== stepCode) || !$scope.selectedStep)) {
+                        if (stepCode && (($scope.selectedStep && $scope.selectedStep.code !== stepCode)
+                            || !$scope.selectedStep)) {
                             $scope.goTo(_.find($scope.steps, {code: stepCode}));
                         }
                     });
@@ -380,7 +381,7 @@ function DropdownPositionAbsoluteDirective($position) {
                          * if not, show it above the icon
                          */
                         var dropdownHeight = dropdown.dropdownMenu.outerHeight(),
-                                dropdownWidth = dropdown.dropdownMenu.outerWidth();
+                            dropdownWidth = dropdown.dropdownMenu.outerWidth();
 
                         if ((windowHeight - pos.top) < dropdownHeight) {
                             if ((pos.top - 150) < dropdownHeight) {
@@ -486,10 +487,8 @@ function DropdownFocus(Keys) {
                                 }
                             } else if (nextElem.length > 0) {
                                 nextElem.focus();
-                            } else {
-                                if (buttonList[0] !== undefined) {
-                                    buttonList[0].focus();
-                                }
+                            } else if (buttonList[0] !== undefined) {
+                                buttonList[0].focus();
                             }
                         };
 
@@ -601,10 +600,9 @@ function DatepickerDirective($document) {
 
 DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', 'config'];
 function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper, config) {
-    var starting_day = config.startingDay || '0';
-    var popupTpl =
-    '<div sd-datepicker-wrapper ng-model="date">' +
-        '<div datepicker format-day="d" starting-day="' + starting_day + '" show-weeks="false"></div>' +
+    var startingDay = config.startingDay || '0';
+    var popupTpl = '<div sd-datepicker-wrapper ng-model="date">' +
+        '<div datepicker format-day="d" starting-day="' + startingDay + '" show-weeks="false"></div>' +
     '</div>';
 
     return {
@@ -1309,7 +1307,8 @@ function validationDirective(gettext, gettextCatalog) {
                 elem.addClass('sd-validate');
                 if (elem.hasClass('field')) {
                     elem.find('label')
-                    .after('<span id="required_span" class="sd-required">' + gettextCatalog.getString('Required') + '</span>');
+                    .after('<span id="required_span" class="sd-required">'
+                        + gettextCatalog.getString('Required') + '</span>');
                 } else if (elem.find('.authoring-header__input-holder').length) {
                     elem.find('.authoring-header__input-holder').append(invalidText);
                 } else {
@@ -1333,9 +1332,8 @@ function MultipleEmailsValidation() {
         restrict: 'A',
         require: 'ngModel',
         link: function (scope, elem, attrs, ctrl) {
-            /* jshint maxlen:250 */
+            // eslint-disable-next-line max-len
             var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
-            /* jshint maxlen:250 */
             ctrl.$validators.multipleEmails = function(modelValue, viewValue) {
                 if (ctrl.$isEmpty(modelValue)) {
                     return true;
@@ -1365,8 +1363,8 @@ function LoadingDirective() {
         scope: {loading: '=sdLoading'},
         template: [
             '<div>',
-                '<div ng-transclude></div>',
-                '<div class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>',
+            '<div ng-transclude></div>',
+            '<div class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>',
             '</div>'
         ].join('')
     };
@@ -1416,12 +1414,12 @@ function multiSelectDirective() {
 
             function updateItem() {
                 switch (scope.output) {
-                    case 'string':
-                        scope.item = scope.selectedItems.join(', ');
-                        break;
+                case 'string':
+                    scope.item = scope.selectedItems.join(', ');
+                    break;
 
-                    default:
-                        scope.item = scope.selectedItems;
+                default:
+                    scope.item = scope.selectedItems;
                 }
 
                 scope.change(scope.item);

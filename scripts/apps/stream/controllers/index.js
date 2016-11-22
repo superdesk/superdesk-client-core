@@ -1,1 +1,1 @@
-export { StreamController } from './StreamController';
+export {StreamController} from './StreamController';

@@ -11,7 +11,7 @@ import './styles/packaging.scss';
 
 import * as ctrl from './controllers';
 import * as directive from './directives';
-import { PackagesService } from './services';
+import {PackagesService} from './services';
 
 /**
  * @ngdoc module
@@ -60,7 +60,8 @@ angular.module('superdesk.apps.packaging', [
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition:['authoring', 'item', '$rootScope', function(authoring, item, $rootScope) {
                     return authoring.itemActions(item).package_item &&
-                        !($rootScope.config && $rootScope.config.features && $rootScope.config.features.hideCreatePackage);
+                        !($rootScope.config && $rootScope.config.features
+                        && $rootScope.config.features.hideCreatePackage);
                 }],
                 group: 'packaging'
             })
@@ -77,7 +78,8 @@ angular.module('superdesk.apps.packaging', [
                         var pkg = authoringWorkspace.getItem();
                         var actions = authoring.itemActions(item);
                         var added = pkg ? packages.isAdded(pkg, item) : false;
-                        return pkg && pkg.type === 'composite' && pkg._id !== item._id && actions.add_to_current && !added;
+                        return pkg && pkg.type === 'composite' && pkg._id !== item._id
+                            && actions.add_to_current && !added;
                     }],
                 group: 'packaging'
             })

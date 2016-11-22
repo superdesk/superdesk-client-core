@@ -1,1 +1,1 @@
-export { GroupsFactory } from './GroupsFactory';
+export {GroupsFactory} from './GroupsFactory';

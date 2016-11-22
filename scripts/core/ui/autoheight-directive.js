@@ -37,25 +37,26 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             var $win = angular.element($window),
                 mirrorStyle,
-                mirrorStyle_basic = 'position: absolute; top: -999px; right: auto; bottom: auto; left: 0 ;' +
-                              'overflow: hidden; -webkit-box-sizing: content-box;' +
-                              '-moz-box-sizing: content-box; box-sizing: content-box;' +
-                              'min-height: 0 !important; height: 0 !important; padding: 0;' +
-                              'word-wrap: break-word; border: 0;',
+                mirrorStyleBasic = 'position: absolute; top: -999px; right: auto; bottom: auto; left: 0 ;' +
+                    'overflow: hidden; -webkit-box-sizing: content-box;' +
+                    '-moz-box-sizing: content-box; box-sizing: content-box;' +
+                    'min-height: 0 !important; height: 0 !important; padding: 0;' +
+                    'word-wrap: break-word; border: 0;',
                 $mirror = angular.element('<textarea tabindex="-1" ' +
-                                          'style="' + mirrorStyle_basic + '"/>').attr('elastic', true),
+                                          'style="' + mirrorStyleBasic + '"/>').attr('elastic', true),
                 mirror = $mirror[0],
                 taStyle, borderBox, boxOuter, minHeightValue, heightValue,
                 minHeight, maxHeight, mirrored, active,
                 copyStyle = ['font-family',
-                             'font-size',
-                             'font-weight',
-                             'font-style',
-                             'letter-spacing',
-                             'line-height',
-                             'text-transform',
-                             'word-spacing',
-                             'text-indent'];
+                    'font-size',
+                    'font-weight',
+                    'font-style',
+                    'letter-spacing',
+                    'line-height',
+                    'text-transform',
+                    'word-spacing',
+                    'text-indent'
+                ];
 
             // exit if elastic already applied (or is the mirror element)
             if ($ta.attr('elastic')) {
@@ -100,7 +101,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             function setMirrorStyle() {
                 taStyle = $window.getComputedStyle(ta);
-                mirrorStyle = mirrorStyle_basic;
+                mirrorStyle = mirrorStyleBasic;
                 angular.forEach(copyStyle, function(val) {
                     mirrorStyle += val + ':' + taStyle[val] + ';';
                 });

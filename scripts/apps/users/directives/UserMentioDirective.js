@@ -33,7 +33,9 @@ export function UserMentioDirective(userList, desks, asset, $q) {
 
                     $q.all(promises).then(function() {
                         scope.users = _.sortBy(scope.users, function(item) {
-                            return item.type === 'user' ? item.item.username.toLowerCase() : item.item.name.toLowerCase();
+                            return item.type === 'user' ?
+                                item.item.username.toLowerCase()
+                                : item.item.name.toLowerCase();
                         });
 
                         scope.fetching = false;
@@ -85,9 +87,11 @@ export function UserMentioDirective(userList, desks, asset, $q) {
             };
 
             scope.$watchCollection(
-                function() { return $('.users-list-embed>li.active');},
+                function() {
+                    return $('.users-list-embed>li.active');
+                },
                 function (newValue) {
-                    if (newValue.hasClass('active')){
+                    if (newValue.hasClass('active')) {
                         $('.mentio-menu').scrollTop(newValue.position().top);
                     }
                 }

@@ -1,2 +1,2 @@
-export { ConfigController } from './ConfigController';
-export { DashboardController } from './DashboardController';
+export {ConfigController} from './ConfigController';
+export {DashboardController} from './DashboardController';

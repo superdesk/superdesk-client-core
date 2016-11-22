@@ -27,9 +27,10 @@ AuthoringDirective.$inject = [
     'metadata',
     'suggest'
 ];
-export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify, gettext, desks, authoring, api, session, lock,
-    privileges, content, $location, referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService, $rootScope,
-    $interpolate, metadata, suggest) {
+export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
+    gettext, desks, authoring, api, session, lock, privileges, content, $location,
+    referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
+    $rootScope, $interpolate, metadata, suggest) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -50,10 +51,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
             $scope.openSuggestions = () => suggest.setActive();
 
-            $scope.$watch('origItem', function(new_value, old_value) {
+            $scope.$watch('origItem', function(newValue, oldValue) {
                 $scope.itemActions = null;
-                if (new_value) {
-                    $scope.itemActions = authoring.itemActions(new_value);
+                if (newValue) {
+                    $scope.itemActions = authoring.itemActions(newValue);
                 }
             }, true);
 
@@ -301,9 +302,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
                             if (angular.isDefined(response.data._issues['validator exception'])) {
                                 var errors = response.data._issues['validator exception'];
-                                var modified_errors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
-                                for (var i = 0; i < modified_errors.length; i++) {
-                                    notify.error(_.trim(modified_errors[i]));
+                                var modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
+                                for (var i = 0; i < modifiedErrors.length; i++) {
+                                    notify.error(_.trim(modifiedErrors[i]));
                                 }
 
                                 if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
@@ -349,8 +350,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                             var field = cv.schema_field || 'subject';
                             angular.forEach(cv.items, function(row) {
                                 var element = _.find(updated[field], function(item) {
-                                       return item.qcode === row.qcode;
-                                   });
+                                    return item.qcode === row.qcode;
+                                });
                                 if (element) {
                                     found = true;
                                 }
@@ -415,15 +416,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.runTansa = function() {
                 onlyTansaProof = true;
 
-                switch ($scope.item.language){
-                    case 'nb-NO':
-                        window.tansa.settings.profileId = 1;
-                        break;
-                    case 'nn-NO':
-                        window.tansa.settings.profileId = 2;
-                        break;
+                switch ($scope.item.language) {
+                case 'nb-NO':
+                    window.tansa.settings.profileId = 1;
+                    break;
+                case 'nn-NO':
+                    window.tansa.settings.profileId = 2;
+                    break;
                 }
-                if (window.RunTansaProofing){
+                if (window.RunTansaProofing) {
                     window.RunTansaProofing();
                 } else {
                     isCheckedByTansa = true;
@@ -443,7 +444,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     isCheckedByTansa = true;
                     publishFn();
                 } else {
-                    // after changes from tansa, there is some time needed for autosave and for commiting scope in editor
+                    // after changes from tansa, there is some time needed for autosave
+                    // and for commiting scope in editor
                     $timeout(() => {
                         isCheckedByTansa = true;
                         $scope.saveTopbar().then(publishFn);
@@ -623,8 +625,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             // call the function to unlock and lock the story for editing.
             $scope.unlock = function() {
                 $scope.unlockClicked = true;
-                lock.unlock($scope.item).then(function(unlocked_item) {
-                    $scope.edit(unlocked_item);
+                lock.unlock($scope.item).then(function(unlockedItem) {
+                    $scope.edit(unlockedItem);
                 });
             };
 
@@ -667,7 +669,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.sendToNextStage = function() {
                 var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
-                for (var i = 0; i < stageList.length; i++){
+                for (var i = 0; i < stageList.length; i++) {
                     if (stageList[i]._id === $scope.stage._id) {
                         stageIndex = (i + 1 === stageList.length ? 0 : i + 1);
                         break;
@@ -741,12 +743,12 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             });
 
             $scope.$on('item:highlight', function(e, data) {
-                if ($scope.item._id === data.item_id){
+                if ($scope.item._id === data.item_id) {
                     if (!$scope.item.highlights) {
                         $scope.item.highlights = [data.highlight_id];
-                    } else if ($scope.item.highlights.indexOf(data.highlight_id) === -1){
+                    } else if ($scope.item.highlights.indexOf(data.highlight_id) === -1) {
                         $scope.item.highlights = [data.highlight_id].concat($scope.item.highlights);
-                    } else if (!$scope.item.multiSelect){
+                    } else if (!$scope.item.multiSelect) {
                         $scope.item.highlights = _.without($scope.item.highlights, data.highlight_id);
                     }
                 }

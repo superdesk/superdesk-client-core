@@ -40,9 +40,9 @@ describe('Reload Service', function() {
         msg = {
             event: 'desk_membership_revoked',
             extra: {
-                        desk_id: '5567ff31102454c7bac47644',
-                        user_ids: ['1']
-                    }
+                desk_id: '5567ff31102454c7bac47644',
+                user_ids: ['1']
+            }
         };
 
         var reload = spyOn(reloadService, 'reload');
@@ -55,9 +55,9 @@ describe('Reload Service', function() {
         msg = {
             event: 'stage',
             extra: {
-                        desk_id: '5567ff31102454c7bac47644',
-                        user_ids: ['1']
-                    }
+                desk_id: '5567ff31102454c7bac47644',
+                user_ids: ['1']
+            }
         };
         reloadService.activeDesk = '5567ff31102454c7bac47644';
 

@@ -79,7 +79,8 @@ export function extendItem(dest, src) {
  */
 export function filterDefaultValues(diff, orig) {
     Object.keys(CONTENT_FIELDS_DEFAULTS).forEach(function(key) {
-        if (diff.hasOwnProperty(key) && angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key]) && !orig.hasOwnProperty(key)) {
+        if (diff.hasOwnProperty(key) && angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key])
+            && !orig.hasOwnProperty(key)) {
             delete diff[key];
         }
     });
@@ -118,10 +119,8 @@ export function forcedExtend(dest, src) {
             } else {
                 dest[key] = value;
             }
-        } else {
-            if (src[key]) {
-                dest[key] = src[key];
-            }
+        } else if (src[key]) {
+            dest[key] = src[key];
         }
     });
 }

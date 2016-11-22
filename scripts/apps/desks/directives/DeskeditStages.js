@@ -1,4 +1,4 @@
-import { limits } from 'apps/desks/constants';
+import {limits} from 'apps/desks/constants';
 
 DeskeditStages.$inject = ['gettext', 'api', 'WizardHandler', 'tasks', '$rootScope', 'desks', 'notify', 'macros'];
 export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, desks, notify, macros) {

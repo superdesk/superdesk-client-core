@@ -141,9 +141,9 @@ function APIProvider() {
             return urls.resource(this.resource)
                 .then(angular.bind(this, function(url) {
                     if (this.parent) {
-                        var new_url = resolve(url, this.parent);
-                        if (new_url !== url) {
-                            return new_url;
+                        var newUrl = resolve(url, this.parent);
+                        if (newUrl !== url) {
+                            return newUrl;
                         }
                     }
 

@@ -23,22 +23,22 @@ angular.module('superdesk.apps.dashboard.widgets.ingeststats', [])
         });
     }])
     .controller('IngestStatsController', ['$scope', '$timeout', 'api',
-    function ($scope, $timeout, api) {
-        function updateData() {
-            api.ingest.query().then(function(items) {
-                $scope.items = items;
+        function ($scope, $timeout, api) {
+            function updateData() {
+                api.ingest.query().then(function(items) {
+                    $scope.items = items;
 
-                $timeout(function() {
-                    updateData();
-                }, $scope.widget.configuration.updateInterval * 1000 * 60);
-            });
-        }
+                    $timeout(function() {
+                        updateData();
+                    }, $scope.widget.configuration.updateInterval * 1000 * 60);
+                });
+            }
 
-        updateData();
-    }])
+            updateData();
+        }])
     .controller('IngestStatsConfigController', ['$scope', 'colorSchemes',
-    function ($scope, colorSchemes) {
-        colorSchemes.get(function(colorsData) {
-            $scope.schemes = colorsData.schemes;
-        });
-    }]);
+        function ($scope, colorSchemes) {
+            colorSchemes.get(function(colorsData) {
+                $scope.schemes = colorsData.schemes;
+            });
+        }]);

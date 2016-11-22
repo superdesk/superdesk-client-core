@@ -1,4 +1,4 @@
-angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePreview', [ function() {
+angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePreview', [function() {
     var IS_IMG_REGEXP = /^image\//;
     return {
         scope: {

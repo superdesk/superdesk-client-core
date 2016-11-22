@@ -9,8 +9,8 @@
  */
 import './styles/content-filters.scss';
 
-import { ContentFiltersService } from './services';
-import { ManageFiltersTab } from './directives';
+import {ContentFiltersService} from './services';
+import {ManageFiltersTab} from './directives';
 import * as ctrl from './controllers';
 
 // XXX: For some reason, loading the superdesk.apps.content_filters module in
@@ -29,19 +29,19 @@ import * as ctrl from './controllers';
  */
 angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
 .config(['superdeskProvider', function (superdesk) {
-        var templateUrl = 'scripts/apps/content-filters/' +
+    var templateUrl = 'scripts/apps/content-filters/' +
                           'views/settings.html';
 
-        superdesk.activity('/settings/content-filters', {
-                label: gettext('Content Filters'),
-                controller: ctrl.ContentFiltersConfigController,
-                controllerAs: 'ctrl',
-                templateUrl: templateUrl,
-                category: superdesk.MENU_SETTINGS,
-                priority: -800,
-                privileges: {dictionaries: 1}
-            });
-    }])
+    superdesk.activity('/settings/content-filters', {
+        label: gettext('Content Filters'),
+        controller: ctrl.ContentFiltersConfigController,
+        controllerAs: 'ctrl',
+        templateUrl: templateUrl,
+        category: superdesk.MENU_SETTINGS,
+        priority: -800,
+        privileges: {dictionaries: 1}
+    });
+}])
     .service('contentFilters', ContentFiltersService)
     .controller('ContentFiltersConfigCtrl', ctrl.ContentFiltersConfigController)
     .controller('FilterConditionsCtrl', ctrl.FilterConditionsController)

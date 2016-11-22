@@ -3,7 +3,7 @@ import './content/styles/profiles.scss';
 
 // scripts
 import './content';
-import { WorkspaceService } from './services';
+import {WorkspaceService} from './services';
 import * as directive from './directives';
 
 /**

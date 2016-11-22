@@ -1,1 +1,1 @@
-export { DictionaryService } from './DictionaryService';
+export {DictionaryService} from './DictionaryService';

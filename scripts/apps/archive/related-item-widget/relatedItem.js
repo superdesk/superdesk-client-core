@@ -141,16 +141,16 @@ function RelatedItemController (
                 api.save('archive_rewrite', {},
                     {'update': angular.extend({}, $scope.origItem, $scope.item)},
                     item)
-                .then(function(new_item) {
-                            notify.success(gettext('Story is associated as update.'));
-                            authoringWorkspace.edit(new_item._id);
-                        }, function(response) {
-                            if (angular.isDefined(response.data._message)) {
-                                notify.error(gettext('Failed to associate update: ' + response.data._message));
-                            } else {
-                                notify.error(gettext('There is an error. Failed to associate update.'));
-                            }
-                        });
+                .then(function(newItem) {
+                    notify.success(gettext('Story is associated as update.'));
+                    authoringWorkspace.edit(newItem._id);
+                }, function(response) {
+                    if (angular.isDefined(response.data._message)) {
+                        notify.error(gettext('Failed to associate update: ' + response.data._message));
+                    } else {
+                        notify.error(gettext('There is an error. Failed to associate update.'));
+                    }
+                });
             },
             'class': 'open',
             icon: 'icon-expand',

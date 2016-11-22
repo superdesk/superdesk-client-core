@@ -9,7 +9,7 @@
  */
 import './styles/vocabularies.scss';
 
-import { VocabularyService, SchemaFactory } from './services';
+import {VocabularyService, SchemaFactory} from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 

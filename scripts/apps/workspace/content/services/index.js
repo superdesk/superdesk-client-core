@@ -1,1 +1,1 @@
-export { ContentService } from './ContentService';
+export {ContentService} from './ContentService';

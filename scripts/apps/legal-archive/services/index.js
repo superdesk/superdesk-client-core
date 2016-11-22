@@ -1,1 +1,1 @@
-export { LegalArchiveService } from './LegalArchiveService';
+export {LegalArchiveService} from './LegalArchiveService';
