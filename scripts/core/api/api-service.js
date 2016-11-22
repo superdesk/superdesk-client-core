@@ -1,17 +1,41 @@
 /**
- * Api layer provider
+ * @ngdoc provider
+ * @name apiProvider
+ * @module superdesk.core.api
+ * @description This provider allows registering API configuration.
  */
 function APIProvider() {
     var apis = {};
 
     /**
-     * Register an api
+     * @ngdoc method
+     * @name apiProvider#api_
+     * @public
+     * @param {string} name
+     * @param {Object} config
+     * @description
+     * > **WARNING** This method is actually called `api` but can not named that
+     *  because of a bug in dgeni. So replace `api_` with `api` when calling.
+     *
+     * Register an api.
      */
     this.api = function(name, config) {
         apis[name] = config;
         return this;
     };
 
+    /**
+     * @ngdoc service
+     * @name api
+     * @module superdesk.core.api
+     * @requires $injector
+     * @requires $q
+     * @requires $http
+     * @requires urls
+     * @requires lodash
+     * @requires HttpEndpointFactory
+     * @description Raw API operations.
+     */
     this.$get = apiServiceFactory;
 
     apiServiceFactory.$inject = ['$injector', '$q', '$http', 'urls', 'lodash', 'HttpEndpointFactory'];
@@ -82,12 +106,31 @@ function APIProvider() {
          * API Resource instance
          */
         function Resource(resource, parent) {
+            /**
+             * @ngdoc property
+             * @name api#resource
+             * @type {string}
+             * @public
+             * @description API resource
+             */
             this.resource = resource;
+
+            /**
+             * @ngdoc property
+             * @name api#parent
+             * @public
+             * @type {string}
+             * @description Resource parent.
+             */
             this.parent = parent;
         }
 
         /**
-         * Get resource url
+         * @ngdoc method
+         * @name api#url
+         * @public
+         * @description
+         * Get resource url.
          */
         Resource.prototype.url = function(_id) {
 
@@ -113,6 +156,10 @@ function APIProvider() {
         };
 
         /**
+         * @ngdoc method
+         * @name api#save
+         * @public
+         * @description
          * Save an item
          */
         Resource.prototype.save = function(item, diff, params) {
@@ -135,6 +182,10 @@ function APIProvider() {
         };
 
         /**
+         * @ngdoc method
+         * @name api#replace
+         * @public
+         * @description
          * Replace an item
          */
         Resource.prototype.replace = function(item) {
@@ -146,6 +197,12 @@ function APIProvider() {
         };
 
         /**
+         * @ngdoc method
+         * @name api#query
+         * @public
+         * @param {Object} params
+         * @param {bool} cache
+         * @description
          * Query resource
          */
         Resource.prototype.query = function(params, cache) {
@@ -158,9 +215,16 @@ function APIProvider() {
         };
 
         /**
-         * Get an item by _id
+         * @ngdoc method
+         * @name api#getById
+         * @public
          *
          * @param {String} _id
+         * @param {Object} params
+         * @param {bool} cache
+         *
+         * @description
+         * Get an item by _id
          */
         Resource.prototype.getById = function(_id, params, cache) {
             return http({
@@ -172,9 +236,14 @@ function APIProvider() {
         };
 
         /**
-         * Remove an item
+         * @ngdoc method
+         * @name api#remove
+         * @public
          *
          * @param {Object} item
+         * @param {Object} params
+         *
+         * @description Remove an item
          */
         Resource.prototype.remove = function(item, params) {
             return http({
@@ -250,9 +319,13 @@ function APIProvider() {
         }
 
         /**
-         * Get on a given url
+         * @ngdoc method
+         * @name api#get
+         * @public
          *
          * @param {string} url
+         *
+         * @description Get on a given url
          */
         api.get = function apiGet(url, params) {
             return http({
@@ -273,4 +346,4 @@ function APIProvider() {
 }
 
 angular.module('superdesk.core.api.service', [])
-.provider('api', APIProvider);
+    .provider('api', APIProvider);

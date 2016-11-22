@@ -2,7 +2,7 @@ export default angular.module('superdesk.core.services.asset', [])
     /**
      * @ngdoc provider
      * @module superdesk.core.services
-     * @name asset
+     * @name assetProvider
      *
      * @requires https://docs.angularjs.org/api/ng/service/$injector $injector
      *
@@ -26,6 +26,13 @@ export default angular.module('superdesk.core.services.asset', [])
 
         this.imageUrl = this.templateUrl;
 
+        /**
+         * @ngdoc service
+         * @module superdesk.core.services
+         * @name asset
+         * @description The asset service has no accessible methods and is only
+         * available at provider level.
+         */
         this.$get = function() {
             return this;
         };
