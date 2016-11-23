@@ -1,14 +1,9 @@
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
 <div class="modal-header modal-header--padding-20">
-=======
-<div class="modal-header">
->>>>>>> Added web publisher module
     <h3 class="pull-left" translate>Routes</h3>
 </div>
 
 <div class="subnav">
     <ul class="filter-type filter-type--padded rightPadding">
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
         <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.routeType === ''}">
             <a ng-click="webPublisher.changeRouteFilter('')" translate>all</a>
         </li>
@@ -21,56 +16,25 @@
     </ul>
 
     <div sd-item-searchbar class="searchbar-flex-handler"></div>
-=======
-        <li title="all" class="filter-type__item filter-type__item--active">
-            <a href="" translate>all</a>
-        </li>
-        <li title="collection" class="filter-type__item">
-            <a href="" translate>collection</a>
-        </li>
-        <li title="content" class="filter-type__item">
-            <a href="" translate>content</a>
-        </li>
-    </ul>
-
-    <div sd-item-searchbar="" data-repo="repo" data-context="context" class=""></div>
->>>>>>> Added web publisher module
 
     <div class="subnav__stretch-bar"></div>
 
     <div class="subnav__button-stack--square-buttons">
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
         <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateRoute()">
-=======
-        <button class="navbtn sd-create-btn" ng-click="paneOpen = !paneOpen">
->>>>>>> Added web publisher module
             <i class="svg-icon-plus"></i><span class="circle"></span>
         </button>
     </div>
 </div>
 <div class="paneLayout paneLayout--twoHeadersMargin">
     <div class="paneLayout__content">
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
         <div class="contentPadding">
             <ul class="treeList">
                 <li ng-repeat="route in routes | filter: {type: webPublisher.routeType, level: webPublisher.routeType === 'content' ? '' : 0} | orderBy: ['type', 'name'] track by route.id"
                     ng-include="webPublisher.TEMPLATES_DIR + '/routes-tree.html'">
-=======
-        <div class="contentPadding ">
-            <ul class="treeList">
-                <li>
-                    <div ng-include="'scripts/apps/web-publisher/views/treeList__element.html'"></div>
-                    <ul class="treeList">
-                        <li>
-                            <div ng-include="'scripts/apps/web-publisher/views/treeList__element.html'"></div>
-                        </li>
-                    </ul>
->>>>>>> Added web publisher module
                 </li>
             </ul>
         </div>
     </div>
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
     <div class="paneLayout__pane paneContent" ng-class="{'paneLayout__pane--open': webPublisher.routePaneOpen}">
         <div class="paneContent__header">
             <h3 class="pull-left" translate>Add Route</h3>
@@ -109,27 +73,6 @@
                     <div class="item">
                         <label for="articleTemplate" translate>article template name</label>
                         <input type="text" class="line-input" id="articleTemplate" ng-model="newRoute.articlesTemplateName">
-=======
-    <div class="paneLayout__pane" ng-class="{'paneLayout__pane--open': paneOpen}">
-        <div class="modal-header">
-            <h3 class="pull-left" translate>Add Route</h3>
-            <div class="pull-right">
-                <button class="btn" ng-click="paneOpen = !paneOpen" translate>Cancel</button>
-                <button class="btn btn--primary" ng-disabled="" ng-click="" translate>Save</button>
-            </div>
-        </div>
-        <div class="contentPadding">
-            <form name="" class="flat">
-                <fieldset class="label-light">
-                    <div sd-info-item>
-                        <label for="name" translate>name</label>
-                        <input type="text" name="name" id="name" ng-model="something.name" required>
-                    </div>
-
-                    <div sd-info-item>
-                        <label for="template" translate>template name</label>
-                        <input type="text" name="template" id="template" ng-model="something.template">
->>>>>>> Added web publisher module
                     </div>
                 </fieldset>
             </form>

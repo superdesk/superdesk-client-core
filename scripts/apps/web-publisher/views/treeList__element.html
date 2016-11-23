@@ -1,25 +1,24 @@
-<div class="treeList__element">
-    <div class="treeList__icon">
-        <li class="icon-chevron-down-thin"></li>
-        <!-- OR <li class="icon-chevron-right-thin"></li> -->
+<div class="listElement">
+    <div class="listElement__icon" ng-if="route.type == 'collection'">
+        <i class="icon-chevron-right-thin"></i>
+        <!-- OR <i class="icon-chevron-down-thin"></i> -->
     </div>
-    <div class="treeList__icon">
-        <i class="icon-align-justify"></i>
-        <!-- OR <i class="icon-text"></i> -->
+    <div class="listElement__icon">
+        <i ng-class="{'icon-align-justify': route.type == 'collection', 'icon-text': route.type == 'content'}"></i>
     </div>
     <!-- type content goes without --bold -->
-    <div class="treeList__name treeList__name--bold">
-        Sports
+    <div class="listElement__content">
+        <strong>{{route.name}}</strong>
     </div>
-    <div class="pull-right">
-        <span class="treeList__label">123</span>
+    <div class="listElement__right">
+        <span class="countLabel">123</span>
         <div class="dropdown pull-right" dropdown>
             <button class="dropdown__toggle" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
             <ul class="dropdown__menu more-activity-menu pull-right">
-                <li><button ng-click="" title=""><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                <li><button ng-click="" title=""><i class="icon-trash"></i>{{:: 'Delete'| translate}}</button></li>
+                <li><button ng-click="webPublisher.editRoute(route)"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                <li><button ng-click="webPublisher.deleteRoute(route.id)"><i class="icon-trash"></i>{{:: 'Delete'| translate}}</button></li>
             </ul>
         </div>
     </div>

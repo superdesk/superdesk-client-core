@@ -2,11 +2,16 @@
     border: 1px solid $tableBorder;
     border-left: 3px solid #4d646f;
     border-top: 0;
+<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
     padding: 12px 5px 12px 15px;
+=======
+    padding: .7em 15px;
+>>>>>>> Added routes management
     background-color: #fff;
     position: relative;
     display: flex;
     align-items: center;
+<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
 
     &--noLeftBorder {
         border-left: 1px solid $tableBorder;
@@ -16,23 +21,36 @@
         font-weight: 700;
     }
 
+=======
+>>>>>>> Added routes management
     &__icon {
         flex: 0 0 auto;
         display: inline-block;
         margin-right: 10px;
         line-height: 1em;
+<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
         margin-top: 2px;
+=======
+>>>>>>> Added routes management
         align-items: center;
 
         i {
           color: $grayLight;
         }
 
+<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
         &:hover i {
             color: $blue;
         }
 
         &--active {
+=======
+        &:hover i{
+            color: $blue;
+        }
+
+        &--active{
+>>>>>>> Added routes management
             i {
                 color: $blue;
             }
@@ -41,10 +59,15 @@
                 color: $grayLight;
             }
         }
+<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
+=======
+
+>>>>>>> Added routes management
     }
 
     &__content {
         width: 100%;
+<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
         color: $gray;
 
         button {
@@ -73,4 +96,12 @@
     &:hover button {
         display: inline-block;
     }
+=======
+    }
+
+    &__right{
+        flex: 0 0 auto;
+        align-items: center;
+    }
+>>>>>>> Added routes management
 }

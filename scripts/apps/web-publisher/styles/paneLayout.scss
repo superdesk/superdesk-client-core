@@ -7,8 +7,7 @@
     top: 0;
     overflow-x: hidden;
 
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
-    .close-filter{
+    .close-filter {
         position: absolute;
         top: 16px;
         right: 8px;
@@ -21,46 +20,37 @@
         }
     }
 
-=======
->>>>>>> Added web publisher module
     &--headerMargin {
-        top: 48px;
+        top: 49px;
     }
 
     &--twoHeadersMargin {
-        top: 96px;
+        top: 97px;
+    }
+    &--threeHeadersMargin {
+        top: 145px;
     }
 
     &__content {
         background-color: $sd-background;
         width: 100%;
-        overflow-y: scroll;
+        overflow-y: auto;
+        position: relative;
     }
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
     // right pane
-=======
-
->>>>>>> Added web publisher module
     &__pane {
         background-color: #fff;
         border-left: 1px solid $tableBorder;
         flex: 0 0 400px;
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
         overflow: hidden;
         // margin instead of translateX because of automatic __content size
         margin-right: -500px;
-=======
-        // margin instead of translateX because of automatic __content size
-        margin-right: -500px;
-        overflow-y: scroll;
->>>>>>> Added web publisher module
         transition: all .3s;
 
         &--open {
             margin-right: 0;
         }
     }
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
     // left pane
     &__leftPane {
         @include box-sizing(border-box);
@@ -78,6 +68,3 @@
         }
     }
 }
-=======
-}
->>>>>>> Added web publisher module

@@ -1,23 +1,15 @@
 describe('publisher service', () => {
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
-=======
-
->>>>>>> Added web publisher module
     beforeEach(window.module('superdesk.apps.web_publisher'));
 
     it('can create site', inject((publisher, pubapi, $q, $rootScope) => {
         let data = {name: 'foo', subdomain: 'bar'};
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
 
-=======
->>>>>>> Added web publisher module
         spyOn(pubapi, 'save').and.returnValue($q.when({}));
         publisher.manageSite(data);
         $rootScope.$digest();
         expect(pubapi.save).toHaveBeenCalledWith('tenants', data, undefined);
     }));
 
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
     it('can remove site 123', inject((publisher, pubapi, $q, $rootScope) => {
         spyOn(pubapi, 'remove').and.returnValue($q.when({}));
         publisher.removeSite(123);
@@ -25,13 +17,10 @@ describe('publisher service', () => {
         expect(pubapi.remove).toHaveBeenCalledWith('tenants', 123);
     }));
 
-=======
->>>>>>> Added web publisher module
     it('can list sites', inject((publisher, pubapi, $q, $rootScope) => {
         spyOn(pubapi, 'query').and.returnValue($q.when([]));
         publisher.querySites();
         $rootScope.$digest();
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
         expect(pubapi.query).toHaveBeenCalledWith('tenants');
     }));
 
@@ -109,8 +98,5 @@ describe('publisher service', () => {
         publisher.queryLists();
         $rootScope.$digest();
         expect(pubapi.query).toHaveBeenCalledWith('content/lists');
-=======
-        expect(pubapi.query).toHaveBeenCalledWith('tenants', undefined);
->>>>>>> Added web publisher module
     }));
 });

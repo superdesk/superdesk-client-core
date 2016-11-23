@@ -7,7 +7,6 @@
  */
 PublisherFactory.$inject = ['pubapi'];
 export function PublisherFactory(pubapi) {
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
     class Publisher {
         /**
          * @ngdoc method
@@ -18,25 +17,27 @@ export function PublisherFactory(pubapi) {
         setToken() {
             return pubapi.setToken();
         }
-=======
-
-    class Publisher {
->>>>>>> Added web publisher module
 
         /**
          * @ngdoc method
          * @name publisher#setTenant
          * @param {String} tenant
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
          * @returns {Object}
-=======
-         * @returns Object
->>>>>>> Added web publisher module
          * @description Change the tenant we are using the api for
          */
         setTenant(tenant) {
             pubapi.setTenant(tenant);
             return this;
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#setOrganization
+         * @returns {Object}
+         * @description Set organization id for articles on monitoring
+         */
+        setOrganization() {
+            return pubapi.setOrganization();
         }
 
         /**
@@ -66,11 +67,7 @@ export function PublisherFactory(pubapi) {
          * @ngdoc method
          * @name publisher#querySites
          * @returns {Promise}
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
          * @description List all sites in publisher
-=======
-         * @description Query sites
->>>>>>> Added web publisher module
          */
         querySites() {
             return pubapi.query('tenants');
@@ -102,7 +99,6 @@ export function PublisherFactory(pubapi) {
         /**
          * @ngdoc method
          * @name publisher#queryRoutes
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
          * @param {Object} type - which routes to query (collection or content)
          * @returns {Promise}
          * @description List all routes for defined type
@@ -143,29 +139,17 @@ export function PublisherFactory(pubapi) {
          */
         removeMenu(id) {
             return pubapi.remove('menus', id);
-=======
-         * @returns {Promise}
-         * @description Query routes
-         */
-        queryRoutes() {
-            return pubapi.query('content/routes');
->>>>>>> Added web publisher module
         }
 
         /**
          * @ngdoc method
          * @name publisher#queryMenus
          * @returns {Promise}
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
          * @description List all menus
-=======
-         * @description Query menus
->>>>>>> Added web publisher module
          */
         queryMenus() {
             return pubapi.query('menus');
         }
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
 
         /**
          * @ngdoc method
@@ -202,12 +186,12 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
-         * @name publisher#queryLists
+         * @name publisher#queryListArticles
          * @param {String} id - id of content list
          * @returns {Promise}
          * @description List all articles for selected content list
          */
-        queryArticles(id) {
+        queryListArticles(id) {
             return pubapi.query('content/lists/' + id + '/items');
         }
 
@@ -223,8 +207,27 @@ export function PublisherFactory(pubapi) {
         pinArticle(listId, articleId, article) {
             return pubapi.save('content/lists/' + listId + '/items', article, articleId);
         }
-=======
->>>>>>> Added web publisher module
+
+        /**
+         * @ngdoc method
+         * @name publisher#queryTenantArticles
+         * @returns {Promise}
+         * @description List all articles for selected tenant
+         */
+        queryTenantArticles() {
+            return pubapi.query('content/articles');
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#queryMonitoringArticles
+         * @param {String} articleStatus - status of articles (new, published, unpublished, canceled)
+         * @returns {Promise}
+         * @description List all articles for monitoring view
+         */
+        queryMonitoringArticles(articleStatus) {
+            return pubapi.queryWithDetails('organization/articles', articleStatus);
+        }
     }
 
     return new Publisher();
