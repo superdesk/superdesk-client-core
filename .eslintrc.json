@@ -57,6 +57,10 @@
         "no-obj-calls": 2,
         "no-unexpected-multiline": 2,
         "no-unreachable": 2,
+        "no-unsafe-negation": 2,
+        "use-isnan": 2,
+        "valid-typeof": 2,
+
         "strict": 0,
         "indent": [2, 4],
         "quotes": [2, "single"],
@@ -64,7 +68,6 @@
         "semi": [2, "always"],
         "camelcase": [2, {"properties": "never"}],
         "comma-dangle": [2, "never"],
-        "no-cond-assign": [2, "except-parens"],
         "valid-jsdoc": [0, {
             "requireReturn": false,
             "requireReturnDescription": false,
