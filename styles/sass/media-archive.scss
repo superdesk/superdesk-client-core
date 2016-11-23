@@ -274,7 +274,7 @@ $sfbox_mediaMaxWidth : 172px;
             }
         }
     }
-    &.media-picture, &.media-video {
+    &.media-picture, &.media-graphic, &.media-video {
         .text {
             display: none;
             position: absolute;
@@ -288,7 +288,7 @@ $sfbox_mediaMaxWidth : 172px;
             display: block
         }
     }
-    &.media-text,&.media-preformatted,&.media-composite,&.media-picture {
+    &.media-text,&.media-preformatted,&.media-composite,&.media-picture,&.media-graphic {
         .media {
             max-width: $sfbox_minWidth - 4;
             font-size: 12px;
