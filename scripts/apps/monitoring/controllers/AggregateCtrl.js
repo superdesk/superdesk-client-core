@@ -17,7 +17,8 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     this.searchLookup = {};
     this.deskLookup = {};
     this.stageLookup = {};
-    this.fileTypes = ['all', 'text', 'picture', 'composite', 'takesPackage', 'highlightsPackage', 'video', 'audio'];
+    this.fileTypes = ['all', 'text', 'picture', 'graphic', 'composite', 'takesPackage',
+        'highlightsPackage', 'video', 'audio'];
     this.selectedFileType = $scope.type === 'monitoring' ? storage.getItem('selectedFileType') || [] : [];
     this.monitoringSearch = false;
     this.searchQuery = null;

@@ -42,7 +42,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.views = {send: false};
             $scope.stage = null;
             $scope._editable = !!$scope.origItem._editable;
-            $scope.isMediaType = _.includes(['audio', 'video', 'picture'], $scope.origItem.type);
+            $scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], $scope.origItem.type);
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
             $scope.itemActions = authoring.itemActions($scope.origItem);
             $scope.highlight = !!$scope.origItem.highlight;
@@ -391,7 +391,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function validateForPublish(item) {
                 var requiredFields = $rootScope.config.requiredMediaMetadata;
-                if (item.type === 'picture') {
+                if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
                     _.each(requiredFields, function(key) {
                         if (item[key] == null || _.isEmpty(item[key])) {

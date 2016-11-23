@@ -169,7 +169,7 @@
 
 <div class="field" ng-if="isMediaType" order="{{editor.media.order}}" sd-width="{{editor.media.sdWidth || 'full'}}">
 
-  <div ng-if="item.type == 'picture'" class="full-preview" sd-ratio-calc>
+  <div ng-if="item.type == 'picture' || item.type == 'graphic'" class="full-preview" sd-ratio-calc>
       <div>
           <span translate>Original</span>
           <div sd-item-rendition data-item="item" data-rendition="baseImage" ng-click="preview(item);"></div>

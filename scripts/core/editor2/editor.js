@@ -479,7 +479,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 var url = data.url, altText = data.altText;
                 var promiseFinished;
                 // if this is a SD archive, we use its properties
-                if (data._type === 'archive' || data.type === 'picture') {
+                if (data._type === 'archive' || data.type === 'picture' || data.type === 'graphic') {
                     // get expected renditions list
                     promiseFinished = renditionsService.get().then(function(renditionsList) {
                         // ]use the first rendtion as default
@@ -522,6 +522,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 });
             }
         };
+        mediaTypes.graphic = mediaTypes.picture;
         return $q.when(mediaTypes[data.type]());
     };
 
@@ -654,50 +655,52 @@ angular.module('superdesk.apps.editor2', [
         };
     }])
     .directive('sdTextEditorDropZone', ['editor',
-    function (editor) {
-        var dragOverClass = 'medium-editor-dragover';
-        return {
-            require: '^sdTextEditorBlockText',
-            scope: {sdTextEditorDropZone: '@'},
-            link: function(scope, element, attrs, ctrl) {
-                if (scope.sdTextEditorDropZone === 'false') {
-                    return;
-                }
-                var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.video'];
-                element.on('drop dragdrop', function(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    var media_type = event.originalEvent.dataTransfer.types[0];
-                    var item = angular.fromJson(event.originalEvent.dataTransfer.getData(media_type));
-                    var paragraph = angular.element(event.target);
-                    paragraph.removeClass(dragOverClass);
-                    if (paragraph.text() === '') {
-                        // select paragraph element in order to know position
-                        ctrl.selectElement(paragraph.get(0));
-                        ctrl.insertMedia(item);
+        function (editor) {
+            var dragOverClass = 'medium-editor-dragover';
+            return {
+                require: '^sdTextEditorBlockText',
+                scope: {sdTextEditorDropZone: '@'},
+                link: function(scope, element, attrs, ctrl) {
+                    if (scope.sdTextEditorDropZone === 'false') {
+                        return;
                     }
-                })
-                .on('dragover', function(event) {
-                    var paragraph = angular.element(event.target);
-                    if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
-                        // allow to overwite the drop binder (see above)
+                    var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.graphic',
+                        'application/superdesk.item.video'];
+                    element.on('drop dragdrop', function(event) {
                         event.preventDefault();
                         event.stopPropagation();
-                        // if dragged element is a picture and if the paragraph is empty, highlight the paragraph
+                        var mediaType = event.originalEvent.dataTransfer.types[0];
+                        var item = angular.fromJson(event.originalEvent.dataTransfer.getData(mediaType));
+                        var paragraph = angular.element(event.target);
+                        paragraph.removeClass(dragOverClass);
                         if (paragraph.text() === '') {
-                            return paragraph.addClass(dragOverClass);
+                            // select paragraph element in order to know position
+                            ctrl.selectElement(paragraph.get(0));
+                            ctrl.insertMedia(item);
                         }
-                    }
-                    // otherwise, remove the style
-                    paragraph.removeClass(dragOverClass);
-                })
-                .on('dragleave', function(event) {
-                    var paragraph = angular.element(event.target);
-                    paragraph.removeClass(dragOverClass);
-                });
-            }
-        };
-    }])
+                    })
+                    .on('dragover', function(event) {
+                        var paragraph = angular.element(event.target);
+                        if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
+                            // allow to overwite the drop binder (see above)
+                            event.preventDefault();
+                            event.stopPropagation();
+                            // if dragged element is a picture and if the paragraph is empty, highlight the paragraph
+                            if (paragraph.text() === '') {
+                                return paragraph.addClass(dragOverClass);
+                            }
+                        }
+                        // otherwise, remove the style
+                        paragraph.removeClass(dragOverClass);
+                    })
+                    .on('dragleave', function(event) {
+                        var paragraph = angular.element(event.target);
+                        paragraph.removeClass(dragOverClass);
+                    });
+                }
+            };
+        }
+    ])
     .directive('sdTextEditor', ['$timeout', 'lodash', function ($timeout, _) {
         return {
             scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?'},
@@ -1297,6 +1300,7 @@ angular.module('superdesk.apps.editor2', [
                     insertMedia: function(media) {
                         var mediaType = {
                             'picture': 'Image',
+                            'graphic': 'Image',
                             'video': 'Video'
                         };
                         var imageBlock = {
