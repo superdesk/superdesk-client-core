@@ -72,7 +72,7 @@
 
         <div sd-media-query min-width="560" class="subnav">
 
-            <div class="button-list button-list--padded" ng-if="!elementState || elementState === 'comfort'">
+            <div class="button-list button-list--padded filter-tabs" ng-if="!elementState || elementState === 'comfort'">
                 <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
                     <span ng-if="fileType=='all'" class="toggle-button__text toggle-button__text--all">{{:: 'all' | translate}}</span>
                     <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="toggle-button__icon filetype-icon-{{fileType}}"></i>
@@ -80,12 +80,12 @@
                     <i ng-if="fileType=='highlightsPackage'" class="toggle-button__icon filetype-icon-highlight-pack" title="{{ :: 'Highlight Package' | translate }}"></i>
                 </a>
             </div>
-            <button class="navbtn navbtn--btn-rearrange pull-left" tooltip="{{:: 'Re-Arrange Groups' | translate}}" tooltip-placement="right" ng-if="type === 'monitoring' && monitoring.singleGroup.singleViewType == null && viewColumn"
+            <button class="navbtn navbtn--btn-rearrange pull-left" tooltip="{{:: 'Re-Arrange Groups' | translate}}" tooltip-placement="right" ng-if="(!elementState || elementState === 'comfort') && type === 'monitoring' && monitoring.singleGroup.singleViewType == null && viewColumn"
                  ng-click="aggregate.edit('reorder', true)">
                 <i class="icon-move"></i> <span class="title" translate>Rearrange groups</span>
             </button>
 
-            <div class="subnav__stretch-bar"></div>
+            <div class="subnav__stretch-bar" ng-class="{swimlane: viewColumn}"></div>
 
             <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'" class="sortbar-container"></div>
 
@@ -104,7 +104,17 @@
                             </div>
                         </li>
                         <li class="divider"></li>
-                        <li sd-item-sortbar></li>
+                        <li class="level-compact pull-left">
+                            <div class="navbtn--btn-rearrange compact pull-left">
+                                <button class="rearrange" tooltip="{{:: 'Re-Arrange Groups' | translate}}" tooltip-placement="right" 
+                                  ng-if="type === 'monitoring' && monitoring.singleGroup.singleViewType == null && viewColumn"
+                                 ng-click="aggregate.edit('reorder', true)">
+                                <i class="icon-move"></i>
+                                <span class="title" translate>Rearrange groups</span>
+                                </button>
+                            </div>
+                            <div sd-item-sortbar></div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -124,7 +134,7 @@
                 <div ng-if="viewColumn" class="swimlane">
                     <div class="sd-columns swimlane"
                          ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
-                        <div class="sd-column swimlane" ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
+                        <div class="sd-column swimlane" ng-class="{'last': $last, active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
                              ng-repeat="group in aggregate.groups | limitTo:monitoring.columnsLimit track by group._id"
                              sd-monitoring-group data-group="group" data-num-items="group.max_items"
                              data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
