@@ -14,6 +14,6 @@ describe('publisher service', () => {
         spyOn(pubapi, 'query').and.returnValue($q.when([]));
         publisher.querySites();
         $rootScope.$digest();
-        expect(pubapi.query).toHaveBeenCalledWith('tenants', undefined);
+        expect(pubapi.query).toHaveBeenCalledWith('tenants');
     }));
 });

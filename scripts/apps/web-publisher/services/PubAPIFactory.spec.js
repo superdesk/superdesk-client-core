@@ -1,5 +1,5 @@
 describe('pubapi', () => {
-    const RESOURCE_URL = 'http://default.example.com/api/v1/tenants/';
+    const RESOURCE_URL = 'http://example.com/api/v1/tenants/';
     const ITEM_URL = RESOURCE_URL + '123';
 
     beforeEach(window.module('superdesk.apps.web_publisher'));
@@ -15,7 +15,7 @@ describe('pubapi', () => {
 
     it('can build a resource url', inject((pubapi) => {
         let url = pubapi.resourceURL('menus');
-        expect(url).toBe('http://default.example.com/api/v1/menus/');
+        expect(url).toBe('http://example.com/api/v1/menus/');
     }));
 
     it('can query', inject((pubapi, $httpBackend) => {
