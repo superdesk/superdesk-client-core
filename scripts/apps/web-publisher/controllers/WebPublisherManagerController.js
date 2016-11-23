@@ -30,7 +30,6 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         self.activeTab = newTabName;
     };
 
-
     /**
      * @ngdoc method
      * @name WebPublisherManagerController#newMenu
@@ -76,7 +75,6 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         });
     };
 
-
     /**
      * @ngdoc method
      * @name WebPublisherManagerController#editMenuTree
@@ -94,7 +92,6 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         publisher.queryRoutes().then(routes => $scope.routes = routes);
         self.changeTab('navigation-menu');
     };
-
 
     /**
      * @ngdoc method
@@ -152,7 +149,6 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             $scope.menus[index] = menu;
         });
     }
-
 
     /**
      * @ngdoc method

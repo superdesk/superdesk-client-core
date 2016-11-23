@@ -68,7 +68,6 @@ export function PubAPIFactory(config, $http, $q) {
             });
         }
 
-
         /**
          * @ngdoc method
          * @name pubapi#get
