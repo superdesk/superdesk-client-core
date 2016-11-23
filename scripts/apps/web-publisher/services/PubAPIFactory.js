@@ -89,12 +89,12 @@ export function PubAPIFactory(config, $http, $q) {
          * @ngdoc method
          * @name pubapi#resourceURL
          * @param {String} resource
-         * @param {String} code - code of site
+         * @param {String} id
          * @returns {String}
          * @description Get resource url
          */
-        resourceURL(resource, code = '') {
-            return `${this._protocol}://${this._tenant}.${this._domain}/${this._base}/${resource}/${code}`;
+        resourceURL(resource, id = '') {
+            return `${this._protocol}://${this._tenant}.${this._domain}/${this._base}/${resource}/${id}`;
         }
 
         /**
