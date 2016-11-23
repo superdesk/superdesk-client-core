@@ -120,8 +120,8 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
 
                 // init the lists of field aliases and non-selected fields
                 $scope.fieldAliases = [];
-                aliases = (angular.isDefined($scope.origProvider.config)
-                    && $scope.origProvider.config.field_aliases) || [];
+                aliases = angular.isDefined($scope.origProvider.config)
+                    && $scope.origProvider.config.field_aliases || [];
 
                 var aliasObj = {};
                 aliases.forEach(function(item) {
@@ -244,7 +244,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                     }
                 });
 
-                if (typeof($scope.provider.config) !== 'undefined') {
+                if (typeof $scope.provider.config !== 'undefined') {
                     $scope.provider.config.field_aliases = newAliases;
                 }
                 delete $scope.provider.all_errors;

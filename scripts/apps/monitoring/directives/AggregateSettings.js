@@ -73,8 +73,8 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
              * @returns {Boolean}
              */
             scope.shouldHideStep = function(code) {
-                return (scope.displayOnlyCurrentStep != null && !(scope.displayOnlyCurrentStep
-                    && scope.currentStep === code));
+                return scope.displayOnlyCurrentStep != null && !(scope.displayOnlyCurrentStep
+                    && scope.currentStep === code);
             };
 
             /**

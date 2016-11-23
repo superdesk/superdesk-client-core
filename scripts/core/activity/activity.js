@@ -149,7 +149,7 @@ function SuperdeskProvider($routeProvider, _) {
              */
             betaService.isBeta().then(function(beta) {
                 _.forEach(activities, function(activity, id) {
-                    if ((activity.beta === true && !beta) || !isAllowed(activity, beta)) {
+                    if (activity.beta === true && !beta || !isAllowed(activity, beta)) {
                         $routeProvider.when(activity.when, {redirectTo: '/workspace'});
                     }
                 });
@@ -542,7 +542,7 @@ angular.module('superdesk.core.activity', [
      */
     this.setReferrer = function(currentRoute, previousRoute) {
         if (currentRoute && previousRoute) {
-            if ((currentRoute.$$route !== undefined) && (previousRoute.$$route !== undefined)) {
+            if (currentRoute.$$route !== undefined && previousRoute.$$route !== undefined) {
                 if (currentRoute.$$route.originalPath === '/') {
                     this.setReferrerUrl('/workspace');
                     localStorage.setItem('referrerUrl', '/workspace');
@@ -563,9 +563,9 @@ angular.module('superdesk.core.activity', [
     };
 
     this.getReferrerUrl = function() {
-        if (typeof (referrerURL) === 'undefined' || (referrerURL) === null) {
-            if (typeof (localStorage.getItem('referrerUrl')) === 'undefined'
-                || (localStorage.getItem('referrerUrl')) === null) {
+        if (typeof referrerURL === 'undefined' || referrerURL === null) {
+            if (typeof localStorage.getItem('referrerUrl') === 'undefined'
+                || localStorage.getItem('referrerUrl') === null) {
                 this.setReferrerUrl('/workspace');
             } else {
                 referrerURL = localStorage.getItem('referrerUrl');

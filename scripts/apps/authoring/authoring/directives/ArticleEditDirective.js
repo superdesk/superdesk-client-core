@@ -61,7 +61,9 @@ export function ArticleEditDirective(
             try {
                 angular.module('superdesk.apps.editor2');
                 history.watch('item', mainEditScope || scope);
-            } catch (e) {}
+            } catch (e) {
+                // no-op
+            }
 
             scope.$on('History.undone', triggerAutosave);
             scope.$on('History.redone', triggerAutosave);

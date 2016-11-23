@@ -195,7 +195,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     }
                 });
             } else {
-                newBody = (blocks.length > 0) ? blocks[0].body : '';
+                newBody = blocks.length > 0 ? blocks[0].body : '';
             }
             // strip <br> and <p>
             newBody = newBody.trim().replace(/<p><br><\/p>$/, '');
@@ -356,7 +356,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 for (i = 0, len = string.length; i < len; i++) {
                     chr   = string.charCodeAt(i);
                     /*jshint bitwise: false */
-                    hash  = ((hash << 5) - hash) + chr;
+                    hash  = (hash << 5) - hash + chr;
                     hash |= 0; // Convert to 32bit integer
                 }
                 return hash;

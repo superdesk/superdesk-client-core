@@ -103,8 +103,8 @@ export function PieChartDashboard(colorSchemes) {
                                 .each(function() {
                                     if (this !== self) {
                                         var b = this.getBoundingClientRect();
-                                        if ((Math.abs(a.left - b.left) * 2 < (a.width + b.width)) &&
-                                                (Math.abs(a.top - b.top) * 2 < (a.height + b.height))) {
+                                        if (Math.abs(a.left - b.left) * 2 < a.width + b.width &&
+                                                Math.abs(a.top - b.top) * 2 < a.height + b.height) {
 
                                             var dx = (Math.max(0, a.right - b.left) +
                                                     Math.min(0, a.left - b.right)) * 0.01,

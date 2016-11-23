@@ -37,8 +37,8 @@ describe('content', function() {
         //choose time with date not in a valid month number.
         //default view time format in config
         var embargoDate = '09/09/' + (now.getFullYear() + 1);
-        var embargoTime = (now.getHours() < 10 ? ('0' + now.getHours()) : now.getHours()) + ':' +
-                        (now.getMinutes() < 10 ? ('0' + now.getMinutes()) : now.getMinutes());
+        var embargoTime = (now.getHours() < 10 ? '0' + now.getHours() : now.getHours()) + ':' +
+                        (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
 
         element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
         element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);

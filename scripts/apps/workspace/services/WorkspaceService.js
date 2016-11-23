@@ -95,7 +95,7 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
      */
     function getActiveWorkspaceId() {
         return preferences.get(PREFERENCE_KEY).then(function(prefs) {
-            return (prefs && prefs.workspace) ? prefs.workspace : null;
+            return prefs && prefs.workspace ? prefs.workspace : null;
         });
     }
 

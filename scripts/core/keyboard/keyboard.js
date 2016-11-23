@@ -326,7 +326,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
     this.unbind = function unbind(label) {
         label = label.toLowerCase();
         var binding = this.keyboardEvent[label];
-        delete(this.keyboardEvent[label]);
+        delete this.keyboardEvent[label];
         if (!binding) {
             return;
         }

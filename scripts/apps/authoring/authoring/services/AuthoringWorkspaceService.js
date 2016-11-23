@@ -164,7 +164,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
         return authoring.open(itemId, action === 'view', repo)
             .then(function(item) {
                 self.item = item;
-                self.action = (action !== 'view' && item._editable) ? action : 'view';
+                self.action = action !== 'view' && item._editable ? action : 'view';
             })
             .then(saveState);
     }

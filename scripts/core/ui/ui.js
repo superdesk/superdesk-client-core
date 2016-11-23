@@ -124,7 +124,7 @@ function WizardDirective() {
                 $scope.steps.push(step);
                 if (!stopWatch) {
                     stopWatch = $scope.$watch('currentStep', function(stepCode) {
-                        if (stepCode && (($scope.selectedStep && $scope.selectedStep.code !== stepCode)
+                        if (stepCode && ($scope.selectedStep && $scope.selectedStep.code !== stepCode
                             || !$scope.selectedStep)) {
                             $scope.goTo(_.find($scope.steps, {code: stepCode}));
                         }
@@ -236,7 +236,7 @@ function AutoexpandDirective() {
                     }
                     var h = Math.max(_minHeight, e.scrollHeight);
 
-                    e.style.overflow = (e.scrollHeight > h ? 'auto' : 'hidden');
+                    e.style.overflow = e.scrollHeight > h ? 'auto' : 'hidden';
                     e.style.height = h + 1 + 'px';
 
                     e.valLength = vlen;
@@ -340,7 +340,7 @@ function DropdownPositionDirective($document) {
                 var docWidth = $document.width(),
                     elemPosition = element.offset().left + element.find('.dropdown__menu').width();
 
-                return (docWidth - elemPosition) < tolerance;
+                return docWidth - elemPosition < tolerance;
             }
         }
     };
@@ -383,8 +383,8 @@ function DropdownPositionAbsoluteDirective($position) {
                         var dropdownHeight = dropdown.dropdownMenu.outerHeight(),
                             dropdownWidth = dropdown.dropdownMenu.outerWidth();
 
-                        if ((windowHeight - pos.top) < dropdownHeight) {
-                            if ((pos.top - 150) < dropdownHeight) {
+                        if (windowHeight - pos.top < dropdownHeight) {
+                            if (pos.top - 150 < dropdownHeight) {
                                 // Substracting 150 is for topmenu and submenu bar
                                 css.top = '150px';
                                 css.right = css.right + 30;
@@ -398,7 +398,7 @@ function DropdownPositionAbsoluteDirective($position) {
                          * Calculate if there is enough space for opening on left side of icon,
                          * if not, move it to the right side
                          */
-                        if ((pos.left - 48) < dropdownWidth) {
+                        if (pos.left - 48 < dropdownWidth) {
                             css.right -= dropdownWidth;
                         }
                         dropdown.dropdownMenu.css(css);
@@ -524,13 +524,13 @@ function PopupService($document) {
 
         var position = {top: 0, left:0};
 
-        if ((elOffset.top + elHeight + height + tolerance) > docHeight) {
+        if (elOffset.top + elHeight + height + tolerance > docHeight) {
             position.top = elOffset.top - height;
         } else {
             position.top = elOffset.top + elHeight;
         }
 
-        if ((elOffset.left + width + tolerance) > docWidth) {
+        if (elOffset.left + width + tolerance > docWidth) {
             position.left = docWidth - tolerance - width;
         } else {
             position.left = elOffset.left;
@@ -916,7 +916,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
                 scope.matchingTimeZones = _.filter(
                     scope.timeZones,
                     function(item) {
-                        return (item.toLowerCase().indexOf(termLower) >= 0);
+                        return item.toLowerCase().indexOf(termLower) >= 0;
                     }
                 );
             };

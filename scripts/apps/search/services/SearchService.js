@@ -486,7 +486,7 @@ export function SearchService($location, gettext, config, session) {
      * @return {String}
      */
     this.getTrackByIdentifier = function(id, version) {
-        return version ? (id + ':' + version) : id;
+        return version ? id + ':' + version : id;
     };
 
     /*
@@ -522,7 +522,7 @@ export function SearchService($location, gettext, config, session) {
 
         if (!_.isEmpty(diff)) {
             // if different, then determine _showReferesh, such that, if item is previewing or scroll in not on top.
-            _showRefresh = (data.isItemPreviewing || !!data.scrollTop);
+            _showRefresh = data.isItemPreviewing || !!data.scrollTop;
         }
 
         return _showRefresh;

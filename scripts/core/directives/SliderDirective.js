@@ -55,12 +55,12 @@ export default angular.module('superdesk.core.directives.slider', []).
                         disabled: scope.disabled,
                         create: function() {
                             $(this).find('.ui-slider-thumb')
-                                    .css('left', ((value - minValue) * 100) / (maxValue - minValue) + '%')
+                                    .css('left', (value - minValue) * 100 / (maxValue - minValue) + '%')
                                     .text(scope.invert ? Math.abs(value) : value);
                         },
                         slide: function(event, ui) {
                             $(this).find('.ui-slider-thumb')
-                                    .css('left', ((ui.value - minValue) * 100) / (maxValue - minValue) + '%')
+                                    .css('left', (ui.value - minValue) * 100 / (maxValue - minValue) + '%')
                                     .text(scope.invert ? Math.abs(ui.value) : ui.value);
 
                             scope.update({

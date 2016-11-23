@@ -107,8 +107,8 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             });
 
             scope.$on('item:move', function(_e, data) {
-                if ((data.to_desk && data.from_desk !== data.to_desk) ||
-                    (data.to_stage && data.from_stage !== data.to_stage))  {
+                if (data.to_desk && data.from_desk !== data.to_desk ||
+                    data.to_stage && data.from_stage !== data.to_stage)  {
                     scheduleQuery(2000); // smaller delay.
                 }
             });
@@ -172,7 +172,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                         scope.fetching = true;
                         scope.page += 1;
 
-                        criteria.source.from = (scope.page) * criteria.source.size;
+                        criteria.source.from = scope.page * criteria.source.size;
                         scope.loading = true;
 
                         if (scope.items.length > criteria.source.size) {

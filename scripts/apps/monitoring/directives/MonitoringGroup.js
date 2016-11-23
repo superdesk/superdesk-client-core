@@ -166,7 +166,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                 if (group && group._id === scope.group._id ||
                         _.includes(['highlights', 'spiked'], _viewType) ||
-                        (!group && scope.viewColumn)) {
+                        !group && scope.viewColumn) {
                     scope.refreshGroup();
                 }
             });
@@ -334,7 +334,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             // For highlight page return only highlights items, i.e, include only last version if item type is published
             function getOnlyHighlightsItems(items) {
                 items._items = _.filter(items._items, function(item) {
-                    return ((item._type === 'published' && item.last_published_version) || item._type !== 'published');
+                    return item._type === 'published' && item.last_published_version || item._type !== 'published';
                 });
                 return items;
             }
@@ -342,13 +342,13 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             // Determine if item is previewing for its respective view type.
             function isItemPreviewing() {
                 if (scope.group.type === 'spike') {
-                    return (monitoring.previewItem &&
-                        monitoring.previewItem.task.desk === scope.group._id);
+                    return monitoring.previewItem &&
+                        monitoring.previewItem.task.desk === scope.group._id;
                 } else if (scope.group.type === 'highlights') {
-                    return (monitoring.previewItem &&
-                        _.includes(monitoring.previewItem.highlights, monitoring.queryParam.highlight));
+                    return monitoring.previewItem &&
+                        _.includes(monitoring.previewItem.highlights, monitoring.queryParam.highlight);
                 } else {
-                    return (monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id);
+                    return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
                 }
             }
 
@@ -386,7 +386,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 }
 
                 return apiquery().then(function(items) {
-                    if (!scope.showRefresh && data && !data.force && (data.user !== session.identity._id)) {
+                    if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
                         var itemPreviewing = isItemPreviewing();
                         var _data = {
                             newItems: items,
@@ -398,7 +398,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         monitoring.showRefresh = scope.showRefresh = search.canShowRefresh(_data);
                     }
 
-                    if (!scope.showRefresh || (data && data.force)) {
+                    if (!scope.showRefresh || data && data.force) {
                         scope.total = items._meta.total;
                         items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
                         monitoring.totalItems = items._meta.total;

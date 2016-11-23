@@ -159,7 +159,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     };
 
     function _reOpenItem(item) {
-        if (($scope.active && $scope.active._id !== item._id) || (!$scope.active && item)) {
+        if ($scope.active && $scope.active._id !== item._id || !$scope.active && item) {
             authoringWorkspace.edit(item);
         } else {
             notify.success(gettext('Item already open.'));

@@ -98,7 +98,7 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
     }
 
     function selectGroup(group) {
-        self.selectedGroup = (self.selectedGroup && self.selectedGroup._id === group._id) ? null : group;
+        self.selectedGroup = self.selectedGroup && self.selectedGroup._id === group._id ? null : group;
         return self.selectedGroup;
     }
 }

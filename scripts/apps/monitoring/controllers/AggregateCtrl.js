@@ -342,14 +342,14 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      * @return [{string}] fileType
      */
     this.getSelectedFileTypes = function() {
-        return (this.selectedFileType.length === 0) ? null: JSON.stringify(this.selectedFileType);
+        return this.selectedFileType.length === 0 ? null: JSON.stringify(this.selectedFileType);
     };
 
     /**
      * Update the type filter criteria
      */
     function updateFileTypeCriteria() {
-        var value = (self.selectedFileType.length === 0) ? null: JSON.stringify(self.selectedFileType);
+        var value = self.selectedFileType.length === 0 ? null: JSON.stringify(self.selectedFileType);
 
         _.each(self.groups, function(item) {
             item.fileType = value;
@@ -486,7 +486,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     };
 
     this.getExpandedState = function(key) {
-        return (this.state.expanded[key] === undefined) ? true : this.state.expanded[key];
+        return this.state.expanded[key] === undefined ? true : this.state.expanded[key];
     };
 
     this.setSoloGroup = function(group) {

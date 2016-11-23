@@ -22,7 +22,7 @@ export default angular.module('superdesk.core.filters', []).
         return function(array, propertyName, schemeName, returnArray) {
             var subjectMerged = [];
             _.forEach(array, function(item) {
-                var value = (propertyName == null ? item : item[propertyName]);
+                var value = propertyName == null ? item : item[propertyName];
                 if (value) {
                     subjectMerged.push(value);
 
@@ -158,7 +158,7 @@ export default angular.module('superdesk.core.filters', []).
     }])
     .filter('daysInAMonth', function() {
         return function(month) {
-            var _timeStamp = month ? moment((month + 1), 'MM') : moment();
+            var _timeStamp = month ? moment(month + 1, 'MM') : moment();
             var daysInCurrMonth = [];
 
             for (var i = _timeStamp.startOf('month').date(); i <= _timeStamp.endOf('month').date(); i++) {

@@ -372,16 +372,16 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         // takes packages are readonly.
         // killed item and item that have last publish action are readonly
-        if ((angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges)) ||
-            (currentItem.state === 'killed') ||
+        if (angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges) ||
+            currentItem.state === 'killed' ||
             itemOnReadOnlyStage ||
-            (angular.isDefined(currentItem.takes) && currentItem.takes.state === 'killed') ||
-            (currentItem._type && currentItem._type === 'archived')) {
+            angular.isDefined(currentItem.takes) && currentItem.takes.state === 'killed' ||
+            currentItem._type && currentItem._type === 'archived') {
             return action;
         }
 
-        var digitalPackage = (angular.isDefined(currentItem.package_type) &&
-                            currentItem.package_type === 'takes');
+        var digitalPackage = angular.isDefined(currentItem.package_type) &&
+                            currentItem.package_type === 'takes';
         var isReadOnlyState = _.includes(['spiked', 'scheduled', 'killed'], currentItem.state) ||
                                 digitalPackage;
 
@@ -449,23 +449,23 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.re_write = !isReadOnlyState && _.includes(['text'], currentItem.type) &&
             !currentItem.embargo && !currentItem.rewritten_by && action.new_take &&
             (!currentItem.broadcast || !currentItem.broadcast.master_id) &&
-            (!currentItem.rewrite_of || (currentItem.rewrite_of && this.isPublished(currentItem)));
+            (!currentItem.rewrite_of || currentItem.rewrite_of && this.isPublished(currentItem));
         var reWrite = action.re_write;
 
         action.resend = _.includes(['text'], currentItem.type) &&
             _.includes(['published', 'corrected', 'killed'], currentItem.state);
 
         //mark item for highlights
-        action.mark_item = (currentItem.task && currentItem.task.desk &&
+        action.mark_item = currentItem.task && currentItem.task.desk &&
             !isReadOnlyState && currentItem.package_type !== 'takes' &&
-             userPrivileges.mark_for_highlights);
+             userPrivileges.mark_for_highlights;
 
         // allow all stories to be packaged if it doesn't have Embargo
         action.package_item = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state) &&
             !currentItem.embargo && currentItem.package_type !== 'takes' &&
             (this.isPublished(currentItem) || !currentItem.publish_schedule);
 
-        action.create_broadcast = (_.includes(['published', 'corrected'], currentItem.state)) &&
+        action.create_broadcast = _.includes(['published', 'corrected'], currentItem.state) &&
             _.includes(['text', 'preformatted'], currentItem.type) &&
             !isBroadcast && userPrivileges.archive_broadcast;
 
@@ -506,8 +506,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @returns {boolean} True if a "Valid Take" else False
      */
     this.isTakeItem = function(item) {
-        return (_.includes(['text'], item.type) &&
-            item.takes && item.takes.sequence > 1);
+        return _.includes(['text'], item.type) &&
+            item.takes && item.takes.sequence > 1;
     };
 
     /**

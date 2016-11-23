@@ -113,13 +113,13 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
 
                 $scope.testLookup[result.product_id] = result;
 
-                if ((result.matched && $scope.resultType === 'Match') ||
-                (!result.matched && $scope.resultType === 'No-Match')) {
+                if (result.matched && $scope.resultType === 'Match' ||
+                !result.matched && $scope.resultType === 'No-Match') {
                     $scope.filteredProducts.push($scope.productLookup[result.product_id]);
                 }
             });
         }, function(response) {
-            var msg = (response.data && response.data._message) ? response.data._message : JSON.stringify(response);
+            var msg = response.data && response.data._message ? response.data._message : JSON.stringify(response);
             notify.error(gettext('Error: ' + msg));
         }).finally(function() {
             $scope.loading = false;

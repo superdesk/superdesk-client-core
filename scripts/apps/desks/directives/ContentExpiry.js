@@ -34,7 +34,7 @@ export function ContentExpiry() {
             }
 
             function getExpiryHours(inputMin) {
-                return Math.floor((inputMin / 60) % 24);
+                return Math.floor(inputMin / 60 % 24);
             }
 
             function getExpiryMinutes(inputMin) {
@@ -43,7 +43,7 @@ export function ContentExpiry() {
 
             function getTotalExpiryMinutes(contentExpiry) {
                 if (contentExpiry.Expire) {
-                    return (contentExpiry.Days * 24 * 60) + (contentExpiry.Hours * 60) + contentExpiry.Minutes;
+                    return contentExpiry.Days * 24 * 60 + contentExpiry.Hours * 60 + contentExpiry.Minutes;
                 } else {
                     return -1;
                 }

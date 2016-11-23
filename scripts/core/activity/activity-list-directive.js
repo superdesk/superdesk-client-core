@@ -37,7 +37,7 @@ angular.module('superdesk.core.activity.list', [])
                                 if (scope.item.actioning &&
                                 !scope.item.actioning[activity._id] &&
                                 oldValue &&
-                                (newValue[activity._id] !== oldValue[activity._id])) {
+                                newValue[activity._id] !== oldValue[activity._id]) {
                                     if (scope.item.error && scope.item.error.data && scope.item.error.data._message) {
                                         notify.error(gettext(scope.item.error.data._message));
                                         delete scope.item.error;

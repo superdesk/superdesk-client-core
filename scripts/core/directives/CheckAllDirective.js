@@ -30,7 +30,7 @@ export default angular.module('superdesk.core.directives.checkAll', [])
 
                 $scope.$watch(attrs.ngModel, function(model) {
                     if (model) {
-                        checked = (_.every(ngModel.$viewValue, checkAttribute) && (ngModel.$viewValue.length > 0));
+                        checked = _.every(ngModel.$viewValue, checkAttribute) && ngModel.$viewValue.length > 0;
                         render(element, checked);
                     }
                 }, true);

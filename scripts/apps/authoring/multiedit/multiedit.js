@@ -34,7 +34,7 @@ function MultieditService(storage, superdesk, authoringWorkspace, referrer, $loc
             });
         }
         if (self.items.length < MIN_BOARDS) {
-            for (var i = 0; i < (MIN_BOARDS - self.items.length); i++) {
+            for (var i = 0; i < MIN_BOARDS - self.items.length; i++) {
                 self.items.push(createBoard(null));
             }
         }
@@ -284,7 +284,7 @@ function MultieditFloatMenuDirective($document) {
                 var position = {
                     right: docWidth - crdL
                 };
-                if ((docHeight - crdT) < 400) {
+                if (docHeight - crdT < 400) {
                     position.bottom = docHeight - crdT;
                     position.top = 'auto';
                 } else {

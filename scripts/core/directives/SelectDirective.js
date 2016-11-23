@@ -171,7 +171,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                         return true;
                     }
                     var value = modelCtrl.$modelValue;
-                    return (angular.isArray(value) && value.length > 0) || (!angular.isArray(value) && value !== null);
+                    return angular.isArray(value) && value.length > 0 || !angular.isArray(value) && value !== null;
                 };
 
                 function selectSingle(item) {

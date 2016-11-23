@@ -350,7 +350,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
             var word = node.dataset.word;
             index = parseInt(node.dataset.index, 10) + replacementOffset;
             this.replaceWord(scope, index, word.length, text);
-            replacementOffset += (text.length - word.length);
+            replacementOffset += text.length - word.length;
         }
         return replacementOffset;
     };
@@ -420,7 +420,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
                         scope.medium.importSelection(caretPosition);
                         // apply old settings
-                        self.setSettings({findreplace: (oldSettings.findreplace ? oldSettings.findreplace : null)});
+                        self.setSettings({findreplace: oldSettings.findreplace ? oldSettings.findreplace : null});
                     }
                 }
             });
@@ -1128,8 +1128,8 @@ angular.module('superdesk.apps.editor2', [
                                 return;
                             }
                         // prevent default behaviour for ctrl or shift operations
-                            if ((event.ctrlKey && ctrlOperations[event.keyCode]) ||
-                            (event.shiftKey && shiftOperations[event.keyCode])) {
+                            if (event.ctrlKey && ctrlOperations[event.keyCode] ||
+                            event.shiftKey && shiftOperations[event.keyCode]) {
                                 event.preventDefault();
                             }
                             cancelTimeout(event);
@@ -1202,8 +1202,8 @@ angular.module('superdesk.apps.editor2', [
                                 scope.replaceTarget = node;
                                 scope.$applyAsync(function() {
                                     var menu = elem[0].getElementsByClassName('dropdown__menu')[0];
-                                    menu.style.left = (node.offsetLeft) + 'px';
-                                    menu.style.top = (node.offsetTop + node.offsetHeight) + 'px';
+                                    menu.style.left = node.offsetLeft + 'px';
+                                    menu.style.top = node.offsetTop + node.offsetHeight + 'px';
                                     menu.style.position = 'absolute';
                                     scope.openDropdown = true;
                                 });
@@ -1485,7 +1485,7 @@ function EditorUtilsFactory() {
                         return parseInt(elem.getAttribute('data-index'), 10) === index;
                     });
 
-                    active = (matched && matched.length) ? matched[0].classList.contains(ACTIVE_CLASS) : false;
+                    active = matched && matched.length ? matched[0].classList.contains(ACTIVE_CLASS) : false;
                 }
                 return active;
             }

@@ -189,7 +189,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             if (!this.activeDeskId || !_.find(this.userDesks, {_id: this.activeDeskId})) {
                 if (session.identity.desk) {
                     var defaultDesk = _.find(this.userDesks, {_id: session.identity.desk});
-                    return (defaultDesk && defaultDesk._id) || this.userDesks[0]._id;
+                    return defaultDesk && defaultDesk._id || this.userDesks[0]._id;
                 }
                 return this.userDesks[0]._id;
             }

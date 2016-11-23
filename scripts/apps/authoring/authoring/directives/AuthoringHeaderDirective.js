@@ -10,12 +10,12 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
             scope.displayCompanyCodes = null;
 
             scope.shouldDisplayUrgency = function() {
-                return !(scope.editor.urgency || {}).service || (
+                return !(scope.editor.urgency || {}).service ||
                     Array.isArray(scope.item.anpa_category) &&
                     scope.item.anpa_category.length &&
                     scope.item.anpa_category[0].qcode &&
                     scope.editor.urgency.service[scope.item.anpa_category[0].qcode]
-                );
+                ;
             };
 
             /**

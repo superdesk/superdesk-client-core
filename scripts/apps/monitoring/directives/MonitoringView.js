@@ -36,7 +36,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
              * @returns {Boolean}
              */
             scope.isActiveGroup = function(group) {
-                return scope.monitoring.selectedGroup ? (scope.monitoring.selectedGroup._id === group._id) : true;
+                return scope.monitoring.selectedGroup ? scope.monitoring.selectedGroup._id === group._id : true;
             };
 
             var updateTimeout;

@@ -23,7 +23,7 @@ export function UserPopupService($compile, $timeout, userList) {
         var box = popover.get(true);
         var position = el.offset();
         box.css({
-            left: position.left + el.outerWidth() - (box.outerWidth() / 2),
+            left: position.left + el.outerWidth() - box.outerWidth() / 2,
             top: position.top + el.outerHeight()
         });
 

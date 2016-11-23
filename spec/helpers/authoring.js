@@ -689,7 +689,7 @@ function Authoring() {
     this.isPublishedState = function() {
         return this.getItemState().getText()
             .then(function(state) {
-                return (['published', 'corrected', 'killed'].indexOf(state.toLowerCase()) !== -1);
+                return ['published', 'corrected', 'killed'].indexOf(state.toLowerCase()) !== -1;
             });
     };
 

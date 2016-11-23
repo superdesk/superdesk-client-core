@@ -107,7 +107,7 @@ function MetadataCtrl(
     });
 
     $scope.$watch('item.time_zone', function(newValue, oldValue) {
-        if ((newValue || oldValue) && (newValue !== oldValue)) {
+        if ((newValue || oldValue) && newValue !== oldValue) {
             setTimeZone();
             setPublishScheduleDate(newValue, oldValue);
             setEmbargoTS(newValue, oldValue);
@@ -128,7 +128,7 @@ function MetadataCtrl(
     }
 
     function setPublishScheduleDate(newValue, oldValue) {
-        if ((newValue || oldValue) && (newValue !== oldValue)) {
+        if ((newValue || oldValue) && newValue !== oldValue) {
             if ($scope.item.publish_schedule_date && $scope.item.publish_schedule_time) {
                 $scope.item.publish_schedule = datetimeHelper.mergeDateTime(
                     $scope.item.publish_schedule_date,
@@ -163,7 +163,7 @@ function MetadataCtrl(
      * values of both Embargo Date and Embargo Time to form Timestamp.
      */
     function setEmbargoTS(newValue, oldValue) {
-        if ((newValue || oldValue) && (newValue !== oldValue)) {
+        if ((newValue || oldValue) && newValue !== oldValue) {
             if ($scope.item.embargo_date && $scope.item.embargo_time) {
                 $scope.item.embargo = datetimeHelper.mergeDateTime(
                     $scope.item.embargo_date,
@@ -499,7 +499,7 @@ function MetaWordsListDirective() {
                     scope.words = scope.list;
                 } else {
                     scope.words = _.filter(scope.list, function(t) {
-                        return ((t.name.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1));
+                        return t.name.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1;
                     });
                 }
 
@@ -684,12 +684,12 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         var searchObj = {};
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
                         if (searchUnique) {
-                            return (((t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1) ||
-                                    (t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1)) &&
-                                !_.find(scope.item[scope.field], searchObj));
+                            return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 ||
+                                    t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
+                                !_.find(scope.item[scope.field], searchObj);
                         } else {
-                            return ((t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
-                                !_.find(scope.item[scope.field], searchObj));
+                            return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 &&
+                                !_.find(scope.item[scope.field], searchObj);
                         }
                     }));
                     scope.activeList = true;
@@ -878,7 +878,7 @@ function MetaLocatorsDirective() {
                     setLocators(scope.list);
                 } else {
                     setLocators(_.filter(scope.list, function(t) {
-                        return ((t.city.toLowerCase().indexOf(locatorToFind.toLowerCase()) !== -1));
+                        return t.city.toLowerCase().indexOf(locatorToFind.toLowerCase()) !== -1;
                     }));
                 }
 

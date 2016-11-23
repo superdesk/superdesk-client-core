@@ -24,7 +24,7 @@ function AuthExpiredInterceptor(session, $q, $injector, $rootScope, config, _) {
         },
         responseError: function(response) {
             if (_.startsWith(response.config.url, config.server.url) && response.status === 401) {
-                if (!(((response.data || {})._issues || {}).credentials)) {
+                if (!((response.data || {})._issues || {}).credentials) {
                     return handleAuthExpired(response);
                 }
             }

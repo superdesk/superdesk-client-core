@@ -28,7 +28,7 @@ export function ContentResults($location, preferencesService, packages, tags, as
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
 
-            var multiSelectable = (attr.multiSelectable !== undefined);
+            var multiSelectable = attr.multiSelectable !== undefined;
 
             scope.flags = controller.flags;
             scope.selected = scope.selected || {};
@@ -56,7 +56,7 @@ export function ContentResults($location, preferencesService, packages, tags, as
             var savedView;
             preferencesService.get('archive:view').then(function(result) {
                 savedView = result.view;
-                scope.view = (!!savedView && savedView !== 'undefined') ? savedView : 'mgrid';
+                scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
             });
 
             scope.$on('key:v', toggleView);

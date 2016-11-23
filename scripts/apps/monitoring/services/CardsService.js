@@ -31,8 +31,8 @@ export function CardsService(api, search, session, desks, config) {
 
         criteria.es_highlight = card.query ? search.getElasticHighlight() : 0;
 
-        params.spike = (card.type === 'spike' || card.type === 'spike-personal' ||
-            (card.type === 'search' && params.spike === true));
+        params.spike = card.type === 'spike' || card.type === 'spike-personal' ||
+            card.type === 'search' && params.spike === true;
 
         var query = search.query(search.setFilters(params));
 

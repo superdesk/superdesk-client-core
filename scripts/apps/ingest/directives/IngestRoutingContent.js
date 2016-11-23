@@ -66,7 +66,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                     delete r.filterName;
                 });
 
-                var _new = !!!scope.editScheme._id;
+                var _new = !scope.editScheme._id;
                 api('routing_schemes').save(_orig, scope.editScheme)
                 .then(function() {
                     if (_new) {

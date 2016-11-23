@@ -211,11 +211,11 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
                 angular.forEach(scope.meta, function(val, key) {
                     //checkbox boolean values.
-                    if (typeof(val) === 'boolean') {
+                    if (typeof val === 'boolean') {
                         val = booleanToBinaryString(val);
                     }
 
-                    if (typeof(val) === 'string') {
+                    if (typeof val === 'string') {
                         val = val.replace(pattern, '');
                     }
 
@@ -225,7 +225,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                         if (key.indexOf('scanpix_') === 0) {
                             key = key.substring(8);
                         }
-                        if (typeof(val) === 'string') {
+                        if (typeof val === 'string') {
                             if (val) {
                                 metas.push(key + ':(' + val + ')');
                             }

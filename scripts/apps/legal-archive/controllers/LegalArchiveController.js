@@ -64,6 +64,6 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
 
     preferencesService.get('archive:view').then(function(result) {
         var savedView = result.view;
-        $scope.view = (!!savedView && savedView !== 'undefined') ? savedView : 'mgrid';
+        $scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
     });
 }

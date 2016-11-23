@@ -147,7 +147,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 function getData(timeStr) {
                     var time = timeStr.split(':');
                     return [
-                        {unit: 'h', val: parseInt(time[0], 10) + (parseInt(time[1], 10) / 60), r: 0.5},
+                        {unit: 'h', val: parseInt(time[0], 10) + parseInt(time[1], 10) / 60, r: 0.5},
                         {unit: 'm', val: parseInt(time[1], 10), r: 0.8}
                     ];
                 }
