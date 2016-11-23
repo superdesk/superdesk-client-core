@@ -108,7 +108,7 @@ describe('users', function() {
                                 return true;
                             });
                     } catch (err) {
-                        console.log(err);
+                        console.error(err);
                     }
                 }, 5000);
             }).then(function() {

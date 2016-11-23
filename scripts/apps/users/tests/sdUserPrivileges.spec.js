@@ -139,12 +139,12 @@ describe('sdUserPrivileges directive', function() {
         });
 
         it('logs an error if fetching the user\'s role fails', function() {
-            spyOn(console, 'log');
+            spyOn(console, 'error');
 
             queryDeferred.reject('Server error');
             isoScope.$digest();
 
-            expect(console.log).toHaveBeenCalledWith('Server error');
+            expect(console.error).toHaveBeenCalledWith('Server error');
         });
 
     });

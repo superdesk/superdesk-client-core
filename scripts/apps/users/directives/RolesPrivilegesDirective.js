@@ -23,7 +23,7 @@ export function RolesPrivilegesDirective(api, gettext, notify, $q, $filter) {
                     promises.push(api.save('roles', role, _.pick(role, 'privileges'))
                     .then(function(result) {
                     }, function(error) {
-                        console.log(error);
+                        console.error(error);
                     }));
                 });
 

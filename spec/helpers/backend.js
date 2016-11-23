@@ -43,10 +43,10 @@ function backendRequest(params, callback) {
         }
 
         if (!error) {
-            console.log('response err', response.statusCode, body);
-            console.log('request', params);
+            console.error('response err', response.statusCode, body);
+            console.error('request', params);
         } else {
-            console.log('Request error=' + JSON.stringify(error) + ' params=' + JSON.stringify(params));
+            console.error('Request error=' + JSON.stringify(error) + ' params=' + JSON.stringify(params));
         }
 
         throw new Error('stop tests');
@@ -78,7 +78,7 @@ function withToken(callback) {
                 throw new Error(error);
             }
             if (!json.token) {
-                console.log(json);
+                console.error(json);
                 throw new Error('Auth failed');
             }
             browser.params.token = json.token;

@@ -111,7 +111,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
                 return item;
             }, function(response) {
                 if (response.status === 404) {
-                    console.log('Item not found');
+                    console.error('Item not found.');
                 }
             });
     };

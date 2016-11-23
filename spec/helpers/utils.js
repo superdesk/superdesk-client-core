@@ -55,7 +55,7 @@ function printLogs(prefix) {
             return log.level.value >= 1000;
         });
 
-        console.log(prefix + 'log: ' + require('util').inspect(logs, {dept: 3}));
+        console.info(prefix + 'log: ' + require('util').inspect(logs, {dept: 3}));
     });
 }
 

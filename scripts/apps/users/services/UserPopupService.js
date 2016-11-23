@@ -32,7 +32,7 @@ export function UserPopupService($compile, $timeout, userList) {
         .then(function(user) {
             buildTemplate(user, scope);
         }, function(response) {
-            console.log(response);
+            console.error(response);
         });
 
         box.show();
