@@ -87,7 +87,7 @@
             </p>
 
             <!-- item rendition -->
-            <div ng-if="selected.preview.type == 'picture'" class="picture-preview">
+            <div ng-if="selected.preview.type == 'picture' || selected.preview.type == 'graphic'" class="picture-preview">
                 <div>
                     <span translate>Original</span>
                     <div sd-item-rendition data-item="selected.preview" data-rendition="viewImage" ng-click="preview(item);"></div>

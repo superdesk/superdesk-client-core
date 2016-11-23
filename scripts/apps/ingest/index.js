@@ -126,7 +126,10 @@ angular.module('superdesk.apps.ingest', [
                 monitor: true,
                 controller: ctrl.ExternalSourceController,
                 filters: [{action: 'list', type: 'externalsource'}],
-                privileges: {fetch: 1}
+                privileges: {fetch: 1},
+                additionalCondition: ['config', function (config) {
+                    return config.features.editFeaturedImage;
+                }]
             });
     }])
 

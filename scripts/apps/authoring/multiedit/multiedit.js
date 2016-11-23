@@ -200,7 +200,7 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
                     scope.origItem = item;
                     scope.item = _.create(item);
                     scope._editable = authoring.isEditable(item);
-                    scope.isMediaType = _.includes(['audio', 'video', 'picture'], scope.item.type);
+                    scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type);
                     if (scope.focus) {
                         $timeout(function() {
                             elem.children().focus();
