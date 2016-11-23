@@ -8,7 +8,7 @@
     <div class="alert-error" ng-show="error" translate>Problems occurred while fetching data.</div>
     <div class="loading" ng-show="data == null && error == null"></div>
     <div class="error-icon" ng-show="error != null"><i class="filetype-icon-large-{{data.type}}"></i></div>
-    <div ng-if="data.type === 'picture'" sd-item-rendition data-item="data" data-rendition="thumbnail" ng-click="preview(data)"></div>
+    <div ng-if="data.type === 'picture' || data.type === 'graphic'" sd-item-rendition data-item="data" data-rendition="thumbnail" ng-click="preview(data)"></div>
     <audio ng-if="data.type === 'audio'" controls="controls" sd-sources data-renditions="data.renditions" ng-show="data"></audio>
     <div ng-if="data.type === 'video'"><i class="filetype-icon-large-video"></i></div>
   </div>

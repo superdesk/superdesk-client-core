@@ -10,7 +10,7 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
         },
         templateUrl: 'scripts/apps/authoring/views/item-association.html',
         link: function(scope, elem) {
-            var MEDIA_TYPES = ['application/superdesk.item.picture'];
+            var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.graphic'];
             if (scope.allowVideo === 'true') {
                 MEDIA_TYPES.push('application/superdesk.item.video');
             }

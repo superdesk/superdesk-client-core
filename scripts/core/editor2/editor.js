@@ -486,7 +486,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 var url = data.url, altText = data.altText;
                 var promiseFinished;
                 // if this is a SD archive, we use its properties
-                if (data._type === 'archive' || data.type === 'picture') {
+                if (data._type === 'archive' || data.type === 'picture' || data.type === 'graphic') {
                     // get expected renditions list
                     promiseFinished = renditionsService.get().then(function(renditionsList) {
                         // ]use the first rendtion as default
@@ -530,6 +530,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 });
             }
         };
+        mediaTypes['graphic'] = mediaTypes['picture'];
         return $q.when(mediaTypes[data.type]());
     };
 
@@ -671,7 +672,8 @@ angular.module('superdesk.apps.editor2', [
                     if (scope.sdTextEditorDropZone === 'false') {
                         return;
                     }
-                    var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.video'];
+                    var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.graphic',
+                        'application/superdesk.item.video'];
                     element.on('drop dragdrop', function(event) {
                         event.preventDefault();
                         event.stopPropagation();
@@ -1314,6 +1316,7 @@ angular.module('superdesk.apps.editor2', [
                             insertMedia: function(media) {
                                 var mediaType = {
                                     'picture': 'Image',
+                                    'graphic': 'Image',
                                     'video': 'Video'
                                 };
                                 var imageBlock = {
