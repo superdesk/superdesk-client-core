@@ -1,0 +1,92 @@
+<div class="split-content">
+    <div class="header">
+        <div class="modal-header">
+            <h3 class="pull-left" translate>Content Lists</h3>
+        </div>
+
+        <div class="subnav">
+            <ul class="filter-type filter-type--padded rightPadding">
+                <li title="all" class="filter-type__item filter-type__item--active">
+                    <a href="" translate>all</a>
+                </li>
+                <li title="collection" class="filter-type__item">
+                    <a href="" translate>automatic</a>
+                </li>
+                <li title="content" class="filter-type__item">
+                    <a href="" translate>manual</a>
+                </li>
+            </ul>
+
+            <div class="subnav__stretch-bar"></div>
+
+            <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
+                <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
+
+                <ul class="dropdown__menu dropdown__menu--scrollable pull-right">
+                    <li><div class="dropdown__menu-label" translate=""><span>Create new item</span></div></li>
+                    <li>
+                        <button ng-click="" >
+                            <i class="icon-plus-small icon-round icon-white"></i> Automatic list
+                        </button>
+                    </li>
+                    <li>
+                        <button ng-click="" >
+                            <i class="icon-plus-small icon-round icon-white"></i> Manual list
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="content headerMargin">
+
+
+        <div class="flex-grid box wrap-items small-1 medium-2 large-3 xlarge-4">
+
+            <div class="flex-item card-box" ng-repeat="i in [1,2,3]" ng-class="$even ? 'active' : ''">
+                <div class="card-box__header">
+                    <div class="dropdown" dropdown>
+                        <button class="dropdown__toggle" dropdown__toggle>
+                            <i class="icon-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown__menu more-activity-menu pull-right">
+                            <li><div class="menu-label" translate>Actions</div></li>
+                            <li class="divider"></li>
+                            <li>
+                                <button ng-click="" title="{{:: 'Edit menu'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button>
+                            </li>
+                            <li>
+                                <button ng-click="" title="{{:: 'Remove menu'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-box__heading" contentEditable>List {{i}} <span ng-show="$even">- manual</span> <span ng-show="$odd">- automatic</span></div>
+                </div>
+
+                <!-- todo: ng-show if listOfItems.length -->
+                <div class="card-box__content" ng-show="i!=3">
+                    <ul class="card-box__content-list card-box__content-list--scrollable">
+                        <li ng-repeat="i in [1,2,3,4,5,6,7,8,9]">
+                            <h4>Article {{i}}</h4>
+                        </li>
+                    </ul>
+                </div>
+                <!-- todo: ng-show if listOfItems.length -->
+                <div class="card-box__footer" ng-show="i!=3">
+                        <span class="text--lighter text--small text--uppercase">Last Modified:</span>
+                        <span class="leftSpace text--small">2 days ago</span>
+                        <span class="pull-right state-label state-published">active</span>
+
+                </div>
+
+                <!-- todo: ng-hide if listOfItems.length -->
+                <div class="card-box__placeholder card-box__placeholder--cursorPointer" ng-hide="i!=3">
+                   Click to add items.
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+

@@ -15,9 +15,6 @@
         padding: 0;
         width: 100%;
         background-color: $sd-background;
-        .mainContentPadding {
-            padding: 20px;
-            width: 30%;
-        }
+        overflow: hidden;
     }
 }
