@@ -41,6 +41,7 @@
         "no-console": [2, {
             "allow": ["warn", "error", "info"]
         }],
+        "no-constant-condition": 2,
         "strict": 0,
         "indent": [2, 4],
         "quotes": [2, "single"],
