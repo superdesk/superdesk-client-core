@@ -910,10 +910,31 @@ $main-item-color-inactive: #aaa;
         }
 
     }
+    .card-box__placeholder {
+        padding: 16px;
+        flex-grow: 1;
+        @include box-sizing(border-box);
+        height: calc(100% - 48px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $grayLight;
+        font-weight: 300;
+        font-size: 1.2rem;
+
+        &--cursorPointer{
+            cursor: pointer;
+        }
+
+    }
     .card-box__content-list {
         margin: -16px;
         padding: 0;
         list-style: none;
+        &--scrollable {
+            height: 35vh;
+            overflow-y: scroll;
+        }
         li {
             padding: 16px;
             border-bottom: 1px solid #ebebeb;
@@ -1452,11 +1473,11 @@ body.prepare-print {
         border: 0;
         border-bottom: 1px solid #c2c2c2;
         border-right: 1px solid #c2c2c2;
-        
+
         &:last-of-type {
             border-right: 0;
         }
-        
+
         &--active {
             color: $sd-blue;
             border-top: 1px solid #c2c2c2;
