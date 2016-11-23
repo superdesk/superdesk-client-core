@@ -1,0 +1,77 @@
+.contentPadding {
+    padding: 20px;
+}
+
+.contentScrollable{
+    position: relative;
+
+    &__scrollable{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        overflow-y: scroll;
+    }
+}
+
+.headerMargin {
+    margin-top: 48px;
+
+    &--two {
+        margin-top: 96px;
+    }
+}
+
+.rightPadding {
+    padding-right: 20px;
+}
+
+.leftSpace{
+    margin-left: .5em;
+}
+
+.countLabel {
+    display: inline-block;
+    background-color: #90bccf;
+    color: #fff;
+    border-radius: 55px;
+    line-height: 1em;
+    height: 1em;
+    font-size: 11px;
+    padding: 4px 6px;
+    font-family: arial, sans-serif;
+}
+
+.iconButton {
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.text{
+
+    &--light{
+        color: $gray;
+    }
+
+    &--lighter{
+        color: $grayLight;
+    }
+
+    &--italic{
+        font-style: italic;
+    }
+
+    &--bold{
+        font-weight: 500;
+    }
+
+    &--uppercase{
+        text-transform: uppercase;
+    }
+
+    &--small{
+        font-size: .9em;
+    }
+}

@@ -3,7 +3,7 @@
         <h3 class="pull-left"><span translate>Manage:</span> <b>{{new.name}}</b></h3>
         <div class="pull-right">
             <button class="btn" ng-click="webPublisher.toogleCreateSite()" translate>Close</button>
-            <button 
+            <button
                 class="btn btn--primary"
                 ng-disabled="webPublisher.createForm.$invalid || !webPublisher.createForm.$dirty"
                 ng-click="webPublisher.save()"
@@ -26,11 +26,17 @@
                         ng-disabled="!webPublisher.siteCode || webPublisher.createForm.$dirty"
                         translate>Navigation</button>
                 </li>
+
+                <li ng-class="{active: webPublisher.activeTab === 'contentLists'}">
+                    <button ng-click="webPublisher.changeTab('contentLists')"
+                        ng-disabled="!webPublisher.siteCode || webPublisher.createForm.$dirty"
+                        translate>Content Lists</button>
+                </li>
             </ul>
         </div>
         <div class="sidebarLayout__content" ng-switch="webPublisher.activeTab">
             <form name="webPublisher.createForm">
-                <fieldset ng-switch-when="general" class="mainContentPadding">
+                <fieldset ng-switch-when="general" class="contentPadding">
                     <div class="field">
                         <label for="name" translate>Web Site Name:</label>
                         <input type="text" name="name" ng-model="new.name" required/>
@@ -46,6 +52,9 @@
             </div>
             <div ng-switch-when="navigation" class="navigation-main">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation.html'"></div>
+            </div>
+            <div ng-switch-when="contentLists">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/content-lists.html'"></div>
             </div>
         </div>
     </div>

@@ -1,0 +1,45 @@
+.listElement {
+    border: 1px solid $tableBorder;
+    border-left: 3px solid #4d646f;
+    border-top: 0;
+    padding: .7em 15px;
+    background-color: #fff;
+    position: relative;
+    display: flex;
+    align-items: center;
+    &__icon {
+        flex: 0 0 auto;
+        display: inline-block;
+        margin-right: 10px;
+        line-height: 1em;
+        align-items: center;
+
+        i {
+          color: $grayLight;
+        }
+
+        &:hover i{
+            color: $blue;
+        }
+
+        &--active{
+            i {
+                color: $blue;
+            }
+
+            &:hover i {
+                color: $grayLight;
+            }
+        }
+
+    }
+
+    &__content {
+        width: 100%;
+    }
+
+    &__right{
+        flex: 0 0 auto;
+        align-items: center;
+    }
+}
