@@ -179,6 +179,22 @@
         content: " ";
     }
 }
+// Button variation for menu items with active state (.menu-item--active)
+.dropdown__menu {
+    .menu-item--active {
+        button, button:hover {
+            background-color: lighten($sd-blue, 10%);
+            color: white;
+            [class^="icon-"], [class*=" icon-"],
+            [class^="filetype-icon-"], [class*=" filetype-icon-"] {
+                color: white;
+            }
+        }
+        button:hover {
+            background-color: $sd-blue;
+        }
+    }
+}
 
 .dropdown__menu-label {
     text-transform: uppercase;
@@ -237,6 +253,22 @@
 .dropdown__menu--right {
     right: 0;
     left: auto;
+}
+
+.dropdown__menu {
+    .menu-item--active {
+        button, button:hover {
+            background-color: lighten($sd-blue, 10%);
+            color: white;
+            [class^="icon-"], [class*=" icon-"],
+            [class^="filetype-icon-"], [class*=" filetype-icon-"] {
+                color: white;
+            }
+        }
+        button:hover {
+            background-color: $sd-blue;
+        }
+    }
 }
 
 // Dividers (basically an hr) within the dropdown

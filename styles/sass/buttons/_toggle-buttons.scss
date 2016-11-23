@@ -68,3 +68,27 @@ $toggleButtonBorderColor: #c6c6c6;
 .button-list--padded {
    padding: 11px 0 11px 20px;
 }
+
+// swimlane switch button
+.swimlane-switch {
+    height: 48px;
+    width: 48px;
+    background: none;
+    border: 0;
+    padding: 15px 16px;
+    border-left: 1px solid #dfdfdf;
+    @include opacity(60);
+    &:hover {
+        @include opacity(80);
+    }
+     .icon-th-list {
+        transform: rotate(90deg);
+        transition: transform 0.2s ease-in;   
+    }
+    &.swimlane-switch--on {
+        .icon-th-list {  
+            transition: transform 0.2s ease-in;
+            transform: rotate(0);   
+        }
+    }
+}
