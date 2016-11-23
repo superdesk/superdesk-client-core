@@ -14,6 +14,21 @@ describe('publisher service', () => {
         spyOn(pubapi, 'query').and.returnValue($q.when([]));
         publisher.querySites();
         $rootScope.$digest();
-        expect(pubapi.query).toHaveBeenCalledWith('tenants', undefined);
+        expect(pubapi.query).toHaveBeenCalledWith('tenants');
+    }));
+
+    it('can create route', inject((publisher, pubapi, $q, $rootScope) => {
+        let data = {name: 'foo', type: 'collenction'};
+        spyOn(pubapi, 'save').and.returnValue($q.when({}));
+        publisher.manageRoute(data);
+        $rootScope.$digest();
+        expect(pubapi.save).toHaveBeenCalledWith('content/routes', data, undefined);
+    }));
+
+    it('can list routes', inject((publisher, pubapi, $q, $rootScope) => {
+        spyOn(pubapi, 'query').and.returnValue($q.when([]));
+        publisher.queryRoutes();
+        $rootScope.$digest();
+        expect(pubapi.query).toHaveBeenCalledWith('content/routes', undefined);
     }));
 });
