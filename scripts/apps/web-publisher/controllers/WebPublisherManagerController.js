@@ -92,7 +92,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         };
 
         publisher.queryRoutes().then(routes => $scope.routes = routes);
-        self.changeTab("navigation-menu");
+        self.changeTab('navigation-menu');
     };
 
 

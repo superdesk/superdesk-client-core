@@ -34,13 +34,13 @@ describe('publisher service', () => {
     it('can save a new menu', inject((publisher, pubapi, $q, $rootScope) => {
         spyOn(pubapi, 'save').and.returnValue($q.when({}));
         publisher.saveMenu({
-            name: "Name",
-            label: "Label"
+            name: 'Name',
+            label: 'Label'
         });
         $rootScope.$digest();
         expect(pubapi.save).toHaveBeenCalledWith('menus', {menu: {
-            name: "Name",
-            label: "Label"
+            name: 'Name',
+            label: 'Label'
         }}, undefined);
     }));
 
@@ -48,13 +48,13 @@ describe('publisher service', () => {
         spyOn(pubapi, 'save').and.returnValue($q.when({}));
         publisher.saveMenu({
             id: 34,
-            name: "Name2",
-            label: "Label2"
+            name: 'Name2',
+            label: 'Label2'
         });
         $rootScope.$digest();
         expect(pubapi.save).toHaveBeenCalledWith('menus', {menu: {
-            name: "Name2",
-            label: "Label2"
+            name: 'Name2',
+            label: 'Label2'
         }}, 34);
     }));
 
