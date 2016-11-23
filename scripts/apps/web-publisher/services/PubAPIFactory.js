@@ -9,7 +9,6 @@
  *
  * @description Publisher API service
  */
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
 PubAPIFactory.$inject = ['config', '$http', '$q', 'session'];
 export function PubAPIFactory(config, $http, $q, session) {
     class PubAPI {
@@ -19,7 +18,7 @@ export function PubAPIFactory(config, $http, $q, session) {
             this._base = pubConfig.base || '';
             this._protocol = pubConfig.protocol || 'http';
             this._domain = pubConfig.domain || '';
-            this.setTenant(pubConfig.tenant || 'default');
+            this.setTenant(pubConfig.tenant);
         }
 
         /**
@@ -34,19 +33,6 @@ export function PubAPIFactory(config, $http, $q, session) {
                     this._token = response.token.api_key;
                     return response;
                 });
-=======
-PubAPIFactory.$inject = ['config', '$http', '$q'];
-export function PubAPIFactory(config, $http, $q) {
-
-    class PubAPI {
-
-        constructor() {
-            let pubConfig = config.publisher || {};
-            this._base = pubConfig.base || '';
-            this._protocol = pubConfig.protocol || 'http';
-            this._tenant = pubConfig.tenant || 'default';
-            this._domain = pubConfig.domain || '';
->>>>>>> Added web publisher module
         }
 
         /**
@@ -57,22 +43,19 @@ export function PubAPIFactory(config, $http, $q) {
          */
         setTenant(tenant) {
             this._tenant = tenant;
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
-            this._server = this.buildServerURL();
+            this._server = `${this._protocol}://${this._tenant}.${this._domain}`;
         }
 
         /**
          * @ngdoc method
-         * @name pubapi#buildServerURL
-         * @returns {String}
-         * @description Builds base server URL of the site.
+         * @name pubapi#setOrganization
+         * @description Set organization id for articles on monitoring
          */
-        buildServerURL() {
-            let subdomain = this._tenant === 'default' ? '' : `${this._tenant}.`;
-
-            return `${this._protocol}://${subdomain}${this._domain}`;
-=======
->>>>>>> Added web publisher module
+        setOrganization() {
+            return this.query('organizations').then((organizations) => {
+                this._organizatonId = 3; // organizations[0].id;
+                return organizations;
+            });
         }
 
         /**
@@ -88,8 +71,23 @@ export function PubAPIFactory(config, $http, $q) {
                 url: this.resourceURL(resource),
                 method: 'GET',
                 params: params
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             }).then((response) => response._embedded._items);
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#query
+         * @param {String} resource
+         * @param {Object} params
+         * @returns {Promise}
+         * @description Query resource
+         */
+        queryWithDetails(resource, params) {
+            return this.req({
+                url: this.resourceURL(resource),
+                method: 'GET',
+                params: params
+            });
         }
 
         /**
@@ -104,10 +102,6 @@ export function PubAPIFactory(config, $http, $q) {
             return this.req({
                 url: this.resourceURL(resource, id),
                 method: 'GET'
-=======
-            }).then(response => {
-                return response._embedded._items;
->>>>>>> Added web publisher module
             });
         }
 
@@ -125,11 +119,7 @@ export function PubAPIFactory(config, $http, $q) {
                 url: this.resourceURL(resource, id),
                 method: id ? 'PATCH' : 'POST',
                 data: item
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             }).then((response) => {
-=======
-            }).then(response => {
->>>>>>> Added web publisher module
                 angular.extend(item, response);
                 return response;
             });
@@ -154,21 +144,12 @@ export function PubAPIFactory(config, $http, $q) {
          * @ngdoc method
          * @name pubapi#resourceURL
          * @param {String} resource
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
          * @param {String} id
          * @returns {String}
          * @description Get resource url
          */
         resourceURL(resource, id = '') {
             return `${this._server}/${this._base}/${resource}/${id}`;
-=======
-         * @param {String} code - code of site
-         * @returns {String}
-         * @description Get resource url
-         */
-        resourceURL(resource, code = '') {
-            return `${this._protocol}://${this._tenant}.${this._domain}/${this._base}/${resource}/${code}`;
->>>>>>> Added web publisher module
         }
 
         /**
@@ -179,7 +160,6 @@ export function PubAPIFactory(config, $http, $q) {
         * @description API Request - Adds basic error reporting, eventually authentication
         */
         req(config) {
-<<<<<<< 73c4543c334408bd75671df0f12ed5599fea3d4e
             config.headers = {Authorization: 'Basic ' + this._token};
             return $http(config).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
@@ -188,15 +168,6 @@ export function PubAPIFactory(config, $http, $q) {
 
                 console.error('publisher api error', response);
                 return $q.reject(response);
-=======
-            return $http(config).then(response => {
-                if (response.status >= 200 && response.status < 300) {
-                    return response.data;
-                } else {
-                    console.error('publisher api error', response);
-                    return $q.reject(response);
-                }
->>>>>>> Added web publisher module
             });
         }
     }

@@ -642,8 +642,19 @@ export function WebPublisherManagerController($scope, publisher, modal) {
      * @param {String} newTabName - name of the new active tab
      * @description Sets the active tab name to the given value
      */
-    self.changeTab = function (newTabName) {
+    self.changeTab = newTabName => {
         self.activeTab = newTabName;
+        loadLists(newTabName);
+    };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#changeRouteFilter
+     * @param {String} type - type of routes
+     * @description Sets type for routes
+     */
+    self.changeRouteFilter = type => {
+        self.routeType = type;
     };
 
     /**
@@ -652,8 +663,8 @@ export function WebPublisherManagerController($scope, publisher, modal) {
      * @description Opens modal window for creating new site
      */
     self.toogleCreateSite = () => {
-        self.siteCode = '';
-        $scope.new = {};
+        self.selectedSite = {};
+        $scope.newSite = {};
         self.openSiteModal = !self.openSiteModal;
         publisher.setTenant('default');
     };
@@ -664,42 +675,118 @@ export function WebPublisherManagerController($scope, publisher, modal) {
      * @param {Object} site - site which is edited
      * @description Opens modal window for editing site
      */
-    self.editSite = (site) => {
-        self.siteCode = site.code;
-        $scope.new = _.pick(site, 'name', 'subdomain');
-        self.openSiteModal = !self.openSiteModal;
-        publisher.setTenant(site.subdomain)
-            .queryMenus().then(menus => $scope.menus = menus);
+    self.editSite = site => {
+        self.selectedSite = site;
+        $scope.newSite = angular.extend({}, site);
+        self.openSiteModal = true;
+        publisher.setTenant(site.subdomain);
     };
 
     /**
      * @ngdoc method
-     * @name WebPublisherManagerController#save
+     * @name WebPublisherManagerController#saveSite
      * @description Saving site
      */
-    self.save = () => {
-        //$scope.createForm.$setPristine();
-        publisher.manageSite({tenant: $scope.new}, self.siteCode).then(site => {
-            self.createForm.$setPristine();
-            self.siteCode = site.code;
-            self.activeTab = 'routes';
-        });
+    self.saveSite = () => {
+        publisher.manageSite({tenant: _.pick($scope.newSite, updatedKeys($scope.newSite, self.selectedSite))}, self.selectedSite.code)
+            .then(site => {
+                self.siteForm.$setPristine();
+                self.selectedSite = site;
+                publisher.setTenant(site.subdomain);
+                self.changeTab('routes');
+            });
     };
 
     /**
      * @ngdoc method
-     * @name WebPublisherManagerController#remove
+     * @name WebPublisherManagerController#deleteSite
      * @param {String} code - code of site which is deleted
      * @description Deleting site
      */
-    self.remove = (code) => {
+    self.deleteSite = code => {
         modal.confirm(gettext('Please confirm you want to delete website.')).then(
             () => publisher.removeSite(code).then(refreshSites)
         );
     };
 
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#toogleCreateRoute
+     * @description Opens window for creating new route
+     */
+    self.toogleCreateRoute = () => {
+        self.selectedRoute = {};
+        $scope.newRoute = {};
+        self.routePaneOpen = !self.routePaneOpen;
+    };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#editRoute
+     * @param {Object} route - route which is edited
+     * @description Opens window for editing route
+     */
+    self.editRoute = route => {
+        self.routeForm.$setPristine();
+        self.selectedRoute = route;
+        $scope.newRoute = angular.extend({}, route);
+        self.routePaneOpen = true;
+    };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#saveRoute
+     * @description Saving route
+     */
+    self.saveRoute = () => {
+        publisher.manageRoute({route: _.pick($scope.newRoute, updatedKeys($scope.newRoute, self.selectedRoute))}, self.selectedRoute.id)
+            .then(route => {
+                self.routePaneOpen = false;
+                refreshRoutes(self.routeType);
+            });
+    };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#deleteRoute
+     * @param {String} id - id of route which is deleted
+     * @description Deleting route
+     */
+    self.deleteRoute = id => {
+        modal.confirm(gettext('Please confirm you want to delete route.')).then(
+            () => publisher.removeRoute(id).then(
+                () => refreshRoutes(self.routeType)));
+    };
+
+    // compares 2 objects and returns keys of fields that are updated
+    function updatedKeys(a, b) {
+        return _.reduce(a, (result, value, key) => {
+            return _.isEqual(value, b[key]) ?
+                result : result.concat(key);
+        }, []);
+    }
+
+    function loadLists(tabName) {
+        switch (tabName) {
+            case 'routes':
+                self.routeType = '';
+                refreshRoutes(self.routeType);
+                break;
+            case 'navigation':
+                refreshMenus();
+                break;
+        }
+    }
+
+    function refreshRoutes(type) {
+        publisher.queryRoutes({type: type}).then(routes => $scope.routes = routes);
+    }
+
+    function refreshMenus() {
+        publisher.queryMenus().then(menus => $scope.menus = menus);
+    }
+
     function refreshSites() {
-        self.openSiteModal = false;
         publisher.querySites().then(sites => $scope.sites = sites);
     }
 
