@@ -1,6 +1,6 @@
 'use strict';
 
-describe('MetadataWidgetCtrl controller', function () {
+describe('MetadataWidgetCtrl controller', function() {
     var metadata,  // the metadata service
         metaInit,  //deferred initialization of the metadata service
         prefsGet,  //deferred result of the preferences service's get() method
@@ -28,7 +28,7 @@ describe('MetadataWidgetCtrl controller', function () {
         });
     }));
 
-    beforeEach(inject(function (
+    beforeEach(inject(function(
         $rootScope, $controller, $q, _metadata_, preferencesService
     ) {
         metadata = _metadata_;
@@ -52,7 +52,7 @@ describe('MetadataWidgetCtrl controller', function () {
         expect(scope.item.publish_schedule_time).toBe('15:12:34');
     });
 
-    it('initializes the list of categories to pick from in scope', function () {
+    it('initializes the list of categories to pick from in scope', function() {
         var userPrefs = {
             'categories:preferred': {
                 selected: {'a': true, 'b': false, 'c': true, 'd': true}
@@ -134,7 +134,7 @@ describe('metadata terms directive', function() {
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_) {
+    beforeEach(inject(function(_$rootScope_, _$compile_) {
         $rootScope = _$rootScope_;
         $compile = _$compile_;
     }));
@@ -442,7 +442,7 @@ describe('dateline dropdown', function() {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_) {
+    beforeEach(inject(function(_$rootScope_, _$compile_) {
         $rootScope = _$rootScope_;
         $compile = _$compile_;
     }));

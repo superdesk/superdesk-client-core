@@ -10,7 +10,7 @@ describe('highlights', function() {
     xdescribe('sdPackageHighlightsDropdown directive', function() {
         var scope, desk;
 
-        beforeEach(inject(function (desks, highlightsService, $rootScope, $compile, $q) {
+        beforeEach(inject(function(desks, highlightsService, $rootScope, $compile, $q) {
             desk = {_id: '123'};
             desks.setCurrentDeskId(desk._id);
 
@@ -24,7 +24,7 @@ describe('highlights', function() {
             scope.$digest();
         }));
 
-        it('can set highlights', inject(function (desks, highlightsService, $q, $rootScope) {
+        it('can set highlights', inject(function(desks, highlightsService, $q, $rootScope) {
             var active = desks.active;
             expect(active.desk).toEqual('123');
             $rootScope.$digest();

@@ -117,14 +117,14 @@ describe('desks service', function() {
         expect(stages.length).toBe(1);
     }));
 
-    describe('getCurrentDeskId() method', function () {
+    describe('getCurrentDeskId() method', function() {
         var desks;
 
-        beforeEach(inject(function (_desks_) {
+        beforeEach(inject(function(_desks_) {
             desks = _desks_;
         }));
 
-        it('returns null if user desks list is empty', function () {
+        it('returns null if user desks list is empty', function() {
             var result;
 
             desks.userDesks = [];

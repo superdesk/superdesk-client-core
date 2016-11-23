@@ -15,7 +15,7 @@ export default angular.module('superdesk.core.directives.switch', [])
      *
      * @description sdSwitch is sdCheck directive with different styling.
      */
-    .directive('sdSwitch', ['Keys', function (Keys) {
+    .directive('sdSwitch', ['Keys', function(Keys) {
         return {
             require: 'ngModel',
             replace: true,

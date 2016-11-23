@@ -39,7 +39,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      * @param {Object} item
      */
     this.open = function(item) {
-        var _open = function (_item) {
+        var _open = function(_item) {
             var actions = authoring.itemActions(_item);
             if (actions.edit) {
                 this.edit(_item);
@@ -124,7 +124,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     /**
      * Should be invoked when an item is saved by system without user interaction
      */
-    this.addAutosave = function () {
+    this.addAutosave = function() {
         if (self.item) {
             self.item._autosaved = true;
         }
@@ -164,7 +164,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
         return authoring.open(itemId, action === 'view', repo)
             .then(function(item) {
                 self.item = item;
-                self.action = (action !== 'view' && item._editable) ? action : 'view';
+                self.action = action !== 'view' && item._editable ? action : 'view';
             })
             .then(saveState);
     }

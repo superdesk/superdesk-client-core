@@ -7,7 +7,7 @@
  * notifications for users.
  */
 export default angular.module('superdesk.core.notify', ['superdesk.core.translate'])
-    .service('notify', ['$timeout', 'gettext', function ($timeout, gettext) {
+    .service('notify', ['$timeout', 'gettext', function($timeout, gettext) {
         function NotifyService() {
 
             var ttls = {
@@ -61,11 +61,11 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
 
         return new NotifyService();
     }])
-    .directive('sdNotify', ['notify', '$rootScope', function (notify, $rootScope) {
+    .directive('sdNotify', ['notify', '$rootScope', function(notify, $rootScope) {
         return {
             scope: true,
             templateUrl: 'scripts/core/notify/views/notify.html',
-            link: function (scope, element, items) {
+            link: function(scope, element, items) {
                 scope.messages = notify.messages;
             }
         };

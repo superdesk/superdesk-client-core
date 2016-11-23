@@ -6,7 +6,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
      * @param {Object} item
      * @param {Object} desk when passed the item will be assigned to this desk instead of user's activeDesk.
      */
-    this.addTaskToArticle = function (item, desk) {
+    this.addTaskToArticle = function(item, desk) {
         desk = desk || desks.getCurrentDesk();
         if ((!item.task || !item.task.desk) && desk && $location.path() !== '/workspace/personal') {
             item.task = {'desk': desk._id, 'stage': desk.working_stage, 'user': session.identity._id};

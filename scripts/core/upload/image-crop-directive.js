@@ -219,8 +219,8 @@ export default angular.module('superdesk.core.upload.imagecrop', [
 
                      img = imageFactory.makeInstance();
                      img.onload = function() {
-                         if (!src || (scope.showMinSizeError
-                             && !validateConstraints(scope.original, scope.rendition))) {
+                         if (!src || scope.showMinSizeError
+                             && !validateConstraints(scope.original, scope.rendition)) {
                              return;
                          }
                          elem.append(img);
@@ -313,12 +313,12 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             bindToController: true,
             controllerAs: 'vm',
             controller: ['$rootScope', function($rootScope) {
-                var vm = this;
-                angular.extend(vm, {
+                var self = this;
+                angular.extend(self, {
                     updatePOI: function(poi) {
-                        angular.extend(vm.poi, poi);
-                        vm.onChange();
-                        $rootScope.$broadcast('poiUpdate', vm.poi);
+                        angular.extend(self.poi, poi);
+                        self.onChange();
+                        $rootScope.$broadcast('poiUpdate', self.poi);
                     }
                 });
             }],
@@ -340,10 +340,10 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                     if (!angular.isDefined(poi)) {
                         poi = vm.poi;
                     }
-                    var topOffset = (poi.y * img.height) - circleRadius;
-                    var leftOffset = (poi.x * img.width) - circleRadius;
-                    var verticalLeftOffset = leftOffset + circleRadius - (lineThickness / 2);
-                    var horizontalTopffset = topOffset + circleRadius - (lineThickness / 2);
+                    var topOffset = poi.y * img.height - circleRadius;
+                    var leftOffset = poi.x * img.width - circleRadius;
+                    var verticalLeftOffset = leftOffset + circleRadius - lineThickness / 2;
+                    var horizontalTopffset = topOffset + circleRadius - lineThickness / 2;
                     $poiContainer.css({
                         width: img.width,
                         height: img.height
@@ -357,18 +357,18 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         top: horizontalTopffset
                     });
                     $poiRight.css({
-                        width: img.width - (leftOffset + (2 * circleRadius)),
+                        width: img.width - (leftOffset + 2 * circleRadius),
                         top: horizontalTopffset,
-                        left: leftOffset +  (2 * circleRadius)
+                        left: leftOffset +  2 * circleRadius
                     });
                     $poiTop.css({
                         height: topOffset,
                         left: verticalLeftOffset
                     });
                     $poiBottom.css({
-                        height: img.height - (topOffset + (2 * circleRadius)),
+                        height: img.height - (topOffset + 2 * circleRadius),
                         left: verticalLeftOffset,
-                        top: topOffset + (2 * circleRadius)
+                        top: topOffset + 2 * circleRadius
                     });
                 }
                 function updateWhenImageIsReady() {
@@ -418,7 +418,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         onExistEvents.forEach(function(eventName) {
                             overlay.on(eventName, exitDragMode);
                         });
-                        scope.$on('$destroy', function () {
+                        scope.$on('$destroy', function() {
                             overlay.off('mousedown', enableDragMode);
                             overlay.off('mousemove', updateOnMouseDrag);
                             onExistEvents.forEach(function(eventName) {
@@ -433,7 +433,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 scope.$on('poiUpdate', updateWhenImageIsReady);
                 angular.element($window).on('resize', updateWhenImageIsReady);
                 // on destroy
-                scope.$on('$destroy', function () {
+                scope.$on('$destroy', function() {
                     angular.element($window).off('resize', updateWhenImageIsReady);
                 });
             }

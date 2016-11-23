@@ -44,7 +44,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         $scope.failed = _.some($scope.items, {model: false});
     };
 
-    var validateFields = function () {
+    var validateFields = function() {
         $scope.errorMessage = null;
         if (!_.isEmpty($scope.items)) {
             _.each($scope.items, function(item) {
@@ -128,7 +128,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                     $scope.resolve(results);
                 });
             })
-            ['finally'](function() {
+            .finally(function() {
                 $scope.saving = false;
                 checkFail();
             });

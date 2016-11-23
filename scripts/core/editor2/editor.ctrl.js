@@ -2,7 +2,7 @@ angular.module('superdesk.apps.editor2.ctrl', []).controller('SdTextEditorContro
 
 SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element', 'editor', 'config', '$q'];
 function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, config, $q) {
-    var vm = this;
+    var self = this;
     function Block(attrs) {
         var self = this;
         if (!angular.isDefined(attrs)) {
@@ -93,8 +93,8 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     var association;
                     var embedAssoKey = /{id: "(embedded\d+)"}/;
                     if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null) {
-                        if (vm.associations) {
-                            association = angular.copy(vm.associations[match[1]]);
+                        if (self.associations) {
+                            association = angular.copy(self.associations[match[1]]);
                         }
                     }
                     // create the embed block
@@ -148,37 +148,37 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         }
         return blocks;
     }
-    angular.extend(vm, {
+    angular.extend(self, {
         configuration: angular.extend({embeds: true}, config.editor || {}),
         blocks: [],
         initEditorWithOneBlock: function(model) {
-            vm.model = model;
-            vm.blocks = [new Block({body: model.$modelValue})];
+            self.model = model;
+            self.blocks = [new Block({body: model.$modelValue})];
         },
         initEditorWithMultipleBlock: function(model) {
             // save the model to update it later
-            vm.model = model;
+            self.model = model;
             // parse the given model and create blocks per paragraph and embed
             var content = model.$modelValue || '';
             // update the actual blocks value at the end to prevent more digest cycle as needed
-            vm.blocks = splitIntoBlock(content);
-            vm.renderBlocks();
+            self.blocks = splitIntoBlock(content);
+            self.renderBlocks();
         },
         serializeBlock: function(blocks) {
-            blocks = angular.isDefined(blocks) ? blocks : vm.blocks;
+            blocks = angular.isDefined(blocks) ? blocks : self.blocks;
             // in case blocks are not ready
             if (blocks.length === 0) {
                 return '';
             }
             var newBody = '';
-            if (vm.config.multiBlockEdition) {
+            if (self.config.multiBlockEdition) {
                 blocks.forEach(function(block) {
                     if (angular.isDefined(block.body) && block.body.trim() !== '') {
                         if (block.blockType === 'embed') {
                             var blockName = block.embedType.trim();
                             // add an id to the image in order to retrieve it in `assocations` field
                             if (block.association) {
-                                blockName += ' {id: "embedded' + vm.generateBlockId(block) + '"}';
+                                blockName += ' {id: "embedded' + self.generateBlockId(block) + '"}';
                             }
                             newBody += [
                                 '<!-- EMBED START ' + blockName + ' -->\n',
@@ -195,7 +195,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     }
                 });
             } else {
-                newBody = (blocks.length > 0) ? blocks[0].body : '';
+                newBody = blocks.length > 0 ? blocks[0].body : '';
             }
             // strip <br> and <p>
             newBody = newBody.trim().replace(/<p><br><\/p>$/, '');
@@ -203,7 +203,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             return newBody;
         },
         commitChanges: function() {
-            var associations = angular.copy(vm.associations);
+            var associations = angular.copy(self.associations);
             // initialize associations if doesn't exist
             if (typeof associations !== 'object') {
                 associations = {};
@@ -215,15 +215,15 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 }
             });
 
-            if (Object.keys(associations).length || vm.associations) {
+            if (Object.keys(associations).length || self.associations) {
                 // update associations with the ones stored in blocks
-                vm.associations = angular.extend({}, associations, vm.getAssociations());
+                self.associations = angular.extend({}, associations, self.getAssociations());
             }
 
             // save model with latest state of blocks
-            var serialized = vm.serializeBlock();
-            if (serialized !== vm.model.$viewValue) {
-                vm.model.$setViewValue(vm.serializeBlock());
+            var serialized = self.serializeBlock();
+            if (serialized !== self.model.$viewValue) {
+                self.model.$setViewValue(self.serializeBlock());
             }
         },
         /**
@@ -231,21 +231,21 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         */
         getAssociations: function() {
             var association = {};
-            vm.blocks.forEach(function(block) {
+            self.blocks.forEach(function(block) {
                 // we keep the association only for Superdesk images
                 if (block.association) {
                     // add the association
-                    association['embedded' + vm.generateBlockId(block)] = angular.copy(block.association);
+                    association['embedded' + self.generateBlockId(block)] = angular.copy(block.association);
                 }
             });
             return association;
         },
         getBlockPosition: function(block) {
-            return _.indexOf(vm.blocks, block);
+            return _.indexOf(self.blocks, block);
         },
         splitAndInsert: function(textBlockCtrl, blocksToInsert) {
             // index where to add the new block
-            var index = vm.getBlockPosition(textBlockCtrl.block) + 1;
+            var index = self.getBlockPosition(textBlockCtrl.block) + 1;
             if (index === 0) {
                 throw 'Block to split not found';
             }
@@ -256,7 +256,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     // save the blocks (with removed leading text)
                     textBlockCtrl.updateModel();
                     // add new text block for the remaining text
-                    return vm.insertNewBlock(index, {
+                    return self.insertNewBlock(index, {
                         body: after
                     }, true);
                 }
@@ -271,7 +271,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     var createdBlocks = [];
                     blocksToInsert.forEach(function(bti) {
                         waitFor = waitFor.then(function() {
-                            var newBlock = vm.insertNewBlock(index, bti);
+                            var newBlock = self.insertNewBlock(index, bti);
                             createdBlocks.push(newBlock);
                             return newBlock;
                         });
@@ -298,12 +298,12 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             var newBlock = new Block(attrs);
             return $q(function(resolve) {
                 $timeout(function() {
-                    vm.blocks.splice(position, 0, newBlock);
+                    self.blocks.splice(position, 0, newBlock);
                     $timeout(function() {
-                        vm.commitChanges();
+                        self.commitChanges();
                         if (!doNotRenderBlocks) {
                             $timeout(function() {
-                                vm.renderBlocks();
+                                self.renderBlocks();
                                 resolve(newBlock);
                             }, 0, false);
                         } else {
@@ -317,29 +317,29 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         * Merge text blocks when there are following each other and add empty text block arround embeds if needed
         */
         renderBlocks: function() {
-            vm.blocks = prepareBlocks(vm.blocks);
+            self.blocks = prepareBlocks(self.blocks);
         },
         removeBlock: function(block) {
             // remove block only if it's not the only one
-            var blockPosition = vm.getBlockPosition(block);
-            if (vm.blocks.length > 1) {
-                vm.blocks.splice(blockPosition, 1);
+            var blockPosition = self.getBlockPosition(block);
+            if (self.blocks.length > 1) {
+                self.blocks.splice(blockPosition, 1);
             } else {
                 // if it's the first block, just remove the content
                 block.body = '';
             }
-            vm.renderBlocks();
-            return $timeout(vm.commitChanges);
+            self.renderBlocks();
+            return $timeout(self.commitChanges);
         },
         clipboard: undefined,
         cutBlock: function(block) {
-            vm.clipboard = angular.copy(block);
-            return vm.removeBlock(block);
+            self.clipboard = angular.copy(block);
+            return self.removeBlock(block);
         },
         getCutBlock: function(remove) {
-            var block = vm.clipboard;
+            var block = self.clipboard;
             if (remove) {
-                vm.clipboard = undefined;
+                self.clipboard = undefined;
             }
             return block;
         },
@@ -356,12 +356,12 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 for (i = 0, len = string.length; i < len; i++) {
                     chr   = string.charCodeAt(i);
                     /*jshint bitwise: false */
-                    hash  = ((hash << 5) - hash) + chr;
+                    hash  = (hash << 5) - hash + chr;
                     hash |= 0; // Convert to 32bit integer
                 }
                 return hash;
             }
-            return String(Math.abs(hashCode(block.body))) + String(vm.getBlockPosition(block));
+            return String(Math.abs(hashCode(block.body))) + String(self.getBlockPosition(block));
         }
     });
 }

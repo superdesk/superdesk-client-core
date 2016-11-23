@@ -58,7 +58,7 @@ function Authoring() {
      *   'composite', 'picture', etc.
      * @return {Object} a promise that is resolved with all DOM elements found
      */
-    this.findItemTypeIcons = function (itemType) {
+    this.findItemTypeIcons = function(itemType) {
         var selector = '.filetype-icon-' + itemType;
         return this.infoIconsBox.all(by.css(selector));
     };
@@ -371,7 +371,7 @@ function Authoring() {
         return element.all(by.repeater('pitem in contentItems')).get(item);
     };
 
-    this.getSearchItemCount = function () {
+    this.getSearchItemCount = function() {
         return element.all(by.repeater('pitem in contentItems')).count();
     };
 
@@ -475,7 +475,7 @@ function Authoring() {
     this.checkMarkedForHighlight = function(highlight, item) {
         expect(element(by.className('icon-star')).isDisplayed()).toBeTruthy();
         browser.actions().click(element(by.className('icon-star'))).perform();
-        element.all(by.css('.dropdown__menu.open li')).then(function (items) {
+        element.all(by.css('.dropdown__menu.open li')).then(function(items) {
             expect(items[1].getText()).toContain(highlight);
         });
     };
@@ -488,19 +488,19 @@ function Authoring() {
     var packageSlugline = element.all(by.className('keyword')).last();
     var byline = element(by.model('item.byline')).all(by.className('editor-type-html')).first();
 
-    this.writeText = function (text) {
+    this.writeText = function(text) {
         bodyHtml.sendKeys(text);
     };
 
-    this.writeTextToHeadline = function (text) {
+    this.writeTextToHeadline = function(text) {
         headline.sendKeys(text);
     };
 
-    this.writeTextToAbstract = function (text) {
+    this.writeTextToAbstract = function(text) {
         abstract.sendKeys(text);
     };
 
-    this.writeTextToByline = function (text) {
+    this.writeTextToByline = function(text) {
         byline.sendKeys(text);
     };
 
@@ -513,7 +513,7 @@ function Authoring() {
         element(by.id('comment-post')).click();
     };
 
-    this.writeTextToPackageSlugline = function (text) {
+    this.writeTextToPackageSlugline = function(text) {
         browser.wait(function() {
             return packageSlugline.isDisplayed();
         }, 100);
@@ -563,7 +563,7 @@ function Authoring() {
         element(by.className('icon-chevron-up-thin')).click();
     };
 
-    this.changeNormalTheme = function (theme) {
+    this.changeNormalTheme = function(theme) {
         element(by.className('theme-select'))
                 .element(by.className('dropdown__toggle')).click();
 
@@ -571,7 +571,7 @@ function Authoring() {
                 .all(by.className(theme)).first().click();
     };
 
-    this.changeProofreadTheme = function (theme) {
+    this.changeProofreadTheme = function(theme) {
         element(by.className('proofread-toggle')).click();
         element(by.className('theme-select'))
                 .element(by.className('dropdown__toggle')).click();
@@ -580,22 +580,22 @@ function Authoring() {
                 .all(by.className(theme)).first().click();
     };
 
-    this.addHelpline = function (helplineLabel) {
+    this.addHelpline = function(helplineLabel) {
         element(by.id('helplines')).element(by.css('option[label="' + helplineLabel + '"]')).click();
     };
 
-    this.getHelplineSelectedOption = function (option) {
+    this.getHelplineSelectedOption = function(option) {
         return element(by.id('helplines')).all(by.tagName('option')).get(option).getAttribute('selected');
     };
 
-    this.getBodyFooter = function () {
+    this.getBodyFooter = function() {
         return bodyFooter.getText();
     };
-    this.getBodyFooterPreview = function () {
+    this.getBodyFooterPreview = function() {
         return bodyFooterPreview.getText();
     };
 
-    this.showTransmissionDetails = function (publishedHistoryItemIndex) {
+    this.showTransmissionDetails = function(publishedHistoryItemIndex) {
         this.getHistoryItem(publishedHistoryItemIndex).element(
             by.css('[ng-click="showOrHideTransmissionDetails()"]')).click();
         browser.sleep(700);
@@ -689,7 +689,7 @@ function Authoring() {
     this.isPublishedState = function() {
         return this.getItemState().getText()
             .then(function(state) {
-                return (['published', 'corrected', 'killed'].indexOf(state.toLowerCase()) !== -1);
+                return ['published', 'corrected', 'killed'].indexOf(state.toLowerCase()) !== -1;
             });
     };
 
@@ -697,7 +697,7 @@ function Authoring() {
         return this.subject.all(by.className('dropdown__toggle')).click();
     };
 
-    this.getSelectedSubjects = function () {
+    this.getSelectedSubjects = function() {
         return this.subject.all(by.repeater('t in selectedItems'));
     };
 
@@ -705,7 +705,7 @@ function Authoring() {
         return this.anpa_category.all(by.className('dropdown__toggle')).click();
     };
 
-    this.getSelectedCategories = function () {
+    this.getSelectedCategories = function() {
         return this.anpa_category.all(by.repeater('t in selectedItems'));
     };
 
@@ -715,14 +715,14 @@ function Authoring() {
     };
 
     // set first filtered item as per inital term provided
-    this.setlocation = function (term) {
+    this.setlocation = function(term) {
         var location = element.all(by.css('[data-field="located"]')).all(by.model('term'));
         location.sendKeys(term);
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
     };
 
-    this.getSelectedLocation = function (term) {
+    this.getSelectedLocation = function(term) {
         var location = element.all(by.css('[data-field="located"]')).all(by.model('term'));
         return location.first().getAttribute('value');
     };

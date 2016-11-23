@@ -1,6 +1,6 @@
 'use strict';
 
-describe('MetadataTags directive', function () {
+describe('MetadataTags directive', function() {
     var scope, element, apiEndpoint, apiData;
 
     var bodyHtml = '<div x="1"><span y="2">realBody</span></div>';
@@ -19,7 +19,7 @@ describe('MetadataTags directive', function () {
         });
     }));
 
-    beforeEach(inject(function ($rootScope, $compile, api) {
+    beforeEach(inject(function($rootScope, $compile, api) {
         scope = $rootScope.$new();
         element = angular.element([
             '<div sd-meta-tags data-item="item" data-field="keywords"',

@@ -5,7 +5,7 @@ function URLResolver($http, $q, $log, config) {
     var _links, baseUrl = config.server.url;
 
     function basejoin(path) {
-        return baseUrl + (path.indexOf('/') === 0 ? path : ('/' + path));
+        return baseUrl + (path.indexOf('/') === 0 ? path : '/' + path);
     }
 
     /**

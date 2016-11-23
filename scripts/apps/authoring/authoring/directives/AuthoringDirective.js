@@ -374,7 +374,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 });
             }
 
-            function hasNullValue (target) {
+            function hasNullValue(target) {
                 for (var member in target) {
                     if (target[member] == null) {
                         return true;
@@ -502,7 +502,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             $scope.showCustomButtons = function(item) {
-                return (item.task && item.task.desk) && item.state !== 'draft' || $scope.dirty;
+                return item.task && item.task.desk && item.state !== 'draft' || $scope.dirty;
             };
 
             $scope.saveAndContinue = function(customButtonAction) {
@@ -671,7 +671,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
                 for (var i = 0; i < stageList.length; i++) {
                     if (stageList[i]._id === $scope.stage._id) {
-                        stageIndex = (i + 1 === stageList.length ? 0 : i + 1);
+                        stageIndex = i + 1 === stageList.length ? 0 : i + 1;
                         break;
                     }
                 }
@@ -698,7 +698,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     $location.search('item', null);
                     $location.search('action', null);
                 })
-                ['finally'](reloadService.forceReload);
+                .finally(reloadService.forceReload);
             });
 
             $scope.$on('item:lock', function(_e, data) {

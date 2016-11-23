@@ -190,8 +190,8 @@ export function SearchResults(
                 scope.total = null;
                 criteria.aggregations = $rootScope.aggregations;
                 criteria.es_highlight = search.getElasticHighlight();
-                return api.query(getProvider(criteria), criteria).then(function (items) {
-                    if (!scope.showRefresh && data && !data.force && (data.user !== session.identity._id)) {
+                return api.query(getProvider(criteria), criteria).then(function(items) {
+                    if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
 
                         var isItemPreviewing = !!scope.selected.preview;
                         var _data = {
@@ -204,7 +204,7 @@ export function SearchResults(
                         scope.showRefresh = search.canShowRefresh(_data);
                     }
 
-                    if (!scope.showRefresh || (data && data.force)) {
+                    if (!scope.showRefresh || data && data.force) {
                         scope.total = items._meta.total;
                         scope.$applyAsync(function() {
                             render(items, null, true);
@@ -258,7 +258,7 @@ export function SearchResults(
             });
 
             scope.refreshList = function() {
-                scope.$applyAsync(function () {
+                scope.$applyAsync(function() {
                     scope.scrollTop = 0;
                 });
                 scope.showRefresh = false;
@@ -360,7 +360,7 @@ export function SearchResults(
                 scope.selected.view = null;
             };
 
-            scope.openSingleItem = function (packageItem) {
+            scope.openSingleItem = function(packageItem) {
                 packages.fetchItem(packageItem).then(function(item) {
                     scope.selected.view = item;
                 });
@@ -371,7 +371,7 @@ export function SearchResults(
             var savedView;
             preferencesService.get('archive:view').then(function(result) {
                 savedView = result.view;
-                scope.view = (!!savedView && savedView !== 'undefined') ? savedView : 'mgrid';
+                scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
             });
 
             scope.$on('key:v', toggleView);

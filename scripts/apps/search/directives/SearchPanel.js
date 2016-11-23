@@ -71,7 +71,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 $rootScope.aggregations = 0;
             };
 
-            var initAggregations = function () {
+            var initAggregations = function() {
                 scope.aggregations = {
                     'type': {},
                     'desk': {},
@@ -296,7 +296,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 return _.isEmpty(scope.aggregations[type]);
             };
 
-            scope.format = function (date) {
+            scope.format = function(date) {
                 return date ? moment(date).format('YYYY-MM-DD') : null; // jshint ignore:line
             };
 

@@ -55,11 +55,11 @@ function MetadataCtrl(
         // gather article's existing category codes
         itemCategories = $scope.item.anpa_category || [];
 
-        itemCategories.forEach(function (cat) {
+        itemCategories.forEach(function(cat) {
             assigned[cat.qcode] = true;
         });
 
-        filtered = _.filter(all, function (cat) {
+        filtered = _.filter(all, function(cat) {
             return !assigned[cat.qcode] && (_.isEmpty(userPrefs) || userPrefs[cat.qcode]);
         });
 
@@ -80,18 +80,18 @@ function MetadataCtrl(
 
         all =  _.cloneDeep(metadata.values.company_codes || []);
 
-        all.forEach(function (companyCode) {
+        all.forEach(function(companyCode) {
             companyCode.name = companyCode.name + ' (' + companyCode.qcode + ')';
         });
 
         // gather article's existing company codes
         itemCompanyCodes = $scope.item.company_codes || [];
 
-        itemCompanyCodes.forEach(function (companyCode) {
+        itemCompanyCodes.forEach(function(companyCode) {
             assigned[companyCode.qcode] = true;
         });
 
-        filtered = _.filter(all, function (companyCode) {
+        filtered = _.filter(all, function(companyCode) {
             return !assigned[companyCode.qcode];
         });
 
@@ -107,7 +107,7 @@ function MetadataCtrl(
     });
 
     $scope.$watch('item.time_zone', function(newValue, oldValue) {
-        if ((newValue || oldValue) && (newValue !== oldValue)) {
+        if ((newValue || oldValue) && newValue !== oldValue) {
             setTimeZone();
             setPublishScheduleDate(newValue, oldValue);
             setEmbargoTS(newValue, oldValue);
@@ -128,7 +128,7 @@ function MetadataCtrl(
     }
 
     function setPublishScheduleDate(newValue, oldValue) {
-        if ((newValue || oldValue) && (newValue !== oldValue)) {
+        if ((newValue || oldValue) && newValue !== oldValue) {
             if ($scope.item.publish_schedule_date && $scope.item.publish_schedule_time) {
                 $scope.item.publish_schedule = datetimeHelper.mergeDateTime(
                     $scope.item.publish_schedule_date,
@@ -163,7 +163,7 @@ function MetadataCtrl(
      * values of both Embargo Date and Embargo Time to form Timestamp.
      */
     function setEmbargoTS(newValue, oldValue) {
-        if ((newValue || oldValue) && (newValue !== oldValue)) {
+        if ((newValue || oldValue) && newValue !== oldValue) {
             if ($scope.item.embargo_date && $scope.item.embargo_time) {
                 $scope.item.embargo = datetimeHelper.mergeDateTime(
                     $scope.item.embargo_date,
@@ -284,7 +284,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                             buttonList[0].focus();
                         }
 
-                        keyboardManager.push('up', function () {
+                        keyboardManager.push('up', function() {
                             if (buttonList.length > 0) {
                                 var focusedElem = elem.find('button:focus')[0];
                                 var indexValue = _.findIndex(buttonList, function(chr) {
@@ -297,7 +297,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                             }
                         }, keyboardOptions);
 
-                        keyboardManager.push('down', function () {
+                        keyboardManager.push('down', function() {
                             if (buttonList.length > 0) {
                                 var focusedElem = elem.find('button:focus')[0];
                                 var indexValue = _.findIndex(buttonList, function(chr) {
@@ -498,8 +498,8 @@ function MetaWordsListDirective() {
                 if (!wordToFind) {
                     scope.words = scope.list;
                 } else {
-                    scope.words = _.filter(scope.list, function (t) {
-                        return ((t.name.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1));
+                    scope.words = _.filter(scope.list, function(t) {
+                        return t.name.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1;
                     });
                 }
 
@@ -516,7 +516,7 @@ function MetaWordsListDirective() {
             scope.select = function(item) {
                 var keyword = item ? item.qcode : scope.selectedTerm;
                 var t = _.clone(scope.item[scope.field]) || [];
-                var index = _.findIndex(t, function (word) {
+                var index = _.findIndex(t, function(word) {
                     return word.toLowerCase() === keyword.toLowerCase();
                 });
 
@@ -666,7 +666,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.termPath.push(term);
                 scope.activeTree = scope.tree[term ? term.qcode : null];
                 $event.stopPropagation();
-                _.defer(function () {
+                _.defer(function() {
                     elem.find('button:not([disabled]):not(.dropdown__toggle)')[0].focus();
                 });
             };
@@ -684,12 +684,12 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         var searchObj = {};
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
                         if (searchUnique) {
-                            return (((t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1) ||
-                                    (t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1)) &&
-                                !_.find(scope.item[scope.field], searchObj));
+                            return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 ||
+                                    t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
+                                !_.find(scope.item[scope.field], searchObj);
                         } else {
-                            return ((t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
-                                !_.find(scope.item[scope.field], searchObj));
+                            return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 &&
+                                !_.find(scope.item[scope.field], searchObj);
                         }
                     }));
                     scope.activeList = true;
@@ -770,7 +770,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     }
 
                     $timeout(function() {
-                        scope.$applyAsync(function () {
+                        scope.$applyAsync(function() {
                             scope.postprocessing();
                             scope.change({item: scope.item, field: scope.field});
                         });
@@ -878,7 +878,7 @@ function MetaLocatorsDirective() {
                     setLocators(scope.list);
                 } else {
                     setLocators(_.filter(scope.list, function(t) {
-                        return ((t.city.toLowerCase().indexOf(locatorToFind.toLowerCase()) !== -1));
+                        return t.city.toLowerCase().indexOf(locatorToFind.toLowerCase()) !== -1;
                     }));
                 }
 

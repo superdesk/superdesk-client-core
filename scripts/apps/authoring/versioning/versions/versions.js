@@ -41,7 +41,7 @@ function VersioningController($scope, authoring, api, notify, lock, desks, archi
      * Or if editable but not dirty.
      * Then the last version can be edited only when editable and not dirty.
      */
-    $scope.openVersion = function (version) {
+    $scope.openVersion = function(version) {
         if (!$scope.item._editable) {
             $scope.preview(version);
         } else if ($scope.item._editable && !$scope.dirty) {

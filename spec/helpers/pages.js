@@ -99,7 +99,7 @@ function IngestDashboard() {
         return self.getProviderList().get(index);
     };
 
-    this.getProviderButton = function (provider) {
+    this.getProviderButton = function(provider) {
         var toggleButton = provider.element(by.model('item.dashboard_enabled'));
         return toggleButton;
     };
@@ -158,12 +158,12 @@ function IngestSettings() {
     this.newRoutingRuleBtn = element(by.partialButtonText('New Rule'));
 
     var newSchemeInput = element(by.model('editScheme.name'));
-    this.writeTextToSchemeName = function (text) {
+    this.writeTextToSchemeName = function(text) {
         newSchemeInput.sendKeys(text);
     };
 
     var newRuleInput = element(by.model('rule.name'));
-    this.writeTextToRuleName = function (text) {
+    this.writeTextToRuleName = function(text) {
         newRuleInput.sendKeys(text);
     };
     this.getTextfromRuleName = function() {

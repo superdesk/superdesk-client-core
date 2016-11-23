@@ -59,7 +59,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
     });
 }])
 
-.service('keyboardManager', ['$window', '$timeout', function ($window, $timeout) {
+.service('keyboardManager', ['$window', '$timeout', function($window, $timeout) {
     var stack = [],
         defaultOpt = {
             'type':             'keydown',
@@ -326,7 +326,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
     this.unbind = function unbind(label) {
         label = label.toLowerCase();
         var binding = this.keyboardEvent[label];
-        delete(this.keyboardEvent[label]);
+        delete this.keyboardEvent[label];
         if (!binding) {
             return;
         }
@@ -343,14 +343,14 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
     };
 }])
 
-.directive('sdHotkey', ['keyboardManager', '$timeout', function (keyboardManager, $timeout) {
+.directive('sdHotkey', ['keyboardManager', '$timeout', function(keyboardManager, $timeout) {
     return {
-        link: function (scope, elem, attrs, ctrl) {
+        link: function(scope, elem, attrs, ctrl) {
             var hotkey = attrs.sdHotkey,
                 callback = scope.$eval(attrs.sdHotkeyCallback),
                 options = scope.$eval(attrs.sdHotkeyOptions);
 
-            keyboardManager.bind(hotkey, function (e) {
+            keyboardManager.bind(hotkey, function(e) {
                 e.preventDefault();
                 if (callback) {
                     callback();
@@ -362,11 +362,11 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             /*
              * On scope $destroy unbind binded shortcuts
              */
-            scope.$on('$destroy', function () {
+            scope.$on('$destroy', function() {
                 keyboardManager.unbind(hotkey);
             });
 
-            $timeout(function () {
+            $timeout(function() {
                 if (elem.attr('title')) {
                     elem.attr('title', elem.attr('title') + ' (' + hotkey + ')');
                 } else if (elem.attr('tooltip')) {

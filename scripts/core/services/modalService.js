@@ -71,7 +71,7 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
                     }
                 });
 
-                var closeModal = function () {
+                var closeModal = function() {
                     scope.model = false;
                     scope.$evalAsync();
                 };

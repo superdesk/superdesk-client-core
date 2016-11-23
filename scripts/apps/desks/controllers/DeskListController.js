@@ -18,7 +18,7 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
         $scope.desks = desks.desks;
         $scope.deskStages = desks.deskStages;
 
-        desks.fetchCurrentUserDesks().then(function (deskList) {
+        desks.fetchCurrentUserDesks().then(function(deskList) {
             userDesks = deskList;
         });
     });

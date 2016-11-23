@@ -10,11 +10,11 @@ describe('Image Crop', function() {
         var url = 'http://master.dev.superdesk.org/api/upload/55dbf92936b0650033518780/raw?_schema=http';
         var newUrl = 'http://master.dev.superdesk.org/api/upload/55ca5972b8e27e006385b6e3/raw?_schema=http';
 
-        beforeEach(inject(function ($rootScope, imageFactory, $compile) {
+        beforeEach(inject(function($rootScope, imageFactory, $compile) {
             scope = $rootScope.$new();
 
             fakeImg = {};
-            spyOn(imageFactory, 'makeInstance').and.callFake(function () {
+            spyOn(imageFactory, 'makeInstance').and.callFake(function() {
                 return fakeImg;
             });
 

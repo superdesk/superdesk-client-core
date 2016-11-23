@@ -65,28 +65,28 @@ describe('ingest', function() {
         }));
     });
 
-    describe('registering activities in superdesk.apps.ingest module', function () {
+    describe('registering activities in superdesk.apps.ingest module', function() {
 
         beforeEach(window.module('superdesk.apps.ingest'));
 
-        describe('the "archive" activity', function () {
+        describe('the "archive" activity', function() {
             var activity;
 
-            beforeEach(inject(function (superdesk) {
+            beforeEach(inject(function(superdesk) {
                 activity = superdesk.activities.archive;
                 if (angular.isUndefined(activity)) {
                     fail('Activity "archive" is not registered.');
                 }
             }));
 
-            it('is allowed if the current desk is not "personal"', function () {
+            it('is allowed if the current desk is not "personal"', function() {
                 var extraCondition = activity.additionalCondition,
                     fakeDesks;
 
                 // get the function that checks the additional conditions
                 extraCondition = extraCondition[extraCondition.length - 1];
                 fakeDesks = {
-                    getCurrentDeskId: function () {
+                    getCurrentDeskId: function() {
                         return '1234';
                     }
                 };
@@ -94,14 +94,14 @@ describe('ingest', function() {
                 expect(extraCondition(fakeDesks)).toBe(true);
             });
 
-            it('is not allowed if the current desk is "personal"', function () {
+            it('is not allowed if the current desk is "personal"', function() {
                 var extraCondition = activity.additionalCondition,
                     fakeDesks;
 
                 // get the function that checks the additional conditions
                 extraCondition = extraCondition[extraCondition.length - 1];
                 fakeDesks = {
-                    getCurrentDeskId: function () {
+                    getCurrentDeskId: function() {
                         return null;
                     }
                 };

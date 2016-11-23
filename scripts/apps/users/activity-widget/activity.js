@@ -19,7 +19,7 @@ angular.module('superdesk.apps.users.activity', [
             icon: 'stream'
         });
     }]).controller('ActivityController', ['$scope', 'profileService',
-        function ($scope, profileService) {
+        function($scope, profileService) {
             var page = 1;
             var currentConfig = null;
             $scope.max_results = 0;
@@ -54,7 +54,7 @@ angular.module('superdesk.apps.users.activity', [
                 }
             }, true);
         }]).controller('ActivityConfigController', ['$scope',
-            function ($scope) {
+            function($scope) {
                 $scope.notIn = function(haystack) {
                     return function(needle) {
                         return haystack.indexOf(needle) === -1;

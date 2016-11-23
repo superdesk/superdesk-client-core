@@ -23,12 +23,12 @@ describe('superdesk ui', function() {
 
     var datetimeHelper;
 
-    describe('datetimeHelper service', function () {
-        beforeEach(inject(function (_datetimeHelper_) {
+    describe('datetimeHelper service', function() {
+        beforeEach(inject(function(_datetimeHelper_) {
             datetimeHelper = _datetimeHelper_;
         }));
 
-        it('should be defined', function () {
+        it('should be defined', function() {
             expect(datetimeHelper).toBeDefined();
         });
 
@@ -53,7 +53,7 @@ describe('superdesk ui', function() {
         });
     });
 
-    describe('sdTimezone directive', function () {
+    describe('sdTimezone directive', function() {
         var fakeTzData,
             getTzDataDeferred,
             isoScope;  // the directive's isolate scope
@@ -74,17 +74,17 @@ describe('superdesk ui', function() {
             // Mock child directives to test the directive under test in
             // isolation, avoiding the need to create more complex fixtures
             // that satisfy any special child directives' requirements.
-            childDirectives.forEach(function (directiveName) {
+            childDirectives.forEach(function(directiveName) {
                 // Internally, Angular appends the "Directive" suffix to
                 // directive name, thus we need to do the same for mocking.
                 directiveName += 'Directive';
-                $provide.factory(directiveName, function () {
+                $provide.factory(directiveName, function() {
                     return {};
                 });
             });
         }));
 
-        beforeEach(inject(function ($compile, $rootScope, $q, tzdata) {
+        beforeEach(inject(function($compile, $rootScope, $q, tzdata) {
             var element,
                 html = '<div sd-timezone data-timezone="timezone"></div>',
                 scope;
@@ -100,17 +100,17 @@ describe('superdesk ui', function() {
             isoScope = element.isolateScope();
         }));
 
-        it('initially clears the time zone search term', function () {
+        it('initially clears the time zone search term', function() {
             expect(isoScope.tzSearchTerm).toEqual('');
         });
 
         it('initializes the list of matching time zones to an empty list',
-            function () {
+            function() {
                 expect(isoScope.matchingTimeZones).toEqual([]);
             }
         );
 
-        it('initializes the list of all available time zones', function () {
+        it('initializes the list of all available time zones', function() {
             var serverTzData = {
                 zones: {
                     'Europe/Rome': ['1 - CET'],
@@ -122,7 +122,7 @@ describe('superdesk ui', function() {
             };
             fakeTzData.zones = serverTzData.zones;
             fakeTzData.links = serverTzData.links;
-            fakeTzData.getTzNames = function () {
+            fakeTzData.getTzNames = function() {
                 return ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
             };
 
@@ -136,7 +136,7 @@ describe('superdesk ui', function() {
             );
         });
 
-        it('applies the default timezone', inject(function ($compile, $rootScope, config) {
+        it('applies the default timezone', inject(function($compile, $rootScope, config) {
             var serverTzData = {
                 zones: {
                     'Europe/Rome': ['1 - CET'],
@@ -148,7 +148,7 @@ describe('superdesk ui', function() {
             };
             fakeTzData.zones = serverTzData.zones;
             fakeTzData.links = serverTzData.links;
-            fakeTzData.getTzNames = function () {
+            fakeTzData.getTzNames = function() {
                 return ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
             };
 
@@ -168,9 +168,9 @@ describe('superdesk ui', function() {
             expect(isoScope.timezone).toEqual('Europe/Rome');
         }));
 
-        describe('scope\'s searchTimeZones() method', function () {
+        describe('scope\'s searchTimeZones() method', function() {
             it('sets the time zone search term to the given term ',
-                function () {
+                function() {
                     isoScope.tzSearchTerm = 'foo';
                     isoScope.searchTimeZones('bar');
                     expect(isoScope.tzSearchTerm).toEqual('bar');
@@ -179,7 +179,7 @@ describe('superdesk ui', function() {
 
             it('sets the matching time zones to an empty list if given ' +
                 'an empty search term',
-                function () {
+                function() {
                     isoScope.matchingTimeZones = ['foo', 'bar'];
                     isoScope.searchTimeZones('');
                     expect(isoScope.matchingTimeZones).toEqual([]);
@@ -188,7 +188,7 @@ describe('superdesk ui', function() {
 
             it('sets the matching time zones to those matching the given ' +
                 'search term',
-                function () {
+                function() {
                     isoScope.timeZones = [
                         'Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz'
                     ];
@@ -200,24 +200,24 @@ describe('superdesk ui', function() {
             );
         });
 
-        describe('scope\'s selectTimeZone() method', function () {
+        describe('scope\'s selectTimeZone() method', function() {
             it('sets the routing rule\'s time zone to the one given',
-                function () {
+                function() {
                     isoScope.timezone = null;
                     isoScope.selectTimeZone('foo');
                     expect(isoScope.timezone).toEqual('foo');
                 }
             );
 
-            it('clears the time zone search term', function () {
+            it('clears the time zone search term', function() {
                 isoScope.tzSearchTerm = 'Europe';
                 isoScope.selectTimeZone('foo');
                 expect(isoScope.tzSearchTerm).toEqual('');
             });
         });
 
-        describe('scope\'s clearSelectedTimeZone() method', function () {
-            it('clears the time zone', function () {
+        describe('scope\'s clearSelectedTimeZone() method', function() {
+            it('clears the time zone', function() {
                 isoScope.timezone = 'foo';
                 isoScope.clearSelectedTimeZone();
                 expect(isoScope.timezone).not.toBeDefined();

@@ -24,7 +24,7 @@ function AuthExpiredInterceptor(session, $q, $injector, $rootScope, config, _) {
         },
         responseError: function(response) {
             if (_.startsWith(response.config.url, config.server.url) && response.status === 401) {
-                if (!(((response.data || {})._issues || {}).credentials)) {
+                if (!((response.data || {})._issues || {}).credentials) {
                     return handleAuthExpired(response);
                 }
             }
@@ -163,7 +163,7 @@ export default angular.module('superdesk.core.auth', [
                 }
 
                 if (canLogout) {
-                    api.auth.getById(session.sessionId).then(function (sessionData) {
+                    api.auth.getById(session.sessionId).then(function(sessionData) {
                         api.auth.remove(sessionData).then(replace, replace);
                     });
                 }
@@ -172,7 +172,7 @@ export default angular.module('superdesk.core.auth', [
         // populate current user
             $rootScope.$watch(function watchSessionIdentity() {
                 return session.identity;
-            }, function (identity) {
+            }, function(identity) {
                 $rootScope.currentUser = session.identity;
                 $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
             });

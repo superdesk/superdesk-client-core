@@ -17,7 +17,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return authoring.open(_id, readOnly);
     };
 
-    this.createPackageFromItems = function (items, defaults) {
+    this.createPackageFromItems = function(items, defaults) {
         var idRef = 'main';
         var item = items[0];
         var newPackage = {
@@ -97,7 +97,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.isAdded = function(pkg, item) {
         var added = pkg.groups ? pkg.groups.some(function(group) {
             return group.refs.some(function(ref) {
-                return (ref.guid === item._id) || (ref.residRef === item._id);
+                return ref.guid === item._id || ref.residRef === item._id;
             });
         }) : false;
         var addedToPkg = this.isAddedToPackage(pkg, item);
@@ -111,7 +111,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
                 return item;
             }, function(response) {
                 if (response.status === 404) {
-                    console.log('Item not found');
+                    console.error('Item not found.');
                 }
             });
     };
@@ -124,12 +124,12 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             location: 'archive',
             slugline: item.slugline || '',
             renditions: item.renditions || {},
-            itemClass: item.type ? ('icls:' + item.type) : ''
+            itemClass: item.type ? 'icls:' + item.type : ''
         };
     };
 
     this.addPackageGroupItem = function(group, item, broadcast) {
-        broadcast = (typeof broadcast === 'undefined');
+        broadcast = typeof broadcast === 'undefined';
         var pkg = authoringWorkspace.getItem();
         var pkgId = pkg._id;
         if (typeof this.packageGroupItems[pkgId] === 'undefined') {
@@ -149,7 +149,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     };
 
     this.isAddedToPackage = function(pkg, item) {
-        return pkg ? (_.indexOf(this.packageGroupItems[pkg._id], item._id) !== -1) : false;
+        return pkg ? _.indexOf(this.packageGroupItems[pkg._id], item._id) !== -1 : false;
     };
 
     function getGroupFor(item, idRef) {

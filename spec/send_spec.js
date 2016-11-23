@@ -34,14 +34,14 @@ describe('send', function() {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('warns that there are spelling mistakes', function () {
+    it('warns that there are spelling mistakes', function() {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
         expect(element(by.className('modal-content')).isDisplayed()).toBe(true);
     });
 
-    it('can submit item to a desk although there are spelling mistakes', function () {
+    it('can submit item to a desk although there are spelling mistakes', function() {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -57,7 +57,7 @@ describe('send', function() {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('can cancel submit request because there are spelling mistakes', function () {
+    it('can cancel submit request because there are spelling mistakes', function() {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -88,7 +88,7 @@ describe('send', function() {
         expect(monitoring.getGroups().count()).toBe(6);
     });
 
-    it('can confirm before submitting unsaved item to a desk', function () {
+    it('can confirm before submitting unsaved item to a desk', function() {
         workspace.openPersonal();
         workspace.editItem(1);
 

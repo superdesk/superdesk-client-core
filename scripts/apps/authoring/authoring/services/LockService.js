@@ -4,7 +4,7 @@ export function LockService($q, api, session, privileges, notify) {
      * Lock an item
      */
     this.lock = function lock(item, force) {
-        if ((!item.lock_user && item._editable) || force) {
+        if (!item.lock_user && item._editable || force) {
             return api.save('archive_lock', {}, {}, item).then(function(lock) {
                 _.extend(item, lock);
                 item._locked = true;

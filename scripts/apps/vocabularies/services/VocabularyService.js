@@ -12,9 +12,10 @@
  */
 VocabularyService.$inject = ['api', '$q', '$filter', '$rootScope'];
 export function VocabularyService(api, $q, $filter, $rootScope) {
-    var service = this;
-    service.AllActiveVocabularies = null;
-    service.vocabularies = null;
+    var self = this;
+
+    self.AllActiveVocabularies = null;
+    self.vocabularies = null;
 
     /**
      * @ngdoc method
@@ -25,15 +26,15 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @return {Promise} {Object} vocabularies
      */
     this.getAllActiveVocabularies = function() {
-        if (service.AllActiveVocabularies == null) {
+        if (self.AllActiveVocabularies == null) {
             return api.query('vocabularies', {max_results: 50}).then(
                 function(result) {
-                    service.AllActiveVocabularies = result;
-                    return service.AllActiveVocabularies;
+                    self.AllActiveVocabularies = result;
+                    return self.AllActiveVocabularies;
                 }
             );
         } else {
-            return $q.when(service.AllActiveVocabularies);
+            return $q.when(self.AllActiveVocabularies);
         }
     };
 
@@ -45,16 +46,16 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @return {Promise} {Object} vocabularies
      */
     this.getVocabularies = function() {
-        if (service.vocabularies == null) {
+        if (self.vocabularies == null) {
             return api.query('vocabularies', {where: {type: 'manageable'}}).then(
                 function(result) {
                     result._items = $filter('sortByName')(result._items, 'display_name');
-                    service.vocabularies = result;
-                    return service.vocabularies;
+                    self.vocabularies = result;
+                    return self.vocabularies;
                 }
             );
         } else {
-            return $q.when(service.vocabularies);
+            return $q.when(self.vocabularies);
         }
     };
 
@@ -65,8 +66,8 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @description Clears the cached vocabularies.
      */
     this._resetVocabularies = function() {
-        service.AllActiveVocabularies = null;
-        service.vocabularies = null;
+        self.AllActiveVocabularies = null;
+        self.vocabularies = null;
     };
 
     // reset cache on update

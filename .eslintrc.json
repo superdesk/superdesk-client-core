@@ -32,18 +32,42 @@
         }
     },
     "rules": {
-        "strict": 0,
         "react/jsx-uses-vars": 2,
         "react/jsx-uses-react": 2,
         "react/react-in-jsx-scope": 2,
         "react/prop-types": 0,
+
+        "no-cond-assign": 2,
+        "no-console": [2, {
+            "allow": ["warn", "error", "info"]
+        }],
+        "no-constant-condition": 2,
+        "no-debugger": 2,
+        "no-dupe-args": 2,
+        "no-dupe-keys": 2,
+        "no-duplicate-case": 2,
+        "no-empty": 2,
+        "no-ex-assign": 2,
+        "no-extra-boolean-cast": 2,
+        "no-extra-parens": 2,
+        "no-extra-semi": 2,
+        "no-func-assign": 2,
+        "no-inner-declarations": 2,
+        "no-irregular-whitespace": 2,
+        "no-obj-calls": 2,
+        "no-unexpected-multiline": 2,
+        "no-unreachable": 2,
+        "no-unsafe-negation": 2,
+        "use-isnan": 2,
+        "valid-typeof": 2,
+
+        "strict": 0,
         "indent": [2, 4],
         "quotes": [2, "single"],
         "linebreak-style": [2, "unix"],
         "semi": [2, "always"],
         "camelcase": [2, {"properties": "never"}],
         "comma-dangle": [2, "never"],
-        "no-cond-assign": [2, "except-parens"],
         "valid-jsdoc": [0, {
             "requireReturn": false,
             "requireReturnDescription": false,
@@ -53,7 +77,7 @@
         "brace-style": [2, "1tbs", {"allowSingleLine": false}],
         "comma-style": [2, "last"],
         "computed-property-spacing": [2, "never"],
-        "consistent-this": [0, "that"],
+        "consistent-this": [2, "self"],
         "no-unused-vars": [2, {"vars": "all", "args": "none"}],
         "no-underscore-dangle": 0,
         "no-use-before-define": 0,
@@ -66,6 +90,7 @@
         "keyword-spacing": 2,
         "space-before-blocks": [2, "always"],
         "space-in-parens": [2, "never"],
+        "space-before-function-paren": [2, "never"],
         "max-len": [2, 120, 4]
     }
 }

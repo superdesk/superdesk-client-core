@@ -52,8 +52,8 @@ function Dashboard() {
      *
      * @param {string} name
      */
-    this.addWidget = function (name) {
-        this.getSettingsWidget(name).then(function (widget) {
+    this.addWidget = function(name) {
+        this.getSettingsWidget(name).then(function(widget) {
             widget.click();
         });
         element.all(by.css('[ng-click="dashboard.addWidget(dashboard.selectedWidget)"]')).first().click();
@@ -62,7 +62,7 @@ function Dashboard() {
     /**
      * Close the dashboard settings.
      */
-    this.doneAction = function () {
+    this.doneAction = function() {
         element.all(by.css('[ng-click="dashboard.add = false"]')).first().click();
     };
 

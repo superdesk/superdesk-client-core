@@ -18,7 +18,7 @@ describe('Tag Service', function() {
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(window.module(function ($provide) {
+    beforeEach(window.module(function($provide) {
         fakeMetadata = {
             values: {subjectcodes: []},
             fetchSubjectcodes: jasmine.createSpy()
@@ -122,7 +122,7 @@ describe('Tag Service', function() {
 
     }));
 
-    it('create tags for from desk and to desk', inject(function ($location, $rootScope, $q, tags, _desks_) {
+    it('create tags for from desk and to desk', inject(function($location, $rootScope, $q, tags, _desks_) {
         var desks = _desks_;
         desks.deskLookup = {
             from: {
@@ -150,7 +150,7 @@ describe('Tag Service', function() {
         expect(tagsList.selectedParameters[1].label).toEqual('To Desk:Sport');
     }));
 
-    it('create tags original creator', inject(function ($location, $rootScope, $q, tags, desks, _userList_) {
+    it('create tags original creator', inject(function($location, $rootScope, $q, tags, desks, _userList_) {
         var userList = _userList_;
 
         $location.search('original_creator', '123');
@@ -174,7 +174,7 @@ describe('Tag Service', function() {
         expect(tagsList.selectedParameters[0].label).toEqual('Creator:Test User');
     }));
 
-    it('create tags if creator is not known', inject(function ($location, $rootScope, $q, tags, desks, _userList_) {
+    it('create tags if creator is not known', inject(function($location, $rootScope, $q, tags, desks, _userList_) {
         var userList = _userList_;
 
         $location.search('original_creator', '123');
@@ -193,7 +193,7 @@ describe('Tag Service', function() {
         expect(tagsList.selectedParameters[0].label).toEqual('Creator:Unknown');
     }));
 
-    it('create tags for unique name', inject(function ($location, $rootScope, $q, tags, desks) {
+    it('create tags for unique name', inject(function($location, $rootScope, $q, tags, desks) {
         $location.search('unique_name', '123');
 
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));

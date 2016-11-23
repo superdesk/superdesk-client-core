@@ -29,7 +29,7 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
                     scope.origPrivileges = angular.copy(scope.user.privileges);
                 }, function(error) {
                     notify.error(gettext('User not found.'));
-                    console.log(error);
+                    console.error(error);
                     return $q.reject(error);
                 });
             }
@@ -39,7 +39,7 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
                     scope.privileges = result._items;
                 }, function(error) {
                     notify.error(gettext('Privileges not found.'));
-                    console.log(error);
+                    console.error(error);
                     return $q.reject(error);
                 });
             }
@@ -49,7 +49,7 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
                     scope.role = role;
                 }, function(error) {
                     notify.error(gettext('User role not found.'));
-                    console.log(error);
+                    console.error(error);
                     return $q.reject(error);
                 });
             }
@@ -60,18 +60,18 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
             *
             * @method save
             */
-            scope.save = function () {
+            scope.save = function() {
                 api.save(
                     'users',
                     scope.user,
                     _.pick(scope.user, 'privileges')
                 )
-                .then(function () {
+                .then(function() {
                     scope.origPrivileges = angular.copy(
                         scope.user.privileges);
                     scope.userPrivileges.$setPristine();
                     notify.success(gettext('Privileges updated.'));
-                }, function (response) {
+                }, function(response) {
                     notify.error(
                         gettext(handleError(response)));
                 });
@@ -84,7 +84,7 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
             *
             * @method cancel
             */
-            scope.cancel = function () {
+            scope.cancel = function() {
                 scope.user.privileges = angular.copy(
                     scope.origPrivileges);
 

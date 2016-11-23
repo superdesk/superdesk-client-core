@@ -1,5 +1,5 @@
 DeskConfigController.$inject = ['$scope', '$controller', 'gettext', 'notify', 'desks', 'WizardHandler', 'modal'];
-export function DeskConfigController ($scope, $controller, gettext, notify, desks, WizardHandler, modal) {
+export function DeskConfigController($scope, $controller, gettext, notify, desks, WizardHandler, modal) {
 
     //expecting $scope.desks to be defined
 
@@ -61,7 +61,7 @@ export function DeskConfigController ($scope, $controller, gettext, notify, desk
         return desks.deskStages[desk._id];
     };
 
-    $scope.getDeskUsers = function (desk) {
+    $scope.getDeskUsers = function(desk) {
         return desks.deskMembers[desk._id];
     };
 }

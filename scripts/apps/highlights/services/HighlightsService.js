@@ -53,7 +53,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
     };
 
     function setLabel(objItems) {
-        _.forEach(objItems, function (item) {
+        _.forEach(objItems, function(item) {
             item.label = item.desks.length ? item.name : item.name + ' ' + gettext('(Global)');
         });
     }

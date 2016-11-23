@@ -6,7 +6,7 @@ export function DestinationDirective(transmissionTypes) {
             destination: '=',
             actions: '='
         },
-        link: function ($scope) {
+        link: function($scope) {
             $scope.types = transmissionTypes;
 
             $scope.$watch('destination.delivery_type', function(type) {

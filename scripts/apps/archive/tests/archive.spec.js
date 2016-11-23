@@ -40,7 +40,7 @@ describe('content', function() {
     }));
 
     describe('archive service', function() {
-        beforeEach(inject(function (desks, session, preferencesService) {
+        beforeEach(inject(function(desks, session, preferencesService) {
             session.identity = {_id: 'user:1'};
 
             spyOn(preferencesService, 'update').and.returnValue(true);

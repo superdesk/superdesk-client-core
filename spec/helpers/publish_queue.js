@@ -69,7 +69,7 @@ function PublishQueue() {
 
     var list = element(by.className('list-pane'));
 
-    this.getItemCount = function () {
+    this.getItemCount = function() {
         browser.sleep(500);     // wait for a while to get list populated.
         return list.all(by.repeater('queue_item in publish_queue track by queue_item._id')).count();
     };

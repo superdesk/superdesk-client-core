@@ -55,7 +55,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
     }
 
     function bindKeyShortcutToWidget(shortcut, widget) {
-        shortcuts.push($scope.$on('key:' + shortcut.replace('+', ':'), function () {
+        shortcuts.push($scope.$on('key:' + shortcut.replace('+', ':'), function() {
             $scope.activate(widget);
         }));
     }
@@ -65,7 +65,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
          * Navigate throw right tab widgets with keyboard combination
          * Combination: Ctrl + {{widget number}} and custom keys from `keyboardShortcut` property
          */
-        angular.forEach(_.sortBy($scope.widgets, 'order'), function (widget, index) {
+        angular.forEach(_.sortBy($scope.widgets, 'order'), function(widget, index) {
             // binding ctrl + {{widget number}}
             bindKeyShortcutToWidget('ctrl+' + (index + 1), widget);
             // binding keys from `widget.keyboardShortcut` property
@@ -83,8 +83,8 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             var locked = lock.isLocked($scope.item) && !lock.can_unlock($scope.item);
             var isReadOnlyStage = desks.isReadOnlyStage($scope.item.task.stage);
 
-            return (widget.needUnlock && (locked || isReadOnlyStage)) ||
-            (widget.needEditable && (!$scope.item._editable || isReadOnlyStage));
+            return widget.needUnlock && (locked || isReadOnlyStage) ||
+            widget.needEditable && (!$scope.item._editable || isReadOnlyStage);
         }
     };
 
@@ -131,7 +131,7 @@ function AuthoringWidgetsDir(desks, commentsService) {
         controller: WidgetsManagerCtrl,
         templateUrl: 'scripts/apps/authoring/widgets/views/authoring-widgets.html',
         transclude: true,
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             scope.userLookup = desks.userLookup;
             var editor = elem.find('.page-content-container'),
                 stickyHeader = elem.find('.authoring-sticky');

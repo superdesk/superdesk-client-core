@@ -36,7 +36,7 @@ angular.module('superdesk.core.error', [])
 
         $httpProvider.interceptors.push(ErrorHttpInterceptorFactory);
 
-        $provide.factory('$exceptionHandler', function () {
+        $provide.factory('$exceptionHandler', function() {
             return function errorCatcherHandler(exception, cause) {
                 Raven.captureException(exception, {tags: {component: 'ui'}, extra: exception});
                 throw exception;

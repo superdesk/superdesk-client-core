@@ -1,5 +1,5 @@
 GroupsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'groups', 'WizardHandler', 'modal'];
-export function GroupsConfigController ($scope, gettext, notify, api, groups, WizardHandler, modal) {
+export function GroupsConfigController($scope, gettext, notify, api, groups, WizardHandler, modal) {
     $scope.modalActive = false;
     $scope.step = {
         current: null

@@ -2,7 +2,7 @@ DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'se
     'modal', 'gettext', 'privileges', 'pageTitle'];
 export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces,
     modal, gettext, privileges, pageTitle) {
-    var vm = this;
+    var self = this;
 
     $scope.edited = null;
     $scope.workspaces = workspaces;
@@ -11,15 +11,15 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
     pageTitle.setUrl(gettext('Dashboard'));
 
     function setupWorkspace(workspace) {
-        vm.current = null;
+        self.current = null;
         if (workspace) {
             // is the user allowed to configure widgets on this desk?
             $scope.configurable = workspaces.isCustom() || privileges.userHasPrivileges({desks: 1});
             // do this async so that it can clean up previous grid
             $scope.$applyAsync(function() {
-                vm.current = workspace;
-                vm.widgets = extendWidgets(workspace.widgets || []);
-                vm.availableWidgets = dashboardWidgets;
+                self.current = workspace;
+                self.widgets = extendWidgets(workspace.widgets || []);
+                self.availableWidgets = dashboardWidgets;
             });
         }
     }
@@ -72,7 +72,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      * @param {object} widget
      * @returns {boolean}
      */
-    this.isSelected = function (widget) {
+    this.isSelected = function(widget) {
         return widget && !_.find(getAvailableWidgets(this.widgets), widget);
     };
 
@@ -113,7 +113,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
             gettext('Are you sure you want to delete current workspace?')
         )
         .then(function() {
-            return workspaces.delete(vm.current);
+            return workspaces.delete(self.current);
         });
     };
 
@@ -121,7 +121,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      * Enables editing current workspace
      */
     this.rename = function() {
-        $scope.edited = angular.copy(vm.current);
+        $scope.edited = angular.copy(self.current);
     };
 
     /*

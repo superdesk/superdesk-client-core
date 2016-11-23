@@ -4,7 +4,7 @@
 *
 * @module WorldClockConfigController tests
 */
-describe('WorldClockConfigController', function () {
+describe('WorldClockConfigController', function() {
     'use strict';
 
     var getTzdataDeferred,
@@ -13,7 +13,7 @@ describe('WorldClockConfigController', function () {
 
     beforeEach(window.module('superdesk.apps.dashboard.world-clock'));
 
-    beforeEach(inject(function ($controller, $rootScope, $q) {
+    beforeEach(inject(function($controller, $rootScope, $q) {
         scope = $rootScope.$new();
         scope.configuration = {};
 
@@ -30,7 +30,7 @@ describe('WorldClockConfigController', function () {
         });
     }));
 
-    it('initializes the list of available time zone in scope', function () {
+    it('initializes the list of available time zone in scope', function() {
         var expectedList,
             serverTzdata;
 
@@ -48,7 +48,7 @@ describe('WorldClockConfigController', function () {
 
         fakeTzdata.zones = serverTzdata.zones;
         fakeTzdata.links = serverTzdata.links;
-        fakeTzdata.getTzNames = function () {
+        fakeTzdata.getTzNames = function() {
             return ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
         };
 

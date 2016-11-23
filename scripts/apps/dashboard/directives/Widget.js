@@ -19,7 +19,7 @@ export function Widget($modal, asset) {
         transclude: true,
         scope: {widget: '=', save: '&', configurable: '='},
         link: function(scope, element, attrs) {
-            scope.openConfiguration = function () {
+            scope.openConfiguration = function() {
                 $modal.open({
                     templateUrl: 'scripts/apps/dashboard/views/configuration.html',
                     controller: ConfigController,

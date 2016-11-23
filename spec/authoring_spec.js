@@ -306,7 +306,7 @@ describe('authoring', function() {
         expect(element.all(by.css('.authoring-embedded .embedded-auth-view')).count()).toBe(0);
     });
 
-    it('can display monitoring after publishing an item using full view of authoring', function () {
+    it('can display monitoring after publishing an item using full view of authoring', function() {
         monitoring.actionOnItem('Edit', 3, 2);
         monitoring.showHideList();
 

@@ -180,7 +180,7 @@ describe('user edit form', function() {
         $provide.service('session', function($q) {
             return {
                 identity: {_id: 1},
-                getIdentity: function () {
+                getIdentity: function() {
                     return $q.when(
                         {'who': 'cares', 'this': 'is', 'totaly': 'fake'}
                     );

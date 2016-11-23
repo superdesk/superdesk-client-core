@@ -14,20 +14,20 @@ export default angular.module('superdesk.core.workflow', [])
 
             if (action) {
                 if (!_.isEmpty(action.include_states)) {
-                    return (_.findIndex(action.include_states, function(state) {
+                    return _.findIndex(action.include_states, function(state) {
                         return item.state === state;
-                    }) >= 0);
+                    }) >= 0;
                 } else if (!_.isEmpty(action.exclude_states)) {
-                    return (_.findIndex(action.exclude_states, function(state) {
+                    return _.findIndex(action.exclude_states, function(state) {
                         return item.state === state;
-                    }) === -1);
+                    }) === -1;
                 }
             }
 
             return false;
         };
 
-        this.setActions = function (actions) {
+        this.setActions = function(actions) {
             _actions = actions;
         };
 

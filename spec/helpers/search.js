@@ -158,7 +158,7 @@ function GlobalSearch() {
     /**
      * Opens Subject metadata dropdown
      */
-    this.toggleSubjectMetadata = function () {
+    this.toggleSubjectMetadata = function() {
         this.subject.element(by.css('.dropdown__toggle')).click();
     };
 
@@ -187,7 +187,7 @@ function GlobalSearch() {
      *
      * @return {promise} list of elements
      */
-    this.getSelectedSubjectsInFilter = function () {
+    this.getSelectedSubjectsInFilter = function() {
         return element.all(by.repeater('t in selectedItems'));
     };
 
@@ -196,7 +196,7 @@ function GlobalSearch() {
      *
      * @return {promise} list of elements
      */
-    this.getSelectedTags = function () {
+    this.getSelectedTags = function() {
         return element.all(by.repeater('parameter in tags.selectedParameters'));
     };
 
@@ -383,7 +383,7 @@ function GlobalSearch() {
      *
      * @return {promise} list of elements
      */
-    this.getExcludedFacetTags = function () {
+    this.getExcludedFacetTags = function() {
         return element.all(by.repeater('(type,keys) in tags.removedFacets'));
     };
 
@@ -392,7 +392,7 @@ function GlobalSearch() {
      * @param {number} index
      * @return {promise} element
      */
-    this.getExcludedFacetTagByIndex = function (index) {
+    this.getExcludedFacetTagByIndex = function(index) {
         return this.getExcludedFacetTags().get(index);
     };
 
@@ -400,7 +400,7 @@ function GlobalSearch() {
      * Delete the excluded facet tag by index
      * @param {number} index
      */
-    this.deleteExcludedFacetTagByIndex = function (index) {
+    this.deleteExcludedFacetTagByIndex = function(index) {
         this.getExcludedFacetTagByIndex(index).element(by.tagName('button')).click();
     };
 }

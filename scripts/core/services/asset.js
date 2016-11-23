@@ -8,7 +8,7 @@ export default angular.module('superdesk.core.services.asset', [])
      *
      * @description Asset module. This module provides urls for static assets.
      */
-    .provider('asset', ['$injector', function ($injector) {
+    .provider('asset', ['$injector', function($injector) {
         this.templateUrl = function(path) {
             var config = $injector.get('config'),
                 ret = path;

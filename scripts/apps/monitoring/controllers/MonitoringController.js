@@ -32,53 +32,53 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
 
     this.scrollTop = false;
 
-    this.isDeskChanged = function () {
+    this.isDeskChanged = function() {
         return desks.changeDesk;
     };
 
-    this.highlightsDeskChanged = function () {
+    this.highlightsDeskChanged = function() {
         if (desks.changeDesk) {
             $location.url('/workspace/monitoring');
         }
     };
 
-    var vm = this;
+    var self = this;
 
-    vm.switchView(vm.viewColumn);
+    self.switchView(self.viewColumn);
 
     function preview(item) {
-        vm.previewItem = item;
-        vm.state['with-preview'] = !!item;
+        self.previewItem = item;
+        self.state['with-preview'] = !!item;
 
-        if (vm.previewItem != null) {
-            vm.showHistoryTab = vm.previewItem.state !== 'ingested';
+        if (self.previewItem != null) {
+            self.showHistoryTab = self.previewItem.state !== 'ingested';
         }
 
         if (!item) {
-            vm.selectedGroup = null;
+            self.selectedGroup = null;
         }
     }
 
     function closePreview() {
         preview(null);
         $rootScope.$broadcast('item:unselect');
-        if (vm.viewColumn) {
+        if (self.viewColumn) {
             $rootScope.$broadcast('resize:header');
         }
     }
 
     function edit(item) {
-        vm.editItem = item;
-        vm.state['with-authoring'] = !!item;
+        self.editItem = item;
+        self.state['with-authoring'] = !!item;
     }
     function viewSingleGroup(group, type) {
         group.singleViewType = type;
-        vm.singleGroup = group;
+        self.singleGroup = group;
     }
 
     function viewMonitoringHome() {
-        vm.singleGroup.singleViewType = null;
-        vm.singleGroup = null;
+        self.singleGroup.singleViewType = null;
+        self.singleGroup = null;
     }
 
     /**
@@ -90,15 +90,15 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
      */
     function switchView(viewColumn) {
         storage.setItem('displaySwimlane', viewColumn);
-        vm.viewColumn = viewColumn;
+        self.viewColumn = viewColumn;
 
-        vm.columnsLimit = vm.viewColumn ? config.features.swimlane.columnsLimit : null;
+        self.columnsLimit = self.viewColumn ? config.features.swimlane.columnsLimit : null;
 
-        return vm.columnsLimit;
+        return self.columnsLimit;
     }
 
     function selectGroup(group) {
-        vm.selectedGroup = (vm.selectedGroup && vm.selectedGroup._id === group._id) ? null : group;
-        return vm.selectedGroup;
+        self.selectedGroup = self.selectedGroup && self.selectedGroup._id === group._id ? null : group;
+        return self.selectedGroup;
     }
 }

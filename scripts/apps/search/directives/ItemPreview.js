@@ -36,7 +36,7 @@ export function ItemPreview(asset, storage) {
              * Toggle preview pane position - left or right
              * available only when screen size is smaller and authoring is open.
              */
-            scope.shiftPreview = function () {
+            scope.shiftPreview = function() {
                 scope.$applyAsync(function() {
                     scope.toggleLeft = !scope.toggleLeft;
                     storage.setItem('shiftLeft', scope.toggleLeft);
@@ -49,7 +49,7 @@ export function ItemPreview(asset, storage) {
 
             var closePreviewEvents = ['item:deleted', 'item:spike', 'item:unspike', 'item:move', 'content:update'];
 
-            angular.forEach(closePreviewEvents, function (event) {
+            angular.forEach(closePreviewEvents, function(event) {
                 scope.$on(event, shouldClosePreview.bind(this, scope));
             });
 
@@ -59,7 +59,7 @@ export function ItemPreview(asset, storage) {
              *
              * @return {boolean}
              */
-            scope.hideActions = function () {
+            scope.hideActions = function() {
                 return scope.hideActionsMenu;
             };
         }

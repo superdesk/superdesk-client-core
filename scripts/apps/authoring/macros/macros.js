@@ -49,7 +49,7 @@ function MacrosService(api, notify, $filter) {
         }));
     };
 
-    this.setupShortcuts = function ($scope) {
+    this.setupShortcuts = function($scope) {
         this.get().then(function(macros) {
             angular.forEach(macros, function(macro) {
                 if (macro.shortcut) {

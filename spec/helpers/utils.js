@@ -49,13 +49,13 @@ function openUrl(url) {
 }
 
 function printLogs(prefix) {
-    prefix = prefix ? (prefix + ' ') : '';
+    prefix = prefix ? prefix + ' ' : '';
     return browser.manage().logs().get('browser').then(function(browserLog) {
         var logs = browserLog.filter(function(log) {
             return log.level.value >= 1000;
         });
 
-        console.log(prefix + 'log: ' + require('util').inspect(logs, {dept: 3}));
+        console.info(prefix + 'log: ' + require('util').inspect(logs, {dept: 3}));
     });
 }
 

@@ -16,12 +16,12 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
     // Required to display action icons in grid view
     $scope.extras = {'activity':{'action':'list'}};
 
-    $scope.search = function () {
+    $scope.search = function() {
         $location.search('page', null);
         legal.updateSearchQuery($scope.criteria);
     };
 
-    function refresh () {
+    function refresh() {
         $scope.loading = true;
         $scope.preview(null);
         legal.query().then(function(items) {
@@ -34,15 +34,15 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
         $scope.selected.preview = selectedItem;
     };
 
-    $scope.openLightbox = function () {
+    $scope.openLightbox = function() {
         $scope.selected.view = $scope.selected.preview;
     };
 
-    $scope.closeLightbox = function () {
+    $scope.closeLightbox = function() {
         $scope.selected.view = null;
     };
 
-    $scope.clear = function () {
+    $scope.clear = function() {
         legal.criteria = $scope.criteria = {};
         $scope.search();
     };
@@ -64,6 +64,6 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
 
     preferencesService.get('archive:view').then(function(result) {
         var savedView = result.view;
-        $scope.view = (!!savedView && savedView !== 'undefined') ? savedView : 'mgrid';
+        $scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
     });
 }

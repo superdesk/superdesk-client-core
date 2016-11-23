@@ -15,7 +15,7 @@ export function DeskSelect(Keys, _, preferencesService) {
             this.active = null;
         }
 
-        setActive (desk) {
+        setActive(desk) {
             this.active = desk || null;
         }
     }
@@ -77,7 +77,7 @@ export function DeskSelect(Keys, _, preferencesService) {
                 }
 
                 var index = scope.ctrl.active ? _.findIndex(scope.desks, filterActive) : -diff;
-                var next = Math.min(Math.max(0, (index + diff)), scope.desks.length - 1);
+                var next = Math.min(Math.max(0, index + diff), scope.desks.length - 1);
 
                 scope.$apply(function() {
                     scope.ctrl.setActive(scope.desks[next]);

@@ -63,7 +63,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;
 
-    $scope.$on('content:update', function (_e, data) {
+    $scope.$on('content:update', function(_e, data) {
         // only update the workqueue for content:update items in the workqueue
         if (data && data.items) {
             var updateItems = _.keys(data.items);
@@ -84,7 +84,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
             updateWorkqueue();
         }
     });
-    $scope.$on('item:unlock', function (_e, data) {
+    $scope.$on('item:unlock', function(_e, data) {
         var item = _.find(workqueue.items, {_id: data.item});
         if (item && lock.isLocked(item) && session.sessionId !== data.lock_session && $scope.active !== item) {
             authoring.unlock(item, data.user, item.headline);
@@ -159,7 +159,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     };
 
     function _reOpenItem(item) {
-        if (($scope.active && $scope.active._id !== item._id) || (!$scope.active && item)) {
+        if ($scope.active && $scope.active._id !== item._id || !$scope.active && item) {
             authoringWorkspace.edit(item);
         } else {
             notify.success(gettext('Item already open.'));
@@ -205,7 +205,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     /*
      * Open article for edit
      */
-    $scope.edit = function (item, event) {
+    $scope.edit = function(item, event) {
         if (!event.ctrlKey) {
             $scope.active = item;
             authoringWorkspace.edit(item);
@@ -219,7 +219,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     /**
      * Get relative path to article
      */
-    $scope.link = function (item) {
+    $scope.link = function(item) {
         if (item) {
             return $rootScope.link('authoring', item);
         }
@@ -244,7 +244,7 @@ function ArticleDashboardDirective() {
             active: '=active',
             items:'=items'
         },
-        link: function (scope, elem, attrs) {
+        link: function(scope, elem, attrs) {
             scope.closeItem = function(item) {
                 scope._closeItem({'item': item});
             };

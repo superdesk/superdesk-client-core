@@ -5,7 +5,7 @@ TemplatesDirective.$inject = ['gettext', 'notify', 'api', 'templates', 'modal', 
 export function TemplatesDirective(gettext, notify, api, templates, modal, desks, weekdays, content, $filter, _) {
     return {
         templateUrl: 'scripts/apps/templates/views/templates.html',
-        link: function ($scope) {
+        link: function($scope) {
             $scope.weekdays = weekdays;
             $scope.content_templates = null;
             $scope.origTemplate = null;
@@ -156,7 +156,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             /*
              * Returns desks names
              */
-            $scope.getTemplateDesks = function (template) {
+            $scope.getTemplateDesks = function(template) {
                 var templateDesks = [];
                 _.forEach(template.template_desks, function(deskId) {
                     var desk = _.find($scope.desks._items , {_id: deskId});
@@ -170,7 +170,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             /*
              * Returns the schedule desk stage name
              */
-            $scope.getScheduleDesk = function (template) {
+            $scope.getScheduleDesk = function(template) {
                 if (template != null) {
                     return _.find($scope.desks._items , {_id: template.schedule_desk}).name;
                 }
@@ -180,7 +180,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             /*
              * Returns the schedule desk stage name
              */
-            $scope.getScheduleStage = function (template) {
+            $scope.getScheduleStage = function(template) {
                 if (template != null) {
                     return _.find(desks.stages._items , {_id: template.schedule_stage}).name;
                 }

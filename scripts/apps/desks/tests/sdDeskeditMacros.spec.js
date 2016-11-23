@@ -17,7 +17,7 @@ describe('sdDeskeditMacros directive', function() {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.desks'));
 
-    beforeEach(inject(function (_$compile_, _$rootScope_, $q, _macros_) {
+    beforeEach(inject(function(_$compile_, _$rootScope_, $q, _macros_) {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         macros = _macros_;
@@ -55,7 +55,7 @@ describe('sdDeskeditMacros directive', function() {
         return $element;
     }
 
-    it('fetches macros for the current desk if desk is defined', function () {
+    it('fetches macros for the current desk if desk is defined', function() {
         var scopeValues,
             $element;
 
@@ -73,7 +73,7 @@ describe('sdDeskeditMacros directive', function() {
     });
 
     it('stores macro list in scope when desk macros data is fetched',
-        function () {
+        function() {
             var macrosFromServer,
                 scopeValues,
                 $element;
@@ -96,7 +96,7 @@ describe('sdDeskeditMacros directive', function() {
         }
     );
 
-    it('fetches all macros if current desk is not set', function () {
+    it('fetches all macros if current desk is not set', function() {
         var scopeValues,
             $element;
 
@@ -109,7 +109,7 @@ describe('sdDeskeditMacros directive', function() {
         expect(macros.get).toHaveBeenCalled();
     });
 
-    it('stores macro list in scope when macros data is fetched', function () {
+    it('stores macro list in scope when macros data is fetched', function() {
         var macrosFromServer,
             scopeValues,
             $element;

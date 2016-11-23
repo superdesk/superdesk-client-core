@@ -57,7 +57,7 @@ export default angular.module('superdesk.core.services.entity', [])
              * if parameter value is same as default one it will remove it from $location
              */
             set: function(key, val) {
-                var locVar = (key in this.defaults && angular.equals(this.defaults[key], val)) ? null : val;
+                var locVar = key in this.defaults && angular.equals(this.defaults[key], val) ? null : val;
                 $location.search(key, locVar);
                 return this;
             },
@@ -99,7 +99,7 @@ export default angular.module('superdesk.core.services.entity', [])
                         });
                     }
                 }, this);
-                var query = (parts.length === 0) ? '' : '?' + parts.join('&');
+                var query = parts.length === 0 ? '' : '?' + parts.join('&');
                 return query;
             },
 

@@ -17,7 +17,7 @@ describe('sdUserPrivileges directive', function() {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.users'));
 
-    beforeEach(window.module(function ($provide) {
+    beforeEach(window.module(function($provide) {
         fakeEndpoints = {};
 
         function fakeApi() {
@@ -35,7 +35,7 @@ describe('sdUserPrivileges directive', function() {
         $provide.service('api', fakeApi);
     }));
 
-    beforeEach(inject(function (_$rootScope_, _$compile_, $q, api, userList) {
+    beforeEach(inject(function(_$rootScope_, _$compile_, $q, api, userList) {
         $rootScope = _$rootScope_;
         $compile = _$compile_;
 
@@ -84,7 +84,7 @@ describe('sdUserPrivileges directive', function() {
         return $element;
     }
 
-    beforeEach(function () {
+    beforeEach(function() {
         var $element,
             scopeValues,
             userPrivileges;
@@ -102,8 +102,8 @@ describe('sdUserPrivileges directive', function() {
         isoScope = $element.isolateScope();
     });
 
-    describe('on initialization', function () {
-        it('fetches and stores the list of all privileges', function () {
+    describe('on initialization', function() {
+        it('fetches and stores the list of all privileges', function() {
             var serverResponse = {
                 _items: [
                     {name: 'role_foo'},
@@ -122,7 +122,7 @@ describe('sdUserPrivileges directive', function() {
             );
         });
 
-        it('fetches and stores the user\'s role object', function () {
+        it('fetches and stores the user\'s role object', function() {
             var serverResponse = {
                 name: '€d1t0r',
                 privileges: [
@@ -138,28 +138,28 @@ describe('sdUserPrivileges directive', function() {
             expect(isoScope.role).toEqual(serverResponse);
         });
 
-        it('logs an error if fetching the user\'s role fails', function () {
-            spyOn(console, 'log');
+        it('logs an error if fetching the user\'s role fails', function() {
+            spyOn(console, 'error');
 
             queryDeferred.reject('Server error');
             isoScope.$digest();
 
-            expect(console.log).toHaveBeenCalledWith('Server error');
+            expect(console.error).toHaveBeenCalledWith('Server error');
         });
 
     });
 
-    describe('scope\'s save() method', function () {
+    describe('scope\'s save() method', function() {
         var api,
             saveDeferred;
 
-        beforeEach(inject(function ($q, _api_) {
+        beforeEach(inject(function($q, _api_) {
             api = _api_;
             saveDeferred = $q.defer();
             api.save.and.returnValue(saveDeferred.promise);
         }));
 
-        it('saves user\'s privileges', function () {
+        it('saves user\'s privileges', function() {
             var userJohn = {
                 name: 'John Doe',
                 privileges: [{name: 'can_edit'}]
@@ -178,7 +178,7 @@ describe('sdUserPrivileges directive', function() {
         });
 
         it('updates the original priviliges list to the newly saved ones',
-            function () {
+            function() {
                 isoScope.user = {
                     name: 'John Doe',
                     privileges: [{name: 'manager'}, {name: 'reviewer'}]
@@ -196,7 +196,7 @@ describe('sdUserPrivileges directive', function() {
             }
         );
 
-        it('issues system notification on success', inject(function (notify) {
+        it('issues system notification on success', inject(function(notify) {
             spyOn(notify, 'success');
 
             isoScope.save();
@@ -206,7 +206,7 @@ describe('sdUserPrivileges directive', function() {
             expect(notify.success).toHaveBeenCalledWith('Privileges updated.');
         }));
 
-        it('marks the HTML form as pristine on success', function () {
+        it('marks the HTML form as pristine on success', function() {
             isoScope.userPrivileges.$pristine = false;
 
             isoScope.save();
@@ -216,7 +216,7 @@ describe('sdUserPrivileges directive', function() {
             expect(isoScope.userPrivileges.$pristine).toBe(true);
         });
 
-        it('does *not* mark the HTML form as pristine on error', function () {
+        it('does *not* mark the HTML form as pristine on error', function() {
             isoScope.userPrivileges.$pristine = false;
 
             isoScope.save();
@@ -226,7 +226,7 @@ describe('sdUserPrivileges directive', function() {
             expect(isoScope.userPrivileges.$pristine).toBe(false);
         });
 
-        it('issues system notification on error', inject(function (notify) {
+        it('issues system notification on error', inject(function(notify) {
             spyOn(notify, 'error');
 
             isoScope.save();
@@ -238,8 +238,8 @@ describe('sdUserPrivileges directive', function() {
         }));
     });
 
-    describe('scope\'s cancel() method', function () {
-        it('restores user\'s original privilege setttings', function () {
+    describe('scope\'s cancel() method', function() {
+        it('restores user\'s original privilege setttings', function() {
             isoScope.user.privileges = [{name: 'aaa'}, {name: 'bbb'}];
             isoScope.origPrivileges = [{name: 'foo'}, {name: 'bar'}];
 
@@ -249,7 +249,7 @@ describe('sdUserPrivileges directive', function() {
                 [{name: 'foo'}, {name: 'bar'}]);
         });
 
-        it('marks the corresponding HTML form as pristine', function () {
+        it('marks the corresponding HTML form as pristine', function() {
             isoScope.userPrivileges.$pristine = false;
             isoScope.cancel();
             expect(isoScope.userPrivileges.$pristine).toBe(true);

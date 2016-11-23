@@ -124,7 +124,7 @@ function WizardDirective() {
                 $scope.steps.push(step);
                 if (!stopWatch) {
                     stopWatch = $scope.$watch('currentStep', function(stepCode) {
-                        if (stepCode && (($scope.selectedStep && $scope.selectedStep.code !== stepCode)
+                        if (stepCode && ($scope.selectedStep && $scope.selectedStep.code !== stepCode
                             || !$scope.selectedStep)) {
                             $scope.goTo(_.find($scope.steps, {code: stepCode}));
                         }
@@ -133,7 +133,7 @@ function WizardDirective() {
             };
 
             function unselectAll() {
-                _.each($scope.steps, function (step) {
+                _.each($scope.steps, function(step) {
                     step.selected = false;
                 });
                 $scope.selectedStep = null;
@@ -236,7 +236,7 @@ function AutoexpandDirective() {
                     }
                     var h = Math.max(_minHeight, e.scrollHeight);
 
-                    e.style.overflow = (e.scrollHeight > h ? 'auto' : 'hidden');
+                    e.style.overflow = e.scrollHeight > h ? 'auto' : 'hidden';
                     e.style.height = h + 1 + 'px';
 
                     e.valLength = vlen;
@@ -340,7 +340,7 @@ function DropdownPositionDirective($document) {
                 var docWidth = $document.width(),
                     elemPosition = element.offset().left + element.find('.dropdown__menu').width();
 
-                return (docWidth - elemPosition) < tolerance;
+                return docWidth - elemPosition < tolerance;
             }
         }
     };
@@ -370,12 +370,12 @@ function DropdownPositionAbsoluteDirective($position) {
                         right: Math.max(5, window.innerWidth - pos.left)
                     };
 
-                    scope.$evalAsync(function () {
+                    scope.$evalAsync(function() {
                         // Hide it to avoid flickering
                         dropdown.dropdownMenu.css({opacity: '0', left: 'auto'});
                     });
 
-                    scope.$applyAsync(function () {
+                    scope.$applyAsync(function() {
                         /*
                          * Calculate if there is enough space for showing after the icon
                          * if not, show it above the icon
@@ -383,8 +383,8 @@ function DropdownPositionAbsoluteDirective($position) {
                         var dropdownHeight = dropdown.dropdownMenu.outerHeight(),
                             dropdownWidth = dropdown.dropdownMenu.outerWidth();
 
-                        if ((windowHeight - pos.top) < dropdownHeight) {
-                            if ((pos.top - 150) < dropdownHeight) {
+                        if (windowHeight - pos.top < dropdownHeight) {
+                            if (pos.top - 150 < dropdownHeight) {
                                 // Substracting 150 is for topmenu and submenu bar
                                 css.top = '150px';
                                 css.right = css.right + 30;
@@ -398,7 +398,7 @@ function DropdownPositionAbsoluteDirective($position) {
                          * Calculate if there is enough space for opening on left side of icon,
                          * if not, move it to the right side
                          */
-                        if ((pos.left - 48) < dropdownWidth) {
+                        if (pos.left - 48 < dropdownWidth) {
                             css.right -= dropdownWidth;
                         }
                         dropdown.dropdownMenu.css(css);
@@ -413,7 +413,7 @@ DropdownFocus.$inject = ['Keys'];
 function DropdownFocus(Keys) {
     return {
         require: 'dropdown',
-        link: function (scope, elem, attrs, dropdown) {
+        link: function(scope, elem, attrs, dropdown) {
             scope.$watch(dropdown.isOpen, function(isOpen) {
                 var inputField = elem.find('input[type="text"]');
 
@@ -524,13 +524,13 @@ function PopupService($document) {
 
         var position = {top: 0, left:0};
 
-        if ((elOffset.top + elHeight + height + tolerance) > docHeight) {
+        if (elOffset.top + elHeight + height + tolerance > docHeight) {
             position.top = elOffset.top - height;
         } else {
             position.top = elOffset.top + elHeight;
         }
 
-        if ((elOffset.left + width + tolerance) > docWidth) {
+        if (elOffset.left + width + tolerance > docWidth) {
             position.left = docWidth - tolerance - width;
         } else {
             position.left = elOffset.left;
@@ -545,7 +545,7 @@ function DatepickerWrapper() {
     return {
         transclude: true,
         templateUrl: 'scripts/core/ui/views/datepicker-wrapper.html',
-        link: function (scope, element) {
+        link: function(scope, element) {
             element.bind('click', function(event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -610,7 +610,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
         scope: {
             open: '=opened'
         },
-        link: function (scope, element, attrs, ctrl) {
+        link: function(scope, element, attrs, ctrl) {
 
             var VIEW_DATE_FORMAT = config.view.dateformat;
             var MODEL_DATE_FORMAT = config.model.dateformat;
@@ -693,7 +693,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                     evt.preventDefault();
                     scope.close();
                 } else if (evt.which === DOWN_ARROW && !scope.open) {
-                    scope.$apply(function () {
+                    scope.$apply(function() {
                         scope.open = true;
                     });
                 }
@@ -727,7 +727,7 @@ function TimepickerDirective($document) {
             disabled: '=ngDisabled'
         },
         templateUrl: 'scripts/core/ui/views/sd-timepicker.html',
-        link: function (scope, element) {
+        link: function(scope, element) {
 
             scope.openTimePicker = function(e) {
                 scope.opened = !scope.opened;
@@ -846,7 +846,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                     evt.preventDefault();
                     scope.close();
                 } else if (evt.which === DOWN_ARROW && !scope.open) {
-                    scope.$apply(function () {
+                    scope.$apply(function() {
                         scope.open = true;
                     });
                 }
@@ -887,7 +887,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
             // user-provided search term
             scope.matchingTimeZones = [];
 
-            tzdata.$promise.then(function () {
+            tzdata.$promise.then(function() {
                 scope.timeZones = tzdata.getTzNames();
                 if (!scope.timezone && config.defaultTimezone) {
                     scope.selectTimeZone(config.defaultTimezone);
@@ -902,7 +902,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
              * @method searchTimeZones
              * @param {string} searchTerm
              */
-            scope.searchTimeZones = function (searchTerm) {
+            scope.searchTimeZones = function(searchTerm) {
                 var termLower;
 
                 scope.tzSearchTerm = searchTerm;
@@ -915,8 +915,8 @@ function TimezoneDirective(tzdata, config, $timeout) {
                 termLower = searchTerm.toLowerCase();
                 scope.matchingTimeZones = _.filter(
                     scope.timeZones,
-                    function (item) {
-                        return (item.toLowerCase().indexOf(termLower) >= 0);
+                    function(item) {
+                        return item.toLowerCase().indexOf(termLower) >= 0;
                     }
                 );
             };
@@ -928,7 +928,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
              * @method selectTimeZone
              * @param {string} tz - name of the time zone to select
              */
-            scope.selectTimeZone = function (tz) {
+            scope.selectTimeZone = function(tz) {
                 scope.timezone = tz;
                 scope.tzSearchTerm = '';
             };
@@ -939,7 +939,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
              *
              * @method clearSelectedTimeZone
              */
-            scope.clearSelectedTimeZone = function () {
+            scope.clearSelectedTimeZone = function() {
                 $timeout(function() {
                     el.find('input')[0].focus();
                 }, 0, false);
@@ -1089,7 +1089,7 @@ function splitterWidget(superdesk, superdeskFlags, $timeout) {
              * switching from settings back to monitoring
              */
             if (!authoring.length) {
-                $timeout(function () {
+                $timeout(function() {
                     authoring = element.next('#authoring-container');
                     authoring.width(superdesk.authoringWidth);
                 }, 0, false);
@@ -1102,7 +1102,7 @@ function splitterWidget(superdesk, superdeskFlags, $timeout) {
                     var container = ui.element.parent();
                     workspace.resizable({maxWidth: container.width() - 730});
                 },
-                resize: function (e, ui) {
+                resize: function(e, ui) {
                     var container = ui.element.parent(),
                         remainingSpace = container.width() - workspace.outerWidth() - 48,
                         authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
@@ -1126,7 +1126,7 @@ function splitterWidget(superdesk, superdeskFlags, $timeout) {
 
                     header.width(stage.outerWidth());
                 },
-                stop: function (e, ui) {
+                stop: function(e, ui) {
                     var container = ui.element.parent();
 
                     var stage = ui.element.find('.stage.swimlane');
@@ -1181,7 +1181,7 @@ function HeaderResizeDirective($rootScope, $timeout, $window, workspaces) {
             }, resize);
 
             $rootScope.$on('resize:header', function() {
-                $timeout(function () {
+                $timeout(function() {
                     resize();
                 }, 0, false);
             });
@@ -1208,7 +1208,7 @@ function mediaQuery($window) {
             minWidth: '=',
             maxWidth: '='
         },
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             var window = angular.element($window);
             var resize = _.debounce(calcSize, 300);
             window.on('resize', resize);
@@ -1216,17 +1216,17 @@ function mediaQuery($window) {
             function calcSize() {
                 var width = elem.width();
                 if (width < scope.minWidth) {
-                    scope.$parent.$applyAsync(function () {
+                    scope.$parent.$applyAsync(function() {
                         scope.$parent.elementState = 'compact';
                     });
                     elem.removeClass('comfort').addClass('compact');
                 } else if (width > scope.maxWidth) {
-                    scope.$parent.$applyAsync(function () {
+                    scope.$parent.$applyAsync(function() {
                         scope.$parent.elementState = 'comfort';
                     });
                     elem.removeClass('compact').addClass('comfort');
                 } else {
-                    scope.$parent.$applyAsync(function () {
+                    scope.$parent.$applyAsync(function() {
                         scope.$parent.elementState = null;
                     });
                     elem.removeClass('compact comfort');
@@ -1254,7 +1254,7 @@ function mediaQuery($window) {
 focusElement.$inject = [];
 function focusElement() {
     return {
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             var dataElement = elem.attr('data-element'),
                 dataAppendElement = elem.attr('data-append-element'),
                 dataClass = elem.attr('data-append-class'),
@@ -1264,11 +1264,11 @@ function focusElement() {
                 element = elem.find(dataElement);
             }
 
-            element.on('focus', function () {
+            element.on('focus', function() {
                 element.closest(dataAppendElement).addClass(dataClass);
             });
 
-            element.on('blur', function () {
+            element.on('blur', function() {
                 element.closest(dataAppendElement).removeClass(dataClass);
             });
         }
@@ -1285,10 +1285,10 @@ validationDirective.$inject = ['gettext', 'gettextCatalog'];
 function validationDirective(gettext, gettextCatalog) {
     return {
         restrict: 'A',
-        link: function (scope, elem, attrs, ctrl) {
+        link: function(scope, elem, attrs, ctrl) {
             var invalidText = '<span id="required_span" class="sd-invalid-text">' +
             gettextCatalog.getString('This field is required') + '</span>';
-            scope.$watch(attrs.required, function (required) {
+            scope.$watch(attrs.required, function(required) {
 
                 if (!required) {
                     if (elem.hasClass('sd-validate')) {
@@ -1316,7 +1316,7 @@ function validationDirective(gettext, gettextCatalog) {
                 }
             });
 
-            scope.$watch(attrs.sdValidationError, function (isError) {
+            scope.$watch(attrs.sdValidationError, function(isError) {
                 if (isError === true) {
                     elem.addClass('sd-invalid').removeClass('sd-valid');
                 } else if (isError === false) {
@@ -1331,7 +1331,7 @@ function MultipleEmailsValidation() {
     return {
         restrict: 'A',
         require: 'ngModel',
-        link: function (scope, elem, attrs, ctrl) {
+        link: function(scope, elem, attrs, ctrl) {
             // eslint-disable-next-line max-len
             var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
             ctrl.$validators.multipleEmails = function(modelValue, viewValue) {
@@ -1341,7 +1341,7 @@ function MultipleEmailsValidation() {
 
                 var emails = modelValue.split(',');
 
-                function testEmail (email) {
+                function testEmail(email) {
                     return EMAIL_REGEXP.test(email);
                 }
 
@@ -1381,12 +1381,12 @@ function multiSelectDirective() {
             disabled: '='
         },
         templateUrl: 'scripts/core/ui/views/sd-multi-select.html',
-        link: function (scope) {
+        link: function(scope) {
             scope.selectedItems = [];
             scope.list = _.sortBy(scope.list);
             scope.activeList = false;
 
-            scope.selectItem = function (item) {
+            scope.selectItem = function(item) {
                 scope.list = _.without(scope.list, item);
                 scope.activeList = false;
                 scope.selectedTerm = '';
@@ -1395,7 +1395,7 @@ function multiSelectDirective() {
                 updateItem();
             };
 
-            scope.removeItem = function (item) {
+            scope.removeItem = function(item) {
                 scope.list.push(item);
                 scope.list = _.sortBy(scope.list);
                 scope.selectedItems = _.without(scope.selectedItems, item);
@@ -1403,7 +1403,7 @@ function multiSelectDirective() {
                 updateItem();
             };
 
-            scope.$watch('item', function (item) {
+            scope.$watch('item', function(item) {
                 if (!item) {
                     return false;
                 }
@@ -1426,14 +1426,14 @@ function multiSelectDirective() {
             }
 
             // Typeahead search
-            scope.searchTerms = function (term) {
+            scope.searchTerms = function(term) {
                 if (!term) {
-                    scope.$applyAsync(function () {
+                    scope.$applyAsync(function() {
                         scope.activeList = false;
                     });
                 }
 
-                scope.terms = _.filter(scope.list, function (t) {
+                scope.terms = _.filter(scope.list, function(t) {
                     return t.toLowerCase().indexOf(term.toLowerCase()) !== -1;
                 });
 

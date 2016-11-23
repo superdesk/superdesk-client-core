@@ -34,7 +34,7 @@ function MultieditService(storage, superdesk, authoringWorkspace, referrer, $loc
             });
         }
         if (self.items.length < MIN_BOARDS) {
-            for (var i = 0; i < (MIN_BOARDS - self.items.length); i++) {
+            for (var i = 0; i < MIN_BOARDS - self.items.length; i++) {
                 self.items.push(createBoard(null));
             }
         }
@@ -49,7 +49,7 @@ function MultieditService(storage, superdesk, authoringWorkspace, referrer, $loc
         $location.url(referrer.getReferrerUrl());
     };
 
-    this.open = function () {
+    this.open = function() {
         if (authoringWorkspace.getState()) {
             authoringWorkspace.close(true);
         }
@@ -116,7 +116,7 @@ function MultieditDropdownDirective(workqueue, multiEdit, $route) {
             scope.current = $route.current.params.item;
             scope.queue = [scope.current];
 
-            scope.$watch(function () {
+            scope.$watch(function() {
                 return workqueue.items;
             }, function(items) {
                 scope.items = items;
@@ -153,7 +153,7 @@ function MultieditDropdownInnerDirective(workqueue, multiEdit) {
             var workqueueItems = [],
                 multieditItems = [];
 
-            scope.$watch(function () {
+            scope.$watch(function() {
                 return multiEdit.items;
             }, function(items) {
                 multieditItems = _.map(multiEdit.items, function(board) {
@@ -162,7 +162,7 @@ function MultieditDropdownInnerDirective(workqueue, multiEdit) {
                 filter();
             }, true);
 
-            scope.$watch(function () {
+            scope.$watch(function() {
                 return workqueue.items;
             }, function(items) {
                 workqueueItems = items;
@@ -217,7 +217,7 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
                 authoring.autosave(item, scope.origItem);
             };
 
-            scope.$watch('item.flags', function (newValue, oldValue) {
+            scope.$watch('item.flags', function(newValue, oldValue) {
                 if (newValue !== oldValue) {
                     scope.item.flags = newValue;
                     scope.origItem.flags = oldValue;
@@ -284,7 +284,7 @@ function MultieditFloatMenuDirective($document) {
                 var position = {
                     right: docWidth - crdL
                 };
-                if ((docHeight - crdT) < 400) {
+                if (docHeight - crdT < 400) {
                     position.bottom = docHeight - crdT;
                     position.top = 'auto';
                 } else {

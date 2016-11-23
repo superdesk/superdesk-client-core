@@ -1931,7 +1931,7 @@ describe('authoring container directive', function() {
 
 });
 
-describe('authoring themes', function () {
+describe('authoring themes', function() {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));
 
@@ -1982,7 +1982,7 @@ describe('authoring themes', function () {
 });
 
 describe('send item directive', function() {
-    beforeEach(window.module(function ($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
     }));
 
@@ -1993,7 +1993,7 @@ describe('send item directive', function() {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    beforeEach(inject(function ($templateCache) {
+    beforeEach(inject(function($templateCache) {
         $templateCache.put('scripts/apps/authoring/views/send-item.html', '');
     }));
 

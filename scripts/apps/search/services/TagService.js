@@ -45,7 +45,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         };
     }
 
-    function initSelectedParameters (parameters) {
+    function initSelectedParameters(parameters) {
         tags.selectedParameters = [];
         while (parameters.indexOf(':') > 0 &&
                parameters.indexOf(':') < parameters.indexOf('(', parameters.indexOf(':')) &&
@@ -83,7 +83,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     /*
      * function to parse search input from the search bar.
      */
-    function initSelectedKeywords (keywords) {
+    function initSelectedKeywords(keywords) {
         tags.selectedKeywords = [];
         while (keywords.indexOf('(') >= 0 && keywords.indexOf(')') > 0) {
             var closeIndex = keywords.indexOf('(');
@@ -127,7 +127,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 break;
             case 'company_codes':
             case 'subject':
-                var processSelectedItems = function (selectedItems, codeList) {
+                var processSelectedItems = function(selectedItems, codeList) {
                     _.forEach(selecteditems, function(selecteditem) {
                         var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
                         if (name) {
@@ -187,7 +187,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @param {String} type
      * @param {String} key
      */
-    function removeFacet (type, key) {
+    function removeFacet(type, key) {
         if (String(key).indexOf('Last') >= 0 || String(key).indexOf('after') >= 0
             || String(key).indexOf('before') >= 0) {
             removeDateFacet();
@@ -216,7 +216,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @private
      * @description Removes the date search related tags by modifying the $location.search
      */
-    function removeDateFacet () {
+    function removeDateFacet() {
         var search = $location.search();
         if (search.after || search.afterfirstcreated || search.beforefirstcreated ||
                 search.afterversioncreated || search.beforeversioncreated) {
@@ -238,7 +238,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @description Parses search parameters object and create tags
      * @return {Promise} List of items
      */
-    function initSelectedFacets () {
+    function initSelectedFacets() {
         return desks.initialize().then(function(result) {
             tags.selectedFacets = {};
             tags.selectedParameters = [];
@@ -262,7 +262,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                     switch (key) {
                     case 'desk':
                         var selectedDesks = JSON.parse(type);
-                        _.forEach(selectedDesks, function (selectedDesk) {
+                        _.forEach(selectedDesks, function(selectedDesk) {
                             tags.selectedFacets[key].push({
                                 label: desks.deskLookup[selectedDesk].name,
                                 value: selectedDesk});

@@ -164,12 +164,12 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                         scope.keywords = metadata.values.keywords;
                         return metadata.fetchSubjectcodes();
                     })
-                    .then(function () {
+                    .then(function() {
                         scope.subjectcodes = metadata.values.subjectcodes;
                         scope.metadata = metadata.values;
                         return tags.initSelectedFacets();
                     })
-                    .then(function (currentTags) {
+                    .then(function(currentTags) {
                         scope.selecteditems = {};
                         scope.selectedCodes = {};
                         initializeItems();
@@ -211,11 +211,11 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
                 angular.forEach(scope.meta, function(val, key) {
                     //checkbox boolean values.
-                    if (typeof(val) === 'boolean') {
+                    if (typeof val === 'boolean') {
                         val = booleanToBinaryString(val);
                     }
 
-                    if (typeof(val) === 'string') {
+                    if (typeof val === 'string') {
                         val = val.replace(pattern, '');
                     }
 
@@ -225,7 +225,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                         if (key.indexOf('scanpix_') === 0) {
                             key = key.substring(8);
                         }
-                        if (typeof(val) === 'string') {
+                        if (typeof val === 'string') {
                             if (val) {
                                 metas.push(key + ':(' + val + ')');
                             }
@@ -283,7 +283,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 var deskId = '';
                 if (scope.fields[field]) {
                     deskId = scope.fields[field];
-                    var deskType = _.result(_.find(scope.desks._items, function (item) {
+                    var deskType = _.result(_.find(scope.desks._items, function(item) {
                         return item._id === deskId;
                     }), 'desk_type');
 
@@ -296,7 +296,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             /*
              * Filter content by subject search
              */
-            scope.itemSearch = function (items, type) {
+            scope.itemSearch = function(items, type) {
                 if (items[type].length) {
                     scope.fields[type] = items[type];
                 } else {

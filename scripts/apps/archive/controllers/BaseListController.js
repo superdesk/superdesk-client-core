@@ -54,11 +54,11 @@ export class BaseListController {
     }
 
     fetchItems(criteria) {
-        console.log('no api defined');
+        console.warn('No API defined.');
     }
 
     fetchItem(id) {
-        console.log('no api defined');
+        console.warn('no api defined');
     }
 
     refresh(filterDesk) {

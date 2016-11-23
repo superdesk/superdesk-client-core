@@ -4,7 +4,7 @@ export function ResendItem(subscribersService, authoring, api, notify, gettext) 
     return {
         templateUrl: 'scripts/apps/archive/views/resend-configuration.html',
         scope: {item: '='},
-        link: function (scope, elem, attr) {
+        link: function(scope, elem, attr) {
             scope.$watch('item', function(item) {
                 scope.selectedSubscribers = {items: []};
 
@@ -27,13 +27,13 @@ export function ResendItem(subscribersService, authoring, api, notify, gettext) 
                 return subscriberIds;
             }
 
-            scope.resendItem = function () {
+            scope.resendItem = function() {
                 var data = {subscribers: getSubscriberIds(), version: scope.item._current_version};
                 api.save('archive_resend', {}, data, scope.item)
-                    .then(function () {
+                    .then(function() {
                         notify.success(gettext('Item has been resent.'));
                         scope.cancel();
-                    }, function (response) {
+                    }, function(response) {
                         if (response.data._message) {
                             notify.error(response.data._message);
                         } else {

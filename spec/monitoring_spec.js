@@ -39,7 +39,7 @@ describe('monitoring', function() {
         expect(monitoring.getGroups().count()).toBe(6);
     });
 
-    it('can display the item in Desk Output when it\'s been submitted to a production desk', function () {
+    it('can display the item in Desk Output when it\'s been submitted to a production desk', function() {
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         monitoring.actionOnItem('Edit', 2, 0);
@@ -502,7 +502,7 @@ describe('monitoring', function() {
         expect(monitoring.hasClass(element(by.id('main-container')), 'hideMonitoring')).toBe(false);
     });
 
-    it('can fetch item', function () {
+    it('can fetch item', function() {
         setupDeskMonitoringSettings('POLITIC DESK');
 
         monitoring.toggleDesk(0);
@@ -520,7 +520,7 @@ describe('monitoring', function() {
         expect(monitoring.getTextItem(0, 4)).toBe('ingest1');
     });
 
-    it('can fetch as item', function () {
+    it('can fetch as item', function() {
         setupDeskMonitoringSettings('POLITIC DESK');
 
         monitoring.toggleDesk(0);
@@ -555,7 +555,7 @@ describe('monitoring', function() {
         expect(monitoring.getTextItem(0, 0)).toBe('ingest1');
     });
 
-    it('can fetch as and open item', function () {
+    it('can fetch as and open item', function() {
         setupDeskMonitoringSettings('POLITIC DESK');
         monitoring.toggleDesk(0);
         monitoring.nextStages();
@@ -635,18 +635,18 @@ describe('monitoring', function() {
         monitoring.expectIsChecked(0, 0);
 
         //scroll down and select last item
-        browser.executeScript('window.scrollTo(0,250);').then(function () {
+        browser.executeScript('window.scrollTo(0,250);').then(function() {
             monitoring.selectItem(0, 8);
             monitoring.expectIsChecked(0, 8);
         });
 
         //scroll up to top again to see if selection to first item is remembered?
-        browser.executeScript('window.scrollTo(0,0);').then(function () {
+        browser.executeScript('window.scrollTo(0,0);').then(function() {
             monitoring.expectIsChecked(0, 0);
         });
 
         //scroll down again to see if selection to last item is remembered?
-        browser.executeScript('window.scrollTo(0,250);').then(function () {
+        browser.executeScript('window.scrollTo(0,250);').then(function() {
             monitoring.expectIsChecked(0, 8);
         });
 

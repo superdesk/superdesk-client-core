@@ -7,7 +7,7 @@ describe('legal archive service', function() {
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(window.module(function ($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',

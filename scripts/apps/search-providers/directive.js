@@ -1,7 +1,7 @@
 export default function SearchProviderConfigDirective(searchProviderService, gettext, notify, api, modal) {
     return {
         templateUrl: 'scripts/apps/search-providers/views/search-provider-config.html',
-        link: function ($scope) {
+        link: function($scope) {
             $scope.provider = null;
             $scope.origProvider = null;
             $scope.providers = null;
@@ -67,7 +67,7 @@ export default function SearchProviderConfigDirective(searchProviderService, get
                     function removeSearchProvider() {
                         api.search_providers.remove(provider)
                             .then(
-                                function () {
+                                function() {
                                     notify.success(gettext('Search Provider deleted.'));
                                 },
                                 function(response) {

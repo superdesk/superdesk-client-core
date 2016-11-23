@@ -109,7 +109,7 @@ angular.module('superdesk.apps.archive', [
                 filters: [{action: 'list', type: 'archive'}],
                 action: 'spike',
                 condition: function(item) {
-                    return (item.lock_user === null || angular.isUndefined(item.lock_user));
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
                 additionalCondition:['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).spike;
@@ -140,7 +140,7 @@ angular.module('superdesk.apps.archive', [
                 keyboardShortcut: 'ctrl+d',
                 privileges: {duplicate: 1},
                 condition: function(item) {
-                    return (item.lock_user === null || angular.isUndefined(item.lock_user));
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
                 additionalCondition:['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).duplicate;
@@ -162,7 +162,7 @@ angular.module('superdesk.apps.archive', [
                 keyboardShortcut: 'ctrl+b',
                 privileges: {archive_broadcast: 1},
                 condition: function(item) {
-                    return (item.lock_user === null || angular.isUndefined(item.lock_user));
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
                 additionalCondition:['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).create_broadcast;
@@ -182,9 +182,9 @@ angular.module('superdesk.apps.archive', [
                         }, function(response) {
                             data.item.error = response;
                         })
-                    ['finally'](function() {
-                        data.item.actioning.archiveContent = false;
-                    });
+                        .finally(function() {
+                            data.item.actioning.archiveContent = false;
+                        });
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 condition: function(item) {
@@ -247,7 +247,7 @@ angular.module('superdesk.apps.archive', [
                 group: 'corrections',
                 privileges: {rewrite: 1},
                 condition: function(item) {
-                    return (item.lock_user === null || angular.isUndefined(item.lock_user));
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
                 additionalCondition:['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).re_write;

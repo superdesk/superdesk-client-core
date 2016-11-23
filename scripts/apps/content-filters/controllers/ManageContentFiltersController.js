@@ -104,7 +104,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
         $scope.previewContentFilter();
     };
 
-    $scope.productionTest = function (filter) {
+    $scope.productionTest = function(filter) {
         $scope.$broadcast('triggerTest', filter);
     };
 

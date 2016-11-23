@@ -12,7 +12,7 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
              * Toggle 'open' class on dropdown menu element
              * @param {string} isOpen
              */
-            scope.toggleClass = function (isOpen) {
+            scope.toggleClass = function(isOpen) {
                 scope.open = isOpen;
             };
 
@@ -41,30 +41,30 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
                 }
             });
 
-            var closeTimeout, self;
+            var closeTimeout, el;
 
             elem.on({
-                click: function (e) {
+                click: function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                 },
-                mouseenter: function (e) {
-                    self = $(this).find('.highlights-list');
-                    self.not('.open').children('.dropdown__toggle').click();
+                mouseenter: function(e) {
+                    el = $(this).find('.highlights-list');
+                    el.not('.open').children('.dropdown__toggle').click();
 
                     angular.element('.highlights-list-menu.open').on({
-                        mouseenter: function () {
+                        mouseenter: function() {
                             $timeout.cancel(closeTimeout);
                         },
-                        mouseleave: function () {
-                            self.filter('.open').children('.dropdown__toggle').click();
+                        mouseleave: function() {
+                            el.filter('.open').children('.dropdown__toggle').click();
                         }
                     });
 
                 },
-                mouseleave: function () {
-                    closeTimeout = $timeout(function () {
-                        self.filter('.open').children('.dropdown__toggle').click();
+                mouseleave: function() {
+                    closeTimeout = $timeout(function() {
+                        el.filter('.open').children('.dropdown__toggle').click();
                     }, 100, false);
                 }
             });
@@ -73,7 +73,7 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
              * Removing highlight from an item
              * @param {string} highlight
              */
-            scope.unmarkHighlight = function (highlight) {
+            scope.unmarkHighlight = function(highlight) {
                 highlightsService.markItem(highlight, scope.item).then(function() {
                     scope.item.highlights = _.without(scope.item.highlights, highlight);
                 });

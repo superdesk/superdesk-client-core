@@ -11,7 +11,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         var original = $scope.data.item.renditions.original;
         // only extend the item renditions if the original image can fit the rendition dimensions
         // otherwise we will get an error saving
-        if ((original.height >= rendition.height) && (original.width >= rendition.width)) {
+        if (original.height >= rendition.height && original.width >= rendition.width) {
             sizes[rendition.name] = {width: rendition.width, height: rendition.height};
             $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
         }
@@ -56,10 +56,10 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         }
         /* Throw an exception if a required metadata field is missing */
         function validateMediaFields() {
-            _.each($scope.data.requiredFields, function (key) {
+            _.each($scope.data.requiredFields, function(key) {
                 var value = $scope.data.metadata[key];
                 var regex = new RegExp('^\<*br\/*\>*$', 'i');
-                if (!!!value || value.match(regex)) {
+                if (!value || value.match(regex)) {
                     throw gettext('Required field(s) missing');
                 }
             });

@@ -78,8 +78,8 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
      * @param {Object} lang
      * @returns {Object} List of dictionaries
      */
-    this.getDictionary = function (lang) {
-        return dictionaries.getActive(lang, getBaseLanguage(lang)).then(function (items) {
+    this.getDictionary = function(lang) {
+        return dictionaries.getActive(lang, getBaseLanguage(lang)).then(function(items) {
             return items;
         });
     };
@@ -118,7 +118,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
         return $q.when(self.abbreviationsDict.content);
     };
 
-    function updateAbbreviations (data) {
+    function updateAbbreviations(data) {
         if (self.abbreviationsDict && self.abbreviationsDict.content) {
             angular.extend(self.abbreviationsDict.content, data || {});
         }

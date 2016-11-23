@@ -36,7 +36,7 @@ describe('Upload controller', function() {
             };
         });
     }));
-    beforeEach(inject(function (session) {
+    beforeEach(inject(function(session) {
         session.identity = {_id: 'user:1', byline: 'Admin'};
     }));
 

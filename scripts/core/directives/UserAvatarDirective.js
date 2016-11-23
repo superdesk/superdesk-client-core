@@ -2,8 +2,8 @@ export default angular.module('superdesk.core.directives.avatar', [])
     .directive('sdUserAvatar', function() {
         return {
             scope: {user: '='},
-            link: function (scope, element, attrs) {
-                scope.$watch('user', function (user) {
+            link: function(scope, element, attrs) {
+                scope.$watch('user', function(user) {
                     if (user) {
                         initAvatar(user);
                     }
@@ -11,7 +11,7 @@ export default angular.module('superdesk.core.directives.avatar', [])
 
                 var figure = element.parents('figure');
 
-                element.on('error', function (e) {
+                element.on('error', function(e) {
                     showInitials(scope.user.display_name);
                 });
 

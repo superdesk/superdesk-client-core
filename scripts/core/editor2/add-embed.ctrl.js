@@ -4,15 +4,15 @@ angular.module('superdesk.apps.editor2.embed', []).controller('SdAddEmbedControl
 
 SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash',
     'EMBED_PROVIDERS', '$scope', 'editor', 'config', '$injector', 'api'];
-function SdAddEmbedController (embedService, $element, $timeout, $q, _,
+function SdAddEmbedController(embedService, $element, $timeout, $q, _,
 EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
-    var vm = this;
-    angular.extend(vm, {
+    var self = this;
+    angular.extend(self, {
         editorCtrl: undefined,  // defined in link method
         previewLoading: false,
         toggle: function(close) {
             // use parameter or toggle
-            vm.extended = angular.isDefined(close) ? !close : !vm.extended;
+            self.extended = angular.isDefined(close) ? !close : !self.extended;
         },
         /**
          * Return html code to represent an embedded link
@@ -37,11 +37,11 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
         },
         retrieveEmbed:function() {
             function retrieveEmbedFromUrl() {
-                return embedService.get(vm.input).then(function(data) {
+                return embedService.get(self.input).then(function(data) {
                     var embed = data.html;
                     if (!angular.isDefined(embed)) {
                         if (data.type === 'link') {
-                            embed = vm.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
+                            embed = self.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
                         } else {
                             embed = editor.generateMediaTag({url: data.url, altText: data.description});
                         }
@@ -57,7 +57,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
             function parseRawEmbedCode() {
                 var waitFor = [];
                 var embedBlock = {
-                    body: vm.input,
+                    body: self.input,
                     provider: EMBED_PROVIDERS.custom
                 };
                 function updateEmbedBlock(partialUpdate) {
@@ -71,7 +71,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                             continue;
                         }
                     }
-                    var match = provider.pattern.exec(vm.input);
+                    var match = provider.pattern.exec(self.input);
                     if (match) {
                         updateEmbedBlock({provider: provider.name});
                         if (provider.callback) {
@@ -86,46 +86,46 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
             }
             var embedCode;
             // if it's an url, use embedService to retrieve the embed code
-            if (_.startsWith(vm.input, 'http')) {
-                embedCode = retrieveEmbedFromUrl(vm.input);
+            if (_.startsWith(self.input, 'http')) {
+                embedCode = retrieveEmbedFromUrl(self.input);
             // otherwise we use the content of the field directly
             } else {
-                embedCode = parseRawEmbedCode(vm.input);
+                embedCode = parseRawEmbedCode(self.input);
             }
             return $q.when(embedCode);
         },
         updatePreview: function() {
-            vm.previewLoading = true;
-            vm.retrieveEmbed().then(function(embed) {
+            self.previewLoading = true;
+            self.retrieveEmbed().then(function(embed) {
                 angular.element($element).find('.preview').html(embed.body.replace('\\n', ''));
-                vm.previewLoading = false;
+                self.previewLoading = false;
             });
         },
         createFigureBlock: function(data) {
             // create a new block containing the embed
             data.blockType = 'embed';
-            return vm.editorCtrl.insertNewBlock(vm.addToPosition, data);
+            return self.editorCtrl.insertNewBlock(self.addToPosition, data);
         },
         createBlockFromEmbed: function() {
-            vm.retrieveEmbed().then(function(embed) {
-                vm.createFigureBlock({
+            self.retrieveEmbed().then(function(embed) {
+                self.createFigureBlock({
                     embedType: embed.provider,
                     body: embed.body,
                     association: embed.association
                 });
                 // close the addEmbed form
-                vm.toggle(true);
+                self.toggle(true);
             });
         },
         closeEmbed: function() {
             //put block back together on embed form close.
-            vm.toggle();
+            self.toggle();
         }
     });
 
     // toggle when the `extended` directive attribute changes
     $scope.$watch(function() {
-        return vm.extended;
+        return self.extended;
     }, function(extended, wasExtended) {
         // on enter, focus on input
         if (angular.isDefined(extended)) {
@@ -135,9 +135,9 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                 }, 500, false); // positive timeout because of a chrome issue
             // on leave, clear field
             } else if (wasExtended) {
-                vm.input = '';
-                if (typeof vm.onClose === 'function') {
-                    $timeout(vm.onClose);
+                self.input = '';
+                if (typeof self.onClose === 'function') {
+                    $timeout(self.onClose);
                 }
             }
         }

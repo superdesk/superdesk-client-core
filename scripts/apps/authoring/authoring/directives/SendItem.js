@@ -151,13 +151,13 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              */
             scope.showSendButtonAndDestination = function() {
                 if (scope.itemActions) {
-                    var preCondition = (scope.mode === 'ingest' ||
+                    var preCondition = scope.mode === 'ingest' ||
                                         scope.mode === 'personal' ||
                                         scope.mode === 'monitoring' ||
-                                        (scope.mode === 'authoring' &&
+                                        scope.mode === 'authoring' &&
                                         scope.isSendEnabled() &&
-                                        scope.itemActions.send) ||
-                                        scope.mode === 'spike');
+                                        scope.itemActions.send ||
+                                        scope.mode === 'spike';
 
                     if (scope.currentUserAction === ctrl.userActions.publish) {
                         return preCondition && scope.showSendAndPublish();
@@ -174,8 +174,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.disableSendButton = function() {
                 if (scope.item && scope.item.task) {
                     return !scope.selectedDesk ||
-                           (scope.mode !== 'ingest' && scope.selectedStage &&
-                           scope.selectedStage._id === scope.item.task.stage);
+                           scope.mode !== 'ingest' && scope.selectedStage &&
+                           scope.selectedStage._id === scope.item.task.stage;
                 }
             };
 
@@ -301,7 +301,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 }
 
                 // Selected destination desk should be different from item current location desk
-                var isDestinationChanged = scope.selectedDesk && (scope.item.task.desk !== scope.selectedDesk._id);
+                var isDestinationChanged = scope.selectedDesk && scope.item.task.desk !== scope.selectedDesk._id;
 
                 return scope.showSendAndPublish() && !authoring.isPublished(scope.item) &&
                     isDestinationChanged && scope.mode === 'authoring' && scope.itemActions.publish;

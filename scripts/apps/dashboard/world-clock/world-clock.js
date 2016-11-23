@@ -21,11 +21,11 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      *   Controller for the world clock widget configuration modal.
      */
     .controller('WorldClockConfigController', ['$scope', 'notify', 'tzdata',
-        function ($scope, notify, tzdata) {
+        function($scope, notify, tzdata) {
 
             $scope.availableZones = [];
 
-            tzdata.$promise.then(function () {
+            tzdata.$promise.then(function() {
                 $scope.availableZones = tzdata.getTzNames();
             });
 
@@ -56,7 +56,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      *   time zones around the world.
      */
     .controller('WorldClockController', ['$scope', '$interval', 'tzdata',
-        function ($scope, $interval, tzdata) {
+        function($scope, $interval, tzdata) {
 
             var interval, INTERVAL_DELAY = 500;
 
@@ -69,7 +69,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
         // RequireJS to the testing code which does not use the latter
             this._moment = moment;
 
-            tzdata.$promise.then(function () {
+            tzdata.$promise.then(function() {
                 moment.tz.add(
                 _.pick(tzdata, ['zones', 'links'])
             );
@@ -147,7 +147,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 function getData(timeStr) {
                     var time = timeStr.split(':');
                     return [
-                        {unit: 'h', val: parseInt(time[0], 10) + (parseInt(time[1], 10) / 60), r: 0.5},
+                        {unit: 'h', val: parseInt(time[0], 10) + parseInt(time[1], 10) / 60, r: 0.5},
                         {unit: 'm', val: parseInt(time[1], 10), r: 0.8}
                     ];
                 }

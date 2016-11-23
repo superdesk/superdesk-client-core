@@ -266,7 +266,7 @@ export function ItemList(
              * @return {Boolean}
              */
             function isCheckAllowed(item) {
-                return !(item.state === 'killed' || (item._type === 'published' && !item.last_published_version));
+                return !(item.state === 'killed' || item._type === 'published' && !item.last_published_version);
             }
 
             /**
@@ -280,7 +280,7 @@ export function ItemList(
                 );
             };
 
-            function createMarkUp (html) {
+            function createMarkUp(html) {
                 return {__html: html};
             }
 
@@ -643,7 +643,7 @@ export function ItemList(
                 render: function() {
                     var highlights = this.getHighlights();
 
-                    var hasActiveHighlight = (function() {
+                    var hasActiveHighlight = function() {
                         var statuses = this.getHighlightStatuses(highlights, this.props.item);
 
                         if ($location.path() === '/workspace/highlights') {
@@ -653,7 +653,7 @@ export function ItemList(
                         return highlights.some(function(h) {
                             return statuses[h];
                         });
-                    }).call(this);
+                    }.call(this);
 
                     return React.createElement(
                         'div',
@@ -699,7 +699,7 @@ export function ItemList(
                     return {open: false};
                 },
 
-                close: function (cancel) {
+                close: function(cancel) {
                     if (cancel === true && closeTimeout) {
                         $timeout.cancel(closeTimeout);
                     } else {
@@ -709,7 +709,7 @@ export function ItemList(
                     }
                 },
 
-                toggle: function (event) {
+                toggle: function(event) {
                     if (event) {
                         event.stopPropagation();
                     }
@@ -718,7 +718,7 @@ export function ItemList(
                     this.renderDropdown();
                 },
 
-                render: function () {
+                render: function() {
                     return React.createElement('dd',
                             {className: 'dropdown dropdown--dropup more-actions'},
                             React.createElement('button', {
@@ -731,8 +731,8 @@ export function ItemList(
                             ));
                 },
 
-                renderDropdown: function () {
-                    var desks = this.props.desks.map(function (desk, index) {
+                renderDropdown: function() {
+                    var desks = this.props.desks.map(function(desk, index) {
                         return React.createElement(
                                 'li',
                                 {key: 'desk' + index},
@@ -1030,9 +1030,9 @@ export function ItemList(
                     var archiveItem = props.item.archive_item;
 
                     var isTake = item.type === 'text' &&
-                        ((item.takes && item.takes.sequence > 1) ||
-                        (item._type === 'published' && archiveItem &&
-                        archiveItem.takes && archiveItem.takes.sequence > 1));
+                        (item.takes && item.takes.sequence > 1 ||
+                        item._type === 'published' && archiveItem &&
+                        archiveItem.takes && archiveItem.takes.sequence > 1);
 
                     var selectTakesPackage = function(event) {
                         event.stopPropagation();
@@ -1262,12 +1262,12 @@ export function ItemList(
                     }
                 },
 
-                setPosition: function () {
+                setPosition: function() {
                     var targetRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
                     var LEFT_BAR_WIDTH = 48;
                     var BUFFER = 250;
 
-                    if (targetRect.left < (LEFT_BAR_WIDTH + BUFFER)) {
+                    if (targetRect.left < LEFT_BAR_WIDTH + BUFFER) {
                         this.setState({position: 'left-submenu'});
                     } else {
                         this.setState({position: 'right-submenu'});
@@ -1459,7 +1459,7 @@ export function ItemList(
                                 onMultiSelect: this.props.onMultiSelect,
                                 swimlane: this.props.swimlane
                             }),
-                            (item.priority || item.urgency) ? React.createElement(ListPriority, {item: item}) : null,
+                            item.priority || item.urgency ? React.createElement(ListPriority, {item: item}) : null,
                             React.createElement(ListItemInfo, {
                                 item: item,
                                 selectTakesPackage: this.selectTakesPackage,
@@ -1508,10 +1508,10 @@ export function ItemList(
 
                 multiSelect: function(items, selected) {
                     var itemsById = angular.extend({}, this.state.itemsById);
-                    items.forEach(function (item) {
+                    items.forEach(function(item) {
                         var itemId = search.generateTrackByIdentifier(item);
                         itemsById[itemId] = angular.extend({}, item, {selected: selected});
-                        scope.$applyAsync(function () {
+                        scope.$applyAsync(function() {
                             multi.toggle(itemsById[itemId]);
                         });
                     });
@@ -1540,14 +1540,14 @@ export function ItemList(
                     }, 500, false);
                 },
 
-                selectItem: function (item) {
+                selectItem: function(item) {
                     if (isCheckAllowed(item)) {
                         var selected = !item.selected;
                         this.multiSelect([item], selected);
                     }
                 },
 
-                selectMultipleItems: function (lastItem) {
+                selectMultipleItems: function(lastItem) {
                     var itemId = search.generateTrackByIdentifier(lastItem),
                         positionStart = 0,
                         positionEnd = _.indexOf(this.state.itemsList, itemId),
@@ -1792,7 +1792,7 @@ export function ItemList(
                         return true;
                     }
 
-                    if ((!a.es_highlight && b.es_highlight) || (a.es_highlight && !b.es_highlight)) {
+                    if (!a.es_highlight && b.es_highlight || a.es_highlight && !b.es_highlight) {
                         return false;
                     }
 
@@ -1823,8 +1823,8 @@ export function ItemList(
                             return false;   //take package of the new item might have changed
                         }
 
-                        return (a.archive_item._current_version === b.archive_item._current_version &&
-                        a.archive_item._updated === b.archive_item._updated);
+                        return a.archive_item._current_version === b.archive_item._current_version &&
+                        a.archive_item._updated === b.archive_item._updated;
                     }
 
                     return false;

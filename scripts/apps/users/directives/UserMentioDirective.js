@@ -58,17 +58,17 @@ export function UserMentioDirective(userList, desks, asset, $q) {
             function getFilteredDesks(prefix, list, page) {
                 return desks.initialize().then(function() {
                     var filteredDesks = desks.desks._items;
-                    if (!!scope.prefix) {
+                    if (scope.prefix) {
                         filteredDesks = _.filter(desks.desks._items, function(item) {
                             return _.startsWith(item.name.toLowerCase(), prefix.toLowerCase());
                         });
                     }
 
-                    if (!!page) {
+                    if (page) {
                         filteredDesks = filteredDesks.slice((page - 1) * 10, page * 10);
                     }
 
-                    _.each(filteredDesks, function (item) {
+                    _.each(filteredDesks, function(item) {
                         list.push({'type': 'desk', 'item': item});
                     });
                 });
@@ -83,14 +83,14 @@ export function UserMentioDirective(userList, desks, asset, $q) {
             };
 
             scope.select = function(item) {
-                return (item.type === 'user' ? '@' + item.item.username : '#' + item.item.name.replace(' ', '_'));
+                return item.type === 'user' ? '@' + item.item.username : '#' + item.item.name.replace(' ', '_');
             };
 
             scope.$watchCollection(
                 function() {
                     return $('.users-list-embed>li.active');
                 },
-                function (newValue) {
+                function(newValue) {
                     if (newValue.hasClass('active')) {
                         $('.mentio-menu').scrollTop(newValue.position().top);
                     }

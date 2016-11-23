@@ -22,7 +22,7 @@ export function GroupeditBasicDirective(gettext, api, WizardHandler) {
 
             scope.save = function(group) {
                 scope.message = gettext('Saving...');
-                var _new = !!!group._id;
+                var _new = !group._id;
                 api.groups.save(scope.group.edit, group).then(function() {
                     if (_new) {
                         scope.edit(scope.group.edit);

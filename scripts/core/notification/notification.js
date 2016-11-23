@@ -94,30 +94,30 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
  */
 NotifyConnectionService.$inject = ['$rootScope', 'notify', 'gettext', '$timeout', 'session'];
 function NotifyConnectionService($rootScope, notify, gettext, $timeout, session) {
-    var _this = this;
-    _this.message = null;
+    var self = this;
+    self.message = null;
 
     $rootScope.$on('disconnected', function(event) {
-        _this.message = gettext('Disconnected from Notification Server!');
-        $rootScope.$applyAsync(function () {
-            notify.warning(_this.message);
+        self.message = gettext('Disconnected from Notification Server!');
+        $rootScope.$applyAsync(function() {
+            notify.warning(self.message);
         });
     });
 
     $rootScope.$on('connected', function(event) {
-        _this.message = gettext('Connected to Notification Server!');
-        $rootScope.$applyAsync(function () {
+        self.message = gettext('Connected to Notification Server!');
+        $rootScope.$applyAsync(function() {
             notify.pop();   // removes disconnection warning, once connected.
-            notify.success(_this.message);
+            notify.success(self.message);
         });
     });
 
     $rootScope.$on('vocabularies:updated', function(event, data) {
         if (!data.user || data.user !== session.identity._id) {
-            _this.message = gettext(data.vocabulary +
+            self.message = gettext(data.vocabulary +
                 ' vocabulary has been updated. Please re-login to see updated vocabulary values');
             $timeout(function() {
-                notify.error(_this.message);
+                notify.error(self.message);
             }, 100);
         }
     });
@@ -125,13 +125,13 @@ function NotifyConnectionService($rootScope, notify, gettext, $timeout, session)
 
 ReloadService.$inject = ['$window', '$rootScope', 'session', 'desks', 'gettext', 'superdeskFlags'];
 function ReloadService($window, $rootScope, session, desks, gettext, superdeskFlags) {
-    var _this = this;
-    _this.userDesks = [];
-    _this.result = null;
-    _this.activeDesk = null;
-    desks.fetchCurrentUserDesks().then(function (deskList) {
-        _this.userDesks = deskList;
-        _this.activeDesk = desks.active.desk;
+    var self = this;
+    self.userDesks = [];
+    self.result = null;
+    self.activeDesk = null;
+    desks.fetchCurrentUserDesks().then(function(deskList) {
+        self.userDesks = deskList;
+        self.activeDesk = desks.active.desk;
     });
 
     var userEvents = {
@@ -154,13 +154,13 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     };
 
     $rootScope.$on('reload', function(event, msg) {
-        _this.result = _this.reloadIdentifier(msg);
-        _this.reload(_this.result);
+        self.result = self.reloadIdentifier(msg);
+        self.reload(self.result);
     });
     this.reload = function(result) {
         if (result.reload) {
             if (superdeskFlags.flags.authoring) {
-                _this.broadcast(gettext(result.message));
+                self.broadcast(gettext(result.message));
             } else {
                 this.forceReload();
             }
@@ -197,7 +197,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
         }
         if (_.has(deskEvents, msg.event)) {
             if (msg.extra.desk_id != null && msg.extra.user_ids != null) {
-                if (_.find(_this.userDesks, {_id: msg.extra.desk_id}) != null &&
+                if (_.find(self.userDesks, {_id: msg.extra.desk_id}) != null &&
                     msg.extra.user_ids.indexOf(session.identity._id)  !== -1) {
                     result.message = deskEvents[msg.event];
                     result.reload = true;
@@ -208,15 +208,15 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
         if (_.has(stageEvents, msg.event)) {
             if (msg.extra.desk_id != null) {
                 if (msg.event === 'stage_visibility_updated') {
-                    if (_.find(_this.userDesks, {_id: msg.extra.desk_id}) == null &&
+                    if (_.find(self.userDesks, {_id: msg.extra.desk_id}) == null &&
                     ($window.location.hash.match('/search') != null
                         || $window.location.hash.match('/authoring/') != null)) {
                         result.message = stageEvents[msg.event];
                         result.reload = true;
                     }
                 } else if (msg.event === 'stage') {
-                    if (_.find(_this.userDesks, {_id: msg.extra.desk_id}) != null
-                        && _this.activeDesk === msg.extra.desk_id) {
+                    if (_.find(self.userDesks, {_id: msg.extra.desk_id}) != null
+                        && self.activeDesk === msg.extra.desk_id) {
                         result.message = stageEvents[msg.event];
                         result.reload = true;
                     }

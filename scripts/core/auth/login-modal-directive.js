@@ -7,7 +7,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     'features',
     'asset',
     '$route',
-    function (session, auth, features, asset, $route) {
+    function(session, auth, features, asset, $route) {
         return {
             replace: true,
             templateUrl: asset.templateUrl('core/auth/login-modal.html'),

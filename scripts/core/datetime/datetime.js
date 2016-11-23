@@ -207,7 +207,7 @@ export default angular.module('superdesk.core.datetime', [
      *   server upon instantiaton and stores it internally for future use,
      *   avoiding the need to fetch it again every time when needed.
      */
-    .factory('tzdata', ['$resource', function ($resource) {
+    .factory('tzdata', ['$resource', function($resource) {
         var filename = 'scripts/apps/dashboard/world-clock/timezones-all.json',
             tzResource = $resource(filename);
 
@@ -221,7 +221,7 @@ export default angular.module('superdesk.core.datetime', [
          * @method getTzNames
          * @return {Array} a list of time zone names
          */
-        tzResource.prototype.getTzNames = function () {
+        tzResource.prototype.getTzNames = function() {
             return _.union(
                     _.keys(this.zones),
                     _.keys(this.links)

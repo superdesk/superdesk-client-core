@@ -17,7 +17,7 @@ export function FetchedDesks(desks, familyService, $location, superdesk) {
                 }
             });
 
-            scope.selectFetched = function (desk) {
+            scope.selectFetched = function(desk) {
                 if (desk.isUserDeskMember) {
                     desks.setCurrentDeskId(desk.desk._id);
                     $location.url('/workspace/monitoring');
