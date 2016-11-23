@@ -190,7 +190,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                         .then(function(items) {
                             scope.cacheNextItems = items._items;
                         })
-                        ['finally'](function() {
+                        .finally(function() {
                             scope.loading = false;
                         });
                     }
@@ -223,7 +223,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                     .then(function(items) {
                         scope.cachePreviousItems = items._items;
                     })
-                    ['finally'](function() {
+                    .finally(function() {
                         scope.loading = false;
                     });
                 } else {

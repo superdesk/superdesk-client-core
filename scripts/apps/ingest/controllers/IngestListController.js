@@ -21,7 +21,7 @@ export class IngestListController extends BaseListController {
                 $scope.items = search.mergeItems(items, $scope.items, next);
                 $scope.total = items._meta.total;
             })
-            ['finally'](function() {
+            .finally(function() {
                 $scope.loading = false;
             });
         };

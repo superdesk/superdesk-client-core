@@ -91,8 +91,9 @@ export function ArticleEditDirective(
                         _.extend(item, updates);
                     }
                     if (autopopulateByline && !item.byline) {
-                        item.byline = $interpolate(gettext('By {{ display_name }}'))
-                            ({display_name: session.identity.display_name});
+                        item.byline = $interpolate(gettext('By {{ display_name }}'))({
+                            display_name: session.identity.display_name
+                        });
                     }
                 }
             });
@@ -131,10 +132,11 @@ export function ArticleEditDirective(
                     scope.resetNumberOfDays(false);
 
                     item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
-                        $interpolate('{{ month | translate }}')
-                        ({month: _.findKey(scope.monthNames, function(m) {
-                            return m === scope.dateline.month;
-                        })}),
+                        $interpolate('{{ month | translate }}')({
+                            month: _.findKey(scope.monthNames, function(m) {
+                                return m === scope.dateline.month;
+                            })
+                        }),
                         scope.dateline.day, item.dateline.source);
                 }
             };
@@ -214,10 +216,11 @@ export function ArticleEditDirective(
                             parseInt(scope.dateline.month), parseInt(scope.dateline.day));
 
                     scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
-                        $interpolate('{{ month | translate }}')
-                        ({month: _.findKey(scope.monthNames, function(m) {
-                            return m === scope.dateline.month;
-                        })}),
+                        $interpolate('{{ month | translate }}')({
+                            month: _.findKey(scope.monthNames, function(m) {
+                                return m === scope.dateline.month;
+                            })
+                        }),
                         scope.dateline.day, scope.item.dateline.source);
 
                     mainEditScope.dirty = true;

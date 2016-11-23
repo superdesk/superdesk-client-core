@@ -114,7 +114,7 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
 
                 $scope.filterCondition.value = null;
             })
-            ['finally'](function() {
+            .finally(function() {
                 $scope.loading = false;
             });
         }

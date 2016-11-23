@@ -21,7 +21,7 @@ export function AuthoringTopbarDirective(TranslationService) {
             scope.saveTopbar = function() {
                 scope.saveDisabled = true;
                 return scope.save(scope.item)
-                ['finally'](function() {
+                .finally(function() {
                     scope.saveDisabled = false;
                 });
             };

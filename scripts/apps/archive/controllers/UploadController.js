@@ -128,7 +128,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                     $scope.resolve(results);
                 });
             })
-            ['finally'](function() {
+            .finally(function() {
                 $scope.saving = false;
                 checkFail();
             });

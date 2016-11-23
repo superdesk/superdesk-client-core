@@ -182,9 +182,9 @@ angular.module('superdesk.apps.archive', [
                         }, function(response) {
                             data.item.error = response;
                         })
-                    ['finally'](function() {
-                        data.item.actioning.archiveContent = false;
-                    });
+                        .finally(function() {
+                            data.item.actioning.archiveContent = false;
+                        });
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 condition: function(item) {

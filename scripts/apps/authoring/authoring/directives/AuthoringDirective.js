@@ -698,7 +698,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     $location.search('item', null);
                     $location.search('action', null);
                 })
-                ['finally'](reloadService.forceReload);
+                .finally(reloadService.forceReload);
             });
 
             $scope.$on('item:lock', function(_e, data) {

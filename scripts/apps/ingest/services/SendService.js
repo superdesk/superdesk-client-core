@@ -34,8 +34,9 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                     }
                     notify.error(gettext(message));
                     item.error = response;
-                })
-            ['finally'](function() {
+                }
+            )
+            .finally(function() {
                 if (item.actioning) {
                     item.actioning.archive = false;
                 }

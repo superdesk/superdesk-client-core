@@ -84,11 +84,9 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 if (self.settings != null && self.settings.desk) {
                     // when viewing in desk's monitoring settings
                     return deskSettingsMonitoringConfig(self.settings.desk);
-                } else {
-                    // when viewing in monitoring view
-                    return workspaceMonitoringConfig(activeWorkspace);
                 }
-                return {'type': 'desk', 'groups': []};
+                // when viewing in monitoring view
+                return workspaceMonitoringConfig(activeWorkspace);
             });
         }
     };
