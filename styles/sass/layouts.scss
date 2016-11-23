@@ -941,6 +941,23 @@ $main-item-color-inactive: #aaa;
         }
 
     }
+    .card-box__placeholder {
+        padding: 16px;
+        flex-grow: 1;
+        @include box-sizing(border-box);
+        height: calc(100% - 48px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $grayLight;
+        font-weight: 300;
+        font-size: 1.2rem;
+
+        &--cursorPointer{
+            cursor: pointer;
+        }
+
+    }
     .card-box__content-list {
         margin: -16px;
         padding: 0;

@@ -1,12 +1,12 @@
 <div sd-modal data-model="true" data-full="true" class="modal--fullscreen publisherManager" ng-init="webPublisher.activeTab = 'general'">
     <div class="modal-header">
-        <h3 class="pull-left"><span translate>Manage:</span> <b>{{new.name}}</b></h3>
+        <h3 class="pull-left"><span translate>Manage:</span> <b>{{newSite.name}}</b></h3>
         <div class="pull-right">
             <button class="btn" ng-click="webPublisher.toogleCreateSite()" translate>Close</button>
-            <button 
+            <button
                 class="btn btn--primary"
-                ng-disabled="webPublisher.createForm.$invalid || !webPublisher.createForm.$dirty"
-                ng-click="webPublisher.save()"
+                ng-disabled="webPublisher.siteForm.$invalid || !webPublisher.siteForm.$dirty"
+                ng-click="webPublisher.saveSite()"
                 translate>Save</button>
         </div>
     </div>
@@ -18,26 +18,31 @@
                 </li>
                 <li ng-class="{active: webPublisher.activeTab === 'routes'}">
                     <button ng-click="webPublisher.changeTab('routes')"
-                        ng-disabled="!webPublisher.siteCode || webPublisher.createForm.$dirty"
+                        ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
                         translate>Routes</button>
                 </li>
                 <li ng-class="{active: webPublisher.activeTab === 'navigation'}">
                     <button ng-click="webPublisher.changeTab('navigation')"
-                        ng-disabled="!webPublisher.siteCode || webPublisher.createForm.$dirty"
+                        ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
                         translate>Navigation</button>
+                </li>
+                <li ng-class="{active: webPublisher.activeTab === 'contentLists'}">
+                    <button ng-click="webPublisher.changeTab('contentLists')"
+                        ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
+                        translate>Content Lists</button>
                 </li>
             </ul>
         </div>
         <div class="sidebarLayout__content" ng-switch="webPublisher.activeTab">
-            <form name="webPublisher.createForm">
+            <form name="webPublisher.siteForm">
                 <fieldset ng-switch-when="general" class="mainContentPadding">
                     <div class="field">
                         <label for="name" translate>Web Site Name:</label>
-                        <input type="text" name="name" ng-model="new.name" required/>
+                        <input type="text" name="name" ng-model="newSite.name" required/>
                     </div>
                     <div class="field">
                         <label for="subdomain" translate>Subdomain Name:</label>
-                        <input type="text" name="subdomain" ng-model="new.subdomain" required/>
+                        <input type="text" name="subdomain" ng-model="newSite.subdomain" required/>
                     </div>
                 </fieldset>
             </form>
@@ -46,6 +51,9 @@
             </div>
             <div ng-switch-when="navigation" class="navigation-main">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation.html'"></div>
+            </div>
+            <div ng-switch-when="contentLists">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/content-lists.html'"></div>
             </div>
         </div>
     </div>
