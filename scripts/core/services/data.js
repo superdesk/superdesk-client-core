@@ -35,7 +35,7 @@ export default angular.module('superdesk.core.services.data', [])
     .factory('DataAdapter', ['$rootScope', 'em', 'LocationStateAdapter',
         function($rootScope, em, LocationStateAdapter) {
             return function DataAdapter(resource, params) {
-                var _this = this;
+                var self = this;
                 var state = LocationStateAdapter; // @todo implement storage state adapter
                 var cancelWatch = angular.noop;
                 var defaultParams = {page: 1};
@@ -78,13 +78,13 @@ export default angular.module('superdesk.core.services.data', [])
                  * @description Execute query.
                  */
                 this.query = function(criteria) {
-                    _this.loading = true;
+                    self.loading = true;
                     var query = {resource: resource, criteria: criteria, start: Date.now()};
                     var promise = em.getRepository(resource).matching(criteria);
                     promise.then(function(data) {
-                        _this.loading = false;
+                        self.loading = false;
                         slowQueryLog(query);
-                        angular.extend(_this, data);
+                        angular.extend(self, data);
                     });
 
                     return promise;
@@ -200,7 +200,7 @@ export default angular.module('superdesk.core.services.data', [])
                     cancelWatch = $rootScope.$watchCollection(function () {
                         return getQueryCriteria();
                     }, function(criteria) {
-                        _this.query(criteria);
+                        self.query(criteria);
                     });
                 };
 
@@ -212,7 +212,7 @@ export default angular.module('superdesk.core.services.data', [])
                  * @description Force reload with same params
                  */
                 this.reload = function() {
-                    _this.query(getQueryCriteria());
+                    self.query(getQueryCriteria());
                 };
 
                 if (params) {

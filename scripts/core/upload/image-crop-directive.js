@@ -313,12 +313,12 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             bindToController: true,
             controllerAs: 'vm',
             controller: ['$rootScope', function($rootScope) {
-                var vm = this;
-                angular.extend(vm, {
+                var self = this;
+                angular.extend(self, {
                     updatePOI: function(poi) {
-                        angular.extend(vm.poi, poi);
-                        vm.onChange();
-                        $rootScope.$broadcast('poiUpdate', vm.poi);
+                        angular.extend(self.poi, poi);
+                        self.onChange();
+                        $rootScope.$broadcast('poiUpdate', self.poi);
                     }
                 });
             }],

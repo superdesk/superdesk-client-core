@@ -41,7 +41,7 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
                 }
             });
 
-            var closeTimeout, self;
+            var closeTimeout, el;
 
             elem.on({
                 click: function (e) {
@@ -49,22 +49,22 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
                     e.stopPropagation();
                 },
                 mouseenter: function (e) {
-                    self = $(this).find('.highlights-list');
-                    self.not('.open').children('.dropdown__toggle').click();
+                    el = $(this).find('.highlights-list');
+                    el.not('.open').children('.dropdown__toggle').click();
 
                     angular.element('.highlights-list-menu.open').on({
                         mouseenter: function () {
                             $timeout.cancel(closeTimeout);
                         },
                         mouseleave: function () {
-                            self.filter('.open').children('.dropdown__toggle').click();
+                            el.filter('.open').children('.dropdown__toggle').click();
                         }
                     });
 
                 },
                 mouseleave: function () {
                     closeTimeout = $timeout(function () {
-                        self.filter('.open').children('.dropdown__toggle').click();
+                        el.filter('.open').children('.dropdown__toggle').click();
                     }, 100, false);
                 }
             });

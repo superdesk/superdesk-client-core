@@ -10,7 +10,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
     this.getConfig = getConfig;
     this.startConfig = startConfig;
 
-    var vm = this;
+    var self = this;
 
     /**
      * Send given item to a current user desk
@@ -106,9 +106,9 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @return {Promise}
      */
     function sendAllAs(items) {
-        vm.config = $q.defer();
-        return vm.config.promise.then(function(config) {
-            vm.config = null;
+        self.config = $q.defer();
+        return self.config.promise.then(function(config) {
+            self.config = null;
             multi.reset();
             return $q.all(items.map(function(item) {
                 return sendOneAs(item, config);
@@ -122,7 +122,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @returns {Object|null}
      */
     function getConfig() {
-        return vm.config;
+        return self.config;
     }
 
     /**
@@ -131,9 +131,9 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @return {Promise}
      */
     function startConfig() {
-        vm.config = $q.defer();
-        return vm.config.promise.then(function(val) {
-            vm.config = null;
+        self.config = $q.defer();
+        return self.config.promise.then(function(val) {
+            self.config = null;
             return val;
         });
     }

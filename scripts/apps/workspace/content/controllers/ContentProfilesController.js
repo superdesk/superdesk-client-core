@@ -1,6 +1,6 @@
 ContentProfilesController.$inject = ['$scope', 'notify', 'content', 'modal', '$q'];
 export function ContentProfilesController($scope, notify, content, modal, $q) {
-    var that = this;
+    var self = this;
 
     // creating will be true while the modal for creating a new content
     // profile is visible.
@@ -18,7 +18,7 @@ export function ContentProfilesController($scope, notify, content, modal, $q) {
      */
     function refreshList() {
         return content.getTypes(true).then(function(types) {
-            that.items = types;
+            self.items = types;
         });
     }
 
@@ -46,7 +46,7 @@ export function ContentProfilesController($scope, notify, content, modal, $q) {
                 angular.isObject(resp.data._issues) &&
                 angular.isObject(resp.data._issues.label) &&
                 resp.data._issues.label.unique) {
-                notify.error(that.duplicateErrorTxt);
+                notify.error(self.duplicateErrorTxt);
                 return $q.reject(resp);
             }
             return next(resp);
@@ -80,7 +80,7 @@ export function ContentProfilesController($scope, notify, content, modal, $q) {
     this.save = function() {
         var onSuccess = function(resp) {
             refreshList();
-            that.toggleCreate();
+            self.toggleCreate();
             return resp;
         };
 

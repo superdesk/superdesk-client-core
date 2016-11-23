@@ -2,7 +2,7 @@ import notifySaveError from '../helpers';
 
 CreateTemplateController.$inject = ['item', 'templates', 'api', 'desks', '$q', 'notify', 'lodash'];
 export function CreateTemplateController(item, templates, api, desks, $q, notify, _) {
-    var vm = this;
+    var self = this;
 
     this.type = 'create';
     this.name = item.slugline || null;
@@ -20,44 +20,44 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
     function activate() {
         if (item.template) {
             api.find('content_templates', item.template).then(function(template) {
-                vm.name = template.template_name;
-                vm.desk = template.template_desks != null ? template.template_desks[0] : null;
-                vm.is_public = template.is_public !== false;
-                vm.template = template;
+                self.name = template.template_name;
+                self.desk = template.template_desks != null ? template.template_desks[0] : null;
+                self.is_public = template.is_public !== false;
+                self.template = template;
             });
         }
 
         desks.fetchCurrentUserDesks().then(function(desks) {
-            vm.desks = desks;
+            self.desks = desks;
         });
     }
 
     function save() {
         var data = {
-            template_name: vm.name,
-            template_type: vm.type,
-            template_desks: vm.is_public ? [vm.desk] : null,
-            is_public: vm.is_public,
+            template_name: self.name,
+            template_type: self.type,
+            template_desks: self.is_public ? [self.desk] : null,
+            is_public: self.is_public,
             data: templates.pickItemData(item)
         };
 
-        var template = vm.template ? vm.template : data;
-        var diff = vm.template ? data : null;
+        var template = self.template ? self.template : data;
+        var diff = self.template ? data : null;
 
         // in case there is old template but user renames it - create a new one
-        if (vm.template && vm.name !== vm.template.template_name) {
+        if (self.template && self.name !== self.template.template_name) {
             template = data;
             diff = null;
         }
 
         return api.save('content_templates', template, diff)
         .then(function(data) {
-            vm._issues = null;
+            self._issues = null;
             return data;
         }, function(response) {
             notifySaveError(response, notify);
-            vm._issues = response.data._issues;
-            return $q.reject(vm._issues);
+            self._issues = response.data._issues;
+            return $q.reject(self._issues);
         });
     }
 }

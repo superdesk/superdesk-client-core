@@ -546,38 +546,38 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
 SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions', 'config'];
 function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) {
-    var vm = this;
-    angular.extend(vm, {
+    var self = this;
+    angular.extend(self, {
         embedCode: undefined,  // defined below
         caption: undefined,  // defined below
         editable: false,
         toggleEdition: function() {
-            vm.editable = !vm.editable;
+            self.editable = !self.editable;
         },
         saveEmbedCode: function() {
             // update the block's model
-            angular.extend(vm.model, {
-                body: vm.embedCode
+            angular.extend(self.model, {
+                body: self.embedCode
             });
             // on change callback
-            vm.onBlockChange();
+            self.onBlockChange();
         },
         cancel: function() {
-            vm.embedCode = vm.model.body;
+            self.embedCode = self.model.body;
         },
         saveCaption: function(caption) {
             // if block is a superdesk image (with association), we update the description_text
-            if (vm.model.association) {
-                vm.model.association.description_text = caption;
+            if (self.model.association) {
+                self.model.association.description_text = caption;
             }
             // update the caption in the model
-            vm.model.caption = caption;
+            self.model.caption = caption;
             // update the caption in the view
-            vm.caption = caption;
+            self.caption = caption;
 
             // on change callback
             $timeout(function() {
-                vm.onBlockChange();
+                self.onBlockChange();
             });
         },
         handlePaste: function(e) {
@@ -596,27 +596,27 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
         },
         editPicture: function(picture) {
             // only for SD images (with association)
-            if (!vm.model.association) {
+            if (!self.model.association) {
                 return false;
             }
-            vm.model.loading = true;
+            self.model.loading = true;
             renditions.crop(picture).then(function(picture) {
                 // update block
-                vm.model.association = picture;
+                self.model.association = picture;
                 editor.generateMediaTag(picture).then(function(img) {
-                    vm.model.body = img;
+                    self.model.body = img;
                 });
                 // update caption
-                vm.saveCaption(vm.model.association.description_text);
+                self.saveCaption(self.model.association.description_text);
             }).finally(function() {
-                vm.model.loading = false;
+                self.model.loading = false;
             });
         }
     });
     $timeout(function() {
-        angular.extend(vm, {
-            embedCode: vm.model.body,
-            caption: vm.model.caption
+        angular.extend(self, {
+            embedCode: self.model.body,
+            caption: self.model.caption
         });
     });
 }
@@ -1276,27 +1276,27 @@ angular.module('superdesk.apps.editor2', [
                 },
                 controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', 'config',
                     function(scope, editor, api , superdesk, renditions, config) {
-                        var vm = this;
-                        angular.extend(vm, {
+                        var self = this;
+                        angular.extend(self, {
                             block: undefined, // provided in link method
                             sdEditorCtrl: undefined, // provided in link method
                             selectElement: function(element) {
                                 scope.medium.selectElement(element);
                         // save position
-                                vm.savePosition();
+                                self.savePosition();
                             },
                             restoreSelection: function() {
-                                scope.medium.importSelection(vm.block.caretPosition);
+                                scope.medium.importSelection(self.block.caretPosition);
                         // put the caret at end of the selection
                                 scope.medium.options.ownerDocument.getSelection().collapseToEnd();
                             },
                             savePosition: function() {
-                                vm.block.caretPosition = scope.medium.exportSelection();
+                                self.block.caretPosition = scope.medium.exportSelection();
                             },
                             extractEndOfBlock: function() {
                         // it can happen that user lost the focus on the block when this fct in called
                         // so we restore the latest known position
-                                vm.restoreSelection();
+                                self.restoreSelection();
                         // extract the text after the cursor
                                 var remainingElementsContainer = document.createElement('div');
                                 remainingElementsContainer.appendChild(extractBlockContentsFromCaret().cloneNode(true));
@@ -1323,7 +1323,7 @@ angular.module('superdesk.apps.editor2', [
                                     loading: true,
                                     association: media
                                 };
-                                vm.sdEditorCtrl.splitAndInsert(vm, imageBlock).then(function(block) {
+                                self.sdEditorCtrl.splitAndInsert(self, imageBlock).then(function(block) {
                             // load the media and update the block
                                     $q.when((function() {
                                         if (config.features && 'editFeaturedImage' in config.features &&
@@ -1339,7 +1339,7 @@ angular.module('superdesk.apps.editor2', [
                                                 association: media,
                                                 loading: false
                                             });
-                                            $timeout(vm.sdEditorCtrl.commitChanges);
+                                            $timeout(self.sdEditorCtrl.commitChanges);
                                         });
                                     });
                                 });

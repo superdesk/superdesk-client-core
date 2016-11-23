@@ -36,8 +36,8 @@ angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', [
 AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout', 'config', '$q'];
 function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q) {
     var elementHolder = element.find('div:first-child').first();
-    var vm = this;
-    angular.extend(vm, {
+    var self = this;
+    angular.extend(self, {
         expanded: false,
         config: angular.extend({embeds: true}, config.editor || {}), // should be on by default
         // update the (+) vertical position on the left and his visibility (hidden/shown)
@@ -51,11 +51,11 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
             }
             // hide if medium is not defined yett (can happen at initialization)
             if (!angular.isDefined(scope.medium)) {
-                return vm.hide();
+                return self.hide();
             }
             // hide if the text input is not selected and if it was not a click on the (+) button
             if (!angular.element(editorElem).is(':focus') && !elementContainsEventTarget()) {
-                return vm.hide();
+                return self.hide();
             }
             var currentParagraph;
             try {
@@ -73,24 +73,24 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
             // handle focus changes: show (+) if current element has been focused
             if (event && event.type === 'focus') {
                 if (elementContainsEventTarget() && currentParagraph.text() === '') {
-                    return vm.show();
+                    return self.show();
                 } else {
-                    return vm.hide();
+                    return self.hide();
                 }
             }
             // handle click: show (+) if editor is focused
             if (event && event.type === 'click') {
                 if (editorElem.is(':focus') && currentParagraph.text() === '') {
-                    return vm.show();
+                    return self.show();
                 } else {
-                    return vm.hide();
+                    return self.hide();
                 }
             }
             // default rules, show (+) if line is empty
             if (currentParagraph.text() === '') {
-                return vm.show();
+                return self.show();
             } else {
-                return vm.hide();
+                return self.hide();
             }
         },
         hide: function() {
@@ -98,7 +98,7 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
                 elementHolder.css({
                     'display': 'none'
                 });
-                vm.expanded = false;
+                self.expanded = false;
             });
         },
         show: function() {
@@ -109,20 +109,20 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
             });
         },
         toogleExpand: function() {
-            vm.expanded = !vm.expanded;
+            self.expanded = !self.expanded;
         },
         isSomethingInClipboard: function() {
-            return angular.isDefined(vm.sdEditorCtrl.getCutBlock());
+            return angular.isDefined(self.sdEditorCtrl.getCutBlock());
         },
         triggerAction: function(action) {
-            vm.hide();
-            vm.actions[action]();
+            self.hide();
+            self.actions[action]();
         },
         actions: {
             addEmbed: function() {
-                vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl).then(function() {
+                self.sdEditorCtrl.splitAndInsert(self.textBlockCtrl).then(function() {
                     // show the add-embed form
-                    vm.textBlockCtrl.block.showAndFocusLowerAddAnEmbedBox();
+                    self.textBlockCtrl.block.showAndFocusLowerAddAnEmbedBox();
                 });
             },
             addPicture: function() {
@@ -138,18 +138,18 @@ function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q
                             };
                         });
                     })).then(function(renderedImages) {
-                        vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl, renderedImages);
+                        self.sdEditorCtrl.splitAndInsert(self.textBlockCtrl, renderedImages);
                     });
                 }, function() {
                     scope.node.focus();
-                    vm.textBlockCtrl.restoreSelection();
+                    self.textBlockCtrl.restoreSelection();
                 });
             },
             pasteBlock: function() {
-                if (!vm.sdEditorCtrl.getCutBlock()) {
+                if (!self.sdEditorCtrl.getCutBlock()) {
                     return false;
                 }
-                vm.sdEditorCtrl.splitAndInsert(vm.textBlockCtrl, vm.sdEditorCtrl.getCutBlock(true));
+                self.sdEditorCtrl.splitAndInsert(self.textBlockCtrl, self.sdEditorCtrl.getCutBlock(true));
             }
         }
     });
