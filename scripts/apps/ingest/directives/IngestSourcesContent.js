@@ -46,13 +46,13 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                 var provider;
                 if (providerId) {
                     if ($scope.providers && $scope.providers._items) {
-                        provider = _.find($scope.providers._items, function (item) {
+                        provider = _.find($scope.providers._items, function(item) {
                             return item._id === providerId;
                         });
                     }
 
                     if (provider == null) {
-                        api.ingestProviders.getById(providerId).then(function (result) {
+                        api.ingestProviders.getById(providerId).then(function(result) {
                             provider = result;
                         });
                     }
@@ -78,7 +78,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             $scope.fetchSourceErrors = function() {
                 if ($scope.provider && $scope.provider.feeding_service) {
                     return api('io_errors').query({'source_type': $scope.provider.feeding_service})
-                        .then(function (result) {
+                        .then(function(result) {
                             $scope.provider.source_errors = result._items[0].source_errors;
                             $scope.provider.all_errors = result._items[0].all_errors;
                         });
@@ -90,7 +90,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                     function removeIngestProviderChannel() {
                         api.ingestProviders.remove(provider)
                             .then(
-                                function () {
+                                function() {
                                     notify.success(gettext('Ingest Source deleted.'));
                                 },
                                 function(response) {
@@ -124,17 +124,17 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                     && $scope.origProvider.config.field_aliases) || [];
 
                 var aliasObj = {};
-                aliases.forEach(function (item) {
+                aliases.forEach(function(item) {
                     _.extend(aliasObj, item);
                 });
 
-                Object.keys(aliasObj).forEach(function (fieldName) {
+                Object.keys(aliasObj).forEach(function(fieldName) {
                     $scope.fieldAliases.push(
                         {fieldName: fieldName, alias: aliasObj[fieldName]});
                 });
 
                 $scope.fieldsNotSelected = $scope.contentFields.filter(
-                    function (fieldName) {
+                    function(fieldName) {
                         return !(fieldName in aliasObj);
                     }
                 );
@@ -157,7 +157,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             * @method setRssConfig
             * @param {Object} provider - ingest provider instance
             */
-            $scope.setRssConfig = function (provider) {
+            $scope.setRssConfig = function(provider) {
                 if (!provider.config.auth_required) {
                     provider.config.username = null;
                     provider.config.password = null;
@@ -170,7 +170,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             *
             * @method addFieldAlias
             */
-            $scope.addFieldAlias = function () {
+            $scope.addFieldAlias = function() {
                 $scope.fieldAliases.push({fieldName: null, alias: ''});
             };
 
@@ -181,7 +181,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             * @method removeFieldAlias
             * @param {Number} itemIdx - index of the item to remove
             */
-            $scope.removeFieldAlias = function (itemIdx) {
+            $scope.removeFieldAlias = function(itemIdx) {
                 var removed = $scope.fieldAliases.splice(itemIdx, 1);
                 if (removed[0].fieldName) {
                     $scope.fieldsNotSelected.push(removed[0].fieldName);
@@ -194,17 +194,17 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             *
             * @method fieldSelectionChanged
             */
-            $scope.fieldSelectionChanged = function () {
+            $scope.fieldSelectionChanged = function() {
                 var selectedFields = {};
 
-                $scope.fieldAliases.forEach(function (item) {
+                $scope.fieldAliases.forEach(function(item) {
                     if (item.fieldName) {
                         selectedFields[item.fieldName] = true;
                     }
                 });
 
                 $scope.fieldsNotSelected = $scope.contentFields.filter(
-                    function (fieldName) {
+                    function(fieldName) {
                         return !(fieldName in selectedFields);
                     }
                 );
@@ -223,7 +223,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             * @param {String} [selectedName] - currently selected field
             * @return {String[]} list of field names
             */
-            $scope.availableFieldOptions = function (selectedName) {
+            $scope.availableFieldOptions = function(selectedName) {
                 var fieldNames = angular.copy($scope.fieldsNotSelected);
 
                 // add current field selection, if available
@@ -236,7 +236,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             $scope.save = function() {
                 var newAliases = [];
 
-                $scope.fieldAliases.forEach(function (item) {
+                $scope.fieldAliases.forEach(function(item) {
                     if (item.fieldName && item.alias) {
                         var newAlias = {};
                         newAlias[item.fieldName] = item.alias;
@@ -293,7 +293,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             /**
              * Initializes the configuration for the selected feeding service if the config is not defined.
              */
-            $scope.initProviderConfig = function () {
+            $scope.initProviderConfig = function() {
                 var service = getCurrentService();
                 if (service && service.config) {
                     $scope.provider.config = angular.extend({}, service.config);

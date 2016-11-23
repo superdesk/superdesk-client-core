@@ -1,6 +1,6 @@
 DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'gettext', 'notify',
     'modal', '$rootScope', '$q'];
-export function DictionaryEditController ($scope, dictionaries, upload, gettext, notify,
+export function DictionaryEditController($scope, dictionaries, upload, gettext, notify,
     modal, $rootScope, $q) {
 
     function onSuccess(result) {
@@ -29,7 +29,7 @@ export function DictionaryEditController ($scope, dictionaries, upload, gettext,
     }
 
     // listen for the file selected event
-    $scope.$on('fileSelected', function (event, args) {
+    $scope.$on('fileSelected', function(event, args) {
         $scope.$apply(function() {
             $scope.file = args.file;
         });

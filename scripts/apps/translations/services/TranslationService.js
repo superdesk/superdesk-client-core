@@ -22,7 +22,7 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace) 
      * @returns {Object} Languages
      * @description Fetch languages from database
      */
-    service.fetch = function () {
+    service.fetch = function() {
         return api.query('languages');
     };
 
@@ -33,7 +33,7 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace) 
      * @description Return list of langugages
      * @return {Object} list of items
      */
-    service.get = function () {
+    service.get = function() {
         return service.languages;
     };
 
@@ -45,13 +45,13 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace) 
      * @param {Object} item item to be translated
      * @param {Object} language translate language
      */
-    service.set = function (item, language) {
+    service.set = function(item, language) {
         var params = {
             guid: item.guid,
             language: language.language
         };
 
-        api.save('translate', params).then(function (item) {
+        api.save('translate', params).then(function(item) {
             authoringWorkspace.open(item);
             $rootScope.$broadcast('item:translate');
             notify.success(gettext('Item Translated'));
@@ -65,14 +65,14 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace) 
      * @description Check if item is available for translating
      * @return {boolean}
      */
-    service.checkAvailability = function (item) {
-        return !service.languages ? false : _.find(service.languages._items, function (language) {
+    service.checkAvailability = function(item) {
+        return !service.languages ? false : _.find(service.languages._items, function(language) {
             return language.source && language.language === item.language;
         });
     };
 
     // Fetch languages from database on service initialization
-    service.fetch().then(function (languages) {
+    service.fetch().then(function(languages) {
         service.languages = languages;
     });
 

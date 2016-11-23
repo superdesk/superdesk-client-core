@@ -12,7 +12,7 @@ export default angular.module('superdesk.core.directives.slider', []).
      *
      * @description Regular slider.
      */
-    directive('sdSlider', function () {
+    directive('sdSlider', function() {
         return {
             transclude: true,
             templateUrl: 'scripts/core/views/sdSlider.html',
@@ -25,8 +25,8 @@ export default angular.module('superdesk.core.directives.slider', []).
                 invert: '=',
                 update: '&'
             },
-            link: function (scope, element, attrs, controller) {
-                scope.$watch('list', function (list) {
+            link: function(scope, element, attrs, controller) {
+                scope.$watch('list', function(list) {
                     if (!list) {
                         return false;
                     }
@@ -53,12 +53,12 @@ export default angular.module('superdesk.core.directives.slider', []).
                         max: maxValue,
                         value: value,
                         disabled: scope.disabled,
-                        create: function () {
+                        create: function() {
                             $(this).find('.ui-slider-thumb')
                                     .css('left', ((value - minValue) * 100) / (maxValue - minValue) + '%')
                                     .text(scope.invert ? Math.abs(value) : value);
                         },
-                        slide: function (event, ui) {
+                        slide: function(event, ui) {
                             $(this).find('.ui-slider-thumb')
                                     .css('left', ((ui.value - minValue) * 100) / (maxValue - minValue) + '%')
                                     .text(scope.invert ? Math.abs(ui.value) : ui.value);
@@ -68,10 +68,10 @@ export default angular.module('superdesk.core.directives.slider', []).
                                 field: scope.field
                             });
                         },
-                        start: function () {
+                        start: function() {
                             $(this).find('.ui-slider-thumb').addClass('ui-slider-thumb-active');
                         },
-                        stop: function () {
+                        stop: function() {
                             $(this).find('.ui-slider-thumb').removeClass('ui-slider-thumb-active');
                         }
                     });

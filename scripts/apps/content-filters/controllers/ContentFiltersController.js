@@ -6,7 +6,7 @@
  * settings section.
  */
 ContentFiltersConfigController.$inject = [];
-export function ContentFiltersConfigController () {
+export function ContentFiltersConfigController() {
     var self = this;
 
     self.TEMPLATES_DIR = 'scripts/apps/content-filters/views';
@@ -18,7 +18,7 @@ export function ContentFiltersConfigController () {
     * @method changeTab
     * @param {string} newTabName - name of the new active tab
     */
-    self.changeTab = function (newTabName) {
+    self.changeTab = function(newTabName) {
         self.activeTab = newTabName;
     };
 }

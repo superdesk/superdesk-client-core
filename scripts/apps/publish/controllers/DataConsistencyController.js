@@ -2,7 +2,7 @@ DataConsistencyController.$inject = ['$scope', 'api'];
 export function DataConsistencyController($scope, api) {
     $scope.consistency_records = null;
 
-    function fetchConsistencyRecords () {
+    function fetchConsistencyRecords() {
         var criteria = criteria || {};
         criteria.max_results = 200;
         return api.consistency.query(criteria);

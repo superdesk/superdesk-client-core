@@ -44,7 +44,7 @@ export function DeskConfigModal(metadata, content, api) {
              * Initialize languages
              * @return {Object} languages
              */
-            api.query('languages').then(function (languages) {
+            api.query('languages').then(function(languages) {
                 scope.languages = languages._items;
             });
         }

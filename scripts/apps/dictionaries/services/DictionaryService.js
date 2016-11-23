@@ -8,13 +8,13 @@ export function DictionaryService(api, urls, session, Upload, $q) {
     this.addWordToUserDictionary = addWordToUserDictionary;
     this.getUserAbbreviations = getUserAbbreviations;
 
-    function setPersonalName (data) {
+    function setPersonalName(data) {
         if (data.user) {
             data.name = data.user + ':' + data.language_id;
         }
     }
 
-    this.fetch = function (success, error) {
+    this.fetch = function(success, error) {
         return session.getIdentity().then(function(identity) {
             return api.query('dictionaries', {
                 projection: {content: 0},
@@ -28,11 +28,11 @@ export function DictionaryService(api, urls, session, Upload, $q) {
         });
     };
 
-    this.open = function (dictionary, success, error) {
+    this.open = function(dictionary, success, error) {
         return api.find('dictionaries', dictionary._id).then(success, error);
     };
 
-    this.upload = function (dictionary, data, file, success, error, progress) {
+    this.upload = function(dictionary, data, file, success, error, progress) {
         var hasId = _.has(dictionary, '_id') && dictionary._id !== null;
         var method = hasId ? 'PATCH' : 'POST';
         var headers = hasId ? {'If-Match': dictionary._etag} : {};
@@ -66,7 +66,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
         }, error);
     };
 
-    this.update = function (dictionary, data, success, error) {
+    this.update = function(dictionary, data, success, error) {
         var sendData = {};
         angular.forEach(data, function(val, key) {
             if (key[0] !== '_') {
@@ -78,7 +78,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
         return api.save('dictionaries', dictionary, sendData).then(success, error);
     };
 
-    this.remove = function (dictionary, success, error) {
+    this.remove = function(dictionary, success, error) {
         return api.remove(dictionary).then(success, error);
     };
 

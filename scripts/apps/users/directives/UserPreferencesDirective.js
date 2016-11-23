@@ -50,22 +50,22 @@ export function UserPreferencesDirective(
             *
             * @method save
             */
-            scope.save = function () {
+            scope.save = function() {
                 preSaveCategoriesCheck()
-                .then(function () {
+                .then(function() {
                     var update = createPatchObject();
                     return preferencesService.update(update).then(function() {
                         userList.getUser(scope.user._id, true).then(function(u) {
                             scope.user = u;
                         });
                     });
-                }, function () {
+                }, function() {
                     return $q.reject('canceledByModal');
                 })
-                .then(function () {
+                .then(function() {
                     notify.success(gettext('User preferences saved'));
                     scope.cancel();
-                }, function (reason) {
+                }, function(reason) {
                     if (reason !== 'canceledByModal') {
                         notify.error(gettext(
                             'User preferences could not be saved...'
@@ -83,7 +83,7 @@ export function UserPreferencesDirective(
                     datelinePreference.located = null;
                 }
 
-                $timeout(function () {
+                $timeout(function() {
                     scope.datelinePreview = datelinePreference.located;
                 });
             };
@@ -94,8 +94,8 @@ export function UserPreferencesDirective(
             *
             * @method checkAll
             */
-            scope.checkAll = function () {
-                scope.categories.forEach(function (cat) {
+            scope.checkAll = function() {
+                scope.categories.forEach(function(cat) {
                     cat.selected = true;
                 });
                 scope.userPrefs.$setDirty();
@@ -107,8 +107,8 @@ export function UserPreferencesDirective(
             *
             * @method checkNone
             */
-            scope.checkNone = function () {
-                scope.categories.forEach(function (cat) {
+            scope.checkNone = function() {
+                scope.categories.forEach(function(cat) {
                     cat.selected = false;
                 });
                 scope.userPrefs.$setDirty();
@@ -121,8 +121,8 @@ export function UserPreferencesDirective(
             *
             * @method checkDefault
             */
-            scope.checkDefault = function () {
-                scope.categories.forEach(function (cat) {
+            scope.checkDefault = function() {
+                scope.categories.forEach(function(cat) {
                     cat.selected = !!scope.defaultCategories[cat.qcode];
                 });
                 scope.userPrefs.$setDirty();
@@ -166,7 +166,7 @@ export function UserPreferencesDirective(
                     'cities', 'categories', 'default_categories', 'locators'
                 ];
 
-                initNeeded = buckets.some(function (bucketName) {
+                initNeeded = buckets.some(function(bucketName) {
                     var values = metadata.values || {};
                     return angular.isUndefined(values[bucketName]);
                 });
@@ -174,7 +174,7 @@ export function UserPreferencesDirective(
                 if (initNeeded) {
                     var initPromises = [];
                     initPromises.push(metadata.initialize(), desks.initialize());
-                    $q.all(initPromises).then(function () {
+                    $q.all(initPromises).then(function() {
                         updateScopeData(metadata.values, data);
                     });
                 } else {
@@ -199,7 +199,7 @@ export function UserPreferencesDirective(
                 // preferred by default, unless of course the user
                 // changes this preference setting.
                 scope.defaultCategories = {};
-                helperData.default_categories.forEach(function (cat) {
+                helperData.default_categories.forEach(function(cat) {
                     scope.defaultCategories[cat.qcode] = true;
                 });
 
@@ -208,7 +208,7 @@ export function UserPreferencesDirective(
                 // objects in the existing category list are protected
                 // from modifications on ng-model changes.
                 scope.categories = [];
-                helperData.categories.forEach(function (cat) {
+                helperData.categories.forEach(function(cat) {
                     var newObj = _.create(cat),
                         selectedCats = userPrefs['categories:preferred'].selected;
                     newObj.selected = !!selectedCats[cat.qcode];
@@ -226,7 +226,7 @@ export function UserPreferencesDirective(
                  * from modifications on ng-model changes.
                  */
                 scope.desks = [];
-                _.each(desks.deskLookup, function (desk) {
+                _.each(desks.deskLookup, function(desk) {
                     var newObj = _.create(desk),
                         selectedDesks = userPrefs['desks:preferred'].selected;
                     newObj.selected = !!selectedDesks[desk._id];
@@ -255,7 +255,7 @@ export function UserPreferencesDirective(
                     msg,
                     someSelected;
 
-                someSelected = scope.categories.some(function (cat) {
+                someSelected = scope.categories.some(function(cat) {
                     return cat.selected;
                 });
 
@@ -271,7 +271,7 @@ export function UserPreferencesDirective(
                 ].join('');
                 msg = gettext(msg);
 
-                modalResult = modal.confirm(msg).then(function () {
+                modalResult = modal.confirm(msg).then(function() {
                     scope.checkDefault();
                 });
 
@@ -297,14 +297,14 @@ export function UserPreferencesDirective(
 
                     if (key === 'categories:preferred') {
                         val.selected = {};
-                        scope.categories.forEach(function (cat) {
+                        scope.categories.forEach(function(cat) {
                             val.selected[cat.qcode] = !!cat.selected;
                         });
                     }
 
                     if (key === 'desks:preferred') {
                         val.selected = {};
-                        scope.desks.forEach(function (desk) {
+                        scope.desks.forEach(function(desk) {
                             val.selected[desk._id] = !!desk.selected;
                         });
                     }

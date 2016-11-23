@@ -26,7 +26,7 @@ angular.module('superdesk.apps.translations', [
 
 .directive('sdTranslationDropdown', directive.TranslationDropdown)
 
-.config(['superdeskProvider', function (superdesk) {
+.config(['superdeskProvider', function(superdesk) {
     superdesk
         .activity('translate', {
             label: gettext('Translate'),

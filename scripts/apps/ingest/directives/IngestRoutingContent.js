@@ -28,7 +28,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                 contentFilters.getAllContentFilters(
                     filtersStartPage, scope.contentFilters
                 )
-                .then(function (filters) {
+                .then(function(filters) {
                     scope.contentFilters = filters;
                 });
             }
@@ -80,7 +80,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                 });
             };
 
-            scope.cancel = function () {
+            scope.cancel = function() {
                 scope.editScheme = null;
                 scope.rule = null;
                 scope.ruleIndex = null;
@@ -138,7 +138,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
              * @method editRule
              * @param {Object} rule - routing scheme rule's config data
              */
-            scope.editRule = function (rule) {
+            scope.editRule = function(rule) {
                 var filter;
 
                 scope.rule = rule;

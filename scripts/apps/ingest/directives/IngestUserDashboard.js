@@ -1,14 +1,14 @@
 import * as constant from 'apps/ingest/constants';
 
 IngestUserDashboard.$inject = ['api', 'userList', 'privileges'];
-export function IngestUserDashboard (api, userList, privileges) {
+export function IngestUserDashboard(api, userList, privileges) {
     return {
         templateUrl: 'scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html',
         scope: {
             item: '=',
             setUserPreferences: '&'
         },
-        link: function (scope) {
+        link: function(scope) {
 
             function getCount() {
                 var criteria = {
@@ -28,16 +28,16 @@ export function IngestUserDashboard (api, userList, privileges) {
                     }
                 };
 
-                api.ingest.query(criteria).then(function (result) {
+                api.ingest.query(criteria).then(function(result) {
                     scope.ingested_count = result._meta.total;
                 });
             }
 
             function updateProvider() {
-                api.ingestProviders.getById(scope.item._id).then(function (result) {
+                api.ingestProviders.getById(scope.item._id).then(function(result) {
                     angular.extend(scope.item, result);
                     getUser();
-                }, function (error) {
+                }, function(error) {
                     if (error.status === 404) {
                         scope.item.dashboard_enabled = false;
                         scope.setUserPreferences();
@@ -64,7 +64,7 @@ export function IngestUserDashboard (api, userList, privileges) {
                     '$and': where
                 });
 
-                api.query('activity', criteria).then(function (result) {
+                api.query('activity', criteria).then(function(result) {
                     scope.log_messages = result._items;
                 });
             }
@@ -120,11 +120,11 @@ export function IngestUserDashboard (api, userList, privileges) {
                 getLogMessages();
             };
 
-            scope.$on('ingest:update', function (evt, extras) {
+            scope.$on('ingest:update', function(evt, extras) {
                 refreshItem(extras);
             });
 
-            scope.$on('ingest_provider:update', function (evt, extras) {
+            scope.$on('ingest_provider:update', function(evt, extras) {
                 refreshItem(extras);
             });
         }

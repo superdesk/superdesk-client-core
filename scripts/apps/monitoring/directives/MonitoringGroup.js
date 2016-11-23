@@ -150,7 +150,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              * Change between single stage view and grouped view by keyboard
              * Keyboard shortcut: Ctrl + g
              */
-            scope.$on('key:ctrl:g', function () {
+            scope.$on('key:ctrl:g', function() {
                 if (scope.selected) {
                     if (monitoring.singleGroup == null) {
                         monitoring.viewSingleGroup(monitoring.selectedGroup, 'stage');
@@ -183,7 +183,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              * Change between single desk view and grouped view by keyboard
              * Keyboard shortcut: Ctrl + g
              */
-            scope.$on('key:ctrl:alt:g', function () {
+            scope.$on('key:ctrl:alt:g', function() {
                 if (scope.selected) {
                     if (monitoring.singleGroup == null) {
                         monitoring.viewSingleGroup(monitoring.selectedGroup, 'desk');
@@ -195,7 +195,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             // forced refresh on refresh button click or on refresh:list
             scope.refreshGroup = function() {
-                scope.$applyAsync(function () {
+                scope.$applyAsync(function() {
                     scope.scrollTop = 0;
                     monitoring.scrollTop = 0;
                 });
@@ -228,11 +228,11 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 }
 
                 var intent = {action: 'list'};
-                superdesk.findActivities(intent, item).forEach(function (activity) {
+                superdesk.findActivities(intent, item).forEach(function(activity) {
                     if (activity.keyboardShortcut && workflowService.isActionAllowed(item, activity.action)) {
                         monitoring.bindedItems.push(
                             scope.$on('key:' + activity.keyboardShortcut.replace('+', ':'),
-                            function () {
+                            function() {
                                 if (activity._id === 'mark.item') {
                                     bindMarkItemShortcut();
                                 } else {
@@ -258,10 +258,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 if (highlightDropdown.find('button').length > 0) {
                     highlightDropdown.find('button:not([disabled])')[0].focus();
 
-                    keyboardManager.push('up', function () {
+                    keyboardManager.push('up', function() {
                         highlightDropdown.find('button:focus').parent('li').prev().children('button').focus();
                     });
-                    keyboardManager.push('down', function () {
+                    keyboardManager.push('down', function() {
                         highlightDropdown.find('button:focus').parent('li').next().children('button').focus();
                     });
                 }
@@ -271,7 +271,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              * Unbind all item actions
              */
             function unbindActionKeyShortcuts() {
-                monitoring.bindedItems.forEach(function (func) {
+                monitoring.bindedItems.forEach(function(func) {
                     func();
                 });
                 monitoring.bindedItems = [];
@@ -303,7 +303,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                             activity = superdesk.findActivities(intent, item)[0];
 
                         activityService.start(activity, {data: {item: item}})
-                            .then(function (item) {
+                            .then(function(item) {
                                 authoringWorkspace.edit(item);
                             });
                     } else if (item.type === 'composite' && item.package_type === 'takes') {

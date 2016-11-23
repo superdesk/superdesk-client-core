@@ -16,7 +16,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                 scope.edit = _.create(scope.editingSearch) || {};
             });
 
-            scope.editItem = function () {
+            scope.editItem = function() {
                 scope.activateSearchPane = true;
                 scope.edit = _.create(scope.editingSearch) || {};
             };
@@ -29,7 +29,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                 scope.edit.description = '';
             };
 
-            scope.cancel = function () {
+            scope.cancel = function() {
                 scope.sTab = scope.editingSearch ? 'savedSearches' : 'advancedSearch';
                 scope.editingSearch = false;
                 scope.edit = null;

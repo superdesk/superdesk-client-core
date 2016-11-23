@@ -103,12 +103,12 @@ function Content() {
 
     var list = element(by.className('list-view'));
 
-    this.getCount = function () {
+    this.getCount = function() {
         waitFor(list);
         return list.all(by.css('.media-box')).count();
     };
 
-    this.getItemCount = function () {
+    this.getItemCount = function() {
         waitFor(list);
         return list.all(by.css('.media-box')).count();
     };

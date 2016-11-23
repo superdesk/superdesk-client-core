@@ -3,7 +3,7 @@ export function UserUniqueDirective($q, api) {
     return {
         require: 'ngModel',
         scope: {exclude: '='},
-        link: function (scope, element, attrs, ctrl) {
+        link: function(scope, element, attrs, ctrl) {
 
             /**
              * Test if given value is unique for seleted field

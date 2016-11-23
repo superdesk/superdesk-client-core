@@ -5,7 +5,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',
         require: '?^sdAuthoringWidgets',
-        link: function (scope, elem, attrs, WidgetsManagerCtrl) {
+        link: function(scope, elem, attrs, WidgetsManagerCtrl) {
             scope.contentType = null;
             scope.displayCompanyCodes = null;
 
@@ -36,7 +36,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 }
 
                 if (!display && scope.item.subject) {
-                    financeCategory = _.find(scope.item.subject, function (category) {
+                    financeCategory = _.find(scope.item.subject, function(category) {
                         if (category.qcode === '04000000' || category.qcode === '04006018'
                             || category.qcode === '04019000') {
                             return category;
@@ -49,7 +49,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 return display;
             };
 
-            scope.$watch('item', function (item) {
+            scope.$watch('item', function(item) {
                 if (!item) {
                     return;
                 }
@@ -58,15 +58,15 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 scope.missing_link = false;
 
                 if (!archiveService.isLegal(scope.item)) {
-                    var relatedItemWidget = _.filter(authoringWidgets, function (widget) {
+                    var relatedItemWidget = _.filter(authoringWidgets, function(widget) {
                         return widget._id === 'related-item';
                     });
 
-                    scope.activateWidget = function () {
+                    scope.activateWidget = function() {
                         WidgetsManagerCtrl.activate(relatedItemWidget[0]);
                     };
 
-                    scope.previewMasterStory = function () {
+                    scope.previewMasterStory = function() {
                         var itemId = item.broadcast.takes_package_id ?
                             item.broadcast.takes_package_id : item.broadcast.master_id;
                         return api.find('archive', itemId).then(function(item) {
@@ -76,7 +76,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 }
             });
 
-            scope.$watch('item.profile', function (profile) {
+            scope.$watch('item.profile', function(profile) {
                 if (profile) {
                     content.getType(profile)
                         .then(function(type) {

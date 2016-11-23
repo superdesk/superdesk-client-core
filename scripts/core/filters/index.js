@@ -157,7 +157,7 @@ export default angular.module('superdesk.core.filters', []).
         };
     }])
     .filter('daysInAMonth', function() {
-        return function (month) {
+        return function(month) {
             var _timeStamp = month ? moment((month + 1), 'MM') : moment();
             var daysInCurrMonth = [];
 
@@ -169,7 +169,7 @@ export default angular.module('superdesk.core.filters', []).
         };
     })
     .filter('parseDateline', function() {
-        return function (dateToFormat, located) {
+        return function(dateToFormat, located) {
             var momentizedTimestamp = moment.utc(dateToFormat);
 
             if (angular.isDefined(located) && located.tz !== 'UTC') {
@@ -200,7 +200,7 @@ export default angular.module('superdesk.core.filters', []).
         };
     })
     .filter('relativeUTCTimestamp', function() {
-        return function (located, month, date) {
+        return function(located, month, date) {
             var currentTSInLocated = located.tz === 'UTC' ? moment.utc() : moment().tz(located.tz);
             currentTSInLocated.month(month).date(date);
 
@@ -208,12 +208,12 @@ export default angular.module('superdesk.core.filters', []).
         };
     })
     .filter('sortByName', function() {
-        return function (_collection, propertyName) {
+        return function(_collection, propertyName) {
             if (!propertyName) {
                 propertyName = 'name';
             }
 
-            _collection = _.sortBy(_collection, function (_entry) {
+            _collection = _.sortBy(_collection, function(_entry) {
                 return _entry[propertyName] ? _entry[propertyName].toLowerCase() : _entry.name.toLowerCase();
             });
 
@@ -221,7 +221,7 @@ export default angular.module('superdesk.core.filters', []).
         };
     })
     .filter('formatFilterCondition', function() {
-        return function (filterCondition, valueLookup) {
+        return function(filterCondition, valueLookup) {
             var labels = [];
 
             if (filterCondition.field === 'anpa_category' || filterCondition.field === 'subject') {
@@ -240,7 +240,7 @@ export default angular.module('superdesk.core.filters', []).
         };
     })
     .filter('removeLodash', function() {
-        return function (value) {
+        return function(value) {
             var cleanedValue = value || '';
 
             return cleanedValue.replace('_', ' ');

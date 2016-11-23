@@ -20,7 +20,7 @@ describe('spellcheck', function() {
         LANG = 'en-US',
         errors = [];
 
-    beforeEach(window.module(function ($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
     }));
 

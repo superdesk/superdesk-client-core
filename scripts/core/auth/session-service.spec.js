@@ -13,18 +13,18 @@ describe('session service', function() {
         window.module('superdesk.core.auth.session');
     });
 
-    it('has identity and token property', inject(function (session) {
+    it('has identity and token property', inject(function(session) {
         expect(session.token).toBe(null);
         expect(session.identity).toBe(null);
     }));
 
-    it('can be started', inject(function (session, $q) {
+    it('can be started', inject(function(session, $q) {
         session.start(SESSION, {name: 'user'});
         expect(session.token).toBe(SESSION.token);
         expect(session.identity.name).toBe('user');
     }));
 
-    it('can be set expired', inject(function (session, $rootScope) {
+    it('can be set expired', inject(function(session, $rootScope) {
         spyOn($rootScope, '$broadcast');
         session.start(SESSION, {name: 'foo'});
         expect($rootScope.$broadcast).toHaveBeenCalledWith('login');
@@ -34,14 +34,14 @@ describe('session service', function() {
         expect($rootScope.$broadcast).toHaveBeenCalledWith('logout');
     }));
 
-    it('can resolve identity on start', inject(function (session, $rootScope) {
+    it('can resolve identity on start', inject(function(session, $rootScope) {
         var identity;
 
-        session.getIdentity().then(function (_identity) {
+        session.getIdentity().then(function(_identity) {
             identity = _identity;
         });
 
-        session.getIdentity().then(function (i2) {
+        session.getIdentity().then(function(i2) {
             expect(identity).toBe(i2);
         });
 
@@ -51,7 +51,7 @@ describe('session service', function() {
         expect(identity.name).toBe('foo');
     }));
 
-    it('can store state for future requests', inject(function (session, $rootScope) {
+    it('can store state for future requests', inject(function(session, $rootScope) {
         session.start(SESSION, {name: 'bar'});
 
         var nextInjector = angular.injector(['superdesk.core.auth.session', 'superdesk.core.services.storage', 'ng']);
@@ -69,7 +69,7 @@ describe('session service', function() {
         expect(session.identity.name).toBe('bar');
     }));
 
-    it('can set test user with given id', inject(function (session) {
+    it('can set test user with given id', inject(function(session) {
         session.testUser('1234id');
 
         expect(session.token).toBe(1);
@@ -92,19 +92,19 @@ describe('session service', function() {
         expect(session.identity.allowed_actions).toBeUndefined();
     }));
 
-    it('can clear session', inject(function (session) {
+    it('can clear session', inject(function(session) {
         session.start(SESSION, {name: 'bar'});
         session.clear();
         expect(session.token).toBe(null);
         expect(session.identity).toBe(null);
     }));
 
-    it('can persist session delete href', inject(function (session) {
+    it('can persist session delete href', inject(function(session) {
         session.start(SESSION, {name: 'bar'});
         expect(session.getSessionHref()).toBe(SESSION._links.self.href);
     }));
 
-    it('can update identity', inject(function (session, $rootScope) {
+    it('can update identity', inject(function(session, $rootScope) {
         session.start(SESSION, {name: 'bar'});
         session.updateIdentity({name: 'baz'});
         expect(session.identity.name).toBe('baz');

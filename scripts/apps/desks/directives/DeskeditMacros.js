@@ -17,12 +17,12 @@ export function DeskeditMacros(macros, WizardHandler) {
                     scope.macros = macros;
                 });
             } else {
-                macros.get().then(function (macroList) {
+                macros.get().then(function(macroList) {
                     scope.macros = macroList;
                 });
             }
 
-            scope.save = function () {
+            scope.save = function() {
                 WizardHandler.wizard('desks').finish();
             };
         }

@@ -245,7 +245,7 @@ describe('publish queue', function() {
     it('can resend single publish queue item', inject(function($rootScope, api, $q) {
         $rootScope.$digest();
         expect($scope.publish_queue.length).toBe(3);
-        spyOn(api.publish_queue, 'save').and.callFake(function () {
+        spyOn(api.publish_queue, 'save').and.callFake(function() {
             publishQueue._items.push($scope.buildNewSchedule($scope.publish_queue[0]));
             return $q.when();
         });

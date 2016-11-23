@@ -138,7 +138,7 @@ export function SearchService($location, gettext, config, session) {
     /*
      * Function for finding object by string array for cv codes
      */
-    this.getSelectedCodes = function (currentTags, codeList, field) {
+    this.getSelectedCodes = function(currentTags, codeList, field) {
         var queryArray = currentTags.selectedParameters, filteredArray = [];
         if (!$location.search().q) {
             return filteredArray;
@@ -163,14 +163,14 @@ export function SearchService($location, gettext, config, session) {
     /*
      * Function for finding object by string array for subject codes
      */
-    this.getSubjectCodes = function (currentTags, subjectcodes) {
+    this.getSubjectCodes = function(currentTags, subjectcodes) {
         return this.getSelectedCodes(currentTags, subjectcodes, 'subject');
     };
 
     /*
      * Function for finding object by string array for company codes
      */
-    this.getCompanyCodes = function (currentTags, codes) {
+    this.getCompanyCodes = function(currentTags, codes) {
         return this.getSelectedCodes(currentTags, codes, 'company_codes');
     };
 
@@ -474,7 +474,7 @@ export function SearchService($location, gettext, config, session) {
      * @param {Object} item
      * @return {String}
      */
-    this.generateTrackByIdentifier = function (item) {
+    this.generateTrackByIdentifier = function(item) {
         return this.getTrackByIdentifier(item._id, item.state !== 'ingested' ? item._current_version : null);
     };
 
@@ -485,7 +485,7 @@ export function SearchService($location, gettext, config, session) {
      * @param {String} version
      * @return {String}
      */
-    this.getTrackByIdentifier = function (id, version) {
+    this.getTrackByIdentifier = function(id, version) {
         return version ? (id + ':' + version) : id;
     };
 
@@ -542,7 +542,7 @@ export function SearchService($location, gettext, config, session) {
         if (this.getElasticHighlight()) {
             newItems._items = _.map(newItems._items, function(item) {
                 if (item.es_highlight) {
-                    _.forEach(_.keys(item.es_highlight), function (key) {
+                    _.forEach(_.keys(item.es_highlight), function(key) {
                         item[key] = item.es_highlight[key][0];
                     });
                 } else {
@@ -567,7 +567,7 @@ export function SearchService($location, gettext, config, session) {
             // if fetched items are new or removed then update current scope.items
             // by adding or removing items found in diffToAdd or diffToMinus respectively.
             if (!_.isEmpty(diffToMinus)) {
-                _.remove(scopeItems._items, function (item) {
+                _.remove(scopeItems._items, function(item) {
                     return _.includes(diffToMinus, item._id);
                 });
             }

@@ -15,7 +15,7 @@ describe('Embed Code Handlers', function() {
         ctrl = $controller('SdAddEmbedController', {$scope: scope, $element: element});
     }));
 
-    it('match a twitter url', inject(function ($httpBackend, config) {
+    it('match a twitter url', inject(function($httpBackend, config) {
         ctrl.input = 'https://twitter.com/letzi83/status/764062125996113921';
         $httpBackend
             .expectJSONP('https://iframe.ly/api/iframely?callback=JSON_CALLBACK&api_key=' +
@@ -34,7 +34,7 @@ describe('Embed Code Handlers', function() {
         scope.$digest();
     }));
 
-    it('match a twitter embed', function () {
+    it('match a twitter embed', function() {
         ctrl.input = '<blockquote class="twitter-tweet" data-lang="fr"><p lang="en" dir="ltr">' +
         'A bit old, but I just got around to ready it: &quot;This Is What a Feminist Looks Like&quot;' +
         ' according to <a href="https://twitter.com/hashtag/Obama?src=hash">#Obama</a>: <a href="' +
@@ -50,7 +50,7 @@ describe('Embed Code Handlers', function() {
         scope.$digest();
     });
 
-    it('match a vidible embed', inject(function (config, $httpBackend) {
+    it('match a vidible embed', inject(function(config, $httpBackend) {
         ctrl.input = '<div class="vdb_player vdb_56bb474de4b0568f54a23ed7538612f0e4b00fbb8e898655">' +
         '<script type="text/javascript" src="//delivery.vidible.tv/jsonp/pid=56bb474de4b0568f54a23ed7/' +
         '538612f0e4b00fbb8e898655.js"></script></div>';

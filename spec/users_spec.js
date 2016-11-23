@@ -189,16 +189,16 @@ describe('users', function() {
         });
     });
 
-    describe('editing user preferences:', function () {
+    describe('editing user preferences:', function() {
         beforeEach(function(done) {
-            userPrefs.navigateTo().then(function () {
+            userPrefs.navigateTo().then(function() {
                 return userPrefs.prefsTab.click();
             }).then(done);
         });
 
         it('should filter categories in the Authoring metadata head menu ' +
            'based on the user\'s preferred categories settings',
-            function () {
+            function() {
                 userPrefs.btnCheckNone.click();  // uncheck all categories
 
                 // select the Entertainment and Finance categories
@@ -225,7 +225,7 @@ describe('users', function() {
 
         it('should filter and navigate filtered list via keyboard action in the ' +
            'Authoring metadata based on the user\'s preferred categories settings',
-            function () {
+            function() {
                 userPrefs.btnCheckNone.click();  // uncheck all categories
 
                 // select the Entertainment and Finance categories
@@ -258,16 +258,16 @@ describe('users', function() {
         //
     });
 
-    describe('editing user privileges:', function () {
-        beforeEach(function (done) {
-            userPrefs.navigateTo().then(function () {
+    describe('editing user privileges:', function() {
+        beforeEach(function(done) {
+            userPrefs.navigateTo().then(function() {
                 return userPrefs.privlTab.click();
             }).then(done);
         });
 
         it('should reset the form to the last saved state when the Cancel ' +
             'button is clicked',
-            function () {
+            function() {
                 var checkboxes = userPrefs.privlCheckboxes;
 
                 // Initially all checboxes are unchecked. Now let's select

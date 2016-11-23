@@ -163,7 +163,7 @@ export default angular.module('superdesk.core.auth', [
                 }
 
                 if (canLogout) {
-                    api.auth.getById(session.sessionId).then(function (sessionData) {
+                    api.auth.getById(session.sessionId).then(function(sessionData) {
                         api.auth.remove(sessionData).then(replace, replace);
                     });
                 }
@@ -172,7 +172,7 @@ export default angular.module('superdesk.core.auth', [
         // populate current user
             $rootScope.$watch(function watchSessionIdentity() {
                 return session.identity;
-            }, function (identity) {
+            }, function(identity) {
                 $rootScope.currentUser = session.identity;
                 $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
             });

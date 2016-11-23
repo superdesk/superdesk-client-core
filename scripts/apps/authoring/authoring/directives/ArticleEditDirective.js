@@ -100,7 +100,7 @@ export function ArticleEditDirective(
 
                 if (scope.item && scope.item.type === 'picture') {
                     scope.item.hasCrops = false;
-                    scope.item.hasCrops = scope.metadata.crop_sizes.some(function (crop) {
+                    scope.item.hasCrops = scope.metadata.crop_sizes.some(function(crop) {
                         return scope.item.renditions && scope.item.renditions[crop.name];
                     });
                 }
@@ -284,7 +284,7 @@ export function ArticleEditDirective(
                 }
             });
 
-            scope.$watch('item.profile', function (profile) {
+            scope.$watch('item.profile', function(profile) {
                 if (profile) {
                     content.getType(profile)
                         .then(function(type) {

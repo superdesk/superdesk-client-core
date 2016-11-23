@@ -72,7 +72,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      * @param {object} widget
      * @returns {boolean}
      */
-    this.isSelected = function (widget) {
+    this.isSelected = function(widget) {
         return widget && !_.find(getAvailableWidgets(this.widgets), widget);
     };
 

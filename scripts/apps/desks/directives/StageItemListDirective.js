@@ -46,10 +46,10 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 superdesk.intent('preview', 'item', item);
             };
 
-            scope.edit = function (item) {
+            scope.edit = function(item) {
                 if (item._type === 'ingest') {
                     var activity = superdesk.findActivities({action: 'list', type: 'ingest'}, item)[0];
-                    activityService.start(activity, {data: {item: item}}).then(function (item) {
+                    activityService.start(activity, {data: {item: item}}).then(function(item) {
                         initEdit(item);
                     });
                 } else {
@@ -57,7 +57,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 }
 
                 function initEdit(item) {
-                    superdesk.intent('edit', 'item', item).then(null, function () {
+                    superdesk.intent('edit', 'item', item).then(null, function() {
                         superdesk.intent('view', 'item', item);
                     });
                 }
@@ -261,7 +261,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 });
             });
 
-            scope.move = function (diff, event) {
+            scope.move = function(diff, event) {
                 if (scope.selected != null && $rootScope.config.features.customMonitoringWidget) {
                     if (scope.items) {
                         var index = _.findIndex(scope.items, {_id: scope.selected._id});

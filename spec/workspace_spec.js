@@ -4,8 +4,8 @@
 var dashboard = require('./helpers/dashboard'),
     altKey = require('./helpers/utils').altKey;
 
-describe('workspace', function () {
-    beforeEach(function () {
+describe('workspace', function() {
+    beforeEach(function() {
         dashboard.openDashboard();
     });
 

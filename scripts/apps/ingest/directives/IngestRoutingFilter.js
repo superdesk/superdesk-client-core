@@ -30,7 +30,7 @@ export function IngestRoutingFilter() {
      * @return {string} - an escaped version of the given string
      */
     // XXX: should probably be moved into some utils module - but where?
-    RegExp.escape = function (s) {
+    RegExp.escape = function(s) {
         return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     };
 
@@ -70,12 +70,12 @@ export function IngestRoutingFilter() {
              * @method searchFilters
              * @param {string} term - the string to search for
              */
-            scope.searchFilters = function (term) {
+            scope.searchFilters = function(term) {
                 var regex = new RegExp(RegExp.escape(term), 'i');
 
                 scope.matchingFilters = _.filter(
                     scope.filters,
-                    function (filter) {
+                    function(filter) {
                         return regex.test(filter.name);
                     }
                 );
@@ -88,7 +88,7 @@ export function IngestRoutingFilter() {
              * @method selectFilter
              * @param {Object} filter - the content filter to select
              */
-            scope.selectFilter = function (filter) {
+            scope.selectFilter = function(filter) {
                 scope.selectedFilter = filter;
                 scope.rule.filter = filter._id;
                 scope.rule.filterName = filter.name;
@@ -100,7 +100,7 @@ export function IngestRoutingFilter() {
              *
              * @method clearSelectedFilter
              */
-            scope.clearSelectedFilter = function () {
+            scope.clearSelectedFilter = function() {
                 scope.selectedFilter = null;
                 scope.rule.filter = null;
                 scope.rule.filterName = null;

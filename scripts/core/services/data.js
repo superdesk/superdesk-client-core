@@ -197,7 +197,7 @@ export default angular.module('superdesk.core.services.data', [])
                     }, params);
 
                     // main loop - update when query criteria change
-                    cancelWatch = $rootScope.$watchCollection(function () {
+                    cancelWatch = $rootScope.$watchCollection(function() {
                         return getQueryCriteria();
                     }, function(criteria) {
                         self.query(criteria);

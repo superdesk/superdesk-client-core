@@ -9,7 +9,7 @@ export function SubscribersDirective(
 
     return {
         templateUrl: 'scripts/apps/publish/views/subscribers.html',
-        link: function ($scope) {
+        link: function($scope) {
             $scope.subscriber = null;
             $scope.origSubscriber = null;
             $scope.subscribers = null;

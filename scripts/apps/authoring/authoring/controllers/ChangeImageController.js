@@ -56,7 +56,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         }
         /* Throw an exception if a required metadata field is missing */
         function validateMediaFields() {
-            _.each($scope.data.requiredFields, function (key) {
+            _.each($scope.data.requiredFields, function(key) {
                 var value = $scope.data.metadata[key];
                 var regex = new RegExp('^\<*br\/*\>*$', 'i');
                 if (!!!value || value.match(regex)) {

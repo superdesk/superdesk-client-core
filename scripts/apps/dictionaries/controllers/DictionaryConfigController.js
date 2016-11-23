@@ -1,5 +1,5 @@
 DictionaryConfigController.$inject = ['$scope', 'dictionaries', 'gettext', 'session', 'modal', 'notify'];
-export function DictionaryConfigController ($scope, dictionaries, gettext, session, modal, notify) {
+export function DictionaryConfigController($scope, dictionaries, gettext, session, modal, notify) {
     $scope.dictionaries = null;
     $scope.origDictionary = null;
     $scope.dictionary = null;

@@ -15,7 +15,7 @@ export function DeskSelect(Keys, _, preferencesService) {
             this.active = null;
         }
 
-        setActive (desk) {
+        setActive(desk) {
             this.active = desk || null;
         }
     }

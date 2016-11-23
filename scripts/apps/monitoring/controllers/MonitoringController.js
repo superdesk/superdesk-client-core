@@ -32,11 +32,11 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
 
     this.scrollTop = false;
 
-    this.isDeskChanged = function () {
+    this.isDeskChanged = function() {
         return desks.changeDesk;
     };
 
-    this.highlightsDeskChanged = function () {
+    this.highlightsDeskChanged = function() {
         if (desks.changeDesk) {
             $location.url('/workspace/monitoring');
         }

@@ -4,7 +4,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk) {
     return {
         templateUrl: 'scripts/apps/archive/views/preview.html',
         link: function(scope) {
-            scope.previewRewriteStory = function () {
+            scope.previewRewriteStory = function() {
                 return api.find('archive', scope.item.rewrite_id).then(function(item) {
                     $rootScope.$broadcast('broadcast:preview', {'item': item});
                 });

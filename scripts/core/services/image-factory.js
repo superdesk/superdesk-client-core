@@ -6,9 +6,9 @@
 * @description Factory for creating Image objects. Allows for easier mocking in tests.
 */
 export default angular.module('superdesk.core.services.imageFactory' , []).factory('imageFactory',
-    function () {
+    function() {
         return {
-            makeInstance: function () {
+            makeInstance: function() {
                 return new Image();
             }
         };

@@ -2,7 +2,7 @@ RoleUnique.$inject = ['api', '$q'];
 export function RoleUnique(api, $q) {
     return {
         require: 'ngModel',
-        link: function (scope, element, attrs, ctrl) {
+        link: function(scope, element, attrs, ctrl) {
 
             /**
              * Test if given value is unique for seleted field

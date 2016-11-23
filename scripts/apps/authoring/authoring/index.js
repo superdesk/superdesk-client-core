@@ -173,7 +173,7 @@ angular.module('superdesk.apps.authoring', [
                 href: '/preview/:_id',
                 when: '/preview/:_id',
                 template: '<div sd-full-preview data-item="item"></div>',
-                controller: ['$scope', 'item', function ($scope, item) {
+                controller: ['$scope', 'item', function($scope, item) {
                     $scope.item = item;
                 }],
                 resolve: {

@@ -34,7 +34,7 @@ RelatedItemController.$inject = [
     'storage'
 ];
 
-function RelatedItemController (
+function RelatedItemController(
     $scope,
     api,
     BaseWidgetController,

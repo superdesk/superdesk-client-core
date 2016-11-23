@@ -6,7 +6,7 @@ export function FullPreviewDirective(api, $timeout, config, content) {
             closeAction: '='
         },
         templateUrl: 'scripts/apps/authoring/views/full-preview.html',
-        link: function (scope, elem, attr, ctrl) {
+        link: function(scope, elem, attr, ctrl) {
             scope.hide_images = false;
 
             scope.filterKey = config.previewSubjectFilterKey || '';
@@ -20,16 +20,16 @@ export function FullPreviewDirective(api, $timeout, config, content) {
                 scope.editor = content.editor();
             }
 
-            scope.printPreview = function () {
+            scope.printPreview = function() {
                 angular.element('body').addClass('prepare-print');
 
-                var afterPrint = function () {
+                var afterPrint = function() {
                     angular.element('body').removeClass('prepare-print');
                 };
 
                 if (window.matchMedia) {
                     var mediaQueryList = window.matchMedia('print');
-                    mediaQueryList.addListener(function (mql) {
+                    mediaQueryList.addListener(function(mql) {
                         if (!mql.matches) {
                             afterPrint();
                         }
@@ -38,7 +38,7 @@ export function FullPreviewDirective(api, $timeout, config, content) {
 
                 window.onafterprint = afterPrint;
 
-                $timeout(function () {
+                $timeout(function() {
                     window.print();
                 }, 200, false);
                 return false;

@@ -27,7 +27,7 @@ export default angular.module('superdesk.core.workflow', [])
             return false;
         };
 
-        this.setActions = function (actions) {
+        this.setActions = function(actions) {
             _actions = actions;
         };
 

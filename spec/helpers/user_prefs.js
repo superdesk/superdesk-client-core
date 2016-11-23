@@ -30,7 +30,7 @@ function UserPrefs() {
         element(by.css('[name="user_language"]')).element(by.cssContainingText('option', lang)).click();
     };
 
-    this.navigateTo = function () {
+    this.navigateTo = function() {
         return openUrl('/#/profile');
     };
 }

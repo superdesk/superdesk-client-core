@@ -34,7 +34,7 @@ angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', [
     }]);
 
 AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout', 'config', '$q'];
-function AddContentCtrl (scope, element, superdesk, editor, $timeout, config, $q) {
+function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q) {
     var elementHolder = element.find('div:first-child').first();
     var self = this;
     angular.extend(self, {

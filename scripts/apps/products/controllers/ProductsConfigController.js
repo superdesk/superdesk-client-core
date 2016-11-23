@@ -1,6 +1,6 @@
 ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal',
     'subscribersService', 'metadata', '$filter'];
-export function ProductsConfigController ($scope, gettext, notify, api, products, modal,
+export function ProductsConfigController($scope, gettext, notify, api, products, modal,
     subscribersService, metadata, $filter) {
 
     $scope.testLookup = {};

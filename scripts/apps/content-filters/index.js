@@ -28,7 +28,7 @@ import * as ctrl from './controllers';
  * @description Superdesk package containing content filters.
  */
 angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
-.config(['superdeskProvider', function (superdesk) {
+.config(['superdeskProvider', function(superdesk) {
     var templateUrl = 'scripts/apps/content-filters/' +
                           'views/settings.html';
 

@@ -56,7 +56,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     /*
     * Populates the publish queue and update the flags after fetch operation.
     */
-    function populatePublishQueue () {
+    function populatePublishQueue() {
         fetchPublishQueue().then(function(queue) {
             var queuedItems = queue._items;
 
@@ -74,7 +74,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     /*
     * Fetch the publish queue on the basis of built criteria.
     */
-    function fetchPublishQueue () {
+    function fetchPublishQueue() {
         var criteria = criteria || {};
         criteria.max_results = $scope.pageSize;
         criteria.page = $scope.page;
@@ -125,7 +125,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         });
     };
 
-    $scope.buildNewSchedule = function (item) {
+    $scope.buildNewSchedule = function(item) {
         var pickFields = ['item_id', 'item_version', 'publishing_action', 'formatted_item', 'headline',
             'content_type', 'subscriber_id', 'unique_name', 'destination', 'ingest_provider',
             'item_encoding', 'encoded_item_id'];
@@ -256,7 +256,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         populatePublishQueue();
     };
 
-    function refreshQueueState (data) {
+    function refreshQueueState(data) {
         var item = _.find($scope.publish_queue, {'_id': data.queue_id});
 
         if (item) {

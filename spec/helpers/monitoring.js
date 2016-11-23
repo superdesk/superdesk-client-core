@@ -474,7 +474,7 @@ function Monitoring() {
                 .mouseDown()
                 .perform()
                 .then(function() {
-                    dst.waitReady().then(function () {
+                    dst.waitReady().then(function() {
                         browser.actions()
                             .mouseMove(dst)
                             .mouseUp()
@@ -494,8 +494,8 @@ function Monitoring() {
         maxItemsInput.sendKeys(value);
     };
 
-    this.hasClass = function (element, cls) {
-        return element.getAttribute('class').then(function (classes) {
+    this.hasClass = function(element, cls) {
+        return element.getAttribute('class').then(function(classes) {
             return classes.split(' ').indexOf(cls) !== -1;
         });
     };
@@ -707,17 +707,17 @@ function Monitoring() {
         }
     };
 
-    this.openSearchBox = function () {
+    this.openSearchBox = function() {
         element.all(by.css('[ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"]')).click();
     };
 
     this.searchInput = element(by.id('search-input'));
 
-    this.getCorrectionItems = function (group) {
+    this.getCorrectionItems = function(group) {
         return this.getGroupItems(5).all(by.css('[title="correction sequence"]'));
     };
 
-    this.getTakeItems = function (group) {
+    this.getTakeItems = function(group) {
         return this.getGroupItems(group).all(by.className('takekey'));
     };
 }

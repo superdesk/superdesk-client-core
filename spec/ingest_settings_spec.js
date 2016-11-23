@@ -9,7 +9,7 @@ describe('ingest_settings', function() {
         openUrl('/#/settings/ingest').then(done);
     });
 
-    xit('unselecting options in dropdown lists on the Actions pane', function () {
+    xit('unselecting options in dropdown lists on the Actions pane', function() {
         var deskList,   // dropdown list for choosing a desk
             macroList,  // dropdown list for choosing a macro
             stageList,  // dropdown list for choosing a desk stage
@@ -72,7 +72,7 @@ describe('ingest_settings', function() {
         expect(macroList.$('option:checked').getAttribute('value')).toEqual('');
     });
 
-    it('contains the Schedule tab for editing routing schedules', function () {
+    it('contains the Schedule tab for editing routing schedules', function() {
         var ruleSettings,
             tzOption;
 

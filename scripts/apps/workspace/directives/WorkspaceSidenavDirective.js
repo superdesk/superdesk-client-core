@@ -15,7 +15,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
              * @param {boolean} state Gets the state of button
              * @param {object} e Gets $event from the element
              */
-            scope.hideMonitoring = function (state, e) {
+            scope.hideMonitoring = function(state, e) {
                 if (superdeskFlags.flags.authoring && state) {
                     e.preventDefault();
                     superdeskFlags.flags.hideMonitoring = !superdeskFlags.flags.hideMonitoring;
@@ -24,7 +24,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
                 }
             };
 
-            scope.loadScanpixSearch = function (source) {
+            scope.loadScanpixSearch = function(source) {
                 $location.url('/search?repo=' + source + '&q=subscription:(subscription)');
                 $route.reload();
             };
@@ -43,7 +43,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
              * By using keyboard shortcuts, change the current showed view
              *
              */
-            scope.highlightsHotkey = function () {
+            scope.highlightsHotkey = function() {
                 elem.find('.highlights-dropdown .dropdown__toggle').click();
                 elem.find('.dropdown__menu button')[0].focus();
             };

@@ -19,12 +19,12 @@ export function ItemSearchbar($location, $document, asset) {
                 }
             };
 
-            scope.search = function () {
+            scope.search = function() {
                 var output = '';
 
                 if (scope.query) {
                     var newQuery = _.uniq(scope.query.split(/[\s,]+/));
-                    _.each(newQuery, function (item, key) {
+                    _.each(newQuery, function(item, key) {
                         if (item) {
                             output += key !== 0 ? ' (' + item + ')' : '(' + item + ')';
                         }

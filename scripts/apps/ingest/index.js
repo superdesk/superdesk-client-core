@@ -114,7 +114,7 @@ angular.module('superdesk.apps.ingest', [
                 filters: [{action: 'list', type: 'ingest'}],
                 privileges: {fetch: 1},
                 key: 'f',
-                additionalCondition: ['desks', function (desks) {
+                additionalCondition: ['desks', function(desks) {
                     // fetching to 'personal' desk is not allowed
                     return desks.getCurrentDeskId() != null;
                 }]

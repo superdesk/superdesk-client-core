@@ -17,7 +17,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return authoring.open(_id, readOnly);
     };
 
-    this.createPackageFromItems = function (items, defaults) {
+    this.createPackageFromItems = function(items, defaults) {
         var idRef = 'main';
         var item = items[0];
         var newPackage = {

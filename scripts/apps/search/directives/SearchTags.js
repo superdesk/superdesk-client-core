@@ -19,7 +19,7 @@ export function SearchTags($location, tags, asset, metadata) {
             function init() {
                 metadata
                     .initialize()
-                    .then(function () {
+                    .then(function() {
                         scope.metadata = metadata.values;
                     });
 

@@ -374,7 +374,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 });
             }
 
-            function hasNullValue (target) {
+            function hasNullValue(target) {
                 for (var member in target) {
                     if (target[member] == null) {
                         return true;

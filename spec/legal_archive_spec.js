@@ -7,7 +7,7 @@ var workspace = require('./helpers/workspace'),
 var hover = require('./helpers/utils').hover;
 
 describe('legal_archive', function() {
-    it('can display Legal Archive option in hamburger menu', function () {
+    it('can display Legal Archive option in hamburger menu', function() {
         workspace.open();
 
         expect(legalArchive.getLegalArchiveMenuOption().isDisplayed()).toBe(true);
@@ -18,7 +18,7 @@ describe('legal_archive', function() {
         expect(content.getItems().count()).toBe(4);
     });
 
-    it('can display only OPEN option in the Actions Menu for items in Legal Archive', function () {
+    it('can display only OPEN option in the Actions Menu for items in Legal Archive', function() {
         legalArchive.open();
         var menu = content.openItemMenu('item1 in legal archive');
         var menuItems = menu.all(by.repeater('activity in actions.default'));
@@ -26,7 +26,7 @@ describe('legal_archive', function() {
         expect(menuItems.count()).toBe(1);
     });
 
-    it('on open item close preview in a Legal Archive', function () {
+    it('on open item close preview in a Legal Archive', function() {
         legalArchive.open();
 
         content.previewItem('item1 in legal archive');
@@ -36,7 +36,7 @@ describe('legal_archive', function() {
         expect(element(by.id('item-preview')).isDisplayed()).toBe(false);
     });
 
-    it('can open text item in a Legal Archive', function () {
+    it('can open text item in a Legal Archive', function() {
         legalArchive.open();
 
         content.actionOnItem('Open', 'item1 in legal archive');
@@ -46,7 +46,7 @@ describe('legal_archive', function() {
         assertAuthoringTopbarAndItemState();
     });
 
-    it('can open package in a Legal Archive', function () {
+    it('can open package in a Legal Archive', function() {
         legalArchive.open();
 
         content.actionOnItem('Open', 'package1 in legal archive');
@@ -61,7 +61,7 @@ describe('legal_archive', function() {
 
         content.actionOnItem('Open', 'package1 in legal archive');
 
-        element.all(by.repeater('child in item.childData')).then(function (itemsInPackage) {
+        element.all(by.repeater('child in item.childData')).then(function(itemsInPackage) {
             hover(itemsInPackage[0]);
             itemsInPackage[0].element(by.className('package-item__open-item')).click();
             assertAuthoringTopbarAndItemState();

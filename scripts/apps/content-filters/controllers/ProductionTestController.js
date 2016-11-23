@@ -38,13 +38,13 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
     $scope.openView = function(item) {
         $scope.openLightbox(item);
     };
-    $scope.openLightbox = function (item) {
+    $scope.openLightbox = function(item) {
         $scope.selected.view = item;
     };
-    $scope.closeLightbox = function () {
+    $scope.closeLightbox = function() {
         $scope.selected.view = null;
     };
-    $scope.hideActions = function () {
+    $scope.hideActions = function() {
         return true;
     };
 
@@ -92,7 +92,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
     $scope.fetchResults = function() {
         fetchProductionTestResult();
     };
-    $scope.$on('triggerTest', function (event, filter) {
+    $scope.$on('triggerTest', function(event, filter) {
         $scope.productionTest = true;
         $scope.testResult = null;
         $scope.selectedfilter = filter._id;

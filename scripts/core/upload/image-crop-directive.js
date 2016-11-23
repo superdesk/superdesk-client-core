@@ -418,7 +418,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         onExistEvents.forEach(function(eventName) {
                             overlay.on(eventName, exitDragMode);
                         });
-                        scope.$on('$destroy', function () {
+                        scope.$on('$destroy', function() {
                             overlay.off('mousedown', enableDragMode);
                             overlay.off('mousemove', updateOnMouseDrag);
                             onExistEvents.forEach(function(eventName) {
@@ -433,7 +433,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 scope.$on('poiUpdate', updateWhenImageIsReady);
                 angular.element($window).on('resize', updateWhenImageIsReady);
                 // on destroy
-                scope.$on('$destroy', function () {
+                scope.$on('$destroy', function() {
                     angular.element($window).off('resize', updateWhenImageIsReady);
                 });
             }

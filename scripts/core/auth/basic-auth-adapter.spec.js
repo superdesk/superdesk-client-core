@@ -11,7 +11,7 @@ describe('basic auth adapter', function() {
     beforeEach(window.module('superdesk.core.auth'));
     beforeEach(window.module('superdesk.core.menu'));
     beforeEach(window.module('superdesk.apps.authoring'));
-    beforeEach(inject(function (_$httpBackend_) {
+    beforeEach(inject(function(_$httpBackend_) {
         $httpBackend = _$httpBackend_;
     }));
 

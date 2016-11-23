@@ -128,7 +128,7 @@ describe('workspace', function() {
     describe('sdDeskDropdown directive', function() {
         var scope, workspaces;
 
-        beforeEach(inject(function (desks, _workspaces_, api, preferencesService, $q, $rootScope, $compile) {
+        beforeEach(inject(function(desks, _workspaces_, api, preferencesService, $q, $rootScope, $compile) {
             workspaces = _workspaces_;
             spyOn(desks, 'setCurrentDeskId');
             spyOn(workspaces, 'setActive');
@@ -144,7 +144,7 @@ describe('workspace', function() {
         }));
 
         describe('selectDesk() scope method', function() {
-            it('can set workspace type', inject(function () {
+            it('can set workspace type', inject(function() {
                 var desk = {_id: 'foo'};
                 scope.workspaceType = null;
                 scope.selectDesk(desk);
@@ -154,7 +154,7 @@ describe('workspace', function() {
         });
 
         describe('selectWorkspace() scope method', function() {
-            it('can set workspace type', inject(function () {
+            it('can set workspace type', inject(function() {
                 var workspace = {name: 'foo', widgets: [{_id: 'foo'}]};
 
                 scope.workspaceType = null;

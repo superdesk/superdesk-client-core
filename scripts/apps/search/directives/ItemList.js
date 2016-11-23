@@ -280,7 +280,7 @@ export function ItemList(
                 );
             };
 
-            function createMarkUp (html) {
+            function createMarkUp(html) {
                 return {__html: html};
             }
 
@@ -699,7 +699,7 @@ export function ItemList(
                     return {open: false};
                 },
 
-                close: function (cancel) {
+                close: function(cancel) {
                     if (cancel === true && closeTimeout) {
                         $timeout.cancel(closeTimeout);
                     } else {
@@ -709,7 +709,7 @@ export function ItemList(
                     }
                 },
 
-                toggle: function (event) {
+                toggle: function(event) {
                     if (event) {
                         event.stopPropagation();
                     }
@@ -718,7 +718,7 @@ export function ItemList(
                     this.renderDropdown();
                 },
 
-                render: function () {
+                render: function() {
                     return React.createElement('dd',
                             {className: 'dropdown dropdown--dropup more-actions'},
                             React.createElement('button', {
@@ -731,8 +731,8 @@ export function ItemList(
                             ));
                 },
 
-                renderDropdown: function () {
-                    var desks = this.props.desks.map(function (desk, index) {
+                renderDropdown: function() {
+                    var desks = this.props.desks.map(function(desk, index) {
                         return React.createElement(
                                 'li',
                                 {key: 'desk' + index},
@@ -1262,7 +1262,7 @@ export function ItemList(
                     }
                 },
 
-                setPosition: function () {
+                setPosition: function() {
                     var targetRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
                     var LEFT_BAR_WIDTH = 48;
                     var BUFFER = 250;
@@ -1508,10 +1508,10 @@ export function ItemList(
 
                 multiSelect: function(items, selected) {
                     var itemsById = angular.extend({}, this.state.itemsById);
-                    items.forEach(function (item) {
+                    items.forEach(function(item) {
                         var itemId = search.generateTrackByIdentifier(item);
                         itemsById[itemId] = angular.extend({}, item, {selected: selected});
-                        scope.$applyAsync(function () {
+                        scope.$applyAsync(function() {
                             multi.toggle(itemsById[itemId]);
                         });
                     });
@@ -1540,14 +1540,14 @@ export function ItemList(
                     }, 500, false);
                 },
 
-                selectItem: function (item) {
+                selectItem: function(item) {
                     if (isCheckAllowed(item)) {
                         var selected = !item.selected;
                         this.multiSelect([item], selected);
                     }
                 },
 
-                selectMultipleItems: function (lastItem) {
+                selectMultipleItems: function(lastItem) {
                     var itemId = search.generateTrackByIdentifier(lastItem),
                         positionStart = 0,
                         positionEnd = _.indexOf(this.state.itemsList, itemId),

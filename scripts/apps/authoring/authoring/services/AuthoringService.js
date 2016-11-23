@@ -62,7 +62,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
     };
 
-    this.rewrite = function (item) {
+    this.rewrite = function(item) {
         var authoringWorkspace = $injector.get('authoringWorkspace');
 
         session.getIdentity()
@@ -150,7 +150,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * Removes certain properties which are irrelevant for publish actions depending on the orig.item.state.
      * If not removed the API will throw errors.
      */
-    this.cleanUpdatesBeforePublishing = function (original, updates) {
+    this.cleanUpdatesBeforePublishing = function(original, updates) {
         if (!updates.publish_schedule) {
             delete updates.publish_schedule;
         }
@@ -199,7 +199,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         });
     };
 
-    this.validateBeforeTansa = function (orig, diff, act) {
+    this.validateBeforeTansa = function(orig, diff, act) {
         diff = helpers.extendItem({}, diff);
 
         this.cleanUpdatesBeforePublishing(orig, diff);

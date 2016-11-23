@@ -12,7 +12,7 @@ export function ProfilingController($scope, api) {
     /*
     * Populates the profiling data.
     */
-    function populateProfilingData () {
+    function populateProfilingData() {
         api.profiling.getById($scope.current_profile).then(function(profile) {
             $scope.profiling_data = profile.profiling_data;
             $scope.lastRefreshedAt = new Date();

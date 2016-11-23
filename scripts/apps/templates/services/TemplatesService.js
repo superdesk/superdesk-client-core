@@ -106,7 +106,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
             });
     };
 
-    this.fetchTemplatesByUserDesk = function (user, desk, page, pageSize, type, templateName) {
+    this.fetchTemplatesByUserDesk = function(user, desk, page, pageSize, type, templateName) {
         var params = {
             page: page || 1,
             max_results: pageSize || PAGE_SIZE,

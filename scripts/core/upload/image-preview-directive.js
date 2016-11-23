@@ -24,7 +24,7 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
 
                 var img = document.createElement('img');
 
-                img.onload = function () {
+                img.onload = function() {
                     scope.$apply(function() {
                         scope.width = img.width;
                         scope.height = img.height;

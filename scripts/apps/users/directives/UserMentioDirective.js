@@ -68,7 +68,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
                         filteredDesks = filteredDesks.slice((page - 1) * 10, page * 10);
                     }
 
-                    _.each(filteredDesks, function (item) {
+                    _.each(filteredDesks, function(item) {
                         list.push({'type': 'desk', 'item': item});
                     });
                 });
@@ -90,7 +90,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
                 function() {
                     return $('.users-list-embed>li.active');
                 },
-                function (newValue) {
+                function(newValue) {
                     if (newValue.hasClass('active')) {
                         $('.mentio-menu').scrollTop(newValue.position().top);
                     }

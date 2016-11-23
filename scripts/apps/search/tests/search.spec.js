@@ -231,7 +231,7 @@ describe('search service', function() {
     });
 });
 
-describe('sdSearchPanel directive', function () {
+describe('sdSearchPanel directive', function() {
     var desks,
         facetsInit,
         fakeApi,
@@ -250,7 +250,7 @@ describe('sdSearchPanel directive', function () {
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(window.module(function ($provide) {
+    beforeEach(window.module(function($provide) {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
@@ -288,7 +288,7 @@ describe('sdSearchPanel directive', function () {
     /**
      * Mock even more dependencies and compile the directive under test.
      */
-    beforeEach(inject(function (
+    beforeEach(inject(function(
         $templateCache, $compile, $rootScope, $q, _desks_, tags, search
     ) {
         var html,
@@ -322,9 +322,9 @@ describe('sdSearchPanel directive', function () {
         isoScope = $element.isolateScope();
     }));
 
-    describe('reacting to changes in the item list', function () {
+    describe('reacting to changes in the item list', function() {
 
-        beforeEach(function () {
+        beforeEach(function() {
             isoScope.items = {
                 _aggregations: {
                     desk: {buckets: []},
@@ -342,7 +342,7 @@ describe('sdSearchPanel directive', function () {
             };
         });
 
-        xit('does not throw an error if desk not in deskLookup', function () {
+        xit('does not throw an error if desk not in deskLookup', function() {
             isoScope.desk = null;
 
             isoScope.items._aggregations.desk.buckets = [
@@ -361,7 +361,7 @@ describe('sdSearchPanel directive', function () {
             }
         });
 
-        xit('outputs a warning if desk not in deskLookup', function () {
+        xit('outputs a warning if desk not in deskLookup', function() {
             isoScope.desk = null;
 
             isoScope.items._aggregations.desk.buckets = [

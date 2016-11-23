@@ -99,14 +99,14 @@ function NotifyConnectionService($rootScope, notify, gettext, $timeout, session)
 
     $rootScope.$on('disconnected', function(event) {
         self.message = gettext('Disconnected from Notification Server!');
-        $rootScope.$applyAsync(function () {
+        $rootScope.$applyAsync(function() {
             notify.warning(self.message);
         });
     });
 
     $rootScope.$on('connected', function(event) {
         self.message = gettext('Connected to Notification Server!');
-        $rootScope.$applyAsync(function () {
+        $rootScope.$applyAsync(function() {
             notify.pop();   // removes disconnection warning, once connected.
             notify.success(self.message);
         });
@@ -129,7 +129,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     self.userDesks = [];
     self.result = null;
     self.activeDesk = null;
-    desks.fetchCurrentUserDesks().then(function (deskList) {
+    desks.fetchCurrentUserDesks().then(function(deskList) {
         self.userDesks = deskList;
         self.activeDesk = desks.active.desk;
     });

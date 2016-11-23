@@ -100,7 +100,7 @@ export function PieChartDashboard(colorSchemes) {
                             a = self.getBoundingClientRect();
 
                         svg.selectAll('.place-label')
-                                .each(function () {
+                                .each(function() {
                                     if (this !== self) {
                                         var b = this.getBoundingClientRect();
                                         if ((Math.abs(a.left - b.left) * 2 < (a.width + b.width)) &&

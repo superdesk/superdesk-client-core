@@ -223,7 +223,7 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
             link: function(scope, elem, attrs, ctrl) {
                 scope.flags = ctrl.flags;
 
-                scope.openArticle = function (notification) {
+                scope.openArticle = function(notification) {
                     ctrl.flags.notifications = !ctrl.flags.notifications;
                     authoringWorkspace.edit({'_id': notification.item}, 'edit');
                 };

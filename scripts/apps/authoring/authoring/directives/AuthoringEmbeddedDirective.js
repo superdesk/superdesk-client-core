@@ -8,7 +8,7 @@ export function AuthoringEmbeddedDirective(api, notify, gettext, $filter, config
             item: '=',
             action: '='
         },
-        link: function (scope) {
+        link: function(scope) {
             if (scope.action === 'kill') {
                 // kill template is applied on the item.
                 // task is required to get the desk name.

@@ -64,7 +64,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
     function sendOneAs(item, config) {
         var data = getData(config);
         if (item._type === 'ingest') {
-            return api.save('fetch', {}, data, item).then(function (archived) {
+            return api.save('fetch', {}, data, item).then(function(archived) {
                 item.archived = archived._created;
                 if (config.open) {
                     $injector.get('authoringWorkspace').edit(archived);
@@ -72,7 +72,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                 return archived;
             });
         } else if (!item.lock_user) {
-            return api.save('move', {}, {task: data}, item).then(function (item) {
+            return api.save('move', {}, {task: data}, item).then(function(item) {
                 $rootScope.$broadcast('item:update', {item: item});
                 return item;
             });

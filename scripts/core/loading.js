@@ -16,7 +16,7 @@ angular.module('superdesk.core.loading', [])
             });
 
         // prevent routing when there is no token
-            stopListener = $rootScope.$on('$locationChangeStart', function (e) {
+            stopListener = $rootScope.$on('$locationChangeStart', function(e) {
                 $rootScope.requiredLogin = requiresLogin($location.path());
                 if ($rootScope.loading && $rootScope.requiredLogin) {
                     e.preventDefault();

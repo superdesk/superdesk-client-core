@@ -55,7 +55,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
         },
         fetchDashboardProviders: function() {
             var deferred = $q.defer();
-            _getAllIngestProviders().then(function (result) {
+            _getAllIngestProviders().then(function(result) {
                 var ingestProviders = result;
                 preferencesService.get('dashboard:ingest').then(function(userIngestProviders) {
                     if (!_.isArray(userIngestProviders)) {
@@ -72,10 +72,10 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
                     });
 
                     deferred.resolve(ingestProviders);
-                }, function (error) {
+                }, function(error) {
                     deferred.reject(error);
                 });
-            }, function (error) {
+            }, function(error) {
                 deferred.reject(error);
             });
 

@@ -1,5 +1,5 @@
     angular.module('superdesk.core.auth.basic', []).service('authAdapter', ['$http', '$q', 'urls',
-        function ($http, $q, urls) {
+        function($http, $q, urls) {
 
         /**
          * Authenticate using given credentials

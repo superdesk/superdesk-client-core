@@ -97,7 +97,7 @@ function Dictionaries() {
         return element(by.id('add-word-btn'));
     };
 
-    this.getWordsCount = function () {
+    this.getWordsCount = function() {
         return element.all(by.repeater('word in $vs_collection')).count();
     };
 

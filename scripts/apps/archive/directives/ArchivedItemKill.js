@@ -6,7 +6,7 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
         scope: {
             'item': '='
         },
-        link: function (scope, elem, attr) {
+        link: function(scope, elem, attr) {
             scope._editable = true;
 
             var itemToDelete = {'_id': scope.item._id, '_etag': scope.item._etag};
@@ -26,7 +26,7 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
                     }, function(err) {
                         notify.error(gettext('Failed to apply kill template to the item.'));
                     });
-                }, function (response) {
+                }, function(response) {
                 if (response.data._message) {
                     notify.error(response.data._message);
                 } else {
@@ -35,9 +35,9 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
             }
             );
 
-            scope.kill = function () {
+            scope.kill = function() {
                 api.save('archived', scope.item, _.pick(scope.item, ['headline', 'abstract', 'body_html']))
-                    .then(function (response) {
+                    .then(function(response) {
                         notify.success(gettext('Item has been killed.'));
                         scope.cancel();
                     });

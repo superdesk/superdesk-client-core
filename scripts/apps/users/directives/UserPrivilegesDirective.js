@@ -60,18 +60,18 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
             *
             * @method save
             */
-            scope.save = function () {
+            scope.save = function() {
                 api.save(
                     'users',
                     scope.user,
                     _.pick(scope.user, 'privileges')
                 )
-                .then(function () {
+                .then(function() {
                     scope.origPrivileges = angular.copy(
                         scope.user.privileges);
                     scope.userPrivileges.$setPristine();
                     notify.success(gettext('Privileges updated.'));
-                }, function (response) {
+                }, function(response) {
                     notify.error(
                         gettext(handleError(response)));
                 });
@@ -84,7 +84,7 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
             *
             * @method cancel
             */
-            scope.cancel = function () {
+            scope.cancel = function() {
                 scope.user.privileges = angular.copy(
                     scope.origPrivileges);
 
