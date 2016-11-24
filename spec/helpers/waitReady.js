@@ -63,5 +63,5 @@ ElementFinder.prototype.waitReady = function(optStr) {
 // Helpers
 function _refreshPage() {
     // Swallow useless refresh page webdriver errors
-    browser.navigate().refresh().then(function() {}, function(e) {});
+    browser.navigate().refresh();
 }

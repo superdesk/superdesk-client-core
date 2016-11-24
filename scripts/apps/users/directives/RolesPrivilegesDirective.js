@@ -21,8 +21,7 @@ export function RolesPrivilegesDirective(api, gettext, notify, $q, $filter) {
 
                 _.each(scope.roles, function(role) {
                     promises.push(api.save('roles', role, _.pick(role, 'privileges'))
-                    .then(function(result) {
-                    }, function(error) {
+                    .then(null, function(error) {
                         console.error(error);
                     }));
                 });

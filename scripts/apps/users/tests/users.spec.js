@@ -11,7 +11,7 @@ describe('users api', function() {
 
         spyOn(api, 'save').and.returnValue($q.when({}));
 
-        usersService.save(user, data).then(function() {});
+        usersService.save(user, data);
 
         $rootScope.$digest();
 
@@ -78,11 +78,11 @@ describe('userlist service', function() {
     }));
 
     it('can return users from cache', inject(function(userList, $rootScope, api) {
-        userList.get().then(function(result) {});
+        userList.get();
         $rootScope.$digest();
 
         api = jasmine.createSpy('api');
-        userList.get().then(function(result) {});
+        userList.get();
         $rootScope.$digest();
 
         expect(api).not.toHaveBeenCalled();
@@ -99,11 +99,11 @@ describe('userlist service', function() {
     }));
 
     it('can return single user from default cacher', inject(function(userList, $rootScope, api) {
-        userList.get().then(function(result) {});
+        userList.get();
         $rootScope.$digest();
 
         api = jasmine.createSpy('api');
-        userList.getUser(1).then(function(result) {});
+        userList.getUser(1);
         $rootScope.$digest();
 
         expect(api).not.toHaveBeenCalled();

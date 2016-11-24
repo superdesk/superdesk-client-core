@@ -10,7 +10,7 @@ describe('upload service', function() {
             this.upload = function() {
                 return $q.when();
             };
-            this.http = function() {};
+            this.http = function() {/* no-op */};
         }]);
     }));
 

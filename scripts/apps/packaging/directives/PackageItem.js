@@ -6,8 +6,6 @@ export function PackageItem() {
             item: '=',
             setitem: '&',
             mode: '='
-        },
-        link: function(scope, elem) {
         }
     };
 }

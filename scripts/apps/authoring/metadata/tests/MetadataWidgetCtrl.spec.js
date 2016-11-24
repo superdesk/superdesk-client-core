@@ -395,7 +395,7 @@ describe('metadata terms directive', function() {
             subjects: subjects
         };
         var event = {
-            stopPropagation: function() {}
+            stopPropagation: function() {/* no-op */}
         };
 
         var elm = compileDirective(elmHtml, scopeValues);

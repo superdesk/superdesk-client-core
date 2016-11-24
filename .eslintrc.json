@@ -68,6 +68,12 @@
         "curly": 2,
         "dot-location": [2, "property"],
         "dot-notation": 2,
+        "eqeqeq": 0,
+        "no-alert": 2,
+        "no-caller": 2,
+        "no-case-declarations": 2,
+        "no-else-return": 0,
+        "no-empty-function": 2,
 
         "strict": 0,
         "indent": [2, 4],

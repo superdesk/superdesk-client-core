@@ -33,7 +33,7 @@ export default class SuggestService {
          * @description Holds the function that will be called when new suggestions
          * have been received.
          */
-        this._listener = data => {};
+        this._listener = data => {/* no-op */};
     }
 
      /**

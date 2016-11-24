@@ -39,7 +39,7 @@ export function UsersService(api, $q, notify) {
             username: user.username,
             old_password: oldPassword,
             new_password: newPassword
-        }).then(function(result) {});
+        });
     };
 
     /**
@@ -49,8 +49,7 @@ export function UsersService(api, $q, notify) {
      * @returns {Promise}
      */
     usersService.resetPassword = function resetPassword(user) {
-        return api.resetPassword.create({email: user.email})
-            .then(function(result) {});
+        return api.resetPassword.create({email: user.email});
     };
 
     /**
