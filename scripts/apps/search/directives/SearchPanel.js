@@ -40,7 +40,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
             scope.privileges = privileges.privileges;
             scope.search_config = metadata.search_config;
 
-            scope.$on('edit:search', function(event, args)  {
+            scope.$on('edit:search', function(event, args) {
                 scope.sTab = 'advancedSearch';
                 scope.innerTab = 'parameters';
                 scope.activateSearchPane = false;
@@ -121,7 +121,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                         });
                     }
 
-                    if (angular.isDefined(scope.items._aggregations.urgency))                    {
+                    if (angular.isDefined(scope.items._aggregations.urgency)) {
                         _.forEach(scope.items._aggregations.urgency.buckets, function(urgency) {
                             scope.aggregations.urgency[urgency.key] = urgency.doc_count;
                         });
@@ -150,7 +150,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                             var lookedUpDesk = desks.deskLookup[desk.key];
 
                             if (typeof lookedUpDesk === 'undefined') {
-                                var msg =  [
+                                var msg = [
                                     'Desk (key: ', desk.key, ') not found in ',
                                     'deskLookup, probable storage inconsistency.'
                                 ].join('');

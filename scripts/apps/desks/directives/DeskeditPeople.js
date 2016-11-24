@@ -1,4 +1,4 @@
-DeskeditPeople.$inject = ['gettext', 'WizardHandler', 'desks',  '$rootScope'];
+DeskeditPeople.$inject = ['gettext', 'WizardHandler', 'desks', '$rootScope'];
 export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
     return {
         link: function(scope, elem, attrs) {

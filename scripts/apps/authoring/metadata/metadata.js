@@ -78,7 +78,7 @@ function MetadataCtrl(
             filtered,
             itemCompanyCodes;  // existing company codes assigned to the article
 
-        all =  _.cloneDeep(metadata.values.company_codes || []);
+        all = _.cloneDeep(metadata.values.company_codes || []);
 
         all.forEach(function(companyCode) {
             companyCode.name = companyCode.name + ' (' + companyCode.qcode + ')';
@@ -909,7 +909,7 @@ function MetaLocatorsDirective() {
 
                 if (locator) {
                     if (angular.isDefined(scope.fieldprefix)) {
-                        if (!angular.isDefined(scope.item[scope.fieldprefix]))                        {
+                        if (!angular.isDefined(scope.item[scope.fieldprefix])) {
                             _.extend(scope.item, {dateline: {}});
                         }
                         updates[scope.fieldprefix] = scope.item[scope.fieldprefix];

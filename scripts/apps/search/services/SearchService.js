@@ -271,7 +271,7 @@ export function SearchService($location, gettext, config, session) {
                 query.post_filter({range: range});
             }
 
-            if (params.after)            {
+            if (params.after) {
                 var facetrange = {firstcreated: {}};
                 facetrange.firstcreated.gte = params.after;
                 query.post_filter({range: facetrange});

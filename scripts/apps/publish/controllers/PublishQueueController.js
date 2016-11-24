@@ -68,7 +68,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             $scope.lastRefreshedAt = new Date();
             $scope.showResendBtn = false;
             $scope.showCancelSelectionBtn = false;
-            $scope.maxPage =  Math.ceil(queue._meta.total / $scope.pageSize);
+            $scope.maxPage = Math.ceil(queue._meta.total / $scope.pageSize);
         });
     }
     /*

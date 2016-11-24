@@ -182,7 +182,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
         };
         if (_.has(userEvents, msg.event)) {
             if (msg.extra.user_id != null) {
-                if (msg.extra.user_id.indexOf(session.identity._id)  !== -1) {
+                if (msg.extra.user_id.indexOf(session.identity._id) !== -1) {
                     result.message = userEvents[msg.event];
                     result.reload = true;
                 }
@@ -190,7 +190,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
         }
 
         if (_.has(roleEvents, msg.event)) {
-            if (msg.extra.role_id.indexOf(session.identity.role)  !== -1) {
+            if (msg.extra.role_id.indexOf(session.identity.role) !== -1) {
                 result.message = roleEvents[msg.event];
                 result.reload = true;
             }
@@ -198,7 +198,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
         if (_.has(deskEvents, msg.event)) {
             if (msg.extra.desk_id != null && msg.extra.user_ids != null) {
                 if (_.find(self.userDesks, {_id: msg.extra.desk_id}) != null &&
-                    msg.extra.user_ids.indexOf(session.identity._id)  !== -1) {
+                    msg.extra.user_ids.indexOf(session.identity._id) !== -1) {
                     result.message = deskEvents[msg.event];
                     result.reload = true;
                 }

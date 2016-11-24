@@ -28,7 +28,7 @@ export function AuthoringEmbeddedDirective(api, notify, gettext, $filter, config
                 });
             } else {
                 if (scope.action === 'correct') {
-                    scope.item.ednote = gettext('In the story "') + scope.item.slugline + gettext('" sent at: ')  +
+                    scope.item.ednote = gettext('In the story "') + scope.item.slugline + gettext('" sent at: ') +
                     $filter('formatLocalDateTimeString')(scope.item.versioncreated, config.view.dateformat + ' ' +
                         config.view.timeformat) +
                     gettext('\r\n\r\nThis is a corrected repeat.');

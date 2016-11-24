@@ -183,7 +183,7 @@ export function SubscribersDirective(
                     }
                     $scope.subscriber.products = $filter('sortByName')($scope.subscriber.products);
 
-                    $scope.subscriber.global_filters =  $scope.origSubscriber.global_filters || {};
+                    $scope.subscriber.global_filters = $scope.origSubscriber.global_filters || {};
 
                     $scope.destinations = [];
                     if (angular.isDefined($scope.subscriber.destinations)

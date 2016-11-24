@@ -198,7 +198,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             if (search[type]) {
                 var keys = JSON.parse(search[type]);
                 keys.splice(keys.indexOf(key), 1);
-                if (keys.length > 0)                {
+                if (keys.length > 0) {
                     $location.search(type, JSON.stringify(keys));
                 } else {
                     $location.search(type, null);

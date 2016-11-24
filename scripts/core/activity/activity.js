@@ -614,7 +614,7 @@ angular.module('superdesk.core.activity', [
         }
     });
 
-    $rootScope.$on('$routeChangeSuccess',  function(ev, currentRoute, previousRoute) {
+    $rootScope.$on('$routeChangeSuccess', function(ev, currentRoute, previousRoute) {
         referrer.setReferrer(currentRoute, previousRoute);
     });
 }])

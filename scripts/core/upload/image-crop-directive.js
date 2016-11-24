@@ -359,7 +359,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                     $poiRight.css({
                         width: img.width - (leftOffset + 2 * circleRadius),
                         top: horizontalTopffset,
-                        left: leftOffset +  2 * circleRadius
+                        left: leftOffset + 2 * circleRadius
                     });
                     $poiTop.css({
                         height: topOffset,

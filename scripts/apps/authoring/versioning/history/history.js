@@ -19,10 +19,10 @@ function HistoryController($scope, authoring, api, notify, desks, archiveService
                     $scope.last = archiveService.lastVersion($scope.item, $scope.versions);
 
                     if (archiveService.isLegal($scope.item)) {
-                        $scope.canRevert =  false;
+                        $scope.canRevert = false;
                         $scope.openVersion($scope.last);
                     } else {
-                        $scope.canRevert =  authoring.isEditable($scope.item) && !authoring.isPublished($scope.item);
+                        $scope.canRevert = authoring.isEditable($scope.item) && !authoring.isPublished($scope.item);
 
                         if ($scope.item._autosave) {
                             $scope.selected = $scope.item._autosave;

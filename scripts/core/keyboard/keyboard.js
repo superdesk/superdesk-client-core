@@ -330,9 +330,9 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         if (!binding) {
             return;
         }
-        var type   = binding.event,
-            elt        = binding.target,
-            callback   = binding.callback;
+        var type = binding.event,
+            elt = binding.target,
+            callback = binding.callback;
         if (elt.detachEvent) {
             elt.detachEvent('on' + type, callback);
         } else if (elt.removeEventListener) {

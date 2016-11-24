@@ -5,7 +5,7 @@ export function HighlightsLabel(desks, highlightsService) {
         template: '<span translate>{{ highlightItem.label }} ({{ totalItems }} items)</span>',
         link: function(scope) {
             highlightsService.get(desks.getCurrentDeskId()).then(function(result) {
-                scope.highlightItem =  _.find(result._items, {_id: scope.highlight_id});
+                scope.highlightItem = _.find(result._items, {_id: scope.highlight_id});
             });
         }
     };

@@ -3,7 +3,7 @@ import './styles/tasks.scss';
 TasksService.$inject = ['desks', '$rootScope', 'api', 'datetimeHelper'];
 function TasksService(desks, $rootScope, api, datetimeHelper) {
 
-    this.statuses =  [
+    this.statuses = [
         {_id: 'todo', name: gettext('To Do')},
         {_id: 'in_progress', name: gettext('In Progress')},
         {_id: 'done', name: gettext('Done')}

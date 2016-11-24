@@ -252,7 +252,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 if (scope.widget) {
                     workspaces.getActive()
                     .then(function(workspace) {
-                        var widgets =  angular.copy(workspace.widgets);
+                        var widgets = angular.copy(workspace.widgets);
                         _.each(widgets, function(widget) {
                             if (scope.widget._id === widget._id && scope.widget.multiple_id === widget.multiple_id) {
                                 widget.configuration = {};

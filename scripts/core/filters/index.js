@@ -26,7 +26,7 @@ export default angular.module('superdesk.core.filters', [])
                 if (value) {
                     subjectMerged.push(value);
 
-                    if (schemeName && item.scheme !==  schemeName) {
+                    if (schemeName && item.scheme !== schemeName) {
                         subjectMerged.pop();
                     }
                 }
@@ -105,7 +105,7 @@ export default angular.module('superdesk.core.filters', [])
             }
         };
     }])
-    .filter('queueStatus', ['$filter', function($filter)  {
+    .filter('queueStatus', ['$filter', function($filter) {
         return function(input) {
             if (input === 'pending') {
                 return 'warning';

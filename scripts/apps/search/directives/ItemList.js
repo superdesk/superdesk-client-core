@@ -326,7 +326,7 @@ export function ItemList(
             var SelectBox = React.createClass({
                 toggle: function(event) {
                     event.stopPropagation();
-                    if (isCheckAllowed(this.props.item))                    {
+                    if (isCheckAllowed(this.props.item)) {
                         var selected = !this.props.item.selected;
                         this.props.onMultiSelect([this.props.item], selected);
                     }
@@ -1151,7 +1151,7 @@ export function ItemList(
                             activity: activity,
                             key: activity._id
                         });
-                    }.bind(this);
+                    };
 
                     var actions = this.getActions();
                     this.groups.map(function(group) {

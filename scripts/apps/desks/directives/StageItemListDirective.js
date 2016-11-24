@@ -109,7 +109,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
 
             scope.$on('item:move', function(_e, data) {
                 if (data.to_desk && data.from_desk !== data.to_desk ||
-                    data.to_stage && data.from_stage !== data.to_stage)  {
+                    data.to_stage && data.from_stage !== data.to_stage) {
                     scheduleQuery(2000); // smaller delay.
                 }
             });

@@ -27,7 +27,7 @@ export function Editor3Controller($element) {
       * @description Process the change editor state and set the 'value' parameter
       *  for the Editor3 directive.
       */
-    this.parentOnChange =  (text) => {
+    this.parentOnChange = (text) => {
         if (this.trim) {
             this.value = text.trim();
         } else {
