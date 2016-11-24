@@ -67,6 +67,7 @@
         "complexity": [2, 30],
         "curly": 2,
         "dot-location": [2, "property"],
+        "dot-notation": 2,
 
         "strict": 0,
         "indent": [2, 4],

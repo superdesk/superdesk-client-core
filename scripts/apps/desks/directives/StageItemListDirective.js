@@ -88,7 +88,8 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
 
                     scope.cachePreviousItems = items._items;
                     setNextItems(criteria);
-                })['finally'](function() {
+                })
+                .finally(function() {
                     scope.loading = false;
                 });
             }

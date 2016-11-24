@@ -69,8 +69,8 @@ export default angular.module('superdesk.core.services.permissions', [])
 
             if (role.permissions && role.permissions[resource] && role.permissions[resource][method]) {
                 delay.resolve(true);
-            } else if (role['extends']) {
-                em.repository('user_roles').find(role['extends']).then(function(extendedFrom) {
+            } else if (role.extends) {
+                em.repository('user_roles').find(role.extends).then(function(extendedFrom) {
                     delay.resolve(self._isRoleAllowedSingle(resource, method, extendedFrom));
                 });
             }

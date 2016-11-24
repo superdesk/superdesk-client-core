@@ -20,7 +20,7 @@ angular.module('superdesk.core.activity.modal', [])
                         return config.defer.resolve(result);
                     };
 
-                    config.defer.promise['finally'](function() {
+                    config.defer.promise.finally(function() {
                         scope.stack.pop();
                     });
                 }

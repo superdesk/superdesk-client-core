@@ -530,7 +530,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 });
             }
         };
-        mediaTypes['graphic'] = mediaTypes['picture'];
+        mediaTypes.graphic = mediaTypes.picture;
         return $q.when(mediaTypes[data.type]());
     };
 

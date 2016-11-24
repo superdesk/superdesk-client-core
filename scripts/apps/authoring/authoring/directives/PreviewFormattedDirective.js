@@ -20,7 +20,8 @@ export function PreviewFormattedDirective(api, config, notify, storage) {
                     if (angular.isDefined(error.data._message)) {
                         notify.error(gettext(error.data._message));
                     }
-                })['finally'](function() {
+                })
+                .finally(function() {
                     scope.loading = false;
                 });
             };

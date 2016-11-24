@@ -235,8 +235,8 @@ export default angular.module('superdesk.core.services.entity', [])
          *
          * @description Remove given item.
          */
-        this['delete'] = function(item) {
-            return server['delete'](item);
+        this.delete = function(item) {
+            return server.delete(item);
         };
 
         /**
@@ -280,7 +280,7 @@ export default angular.module('superdesk.core.services.entity', [])
          * @description Remove given item from repository
          */
         this.remove = function(item) {
-            return this['delete'](item);
+            return this.delete(item);
         };
 
         /**

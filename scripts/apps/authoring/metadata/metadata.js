@@ -632,7 +632,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                 scope.terms = filterSelected(items);
                 scope.tree = tree;
-                scope.activeTree = tree[null];
+                scope.activeTree = tree.null;
                 scope.combinedList = _.union(scope.list, scope.item[scope.field] ? scope.item[scope.field] : []);
             });
 
@@ -784,7 +784,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         if (reloadList) {
                             scope.activeTerm = null;
                             scope.searchTerms(null);
-                            scope.activeTree = scope.tree[null];
+                            scope.activeTree = scope.tree.null;
                         } else {
                             scope.terms = _.clone(scope.activeTree) || [];
                             scope.allSelected = scope.terms.length === 0;
