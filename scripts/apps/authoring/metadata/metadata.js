@@ -78,7 +78,7 @@ function MetadataCtrl(
             filtered,
             itemCompanyCodes;  // existing company codes assigned to the article
 
-        all =  _.cloneDeep(metadata.values.company_codes || []);
+        all = _.cloneDeep(metadata.values.company_codes || []);
 
         all.forEach(function(companyCode) {
             companyCode.name = companyCode.name + ' (' + companyCode.qcode + ')';
@@ -243,13 +243,13 @@ function MetaTargetedPublishingDirective() {
                     scope.targets = [];
                 }
 
-                target = JSON.parse(target);
+                let parsedTarget = JSON.parse(target);
 
                 var existing = _.find(scope.targets,
-                    {'qcode': target.qcode, 'name': target.name, 'allow': !scope.deny});
+                    {'qcode': parsedTarget.qcode, 'name': parsedTarget.name, 'allow': !scope.deny});
 
                 if (!existing) {
-                    scope.targets.push({'qcode': target.qcode, 'name': target.name, 'allow': !scope.deny});
+                    scope.targets.push({'qcode': parsedTarget.qcode, 'name': parsedTarget.name, 'allow': !scope.deny});
                     scope.autosave();
                 }
 
@@ -632,7 +632,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                 scope.terms = filterSelected(items);
                 scope.tree = tree;
-                scope.activeTree = tree[null];
+                scope.activeTree = tree.null;
                 scope.combinedList = _.union(scope.list, scope.item[scope.field] ? scope.item[scope.field] : []);
             });
 
@@ -784,7 +784,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         if (reloadList) {
                             scope.activeTerm = null;
                             scope.searchTerms(null);
-                            scope.activeTree = scope.tree[null];
+                            scope.activeTree = scope.tree.null;
                         } else {
                             scope.terms = _.clone(scope.activeTree) || [];
                             scope.allSelected = scope.terms.length === 0;
@@ -894,31 +894,32 @@ function MetaLocatorsDirective() {
              */
             scope.selectLocator = function(locator) {
                 var updates = {};
+                let loc = locator;
 
-                if (!locator && scope.selectedTerm) {
+                if (!loc && scope.selectedTerm) {
                     var previousLocator = scope.fieldprefix ? scope.item[scope.fieldprefix][scope.field] :
                                             scope.item[scope.field];
 
                     if (previousLocator && scope.selectedTerm === previousLocator.city) {
-                        locator = previousLocator;
+                        loc = previousLocator;
                     } else {
-                        locator = {'city': scope.selectedTerm, 'city_code': scope.selectedTerm, 'tz': 'UTC',
+                        loc = {'city': scope.selectedTerm, 'city_code': scope.selectedTerm, 'tz': 'UTC',
                             'dateline': 'city', 'country': '', 'country_code': '', 'state_code': '', 'state': ''};
                     }
                 }
 
-                if (locator) {
+                if (loc) {
                     if (angular.isDefined(scope.fieldprefix)) {
-                        if (!angular.isDefined(scope.item[scope.fieldprefix]))                        {
+                        if (!angular.isDefined(scope.item[scope.fieldprefix])) {
                             _.extend(scope.item, {dateline: {}});
                         }
                         updates[scope.fieldprefix] = scope.item[scope.fieldprefix];
-                        updates[scope.fieldprefix][scope.field] = locator;
+                        updates[scope.fieldprefix][scope.field] = loc;
                     } else {
-                        updates[scope.field] = locator;
+                        updates[scope.field] = loc;
                     }
 
-                    scope.selectedTerm = locator.city;
+                    scope.selectedTerm = loc.city;
                     _.extend(scope.item, updates);
                 }
 

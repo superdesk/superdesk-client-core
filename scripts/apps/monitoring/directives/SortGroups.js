@@ -14,9 +14,7 @@ export function SortGroups() {
                         var height = current.height() - 20;
                         return $('<li class="placeholder" style="height:' + height + 'px"></li>')[0];
                     },
-                    update: function() {
-                        return;
-                    }
+                    update: function() {/* no-op */}
                 },
                 start: function(event, ui) {
                     ui.item.data('start_index', ui.item.parent().find('li.sort-item').index(ui.item));

@@ -104,7 +104,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
         var group = null;
 
         if (highlight.groups && highlight.groups.length > 0) {
-            group =  highlight.groups[0];
+            group = highlight.groups[0];
         }
         if (highlight.task) {
             pkgDefaults.task = highlight.task;
@@ -135,7 +135,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
      * @param {int} hourDifference
      * @return {bool}
      */
-    service.isInDateRange =  function(highlight, hourDifference) {
+    service.isInDateRange = function(highlight, hourDifference) {
         if (highlight) {
             if (highlight.auto_insert === 'now/d') {
                 return hourDifference <= 24;

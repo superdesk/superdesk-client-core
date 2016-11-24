@@ -45,7 +45,8 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         };
     }
 
-    function initSelectedParameters(parameters) {
+    function initSelectedParameters(params) {
+        let parameters = params;
         tags.selectedParameters = [];
         while (parameters.indexOf(':') > 0 &&
                parameters.indexOf(':') < parameters.indexOf('(', parameters.indexOf(':')) &&
@@ -83,7 +84,8 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     /*
      * function to parse search input from the search bar.
      */
-    function initSelectedKeywords(keywords) {
+    function initSelectedKeywords(kwds) {
+        let keywords = kwds;
         tags.selectedKeywords = [];
         while (keywords.indexOf('(') >= 0 && keywords.indexOf(')') > 0) {
             var closeIndex = keywords.indexOf('(');
@@ -107,6 +109,8 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @param {object} params - $location.search
      */
     function initParameters(params) {
+        var selecteditems = [];
+
         _.each(PARAMETERS, function(value, key) {
             if (!angular.isDefined(params[key])) {
                 return;
@@ -139,7 +143,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                     var cv = cvs[i];
                     if (cv.field === key) {
                         var codeList = metadata.values[cv.list];
-                        var selecteditems = JSON.parse(params[key]);
+                        selecteditems = JSON.parse(params[key]);
                         processSelectedItems(selecteditems, codeList);
                     }
                 }
@@ -196,7 +200,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             if (search[type]) {
                 var keys = JSON.parse(search[type]);
                 keys.splice(keys.indexOf(key), 1);
-                if (keys.length > 0)                {
+                if (keys.length > 0) {
                     $location.search(type, JSON.stringify(keys));
                 } else {
                     $location.search(type, null);

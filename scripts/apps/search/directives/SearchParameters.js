@@ -211,33 +211,34 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
                 angular.forEach(scope.meta, function(val, key) {
                     //checkbox boolean values.
+                    let v = val;
                     if (typeof val === 'boolean') {
-                        val = booleanToBinaryString(val);
+                        v = booleanToBinaryString(val);
                     }
 
                     if (typeof val === 'string') {
-                        val = val.replace(pattern, '');
+                        v = val.replace(pattern, '');
                     }
 
                     if (key === '_all') {
-                        metas.push(val.join(' '));
-                    } else if (val) {
+                        metas.push(v.join(' '));
+                    } else if (v) {
+                        let k = key;
                         if (key.indexOf('scanpix_') === 0) {
-                            key = key.substring(8);
+                            k = key.substring(8);
                         }
-                        if (typeof val === 'string') {
-                            if (val) {
-                                metas.push(key + ':(' + val + ')');
+                        if (typeof v === 'string') {
+                            if (v) {
+                                metas.push(k + ':(' + v + ')');
                             }
-                        } else if (angular.isArray(val)) {
-                            angular.forEach(val, function(value) {
-                                value = value.replace(pattern, '');
-                                metas.push(key + ':(' + value + ')');
+                        } else if (angular.isArray(v)) {
+                            angular.forEach(v, function(value) {
+                                metas.push(k + ':(' + value.replace(pattern, '') + ')');
                             });
                         } else {
-                            var subkey = getFirstKey(val);
-                            if (val[subkey]) {
-                                metas.push(key + '.' + subkey + ':(' + val[subkey] + ')');
+                            var subkey = getFirstKey(v);
+                            if (v[subkey]) {
+                                metas.push(k + '.' + subkey + ':(' + v[subkey] + ')');
                             }
                         }
                     }

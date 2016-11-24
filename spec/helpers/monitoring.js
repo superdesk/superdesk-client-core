@@ -672,10 +672,6 @@ function Monitoring() {
         this.toggleStage(deskIndex, 0);
 
         if (typeof canCloseSettingsModal !== 'boolean') {
-            canCloseSettingsModal = true;
-        }
-
-        if (canCloseSettingsModal) {
             this.nextStages();
             this.nextSearches();
             this.nextReorder();
@@ -696,10 +692,6 @@ function Monitoring() {
         this.toggleStage(deskIndex, 0);
 
         if (typeof canCloseSettingsModal !== 'boolean') {
-            canCloseSettingsModal = true;
-        }
-
-        if (canCloseSettingsModal) {
             this.nextStages();
             this.nextSearches();
             this.nextReorder();

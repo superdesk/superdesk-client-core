@@ -56,7 +56,6 @@ export function SearchTags($location, tags, asset, metadata) {
                     _.each(PARAMETERS, function(value, key) {
                         if (type === value && searchParameters[key]) {
                             $location.search(key, null);
-                            return;
                         }
                     });
                 }

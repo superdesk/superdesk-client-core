@@ -156,19 +156,17 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
     // Add a new keyboard combination shortcut
     this.bind = function bind(label, callback, opt) {
         var fct, elt, code, k;
-        // Initialize opt object
-        opt = angular.extend({}, defaultOpt, opt);
-        label = label.toLowerCase();
-        elt = opt.target;
-        if (typeof opt.target === 'string') {
-            elt = document.getElementById(opt.target);
+        // Initialize options object
+        let options = angular.extend({}, defaultOpt, opt);
+        let lbl = label.toLowerCase();
+        elt = options.target;
+        if (typeof options.target === 'string') {
+            elt = document.getElementById(options.target);
         }
 
-        fct = function keyboardHandler(e) {
-            e = e || $window.event;
-
+        fct = function keyboardHandler(e = $window.event) {
             // Disable event handler when focus input and textarea
-            if (opt.inputDisabled) {
+            if (options.inputDisabled) {
                 var elt;
                 if (e.target) {
                     elt = e.target;
@@ -200,7 +198,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 character = '.';
             } // If the user presses , when the type is onkeydown
 
-            var keys = label.split('+');
+            var keys = lbl.split('+');
             // Key Pressed - counts the number of valid keypresses
             // - if it is same as the number of keys, the shortcut function is invoked
             var kp = 0;
@@ -243,8 +241,8 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                     if (specialKeys[k] === code) {
                         kp++;
                     }
-                } else if (opt.keyCode) { // If a specific key is set into the config
-                    if (opt.keyCode === code) {
+                } else if (options.keyCode) { // If a specific key is set into the config
+                    if (options.keyCode === code) {
                         kp++;
                     }
                 } else if (character === k) { // The special keys did not match
@@ -267,7 +265,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                     callback(e);
                 }, 1);
 
-                if (!opt.propagate) { // Stop the event
+                if (!options.propagate) { // Stop the event
                     // e.cancelBubble is supported by IE - this will kill the bubbling process.
                     e.cancelBubble = true;
                     e.returnValue = false;
@@ -284,22 +282,22 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         };
 
         // Store shortcut
-        this.keyboardEvent[label] = {
+        this.keyboardEvent[lbl] = {
             'callback': fct,
             'target':   elt,
-            'event':    opt.type,
+            'event':    options.type,
             '_callback': callback,
-            'opt': opt,
-            'label': label
+            'opt': options,
+            'label': lbl
         };
 
         //Attach the function with the event
         if (elt.addEventListener) {
-            elt.addEventListener(opt.type, fct, false);
+            elt.addEventListener(options.type, fct, false);
         } else if (elt.attachEvent) {
-            elt.attachEvent('on' + opt.type, fct);
+            elt.attachEvent('on' + options.type, fct);
         } else {
-            elt['on' + opt.type] = fct;
+            elt['on' + options.type] = fct;
         }
     };
 
@@ -324,15 +322,15 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 
     // Remove the shortcut - just specify the shortcut and I will remove the binding
     this.unbind = function unbind(label) {
-        label = label.toLowerCase();
-        var binding = this.keyboardEvent[label];
-        delete this.keyboardEvent[label];
+        let lbl = label.toLowerCase();
+        var binding = this.keyboardEvent[lbl];
+        delete this.keyboardEvent[lbl];
         if (!binding) {
             return;
         }
-        var type   = binding.event,
-            elt        = binding.target,
-            callback   = binding.callback;
+        var type = binding.event,
+            elt = binding.target,
+            callback = binding.callback;
         if (elt.detachEvent) {
             elt.detachEvent('on' + type, callback);
         } else if (elt.removeEventListener) {

@@ -17,20 +17,19 @@ export function UserListService(api, $q, $cacheFactory) {
         var p = $q.when();
         var deferred = $q.defer();
 
-        function _getAll(page, items) {
-            page = page || DEFAULT_PAGE;
-            items = items || [];
-
+        function _getAll(page = DEFAULT_PAGE, items = []) {
             api('users')
                 .query({max_results: 200, page: page})
                 .then(function(result) {
-                    items = items.concat(result._items);
+                    let pg = page;
+                    let merged = items.concat(result._items);
+
                     if (result._links.next) {
-                        page++;
-                        p = p.then(_getAll(page, items));
+                        pg++;
+                        p = p.then(_getAll(pg, merged));
                     } else {
-                        cache.put(DEFAULT_CACHE_KEY, items);
-                        deferred.resolve(items);
+                        cache.put(DEFAULT_CACHE_KEY, merged);
+                        deferred.resolve(merged);
                     }
                 });
 
@@ -51,10 +50,8 @@ export function UserListService(api, $q, $cacheFactory) {
      * @param {Integer} perPage
      * @returns {Promise}
      */
-    userservice.get = function(search, page, perPage) {
-        page = page || DEFAULT_PAGE;
+    userservice.get = function(search, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE) {
         var key = search || DEFAULT_CACHE_KEY;
-        perPage = perPage || DEFAULT_PER_PAGE;
         key = buildKey(key, page, perPage);
 
         var value = cache.get(key);

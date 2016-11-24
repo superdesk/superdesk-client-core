@@ -85,16 +85,11 @@ export default angular.module('superdesk.core.services.entity', [])
              * @description Returns query string compiled from given params if
              * parameter value is same as default one it will remove it from query
              */
-            makeQuery: function(params, defaults) {
-                defaults = defaults || {};
-
+            makeQuery: function(params, defaults = {}) {
                 var parts = [];
                 _.forEach(params, function(val, key) {
                     if (!angular.equals(defaults[key], val)) {
-                        if (_.isArray(val) === false) {
-                            val = [val];
-                        }
-                        _.forEach(val, function(item) {
+                        _.forEach(_.isArray(val) ? val : [val], function(item) {
                             parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(item));
                         });
                     }
@@ -178,11 +173,7 @@ export default angular.module('superdesk.core.services.entity', [])
              *
              * @description Find entities matching given criteria
              */
-            this.matching = function(criteria) {
-                if (!criteria) {
-                    criteria = {};
-                }
-
+            this.matching = function(criteria = {}) {
                 return server.list(entity, criteria);
             };
 
@@ -235,8 +226,8 @@ export default angular.module('superdesk.core.services.entity', [])
          *
          * @description Remove given item.
          */
-        this['delete'] = function(item) {
-            return server['delete'](item);
+        this.delete = function(item) {
+            return server.delete(item);
         };
 
         /**
@@ -280,7 +271,7 @@ export default angular.module('superdesk.core.services.entity', [])
          * @description Remove given item from repository
          */
         this.remove = function(item) {
-            return this['delete'](item);
+            return this.delete(item);
         };
 
         /**

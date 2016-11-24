@@ -7,7 +7,7 @@ export function MultiActionBarController(
     $rootScope, multi, multiEdit, send, remove, modal, $q,
     packages, superdesk, notify, spike, authoring, privileges, $location
 ) {
-    this.send  = function() {
+    this.send = function() {
         send.all(multi.getItems());
     };
 

@@ -228,7 +228,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                          if (angular.isDefined(scope.rendition)) {
                              if (angular.isDefined(scope.rendition.ratio)) {
                                  ratio = scope.rendition.ratio.split(':');
-                                 ratio = parseInt(ratio[0]) / parseInt(ratio[1]);
+                                 ratio = parseInt(ratio[0], 10) / parseInt(ratio[1], 10);
                              } else if (angular.isDefined(scope.rendition.width)
                                  && angular.isDefined(scope.rendition.height)) {
                                  ratio = scope.rendition.width / scope.rendition.height;
@@ -336,10 +336,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 var $poiRight = element.find('.image-point__poi__cross-right');
                 var $poiTop = element.find('.image-point__poi__cross-top');
                 var $poiBottom = element.find('.image-point__poi__cross-bottom');
-                function drawPoint(img, poi) {
-                    if (!angular.isDefined(poi)) {
-                        poi = vm.poi;
-                    }
+                function drawPoint(img, poi = vm.poi) {
                     var topOffset = poi.y * img.height - circleRadius;
                     var leftOffset = poi.x * img.width - circleRadius;
                     var verticalLeftOffset = leftOffset + circleRadius - lineThickness / 2;
@@ -359,7 +356,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                     $poiRight.css({
                         width: img.width - (leftOffset + 2 * circleRadius),
                         top: horizontalTopffset,
-                        left: leftOffset +  2 * circleRadius
+                        left: leftOffset + 2 * circleRadius
                     });
                     $poiTop.css({
                         height: topOffset,

@@ -42,17 +42,22 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      * @param {object} widget
      */
     this.addWidget = function(widget) {
+        let w = widget;
+
         if (widget.multiple) {
-            widget = angular.copy(widget);
-            widget.multiple_id = 0;
+            w = angular.copy(widget);
+            w.multiple_id = 0;
+
             angular.forEach(this.widgets, function(item) {
-                if (item._id === widget._id && item.multiple_id >= widget.multiple_id) {
-                    widget.multiple_id = item.multiple_id + 1;
+                if (item._id === w._id && item.multiple_id >= w.multiple_id) {
+                    w.multiple_id = item.multiple_id + 1;
                 }
             });
         }
-        widget.active = true;
-        this.widgets.push(widget);
+
+        w.active = true;
+
+        this.widgets.push(w);
         this.selectWidget();
         this.save();
     };

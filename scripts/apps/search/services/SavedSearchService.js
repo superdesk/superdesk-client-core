@@ -2,20 +2,17 @@ SavedSearchService.$inject = ['api', '$filter', '$q', '$rootScope'];
 
 export function SavedSearchService(api, $filter, $q, $rootScope) {
 
-    var _getAll = function(endPoint, page, items, params) {
-        page = page || 1;
-        items = items || [];
-        params = params || null;
-
+    var _getAll = function(endPoint, page = 1, items = [], params = null) {
         return api.query(endPoint, {max_results: 200, page: page}, params)
-        .then(function(result) {
-            items = items.concat(result._items);
-            if (result._links.next) {
-                page++;
-                return _getAll(endPoint, page, items, params);
-            }
-            return $filter('sortByName')(items);
-        });
+            .then(function(result) {
+                let pg = page;
+                let merged = items.concat(result._items);
+                if (result._links.next) {
+                    pg++;
+                    return _getAll(endPoint, pg, merged, params);
+                }
+                return $filter('sortByName')(merged);
+            });
     };
 
     this.savedSearches = null;

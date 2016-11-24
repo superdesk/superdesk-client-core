@@ -64,8 +64,8 @@ export default angular.module('superdesk.apps.highlights', [
                 category: superdesk.MENU_SETTINGS,
                 priority: -800,
                 privileges: {highlights: 1}
-            }).
-            activity('/workspace/highlights', {
+            })
+            .activity('/workspace/highlights', {
                 label: gettext('Highlights View'),
                 priority: 100,
                 templateUrl: 'scripts/apps/monitoring/views/highlights-view.html',

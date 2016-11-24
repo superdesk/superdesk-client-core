@@ -75,7 +75,7 @@ describe('Superdesk service', function() {
             successResult = result;
         });
         superdesk.intent('testAction2', 'testType2', 'testData2')
-        .then(function() {}, function(result) {
+        .then(null, function(result) {
             failureResult = result;
         });
 

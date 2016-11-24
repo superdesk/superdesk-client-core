@@ -6,7 +6,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     $scope.saving = false;
     $scope.failed = false;
     $scope.enableSave = false;
-    $scope.currentUser =  session.identity;
+    $scope.currentUser = session.identity;
     $scope.uniqueUpload = $scope.locals && $scope.locals.data && $scope.locals.data.uniqueUpload === true;
     $scope.requiredFields = config.requiredMediaMetadata;
 

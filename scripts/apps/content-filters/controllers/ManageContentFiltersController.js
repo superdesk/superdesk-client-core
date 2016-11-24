@@ -19,7 +19,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
     $scope.editFilter = function(pf) {
         $scope.origContentFilter = pf || {};
         $scope.contentFilter = _.create($scope.origContentFilter);
-        $scope.contentFilter.name =  $scope.origContentFilter.name;
+        $scope.contentFilter.name = $scope.origContentFilter.name;
         $scope.contentFilter.content_filter = _.cloneDeep($scope.origContentFilter.content_filter);
         initContentFilter();
         $scope.previewContentFilter();
@@ -168,7 +168,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
     };
 
     var initContentFilter = function() {
-        if (!$scope.contentFilter.content_filter || $scope.contentFilter.content_filter.length === 0)        {
+        if (!$scope.contentFilter.content_filter || $scope.contentFilter.content_filter.length === 0) {
             $scope.contentFilter.content_filter = [{'expression': {}}];
         }
     };

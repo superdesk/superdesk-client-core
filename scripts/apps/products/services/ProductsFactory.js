@@ -5,19 +5,19 @@ export function ProductsFactory($q, api, contentFilters, $filter) {
      *
      * @return {*}
      */
-    var _getAllProducts = function(page, products) {
-        page = page || 1;
-        products = products || [];
-
+    var _getAllProducts = function(page = 1, products = []) {
         return api('products')
             .query({max_results: 200, page: page})
             .then(function(result) {
-                products = products.concat(result._items);
+                let pg = page;
+                let merged = products.concat(result._items);
+
                 if (result._links.next) {
-                    page++;
-                    return _getAllProducts(page, products);
+                    pg++;
+                    return _getAllProducts(pg, merged);
                 }
-                return $filter('sortByName')(products);
+
+                return $filter('sortByName')(merged);
             });
     };
 

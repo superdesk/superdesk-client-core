@@ -1,6 +1,5 @@
 export function SplitFilter() {
-    return function(input) {
-        input = input || '';
+    return function(input = '') {
         var out = '';
         for (var i = 0; i < input.length; i++) {
             if (input.charAt(i) === input.charAt(i).toUpperCase()) {

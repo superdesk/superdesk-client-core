@@ -25,15 +25,18 @@ function PiwikTracking(config) {
 function GoogleTracking(config) {
     /* global ga */
     (function(i, s, o, g, r, a, m) {
+        let el = a;
+        let tag = m;
+
         i.GoogleAnalyticsObject = r;
         i[r] = i[r]|| function() {
             (i[r].q = i[r].q|| []).push(arguments);
         };
-        i[r].l = 1 * new Date();a = s.createElement(o);
-        m = s.getElementsByTagName(o)[0];
-        a.async = 1;
-        a.src = g;
-        m.parentNode.insertBefore(a, m);
+        i[r].l = 1 * new Date();el = s.createElement(o);
+        tag = s.getElementsByTagName(o)[0];
+        el.async = 1;
+        el.src = g;
+        tag.parentNode.insertBefore(el, tag);
     })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', config.id, 'sourcefabric.org');

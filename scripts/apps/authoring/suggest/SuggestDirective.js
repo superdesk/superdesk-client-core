@@ -45,7 +45,7 @@ class LinkFunction {
      * @description Toggles the active state of the service.
      */
     toggleActive(v) {
-        this.suggest.setActive.call(this.suggest, v);
+        this.suggest.setActive(v);
     }
 
     /**

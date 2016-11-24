@@ -24,12 +24,8 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
                 return this.messages.pop();
             };
 
-            this.addMessage = function(type, text, ttl) {
+            this.addMessage = function(type, text, ttl = ttls[type]) {
                 var self = this;
-
-                if (ttl == null) {
-                    ttl = ttls[type];
-                }
 
                 // add message, only if it's not already exist
                 if (_.find(this.messages, _.matches({msg: text})) === undefined) {

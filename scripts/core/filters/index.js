@@ -1,10 +1,10 @@
-export default angular.module('superdesk.core.filters', []).
-    filter('any', function() {
+export default angular.module('superdesk.core.filters', [])
+    .filter('any', function() {
         return function(data, key) {
             return _.any(data, key);
         };
-    }).
-    filter('body', function() {
+    })
+    .filter('body', function() {
         return function(content) {
             var lines = $(content);
             var texts = [];
@@ -17,8 +17,8 @@ export default angular.module('superdesk.core.filters', []).
 
             return texts.join('\n');
         };
-    }).
-    filter('mergeWords', function() {
+    })
+    .filter('mergeWords', function() {
         return function(array, propertyName, schemeName, returnArray) {
             var subjectMerged = [];
             _.forEach(array, function(item) {
@@ -26,7 +26,7 @@ export default angular.module('superdesk.core.filters', []).
                 if (value) {
                     subjectMerged.push(value);
 
-                    if (schemeName && item.scheme !==  schemeName) {
+                    if (schemeName && item.scheme !== schemeName) {
                         subjectMerged.pop();
                     }
                 }
@@ -38,8 +38,8 @@ export default angular.module('superdesk.core.filters', []).
                 return subjectMerged.join(', ');
             }
         };
-    }).
-    filter('splitWords', function() {
+    })
+    .filter('splitWords', function() {
         return function(word) {
             var split = [];
             _.forEach(word.split(','), function(w) {
@@ -48,13 +48,13 @@ export default angular.module('superdesk.core.filters', []).
             });
             return split;
         };
-    }).
-    filter('trusted', ['$sce', function($sce) {
+    })
+    .filter('trusted', ['$sce', function($sce) {
         return function(value) {
             return $sce.trustAsResourceUrl(value);
         };
-    }]).
-    filter('filterObject', ['$filter', function($filter) {
+    }])
+    .filter('filterObject', ['$filter', function($filter) {
         return function(items, fields) {
             var filtered = [];
             angular.forEach(items, function(item) {
@@ -105,7 +105,7 @@ export default angular.module('superdesk.core.filters', []).
             }
         };
     }])
-    .filter('queueStatus', ['$filter', function($filter)  {
+    .filter('queueStatus', ['$filter', function($filter) {
         return function(input) {
             if (input === 'pending') {
                 return 'warning';
@@ -180,11 +180,7 @@ export default angular.module('superdesk.core.filters', []).
         };
     })
     .filter('formatDatelineText', function() {
-        return function(located, month, date, source) {
-            if (!source) {
-                source = '';
-            }
-
+        return function(located, month, date, source = '') {
             var dateline = located.city_code;
             var datelineFields = located.dateline.split(',');
 
@@ -208,16 +204,10 @@ export default angular.module('superdesk.core.filters', []).
         };
     })
     .filter('sortByName', function() {
-        return function(_collection, propertyName) {
-            if (!propertyName) {
-                propertyName = 'name';
-            }
-
-            _collection = _.sortBy(_collection, function(_entry) {
+        return function(_collection, propertyName = 'name') {
+            return _.sortBy(_collection, function(_entry) {
                 return _entry[propertyName] ? _entry[propertyName].toLowerCase() : _entry.name.toLowerCase();
             });
-
-            return _collection;
         };
     })
     .filter('formatFilterCondition', function() {

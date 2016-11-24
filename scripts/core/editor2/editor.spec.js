@@ -31,9 +31,7 @@ describe('text editor', function() {
             exportSelection: function() {
                 return {start: 0, end: 0};
             },
-            importSelection: function(pos) {
-                return;
-            }
+            importSelection: function(pos) {/* no-op */}
         };
         document.body.appendChild(scope.node);
         spyOn(scope.model, '$setViewValue').and.callThrough();

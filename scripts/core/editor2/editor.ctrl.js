@@ -3,11 +3,8 @@ angular.module('superdesk.apps.editor2.ctrl', []).controller('SdTextEditorContro
 SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element', 'editor', 'config', '$q'];
 function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, config, $q) {
     var self = this;
-    function Block(attrs) {
+    function Block(attrs = {}) {
         var self = this;
-        if (!angular.isDefined(attrs)) {
-            attrs = {};
-        }
         angular.extend(self, _.defaults({
             body: attrs.body,
             loading: attrs.loading,
@@ -164,8 +161,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             self.blocks = splitIntoBlock(content);
             self.renderBlocks();
         },
-        serializeBlock: function(blocks) {
-            blocks = angular.isDefined(blocks) ? blocks : self.blocks;
+        serializeBlock: function(blocks = self.blocks) {
             // in case blocks are not ready
             if (blocks.length === 0) {
                 return '';
@@ -263,13 +259,15 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             })()).then(function() {
                 if (angular.isDefined(blocksToInsert)) {
                     var isArray = true;
-                    if (!angular.isArray(blocksToInsert)) {
+                    var arrayBlocks = blocksToInsert;
+
+                    if (!angular.isArray(arrayBlocks)) {
                         isArray = false;
-                        blocksToInsert = [blocksToInsert];
+                        arrayBlocks = [arrayBlocks];
                     }
                     var waitFor = $q.when();
                     var createdBlocks = [];
-                    blocksToInsert.forEach(function(bti) {
+                    arrayBlocks.forEach(function(bti) {
                         waitFor = waitFor.then(function() {
                             var newBlock = self.insertNewBlock(index, bti);
                             createdBlocks.push(newBlock);
@@ -354,9 +352,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     return hash;
                 }
                 for (i = 0, len = string.length; i < len; i++) {
-                    chr   = string.charCodeAt(i);
+                    chr = string.charCodeAt(i);
                     /*jshint bitwise: false */
-                    hash  = (hash << 5) - hash + chr;
+                    hash = (hash << 5) - hash + chr;
                     hash |= 0; // Convert to 32bit integer
                 }
                 return hash;

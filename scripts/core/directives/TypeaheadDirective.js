@@ -1,4 +1,4 @@
-export default angular.module('superdesk.core.directives.typeahead', []).
+export default angular.module('superdesk.core.directives.typeahead', [])
     /**
      * @ngdoc directive
      * @module superdesk.core.directives
@@ -25,7 +25,7 @@ export default angular.module('superdesk.core.directives.typeahead', []).
      *  </ul>
      * ```
      */
-    directive('sdTypeahead', ['$timeout', 'Keys', '$document', function($timeout, Keys, $document) {
+    .directive('sdTypeahead', ['$timeout', 'Keys', '$document', function($timeout, Keys, $document) {
         return {
             restrict: 'A',
             transclude: true,

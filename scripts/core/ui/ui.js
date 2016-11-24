@@ -822,7 +822,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                     if (datetimeHelper.isValidTime(modelValue, MODEL_TIME_FORMAT)) {
                         //formatter pass fine
                         tptime = modelValue;
-                        viewtime =  viewFormat(modelValue);
+                        viewtime = viewFormat(modelValue);
                     }
                 } else {
                     viewtime = '';
@@ -1008,7 +1008,7 @@ function TimepickerPopupDirective($timeout, config) {
                 scope.select({time: time});
             };
 
-            scope.cancel =  function() {
+            scope.cancel = function() {
                 scope.select();
             };
         }
@@ -1017,10 +1017,7 @@ function TimepickerPopupDirective($timeout, config) {
 
 function LeadingZeroFilter() {
     return function(input) {
-        if (input < 10) {
-            input = '0' + input;
-        }
-        return input;
+        return input < 10 ? '0' + input : input;
     };
 }
 

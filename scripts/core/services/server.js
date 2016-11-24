@@ -36,14 +36,14 @@ export default angular.module('superdesk.core.services.server', [])
                 });
                 return data;
             },
-            _all: function(functionName, items, datas) {
+            _all: function(functionName, items = datas, datas) {
                 var self = this;
                 var delay = $q.defer();
+                var resource;
 
                 // to make it usable with createAll
                 if (datas !== undefined) {
-                    var resource = items;
-                    items = datas;
+                    resource = items;
                 }
 
                 var promises = [];
@@ -63,30 +63,30 @@ export default angular.module('superdesk.core.services.server', [])
             },
             _http: function(method, url, params, data) {
                 var delay = $q.defer();
+                var created;
 
-                method = method.toLowerCase();
                 var options = {
-                    method: method,
+                    method: method.toLowerCase(),
                     url: url,
                     params: params,
                     cache: false
                 };
 
-                if (method === 'patch') {
-                    var created = data.created;
+                if (method === 'PATCH') {
+                    created = data.created;
                 }
-                if (method === 'delete' || method === 'patch') {
+                if (method === 'DELETE' || method === 'PATCH') {
                     options.headers = {'If-Match': data.etag};
                 }
-                if (method === 'post' || method === 'patch') {
+                if (method === 'POST' || method === 'PATCH') {
                     options.data = this._cleanData(data);
                 }
 
                 $http(options)
                 .success(function(responseData) {
-                    if (method === 'post') {
+                    if (method === 'POST') {
                         delay.resolve(responseData);
-                    } else if (method === 'patch') {
+                    } else if (method === 'PATCH') {
                         var fields = ['_id', '_links', 'etag', 'updated'];
                         _.forEach(fields, function(field) {
                             data[field] = responseData[field];

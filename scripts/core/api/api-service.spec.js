@@ -45,7 +45,7 @@ function doTestModule() {
         apiProvider = _apiProvider_;
     }]);
     window.module('superdesk.core.api', 'superdesk.api.tests');
-    inject(function() {});
+    inject(function() {/* no-op */});
 }
 
 describe('API Provider', function() {

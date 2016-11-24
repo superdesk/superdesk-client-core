@@ -326,7 +326,7 @@ export function ItemList(
             var SelectBox = React.createClass({
                 toggle: function(event) {
                     event.stopPropagation();
-                    if (isCheckAllowed(this.props.item))                    {
+                    if (isCheckAllowed(this.props.item)) {
                         var selected = !this.props.item.selected;
                         this.props.onMultiSelect([this.props.item], selected);
                     }
@@ -847,6 +847,7 @@ export function ItemList(
                         return fields[field](itemProps);
                     } else {
                         console.warn('missing field in list: ' + field);
+                        return null;
                     }
                 }).filter(angular.identity);
                 var elemProps = angular.extend({key: area}, props);
@@ -1150,7 +1151,7 @@ export function ItemList(
                             activity: activity,
                             key: activity._id
                         });
-                    }.bind(this);
+                    };
 
                     var actions = this.getActions();
                     this.groups.map(function(group) {
@@ -1179,6 +1180,7 @@ export function ItemList(
 
                             menu.push.apply(menu, actions[group._id].map(createAction));
                         }
+                        return null;
                     });
 
                     return React.createElement(

@@ -8,7 +8,7 @@ export function IngestDashboardController($scope, $api, ingestSources, preferenc
     $scope.fetchItems = function() {
         ingestSources.fetchDashboardProviders().then(function(result) {
             $scope.items = result;
-            $scope.dashboard_items =  _.filter(result, {'dashboard_enabled': true});
+            $scope.dashboard_items = _.filter(result, {'dashboard_enabled': true});
         });
     };
 

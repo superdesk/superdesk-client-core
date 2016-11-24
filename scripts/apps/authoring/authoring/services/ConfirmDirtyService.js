@@ -120,7 +120,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.lock = function lock(userId) {
         api.find('users', userId).then(function(user) {
-            var msg = gettextCatalog.getString('This item was locked by <b>' +  $filter('username')(user) + '</b>.');
+            var msg = gettextCatalog.getString('This item was locked by <b>' + $filter('username')(user) + '</b>.');
             return modal.confirm(msg, gettextCatalog.getString('Item locked'), gettext('OK'), false);
         });
     };

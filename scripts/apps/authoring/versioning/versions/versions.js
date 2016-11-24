@@ -21,7 +21,7 @@ function VersioningController($scope, authoring, api, notify, lock, desks, archi
                     $scope.last = archiveService.lastVersion($scope.item, $scope.versions);
 
                     if (archiveService.isLegal($scope.item)) {
-                        $scope.canRevert =  false;
+                        $scope.canRevert = false;
                         $scope.openVersion($scope.last);
                     } else {
                         $scope.canRevert = authoring.isEditable($scope.item) && !authoring.isPublished($scope.item);

@@ -3,7 +3,7 @@ import './styles/tasks.scss';
 TasksService.$inject = ['desks', '$rootScope', 'api', 'datetimeHelper'];
 function TasksService(desks, $rootScope, api, datetimeHelper) {
 
-    this.statuses =  [
+    this.statuses = [
         {_id: 'todo', name: gettext('To Do')},
         {_id: 'in_progress', name: gettext('In Progress')},
         {_id: 'done', name: gettext('Done')}
@@ -53,11 +53,7 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
         return andFilter;
     };
 
-    this.fetch = function(status, filter) {
-        if (!filter) {
-            filter = this.buildFilter(status);
-        }
-
+    this.fetch = function(status, filter = this.buildFilter(status)) {
         return api('tasks').query({
             source: {
                 size: 200,

@@ -201,12 +201,12 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             switch (options.sluglineMatch) {
             case 'ANY': //any words in the slugline
                 if (options.keyword.indexOf(' ') >= 0) {
-                    queryRelatedItem.push('slugline' + ':("' + sanitizedKeyword + '")');
+                    queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
                 }
 
                 for (var i = 0; i < length; i++) {
                     if (queryWords[i]) {
-                        queryRelatedItem.push('slugline' + ':(' + queryWords[i] + ')');
+                        queryRelatedItem.push('slugline:(' + queryWords[i] + ')');
                     }
                 }
 
@@ -257,9 +257,9 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
     }
 
     this.fetch = function(options) {
-        options = _.extend({}, DEFAULT_OPTIONS, options);
-        return $q.when(getQuery(options)).then(function(query) {
-            return api(options.endpoint, options.endpointParam || undefined)
+        let opt = _.extend({}, DEFAULT_OPTIONS, options);
+        return $q.when(getQuery(opt)).then(function(query) {
+            return api(opt.endpoint, opt.endpointParam || undefined)
                 .query(query);
         });
     };

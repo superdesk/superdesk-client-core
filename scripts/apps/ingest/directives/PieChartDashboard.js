@@ -13,7 +13,7 @@ export function PieChartDashboard(colorSchemes) {
 
             var appendTarget = element[0];
             var horizBlocks = attrs.x ? parseInt(attrs.x, 10) : 1;
-            var vertBlocks  = attrs.y ? parseInt(attrs.y, 10) : 1;
+            var vertBlocks = attrs.y ? parseInt(attrs.y, 10) : 1;
 
             var graphSettings = {       //thightly depends on CSS
                 blockWidth: 300,

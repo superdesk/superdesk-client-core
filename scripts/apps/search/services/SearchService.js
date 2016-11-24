@@ -271,7 +271,7 @@ export function SearchService($location, gettext, config, session) {
                 query.post_filter({range: range});
             }
 
-            if (params.after)            {
+            if (params.after) {
                 var facetrange = {firstcreated: {}};
                 facetrange.firstcreated.gte = params.after;
                 query.post_filter({range: facetrange});
@@ -585,9 +585,7 @@ export function SearchService($location, gettext, config, session) {
             }
             // update scope.item item-wise with matching fetched items to maintain
             // item's current position in scope.
-            scopeItems = this.updateItems(newItems, scopeItems);
-
-            return scopeItems; // i.e. updated scope.items
+            return this.updateItems(newItems, scopeItems); // i.e. updated scope.items
         }
     };
 
@@ -635,11 +633,12 @@ export function SearchService($location, gettext, config, session) {
                     {_id: item._id, _current_version: item._current_version}));
             } else {
                 // remove gone flag to prevent item remaining grey, if gone item moves back to this stage.
+                let itm = item;
                 if (angular.isDefined(item.gone)) {
-                    item = _.omit(item, 'gone');
+                    itm = _.omit(item, 'gone');
                 }
 
-                return _.extend(item, _.find(newItems._items, {_id: item._id}));
+                return _.extend(itm, _.find(newItems._items, {_id: itm._id}));
             }
         });
 
