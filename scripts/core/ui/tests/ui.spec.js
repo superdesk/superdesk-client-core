@@ -77,8 +77,7 @@ describe('superdesk ui', function() {
             childDirectives.forEach(function(directiveName) {
                 // Internally, Angular appends the "Directive" suffix to
                 // directive name, thus we need to do the same for mocking.
-                directiveName += 'Directive';
-                $provide.factory(directiveName, function() {
+                $provide.factory(directiveName + 'Directive', function() {
                     return {};
                 });
             });

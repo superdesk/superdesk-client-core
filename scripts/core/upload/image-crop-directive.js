@@ -336,10 +336,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 var $poiRight = element.find('.image-point__poi__cross-right');
                 var $poiTop = element.find('.image-point__poi__cross-top');
                 var $poiBottom = element.find('.image-point__poi__cross-bottom');
-                function drawPoint(img, poi) {
-                    if (!angular.isDefined(poi)) {
-                        poi = vm.poi;
-                    }
+                function drawPoint(img, poi = vm.poi) {
                     var topOffset = poi.y * img.height - circleRadius;
                     var leftOffset = poi.x * img.width - circleRadius;
                     var verticalLeftOffset = leftOffset + circleRadius - lineThickness / 2;

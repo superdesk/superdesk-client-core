@@ -6,20 +6,19 @@ function MacrosService(api, notify, $filter) {
      *
      * @return {*}
      */
-    var _getAllMacros = function(criteria, page, macros) {
-        page = page || 1;
-        macros = macros || [];
-        criteria = criteria || {};
-
+    var _getAllMacros = function(criteria = {}, page = 1, macros = []) {
         return api.query('macros', _.extend({max_results: 200, page: page}, criteria))
-        .then(function(result) {
-            macros = macros.concat(result._items);
-            if (result._links.next) {
-                page++;
-                return _getAllMacros(criteria, page, macros);
-            }
-            return _.sortBy(macros, ['order', 'label']);
-        });
+            .then(function(result) {
+                let all = macros.concat(result._items);
+                let pg = page;
+
+                if (result._links.next) {
+                    pg++;
+                    return _getAllMacros(criteria, pg, all);
+                }
+
+                return _.sortBy(all, ['order', 'label']);
+            });
     };
 
     /**

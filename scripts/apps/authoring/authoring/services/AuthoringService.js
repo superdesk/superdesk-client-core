@@ -182,13 +182,12 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     };
 
-    this.publish = function publish(orig, diff, action) {
-        action = action || 'publish';
-        diff = helpers.extendItem({}, diff);
-        this.cleanUpdatesBeforePublishing(orig, diff);
-        helpers.filterDefaultValues(diff, orig);
+    this.publish = function publish(orig, diff, action = 'publish') {
+        let extDiff = helpers.extendItem({}, diff);
+        this.cleanUpdatesBeforePublishing(orig, extDiff);
+        helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
-        return api.update(endpoint, orig, diff)
+        return api.update(endpoint, orig, extDiff)
         .then(function(result) {
             return lock.unlock(result)
                 .then(function(result) {
@@ -200,11 +199,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     };
 
     this.validateBeforeTansa = function(orig, diff, act) {
-        diff = helpers.extendItem({}, diff);
+        let extDiff = helpers.extendItem({}, diff);
 
-        this.cleanUpdatesBeforePublishing(orig, diff);
+        this.cleanUpdatesBeforePublishing(orig, extDiff);
 
-        return api.save('validate', {'act': act, 'type': orig.type, 'validate': diff});
+        return api.save('validate', {'act': act, 'type': orig.type, 'validate': extDiff});
     };
 
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {

@@ -257,9 +257,9 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
     }
 
     this.fetch = function(options) {
-        options = _.extend({}, DEFAULT_OPTIONS, options);
-        return $q.when(getQuery(options)).then(function(query) {
-            return api(options.endpoint, options.endpointParam || undefined)
+        let opt = _.extend({}, DEFAULT_OPTIONS, options);
+        return $q.when(getQuery(opt)).then(function(query) {
+            return api(opt.endpoint, opt.endpointParam || undefined)
                 .query(query);
         });
     };

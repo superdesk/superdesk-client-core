@@ -19,14 +19,14 @@ function LoginModal() {
 
     this.login = function(username, password) {
         var self = this;
-        username = username || browser.params.username;
-        password = password || browser.params.password;
+        let usr = username || browser.params.username;
+        let pwd = password || browser.params.password;
         return self.username.waitReady().then(function() {
             return self.username.clear();
         }).then(function() {
-            return self.username.sendKeys(username);
+            return self.username.sendKeys(usr);
         }).then(function() {
-            return self.password.sendKeys(password);
+            return self.password.sendKeys(pwd);
         }).then(function() {
             return self.btn.click();
         });

@@ -1017,10 +1017,7 @@ function TimepickerPopupDirective($timeout, config) {
 
 function LeadingZeroFilter() {
     return function(input) {
-        if (input < 10) {
-            input = '0' + input;
-        }
-        return input;
+        return input < 10 ? '0' + input : input;
     };
 }
 

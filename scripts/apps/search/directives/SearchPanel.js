@@ -212,8 +212,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                     scope.removeFilter(type, key);
                 }
 
-                type = 'not' + type;
-                setUrlParameter(type, key);
+                setUrlParameter('not' + type, key);
                 evt.stopPropagation();
             };
 

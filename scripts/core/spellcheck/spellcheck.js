@@ -52,14 +52,17 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
 
         if (!dict) {
             dict = dictionaries.getActive(lang, baseLang).then(function(items) {
+
                 dict = dict || {};
                 dict.content = {};
 
+                let langItems = items;
+
                 if (baseLang && _.find(items, {'language_id': lang}) && _.find(items, {'language_id': baseLang})) {
-                    items = _.filter(items, {'language_id': lang});
+                    langItems = _.filter(items, {'language_id': lang});
                 }
 
-                angular.forEach(items, addDict);
+                angular.forEach(langItems, addDict);
 
                 // Abbreviations found in dictionary.
                 var re = /\w+(?:\.\w*)+/g;
@@ -103,11 +106,12 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
                 self.abbreviationsDict = self.abbreviationsDict || {};
                 self.abbreviationsDict.content = {};
 
+                let langItems = items;
                 if (baseLang && _.find(items, {'language_id': lang}) && _.find(items, {'language_id': baseLang})) {
-                    items = _.filter(items, {'language_id': lang});
+                    langItems = _.filter(items, {'language_id': lang});
                 }
 
-                angular.forEach(items, function(item) {
+                angular.forEach(langItems, function(item) {
                     angular.extend(self.abbreviationsDict.content, JSON.parse(item.content) || {});
                 });
 

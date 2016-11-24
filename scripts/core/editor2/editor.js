@@ -261,10 +261,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         }
     };
 
-    function replaceText(scope, text, className) {
-        if (!className) {
-            className = ACTIVE_CLASS;
-        }
+    function replaceText(scope, text, className = ACTIVE_CLASS) {
         var nodes = scope.node.parentNode.getElementsByClassName(className);
         var nodesLength = nodes.length;
         var replacementOffset = self.replaceNodes(nodes, text, scope);
@@ -805,13 +802,15 @@ angular.module('superdesk.apps.editor2', [
                 }
 
                 var lines = 0;
-                while (p) {
-                    if (p.childNodes.length && p.childNodes[0].nodeType === Node.TEXT_NODE) {
-                        lines += getLineCount(p.childNodes[0].wholeText);
-                    } else if (p.childNodes.length) {
+                var pos = p;
+
+                while (pos) {
+                    if (pos.childNodes.length && pos.childNodes[0].nodeType === Node.TEXT_NODE) {
+                        lines += getLineCount(pos.childNodes[0].wholeText);
+                    } else if (pos.childNodes.length) {
                         lines += 1; // empty paragraph
                     }
-                    p = p.previousSibling;
+                    pos = pos.previousSibling;
                 }
 
                 return lines;
@@ -852,11 +851,13 @@ angular.module('superdesk.apps.editor2', [
 
             function extractBlockContentsFromCaret() {
                 function getBlockContainer(node) {
-                    while (node) {
-                        if (node.nodeType === 1 && /^(DIV)$/i.test(node.nodeName)) {
-                            return node;
+                    var pos = node;
+
+                    while (pos) {
+                        if (pos.nodeType === 1 && /^(DIV)$/i.test(pos.nodeName)) {
+                            return pos;
                         }
-                        node = node.parentNode;
+                        pos = pos.parentNode;
                     }
                 }
                 var sel = window.getSelection();

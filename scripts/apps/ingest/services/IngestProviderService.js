@@ -2,20 +2,17 @@ import {PROVIDER_DASHBOARD_DEFAULTS} from 'apps/ingest/constants';
 
 IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter', 'searchProviderService'];
 export function IngestProviderService(api, $q, preferencesService, $filter, searchProviderService) {
-    var _getAllIngestProviders = function(criteria, page, providers) {
-        page = page || 1;
-        providers = providers || [];
-        criteria = criteria || {};
-
+    var _getAllIngestProviders = function(criteria = {}, page = 1, providers = []) {
         return api.query('ingest_providers', _.extend({max_results: 200, page: page}, criteria))
-        .then(function(result) {
-            providers = providers.concat(result._items);
-            if (result._links.next) {
-                page++;
-                return _getAllIngestProviders(criteria, page, providers);
-            }
-            return $filter('sortByName')(providers);
-        });
+            .then(function(result) {
+                let pg = page;
+                let merged = providers.concat(result._items);
+                if (result._links.next) {
+                    pg++;
+                    return _getAllIngestProviders(criteria, pg, merged);
+                }
+                return $filter('sortByName')(merged);
+            });
     };
 
     var service = {
@@ -58,14 +55,11 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
             _getAllIngestProviders().then(function(result) {
                 var ingestProviders = result;
                 preferencesService.get('dashboard:ingest').then(function(userIngestProviders) {
-                    if (!_.isArray(userIngestProviders)) {
-                        userIngestProviders = [];
-                    }
-
                     _.forEach(ingestProviders, function(provider) {
-                        var userProvider = _.find(userIngestProviders, function(item) {
-                            return item._id === provider._id;
-                        });
+                        var userProvider = _.find(
+                            _.isArray ? userIngestProviders : [userIngestProviders],
+                            (item) => item._id === provider._id
+                        );
 
                         provider.dashboard_enabled = !!userProvider;
                         forcedExtend(provider, userProvider ? userProvider : PROVIDER_DASHBOARD_DEFAULTS);

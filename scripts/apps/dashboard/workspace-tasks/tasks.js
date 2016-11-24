@@ -53,11 +53,7 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
         return andFilter;
     };
 
-    this.fetch = function(status, filter) {
-        if (!filter) {
-            filter = this.buildFilter(status);
-        }
-
+    this.fetch = function(status, filter = this.buildFilter(status)) {
         return api('tasks').query({
             source: {
                 size: 200,

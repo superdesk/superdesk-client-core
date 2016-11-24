@@ -5,20 +5,19 @@ export function SubscribersService(api, $q, $filter) {
      *
      * @return {*}
      */
-    var _getAllSubscribers = function(criteria, page, subscribers) {
-        page = page || 1;
-        subscribers = subscribers || [];
-        criteria = criteria || {};
-
+    var _getAllSubscribers = function(criteria = {}, page = 1, subscribers = []) {
         return api.query('subscribers', _.extend({max_results: 200, page: page}, criteria))
-        .then(function(result) {
-            subscribers = subscribers.concat(result._items);
-            if (result._links.next) {
-                page++;
-                return _getAllSubscribers(criteria, page, subscribers);
-            }
-            return $filter('sortByName')(subscribers);
-        });
+            .then(function(result) {
+                let pg = page;
+                let merged = subscribers.concat(result._items);
+
+                if (result._links.next) {
+                    pg++;
+                    return _getAllSubscribers(criteria, pg, merged);
+                }
+
+                return $filter('sortByName')(merged);
+            });
     };
 
     var service = {

@@ -59,19 +59,18 @@ export function ContentFiltersService(api, $filter) {
         });
     };
 
-    var _getAll = function(endPoint, page, items) {
-        page = page || 1;
-        items = items || [];
-
+    var _getAll = function(endPoint, page = 1, items = []) {
         return api(endPoint)
-        .query({max_results: 200, page: page})
-        .then(function(result) {
-            items = items.concat(result._items);
-            if (result._links.next) {
-                page++;
-                return _getAll(endPoint, page, items);
-            }
-            return items;
-        });
+            .query({max_results: 200, page: page})
+            .then(function(result) {
+                let extended = items.concat(result._items);
+                let pg = page;
+
+                if (result._links.next) {
+                    pg++;
+                    return _getAll(endPoint, pg, extended);
+                }
+                return extended;
+            });
     };
 }

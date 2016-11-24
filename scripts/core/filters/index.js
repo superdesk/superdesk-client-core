@@ -180,11 +180,7 @@ export default angular.module('superdesk.core.filters', [])
         };
     })
     .filter('formatDatelineText', function() {
-        return function(located, month, date, source) {
-            if (!source) {
-                source = '';
-            }
-
+        return function(located, month, date, source = '') {
             var dateline = located.city_code;
             var datelineFields = located.dateline.split(',');
 
@@ -208,16 +204,10 @@ export default angular.module('superdesk.core.filters', [])
         };
     })
     .filter('sortByName', function() {
-        return function(_collection, propertyName) {
-            if (!propertyName) {
-                propertyName = 'name';
-            }
-
-            _collection = _.sortBy(_collection, function(_entry) {
+        return function(_collection, propertyName = 'name') {
+            return _.sortBy(_collection, function(_entry) {
                 return _entry[propertyName] ? _entry[propertyName].toLowerCase() : _entry.name.toLowerCase();
             });
-
-            return _collection;
         };
     })
     .filter('formatFilterCondition', function() {

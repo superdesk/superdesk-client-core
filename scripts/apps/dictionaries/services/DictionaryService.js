@@ -53,11 +53,14 @@ export function DictionaryService(api, urls, session, Upload, $q) {
         }
 
         urls.resource('dictionaries').then(function(uploadURL) {
+            let url = uploadURL;
+
             if (hasId) {
-                uploadURL += '/' + dictionary._id;
+                url += '/' + dictionary._id;
             }
+
             return Upload.upload({
-                url: uploadURL,
+                url: url,
                 method: method,
                 data: sendData,
                 file: file,

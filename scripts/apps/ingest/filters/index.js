@@ -1,9 +1,7 @@
 export function InsertFilter() {
-    return function(input, location, addition) {
-        location = location || input.length;
-        addition = addition || '';
-
-        return input.substr(0, location) + addition + input.substr(location);
+    return function(input, location, addition = '') {
+        let loc = location || input.length;
+        return input.substr(0, loc) + addition + input.substr(loc);
     };
 }
 

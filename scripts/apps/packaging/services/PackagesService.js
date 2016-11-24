@@ -44,8 +44,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return api.save('archive', newPackage);
     };
 
-    this.createEmptyPackage = function(defaults, idRef) {
-        idRef = idRef || 'main';
+    this.createEmptyPackage = function(defaults, idRef = 'main') {
         var newPackage = {
             headline: '',
             slugline: '',
@@ -129,7 +128,6 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     };
 
     this.addPackageGroupItem = function(group, item, broadcast) {
-        broadcast = typeof broadcast === 'undefined';
         var pkg = authoringWorkspace.getItem();
         var pkgId = pkg._id;
         if (typeof this.packageGroupItems[pkgId] === 'undefined') {
@@ -138,7 +136,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         if (_.indexOf(this.packageGroupItems[pkgId], item._id) === -1) {
             this.packageGroupItems[pkgId].unshift(item._id);
         }
-        if (broadcast) {
+        if (typeof broadcast === 'undefined') {
             $rootScope.$broadcast('package:addItems', {items: [item], group: group});
         }
     };
@@ -171,12 +169,13 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     }
 
     function setDefaults(item, defaults) {
+        let obj = defaults;
         if (angular.isUndefined(defaults) || !_.isObject(defaults)) {
-            defaults = {};
+            obj = {};
         }
 
-        archiveService.addTaskToArticle(defaults);
-        return _.merge(item, defaults);
+        archiveService.addTaskToArticle(obj);
+        return _.merge(item, obj);
     }
 
 }

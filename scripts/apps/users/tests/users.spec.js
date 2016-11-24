@@ -81,11 +81,11 @@ describe('userlist service', function() {
         userList.get();
         $rootScope.$digest();
 
-        api = jasmine.createSpy('api');
+        let spy = jasmine.createSpy('api');
         userList.get();
         $rootScope.$digest();
 
-        expect(api).not.toHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
     }));
 
     it('can fetch single user', inject(function(userList, $rootScope) {
@@ -102,11 +102,11 @@ describe('userlist service', function() {
         userList.get();
         $rootScope.$digest();
 
-        api = jasmine.createSpy('api');
+        let spy = jasmine.createSpy('api');
         userList.getUser(1);
         $rootScope.$digest();
 
-        expect(api).not.toHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
     }));
 });
 

@@ -1,10 +1,12 @@
 export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 'superdesk.core.services.asset'])
     .service('modal', ['$q', '$modal', '$sce', 'asset', function($q, $modal, $sce, asset) {
-        this.confirm = function(bodyText, headerText, okText, cancelText, additionalCancelText) {
-            headerText = headerText || gettext('Confirm');
-            okText = okText || gettext('OK');
-            cancelText = cancelText != null ? cancelText : gettext('Cancel');
-            additionalCancelText = additionalCancelText != null ? additionalCancelText : null;
+        this.confirm = function(
+            bodyText,
+            headerText = gettext('Confirm'),
+            okText = gettext('OK'),
+            cancelText = gettext('Cancel'),
+            additionalCancelText = null
+        ) {
             var delay = $q.defer();
 
             $modal.open({

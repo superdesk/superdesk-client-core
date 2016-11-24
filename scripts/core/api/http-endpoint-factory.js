@@ -188,19 +188,17 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * Update item
      */
     HttpEndpoint.prototype.update = function(item, diff, params) {
-        if (diff && diff._etag) {
-            item._etag = diff._etag;
-        }
+        let diff2 = diff || angular.extend({}, item);
 
-        if (!diff) {
-            diff = angular.extend({}, item);
+        if (diff2._etag) {
+            item._etag = diff2._etag;
         }
 
         var url = item._links.self.href;
         return http({
             method: 'PATCH',
             url: urls.item(url),
-            data: clean(diff, !item._links),
+            data: clean(diff2, !item._links),
             params: params,
             headers: getHeaders(this, item)
         }).then(function(response) {

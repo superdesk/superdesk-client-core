@@ -140,18 +140,20 @@ function APIProvider() {
 
             return urls.resource(this.resource)
                 .then(angular.bind(this, function(url) {
+                    let addr = url;
+
                     if (this.parent) {
                         var newUrl = resolve(url, this.parent);
-                        if (newUrl !== url) {
+                        if (newUrl !== addr) {
                             return newUrl;
                         }
                     }
 
                     if (_id) {
-                        url = url + '/' + _id;
+                        addr = url + '/' + _id;
                     }
 
-                    return url;
+                    return addr;
                 }));
         };
 

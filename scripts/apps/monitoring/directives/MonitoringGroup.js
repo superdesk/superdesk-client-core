@@ -400,9 +400,9 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                     if (!scope.showRefresh || data && data.force) {
                         scope.total = items._meta.total;
-                        items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
-                        monitoring.totalItems = items._meta.total;
-                        scope.items = search.mergeItems(items, scope.items, null, true);
+                        let onlyHighlighted = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
+                        monitoring.totalItems = onlyHighlighted._meta.total;
+                        scope.items = search.mergeItems(onlyHighlighted, scope.items, null, true);
                     } else {
                         // update scope items only with the matching fetched items
                         scope.items = search.updateItems(items, scope.items);
@@ -420,8 +420,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         if (scope.total !== items._meta.total) {
                             scope.total = items._meta.total;
                         }
-                        items = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
-                        scope.items = search.mergeItems(items, scope.items, next);
+                        let onlyHighlighted = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
+                        scope.items = search.mergeItems(onlyHighlighted, scope.items, next);
                     });
                 });
             }

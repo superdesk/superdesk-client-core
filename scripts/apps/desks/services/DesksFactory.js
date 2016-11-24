@@ -1,18 +1,16 @@
 DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify', 'session', '$filter'];
 export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter) {
-    var _fetchAll = function(endpoint, parent, page, items) {
-        page = page || 1;
-        items = items || [];
-
+    var _fetchAll = function(endpoint, parent, page = 1, items = []) {
         return api.query(endpoint, {max_results: 200, page: page}, parent)
-        .then(function(result) {
-            items = items.concat(result._items);
-            if (result._links.next) {
-                page++;
-                return _fetchAll(endpoint, parent, page, items);
-            }
-            return items;
-        });
+            .then(function(result) {
+                let pg = page;
+                let extended = items.concat(result._items);
+                if (result._links.next) {
+                    pg++;
+                    return _fetchAll(endpoint, parent, pg, extended);
+                }
+                return extended;
+            });
     };
 
     /**
@@ -54,10 +52,10 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
 
             return _fetchAll('desks')
             .then(function(items) {
-                items = $filter('sortByName')(items);
+                let byName = $filter('sortByName')(items);
 
-                self.desks = {_items: items};
-                _.each(items, function(item) {
+                self.desks = {_items: byName};
+                _.each(byName, function(item) {
                     self.deskLookup[item._id] = item;
                 });
                 return self.desks;
@@ -127,10 +125,10 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
         },
         fetchUserDesks: function(user) {
             return _fetchAll('user_desks', {'_id': user._id}).then(function(response) {
-                if (response) {
-                    response = $filter('sortByName')(response);
+                if (!response) {
+                    return;
                 }
-                return $q.when(response);
+                return $q.when($filter('sortByName')(response));
             });
         },
 
@@ -225,9 +223,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
         getCurrentDesk: function() {
             return this.deskLookup[this.getCurrentDeskId()] || null;
         },
-        setWorkspace: function(deskId, stageId) {
-            deskId = deskId || null;
-            stageId = stageId || null;
+        setWorkspace: function(deskId = null, stageId = null) {
             if (this.activeDeskId !== deskId || this.activeStageId !== stageId) {
                 this.activeDeskId = deskId;
                 this.activeStageId = stageId;

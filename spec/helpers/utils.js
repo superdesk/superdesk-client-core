@@ -25,13 +25,13 @@ var LoginModal = require('./pages').login;
 
 // authenticate if needed
 function login(username, password) {
-    username = username || 'admin';
-    password = password || 'admin';
+    let usr = username || 'admin';
+    let pwd = password || 'admin';
     var modal = new LoginModal();
     return modal.btn.isDisplayed()
         .then(function(needLogin) {
             if (needLogin) {
-                return modal.login(username, password);
+                return modal.login(usr, pwd);
             }
         });
 }
@@ -49,13 +49,15 @@ function openUrl(url) {
 }
 
 function printLogs(prefix) {
-    prefix = prefix ? prefix + ' ' : '';
     return browser.manage().logs().get('browser').then(function(browserLog) {
         var logs = browserLog.filter(function(log) {
             return log.level.value >= 1000;
         });
 
-        console.info(prefix + 'log: ' + require('util').inspect(logs, {dept: 3}));
+        console.info(
+            (prefix ? prefix + ' ' : '') +
+            'log: ' + require('util').inspect(logs, {dept: 3})
+        );
     });
 }
 

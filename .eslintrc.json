@@ -88,6 +88,10 @@
         "no-lone-blocks": 2,
         "no-multi-spaces": 2,
         "no-multi-str": 2,
+        "no-new-func": 2,
+        "no-new-wrappers": 2,
+        "no-octal": 2,
+        "no-param-reassign": 2,
 
         "strict": 0,
         "indent": [2, 4],

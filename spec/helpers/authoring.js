@@ -147,16 +147,17 @@ function Authoring() {
     };
 
     this.addEmbed = function(embedCode, context) {
+        let ctx = context;
         if (!context) {
-            context = element(by.tagName('body'));
+            ctx = element(by.tagName('body'));
         }
         browser.wait(function() {
-            return context.element(this.add_content_button).isDisplayed();
+            return ctx.element(this.add_content_button).isDisplayed();
         }.bind(this), 1000);
-        context.element(this.add_content_button).click();
-        context.element(by.css('[ng-click="vm.triggerAction(\'addEmbed\')"]')).click();
-        context.element(by.css('.add-embed__input input')).sendKeys(embedCode || 'embed code');
-        context.element(by.css('[ng-click="vm.createBlockFromEmbed()"]')).click();
+        ctx.element(this.add_content_button).click();
+        ctx.element(by.css('[ng-click="vm.triggerAction(\'addEmbed\')"]')).click();
+        ctx.element(by.css('.add-embed__input input')).sendKeys(embedCode || 'embed code');
+        ctx.element(by.css('[ng-click="vm.createBlockFromEmbed()"]')).click();
     };
 
     this.getBlock = function(position) {
@@ -539,13 +540,9 @@ function Authoring() {
     };
 
     this.backspaceBodyHtml = function(count) {
-        if (!count) {
-            count = 1;
-        }
-
         var sequence = '';
 
-        for (var i = 0; i < count; i++) {
+        for (var i = 0; i < (count || 1); i++) {
             sequence += protractor.Key.BACK_SPACE;
         }
 

@@ -45,7 +45,8 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         };
     }
 
-    function initSelectedParameters(parameters) {
+    function initSelectedParameters(params) {
+        let parameters = params;
         tags.selectedParameters = [];
         while (parameters.indexOf(':') > 0 &&
                parameters.indexOf(':') < parameters.indexOf('(', parameters.indexOf(':')) &&
@@ -83,7 +84,8 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     /*
      * function to parse search input from the search bar.
      */
-    function initSelectedKeywords(keywords) {
+    function initSelectedKeywords(kwds) {
+        let keywords = kwds;
         tags.selectedKeywords = [];
         while (keywords.indexOf('(') >= 0 && keywords.indexOf(')') > 0) {
             var closeIndex = keywords.indexOf('(');
