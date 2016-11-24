@@ -1,64 +1,64 @@
-<div class="stage-header clearfix">
-    <!-- list view -->
-    <div class="header-container" ng-if="!viewColumn || viewType === 'spiked'">
-        <span class="stage-name" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
-            <span class="group-header">
-                <a href="" ng-click="viewSingleGroup(group, 'desk')">
-                    {{ :: group.header }}</a></span>
+<!-- list view -->
+<div class="header-container" ng-if="!viewColumn || viewType === 'spiked'">
+    <div class="stage-header">
+        <div class="stage-header__name" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
+            <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
             <span>/</span>
-            <span class="group-subheader">
-                <a href="" ng-click="viewSingleGroup(group, 'stage')">
-                    <span>{{ :: group.subheader }} </span> {{ :: group.type | translate }}
-                </a>
-                <span class="label-total">{{ total || '0' }}</span>
-            </span>
-        </span>
+            <a href="" ng-click="viewSingleGroup(group, 'stage')">{{ :: group.subheader }} {{ :: group.type | translate }}</a>
+        </div>
         <!-- Desk output stages-->
-        <span class="stage-name" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
+        <div class="stage-header__name" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
             <span class="group-header">
-                <a href="" ng-click="viewSingleGroup(group, 'single-stage')">
-                    {{ :: group.header }} {{ :: group.type|splitText | translate }}</a>
+                <a href="" ng-click="viewSingleGroup(group, 'single-stage')">{{ :: group.header }} {{ :: group.type|splitText | translate }}</a>
             </span>
-            <span class="label-total">{{ total || '0' }}</span>
-        </span>
-    </div>
-    <!-- swimlane view -->
-    <div class="header-container" ng-if="viewColumn && viewType != 'spiked'">
-        <span class="stage-name" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
-            <span class="group-header">{{ :: group.header }}
-                <span class="link" ng-click="viewSingleGroup(group, 'desk')" title="{{ 'Open desk content' | translate}}">
-                    <i class="icon-external"></i></span>
-            </span>
-            <span class="group-subheader">{{ :: group.subheader }} {{ :: group.type | translate }}
-                <span class="link" ng-click="viewSingleGroup(group, 'stage')" title="{{ 'Open stage content' | translate}}">
-                    <i class="icon-external"></i></span>
-                <span class="label-total pull-right">{{ total || '0' }}</span>
-            </span>
-        </span>
-        <!-- Desk output stages-->
-        <span class="stage-name" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
-            <span class="group-header">{{ :: group.header }}
-                <span class="link" ng-click="viewSingleGroup(group, 'single-stage')" title="{{ 'Open desk content' | translate}}">
-                    <i class="icon-external"></i></span>
-            </span>
-            <span class="group-subheader">{{ :: group.type|splitText | translate }}
-                <span class="link" ng-click="viewSingleGroup(group, 'single-stage')" title="{{ 'Open desk content' | translate}}">
-                    <i class="icon-external"></i></span>
-                <span class="label-total pull-right">{{ total || '0' }}</span>
-            </span>
-        </span>
-    </div>
-    <!-- refresh button -->
-    <div class="refresh-box pull-right" ng-class="{swimlane: viewColumn}">
-        <button ng-if="showRefresh" ng-click="refreshGroup(group)" ng-class="{btnRefresh: viewType === 'monitoring' || viewColumn, swimlane: viewColumn}"
-            tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+        </div>
+        <span class="stage-header__number label-total">{{ total || '0' }}</span>
+        <div class="stage-header__stretch-bar"></div>
+        <!-- desk notification section -->
+        <div class="stage-header__notification" ng-if="!viewColumn">
+            <div ng-if="group.type === 'stage'" class="dropdown dropdown--dropright dropdown--hover dropdown--noarrow monitoring-dropdown"
+                dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
+            </div>
+        </div>
+        <!-- refresh button -->
+        <button ng-if="showRefresh" class="btn btn--light btn--circle stage-header__refresh" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
             <i class="icon-repeat blue"></i>
         </button>
     </div>
-    <!-- desk notification section -->
-    <div class="notification-container" ng-class="{'swimlane pull-right': viewColumn, 'refresh': showRefresh}">
-        <div ng-if="group.type === 'stage'" class="dropdown dropdown--dropright dropdown--hover monitoring-dropdown"
-             dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
+</div>
+
+
+<!-- swimlane view -->
+<div class="header-container" ng-if="viewColumn && viewType !== 'spiked'">
+    <div class="stage-header" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
+        <div class="stage-header__name">
+            <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
+            <span class="group-divider">/</span>
+            <a href="" ng-click="viewSingleGroup(group, 'stage')">{{ :: group.subheader }}</a>  
         </div>
+        <span class="stage-header__number label-total">{{ total || '0' }}</span>
+        <div class="stage-header__notification">
+            <div ng-if="group.type === 'stage'" class="dropdown dropdown--dropright dropdown--hover dropdown--noarrow monitoring-dropdown"
+                dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
+            </div>
+        </div>
+        <button ng-if="showRefresh" class="btn btn--light btn--circle stage-header__refresh" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+            <i class="icon-repeat blue"></i>
+        </button>
+    </div>
+    <!-- Desk output stages-->
+    <div class="stage-header" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
+        <div class="stage-header__name">
+            <a href="" ng-click="viewSingleGroup(group, 'single-stage')">{{ :: group.header }} {{ :: group.type|splitText | translate }}</a>
+        </div>
+        <span class="stage-header__number label-total">{{ total || '0' }}</span>
+        <div class="stage-header__notification">
+            <div ng-if="group.type === 'stage'" class="dropdown dropdown--dropright dropdown--hover dropdown--noarrow monitoring-dropdown"
+                dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
+            </div>
+        </div>
+        <button ng-if="showRefresh" class="btn btn--light btn--circle stage-header__refresh" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+            <i class="icon-repeat blue"></i>
+        </button>
     </div>
 </div>

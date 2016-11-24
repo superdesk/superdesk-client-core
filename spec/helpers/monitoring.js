@@ -90,7 +90,7 @@ function Monitoring() {
     };
 
     this.actionOnDeskSingleView = function() {
-        var elem = element.all(by.className('stage-name'));
+        var elem = element.all(by.className('stage-header__name'));
         var header = elem.all(by.css('[ng-click="viewSingleGroup(group, \'desk\')"]')).first();
         header.click();
     };
@@ -100,7 +100,7 @@ function Monitoring() {
     };
 
     this.actionOnStageSingleView = function() {
-        var elem = element.all(by.className('stage-name'));
+        var elem = element.all(by.className('stage-header__name'));
         var subheader = elem.all(by.css('[ng-click="viewSingleGroup(group, \'stage\')"]')).first();
         subheader.click();
     };

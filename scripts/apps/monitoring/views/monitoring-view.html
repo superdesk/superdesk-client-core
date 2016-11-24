@@ -54,12 +54,7 @@
                 <i class="icon-settings"></i>
             </button>
 
-            <button id="switch-view-btn" ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView"
-             class="navbtn strict" ng-click="displayColumn()" ng-class="{active: viewColumn}"
-                 tooltip="{{ viewColumn ? 'Switch to List View' : 'Switch to Swimlane View'  | translate }}"
-                 tooltip-placement="left">
-                <i class="big-icon-view"></i>
-            </button>
+            
 
             <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
                 <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
@@ -70,7 +65,7 @@
 
     <section class="main-section" ng-class="monitoring.state">
 
-        <div sd-media-query min-width="560" class="subnav">
+        <div sd-media-query min-width="700" class="subnav">
 
             <div class="button-list button-list--padded" ng-if="!elementState || elementState === 'comfort'">
                 <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
@@ -80,31 +75,49 @@
                     <i ng-if="fileType=='highlightsPackage'" class="toggle-button__icon filetype-icon-highlight-pack" title="{{ :: 'Highlight Package' | translate }}"></i>
                 </a>
             </div>
-            <button class="navbtn navbtn--btn-rearrange pull-left" tooltip="{{:: 'Re-Arrange Groups' | translate}}" tooltip-placement="right" ng-if="type === 'monitoring' && monitoring.singleGroup.singleViewType == null && viewColumn"
-                 ng-click="aggregate.edit('reorder', true)">
-                <i class="icon-move"></i> <span class="title" translate>Rearrange groups</span>
-            </button>
 
             <div class="subnav__stretch-bar"></div>
 
             <div sd-item-sortbar ng-if="!elementState || elementState === 'comfort'" class="sortbar-container"></div>
 
-            <div class="button-stack right-stack" ng-if="elementState === 'compact'">
+            <button id="switch-view-btn" ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView"
+             class="swimlane-switch" ng-click="displayColumn()" ng-class="{'swimlane-switch--on': viewColumn}"
+                 tooltip="{{ viewColumn ? 'Switch to List View' : 'Switch to Swimlane View'  | translate }}"
+                 tooltip-placement="left">
+                <i class="icon-th-list"></i>
+            </button>
+
+            <div class="button-stack right-stack">
                 <div class="dropdown navbtn strict" dropdown>
                     <button class="dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                     <ul class="dropdown__menu pull-right">
-                        <li class="filter-type">
-                            <div ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="filter-type__item" ng-class="{'filter-type__item--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
-                                <a ng-if="fileType=='all'" class="filetype-icon-{{fileType}}" translate>all</a>
+                        <li ng-if="elementState === 'compact'"><span class="dropdown__menu-label">{{:: 'File types' | translate}}</span></li>
+                        <li ng-repeat="fileType in aggregate.fileTypes" 
+                            ng-click="aggregate.setFileType(fileType)" 
+                            ng-class="{'menu-item--active': aggregate.hasFileType(fileType)}"
+                            ng-if="elementState === 'compact'" title="{{fileType | translate}}">
+                            <button>
+                                <span ng-if="fileType=='all'"></span>
                                 <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
                                 <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack"
                                 title="{{ :: 'Takes Package' | translate }}"></i>
                                 <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack"
                                 title="{{ :: 'Highlight Package' | translate }}"></i>
-                            </div>
+                                &nbsp;<span>{{fileType}}</span>
+                            </button>
                         </li>
-                        <li class="divider"></li>
-                        <li sd-item-sortbar></li>
+                        <li ng-if="elementState === 'compact'" class="divider"></li>
+                        <li ng-if="elementState === 'compact'"><span class="dropdown__menu-label">{{:: 'Sorting' | translate}}</span></li>
+                        <li ng-if="elementState === 'compact'">
+                            <span sd-item-sortbar></span>
+                        </li>
+                        <li ng-if="elementState === 'compact'" class="divider"></li>
+                        <li>
+                            <button ng-click="aggregate.edit('reorder', true)">
+                                <i class="icon-switches"></i>
+                                 &nbsp;<span>{{:: 'Rearrange Groups' | translate}}</span>
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -113,7 +126,7 @@
         <div class="preview-layout monitoring-preview-layout">
             <div class="content-list" ng-show="!aggregate.loading">
                 <!-- list view -->
-                <div ng-if="!viewColumn" class="list">
+                <div ng-if="!viewColumn && type === 'monitoring'" class="list">
                     <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                         <div ng-repeat="group in aggregate.groups track by group._id"
                              sd-monitoring-group data-group="group"  data-num-items="group.max_items"
@@ -121,10 +134,10 @@
                     </div>
                 </div>
                 <!-- swimlane view -->
-                <div ng-if="viewColumn" class="swimlane">
-                    <div class="sd-columns swimlane"
+                <div ng-if="viewColumn && type === 'monitoring'">
+                    <div class="sd-columns"
                          ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
-                        <div class="sd-column swimlane" ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
+                        <div class="sd-column" ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
                              ng-repeat="group in aggregate.groups | limitTo:monitoring.columnsLimit track by group._id"
                              sd-monitoring-group data-group="group" data-num-items="group.max_items"
                              data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
