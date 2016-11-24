@@ -39,10 +39,11 @@ export default angular.module('superdesk.core.services.server', [])
             _all: function(functionName, items, datas) {
                 var self = this;
                 var delay = $q.defer();
+                var resource;
 
                 // to make it usable with createAll
                 if (datas !== undefined) {
-                    var resource = items;
+                    resource = items;
                     items = datas;
                 }
 
@@ -63,6 +64,7 @@ export default angular.module('superdesk.core.services.server', [])
             },
             _http: function(method, url, params, data) {
                 var delay = $q.defer();
+                var created;
 
                 method = method.toLowerCase();
                 var options = {
@@ -73,7 +75,7 @@ export default angular.module('superdesk.core.services.server', [])
                 };
 
                 if (method === 'patch') {
-                    var created = data.created;
+                    created = data.created;
                 }
                 if (method === 'delete' || method === 'patch') {
                     options.headers = {'If-Match': data.etag};

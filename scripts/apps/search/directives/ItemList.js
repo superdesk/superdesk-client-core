@@ -847,6 +847,7 @@ export function ItemList(
                         return fields[field](itemProps);
                     } else {
                         console.warn('missing field in list: ' + field);
+                        return null;
                     }
                 }).filter(angular.identity);
                 var elemProps = angular.extend({key: area}, props);
@@ -1179,6 +1180,7 @@ export function ItemList(
 
                             menu.push.apply(menu, actions[group._id].map(createAction));
                         }
+                        return null;
                     });
 
                     return React.createElement(

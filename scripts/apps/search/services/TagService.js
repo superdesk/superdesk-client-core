@@ -107,6 +107,8 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @param {object} params - $location.search
      */
     function initParameters(params) {
+        var selecteditems = [];
+
         _.each(PARAMETERS, function(value, key) {
             if (!angular.isDefined(params[key])) {
                 return;
@@ -139,7 +141,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                     var cv = cvs[i];
                     if (cv.field === key) {
                         var codeList = metadata.values[cv.list];
-                        var selecteditems = JSON.parse(params[key]);
+                        selecteditems = JSON.parse(params[key]);
                         processSelectedItems(selecteditems, codeList);
                     }
                 }
