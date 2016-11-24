@@ -42,8 +42,8 @@ function Authoring() {
     this.sendItemContainer = element(by.id('send-item-container'));
     this.linkToMasterButton = element(by.id('preview-master'));
     this.marked_for_legal = element(by.model('item.flags.marked_for_legal'));
-    this.anpa_category = element(by.className('authoring-header__detailed')).
-                            all(by.css('[data-field="anpa_category"]'));
+    this.anpa_category = element(by.className('authoring-header__detailed'))
+        .all(by.css('[data-field="anpa_category"]'));
     this.subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
     this.missing_link = element(by.className('missing-link'));
     this.publish_panel = element(by.css('#panel-publish:not(.ng-hide)'));
@@ -327,8 +327,9 @@ function Authoring() {
     };
 
     this.getKeywords = function() {
-        return element(by.css('[data-field="keywords"]')).all(by.repeater('t in item[field] track by t')).
-                first().getText();
+        return element(by.css('[data-field="keywords"]'))
+            .all(by.repeater('t in item[field] track by t'))
+            .first().getText();
     };
 
     this.getPubStatus = function() {

@@ -64,6 +64,9 @@
         "accessor-pairs": 2,
         "array-callback-return": 2,
         "block-scoped-var": 2,
+        "complexity": [2, 30],
+        "curly": 2,
+        "dot-location": [2, "property"],
 
         "strict": 0,
         "indent": [2, 4],

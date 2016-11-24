@@ -1,4 +1,4 @@
-export default angular.module('superdesk.core.directives.slider', []).
+export default angular.module('superdesk.core.directives.slider', [])
     /**
      * @ngdoc directive
      * @module superdesk.core.directives
@@ -12,7 +12,7 @@ export default angular.module('superdesk.core.directives.slider', []).
      *
      * @description Regular slider.
      */
-    directive('sdSlider', function() {
+    .directive('sdSlider', function() {
         return {
             transclude: true,
             templateUrl: 'scripts/core/views/sdSlider.html',

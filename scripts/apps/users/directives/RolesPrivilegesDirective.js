@@ -11,10 +11,10 @@ export function RolesPrivilegesDirective(api, gettext, notify, $q, $filter) {
                 scope.roles = $filter('sortByName')(result._items);
             });
 
-            api('privileges').query().
-            then(function(result) {
-                scope.privileges = result._items;
-            });
+            api('privileges').query()
+                .then(function(result) {
+                    scope.privileges = result._items;
+                });
 
             scope.saveAll = function(rolesForm) {
                 var promises = [];

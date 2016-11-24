@@ -1,10 +1,10 @@
-export default angular.module('superdesk.core.filters', []).
-    filter('any', function() {
+export default angular.module('superdesk.core.filters', [])
+    .filter('any', function() {
         return function(data, key) {
             return _.any(data, key);
         };
-    }).
-    filter('body', function() {
+    })
+    .filter('body', function() {
         return function(content) {
             var lines = $(content);
             var texts = [];
@@ -17,8 +17,8 @@ export default angular.module('superdesk.core.filters', []).
 
             return texts.join('\n');
         };
-    }).
-    filter('mergeWords', function() {
+    })
+    .filter('mergeWords', function() {
         return function(array, propertyName, schemeName, returnArray) {
             var subjectMerged = [];
             _.forEach(array, function(item) {
@@ -38,8 +38,8 @@ export default angular.module('superdesk.core.filters', []).
                 return subjectMerged.join(', ');
             }
         };
-    }).
-    filter('splitWords', function() {
+    })
+    .filter('splitWords', function() {
         return function(word) {
             var split = [];
             _.forEach(word.split(','), function(w) {
@@ -48,13 +48,13 @@ export default angular.module('superdesk.core.filters', []).
             });
             return split;
         };
-    }).
-    filter('trusted', ['$sce', function($sce) {
+    })
+    .filter('trusted', ['$sce', function($sce) {
         return function(value) {
             return $sce.trustAsResourceUrl(value);
         };
-    }]).
-    filter('filterObject', ['$filter', function($filter) {
+    }])
+    .filter('filterObject', ['$filter', function($filter) {
         return function(items, fields) {
             var filtered = [];
             angular.forEach(items, function(item) {

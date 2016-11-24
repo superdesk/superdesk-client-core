@@ -1924,8 +1924,11 @@ describe('authoring container directive', function() {
                     iscope.$digest();
                     var iscopeEmbed = elemEmbed.isolateScope();
                     expect(iscopeEmbed.action).toBe('kill');
-                    expect(api.save).
-                toHaveBeenCalledWith('content_templates_apply', {}, {template_name: 'kill', item: {_id: 'foo'}}, {});
+                    expect(api.save)
+                        .toHaveBeenCalledWith('content_templates_apply', {}, {
+                            template_name: 'kill',
+                            item: {_id: 'foo'}
+                        }, {});
                 }));
     });
 
