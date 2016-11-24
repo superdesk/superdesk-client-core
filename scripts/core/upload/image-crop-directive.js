@@ -228,7 +228,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                          if (angular.isDefined(scope.rendition)) {
                              if (angular.isDefined(scope.rendition.ratio)) {
                                  ratio = scope.rendition.ratio.split(':');
-                                 ratio = parseInt(ratio[0]) / parseInt(ratio[1]);
+                                 ratio = parseInt(ratio[0], 10) / parseInt(ratio[1], 10);
                              } else if (angular.isDefined(scope.rendition.width)
                                  && angular.isDefined(scope.rendition.height)) {
                                  ratio = scope.rendition.width / scope.rendition.height;

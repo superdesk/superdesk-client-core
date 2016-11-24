@@ -32,16 +32,16 @@ export default angular.module('superdesk.core.directives.slider', [])
                     }
 
                     var value = scope.invert ?
-                            -Math.abs(parseInt(scope.value)) :
-                            parseInt(scope.value),
+                            -Math.abs(parseInt(scope.value, 10)) :
+                            parseInt(scope.value, 10),
 
                         minValue = scope.invert ?
-                            -Math.abs(parseInt(scope.list[scope.list.length - 1][scope.unique])) :
-                            parseInt(scope.list[0][scope.unique]),
+                            -Math.abs(parseInt(scope.list[scope.list.length - 1][scope.unique], 10)) :
+                            parseInt(scope.list[0][scope.unique], 10),
 
                         maxValue = scope.invert ?
-                            -Math.abs(parseInt(scope.list[0][scope.unique])) :
-                            parseInt(scope.list[scope.list.length - 1][scope.unique]);
+                            -Math.abs(parseInt(scope.list[0][scope.unique], 10)) :
+                            parseInt(scope.list[scope.list.length - 1][scope.unique], 10);
 
                     if (!value) {
                         value = minValue;

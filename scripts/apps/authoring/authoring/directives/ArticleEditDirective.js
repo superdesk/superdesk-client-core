@@ -150,7 +150,7 @@ export function ArticleEditDirective(
              */
             scope.resetNumberOfDays = function(resetDatelineDate, datelineMonth) {
                 if (scope.dateline.month !== '') {
-                    scope.daysInMonth = $filter('daysInAMonth')(parseInt(scope.dateline.month));
+                    scope.daysInMonth = $filter('daysInAMonth')(parseInt(scope.dateline.month, 10));
 
                     if (resetDatelineDate) {
                         if (datelineMonth) {
@@ -213,7 +213,7 @@ export function ArticleEditDirective(
                     }
 
                     scope.item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
-                            parseInt(scope.dateline.month), parseInt(scope.dateline.day));
+                            parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
 
                     scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
                         $interpolate('{{ month | translate }}')({

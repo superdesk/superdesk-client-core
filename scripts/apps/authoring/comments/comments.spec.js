@@ -8,9 +8,7 @@ describe('item comments', function() {
             this.$get = function() {
                 return {
                     item_comments: {
-                        query: function() {
-                            return;
-                        }
+                        query: function() {/* no-op */}
                     }
                 };
             };

@@ -143,7 +143,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                     }
 
                     if (isMultiple) {
-                        scope.header = modelCtrl.$modelValue.length + ' ' + 'selected';
+                        scope.header = modelCtrl.$modelValue.length + ' selected';
                     } else {
                         var local = {};
                         local[parsedResult.itemName] = modelCtrl.$modelValue;
