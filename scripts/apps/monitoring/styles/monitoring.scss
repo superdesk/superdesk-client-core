@@ -150,6 +150,7 @@
         margin: 0 3px;
         border-bottom: 4px solid #4d4d4d;
         @include text-overflow();
+        display: flex;
         .stage-header__name {
             flex-grow: 1;
             box-sizing: border-box;
@@ -162,6 +163,11 @@
         }
         .stage-header__notification {
             margin-top: 13px;
+            .monitoring-dropdown {
+                .dropdown__menu {
+                    margin-top: 11px !important;
+                }
+            }
         }
         .stage-header__refresh {
             margin: 13px 0 0 3px;
@@ -174,7 +180,7 @@
   .main-section {
     .content-item-preview {
       position: absolute;
-      z-index: 4;
+      z-index: 3;
       top: 0;
       right: 0;
       bottom: 0;
@@ -200,6 +206,30 @@
       }
     }
   }
+  &:not(.authoring) {
+        .main-section {
+            &:not(.with-preview) {
+                .content-list {
+                    .sd-column {
+                        &.last {
+                            .stage-header {
+                                .stage-header__notification {
+                                    .monitoring-dropdown {
+                                        .dropdown__menu {
+                                            left: calc(100vw - 335px) !important;
+                                        }
+                                    }
+                                }
+                            }
+                            .notification-label {
+                                float: right !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 .workspace.authoring {
@@ -265,7 +295,7 @@
                 @media only screen and (max-width : 1430px) {
                     right: 0;
                 }
-                .sd-column.swimlane {
+                .sd-column {
                     &.inactive {
                         display: none !important;
                     }
@@ -311,6 +341,7 @@
         }
         min-width: 300px;
         position: fixed;
+        margin-top: 10px;
     }
 
     a {

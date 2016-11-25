@@ -290,7 +290,7 @@ $search-widget-preview-width: 440px;
 }
 
 .stage-header {
-    display: flex;
+    display: inline-flex;
     height: 20px;
     margin-bottom: 8px;
     .stage-header__line, .stage-header__stretch-bar {
@@ -331,6 +331,10 @@ $search-widget-preview-width: 440px;
     .stage-header__number, 
     .stage-header__notification {
         margin: 0 0 0 4px;
+    }
+    .stage-header__refresh {
+        position: absolute;
+        right: 20px !important;
     }
     .stage-header__number  {
         margin-top:3px;

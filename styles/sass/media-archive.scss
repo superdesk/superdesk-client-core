@@ -790,10 +790,13 @@ $rightfield-width:60px;
                 font-size: 12px;
                 margin-right: 10px;
                 white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             .highlights-box {
                 margin-top: -2px;
                 margin-right: 5px;
+                overflow: visible !important;
             }
             .item-heading {
                 flex-grow: 1;
