@@ -148,9 +148,9 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
             $scope.templatesFilter = function(templateType) {
                 if ($scope.template._id && $scope.template.template_type === 'kill') {
                     return templateType._id === 'kill';
-                } else {
-                    return templateType._id !== 'kill';
                 }
+
+                return templateType._id !== 'kill';
             };
 
             /*

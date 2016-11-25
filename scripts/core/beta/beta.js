@@ -35,9 +35,9 @@ angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
                 }, function() {
                     return $q.when(false);
                 });
-            } else {
-                return $q.resolve($rootScope.beta);
             }
+
+            return $q.resolve($rootScope.beta);
         };
     }])
 

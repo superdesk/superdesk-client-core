@@ -94,9 +94,9 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
                 values.push(value[$scope.valueFieldLookup[$scope.filterCondition.field]]);
             });
             return values.join();
-        } else {
-            return $scope.filterCondition.value;
         }
+
+        return $scope.filterCondition.value;
     };
 
     $scope.getFilterConditionSummary = function(filterCondition) {

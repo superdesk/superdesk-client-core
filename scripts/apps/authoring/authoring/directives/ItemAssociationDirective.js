@@ -75,19 +75,19 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
                     .finally(function() {
                         scope.loading = false;
                     });
-                } else {
-                    updateItemAssociation(item);
                 }
+
+                updateItemAssociation(item);
             };
 
             scope.isVideo = function(rendition) {
                 if (_.startsWith(rendition.mimetype, 'video')) {
                     return true;
-                } else {
-                    return _.some(['.mp4', '.webm', '.ogv', '.ogg'], function(ext) {
-                        return _.endsWith(rendition.href, ext);
-                    });
                 }
+
+                return _.some(['.mp4', '.webm', '.ogv', '.ogg'], function(ext) {
+                    return _.endsWith(rendition.href, ext);
+                });
             };
 
             scope.isImage = function(rendition) {
@@ -95,12 +95,8 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
             };
 
             scope.isEditable = function() {
-                if (config.features && 'editFeaturedImage' in config.features &&
-                        !config.features.editFeaturedImage) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return !(config.features && 'editFeaturedImage' in config.features
+                    && !config.features.editFeaturedImage);
             };
 
             scope.remove = function(item) {

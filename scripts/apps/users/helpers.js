@@ -7,7 +7,7 @@ export default function privilegesErrorHandler(response) {
         return 'Error: ' + response.data._issues['validator exception'];
     } else if (angular.isDefined(response.data._message)) {
         return 'Error: ' + response.data._message;
-    } else {
-        return 'Error. Privileges not updated.';
     }
+
+    return 'Error. Privileges not updated.';
 }

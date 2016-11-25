@@ -179,9 +179,9 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         let admin = session.identity.user_type === 'administrator';
         if (strict) {
             return admin;
-        } else {
-            return admin || privileges.privileges.content_templates;
         }
+
+        return admin || privileges.privileges.content_templates;
     };
 
     this.addRecentTemplate = function(deskId, templateId) {

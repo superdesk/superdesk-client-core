@@ -74,24 +74,24 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
             if (event && event.type === 'focus') {
                 if (elementContainsEventTarget() && currentParagraph.text() === '') {
                     return self.show();
-                } else {
-                    return self.hide();
                 }
+
+                return self.hide();
             }
             // handle click: show (+) if editor is focused
             if (event && event.type === 'click') {
                 if (editorElem.is(':focus') && currentParagraph.text() === '') {
                     return self.show();
-                } else {
-                    return self.hide();
                 }
+
+                return self.hide();
             }
             // default rules, show (+) if line is empty
             if (currentParagraph.text() === '') {
                 return self.show();
-            } else {
-                return self.hide();
             }
+
+            return self.hide();
         },
         hide: function() {
             $timeout(function() {

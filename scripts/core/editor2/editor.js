@@ -1334,9 +1334,9 @@ angular.module('superdesk.apps.editor2', [
                                         if (config.features && 'editFeaturedImage' in config.features &&
                                             !config.features.editFeaturedImage && media._type === 'externalsource') {
                                             return media;
-                                        } else {
-                                            return renditions.ingest(media);
                                         }
+
+                                        return renditions.ingest(media);
                                     })()).then(function(media) {
                                         editor.generateMediaTag(media).then(function(imgTag) {
                                             angular.extend(block, {

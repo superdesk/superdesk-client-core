@@ -44,9 +44,9 @@ export function ContentExpiry() {
             function getTotalExpiryMinutes(contentExpiry) {
                 if (contentExpiry.Expire) {
                     return contentExpiry.Days * 24 * 60 + contentExpiry.Hours * 60 + contentExpiry.Minutes;
-                } else {
-                    return -1;
                 }
+
+                return -1;
             }
 
             var setContentExpiry = function(item) {

@@ -224,9 +224,9 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
             return _.find(Object.keys(dict.content), function(val) {
                 return val.toLowerCase() === lowerCaseWord;
             });
-        } else {
-            return dict.content[word];
         }
+
+        return dict.content[word];
     }
 
     /**
@@ -313,23 +313,23 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
     this.suggest = function suggest(word) {
         if (word.match(/^\s+$/i)) {
             return Promise.resolve([{key: ' ', value: 'Add single space'}]);
-        } else {
-            return api.save('spellcheck', {
-                word: word,
-                language_id: lang
-            }).then(function(result) {
-                var allDict = getDict();
-                var wordFoundInDict = _.pick(allDict.content, function(value, key) {
-                    if (key.toLowerCase() === word.toLowerCase()) {
-                        return key;
-                    }
-                });
-
-                angular.extend(result.corrections, Object.keys(wordFoundInDict));
-
-                return result.corrections.map(key => ({key: key, value: key}));
-            });
         }
+
+        return api.save('spellcheck', {
+            word: word,
+            language_id: lang
+        }).then(function(result) {
+            var allDict = getDict();
+            var wordFoundInDict = _.pick(allDict.content, function(value, key) {
+                if (key.toLowerCase() === word.toLowerCase()) {
+                    return key;
+                }
+            });
+
+            angular.extend(result.corrections, Object.keys(wordFoundInDict));
+
+            return result.corrections.map(key => ({key: key, value: key}));
+        });
     };
 
     /**

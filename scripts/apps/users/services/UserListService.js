@@ -57,28 +57,27 @@ export function UserListService(api, $q, $cacheFactory) {
         var value = cache.get(key);
         if (value) {
             return $q.when(value);
-        } else {
-            var criteria = {
-                max_results: page * perPage
-            };
-            if (search) {
-                criteria.where = JSON.stringify({
-                    '$or': [
-                        {display_name: {'$regex': search, '$options': '-i'}},
-                        {username: {'$regex': search, '$options': '-i'}},
-                        {first_name: {'$regex': search, '$options': '-i'}},
-                        {last_name: {'$regex': search, '$options': '-i'}},
-                        {email: {'$regex': search, '$options': '-i'}}
-                    ]
-                });
-            }
+        }
 
-            return api('users').query(criteria)
+        var criteria = {max_results: page * perPage};
+
+        if (search) {
+            criteria.where = JSON.stringify({
+                '$or': [
+                    {display_name: {'$regex': search, '$options': '-i'}},
+                    {username: {'$regex': search, '$options': '-i'}},
+                    {first_name: {'$regex': search, '$options': '-i'}},
+                    {last_name: {'$regex': search, '$options': '-i'}},
+                    {email: {'$regex': search, '$options': '-i'}}
+                ]
+            });
+        }
+
+        return api('users').query(criteria)
             .then(function(result) {
                 cache.put(key, result);
                 return result;
             });
-        }
     };
 
     /**

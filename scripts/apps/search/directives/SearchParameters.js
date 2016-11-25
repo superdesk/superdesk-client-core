@@ -259,13 +259,11 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 if (metas.length) {
                     if (scope.query) {
                         return scope.query + ' ' + metas.join(' ');
-                    } else {
-                        return metas.join(' ');
                     }
-                } else {
-                    return scope.query || null;
+                    return metas.join(' ');
                 }
 
+                return scope.query || null;
             }
 
             scope.$on('search:parameters', searchParameters);

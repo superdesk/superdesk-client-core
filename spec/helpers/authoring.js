@@ -171,9 +171,9 @@ function Authoring() {
         block.element(by.css('.editor-type-html')).isPresent().then(function(isText) {
             if (isText) {
                 return block.element(by.css('.editor-type-html')).getText();
-            } else {
-                return block.element(by.css('.preview--embed')).getText();
             }
+
+            return block.element(by.css('.preview--embed')).getText();
         }).then(function(value) {
             expect(value).toBe(expectedValue);
         });

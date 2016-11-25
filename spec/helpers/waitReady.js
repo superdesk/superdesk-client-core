@@ -43,10 +43,10 @@ ElementFinder.prototype.waitReady = function(optStr) {
                     lastWebdriverError = 'visible:' + visible;
                     return visible;
                 }, _isPresentError);
-            } else {
-                lastWebdriverError = 'present:' + present;
-                return false;
             }
+
+            lastWebdriverError = 'present:' + present;
+            return false;
         }, _isPresentError);
     }, specTimeoutMs).then(function(waitResult) {
         if (!waitResult) {

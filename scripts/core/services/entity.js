@@ -288,9 +288,9 @@ export default angular.module('superdesk.core.services.entity', [])
         this.save = function(resource, item) {
             if ('_etag' in item) {
                 return this.update(item);
-            } else {
-                return this.create(resource, item);
             }
+
+            return this.create(resource, item);
         };
 
         /**

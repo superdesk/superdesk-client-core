@@ -35,9 +35,9 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
                     return self.AllActiveVocabularies;
                 }
             );
-        } else {
-            return $q.when(self.AllActiveVocabularies);
         }
+
+        return $q.when(self.AllActiveVocabularies);
     };
 
     /**
@@ -56,9 +56,9 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
                     return self.vocabularies;
                 }
             );
-        } else {
-            return $q.when(self.vocabularies);
         }
+
+        return $q.when(self.vocabularies);
     };
 
     /**

@@ -19,10 +19,10 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
     function save(workspace, diff) {
         if (diff) {
             return api.save(RESOURCE, workspace, diff).then(updateActive);
-        } else {
-            workspace.user = workspace.user || session.identity._id;
-            return api.save(RESOURCE, workspace).then(updateActive);
         }
+
+        workspace.user = workspace.user || session.identity._id;
+        return api.save(RESOURCE, workspace).then(updateActive);
     }
 
     function _delete(workspace) {
@@ -168,9 +168,9 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
                     return getDeskWorkspace(activeWorkspace.id);
                 } else if (activeWorkspace.type === 'workspace') {
                     return findWorkspace(activeWorkspace.id);
-                } else {
-                    return createUserWorkspace();
                 }
+
+                return createUserWorkspace();
             }).then(updateActive);
     }
 
@@ -194,9 +194,9 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
         return api.query('workspaces', {where: {desk: deskId}}).then(function(result) {
             if (result._items.length === 1) {
                 return result._items[0];
-            } else {
-                return {desk: deskId, widgets: []};
             }
+
+            return {desk: deskId, widgets: []};
         });
     }
 

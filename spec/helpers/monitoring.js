@@ -80,9 +80,9 @@ function Monitoring() {
             return all.filter(function(elem) {
                 return elem.all(by.className('filetype-icon-' + item.type)).count();
             }).get(item.index || 0);
-        } else {
-            return all.get(item);
         }
+
+        return all.get(item);
     };
 
     this.getGroupItems = function(group) {

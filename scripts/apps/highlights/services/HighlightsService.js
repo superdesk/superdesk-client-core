@@ -29,27 +29,27 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
             return $q.when(value);
         } else if (promise[key]) {
             return promise[key];
-        } else {
-            var criteria = {};
-            if (desk) {
-                criteria = {where: {'$or': [
-                                            {'desks': desk},
-                                            {'desks': {'$size': 0}}
-                ]
-                }
-                };
-            }
-
-            promise[key] = api('highlights').query(criteria)
-                .then(function(result) {
-                    setLabel(result._items);
-                    cache.put(key, result);
-                    promise[key] = null;
-                    return $q.when(result);
-                });
-
-            return promise[key];
         }
+
+        var criteria = {};
+        if (desk) {
+            criteria = {where: {'$or': [
+                                        {'desks': desk},
+                                        {'desks': {'$size': 0}}
+            ]
+            }
+            };
+        }
+
+        promise[key] = api('highlights').query(criteria)
+            .then(function(result) {
+                setLabel(result._items);
+                cache.put(key, result);
+                promise[key] = null;
+                return $q.when(result);
+            });
+
+        return promise[key];
     };
 
     function setLabel(objItems) {

@@ -60,9 +60,9 @@ function HttpEndpointFactory($http, $q, urls, _) {
                 if (response.status >= 200 && response.status < 300 &&
                 (!response.data || !response.data._status || response.data._status !== 'ERR')) {
                     return response;
-                } else {
-                    return $q.reject(response);
                 }
+
+                return $q.reject(response);
             });
     }
 

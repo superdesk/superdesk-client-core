@@ -422,9 +422,9 @@ export function ItemList(
                     return React.createElement('i', {className: 'filetype-icon-takes-pack'});
                 } else if (props.type === 'composite' && props.highlight) {
                     return React.createElement('i', {className: 'filetype-icon-highlight-pack'});
-                } else {
-                    return React.createElement('i', {className: 'filetype-icon-' + props.type});
                 }
+
+                return React.createElement('i', {className: 'filetype-icon-' + props.type});
             };
 
             var GridTypeIcon = function(props) {
@@ -815,10 +815,10 @@ export function ItemList(
                 var contents = specs.map(function(field) {
                     if (fields[field]) {
                         return fields[field](itemProps);
-                    } else {
-                        console.warn('missing field in list: ' + field);
-                        return null;
                     }
+
+                    console.warn('missing field in list: ' + field);
+                    return null;
                 }).filter(angular.identity);
                 var elemProps = angular.extend({key: area}, props);
                 return contents.length ? React.createElement('div', elemProps, contents) : null;
@@ -1297,22 +1297,22 @@ export function ItemList(
                                 }) : null
                             )
                         );
-                    } else {
-                        return React.createElement(
-                            'li',
-                            null,
-                            React.createElement(
-                                'a',
-                                {title: gettextCatalog.getString(activity.label), onClick: this.run},
-                                React.createElement('i', {
-                                    className: 'icon-' + activity.icon
-                                }),
-                                React.createElement('span', {
-                                    style: {display: 'inline'}
-                                }, gettextCatalog.getString(activity.label))
-                            )
-                        );
                     }
+
+                    return React.createElement(
+                        'li',
+                        null,
+                        React.createElement(
+                            'a',
+                            {title: gettextCatalog.getString(activity.label), onClick: this.run},
+                            React.createElement('i', {
+                                className: 'icon-' + activity.icon
+                            }),
+                            React.createElement('span', {
+                                style: {display: 'inline'}
+                            }, gettextCatalog.getString(activity.label))
+                        )
+                    );
                 }
             });
 

@@ -17,10 +17,10 @@ export function LockService($q, api, session, privileges, notify) {
                 item._editable = false;
                 return item;
             });
-        } else {
-            item._locked = this.isLockedInCurrentSession(item);
-            return $q.when(item);
         }
+
+        item._locked = this.isLockedInCurrentSession(item);
+        return $q.when(item);
     };
 
     /**
@@ -81,8 +81,8 @@ export function LockService($q, api, session, privileges, notify) {
     this.can_unlock = function canUnlock(item) {
         if (this.isLockedByMe(item)) {
             return true;
-        } else {
-            return item.state === 'draft' ? false : privileges.privileges.unlock;
         }
+
+        return item.state === 'draft' ? false : privileges.privileges.unlock;
     };
 }

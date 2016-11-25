@@ -34,9 +34,9 @@ export default angular.module('superdesk.core.filters', [])
 
             if (returnArray) {
                 return subjectMerged;
-            } else {
-                return subjectMerged.join(', ');
             }
+
+            return subjectMerged.join(', ');
         };
     }])
     .filter('splitWords', function() {
@@ -151,9 +151,9 @@ export default angular.module('superdesk.core.filters', [])
                 }
 
                 return $filter('formatDatelineText')(located, _month, momentizedTimestamp.format('D'), source);
-            } else {
-                return '';
             }
+
+            return '';
         };
     }])
     .filter('daysInAMonth', function() {

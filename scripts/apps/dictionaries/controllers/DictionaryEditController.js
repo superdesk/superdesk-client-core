@@ -148,9 +148,9 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
                 }, function() {
                     return false;
                 });
-        } else {
-            return $q.when(true);
         }
+
+        return $q.when(true);
     }
 
     $scope.addAbbreviation = function() {

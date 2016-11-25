@@ -494,9 +494,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                             notify.error(gettext('Error. Item not published.'));
                             return false;
                         });
-                    } else {
-                        return publishItem($scope.origItem, $scope.item);
                     }
+
+                    return publishItem($scope.origItem, $scope.item);
                 }
 
                 return false;
@@ -571,9 +571,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     }, function() { // cancel
                         return $q.reject();
                     });
-                } else {
-                    return lock.unlock($scope.origItem);
                 }
+
+                return lock.unlock($scope.origItem);
             };
 
             /**

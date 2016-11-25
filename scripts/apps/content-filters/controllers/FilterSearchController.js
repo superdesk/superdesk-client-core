@@ -89,9 +89,9 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
                 values.push(value[$scope.valueFieldLookup[$scope.filterCondition.field]]);
             });
             return values.join();
-        } else {
-            return $scope.filterCondition.value;
         }
+
+        return $scope.filterCondition.value;
     }
 
     $scope.search = function() {

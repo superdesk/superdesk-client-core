@@ -50,9 +50,9 @@ function DateTimeService(moment, weekdays, config) {
             return m.format(WEEK_FORMAT);
         } else if (isArchiveYear(m, now)) {
             return m.format(ARCHIVE_FORMAT);
-        } else {
-            return m.format(DATE_FORMAT);
         }
+
+        return m.format(DATE_FORMAT);
     };
 
     /**

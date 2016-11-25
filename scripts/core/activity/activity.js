@@ -457,10 +457,11 @@ angular.module('superdesk.core.activity', [
                         activity: activity,
                         locals: locals
                     });
+
                     return defer.promise;
-                } else {
-                    return $q.when($injector.invoke(activity.controller, {}, locals));
                 }
+
+                return $q.when($injector.invoke(activity.controller, {}, locals));
             }
 
             if (activity.confirm) {
@@ -469,9 +470,9 @@ angular.module('superdesk.core.activity', [
                 }, function() {
                     return $q.reject({confirm: 1});
                 });
-            } else {
-                return execute(activity, locals);
             }
+
+            return execute(activity, locals);
         };
 
     }])

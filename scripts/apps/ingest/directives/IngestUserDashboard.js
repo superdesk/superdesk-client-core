@@ -107,9 +107,9 @@ export function IngestUserDashboard(api, userList, privileges) {
                         lastItemUpdate.add(idleTime.hours, 'h').add(idleTime.minutes, 'm');
                         if (moment() > lastItemUpdate) {
                             return true;
-                        } else {
-                            return false;
                         }
+
+                        return false;
                     }
                 }
                 return false;

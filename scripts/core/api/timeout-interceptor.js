@@ -43,10 +43,9 @@ function TimeoutInterceptor($timeout, $q, $rootScope, request) {
             if (!rejection.status && !request.isUpload(rejection.config)) {
                 $rootScope.serverStatus += 1;
                 return request.resend(rejection.config);
-            } else {
-                $timeout.cancel(rejection.config.timeout);
             }
 
+            $timeout.cancel(rejection.config.timeout);
             $rootScope.serverStatus = STATUS.OK;
             return $q.reject(rejection);
         }
