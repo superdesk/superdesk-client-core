@@ -57,7 +57,7 @@ export function ContentExpiry() {
                 scope.ContentExpiry.Hours = 0;
                 scope.ContentExpiry.Minutes = 0;
 
-                if (item && item[expiryfield] != null) {
+                if (item && !_.isNil(item[expiryfield])) {
                     if (item[expiryfield] < 0) {
                         scope.ContentExpiry.Expire = false;
                     } else {

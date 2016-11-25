@@ -32,7 +32,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      */
     function getAvailableWidgets(userWidgets) {
         return _.filter(dashboardWidgets, function(widget) {
-            return widget.multiple || _.find(userWidgets, {_id: widget._id}) == null;
+            return widget.multiple || _.isNil(_.find(userWidgets, {_id: widget._id}));
         });
     }
 

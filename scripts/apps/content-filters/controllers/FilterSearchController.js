@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.content_filters
@@ -15,7 +17,7 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
     $scope.contentFiltersLookup = {};
 
     $scope.isListValue = function() {
-        if ($scope.filterCondition != null) {
+        if (!_.isNil($scope.filterCondition)) {
             return _.includes(['in', 'nin'], $scope.filterCondition.operator)
                 && $scope.valueLookup[$scope.filterCondition.field];
         }
@@ -67,7 +69,7 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
     }
 
     function setFilterValues() {
-        var values = $scope.filterCondition.value != null ? $scope.filterCondition.value.split(',') : [];
+        var values = !_.isNil($scope.filterCondition.value) ? $scope.filterCondition.value.split(',') : [];
         var allValues = $scope.valueLookup[$scope.filterCondition.field];
         var valueField = $scope.valueFieldLookup[$scope.filterCondition.field];
 

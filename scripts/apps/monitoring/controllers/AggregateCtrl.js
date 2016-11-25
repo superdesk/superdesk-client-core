@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage',
     'gettext', 'multi', 'config', '$timeout', 'savedSearch'];
 
@@ -82,7 +84,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             return widgetMonitoringConfig(self.widget);
         } else {
             return workspaces.getActiveId().then(function(activeWorkspace) {
-                if (self.settings != null && self.settings.desk) {
+                if (!_.isNil(self.settings) && self.settings.desk) {
                     // when viewing in desk's monitoring settings
                     return deskSettingsMonitoringConfig(self.settings.desk);
                 }
@@ -221,7 +223,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 }
                 self.groups.push(item);
             });
-        } else if (settings && settings.groups.length === 0 && settings.type === 'desk' && settings.desk == null) {
+        } else if (settings && settings.groups.length === 0 && settings.type === 'desk' && _.isNil(settings.desk)) {
             _.each(self.stageLookup, function(item) {
                 if (item.desk === desks.getCurrentDeskId()) {
                     self.groups.push({_id: item._id, type: 'stage', header: item.name});
@@ -239,7 +241,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                     });
                 }
             }
-        } else if (settings && settings.groups.length === 0 && settings.desk != null) {
+        } else if (settings && settings.groups.length === 0 && !_.isNil(settings.desk)) {
             _.each(self.stageLookup, function(item) {
                 if (item.desk === settings.desk._id) {
                     self.groups.push({_id: item._id, type: 'stage', header: item.name});

@@ -210,7 +210,7 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
  * @items {object} Item container as received from server, with _items and _meta.
  * @limit {number} Number of items per page.
  */
-mod.directive('sdPagination', ['$location', 'asset', function($location, asset) {
+mod.directive('sdPagination', ['$location', 'asset', 'lodash', function($location, asset, _) {
     return {
         templateUrl: asset.templateUrl('core/list/views/sdPagination.html'),
         scope: {
@@ -256,7 +256,7 @@ mod.directive('sdPagination', ['$location', 'asset', function($location, asset) 
             scope.setLimit = function(pagesize) {
                 localStorage.setItem('pagesize', pagesize);
                 scope.setPage(0);
-                $location.search('max_results', pagesize != null ? pagesize : size);
+                $location.search('max_results', !_.isNil(pagesize) ? pagesize : size);
             };
         }
     };

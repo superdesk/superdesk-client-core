@@ -1,4 +1,5 @@
 import * as constant from 'apps/ingest/constants';
+import _ from 'lodash';
 
 IngestSourcesContent.$inject = ['feedingServices', 'feedParsers', 'gettext', 'notify', 'api', '$location',
     'modal', '$filter', 'config'];
@@ -51,7 +52,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                         });
                     }
 
-                    if (provider == null) {
+                    if (_.isNil(provider)) {
                         api.ingestProviders.getById(providerId).then(function(result) {
                             provider = result;
                         });

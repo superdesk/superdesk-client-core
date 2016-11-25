@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 CardsService.$inject = ['api', 'search', 'session', 'desks', 'config'];
 export function CardsService(api, search, session, desks, config) {
     this.criteria = getCriteria;
@@ -92,7 +94,7 @@ export function CardsService(api, search, session, desks, config) {
             break;
 
         default:
-            if (card.singleViewType != null && card.singleViewType === 'desk') {
+            if (!_.isNil(card.singleViewType) && card.singleViewType === 'desk') {
                 query.filter({term: {'task.desk': card.deskId}});
             } else {
                 query.filter({term: {'task.stage': card._id}});

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
     'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
     'archiveService', '$rootScope', 'config'];
@@ -31,7 +33,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 || scope.group.type === 'spike');
             scope.viewColumn = monitoring.viewColumn;
 
-            if (scope.forceLimited != null) {
+            if (!_.isNil(scope.forceLimited)) {
                 scope.limited = scope.forceLimited;
             }
 
@@ -81,7 +83,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             });
             scope.$on('broadcast:preview', function(event, args) {
                 scope.previewingBroadcast = true;
-                if (args.item != null) {
+                if (!_.isNil(args.item)) {
                     preview(args.item);
                 } else {
                     monitoring.closePreview();
@@ -153,7 +155,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              */
             scope.$on('key:ctrl:g', function() {
                 if (scope.selected) {
-                    if (monitoring.singleGroup == null) {
+                    if (_.isNil(monitoring.singleGroup)) {
                         monitoring.viewSingleGroup(monitoring.selectedGroup, 'stage');
                     } else {
                         monitoring.viewMonitoringHome();
@@ -186,7 +188,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              */
             scope.$on('key:ctrl:alt:g', function() {
                 if (scope.selected) {
-                    if (monitoring.singleGroup == null) {
+                    if (_.isNil(monitoring.singleGroup)) {
                         monitoring.viewSingleGroup(monitoring.selectedGroup, 'desk');
                     } else {
                         monitoring.viewMonitoringHome();

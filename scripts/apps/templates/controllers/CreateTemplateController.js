@@ -21,7 +21,7 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
         if (item.template) {
             api.find('content_templates', item.template).then(function(template) {
                 self.name = template.template_name;
-                self.desk = template.template_desks != null ? template.template_desks[0] : null;
+                self.desk = !_.isNil(template.template_desks) ? template.template_desks[0] : null;
                 self.is_public = template.is_public !== false;
                 self.template = template;
             });

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 RoleUnique.$inject = ['api', '$q'];
 export function RoleUnique(api, $q) {
     return {
@@ -11,7 +13,7 @@ export function RoleUnique(api, $q) {
                 var value = modelValue || viewValue;
                 if (value) {
                     var criteria = {where: {'name': value}};
-                    if (scope.editRole != null && scope.editRole._id != null) {
+                    if (!_.isNil(scope.editRole) && !_.isNil(scope.editRole._id)) {
                         criteria.where._id = {'$ne': scope.editRole._id};
                     }
                     return api.roles.query(criteria)

@@ -13,8 +13,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
      *
      * @description Preferences Service (TODO)
      */
-    .service('preferencesService', ['$injector', '$rootScope', '$q', 'session', 'notify', 'gettext',
-        function PreferencesService($injector, $rootScope, $q, session, notify, gettext) {
+    .service('preferencesService', ['$injector', '$rootScope', '$q', 'session', 'notify', 'gettext', 'lodash',
+        function PreferencesService($injector, $rootScope, $q, session, notify, gettext, _) {
             var USER_PREFERENCES = 'user_preferences',
                 SESSION_PREFERENCES = 'session_preferences',
                 ACTIVE_PRIVILEGES = 'active_privileges',
@@ -244,7 +244,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     ACTIVE_PRIVILEGES,
                     ACTIONS
                 ], function(key) {
-                    if (preferences[key] == null) {
+                    if (_.isNil(preferences[key])) {
                         preferences[key] = {};
                     }
                 });

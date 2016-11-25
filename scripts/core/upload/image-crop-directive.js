@@ -146,7 +146,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                       * @return {Array} [x0, y0, x1, y1]
                       */
                  function parseCoordinates(cropImage) {
-                     if (cropImage != null && cropImage.CropLeft != null) {
+                     if (!_.isNil(cropImage) && !_.isNil(cropImage.CropLeft)) {
                          return [
                              cropImage.CropLeft,
                              cropImage.CropTop,

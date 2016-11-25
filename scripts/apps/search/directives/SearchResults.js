@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 SearchResults.$inject = [
     '$location',
     'preferencesService',
@@ -360,7 +362,7 @@ export function SearchResults(
                         scope.selected.preview = completeItem;
                         scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
 
-                        if (scope.selected.preview != null) {
+                        if (!_.isNil(scope.selected.preview)) {
                             scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
                         }
 

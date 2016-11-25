@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', '$filter', 'privileges', 'datetimeHelper',
     'preferencesService', 'archiveService', 'config', 'moment', 'content'
@@ -999,7 +1001,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
                 tempItem = {};
 
             angular.forEach(this.search_cvs || [], function(cv) {
-                if (term == null) { // clear subject scope
+                if (_.isNil(term)) { // clear subject scope
                     self.subjectScope.item[cv.id].length = 0;
                 } else {
                     var subjectCodesArray = self.subjectScope.item[cv.id],

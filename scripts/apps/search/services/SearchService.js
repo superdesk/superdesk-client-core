@@ -3,7 +3,11 @@ import {
     EXCLUDE_FACETS,
     CORE_PROJECTED_FIELDS,
     UI_PROJECTED_FIELD_MAPPINGS,
-    DEFAULT_LIST_CONFIG} from 'apps/search/constants';
+    DEFAULT_LIST_CONFIG
+} from 'apps/search/constants';
+
+import _ from 'lodash';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -420,7 +424,7 @@ export function SearchService($location, gettext, config, session) {
          * @param {number} _size
          */
         this.size = function setSize(_size) {
-            size = _size != null ? _size : size;
+            size = !_.isNil(_size) ? _size : size;
             return this;
         };
 

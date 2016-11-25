@@ -1656,7 +1656,7 @@ export function ItemList(
                         return;
                     }
 
-                    if (diff != null) {
+                    if (!_.isNil(diff)) {
                         event.preventDefault();
                         event.stopPropagation();
                         if (this.state.selected) {

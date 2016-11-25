@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 VocabularyEditController.$inject = [
     '$scope',
     'gettext',
@@ -56,7 +58,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
             });
         }
 
-        if ($scope.errorMessage == null) {
+        if (_.isNil($scope.errorMessage)) {
             api.save('vocabularies', $scope.vocabulary).then(onSuccess, onError);
         }
         // discard metadata cache:

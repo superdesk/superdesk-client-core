@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 HighlightsConfig.$inject = ['$scope', 'highlightsService', 'desks', 'api', 'gettext', 'notify', 'modal'];
 export function HighlightsConfig($scope, highlightsService, desks, api, gettext, notify, modal) {
 
@@ -97,7 +99,7 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
 
     $scope.handleEdit = function($event) {
         clearErrorMessages();
-        if ($scope.configEdit.name != null) {
+        if (!_.isNil($scope.configEdit.name)) {
             $scope._errorLimits = $scope.configEdit.name.length > $scope.limits.highlight ? true : null;
         }
     };

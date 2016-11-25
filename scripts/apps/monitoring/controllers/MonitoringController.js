@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 MonitoringController.$inject = ['$rootScope', '$location', 'desks', 'storage', 'config'];
 export function MonitoringController($rootScope, $location, desks, storage, config) {
     this.state = {};
@@ -50,7 +52,7 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
         self.previewItem = item;
         self.state['with-preview'] = !!item;
 
-        if (self.previewItem != null) {
+        if (!_.isNil(self.previewItem)) {
             self.showHistoryTab = self.previewItem.state !== 'ingested';
         }
 

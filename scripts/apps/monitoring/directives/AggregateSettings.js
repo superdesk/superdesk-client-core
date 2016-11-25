@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 AggregateSettings.$inject = ['desks', 'workspaces', 'session', 'preferencesService', 'WizardHandler', '$filter'];
 export function AggregateSettings(desks, workspaces, session, preferencesService, WizardHandler, $filter) {
     return {
@@ -73,7 +75,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
              * @returns {Boolean}
              */
             scope.shouldHideStep = function(code) {
-                return scope.displayOnlyCurrentStep != null && !(scope.displayOnlyCurrentStep
+                return !_.isNil(scope.displayOnlyCurrentStep) && !(scope.displayOnlyCurrentStep
                     && scope.currentStep === code);
             };
 

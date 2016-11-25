@@ -43,8 +43,8 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              * Returns true if desks selection should be displayed
              */
             $scope.showDesks = function() {
-                return $scope.template != null &&
-                    $scope.template.template_type != null &&
+                return !_.isNil($scope.template) &&
+                    !_.isNil($scope.template.template_type) &&
                     $scope.template.template_type !== 'kill' &&
                     $scope.template.is_public;
             };
@@ -54,14 +54,14 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              */
             $scope.showStages = function() {
                 return $scope.showScheduling() &&
-                    $scope.stages != null && $scope.stages.length > 0;
+                    !_.isNil($scope.stages) && $scope.stages.length > 0;
             };
 
             /*
              * Returns true if scheduling should be displayed
              */
             $scope.showScheduling = function() {
-                return $scope.template != null &&
+                return !_.isNil($scope.template) &&
                     $scope.template.template_type !== 'kill' &&
                     $scope.template.is_public;
             };
@@ -121,7 +121,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              * Sets the template template_desks list to null if deskId is null/empty or to a list with one element.
              */
             $scope.setTemplateDesks = function(deskId) {
-                if (deskId == null || deskId === '') {
+                if (_.isNil(deskId) || deskId === '') {
                     $scope.template.template_desks = null;
                     selectDesk(null);
                 } else {
@@ -134,7 +134,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              * Truncates the template template_desks list to the first element.
              */
             $scope.resetDesks = function() {
-                if ($scope.template.template_desks != null &&
+                if (!_.isNil($scope.template.template_desks) &&
                         $scope.template.template_type !== 'create' &&
                         $scope.template.template_desks.length > 0) {
                     $scope.template.template_desks.splice(1, $scope.template.template_desks.length - 1);
@@ -171,7 +171,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              * Returns the schedule desk stage name
              */
             $scope.getScheduleDesk = function(template) {
-                if (template != null) {
+                if (!_.isNil(template)) {
                     return _.find($scope.desks._items , {_id: template.schedule_desk}).name;
                 }
                 return null;
@@ -181,7 +181,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              * Returns the schedule desk stage name
              */
             $scope.getScheduleStage = function(template) {
-                if (template != null) {
+                if (!_.isNil(template)) {
                     return _.find(desks.stages._items , {_id: template.schedule_stage}).name;
                 }
                 return null;

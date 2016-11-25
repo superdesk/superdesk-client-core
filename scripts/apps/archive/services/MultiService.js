@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 MultiService.$inject = ['$rootScope'];
 export function MultiService($rootScope) {
 
@@ -76,12 +78,12 @@ export function MultiService($rootScope) {
         self.remove(itemId);
     });
     $rootScope.$on('item:spike', function(e, data) {
-        if (data != null) {
+        if (!_.isNil(data)) {
             self.remove(data.item);
         }
     });
     $rootScope.$on('item:unspike', function(e, data) {
-        if (data != null) {
+        if (!_.isNil(data)) {
             self.remove(data.item);
         }
     });

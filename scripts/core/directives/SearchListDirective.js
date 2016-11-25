@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default angular.module('superdesk.core.directives.searchList', ['superdesk.core.services.asset'])
     /**
      * @ngdoc directive
@@ -63,9 +65,9 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                 scope.maxPage = 0;
                 scope.items = null;
                 scope.keyword = null;
-
                 scope.editable = true;
-                if (scope.$parent._editable != null) {
+
+                if (!_.isNil(scope.$parent._editable)) {
                     scope.editable = scope.$parent._editable;
                 }
 

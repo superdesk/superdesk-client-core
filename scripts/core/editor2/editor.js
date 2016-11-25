@@ -9,6 +9,7 @@
  */
 import MediumEditor from 'medium-editor';
 import MediumEditorTable from 'medium-editor-tables';
+import _ from 'lodash';
 
 import './customAnchor';
 
@@ -48,7 +49,7 @@ function HistoryStack(initialValue) {
      * Select next value (redo)
      */
     this.selectNext = function() {
-        index = stack[index + 1] != null ? index + 1 : index;
+        index = !_.isNil(stack[index + 1]) ? index + 1 : index;
     };
 
     /**
@@ -283,7 +284,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
             }
         }
 
-        if (activeIndex != null) {
+        if (!_.isNil(activeIndex)) {
             for (var j = activeIndex + 1; j < nodes.length; j++) {
                 nextElem = nodes.item(j);
                 newIndex = parseInt(nextElem.getAttribute('data-index'), 10) + replacementOffset;
@@ -1498,7 +1499,7 @@ function EditorUtilsFactory() {
             while (tree.nextNode()) {
                 text = tree.currentNode.textContent;
 
-                while ((match = text.match(re)) != null) {
+                while (!_.isNil(match = text.match(re))) {
                     isActive = isTokenActive(nodeOffset + match.index);
 
                     tokens.push({

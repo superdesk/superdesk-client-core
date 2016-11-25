@@ -1,4 +1,5 @@
 import {limits} from 'apps/desks/constants';
+import _ from 'lodash';
 
 DeskeditBasic.$inject = ['gettext', 'desks', 'WizardHandler', 'metadata', '$filter', '$interpolate', '$rootScope'];
 export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, $interpolate, $rootScope) {
@@ -85,7 +86,7 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
 
             scope.handleEdit = function($event) {
                 clearErrorMessages();
-                if (scope.desk.edit.name != null) {
+                if (!_.isNil(scope.desk.edit.name)) {
                     scope._errorLimits = scope.desk.edit.name.length > scope.limits.desk ? true : null;
                 }
             };
