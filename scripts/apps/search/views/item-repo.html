@@ -11,7 +11,7 @@
     </div>
     <div ng-repeat="provider in providers track by provider._id">
         <label class="sd-radio">
-            <input type="radio" ng-value="provider.search_provider" ng-model="repo.search" ng-checked="isDefault(provider)" ng-change="toggleRepo(provider.search_provider)">
+            <input type="radio" ng-value="provider._id" ng-model="repo.search" ng-checked="isDefault(provider)" ng-change="toggleRepo(provider._id)">
             {{:: provider.source}}<span class="check"></span>
         </label>
     </div>

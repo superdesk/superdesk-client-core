@@ -9,7 +9,11 @@ export default function SearchProviderConfigDirective(searchProviderService, get
 
             searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                 $scope.providerTypes = providerTypes;
-                $scope.noProvidersAllowed = !Object.keys($scope.providerTypes).length;
+                $scope.noProvidersAllowed = !$scope.providerTypes.length;
+                $scope.providerLabels = {};
+                $scope.providerTypes.forEach((type) => {
+                    $scope.providerLabels[type.search_provider] = type.label;
+                });
             });
 
             /**

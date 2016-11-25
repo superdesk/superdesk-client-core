@@ -16,6 +16,7 @@ function AllowedService(_, api, $q) {
                 response._items.forEach((item) => {
                     values[item._id] = item.items;
                 });
+
                 return values;
             });
     }

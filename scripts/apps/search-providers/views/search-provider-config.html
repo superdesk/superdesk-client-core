@@ -10,7 +10,7 @@
         <ul class="pills-list provider-list">
             <li ng-repeat="provider in providers track by provider._id" class="clearfix">
                 <div class="header">
-                    <h6 id="providerType">{{ providerTypes[provider.search_provider] }}</h6>
+                    <h6 id="providerType">{{ providerLabels[provider.search_provider] }}</h6>
                     <span class="label offProvider" ng-if="provider.is_closed" translate>Closed</span>
                     <div class="actions">
                         <button ng-click="edit(provider)" title="{{:: 'Edit Search Provider' | translate }}"><i class="icon-pencil"></i></button>
@@ -49,8 +49,9 @@
 
                 <div class="field">
                     <label for="provider-type" translate>Provider Type</label>
-                    <select id="provider-type" ng-model="provider.search_provider" ng-options="key as val for (key, val) in providerTypes" required>
-                        <option value=""></option>
+                    <select id="provider-type"
+                        ng-model="provider.search_provider"
+                        ng-options="type.search_provider as type.label for type in providerTypes" required>
                     </select>
                 </div>
 
