@@ -277,9 +277,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     return waitFor.then(function() {
                         if (isArray) {
                             return $q.all(createdBlocks);
-                        } else {
-                            return createdBlocks[0];
                         }
+
+                        return createdBlocks[0];
                     });
                 }
             });

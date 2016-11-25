@@ -24,9 +24,9 @@ describe('sdUserUnique Directive', function() {
                         return $q.when({
                             _items: [{_id: 9, username: 'foo'}]
                         });
-                    } else {
-                        return $q.when({_items: []});
                     }
+
+                    return $q.when({_items: []});
                 }
             };
         });

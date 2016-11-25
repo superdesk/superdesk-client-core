@@ -61,9 +61,9 @@ describe('Preferences Service', function() {
         spyOn(api, 'find').and.callFake(function(resource, id, params, cache) {
             if (cache) {
                 return $q.when(testPreferences);
-            } else {
-                return $q.when(testUncachedPreferences);
             }
+
+            return $q.when(testUncachedPreferences);
         });
         spyOn(api, 'save').and.returnValue($q.when({'user_preferences': update}));
     }));

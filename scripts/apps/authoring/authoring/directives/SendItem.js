@@ -128,9 +128,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         if (scope.mode === 'authoring') {
                             return confirm.confirmSpellcheck(spellcheckErrors)
                                 .then(runSend, err => false);
-                        } else {
-                            return runSend(open);
                         }
+
+                        return runSend(open);
                     });
             };
 
@@ -226,10 +226,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 if (prePublishCondition && authoring.isPublished(scope.item)) {
                     if (['published', 'corrected'].indexOf(scope.item.state) >= 0) {
                         return scope.origItem.embargo;
-                    } else {
-                        // for published states other than 'published', 'corrected'
-                        return false;
                     }
+
+                    // for published states other than 'published', 'corrected'
+                    return false;
                 }
 
                 return prePublishCondition;
@@ -427,9 +427,9 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         // if locked then publish
                         if (item._locked) {
                             return scope.publish();
-                        } else {
-                            return $q.reject();
                         }
+
+                        return $q.reject();
                     })
                     .then(function(result) {
                         if (result) {
@@ -538,10 +538,10 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         if (sendAndContinue) {
                             deferred.resolve();
                             return deferred.promise;
-                        } else {
-                            authoringWorkspace.close(true);
-                            return true;
                         }
+
+                        authoringWorkspace.close(true);
+                        return true;
                     }, function(err) {
                         if (err) {
                             if (angular.isDefined(err.data._message)) {

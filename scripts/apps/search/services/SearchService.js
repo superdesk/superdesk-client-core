@@ -504,9 +504,9 @@ export function SearchService($location, gettext, config, session) {
         return _.filter(a._items, function(item) {
             if (item._type === 'published') {
                 return !_.find(b._items, {_id: item._id, _current_version: item._current_version});
-            } else {
-                return !_.find(b._items, {_id: item._id});
             }
+
+            return !_.find(b._items, {_id: item._id});
         });
     }
 
@@ -574,36 +574,36 @@ export function SearchService($location, gettext, config, session) {
         } else if (append && scopeItems) {
             var nextItems = scopeItems._items.concat(newItems._items);
             return angular.extend({}, newItems, {_items: nextItems});
-        } else {
-            // items in scopeItem, which are no longer exist in fetched newItems. i-e; need to remove from scopeItems
-            var diffToMinus = _.map(compareWith(scopeItems, newItems), '_id');
-
-            // items in fetched newItems, which are new for scopeItems. i-e; need to include in scopeItems
-            var diffToAdd = _.map(compareWith(newItems, scopeItems), '_id');
-
-            // if fetched items are new or removed then update current scope.items
-            // by adding or removing items found in diffToAdd or diffToMinus respectively.
-            if (!_.isEmpty(diffToMinus)) {
-                _.remove(scopeItems._items, function(item) {
-                    return _.includes(diffToMinus, item._id);
-                });
-            }
-
-            if (!_.isEmpty(diffToAdd)) {
-                var index = 0;
-                _.map(newItems._items, function(item) {
-                    if (_.includes(diffToAdd, item._id)) {
-                        // insert item at its place from the fetched sorted items
-                        scopeItems._items.splice(index, 0, item);
-                    }
-
-                    index++;
-                });
-            }
-            // update scope.item item-wise with matching fetched items to maintain
-            // item's current position in scope.
-            return this.updateItems(newItems, scopeItems); // i.e. updated scope.items
         }
+
+        // items in scopeItem, which are no longer exist in fetched newItems. i-e; need to remove from scopeItems
+        var diffToMinus = _.map(compareWith(scopeItems, newItems), '_id');
+
+        // items in fetched newItems, which are new for scopeItems. i-e; need to include in scopeItems
+        var diffToAdd = _.map(compareWith(newItems, scopeItems), '_id');
+
+        // if fetched items are new or removed then update current scope.items
+        // by adding or removing items found in diffToAdd or diffToMinus respectively.
+        if (!_.isEmpty(diffToMinus)) {
+            _.remove(scopeItems._items, function(item) {
+                return _.includes(diffToMinus, item._id);
+            });
+        }
+
+        if (!_.isEmpty(diffToAdd)) {
+            var index = 0;
+            _.map(newItems._items, function(item) {
+                if (_.includes(diffToAdd, item._id)) {
+                    // insert item at its place from the fetched sorted items
+                    scopeItems._items.splice(index, 0, item);
+                }
+
+                index++;
+            });
+        }
+        // update scope.item item-wise with matching fetched items to maintain
+        // item's current position in scope.
+        return this.updateItems(newItems, scopeItems); // i.e. updated scope.items
     };
 
     /**
@@ -675,15 +675,15 @@ export function SearchService($location, gettext, config, session) {
             if (item._type === 'published') {
                 return _.extend(item, _.find(newItems._items,
                     {_id: item._id, _current_version: item._current_version}));
-            } else {
-                // remove gone flag to prevent item remaining grey, if gone item moves back to this stage.
-                let itm = item;
-                if (angular.isDefined(item.gone)) {
-                    itm = _.omit(item, 'gone');
-                }
-
-                return _.extend(itm, _.find(newItems._items, {_id: itm._id}));
             }
+
+            // remove gone flag to prevent item remaining grey, if gone item moves back to this stage.
+            let itm = item;
+            if (angular.isDefined(item.gone)) {
+                itm = _.omit(item, 'gone');
+            }
+
+            return _.extend(itm, _.find(newItems._items, {_id: itm._id}));
         });
 
         // update aggregations

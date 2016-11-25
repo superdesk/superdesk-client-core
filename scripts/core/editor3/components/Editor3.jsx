@@ -128,20 +128,20 @@ export class Editor3 extends React.Component {
                     </div>
                 </div>
             );
-        } else {
-            return (
-                <div onClick={this.focus} className="Editor3-editor-single-line">
-                    <Editor
-                        editorState={editorState}
-                        handleKeyCommand={this.handleKeyCommand}
-                        onChange={this.onChange}
-                        onTab={this.onTab}
-                        readOnly={this.readOnly}
-                        ref="editor"
-                    />
-                </div>
-            );
         }
+
+        return (
+            <div onClick={this.focus} className="Editor3-editor-single-line">
+                <Editor
+                    editorState={editorState}
+                    handleKeyCommand={this.handleKeyCommand}
+                    onChange={this.onChange}
+                    onTab={this.onTab}
+                    readOnly={this.readOnly}
+                    ref="editor"
+                />
+            </div>
+        );
     }
 }
 

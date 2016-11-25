@@ -630,11 +630,11 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                     //date was typed in
                     ctrl.$setValidity('date', true);
                     return moment(viewValue, VIEW_DATE_FORMAT).format(MODEL_DATE_FORMAT);
-                } else {
-                    //input is not valid
-                    ctrl.$setValidity('date', false);
-                    return null;
                 }
+
+                //input is not valid
+                ctrl.$setValidity('date', false);
+                return null;
             });
 
             scope.dateSelection = function(dt) {
@@ -791,11 +791,11 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                     ctrl.$setValidity('time', true);
                     scope.time = moment(viewValue, VIEW_TIME_FORMAT).format(MODEL_TIME_FORMAT);
                     return scope.time;
-                } else {
-                    //regex not passing
-                    ctrl.$setValidity('time', false);
-                    return null;
                 }
+
+                //regex not passing
+                ctrl.$setValidity('time', false);
+                return null;
             });
 
             scope.timeSelection = function(tt) {

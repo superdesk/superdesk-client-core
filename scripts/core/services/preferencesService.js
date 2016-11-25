@@ -84,9 +84,9 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     .then(null, function(response) {
                         if (response && response.status === 404) {
                             return fetchPreferences();
-                        } else {
-                            return $q.reject(response);
                         }
+
+                        return $q.reject(response);
                     }).then(setPreferences);
 
                 /**
@@ -119,9 +119,9 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     return preferences[USER_PREFERENCES];
                 } else if (userPreferences[key]) {
                     return preferences[USER_PREFERENCES][key];
-                } else {
-                    return preferences[SESSION_PREFERENCES][key];
                 }
+
+                return preferences[SESSION_PREFERENCES][key];
             }
 
             /**
@@ -170,9 +170,9 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     return scheduleUpdate(USER_PREFERENCES, updates);
                 } else if (userPreferences[key]) {
                     return scheduleUpdate(USER_PREFERENCES, updates, key);
-                } else {
-                    return scheduleUpdate(SESSION_PREFERENCES, updates, key);
                 }
+
+                return scheduleUpdate(SESSION_PREFERENCES, updates, key);
             };
 
             var updates,

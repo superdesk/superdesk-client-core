@@ -112,9 +112,9 @@ export function ItemRepo(
 
                     return repos.length ? repos.join(',') : null;
 
-                } else {
-                    return scope.repo.search;
                 }
+
+                return scope.repo.search;
             }
 
             scope.$on('$locationChangeSuccess', function() {

@@ -53,9 +53,9 @@ export function UserSelectList($filter, api) {
             function getSelectedIndex() {
                 if (scope.selected) {
                     return _.findIndex(scope.users._items, scope.selected);
-                } else {
-                    return -1;
                 }
+
+                return -1;
             }
 
             function previous() {
@@ -109,9 +109,9 @@ export function UserSelectList($filter, api) {
             scope.getUserDisplay = function(user) {
                 if (scope.displayUser) {
                     return user[scope.displayUser];
-                } else {
-                    return user.display_name;
                 }
+
+                return user.display_name;
             };
         }
     };

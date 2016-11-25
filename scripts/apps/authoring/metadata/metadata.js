@@ -689,10 +689,10 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                             return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 ||
                                     t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
                                 !_.find(scope.item[scope.field], searchObj);
-                        } else {
-                            return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 &&
-                                !_.find(scope.item[scope.field], searchObj);
                         }
+
+                        return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 &&
+                            !_.find(scope.item[scope.field], searchObj);
                     }));
                     scope.activeList = true;
                 }

@@ -38,8 +38,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 item._editable = false;
                 return item;
             });
-        } else {
-            return api.find('archive', _id, {embedded: {lock_user: 1}})
+        }
+
+        return api.find('archive', _id, {embedded: {lock_user: 1}})
             .then(function _lock(item) {
                 if (readOnly) {
                     item._locked = lock.isLockedInCurrentSession(item);
@@ -53,13 +54,12 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     item._locked = true;
                     item._editable = true;
                     return $q.when(item);
-                } else { // not locked at all, try to lock
-                    item._editable = true;
-                    return lock.lock(item);
                 }
+
+                item._editable = true; // not locked at all, try to lock
+                return lock.lock(item);
             })
             .then(item => autosave.open(item).then(null, err => item));
-        }
     };
 
     this.rewrite = function(item) {
@@ -266,14 +266,15 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 $injector.get('authoringWorkspace').update(origItem);
                 return origItem;
             });
-        } else {
-            if (origItem) {
-                // if there is nothing to save. No diff.
-                origItem._autosave = null;
-                origItem._autosaved = false;
-            }
-            return $q.when(origItem);
         }
+
+        if (origItem) {
+            // if there is nothing to save. No diff.
+            origItem._autosave = null;
+            origItem._autosaved = false;
+        }
+
+        return $q.when(origItem);
     };
 
     /**

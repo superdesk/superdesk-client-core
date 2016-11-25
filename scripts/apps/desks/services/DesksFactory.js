@@ -89,11 +89,11 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
 
             if (self.deskStages[desk] && !refresh) {
                 return $q.when().then(returnDeskStages);
-            } else {
-                return self.fetchStages()
-                    .then(angular.bind(self, self.generateDeskStages))
-                    .then(returnDeskStages);
             }
+
+            return self.fetchStages()
+                .then(angular.bind(self, self.generateDeskStages))
+                .then(returnDeskStages);
 
             function returnDeskStages() {
                 return self.deskStages[desk];

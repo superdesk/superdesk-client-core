@@ -43,12 +43,12 @@ function Content() {
             if (typeof item === 'number') {
                 // BC: get item by its index
                 return index === item;
-            } else {
-                return elem.element(by.className('item-heading')).getText()
-                    .then(function(text) {
-                        return text.toLowerCase().indexOf(item) >= 0;
-                    });
             }
+
+            return elem.element(by.className('item-heading')).getText()
+                .then(function(text) {
+                    return text.toLowerCase().indexOf(item) >= 0;
+                });
         }
     };
 

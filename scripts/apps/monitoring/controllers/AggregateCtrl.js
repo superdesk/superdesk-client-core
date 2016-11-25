@@ -82,16 +82,16 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
         if (self.widget) {
             // when reading from monitoring widget
             return widgetMonitoringConfig(self.widget);
-        } else {
-            return workspaces.getActiveId().then(function(activeWorkspace) {
-                if (!_.isNil(self.settings) && self.settings.desk) {
-                    // when viewing in desk's monitoring settings
-                    return deskSettingsMonitoringConfig(self.settings.desk);
-                }
-                // when viewing in monitoring view
-                return workspaceMonitoringConfig(activeWorkspace);
-            });
         }
+
+        return workspaces.getActiveId().then(function(activeWorkspace) {
+            if (!_.isNil(self.settings) && self.settings.desk) {
+                // when viewing in desk's monitoring settings
+                return deskSettingsMonitoringConfig(self.settings.desk);
+            }
+            // when viewing in monitoring view
+            return workspaceMonitoringConfig(activeWorkspace);
+        });
     };
 
     /**

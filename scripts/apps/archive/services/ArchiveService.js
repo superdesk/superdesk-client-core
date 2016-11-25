@@ -131,39 +131,39 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
                         return $q.when(_.sortBy(result._items, '_current_version'));
                     }
                 });
-        } else {
-            return api.find('archive', item._id, {version: 'all', embedded: {user: 1}, max_results: 200})
-                .then(function(result) {
-                    _.each(result._items, function(version) {
-                        if (version.task) {
-                            if (version.task.desk) {
-                                var versiondesk = desks.deskLookup[version.task.desk];
-                                version.desk = versiondesk && versiondesk.name;
-                            }
-                            if (version.task.stage) {
-                                var versionstage = desks.stageLookup[version.task.stage];
-                                version.stage = versionstage && versionstage.name;
-                            }
-                        }
-                        if (version.version_creator || version.original_creator) {
-                            var versioncreator = desks.userLookup[version.version_creator || version.original_creator];
-                            version.creator = versioncreator && versioncreator.display_name;
-                        }
+        }
 
-                        if (version.type === 'text') {
-                            version.typeName = 'Story';
-                        } else {
-                            version.typeName = _.capitalize(item.type);
+        return api.find('archive', item._id, {version: 'all', embedded: {user: 1}, max_results: 200})
+            .then(function(result) {
+                _.each(result._items, function(version) {
+                    if (version.task) {
+                        if (version.task.desk) {
+                            var versiondesk = desks.deskLookup[version.task.desk];
+                            version.desk = versiondesk && versiondesk.name;
                         }
-                    });
+                        if (version.task.stage) {
+                            var versionstage = desks.stageLookup[version.task.stage];
+                            version.stage = versionstage && versionstage.name;
+                        }
+                    }
+                    if (version.version_creator || version.original_creator) {
+                        var versioncreator = desks.userLookup[version.version_creator || version.original_creator];
+                        version.creator = versioncreator && versioncreator.display_name;
+                    }
 
-                    if (historyType === 'versions') {
-                        return $q.when(_.sortBy(_.reject(result._items, {version: 0}), '_current_version').reverse());
-                    } else if (historyType === 'operations') {
-                        return $q.when(_.sortBy(result._items, '_current_version'));
+                    if (version.type === 'text') {
+                        version.typeName = 'Story';
+                    } else {
+                        version.typeName = _.capitalize(item.type);
                     }
                 });
-        }
+
+                if (historyType === 'versions') {
+                    return $q.when(_.sortBy(_.reject(result._items, {version: 0}), '_current_version').reverse());
+                } else if (historyType === 'operations') {
+                    return $q.when(_.sortBy(result._items, '_current_version'));
+                }
+            });
     };
 
     /**

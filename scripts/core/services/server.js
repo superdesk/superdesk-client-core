@@ -24,9 +24,9 @@ export default angular.module('superdesk.core.services.server', [])
             _wrapUrl: function(url) {
                 if (config.server.url.indexOf('https') === 0) {
                     return 'https://' + url;
-                } else {
-                    return 'http://' + url;
                 }
+
+                return 'http://' + url;
             },
             _cleanData: function(item) {
                 var data = _.cloneDeep(item);
