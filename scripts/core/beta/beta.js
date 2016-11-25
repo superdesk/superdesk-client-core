@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
 
 /**
@@ -26,7 +28,7 @@ angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
         };
 
         this.isBeta = function() {
-            if ($rootScope.beta == null) {
+            if (_.isNil($rootScope.beta)) {
                 return preferencesService.get('feature:preview').then(function(result) {
                     $rootScope.beta = result && result.enabled;
                     return $rootScope.beta;

@@ -1,8 +1,8 @@
 /**
  * Spellcheck module
  */
-SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location'];
-function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
+SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash'];
+function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
     var lang,
         dict,
         ignored = {},
@@ -174,7 +174,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
         // Words that come after an abbreviation in content.
         var _reNonSentenceWords = '\\s+(?:' + _abbreviationString + ')(\\s+\\w+)';
         var reNonSentenceWords = new RegExp(_reNonSentenceWords, 'g');
-        while ((match = reNonSentenceWords.exec(textContent)) != null) {
+        while (!_.isNil(match = reNonSentenceWords.exec(textContent))) {
             wordIndex = match.index + match[0].indexOf(_.trim(match[1]));
             nonSentenceWords[currentOffset + wordIndex] = _.trim(match[1]);
         }
@@ -198,7 +198,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
         var match, wordIndex;
         var sentenceWords = {};
         // Replace quotes (",“,”,‘,’,'), that might occur at start/end of sentence/paragraph before applying regex.
-        while ((match = reSentenceWords.exec(textContent.replace(/["“”‘’']/g, ' '))) != null) {
+        while (!_.isNil(match = reSentenceWords.exec(textContent.replace(/["“”‘’']/g, ' ')))) {
             wordIndex = match.index + match[0].indexOf(match[1]);
             sentenceWords[currentOffset + wordIndex] = match[1];
         }
@@ -277,7 +277,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
             var objSentenceWords = getSentenceWords(node.textContent, currentOffset);
 
             while (tree.nextNode()) {
-                while ((dblSpacesMatch = dblSpacesRegExp.exec(tree.currentNode.textContent)) != null) {
+                while (!_.isNil(dblSpacesMatch = dblSpacesRegExp.exec(tree.currentNode.textContent))) {
                     var dblSpace = dblSpacesMatch[1];
 
                     errors.push({
@@ -287,7 +287,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location) {
                     });
                 }
 
-                while ((match = regexp.exec(tree.currentNode.textContent)) != null) {
+                while (!_.isNil(match = regexp.exec(tree.currentNode.textContent))) {
                     var word = match[0];
                     var isSentenceWord = !!objSentenceWords[currentOffset + match.index];
                     if (isNaN(word) && !isIgnored(word) && isSpellingMistake(word, isSentenceWord)) {

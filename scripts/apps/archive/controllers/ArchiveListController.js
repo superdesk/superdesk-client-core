@@ -1,4 +1,5 @@
 import {BaseListController} from './BaseListController';
+import _ from 'lodash';
 
 export class ArchiveListController extends BaseListController {
     constructor($scope, $injector, $location, $q, $timeout, superdesk, session, api, desks, content,
@@ -56,7 +57,7 @@ export class ArchiveListController extends BaseListController {
         };
 
         this.fetchItems = function fetchItems(criteria, next) {
-            if (resource == null) {
+            if (_.isNil(resource)) {
                 return;
             }
             $scope.loading = true;
@@ -72,7 +73,7 @@ export class ArchiveListController extends BaseListController {
         };
 
         this.fetchItem = function fetchItem(id) {
-            if (resource == null) {
+            if (_.isNil(resource)) {
                 return $q.reject(id);
             }
 

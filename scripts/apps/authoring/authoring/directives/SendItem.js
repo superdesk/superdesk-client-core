@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 SendItem.$inject = ['$q', 'api', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope',
     'authoring', 'send', 'editor', 'confirm', 'archiveService',
@@ -686,12 +688,12 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     var itemDesk = desks.getItemDesk(scope.item);
                     var lastDestination = scope.destination_last[scope.currentUserAction];
                     if (itemDesk) {
-                        if (lastDestination && lastDestination.desk != null) {
+                        if (lastDestination && !_.isNil(lastDestination.desk)) {
                             scope.selectDesk(desks.deskLookup[lastDestination.desk]);
                         } else {
                             scope.selectDesk(itemDesk);
                         }
-                    } else if (lastDestination && lastDestination.desk != null) {
+                    } else if (lastDestination && !_.isNil(lastDestination.desk)) {
                         scope.selectDesk(desks.deskLookup[lastDestination.desk]);
                     } else {
                         scope.selectDesk(desks.getCurrentDesk());

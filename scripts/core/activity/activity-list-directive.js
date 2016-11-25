@@ -79,7 +79,7 @@ angular.module('superdesk.core.activity.list', [])
                         scope.item.actioning[activity._id] = true;
                     }
 
-                    if (e != null) {
+                    if (!_.isNil(e)) {
                         e.stopPropagation();
                     }
 

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 UserListDirective.$inject = ['keyboardManager', 'usersService', 'asset'];
 export function UserListDirective(keyboardManager, usersService, asset) {
     return {
@@ -24,7 +26,7 @@ export function UserListDirective(keyboardManager, usersService, asset) {
             };
 
             scope.$watch('selected', function(selected) {
-                if (selected == null) {
+                if (_.isNil(selected)) {
                     bindKeys();
                 }
             });

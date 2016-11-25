@@ -8,6 +8,7 @@ import * as ctrl from './controllers';
 import * as svc from './services';
 import * as directive from './directives';
 import {InsertFilter, ScheduleFilter} from './filters';
+import _ from 'lodash';
 
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);
@@ -116,7 +117,7 @@ angular.module('superdesk.apps.ingest', [
                 key: 'f',
                 additionalCondition: ['desks', function(desks) {
                     // fetching to 'personal' desk is not allowed
-                    return desks.getCurrentDeskId() != null;
+                    return !_.isNil(desks.getCurrentDeskId());
                 }]
             })
 

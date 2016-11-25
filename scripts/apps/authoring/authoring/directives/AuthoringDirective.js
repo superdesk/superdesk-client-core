@@ -1,4 +1,5 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
+import _ from 'lodash';
 
 AuthoringDirective.$inject = [
     'superdesk',
@@ -376,7 +377,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function hasNullValue(target) {
                 for (var member in target) {
-                    if (target[member] == null) {
+                    if (_.isNil(target[member])) {
                         return true;
                     }
                 }
@@ -397,7 +398,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
                     _.each(requiredFields, function(key) {
-                        if (item[key] == null || _.isEmpty(item[key])) {
+                        if (_.isNil(item[key]) || _.isEmpty(item[key])) {
                             notify.error($interpolate(gettext(
                                 'Required field {{ key }} is missing. ...'))({key: key}));
                             return false;

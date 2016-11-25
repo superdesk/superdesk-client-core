@@ -18,11 +18,11 @@ export default angular.module('superdesk.core.filters', [])
             return texts.join('\n');
         };
     })
-    .filter('mergeWords', function() {
+    .filter('mergeWords', ['lodash', function(_) {
         return function(array, propertyName, schemeName, returnArray) {
             var subjectMerged = [];
             _.forEach(array, function(item) {
-                var value = propertyName == null ? item : item[propertyName];
+                var value = _.isNil(propertyName) ? item : item[propertyName];
                 if (value) {
                     subjectMerged.push(value);
 
@@ -38,7 +38,7 @@ export default angular.module('superdesk.core.filters', [])
                 return subjectMerged.join(', ');
             }
         };
-    })
+    }])
     .filter('splitWords', function() {
         return function(word) {
             var split = [];

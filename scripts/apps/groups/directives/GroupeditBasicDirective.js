@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 GroupeditBasicDirective.$inject = ['gettext', 'api', 'WizardHandler'];
 export function GroupeditBasicDirective(gettext, api, WizardHandler) {
     return {
@@ -54,7 +56,7 @@ export function GroupeditBasicDirective(gettext, api, WizardHandler) {
             }
             scope.handleEdit = function($event) {
                 clearErrorMessages();
-                if (scope.group.edit.name != null) {
+                if (!_.isNil(scope.group.edit.name)) {
                     scope._errorLimits = scope.group.edit.name.length > scope.limits.group ? true : null;
                 }
             };

@@ -263,7 +263,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             });
 
             scope.move = function(diff, event) {
-                if (scope.selected != null && $rootScope.config.features.customMonitoringWidget) {
+                if (!_.isNil(scope.selected) && $rootScope.config.features.customMonitoringWidget) {
                     if (scope.items) {
                         var index = _.findIndex(scope.items, {_id: scope.selected._id});
                         if (!itemHeight) {

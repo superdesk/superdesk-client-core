@@ -25,7 +25,7 @@ ElementFinder.prototype.waitReady = function(optStr) {
     }
 
     function _isPresentError(err) {
-        lastWebdriverError = err != null ? err.toString() : err;
+        lastWebdriverError = typeof error !== 'undefined' && error !== null ? err.toString() : err;
         return false;
     }
 

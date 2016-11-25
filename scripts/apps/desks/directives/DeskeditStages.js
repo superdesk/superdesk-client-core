@@ -1,4 +1,5 @@
 import {limits} from 'apps/desks/constants';
+import _ from 'lodash';
 
 DeskeditStages.$inject = ['gettext', 'api', 'WizardHandler', 'tasks', '$rootScope', 'desks', 'notify', 'macros'];
 export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, desks, notify, macros) {
@@ -56,7 +57,7 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
             };
 
             scope.edit = function(stage) {
-                if (stage.is_visible == null) {
+                if (_.isNil(stage.is_visible)) {
                     stage.is_visible = true;
                 }
 
@@ -147,7 +148,7 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
 
             scope.handleEdit = function($event) {
                 clearErrorMessages();
-                if (scope.editStage.name != null) {
+                if (!_.isNil(scope.editStage.name)) {
                     scope._errorLimits = scope.editStage.name.length > scope.limits.stage ? true : null;
                 }
             };

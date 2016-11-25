@@ -1,4 +1,5 @@
 import d3 from 'd3';
+import _ from 'lodash';
 
 PieChartDashboard.$inject = ['colorSchemes'];
 export function PieChartDashboard(colorSchemes) {
@@ -50,7 +51,7 @@ export function PieChartDashboard(colorSchemes) {
                     .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
                 scope.$watchGroup(['terms', 'colors'], function renderData(newData) {
-                    if (newData[0] != null) {
+                    if (!_.isNil(newData[0])) {
 
                         if (newData[1] !== null) {
                             colorScheme = colorsData.schemes[_.findKey(colorsData.schemes, {name: newData[1]})];

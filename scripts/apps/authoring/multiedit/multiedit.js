@@ -240,7 +240,7 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
             };
 
             scope.isPublished = function(item) {
-                if (item != null) {
+                if (!_.isNil(item)) {
                     return authoring.isPublished(item);
                 }
             };

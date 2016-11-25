@@ -1,4 +1,5 @@
 import EXIF from 'exif-js';
+import _ from 'lodash';
 
 UploadController.$inject = ['$scope', '$q', 'upload', 'api', 'archiveService', 'session', 'config'];
 export function UploadController($scope, $q, upload, api, archiveService, session, config) {
@@ -49,7 +50,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         if (!_.isEmpty($scope.items)) {
             _.each($scope.items, function(item) {
                 _.each($scope.requiredFields, function(key) {
-                    if (item.meta[key] == null || _.isEmpty(item.meta[key])) {
+                    if (_.isNil(item.meta[key]) || _.isEmpty(item.meta[key])) {
                         $scope.errorMessage = 'Required field(s) are missing';
                         return false;
                     }
@@ -118,7 +119,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
     $scope.save = function() {
         validateFields();
-        if ($scope.errorMessage == null) {
+        if (_.isNil($scope.errorMessage)) {
             $scope.saving = true;
             return $scope.upload().then(function(results) {
                 $q.all(_.map($scope.items, function(item) {
@@ -146,7 +147,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     };
 
     $scope.cancelItem = function(item, index) {
-        if (item != null) {
+        if (!_.isNil(item)) {
             if (item.model) {
                 api.archive.remove(item.model);
             } else if (item.upload && item.upload.abort) {

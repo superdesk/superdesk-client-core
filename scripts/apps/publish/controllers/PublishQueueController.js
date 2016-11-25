@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 PublishQueueController.$inject = [
     '$scope',
     'subscribersService',
@@ -90,14 +92,14 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         }
 
         var filterTerms = [];
-        if ($scope.selectedFilterSubscriber != null) {
+        if (!_.isNil($scope.selectedFilterSubscriber)) {
             filterTerms.push({'subscriber_id': $scope.selectedFilterSubscriber._id});
         }
-        if ($scope.selectedFilterStatus != null) {
+        if (!_.isNil($scope.selectedFilterStatus)) {
             filterTerms.push({'state': $scope.selectedFilterStatus});
         }
 
-        if ($scope.selectedFilterIngestProvider != null) {
+        if (!_.isNil($scope.selectedFilterIngestProvider)) {
             filterTerms.push({'ingest_provider': $scope.selectedFilterIngestProvider._id});
         }
 

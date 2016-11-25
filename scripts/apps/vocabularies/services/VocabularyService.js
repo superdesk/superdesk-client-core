@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.vocabularies
@@ -26,7 +28,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @return {Promise} {Object} vocabularies
      */
     this.getAllActiveVocabularies = function() {
-        if (self.AllActiveVocabularies == null) {
+        if (_.isNil(self.AllActiveVocabularies)) {
             return api.query('vocabularies', {max_results: 50}).then(
                 function(result) {
                     self.AllActiveVocabularies = result;
@@ -46,7 +48,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @return {Promise} {Object} vocabularies
      */
     this.getVocabularies = function() {
-        if (self.vocabularies == null) {
+        if (_.isNil(self.vocabularies)) {
             return api.query('vocabularies', {where: {type: 'manageable'}}).then(
                 function(result) {
                     result._items = $filter('sortByName')(result._items, 'display_name');

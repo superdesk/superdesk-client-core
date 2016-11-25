@@ -123,8 +123,8 @@ function NotifyConnectionService($rootScope, notify, gettext, $timeout, session)
     });
 }
 
-ReloadService.$inject = ['$window', '$rootScope', 'session', 'desks', 'gettext', 'superdeskFlags'];
-function ReloadService($window, $rootScope, session, desks, gettext, superdeskFlags) {
+ReloadService.$inject = ['$window', '$rootScope', 'session', 'desks', 'gettext', 'superdeskFlags', 'lodash'];
+function ReloadService($window, $rootScope, session, desks, gettext, superdeskFlags, _) {
     var self = this;
     self.userDesks = [];
     self.result = null;
@@ -181,7 +181,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
             message: null
         };
         if (_.has(userEvents, msg.event)) {
-            if (msg.extra.user_id != null) {
+            if (!_.isNil(msg.extra.user_id)) {
                 if (msg.extra.user_id.indexOf(session.identity._id) !== -1) {
                     result.message = userEvents[msg.event];
                     result.reload = true;
@@ -196,8 +196,8 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
             }
         }
         if (_.has(deskEvents, msg.event)) {
-            if (msg.extra.desk_id != null && msg.extra.user_ids != null) {
-                if (_.find(self.userDesks, {_id: msg.extra.desk_id}) != null &&
+            if (!_.isNil(msg.extra.desk_id) && !_.isNil(msg.extra.user_ids)) {
+                if (!_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
                     msg.extra.user_ids.indexOf(session.identity._id) !== -1) {
                     result.message = deskEvents[msg.event];
                     result.reload = true;
@@ -206,16 +206,16 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
         }
 
         if (_.has(stageEvents, msg.event)) {
-            if (msg.extra.desk_id != null) {
+            if (!_.isNil(msg.extra.desk_id)) {
                 if (msg.event === 'stage_visibility_updated') {
-                    if (_.find(self.userDesks, {_id: msg.extra.desk_id}) == null &&
-                    ($window.location.hash.match('/search') != null
-                        || $window.location.hash.match('/authoring/') != null)) {
+                    if (_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
+                    !_.isNil($window.location.hash.match('/search'))
+                        || !_.isNil($window.location.hash.match('/authoring/'))) {
                         result.message = stageEvents[msg.event];
                         result.reload = true;
                     }
                 } else if (msg.event === 'stage') {
-                    if (_.find(self.userDesks, {_id: msg.extra.desk_id}) != null
+                    if (!_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id}))
                         && self.activeDesk === msg.extra.desk_id) {
                         result.message = stageEvents[msg.event];
                         result.reload = true;
