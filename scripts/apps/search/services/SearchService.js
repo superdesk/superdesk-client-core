@@ -1,18 +1,22 @@
-import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
-
-SearchService.$inject = ['$location', 'gettext', 'config', 'session'];
+import {
+    PARAMETERS,
+    EXCLUDE_FACETS,
+    CORE_PROJECTED_FIELDS,
+    UI_PROJECTED_FIELD_MAPPINGS,
+    DEFAULT_LIST_CONFIG} from 'apps/search/constants';
 /**
  * @ngdoc service
  * @module superdesk.apps.search
  * @name search
  *
- * @requires https://docs.angularjs.org/api/ng/service/$injector $location
+ * @requires $location
  * @requires gettext
  * @requires config
  * @requires session
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
+SearchService.$inject = ['$location', 'gettext', 'config', 'session'];
 export function SearchService($location, gettext, config, session) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
@@ -529,27 +533,36 @@ export function SearchService($location, gettext, config, session) {
     };
 
     /**
+     * @ngdoc method
+     * @name search#mergeHighlightFields
+     * @public
+     * @description Merges the highlighted fields to the item
+     * @param {Object} item
+     * @returns {Object}
+     */
+    this.mergeHighlightFields = function(item) {
+        if (item.es_highlight) {
+            _.forEach(_.keys(item.es_highlight), function(key) {
+                item[key] = item.es_highlight[key][0];
+            });
+        } else {
+            item.es_highlight = [];
+        }
+        return item;
+    };
+
+    /**
      * Merge newItems list with scopeItems list if any
      *
      * @param {Object} newItems
      * @param {Object} scopeItems
      * @param {boolean} append
      * @param {boolean} force
-     * @return {Object}
+     * @returns {Object}
      */
-
     this.mergeItems = function(newItems, scopeItems, append, force) {
         if (this.getElasticHighlight()) {
-            newItems._items = _.map(newItems._items, function(item) {
-                if (item.es_highlight) {
-                    _.forEach(_.keys(item.es_highlight), function(key) {
-                        item[key] = item.es_highlight[key][0];
-                    });
-                } else {
-                    item.es_highlight = [];
-                }
-                return item;
-            });
+            newItems._items = _.map(newItems._items, this.mergeHighlightFields);
         }
 
         if (force || !scopeItems) {
@@ -610,13 +623,40 @@ export function SearchService($location, gettext, config, session) {
      * @ngdoc method
      * @name search#doesSearchAgainstRepo
      * @public
-     * @return {Boolean}
+     * @returns {Boolean}
      * @description Checks if the given search object will do the search agains the given repo
      * @param {Object} search search criteria
      * @param {String} repo name of the repo: ingest, archive, published, archived
      */
     this.doesSearchAgainstRepo = function(search, repo) {
         return !search.filter.query.repo || search.filter.query.repo.toLowerCase().indexOf(repo.toLowerCase());
+    };
+
+    /**
+     * @ngdoc method
+     * @name search#getSingleItemCriteria
+     * @public
+     * @returns {Object}
+     * @description Returns the query criteria for a single item while keeping keywords or
+     * q values so that the results will have highlights
+     * @param {Object} item
+     * @param {Object} criteria
+     */
+    this.getSingleItemCriteria = function(item, criteria) {
+        let itemCriteria = criteria || this.query($location.search()).getCriteria(true);
+        itemCriteria.source.from = 0;
+        itemCriteria.source.size = 1;
+        itemCriteria.es_highlight = this.getElasticHighlight();
+
+        let itemId = {};
+        if (item._type !== 'published') {
+            itemId[item._id] = 1;
+        } else {
+            itemId[item.item_id] = 1;
+        }
+
+        itemCriteria.source.query.filtered.filter = this.getItemQuery(itemId).filtered.filter;
+        return itemCriteria;
     };
 
     /**
@@ -646,5 +686,25 @@ export function SearchService($location, gettext, config, session) {
         scopeItems._aggregations = newItems._aggregations;
 
         return angular.extend({}, scopeItems);
+    };
+
+    /**
+     * @ngdoc method
+     * @name search#getProjectedFields
+     * @public
+     * @returns {Array}
+     * @description Returns the list of fields to be used in projections
+     */
+    this.getProjectedFields = function() {
+        var uiConfig = config.list || DEFAULT_LIST_CONFIG;
+        var uiFields = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
+
+        let projectedFields = [];
+        uiFields.forEach(uiField => {
+            if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {
+                projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);
+            }
+        });
+        return _.union(CORE_PROJECTED_FIELDS.fields, projectedFields);
     };
 }

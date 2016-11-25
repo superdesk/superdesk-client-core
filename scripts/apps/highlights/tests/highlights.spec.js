@@ -58,7 +58,7 @@ describe('highlights', function() {
         it('can mark item for highlights', inject(function(highlightsService, api, $q) {
             spyOn(api, 'save').and.returnValue($q.when({}));
             highlightsService.markItem('h1', {_id: 'id', guid: 'guid'});
-            expect(api.save).toHaveBeenCalledWith('marked_for_highlights', {highlights: 'h1', marked_item: 'guid'});
+            expect(api.save).toHaveBeenCalledWith('marked_for_highlights', {highlights: 'h1', marked_item: 'id'});
         }));
 
         it('can save highlights configuration', inject(function(highlightsService, api, $q) {
