@@ -40,15 +40,15 @@
             </ul>
         </div>
     </div>
-    <div class="paneLayout__pane" ng-class="{'paneLayout__pane--open': paneOpen}">
-        <div class="modal-header">
+    <div class="paneLayout__pane paneContent" ng-class="{'paneLayout__pane--open': paneOpen}">
+        <div class="paneContent__header">
             <h3 class="pull-left" translate>Add Route</h3>
             <div class="pull-right">
                 <button class="btn" ng-click="paneOpen = !paneOpen" translate>Cancel</button>
                 <button class="btn btn--primary" ng-disabled="" ng-click="" translate>Save</button>
             </div>
         </div>
-        <div class="contentPadding">
+        <div class="paneContent__content contentPadding">
             <form name="" class="flat">
                 <fieldset class="label-light">
                     <div sd-info-item>

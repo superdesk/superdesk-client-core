@@ -56,6 +56,10 @@
             <div ng-switch-when="contentLists">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/content-lists.html'"></div>
             </div>
+            <!-- temp: this is temporary. I suppose it should be done other way. I just needed some place to work on ui -->
+            <div ng-switch-when="contentListAutomatic" class="contentListEditPage">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/content-list-automatic.html'"></div>
+            </div>
         </div>
     </div>
 </div>
