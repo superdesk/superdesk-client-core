@@ -70,7 +70,7 @@ export function UserPopupService($compile, $timeout, userList) {
         popover.status = $timeout(hide, holdInterval, false);
     }
 
-    //build template
+    // build template
     function buildTemplate(user, scope) {
         var box = popover.get();
         box.html(

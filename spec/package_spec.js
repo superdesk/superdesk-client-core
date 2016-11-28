@@ -86,6 +86,6 @@ describe('package', function() {
         authoring.save();
         authoring.close();
         monitoring.previewAction(3, 0);
-        //There is no preview in preview, SD-3319
+        // There is no preview in preview, SD-3319
     });
 });

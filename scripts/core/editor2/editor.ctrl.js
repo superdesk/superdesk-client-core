@@ -352,7 +352,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 }
                 for (i = 0, len = string.length; i < len; i++) {
                     chr = string.charCodeAt(i);
-                    /*jshint bitwise: false */
+                    /* jshint bitwise: false */
                     hash = (hash << 5) - hash + chr;
                     hash |= 0; // Convert to 32bit integer
                 }

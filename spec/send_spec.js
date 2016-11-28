@@ -45,10 +45,10 @@ describe('send', function() {
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
 
-        //Spell check confirmation modal save action
+        // Spell check confirmation modal save action
         authoring.confirmSendTo();
 
-        //Unsaved item confirmation modal save action
+        // Unsaved item confirmation modal save action
         authoring.confirmSendTo();
 
         workspace.switchToDesk('SPORTS DESK');
@@ -91,17 +91,17 @@ describe('send', function() {
         workspace.openPersonal();
         workspace.editItem(1);
 
-        //Skip spell check
+        // Skip spell check
         authoring.toggleAutoSpellCheck();
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
 
         authoring.writeText('Text, that not saved yet');
         authoring.sendTo('Sports Desk', null, true);
 
-        //Spell check confirmation modal save action
+        // Spell check confirmation modal save action
         authoring.confirmSendTo();
 
-        //Unsaved item confirmation modal save action
+        // Unsaved item confirmation modal save action
         authoring.confirmSendTo();
 
         workspace.switchToDesk('SPORTS DESK');
@@ -118,12 +118,12 @@ describe('send', function() {
 
         authoring.sendTo('Politic Desk');
 
-        //Spell check confirmation modal save action
+        // Spell check confirmation modal save action
         authoring.confirmSendTo();
 
         expect(monitoring.getGroups().count()).toBe(6);
 
-        //now continue to open new item to see if its remembered?
+        // now continue to open new item to see if its remembered?
         monitoring.openAction(4, 0);
         monitoring.showHideList();
         authoring.sendToButton.click();
@@ -148,11 +148,11 @@ describe('send', function() {
         monitoring.openSendMenu();
         authoring.sendTo('Sports Desk', 'Working Stage');
 
-        //now continue to open new multi selected items' SendTo panel to see if last destination remembered?
+        // now continue to open new multi selected items' SendTo panel to see if last destination remembered?
         monitoring.selectItem(3, 0);
         monitoring.expectIsChecked(3, 0);
 
-        //open sendTo panel
+        // open sendTo panel
         monitoring.openSendMenu();
 
         var sidebar = element.all(by.css('.slide-pane')).last(),

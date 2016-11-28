@@ -438,7 +438,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     return;
                 }
 
-                //continueAfterPublish is passed only from $scope.publishAndContinue as bool,
+                // continueAfterPublish is passed only from $scope.publishAndContinue as bool,
                 // in other cases this is object (don't use parameter in those cases)
                 let publishFn = continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish;
                 if (isCancelled) {
@@ -484,7 +484,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     }
 
                     if ($scope.dirty && message === 'publish') {
-                        //confirmation only required for publish
+                        // confirmation only required for publish
                         return authoring.publishConfirmation($scope.origItem, $scope.item, $scope.dirty, message)
                         .then(function(res) {
                             if (res) {

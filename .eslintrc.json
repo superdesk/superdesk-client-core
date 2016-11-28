@@ -111,7 +111,7 @@
         "no-unused-vars": [2, {"vars": "all", "args": "none"}],
         "no-undef": 2,
         "no-undef-init": 2,
-        "no-use-before-define": 2,
+        "no-use-before-define": 0,
 
         "array-bracket-spacing": [2, "never"],
         "block-spacing": 2,
@@ -139,21 +139,19 @@
         "object-curly-spacing": [2, "never"],
         "padded-blocks": [2, "never"],
         "quote-props": [2, "as-needed"],
-
         "quotes": [2, "single"],
-        "linebreak-style": [2, "unix"],
+        "require-jsdoc": 0,
+        "semi-spacing": 2,
         "semi": [2, "always"],
-        "camelcase": [2, {"properties": "never"}],
-        "valid-jsdoc": [0, {
-            "requireReturn": false,
-            "requireReturnDescription": false,
-            "requireParamDescription": false
-        }],
-        "no-underscore-dangle": 0,
-        "no-use-before-define": 0,
-        "keyword-spacing": 2,
-        "space-before-blocks": [2, "always"],
+        "space-before-blocks": 2,
+        "space-before-function-paren": [2, "never"],
         "space-in-parens": [2, "never"],
-        "space-before-function-paren": [2, "never"]
+        "space-infix-ops": 2,
+        "space-unary-ops": 2,
+        "spaced-comment": 2,
+
+        "linebreak-style": [2, "unix"],
+        "camelcase": [2, {"properties": "never"}],
+        "no-underscore-dangle": 0
     }
 }

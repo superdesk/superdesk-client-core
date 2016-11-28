@@ -103,7 +103,7 @@ export function PackageItemsEdit(packages, notify) {
                     dest.items.splice(end.index, 0, item);
                     packages.addPackageGroupItem(dest, item, false);
                 } else {
-                    //just change the address
+                    // just change the address
                     dest.items = _.cloneDeep(dest.items);
                 }
                 autosave();

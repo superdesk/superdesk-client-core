@@ -255,7 +255,7 @@ export function SearchService($location, gettext, config, session) {
           * @param {Object} query - Query object
           */
         function buildFilters(params, query) {
-            //created & modified date filters
+            // created & modified date filters
             if (params.beforefirstcreated || params.afterfirstcreated ||
                 params.beforeversioncreated || params.afterversioncreated) {
                 var range = {firstcreated: {}, versioncreated: {}};
@@ -461,7 +461,7 @@ export function SearchService($location, gettext, config, session) {
                                {term: {original_creator: session.identity._id}}]},
                          {not: {terms: {state: ['draft']}}}]});
 
-        //remove the digital package from production view.
+        // remove the digital package from production view.
         this.filter({not: {and: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
 
         buildFilters(params, this);

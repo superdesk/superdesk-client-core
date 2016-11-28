@@ -45,7 +45,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             api('roles').query().then(function(result) {
                 scope.roles = result._items;
             });
-            //get available translation languages
+            // get available translation languages
             var noBaseLanguage = true;
             scope.languages = _.map(gettextCatalog.strings, function(translation, lang) {
                 if (lang === gettextCatalog.baseLanguage) {
@@ -57,7 +57,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 }
             });
 
-            //add baseLanguage if needed
+            // add baseLanguage if needed
             if (noBaseLanguage) {
                 scope.languages.unshift({
                     code: gettextCatalog.baseLanguage,

@@ -15,11 +15,11 @@ export function PieChartDashboard(colorSchemes) {
             var horizBlocks = attrs.x ? parseInt(attrs.x, 10) : 1;
             var vertBlocks = attrs.y ? parseInt(attrs.y, 10) : 1;
 
-            var graphSettings = {       //thightly depends on CSS
+            var graphSettings = {       // thightly depends on CSS
                 blockWidth: 300,
                 blockHeight: 197,
-                mergeSpaceLeft: 60,     //30 + 2 + 20
-                mergeSpaceBottom: 99    //30 + 2 + 20 + 47
+                mergeSpaceLeft: 60,     // 30 + 2 + 20
+                mergeSpaceBottom: 99    // 30 + 2 + 20 + 47
             };
 
             var width = graphSettings.blockWidth * horizBlocks + graphSettings.mergeSpaceLeft * (horizBlocks - 1),
@@ -92,7 +92,7 @@ export function PieChartDashboard(colorSchemes) {
                                 .each(rerangeLabels);
                     }
                     function rerangeLabels() {
-                        /*jshint validthis: true */
+                        /* jshint validthis: true */
                         var self = this,
                             a = self.getBoundingClientRect();
 

@@ -209,7 +209,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 var pattern = /[()]/g;
 
                 angular.forEach(scope.meta, function(val, key) {
-                    //checkbox boolean values.
+                    // checkbox boolean values.
                     let v = val;
                     if (typeof val === 'boolean') {
                         v = booleanToBinaryString(val);

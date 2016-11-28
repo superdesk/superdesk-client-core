@@ -10,16 +10,16 @@ export default angular.module('superdesk.core.translate', ['gettext', 'superdesk
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, function(event) {
                 if ($rootScope.$root.currentUser
                     && gettextCatalog.strings.hasOwnProperty($rootScope.$root.currentUser.language)) {
-                    //if the current logged in user has a saved language preference that is available
+                    // if the current logged in user has a saved language preference that is available
                     gettextCatalog.setCurrentLanguage($rootScope.$root.currentUser.language);
                 } else if (gettextCatalog.strings.hasOwnProperty(window.navigator.language)) {
-                    //no saved preference but browser language is available
+                    // no saved preference but browser language is available
                     gettextCatalog.setCurrentLanguage(window.navigator.language);
                 } else {
-                    //no other options available go with baseLanguage
+                    // no other options available go with baseLanguage
                     gettextCatalog.setCurrentLanguage(gettextCatalog.baseLanguage);
                 }
-                //set locale for date/time management
+                // set locale for date/time management
                 moment.locale(gettextCatalog.currentLanguage);
             });
 

@@ -527,7 +527,7 @@ export function ItemList(
                                     'button',
                                     {className: 'btn btn--mini', onClick: this.removeHighlight(highlight)},
                                     gettext('REMOVE')
-                                ):null
+                                ) : null
                             );
                         }
                     }.bind(this);
@@ -1599,7 +1599,7 @@ export function ItemList(
 
                 setSelectedItem: function(item) {
                     if (monitoringState.selectedGroup !== scope.$id) {
-                        //If selected item is from another group, deselect all
+                        // If selected item is from another group, deselect all
                         $rootScope.$broadcast('item:unselect');
                         monitoringState.selectedGroup = scope.$id;
                     }
@@ -1792,7 +1792,7 @@ export function ItemList(
 
                     if (a.archive_item && b.archive_item) {
                         if (b.archive_item.takes) {
-                            return false;   //take package of the new item might have changed
+                            return false;   // take package of the new item might have changed
                         }
 
                         return a.archive_item._current_version === b.archive_item._current_version &&

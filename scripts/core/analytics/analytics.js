@@ -29,10 +29,10 @@ function GoogleTracking(config) {
         let tag = m;
 
         i.GoogleAnalyticsObject = r;
-        i[r] = i[r]|| function() {
-            (i[r].q = i[r].q|| []).push(arguments);
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments);
         };
-        i[r].l = 1 * new Date();el = s.createElement(o);
+        i[r].l = 1 * new Date(); el = s.createElement(o);
         tag = s.getElementsByTagName(o)[0];
         el.async = 1;
         el.src = g;

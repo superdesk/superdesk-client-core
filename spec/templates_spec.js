@@ -16,7 +16,7 @@ describe('templates', function() {
     });
 
     it('add create template', function() {
-        //add a new template
+        // add a new template
         templates.add();
         templates.getTemplateNameElement().sendKeys('New Template');
         templates.setTemplateType('string:create');

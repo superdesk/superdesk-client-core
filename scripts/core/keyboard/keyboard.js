@@ -215,7 +215,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                     wanted: false,
                     pressed: !!e.altKey
                 },
-                meta: { //Meta is Mac specific
+                meta: { // Meta is Mac specific
                     wanted: false,
                     pressed: !!e.metaKey
                 }
@@ -288,7 +288,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             label: lbl
         };
 
-        //Attach the function with the event
+        // Attach the function with the event
         if (elt.addEventListener) {
             elt.addEventListener(options.type, fct, false);
         } else if (elt.attachEvent) {

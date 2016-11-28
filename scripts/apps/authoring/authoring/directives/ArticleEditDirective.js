@@ -258,7 +258,7 @@ export function ArticleEditDirective(
              * Adds the selected Helpline to the item allowing user for further edit.
              */
             scope.addHelplineToFooter = function() {
-                //determine and ignore if footer text have empty tags
+                // determine and ignore if footer text have empty tags
                 var container = document.createElement('div');
                 container.innerHTML = scope.item.body_footer;
 
@@ -272,7 +272,7 @@ export function ArticleEditDirective(
                     autosave.save(scope.item, scope.origItem);
                 }
 
-                //first option should always be selected, as multiple helplines could be added in footer
+                // first option should always be selected, as multiple helplines could be added in footer
                 _.defer(function() {
                     var ddlHelpline = elem.find('#helplines');
                     ddlHelpline[0].options[0].selected = true;

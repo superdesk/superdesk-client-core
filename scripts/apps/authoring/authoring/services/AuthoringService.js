@@ -6,7 +6,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     notify, session, $injector, moment, config) {
     var self = this;
 
-    //TODO: have to trap desk update event for refereshing users desks.
+    // TODO: have to trap desk update event for refereshing users desks.
     this.userDesks = [];
 
     /**
@@ -159,7 +159,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             delete updates.dateline;
         }
 
-        //check if rendition is dirty for real
+        // check if rendition is dirty for real
         if (_.isEqual(original.renditions, updates.renditions)) {
             delete updates.renditions;
         }
@@ -407,7 +407,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         // item is published state - corrected, published, scheduled, killed
         if (self.isPublished(currentItem)) {
-            //if not the last published version
+            // if not the last published version
             if (angular.isDefined(item.archive_item) &&
                 item._current_version !== item.archive_item._current_version) {
                 return angular.extend({}, helpers.DEFAULT_ACTIONS);
@@ -423,7 +423,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         } else {
             // production states i.e in_progress, routed, fetched, submitted.
 
-            //if spiked
+            // if spiked
             if (currentItem.state === 'spiked') {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 action.unspike = true;
@@ -453,7 +453,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.resend = _.includes(['text'], currentItem.type) &&
             _.includes(['published', 'corrected', 'killed'], currentItem.state);
 
-        //mark item for highlights
+        // mark item for highlights
         action.mark_item = currentItem.task && currentItem.task.desk &&
             !isReadOnlyState && currentItem.package_type !== 'takes' &&
              userPrivileges.mark_for_highlights;
@@ -469,7 +469,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.multi_edit = !isReadOnlyState;
 
-        //check for desk membership for edit rights.
+        // check for desk membership for edit rights.
         if (currentItem.task && currentItem.task.desk) {
             // in production
 

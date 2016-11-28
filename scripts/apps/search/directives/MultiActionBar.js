@@ -40,7 +40,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk) {
 
                     var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
                     _activities.forEach(function(activity) {
-                        if (!item.lock_user) { //ignore activities if the item is locked
+                        if (!item.lock_user) { // ignore activities if the item is locked
                             activities[activity._id] = activities[activity._id] ? activities[activity._id] + 1 : 1;
                         }
                     });

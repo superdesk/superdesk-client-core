@@ -9,9 +9,9 @@
  */
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace, referrer, $location) {
-    //1. Service manages multiedit screen
-    //2. Screen has it's boards, at least 2 of them
-    //3. Every board can be popuplated with one content item
+    // 1. Service manages multiedit screen
+    // 2. Screen has it's boards, at least 2 of them
+    // 3. Every board can be popuplated with one content item
 
     var MIN_BOARDS = 2;
     var STORAGE_KEY = 'multiedit';

@@ -206,7 +206,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             options.sluglineMatch = options.sluglineMatch || '';
 
             switch (options.sluglineMatch) {
-            case 'ANY': //any words in the slugline
+            case 'ANY': // any words in the slugline
                 if (options.keyword.indexOf(' ') >= 0) {
                     queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
                 }
@@ -224,7 +224,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                 }
 
                 break;
-            case 'PREFIX': //phrase prefix
+            case 'PREFIX': // phrase prefix
                 query.source.query.filtered.query = {
                     match_phrase_prefix: {
                         'slugline.phrase': sanitizedKeyword

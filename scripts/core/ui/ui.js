@@ -509,7 +509,7 @@ function PopupService($document) {
     var service = {};
 
     service.position = function(width, height, target) {
-        //taking care of screen size and responsiveness
+        // taking care of screen size and responsiveness
         var tolerance = 10;
         var elOffset = target.offset();
         var elHeight = target.outerHeight();
@@ -616,23 +616,23 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                     ctrl.$setValidity('date', true);
                     return null;
                 } else if (viewValue.dpdate) {
-                    //from datepicker
+                    // from datepicker
                     ctrl.$setValidity('date', true);
                     return moment(viewValue.dpdate).format(MODEL_DATE_FORMAT);
                 } else if (datetimeHelper.isValidDate(viewValue, VIEW_DATE_FORMAT)) {
-                    //date was typed in
+                    // date was typed in
                     ctrl.$setValidity('date', true);
                     return moment(viewValue, VIEW_DATE_FORMAT).format(MODEL_DATE_FORMAT);
                 }
 
-                //input is not valid
+                // input is not valid
                 ctrl.$setValidity('date', false);
                 return null;
             });
 
             scope.dateSelection = function(dt) {
                 if (angular.isDefined(dt)) {
-                    //if one of predefined dates is selected (today, tomorrow...)
+                    // if one of predefined dates is selected (today, tomorrow...)
                     scope.date = dt;
                 }
                 ctrl.$setViewValue({
@@ -643,18 +643,18 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                 scope.close();
             };
 
-            //select one of predefined dates
+            // select one of predefined dates
             scope.select = function(offset) {
                 var day = moment().startOf('day').add(offset, 'days');
                 scope.dateSelection(day);
             };
 
             ctrl.$render = function() {
-                element.val(ctrl.$viewValue.viewdate);  //set the view
-                scope.date = ctrl.$viewValue.dpdate;    //set datepicker model
+                element.val(ctrl.$viewValue.viewdate);  // set the view
+                scope.date = ctrl.$viewValue.dpdate;    // set datepicker model
             };
 
-            //handle model changes
+            // handle model changes
             ctrl.$formatters.unshift(function dateFormatter(modelValue) {
                 var dpdate,
                     viewdate = 'Invalid Date';
@@ -774,24 +774,24 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                     ctrl.$setValidity('time', true);
                     return null;
                 } else if (viewValue.tptime) {
-                    //time selected from picker
+                    // time selected from picker
                     ctrl.$setValidity('time', true);
                     return viewValue.tptime;
                 } else if (datetimeHelper.isValidTime(viewValue, VIEW_TIME_FORMAT)) {
-                    //time written in
+                    // time written in
                     ctrl.$setValidity('time', true);
                     scope.time = moment(viewValue, VIEW_TIME_FORMAT).format(MODEL_TIME_FORMAT);
                     return scope.time;
                 }
 
-                //regex not passing
+                // regex not passing
                 ctrl.$setValidity('time', false);
                 return null;
             });
 
             scope.timeSelection = function(tt) {
                 if (angular.isDefined(tt)) {
-                    //if one of predefined time options is selected
+                    // if one of predefined time options is selected
                     scope.time = tt.time;
                     ctrl.$setViewValue({tptime: tt.time, viewtime: viewFormat(tt.time)});
                     ctrl.$render();
@@ -800,18 +800,18 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             ctrl.$render = function() {
-                element.val(ctrl.$viewValue.viewtime);  //set the view
-                scope.time = ctrl.$viewValue.tptime;    //set timepicker model
+                element.val(ctrl.$viewValue.viewtime);  // set the view
+                scope.time = ctrl.$viewValue.tptime;    // set timepicker model
             };
 
-            //handle model changes
+            // handle model changes
             ctrl.$formatters.unshift(function dateFormatter(modelValue) {
                 var tptime,
                     viewtime = 'Invalid Time';
 
                 if (modelValue) {
                     if (datetimeHelper.isValidTime(modelValue, MODEL_TIME_FORMAT)) {
-                        //formatter pass fine
+                        // formatter pass fine
                         tptime = modelValue;
                         viewtime = viewFormat(modelValue);
                     }
@@ -992,7 +992,7 @@ function TimepickerPopupDirective($timeout, config) {
                 } else {
                     local = scope.hour + ':' + scope.minute + ':' + scope.second;
                 }
-                //convert from local to utc
+                // convert from local to utc
                 time = moment(local, MODEL_TIME_FORMAT).format(MODEL_TIME_FORMAT);
                 scope.select({time: time});
             };

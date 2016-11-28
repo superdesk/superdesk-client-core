@@ -55,7 +55,7 @@ describe('legal archive service', function() {
         legal.updateSearchQuery({_id: '123', headline: 'test', published_after: '06/16/2015'});
         $rootScope.$digest();
         criteria = legal.getCriteria();
-        /*jshint multistr: true */
+        /* jshint multistr: true */
         expect(criteria.where).toBe('{"$and":[' + [
             '{"_id":"123"}',
             '{"headline":{"$regex":"test","$options":"-i"}}',

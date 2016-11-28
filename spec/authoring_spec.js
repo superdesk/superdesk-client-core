@@ -61,7 +61,7 @@ describe('authoring', function() {
     });
 
     it('authoring operations', function() {
-        //undo and redo operations by using CTRL+Z and CTRL+y ...
+        // undo and redo operations by using CTRL+Z and CTRL+y ...
         // ... from a new item
         authoring.createTextItem();
         browser.sleep(1000);
@@ -104,12 +104,12 @@ describe('authoring', function() {
         authoring.save();
         authoring.close();
 
-        //allows to create a new empty package
+        // allows to create a new empty package
         monitoring.createItemAction('create_package');
         expect(element(by.className('packaging-screen')).isDisplayed()).toBe(true);
         authoring.close();
 
-        //can edit packages in which the item was linked
+        // can edit packages in which the item was linked
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.showPackages();
@@ -120,21 +120,21 @@ describe('authoring', function() {
         expect(authoring.getGUID().getText()).toMatch('package2');
         authoring.close();
 
-        //can change normal theme
+        // can change normal theme
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.changeNormalTheme('dark-theme');
         expect(monitoring.hasClass(element(by.className('main-article')), 'dark-theme')).toBe(true);
         authoring.close();
 
-        //can change proofread theme
+        // can change proofread theme
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.changeProofreadTheme('dark-theme-mono');
         expect(monitoring.hasClass(element(by.className('main-article')), 'dark-theme-mono')).toBe(true);
         authoring.close();
 
-        //publish & kill item
+        // publish & kill item
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
@@ -144,7 +144,7 @@ describe('authoring', function() {
         authoring.sendToButton.click();
         expect(authoring.kill_button.isDisplayed()).toBe(true);
 
-        //publish & correct item
+        // publish & correct item
         monitoring.openMonitoring();
         // reset filters
         monitoring.filterAction('all');
@@ -169,7 +169,7 @@ describe('authoring', function() {
         expect(authoring.edit_correct_button.isDisplayed()).toBe(false);
         expect(authoring.edit_kill_button.isDisplayed()).toBe(false);
 
-        //update(rewrite) item
+        // update(rewrite) item
         monitoring.openMonitoring();
         // reset filters
         monitoring.filterAction('all');
@@ -187,7 +187,7 @@ describe('authoring', function() {
     });
 
     it('authoring history', function() {
-        //view item history create-fetch operation
+        // view item history create-fetch operation
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.showHistory();
@@ -195,7 +195,7 @@ describe('authoring', function() {
         expect(authoring.getHistoryItem(0).getText()).toMatch(/Fetched as \d+ to Politic Desk\/two by.*/);
         authoring.close();
 
-        //view item history move operation
+        // view item history move operation
         expect(monitoring.getTextItem(2, 3)).toBe('item8');
         monitoring.actionOnItem('Edit', 2, 3);
         authoring.writeText('Two');
@@ -213,17 +213,17 @@ describe('authoring', function() {
         expect(authoring.getHistoryItem(2).getText()).toMatch(/Moved to Politic Desk\/two by .*/);
         authoring.close();
 
-        //view item history editable for newly created unsaved item
+        // view item history editable for newly created unsaved item
         authoring.createTextItem();
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(1);
         expect(authoring.getHistoryItem(0).getText()).toMatch(/Story \d+ (.*) Created by.*/);
         expect(authoring.save_button.isDisplayed()).toBe(true);
         authoring.getHistoryItem(0).click();
-        expect(authoring.save_button.isDisplayed()).toBe(true); //expect save button still available
+        expect(authoring.save_button.isDisplayed()).toBe(true); // expect save button still available
         authoring.close();
 
-        //view item history create-update operations
+        // view item history create-update operations
         authoring.createTextItem();
         authoring.writeTextToHeadline('new item');
         authoring.writeText('some text');
@@ -235,7 +235,7 @@ describe('authoring', function() {
         authoring.save();
         authoring.close();
 
-        //view item history publish operation
+        // view item history publish operation
         expect(monitoring.getTextItem(3, 3)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 3);
         authoring.addHelpline('Children');
@@ -256,7 +256,7 @@ describe('authoring', function() {
         monitoring.filterAction('takesPackage');
         authoring.close();
 
-        //view item history spike-unspike operations
+        // view item history spike-unspike operations
         browser.sleep(5000);
         monitoring.showMonitoring();
         expect(monitoring.getTextItem(2, 2)).toBe('item7');
@@ -273,7 +273,7 @@ describe('authoring', function() {
         expect(authoring.getHistoryItem(2).getText()).toMatch(/Unspiked to Politic Desk\/Incoming Stage by .*/);
         authoring.close();
 
-        //view item history duplicate operation
+        // view item history duplicate operation
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Duplicate', 2, 0);
         expect(monitoring.getTextItem(0, 0)).toBe('item5');
@@ -422,24 +422,24 @@ describe('authoring', function() {
     });
 
     it('keyboard navigation operations on subject dropdown', function() {
-        //Open any item in Edit mode
+        // Open any item in Edit mode
         monitoring.actionOnItem('Edit', 2, 1);
 
-        //Open subject metadata dropdown field
+        // Open subject metadata dropdown field
         authoring.getSubjectMetadataDropdownOpened();
-        browser.sleep(500); //wait a bit
+        browser.sleep(500); // wait a bit
 
-        //Perform down arrow would focus/active next element in list
+        // Perform down arrow would focus/active next element in list
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
         browser.sleep(200);
         expect(browser.driver.switchTo().activeElement().getText()).toEqual('arts, culture and entertainment');
 
-        //Perform right arrow would navigate to next level of focused category and selected as input term
+        // Perform right arrow would navigate to next level of focused category and selected as input term
         browser.actions().sendKeys(protractor.Key.RIGHT).perform();
         var selectedTerm = authoring.getNextLevelSelectedCategory();
         expect(selectedTerm.get(0).getText()).toBe('arts, culture and entertainment');
 
-        //Perform Left arrow key would back to one level up in tree and should be focused/active
+        // Perform Left arrow key would back to one level up in tree and should be focused/active
         browser.actions().sendKeys(protractor.Key.LEFT).perform();
         browser.sleep(200);
         expect(browser.driver.switchTo().activeElement().getText()).toEqual('arts, culture and entertainment');
@@ -485,7 +485,7 @@ describe('authoring', function() {
         expect(authoring.getHelplineSelectedOption(0)).toBe('true');    // first option remained selected
         expect(authoring.getHelplineSelectedOption(1)).toBe(null);      // Suicide not remained selected
 
-        //select another helpline
+        // select another helpline
         authoring.addHelpline('Children');
         expect(authoring.getHelplineSelectedOption(0)).toBe('true');    // first option remained selected
         expect(authoring.getHelplineSelectedOption(2)).toBe(null);      // Children not remained selected
@@ -567,13 +567,13 @@ describe('authoring', function() {
         expect(monitoring.getGroupItems(4).count()).toBe(1);
         expect(monitoring.getGroupItems(5).count()).toBe(0); // no published content.
         workspace.selectDesk('Politic Desk');
-        expect(monitoring.getGroupItems(5).count()).toBe(0); //desk output
+        expect(monitoring.getGroupItems(5).count()).toBe(0); // desk output
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.writeText('Testing');
         authoring.save();
         authoring.sendAndpublish('Sports Desk');
-        //desk output count zero as content publish from sport desk
+        // desk output count zero as content publish from sport desk
         expect(monitoring.getGroupItems(5).count()).toBe(0);
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(5).count()).toBe(2);

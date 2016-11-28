@@ -87,10 +87,10 @@ function CommentTextDirective($compile) {
         link: function(scope, element, attrs) {
             var html;
 
-            //replace new lines with paragraphs
+            // replace new lines with paragraphs
             html = attrs.text.replace(/(?:\r\n|\r|\n)/g, '</p><p>');
 
-            //map user mentions
+            // map user mentions
             var mentionedUsers = html.match(/\@([a-zA-Z0-9-_.]\w+)/g);
             _.each(mentionedUsers, function(token) {
                 var username = token.substring(1, token.length);
@@ -100,7 +100,7 @@ function CommentTextDirective($compile) {
                 }
             });
 
-            //map desk mentions
+            // map desk mentions
             var mentionedDesks = html.match(/\#([a-zA-Z0-9-_.]\w+)/g);
             _.each(mentionedDesks, function(token) {
                 var deskname = token.substring(1, token.length);
@@ -109,7 +109,7 @@ function CommentTextDirective($compile) {
                     '<a href="">' + token + '</a>');
                 }
             });
-            //build element
+            // build element
             element.html('<p><b>' + attrs.name + '</b> : ' + html + '</p>');
 
             $compile(element.contents())(scope);

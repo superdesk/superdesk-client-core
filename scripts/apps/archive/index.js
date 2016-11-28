@@ -1,7 +1,7 @@
-//styles
+// styles
 import './styles/related-item.scss';
 
-//scripts
+// scripts
 import './related-item-widget/relatedItem';
 
 import * as directive from './directives';

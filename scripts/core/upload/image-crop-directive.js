@@ -295,7 +295,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             restrict: 'A',
             link: function(scope, element, attrs) {
                 element.bind('load', function() {
-                    //call the function that was passed
+                    // call the function that was passed
                     scope.$apply(attrs.imageonload);
                 });
             }

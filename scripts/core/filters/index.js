@@ -78,14 +78,14 @@ export default angular.module('superdesk.core.filters', [])
     })
     .filter('formatDateTimeString', [function() {
         return function(input, formatString) {
-            var momentTimestamp = angular.isDefined(input)? moment(input).utc() : moment.utc();
+            var momentTimestamp = angular.isDefined(input) ? moment(input).utc() : moment.utc();
             return angular.isDefined(formatString) ? momentTimestamp.format(formatString)
                 : momentTimestamp.format();
         };
     }])
     .filter('formatLocalDateTimeString', [function() {
         return function(input, formatString) {
-            var momentTimestamp = angular.isDefined(input)? moment(input).utc() : moment.utc();
+            var momentTimestamp = angular.isDefined(input) ? moment(input).utc() : moment.utc();
             return angular.isDefined(formatString) ? momentTimestamp.local().format(formatString) :
             momentTimestamp.local().format();
         };

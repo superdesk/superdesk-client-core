@@ -2,8 +2,8 @@
 
 describe('MetadataWidgetCtrl controller', function() {
     var metadata,  // the metadata service
-        metaInit,  //deferred initialization of the metadata service
-        prefsGet,  //deferred result of the preferences service's get() method
+        metaInit,  // deferred initialization of the metadata service
+        prefsGet,  // deferred result of the preferences service's get() method
         scope;
 
     beforeEach(window.module('superdesk.apps.publish'));

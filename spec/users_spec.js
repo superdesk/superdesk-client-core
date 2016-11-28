@@ -42,7 +42,7 @@ describe('users', function() {
                 expect(text).toEqual('Mein Profil');
             });
             browser.sleep(500);
-            //go back to original lanuages
+            // go back to original lanuages
             userPrefs.setLang('English');
             var btnSave = $('.action-bar').element(by.buttonText('Speichern'));
             browser.wait(() => btnSave.isDisplayed(), 3000);
@@ -238,9 +238,9 @@ describe('users', function() {
                 authoring.newPlainArticleLink.click();
 
                 browser.sleep(100);
-                //Open subject metadata dropdown field
+                // Open subject metadata dropdown field
                 authoring.getCategoryMetadataDropdownOpened();
-                browser.sleep(100); //wait a bit
+                browser.sleep(100); // wait a bit
 
                 var catListItems = authoring.getCategoryListItems;
                 expect(catListItems.count()).toBe(2);

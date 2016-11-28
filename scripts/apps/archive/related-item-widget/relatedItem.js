@@ -81,7 +81,7 @@ function RelatedItemController(
         apply: {
             title: 'Associate metadata',
             method: function(item) {
-                /*TODOs:
+                /* TODOs:
                 1) Overwrite Destination code
                 2) Patch IPTC Code
                 3) Overwrite category, service and locator fields

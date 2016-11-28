@@ -101,7 +101,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
         return _.includes(['published', 'killed', 'scheduled', 'corrected'], item.state);
     };
 
-    /***
+    /** *
      * Returns version history of the item.
      *
      * @param {Object} item

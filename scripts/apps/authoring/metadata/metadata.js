@@ -146,7 +146,7 @@ function MetadataCtrl(
     }
 
     $scope.$watch('item.embargo_date', function(newValue, oldValue) {
-        //set embargo time default on initial date selection
+        // set embargo time default on initial date selection
         if (newValue && oldValue === undefined) {
             $scope.item.embargo_time = moment('00:01', 'HH:mm')
                 .format(config.model.timeformat);
@@ -347,7 +347,7 @@ function MetaDropdownDirective($filter, keyboardManager) {
                 _.extend(scope.item, o);
                 scope.change({item: scope.item, field: scope.field});
 
-                //retain focus on same dropdown control after selection.
+                // retain focus on same dropdown control after selection.
                 _.defer(function() {
                     elem.find('.dropdown__toggle').focus();
                 });
@@ -538,7 +538,7 @@ function MetaWordsListDirective() {
             scope.removeTerm = function(term) {
                 var temp = _.without(scope.item[scope.field], term);
 
-                //build object
+                // build object
                 var o = {};
                 o[scope.field] = temp;
 
@@ -679,7 +679,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     scope.terms = filterSelected(scope.list);
                     scope.activeList = false;
                 } else {
-                    var searchList = reloadList? scope.list : scope.combinedList;
+                    var searchList = reloadList ? scope.list : scope.combinedList;
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), function(t) {
                         var searchObj = {};
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
@@ -719,7 +719,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                 // Only select terms that are not already selected
                 if (!isSelected) {
-                    //instead of simple push, extend the item[field] in order to trigger dirty $watch
+                    // instead of simple push, extend the item[field] in order to trigger dirty $watch
                     var t = [];
 
                     if (!term.single_value) {
@@ -732,7 +732,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         });
                     }
 
-                    //build object
+                    // build object
                     var o = {};
 
                     if (term.language && scope.setLanguage) {
@@ -776,7 +776,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         });
                     }, 50, false);
 
-                    //retain focus and initialise activeTree on same dropdown control after selection.
+                    // retain focus and initialise activeTree on same dropdown control after selection.
                     _.defer(function() {
                         if (!_.isEmpty(elem.find('.dropdown__toggle'))) {
                             elem.find('.dropdown__toggle').focus();

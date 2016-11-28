@@ -43,12 +43,12 @@ describe('ingest_provider', function() {
         var settings = ingestDashboard.getDashboardSettings(dashboard);
         settings.click();
 
-        //status
+        // status
         expect(ingestDashboard.getDashboardStatus(dashboard).isDisplayed()).toBe(true);
         ingestDashboard.getDashboardSettingsStatusButton(settings).click();
         expect(ingestDashboard.getDashboardStatus(dashboard).isDisplayed()).toBe(false);
 
-        //ingest count
+        // ingest count
         expect(ingestDashboard.getDashboardIngestCount(dashboard).isDisplayed()).toBe(true);
         ingestDashboard.getDashboardSettingsIngestCountButton(settings).click();
         expect(ingestDashboard.getDashboardIngestCount(dashboard).isDisplayed()).toBe(false);

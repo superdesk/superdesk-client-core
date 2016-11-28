@@ -33,7 +33,7 @@ export function ContentFiltersService(api, $filter) {
     };
 
     this.getFilterSearchResults = function(inputParams) {
-        //call api to get search results
+        // call api to get search results
         return api.query('subscribers', {filter_condition: inputParams})
             .then(angular.bind(this, function(resultSet) {
                 return resultSet._items;

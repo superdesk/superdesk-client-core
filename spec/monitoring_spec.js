@@ -478,13 +478,13 @@ describe('monitoring', function() {
 
         expect(monitoring.getGroupItems(1).count()).toBe(4);
         monitoring.selectItem(1, 2);
-        browser.sleep(1000); //Wait for animation
+        browser.sleep(1000); // Wait for animation
         monitoring.spikeMultipleItems();
         expect(monitoring.getGroupItems(1).count()).toBe(3);
         monitoring.showSpiked();
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
         monitoring.selectSpikedItem(0);
-        browser.sleep(1000); //Wait for animation
+        browser.sleep(1000); // Wait for animation
         monitoring.unspikeMultipleItems();
         expect(monitoring.getSpikedItems().count()).toBe(0);
     });
@@ -574,7 +574,7 @@ describe('monitoring', function() {
         monitoring.openMonitoring();
         expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
         expect(monitoring.getGroups().count()).toBe(6);
-        //exclude deskOutput and ScheduledDeskOutput
+        // exclude deskOutput and ScheduledDeskOutput
         setupDeskMonitoringSettings('POLITIC DESK');
         monitoring.toggleDeskOutput(0);
         monitoring.saveSettings();
@@ -583,30 +583,30 @@ describe('monitoring', function() {
 
         expect(monitoring.getGroups().count()).toBe(5);
 
-        //ensure each stage items counts
+        // ensure each stage items counts
         expect(monitoring.getGroupItems(0).count()).toBe(0);
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getGroupItems(3).count()).toBe(4);
         expect(monitoring.getGroupItems(4).count()).toBe(0);
 
-        //view all items in desk single view
+        // view all items in desk single view
         monitoring.actionOnDeskSingleView();
         expect(monitoring.getSingleViewItemCount()).toBe(8);
         expect(monitoring.getDeskSingleViewTitle()).toBe('Politic Desk desk 8');
 
-        //Monitoring Home
+        // Monitoring Home
         monitoring.actionMonitoringHome();
         expect(monitoring.getMonitoringHomeTitle()).toBe('Monitoring');
 
-        //Stage single view
+        // Stage single view
         monitoring.actionOnStageSingleView();
         expect(monitoring.getSingleViewItemCount()).toBe(0);
         expect(monitoring.getStageSingleViewTitle()).toBe('Politic Desk / Working Stage stage 0');
     });
 
     it('can remember multi selection even after scrolling and can reset multi-selection', function() {
-        //Initial steps to setup global saved search group as a test group for this case
+        // Initial steps to setup global saved search group as a test group for this case
         setupDeskMonitoringSettings('POLITIC DESK');
         monitoring.turnOffDeskWorkingStage(0, false);
 
@@ -621,7 +621,7 @@ describe('monitoring', function() {
         monitoring.nextSearches();
         monitoring.nextReorder();
 
-        //limit the size of group for the sake of scroll bar
+        // limit the size of group for the sake of scroll bar
         monitoring.setMaxItems(0, 3);
         monitoring.saveSettings();
 
@@ -629,29 +629,29 @@ describe('monitoring', function() {
 
         expect(monitoring.getGroupItems(0).count()).toBe(9);
 
-        //select first item
+        // select first item
         monitoring.selectItem(0, 0);
         monitoring.expectIsChecked(0, 0);
 
-        //scroll down and select last item
+        // scroll down and select last item
         browser.executeScript('window.scrollTo(0,250);').then(function() {
             monitoring.selectItem(0, 8);
             monitoring.expectIsChecked(0, 8);
         });
 
-        //scroll up to top again to see if selection to first item is remembered?
+        // scroll up to top again to see if selection to first item is remembered?
         browser.executeScript('window.scrollTo(0,0);').then(function() {
             monitoring.expectIsChecked(0, 0);
         });
 
-        //scroll down again to see if selection to last item is remembered?
+        // scroll down again to see if selection to last item is remembered?
         browser.executeScript('window.scrollTo(0,250);').then(function() {
             monitoring.expectIsChecked(0, 8);
         });
 
         expect(monitoring.getMultiSelectCount()).toBe('2 Items selected');
 
-        //Now reset multi-selection
+        // Now reset multi-selection
         monitoring.clickOnCancelButton();
         monitoring.expectIsNotChecked(0, 0);
         monitoring.expectIsNotChecked(0, 8);
@@ -680,7 +680,7 @@ describe('monitoring', function() {
         authoring.publish();
         monitoring.filterAction('text');
         expect(monitoring.getTextItem(0, 0)).toBe('item6');
-        //select first item
+        // select first item
         monitoring.selectItem(0, 0);
         monitoring.expectIsChecked(0, 0);
         expect(monitoring.getMultiSelectCount()).toBe('1 Item selected');
@@ -700,10 +700,10 @@ describe('monitoring', function() {
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5'); // duplicated item
-        //publish this duplicated item
+        // publish this duplicated item
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.publish();
-        //now preview original item's duplicate tab for duplicated published item
+        // now preview original item's duplicate tab for duplicated published item
         monitoring.previewAction(2, 0);
         monitoring.tabAction('related');
         expect(authoring.getDuplicatedItemState(0)).toBe('PUBLISHED');
@@ -717,7 +717,7 @@ describe('monitoring', function() {
         monitoring.actionOnItem('Edit', 1, 0);
         authoring.publish();
 
-        //open published text item
+        // open published text item
         monitoring.filterAction('text');
         monitoring.actionOnItem('Open', 4, 0);
         expect(authoring.save_button.isPresent()).toBe(false);  // Save button hidden for publish item

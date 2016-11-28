@@ -532,7 +532,7 @@ function Monitoring() {
         return element(by.css('[ng-click="send()"]')).click();
     };
 
-    //Cancel button resets the multi selection
+    // Cancel button resets the multi selection
     this.clickOnCancelButton = function() {
         return element(by.css('[ng-click="multi.reset()"]')).click();
     };

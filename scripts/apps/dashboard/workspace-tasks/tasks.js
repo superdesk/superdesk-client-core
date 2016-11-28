@@ -30,14 +30,14 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
         filters.push({not: {term: {package_type: 'takes'}}});
 
         if (desks.getCurrentDeskId()) {
-            //desk filter
+            // desk filter
             filters.push({term: {'task.desk': desks.getCurrentDeskId()}});
         } else {
-            //user filter
+            // user filter
             filters.push({term: {'task.user': $rootScope.currentUser._id}});
         }
 
-        //status filter
+        // status filter
         if (status) {
             filters.push({term: {'task.status': status}});
         } else {

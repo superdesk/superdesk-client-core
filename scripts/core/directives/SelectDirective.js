@@ -64,7 +64,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
 
                 var popUpEl = angular.element('<div sd-select-popup></div>');
 
-            //required validator
+            // required validator
                 if (attrs.required || attrs.ngRequired) {
                     required = true;
                 }
@@ -72,21 +72,21 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                     required = newVal;
                 });
 
-            //watch disabled state
+            // watch disabled state
                 scope.$watch(function() {
                     return $parse(attrs.disabled)(originalScope);
                 }, function(newVal) {
                     scope.disabled = newVal;
                 });
 
-            //watch single/multiple state for dynamically change single to multiple
+            // watch single/multiple state for dynamically change single to multiple
                 scope.$watch(function() {
                     return $parse(attrs.multiple)(originalScope);
                 }, function(newVal) {
                     isMultiple = newVal || false;
                 });
 
-            //watch option changes for options that are populated dynamically
+            // watch option changes for options that are populated dynamically
                 scope.$watch(function() {
                     return parsedResult.source(originalScope);
                 }, function(newVal) {
@@ -95,7 +95,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                     }
                 }, true);
 
-            //watch model change
+            // watch model change
                 scope.$watch(function() {
                     return modelCtrl.$modelValue;
                 }, function(newVal, oldVal) {

@@ -118,7 +118,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
             });
         },
         closeEmbed: function() {
-            //put block back together on embed form close.
+            // put block back together on embed form close.
             self.toggle();
         }
     });

@@ -15,7 +15,7 @@ function UserImportService(api, $q) {
             if (response.status === 404) {
                 return reject('profile_to_import', data._message);
             } else if (response.status === 400) {
-                return reject(data._issues.profile_to_import ? 'profile_to_import': 'credentials', data._message);
+                return reject(data._issues.profile_to_import ? 'profile_to_import' : 'credentials', data._message);
             }
 
             return reject('credentials', data._message);
