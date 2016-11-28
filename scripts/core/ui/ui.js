@@ -211,7 +211,7 @@ AutofocusDirective.$inject = [];
 function AutofocusDirective() {
     return {
         link: function(scope, element) {
-            _.defer (function() {
+            _.defer(function() {
                 var value = element.val();
                 element.val('').focus();
                 element.val(value);

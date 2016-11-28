@@ -273,7 +273,7 @@ export function ArticleEditDirective(
                 }
 
                 //first option should always be selected, as multiple helplines could be added in footer
-                _.defer (function() {
+                _.defer(function() {
                     var ddlHelpline = elem.find('#helplines');
                     ddlHelpline[0].options[0].selected = true;
                 });

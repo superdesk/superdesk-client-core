@@ -101,7 +101,7 @@ function TransmissionDetailsDirective(api, archiveService) {
                 if (scope.show_transmission_details) {
                     var criteria = {'max_results': 20};
 
-                    criteria.where = JSON.stringify ({
+                    criteria.where = JSON.stringify({
                         '$and': [{'item_id': scope.item._id}, {'item_version': scope.item._current_version}]
                     });
 

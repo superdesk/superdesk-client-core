@@ -15,5 +15,5 @@ export function DataConsistencyController($scope, api) {
         });
     };
 
-    $scope.reload ();
+    $scope.reload();
 }

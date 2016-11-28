@@ -350,7 +350,7 @@ function MetaDropdownDirective($filter, keyboardManager) {
                 scope.change({item: scope.item, field: scope.field});
 
                 //retain focus on same dropdown control after selection.
-                _.defer (function() {
+                _.defer(function() {
                     elem.find('.dropdown__toggle').focus();
                 });
 
@@ -779,7 +779,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     }, 50, false);
 
                     //retain focus and initialise activeTree on same dropdown control after selection.
-                    _.defer (function() {
+                    _.defer(function() {
                         if (!_.isEmpty(elem.find('.dropdown__toggle'))) {
                             elem.find('.dropdown__toggle').focus();
                         }

@@ -113,7 +113,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         }
 
         if (!_.isEmpty(andTerms)) {
-            criteria.where = JSON.stringify ({
+            criteria.where = JSON.stringify({
                 '$and': andTerms
             });
         }

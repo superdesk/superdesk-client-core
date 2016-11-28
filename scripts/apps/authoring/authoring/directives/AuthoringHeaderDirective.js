@@ -170,7 +170,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
             });
 
             // If correction set focus to the ednote to encourage user to fill it in
-            _.defer (function() {
+            _.defer(function() {
                 if (scope.action === 'correct') {
                     elem.find('#ednote').focus();
                 } else {

@@ -60,7 +60,7 @@ export function IngestUserDashboard(api, userList, privileges) {
                     where.push({name: 'error'});
                 }
 
-                criteria.where = JSON.stringify ({
+                criteria.where = JSON.stringify({
                     '$and': where
                 });
 
