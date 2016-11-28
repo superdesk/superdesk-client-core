@@ -152,7 +152,7 @@ describe('search service', function() {
         scopeItems = {_items: [{_id: 'foo', _current_version: 1}]};
 
         _data = prepareData(newItems, scopeItems, scrollTop, isItemPreviewing);
-        expect(search.canShowRefresh(_data)).toBe(undefined);
+        expect(search.canShowRefresh(_data)).toBeUndefined();
 
     }));
 
@@ -261,7 +261,7 @@ describe('sdSearchPanel directive', function() {
                 dateformat: 'MM/DD/YYYY'
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined}
+            server: {}
         });
 
         fakeApi = {

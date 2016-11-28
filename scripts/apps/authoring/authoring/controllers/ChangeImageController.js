@@ -108,7 +108,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
     $scope.data.showAoISelectionButton = $scope.data.showAoISelectionButton === true;
     $scope.showAreaOfInterestView = function(show) {
         angular.extend($scope, {
-            isAoISelectionModeEnabled: show === undefined || show,
+            isAoISelectionModeEnabled: typeof show === 'undefined' || show,
             areaOfInterestData: {},
             loaderForAoI: false
         });

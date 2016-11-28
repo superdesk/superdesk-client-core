@@ -8,7 +8,7 @@ function SdAddEmbedController(embedService, $element, $timeout, $q, _,
 EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
     var self = this;
     angular.extend(self, {
-        editorCtrl: undefined,  // defined in link method
+        editorCtrl: null,  // defined in link method
         previewLoading: false,
         toggle: function(close) {
             // use parameter or toggle

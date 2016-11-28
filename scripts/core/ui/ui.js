@@ -476,18 +476,18 @@ function DropdownFocus(Keys) {
                             if (inputField.is(':focus') || categoryButton.is(':focus')) {
                                 if (_.isEmpty(inputField.val())) {
                                     var mainList = elem.find('.main-list').children('ul').find('li > button');
-                                    if (mainList[0] !== undefined) {
+                                    if (typeof mainList[0] !== 'undefined') {
                                         mainList[0].focus();
                                     }
                                 } else {
                                     var buttonSet = elem.find('button:not([disabled]):not(.dropdown__toggle)');
-                                    if (buttonSet[0] !== undefined) {
+                                    if (typeof buttonSet[0] !== 'undefined') {
                                         buttonSet[0].focus();
                                     }
                                 }
                             } else if (nextElem.length > 0) {
                                 nextElem.focus();
-                            } else if (buttonList[0] !== undefined) {
+                            } else if (typeof buttonList[0] !== 'undefined') {
                                 buttonList[0].focus();
                             }
                         };

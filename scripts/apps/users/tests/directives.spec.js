@@ -58,7 +58,7 @@ describe('sdUserUnique Directive', function() {
         scope.$digest();
 
         expect(scope.$eval('userForm.username.$valid')).toBe(true);
-        expect(scope.$eval('userForm.username.$error.unique')).toBe(undefined);
+        expect(scope.$eval('userForm.username.$error.unique')).toBeUndefined();
         expect(scope.$eval('userForm.username.$modelValue')).toBe('bar');
     }));
 
@@ -92,7 +92,7 @@ describe('sdUserUnique Directive', function() {
         scope.$digest();
 
         expect(scope.$eval('userForm.passwordConfirm.$valid')).toBe(true);
-        expect(scope.$eval('userForm.passwordConfirm.$error.confirm')).toBe(undefined);
+        expect(scope.$eval('userForm.passwordConfirm.$error.confirm')).toBeUndefined();
     }));
 
 });

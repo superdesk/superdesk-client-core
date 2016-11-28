@@ -20,7 +20,7 @@ describe('content', function() {
                 dateformat: 'MM/DD/YYYY'
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined}
+            server: {}
         });
     }));
 

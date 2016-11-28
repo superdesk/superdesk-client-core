@@ -37,6 +37,6 @@ describe('list directives', function() {
         iscope.$digest();
 
         expect($location.search().q).toBe('test');
-        expect($location.search().page).toBe(undefined);
+        expect($location.search().page).toBeUndefined();
     }));
 });

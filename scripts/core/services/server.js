@@ -42,13 +42,13 @@ export default angular.module('superdesk.core.services.server', [])
                 var resource;
 
                 // to make it usable with createAll
-                if (datas !== undefined) {
+                if (typeof datas !== 'undefined') {
                     resource = items;
                 }
 
                 var promises = [];
                 _.forEach(items, function(item) {
-                    if (resource !== undefined) {
+                    if (typeof resource !== 'undefined') {
                         promises.push(self[functionName](resource, item));
                     } else {
                         promises.push(self[functionName](item));

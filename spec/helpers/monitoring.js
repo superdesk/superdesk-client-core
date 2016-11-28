@@ -205,7 +205,7 @@ function Monitoring() {
     this.setOrder = function(field, switchDir) {
         element(by.id('order_button')).click();
         element(by.id('order_selector')).element(by.partialLinkText(field)).click();
-        if (switchDir !== undefined && switchDir) {
+        if (typeof switchDir !== 'undefined' && switchDir) {
             element(by.css('[ng-click="toggleDir()"]')).click();
         }
     };

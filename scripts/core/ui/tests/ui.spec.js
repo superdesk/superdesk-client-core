@@ -14,7 +14,7 @@ describe('superdesk ui', function() {
                 dateformat: 'MM/DD/YYYY'
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined}
+            server: {}
         });
     }));
 
@@ -262,7 +262,7 @@ describe('superdesk ui', function() {
             form.email.$setViewValue('test@test.com,test');
             scope.$digest();
             expect(form.email.$valid).toBe(false);
-            expect(scope.model.email).toBe(undefined);
+            expect(scope.model.email).toBeUndefined();
         });
     });
 });

@@ -36,7 +36,7 @@ describe('keyboardManager', function() {
 
         km.unbind('up');
 
-        expect(km.keyboardEvent.up).toBe(undefined);
+        expect(km.keyboardEvent.up).toBeUndefined();
     });
 
     it('can push and pop an event', function() {

@@ -59,7 +59,7 @@ describe('Upload controller', function() {
 
         expect(scope.items.length).toBe(1);
         expect(scope.items[0].file.type).toBe('text/plain');
-        expect(scope.items[0].meta).not.toBe(undefined);
+        expect(scope.items[0].meta).not.toBeUndefined();
         expect(scope.items[0].progress).toBe(0);
 
         // mandatory fields
@@ -133,7 +133,7 @@ describe('Upload controller', function() {
 
             expect(scope.items.length).toBe(1);
             expect(scope.items[0].file.type).toBe('text/plain');
-            expect(scope.items[0].meta).not.toBe(undefined);
+            expect(scope.items[0].meta).not.toBeUndefined();
             expect(scope.items[0].progress).toBe(0);
 
         // mandatory fields

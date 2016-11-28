@@ -10,7 +10,7 @@ function Content() {
     this.send = send;
 
     this.setListView = function(noNavigate) {
-        if (noNavigate === undefined || !noNavigate) {
+        if (typeof noNavigate === 'undefined' || !noNavigate) {
             nav('workspace/content');
         }
 

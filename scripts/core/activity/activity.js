@@ -542,7 +542,7 @@ angular.module('superdesk.core.activity', [
      */
     this.setReferrer = function(currentRoute, previousRoute) {
         if (currentRoute && previousRoute) {
-            if (currentRoute.$$route !== undefined && previousRoute.$$route !== undefined) {
+            if (typeof currentRoute.$$route !== 'undefined' && typeof previousRoute.$$route !== 'undefined') {
                 if (currentRoute.$$route.originalPath === '/') {
                     this.setReferrerUrl('/workspace');
                     localStorage.setItem('referrerUrl', '/workspace');

@@ -2,8 +2,6 @@
  * This module enables the 'tansa' spellchecker functionality and installs
  * it based on the documentation provided by the user guide.
  */
-
-/* jshint ignore:start */
 document.write(`
     <script type="text/javascript">
         var tansa = {
@@ -30,6 +28,7 @@ document.write(`
     </script>
 `);
 
+/* globals tansa: true */
 var script = document.createElement('script');
 script.src = `${tansa.settings.baseUrl}tansaLoader.js?${new Date().getTime()}`;
 document.write(script.outerHTML);
@@ -41,4 +40,3 @@ document.write(`
         window.tansa.settings.platformVersion = pgwBrowser.os.fullVersion;
      </script>
 `);
-/* jshint ignore:end */

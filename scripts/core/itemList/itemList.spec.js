@@ -28,7 +28,7 @@ describe('itemListService', function() {
         $rootScope.$digest();
         expect(queryParams).toEqual({
             _endpoint: 'search',
-            _endpointParam: undefined,
+            _endpointParam: null,
             source: {
                 query: {
                     filtered: {}

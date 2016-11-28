@@ -121,7 +121,7 @@ describe('workspace', function() {
             workspaces.getActive();
             $rootScope.$digest();
 
-            expect(workspaces.active.desk).toBe(undefined);
+            expect(workspaces.active.desk).toBeUndefined();
             expect(workspaces.active.user).toBe('foo');
         }));
     });

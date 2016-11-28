@@ -20,7 +20,7 @@ describe('widgets provider', function() {
     });
 
     it('is defined', inject(function(dashboardWidgets) {
-        expect(dashboardWidgets).not.toBe(undefined);
+        expect(dashboardWidgets).not.toBeUndefined();
     }));
 
     it('can register widgets', inject(function(dashboardWidgets) {

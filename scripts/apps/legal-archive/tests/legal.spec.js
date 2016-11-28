@@ -18,7 +18,7 @@ describe('legal archive service', function() {
                 dateformat: 'MM/DD/YYYY'
             },
             defaultTimezone: 'UTC',
-            server: {url: undefined}
+            server: {}
         });
     }));
 

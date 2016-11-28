@@ -28,7 +28,7 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
                 var self = this;
 
                 // add message, only if it's not already exist
-                if (_.find(this.messages, _.matches({msg: text})) === undefined) {
+                if (_.find(this.messages, typeof _.matches({msg: text})) === 'undefined') {
                     this.messages.push({type: type, msg: text});
                 }
 
