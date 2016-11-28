@@ -263,40 +263,38 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             });
 
             scope.move = function(diff, event) {
-                if (!_.isNil(scope.selected) && $rootScope.config.features.customMonitoringWidget) {
-                    if (scope.items) {
-                        var index = _.findIndex(scope.items, {_id: scope.selected._id});
-                        if (!itemHeight) {
-                            var containerItems = container.getElementsByTagName('li');
-                            if (containerItems.length) {
-                                itemHeight = containerItems[0].offsetHeight;
-                            }
+                if (!_.isNil(scope.selected) && $rootScope.config.features.customMonitoringWidget && scope.items) {
+                    var index = _.findIndex(scope.items, {_id: scope.selected._id});
+                    if (!itemHeight) {
+                        var containerItems = container.getElementsByTagName('li');
+                        if (containerItems.length) {
+                            itemHeight = containerItems[0].offsetHeight;
                         }
-                        if (index === -1) { // selected not in current items, select first
-                            container.scrollTop = 0;
-                            clickItem(_.head(scope.items), event);
+                    }
+                    if (index === -1) { // selected not in current items, select first
+                        container.scrollTop = 0;
+                        clickItem(_.head(scope.items), event);
+                    }
+                    var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
+                    if (nextIndex < 0) {
+                        clickItem(_.last(scope.items), event);
+                    }
+                    if (index !== nextIndex) {
+                        // scrolling in monitoring widget for ntb is done by keyboard
+                        // when we select next item if item is out of focus (not visible) it will scroll down
+                        if ((nextIndex + 2) * itemHeight > container.offsetHeight + container.scrollTop &&
+                            nextIndex > index) {
+                            container.scrollTop += itemHeight * 2;
                         }
-                        var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
-                        if (nextIndex < 0) {
-                            clickItem(_.last(scope.items), event);
+                        // when we select previous item if item is out of focus (not visible) it will scroll up
+                        if (nextIndex * itemHeight < container.scrollTop && nextIndex < index) {
+                            container.scrollTop -= itemHeight * 2;
                         }
-                        if (index !== nextIndex) {
-                            // scrolling in monitoring widget for ntb is done by keyboard
-                            // when we select next item if item is out of focus (not visible) it will scroll down
-                            if ((nextIndex + 2) * itemHeight > container.offsetHeight + container.scrollTop &&
-                                nextIndex > index) {
-                                container.scrollTop += itemHeight * 2;
-                            }
-                            // when we select previous item if item is out of focus (not visible) it will scroll up
-                            if (nextIndex * itemHeight < container.scrollTop && nextIndex < index) {
-                                container.scrollTop -= itemHeight * 2;
-                            }
-                            clickItem(scope.items[nextIndex], event);
-                        } else if (event) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            event.stopImmediatePropagation();
-                        }
+                        clickItem(scope.items[nextIndex], event);
+                    } else if (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        event.stopImmediatePropagation();
                     }
                 }
             };

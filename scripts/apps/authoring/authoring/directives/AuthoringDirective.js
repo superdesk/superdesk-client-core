@@ -299,39 +299,39 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 return authoring.publish(orig, item, action)
                 .then(function(response) {
-                    if (response) {
-                        if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
-                            if (angular.isDefined(response.data._issues['validator exception'])) {
-                                var errors = response.data._issues['validator exception'];
-                                var modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
-                                for (var i = 0; i < modifiedErrors.length; i++) {
-                                    notify.error(_.trim(modifiedErrors[i]));
-                                }
-
-                                if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
-                                    authoring.open(item._id, true).then(function(res) {
-                                        $scope.origItem = res;
-                                        $scope.dirty = false;
-                                        $scope.item = _.create($scope.origItem);
-                                    });
-                                }
-
-                                return false;
-                            }
-                        } else if (response.status === 412) {
-                            notifyPreconditionFailed();
-                            return false;
-                        } else {
-                            notify.success(gettext('Item published.'));
-                            $scope.item = response;
-                            $scope.dirty = false;
-                            authoringWorkspace.close(true);
-                            return true;
-                        }
-                    } else {
+                    if (!response) {
                         notify.error(gettext('Unknown Error: Item not published.'));
                         return false;
                     }
+
+                    if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
+                        if (angular.isDefined(response.data._issues['validator exception'])) {
+                            var errors = response.data._issues['validator exception'];
+                            var modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
+                            for (var i = 0; i < modifiedErrors.length; i++) {
+                                notify.error(_.trim(modifiedErrors[i]));
+                            }
+
+                            if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
+                                authoring.open(item._id, true).then(function(res) {
+                                    $scope.origItem = res;
+                                    $scope.dirty = false;
+                                    $scope.item = _.create($scope.origItem);
+                                });
+                            }
+
+                            return false;
+                        }
+                    } else if (response.status === 412) {
+                        notifyPreconditionFailed();
+                        return false;
+                    }
+
+                    notify.success(gettext('Item published.'));
+                    $scope.item = response;
+                    $scope.dirty = false;
+                    authoringWorkspace.close(true);
+                    return true;
                 });
             }
 

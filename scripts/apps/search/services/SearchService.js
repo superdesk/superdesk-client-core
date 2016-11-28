@@ -153,15 +153,17 @@ export function SearchService($location, gettext, config, session) {
         }
         for (var i = 0, queryArrayLength = queryArray.length; i < queryArrayLength; i++) {
             var queryArrayElement = queryArray[i];
-            if (queryArrayElement.indexOf(field + '.qcode') !== -1 ||
-                queryArrayElement.indexOf(field + '.name') !== -1) {
-                var elementName = queryArrayElement.substring(
-                        queryArrayElement.lastIndexOf('(') + 1,
-                        queryArrayElement.lastIndexOf(')'));
-                for (var j = 0, codeListLength = codeList.length; j < codeListLength; j++) {
-                    if (codeList[j].qcode === elementName || codeList[j].name === elementName) {
-                        filteredArray.push(codeList[j]);
-                    }
+            if (queryArrayElement.indexOf(field + '.qcode') === -1 &&
+                queryArrayElement.indexOf(field + '.name') === -1) {
+                continue;
+            }
+            var elementName = queryArrayElement.substring(
+                    queryArrayElement.lastIndexOf('(') + 1,
+                    queryArrayElement.lastIndexOf(')')
+            );
+            for (var j = 0, codeListLength = codeList.length; j < codeListLength; j++) {
+                if (codeList[j].qcode === elementName || codeList[j].name === elementName) {
+                    filteredArray.push(codeList[j]);
                 }
             }
         }

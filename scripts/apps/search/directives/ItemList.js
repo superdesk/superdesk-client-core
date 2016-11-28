@@ -1656,17 +1656,21 @@ export function ItemList(
                         return;
                     }
 
+                    var highlightSelected = () => {
+                        for (var i = 0; i < this.state.itemsList.length; i++) {
+                            if (this.state.itemsList[i] === this.state.selected) {
+                                var next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
+                                this.select(this.state.itemsById[this.state.itemsList[next]]);
+                                return;
+                            }
+                        }
+                    };
+
                     if (!_.isNil(diff)) {
                         event.preventDefault();
                         event.stopPropagation();
                         if (this.state.selected) {
-                            for (var i = 0; i < this.state.itemsList.length; i++) {
-                                if (this.state.itemsList[i] === this.state.selected) {
-                                    var next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
-                                    this.select(this.state.itemsById[this.state.itemsList[next]]);
-                                    return;
-                                }
-                            }
+                            highlightSelected();
                         } else {
                             this.select(this.state.itemsById[this.state.itemsList[0]]);
                         }

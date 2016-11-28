@@ -82,6 +82,20 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 });
             };
 
+            function validateField(response, field) {
+                if (scope.userForm[field]) {
+                    if (scope.error[field]) {
+                        scope.error.message = null;
+                    }
+                    for (var constraint in response.data._issues[field]) {
+                        if (response.data._issues[field][constraint]) {
+                            scope.userForm[field].$setValidity(constraint, false);
+                            scope.error.message = null;
+                        }
+                    }
+                }
+            }
+
             scope.save = function() {
                 scope.error = null;
                 notify.info(gettext('Saving...'));
@@ -120,17 +134,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                             scope.error.message = errorMessage;
 
                             for (var field in response.data._issues) {
-                                if (scope.userForm[field]) {
-                                    if (scope.error[field]) {
-                                        scope.error.message = null;
-                                    }
-                                    for (var constraint in response.data._issues[field]) {
-                                        if (response.data._issues[field][constraint]) {
-                                            scope.userForm[field].$setValidity(constraint, false);
-                                            scope.error.message = null;
-                                        }
-                                    }
-                                }
+                                validateField(response, field);
                             }
                         }
 

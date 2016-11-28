@@ -124,6 +124,9 @@
         "indent": [2, 4],
         "jsx-quotes": 2,
         "key-spacing": 2,
+        "keyword-spacing": 2,
+        "max-depth": [2, 3],
+        "max-len": [2, 120, 4],
 
         "quotes": [2, "single"],
         "linebreak-style": [2, "unix"],
@@ -145,7 +148,6 @@
         "keyword-spacing": 2,
         "space-before-blocks": [2, "always"],
         "space-in-parens": [2, "never"],
-        "space-before-function-paren": [2, "never"],
-        "max-len": [2, 120, 4]
+        "space-before-function-paren": [2, "never"]
     }
 }

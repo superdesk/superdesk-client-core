@@ -89,10 +89,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     // retrieve the association reference
                     var association;
                     var embedAssoKey = /{id: "(embedded\d+)"}/;
-                    if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null) {
-                        if (self.associations) {
-                            association = angular.copy(self.associations[match[1]]);
-                        }
+                    if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null
+                        && self.associations) {
+                        association = angular.copy(self.associations[match[1]]);
                     }
                     // create the embed block
                     block = new Block({blockType: 'embed', embedType: embedType, association: association, body: ''});
