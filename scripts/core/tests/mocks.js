@@ -19,7 +19,7 @@ angular.module('superdesk.mocks', [])
         },
         requiredMediaMetadata: ['headline', 'description_text', 'alt_text']
     })
-    .service('features', function() {/* no-op */})
+    .service('features', function() { /* no-op */ })
     .service('preferencesService', function($q) {
         this.mock = true;
 

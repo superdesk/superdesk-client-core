@@ -4,11 +4,11 @@ describe('item comments', function() {
 
     beforeEach(window.module(function($provide) {
         $provide.provider('api', function() {
-            this.api = function() {/* no-op */};
+            this.api = function() { /* no-op */ };
             this.$get = function() {
                 return {
                     item_comments: {
-                        query: function() {/* no-op */}
+                        query: function() { /* no-op */ }
                     }
                 };
             };

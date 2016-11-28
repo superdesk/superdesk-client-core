@@ -11,7 +11,7 @@ describe('widgets provider', function() {
         window.module('superdesk.apps.dashboard.widgets', 'superdesk.apps.dashboard.widgets.tests');
 
         // init the tests module to get the actual provider
-        inject(function() {/* no-op */});
+        inject(function() { /* no-op */ });
     });
 
     beforeEach(function() {

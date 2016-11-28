@@ -35,7 +35,7 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
                     desks.fetchDeskStages(scope.desk.edit._id, true).then(function(stages) {
                         scope.stages = stages;
                         scope.message = null;
-                    }).finally(function() {/* no-op */});
+                    }).finally(function() { /* no-op */ });
                 } else {
                     WizardHandler.wizard('desks').goTo(previous);
                 }

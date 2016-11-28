@@ -113,7 +113,9 @@
         "no-undef-init": 2,
         "no-use-before-define": 2,
 
-        "strict": 0,
+        "array-bracket-spacing": [2, "never"],
+        "block-spacing": 2,
+
         "indent": [2, 4],
         "quotes": [2, "single"],
         "linebreak-style": [2, "unix"],
@@ -125,7 +127,6 @@
             "requireReturnDescription": false,
             "requireParamDescription": false
         }],
-        "array-bracket-spacing": [2, "never"],
         "brace-style": [2, "1tbs", {"allowSingleLine": false}],
         "comma-style": [2, "last"],
         "computed-property-spacing": [2, "never"],

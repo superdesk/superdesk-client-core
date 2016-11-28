@@ -14,7 +14,7 @@ function getBackendUrl(uri) {
 }
 
 function backendRequest(params, callback) {
-    let cb = callback || function() {/* no-op */};
+    let cb = callback || function() { /* no-op */ };
     if (params.uri) {
         params.url = getBackendUrl(params.uri);
         delete params.uri;
@@ -98,6 +98,6 @@ function backendRequestAuth(params, callback) {
         var token = browser.params.token;
         params.headers = params.headers || {};
         params.headers.authorization = 'Basic ' + bt(token + ':');
-        backendRequest(params, callback || function() {/* no-op */});
+        backendRequest(params, callback || function() { /* no-op */ });
     });
 }
