@@ -6,7 +6,6 @@ export function RolesPrivilegesDirective(api, gettext, notify, $q, $filter) {
         scope: true,
         templateUrl: 'scripts/apps/users/views/settings-privileges.html',
         link: function(scope) {
-
             api('roles').query().then(function(result) {
                 scope.roles = $filter('sortByName')(result._items);
             });

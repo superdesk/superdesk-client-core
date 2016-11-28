@@ -89,7 +89,7 @@ angular.module('superdesk.apps.ingest', [
                     remove.remove(data.item);
                 }],
                 filters: [{action: 'list', type: 'ingest'}],
-                additionalCondition:['remove', 'item', function(remove, item) {
+                additionalCondition: ['remove', 'item', function(remove, item) {
                     return remove.canRemove(item);
                 }],
                 privileges: {fetch: 1}

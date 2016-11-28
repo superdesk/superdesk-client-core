@@ -41,7 +41,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
         // pick own properties
         angular.forEach(data, function(val, key) {
             if (key !== 'content' && key[0] !== '_') {
-                sendData[key] = val === null ? val: val.toString();
+                sendData[key] = val === null ? val : val.toString();
             }
         });
         setPersonalName(sendData);

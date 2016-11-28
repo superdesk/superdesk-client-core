@@ -1,7 +1,6 @@
 'use strict';
 
 describe('PermissionsService', function() {
-
     beforeEach(window.module('superdesk.core.services.entity'));
     beforeEach(window.module('superdesk.core.services.server'));
     beforeEach(window.module('superdesk.core.services.permissions'));
@@ -116,5 +115,4 @@ describe('PermissionsService', function() {
 
         expect(result).toBe(false);
     });
-
 });

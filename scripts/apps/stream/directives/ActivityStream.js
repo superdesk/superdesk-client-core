@@ -10,7 +10,7 @@ export function ActivityStream(asset, authoringWorkspace) {
         link: function(scope, element, attrs) {
             scope.openArticle = function(activity) {
                 if (activity.item) {
-                    authoringWorkspace.edit({'_id': activity.item}, 'edit');
+                    authoringWorkspace.edit({_id: activity.item}, 'edit');
                 }
             };
         }

@@ -7,7 +7,6 @@ var openUrl = require('./helpers/utils').open,
     monitoring = require('./helpers/monitoring');
 
 describe('search', function() {
-
     beforeEach(function() {
         openUrl('/#/search').then(globalSearch.setListView());
     });
@@ -24,7 +23,7 @@ describe('search', function() {
         globalSearch.openFilterPanel();
         globalSearch.clickClearFilters();
 
-        //can navigate/filter subject field and search by selected subject term
+        // can navigate/filter subject field and search by selected subject term
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.toggleSearchTabs('parameters');
         globalSearch.toggleSubjectMetadata(); // opens subject drop-down
@@ -43,7 +42,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBeGreaterThan(0);
         globalSearch.clickClearFilters();
 
-        //can search by priority field
+        // can search by priority field
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.toggleSearchTabs('filters');
         expect(globalSearch.getPriorityElements().count()).toBe(3);
@@ -52,7 +51,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(1);
         globalSearch.clickClearFilters();
 
-        //can search by byline field
+        // can search by byline field
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openParameters();
         var bylineTextbox = element(by.id('search-byline'));
@@ -62,7 +61,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(1);
         globalSearch.clickClearFilters();
 
-        //can search by slugline
+        // can search by slugline
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openParameters();
         bylineTextbox = element(by.id('search-slugline'));
@@ -72,7 +71,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(1);
         globalSearch.clickClearFilters();
 
-        //can search by slugline with parenthesis and clear by tag
+        // can search by slugline with parenthesis and clear by tag
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openParameters();
         bylineTextbox = element(by.id('search-slugline'));
@@ -84,7 +83,7 @@ describe('search', function() {
         element(by.css('.icon-close-small.icon-white')).click();
         expect(globalSearch.getItems().count()).toBe(14);
 
-        //can search by original creator
+        // can search by original creator
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openParameters();
         globalSearch.selectCreator('search-creator', 'first name last name');
@@ -92,7 +91,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(10);
         globalSearch.clickClearFilters();
 
-        //can search by ingest provider
+        // can search by ingest provider
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openParameters();
         globalSearch.selectProvider('search-ingest-provider', 'aap');
@@ -100,7 +99,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(1);
         globalSearch.clickClearFilters();
 
-        //can search by genre field
+        // can search by genre field
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.toggleSearchTabs('filters');
         expect(globalSearch.getGenreElements().count()).toBe(2);
@@ -109,7 +108,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(10);
         globalSearch.clickClearFilters();
 
-        //initialize for search by from desk field and company
+        // initialize for search by from desk field and company
         monitoring.openMonitoring();
         monitoring.switchToDesk('SPORTS DESK').then(authoring.createTextItem());
         authoring.writeTextToHeadline('From-Sports-To-Politics');
@@ -121,7 +120,7 @@ describe('search', function() {
         monitoring.switchToDesk('POLITIC DESK');
         expect(monitoring.getTextItem(1, 0)).toBe('From-Sports-To-Politics');
 
-        //search by from desk field
+        // search by from desk field
         globalSearch.openGlobalSearch();
         globalSearch.setListView();
         expect(globalSearch.getItems().count()).toBe(15);
@@ -143,7 +142,7 @@ describe('search', function() {
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(15);
 
-        //can dynamically update items in related tab when item duplicated
+        // can dynamically update items in related tab when item duplicated
         expect(globalSearch.getItems().count()).toBe(15);
         globalSearch.actionOnItem('Duplicate', 0);
         globalSearch.itemClick(0);
@@ -154,7 +153,7 @@ describe('search', function() {
         monitoring.tabAction('related');
         expect(globalSearch.getRelatedItems().count()).toBe(2);
 
-        //can search with different repos
+        // can search with different repos
         globalSearch.openParameters();
         globalSearch.ingestRepo.click();
         browser.sleep(200);
@@ -174,11 +173,10 @@ describe('search', function() {
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(2);
-
     });
 
     it('can action on items', function() {
-        //DOWN arrow key selects an item and opens preview pane
+        // DOWN arrow key selects an item and opens preview pane
         expect(globalSearch.getItems().count()).toBe(14);
         var previewPane = element(by.id('item-preview'));
         expect(previewPane.isPresent()).toBe(false);
@@ -225,7 +223,7 @@ describe('search', function() {
         expect(authoring.getHeaderSluglineText()).toBe('item1 slugline');
         authoring.close();
 
-        //can avoid opening item\'s preview on an item action
+        // can avoid opening item\'s preview on an item action
         expect(globalSearch.getItems().count()).toBe(14);
         previewPane = element(by.id('item-preview'));
         expect(previewPane.isPresent()).toBe(false);
@@ -234,7 +232,7 @@ describe('search', function() {
         authoring.save();
         authoring.close();
 
-        //can avoid retaining item\'s preview on an item action
+        // can avoid retaining item\'s preview on an item action
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.itemClick(2);
         previewPane = element(by.id('item-preview'));
@@ -244,7 +242,7 @@ describe('search', function() {
         authoring.save();
         authoring.close();
 
-        //can display embargo item when set
+        // can display embargo item when set
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.actionOnItem('Edit', 4);
         authoring.sendToButton.click();
@@ -254,7 +252,7 @@ describe('search', function() {
         expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
         expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
 
-        //can search scheduled
+        // can search scheduled
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.actionOnItem('Edit', 1);
         authoring.schedule(false);

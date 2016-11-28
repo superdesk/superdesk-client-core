@@ -1,6 +1,5 @@
 
 describe('superdesk.core.api.allowed', function() {
-
     'use strict';
 
     beforeEach(window.module('superdesk.core.api'));

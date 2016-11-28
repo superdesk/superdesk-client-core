@@ -2,7 +2,6 @@ GroupeditPeopleDirective.$inject = ['gettext', 'api', 'WizardHandler', 'groups']
 export function GroupeditPeopleDirective(gettext, api, WizardHandler, groups) {
     return {
         link: function(scope, elem, attrs) {
-
             scope.$watch('step.current', function(step, previous) {
                 if (step === 'people') {
                     scope.search = null;

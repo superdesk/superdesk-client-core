@@ -1,7 +1,6 @@
 
 URLResolver.$inject = ['$http', '$q', '$log', 'config'];
 function URLResolver($http, $q, $log, config) {
-
     var _links, baseUrl = config.server.url;
 
     function basejoin(path) {

@@ -13,7 +13,7 @@ export function ResendItem(subscribersService, authoring, api, notify, gettext) 
                         scope.customSubscribers = [];
                         scope.subscribers = items._items;
                         _.each(items, function(item) {
-                            scope.customSubscribers.push({'qcode': item._id, 'name': item.name});
+                            scope.customSubscribers.push({qcode: item._id, name: item.name});
                         });
                     });
                 }

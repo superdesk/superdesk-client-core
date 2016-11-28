@@ -5,7 +5,6 @@ MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'su
     'archiveService', '$rootScope', 'config'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
         workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, config) {
-
     var ITEM_HEIGHT = 57;
 
     return {
@@ -18,7 +17,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             forceLimited: '@'
         },
         link: function(scope, elem, attrs, ctrls) {
-
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
 
@@ -320,7 +318,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             }
 
             function select(item) {
-                scope.currentGroup = item.task ? item.task.stage: null;
+                scope.currentGroup = item.task ? item.task.stage : null;
                 scope.selected = item;
                 monitoring.selectedGroup = scope.group;
                 monitoring.preview(item);
@@ -481,7 +479,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             function viewSingleGroup(group, type) {
                 monitoring.viewSingleGroup(group, type);
             }
-
         }
     };
 }

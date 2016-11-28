@@ -1,12 +1,12 @@
 LegalArchiveController.$inject = ['$scope', '$location', 'legal', 'preferencesService'];
 export function LegalArchiveController($scope, $location, legal, preferencesService) {
     var viewUpdate = {'archive:view': {
-        'allowed': ['mgrid', 'compact'],
-        'category': 'archive',
-        'view': 'mgrid',
-        'default': 'mgrid',
-        'label': 'Users archive view format',
-        'type': 'string'}};
+        allowed: ['mgrid', 'compact'],
+        category: 'archive',
+        view: 'mgrid',
+        default: 'mgrid',
+        label: 'Users archive view format',
+        type: 'string'}};
     $scope.criteria = {};
     $scope.items = legal.default_items;
     $scope.loading = false;
@@ -14,7 +14,7 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
     $scope.openAdvanceSearch = false;
 
     // Required to display action icons in grid view
-    $scope.extras = {'activity':{'action':'list'}};
+    $scope.extras = {activity: {action: 'list'}};
 
     $scope.search = function() {
         $location.search('page', null);

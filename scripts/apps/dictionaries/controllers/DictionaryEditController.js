@@ -2,7 +2,6 @@ DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'gettext
     'modal', '$rootScope', '$q'];
 export function DictionaryEditController($scope, dictionaries, upload, gettext, notify,
     modal, $rootScope, $q) {
-
     function onSuccess(result) {
         if ($scope.isAbbreviations()) {
             $rootScope.$broadcast('abbreviations:updated', result.content);
@@ -79,26 +78,31 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     $scope.filterWords = function filterWords(search) {
         $scope.words = [];
         $scope.isNew = !!search;
-        if (search) {
-            var key = search[0].toLowerCase();
-            if (wordsTrie[key]) {
-                var searchWords = wordsTrie[key],
-                    length = searchWords.length,
-                    words = [],
-                    word;
-                for (var i = 0; i < length; i++) {
-                    word = searchWords[i];
-                    if ($scope.dictionary.content[word] > 0 && isPrefix(search, word)) {
-                        words.push(word);
-                        if (word === search) {
-                            $scope.isNew = false;
-                        }
-                    }
+
+        if (!search) {
+            return;
+        }
+
+        var key = search[0].toLowerCase();
+        if (!wordsTrie[key]) {
+            return;
+        }
+
+        var searchWords = wordsTrie[key],
+            length = searchWords.length,
+            words = [],
+            word;
+        for (var i = 0; i < length; i++) {
+            word = searchWords[i];
+            if ($scope.dictionary.content[word] > 0 && isPrefix(search, word)) {
+                words.push(word);
+                if (word === search) {
+                    $scope.isNew = false;
                 }
-                words.sort();
-                $scope.words = words;
             }
         }
+        words.sort();
+        $scope.words = words;
     };
 
     var wordsTrie = {};

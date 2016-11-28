@@ -5,7 +5,6 @@ DeskeditStages.$inject = ['gettext', 'api', 'WizardHandler', 'tasks', '$rootScop
 export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, desks, notify, macros) {
     return {
         link: function(scope, elem, attrs) {
-
             var orig = null;
 
             scope.limits = limits;
@@ -35,7 +34,7 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
                     desks.fetchDeskStages(scope.desk.edit._id, true).then(function(stages) {
                         scope.stages = stages;
                         scope.message = null;
-                    }).finally(function() {/* no-op */});
+                    }).finally(function() { /* no-op */ });
                 } else {
                     WizardHandler.wizard('desks').goTo(previous);
                 }

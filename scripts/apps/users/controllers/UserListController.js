@@ -78,10 +78,10 @@ export function UserListController($scope, $location, api, _) {
 
         if (search.q) {
             query = {
-                '$or': [
-                    {username: {'$regex': search.q, '$options': '-i'}},
-                    {display_name: {'$regex': search.q, '$options': '-i'}},
-                    {email: {'$regex': search.q, '$options': '-i'}}
+                $or: [
+                    {username: {$regex: search.q, $options: '-i'}},
+                    {display_name: {$regex: search.q, $options: '-i'}},
+                    {email: {$regex: search.q, $options: '-i'}}
                 ]
             };
         }

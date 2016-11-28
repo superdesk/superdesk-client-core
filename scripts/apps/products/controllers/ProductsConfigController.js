@@ -2,7 +2,6 @@ ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'produ
     'subscribersService', 'metadata', '$filter'];
 export function ProductsConfigController($scope, gettext, notify, api, products, modal,
     subscribersService, metadata, $filter) {
-
     $scope.testLookup = {};
     $scope.productLookup = {};
     $scope.loading = false;
@@ -102,7 +101,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
         }
 
         $scope.loading = true;
-        products.testProducts({'article_id': $scope.articleId}).then(function(results) {
+        products.testProducts({article_id: $scope.articleId}).then(function(results) {
             $scope.rawResults = results;
             $scope.filteredProducts = [];
 
@@ -110,7 +109,6 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
                 $scope.filteredProducts = $scope.products;
             }
             _.each(results._id, function(result) {
-
                 $scope.testLookup[result.product_id] = result;
 
                 if (result.matched && $scope.resultType === 'Match' ||

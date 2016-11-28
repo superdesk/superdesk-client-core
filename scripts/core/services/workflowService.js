@@ -3,7 +3,6 @@ export default angular.module('superdesk.core.workflow', [])
     .service('workflowService', ['preferencesService', '$rootScope', function(preferencesService, $rootScope) {
         var _actions = [];
         this.isActionAllowed = function isActionAllowed(item, actionName) {
-
             if (_.isUndefined(actionName) || _.isUndefined(item.state)) {
                 return true;
             }
@@ -34,5 +33,4 @@ export default angular.module('superdesk.core.workflow', [])
         preferencesService.getActions().then(this.setActions);
 
         $rootScope.isActionAllowed = angular.bind(this, this.isActionAllowed);
-
     }]);

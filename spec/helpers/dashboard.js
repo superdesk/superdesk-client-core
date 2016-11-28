@@ -5,7 +5,6 @@ var openUrl = require('./utils').open;
 module.exports = new Dashboard();
 
 function Dashboard() {
-
     /**
      * Open dashboard for current selected desk/custom workspace.
      */

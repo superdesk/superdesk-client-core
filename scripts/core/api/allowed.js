@@ -3,7 +3,6 @@ angular.module('superdesk.core.api.allowed', [])
 
 AllowedService.$inject = ['lodash', 'api', '$q'];
 function AllowedService(_, api, $q) {
-
     var values;
 
     function fetch() {

@@ -2,11 +2,9 @@
 'use strict';
 
 describe('packaging', function() {
-
     beforeEach(window.module('superdesk.apps.packaging'));
 
     describe('package-items-edit directive', function() {
-
         // ignore template
         beforeEach(inject(function($templateCache) {
             $templateCache.put('scripts/apps/packaging/views/sd-package-items-edit.html', '');
@@ -15,7 +13,7 @@ describe('packaging', function() {
         it('listens to package:addItems event', inject(function($compile, $rootScope) {
             var scope = $rootScope.$new();
             scope.autosave = jasmine.createSpy('autosave');
-            scope.groups = [{id: 'root', 'refs': [{idRef: 'main'}]}, {id: 'main', refs: [], items: []}];
+            scope.groups = [{id: 'root', refs: [{idRef: 'main'}]}, {id: 'main', refs: [], items: []}];
             $compile('<div sd-package-items-edit ng-model="groups"></div>')(scope);
             scope.$digest();
 
@@ -41,7 +39,6 @@ describe('packaging', function() {
     });
 
     describe('package-item-preview directive', function() {
-
         // ignore template
         beforeEach(inject(function($templateCache) {
             $templateCache.put('scripts/apps/packaging/views/sd-package-item-preview.html', '');

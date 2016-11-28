@@ -3,7 +3,6 @@
  */
 UsersService.$inject = ['api', '$q', 'notify'];
 export function UsersService(api, $q, notify) {
-
     var usersService = {};
 
     usersService.usernamePattern = /^[A-Za-z0-9_.'-]+$/;

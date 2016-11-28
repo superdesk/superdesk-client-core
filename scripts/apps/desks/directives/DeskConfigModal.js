@@ -23,7 +23,6 @@ export function DeskConfigModal(metadata, content, api) {
         require: '^sdDeskConfig',
         templateUrl: 'scripts/apps/desks/views/desk-config-modal.html',
         link: function(scope, elem, attrs, ctrl) {
-
             /*
              * Initialize metadata
              * @return {Object} metadata

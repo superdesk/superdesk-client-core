@@ -2,7 +2,6 @@
 'use strict';
 
 describe('authoring widgets', function() {
-
     beforeEach(window.module('superdesk.templates-cache'));
 
     angular.module('superdesk.apps.authoring.widgets.test', ['superdesk.apps.authoring.widgets'])

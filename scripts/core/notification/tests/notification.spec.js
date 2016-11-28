@@ -95,5 +95,4 @@ describe('Notify Connection Service', function() {
         rootScope.$digest();
         expect(notifyConnectionService.message).toEqual(msg);
     }));
-
 });

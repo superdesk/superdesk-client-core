@@ -6,7 +6,6 @@ var workspace = require('./helpers/pages').workspace,
     authoring = require('./helpers/authoring');
 
 describe('content', function() {
-
     var body = element(by.tagName('body'));
 
     function selectedHeadline() {
@@ -34,8 +33,8 @@ describe('content', function() {
 
     function setEmbargo() {
         var now = new Date();
-        //choose time with date not in a valid month number.
-        //default view time format in config
+        // choose time with date not in a valid month number.
+        // default view time format in config
         var embargoDate = '09/09/' + (now.getFullYear() + 1);
         var embargoTime = (now.getHours() < 10 ? '0' + now.getHours() : now.getHours()) + ':' +
                         (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
@@ -244,11 +243,10 @@ describe('content', function() {
         expect(authoring.sendAndContinueBtn.isEnabled()).toBe(false);
         expect(authoring.sendBtn.isEnabled()).toBe(true);
 
-        //State after changing Desk
+        // State after changing Desk
         dropdown.click();
         sidebar.element(by.buttonText('Politic Desk')).click();
         expect(authoring.sendAndContinueBtn.isEnabled()).toBe(false);
         expect(authoring.sendBtn.isEnabled()).toBe(true);
     });
-
 });

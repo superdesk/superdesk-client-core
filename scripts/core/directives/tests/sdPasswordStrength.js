@@ -32,7 +32,7 @@ describe('sdPasswordStrength', function() {
     });
 
     it('should start of with correct strength when model is pre-populated', function() {
-        var $el = compileDirective({'pwd': 'abcdE123'});
+        var $el = compileDirective({pwd: 'abcdE123'});
         expect($el.next().find('.label').text()).toBe('OK');
     });
 
@@ -74,14 +74,14 @@ describe('sdPasswordStrength', function() {
     });
 
     it('should invalidate model when password is not good enough', function() {
-        var $el = compileDirective({'pwd': 'abcd'});
+        var $el = compileDirective({pwd: 'abcd'});
         var ctrl = $el.controller('ngModel');
 
         expect(ctrl.$invalid).toBeTruthy();
     });
 
     it('should validate model when password becomes good enough', function() {
-        var $el = compileDirective({'pwd': 'abcd'});
+        var $el = compileDirective({pwd: 'abcd'});
         var $scope = $el.scope();
         var ctrl = $el.controller('ngModel');
 

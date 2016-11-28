@@ -40,10 +40,8 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
 
             return delay.promise;
         };
-
     }])
     .directive('sdModal', ['$document', function($document) {
-
         return {
             template: [
                 '<div class="modal" data-backdrop="static">',
@@ -54,7 +52,6 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
                 model: '='
             },
             link: function modalLinkFunction(scope, element, attrs) {
-
                 var content, _initialized = false;
 
                 scope.$watch('model', function() {

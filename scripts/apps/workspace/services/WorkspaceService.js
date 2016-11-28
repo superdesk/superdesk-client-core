@@ -1,6 +1,5 @@
 WorkspaceService.$inject = ['api', 'desks', 'session', 'preferencesService', '$q'];
 export function WorkspaceService(api, desks, session, preferences, $q) {
-
     this.active = null;
     this.save = save;
     this.delete = _delete;
@@ -130,7 +129,7 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
                 }
 
                 self.workspaceType = type;
-                return {'id': id, 'type': type};
+                return {id: id, type: type};
             });
     }
 

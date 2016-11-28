@@ -84,7 +84,6 @@ function escapeRegExp(string) {
 
 EditorService.$inject = ['spellcheck', '$q', 'lodash', 'renditions', 'editorUtils'];
 function EditorService(spellcheck, $q, _, renditionsService, utils) {
-
     this.settings = {spellcheck: true};
 
     /**
@@ -468,7 +467,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
     this.generateMediaTag = function(data) {
         var mediaTypes = {
-            'video': function() {
+            video: function() {
                 var videoTag = ['<video controls="controls">'];
                 angular.forEach(data.renditions, function(rendition, name) {
                     if (_.some(['.mp4', '.webm', '.ogv'], function(ext) {
@@ -480,7 +479,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 videoTag.push('</video>');
                 return videoTag.join('');
             },
-            'picture': function() {
+            picture: function() {
                 var url = data.url, altText = data.altText;
                 var promiseFinished;
                 // if this is a SD archive, we use its properties
@@ -797,7 +796,6 @@ angular.module('superdesk.apps.editor2', [
          * Get number of lines for all p nodes before given node withing same parent.
          */
             function getLinesBeforeNode(p) {
-
                 function getLineCount(text) {
                     return text.split('\n').length;
                 }
@@ -1002,7 +1000,7 @@ angular.module('superdesk.apps.editor2', [
                         // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
                             if (scope.config.multiBlockEdition) {
                             // this dummy imageDragging stop preventing drag & drop events
-                                editorConfig.extensions = {'imageDragging': {}};
+                                editorConfig.extensions = {imageDragging: {}};
                                 if (editorConfig.toolbar.buttons.indexOf('table') !== -1
                                     && angular.isDefined(MediumEditorTable)) {
                                     editorConfig.extensions.table = new MediumEditorTable({
@@ -1279,7 +1277,7 @@ angular.module('superdesk.apps.editor2', [
                     }
                 },
                 controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', 'config',
-                    function(scope, editor, api , superdesk, renditions, config) {
+                    function(scope, editor, api, superdesk, renditions, config) {
                         var self = this;
                         angular.extend(self, {
                             block: undefined, // provided in link method
@@ -1317,9 +1315,9 @@ angular.module('superdesk.apps.editor2', [
                             },
                             insertMedia: function(media) {
                                 var mediaType = {
-                                    'picture': 'Image',
-                                    'graphic': 'Image',
-                                    'video': 'Video'
+                                    picture: 'Image',
+                                    graphic: 'Image',
+                                    video: 'Video'
                                 };
                                 var imageBlock = {
                                     blockType: 'embed',
@@ -1394,7 +1392,6 @@ angular.module('superdesk.apps.editor2', [
                 };
             }
         });
-
     }])
     .config(['embedServiceProvider', 'iframelyServiceProvider', '$injector',
         function(embedServiceProvider, iframelyServiceProvider, $injector) {
@@ -1408,7 +1405,6 @@ angular.module('superdesk.apps.editor2', [
         }]);
 
 function EditorUtilsFactory() {
-
     var CLONE_CLASS = 'clone';
     var HILITE_CLASS = 'sdhilite';
     var ACTIVE_CLASS = 'sdactive';

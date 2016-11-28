@@ -11,13 +11,12 @@
 var templates = require('./helpers/templates');
 
 describe('templates', function() {
-
     beforeEach(function() {
         templates.openTemplatesSettings();
     });
 
     it('add create template', function() {
-        //add a new template
+        // add a new template
         templates.add();
         templates.getTemplateNameElement().sendKeys('New Template');
         templates.setTemplateType('string:create');

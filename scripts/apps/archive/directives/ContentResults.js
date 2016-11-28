@@ -8,15 +8,15 @@ ContentResults.$inject = ['$location', 'preferencesService', 'packages', 'tags',
 export function ContentResults($location, preferencesService, packages, tags, asset, search) {
     var update = {
         'archive:view': {
-            'allowed': [
+            allowed: [
                 'mgrid',
                 'compact'
             ],
-            'category': 'archive',
-            'view': 'mgrid',
-            'default': 'mgrid',
-            'label': 'Users archive view format',
-            'type': 'string'
+            category: 'archive',
+            view: 'mgrid',
+            default: 'mgrid',
+            label: 'Users archive view format',
+            type: 'string'
         }
     };
 
@@ -24,7 +24,6 @@ export function ContentResults($location, preferencesService, packages, tags, as
         require: '^sdSearchContainer',
         templateUrl: asset.templateUrl('apps/search/views/search-results.html'),
         link: function(scope, elem, attr, controller) {
-
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
 

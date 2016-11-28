@@ -28,10 +28,10 @@ export default angular.module('superdesk.core.services.pageTitle', [])
         };
 
         function setTitle(url, activeWorkspace) {
-            document.title = 'Superdesk' + (url?' - ' + url:'') + (activeWorkspace?' - ' + activeWorkspace:'');
+            document.title = 'Superdesk' + (url ? ' - ' + url : '') + (activeWorkspace ? ' - ' + activeWorkspace : '');
         }
 
         this.clear = function() {
-            document.title = this.title ;
+            document.title = this.title;
         };
     });

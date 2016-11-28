@@ -3,7 +3,6 @@ export function MultiMarkHighlightsDropdown(desks, highlightsService, multi) {
     return {
         templateUrl: 'scripts/apps/highlights/views/mark_highlights_dropdown_directive.html',
         link: function(scope) {
-
             scope.markItem = function(highlight) {
                 angular.forEach(multi.getItems(), function(item) {
                     item.multiSelect = true;

@@ -65,13 +65,13 @@ describe('Embed Code Handlers', function() {
         // retrieve embed with Vidible enabled
         config.editor.vidible = true;
         var apiResponse = {
-            'height': 360,
-            'mimeType': 'video/ogg',
-            'size': 2004079,
-            'type': 'video',
-            'url': 'http://delivery.vidible.tv/video/redirect/56bb4688e4b0b6448ed479dd' +
+            height: 360,
+            mimeType: 'video/ogg',
+            size: 2004079,
+            type: 'video',
+            url: 'http://delivery.vidible.tv/video/redirect/56bb4688e4b0b6448ed479dd' +
             '?bcid=538612f0e4b00fbb8e898655&w=640&h=360',
-            'width': 640
+            width: 640
         };
         $httpBackend
             .expectGET(config.server.url + '/vidible/bcid/538612f0e4b00fbb8e898655/pid/56bb474de4b0568f54a23ed7')
@@ -86,5 +86,4 @@ describe('Embed Code Handlers', function() {
         $httpBackend.flush();
         scope.$digest();
     }));
-
 });

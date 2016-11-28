@@ -1,7 +1,6 @@
 'use strict';
 
 describe('workspace', function() {
-
     var DESK = 1;
 
     beforeEach(window.module('superdesk.templates-cache'));

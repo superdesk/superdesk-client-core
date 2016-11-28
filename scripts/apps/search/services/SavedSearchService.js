@@ -1,7 +1,6 @@
 SavedSearchService.$inject = ['api', '$filter', '$q', '$rootScope'];
 
 export function SavedSearchService(api, $filter, $q, $rootScope) {
-
     var _getAll = function(endPoint, page = 1, items = [], params = null) {
         return api.query(endPoint, {max_results: 200, page: page}, params)
             .then(function(result) {

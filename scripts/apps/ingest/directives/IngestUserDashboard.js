@@ -9,7 +9,6 @@ export function IngestUserDashboard(api, userList, privileges) {
             setUserPreferences: '&'
         },
         link: function(scope) {
-
             function getCount() {
                 var criteria = {
                     source: {
@@ -60,8 +59,8 @@ export function IngestUserDashboard(api, userList, privileges) {
                     where.push({name: 'error'});
                 }
 
-                criteria.where = JSON.stringify ({
-                    '$and': where
+                criteria.where = JSON.stringify({
+                    $and: where
                 });
 
                 api.query('activity', criteria).then(function(result) {

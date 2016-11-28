@@ -17,7 +17,6 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
         },
         templateUrl: 'scripts/apps/users/views/user-privileges.html',
         link: function(scope) {
-
             getUser()
                 .then(getPrivileges)
                 .then(getUserRole);

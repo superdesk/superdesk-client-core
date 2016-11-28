@@ -5,7 +5,6 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
     return {
         templateUrl: 'scripts/apps/workspace/views/workspace-sidenav-items.html',
         link: function(scope, elem) {
-
             scope.workspaceConfig = config.workspace || {};
 
             /*

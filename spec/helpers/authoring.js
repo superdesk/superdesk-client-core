@@ -4,7 +4,6 @@
 module.exports = new Authoring();
 
 function Authoring() {
-
     this.lock = element(by.css('[ng-click="lock()"]'));
     this.publish_button = element(by.buttonText('publish'));
     this.correct_button = element(by.buttonText('correct'));
@@ -269,7 +268,6 @@ function Authoring() {
                 }
             });
         }
-
     };
 
     this.correct = function() {
@@ -409,7 +407,6 @@ function Authoring() {
     this.removeGroupItem = function(group, index) {
         var groupItem = this.getGroupItems(group).get(index);
         groupItem.all(by.css('[ng-click="remove(group.id, item.residRef)"]')).get(index).click();
-
     };
 
     this.getGroupItem = function(group, item) {
@@ -742,5 +739,4 @@ function Authoring() {
         var _list = element(by.css('[data-title="' + group + '"]')).all(by.tagName('UL')).all(by.tagName('LI'));
         return _list;
     };
-
 }

@@ -33,8 +33,8 @@ export function SearchService($location, gettext, config, session) {
     ];
 
     this.cvs = config.search_cvs ||
-        [{'id': 'subject', 'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'},
-    {'id': 'companycodes', 'name': 'Company Codes', 'field': 'company_codes', 'list': 'company_codes'}];
+        [{id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
+    {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}];
 
     function getSort() {
         var sort = ($location.search().sort || 'versioncreated:desc').split(':');
@@ -61,7 +61,6 @@ export function SearchService($location, gettext, config, session) {
      * Set filters for parameters
      */
     function setParameters(filters, params) {
-
         // set the filters for parameters defined in the parameters panel.
         _.each(PARAMETERS, function(value, key) {
             if (!params[key]) {
@@ -74,19 +73,19 @@ export function SearchService($location, gettext, config, session) {
                 desk = params[key].split('-');
                 if (desk.length === 2) {
                     if (desk[1] === 'authoring') {
-                        filters.push({'term': {'task.last_authoring_desk': desk[0]}});
+                        filters.push({term: {'task.last_authoring_desk': desk[0]}});
                     } else {
-                        filters.push({'term': {'task.last_production_desk': desk[0]}});
+                        filters.push({term: {'task.last_production_desk': desk[0]}});
                     }
                 }
                 break;
             case 'to_desk':
                 desk = params[key].split('-');
                 if (desk.length === 2) {
-                    filters.push({'term': {'task.desk': desk[0]}});
+                    filters.push({term: {'task.desk': desk[0]}});
                     if (!params.from_desk) {
                         var field = desk[1] === 'authoring' ? 'task.last_production_desk' : 'task.last_authoring_desk';
-                        filters.push({'exists': {'field': field}});
+                        filters.push({exists: {field: field}});
                     }
                 }
                 break;
@@ -94,13 +93,13 @@ export function SearchService($location, gettext, config, session) {
                     // Will get set in the base filters
                 break;
             case 'subject':
-                filters.push({'terms': {'subject.qcode': JSON.parse(params[key])}});
+                filters.push({terms: {'subject.qcode': JSON.parse(params[key])}});
                 break;
             case 'company_codes':
-                filters.push({'terms': {'company_codes.qcode': JSON.parse(params[key])}});
+                filters.push({terms: {'company_codes.qcode': JSON.parse(params[key])}});
                 break;
             default:
-                var filter = {'term': {}};
+                var filter = {term: {}};
                 filter.term[key] = params[key];
                 filters.push(filter);
             }
@@ -153,15 +152,17 @@ export function SearchService($location, gettext, config, session) {
         }
         for (var i = 0, queryArrayLength = queryArray.length; i < queryArrayLength; i++) {
             var queryArrayElement = queryArray[i];
-            if (queryArrayElement.indexOf(field + '.qcode') !== -1 ||
-                queryArrayElement.indexOf(field + '.name') !== -1) {
-                var elementName = queryArrayElement.substring(
-                        queryArrayElement.lastIndexOf('(') + 1,
-                        queryArrayElement.lastIndexOf(')'));
-                for (var j = 0, codeListLength = codeList.length; j < codeListLength; j++) {
-                    if (codeList[j].qcode === elementName || codeList[j].name === elementName) {
-                        filteredArray.push(codeList[j]);
-                    }
+            if (queryArrayElement.indexOf(field + '.qcode') === -1 &&
+                queryArrayElement.indexOf(field + '.name') === -1) {
+                continue;
+            }
+            var elementName = queryArrayElement.substring(
+                    queryArrayElement.lastIndexOf('(') + 1,
+                    queryArrayElement.lastIndexOf(')')
+            );
+            for (var j = 0, codeListLength = codeList.length; j < codeListLength; j++) {
+                if (codeList[j].qcode === elementName || codeList[j].name === elementName) {
+                    filteredArray.push(codeList[j]);
                 }
             }
         }
@@ -254,8 +255,7 @@ export function SearchService($location, gettext, config, session) {
           * @param {Object} query - Query object
           */
         function buildFilters(params, query) {
-
-            //created & modified date filters
+            // created & modified date filters
             if (params.beforefirstcreated || params.afterfirstcreated ||
                 params.beforeversioncreated || params.afterversioncreated) {
                 var range = {firstcreated: {}, versioncreated: {}};
@@ -353,7 +353,7 @@ export function SearchService($location, gettext, config, session) {
             };
 
             if (postFilters.length > 0) {
-                criteria.post_filter = {'and': postFilters};
+                criteria.post_filter = {and: postFilters};
             }
 
             // Construct the query string by combining the q parameter and the raw parameter, if both present
@@ -457,11 +457,11 @@ export function SearchService($location, gettext, config, session) {
             {term: {last_published_version: false}}]}});
 
         // remove other users drafts.
-        this.filter({or:[{and: [{term: {state: 'draft'}},
-                               {term: {'original_creator': session.identity._id}}]},
+        this.filter({or: [{and: [{term: {state: 'draft'}},
+                               {term: {original_creator: session.identity._id}}]},
                          {not: {terms: {state: ['draft']}}}]});
 
-        //remove the digital package from production view.
+        // remove the digital package from production view.
         this.filter({not: {and: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
 
         buildFilters(params, this);
@@ -620,7 +620,7 @@ export function SearchService($location, gettext, config, session) {
      */
     this.getItemQuery = function(items) {
         var updatedItems = _.keys(items);
-        return {'filtered': {'filter': {'terms': {'_id': updatedItems}}}};
+        return {filtered: {filter: {terms: {_id: updatedItems}}}};
     };
 
     /**

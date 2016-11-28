@@ -20,7 +20,6 @@ export default angular.module('superdesk.core.directives.sort', ['superdesk.core
             },
             templateUrl: asset.templateUrl('core/views/sdSort.html'),
             link: function(scope, element, attrs) {
-
                 scope.loc = $location;
                 scope.sort = scope.loc.search().sort;
 
@@ -31,10 +30,10 @@ export default angular.module('superdesk.core.directives.sort', ['superdesk.core
                 element.click(function() {
                     scope.$apply(function() {
                         if (scope.sort && scope.field === scope.sort[0]) {
-                            //switch sort direction
+                            // switch sort direction
                             $location.search('sort', [scope.field, scope.sort[1] === 'asc' ? 'desc' : 'asc']);
                         } else {
-                            //set sort field
+                            // set sort field
                             $location.search('sort', [scope.field, 'asc']);
                         }
                     });

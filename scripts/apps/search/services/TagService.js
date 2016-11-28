@@ -24,16 +24,16 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     tags.removedFacets = {};
 
     var FacetKeys = {
-        'type': 1,
-        'category': 1,
-        'urgency': 1,
-        'priority': 1,
-        'source': 1,
-        'credit': 1,
-        'desk': 1,
-        'genre': 1,
-        'legal': 1,
-        'sms': 1
+        type: 1,
+        category: 1,
+        urgency: 1,
+        priority: 1,
+        source: 1,
+        credit: 1,
+        desk: 1,
+        genre: 1,
+        legal: 1,
+        sms: 1
     };
 
     var cvs = search.cvs;
@@ -51,7 +51,6 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         while (parameters.indexOf(':') > 0 &&
                parameters.indexOf(':') < parameters.indexOf('(', parameters.indexOf(':')) &&
                parameters.indexOf(':') < parameters.indexOf(')', parameters.indexOf(':'))) {
-
             var colonIndex = parameters.indexOf(':');
             var parameter = parameters.substring(parameters.lastIndexOf(' ', colonIndex),
                 parameters.indexOf(')', colonIndex) + 1);
@@ -229,7 +228,6 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             $location.search('beforefirstcreated', null);
             $location.search('afterversioncreated', null);
             $location.search('beforeversioncreated', null);
-
         } else if (search.scheduled_after) {
             $location.search('scheduled_after', null);
         }

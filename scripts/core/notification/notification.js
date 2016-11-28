@@ -9,7 +9,6 @@
 */
 WebSocketProxy.$inject = ['$rootScope', 'config', '$interval', 'session', 'SESSION_EVENTS'];
 function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) {
-
     var ws = null;
     var connectTimer = -1;
     var TIMEOUT = 5000;
@@ -28,10 +27,10 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
     ];
 
     var readyState = {
-        'CONNECTING': 0,
-        'OPEN': 1,
-        'CLOSING': 2,
-        'CLOSED': 3
+        CONNECTING: 0,
+        OPEN: 1,
+        CLOSING: 2,
+        CLOSED: 3
     };
 
     if (!config.server.ws) {
@@ -135,22 +134,22 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     });
 
     var userEvents = {
-        'user_disabled': 'User is disabled',
-        'user_inactivated': 'User is inactivated',
-        'user_role_changed': 'User role is changed',
-        'user_type_changed': 'User type is changed',
-        'user_privileges_revoked': 'User privileges are revoked'
+        user_disabled: 'User is disabled',
+        user_inactivated: 'User is inactivated',
+        user_role_changed: 'User role is changed',
+        user_type_changed: 'User type is changed',
+        user_privileges_revoked: 'User privileges are revoked'
     };
     var roleEvents = {
-        'role_privileges_revoked': 'Role privileges are revoked'
+        role_privileges_revoked: 'Role privileges are revoked'
     };
     var deskEvents = {
-        'desk_membership_revoked': 'User removed from desk',
-        'desk': 'Desk is deleted/updated'
+        desk_membership_revoked: 'User removed from desk',
+        desk: 'Desk is deleted/updated'
     };
     var stageEvents = {
-        'stage': 'Stage is created/updated/deleted',
-        'stage_visibility_updated': 'Stage visibility change'
+        stage: 'Stage is created/updated/deleted',
+        stage_visibility_updated: 'Stage visibility change'
     };
 
     $rootScope.$on('reload', function(event, msg) {
@@ -205,21 +204,19 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
             }
         }
 
-        if (_.has(stageEvents, msg.event)) {
-            if (!_.isNil(msg.extra.desk_id)) {
-                if (msg.event === 'stage_visibility_updated') {
-                    if (_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
-                    !_.isNil($window.location.hash.match('/search'))
-                        || !_.isNil($window.location.hash.match('/authoring/'))) {
-                        result.message = stageEvents[msg.event];
-                        result.reload = true;
-                    }
-                } else if (msg.event === 'stage') {
-                    if (!_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id}))
-                        && self.activeDesk === msg.extra.desk_id) {
-                        result.message = stageEvents[msg.event];
-                        result.reload = true;
-                    }
+        if (_.has(stageEvents, msg.event) && !_.isNil(msg.extra.desk_id)) {
+            if (msg.event === 'stage_visibility_updated') {
+                if (_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
+                !_.isNil($window.location.hash.match('/search'))
+                    || !_.isNil($window.location.hash.match('/authoring/'))) {
+                    result.message = stageEvents[msg.event];
+                    result.reload = true;
+                }
+            } else if (msg.event === 'stage') {
+                if (!_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id}))
+                    && self.activeDesk === msg.extra.desk_id) {
+                    result.message = stageEvents[msg.event];
+                    result.reload = true;
                 }
             }
         }

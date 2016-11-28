@@ -12,7 +12,7 @@ import SearchProviderService from './service';
 import SearchProviderConfigDirective from './directive';
 
 SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
-function SearchProviderSettingsController($scope, privileges) {/* no-op */}
+function SearchProviderSettingsController($scope, privileges) { /* no-op */ }
 
 /**
  * @ngdoc module

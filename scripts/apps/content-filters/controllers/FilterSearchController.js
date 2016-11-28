@@ -99,13 +99,12 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
             $scope.searchResult = null;
             $scope.filterCondition.value = getFilterValue();
             var inputs = {
-                'field': $scope.filterCondition.field,
-                'operator': $scope.filterCondition.operator,
-                'value': $scope.filterCondition.value
+                field: $scope.filterCondition.field,
+                operator: $scope.filterCondition.operator,
+                value: $scope.filterCondition.value
             };
             $scope.loading = true;
             contentFilters.getFilterSearchResults(inputs).then(function(result) {
-
                 if (result[0].filter_conditions.length === 0 &&
                     result[0].content_filters.length === 0 &&
                     result[0].selected_subscribers.length === 0) {

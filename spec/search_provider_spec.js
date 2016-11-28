@@ -4,7 +4,6 @@ var openUrl = require('./helpers/utils').open,
     globalSearch = require('./helpers/search');
 
 describe('search_provider', function() {
-
     beforeEach(function(done) {
         openUrl('/#/settings/searchProviders').then(done);
     });
@@ -34,5 +33,4 @@ describe('search_provider', function() {
         expect(element.all(by.css('[ng-value="provider.search_provider"]')).get(0).isSelected()).toBeTruthy();
         expect(element.all(by.css('[ng-value="provider.search_provider"]')).get(1).isSelected()).toBeFalsy();
     });
-
 });

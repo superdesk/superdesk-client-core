@@ -7,7 +7,6 @@ var openUrl = require('./helpers/utils').open,
     monitoring = require('./helpers/monitoring');
 
 describe('spike', function() {
-
     beforeEach(function(done) {
         openUrl('/#/workspace/content').then(done);
     });

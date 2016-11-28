@@ -2,7 +2,6 @@ import './styles/tasks.scss';
 
 TasksService.$inject = ['desks', '$rootScope', 'api', 'datetimeHelper'];
 function TasksService(desks, $rootScope, api, datetimeHelper) {
-
     this.statuses = [
         {_id: 'todo', name: gettext('To Do')},
         {_id: 'in_progress', name: gettext('In Progress')},
@@ -31,14 +30,14 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
         filters.push({not: {term: {package_type: 'takes'}}});
 
         if (desks.getCurrentDeskId()) {
-            //desk filter
+            // desk filter
             filters.push({term: {'task.desk': desks.getCurrentDeskId()}});
         } else {
-            //user filter
+            // user filter
             filters.push({term: {'task.user': $rootScope.currentUser._id}});
         }
 
-        //status filter
+        // status filter
         if (status) {
             filters.push({term: {'task.status': status}});
         } else {
@@ -66,7 +65,6 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
 
 TasksController.$inject = ['$scope', '$timeout', 'api', 'notify', 'desks', 'tasks', '$filter', 'archiveService'];
 function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, archiveService) {
-
     var KANBAN_VIEW = 'kanban',
         timeout;
 
@@ -153,8 +151,8 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
         var endTime = moment().hours(23).minutes(59).seconds(59);
 
         var filter = {
-            'schedule_desk': desks.getCurrentDeskId(),
-            'next_run': {$gte: toServerTime(startTime), $lte: toServerTime(endTime)}
+            schedule_desk: desks.getCurrentDeskId(),
+            next_run: {$gte: toServerTime(startTime), $lte: toServerTime(endTime)}
         };
 
         api.query('content_templates', {where: filter, sort: 'next_run'}).then(function(results) {
@@ -326,7 +324,6 @@ function StagesCtrlFactory(api, desks) {
     return function StagesCtrl($scope) {
         var self = this;
         promise.then(function() {
-
             self.stages = null;
             self.selected = null;
 
@@ -370,7 +367,6 @@ angular.module('superdesk.apps.workspace.tasks', [])
 .service('tasks', TasksService)
 
 .config(['superdeskProvider', function(superdesk) {
-
     superdesk.activity('/workspace/tasks', {
         label: gettext('Workspace'),
         controller: TasksController,

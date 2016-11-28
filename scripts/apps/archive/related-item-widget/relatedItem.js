@@ -81,7 +81,7 @@ function RelatedItemController(
         apply: {
             title: 'Associate metadata',
             method: function(item) {
-                /*TODOs:
+                /* TODOs:
                 1) Overwrite Destination code
                 2) Patch IPTC Code
                 3) Overwrite category, service and locator fields
@@ -100,7 +100,7 @@ function RelatedItemController(
                     return item;
                 });
             },
-            'class': 'open',
+            class: 'open',
             icon: 'icon-expand',
             condition: function(item) {
                 return item.type !== 'composite';
@@ -123,7 +123,7 @@ function RelatedItemController(
                     }
                 });
             },
-            'class': 'open',
+            class: 'open',
             icon: 'icon-expand',
             condition: function(item) {
                 var canHaveNewTake = authoring.itemActions(item).new_take;
@@ -137,9 +137,8 @@ function RelatedItemController(
         update: {
             title: 'Associate as update',
             method: function(item) {
-
                 api.save('archive_rewrite', {},
-                    {'update': angular.extend({}, $scope.origItem, $scope.item)},
+                    {update: angular.extend({}, $scope.origItem, $scope.item)},
                     item)
                 .then(function(newItem) {
                     notify.success(gettext('Story is associated as update.'));
@@ -152,7 +151,7 @@ function RelatedItemController(
                     }
                 });
             },
-            'class': 'open',
+            class: 'open',
             icon: 'icon-expand',
             condition: function(item) {
                 var userHasPermission = privileges.userHasPrivileges({rewrite: 1});
@@ -174,7 +173,7 @@ function RelatedItemController(
                     superdesk.intent('view', 'item', item);
                 });
             },
-            'class': 'open',
+            class: 'open',
             icon: 'icon-external',
             condition: function(item) {
                 return true;

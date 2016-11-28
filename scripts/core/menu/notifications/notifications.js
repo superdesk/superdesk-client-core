@@ -1,6 +1,5 @@
 UserNotificationsService.$inject = ['$rootScope', '$timeout', 'api', 'session', 'SESSION_EVENTS'];
 function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EVENTS) {
-
     var UPDATE_TIMEOUT = 500;
 
     this._items = null;
@@ -56,10 +55,10 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
     this.markAsRead = function(notification) {
         var _notification = angular.extend({}, notification);
         var recipients = notification.recipients;
-        var recipient = _.find(recipients, {'user_id': session.identity._id});
+        var recipient = _.find(recipients, {user_id: session.identity._id});
         if (recipient && !recipient.read) {
             recipient.read = true;
-            return api('activity').save(_notification, {'recipients': recipients}).then(() => {
+            return api('activity').save(_notification, {recipients: recipients}).then(() => {
                 this.unread = _.max([0, this.unread - 1]);
                 notification._unread = null;
             });
@@ -68,7 +67,7 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
 
     // Returns the filtered recipients for given user id
     function getFilteredRecipients(activity, userId) {
-        return _.find(activity, {'user_id': session.identity._id});
+        return _.find(activity, {user_id: session.identity._id});
     }
 
     // Checks if the current message is read
@@ -103,7 +102,6 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
 
 DeskNotificationsService.$inject = ['$rootScope', 'api', 'session'];
 function DeskNotificationsService($rootScope, api, session) {
-
     this._items = {};
     this.unread = {};
 
@@ -159,11 +157,11 @@ function DeskNotificationsService($rootScope, api, session) {
     this.markAsRead = function(notification, deskId) {
         var _notification = angular.extend({}, notification);
         var recipients = _.clone(notification.recipients);
-        var recipient = _.find(recipients, {'desk_id': deskId});
+        var recipient = _.find(recipients, {desk_id: deskId});
         if (recipient && !recipient.read) {
             recipient.read = true;
             recipient.user_id = session.identity._id;
-            return api('activity').save(_notification, {'recipients': recipients}).then(() => {
+            return api('activity').save(_notification, {recipients: recipients}).then(() => {
                 this.unread = _.max([0, this.unread - 1]);
                 notification._unread = null;
             });
@@ -178,7 +176,7 @@ function DeskNotificationsService($rootScope, api, session) {
      * @return {boolean}
      */
     function isRead(recipients, deskId) {
-        var deskReadRecord = _.find(recipients, {'desk_id': deskId});
+        var deskReadRecord = _.find(recipients, {desk_id: deskId});
         return deskReadRecord && deskReadRecord.read;
     }
 
@@ -225,7 +223,7 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
 
                 scope.openArticle = function(notification) {
                     ctrl.flags.notifications = !ctrl.flags.notifications;
-                    authoringWorkspace.edit({'_id': notification.item}, 'edit');
+                    authoringWorkspace.edit({_id: notification.item}, 'edit');
                 };
             }
         };

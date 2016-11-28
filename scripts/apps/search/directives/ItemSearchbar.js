@@ -39,10 +39,10 @@ export function ItemSearchbar($location, $document, asset) {
                 scope.query = null;
                 scope.search();
                 input.focus();
-                //to be implemented
+                // to be implemented
             };
 
-            //initial query
+            // initial query
             var srch = $location.search();
             if (srch.q && srch.q !== '') {
                 scope.query = srch.q.replace(/[()]/g, '');
@@ -61,7 +61,6 @@ export function ItemSearchbar($location, $document, asset) {
             scope.$on('$destroy', function() {
                 $document.unbind('click', closeOnClick);
             });
-
         }
     };
 }

@@ -67,7 +67,6 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         }
 
         return api.save('archive', newPackage);
-
     };
 
     this.addItemsToPackage = function(current, groupId, items) {
@@ -177,5 +176,4 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         archiveService.addTaskToArticle(obj);
         return _.merge(item, obj);
     }
-
 }

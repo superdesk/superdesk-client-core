@@ -52,7 +52,7 @@ export default angular.module('superdesk.apps.highlights', [
                 filters: [
                     {action: 'list', type: 'archive'}
                 ],
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).mark_item;
                 }],
                 group: 'packaging'

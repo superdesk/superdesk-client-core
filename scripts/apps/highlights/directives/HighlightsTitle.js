@@ -7,7 +7,6 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
         templateUrl: 'scripts/apps/highlights/views/highlights_title_directive.html',
         // todo(petr): refactor to use popover-template once angular-bootstrap 0.13 is out
         link: function(scope, elem) {
-
             /*
              * Toggle 'open' class on dropdown menu element
              * @param {string} isOpen
@@ -60,7 +59,6 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
                             el.filter('.open').children('.dropdown__toggle').click();
                         }
                     });
-
                 },
                 mouseleave: function() {
                     closeTimeout = $timeout(function() {

@@ -7,7 +7,6 @@ var dashboard = require('./helpers/dashboard'),
     monitoring = require('./helpers/monitoring');
 
 describe('dashboard', function() {
-
     beforeEach(function() {
         dashboard.openDashboard();
     });

@@ -8,7 +8,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
      */
     this.addTaskToArticle = function(item, desk = desks.getCurrentDesk()) {
         if ((!item.task || !item.task.desk) && desk && $location.path() !== '/workspace/personal') {
-            item.task = {'desk': desk._id, 'stage': desk.working_stage, 'user': session.identity._id};
+            item.task = {desk: desk._id, stage: desk.working_stage, user: session.identity._id};
         }
     };
 
@@ -101,7 +101,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
         return _.includes(['published', 'killed', 'scheduled', 'corrected'], item.state);
     };
 
-    /***
+    /** *
      * Returns version history of the item.
      *
      * @param {Object} item

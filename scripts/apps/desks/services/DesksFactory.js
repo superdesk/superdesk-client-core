@@ -124,7 +124,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             return $q.when();
         },
         fetchUserDesks: function(user) {
-            return _fetchAll('user_desks', {'_id': user._id}).then(function(response) {
+            return _fetchAll('user_desks', {_id: user._id}).then(function(response) {
                 if (!response) {
                     return;
                 }

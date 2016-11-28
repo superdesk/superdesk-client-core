@@ -2,7 +2,8 @@
  * Service for re-sending requests
  */
 RequestService.$inject = ['$injector'];
-function RequestService($injector) { // using $injector to avoid circular dependency on $http
+function RequestService($injector) {
+ // using $injector to avoid circular dependency on $http
 
     /**
      * @link upload:isUpload

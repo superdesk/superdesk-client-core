@@ -49,7 +49,7 @@ describe('content', function() {
                                         {_id: '2', name: 'news', working_stage: '4', incoming_stage: '5'}]};
             desks.setCurrentDeskId('2');
 
-            item = {'_id': '123'};
+            item = {_id: '123'};
         }));
 
         it('can add an item to personal workspace', inject(function($location, archiveService, desks) {

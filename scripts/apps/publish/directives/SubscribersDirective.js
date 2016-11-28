@@ -6,7 +6,6 @@ SubscribersDirective.$inject = [
 export function SubscribersDirective(
     gettext, notify, api, subscribersService, adminPublishSettingsService,
     modal, metadata, contentFilters, $q, $filter, products) {
-
     return {
         templateUrl: 'scripts/apps/publish/views/subscribers.html',
         link: function($scope) {
@@ -126,7 +125,6 @@ export function SubscribersDirective(
              * Upserts the selected subscriber.
              */
             $scope.save = function() {
-
                 $scope.subscriber.destinations = $scope.destinations;
                 $scope.subscriber.products = _.map($scope.subscriber.products, '_id');
 
@@ -189,7 +187,6 @@ export function SubscribersDirective(
                     if (angular.isDefined($scope.subscriber.destinations)
                         && !_.isNull($scope.subscriber.destinations) &&
                         $scope.subscriber.destinations.length > 0) {
-
                         $scope.destinations = _.clone($scope.subscriber.destinations, true);
                     }
 
@@ -219,7 +216,6 @@ export function SubscribersDirective(
 
                 if ($scope.destinations.length > 0 && $scope.subscriberType !== '' &&
                     $scope.subscriberType !== newSubscriberType) {
-
                     var oldFormats = _.result(_.find($scope.subTypes, {qcode: $scope.subscriberType}), 'formats');
                     if (!_.isEqual(oldFormats, formats)) {
                         notify.error(gettext('Error: Please re-assign new format for each destination as the changed ' +

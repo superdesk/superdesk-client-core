@@ -1,5 +1,4 @@
 describe('analytics', function() {
-
     beforeEach(window.module('superdesk.core.analytics'));
     beforeEach(window.module(function($provide) {
         $provide.constant('config', {

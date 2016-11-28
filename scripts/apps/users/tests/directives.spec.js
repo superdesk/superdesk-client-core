@@ -94,7 +94,6 @@ describe('sdUserUnique Directive', function() {
         expect(scope.$eval('userForm.passwordConfirm.$valid')).toBe(true);
         expect(scope.$eval('userForm.passwordConfirm.$error.confirm')).toBe(undefined);
     }));
-
 });
 
 describe('user edit directive', function() {
@@ -146,5 +145,4 @@ describe('user edit directive', function() {
         expect(usersService.phonePattern.test('$')).toBe(false);
         expect(usersService.phonePattern.test('$$$$$$$$$')).toBe(false);
     }));
-
 });

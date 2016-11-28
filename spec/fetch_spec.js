@@ -95,7 +95,7 @@ describe('fetch', function() {
     it('can fetch multiple items', function() {
         workspace.openIngest();
         content.selectItem(0);
-        browser.sleep(1000); //Wait for animation
+        browser.sleep(1000); // Wait for animation
         element(by.id('fetch-all-btn')).click();
         workspace.openContent();
         expect(content.count()).toBe(3);
@@ -104,7 +104,7 @@ describe('fetch', function() {
     it('can fetch as multiple items', function() {
         workspace.openIngest();
         content.selectItem(0);
-        browser.sleep(1000); //Wait for animation
+        browser.sleep(1000); // Wait for animation
         element(by.id('fetch-all-as-btn')).click();
         content.send();
         workspace.openContent();
@@ -114,7 +114,7 @@ describe('fetch', function() {
     it('can remove multiple ingest item', function() {
         workspace.openIngest();
         content.selectItem(0);
-        browser.sleep(1000); //Wait for animation
+        browser.sleep(1000); // Wait for animation
         element(by.id('remove-all-as-btn')).click();
         expect(content.count()).toBe(0);
     });

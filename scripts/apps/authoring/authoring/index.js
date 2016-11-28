@@ -120,7 +120,7 @@ angular.module('superdesk.apps.authoring', [
                     }
                 ],
                 filters: [{action: 'list', type: 'archive'}, {action: 'list', type: 'archived'}],
-                additionalCondition:['authoring', 'item', 'privileges', function(authoring, item, privileges) {
+                additionalCondition: ['authoring', 'item', 'privileges', function(authoring, item, privileges) {
                     if (item._type === 'archived') {
                         return privileges.privileges.archived && item.type === 'text';
                     }
@@ -138,7 +138,7 @@ angular.module('superdesk.apps.authoring', [
                     authoringWorkspace.correct(data.item);
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).correct;
                 }],
                 privileges: {correct: 1}
@@ -157,7 +157,7 @@ angular.module('superdesk.apps.authoring', [
                     {action: 'list', type: 'legal_archive'},
                     {action: 'view', type: 'item'}
                 ],
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).view;
                 }]
             })

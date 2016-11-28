@@ -2,8 +2,8 @@
 
 describe('MetadataWidgetCtrl controller', function() {
     var metadata,  // the metadata service
-        metaInit,  //deferred initialization of the metadata service
-        prefsGet,  //deferred result of the preferences service's get() method
+        metaInit,  // deferred initialization of the metadata service
+        prefsGet,  // deferred result of the preferences service's get() method
         scope;
 
     beforeEach(window.module('superdesk.apps.publish'));
@@ -55,7 +55,7 @@ describe('MetadataWidgetCtrl controller', function() {
     it('initializes the list of categories to pick from in scope', function() {
         var userPrefs = {
             'categories:preferred': {
-                selected: {'a': true, 'b': false, 'c': true, 'd': true}
+                selected: {a: true, b: false, c: true, d: true}
             }
         };
 
@@ -104,28 +104,28 @@ describe('metadata terms directive', function() {
         itemCompanyCodes,
         availableCompanyCodes;
 
-    itemCategories = [{'name': 'National', 'qcode': 'a'}, {'name': 'Sports', 'qcode': 's'}];
-    availableCategories = [{'name': 'International', 'qcode': 'i'},
-                {'name': 'Domestic Sport', 'qcode': 't'}, {'name': 'Motor Racing', 'qcode': 'm'},
-                {'name': 'Horse Racing', 'qcode': 'r'}];
+    itemCategories = [{name: 'National', qcode: 'a'}, {name: 'Sports', qcode: 's'}];
+    availableCategories = [{name: 'International', qcode: 'i'},
+                {name: 'Domestic Sport', qcode: 't'}, {name: 'Motor Racing', qcode: 'm'},
+                {name: 'Horse Racing', qcode: 'r'}];
 
-    itemCompanyCodes = [{'name': '1-PAGE LIMITED', 'qcode': '1PG'}, {'name': '1300 SMILES LIMITED', 'qcode': 'ONT'}];
-    availableCompanyCodes = [{'name': '1ST AVAILABLE LTD', 'qcode': '1ST'},
-                {'name': '360 CAPITAL GROUP', 'qcode': 'TGP'}, {'name': '360 CAPITAL INDUSTRIAL FUND', 'qcode': 'TIX'},
-                {'name': '360 CAPITAL OFFICE FUND', 'qcode': 'TOF'}];
+    itemCompanyCodes = [{name: '1-PAGE LIMITED', qcode: '1PG'}, {name: '1300 SMILES LIMITED', qcode: 'ONT'}];
+    availableCompanyCodes = [{name: '1ST AVAILABLE LTD', qcode: '1ST'},
+                {name: '360 CAPITAL GROUP', qcode: 'TGP'}, {name: '360 CAPITAL INDUSTRIAL FUND', qcode: 'TIX'},
+                {name: '360 CAPITAL OFFICE FUND', qcode: 'TOF'}];
 
-    subjects = [{'name': 'a', 'qcode': '123'},
-        {'name': 'b', 'qcode': '456', 'parent': '123'},
-        {'name': 'c', 'qcode': '789', 'parent': '123'},
-        {'name': 'test', 'qcode': '111'},
-        {'name': 'test-abc', 'qcode': '222', 'parent': '111'},
-        {'name': 'test-efg', 'qcode': '333', 'parent': '111'},
-        {'name': 'test-ttt', 'qcode': '444', 'parent': '111'},
-        {'name': 'test-xyz', 'qcode': '211', 'parent': '222'},
-        {'name': 'test-foo', 'qcode': '212', 'parent': '222'},
-        {'name': 'test-bar', 'qcode': '213', 'parent': '222'}
+    subjects = [{name: 'a', qcode: '123'},
+        {name: 'b', qcode: '456', parent: '123'},
+        {name: 'c', qcode: '789', parent: '123'},
+        {name: 'test', qcode: '111'},
+        {name: 'test-abc', qcode: '222', parent: '111'},
+        {name: 'test-efg', qcode: '333', parent: '111'},
+        {name: 'test-ttt', qcode: '444', parent: '111'},
+        {name: 'test-xyz', qcode: '211', parent: '222'},
+        {name: 'test-foo', qcode: '212', parent: '222'},
+        {name: 'test-bar', qcode: '213', parent: '222'}
     ];
-    itemSubjects = [{'name': 'b', 'qcode': '456', 'parent': '123'}, {'name': 'test', 'qcode': '111'}];
+    itemSubjects = [{name: 'b', qcode: '456', parent: '123'}, {name: 'test', qcode: '111'}];
 
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.api'));
@@ -395,13 +395,13 @@ describe('metadata terms directive', function() {
             subjects: subjects
         };
         var event = {
-            stopPropagation: function() {/* no-op */}
+            stopPropagation: function() { /* no-op */ }
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
         $rootScope.$digest();
         iScope = elm.isolateScope();
-        iScope.openTree({'name': 'test', 'qcode': '111'}, event);
+        iScope.openTree({name: 'test', qcode: '111'}, event);
         expect(iScope.item[iScope.field].length).toBe(2);
         expect(iScope.activeTree.length).toBe(3);
         expect(iScope.terms.length).toBe(8);

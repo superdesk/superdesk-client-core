@@ -3,7 +3,6 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-rules-content.html',
         link: function(scope) {
-
             var _orig = null;
             scope.editRuleset = null;
 
@@ -64,7 +63,7 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
                 if (!scope.editRuleset.rules) {
                     scope.editRuleset.rules = [];
                 }
-                scope.editRuleset.rules.push({old: null, 'new': null});
+                scope.editRuleset.rules.push({old: null, new: null});
             };
 
             scope.reorder = function(start, end) {

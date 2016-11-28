@@ -8,7 +8,7 @@ export function IngestDashboardController($scope, $api, ingestSources, preferenc
     $scope.fetchItems = function() {
         ingestSources.fetchDashboardProviders().then(function(result) {
             $scope.items = result;
-            $scope.dashboard_items = _.filter(result, {'dashboard_enabled': true});
+            $scope.dashboard_items = _.filter(result, {dashboard_enabled: true});
         });
     };
 
@@ -16,7 +16,7 @@ export function IngestDashboardController($scope, $api, ingestSources, preferenc
         var preferences = [];
         var update = {};
 
-        _.forEach(_.filter($scope.items, {'dashboard_enabled': true}),
+        _.forEach(_.filter($scope.items, {dashboard_enabled: true}),
             function(item) {
                 preferences.push(_.pick(item, _.union(['_id'], _.keys(constant.PROVIDER_DASHBOARD_DEFAULTS))));
             }

@@ -7,7 +7,6 @@ export function FetchedDesks(desks, familyService, $location, superdesk) {
         },
         templateUrl: 'scripts/apps/archive/views/fetched-desks.html',
         link: function(scope, elem) {
-
             scope.$watchGroup(['item', 'item.archived'], function() {
                 if (scope.item) {
                     familyService.fetchDesks(scope.item, false)

@@ -26,7 +26,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
         {id: 'Non-Matching', value: 'false'}
     ];
 
-    $scope.model = {selectedType:'true'};
+    $scope.model = {selectedType: 'true'};
 
     $scope.close = function() {
         $scope.filter_test = null;
@@ -100,8 +100,8 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
     });
     var fetchProductionTestResult = function() {
         contentFilters.testContentFilter({
-            'filter_id': $scope.selectedfilter,
-            'return_matching': $scope.$eval($scope.model.selectedType
+            filter_id: $scope.selectedfilter,
+            return_matching: $scope.$eval($scope.model.selectedType
         )}).then(
             function(result) {
                 $scope.testResult = result.match_results;
@@ -116,6 +116,5 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
                 }
             }
         );
-
     };
 }

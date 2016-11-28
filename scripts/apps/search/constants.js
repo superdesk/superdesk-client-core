@@ -32,18 +32,18 @@ export const EXCLUDE_FACETS = Object.freeze({
  * Default list of fields
  */
 export const DEFAULT_LIST_CONFIG = {
-    'priority': [
+    priority: [
         'priority',
         'urgency'
     ],
-    'firstLine': [
+    firstLine: [
         'wordcount',
         'slugline',
         'highlights',
         'headline',
         'versioncreated'
     ],
-    'secondLine': [
+    secondLine: [
         'profile',
         'state',
         'embargo',
@@ -67,7 +67,7 @@ export const DEFAULT_LIST_CONFIG = {
  * for core functionality to work
  */
 export const CORE_PROJECTED_FIELDS = {
-    'fields': [
+    fields: [
         'highlights',
         '_created',
         '_updated',
@@ -101,17 +101,17 @@ export const CORE_PROJECTED_FIELDS = {
  * Mappings of UI fields to schema fields for projection
  */
 export const UI_PROJECTED_FIELD_MAPPINGS = {
-    'priority': 'priority',
-    'urgency': 'urgency',
-    'wordcount': 'word_count',
-    'slugline': 'slugline',
-    'headline': 'headline',
-    'profile': 'profile',
-    'signal': 'signal',
-    'takekey': 'anpa_take_key',
-    'update': 'correction_sequence',
-    'provider': 'ingest_provider',
-    'category': 'anpa_category',
-    'versioncreator': 'version_creator',
-    'versioncreated': 'versioncreated'
+    priority: 'priority',
+    urgency: 'urgency',
+    wordcount: 'word_count',
+    slugline: 'slugline',
+    headline: 'headline',
+    profile: 'profile',
+    signal: 'signal',
+    takekey: 'anpa_take_key',
+    update: 'correction_sequence',
+    provider: 'ingest_provider',
+    category: 'anpa_category',
+    versioncreator: 'version_creator',
+    versioncreated: 'versioncreated'
 };

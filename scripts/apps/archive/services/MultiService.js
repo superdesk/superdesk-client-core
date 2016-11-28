@@ -2,7 +2,6 @@ import _ from 'lodash';
 
 MultiService.$inject = ['$rootScope'];
 export function MultiService($rootScope) {
-
     var items = [];
 
     var self = this;

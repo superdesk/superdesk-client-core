@@ -1,5 +1,4 @@
 function AuthoringWidgetsProvider() {
-
     var widgets = [];
 
     this.widget = function(id, config) {

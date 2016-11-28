@@ -13,7 +13,6 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
         require: 'ngModel',
         restrict: 'A, C',
         link: function(scope, element, attrs, ngModel) {
-
             // cache a reference to the DOM element
             var ta = element[0],
                 $ta = element;
@@ -25,7 +24,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             // set these properties before measuring dimensions
             $ta.css({
-                'overflow': 'hidden',
+                overflow: 'hidden',
                 'overflow-y': 'hidden',
                 'word-wrap': 'break-word'
             });
@@ -70,7 +69,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             // set resize and apply elastic
             $ta.css({
-                'resize': 'none'
+                resize: 'none'
             });
             $ta.attr('elastic', true);
 
@@ -84,7 +83,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
                           taStyle.getPropertyValue('-moz-box-sizing') === 'border-box' ||
                           taStyle.getPropertyValue('-webkit-box-sizing') === 'border-box';
                 boxOuter = !borderBox ? {width: 0, height: 0} : {
-                    width:  parseInt(taStyle.getPropertyValue('border-right-width'), 10) +
+                    width: parseInt(taStyle.getPropertyValue('border-right-width'), 10) +
                             parseInt(taStyle.getPropertyValue('padding-right'), 10) +
                             parseInt(taStyle.getPropertyValue('padding-left'), 10) +
                             parseInt(taStyle.getPropertyValue('border-left-width'), 10),
@@ -110,7 +109,6 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
             }
 
             function adjust() {
-
                 var taHeight,
                     taComputedStyleWidth,
                     mirrorHeight,

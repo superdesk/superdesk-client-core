@@ -7,7 +7,6 @@ var openUrl = require('./helpers/utils').open,
     monitoring = require('./helpers/monitoring');
 
 describe('archived', function() {
-
     beforeEach(function() {
         openUrl('/#/search').then(globalSearch.setListView());
     });
@@ -37,5 +36,4 @@ describe('archived', function() {
         authoring.showInfo();
         expect(authoring.isPublishedState()).toBe(true);
     });
-
 });

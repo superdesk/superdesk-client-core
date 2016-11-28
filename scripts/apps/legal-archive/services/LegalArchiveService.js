@@ -86,14 +86,14 @@ export function LegalArchiveService($q, api, notify, $location, gettext, config)
             if (val) {
                 var clause = {};
                 if (key === 'published_after') {
-                    clause.versioncreated = {'$gte': prepareDate(val, 'T00:00:00')};
+                    clause.versioncreated = {$gte: prepareDate(val, 'T00:00:00')};
                 } else if (key === 'published_before') {
-                    clause.versioncreated = {'$lte': prepareDate(val, 'T23:59:59')};
+                    clause.versioncreated = {$lte: prepareDate(val, 'T23:59:59')};
                 } else if (key === '_id') {
                     clause._id = val;
                     hasId = true;
                 } else {
-                    clause[key] = {'$regex': val, '$options': '-i'};
+                    clause[key] = {$regex: val, $options: '-i'};
                 }
                 where.push(clause);
             }
@@ -105,7 +105,7 @@ export function LegalArchiveService($q, api, notify, $location, gettext, config)
             whereClause = JSON.stringify(where[0]);
         } else if (where.length > 0) {
             whereClause = JSON.stringify({
-                '$and': where
+                $and: where
             });
         }
 

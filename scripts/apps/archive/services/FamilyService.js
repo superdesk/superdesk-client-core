@@ -35,11 +35,11 @@ export function FamilyService(api, desks) {
                         var _isMember = !_.isEmpty(_.find(desks.userDesks, {_id: i.task.desk}));
                         deskList.push(
                             {
-                                'desk': desks.deskLookup[i.task.desk],
-                                'count': 1,
-                                'itemId': i._id,
-                                'isUserDeskMember': _isMember,
-                                'item': i
+                                desk: desks.deskLookup[i.task.desk],
+                                count: 1,
+                                itemId: i._id,
+                                isUserDeskMember: _isMember,
+                                item: i
                             });
                         deskIdList.push(i.task.desk);
                     } else {

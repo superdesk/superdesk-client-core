@@ -63,7 +63,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             var queuedItems = queue._items;
 
             _.forEach(queuedItems, function(item) {
-                angular.extend(item, {'selected': false});
+                angular.extend(item, {selected: false});
             });
 
             $scope.publish_queue = queuedItems;
@@ -83,24 +83,24 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
         var orTerms = null;
         if (!_.isEmpty($scope.searchQuery)) {
-            orTerms = {'$or': [
-                {'headline': {
-                    '$regex': $scope.searchQuery,
-                    '$options':'-i'}
-                }, {'unique_name': $scope.searchQuery}
+            orTerms = {$or: [
+                {headline: {
+                    $regex: $scope.searchQuery,
+                    $options: '-i'}
+                }, {unique_name: $scope.searchQuery}
             ]};
         }
 
         var filterTerms = [];
         if (!_.isNil($scope.selectedFilterSubscriber)) {
-            filterTerms.push({'subscriber_id': $scope.selectedFilterSubscriber._id});
+            filterTerms.push({subscriber_id: $scope.selectedFilterSubscriber._id});
         }
         if (!_.isNil($scope.selectedFilterStatus)) {
-            filterTerms.push({'state': $scope.selectedFilterStatus});
+            filterTerms.push({state: $scope.selectedFilterStatus});
         }
 
         if (!_.isNil($scope.selectedFilterIngestProvider)) {
-            filterTerms.push({'ingest_provider': $scope.selectedFilterIngestProvider._id});
+            filterTerms.push({ingest_provider: $scope.selectedFilterIngestProvider._id});
         }
 
         var andTerms = [];
@@ -113,8 +113,8 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         }
 
         if (!_.isEmpty(andTerms)) {
-            criteria.where = JSON.stringify ({
-                '$and': andTerms
+            criteria.where = JSON.stringify({
+                $and: andTerms
             });
         }
         return api.publish_queue.query(criteria);
@@ -259,7 +259,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     };
 
     function refreshQueueState(data) {
-        var item = _.find($scope.publish_queue, {'_id': data.queue_id});
+        var item = _.find($scope.publish_queue, {_id: data.queue_id});
 
         if (item) {
             var fields = ['error_message', 'completed_at', 'state'];
@@ -275,7 +275,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     function previewItem() {
         var queueItem = _.find($scope.publish_queue, {_id: $location.search()._id}) || null;
         if (queueItem) {
-            api.archive.getById(queueItem.item_id, {'version': queueItem.item_version})
+            api.archive.getById(queueItem.item_id, {version: queueItem.item_version})
                 .then(function(item) {
                     $scope.selected.preview = item;
                 });

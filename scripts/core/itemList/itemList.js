@@ -190,25 +190,28 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             };
         }
 
+        var addSlugs = function(list, words) {
+            words.forEach(w => {
+                if (w) {
+                    list.push('slugline:(' + w + ')');
+                }
+            });
+        };
+
         // Process related items only search
         if (options.related === true && options.keyword) {
             var queryRelatedItem = [];
             var sanitizedKeyword = options.keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
             var queryWords = sanitizedKeyword.split(' ');
-            var length = queryWords.length;
             options.sluglineMatch = options.sluglineMatch || '';
 
             switch (options.sluglineMatch) {
-            case 'ANY': //any words in the slugline
+            case 'ANY': // any words in the slugline
                 if (options.keyword.indexOf(' ') >= 0) {
                     queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
                 }
 
-                for (var i = 0; i < length; i++) {
-                    if (queryWords[i]) {
-                        queryRelatedItem.push('slugline:(' + queryWords[i] + ')');
-                    }
-                }
+                addSlugs(queryRelatedItem, queryWords);
 
                 if (queryRelatedItem.length) {
                     query.source.query.filtered.query = {
@@ -221,7 +224,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                 }
 
                 break;
-            case 'PREFIX': //phrase prefix
+            case 'PREFIX': // phrase prefix
                 query.source.query.filtered.query = {
                     match_phrase_prefix: {
                         'slugline.phrase': sanitizedKeyword

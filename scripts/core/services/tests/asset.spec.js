@@ -2,7 +2,6 @@
 'use strict';
 
 describe('superdesk.core.services.asset module', function() {
-
     beforeEach(window.module('superdesk.core.services.asset'));
     beforeEach(window.module(function($provide) {
         $provide.constant('config', {paths: {superdesk: 'scripts/bower_components/superdesk/app/'}});
@@ -42,5 +41,4 @@ describe('superdesk.core.services.asset module', function() {
         expect(imageUrl)
         .toBe('scripts/bower_components/superdesk/scripts/superdesk/users/activity/thumbnail.png');
     });
-
 });

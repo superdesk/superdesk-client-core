@@ -5,7 +5,7 @@ describe('sdUserPreferences directive', function() {
         scope,
         $element;  // the root DOM element the directive operates on
 
-    var user = {'_id': 1};
+    var user = {_id: 1};
 
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
@@ -39,9 +39,9 @@ describe('sdUserPreferences directive', function() {
                 selected: {}
             },
             'article:default:place': {
-                'label': 'Place',
-                'category': 'article_defaults',
-                'place': ''
+                label: 'Place',
+                category: 'article_defaults',
+                place: ''
             }
         };
 
@@ -80,7 +80,7 @@ describe('sdUserPreferences directive', function() {
     it('initializes the list of default preferred categories in scope',
         function() {
             scope.$digest();
-            expect(scope.defaultCategories).toEqual({'x': true, 'y': true});
+            expect(scope.defaultCategories).toEqual({x: true, y: true});
         }
     );
 
@@ -101,7 +101,6 @@ describe('sdUserPreferences directive', function() {
             $element.find('[sd-typeahead]').append($newDiv);
 
             spyOn(preferencesService, 'update').and.returnValue($q.when(fetchedPreferences));
-
         }));
 
         it('sends the preferred categories settings to server', inject(function(preferencesService) {
@@ -126,7 +125,7 @@ describe('sdUserPreferences directive', function() {
             callArgs = callArgs[0][0] || {};  // first arg of the first call
 
             arg = callArgs['categories:preferred'] || {};
-            expect(arg.selected).toEqual({'v': false, 'q': true});
+            expect(arg.selected).toEqual({v: false, q: true});
         }));
 
         it('it saves default preferred categories if none selected and ' +
@@ -136,7 +135,7 @@ describe('sdUserPreferences directive', function() {
 
                 scope.$digest();
 
-                scope.defaultCategories = {'b': true, 'd': true};
+                scope.defaultCategories = {b: true, d: true};
 
                 // no categories have been selected by the user
                 scope.categories = [
@@ -160,7 +159,7 @@ describe('sdUserPreferences directive', function() {
 
                 arg = callArgs['categories:preferred'] || {};
                 expect(arg.selected).toEqual(
-                    {'a': false, 'b': true, 'c': false, 'd': true}
+                    {a: false, b: true, c: false, d: true}
                 );
             }
         ));
@@ -168,7 +167,7 @@ describe('sdUserPreferences directive', function() {
         it('does not save with default preferred categories if the user ' +
             'does not confirm that', inject(function(preferencesService) {
                 scope.$digest();
-                scope.defaultCategories = {'b': true, 'd': true};
+                scope.defaultCategories = {b: true, d: true};
 
                 // no categories have been selected by the user
                 scope.categories = [
@@ -185,7 +184,6 @@ describe('sdUserPreferences directive', function() {
                 expect(preferencesService.update).not.toHaveBeenCalled();
             }
         ));
-
     });
 
     describe('scope\'s checkAll() method', function() {
@@ -248,7 +246,7 @@ describe('sdUserPreferences directive', function() {
         });
 
         it('makes only the default categories to be selected', function() {
-            scope.defaultCategories = {'b': true, 'c': true};
+            scope.defaultCategories = {b: true, c: true};
             scope.checkDefault();
             scope.categories.forEach(function(cat) {
                 var expectSelected = _.includes(['b', 'c'], cat.qcode);
@@ -262,5 +260,4 @@ describe('sdUserPreferences directive', function() {
             expect(scope.userPrefs.$dirty).toBe(true);
         });
     });
-
 });

@@ -9,7 +9,6 @@ var Login = require('./helpers/pages').login;
 var logout = require('./helpers/pages').logout;
 
 describe('notifications', function() {
-
     beforeEach(function() {
         monitoring.openMonitoring();
     });
@@ -36,7 +35,6 @@ describe('notifications', function() {
         expect(element(by.id('unread-count')).getText()).toBe('3');
         element(by.css('button.current-user')).click();
         expect(element(by.id('unread-count')).getText()).toBe('');
-
     });
 
     it('create a new desk mention', function() {
@@ -60,6 +58,5 @@ describe('notifications', function() {
         authoring.writeTextToComment('#Politic_Desk hello');
         browser.sleep(1000);
         expect(element(by.id('deskNotifications')).getText()).toBe('1');
-
     });
 });

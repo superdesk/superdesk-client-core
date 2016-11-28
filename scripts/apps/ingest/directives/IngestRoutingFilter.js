@@ -8,7 +8,6 @@
  */
 IngestRoutingFilter.$inject = [];
 export function IngestRoutingFilter() {
-
     /**
      * Creates an utility method on the built-in RegExp object used for
      * escaping arbitrary strings so that they can be safely used in

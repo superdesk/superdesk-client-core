@@ -134,7 +134,6 @@ export function ItemList(
 
     return {
         link: function(scope, elem) {
-
             elem.attr('tabindex', 0);
 
             var menuHolderElem = document.getElementById('react-placeholder');
@@ -285,7 +284,7 @@ export function ItemList(
                         React.createElement(
                             'small',
                             {title: headlineText,
-                                dangerouslySetInnerHTML:createMarkUp(headline)}
+                                dangerouslySetInnerHTML: createMarkUp(headline)}
                         ),
                         React.createElement(ItemContainer, {item: item, desk: props.desk})
                     ),
@@ -385,7 +384,7 @@ export function ItemList(
                 info.push(React.createElement(
                     'h5',
                     {key: 1,
-                        dangerouslySetInnerHTML:createMarkUp(item.headline || item.slugline || item.type)}
+                        dangerouslySetInnerHTML: createMarkUp(item.headline || item.slugline || item.type)}
 
                 ));
 
@@ -528,7 +527,7 @@ export function ItemList(
                                     'button',
                                     {className: 'btn btn--mini', onClick: this.removeHighlight(highlight)},
                                     gettext('REMOVE')
-                                ):null
+                                ) : null
                             );
                         }
                     }.bind(this);
@@ -641,7 +640,7 @@ export function ItemList(
                                     className: classNames({
                                         'icon-star': highlights.length === 1,
                                         'icon-multi-star': highlights.length > 1,
-                                        'red': hasActiveHighlight
+                                        red: hasActiveHighlight
                                     })
                                 })
                             )
@@ -771,7 +770,7 @@ export function ItemList(
                     var items = [];
                     items.push(React.createElement('dt', {
                         key: 'dt',
-                        style: {paddingRight:'5px'}
+                        style: {paddingRight: '5px'}
                     }, gettext('fetched in')));
 
                     if (this.state.desks.length) {
@@ -833,7 +832,7 @@ export function ItemList(
                     return React.createElement(
                         'span',
                         {className: 'item-heading', key: 'headline',
-                            dangerouslySetInnerHTML:createMarkUp(headline)}
+                            dangerouslySetInnerHTML: createMarkUp(headline)}
                     );
                 },
 
@@ -842,7 +841,7 @@ export function ItemList(
                         return React.createElement(
                             'span',
                             {className: 'keyword', key: 'slugline',
-                                dangerouslySetInnerHTML:createMarkUp(props.item.slugline)}
+                                dangerouslySetInnerHTML: createMarkUp(props.item.slugline)}
                         );
                     }
                 },
@@ -927,7 +926,6 @@ export function ItemList(
                 },
 
                 updated: function(props) {
-
                     var selectUpdate = function(event) {
                         event.stopPropagation();
                         props.selectUpdate();
@@ -1214,7 +1212,7 @@ export function ItemList(
                     // won't select that item for preview/authoring.
                     event.stopPropagation();
                     scope.$apply(function() {
-                        $rootScope.$broadcast('broadcast:preview', {'item': null}); // closes preview if already opened
+                        $rootScope.$broadcast('broadcast:preview', {item: null}); // closes preview if already opened
                         activityService.start(this.props.activity, {data: {item: this.props.item}});
                     }.bind(this));
 
@@ -1601,7 +1599,7 @@ export function ItemList(
 
                 setSelectedItem: function(item) {
                     if (monitoringState.selectedGroup !== scope.$id) {
-                        //If selected item is from another group, deselect all
+                        // If selected item is from another group, deselect all
                         $rootScope.$broadcast('item:unselect');
                         monitoringState.selectedGroup = scope.$id;
                     }
@@ -1656,17 +1654,21 @@ export function ItemList(
                         return;
                     }
 
+                    var highlightSelected = () => {
+                        for (var i = 0; i < this.state.itemsList.length; i++) {
+                            if (this.state.itemsList[i] === this.state.selected) {
+                                var next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
+                                this.select(this.state.itemsById[this.state.itemsList[next]]);
+                                return;
+                            }
+                        }
+                    };
+
                     if (!_.isNil(diff)) {
                         event.preventDefault();
                         event.stopPropagation();
                         if (this.state.selected) {
-                            for (var i = 0; i < this.state.itemsList.length; i++) {
-                                if (this.state.itemsList[i] === this.state.selected) {
-                                    var next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
-                                    this.select(this.state.itemsById[this.state.itemsList[next]]);
-                                    return;
-                                }
-                            }
+                            highlightSelected();
                         } else {
                             this.select(this.state.itemsById[this.state.itemsList[0]]);
                         }
@@ -1774,7 +1776,6 @@ export function ItemList(
 
                     return (_.map(a.es_highlight, getEsHighlight)).join('-') ===
                         (_.map(b.es_highlight, getEsHighlight)).join('-');
-
                 }
 
                 /**
@@ -1790,9 +1791,8 @@ export function ItemList(
                     }
 
                     if (a.archive_item && b.archive_item) {
-
                         if (b.archive_item.takes) {
-                            return false;   //take package of the new item might have changed
+                            return false;   // take package of the new item might have changed
                         }
 
                         return a.archive_item._current_version === b.archive_item._current_version &&
@@ -1817,7 +1817,6 @@ export function ItemList(
 
                         if (!oldItem || !isSameVersion(oldItem, item) ||
                             !isArchiveItemSameVersion(oldItem, item)) {
-
                             itemsById[itemId] = angular.extend({}, oldItem, item);
                         }
 

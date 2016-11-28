@@ -13,7 +13,6 @@ import {Editor3} from '../components/Editor3';
 
 Editor3Controller.$inject = ['$element'];
 export function Editor3Controller($element) {
-
     var showToolbar = true;
 
     if (!this.editorFormat || this.readOnly) {

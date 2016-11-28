@@ -1,7 +1,6 @@
 'use strict';
 
 describe('upload service', function() {
-
     beforeEach(window.module('superdesk.core.upload'));
 
     beforeEach(window.module(function($provide) {
@@ -10,7 +9,7 @@ describe('upload service', function() {
             this.upload = function() {
                 return $q.when();
             };
-            this.http = function() {/* no-op */};
+            this.http = function() { /* no-op */ };
         }]);
     }));
 

@@ -1,6 +1,5 @@
     angular.module('superdesk.core.auth.basic', []).service('authAdapter', ['$http', '$q', 'urls',
         function($http, $q, urls) {
-
         /**
          * Authenticate using given credentials
          *
@@ -9,7 +8,6 @@
          * @returns {object} promise
          */
             this.authenticate = function(username, password) {
-
                 return urls.resource('auth').then(function(url) {
                     return $http.post(url, {
                         username: username,

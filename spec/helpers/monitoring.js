@@ -7,7 +7,6 @@ var openUrl = require('./utils').open,
 module.exports = new Monitoring();
 
 function Monitoring() {
-
     this.config = element(by.className('aggregate-settings'));
     this.label = element(by.model('widget.configuration.label'));
 
@@ -533,7 +532,7 @@ function Monitoring() {
         return element(by.css('[ng-click="send()"]')).click();
     };
 
-    //Cancel button resets the multi selection
+    // Cancel button resets the multi selection
     this.clickOnCancelButton = function() {
         return element(by.css('[ng-click="multi.reset()"]')).click();
     };

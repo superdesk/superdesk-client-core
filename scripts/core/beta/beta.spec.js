@@ -1,5 +1,4 @@
 describe('beta service', function() {
-
     beforeEach(window.module('superdesk.core.services.beta'));
 
     it('can filter out sd-beta from html when beta is off',

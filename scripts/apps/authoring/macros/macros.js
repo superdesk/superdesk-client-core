@@ -1,6 +1,5 @@
 MacrosService.$inject = ['api', 'notify', '$filter'];
 function MacrosService(api, notify, $filter) {
-
     /**
      * Recursively returns all macros
      *
@@ -28,7 +27,7 @@ function MacrosService(api, notify, $filter) {
      * @param {bool} includeBackend
      */
     this.get = function(includeBackend) {
-        return _getAllMacros({'backend': !!includeBackend}).then(angular.bind(this, function(macros) {
+        return _getAllMacros({backend: !!includeBackend}).then(angular.bind(this, function(macros) {
             this.macros = macros;
             return this.macros;
         }));
@@ -42,7 +41,7 @@ function MacrosService(api, notify, $filter) {
      * @param {bool} includeBackend
      */
     this.getByDesk = function(desk, includeBackend) {
-        return _getAllMacros({'desk': desk, 'backend': !!includeBackend}).then(angular.bind(this, function(macros) {
+        return _getAllMacros({desk: desk, backend: !!includeBackend}).then(angular.bind(this, function(macros) {
             this.macros = macros;
             return this.macros;
         }));

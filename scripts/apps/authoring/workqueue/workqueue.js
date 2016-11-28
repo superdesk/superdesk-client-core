@@ -9,7 +9,6 @@
  */
 WorkqueueService.$inject = ['session', 'api'];
 function WorkqueueService(session, api) {
-
     this.items = [];
 
     /**
@@ -58,7 +57,6 @@ WorkqueueCtrl.$inject = [
 ];
 function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace, multiEdit,
         lock, $location, session, authoring, autosave, confirm, notify, referrer) {
-
     $scope.active = null;
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;
@@ -242,19 +240,19 @@ function ArticleDashboardDirective() {
             _closeItem: '&closeItem',
             _link: '&link',
             active: '=active',
-            items:'=items'
+            items: '=items'
         },
         link: function(scope, elem, attrs) {
             scope.closeItem = function(item) {
-                scope._closeItem({'item': item});
+                scope._closeItem({item: item});
             };
 
             scope.edit = function(item, event) {
-                scope._edit({'item': item, 'event': event});
+                scope._edit({item: item, event: event});
             };
 
             scope.link = function(item) {
-                scope._link({'item': item});
+                scope._link({item: item});
             };
         }
     };

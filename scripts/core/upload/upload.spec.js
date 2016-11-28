@@ -2,7 +2,6 @@
 'use strict';
 
 describe('upload module', function() {
-
     beforeEach(window.module('superdesk.core.upload'));
 
     describe('file type validator directive', function() {

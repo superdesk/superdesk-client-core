@@ -4,7 +4,6 @@ describe('superdesk filters', function() {
     beforeEach(window.module('superdesk.core.filters'));
 
     describe('sort items', function() {
-
         it('can ignore case while sorting', inject(function(sortByNameFilter) {
             var unorderedList = [{name: 'c'}, {name: 'A'}, {name: 'b'}];
 
@@ -19,7 +18,5 @@ describe('superdesk filters', function() {
                 {name: 'A', display_name: 'ANPA Categories'}, {name: 'b', display_name: 'broadcast'},
                 {name: 'c', display_name: 'category'}]);
         }));
-
     });
-
 });

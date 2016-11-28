@@ -30,7 +30,6 @@ describe('spellcheck', function() {
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
     beforeEach(inject(function(dictionaries, spellcheck, $q, preferencesService) {
-
         spyOn(dictionaries, 'getActive').and.returnValue($q.when([
             {_id: 'foo', content: DICT},
             {_id: 'bar', content: {bar: 1}},
@@ -38,7 +37,7 @@ describe('spellcheck', function() {
         ]));
 
         spellcheck.setLanguage(LANG);
-        spyOn(preferencesService, 'get').and.returnValue($q.when({'enabled': true}));
+        spyOn(preferencesService, 'get').and.returnValue($q.when({enabled: true}));
         spyOn(preferencesService, 'update').and.returnValue($q.when({}));
     }));
 

@@ -22,7 +22,6 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             columnsLimit: '='
         },
         link: function(scope, elem) {
-
             var PREFERENCES_KEY = 'agg:view';
             var defaultMaxItems = 10;
 
@@ -264,7 +263,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                                 }
                             }
                         });
-                        workspaces.save(workspace, {'widgets': widgets})
+                        workspaces.save(workspace, {widgets: widgets})
                         .then(function() {
                             scope.showGlobalSavedSearches = false;
                             scope.onclose();

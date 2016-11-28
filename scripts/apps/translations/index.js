@@ -37,7 +37,7 @@ angular.module('superdesk.apps.translations', [
             filters: [
                 {action: 'list', type: 'archive'}
             ],
-            additionalCondition:['TranslationService', 'item', function(TranslationService, item) {
+            additionalCondition: ['TranslationService', 'item', function(TranslationService, item) {
                 return TranslationService.checkAvailability(item);
             }]
         });

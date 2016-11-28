@@ -12,7 +12,6 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
             replace: true,
             templateUrl: asset.templateUrl('core/auth/login-modal.html'),
             link: function(scope, element, attrs) {
-
                 scope.features = features;
 
                 scope.authenticate = function() {

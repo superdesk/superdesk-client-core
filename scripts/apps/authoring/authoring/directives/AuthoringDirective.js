@@ -179,7 +179,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             function _exportHighlight(_id) {
-                api.generate_highlights.save({}, {'package': _id})
+                api.generate_highlights.save({}, {package: _id})
                 .then(authoringWorkspace.edit, function(response) {
                     if (response.status === 403) {
                         _forceExportHighlight(_id);
@@ -192,7 +192,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             function _forceExportHighlight(_id) {
                 modal.confirm(gettext('There are items locked or not published. Do you want to continue?'))
                     .then(function() {
-                        api.generate_highlights.save({}, {'package': _id, 'export': true})
+                        api.generate_highlights.save({}, {package: _id, export: true})
                         .then(authoringWorkspace.edit, function(response) {
                             notify.error(gettext('Error creating highlight.'));
                         });
@@ -200,7 +200,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             }
 
             function _previewHighlight(_id) {
-                api.generate_highlights.save({}, {'package': _id, 'preview': true})
+                api.generate_highlights.save({}, {package: _id, preview: true})
                 .then(function(response) {
                     $scope.highlight_preview = response.body_html;
                 }, function(data) {
@@ -299,39 +299,39 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 return authoring.publish(orig, item, action)
                 .then(function(response) {
-                    if (response) {
-                        if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
-                            if (angular.isDefined(response.data._issues['validator exception'])) {
-                                var errors = response.data._issues['validator exception'];
-                                var modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
-                                for (var i = 0; i < modifiedErrors.length; i++) {
-                                    notify.error(_.trim(modifiedErrors[i]));
-                                }
-
-                                if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
-                                    authoring.open(item._id, true).then(function(res) {
-                                        $scope.origItem = res;
-                                        $scope.dirty = false;
-                                        $scope.item = _.create($scope.origItem);
-                                    });
-                                }
-
-                                return false;
-                            }
-                        } else if (response.status === 412) {
-                            notifyPreconditionFailed();
-                            return false;
-                        } else {
-                            notify.success(gettext('Item published.'));
-                            $scope.item = response;
-                            $scope.dirty = false;
-                            authoringWorkspace.close(true);
-                            return true;
-                        }
-                    } else {
+                    if (!response) {
                         notify.error(gettext('Unknown Error: Item not published.'));
                         return false;
                     }
+
+                    if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
+                        if (angular.isDefined(response.data._issues['validator exception'])) {
+                            var errors = response.data._issues['validator exception'];
+                            var modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
+                            for (var i = 0; i < modifiedErrors.length; i++) {
+                                notify.error(_.trim(modifiedErrors[i]));
+                            }
+
+                            if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
+                                authoring.open(item._id, true).then(function(res) {
+                                    $scope.origItem = res;
+                                    $scope.dirty = false;
+                                    $scope.item = _.create($scope.origItem);
+                                });
+                            }
+
+                            return false;
+                        }
+                    } else if (response.status === 412) {
+                        notifyPreconditionFailed();
+                        return false;
+                    }
+
+                    notify.success(gettext('Item published.'));
+                    $scope.item = response;
+                    $scope.dirty = false;
+                    authoringWorkspace.close(true);
+                    return true;
                 });
             }
 
@@ -438,7 +438,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     return;
                 }
 
-                //continueAfterPublish is passed only from $scope.publishAndContinue as bool,
+                // continueAfterPublish is passed only from $scope.publishAndContinue as bool,
                 // in other cases this is object (don't use parameter in those cases)
                 let publishFn = continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish;
                 if (isCancelled) {
@@ -484,7 +484,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     }
 
                     if ($scope.dirty && message === 'publish') {
-                        //confirmation only required for publish
+                        // confirmation only required for publish
                         return authoring.publishConfirmation($scope.origItem, $scope.item, $scope.dirty, message)
                         .then(function(res) {
                             if (res) {
@@ -677,7 +677,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     }
                 }
 
-                $rootScope.$broadcast('item:nextStage', {'stage': stageList[stageIndex], 'itemId': $scope.item._id});
+                $rootScope.$broadcast('item:nextStage', {stage: stageList[stageIndex], itemId: $scope.item._id});
             };
 
             function refreshItem() {

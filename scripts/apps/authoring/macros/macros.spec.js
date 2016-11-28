@@ -29,7 +29,7 @@ describe('macros', function() {
         spyOn($rootScope, '$broadcast');
         $scope.origItem = {};
         $scope.item = item;
-        $scope.closeWidget = function() {/* no-op */};
+        $scope.closeWidget = function() { /* no-op */ };
         $controller('Macros', {$scope: $scope});
         $scope.call('test');
         expect(macros.call).toHaveBeenCalled();

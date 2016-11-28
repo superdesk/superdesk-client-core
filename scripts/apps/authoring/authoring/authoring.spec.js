@@ -14,25 +14,25 @@ describe('authoring', function() {
 
         var vocabulariesData = [
             {
-                '_id': 'categories',
-                'display_name': 'Categories',
-                'type': 'manageable',
-                'items': [{'is_active': true, 'name': 'Motoring', 'qcode': 'paservice:motoring'}]
+                _id: 'categories',
+                display_name: 'Categories',
+                type: 'manageable',
+                items: [{is_active: true, name: 'Motoring', qcode: 'paservice:motoring'}]
             },
             {
-                '_id': 'subservice_motoring',
-                'display_name': 'Motoring sub-service',
-                'type': 'manageable',
-                'service': {'paservice:motoring': 1},
-                'priority': 2,
-                'items': [{'is_active': true, 'name': 'News', 'qcode': 'paservice:motoring:news'}]
+                _id: 'subservice_motoring',
+                display_name: 'Motoring sub-service',
+                type: 'manageable',
+                service: {'paservice:motoring': 1},
+                priority: 2,
+                items: [{is_active: true, name: 'News', qcode: 'paservice:motoring:news'}]
             }
         ];
         var schema = {
-            'subject': {
-                'mandatory_in_list': {
-                    'scheme': {
-                        'subservice_motoring': 'subservice_motoring'
+            subject: {
+                mandatory_in_list: {
+                    scheme: {
+                        subservice_motoring: 'subservice_motoring'
                     }
                 }
             }
@@ -45,7 +45,7 @@ describe('authoring', function() {
         spyOn(vocabularies, 'getVocabularies').and.returnValue($q.when({_items: vocabulariesData}));
 
         var scope = $rootScope.$new();
-        scope.item = {'profile': 'motoring'};
+        scope.item = {profile: 'motoring'};
 
         $compile('<div sd-authoring-header></div>')(scope);
         scope.$digest();

@@ -1,6 +1,5 @@
 SearchWidgetCtrl.$inject = ['$scope', 'packages', 'api', 'search'];
 export function SearchWidgetCtrl($scope, packages, api, search) {
-
     $scope.selected = null;
     $scope.multiSelected = [];
     $scope.query = null;
@@ -27,10 +26,10 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
 
         var query = search.query(params);
 
-        query.filter({'not': {'exists': {'field': 'embargo'}}});
+        query.filter({not: {exists: {field: 'embargo'}}});
         query.size(25);
         if ($scope.highlight) {
-            query.filter({term: {'highlights': $scope.highlight.toString()}});
+            query.filter({term: {highlights: $scope.highlight.toString()}});
         }
 
         var criteria = query.getCriteria(true);
@@ -113,17 +112,17 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
     };
 
     $scope.addMultiItemsToGroup = function(group) {
-        //add to group
+        // add to group
         packages.addItemsToPackage($scope.item, group, $scope.multiSelected);
         $scope.autosave($scope.item);
 
-        //uncheck all
+        // uncheck all
         _.each($scope.multiSelected, function(item) {
             item.multi = false;
             packages.addPackageGroupItem(group, item, false);
         });
 
-        //clear items
+        // clear items
         $scope.multiSelected = [];
     };
 }

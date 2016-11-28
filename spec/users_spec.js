@@ -13,17 +13,16 @@ describe('users', function() {
         post({
             uri: '/users',
             json: {
-                'first_name': 'foo',
-                'last_name': 'bar',
-                'username': 'spam',
-                'email': 'foo@bar.com',
-                'sign_off': 'foobar'
+                first_name: 'foo',
+                last_name: 'bar',
+                username: 'spam',
+                email: 'foo@bar.com',
+                sign_off: 'foobar'
             }
         }, done);
     });
 
     describe('profile:', function() {
-
         beforeEach(function(done) {
             openUrl('/#/profile').then(done);
         });
@@ -43,7 +42,7 @@ describe('users', function() {
                 expect(text).toEqual('Mein Profil');
             });
             browser.sleep(500);
-            //go back to original lanuages
+            // go back to original lanuages
             userPrefs.setLang('English');
             var btnSave = $('.action-bar').element(by.buttonText('Speichern'));
             browser.wait(() => btnSave.isDisplayed(), 3000);
@@ -144,7 +143,6 @@ describe('users', function() {
             expect(pageNavTitle.getText())
                 .toBe('Users Profile: first name last name');
         });
-
     });
 
     describe('user edit:', function() {
@@ -240,9 +238,9 @@ describe('users', function() {
                 authoring.newPlainArticleLink.click();
 
                 browser.sleep(100);
-                //Open subject metadata dropdown field
+                // Open subject metadata dropdown field
                 authoring.getCategoryMetadataDropdownOpened();
-                browser.sleep(100); //wait a bit
+                browser.sleep(100); // wait a bit
 
                 var catListItems = authoring.getCategoryListItems;
                 expect(catListItems.count()).toBe(2);
@@ -336,5 +334,4 @@ describe('users', function() {
     function modelValue(model) {
         return element(by.model(model)).getAttribute('value');
     }
-
 });

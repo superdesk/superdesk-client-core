@@ -4,7 +4,7 @@ export function ProfilingController($scope, api) {
     $scope.current_profile = null;
     $scope.profiles = ['rest', 'publish:enqueue', 'publish:transmit'];
     $scope.profile_names = {
-        'rest': 'Rest',
+        rest: 'Rest',
         'publish:enqueue': 'Publish Enqueue',
         'publish:transmit': 'Publish Transmit'
     };

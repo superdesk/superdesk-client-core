@@ -46,7 +46,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
             };
 
             scope.run = function(activity) {
-                $rootScope.$broadcast('broadcast:preview', {'item': null}); // closes preview if already opened
+                $rootScope.$broadcast('broadcast:preview', {item: null}); // closes preview if already opened
                 return activityService.start(activity, {data: {item: scope.item}});
             };
 

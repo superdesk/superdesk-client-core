@@ -50,7 +50,6 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
              * Patches or posts the given search
              */
             scope.save = function(editSearch) {
-
                 function onSuccess() {
                     notify.success(gettext('Search was saved successfully'));
                     scope.cancel();

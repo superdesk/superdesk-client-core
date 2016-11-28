@@ -7,7 +7,6 @@ export function ContentExpiry() {
             header: '@'
         },
         link: function(scope, elem, attrs) {
-
             var expiryfield = attrs.expiryfield;
             scope.ContentExpiry = {
                 Expire: true,
@@ -50,7 +49,6 @@ export function ContentExpiry() {
             }
 
             var setContentExpiry = function(item) {
-
                 scope.ContentExpiry.Header = scope.header;
                 scope.ContentExpiry.Expire = true;
                 scope.ContentExpiry.Days = 0;

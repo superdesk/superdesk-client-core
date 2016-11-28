@@ -12,7 +12,6 @@ export function ItemRepo(
         },
         templateUrl: asset.templateUrl('apps/search/views/item-repo.html'),
         link: function(scope, elem) {
-
             /*
              * function to initialize default values on init or search provider change
              */
@@ -60,7 +59,7 @@ export function ItemRepo(
                 }
 
                 if (!scope.repo) {
-                    scope.repo = {'search': 'local'};
+                    scope.repo = {search: 'local'};
                 } else if (!scope.repo.archive && !scope.repo.ingest &&
                         !scope.repo.published && !scope.repo.archived) {
                     scope.repo.search = params.repo;
@@ -89,7 +88,7 @@ export function ItemRepo(
                 if (scope.providers.length > 0 && (!params || !params.repo)) {
                     scope.providers.forEach(function(provider, index, array) {
                         if (provider.is_default) {
-                            scope.repo = {'search': provider.source};
+                            scope.repo = {search: provider.source};
                         }
                     });
                 }
@@ -111,7 +110,6 @@ export function ItemRepo(
                     });
 
                     return repos.length ? repos.join(',') : null;
-
                 }
 
                 return scope.repo.search;

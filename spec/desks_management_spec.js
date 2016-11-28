@@ -4,7 +4,6 @@
 var desks = require('./helpers/desks');
 
 describe('desks_management', function() {
-
     beforeEach(function() {
         desks.openDesksSettings();
     });

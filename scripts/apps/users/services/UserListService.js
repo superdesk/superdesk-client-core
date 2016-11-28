@@ -4,7 +4,6 @@
  */
 UserListService.$inject = ['api', '$q', '$cacheFactory'];
 export function UserListService(api, $q, $cacheFactory) {
-
     var userservice = {};
 
     var cache = $cacheFactory('userList');
@@ -63,12 +62,12 @@ export function UserListService(api, $q, $cacheFactory) {
 
         if (search) {
             criteria.where = JSON.stringify({
-                '$or': [
-                    {display_name: {'$regex': search, '$options': '-i'}},
-                    {username: {'$regex': search, '$options': '-i'}},
-                    {first_name: {'$regex': search, '$options': '-i'}},
-                    {last_name: {'$regex': search, '$options': '-i'}},
-                    {email: {'$regex': search, '$options': '-i'}}
+                $or: [
+                    {display_name: {$regex: search, $options: '-i'}},
+                    {username: {$regex: search, $options: '-i'}},
+                    {first_name: {$regex: search, $options: '-i'}},
+                    {last_name: {$regex: search, $options: '-i'}},
+                    {email: {$regex: search, $options: '-i'}}
                 ]
             });
         }

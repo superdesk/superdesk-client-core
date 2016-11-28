@@ -6,7 +6,6 @@ describe('templates', function() {
     beforeEach(window.module('superdesk.templates-cache'));
 
     describe('templates widget', function() {
-
         var existingTemplate = {template_name: 'template1', template_desks: ['sports']};
 
         beforeEach(inject(function(desks, api, $q) {
@@ -137,14 +136,14 @@ describe('templates', function() {
             $rootScope.$digest();
             expect(preferencesService.update).toHaveBeenCalledWith({
                 'templates:recent': {
-                    'desk1': ['template1']
+                    desk1: ['template1']
                 }
             });
         }));
         it('can get recent templates', inject(function(api, templates, preferencesService, $q, $rootScope) {
             spyOn(preferencesService, 'get').and.returnValue($q.when({
                 'templates:recent': {
-                    'desk2': ['template2', 'template3']
+                    desk2: ['template2', 'template3']
                 }
             }));
             templates.getRecentTemplates('desk2');
@@ -161,7 +160,7 @@ describe('templates', function() {
             var orig = {};
             var data = {hasCrops: 1};
             templates.save(orig, data);
-            expect(api.save).toHaveBeenCalledWith('content_templates', orig, {data: {headline: '', 'body_html': ''}});
+            expect(api.save).toHaveBeenCalledWith('content_templates', orig, {data: {headline: '', body_html: ''}});
         }));
 
         it('can fetch templates all templates with user type as user', inject(function(api, templates, $rootScope) {

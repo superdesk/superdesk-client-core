@@ -22,7 +22,6 @@ describe('vocabularies', function() {
     }));
 
     describe('config modal', function() {
-
         describe('model', function() {
             var scope;
 
@@ -49,7 +48,7 @@ describe('vocabularies', function() {
 
             beforeEach(inject(function($rootScope, $controller) {
                 scope = $rootScope.$new();
-                testItem = {'foo': 'flareon', 'bar': 'beedrill', 'is_active': true};
+                testItem = {foo: 'flareon', bar: 'beedrill', is_active: true};
                 scope.vocabulary = {items: [testItem]};
                 $controller('VocabularyEdit', {$scope: scope});
             }));

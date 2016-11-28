@@ -266,5 +266,4 @@ describe('sdIngestSourcesContent directive', function() {
            }
         );
     });
-
 });

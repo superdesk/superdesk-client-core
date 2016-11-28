@@ -8,4 +8,4 @@ export {UserResolver} from './UserResolver';
 
 // TODO: is this needed?
 UserRolesController.$inject = ['$scope'];
-export function UserRolesController($scope) {/* no-op */}
+export function UserRolesController($scope) { /* no-op */ }

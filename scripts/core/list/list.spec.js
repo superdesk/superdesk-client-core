@@ -5,7 +5,6 @@ describe('superdesk.core.list module', function() {
     beforeEach(window.module('superdesk.core.list'));
 
     describe('pagination', function() {
-
         var TEMPLATE = '<div sd-pagination items="items"></div>';
 
         beforeEach(window.module('superdesk.templates-cache'));
@@ -85,6 +84,5 @@ describe('superdesk.core.list module', function() {
             expect(scope.from).toBe(51);
             expect(scope.to).toBe(55);
         }));
-
     });
 });

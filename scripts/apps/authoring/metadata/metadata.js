@@ -7,7 +7,6 @@ MetadataCtrl.$inject = [
 function MetadataCtrl(
     $scope, desks, metadata, $filter, privileges, datetimeHelper,
     preferencesService, archiveService, config, moment, content) {
-
     desks.initialize()
     .then(function() {
         $scope.deskLookup = desks.deskLookup;
@@ -147,7 +146,7 @@ function MetadataCtrl(
     }
 
     $scope.$watch('item.embargo_date', function(newValue, oldValue) {
-        //set embargo time default on initial date selection
+        // set embargo time default on initial date selection
         if (newValue && oldValue === undefined) {
             $scope.item.embargo_time = moment('00:01', 'HH:mm')
                 .format(config.model.timeformat);
@@ -234,7 +233,6 @@ function MetaTargetedPublishingDirective() {
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-target-publishing.html',
         link: function(scope, elem) {
-
             scope.removeTarget = function(target) {
                 scope.targets = _.without(scope.targets, target);
                 scope.autosave();
@@ -248,10 +246,10 @@ function MetaTargetedPublishingDirective() {
                 let parsedTarget = JSON.parse(target);
 
                 var existing = _.find(scope.targets,
-                    {'qcode': parsedTarget.qcode, 'name': parsedTarget.name, 'allow': !scope.deny});
+                    {qcode: parsedTarget.qcode, name: parsedTarget.name, allow: !scope.deny});
 
                 if (!existing) {
-                    scope.targets.push({'qcode': parsedTarget.qcode, 'name': parsedTarget.name, 'allow': !scope.deny});
+                    scope.targets.push({qcode: parsedTarget.qcode, name: parsedTarget.name, allow: !scope.deny});
                     scope.autosave();
                 }
 
@@ -349,8 +347,8 @@ function MetaDropdownDirective($filter, keyboardManager) {
                 _.extend(scope.item, o);
                 scope.change({item: scope.item, field: scope.field});
 
-                //retain focus on same dropdown control after selection.
-                _.defer (function() {
+                // retain focus on same dropdown control after selection.
+                _.defer(function() {
                     elem.find('.dropdown__toggle').focus();
                 });
 
@@ -540,7 +538,7 @@ function MetaWordsListDirective() {
             scope.removeTerm = function(term) {
                 var temp = _.without(scope.item[scope.field], term);
 
-                //build object
+                // build object
                 var o = {};
                 o[scope.field] = temp;
 
@@ -681,7 +679,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     scope.terms = filterSelected(scope.list);
                     scope.activeList = false;
                 } else {
-                    var searchList = reloadList? scope.list : scope.combinedList;
+                    var searchList = reloadList ? scope.list : scope.combinedList;
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), function(t) {
                         var searchObj = {};
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
@@ -721,7 +719,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                 // Only select terms that are not already selected
                 if (!isSelected) {
-                    //instead of simple push, extend the item[field] in order to trigger dirty $watch
+                    // instead of simple push, extend the item[field] in order to trigger dirty $watch
                     var t = [];
 
                     if (!term.single_value) {
@@ -734,7 +732,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         });
                     }
 
-                    //build object
+                    // build object
                     var o = {};
 
                     if (term.language && scope.setLanguage) {
@@ -778,8 +776,8 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         });
                     }, 50, false);
 
-                    //retain focus and initialise activeTree on same dropdown control after selection.
-                    _.defer (function() {
+                    // retain focus and initialise activeTree on same dropdown control after selection.
+                    _.defer(function() {
                         if (!_.isEmpty(elem.find('.dropdown__toggle'))) {
                             elem.find('.dropdown__toggle').focus();
                         }
@@ -819,7 +817,6 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.change({item: scope.item, field: scope.field});
                 elem.find('.dropdown__toggle').focus(); // retain focus
             };
-
         }
     };
 }
@@ -905,8 +902,8 @@ function MetaLocatorsDirective() {
                     if (previousLocator && scope.selectedTerm === previousLocator.city) {
                         loc = previousLocator;
                     } else {
-                        loc = {'city': scope.selectedTerm, 'city_code': scope.selectedTerm, 'tz': 'UTC',
-                            'dateline': 'city', 'country': '', 'country_code': '', 'state_code': '', 'state': ''};
+                        loc = {city: scope.selectedTerm, city_code: scope.selectedTerm, tz: 'UTC',
+                            dateline: 'city', country: '', country_code: '', state_code: '', state: ''};
                     }
                 }
 
@@ -940,13 +937,13 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         values: {},
         cvs: [],
         search_cvs: config.search_cvs || [
-            {'id': 'subject', 'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'},
-            {'id': 'companycodes', 'name': 'Company Codes', 'field': 'company_codes', 'list': 'company_codes'}
+            {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
+            {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}
         ],
         search_config: config.search || {
-            'slugline': 1, 'headline': 1, 'unique_name': 1, 'story_text': 1, 'byline': 1,
-            'keywords': 1, 'creator': 1, 'from_desk': 1, 'to_desk': 1, 'spike': 1,
-            'scheduled': 1, 'company_codes': 1, 'ingest_provider': 1
+            slugline: 1, headline: 1, unique_name: 1, story_text: 1, byline: 1,
+            keywords: 1, creator: 1, from_desk: 1, to_desk: 1, spike: 1,
+            scheduled: 1, company_codes: 1, ingest_provider: 1
         },
         subjectScope: null,
         loaded: null,
@@ -982,7 +979,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
             self.values.customSubscribers = [];
             return subscribersService.fetchTargetableSubscribers().then(function(items) {
                 _.each(items, function(item) {
-                    self.values.customSubscribers.push({'_id': item._id, 'name': item.name});
+                    self.values.customSubscribers.push({_id: item._id, name: item.name});
                 });
             });
         },

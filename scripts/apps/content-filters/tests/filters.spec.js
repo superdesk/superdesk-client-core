@@ -1,7 +1,6 @@
 'use strict';
 
 describe('content filters', function() {
-
     var $scope;
     beforeEach(window.module('superdesk.apps.content_filters'));
     beforeEach(window.module('superdesk.mocks'));
@@ -14,15 +13,15 @@ describe('content filters', function() {
                 $scope: $scope,
                 $location: $location,
                 $window: $window,
-                'notify': notify,
-                'contentFilters': contentFilters
+                notify: notify,
+                contentFilters: contentFilters
             }
         );
     }));
 
     it('can call production test for matching results',
     inject(function($rootScope, notify, contentFilters, $timeout, $q, api, $window) {
-        var diff = {'filter_id': '559ba1c91024548825803cc4', 'return_matching': true};
+        var diff = {filter_id: '559ba1c91024548825803cc4', return_matching: true};
         var toMatch = [{source: 'test'}];
         spyOn(api, 'save').and.returnValue($q.when({match_results: toMatch}));
         $scope.selectedfilter = '559ba1c91024548825803cc4';
@@ -37,7 +36,7 @@ describe('content filters', function() {
 
     it('can call production test for non-matching results',
     inject(function($rootScope, notify, contentFilters, $timeout, $q, api, $window) {
-        var diff = {'filter_id': '559ba1c91024548825803cc5', 'return_matching': false};
+        var diff = {filter_id: '559ba1c91024548825803cc5', return_matching: false};
         var toMatch = [];
         spyOn(api, 'save').and.returnValue($q.when({match_results: toMatch}));
         $scope.selectedfilter = '559ba1c91024548825803cc5';

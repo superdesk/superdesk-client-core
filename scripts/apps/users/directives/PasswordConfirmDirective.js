@@ -4,7 +4,6 @@ export function PasswordConfirmDirective() {
         require: 'ngModel',
         scope: {password: '='},
         link: function(scope, element, attrs, ctrl) {
-
             function isMatch(password, confirm) {
                 return !password || password === confirm;
             }

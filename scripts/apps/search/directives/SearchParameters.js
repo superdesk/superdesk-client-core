@@ -11,7 +11,6 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
         },
         templateUrl: asset.templateUrl('apps/search/views/search-parameters.html'),
         link: function(scope, elem) {
-
             var ENTER = 13;
 
             scope.keyPressed = function(event) {
@@ -210,7 +209,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 var pattern = /[()]/g;
 
                 angular.forEach(scope.meta, function(val, key) {
-                    //checkbox boolean values.
+                    // checkbox boolean values.
                     let v = val;
                     if (typeof val === 'boolean') {
                         v = booleanToBinaryString(val);
@@ -302,7 +301,6 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     delete scope.fields[type];
                 }
             };
-
         }
     };
 }

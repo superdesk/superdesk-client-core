@@ -38,7 +38,6 @@
  */
 export default angular.module('superdesk.core.services.permissions', [])
     .service('permissionsService', ['$q', '$rootScope', 'em', function($q, $rootScope, em) {
-
         this.isUserAllowed = function(permissions, user) {
             var self = this;
             var delay = $q.defer();
@@ -98,5 +97,4 @@ export default angular.module('superdesk.core.services.permissions', [])
 
             return delay.promise;
         };
-
     }]);

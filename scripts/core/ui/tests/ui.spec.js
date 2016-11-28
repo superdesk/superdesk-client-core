@@ -2,7 +2,6 @@
 'use strict';
 
 describe('superdesk ui', function() {
-
     beforeEach(window.module(function($provide) {
         $provide.constant('config', {
             model: {
@@ -238,7 +237,7 @@ describe('superdesk ui', function() {
                '</form>';
         beforeEach(inject(function($compile, $rootScope) {
             scope = $rootScope.$new();
-            scope.model = {'email': null};
+            scope.model = {email: null};
             $compile(html)(scope);
             scope.$digest();
             form = scope.form;

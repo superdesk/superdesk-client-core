@@ -51,7 +51,6 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
 
             scope.save = function() {
                 if (scope.rule) {
-
                     if (scope.ruleIndex === -1) {
                         scope.editScheme.rules.push(scope.rule);
                     } else {

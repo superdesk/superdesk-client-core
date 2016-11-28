@@ -2,7 +2,6 @@ var ENTER = 13;
 
 CommentsService.$inject = ['api'];
 function CommentsService(api) {
-
     this.comments = null;
 
     this.fetch = function(item) {
@@ -26,7 +25,6 @@ function CommentsService(api) {
 
 CommentsCtrl.$inject = ['$scope', '$routeParams', 'commentsService', 'api', '$q'];
 function CommentsCtrl($scope, $routeParams, commentsService, api, $q) {
-
     $scope.text = null;
     $scope.saveEnterFlag = false;
     $scope.$watch('item._id', reload);
@@ -87,13 +85,12 @@ function CommentTextDirective($compile) {
             comment: '='
         },
         link: function(scope, element, attrs) {
-
             var html;
 
-            //replace new lines with paragraphs
+            // replace new lines with paragraphs
             html = attrs.text.replace(/(?:\r\n|\r|\n)/g, '</p><p>');
 
-            //map user mentions
+            // map user mentions
             var mentionedUsers = html.match(/\@([a-zA-Z0-9-_.]\w+)/g);
             _.each(mentionedUsers, function(token) {
                 var username = token.substring(1, token.length);
@@ -103,7 +100,7 @@ function CommentTextDirective($compile) {
                 }
             });
 
-            //map desk mentions
+            // map desk mentions
             var mentionedDesks = html.match(/\#([a-zA-Z0-9-_.]\w+)/g);
             _.each(mentionedDesks, function(token) {
                 var deskname = token.substring(1, token.length);
@@ -112,7 +109,7 @@ function CommentTextDirective($compile) {
                     '<a href="">' + token + '</a>');
                 }
             });
-            //build element
+            // build element
             element.html('<p><b>' + attrs.name + '</b> : ' + html + '</p>');
 
             $compile(element.contents())(scope);

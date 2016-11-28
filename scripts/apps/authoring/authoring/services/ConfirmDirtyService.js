@@ -92,7 +92,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
         if (spellingErrors === 0) {
             return $q.resolve();
         }
-        var mistakes = spellingErrors > 1?'mistakes':'mistake';
+        var mistakes = spellingErrors > 1 ? 'mistakes' : 'mistake';
         var confirmMessage = 'You have {{ spellingErrors }} spelling {{ mistakes }}. ' +
             'Are you sure you want to continue?';
         return modal.confirm($interpolate(gettextCatalog.getString(confirmMessage))({

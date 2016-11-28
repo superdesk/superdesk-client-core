@@ -1,41 +1,40 @@
 'use strict';
 
 describe('Preferences Service', function() {
-
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.core.api'));
 
     var preferencesService,
         testPreferences = {
-            'active_privileges': {'privilege1': 1, 'privilege2': 0},
-            'user_preferences': {
+            active_privileges: {privilege1: 1, privilege2: 0},
+            user_preferences: {
                 'archive:view': {
-                    'default': 'mgrid',
-                    'label': 'Users archive view format',
-                    'type': 'string',
-                    'category': 'archive',
-                    'allowed': [
+                    default: 'mgrid',
+                    label: 'Users archive view format',
+                    type: 'string',
+                    category: 'archive',
+                    allowed: [
                         'mgrid',
                         'compact'
                     ],
-                    'view': 'mgrid'
+                    view: 'mgrid'
                 },
                 'feature:preview': {
-                    'default': false,
-                    'type': 'bool',
-                    'category': 'feature',
-                    'enabled': true,
-                    'label': 'test'
+                    default: false,
+                    type: 'bool',
+                    category: 'feature',
+                    enabled: true,
+                    label: 'test'
                 },
                 'email:notification': {
-                    'default': true,
-                    'category': 'notifications',
-                    'enabled': true,
-                    'type': 'bool',
-                    'label': 'Send notifications via email'
+                    default: true,
+                    category: 'notifications',
+                    enabled: true,
+                    type: 'bool',
+                    label: 'Send notifications via email'
                 }
             },
-            'session_preferences': {
+            session_preferences: {
                 'desk:items': [],
                 'pinned:items': [],
                 'scratchpad:items': [
@@ -45,15 +44,15 @@ describe('Preferences Service', function() {
             }
         };
 
-    var testUncachedPreferences = {'user_preferences': {'feature:preview': {'enabled': false}}};
+    var testUncachedPreferences = {user_preferences: {'feature:preview': {enabled: false}}};
 
     var update = {
         'feature:preview': {
-            'default': false,
-            'enabled': false,
-            'label': 'Test Label',
-            'type': 'bool',
-            'category': 'feature'
+            default: false,
+            enabled: false,
+            label: 'Test Label',
+            type: 'bool',
+            category: 'feature'
         }
     };
 
@@ -65,7 +64,7 @@ describe('Preferences Service', function() {
 
             return $q.when(testUncachedPreferences);
         });
-        spyOn(api, 'save').and.returnValue($q.when({'user_preferences': update}));
+        spyOn(api, 'save').and.returnValue($q.when({user_preferences: update}));
     }));
 
     beforeEach(inject(function($injector, $q, session) {
@@ -118,7 +117,7 @@ describe('Preferences Service', function() {
         $rootScope.$digest();
 
         preferencesService.update(update, 'feature:preview');
-        preferencesService.update({'workspace:active': {'workspace': ''}}, 'workspace:active');
+        preferencesService.update({'workspace:active': {workspace: ''}}, 'workspace:active');
         $rootScope.$digest();
         expect(api.save.calls.count()).toBe(1);
 
@@ -143,11 +142,9 @@ describe('Preferences Service', function() {
         $rootScope.$digest();
         expect(privileges.privilege1).toBe(1);
     }));
-
 });
 
 describe('preferences error handling', function() {
-
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.core.api'));
 

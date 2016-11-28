@@ -45,7 +45,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             api('roles').query().then(function(result) {
                 scope.roles = result._items;
             });
-            //get available translation languages
+            // get available translation languages
             var noBaseLanguage = true;
             scope.languages = _.map(gettextCatalog.strings, function(translation, lang) {
                 if (lang === gettextCatalog.baseLanguage) {
@@ -53,15 +53,15 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 }
                 var langCode = lang.replace('_', '-');
                 if (langmap[langCode]) {
-                    return {'code': lang, 'nativeName': langmap[langCode].nativeName};
+                    return {code: lang, nativeName: langmap[langCode].nativeName};
                 }
             });
 
-            //add baseLanguage if needed
+            // add baseLanguage if needed
             if (noBaseLanguage) {
                 scope.languages.unshift({
-                    'code': gettextCatalog.baseLanguage,
-                    'nativeName': langmap[gettextCatalog.baseLanguage].nativeName
+                    code: gettextCatalog.baseLanguage,
+                    nativeName: langmap[gettextCatalog.baseLanguage].nativeName
                 });
             }
 
@@ -82,6 +82,20 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 });
             };
 
+            function validateField(response, field) {
+                if (scope.userForm[field]) {
+                    if (scope.error[field]) {
+                        scope.error.message = null;
+                    }
+                    for (var constraint in response.data._issues[field]) {
+                        if (response.data._issues[field][constraint]) {
+                            scope.userForm[field].$setValidity(constraint, false);
+                            scope.error.message = null;
+                        }
+                    }
+                }
+            }
+
             scope.save = function() {
                 scope.error = null;
                 notify.info(gettext('Saving...'));
@@ -98,7 +112,6 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                     }
 
                     userList.clearCache();
-
                 }, function(response) {
                     notify.pop();
                     if (response.status === 404) {
@@ -120,17 +133,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                             scope.error.message = errorMessage;
 
                             for (var field in response.data._issues) {
-                                if (scope.userForm[field]) {
-                                    if (scope.error[field]) {
-                                        scope.error.message = null;
-                                    }
-                                    for (var constraint in response.data._issues[field]) {
-                                        if (response.data._issues[field][constraint]) {
-                                            scope.userForm[field].$setValidity(constraint, false);
-                                            scope.error.message = null;
-                                        }
-                                    }
-                                }
+                                validateField(response, field);
                             }
                         }
 

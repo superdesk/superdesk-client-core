@@ -2,7 +2,6 @@
 'use strict';
 
 describe('superdesk.apps.workspace.content', function() {
-
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
@@ -236,8 +235,8 @@ describe('superdesk.apps.workspace.content', function() {
             var el = compile({
                 model: {
                     schema: {
-                        'headline': {},
-                        'slugline': null
+                        headline: {},
+                        slugline: null
                     }
                 }
             });
@@ -255,8 +254,8 @@ describe('superdesk.apps.workspace.content', function() {
             var el = compile({
                 model: {
                     schema: {
-                        'headline': {},
-                        'slugline': null
+                        headline: {},
+                        slugline: null
                     }
                 }
             });

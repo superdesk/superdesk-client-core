@@ -1,5 +1,4 @@
 describe('packages service', () => {
-
     beforeEach(window.module('superdesk.apps.packaging'));
 
     it('can get reference for an item', inject(packages => {

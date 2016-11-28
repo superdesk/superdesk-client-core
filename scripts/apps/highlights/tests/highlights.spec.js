@@ -1,7 +1,6 @@
 'use strict';
 
 describe('highlights', function() {
-
     beforeEach(window.module('superdesk.apps.highlights'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.archive'));
@@ -98,6 +97,5 @@ describe('highlights', function() {
             expect(highlightsService.isInDateRange(post, 0.5)).toEqual(true);
             expect(highlightsService.isInDateRange(post, 2)).toEqual(false);
         }));
-
     });
 });

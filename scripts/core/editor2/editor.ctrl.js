@@ -89,10 +89,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     // retrieve the association reference
                     var association;
                     var embedAssoKey = /{id: "(embedded\d+)"}/;
-                    if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null) {
-                        if (self.associations) {
-                            association = angular.copy(self.associations[match[1]]);
-                        }
+                    if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null
+                        && self.associations) {
+                        association = angular.copy(self.associations[match[1]]);
                     }
                     // create the embed block
                     block = new Block({blockType: 'embed', embedType: embedType, association: association, body: ''});
@@ -353,7 +352,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 }
                 for (i = 0, len = string.length; i < len; i++) {
                     chr = string.charCodeAt(i);
-                    /*jshint bitwise: false */
+                    /* jshint bitwise: false */
                     hash = (hash << 5) - hash + chr;
                     hash |= 0; // Convert to 32bit integer
                 }

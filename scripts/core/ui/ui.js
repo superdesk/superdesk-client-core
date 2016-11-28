@@ -33,7 +33,6 @@ ShadowDirective.$inject = ['$timeout'];
 function ShadowDirective($timeout) {
     return {
         link: function(scope, element, attrs) {
-
             element.addClass('shadow-list-holder');
 
             function shadowTimeout() {
@@ -77,7 +76,6 @@ function NewlineToElement() {
  */
 WizardHandlerFactory.$inject = [];
 function WizardHandlerFactory() {
-
     var service = {};
     var wizards = {};
 
@@ -110,7 +108,6 @@ function WizardDirective() {
         },
         transclude: true,
         controller: ['$scope', '$element', 'WizardHandler', function($scope, element, WizardHandler) {
-
             WizardHandler.addWizard($scope.name || WizardHandler.defaultName, this);
             $scope.$on('$destroy', function() {
                 WizardHandler.removeWizard($scope.name || WizardHandler.defaultName);
@@ -159,7 +156,7 @@ function WizardDirective() {
             };
 
             this.next = function() {
-                var index = _.indexOf($scope.steps , $scope.selectedStep);
+                var index = _.indexOf($scope.steps, $scope.selectedStep);
                 if (index === $scope.steps.length - 1) {
                     this.finish();
                 } else {
@@ -168,7 +165,7 @@ function WizardDirective() {
             };
 
             this.previous = function() {
-                var index = _.indexOf($scope.steps , $scope.selectedStep);
+                var index = _.indexOf($scope.steps, $scope.selectedStep);
                 $scope.goTo($scope.steps[index - 1]);
             };
 
@@ -211,7 +208,7 @@ AutofocusDirective.$inject = [];
 function AutofocusDirective() {
     return {
         link: function(scope, element) {
-            _.defer (function() {
+            _.defer(function() {
                 var value = element.val();
                 element.val('').focus();
                 element.val(value);
@@ -224,7 +221,6 @@ AutoexpandDirective.$inject = [];
 function AutoexpandDirective() {
     return {
         link: function(scope, element) {
-
             var _minHeight = element.outerHeight();
 
             function resize() {
@@ -248,7 +244,6 @@ function AutoexpandDirective() {
             element.on('keyup change', function() {
                 resize();
             });
-
         }
     };
 }
@@ -257,7 +252,6 @@ DropdownPositionDirective.$inject = ['$document'];
 function DropdownPositionDirective($document) {
     return {
         link: function(scope, element) {
-
             var tolerance = 300,
                 isRightOriented = null,
                 isInlineOriented = null,
@@ -515,14 +509,14 @@ function PopupService($document) {
     var service = {};
 
     service.position = function(width, height, target) {
-        //taking care of screen size and responsiveness
+        // taking care of screen size and responsiveness
         var tolerance = 10;
         var elOffset = target.offset();
         var elHeight = target.outerHeight();
         var docHeight = $document.height();
         var docWidth = $document.width();
 
-        var position = {top: 0, left:0};
+        var position = {top: 0, left: 0};
 
         if (elOffset.top + elHeight + height + tolerance > docHeight) {
             position.top = elOffset.top - height;
@@ -611,7 +605,6 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             open: '=opened'
         },
         link: function(scope, element, attrs, ctrl) {
-
             var VIEW_DATE_FORMAT = config.view.dateformat;
             var MODEL_DATE_FORMAT = config.model.dateformat;
             var ESC = 27;
@@ -623,23 +616,23 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                     ctrl.$setValidity('date', true);
                     return null;
                 } else if (viewValue.dpdate) {
-                    //from datepicker
+                    // from datepicker
                     ctrl.$setValidity('date', true);
                     return moment(viewValue.dpdate).format(MODEL_DATE_FORMAT);
                 } else if (datetimeHelper.isValidDate(viewValue, VIEW_DATE_FORMAT)) {
-                    //date was typed in
+                    // date was typed in
                     ctrl.$setValidity('date', true);
                     return moment(viewValue, VIEW_DATE_FORMAT).format(MODEL_DATE_FORMAT);
                 }
 
-                //input is not valid
+                // input is not valid
                 ctrl.$setValidity('date', false);
                 return null;
             });
 
             scope.dateSelection = function(dt) {
                 if (angular.isDefined(dt)) {
-                    //if one of predefined dates is selected (today, tomorrow...)
+                    // if one of predefined dates is selected (today, tomorrow...)
                     scope.date = dt;
                 }
                 ctrl.$setViewValue({
@@ -650,18 +643,18 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                 scope.close();
             };
 
-            //select one of predefined dates
+            // select one of predefined dates
             scope.select = function(offset) {
                 var day = moment().startOf('day').add(offset, 'days');
                 scope.dateSelection(day);
             };
 
             ctrl.$render = function() {
-                element.val(ctrl.$viewValue.viewdate);  //set the view
-                scope.date = ctrl.$viewValue.dpdate;    //set datepicker model
+                element.val(ctrl.$viewValue.viewdate);  // set the view
+                scope.date = ctrl.$viewValue.dpdate;    // set datepicker model
             };
 
-            //handle model changes
+            // handle model changes
             ctrl.$formatters.unshift(function dateFormatter(modelValue) {
                 var dpdate,
                     viewdate = 'Invalid Date';
@@ -728,7 +721,6 @@ function TimepickerDirective($document) {
         },
         templateUrl: 'scripts/core/ui/views/sd-timepicker.html',
         link: function(scope, element) {
-
             scope.openTimePicker = function(e) {
                 scope.opened = !scope.opened;
 
@@ -767,7 +759,6 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
         },
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
-
             var MODEL_TIME_FORMAT = config.model.timeformat;
             var VIEW_TIME_FORMAT = config.view.timeformat || MODEL_TIME_FORMAT;
             var ESC = 27;
@@ -783,24 +774,24 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                     ctrl.$setValidity('time', true);
                     return null;
                 } else if (viewValue.tptime) {
-                    //time selected from picker
+                    // time selected from picker
                     ctrl.$setValidity('time', true);
                     return viewValue.tptime;
                 } else if (datetimeHelper.isValidTime(viewValue, VIEW_TIME_FORMAT)) {
-                    //time written in
+                    // time written in
                     ctrl.$setValidity('time', true);
                     scope.time = moment(viewValue, VIEW_TIME_FORMAT).format(MODEL_TIME_FORMAT);
                     return scope.time;
                 }
 
-                //regex not passing
+                // regex not passing
                 ctrl.$setValidity('time', false);
                 return null;
             });
 
             scope.timeSelection = function(tt) {
                 if (angular.isDefined(tt)) {
-                    //if one of predefined time options is selected
+                    // if one of predefined time options is selected
                     scope.time = tt.time;
                     ctrl.$setViewValue({tptime: tt.time, viewtime: viewFormat(tt.time)});
                     ctrl.$render();
@@ -809,18 +800,18 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             ctrl.$render = function() {
-                element.val(ctrl.$viewValue.viewtime);  //set the view
-                scope.time = ctrl.$viewValue.tptime;    //set timepicker model
+                element.val(ctrl.$viewValue.viewtime);  // set the view
+                scope.time = ctrl.$viewValue.tptime;    // set timepicker model
             };
 
-            //handle model changes
+            // handle model changes
             ctrl.$formatters.unshift(function dateFormatter(modelValue) {
                 var tptime,
                     viewtime = 'Invalid Time';
 
                 if (modelValue) {
                     if (datetimeHelper.isValidTime(modelValue, MODEL_TIME_FORMAT)) {
-                        //formatter pass fine
+                        // formatter pass fine
                         tptime = modelValue;
                         viewtime = viewFormat(modelValue);
                     }
@@ -945,7 +936,6 @@ function TimezoneDirective(tzdata, config, $timeout) {
                 }, 0, false);
                 delete scope.timezone;
             };
-
         }
     };
 }
@@ -961,7 +951,6 @@ function TimepickerPopupDirective($timeout, config) {
             time: '='
         },
         link: function(scope, element) {
-
             var MODEL_TIME_FORMAT = config.model.timeformat;
 
             var POPUP = '.timepicker-popup';
@@ -969,7 +958,7 @@ function TimepickerPopupDirective($timeout, config) {
             var focusElement = function() {
                 $timeout(function() {
                     element.find(POPUP).focus();
-                }, 0 , false);
+                }, 0, false);
             };
 
             scope.$on('timepicker.focus', focusElement);
@@ -1003,7 +992,7 @@ function TimepickerPopupDirective($timeout, config) {
                 } else {
                     local = scope.hour + ':' + scope.minute + ':' + scope.second;
                 }
-                //convert from local to utc
+                // convert from local to utc
                 time = moment(local, MODEL_TIME_FORMAT).format(MODEL_TIME_FORMAT);
                 scope.select({time: time});
             };
@@ -1286,7 +1275,6 @@ function validationDirective(gettext, gettextCatalog) {
             var invalidText = '<span id="required_span" class="sd-invalid-text">' +
             gettextCatalog.getString('This field is required') + '</span>';
             scope.$watch(attrs.required, function(required) {
-
                 if (!required) {
                     if (elem.hasClass('sd-validate')) {
                         elem.removeClass('sd-validate');

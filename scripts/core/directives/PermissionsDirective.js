@@ -50,7 +50,6 @@ export default angular.module('superdesk.core.directives.permissions', [])
                             scope.model = result;
                         });
                     }
-
                 }
             }
         };

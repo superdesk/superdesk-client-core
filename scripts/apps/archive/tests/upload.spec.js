@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Upload controller', function() {
-
     var files = [{type: 'text/plain'}],
         UPLOAD_URL = 'upload_url';
 
@@ -44,7 +43,7 @@ describe('Upload controller', function() {
 
         spyOn(upload, 'start').and.callThrough();
 
-        scope.resolve = function() {/* no-op */};
+        scope.resolve = function() { /* no-op */ };
         var resolve = spyOn(scope, 'resolve');
 
         $controller('UploadController', {$scope: scope});
@@ -122,7 +121,7 @@ describe('Upload controller', function() {
 
             spyOn(upload, 'start').and.callThrough();
 
-            scope.resolve = function() {/* no-op */};
+            scope.resolve = function() { /* no-op */ };
 
             $controller('UploadController', {$scope: scope});
             $rootScope.$digest();
@@ -151,7 +150,6 @@ describe('Upload controller', function() {
                 data: {media: files[0]},
                 headers: api.archive.getHeaders()
             });
-
         }));
 });
 

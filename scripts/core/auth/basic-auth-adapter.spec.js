@@ -57,5 +57,4 @@ describe('basic auth adapter', function() {
         expect(resolved).toBe(false);
         expect(rejected).toBe(true);
     }));
-
 });

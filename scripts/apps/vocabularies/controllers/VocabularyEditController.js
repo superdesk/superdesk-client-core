@@ -12,7 +12,6 @@ VocabularyEditController.$inject = [
 ];
 
 export function VocabularyEditController($scope, gettext, notify, api, vocabularies, metadata, cvSchema, $rootScope) {
-
     var origVocabularyItems = _.cloneDeep($scope.vocabulary.items);
 
     /**

@@ -35,7 +35,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                 '</div>'];
             return html.join('\n');
         },
-        retrieveEmbed:function() {
+        retrieveEmbed: function() {
             function retrieveEmbedFromUrl() {
                 return embedService.get(self.input).then(function(data) {
                     var embed = data.html;
@@ -118,7 +118,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
             });
         },
         closeEmbed: function() {
-            //put block back together on embed form close.
+            // put block back together on embed form close.
             self.toggle();
         }
     });

@@ -17,7 +17,7 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
 
                 if (_.includes(['archive', 'legal_archive'], scope.item.location)) {
                     url = scope.item.location + '/' + scope.item.residRef;
-                    url += scope.item._current_version ? '?version=' + scope.item._current_version: '';
+                    url += scope.item._current_version ? '?version=' + scope.item._current_version : '';
                     endpoint = scope.item.location;
                 } else if (_.includes('ingest', scope.item.location)) {
                     url = scope.item.location + '/' + scope.item.residRef;

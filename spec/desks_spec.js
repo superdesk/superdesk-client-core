@@ -12,7 +12,6 @@ var desks = require('./helpers/desks');
 var assertToastMsg = require('./helpers/utils').assertToastMsg;
 
 describe('desks', function() {
-
     beforeEach(function() {
         desks.openDesksSettings();
     });
@@ -25,7 +24,7 @@ describe('desks', function() {
         desks.setDeskContentExpiry(1, 10);
         desks.actionSaveAndContinueOnGeneralTab();
         desks.showTab('macros');
-        //expect(desks.listedMacros.count()).toBeGreaterThan(0);
+        // expect(desks.listedMacros.count()).toBeGreaterThan(0);
         desks.save();
         desks.edit('Politic Desk');
         expect(desks.deskDescriptionElement().getAttribute('value')).toEqual('New Description');
@@ -35,7 +34,7 @@ describe('desks', function() {
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('10');
         desks.close();
 
-        //add a new desk
+        // add a new desk
         desks.openDesksSettings();
         desks.getNewDeskButton().click();
         desks.deskNameElement().sendKeys('Test Desk');
@@ -55,7 +54,7 @@ describe('desks', function() {
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('1');
         desks.close();
 
-        //add desk with Done action
+        // add desk with Done action
         desks.openDesksSettings();
         desks.getNewDeskButton().click();
         desks.deskNameElement().sendKeys('Test Desk2');
@@ -75,7 +74,7 @@ describe('desks', function() {
         expect(desks.getDeskContentExpiryMinutes().getAttribute('value')).toEqual('1');
         desks.close();
 
-        //add desk reflects default stage count
+        // add desk reflects default stage count
         desks.openDesksSettings();
         desks.getNewDeskButton().click();
         desks.deskNameElement().sendKeys('Test Desk3');
@@ -85,7 +84,7 @@ describe('desks', function() {
         desks.actionDoneOnGeneralTab();
         expect(desks.getStageCount('Test Desk')).toEqual('2');
 
-        //add another workingstage and assert the first working stage is deletable
+        // add another workingstage and assert the first working stage is deletable
         desks.edit('Test Desk3');
         desks.showTab('Stages');
         desks.getNewStageButton().click();
@@ -95,7 +94,7 @@ describe('desks', function() {
         desks.saveNewStage();
         desks.confirmStageDeleteButton('Working Stage');
 
-        //try to delete working stage will display error message
+        // try to delete working stage will display error message
         desks.editStage('Test Stage');
         desks.toggleWorkingStageFlag();
         desks.saveEditedStage();

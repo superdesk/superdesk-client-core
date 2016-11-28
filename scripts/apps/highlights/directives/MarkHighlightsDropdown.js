@@ -3,7 +3,6 @@ export function MarkHighlightsDropdown(desks, highlightsService, $timeout) {
     return {
         templateUrl: 'scripts/apps/highlights/views/mark_highlights_dropdown_directive.html',
         link: function(scope) {
-
             scope.markItem = function(highlight) {
                 scope.item.multiSelect = false;
                 highlightsService.markItem(highlight._id, scope.item);

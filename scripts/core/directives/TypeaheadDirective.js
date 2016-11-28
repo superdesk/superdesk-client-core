@@ -94,7 +94,6 @@ export default angular.module('superdesk.core.directives.typeahead', [])
             }],
 
             link: function(scope, element, attrs, controller) {
-
                 var $input = element.find('.input-term > input');
                 var $list = element.find('.item-list');
 
@@ -202,7 +201,6 @@ export default angular.module('superdesk.core.directives.typeahead', [])
         return {
             require: '^sdTypeahead',
             link: function(scope, element, attrs, controller) {
-
                 var item = scope.$eval(attrs.typeaheadItem);
 
                 scope.$watch(function() {

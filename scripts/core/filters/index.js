@@ -44,7 +44,7 @@ export default angular.module('superdesk.core.filters', [])
             var split = [];
             _.forEach(word.split(','), function(w) {
                 var trim = w.replace(/^\s+|\s+$/g, '');
-                split.push({'name': trim});
+                split.push({name: trim});
             });
             return split;
         };
@@ -65,7 +65,6 @@ export default angular.module('superdesk.core.filters', [])
     }])
     .filter('menuGroup', function() {
         return function(input) {
-
             if (!input || !input.category) {
                 return '#/';
             }
@@ -74,19 +73,19 @@ export default angular.module('superdesk.core.filters', [])
     })
     .filter('truncateString', function() {
         return function(inputString, limit, postfix) {
-            return _.truncate(inputString, {'length': limit, 'omission': postfix || '...'});
+            return _.truncate(inputString, {length: limit, omission: postfix || '...'});
         };
     })
     .filter('formatDateTimeString', [function() {
         return function(input, formatString) {
-            var momentTimestamp = angular.isDefined(input)? moment(input).utc() : moment.utc();
+            var momentTimestamp = angular.isDefined(input) ? moment(input).utc() : moment.utc();
             return angular.isDefined(formatString) ? momentTimestamp.format(formatString)
                 : momentTimestamp.format();
         };
     }])
     .filter('formatLocalDateTimeString', [function() {
         return function(input, formatString) {
-            var momentTimestamp = angular.isDefined(input)? moment(input).utc() : moment.utc();
+            var momentTimestamp = angular.isDefined(input) ? moment(input).utc() : moment.utc();
             return angular.isDefined(formatString) ? momentTimestamp.local().format(formatString) :
             momentTimestamp.local().format();
         };
@@ -176,7 +175,7 @@ export default angular.module('superdesk.core.filters', [])
                 momentizedTimestamp = momentizedTimestamp.tz(located.tz);
             }
 
-            return {'month': momentizedTimestamp.month().toString(), 'day': momentizedTimestamp.format('D')};
+            return {month: momentizedTimestamp.month().toString(), day: momentizedTimestamp.format('D')};
         };
     })
     .filter('formatDatelineText', function() {

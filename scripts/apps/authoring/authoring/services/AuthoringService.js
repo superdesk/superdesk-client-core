@@ -6,7 +6,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     notify, session, $injector, moment, config) {
     var self = this;
 
-    //TODO: have to trap desk update event for refereshing users desks.
+    // TODO: have to trap desk update event for refereshing users desks.
     this.userDesks = [];
 
     /**
@@ -159,7 +159,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             delete updates.dateline;
         }
 
-        //check if rendition is dirty for real
+        // check if rendition is dirty for real
         if (_.isEqual(original.renditions, updates.renditions)) {
             delete updates.renditions;
         }
@@ -179,7 +179,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 updates.body_html = '';
             }
         }
-
     };
 
     this.publish = function publish(orig, diff, action = 'publish') {
@@ -203,7 +202,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         this.cleanUpdatesBeforePublishing(orig, extDiff);
 
-        return api.save('validate', {'act': act, 'type': orig.type, 'validate': extDiff});
+        return api.save('validate', {act: act, type: orig.type, validate: extDiff});
     };
 
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {
@@ -408,7 +407,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         // item is published state - corrected, published, scheduled, killed
         if (self.isPublished(currentItem)) {
-            //if not the last published version
+            // if not the last published version
             if (angular.isDefined(item.archive_item) &&
                 item._current_version !== item.archive_item._current_version) {
                 return angular.extend({}, helpers.DEFAULT_ACTIONS);
@@ -421,11 +420,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
                 action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState;
             }
-
         } else {
             // production states i.e in_progress, routed, fetched, submitted.
 
-            //if spiked
+            // if spiked
             if (currentItem.state === 'spiked') {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 action.unspike = true;
@@ -455,7 +453,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.resend = _.includes(['text'], currentItem.type) &&
             _.includes(['published', 'corrected', 'killed'], currentItem.state);
 
-        //mark item for highlights
+        // mark item for highlights
         action.mark_item = currentItem.task && currentItem.task.desk &&
             !isReadOnlyState && currentItem.package_type !== 'takes' &&
              userPrivileges.mark_for_highlights;
@@ -471,7 +469,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.multi_edit = !isReadOnlyState;
 
-        //check for desk membership for edit rights.
+        // check for desk membership for edit rights.
         if (currentItem.task && currentItem.task.desk) {
             // in production
 
@@ -481,7 +479,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state);
 
-            var desk = _.find(self.userDesks, {'_id': currentItem.task.desk});
+            var desk = _.find(self.userDesks, {_id: currentItem.task.desk});
             if (!desk) {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 // user can action `update` even if the user is not a member.

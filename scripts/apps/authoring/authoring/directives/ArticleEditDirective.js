@@ -42,8 +42,8 @@ export function ArticleEditDirective(
 
             /* Start: Dateline related properties */
 
-            scope.monthNames = {'Jan': '0', 'Feb': '1', 'Mar': '2', 'Apr': '3', 'May': '4', 'Jun': '5',
-                'Jul': '6', 'Aug': '7', 'Sep': '8', 'Oct': '9', 'Nov': '10', 'Dec': '11'};
+            scope.monthNames = {Jan: '0', Feb: '1', Mar: '2', Apr: '3', May: '4', Jun: '5',
+                Jul: '6', Aug: '7', Sep: '8', Oct: '9', Nov: '10', Dec: '11'};
 
             scope.dateline = {
                 month: '',
@@ -258,7 +258,7 @@ export function ArticleEditDirective(
              * Adds the selected Helpline to the item allowing user for further edit.
              */
             scope.addHelplineToFooter = function() {
-                //determine and ignore if footer text have empty tags
+                // determine and ignore if footer text have empty tags
                 var container = document.createElement('div');
                 container.innerHTML = scope.item.body_footer;
 
@@ -272,8 +272,8 @@ export function ArticleEditDirective(
                     autosave.save(scope.item, scope.origItem);
                 }
 
-                //first option should always be selected, as multiple helplines could be added in footer
-                _.defer (function() {
+                // first option should always be selected, as multiple helplines could be added in footer
+                _.defer(function() {
                     var ddlHelpline = elem.find('#helplines');
                     ddlHelpline[0].options[0].selected = true;
                 });

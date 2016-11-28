@@ -1,5 +1,4 @@
 describe('superdesk.core.datetime module', function() {
-
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.core.datetime'));
 

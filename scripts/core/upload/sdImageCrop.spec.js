@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Image Crop', function() {
-
     beforeEach(window.module('superdesk.core.upload'));
     beforeEach(window.module('superdesk.core.services.imageFactory'));
 

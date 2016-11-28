@@ -1,17 +1,16 @@
 'use strict';
 
 describe('subscribers service', function() {
-
     beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.apps.publish'));
 
     beforeEach(inject(function(subscribersService, $q, api) {
         spyOn(api, 'query').and.returnValue($q.when({
-            _items: [{'name': 'sub-1', 'is_active': false},
-            {'name': 'sub-2', 'is_active': true, 'is_targetable': true},
-            {'name': 'sub-3', 'is_active': false},
-            {'name': 'sub-4', 'is_active': true, 'is_targetable': false},
-            {'name': 'sub-5', 'is_active': true}],
+            _items: [{name: 'sub-1', is_active: false},
+            {name: 'sub-2', is_active: true, is_targetable: true},
+            {name: 'sub-3', is_active: false},
+            {name: 'sub-4', is_active: true, is_targetable: false},
+            {name: 'sub-5', is_active: true}],
             _links: {}
         }));
     }));
@@ -51,5 +50,4 @@ describe('subscribers service', function() {
         $rootScope.$digest();
         expect(allSubscribers.length).toBe(2);
     }));
-
 });
