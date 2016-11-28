@@ -159,7 +159,7 @@ function WizardDirective() {
             };
 
             this.next = function() {
-                var index = _.indexOf($scope.steps , $scope.selectedStep);
+                var index = _.indexOf($scope.steps, $scope.selectedStep);
                 if (index === $scope.steps.length - 1) {
                     this.finish();
                 } else {
@@ -168,7 +168,7 @@ function WizardDirective() {
             };
 
             this.previous = function() {
-                var index = _.indexOf($scope.steps , $scope.selectedStep);
+                var index = _.indexOf($scope.steps, $scope.selectedStep);
                 $scope.goTo($scope.steps[index - 1]);
             };
 
@@ -969,7 +969,7 @@ function TimepickerPopupDirective($timeout, config) {
             var focusElement = function() {
                 $timeout(function() {
                     element.find(POPUP).focus();
-                }, 0 , false);
+                }, 0, false);
             };
 
             scope.$on('timepicker.focus', focusElement);

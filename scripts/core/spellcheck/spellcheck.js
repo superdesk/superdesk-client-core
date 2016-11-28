@@ -128,7 +128,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         }
     }
 
-    $rootScope.$on('abbreviations:updated', angular.bind(self, function(evt , data) {
+    $rootScope.$on('abbreviations:updated', angular.bind(self, function(evt, data) {
         updateAbbreviations(data);
     }));
 

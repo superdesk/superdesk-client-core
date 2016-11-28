@@ -1279,7 +1279,7 @@ angular.module('superdesk.apps.editor2', [
                     }
                 },
                 controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', 'config',
-                    function(scope, editor, api , superdesk, renditions, config) {
+                    function(scope, editor, api, superdesk, renditions, config) {
                         var self = this;
                         angular.extend(self, {
                             block: undefined, // provided in link method

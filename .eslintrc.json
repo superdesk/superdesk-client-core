@@ -115,19 +115,19 @@
 
         "array-bracket-spacing": [2, "never"],
         "block-spacing": 2,
+        "brace-style": [2, "1tbs"],
+        "comma-spacing": 2,
 
         "indent": [2, 4],
         "quotes": [2, "single"],
         "linebreak-style": [2, "unix"],
         "semi": [2, "always"],
         "camelcase": [2, {"properties": "never"}],
-        "comma-dangle": [2, "never"],
         "valid-jsdoc": [0, {
             "requireReturn": false,
             "requireReturnDescription": false,
             "requireParamDescription": false
         }],
-        "brace-style": [2, "1tbs", {"allowSingleLine": false}],
         "comma-style": [2, "last"],
         "computed-property-spacing": [2, "never"],
         "consistent-this": [2, "self"],
