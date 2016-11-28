@@ -81,11 +81,12 @@ export function PublisherFactory(pubapi) {
         /**
          * @ngdoc method
          * @name publisher#queryRoutes
+         * @param {String} type - which routes to query
          * @returns {Promise}
          * @description Query routes
          */
-        queryRoutes() {
-            return pubapi.query('content/routes');
+        queryRoutes(type) {
+            return pubapi.query('content/routes', type);
         }
 
         /**
