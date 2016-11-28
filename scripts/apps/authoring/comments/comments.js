@@ -2,7 +2,6 @@ var ENTER = 13;
 
 CommentsService.$inject = ['api'];
 function CommentsService(api) {
-
     this.comments = null;
 
     this.fetch = function(item) {
@@ -26,7 +25,6 @@ function CommentsService(api) {
 
 CommentsCtrl.$inject = ['$scope', '$routeParams', 'commentsService', 'api', '$q'];
 function CommentsCtrl($scope, $routeParams, commentsService, api, $q) {
-
     $scope.text = null;
     $scope.saveEnterFlag = false;
     $scope.$watch('item._id', reload);
@@ -87,7 +85,6 @@ function CommentTextDirective($compile) {
             comment: '='
         },
         link: function(scope, element, attrs) {
-
             var html;
 
             //replace new lines with paragraphs

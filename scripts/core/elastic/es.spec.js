@@ -1,7 +1,6 @@
 'use strict';
 
 describe('elastic query builder', function() {
-
     beforeEach(window.module('superdesk.core.elastic'));
 
     it('generates query string query for q param', inject(function(es) {

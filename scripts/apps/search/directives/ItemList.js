@@ -134,7 +134,6 @@ export function ItemList(
 
     return {
         link: function(scope, elem) {
-
             elem.attr('tabindex', 0);
 
             var menuHolderElem = document.getElementById('react-placeholder');
@@ -927,7 +926,6 @@ export function ItemList(
                 },
 
                 updated: function(props) {
-
                     var selectUpdate = function(event) {
                         event.stopPropagation();
                         props.selectUpdate();
@@ -1778,7 +1776,6 @@ export function ItemList(
 
                     return (_.map(a.es_highlight, getEsHighlight)).join('-') ===
                         (_.map(b.es_highlight, getEsHighlight)).join('-');
-
                 }
 
                 /**
@@ -1794,7 +1791,6 @@ export function ItemList(
                     }
 
                     if (a.archive_item && b.archive_item) {
-
                         if (b.archive_item.takes) {
                             return false;   //take package of the new item might have changed
                         }
@@ -1821,7 +1817,6 @@ export function ItemList(
 
                         if (!oldItem || !isSameVersion(oldItem, item) ||
                             !isArchiveItemSameVersion(oldItem, item)) {
-
                             itemsById[itemId] = angular.extend({}, oldItem, item);
                         }
 

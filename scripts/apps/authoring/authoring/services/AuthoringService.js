@@ -179,7 +179,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 updates.body_html = '';
             }
         }
-
     };
 
     this.publish = function publish(orig, diff, action = 'publish') {
@@ -421,7 +420,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
                 action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState;
             }
-
         } else {
             // production states i.e in_progress, routed, fetched, submitted.
 

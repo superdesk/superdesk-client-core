@@ -1,6 +1,5 @@
 ChangeAvatarController.$inject = ['$scope', 'upload', 'session', 'urls', 'betaService', 'gettext', 'notify', 'lodash'];
 export function ChangeAvatarController($scope, upload, session, urls, beta, gettext, notify, _) {
-
     $scope.methods = [
         {id: 'upload', label: gettext('Upload from computer')},
         {id: 'camera', label: gettext('Take a picture')},
@@ -46,7 +45,6 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, gett
                 method: 'POST',
                 data: form
             }).then(function(response) {
-
                 if (response.data._status === 'ERR') {
                     notify.error(gettext('There was a problem with your upload'));
                     return;

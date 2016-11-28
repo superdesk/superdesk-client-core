@@ -9,7 +9,6 @@ export function IngestUserDashboard(api, userList, privileges) {
             setUserPreferences: '&'
         },
         link: function(scope) {
-
             function getCount() {
                 var criteria = {
                     source: {

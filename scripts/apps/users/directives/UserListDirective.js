@@ -11,7 +11,6 @@ export function UserListDirective(keyboardManager, usersService, asset) {
             done: '='
         },
         link: function(scope, elem, attrs) {
-
             scope.active = function(user) {
                 return usersService.isActive(user);
             };

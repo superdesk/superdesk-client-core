@@ -2,7 +2,6 @@
 'use strict';
 
 describe('authoring', function() {
-
     var GUID = 'urn:tag:superdesk-1';
     var USER = 'user:1';
     var ITEM = {guid: GUID};
@@ -194,7 +193,6 @@ describe('authoring', function() {
     }
 
     describe('authoring service', function() {
-
         var confirmDefer;
 
         beforeEach(inject(function(confirm, lock, $q) {
@@ -330,7 +328,6 @@ describe('authoring', function() {
             $rootScope.$digest();
 
             expect(api.save).toHaveBeenCalledWith('archive', {}, edit);
-
         }));
 
         it('close the published dirty item without confirmation',
@@ -448,7 +445,6 @@ describe('cropImage', function() {
 
         expect(scope.item.hasCrops).toBe(true);
     }));
-
 });
 
 describe('autosave', function() {
@@ -1048,7 +1044,6 @@ describe('authoring actions', function() {
             itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'view', 'add_to_current', 'mark_item',
                 'package_item', 'multi_edit', 'correct', 'kill', 'create_broadcast', 'resend']);
-
         }));
 
     it('Cannot perform correction or kill on published item without privileges',
@@ -1734,7 +1729,6 @@ describe('authoring actions', function() {
 });
 
 describe('authoring workspace', function() {
-
     var item, lockedItem;
 
     beforeEach(function() {
@@ -1749,7 +1743,6 @@ describe('authoring workspace', function() {
     }));
 
     it('can edit item', inject(function(superdeskFlags, authoringWorkspace, $rootScope) {
-
         expect(superdeskFlags.flags.authoring).toBeFalsy();
 
         authoringWorkspace.edit(item);
@@ -1836,7 +1829,6 @@ describe('authoring workspace', function() {
 });
 
 describe('authoring container directive', function() {
-
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
 
@@ -1931,7 +1923,6 @@ describe('authoring container directive', function() {
                         }, {});
                 }));
     });
-
 });
 
 describe('authoring themes', function() {
@@ -2002,7 +1993,6 @@ describe('send item directive', function() {
 
     it('can hide embargo and publish schedule if take items more than one',
         inject(function($compile, $rootScope, privileges) {
-
             var scope, elem, iscope;
             scope = $rootScope.$new();
             scope.item = {
@@ -2030,7 +2020,6 @@ describe('send item directive', function() {
 
     it('can show embargo and publish schedule if only one take item',
         inject(function($compile, $rootScope, privileges) {
-
             var scope, elem, iscope;
             scope = $rootScope.$new();
             scope.item = {
@@ -2058,7 +2047,6 @@ describe('send item directive', function() {
 
     it('can hide embargo if user does not have the privilege',
         inject(function($compile, $rootScope, privileges) {
-
             var scope, elem, iscope;
             scope = $rootScope.$new();
             scope.item = {
@@ -2086,7 +2074,6 @@ describe('send item directive', function() {
 
     it('can show embargo and publish schedule if not a take item',
         inject(function($compile, $rootScope, privileges) {
-
             var scope, elem, iscope;
             scope = $rootScope.$new();
             scope.item = {
@@ -2111,7 +2098,6 @@ describe('send item directive', function() {
 
     it('can show embargo date',
         inject(function($compile, $rootScope, privileges) {
-
             var scope, elem, iscope;
             scope = $rootScope.$new();
             scope.item = {
@@ -2137,7 +2123,6 @@ describe('send item directive', function() {
 
     it('can show published schedule date',
         inject(function($compile, $rootScope) {
-
             var scope, elem, iscope;
             scope = $rootScope.$new();
             scope.item = {
@@ -2157,7 +2142,6 @@ describe('send item directive', function() {
 
     it('can get last destination desk and stage',
         inject(function($compile, $rootScope, preferencesService, $q) {
-
             var scope, elem, iscope;
             scope = $rootScope.$new();
             scope.item = {
@@ -2178,7 +2162,6 @@ describe('send item directive', function() {
             iscope.destination_last = null;
 
             preferencesService.get().then(function(prefs) {
-
                 iscope.destination_last = {
                     desk: prefs.desk,
                     stage: prefs.stage
@@ -2312,7 +2295,6 @@ describe('send item directive', function() {
                 expect(iScope.orig.task.stage).toBe(selectedStage._id);
                 expect(iScope.orig._locked).toBe(true);
                 expect(iScope.orig._etag).toBe('1111');
-
             }));
 
         it('can send and publish item to different desk but locking failed',

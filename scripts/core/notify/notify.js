@@ -9,7 +9,6 @@
 export default angular.module('superdesk.core.notify', ['superdesk.core.translate'])
     .service('notify', ['$timeout', 'gettext', function($timeout, gettext) {
         function NotifyService() {
-
             var ttls = {
                 info: 3000,
                 success: 3000,

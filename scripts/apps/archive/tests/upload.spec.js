@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Upload controller', function() {
-
     var files = [{type: 'text/plain'}],
         UPLOAD_URL = 'upload_url';
 
@@ -151,7 +150,6 @@ describe('Upload controller', function() {
                 data: {media: files[0]},
                 headers: api.archive.getHeaders()
             });
-
         }));
 });
 

@@ -4,7 +4,6 @@ export function ItemLock(api, lock, privileges, desks) {
         templateUrl: 'scripts/apps/archive/views/item-lock.html',
         scope: {item: '='},
         link: function(scope) {
-
             init();
 
             scope.$watch('item.lock_session', function() {

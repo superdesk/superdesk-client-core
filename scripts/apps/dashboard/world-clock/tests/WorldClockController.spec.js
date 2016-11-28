@@ -49,5 +49,4 @@ describe('WorldClockController', function() {
 
         expect(ctrl._moment.tz.add).toHaveBeenCalledWith(serverTzdata);
     });
-
 });

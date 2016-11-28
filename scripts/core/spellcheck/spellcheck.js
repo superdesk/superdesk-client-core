@@ -52,7 +52,6 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
 
         if (!dict) {
             dict = dictionaries.getActive(lang, baseLang).then(function(items) {
-
                 dict = dict || {};
                 dict.content = {};
 

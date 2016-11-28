@@ -1,7 +1,6 @@
 'use strict';
 
 describe('item comments', function() {
-
     beforeEach(window.module(function($provide) {
         $provide.provider('api', function() {
             this.api = function() { /* no-op */ };
@@ -18,7 +17,6 @@ describe('item comments', function() {
     beforeEach(window.module('superdesk.apps.authoring.comments'));
 
     it('can fetch comments for an item', inject(function(commentsService, api, $rootScope, $q) {
-
         spyOn(api.item_comments, 'query').and.returnValue($q.when({_items: [{_id: 1}]}));
 
         commentsService.fetch('test-id').then(function() {

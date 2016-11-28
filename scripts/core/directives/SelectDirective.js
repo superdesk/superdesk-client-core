@@ -1,11 +1,9 @@
 export default angular.module('superdesk.core.directives.select', ['superdesk.core.services.asset'])
 .factory('optionParser', ['$parse', function($parse) {
-
     var TYPEAHEAD_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
 
     return {
         parse: function(input) {
-
             var match = input.match(TYPEAHEAD_REGEXP);
             if (!match) {
                 throw new Error(
@@ -47,7 +45,6 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
             restrict: 'A',
             require: 'ngModel',
             link: function(originalScope, element, attrs, modelCtrl) {
-
                 var exp = attrs.options,
                     parsedResult = optionParser.parse(exp),
                     isMultiple = !!attrs.multiple,

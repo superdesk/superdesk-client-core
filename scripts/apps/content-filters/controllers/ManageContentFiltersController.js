@@ -109,7 +109,6 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
     };
 
     $scope.test = function() {
-
         if (!$scope.test.article_id) {
             notify.error(gettext('Please provide an article id'));
             return;

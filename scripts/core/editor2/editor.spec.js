@@ -1,7 +1,6 @@
 'use strict';
 
 describe('text editor', function() {
-
     beforeEach(window.module(function($provide) {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}});
     }));
@@ -141,7 +140,6 @@ describe('text editor', function() {
         editor.commit();
         $rootScope.$digest();
         expect(scope.node.innerHTML).toBe('foo ' + abbreviations.IMF + ' ' + abbreviations.WHO);
-
     }));
 
     it('can check if keyboard event is important or not', inject(function(editor) {

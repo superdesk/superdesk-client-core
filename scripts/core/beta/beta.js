@@ -7,7 +7,6 @@ angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
  */
 .service('betaService', ['$window', '$rootScope', '$q', 'preferencesService',
     function($window, $rootScope, $q, preferencesService) {
-
         $rootScope.beta = null;
 
         this.toggleBeta = function() {

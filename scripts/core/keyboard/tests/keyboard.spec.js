@@ -1,7 +1,6 @@
 'use strict';
 
 describe('keyboardManager', function() {
-
     beforeEach(window.module('superdesk.core.keyboard'));
 
     var km, elem, $timeout,

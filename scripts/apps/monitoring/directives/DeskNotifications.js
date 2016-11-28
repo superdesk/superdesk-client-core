@@ -7,7 +7,6 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
         scope: {stage: '=stage'},
         templateUrl: 'scripts/apps/monitoring/views/desk-notifications.html',
         link: function(scope) {
-
             function init() {
                 // Update the figures if there's a desk mention message
                 initNotifications();

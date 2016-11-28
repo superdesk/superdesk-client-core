@@ -28,5 +28,4 @@ describe('ContentFiltersConfigCtrl', function() {
             expect(ctrl.activeTab).toEqual('bar');
         });
     });
-
 });

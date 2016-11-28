@@ -89,7 +89,6 @@ angular.module('superdesk.core.activity.list', [])
                             scope.done(scope.data);
                         }
                     });
-
                 };
 
                 scope.$watch('item', initializeActivities, true);

@@ -2,7 +2,6 @@ DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'gettext
     'modal', '$rootScope', '$q'];
 export function DictionaryEditController($scope, dictionaries, upload, gettext, notify,
     modal, $rootScope, $q) {
-
     function onSuccess(result) {
         if ($scope.isAbbreviations()) {
             $rootScope.$broadcast('abbreviations:updated', result.content);

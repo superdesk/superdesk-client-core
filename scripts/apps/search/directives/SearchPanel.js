@@ -180,7 +180,6 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                             }
                         });
                     }
-
                 });
             });
 

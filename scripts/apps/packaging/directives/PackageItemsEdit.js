@@ -51,7 +51,6 @@ export function PackageItemsEdit(packages, notify) {
             });
 
             ngModel.$formatters.unshift(function(modelValue) {
-
                 var root = _.find(modelValue, {id: 'root'});
                 if (typeof root === 'undefined') {
                     return;

@@ -5,7 +5,6 @@ DeskeditStages.$inject = ['gettext', 'api', 'WizardHandler', 'tasks', '$rootScop
 export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, desks, notify, macros) {
     return {
         link: function(scope, elem, attrs) {
-
             var orig = null;
 
             scope.limits = limits;

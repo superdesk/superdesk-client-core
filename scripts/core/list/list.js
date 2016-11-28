@@ -187,7 +187,6 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
                     if ($event) {
                         $event.stopPropagation();
                     }
-
                 }
 
                 scope.$watch('items', function() {

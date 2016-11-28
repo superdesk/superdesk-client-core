@@ -64,7 +64,6 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
             };
 
             function updatePreviousDefault(role) {
-
                 //find previous role with flag 'default'
                 var previous = _.find(scope.roles, function(r) {
                     return r._id !== role._id && r.is_default;

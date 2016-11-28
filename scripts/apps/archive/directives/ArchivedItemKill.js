@@ -46,7 +46,6 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
             scope.cancel = function() {
                 scope.item = null;
             };
-
         }
     };
 }

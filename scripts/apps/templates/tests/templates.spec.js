@@ -6,7 +6,6 @@ describe('templates', function() {
     beforeEach(window.module('superdesk.templates-cache'));
 
     describe('templates widget', function() {
-
         var existingTemplate = {template_name: 'template1', template_desks: ['sports']};
 
         beforeEach(inject(function(desks, api, $q) {

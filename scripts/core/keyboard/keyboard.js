@@ -15,7 +15,6 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 
 // unbind all keyboard shortcuts when switching route
 .run(['$rootScope', 'keyboardManager', function($rootScope, kb) {
-
     $rootScope.$on('$routeChangeStart', function() {
         angular.forEach(kb.keyboardEvent, function(e, key) {
             if (!e.opt.global) {
@@ -260,7 +259,6 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 modifiers.shift.pressed === modifiers.shift.wanted &&
                 modifiers.alt.pressed === modifiers.alt.wanted &&
                 modifiers.meta.pressed === modifiers.meta.wanted) {
-
                 $timeout(function() {
                     callback(e);
                 }, 1);
@@ -278,7 +276,6 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                     return false;
                 }
             }
-
         };
 
         // Store shortcut

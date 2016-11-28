@@ -1,5 +1,4 @@
 describe('url resolver', function() {
-
     var SERVER_URL = 'http://localhost:5000/api',
         USERS_URL = '/users',
         RESOURCES = {_links: {child: [{title: 'users', href: USERS_URL}]}};

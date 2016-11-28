@@ -11,7 +11,6 @@ export function PieChartDashboard(colorSchemes) {
             colors: '='
         },
         link: function(scope, element, attrs) {
-
             var appendTarget = element[0];
             var horizBlocks = attrs.x ? parseInt(attrs.x, 10) : 1;
             var vertBlocks = attrs.y ? parseInt(attrs.y, 10) : 1;
@@ -28,7 +27,6 @@ export function PieChartDashboard(colorSchemes) {
                 radius = Math.min(width, height) / 2;
 
             colorSchemes.get(function(colorsData) {
-
                 var colorScheme = colorsData.schemes[0];
 
                 var arc = d3.svg.arc()
@@ -52,7 +50,6 @@ export function PieChartDashboard(colorSchemes) {
 
                 scope.$watchGroup(['terms', 'colors'], function renderData(newData) {
                     if (!_.isNil(newData[0])) {
-
                         if (newData[1] !== null) {
                             colorScheme = colorsData.schemes[_.findKey(colorsData.schemes, {name: newData[1]})];
                         }
@@ -86,7 +83,6 @@ export function PieChartDashboard(colorSchemes) {
 
                         arrangeLabels();
                     }
-
                 });
                 function arrangeLabels() {
                     var move = 1;
@@ -106,7 +102,6 @@ export function PieChartDashboard(colorSchemes) {
                                         var b = this.getBoundingClientRect();
                                         if (Math.abs(a.left - b.left) * 2 < a.width + b.width &&
                                                 Math.abs(a.top - b.top) * 2 < a.height + b.height) {
-
                                             var dx = (Math.max(0, a.right - b.left) +
                                                     Math.min(0, a.left - b.right)) * 0.01,
                                                 dy = (Math.max(0, a.bottom - b.top) +

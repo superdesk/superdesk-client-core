@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Tag Service', function() {
-
     var deskList = {
         '123': {_id: '123', name: 'desk1'},
         '456': {_id: '456', name: 'desk2'}
@@ -119,7 +118,6 @@ describe('Tag Service', function() {
         expect(members.selectedFacets.type.length).toBe(2);
         expect(members.selectedKeywords.length).toBe(2);
         expect(members.selectedParameters.length).toBe(1);
-
     }));
 
     it('create tags for from desk and to desk', inject(function($location, $rootScope, $q, tags, _desks_) {

@@ -11,7 +11,6 @@ var monitoring = require('./helpers/monitoring'),
     workspace = require('./helpers/workspace');
 
 describe('authoring', function() {
-
     beforeEach(function() {
         monitoring.openMonitoring();
     });
@@ -22,7 +21,7 @@ describe('authoring', function() {
         authoring.cleanBodyHtmlElement();
         authoring.writeText('line\n');
         authoring.addEmbed('embed');
-        var thirdBlockContext = element(by.model('item.body_html')).all(by.repeater('block in vm.blocks')) .get(2);
+        var thirdBlockContext = element(by.model('item.body_html')).all(by.repeater('block in vm.blocks')).get(2);
         thirdBlockContext.element(by.css('.editor-type-html')).sendKeys('line\n');
         authoring.addEmbed('embed', thirdBlockContext);
         authoring.blockContains(0, 'line');

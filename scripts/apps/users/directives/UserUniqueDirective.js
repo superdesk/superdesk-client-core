@@ -4,7 +4,6 @@ export function UserUniqueDirective($q, api) {
         require: 'ngModel',
         scope: {exclude: '='},
         link: function(scope, element, attrs, ctrl) {
-
             /**
              * Test if given value is unique for seleted field
              */
@@ -15,7 +14,6 @@ export function UserUniqueDirective($q, api) {
                     criteria.where[attrs.uniqueField] = value;
                     return api.users.query(criteria)
                         .then(function(users) {
-
                             if (users._items.length
                                 && (!scope.exclude._id || users._items[0]._id !== scope.exclude._id)) {
                                 return $q.reject(users);

@@ -146,7 +146,6 @@ describe('sdUserPrivileges directive', function() {
 
             expect(console.error).toHaveBeenCalledWith('Server error');
         });
-
     });
 
     describe('scope\'s save() method', function() {
@@ -255,5 +254,4 @@ describe('sdUserPrivileges directive', function() {
             expect(isoScope.userPrivileges.$pristine).toBe(true);
         });
     });
-
 });

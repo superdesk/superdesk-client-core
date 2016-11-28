@@ -4,7 +4,6 @@ var openUrl = require('./helpers/utils').open,
     utils = require('./helpers/utils');
 
 describe('ingest_settings', function() {
-
     beforeEach(function(done) {
         openUrl('/#/settings/ingest').then(done);
     });
@@ -121,6 +120,5 @@ describe('ingest_settings', function() {
         ingestSettings.writeTextToRuleName('Test Rule');
         expect(ingestSettings.getTextfromRuleName()).toBe('Test Rule');
         expect(ingestSettings.newRoutingRuleBtn.getAttribute('disabled')).toBeFalsy();
-
     });
 });

@@ -9,7 +9,6 @@ angular.module('superdesk.core.upload.crop', [])
             maxFileSize: '='
         },
         link: function(scope, elem) {
-
             var bounds, boundx, boundy;
 
             var updateScope = _.throttle(function(c) {

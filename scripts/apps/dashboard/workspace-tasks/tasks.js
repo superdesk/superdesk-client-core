@@ -2,7 +2,6 @@ import './styles/tasks.scss';
 
 TasksService.$inject = ['desks', '$rootScope', 'api', 'datetimeHelper'];
 function TasksService(desks, $rootScope, api, datetimeHelper) {
-
     this.statuses = [
         {_id: 'todo', name: gettext('To Do')},
         {_id: 'in_progress', name: gettext('In Progress')},
@@ -66,7 +65,6 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
 
 TasksController.$inject = ['$scope', '$timeout', 'api', 'notify', 'desks', 'tasks', '$filter', 'archiveService'];
 function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, archiveService) {
-
     var KANBAN_VIEW = 'kanban',
         timeout;
 
@@ -326,7 +324,6 @@ function StagesCtrlFactory(api, desks) {
     return function StagesCtrl($scope) {
         var self = this;
         promise.then(function() {
-
             self.stages = null;
             self.selected = null;
 
@@ -370,7 +367,6 @@ angular.module('superdesk.apps.workspace.tasks', [])
 .service('tasks', TasksService)
 
 .config(['superdeskProvider', function(superdesk) {
-
     superdesk.activity('/workspace/tasks', {
         label: gettext('Workspace'),
         controller: TasksController,

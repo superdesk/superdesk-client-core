@@ -12,7 +12,6 @@ var desks = require('./helpers/desks');
 var assertToastMsg = require('./helpers/utils').assertToastMsg;
 
 describe('desks', function() {
-
     beforeEach(function() {
         desks.openDesksSettings();
     });

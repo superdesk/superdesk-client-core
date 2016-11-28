@@ -1,6 +1,5 @@
 ProfileService.$inject = ['api'];
 export function ProfileService(api) {
-
     var RESOURCE = 'activity';
 
     /**

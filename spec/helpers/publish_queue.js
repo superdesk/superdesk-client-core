@@ -5,7 +5,6 @@ var openUrl = require('./utils').open;
 module.exports = new PublishQueue();
 
 function PublishQueue() {
-
     this.openPublishQueue = function() {
         openUrl('/#/publish_queue');
     };
@@ -73,5 +72,4 @@ function PublishQueue() {
         browser.sleep(500);     // wait for a while to get list populated.
         return list.all(by.repeater('queue_item in publish_queue track by queue_item._id')).count();
     };
-
 }

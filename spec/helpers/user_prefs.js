@@ -9,7 +9,6 @@ var openUrl = require('./utils').open;
  * User Profile section.
  */
 function UserPrefs() {
-
     this.btnSave = $('.action-bar').element(by.buttonText('Save'));
     this.btnCancel = $('.action-bar').element(by.buttonText('Cancel'));
 

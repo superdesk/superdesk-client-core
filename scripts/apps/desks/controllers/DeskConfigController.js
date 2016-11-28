@@ -1,6 +1,5 @@
 DeskConfigController.$inject = ['$scope', '$controller', 'gettext', 'notify', 'desks', 'WizardHandler', 'modal'];
 export function DeskConfigController($scope, $controller, gettext, notify, desks, WizardHandler, modal) {
-
     //expecting $scope.desks to be defined
 
     $scope.modalActive = false;

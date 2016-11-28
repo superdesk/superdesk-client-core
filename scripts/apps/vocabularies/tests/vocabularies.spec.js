@@ -22,7 +22,6 @@ describe('vocabularies', function() {
     }));
 
     describe('config modal', function() {
-
         describe('model', function() {
             var scope;
 

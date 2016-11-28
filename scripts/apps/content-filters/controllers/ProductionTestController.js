@@ -116,6 +116,5 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
                 }
             }
         );
-
     };
 }

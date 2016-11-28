@@ -5,7 +5,6 @@ var authoring = require('./helpers/authoring'),
     assertToastMsg = require('./helpers/utils').assertToastMsg;
 
 describe('takes', function() {
-
     beforeEach(function() {
         monitoring.openMonitoring();
     });

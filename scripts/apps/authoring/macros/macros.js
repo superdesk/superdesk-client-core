@@ -1,6 +1,5 @@
 MacrosService.$inject = ['api', 'notify', '$filter'];
 function MacrosService(api, notify, $filter) {
-
     /**
      * Recursively returns all macros
      *

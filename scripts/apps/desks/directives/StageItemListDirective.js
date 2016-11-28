@@ -27,7 +27,6 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             filter: '='
         },
         link: function(scope, elem) {
-
             var criteria;
 
             scope.page = 1;

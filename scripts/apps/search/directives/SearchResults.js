@@ -46,12 +46,11 @@ export function SearchResults(
         require: '^sdSearchContainer',
         templateUrl: asset.templateUrl('apps/search/views/search-results.html'),
         link: function(scope, elem, attr, controller) {
-
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
 
             var projections = search.getProjectedFields();
-	    var multiSelectable = attr.multiSelectable !== undefined;
+            var multiSelectable = attr.multiSelectable !== undefined;
 
             scope.previewingBroadcast = false;
             scope.shouldRefresh = true;
@@ -198,7 +197,6 @@ export function SearchResults(
                 criteria.projections = JSON.stringify(projections);
                 return api.query(getProvider(criteria), criteria).then(function(items) {
                     if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
-
                         var isItemPreviewing = !!scope.selected.preview;
                         var _data = {
                             newItems: items,

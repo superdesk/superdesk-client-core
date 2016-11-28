@@ -101,7 +101,6 @@ describe('sdUserPreferences directive', function() {
             $element.find('[sd-typeahead]').append($newDiv);
 
             spyOn(preferencesService, 'update').and.returnValue($q.when(fetchedPreferences));
-
         }));
 
         it('sends the preferred categories settings to server', inject(function(preferencesService) {
@@ -185,7 +184,6 @@ describe('sdUserPreferences directive', function() {
                 expect(preferencesService.update).not.toHaveBeenCalled();
             }
         ));
-
     });
 
     describe('scope\'s checkAll() method', function() {
@@ -262,5 +260,4 @@ describe('sdUserPreferences directive', function() {
             expect(scope.userPrefs.$dirty).toBe(true);
         });
     });
-
 });

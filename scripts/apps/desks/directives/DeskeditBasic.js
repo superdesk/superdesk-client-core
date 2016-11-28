@@ -99,7 +99,6 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
                         scope.deskTypes = metadata.values.desk_types;
                     });
             }
-
         }
     };
 }

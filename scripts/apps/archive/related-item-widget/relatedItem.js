@@ -137,7 +137,6 @@ function RelatedItemController(
         update: {
             title: 'Associate as update',
             method: function(item) {
-
                 api.save('archive_rewrite', {},
                     {'update': angular.extend({}, $scope.origItem, $scope.item)},
                     item)

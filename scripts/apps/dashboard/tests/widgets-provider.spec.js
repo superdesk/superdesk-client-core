@@ -2,7 +2,6 @@ describe('widgets provider', function() {
     var dashboardWidgetsProvider;
 
     beforeEach(function() {
-
         angular.module('superdesk.apps.dashboard.widgets.tests', [])
         .config(['dashboardWidgetsProvider', function(_dashboardWidgetsProvider_) {
             dashboardWidgetsProvider = _dashboardWidgetsProvider_;

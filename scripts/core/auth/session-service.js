@@ -7,7 +7,6 @@ angular.module('superdesk.core.auth.session').service('session', [
     'storage',
     'SESSION_EVENTS',
     function($q, $rootScope, storage, SESSION_EVENTS) {
-
         var TOKEN_KEY = 'sess:token';
         var TOKEN_HREF = 'sess:href';
         var IDENTITY_KEY = 'sess:user';

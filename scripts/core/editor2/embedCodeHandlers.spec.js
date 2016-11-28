@@ -86,5 +86,4 @@ describe('Embed Code Handlers', function() {
         $httpBackend.flush();
         scope.$digest();
     }));
-
 });

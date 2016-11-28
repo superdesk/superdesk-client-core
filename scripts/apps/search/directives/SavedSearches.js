@@ -9,7 +9,6 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
         templateUrl: asset.templateUrl('apps/search/views/saved-searches.html'),
         scope: {},
         link: function(scope) {
-
             var resource = api('saved_searches');
             scope.selected = null;
             scope.searchText = null;
@@ -86,7 +85,6 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                     });
                 });
             };
-
         }
     };
 }

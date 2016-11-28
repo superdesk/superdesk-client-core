@@ -51,7 +51,6 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
             model: '=ngModel'
         },
         link: function(scope, elem, attr, form) {
-
             scope.model.schema = scope.model.schema || {};
             scope.model.editor = scope.model.editor || {};
             scope.schema = angular.extend({}, content.contentProfileSchema);

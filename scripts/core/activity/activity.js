@@ -143,7 +143,6 @@ function SuperdeskProvider($routeProvider, _) {
         'betaService', 'features', 'privileges', '$injector', 'lodash',
         function superdeskFactory($q, $route, $rootScope, activityService, activityChooser, betaService,
                                   features, privileges, $injector, _) {
-
             /**
              * Render main menu depending on registered acitivites
              */
@@ -270,7 +269,6 @@ function SuperdeskProvider($routeProvider, _) {
                  * Starts an activity for given action and data
                  */
                 intent: function(action, type, data) {
-
                     var intent = {
                         action: action,
                         type: type,
@@ -474,11 +472,9 @@ angular.module('superdesk.core.activity', [
 
             return execute(activity, locals);
         };
-
     }])
 
 .run(['$rootScope', 'superdesk', function($rootScope, superdesk) {
-
     $rootScope.superdesk = superdesk; // add superdesk reference so we can use constants in templates
 
     $rootScope.intent = function() {

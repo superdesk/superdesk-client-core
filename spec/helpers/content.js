@@ -6,7 +6,6 @@ var nav = require('./utils').nav;
 module.exports = new Content();
 
 function Content() {
-
     this.send = send;
 
     this.setListView = function(noNavigate) {

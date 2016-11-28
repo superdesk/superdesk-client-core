@@ -1,6 +1,5 @@
 AuthoringContainerDirective.$inject = ['authoring', 'authoringWorkspace'];
 export function AuthoringContainerDirective(authoring, authoringWorkspace) {
-
     function AuthoringContainerController() {
         var self = this;
 

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Preferences Service', function() {
-
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.core.api'));
 
@@ -143,11 +142,9 @@ describe('Preferences Service', function() {
         $rootScope.$digest();
         expect(privileges.privilege1).toBe(1);
     }));
-
 });
 
 describe('preferences error handling', function() {
-
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.core.api'));
 

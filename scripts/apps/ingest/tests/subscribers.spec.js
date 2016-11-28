@@ -1,7 +1,6 @@
 'use strict';
 
 describe('subscribers service', function() {
-
     beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.apps.publish'));
 
@@ -51,5 +50,4 @@ describe('subscribers service', function() {
         $rootScope.$digest();
         expect(allSubscribers.length).toBe(2);
     }));
-
 });

@@ -3,7 +3,6 @@
  */
 TimeoutInterceptor.$inject = ['$timeout', '$q', '$rootScope', 'request'];
 function TimeoutInterceptor($timeout, $q, $rootScope, request) {
-
     var TIMEOUT = 3000,
         TIMEOUT_MAX = 60000,
         STATUS = {

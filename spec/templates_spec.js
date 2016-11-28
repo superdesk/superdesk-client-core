@@ -11,7 +11,6 @@
 var templates = require('./helpers/templates');
 
 describe('templates', function() {
-
     beforeEach(function() {
         templates.openTemplatesSettings();
     });

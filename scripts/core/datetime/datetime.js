@@ -22,7 +22,6 @@ function DateTimeDirective(datetime, moment) {
 
 DateTimeService.$inject = ['moment', 'weekdays', 'config'];
 function DateTimeService(moment, weekdays, config) {
-
     var ISO_DATE_FORMAT = 'YYYY-MM-DD';
     var ISO_WEEK_FORMAT = 'YYYY-W';
 
@@ -80,7 +79,6 @@ function DateTimeService(moment, weekdays, config) {
 
 DateTimeHelperService.$inject = ['moment', 'config'];
 function DateTimeHelperService(moment, config) {
-
     /*
     * @param timestring 2016-03-01T04:45:00+0000
     * @param timezone Europe/London

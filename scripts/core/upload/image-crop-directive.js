@@ -175,7 +175,6 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                  }, true);
 
                  scope.$on('poiUpdate', function(e, point) {
-
                      angular.element('.crop-area.thumbnails').css({
                          'height': angular.element('.crop-area.thumbnails').height()
                      });

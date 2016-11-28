@@ -6,7 +6,6 @@ export default angular.module('superdesk.core.directives.selectPopup', ['superde
             replace: true,
             templateUrl: asset.templateUrl('core/views/sdselect.html'),
             link: function(scope, element, attrs) {
-
                 scope.open = false;
 
                 scope.toggleSelect = function() {

@@ -33,7 +33,6 @@ ShadowDirective.$inject = ['$timeout'];
 function ShadowDirective($timeout) {
     return {
         link: function(scope, element, attrs) {
-
             element.addClass('shadow-list-holder');
 
             function shadowTimeout() {
@@ -77,7 +76,6 @@ function NewlineToElement() {
  */
 WizardHandlerFactory.$inject = [];
 function WizardHandlerFactory() {
-
     var service = {};
     var wizards = {};
 
@@ -110,7 +108,6 @@ function WizardDirective() {
         },
         transclude: true,
         controller: ['$scope', '$element', 'WizardHandler', function($scope, element, WizardHandler) {
-
             WizardHandler.addWizard($scope.name || WizardHandler.defaultName, this);
             $scope.$on('$destroy', function() {
                 WizardHandler.removeWizard($scope.name || WizardHandler.defaultName);
@@ -224,7 +221,6 @@ AutoexpandDirective.$inject = [];
 function AutoexpandDirective() {
     return {
         link: function(scope, element) {
-
             var _minHeight = element.outerHeight();
 
             function resize() {
@@ -248,7 +244,6 @@ function AutoexpandDirective() {
             element.on('keyup change', function() {
                 resize();
             });
-
         }
     };
 }
@@ -257,7 +252,6 @@ DropdownPositionDirective.$inject = ['$document'];
 function DropdownPositionDirective($document) {
     return {
         link: function(scope, element) {
-
             var tolerance = 300,
                 isRightOriented = null,
                 isInlineOriented = null,
@@ -611,7 +605,6 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             open: '=opened'
         },
         link: function(scope, element, attrs, ctrl) {
-
             var VIEW_DATE_FORMAT = config.view.dateformat;
             var MODEL_DATE_FORMAT = config.model.dateformat;
             var ESC = 27;
@@ -728,7 +721,6 @@ function TimepickerDirective($document) {
         },
         templateUrl: 'scripts/core/ui/views/sd-timepicker.html',
         link: function(scope, element) {
-
             scope.openTimePicker = function(e) {
                 scope.opened = !scope.opened;
 
@@ -767,7 +759,6 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
         },
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
-
             var MODEL_TIME_FORMAT = config.model.timeformat;
             var VIEW_TIME_FORMAT = config.view.timeformat || MODEL_TIME_FORMAT;
             var ESC = 27;
@@ -945,7 +936,6 @@ function TimezoneDirective(tzdata, config, $timeout) {
                 }, 0, false);
                 delete scope.timezone;
             };
-
         }
     };
 }
@@ -961,7 +951,6 @@ function TimepickerPopupDirective($timeout, config) {
             time: '='
         },
         link: function(scope, element) {
-
             var MODEL_TIME_FORMAT = config.model.timeformat;
 
             var POPUP = '.timepicker-popup';
@@ -1286,7 +1275,6 @@ function validationDirective(gettext, gettextCatalog) {
             var invalidText = '<span id="required_span" class="sd-invalid-text">' +
             gettextCatalog.getString('This field is required') + '</span>';
             scope.$watch(attrs.required, function(required) {
-
                 if (!required) {
                     if (elem.hasClass('sd-validate')) {
                         elem.removeClass('sd-validate');

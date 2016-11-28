@@ -7,7 +7,6 @@ var openUrl = require('./helpers/utils').open,
     monitoring = require('./helpers/monitoring');
 
 describe('search', function() {
-
     beforeEach(function() {
         openUrl('/#/search').then(globalSearch.setListView());
     });
@@ -174,7 +173,6 @@ describe('search', function() {
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(2);
-
     });
 
     it('can action on items', function() {

@@ -1,6 +1,5 @@
 angular.module('superdesk.core.auth.auth', []).service('auth', ['$q', 'api', 'session', 'authAdapter',
     function($q, api, session, authAdapter) {
-
     /**
      * Login using given credentials
      *
@@ -9,7 +8,6 @@ angular.module('superdesk.core.auth.auth', []).service('auth', ['$q', 'api', 'se
      * @returns {object} promise
      */
         this.login = function(username, password) {
-
             function fetchIdentity(loginData) {
                 return api.users.getById(loginData.user);
             }

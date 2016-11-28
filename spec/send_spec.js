@@ -6,7 +6,6 @@ var workspace = require('./helpers/workspace'),
     content = require('./helpers/content');
 
 describe('send', function() {
-
     function getItemState(index) {
         var label = content.getItem(index).element(by.css('.state-label'));
         return label.getText();
@@ -165,5 +164,4 @@ describe('send', function() {
         var btnStage = element(by.buttonText('Working Stage'));
         expect(btnStage.getAttribute('class')).toContain('active'); // stage remembered
     });
-
 });

@@ -10,7 +10,6 @@ export function UserSelectList($filter, api) {
         },
         templateUrl: 'scripts/apps/desks/views/user-select.html',
         link: function(scope, elem, attrs) {
-
             var ARROW_UP = 38, ARROW_DOWN = 40, ENTER = 13;
 
             scope.selected = null;

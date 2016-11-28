@@ -65,7 +65,6 @@ export default angular.module('superdesk.core.filters', [])
     }])
     .filter('menuGroup', function() {
         return function(input) {
-
             if (!input || !input.category) {
                 return '#/';
             }

@@ -2,7 +2,6 @@
 'use strict';
 
 describe('superdesk.apps.workspace.content', function() {
-
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));

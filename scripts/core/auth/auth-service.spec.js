@@ -24,7 +24,6 @@ describe('auth service', function() {
     }));
 
     it('can login', inject(function(auth, session, $httpBackend, $rootScope) {
-
         expect(session.identity).toBe(null);
         expect(session.token).toBe(null);
 

@@ -2,7 +2,6 @@
 'use strict';
 
 describe('desks service', function() {
-
     var USER_URL = 'users/1';
 
     beforeEach(window.module('superdesk.apps.desks'));

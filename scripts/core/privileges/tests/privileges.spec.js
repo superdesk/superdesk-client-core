@@ -1,7 +1,6 @@
 'use strict';
 
 describe('privileges', function() {
-
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.core.privileges'));
 

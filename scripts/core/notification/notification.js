@@ -9,7 +9,6 @@
 */
 WebSocketProxy.$inject = ['$rootScope', 'config', '$interval', 'session', 'SESSION_EVENTS'];
 function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) {
-
     var ws = null;
     var connectTimer = -1;
     var TIMEOUT = 5000;

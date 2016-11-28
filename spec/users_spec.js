@@ -23,7 +23,6 @@ describe('users', function() {
     });
 
     describe('profile:', function() {
-
         beforeEach(function(done) {
             openUrl('/#/profile').then(done);
         });
@@ -144,7 +143,6 @@ describe('users', function() {
             expect(pageNavTitle.getText())
                 .toBe('Users Profile: first name last name');
         });
-
     });
 
     describe('user edit:', function() {
@@ -336,5 +334,4 @@ describe('users', function() {
     function modelValue(model) {
         return element(by.model(model)).getAttribute('value');
     }
-
 });

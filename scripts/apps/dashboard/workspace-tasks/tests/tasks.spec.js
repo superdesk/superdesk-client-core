@@ -1,6 +1,5 @@
 
 describe('tasks', function() {
-
     'use strict';
 
     beforeEach(window.module('superdesk.apps.desks'));
@@ -9,7 +8,6 @@ describe('tasks', function() {
     beforeEach(window.module('superdesk.apps.workspace.tasks'));
 
     describe('task controller', function() {
-
         var scope;
         var desk = {_id: '1', working_stage: 'working', incoming_stage: 'inbox'};
 
@@ -32,7 +30,6 @@ describe('tasks', function() {
         }));
 
         describe('kanban', function() {
-
             var result = {_items: []};
 
             beforeEach(inject(function($rootScope, $q, api) {

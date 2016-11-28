@@ -1,7 +1,6 @@
 'use strict';
 
 describe('user notifications', function() {
-
     var notifications = {_items: [
         {recipients: [{'user_id': 'foo', 'read': 0}, {'user_id': 'bar', 'read': 1}]},
         {recipients: [{'user_id': 'foo', 'read': 1}, {'user_id': 'bar', 'read': 1}]},
@@ -54,7 +53,6 @@ describe('user notifications', function() {
 });
 
 describe('desk notifications', function() {
-
     var notifications = {_items: [
         {recipients: [{'desk_id': 'desk1', 'read': 0}, {'desk_id': 'desk2', 'read': 1}]},
         {recipients: [{'desk_id': 'desk1', 'read': 1}, {'desk_id': 'desk2', 'read': 0}]},

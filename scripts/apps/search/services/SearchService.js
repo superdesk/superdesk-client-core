@@ -61,7 +61,6 @@ export function SearchService($location, gettext, config, session) {
      * Set filters for parameters
      */
     function setParameters(filters, params) {
-
         // set the filters for parameters defined in the parameters panel.
         _.each(PARAMETERS, function(value, key) {
             if (!params[key]) {
@@ -256,7 +255,6 @@ export function SearchService($location, gettext, config, session) {
           * @param {Object} query - Query object
           */
         function buildFilters(params, query) {
-
             //created & modified date filters
             if (params.beforefirstcreated || params.afterfirstcreated ||
                 params.beforeversioncreated || params.afterversioncreated) {

@@ -10,7 +10,6 @@ angular.module('superdesk.core.services.storage', [])
      * it stores data as json to keep its type
      */
     .service('storage', function() {
-
         /**
          * @ngdoc method
          * @name storage#getItem

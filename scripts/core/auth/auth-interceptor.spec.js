@@ -1,5 +1,4 @@
 describe('auth interceptor', function() {
-
     beforeEach(window.module('superdesk.core.auth.interceptor'));
 
     beforeEach(window.module(function($provide) {
@@ -9,7 +8,6 @@ describe('auth interceptor', function() {
 
     it('should intercept 401 response, run auth and resend request',
     inject(function($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) {
-
         var interceptor = AuthExpiredInterceptor,
             config = {method: 'GET', url: 'http://localhost:5000/test', headers: {}},
             response = {status: 401, config: config};
@@ -27,7 +25,6 @@ describe('auth interceptor', function() {
 
     it('should intercept 401 response and reject the request if payload has credentials 1',
     inject(function($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) {
-
         var interceptor = AuthExpiredInterceptor,
             config = {method: 'POST', url: 'http://localhost:5000/auth', headers: {}},
             response = {status: 401, config: config, data: {_issues: {credentials: 1}}};

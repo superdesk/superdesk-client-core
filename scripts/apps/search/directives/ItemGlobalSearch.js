@@ -12,7 +12,6 @@ export function ItemGlobalSearch(
         scope: {repo: '=', context: '='},
         templateUrl: asset.templateUrl('apps/search/views/item-globalsearch.html'),
         link: function(scope, elem) {
-
             var ENTER = 13;
             var ESC = 27;
             scope.meta = {};

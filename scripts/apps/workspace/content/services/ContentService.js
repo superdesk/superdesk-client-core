@@ -2,7 +2,6 @@ import * as constant from '../constants';
 
 ContentService.$inject = ['api', 'superdesk', 'templates', 'desks', 'packages', 'archiveService', '$filter'];
 export function ContentService(api, superdesk, templates, desks, packages, archiveService, $filter) {
-
     var TEXT_TYPE = 'text';
 
     function newItem(type) {

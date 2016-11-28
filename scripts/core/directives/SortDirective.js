@@ -20,7 +20,6 @@ export default angular.module('superdesk.core.directives.sort', ['superdesk.core
             },
             templateUrl: asset.templateUrl('core/views/sdSort.html'),
             link: function(scope, element, attrs) {
-
                 scope.loc = $location;
                 scope.sort = scope.loc.search().sort;
 

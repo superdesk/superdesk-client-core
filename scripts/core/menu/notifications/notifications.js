@@ -1,6 +1,5 @@
 UserNotificationsService.$inject = ['$rootScope', '$timeout', 'api', 'session', 'SESSION_EVENTS'];
 function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EVENTS) {
-
     var UPDATE_TIMEOUT = 500;
 
     this._items = null;
@@ -103,7 +102,6 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
 
 DeskNotificationsService.$inject = ['$rootScope', 'api', 'session'];
 function DeskNotificationsService($rootScope, api, session) {
-
     this._items = {};
     this.unread = {};
 

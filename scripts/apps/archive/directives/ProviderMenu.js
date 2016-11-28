@@ -5,7 +5,6 @@ export function ProviderMenu($location) {
         scope: {items: '='},
         templateUrl: 'scripts/apps/archive/views/provider-menu.html',
         link: function(scope, element, attrs) {
-
             scope.setProvider = function(provider) {
                 scope.selected = provider;
                 $location.search('provider', scope.selected);
@@ -18,7 +17,6 @@ export function ProviderMenu($location) {
                     scope.selected = search.provider;
                 }
             });
-
         }
     };
 }

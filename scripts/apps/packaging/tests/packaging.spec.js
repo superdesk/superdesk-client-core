@@ -2,11 +2,9 @@
 'use strict';
 
 describe('packaging', function() {
-
     beforeEach(window.module('superdesk.apps.packaging'));
 
     describe('package-items-edit directive', function() {
-
         // ignore template
         beforeEach(inject(function($templateCache) {
             $templateCache.put('scripts/apps/packaging/views/sd-package-items-edit.html', '');
@@ -41,7 +39,6 @@ describe('packaging', function() {
     });
 
     describe('package-item-preview directive', function() {
-
         // ignore template
         beforeEach(inject(function($templateCache) {
             $templateCache.put('scripts/apps/packaging/views/sd-package-item-preview.html', '');

@@ -40,7 +40,6 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
         },
         initialize: function() {
             if (!this.fetched) {
-
                 this.fetched = this.fetchProviders()
                     .then(angular.bind(this, this.generateLookup));
             }

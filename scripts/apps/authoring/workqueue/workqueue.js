@@ -9,7 +9,6 @@
  */
 WorkqueueService.$inject = ['session', 'api'];
 function WorkqueueService(session, api) {
-
     this.items = [];
 
     /**
@@ -58,7 +57,6 @@ WorkqueueCtrl.$inject = [
 ];
 function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace, multiEdit,
         lock, $location, session, authoring, autosave, confirm, notify, referrer) {
-
     $scope.active = null;
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;

@@ -2,7 +2,6 @@ DeskeditPeople.$inject = ['gettext', 'WizardHandler', 'desks', '$rootScope'];
 export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
     return {
         link: function(scope, elem, attrs) {
-
             scope.$watch('step.current', function(step, previous) {
                 if (step === 'people') {
                     scope.search = null;
@@ -58,7 +57,6 @@ export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
                     } else {
                         scope._errorMessage = gettext('There was a problem, members not saved. Refresh Desks.');
                     }
-
                 }).finally(function() {
                     scope.saving = false;
                     scope.message = null;

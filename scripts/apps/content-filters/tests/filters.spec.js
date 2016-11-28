@@ -1,7 +1,6 @@
 'use strict';
 
 describe('content filters', function() {
-
     var $scope;
     beforeEach(window.module('superdesk.apps.content_filters'));
     beforeEach(window.module('superdesk.mocks'));

@@ -22,7 +22,6 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             columnsLimit: '='
         },
         link: function(scope, elem) {
-
             var PREFERENCES_KEY = 'agg:view';
             var defaultMaxItems = 10;
 

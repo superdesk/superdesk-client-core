@@ -84,7 +84,6 @@ function escapeRegExp(string) {
 
 EditorService.$inject = ['spellcheck', '$q', 'lodash', 'renditions', 'editorUtils'];
 function EditorService(spellcheck, $q, _, renditionsService, utils) {
-
     this.settings = {spellcheck: true};
 
     /**
@@ -797,7 +796,6 @@ angular.module('superdesk.apps.editor2', [
          * Get number of lines for all p nodes before given node withing same parent.
          */
             function getLinesBeforeNode(p) {
-
                 function getLineCount(text) {
                     return text.split('\n').length;
                 }
@@ -1394,7 +1392,6 @@ angular.module('superdesk.apps.editor2', [
                 };
             }
         });
-
     }])
     .config(['embedServiceProvider', 'iframelyServiceProvider', '$injector',
         function(embedServiceProvider, iframelyServiceProvider, $injector) {
@@ -1408,7 +1405,6 @@ angular.module('superdesk.apps.editor2', [
         }]);
 
 function EditorUtilsFactory() {
-
     var CLONE_CLASS = 'clone';
     var HILITE_CLASS = 'sdhilite';
     var ACTIVE_CLASS = 'sdactive';

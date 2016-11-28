@@ -1,6 +1,5 @@
 VocabularyConfigController.$inject = ['$scope', 'vocabularies', '$timeout'];
 export function VocabularyConfigController($scope, vocabularies, $timeout) {
-
     /**
      * Opens vocabulary in the edit modal.
      *

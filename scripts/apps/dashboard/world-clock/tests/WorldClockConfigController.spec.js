@@ -58,5 +58,4 @@ describe('WorldClockConfigController', function() {
         expectedList = ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
         expect(scope.availableZones).toEqual(expectedList);
     });
-
 });

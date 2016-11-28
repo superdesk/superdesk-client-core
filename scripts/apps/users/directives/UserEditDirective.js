@@ -112,7 +112,6 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                     }
 
                     userList.clearCache();
-
                 }, function(response) {
                     notify.pop();
                     if (response.status === 404) {

@@ -40,13 +40,11 @@ function APIProvider() {
 
     apiServiceFactory.$inject = ['$injector', '$q', '$http', 'urls', 'lodash', 'HttpEndpointFactory'];
     function apiServiceFactory($injector, $q, $http, urls, _, HttpEndpointFactory) {
-
         var endpoints = {
             'http': HttpEndpointFactory
         };
 
         function isOK(response) {
-
             function isErrData(data) {
                 return data && data._status && data._status === 'ERR';
             }
@@ -133,7 +131,6 @@ function APIProvider() {
          * Get resource url.
          */
         Resource.prototype.url = function(_id) {
-
             function resolve(urlTemplate, data) {
                 return urlTemplate.replace(/<.*>/, data._id);
             }
@@ -165,7 +162,6 @@ function APIProvider() {
          * Save an item
          */
         Resource.prototype.save = function(item, diff, params) {
-
             if (diff && diff._etag) {
                 item._etag = diff._etag;
             }

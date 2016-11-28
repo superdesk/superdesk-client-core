@@ -2,7 +2,6 @@
 'use strict';
 
 describe('superdesk ui', function() {
-
     beforeEach(window.module(function($provide) {
         $provide.constant('config', {
             model: {

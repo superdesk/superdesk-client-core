@@ -4,7 +4,6 @@
  */
 UserListService.$inject = ['api', '$q', '$cacheFactory'];
 export function UserListService(api, $q, $cacheFactory) {
-
     var userservice = {};
 
     var cache = $cacheFactory('userList');

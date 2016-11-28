@@ -7,7 +7,6 @@ var openUrl = require('./utils').open,
 module.exports = new Monitoring();
 
 function Monitoring() {
-
     this.config = element(by.className('aggregate-settings'));
     this.label = element(by.model('widget.configuration.label'));
 

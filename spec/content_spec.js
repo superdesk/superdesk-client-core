@@ -6,7 +6,6 @@ var workspace = require('./helpers/pages').workspace,
     authoring = require('./helpers/authoring');
 
 describe('content', function() {
-
     var body = element(by.tagName('body'));
 
     function selectedHeadline() {
@@ -250,5 +249,4 @@ describe('content', function() {
         expect(authoring.sendAndContinueBtn.isEnabled()).toBe(false);
         expect(authoring.sendBtn.isEnabled()).toBe(true);
     });
-
 });

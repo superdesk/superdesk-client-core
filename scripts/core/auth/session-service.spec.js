@@ -6,7 +6,6 @@ var SESSION = {
 };
 
 describe('session service', function() {
-
     beforeEach(function() {
         localStorage.clear();
         window.module('superdesk.core.services.storage');

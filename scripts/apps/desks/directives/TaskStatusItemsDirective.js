@@ -8,7 +8,6 @@ export function TaskStatusItemsDirective(search, api, desks) {
             total: '='
         },
         link: function(scope, elem) {
-
             scope.users = desks.userLookup;
 
             var query = search.query({});
@@ -28,7 +27,6 @@ export function TaskStatusItemsDirective(search, api, desks) {
             }, function() {
                 scope.loading = false;
             });
-
         }
     };
 }

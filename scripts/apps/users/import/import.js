@@ -1,6 +1,5 @@
 UserImportService.$inject = ['api', '$q'];
 function UserImportService(api, $q) {
-
     function reject(key, message) {
         var error = {};
         error[key] = 1;
@@ -26,7 +25,6 @@ function UserImportService(api, $q) {
 
 UserImportController.$inject = ['$scope', 'userImport'];
 function UserImportController($scope, userImport) {
-
     $scope.model = {};
     $scope.error = null;
 

@@ -2,7 +2,6 @@ import _ from 'lodash';
 
 HighlightsConfig.$inject = ['$scope', 'highlightsService', 'desks', 'api', 'gettext', 'notify', 'modal'];
 export function HighlightsConfig($scope, highlightsService, desks, api, gettext, notify, modal) {
-
     highlightsService.get().then(function(items) {
         $scope.configurations = items;
     });
@@ -57,7 +56,6 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
                 $scope.message = gettext('There was a problem while saving highlights configuration');
             }
         }
-
     };
 
     $scope.remove = function(config) {

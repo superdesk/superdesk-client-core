@@ -50,7 +50,6 @@ describe('templates', function() {
         beforeEach(window.module('superdesk.apps.aggregate', 'superdesk.templates-cache'));
 
         beforeEach(window.module(function($provide) {
-
             function fakeApi() {
                 function apiMock(endpointName) {
                     return fakeEndpoints[endpointName];

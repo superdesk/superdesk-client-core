@@ -342,5 +342,4 @@ function Desks() {
     this.saveEditedStage = function() {
         element(by.id('save-edited-stage')).click();
     };
-
 }

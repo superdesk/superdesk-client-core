@@ -9,7 +9,6 @@
  */
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace, referrer, $location) {
-
     //1. Service manages multiedit screen
     //2. Screen has it's boards, at least 2 of them
     //3. Every board can be popuplated with one content item
@@ -89,7 +88,6 @@ function MultieditService(storage, superdesk, authoringWorkspace, referrer, $loc
 
 MultieditController.$inject = ['$scope', 'multiEdit', 'lock', 'workqueue'];
 function MultieditController($scope, multiEdit, lock, workqueue) {
-
     $scope.$watch(function() {
         return multiEdit.items;
     }, function(items) {
@@ -112,7 +110,6 @@ function MultieditDropdownDirective(workqueue, multiEdit, $route) {
     return {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html',
         link: function(scope) {
-
             scope.current = $route.current.params.item;
             scope.queue = [scope.current];
 
@@ -149,7 +146,6 @@ function MultieditDropdownInnerDirective(workqueue, multiEdit) {
     return {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-inner-dropdown.html',
         link: function(scope, elem, attrs) {
-
             var workqueueItems = [],
                 multieditItems = [];
 
@@ -188,7 +184,6 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-article.html',
         scope: {article: '=', focus: '='},
         link: function(scope, elem) {
-
             scope.$watch('article', function(newVal, oldVal) {
                 if (newVal && newVal !== oldVal) {
                     openItem();
@@ -252,7 +247,6 @@ MultieditFloatMenuDirective.$inject = ['$document'];
 function MultieditFloatMenuDirective($document) {
     return {
         link: function(scope, elem) {
-
             var open = false;
 
             elem.bind('click', function(event) {

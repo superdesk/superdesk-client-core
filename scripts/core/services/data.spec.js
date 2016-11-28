@@ -19,7 +19,6 @@ describe('DataService', function() {
     }));
 
     it('cat query resource', function() {
-
         var data = new DataAdapter('users'),
             users = {_items: []},
             promise = data.query({max_results: 25});

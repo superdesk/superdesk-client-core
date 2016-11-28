@@ -1,6 +1,5 @@
 DeskListController.$inject = ['$scope', 'desks', 'superdesk', 'privileges', 'tasks', 'api', 'betaService'];
 export function DeskListController($scope, desks, superdesk, privileges, tasks, api, beta) {
-
     var userDesks;
 
     function sorted(result) {

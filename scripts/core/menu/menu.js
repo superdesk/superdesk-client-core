@@ -26,7 +26,6 @@ angular.module('superdesk.core.menu', [
 
     // set flags for other directives
     .directive('sdSuperdeskView', ['asset', function(asset) {
-
         SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk'];
         function SuperdeskViewController(superdeskFlags, superdesk) {
             this.flags = superdeskFlags.flags;
@@ -57,7 +56,6 @@ angular.module('superdesk.core.menu', [
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/views/menu.html'),
                 link: function(scope, elem, attrs, ctrl) {
-
                     scope.currentRoute = null;
                     scope.flags = ctrl.flags;
                     scope.menu = [];
@@ -131,7 +129,6 @@ angular.module('superdesk.core.menu', [
         return {
             templateUrl: asset.templateUrl('core/menu/views/about.html'),
             link: function(scope) {
-
                 api.query('backend_meta', {}).then(
                     function(metadata) {
                         scope.build_rev = metadata.meta_rev;

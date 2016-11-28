@@ -4,7 +4,6 @@ GroupeditBasicDirective.$inject = ['gettext', 'api', 'WizardHandler'];
 export function GroupeditBasicDirective(gettext, api, WizardHandler) {
     return {
         link: function(scope, elem, attrs) {
-
             var limits = {
                 group: 40
             };

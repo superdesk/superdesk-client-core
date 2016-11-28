@@ -75,7 +75,6 @@ export default angular.module('superdesk.core.directives.slider', [])
                             $(this).find('.ui-slider-thumb').removeClass('ui-slider-thumb-active');
                         }
                     });
-
                 });
             }
         };

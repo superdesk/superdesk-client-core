@@ -3,7 +3,6 @@
  */
 AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', '$rootScope', 'config', 'lodash'];
 function AuthExpiredInterceptor(session, $q, $injector, $rootScope, config, _) {
-
     function handleAuthExpired(response) {
         session.expire();
         return session.getIdentity().then(function() {
@@ -145,7 +144,6 @@ export default angular.module('superdesk.core.auth', [
         function($rootScope, $http, $window, session, api, superdeskFlags, authoringWorkspace,
             modal, gettext, SESSION_EVENTS) {
             $rootScope.logout = function() {
-
                 function replace() {
                     session.clear();
                     $window.location.replace('/'); // reset page for new user

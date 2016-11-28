@@ -76,14 +76,12 @@ describe('API Provider', function() {
     }));
 
     describe('HTTP API Endpoint', function() {
-
         afterEach(inject(function($httpBackend) {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         }));
 
         it('can query', inject(function(api, urls, $q, $httpBackend, $http) {
-
             var headers = $http.defaults.headers.common;
             headers['X-Filter'] = 'User.*';
 
@@ -103,7 +101,6 @@ describe('API Provider', function() {
         }));
 
         it('rejects on query error', inject(function(api, urls, $q, $httpBackend) {
-
             $httpBackend.expectGET(USERS_URL).respond(400);
 
             spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
@@ -208,7 +205,6 @@ describe('API Provider', function() {
         }));
 
         it('can delete', inject(function(api, $httpBackend) {
-
             var user = {_links: {self: {href: USER_PATH}}},
                 then = jasmine.createSpy('then');
 
@@ -222,7 +218,6 @@ describe('API Provider', function() {
         }));
 
         it('handles delete on deleted resource as success', inject(function(api, $httpBackend) {
-
             var user = {_links: {self: {href: USER_PATH}}},
                 then = jasmine.createSpy('then');
 
@@ -279,11 +274,9 @@ describe('API Provider', function() {
 
             expect(user.username).toBe('foo');
             expect(urls.resource).toHaveBeenCalledWith('users');
-
         }));
 
         it('can replace resource on given dest', inject(function(api, $httpBackend) {
-
             var data = {username: 'foo'};
 
             $httpBackend.expectPUT(USER_URL, data).respond({});
@@ -328,7 +321,6 @@ describe('API Provider', function() {
     });
 
     describe('new api service', function() {
-
         afterEach(inject(function($httpBackend) {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
@@ -356,7 +348,6 @@ describe('API Provider', function() {
         }));
 
         it('can update', inject(function(api, $httpBackend) {
-
             var user = {_id: 1, _links: {self: {href: USER_PATH}}, name: 'foo', _etag: ETAG};
             var diff = {name: 'bar'};
 
@@ -383,7 +374,6 @@ describe('API Provider', function() {
         }));
 
         it('can query subresource', inject(function(api, $httpBackend) {
-
             var user = {_id: 1};
 
             $httpBackend.expectGET(USER_URL + '/workspace').respond(200, {});
@@ -394,7 +384,6 @@ describe('API Provider', function() {
         }));
 
         it('rejects on status error', inject(function(api, $httpBackend) {
-
             $httpBackend.expectGET(USERS_URL).respond(400);
 
             var success = jasmine.createSpy('success'),
@@ -409,7 +398,6 @@ describe('API Provider', function() {
         }));
 
         it('rejects on data error', inject(function(api, $httpBackend) {
-
             $httpBackend.expectPOST(USERS_URL).respond(200, {_status: 'ERR'});
 
             var success = jasmine.createSpy('success'),

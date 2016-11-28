@@ -11,7 +11,6 @@ function SourcesDirective() {
             renditions: '='
         },
         link: function(scope, elem, attrs) {
-
             function pause() {
                 elem[0].pause();
             }
@@ -40,7 +39,6 @@ function SourcesDirective() {
 }
 
 function FileValidatorDirective() {
-
     function isAcceptedFileType(file, accept) {
         return file.type.indexOf(accept.replace('*', '')) === 0;
     }

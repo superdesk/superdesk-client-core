@@ -12,7 +12,6 @@ export function ItemRepo(
         },
         templateUrl: asset.templateUrl('apps/search/views/item-repo.html'),
         link: function(scope, elem) {
-
             /*
              * function to initialize default values on init or search provider change
              */
@@ -111,7 +110,6 @@ export function ItemRepo(
                     });
 
                     return repos.length ? repos.join(',') : null;
-
                 }
 
                 return scope.repo.search;

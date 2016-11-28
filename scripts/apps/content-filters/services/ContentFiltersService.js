@@ -9,7 +9,6 @@
  */
 ContentFiltersService.$inject = ['api', '$filter'];
 export function ContentFiltersService(api, $filter) {
-
     this.productionTestFilter = function(filter) {
         return filter;
     };

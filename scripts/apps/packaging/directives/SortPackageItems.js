@@ -1,7 +1,6 @@
 export function SortPackageItems() {
     return {
         link: function(scope, element) {
-
             var updated = false;
 
             element.sortable({

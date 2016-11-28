@@ -5,7 +5,6 @@ describe('users api', function() {
     beforeEach(window.module('superdesk.mocks'));
 
     it('can create user', inject(function(usersService, api, $q, $rootScope) {
-
         var user = {},
             data = {'UserName': 'foo', 'Password': 'bar'};
 
@@ -34,7 +33,6 @@ describe('users api', function() {
     }));
 
     xit('can change user password', inject(function(usersService, resource, $rootScope) {
-
         var user = {UserPassword: {href: 'pwd_url'}};
 
         spyOn(resource, 'replace');
@@ -111,7 +109,6 @@ describe('userlist service', function() {
 });
 
 describe('mentio directive', function() {
-
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));

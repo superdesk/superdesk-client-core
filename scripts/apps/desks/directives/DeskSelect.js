@@ -31,7 +31,6 @@ export function DeskSelect(Keys, _, preferencesService) {
         controller: DeskSelectController,
         controllerAs: 'ctrl',
         link: function(scope, elem, attrs) {
-
             elem[0].tabIndex = 0; // make elem recieve keyboard events
 
             scope.filter = '';

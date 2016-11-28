@@ -73,5 +73,4 @@ describe('legal archive service', function() {
         $rootScope.$digest();
         expect(legal.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'asc'});
     }));
-
 });

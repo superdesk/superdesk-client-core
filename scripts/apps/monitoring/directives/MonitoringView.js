@@ -14,7 +14,6 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             state: '='
         },
         link: function(scope, elem) {
-
             var containerElem = elem.find('.content-list');
             containerElem.on('scroll', handleContainerScroll);
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));

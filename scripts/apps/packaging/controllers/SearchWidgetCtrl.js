@@ -1,6 +1,5 @@
 SearchWidgetCtrl.$inject = ['$scope', 'packages', 'api', 'search'];
 export function SearchWidgetCtrl($scope, packages, api, search) {
-
     $scope.selected = null;
     $scope.multiSelected = [];
     $scope.query = null;

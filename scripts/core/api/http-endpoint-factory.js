@@ -6,7 +6,6 @@
  */
 HttpEndpointFactory.$inject = ['$http', '$q', 'urls', 'lodash'];
 function HttpEndpointFactory($http, $q, urls, _) {
-
     /**
      * @ngdoc method
      * @name HttpEndpointFactory#getUrl

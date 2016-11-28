@@ -1,7 +1,6 @@
 'use strict';
 
 describe('upload service', function() {
-
     beforeEach(window.module('superdesk.core.upload'));
 
     beforeEach(window.module(function($provide) {

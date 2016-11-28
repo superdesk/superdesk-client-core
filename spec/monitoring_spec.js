@@ -7,7 +7,6 @@ var authoring = require('./helpers/authoring'),
     desks = require('./helpers/desks');
 
 describe('monitoring', function() {
-
     // Opens desk settings and configure monitoring settings for the named desk
     function setupDeskMonitoringSettings(name) {
         desks.openDesksSettings();

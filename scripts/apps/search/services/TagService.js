@@ -51,7 +51,6 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         while (parameters.indexOf(':') > 0 &&
                parameters.indexOf(':') < parameters.indexOf('(', parameters.indexOf(':')) &&
                parameters.indexOf(':') < parameters.indexOf(')', parameters.indexOf(':'))) {
-
             var colonIndex = parameters.indexOf(':');
             var parameter = parameters.substring(parameters.lastIndexOf(' ', colonIndex),
                 parameters.indexOf(')', colonIndex) + 1);
@@ -229,7 +228,6 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             $location.search('beforefirstcreated', null);
             $location.search('afterversioncreated', null);
             $location.search('beforeversioncreated', null);
-
         } else if (search.scheduled_after) {
             $location.search('scheduled_after', null);
         }

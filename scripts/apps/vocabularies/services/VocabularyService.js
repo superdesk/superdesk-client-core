@@ -74,5 +74,4 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
 
     // reset cache on update
     $rootScope.$on('vocabularies:updated', angular.bind(this, this._resetVocabularies));
-
 }

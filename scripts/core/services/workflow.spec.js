@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Workflow Service', function() {
-
     beforeEach(window.module('superdesk.core.workflow'));
 
     beforeEach(inject(function(preferencesService, $q, workflowService) {

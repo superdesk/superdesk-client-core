@@ -1,7 +1,6 @@
 'use strict';
 
 describe('auth', function() {
-
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.activity'));
     beforeEach(window.module('superdesk.core.auth'));

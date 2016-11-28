@@ -13,7 +13,6 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
         require: 'ngModel',
         restrict: 'A, C',
         link: function(scope, element, attrs, ngModel) {
-
             // cache a reference to the DOM element
             var ta = element[0],
                 $ta = element;
@@ -110,7 +109,6 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
             }
 
             function adjust() {
-
                 var taHeight,
                     taComputedStyleWidth,
                     mirrorHeight,

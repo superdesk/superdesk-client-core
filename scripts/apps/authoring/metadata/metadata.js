@@ -7,7 +7,6 @@ MetadataCtrl.$inject = [
 function MetadataCtrl(
     $scope, desks, metadata, $filter, privileges, datetimeHelper,
     preferencesService, archiveService, config, moment, content) {
-
     desks.initialize()
     .then(function() {
         $scope.deskLookup = desks.deskLookup;
@@ -234,7 +233,6 @@ function MetaTargetedPublishingDirective() {
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-target-publishing.html',
         link: function(scope, elem) {
-
             scope.removeTarget = function(target) {
                 scope.targets = _.without(scope.targets, target);
                 scope.autosave();
@@ -819,7 +817,6 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.change({item: scope.item, field: scope.field});
                 elem.find('.dropdown__toggle').focus(); // retain focus
             };
-
         }
     };
 }

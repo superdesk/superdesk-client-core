@@ -1,5 +1,4 @@
 describe('saved search service', () => {
-
     beforeEach(window.module('superdesk.apps.search'));
 
     it('can reset searches on event', inject((savedSearch, $rootScope, $q, api) => {

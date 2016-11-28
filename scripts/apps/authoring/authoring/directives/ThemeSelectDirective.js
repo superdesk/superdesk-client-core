@@ -1,11 +1,9 @@
 ThemeSelectDirective.$inject = ['authThemes'];
 export function ThemeSelectDirective(authThemes) {
-
     return {
         templateUrl: 'scripts/apps/authoring/views/theme-select.html',
         scope: {key: '@'},
         link: function themeSelectLink(scope, elem) {
-
             var DEFAULT_CLASS = 'main-article theme-container';
 
             scope.themes = authThemes.availableThemes;

@@ -124,7 +124,6 @@ describe('search service', function() {
             {_items: [{_id: 'foo', _current_version: 1, slugline: 'slugline'}]}, null, false);
         expect(nextItems._items.length).toBe(1);
         expect(nextItems._items[0].slugline).toBe('slugline updated');
-
     }));
 
     it('can evalute canShowRefresh for refresh button display', inject(function(search) {
@@ -153,7 +152,6 @@ describe('search service', function() {
 
         _data = prepareData(newItems, scopeItems, scrollTop, isItemPreviewing);
         expect(search.canShowRefresh(_data)).toBe(undefined);
-
     }));
 
     it('can create query for notdesk facet', inject(function($rootScope, search, session) {
@@ -194,7 +192,6 @@ describe('search service', function() {
     }
 
     describe('multi action bar directive', function() {
-
         var scope;
 
         beforeEach(window.module('superdesk.apps.archive'));
@@ -323,7 +320,6 @@ describe('sdSearchPanel directive', function() {
     }));
 
     describe('reacting to changes in the item list', function() {
-
         beforeEach(function() {
             isoScope.items = {
                 _aggregations: {
@@ -383,5 +379,4 @@ describe('sdSearchPanel directive', function() {
             );
         });
     });
-
 });

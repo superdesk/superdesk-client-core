@@ -22,7 +22,6 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      */
     .controller('WorldClockConfigController', ['$scope', 'notify', 'tzdata',
         function($scope, notify, tzdata) {
-
             $scope.availableZones = [];
 
             tzdata.$promise.then(function() {
@@ -57,7 +56,6 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      */
     .controller('WorldClockController', ['$scope', '$interval', 'tzdata',
         function($scope, $interval, tzdata) {
-
             var interval, INTERVAL_DELAY = 500;
 
             function updateUTC() {

@@ -3,7 +3,6 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-rules-content.html',
         link: function(scope) {
-
             var _orig = null;
             scope.editRuleset = null;
 

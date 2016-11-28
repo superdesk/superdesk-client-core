@@ -9,7 +9,6 @@ export function MediaView(keyboardManager, packages) {
             close: '&'
         },
         link: function(scope, elem) {
-
             var packageStack = [];
 
             scope.singleItem = null;

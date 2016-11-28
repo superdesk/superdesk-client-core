@@ -1,7 +1,6 @@
 'use strict';
 
 describe('publish queue', function() {
-
     var subscribers = {'_items': [
         {
             '_created': '2015-05-11T06:00:48+0000',
