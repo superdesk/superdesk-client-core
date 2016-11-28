@@ -52,7 +52,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
             };
 
             function getRecipient(notification) {
-                return _.find(notification.recipients, {'desk_id': scope.desk});
+                return _.find(notification.recipients, {desk_id: scope.desk});
             }
 
             /**

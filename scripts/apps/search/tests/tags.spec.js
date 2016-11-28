@@ -2,8 +2,8 @@
 
 describe('Tag Service', function() {
     var deskList = {
-        '123': {_id: '123', name: 'desk1'},
-        '456': {_id: '456', name: 'desk2'}
+        123: {_id: '123', name: 'desk1'},
+        456: {_id: '456', name: 'desk2'}
     };
 
     var fakeMetadata;
@@ -209,8 +209,8 @@ describe('Tag Service', function() {
 
     it('create tags for ingest provider', inject(function($location, $rootScope, $q, tags, desks, ingestSources) {
         var providers = [{
-            'name': 'Test Provider',
-            '_id': 123
+            name: 'Test Provider',
+            _id: 123
         }];
 
         ingestSources.providersLookup = _.keyBy(providers, '_id');

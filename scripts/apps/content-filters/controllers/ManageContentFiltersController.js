@@ -79,7 +79,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
     };
 
     $scope.addStatement = function() {
-        $scope.contentFilter.content_filter.push({'expression': {}});
+        $scope.contentFilter.content_filter.push({expression: {}});
     };
 
     $scope.removeStatement = function(index) {
@@ -114,7 +114,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
             return;
         }
 
-        contentFilters.testContentFilter({'filter': $scope.contentFilter, 'article_id': $scope.test.article_id})
+        contentFilters.testContentFilter({filter: $scope.contentFilter, article_id: $scope.test.article_id})
             .then(
                 function(result) {
                     $scope.test.test_result = result.match_results ? 'Does Match' : 'Doesn\'t Match';
@@ -168,7 +168,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
     var initContentFilter = function() {
         if (!$scope.contentFilter.content_filter || $scope.contentFilter.content_filter.length === 0) {
-            $scope.contentFilter.content_filter = [{'expression': {}}];
+            $scope.contentFilter.content_filter = [{expression: {}}];
         }
     };
 

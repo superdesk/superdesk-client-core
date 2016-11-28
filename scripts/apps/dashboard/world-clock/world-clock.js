@@ -91,8 +91,8 @@ angular.module('superdesk.apps.dashboard.world-clock', [
 
         return {
             scope: {
-                'utc': '=',
-                'tz': '@'
+                utc: '=',
+                tz: '@'
             },
             link: function(scope, element, attrs) {
                 var width = 105,

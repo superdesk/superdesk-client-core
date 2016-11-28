@@ -151,8 +151,8 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
         var endTime = moment().hours(23).minutes(59).seconds(59);
 
         var filter = {
-            'schedule_desk': desks.getCurrentDeskId(),
-            'next_run': {$gte: toServerTime(startTime), $lte: toServerTime(endTime)}
+            schedule_desk: desks.getCurrentDeskId(),
+            next_run: {$gte: toServerTime(startTime), $lte: toServerTime(endTime)}
         };
 
         api.query('content_templates', {where: filter, sort: 'next_run'}).then(function(results) {

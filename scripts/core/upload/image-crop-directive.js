@@ -15,15 +15,15 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             var $cropBox = elem.find('.crop-box');
             var $img = elem.find('img');
             elem.css({
-                'position': 'relative'
+                position: 'relative'
             });
             scope.$watch('src', function() {
                 img = new Image();
                 img.onload = function() {
                     $img.css({
-                        'position': 'absolute',
-                        'top': 0,
-                        'left': 0,
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
                         'z-index': 1000
                     });
                     updateCropBox();
@@ -40,8 +40,8 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                     var cBottom = $img.height() - scope.cropData.CropBottom * ratio;
                     var cRight = $img.width() - scope.cropData.CropRight * ratio;
                     $cropBox.css({
-                        'width': $img.width(),
-                        'height': $img.height(),
+                        width: $img.width(),
+                        height: $img.height(),
                         'border-top-width': cTop + 'px',
                         'border-left-width': cLeft + 'px',
                         'border-bottom-width': cBottom + 'px',
@@ -176,7 +176,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
 
                  scope.$on('poiUpdate', function(e, point) {
                      angular.element('.crop-area.thumbnails').css({
-                         'height': angular.element('.crop-area.thumbnails').height()
+                         height: angular.element('.crop-area.thumbnails').height()
                      });
 
                      var center = {

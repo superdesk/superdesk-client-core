@@ -5,7 +5,7 @@ UserEnableCommand.$inject = ['api', 'data', '$q', 'notify', 'gettext', 'usersSer
 export function UserEnableCommand(api, data, $q, notify, gettext, usersService, $rootScope) {
     var user = data.item;
 
-    return usersService.save(user, {'is_enabled': true, 'is_active': true}).then(
+    return usersService.save(user, {is_enabled: true, is_active: true}).then(
         function(response) {
             $rootScope.$broadcast('user:updated', response);
         },

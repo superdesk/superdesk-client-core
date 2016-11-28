@@ -27,7 +27,7 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
             subscribersService.fetchActiveSubscribers().then(function(items) {
                 scope.customSubscribers = [];
                 _.each(items, function(item) {
-                    scope.customSubscribers.push({'_id': item._id, 'name': item.name});
+                    scope.customSubscribers.push({_id: item._id, name: item.name});
                 });
             });
 

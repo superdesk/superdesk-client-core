@@ -49,7 +49,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
                 return userList.get(prefix, page, 10).then(function(result) {
                     var filteredUsers = result._items.slice((page - 1) * 10, page * 10);
                     _.each(filteredUsers, function(user) {
-                        list.push({'type': 'user', 'item': user});
+                        list.push({type: 'user', item: user});
                     });
                 });
             }
@@ -69,7 +69,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
                     }
 
                     _.each(filteredDesks, function(item) {
-                        list.push({'type': 'desk', 'item': item});
+                        list.push({type: 'desk', item: item});
                     });
                 });
             }

@@ -78,7 +78,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
 
             $scope.fetchSourceErrors = function() {
                 if ($scope.provider && $scope.provider.feeding_service) {
-                    return api('io_errors').query({'source_type': $scope.provider.feeding_service})
+                    return api('io_errors').query({source_type: $scope.provider.feeding_service})
                         .then(function(result) {
                             $scope.provider.source_errors = result._items[0].source_errors;
                             $scope.provider.all_errors = result._items[0].all_errors;
@@ -259,7 +259,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             };
 
             $scope.gotoIngest = function(source) {
-                $location.path('/search').search({'repo': 'ingest', 'source': angular.toJson([source])});
+                $location.path('/search').search({repo: 'ingest', source: angular.toJson([source])});
             };
 
             /**

@@ -140,12 +140,12 @@ export function Permissions(superdesk) {
 
         .permission('user-roles-manage', {
             label: gettext('Manage user roles'),
-            permissions: {'user_roles': {write: true}}
+            permissions: {user_roles: {write: true}}
         })
 
         .permission('user-roles-read', {
             label: gettext('Read user roles'),
-            permissions: {'user_roles': {read: true}}
+            permissions: {user_roles: {read: true}}
         });
 }
 

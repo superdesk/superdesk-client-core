@@ -8,15 +8,15 @@ ContentResults.$inject = ['$location', 'preferencesService', 'packages', 'tags',
 export function ContentResults($location, preferencesService, packages, tags, asset, search) {
     var update = {
         'archive:view': {
-            'allowed': [
+            allowed: [
                 'mgrid',
                 'compact'
             ],
-            'category': 'archive',
-            'view': 'mgrid',
-            'default': 'mgrid',
-            'label': 'Users archive view format',
-            'type': 'string'
+            category: 'archive',
+            view: 'mgrid',
+            default: 'mgrid',
+            label: 'Users archive view format',
+            type: 'string'
         }
     };
 

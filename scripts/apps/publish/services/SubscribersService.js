@@ -27,7 +27,7 @@ export function SubscribersService(api, $q, $filter) {
 
         fetchActiveSubscribers: function(criteria) {
             return _getAllSubscribers(criteria).then(function(result) {
-                return _.filter(result, {'is_active': true});
+                return _.filter(result, {is_active: true});
             });
         },
 
@@ -40,7 +40,7 @@ export function SubscribersService(api, $q, $filter) {
         },
 
         fetchSubscribersByKeyword: function(keyword) {
-            return this.fetchSubscribers({'$or': [{name: {'$regex': keyword, '$options': '-i'}}]});
+            return this.fetchSubscribers({$or: [{name: {$regex: keyword, $options: '-i'}}]});
         },
 
         fetchSubscribersByIds: function(ids) {
@@ -48,7 +48,7 @@ export function SubscribersService(api, $q, $filter) {
             _.each(ids, function(id) {
                 parts.push({_id: id});
             });
-            return this.fetchSubscribers({'$or': parts});
+            return this.fetchSubscribers({$or: parts});
         }
     };
 

@@ -24,16 +24,16 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     tags.removedFacets = {};
 
     var FacetKeys = {
-        'type': 1,
-        'category': 1,
-        'urgency': 1,
-        'priority': 1,
-        'source': 1,
-        'credit': 1,
-        'desk': 1,
-        'genre': 1,
-        'legal': 1,
-        'sms': 1
+        type: 1,
+        category: 1,
+        urgency: 1,
+        priority: 1,
+        source: 1,
+        credit: 1,
+        desk: 1,
+        genre: 1,
+        legal: 1,
+        sms: 1
     };
 
     var cvs = search.cvs;

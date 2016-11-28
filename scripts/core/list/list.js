@@ -134,8 +134,8 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
             transclude: true,
             template: '<div ng-transclude></div>',
             scope: {
-                'items': '=',
-                'select': '&'
+                items: '=',
+                select: '&'
             },
             link: function(scope, elem, attrs) {
                 var UP = -1,

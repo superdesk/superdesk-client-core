@@ -515,7 +515,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     .then(function(task) {
                         scope.task = task;
                         msg = sendAndContinue ? 'Send & Continue' : 'Send';
-                        return scope.beforeSend({'action': msg});
+                        return scope.beforeSend({action: msg});
                     })
                     .then(function(result) {
                         if (result && result._etag) {

@@ -5,8 +5,8 @@ ItemSortbar.$inject = ['search', 'asset', '$location'];
  */
 export function ItemSortbar(search, asset, $location) {
     var repos = {
-        'aapmm': true,
-        'paimg': true,
+        aapmm: true,
+        paimg: true,
         // temporaty fix to have several scanpix instances (SDNTB-217)
         // FIXME: need to be refactored (SD-4448)
         'scanpix(ntbtema)': true,

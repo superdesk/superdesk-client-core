@@ -41,7 +41,7 @@ function APIProvider() {
     apiServiceFactory.$inject = ['$injector', '$q', '$http', 'urls', 'lodash', 'HttpEndpointFactory'];
     function apiServiceFactory($injector, $q, $http, urls, _, HttpEndpointFactory) {
         var endpoints = {
-            'http': HttpEndpointFactory
+            http: HttpEndpointFactory
         };
 
         function isOK(response) {

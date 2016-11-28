@@ -4,12 +4,12 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
     return {
         templateUrl: 'scripts/apps/archive/views/archived-kill.html',
         scope: {
-            'item': '='
+            item: '='
         },
         link: function(scope, elem, attr) {
             scope._editable = true;
 
-            var itemToDelete = {'_id': scope.item._id, '_etag': scope.item._etag};
+            var itemToDelete = {_id: scope.item._id, _etag: scope.item._etag};
             api.remove(itemToDelete, {}, 'archived').then(
                 function(response) {
                     var fields = _.union(_.keys(authoring.getContentFieldDefaults()), ['_id', 'versioncreated']);

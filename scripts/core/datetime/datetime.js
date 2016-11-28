@@ -87,8 +87,8 @@ function DateTimeHelperService(moment, config) {
         var momentTS = moment.tz(timestring, timezone);
 
         return {
-            'date': momentTS.format(config.model.dateformat),
-            'time': momentTS.format(config.model.timeformat)
+            date: momentTS.format(config.model.dateformat),
+            time: momentTS.format(config.model.timeformat)
         };
     };
 

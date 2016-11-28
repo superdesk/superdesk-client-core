@@ -53,15 +53,15 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 }
                 var langCode = lang.replace('_', '-');
                 if (langmap[langCode]) {
-                    return {'code': lang, 'nativeName': langmap[langCode].nativeName};
+                    return {code: lang, nativeName: langmap[langCode].nativeName};
                 }
             });
 
             //add baseLanguage if needed
             if (noBaseLanguage) {
                 scope.languages.unshift({
-                    'code': gettextCatalog.baseLanguage,
-                    'nativeName': langmap[gettextCatalog.baseLanguage].nativeName
+                    code: gettextCatalog.baseLanguage,
+                    nativeName: langmap[gettextCatalog.baseLanguage].nativeName
                 });
             }
 

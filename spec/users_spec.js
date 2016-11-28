@@ -13,11 +13,11 @@ describe('users', function() {
         post({
             uri: '/users',
             json: {
-                'first_name': 'foo',
-                'last_name': 'bar',
-                'username': 'spam',
-                'email': 'foo@bar.com',
-                'sign_off': 'foobar'
+                first_name: 'foo',
+                last_name: 'bar',
+                username: 'spam',
+                email: 'foo@bar.com',
+                sign_off: 'foobar'
             }
         }, done);
     });

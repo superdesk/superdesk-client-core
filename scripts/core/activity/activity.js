@@ -248,7 +248,7 @@ function SuperdeskProvider($routeProvider, _) {
                                 return $injector.invoke(
                                     activity.additionalCondition,
                                     {},
-                                    {'item': item ? item : intent.data}
+                                    {item: item ? item : intent.data}
                                 );
                             }
 

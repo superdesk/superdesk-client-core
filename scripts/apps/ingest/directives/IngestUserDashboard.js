@@ -60,7 +60,7 @@ export function IngestUserDashboard(api, userList, privileges) {
                 }
 
                 criteria.where = JSON.stringify({
-                    '$and': where
+                    $and: where
                 });
 
                 api.query('activity', criteria).then(function(result) {

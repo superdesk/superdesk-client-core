@@ -29,9 +29,9 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
  */
 .run(['$rootScope', '$document', 'Keys', function KeyEventBroadcast($rootScope, $document, Keys) {
     var ignoreNodes = {
-        'INPUT': true,
-        'TEXTAREA': true,
-        'BUTTON': true
+        INPUT: true,
+        TEXTAREA: true,
+        BUTTON: true
     };
 
     $document.on('keydown', function(e) {
@@ -61,25 +61,25 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 .service('keyboardManager', ['$window', '$timeout', function($window, $timeout) {
     var stack = [],
         defaultOpt = {
-            'type': 'keydown',
-            'propagate': false,
-            'inputDisabled': false,
-            'target': $window.document,
-            'keyCode': false,
-            'global': false
+            type: 'keydown',
+            propagate: false,
+            inputDisabled: false,
+            target: $window.document,
+            keyCode: false,
+            global: false
         },
         shiftNums = {
             '`': '~',
-            '1': '!',
-            '2': '@',
-            '3': '#',
-            '4': '$',
-            '5': '%',
-            '6': '^',
-            '7': '&',
-            '8': '*',
-            '9': '(',
-            '0': ')',
+            1: '!',
+            2: '@',
+            3: '#',
+            4: '$',
+            5: '%',
+            6: '^',
+            7: '&',
+            8: '*',
+            9: '(',
+            0: ')',
             '-': '_',
             '=': '+',
             ';': ':',
@@ -90,57 +90,57 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             '\\': '|'
         },
         specialKeys = { // Special Keys - and their codes
-            'esc': 27,
-            'escape': 27,
-            'tab': 9,
-            'space': 32,
-            'return': 13,
-            'enter': 13,
-            'backspace': 8,
+            esc: 27,
+            escape: 27,
+            tab: 9,
+            space: 32,
+            return: 13,
+            enter: 13,
+            backspace: 8,
 
-            'scrolllock': 145,
-            'scroll_lock': 145,
-            'scroll': 145,
-            'capslock': 20,
-            'caps_lock': 20,
-            'caps': 20,
-            'numlock': 144,
-            'num_lock': 144,
-            'num': 144,
+            scrolllock: 145,
+            scroll_lock: 145,
+            scroll: 145,
+            capslock: 20,
+            caps_lock: 20,
+            caps: 20,
+            numlock: 144,
+            num_lock: 144,
+            num: 144,
 
-            'pause': 19,
-            'break': 19,
+            pause: 19,
+            break: 19,
 
-            'insert': 45,
-            'home': 36,
-            'delete': 46,
-            'end': 35,
+            insert: 45,
+            home: 36,
+            delete: 46,
+            end: 35,
 
-            'pageup': 33,
-            'page_up': 33,
-            'pu': 33,
+            pageup: 33,
+            page_up: 33,
+            pu: 33,
 
-            'pagedown': 34,
-            'page_down': 34,
-            'pd': 34,
+            pagedown: 34,
+            page_down: 34,
+            pd: 34,
 
-            'left': 37,
-            'up': 38,
-            'right': 39,
-            'down': 40,
+            left: 37,
+            up: 38,
+            right: 39,
+            down: 40,
 
-            'f1': 112,
-            'f2': 113,
-            'f3': 114,
-            'f4': 115,
-            'f5': 116,
-            'f6': 117,
-            'f7': 118,
-            'f8': 119,
-            'f9': 120,
-            'f10': 121,
-            'f11': 122,
-            'f12': 123
+            f1: 112,
+            f2: 113,
+            f3: 114,
+            f4: 115,
+            f5: 116,
+            f6: 117,
+            f7: 118,
+            f8: 119,
+            f9: 120,
+            f10: 121,
+            f11: 122,
+            f12: 123
         };
 
     // Store all keyboard combination shortcuts
@@ -280,12 +280,12 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 
         // Store shortcut
         this.keyboardEvent[lbl] = {
-            'callback': fct,
-            'target': elt,
-            'event': options.type,
-            '_callback': callback,
-            'opt': options,
-            'label': lbl
+            callback: fct,
+            target: elt,
+            event: options.type,
+            _callback: callback,
+            opt: options,
+            label: lbl
         };
 
         //Attach the function with the event

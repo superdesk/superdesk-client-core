@@ -27,10 +27,10 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
     ];
 
     var readyState = {
-        'CONNECTING': 0,
-        'OPEN': 1,
-        'CLOSING': 2,
-        'CLOSED': 3
+        CONNECTING: 0,
+        OPEN: 1,
+        CLOSING: 2,
+        CLOSED: 3
     };
 
     if (!config.server.ws) {
@@ -134,22 +134,22 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     });
 
     var userEvents = {
-        'user_disabled': 'User is disabled',
-        'user_inactivated': 'User is inactivated',
-        'user_role_changed': 'User role is changed',
-        'user_type_changed': 'User type is changed',
-        'user_privileges_revoked': 'User privileges are revoked'
+        user_disabled: 'User is disabled',
+        user_inactivated: 'User is inactivated',
+        user_role_changed: 'User role is changed',
+        user_type_changed: 'User type is changed',
+        user_privileges_revoked: 'User privileges are revoked'
     };
     var roleEvents = {
-        'role_privileges_revoked': 'Role privileges are revoked'
+        role_privileges_revoked: 'Role privileges are revoked'
     };
     var deskEvents = {
-        'desk_membership_revoked': 'User removed from desk',
-        'desk': 'Desk is deleted/updated'
+        desk_membership_revoked: 'User removed from desk',
+        desk: 'Desk is deleted/updated'
     };
     var stageEvents = {
-        'stage': 'Stage is created/updated/deleted',
-        'stage_visibility_updated': 'Stage visibility change'
+        stage: 'Stage is created/updated/deleted',
+        stage_visibility_updated: 'Stage visibility change'
     };
 
     $rootScope.$on('reload', function(event, msg) {

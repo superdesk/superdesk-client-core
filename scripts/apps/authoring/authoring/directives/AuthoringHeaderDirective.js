@@ -31,7 +31,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 var financeCategory;
 
                 if (!display && scope.item.anpa_category) {
-                    financeCategory = _.find(scope.item.anpa_category, {'qcode': 'f'});
+                    financeCategory = _.find(scope.item.anpa_category, {qcode: 'f'});
                     display = !_.isUndefined(financeCategory) && !_.isNull(financeCategory);
                 }
 
@@ -70,7 +70,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                         var itemId = item.broadcast.takes_package_id ?
                             item.broadcast.takes_package_id : item.broadcast.master_id;
                         return api.find('archive', itemId).then(function(item) {
-                            $rootScope.$broadcast('broadcast:preview', {'item': item});
+                            $rootScope.$broadcast('broadcast:preview', {item: item});
                         });
                     };
                 }
@@ -132,17 +132,17 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                             return;
                         }
                         vocabularies.getVocabularies().then(function(vocabulariesColl) {
-                            var vocabulary = _.find(vocabulariesColl._items, {'_id': subjectName});
+                            var vocabulary = _.find(vocabulariesColl._items, {_id: subjectName});
                             if (vocabulary) {
                                 var qcode = _.keys(vocabulary.service).pop();
-                                var categoriesVocabulary = _.find(vocabulariesColl._items, {'_id': 'categories'});
-                                var category = _.find(categoriesVocabulary.items, {'qcode': qcode});
-                                if (category && _.findIndex(scope.item.anpa_category, {'name': category.name}) === -1) {
+                                var categoriesVocabulary = _.find(vocabulariesColl._items, {_id: 'categories'});
+                                var category = _.find(categoriesVocabulary.items, {qcode: qcode});
+                                if (category && _.findIndex(scope.item.anpa_category, {name: category.name}) === -1) {
                                     if (!scope.item.anpa_category) {
                                         scope.item.anpa_category = [];
                                     }
                                     scope.item.anpa_category.splice(-1, 0,
-                                        {'name': category.name, 'qcode': category.qcode, 'scheme': category.scheme});
+                                        {name: category.name, qcode: category.qcode, scheme: category.scheme});
                                 }
                             }
                         });

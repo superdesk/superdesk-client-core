@@ -202,7 +202,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         this.cleanUpdatesBeforePublishing(orig, extDiff);
 
-        return api.save('validate', {'act': act, 'type': orig.type, 'validate': extDiff});
+        return api.save('validate', {act: act, type: orig.type, validate: extDiff});
     };
 
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {
@@ -479,7 +479,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state);
 
-            var desk = _.find(self.userDesks, {'_id': currentItem.task.desk});
+            var desk = _.find(self.userDesks, {_id: currentItem.task.desk});
             if (!desk) {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 // user can action `update` even if the user is not a member.

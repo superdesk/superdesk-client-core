@@ -77,7 +77,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         }
 
         if (templateName) {
-            criteria.template_name = {'$regex': templateName, '$options': '-i'};
+            criteria.template_name = {$regex: templateName, $options: '-i'};
         }
 
         // if you are admin then you can edit public templates
@@ -98,7 +98,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         return $q.when(criteria)
             .then(criteria => {
                 params.where = JSON.stringify({
-                    '$and': [criteria]
+                    $and: [criteria]
                 });
                 return params;
             }).then(params => {
@@ -120,12 +120,12 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         }
 
         var deskCriteria = [
-            {'template_desks': {'$exists': false}, is_public: true},
-            {'template_desks': {'$eq': []}, is_public: true}
+            {template_desks: {$exists: false}, is_public: true},
+            {template_desks: {$eq: []}, is_public: true}
         ];
 
         if (desk) {
-            deskCriteria.push({'template_desks': {'$in': [desk]}, is_public: true});
+            deskCriteria.push({template_desks: {$in: [desk]}, is_public: true});
         }
 
         criteria.$or = [{$or: deskCriteria}, {user: user, is_public: false}];
@@ -135,12 +135,12 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         }
 
         if (templateName) {
-            criteria.template_name = {'$regex': templateName, '$options': '-i'};
+            criteria.template_name = {$regex: templateName, $options: '-i'};
         }
 
         if (!_.isEmpty(criteria)) {
             params.where = JSON.stringify({
-                '$and': [criteria]
+                $and: [criteria]
             });
         }
 
@@ -155,7 +155,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         var params = {
             max_results: PAGE_SIZE,
             page: 1,
-            where: JSON.stringify({_id: {'$in': templateIds}})
+            where: JSON.stringify({_id: {$in: templateIds}})
         };
 
         return api.query('content_templates', params)

@@ -101,7 +101,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
         }
 
         $scope.loading = true;
-        products.testProducts({'article_id': $scope.articleId}).then(function(results) {
+        products.testProducts({article_id: $scope.articleId}).then(function(results) {
             $scope.rawResults = results;
             $scope.filteredProducts = [];
 

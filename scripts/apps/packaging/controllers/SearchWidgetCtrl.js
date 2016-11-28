@@ -26,10 +26,10 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
 
         var query = search.query(params);
 
-        query.filter({'not': {'exists': {'field': 'embargo'}}});
+        query.filter({not: {exists: {field: 'embargo'}}});
         query.size(25);
         if ($scope.highlight) {
-            query.filter({term: {'highlights': $scope.highlight.toString()}});
+            query.filter({term: {highlights: $scope.highlight.toString()}});
         }
 
         var criteria = query.getCriteria(true);

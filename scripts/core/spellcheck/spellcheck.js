@@ -57,8 +57,8 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
 
                 let langItems = items;
 
-                if (baseLang && _.find(items, {'language_id': lang}) && _.find(items, {'language_id': baseLang})) {
-                    langItems = _.filter(items, {'language_id': lang});
+                if (baseLang && _.find(items, {language_id: lang}) && _.find(items, {language_id: baseLang})) {
+                    langItems = _.filter(items, {language_id: lang});
                 }
 
                 angular.forEach(langItems, addDict);
@@ -106,8 +106,8 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
                 self.abbreviationsDict.content = {};
 
                 let langItems = items;
-                if (baseLang && _.find(items, {'language_id': lang}) && _.find(items, {'language_id': baseLang})) {
-                    langItems = _.filter(items, {'language_id': lang});
+                if (baseLang && _.find(items, {language_id: lang}) && _.find(items, {language_id: baseLang})) {
+                    langItems = _.filter(items, {language_id: lang});
                 }
 
                 angular.forEach(langItems, function(item) {
@@ -393,9 +393,9 @@ function SpellcheckMenuController(editor, preferencesService) {
     function setStatus(status) {
         var updates = {};
         updates[PREFERENCES_KEY] = {
-            'type': 'bool',
-            'enabled': status,
-            'default': true
+            type: 'bool',
+            enabled: status,
+            default: true
         };
 
         preferencesService.update(updates, PREFERENCES_KEY);

@@ -467,7 +467,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
     this.generateMediaTag = function(data) {
         var mediaTypes = {
-            'video': function() {
+            video: function() {
                 var videoTag = ['<video controls="controls">'];
                 angular.forEach(data.renditions, function(rendition, name) {
                     if (_.some(['.mp4', '.webm', '.ogv'], function(ext) {
@@ -479,7 +479,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 videoTag.push('</video>');
                 return videoTag.join('');
             },
-            'picture': function() {
+            picture: function() {
                 var url = data.url, altText = data.altText;
                 var promiseFinished;
                 // if this is a SD archive, we use its properties
@@ -1000,7 +1000,7 @@ angular.module('superdesk.apps.editor2', [
                         // if config.multiBlockEdition is true, add Embed and Image button to the toolbar
                             if (scope.config.multiBlockEdition) {
                             // this dummy imageDragging stop preventing drag & drop events
-                                editorConfig.extensions = {'imageDragging': {}};
+                                editorConfig.extensions = {imageDragging: {}};
                                 if (editorConfig.toolbar.buttons.indexOf('table') !== -1
                                     && angular.isDefined(MediumEditorTable)) {
                                     editorConfig.extensions.table = new MediumEditorTable({
@@ -1315,9 +1315,9 @@ angular.module('superdesk.apps.editor2', [
                             },
                             insertMedia: function(media) {
                                 var mediaType = {
-                                    'picture': 'Image',
-                                    'graphic': 'Image',
-                                    'video': 'Video'
+                                    picture: 'Image',
+                                    graphic: 'Image',
+                                    video: 'Video'
                                 };
                                 var imageBlock = {
                                     blockType: 'embed',

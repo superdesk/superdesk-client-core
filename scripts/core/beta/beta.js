@@ -12,11 +12,11 @@ angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
         this.toggleBeta = function() {
             var update = {
                 'feature:preview': {
-                    'default': false,
-                    'enabled': !$rootScope.beta,
-                    'label': 'Enable Feature Preview',
-                    'type': 'bool',
-                    'category': 'feature'
+                    default: false,
+                    enabled: !$rootScope.beta,
+                    label: 'Enable Feature Preview',
+                    type: 'bool',
+                    category: 'feature'
                 }
             };
 

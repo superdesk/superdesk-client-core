@@ -246,10 +246,10 @@ function MetaTargetedPublishingDirective() {
                 let parsedTarget = JSON.parse(target);
 
                 var existing = _.find(scope.targets,
-                    {'qcode': parsedTarget.qcode, 'name': parsedTarget.name, 'allow': !scope.deny});
+                    {qcode: parsedTarget.qcode, name: parsedTarget.name, allow: !scope.deny});
 
                 if (!existing) {
-                    scope.targets.push({'qcode': parsedTarget.qcode, 'name': parsedTarget.name, 'allow': !scope.deny});
+                    scope.targets.push({qcode: parsedTarget.qcode, name: parsedTarget.name, allow: !scope.deny});
                     scope.autosave();
                 }
 
@@ -902,8 +902,8 @@ function MetaLocatorsDirective() {
                     if (previousLocator && scope.selectedTerm === previousLocator.city) {
                         loc = previousLocator;
                     } else {
-                        loc = {'city': scope.selectedTerm, 'city_code': scope.selectedTerm, 'tz': 'UTC',
-                            'dateline': 'city', 'country': '', 'country_code': '', 'state_code': '', 'state': ''};
+                        loc = {city: scope.selectedTerm, city_code: scope.selectedTerm, tz: 'UTC',
+                            dateline: 'city', country: '', country_code: '', state_code: '', state: ''};
                     }
                 }
 
@@ -937,13 +937,13 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         values: {},
         cvs: [],
         search_cvs: config.search_cvs || [
-            {'id': 'subject', 'name': 'Subject', 'field': 'subject', 'list': 'subjectcodes'},
-            {'id': 'companycodes', 'name': 'Company Codes', 'field': 'company_codes', 'list': 'company_codes'}
+            {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
+            {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}
         ],
         search_config: config.search || {
-            'slugline': 1, 'headline': 1, 'unique_name': 1, 'story_text': 1, 'byline': 1,
-            'keywords': 1, 'creator': 1, 'from_desk': 1, 'to_desk': 1, 'spike': 1,
-            'scheduled': 1, 'company_codes': 1, 'ingest_provider': 1
+            slugline: 1, headline: 1, unique_name: 1, story_text: 1, byline: 1,
+            keywords: 1, creator: 1, from_desk: 1, to_desk: 1, spike: 1,
+            scheduled: 1, company_codes: 1, ingest_provider: 1
         },
         subjectScope: null,
         loaded: null,
@@ -979,7 +979,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
             self.values.customSubscribers = [];
             return subscribersService.fetchTargetableSubscribers().then(function(items) {
                 _.each(items, function(item) {
-                    self.values.customSubscribers.push({'_id': item._id, 'name': item.name});
+                    self.values.customSubscribers.push({_id: item._id, name: item.name});
                 });
             });
         },

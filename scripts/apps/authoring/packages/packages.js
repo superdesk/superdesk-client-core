@@ -10,7 +10,7 @@ function PackagesCtrl($scope, $location, superdesk, api, search) {
             filter.push(packageRef.package);
         });
 
-        query.size(25).filter({'terms': {'guid': filter}});
+        query.size(25).filter({terms: {guid: filter}});
         api.archive.query(query.getCriteria(true))
         .then(function(result) {
             $scope.contentItems = result._items;

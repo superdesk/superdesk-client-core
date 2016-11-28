@@ -151,7 +151,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 groups = monitoringSettings;
             }
 
-            return {'type': 'desk', 'groups': groups};
+            return {type: 'desk', groups: groups};
         });
     }
 
@@ -166,7 +166,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             if (preference && preference[activeWorkspace.id] && preference[activeWorkspace.id].groups) {
                 groups = preference[activeWorkspace.id].groups;
             }
-            return {'type': 'workspace', 'groups': groups};
+            return {type: 'workspace', groups: groups};
         });
     }
 
@@ -186,7 +186,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                     self.widget.configuration.label = widget.configuration.label || '';
                 }
             });
-            return {'type': 'desk', 'groups': groups};
+            return {type: 'desk', groups: groups};
         });
     }
 
@@ -201,7 +201,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
         if (desk && desk.monitoring_settings) {
             groups = desk.monitoring_settings;
         }
-        return {'type': 'desk', 'groups': groups, 'desk': objDesk};
+        return {type: 'desk', groups: groups, desk: objDesk};
     }
 
     /**

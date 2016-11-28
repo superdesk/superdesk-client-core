@@ -27,7 +27,7 @@ describe('authoring', function() {
     }));
 
     beforeEach(inject(function(preferencesService, desks, $q) {
-        spyOn(preferencesService, 'get').and.returnValue($q.when({'items': ['urn:tag:superdesk-1']}));
+        spyOn(preferencesService, 'get').and.returnValue($q.when({items: ['urn:tag:superdesk-1']}));
         spyOn(preferencesService, 'update').and.returnValue($q.when({}));
         spyOn(preferencesService, 'getPrivileges').and.returnValue($q.when({}));
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when([]));
@@ -568,7 +568,7 @@ describe('lock service', function() {
 });
 
 describe('authoring actions', function() {
-    var userDesks = [{'_id': 'desk1'}, {'_id': 'desk2'}];
+    var userDesks = [{_id: 'desk1'}, {_id: 'desk2'}];
 
     /**
      * Assert the actions
@@ -598,19 +598,19 @@ describe('authoring actions', function() {
     it('can perform actions if the item is located on the personal workspace',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'draft',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text'
+                _id: 'test',
+                state: 'draft',
+                flags: {marked_for_not_publication: false},
+                type: 'text'
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -622,24 +622,24 @@ describe('authoring actions', function() {
     it('can perform actions if the item is located on the desk',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'submitted',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'submitted',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1
+                _current_version: 1
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -652,24 +652,24 @@ describe('authoring actions', function() {
     it('cannot perform publish if the item is marked for not publication',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'submitted',
-                'flags': {'marked_for_not_publication': true},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'submitted',
+                flags: {marked_for_not_publication: true},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1
+                _current_version: 1
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -682,24 +682,24 @@ describe('authoring actions', function() {
     it('cannot perform publish if the item is highlight package',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'submitted',
-                'type': 'composite',
-                'highlight': 1,
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'submitted',
+                type: 'composite',
+                highlight: 1,
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1
+                _current_version: 1
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -712,24 +712,24 @@ describe('authoring actions', function() {
     it('cannot publish if user does not have publish privileges on the desk',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'submitted',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'submitted',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1
+                _current_version: 1
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': false
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: false
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -742,24 +742,24 @@ describe('authoring actions', function() {
     it('can only view the item if the user does not have desk membership',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'submitted',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk3'
+                _id: 'test',
+                state: 'submitted',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk3'
                 },
-                '_current_version': 2
+                _current_version: 2
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'archive': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                archive: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -771,22 +771,22 @@ describe('authoring actions', function() {
     it('can only view the item if the item is killed',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'killed',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'killed',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -798,19 +798,19 @@ describe('authoring actions', function() {
     it('cannot create an update for a rewritten story ',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'type': 'text',
-                'rewritten_by': 1,
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                type: 'text',
+                rewritten_by: 1,
+                task: {
+                    desk: 'desk1'
                 }
             };
 
             var userPrivileges = {
-                'archive': true,
-                'rewrite': true,
-                'unlock': true
+                archive: true,
+                rewrite: true,
+                unlock: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -822,22 +822,22 @@ describe('authoring actions', function() {
     it('can only view item if the item is spiked',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'spiked',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'spiked',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -849,23 +849,23 @@ describe('authoring actions', function() {
     it('Cannot perform new take if more coming is true or take is not last take on the desk',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'in_progress',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -875,15 +875,15 @@ describe('authoring actions', function() {
                 'mark_item', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
 
             item = {
-                '_id': 'test',
-                'state': 'in_progress',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                'takes': {
-                    'last_take': 'take2'
+                takes: {
+                    last_take: 'take2'
                 }
             };
 
@@ -895,27 +895,27 @@ describe('authoring actions', function() {
     it('Can perform new take',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'in_progress',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1
+                _current_version: 1
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'resend': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                resend: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -925,26 +925,26 @@ describe('authoring actions', function() {
                 'mark_item', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
 
             item = {
-                '_id': 'test',
-                'state': 'published',
-                'marked_for_not_publication': false,
-                'type': 'text',
-                '_current_version': 1,
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                marked_for_not_publication: false,
+                type: 'text',
+                _current_version: 1,
+                task: {
+                    desk: 'desk1'
                 },
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    'takes': {
-                        'last_take': 'test'
+                    takes: {
+                        last_take: 'test'
                     },
-                    '_current_version': 1
+                    _current_version: 1
                 }
             };
 
@@ -956,37 +956,37 @@ describe('authoring actions', function() {
     it('Can perform correction or kill on published item',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 10,
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'marked_for_not_publication': false,
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                _current_version: 10,
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    marked_for_not_publication: false,
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 10
+                    _current_version: 10
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'archive_broadcast': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1000,37 +1000,37 @@ describe('authoring actions', function() {
     it('Can perform resend on rewritten item',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 10,
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'marked_for_not_publication': false,
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                _current_version: 10,
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    marked_for_not_publication: false,
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 10
+                    _current_version: 10
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'archive_broadcast': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1049,36 +1049,36 @@ describe('authoring actions', function() {
     it('Cannot perform correction or kill on published item without privileges',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 10,
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                _current_version: 10,
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 10
+                    _current_version: 10
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': false,
-                'kill': false
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: false,
+                kill: false
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1091,36 +1091,36 @@ describe('authoring actions', function() {
     it('Can only view if the item is not the current version',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 8,
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                _current_version: 8,
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 10
+                    _current_version: 10
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1132,36 +1132,36 @@ describe('authoring actions', function() {
     it('Can only view, duplicate and deschedule if the item is scheduled',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'scheduled',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'scheduled',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 8,
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'scheduled',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                _current_version: 8,
+                archive_item: {
+                    _id: 'test',
+                    state: 'scheduled',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 8
+                    _current_version: 8
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1173,37 +1173,37 @@ describe('authoring actions', function() {
     it('Can only package if the item is not a take package',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 8,
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                _current_version: 8,
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 8
+                    _current_version: 8
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'package_item': false
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: false
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1216,28 +1216,28 @@ describe('authoring actions', function() {
     it('Cannot send item if the version is zero',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'in_progress',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 0
+                _current_version: 0
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'package_item': false,
-                'move': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: false,
+                move: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1250,28 +1250,28 @@ describe('authoring actions', function() {
     it('Cannot perform new take if the version is zero',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'in_progress',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 0
+                _current_version: 0
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'package_item': false,
-                'move': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: false,
+                move: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1284,28 +1284,28 @@ describe('authoring actions', function() {
     it('Cannot send item if the no move privileges',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'in_progress',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1
+                _current_version: 1
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'package_item': false,
-                'move': false
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: false,
+                move: false
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1318,28 +1318,28 @@ describe('authoring actions', function() {
     it('Can send item if the version greater then zero',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'in_progress',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1
+                _current_version: 1
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'package_item': false,
-                'move': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: false,
+                move: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1352,29 +1352,29 @@ describe('authoring actions', function() {
     it('Cannot do new take for embargo item.',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'in_progress',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1,
-                'embargo': Date()
+                _current_version: 1,
+                embargo: Date()
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'package_item': true,
-                'move': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: true,
+                move: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1387,29 +1387,29 @@ describe('authoring actions', function() {
     it('Cannot do new take for scheduled item.',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'in_progress',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1,
-                'publish_schedule': Date()
+                _current_version: 1,
+                publish_schedule: Date()
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'package_item': true,
-                'move': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: true,
+                move: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1425,29 +1425,29 @@ describe('authoring actions', function() {
             pastTimestamp.setHours(pastTimestamp.getHours() - 1);
 
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 2,
-                'publish_schedule': pastTimestamp
+                _current_version: 2,
+                publish_schedule: pastTimestamp
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'package_item': true,
-                'move': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: true,
+                move: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1460,39 +1460,39 @@ describe('authoring actions', function() {
     it('Create broadcast icon is available for text item.',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 10,
-                'genre': [],
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                _current_version: 10,
+                genre: [],
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 10,
-                    'genre': []
+                    _current_version: 10,
+                    genre: []
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'archive_broadcast': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1505,39 +1505,39 @@ describe('authoring actions', function() {
     it('Create broadcast icon is available for text item with genre Article.',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 10,
-                'genre': [{'name': 'Article', 'value': 'Article'}],
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                _current_version: 10,
+                genre: [{name: 'Article', value: 'Article'}],
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 10,
-                    'genre': [{'name': 'Article', 'value': 'Article'}]
+                    _current_version: 10,
+                    genre: [{name: 'Article', value: 'Article'}]
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'archive_broadcast': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1550,45 +1550,45 @@ describe('authoring actions', function() {
     it('Create broadcast icon is not available for broadcast item',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 10,
-                'genre': [
-                    {'name': 'Interview', 'value': 'Interview'},
-                    {'name': 'Broadcast Script', 'value': 'Broadcast Script'}
+                _current_version: 10,
+                genre: [
+                    {name: 'Interview', value: 'Interview'},
+                    {name: 'Broadcast Script', value: 'Broadcast Script'}
                 ],
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 10,
-                    'genre': [
-                        {'name': 'Interview', 'value': 'Interview'},
-                        {'name': 'Broadcast Script', 'value': 'Broadcast Script'}
+                    _current_version: 10,
+                    genre: [
+                        {name: 'Interview', value: 'Interview'},
+                        {name: 'Broadcast Script', value: 'Broadcast Script'}
                     ]
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'archive_broadcast': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1601,36 +1601,36 @@ describe('authoring actions', function() {
     it('takes package is in published state.',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'composite',
-                'package_type': 'takes',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'composite',
+                package_type: 'takes',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1,
-                'genre': [
-                    {'name': 'Interview', 'value': 'Interview'}
+                _current_version: 1,
+                genre: [
+                    {name: 'Interview', value: 'Interview'}
                 ],
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'composite',
-                    'package_type': 'takes',
-                    'task': {
-                        'desk': 'desk1'
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'composite',
+                    package_type: 'takes',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 1,
-                    'genre': [
-                        {'name': 'Interview', 'value': 'Interview'}
+                    _current_version: 1,
+                    genre: [
+                        {name: 'Interview', value: 'Interview'}
                     ]
                 }
             };
 
             var userPrivileges = {
-                'archive_broadcast': true
+                archive_broadcast: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1642,32 +1642,32 @@ describe('authoring actions', function() {
     it('takes package is in scheduled state.',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'scheduled',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'composite',
-                'package_type': 'takes',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'scheduled',
+                flags: {marked_for_not_publication: false},
+                type: 'composite',
+                package_type: 'takes',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 1,
-                'genre': [],
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'scheduled',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'composite',
-                    'package_type': 'takes',
-                    'task': {
-                        'desk': 'desk1'
+                _current_version: 1,
+                genre: [],
+                archive_item: {
+                    _id: 'test',
+                    state: 'scheduled',
+                    flags: {marked_for_not_publication: false},
+                    type: 'composite',
+                    package_type: 'takes',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 1,
-                    'genre': []
+                    _current_version: 1,
+                    genre: []
                 }
             };
 
             var userPrivileges = {
-                'archive_broadcast': true
+                archive_broadcast: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -1679,45 +1679,45 @@ describe('authoring actions', function() {
     it('rewrite is not allowed if re-written item exists.',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var item = {
-                '_id': 'test',
-                'state': 'published',
-                'flags': {'marked_for_not_publication': false},
-                'type': 'text',
-                'task': {
-                    'desk': 'desk1'
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1'
                 },
-                '_current_version': 10,
-                'rewritten_by': '123',
-                'genre': [
-                    {'name': 'Interview', 'value': 'Interview'}
+                _current_version: 10,
+                rewritten_by: '123',
+                genre: [
+                    {name: 'Interview', value: 'Interview'}
                 ],
-                'archive_item': {
-                    '_id': 'test',
-                    'state': 'published',
-                    'flags': {'marked_for_not_publication': false},
-                    'type': 'text',
-                    'task': {
-                        'desk': 'desk1'
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1'
                     },
-                    '_current_version': 10,
-                    'rewritten_by': '123',
-                    'genre': [
-                        {'name': 'Interview', 'value': 'Interview'}
+                    _current_version: 10,
+                    rewritten_by: '123',
+                    genre: [
+                        {name: 'Interview', value: 'Interview'}
                     ]
                 }
             };
 
             var userPrivileges = {
-                'duplicate': true,
-                'mark_item': false,
-                'spike': true,
-                'unspike': true,
-                'mark_for_highlights': true,
-                'unlock': true,
-                'publish': true,
-                'correct': true,
-                'kill': true,
-                'archive_broadcast': true
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -2004,7 +2004,7 @@ describe('send item directive', function() {
                 }
             };
             var userPrivileges = {
-                'embargo': true
+                embargo: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -2031,7 +2031,7 @@ describe('send item directive', function() {
                 }
             };
             var userPrivileges = {
-                'embargo': true
+                embargo: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -2058,7 +2058,7 @@ describe('send item directive', function() {
                 }
             };
             var userPrivileges = {
-                'embargo': false
+                embargo: false
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -2082,7 +2082,7 @@ describe('send item directive', function() {
                 state: 'in-progress'
             };
             var userPrivileges = {
-                'embargo': true
+                embargo: true
             };
 
             privileges.setUserPrivileges(userPrivileges);
@@ -2107,7 +2107,7 @@ describe('send item directive', function() {
                 embargo_date: Date()
             };
             var userPrivileges = {
-                'embargo': true
+                embargo: true
             };
 
             privileges.setUserPrivileges(userPrivileges);

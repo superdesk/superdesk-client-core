@@ -24,7 +24,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             // set these properties before measuring dimensions
             $ta.css({
-                'overflow': 'hidden',
+                overflow: 'hidden',
                 'overflow-y': 'hidden',
                 'word-wrap': 'break-word'
             });
@@ -69,7 +69,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             // set resize and apply elastic
             $ta.css({
-                'resize': 'none'
+                resize: 'none'
             });
             $ta.attr('elastic', true);
 

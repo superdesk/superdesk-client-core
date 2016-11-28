@@ -107,7 +107,7 @@ describe('monitoring', function() {
                 term: {'task.desk': card._id}
             });
             expect(criteria.source.query.filtered.filter.and).toContain({
-                term: {'state': 'spiked'}
+                term: {state: 'spiked'}
             });
         }));
 
@@ -117,7 +117,7 @@ describe('monitoring', function() {
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
             expect(criteria.source.query.filtered.filter.and).toContain({
-                and: [{term: {'highlights': queryParam.highlight}}]
+                and: [{term: {highlights: queryParam.highlight}}]
             });
         }));
 
@@ -243,8 +243,8 @@ describe('monitoring', function() {
         beforeEach(window.module('superdesk.templates-cache'));
 
         beforeEach(inject(function(desks, api, $q) {
-            desks.stageLookup = {'1': {'desk': 'desk1', 'default_incoming': true}};
-            desks.userLookup = {'1': {'display_name': 'user1'}};
+            desks.stageLookup = {1: {desk: 'desk1', default_incoming: true}};
+            desks.userLookup = {1: {display_name: 'user1'}};
             spyOn(api, 'activity').and.returnValue($q.when({_items: []}));
         }));
 

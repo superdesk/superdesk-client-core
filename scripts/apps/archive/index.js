@@ -155,7 +155,7 @@ angular.module('superdesk.apps.archive', [
                         api.save('archive_broadcast', {}, {desk: desks.getCurrentDeskId()}, data.item)
                         .then(function(broadcastItem) {
                             authoringWorkspace.edit(broadcastItem);
-                            $rootScope.$broadcast('broadcast:created', {'item': data.item});
+                            $rootScope.$broadcast('broadcast:created', {item: data.item});
                         });
                     }],
                 filters: [{action: 'list', type: 'archive'}],

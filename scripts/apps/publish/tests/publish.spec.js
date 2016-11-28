@@ -1,113 +1,113 @@
 'use strict';
 
 describe('publish queue', function() {
-    var subscribers = {'_items': [
+    var subscribers = {_items: [
         {
-            '_created': '2015-05-11T06:00:48+0000',
-            '_etag': '8d27862ca97a8741aaf8ac38f1de3605e085062c',
-            '_id': '555045901d41c80c5804501a',
-            '_updated': '2015-05-12T01:01:47+0000',
-            'destinations': [
+            _created: '2015-05-11T06:00:48+0000',
+            _etag: '8d27862ca97a8741aaf8ac38f1de3605e085062c',
+            _id: '555045901d41c80c5804501a',
+            _updated: '2015-05-12T01:01:47+0000',
+            destinations: [
                 {
-                    'config': {
-                        'recipients': 'test@aap.com.au'
+                    config: {
+                        recipients: 'test@aap.com.au'
                     },
-                    'format': 'nitf',
-                    'delivery_type': 'email',
-                    'name': 'test'
+                    format: 'nitf',
+                    delivery_type: 'email',
+                    name: 'test'
                 }
             ],
-            'is_active': true,
-            'name': 'test'
+            is_active: true,
+            name: 'test'
         }
     ]};
 
     var providers = [
         {
-            '_id': '123',
-            'name': 'Test Provider'
+            _id: '123',
+            name: 'Test Provider'
         }
     ];
 
-    var publishQueue = {'_items': [
+    var publishQueue = {_items: [
         {
-            '_created': '2015-05-15T06:27:13+0000',
-            '_etag': 'd18bf9f762b03815acc189fdcef633bf67f8e222',
-            '_id': '555591c11d41c830e91b1f9f',
-            '_updated': '2015-05-19T04:18:23+0000',
-            'completed_at': '2015-05-19T04:18:23+0000',
-            'content_type': 'text',
-            'destination': {
-                'config': {
-                    'recipients': 'test@aap.com.au'
+            _created: '2015-05-15T06:27:13+0000',
+            _etag: 'd18bf9f762b03815acc189fdcef633bf67f8e222',
+            _id: '555591c11d41c830e91b1f9f',
+            _updated: '2015-05-19T04:18:23+0000',
+            completed_at: '2015-05-19T04:18:23+0000',
+            content_type: 'text',
+            destination: {
+                config: {
+                    recipients: 'test@aap.com.au'
                 },
-                'format': 'nitf',
-                'delivery_type': 'email',
-                'name': 'test'
+                format: 'nitf',
+                delivery_type: 'email',
+                name: 'test'
             },
-            'headline': 'RL:Souths win but Dugan stars in NRL',
-            'item_id': 'tag:localhost:2015:a613f9b5-c7c4-4980-a3e8-0a90586ba59e',
-            'publish_schedule': null,
-            'published_seq_num': 11,
-            'publishing_action': 'published',
-            'state': 'success',
-            'subscriber_id': '555045901d41c80c5804501a',
-            'transmit_started_at': '2015-05-19T04:18:23+0000',
-            'unique_name': '#55861'
+            headline: 'RL:Souths win but Dugan stars in NRL',
+            item_id: 'tag:localhost:2015:a613f9b5-c7c4-4980-a3e8-0a90586ba59e',
+            publish_schedule: null,
+            published_seq_num: 11,
+            publishing_action: 'published',
+            state: 'success',
+            subscriber_id: '555045901d41c80c5804501a',
+            transmit_started_at: '2015-05-19T04:18:23+0000',
+            unique_name: '#55861'
         },
         {
-            '_created': '2015-05-19T05:13:29+0000',
-            '_etag': '88602d040ee9e67feb25d928d18325d2f8c24830',
-            '_id': '555ac6791d41c8105b514cf0',
-            '_updated': '2015-05-19T05:13:34+0000',
-            'completed_at': '2015-05-19T05:13:34+0000',
-            'content_type': 'text',
-            'destination': {
-                'config': {
-                    'recipients': 'test@aap.com.au'
+            _created: '2015-05-19T05:13:29+0000',
+            _etag: '88602d040ee9e67feb25d928d18325d2f8c24830',
+            _id: '555ac6791d41c8105b514cf0',
+            _updated: '2015-05-19T05:13:34+0000',
+            completed_at: '2015-05-19T05:13:34+0000',
+            content_type: 'text',
+            destination: {
+                config: {
+                    recipients: 'test@aap.com.au'
                 },
-                'format': 'nitf',
-                'delivery_type': 'email',
-                'name': 'test'
+                format: 'nitf',
+                delivery_type: 'email',
+                name: 'test'
             },
-            'headline': 'Angle Park Greyhound NSW TAB Divs 1-8 Monday',
-            'item_id': 'tag:localhost:2015:15982dd3-0ab2-4da1-b2a2-b8f322e8a612',
-            'publish_schedule': null,
-            'published_seq_num': 15,
-            'publishing_action': 'corrected',
-            'state': 'success',
-            'subscriber_id': '555045901d41c80c5804501a',
-            'transmit_started_at': '2015-05-19T05:13:34+0000',
-            'unique_name': '#55860',
-            'ingest_provider': '123'
+            headline: 'Angle Park Greyhound NSW TAB Divs 1-8 Monday',
+            item_id: 'tag:localhost:2015:15982dd3-0ab2-4da1-b2a2-b8f322e8a612',
+            publish_schedule: null,
+            published_seq_num: 15,
+            publishing_action: 'corrected',
+            state: 'success',
+            subscriber_id: '555045901d41c80c5804501a',
+            transmit_started_at: '2015-05-19T05:13:34+0000',
+            unique_name: '#55860',
+            ingest_provider: '123'
         },
         {
-            '_created': '2015-05-19T08:56:43+0000',
-            '_etag': '3cd58463412d08d2d776a931f04f997282025e7a',
-            '_id': '555afacb1d41c817984405b5',
-            '_updated': '2015-05-19T08:56:49+0000',
-            'completed_at': '2015-05-19T08:56:49+0000',
-            'content_type': 'text',
-            'destination': {
-                'config': {
-                    'recipients': 'test@aap.com.au'
+            _created: '2015-05-19T08:56:43+0000',
+            _etag: '3cd58463412d08d2d776a931f04f997282025e7a',
+            _id: '555afacb1d41c817984405b5',
+            _updated: '2015-05-19T08:56:49+0000',
+            completed_at: '2015-05-19T08:56:49+0000',
+            content_type: 'text',
+            destination: {
+                config: {
+                    recipients: 'test@aap.com.au'
                 },
-                'format': 'nitf',
-                'delivery_type': 'email',
-                'name': 'test'
+                format: 'nitf',
+                delivery_type: 'email',
+                name: 'test'
             },
-            'headline': 'NSW:Man quizzed over suspicious Sydney death',
-            'item_id': 'tag:localhost:2015:7466da05-56d2-47d4-a401-b79ed2af08a2',
-            'publish_schedule': null,
-            'published_seq_num': 16,
-            'publishing_action': 'published',
-            'state': 'success',
-            'subscriber_id': '555045901d41c80c5804501a',
-            'transmit_started_at': '2015-05-19T08:56:49+0000',
-            'unique_name': '#57537'
+            headline: 'NSW:Man quizzed over suspicious Sydney death',
+            item_id: 'tag:localhost:2015:7466da05-56d2-47d4-a401-b79ed2af08a2',
+            publish_schedule: null,
+            published_seq_num: 16,
+            publishing_action: 'published',
+            state: 'success',
+            subscriber_id: '555045901d41c80c5804501a',
+            transmit_started_at: '2015-05-19T08:56:49+0000',
+            unique_name: '#57537'
         }
     ],
-        '_meta': {
+        _meta: {
             total: 3
         }};
 
@@ -130,10 +130,10 @@ describe('publish queue', function() {
         $controller('publishQueueCtrl',
             {
                 $scope: $scope,
-                'subscribersService': subscribersService,
-                'ingestSouces': ingestSources,
-                '$q': $q,
-                'api': api
+                subscribersService: subscribersService,
+                ingestSouces: ingestSources,
+                $q: $q,
+                api: api
             }
         );
     }));
@@ -256,7 +256,7 @@ describe('publish queue', function() {
         $scope.pageSize = 1;
         $scope.page = 2;
 
-        var pagedPublishQueue = {'_items': [publishQueue._items[1]], '_meta': {total: 3}};
+        var pagedPublishQueue = {_items: [publishQueue._items[1]], _meta: {total: 3}};
         api.publish_queue.query = jasmine.createSpy().and.returnValue($q.when(pagedPublishQueue));
 
         $scope.reload = jasmine.createSpy('reload');

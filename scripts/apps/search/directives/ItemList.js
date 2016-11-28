@@ -640,7 +640,7 @@ export function ItemList(
                                     className: classNames({
                                         'icon-star': highlights.length === 1,
                                         'icon-multi-star': highlights.length > 1,
-                                        'red': hasActiveHighlight
+                                        red: hasActiveHighlight
                                     })
                                 })
                             )
@@ -1212,7 +1212,7 @@ export function ItemList(
                     // won't select that item for preview/authoring.
                     event.stopPropagation();
                     scope.$apply(function() {
-                        $rootScope.$broadcast('broadcast:preview', {'item': null}); // closes preview if already opened
+                        $rootScope.$broadcast('broadcast:preview', {item: null}); // closes preview if already opened
                         activityService.start(this.props.activity, {data: {item: this.props.item}});
                     }.bind(this));
 

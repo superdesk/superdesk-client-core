@@ -30,15 +30,15 @@ export function SearchResults(
 ) { // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
-            'allowed': [
+            allowed: [
                 'mgrid',
                 'compact'
             ],
-            'category': 'archive',
-            'view': 'mgrid',
-            'default': 'mgrid',
-            'label': 'Users archive view format',
-            'type': 'string'
+            category: 'archive',
+            view: 'mgrid',
+            default: 'mgrid',
+            label: 'Users archive view format',
+            type: 'string'
         }
     };
 

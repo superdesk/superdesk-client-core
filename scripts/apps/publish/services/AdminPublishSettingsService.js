@@ -6,7 +6,7 @@ export function AdminPublishSettingsService(api) {
 
     var service = {
         fetchPublishErrors: function() {
-            var criteria = {'io_type': 'publish'};
+            var criteria = {io_type: 'publish'};
             return _fetch('io_errors', criteria);
         }
     };

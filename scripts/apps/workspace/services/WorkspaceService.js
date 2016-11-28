@@ -129,7 +129,7 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
                 }
 
                 self.workspaceType = type;
-                return {'id': id, 'type': type};
+                return {id: id, type: type};
             });
     }
 

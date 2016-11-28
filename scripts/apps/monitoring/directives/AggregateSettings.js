@@ -263,7 +263,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                                 }
                             }
                         });
-                        workspaces.save(workspace, {'widgets': widgets})
+                        workspaces.save(workspace, {widgets: widgets})
                         .then(function() {
                             scope.showGlobalSavedSearches = false;
                             scope.onclose();

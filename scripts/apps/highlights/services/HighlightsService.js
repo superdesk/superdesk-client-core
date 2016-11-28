@@ -33,9 +33,9 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
 
         var criteria = {};
         if (desk) {
-            criteria = {where: {'$or': [
-                                        {'desks': desk},
-                                        {'desks': {'$size': 0}}
+            criteria = {where: {$or: [
+                                        {desks: desk},
+                                        {desks: {$size: 0}}
             ]
             }
             };

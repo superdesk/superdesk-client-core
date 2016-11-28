@@ -73,17 +73,17 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
 
             var initAggregations = function() {
                 scope.aggregations = {
-                    'type': {},
-                    'desk': {},
-                    'date': {},
-                    'source': {},
-                    'credit': {},
-                    'category': {},
-                    'urgency': {},
-                    'priority': {},
-                    'genre': {},
-                    'legal': {},
-                    'sms': {}
+                    type: {},
+                    desk: {},
+                    date: {},
+                    source: {},
+                    credit: {},
+                    category: {},
+                    urgency: {},
+                    priority: {},
+                    genre: {},
+                    legal: {},
+                    sms: {}
                 };
             };
 
@@ -141,7 +141,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
 
                     if (angular.isDefined(scope.items._aggregations.credit)) {
                         _.forEach(scope.items._aggregations.credit.buckets, function(credit) {
-                            scope.aggregations.credit[credit.key] = {'count': credit.doc_count, 'qcode': credit.qcode};
+                            scope.aggregations.credit[credit.key] = {count: credit.doc_count, qcode: credit.qcode};
                         });
                     }
 

@@ -22,11 +22,11 @@ export function UserSelectList($filter, api) {
             var _refresh = function() {
                 scope.users = {};
                 return api('users').query({where: JSON.stringify({
-                    '$or': [
-                        {username: {'$regex': scope.search, '$options': '-i'}},
-                        {first_name: {'$regex': scope.search, '$options': '-i'}},
-                        {last_name: {'$regex': scope.search, '$options': '-i'}},
-                        {email: {'$regex': scope.search, '$options': '-i'}}
+                    $or: [
+                        {username: {$regex: scope.search, $options: '-i'}},
+                        {first_name: {$regex: scope.search, $options: '-i'}},
+                        {last_name: {$regex: scope.search, $options: '-i'}},
+                        {email: {$regex: scope.search, $options: '-i'}}
                     ]
                 })})
                 .then(function(result) {

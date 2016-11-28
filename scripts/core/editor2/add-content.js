@@ -96,7 +96,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
         hide: function() {
             $timeout(function() {
                 elementHolder.css({
-                    'display': 'none'
+                    display: 'none'
                 });
                 self.expanded = false;
             });
@@ -104,7 +104,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
         show: function() {
             $timeout(function() {
                 elementHolder.css({
-                    'display': 'block'
+                    display: 'block'
                 });
             });
         },

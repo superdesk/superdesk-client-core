@@ -56,7 +56,7 @@ export function CardsService(api, search, session, desks, config) {
 
         case 'highlights':
             query.filter({and: [
-                {term: {'highlights': queryParam.highlight}}
+                {term: {highlights: queryParam.highlight}}
             ]});
             break;
 
@@ -104,23 +104,23 @@ export function CardsService(api, search, session, desks, config) {
 
         if (card.fileType) {
             var termsHighlightsPackage = {and: [
-                {bool: {must: {'exists': {'field': 'highlight'}}}},
-                {terms: {'type': ['composite']}}
+                {bool: {must: {exists: {field: 'highlight'}}}},
+                {terms: {type: ['composite']}}
             ]};
 
             var termsTakesPackage = {and: [
-                {term: {'package_type': 'takes'}},
-                {term: {'type': ['composite']}}
+                {term: {package_type: 'takes'}},
+                {term: {type: ['composite']}}
             ]};
 
-            var termsFileType = {terms: {'type': JSON.parse(card.fileType)}};
+            var termsFileType = {terms: {type: JSON.parse(card.fileType)}};
 
             // Normal package
             if (_.includes(JSON.parse(card.fileType), 'composite')) {
                 termsFileType = {and: [
-                    {bool: {must_not: {'exists': {'field': 'highlight'}}}},
-                    {bool: {must_not: {term: {'package_type': 'takes'}}}},
-                    {terms: {'type': JSON.parse(card.fileType)}}
+                    {bool: {must_not: {exists: {field: 'highlight'}}}},
+                    {bool: {must_not: {term: {package_type: 'takes'}}}},
+                    {terms: {type: JSON.parse(card.fileType)}}
                 ]};
             }
 

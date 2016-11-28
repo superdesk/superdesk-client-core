@@ -179,7 +179,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             function _exportHighlight(_id) {
-                api.generate_highlights.save({}, {'package': _id})
+                api.generate_highlights.save({}, {package: _id})
                 .then(authoringWorkspace.edit, function(response) {
                     if (response.status === 403) {
                         _forceExportHighlight(_id);
@@ -192,7 +192,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             function _forceExportHighlight(_id) {
                 modal.confirm(gettext('There are items locked or not published. Do you want to continue?'))
                     .then(function() {
-                        api.generate_highlights.save({}, {'package': _id, 'export': true})
+                        api.generate_highlights.save({}, {package: _id, export: true})
                         .then(authoringWorkspace.edit, function(response) {
                             notify.error(gettext('Error creating highlight.'));
                         });
@@ -200,7 +200,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             }
 
             function _previewHighlight(_id) {
-                api.generate_highlights.save({}, {'package': _id, 'preview': true})
+                api.generate_highlights.save({}, {package: _id, preview: true})
                 .then(function(response) {
                     $scope.highlight_preview = response.body_html;
                 }, function(data) {
@@ -677,7 +677,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     }
                 }
 
-                $rootScope.$broadcast('item:nextStage', {'stage': stageList[stageIndex], 'itemId': $scope.item._id});
+                $rootScope.$broadcast('item:nextStage', {stage: stageList[stageIndex], itemId: $scope.item._id});
             };
 
             function refreshItem() {

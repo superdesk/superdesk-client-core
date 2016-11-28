@@ -10,7 +10,7 @@ function resetApp(profile, callback) {
     backendRequest({
         uri: '/prepopulate',
         method: 'POST',
-        json: {'profile': profile}
+        json: {profile: profile}
     }, function(e, r, j) {
         browser.params.token = null;
         callback(e, r, j);

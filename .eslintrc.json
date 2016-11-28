@@ -138,6 +138,7 @@
         "no-whitespace-before-property": 2,
         "object-curly-spacing": [2, "never"],
         "padded-blocks": [2, "never"],
+        "quote-props": [2, "as-needed"],
 
         "quotes": [2, "single"],
         "linebreak-style": [2, "unix"],

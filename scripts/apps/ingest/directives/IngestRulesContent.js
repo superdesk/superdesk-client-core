@@ -63,7 +63,7 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
                 if (!scope.editRuleset.rules) {
                     scope.editRuleset.rules = [];
                 }
-                scope.editRuleset.rules.push({old: null, 'new': null});
+                scope.editRuleset.rules.push({old: null, new: null});
             };
 
             scope.reorder = function(start, end) {

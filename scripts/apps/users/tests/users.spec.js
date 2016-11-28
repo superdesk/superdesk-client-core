@@ -6,7 +6,7 @@ describe('users api', function() {
 
     it('can create user', inject(function(usersService, api, $q, $rootScope) {
         var user = {},
-            data = {'UserName': 'foo', 'Password': 'bar'};
+            data = {UserName: 'foo', Password: 'bar'};
 
         spyOn(api, 'save').and.returnValue($q.when({}));
 
@@ -123,7 +123,7 @@ describe('mentio directive', function() {
     };
 
     var userDesks = {
-        _items: [{'_id': 'desk1'}]
+        _items: [{_id: 'desk1'}]
     };
 
     beforeEach(window.module(function($provide) {
@@ -179,7 +179,7 @@ describe('user edit form', function() {
                 identity: {_id: 1},
                 getIdentity: function() {
                     return $q.when(
-                        {'who': 'cares', 'this': 'is', 'totaly': 'fake'}
+                        {who: 'cares', this: 'is', totaly: 'fake'}
                     );
                 }
             };
@@ -191,7 +191,7 @@ describe('user edit form', function() {
             var scope = $rootScope.$new(true);
             var user = {
                 _id: 1,
-                _readonly: {'first_name': true, 'last_name': true, 'email': true},
+                _readonly: {first_name: true, last_name: true, email: true},
                 is_active: true,
                 need_activation: false
             };

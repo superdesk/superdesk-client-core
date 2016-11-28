@@ -34,7 +34,7 @@ export function ContentFiltersService(api, $filter) {
 
     this.getFilterSearchResults = function(inputParams) {
         //call api to get search results
-        return api.query('subscribers', {'filter_condition': inputParams})
+        return api.query('subscribers', {filter_condition: inputParams})
             .then(angular.bind(this, function(resultSet) {
                 return resultSet._items;
             }));
@@ -53,7 +53,7 @@ export function ContentFiltersService(api, $filter) {
     };
 
     this.getGlobalContentFilters = function() {
-        return api.query('content_filters', {'is_global': true}).then(function(response) {
+        return api.query('content_filters', {is_global: true}).then(function(response) {
             return $filter('sortByName')(response._items);
         });
     };

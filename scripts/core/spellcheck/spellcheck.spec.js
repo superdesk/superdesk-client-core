@@ -37,7 +37,7 @@ describe('spellcheck', function() {
         ]));
 
         spellcheck.setLanguage(LANG);
-        spyOn(preferencesService, 'get').and.returnValue($q.when({'enabled': true}));
+        spyOn(preferencesService, 'get').and.returnValue($q.when({enabled: true}));
         spyOn(preferencesService, 'update').and.returnValue($q.when({}));
     }));
 

@@ -296,7 +296,7 @@ export default angular.module('superdesk.core.services.server', [])
              *
              * @description Delete single item
              */
-            'delete': function(item) {
+            delete: function(item) {
                 return this._http('delete',
                     this._wrapUrl(item._links.self.href),
                     {},

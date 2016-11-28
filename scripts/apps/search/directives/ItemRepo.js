@@ -59,7 +59,7 @@ export function ItemRepo(
                 }
 
                 if (!scope.repo) {
-                    scope.repo = {'search': 'local'};
+                    scope.repo = {search: 'local'};
                 } else if (!scope.repo.archive && !scope.repo.ingest &&
                         !scope.repo.published && !scope.repo.archived) {
                     scope.repo.search = params.repo;
@@ -88,7 +88,7 @@ export function ItemRepo(
                 if (scope.providers.length > 0 && (!params || !params.repo)) {
                     scope.providers.forEach(function(provider, index, array) {
                         if (provider.is_default) {
-                            scope.repo = {'search': provider.source};
+                            scope.repo = {search: provider.source};
                         }
                     });
                 }

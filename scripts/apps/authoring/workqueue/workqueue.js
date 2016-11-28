@@ -244,15 +244,15 @@ function ArticleDashboardDirective() {
         },
         link: function(scope, elem, attrs) {
             scope.closeItem = function(item) {
-                scope._closeItem({'item': item});
+                scope._closeItem({item: item});
             };
 
             scope.edit = function(item, event) {
-                scope._edit({'item': item, 'event': event});
+                scope._edit({item: item, event: event});
             };
 
             scope.link = function(item) {
-                scope._link({'item': item});
+                scope._link({item: item});
             };
         }
     };

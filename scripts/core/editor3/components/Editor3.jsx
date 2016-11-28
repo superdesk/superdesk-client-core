@@ -190,15 +190,15 @@ class StyleButton extends React.Component {
 
 /** The list of supported block types style */
 const BLOCK_TYPES_STYLE = {
-    'h1': 'header-one',
-    'h2': 'header-two',
-    'h3': 'header-three',
-    'h4': 'header-four',
-    'h5': 'header-five',
-    'h6': 'header-six',
-    'quote': 'blockquote',
-    'ul': 'unordered-list-item',
-    'ol': 'ordered-list-item'
+    h1: 'header-one',
+    h2: 'header-two',
+    h3: 'header-three',
+    h4: 'header-four',
+    h5: 'header-five',
+    h6: 'header-six',
+    quote: 'blockquote',
+    ul: 'unordered-list-item',
+    ol: 'ordered-list-item'
 };
 
 /** Block style functional component, will manage the block related toolbar buttons */
@@ -227,9 +227,9 @@ const BlockStyleControls = (props) => {
 
 /** The list of supported inline styles */
 var INLINE_STYLES = {
-    'bold': 'BOLD',
-    'italic': 'ITALIC',
-    'underline': 'UNDERLINE'
+    bold: 'BOLD',
+    italic: 'ITALIC',
+    underline: 'UNDERLINE'
 };
 
 /** Inline style functional component, will manage the inline style related toolbar buttons */

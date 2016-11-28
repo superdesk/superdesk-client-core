@@ -235,8 +235,8 @@ describe('superdesk.apps.workspace.content', function() {
             var el = compile({
                 model: {
                     schema: {
-                        'headline': {},
-                        'slugline': null
+                        headline: {},
+                        slugline: null
                     }
                 }
             });
@@ -254,8 +254,8 @@ describe('superdesk.apps.workspace.content', function() {
             var el = compile({
                 model: {
                     schema: {
-                        'headline': {},
-                        'slugline': null
+                        headline: {},
+                        slugline: null
                     }
                 }
             });

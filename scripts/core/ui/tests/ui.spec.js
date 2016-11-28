@@ -237,7 +237,7 @@ describe('superdesk ui', function() {
                '</form>';
         beforeEach(inject(function($compile, $rootScope) {
             scope = $rootScope.$new();
-            scope.model = {'email': null};
+            scope.model = {email: null};
             $compile(html)(scope);
             scope.$digest();
             form = scope.form;

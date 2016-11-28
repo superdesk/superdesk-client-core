@@ -21,7 +21,7 @@ describe('related item widget', function() {
         $controller('relatedItemController', {$scope: scope});
         scope.$digest();
 
-        var item = {'priority': 1};
+        var item = {priority: 1};
         spyOn(superdesk, 'intent');
         spyOn(api, 'save').and.returnValue($q.when({_items: [item]}));
         scope.options.item = {};
