@@ -44,7 +44,7 @@ describe('publisher service', () => {
         spyOn(pubapi, 'query').and.returnValue($q.when([]));
         publisher.queryRoutes();
         $rootScope.$digest();
-        expect(pubapi.query).toHaveBeenCalledWith('content/routes', undefined);
+        expect(pubapi.query).toHaveBeenCalledWith('content/routes');
     }));
 
     it('can create menu', inject((publisher, pubapi, $q, $rootScope) => {
