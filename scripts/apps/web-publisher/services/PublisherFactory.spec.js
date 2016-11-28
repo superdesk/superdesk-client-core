@@ -10,6 +10,13 @@ describe('publisher service', () => {
         expect(pubapi.save).toHaveBeenCalledWith('tenants', data, undefined);
     }));
 
+    it('can remove site 123', inject((publisher, pubapi, $q, $rootScope) => {
+        spyOn(pubapi, 'remove').and.returnValue($q.when({}));
+        publisher.removeSite(123);
+        $rootScope.$digest();
+        expect(pubapi.remove).toHaveBeenCalledWith('tenants', 123);
+    }));
+
     it('can list sites', inject((publisher, pubapi, $q, $rootScope) => {
         spyOn(pubapi, 'query').and.returnValue($q.when([]));
         publisher.querySites();
@@ -25,10 +32,17 @@ describe('publisher service', () => {
         expect(pubapi.save).toHaveBeenCalledWith('content/routes', data, undefined);
     }));
 
+    it('can remove route 123', inject((publisher, pubapi, $q, $rootScope) => {
+        spyOn(pubapi, 'remove').and.returnValue($q.when({}));
+        publisher.removeRoute(123);
+        $rootScope.$digest();
+        expect(pubapi.remove).toHaveBeenCalledWith('content/routes', 123);
+    }));
+
     it('can list routes', inject((publisher, pubapi, $q, $rootScope) => {
         spyOn(pubapi, 'query').and.returnValue($q.when([]));
         publisher.queryRoutes();
         $rootScope.$digest();
-        expect(pubapi.query).toHaveBeenCalledWith('content/routes', undefined);
+        expect(pubapi.query).toHaveBeenCalledWith('content/routes');
     }));
 });
