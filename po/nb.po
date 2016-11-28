@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2016-11-17 20:02+0000\n"
-"Last-Translator: Helen Vogt <helen.vogt@ntb.no>\n"
+"PO-Revision-Date: 2016-11-28 08:45+0000\n"
+"Last-Translator: karelpetrak <karel.petrak@sourcefabric.org>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/sourcefabric/superdesk/language/nb/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,11 +20,11 @@ msgstr ""
 msgid "--- Not selected ---"
 msgstr "--- ikke valgt ---"
 
-#: scripts/apps/desks/views/desk-config-modal.html:120
+#: scripts/apps/desks/views/desk-config-modal.html:131
 msgid ": OFF"
 msgstr " : AV"
 
-#: scripts/apps/desks/views/desk-config-modal.html:123
+#: scripts/apps/desks/views/desk-config-modal.html:134
 msgid ": ON"
 msgstr ": PÅ"
 
@@ -68,6 +68,10 @@ msgstr ""
 msgid "'PLACE is a required field'"
 msgstr "'Sted kreves'"
 
+#: scripts/core/lang/missing-translations-strings.js:38
+msgid "'PRIORITY is a required field'"
+msgstr "'Prioritet kreves'"
+
 #: scripts/core/lang/missing-translations-strings.js:19
 msgid "'SLUGLINE is a required field'"
 msgstr "'stikkord kreves'"
@@ -75,6 +79,10 @@ msgstr "'stikkord kreves'"
 #: scripts/core/lang/missing-translations-strings.js:18
 msgid "'SUBJECT is a required field'"
 msgstr "'Tema kreves'"
+
+#: scripts/core/lang/missing-translations-strings.js:38
+msgid "'URGENCY is a required field'"
+msgstr "'Hast kreves'"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:31
 msgid "\" sent at:"
@@ -100,19 +108,19 @@ msgstr "[Global]"
 msgid "[none]"
 msgstr "[ingen]"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:249
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:250
 msgid "{{ field }} cannot be earlier than now!"
 msgstr "{{ field }} kan ikke være i fortiden"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:237
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:238
 msgid "{{ field }} date is required!"
 msgstr "{{ field }} dato kreves"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:245
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:246
 msgid "{{ field }} is not a valid date!"
 msgstr "{{ field }} er ikke en gyldig dato!"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:241
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:242
 msgid "{{ field }} time is required!"
 msgstr "{{ field }} tidspunkt kreves"
 
@@ -138,11 +146,11 @@ msgstr[1] "{{ $count }} ord"
 msgid "{{error.email}}"
 msgstr "{{error.email}}"
 
-#: scripts/apps/desks/views/desk-config-modal.html:170
+#: scripts/apps/desks/views/desk-config-modal.html:181
 msgid "{{selected.is_visible ? 'ON' : 'OFF'}}"
 msgstr "{{selected.is_visible ? 'PÅ' : 'AV'}}"
 
-#: scripts/apps/desks/views/desk-config-modal.html:174
+#: scripts/apps/desks/views/desk-config-modal.html:185
 msgid "{{selected.local_readonly ? 'ON' : 'OFF'}}"
 msgstr "{{selected.local_readonly ? 'PÅ' : 'AV'}}"
 
@@ -282,11 +290,12 @@ msgstr "Bildestikkord"
 msgid "Abbreviation"
 msgstr "Forkortelse"
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:141
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:145
 msgid "Abbreviation already exists. Do you want to overwrite it?"
 msgstr "Forkortelsen finnes fra før. Vil du overskrive?"
 
-#: scripts/apps/authoring/views/article-edit.html:63
+#: scripts/apps/authoring/views/article-edit.html:76
+#: scripts/apps/authoring/views/article-edit.html:96
 #: scripts/apps/packaging/views/sd-package-edit.html:19
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:17
 msgid "Abstract"
@@ -304,7 +313,7 @@ msgstr "Valg"
 
 #: scripts/apps/desks/views/settings.html:22
 #: scripts/apps/monitoring/views/item-actions-menu.html:14
-#: scripts/apps/search/directives/ItemList.js:1104
+#: scripts/apps/search/directives/ItemList.js:1108
 #: scripts/apps/templates/views/templates.html:32
 #: scripts/apps/workspace/content/views/profile-settings.html:23
 msgid "Actions"
@@ -487,7 +496,7 @@ msgstr "Bruk denne widgeten"
 msgid "Add title"
 msgstr "Legg til overskrift"
 
-#: scripts/apps/packaging/index.js:69
+#: scripts/apps/packaging/index.js:70
 msgid "Add to current"
 msgstr "Legg til her"
 
@@ -535,13 +544,12 @@ msgstr "Avansert søk"
 msgid "Age Range"
 msgstr "Tidsrom"
 
-#: scripts/apps/monitoring/views/monitoring-view.html:77
-#: scripts/apps/monitoring/views/monitoring-view.html:98
+#: scripts/apps/monitoring/views/monitoring-view.html:72
 #: scripts/apps/users/views/user-preferences.html:60
 msgid "all"
 msgstr "alle"
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:289
+#: scripts/apps/templates/directives/TemplatesDirective.js:293
 #: scripts/apps/users/controllers/UserListController.js:146
 msgid "All"
 msgstr "Alle"
@@ -562,7 +570,7 @@ msgstr "alle bilder"
 msgid "Allow Remove Ingested Items"
 msgstr "Tillat fjerning av importerte elementer"
 
-#: scripts/apps/desks/views/desk-config-modal.html:154
+#: scripts/apps/desks/views/desk-config-modal.html:165
 #: scripts/apps/groups/views/groups-config-modal.html:27
 #: scripts/apps/highlights/views/highlights_config_modal.html:16
 msgid "already exists"
@@ -576,12 +584,12 @@ msgstr "Alt. tekst"
 msgid "Alt Text"
 msgstr "Alt. tekst"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:260
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:261
 msgid "An Item can't have both Embargo and Publish Schedule."
 msgstr "Du må velge enten sperrefrist eller utsatt publiseringstidspunkt"
 
 #: scripts/apps/content-filters/views/production-test-view.html:23
-#: scripts/apps/search/services/SearchService.js:9
+#: scripts/apps/search/services/SearchService.js:25
 msgid "ANPA Category"
 msgstr "Tjeneste"
 
@@ -601,7 +609,7 @@ msgstr "blenderåpning"
 msgid "Applied Global Block Filters"
 msgstr "Globale filtre i bruk"
 
-#: scripts/apps/authoring/views/article-edit.html:179
+#: scripts/apps/authoring/views/article-edit.html:223
 msgid "APPLY CROPS"
 msgstr "Bruk utsnitt"
 
@@ -613,7 +621,7 @@ msgstr "arkiv"
 msgid "Archive"
 msgstr "Arkiv"
 
-#: scripts/apps/search/directives/ItemList.js:364
+#: scripts/apps/search/directives/ItemList.js:339
 msgid "archived"
 msgstr "arkivert"
 
@@ -629,7 +637,7 @@ msgstr "Arkivert"
 msgid "Archived Management"
 msgstr "Arkivert"
 
-#: scripts/apps/highlights/controllers/HighlightsConfig.js:61
+#: scripts/apps/highlights/controllers/HighlightsConfig.js:62
 msgid "Are you sure you want to delete configuration?"
 msgstr "Er du sikker på at du vil slette denne konfigurasjonen?"
 
@@ -637,11 +645,11 @@ msgstr "Er du sikker på at du vil slette denne konfigurasjonen?"
 msgid "Are you sure you want to delete content filter?"
 msgstr "Er du sikker på at du vil slette innholdsfilteret?"
 
-#: scripts/apps/dashboard/controllers/DashboardController.js:113
+#: scripts/apps/dashboard/controllers/DashboardController.js:118
 msgid "Are you sure you want to delete current workspace?"
 msgstr "Er du sikker på at du vil slette dette dashbordet?"
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:74
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:75
 msgid "Are you sure you want to delete filter condition?"
 msgstr "Er du sikker på at du vil slette denne filtreringen?"
 
@@ -649,7 +657,7 @@ msgstr "Er du sikker på at du vil slette denne filtreringen?"
 msgid "Are you sure you want to delete group?"
 msgstr "Er du sikker på at du vil slette denne gruppen?"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:88
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:89
 msgid "Are you sure you want to delete Ingest Source?"
 msgstr "Er du sikker på at du vil slette denne kilden?"
 
@@ -661,7 +669,7 @@ msgstr "Er du sikker på at du vil slette dette produktet?"
 msgid "Are you sure you want to delete rule set?"
 msgstr "Er du sikker på at du vil slette dette regelsettet ?"
 
-#: scripts/apps/search/directives/SavedSearches.js:77
+#: scripts/apps/search/directives/SavedSearches.js:78
 msgid "Are you sure you want to delete saved search?"
 msgstr "Er du sikker på at du vil slette dette lagrede søket?"
 
@@ -669,7 +677,7 @@ msgstr "Er du sikker på at du vil slette dette lagrede søket?"
 msgid "Are you sure you want to delete Search Provider?"
 msgstr "Er du sikker på at du vil slette dette databasesøket?"
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:254
+#: scripts/apps/templates/directives/TemplatesDirective.js:258
 msgid "Are you sure you want to delete the template?"
 msgstr "Er du sikker på at du vil slette denne malen?"
 
@@ -681,7 +689,7 @@ msgstr "Er du sikker på at du vil slette denne regelen?"
 msgid "Are you sure you want to delete this scheme?"
 msgstr "Vil du virkelig slette denne rutingplanen?"
 
-#: scripts/apps/users/directives/UserRolesDirective.js:84
+#: scripts/apps/users/directives/UserRolesDirective.js:82
 msgid "Are you sure you want to delete user role?"
 msgstr "Er du sikker på at du vil slette denne rollen?"
 
@@ -737,6 +745,10 @@ msgstr "audio"
 msgid "Authentication Info"
 msgstr "autentiseringsinfo"
 
+#: scripts/apps/publish/views/subscribers.html:147
+msgid "Authentication Token"
+msgstr ""
+
 #: scripts/apps/ingest/views/settings/reutersConfig.html:7
 msgid "authentication url"
 msgstr "autentiserings-URL"
@@ -766,7 +778,7 @@ msgstr "Legg automatisk til saker fra:"
 msgid "Available clock"
 msgstr "Tilgjengelig klokke"
 
-#: scripts/core/editor2/editor.js:915
+#: scripts/core/editor2/editor.js:923
 msgid "B"
 msgstr "F"
 
@@ -797,7 +809,7 @@ msgstr "Basic"
 msgid "Be the first..."
 msgstr "Vær først....."
 
-#: scripts/core/directives/PasswordStrengthDirective.js:37
+#: scripts/core/directives/PasswordStrengthDirective.js:40
 msgid "Better"
 msgstr "Bedre"
 
@@ -814,7 +826,8 @@ msgstr "Infolinje er tom"
 msgid "Blocking"
 msgstr "Sperrer"
 
-#: scripts/apps/authoring/views/article-edit.html:152
+#: scripts/apps/authoring/views/article-edit.html:182
+#: scripts/apps/authoring/views/article-edit.html:201
 #: scripts/apps/packaging/views/sd-package-edit.html:31
 msgid "Body"
 msgstr "Brødtekst"
@@ -828,7 +841,7 @@ msgstr "Footer"
 msgid "Body HTML"
 msgstr "Brødtekst"
 
-#: scripts/core/editor2/editor.js:913
+#: scripts/core/editor2/editor.js:921
 msgid "bold"
 msgstr "fet"
 
@@ -856,7 +869,7 @@ msgstr "av"
 msgid "By"
 msgstr "Av"
 
-#: scripts/apps/authoring/authoring/directives/ArticleEditDirective.js:92
+#: scripts/apps/authoring/authoring/directives/ArticleEditDirective.js:94
 msgid "By {{ display_name }}"
 msgstr "Av {{ display_name }}"
 
@@ -871,12 +884,18 @@ msgid ""
 "with any of its existing categories)."
 msgstr "Menyvalget for NTB-tjenester (i meldingsskjemaet) vil bare inneholde de tjenestene du definerer her. "
 
+#: scripts/apps/users/views/user-preferences.html:92
+msgid ""
+"By selecting the desks as your preferred desks, they appear first in the "
+"order when sending or publishing items."
+msgstr ""
+
 #: scripts/apps/users/views/edit-form.html:79
 msgid "byline"
 msgstr "kreditering"
 
 #: scripts/apps/archive/views/metadata-view.html:73
-#: scripts/apps/authoring/views/article-edit.html:83
+#: scripts/apps/authoring/views/article-edit.html:113
 #: scripts/apps/search/views/search-parameters.html:37
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:21
 msgid "Byline"
@@ -885,10 +904,10 @@ msgstr "Kreditering"
 #: scripts/apps/archive/views/archived-kill.html:13
 #: scripts/apps/archive/views/resend-configuration.html:28
 #: scripts/apps/archive/views/upload.html:98
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:31
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:44
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:57
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:70
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:33
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:46
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:60
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:74
 #: scripts/apps/authoring/comments/views/comments-widget.html:28
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:15
 #: scripts/apps/authoring/views/change-image.html:5
@@ -897,8 +916,8 @@ msgstr "Kreditering"
 #: scripts/apps/content-filters/views/manage-filters.html:121
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:12
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:86
-#: scripts/apps/desks/views/desk-config-modal.html:113
-#: scripts/apps/desks/views/desk-config-modal.html:144
+#: scripts/apps/desks/views/desk-config-modal.html:124
+#: scripts/apps/desks/views/desk-config-modal.html:155
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:122
 #: scripts/apps/highlights/views/highlights_config_modal.html:52
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:20
@@ -910,7 +929,7 @@ msgstr "Kreditering"
 #: scripts/apps/products/views/products-config-modal.html:57
 #: scripts/apps/publish/views/publish-queue.html:122
 #: scripts/apps/publish/views/publish-queue.html:78
-#: scripts/apps/publish/views/subscribers.html:150
+#: scripts/apps/publish/views/subscribers.html:156
 #: scripts/apps/search-providers/views/search-provider-config.html:79
 #: scripts/apps/search/views/item-globalsearch.html:20
 #: scripts/apps/search/views/save-search.html:28
@@ -928,7 +947,7 @@ msgstr "Kreditering"
 #: scripts/apps/workspace/views/edit-workspace-modal.html:19
 #: scripts/core/activity/views/activity-chooser.html:9
 #: scripts/core/editor2/views/block-embed.html:3
-#: scripts/core/services/modalService.js:6
+#: scripts/core/services/modalService.js:7
 #: scripts/core/ui/views/datepicker-wrapper.html:15
 #: scripts/core/ui/views/sd-timepicker-popup.html:27
 msgid "Cancel"
@@ -968,7 +987,7 @@ msgstr "Bytt bilde"
 msgid "Channel has gone strangely quiet."
 msgstr "Kanalen er taus"
 
-#: scripts/apps/desks/views/desk-config-modal.html:81
+#: scripts/apps/desks/views/desk-config-modal.html:92
 msgid "Character limit exceeded, desk can not be created/updated."
 msgstr "Navnet er for langt, desk kan ikke opprettes/oppdateres"
 
@@ -984,7 +1003,7 @@ msgstr "Navnet er for langt, gruppen kan ikke opprettes/oppdateres"
 msgid "Character limit exceeded, highlight can not be created/updated."
 msgstr "Navnet er for langt, utvalget kan ikke opprettes/oppdateres"
 
-#: scripts/apps/desks/views/desk-config-modal.html:155
+#: scripts/apps/desks/views/desk-config-modal.html:166
 msgid "Character limit exceeded, stage can not be created/updated."
 msgstr "Navnet er for langt, stadium kan ikke opprettes/oppdateres"
 
@@ -1067,7 +1086,7 @@ msgstr "lukket"
 msgid "Closed"
 msgstr "Lukket"
 
-#: scripts/apps/authoring/authoring/index.js:200
+#: scripts/apps/authoring/authoring/index.js:204
 msgid "Closes current item"
 msgstr "Lukker denne saken"
 
@@ -1075,7 +1094,7 @@ msgstr "Lukker denne saken"
 msgid "Color"
 msgstr "Farge"
 
-#: scripts/apps/packaging/index.js:86
+#: scripts/apps/packaging/index.js:88
 msgid "Combine with current"
 msgstr "Slå sammen"
 
@@ -1111,11 +1130,11 @@ msgstr "Konfidensielle data"
 msgid "Configuration"
 msgstr "Konfigurasjon"
 
-#: scripts/apps/highlights/controllers/HighlightsConfig.js:65
+#: scripts/apps/highlights/controllers/HighlightsConfig.js:66
 msgid "Configuration deleted."
 msgstr "Konfigurasjon slettet"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:77
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:81
 msgid ""
 "Configuration has changed. {{ message }} Would you like to save the story to"
 " your workspace?"
@@ -1129,7 +1148,7 @@ msgstr "Navn på konfigurasjon"
 msgid "confirm"
 msgstr "bekreft"
 
-#: scripts/core/services/modalService.js:4
+#: scripts/core/services/modalService.js:5
 #: scripts/core/ui/views/datepicker-wrapper.html:14
 #: scripts/core/ui/views/sd-timepicker-popup.html:26
 msgid "Confirm"
@@ -1161,7 +1180,11 @@ msgstr "innhold"
 msgid "Content"
 msgstr "NTB-innhold"
 
-#: scripts/apps/desks/views/desk-config-modal.html:224
+#: scripts/apps/publish/views/subscribers.html:146
+msgid "Content API Token"
+msgstr ""
+
+#: scripts/apps/desks/views/desk-config-modal.html:235
 msgid "Content expiry"
 msgstr "Utløper"
 
@@ -1169,7 +1192,7 @@ msgstr "Utløper"
 msgid "Content Expiry"
 msgstr "Utløper"
 
-#: scripts/apps/desks/views/desk-config-modal.html:181
+#: scripts/apps/desks/views/desk-config-modal.html:192
 msgid "Content expiry:"
 msgstr "Utløper:"
 
@@ -1206,7 +1229,7 @@ msgstr "Innholdsfiltre"
 msgid "Content Profile"
 msgstr "Innholdsprofil"
 
-#: scripts/apps/desks/views/desk-config-modal.html:62
+#: scripts/apps/desks/views/desk-config-modal.html:73
 #: scripts/apps/workspace/content/index.js:24
 #: scripts/apps/workspace/content/views/profile-settings.html:4
 #: scripts/core/lang/missing-translations-strings.js:26
@@ -1225,7 +1248,7 @@ msgstr "Innholdstyper"
 msgid "Content Types"
 msgstr "Innholdstype"
 
-#: scripts/apps/desks/views/desk-config-modal.html:260
+#: scripts/apps/desks/views/desk-config-modal.html:271
 msgid "Continue"
 msgstr "Fortsett"
 
@@ -1253,7 +1276,7 @@ msgstr "Copyright-eier"
 msgid "Copyright notice"
 msgstr "Copyright-merke"
 
-#: scripts/apps/authoring/authoring/index.js:129
+#: scripts/apps/authoring/authoring/index.js:133
 msgid "Correct item"
 msgstr "Foreta rettelse"
 
@@ -1269,12 +1292,12 @@ msgstr "Rettelse"
 msgid "Correction issued by"
 msgstr "Rettelse utført av"
 
-#: scripts/apps/search/directives/ItemList.js:921
+#: scripts/apps/search/directives/ItemList.js:918
 msgid "correction sequence"
 msgstr ""
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:28
-#: scripts/apps/search/directives/ItemList.js:1107
+#: scripts/apps/search/directives/ItemList.js:1111
 msgid "Corrections"
 msgstr "Oppdateringer"
 
@@ -1284,7 +1307,7 @@ msgstr "lag ny"
 
 #: scripts/apps/archive/views/list.html:9
 #: scripts/apps/highlights/views/create_highlights_button_directive.html:2
-#: scripts/apps/monitoring/views/monitoring-view.html:64
+#: scripts/apps/monitoring/views/monitoring-view.html:59
 #: scripts/apps/templates/services/TemplatesService.js:56
 msgid "Create"
 msgstr "Lag ny"
@@ -1335,7 +1358,7 @@ msgstr "Lag pakke"
 #: scripts/apps/authoring/suggest/SuggestView.html:69
 #: scripts/apps/authoring/views/authoring.html:7
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:8
-#: scripts/apps/search/services/SearchService.js:7
+#: scripts/apps/search/services/SearchService.js:23
 #: scripts/apps/users/views/list.html:32
 msgid "Created"
 msgstr "Opprettet"
@@ -1403,7 +1426,7 @@ msgstr "Krediteringer"
 msgid "Critical Errors"
 msgstr "Kritiske feil"
 
-#: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:89
+#: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:91
 msgid "Crop changes have been recorded"
 msgstr "Utsnittsendringer er lagret"
 
@@ -1450,7 +1473,7 @@ msgid "Date"
 msgstr "Dato"
 
 #: scripts/apps/archive/views/metadata-view.html:69
-#: scripts/apps/authoring/views/article-edit.html:102
+#: scripts/apps/authoring/views/article-edit.html:132
 #: scripts/apps/users/views/user-preferences.html:28
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:22
 msgid "Dateline"
@@ -1484,7 +1507,7 @@ msgstr "standard"
 msgid "Default"
 msgstr "Standard"
 
-#: scripts/apps/desks/views/desk-config-modal.html:70
+#: scripts/apps/desks/views/desk-config-modal.html:81
 msgid "Default Content Profile"
 msgstr "Standard innholdsprofil"
 
@@ -1527,7 +1550,8 @@ msgstr "Avbryt "
 
 #: scripts/apps/archive/views/upload.html:46
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:146
-#: scripts/apps/authoring/views/article-edit.html:194
+#: scripts/apps/authoring/views/article-edit.html:238
+#: scripts/apps/authoring/views/article-edit.html:253
 #: scripts/apps/authoring/views/change-image.html:76
 #: scripts/apps/search/views/save-search-dialog.html:7
 #: scripts/apps/search/views/search-parameters.html:142
@@ -1559,9 +1583,13 @@ msgstr "Desk slettet"
 msgid "Desk description"
 msgstr "Deskbeskrivelse"
 
-#: scripts/apps/desks/services/DesksFactory.js:308
+#: scripts/apps/desks/services/DesksFactory.js:299
 msgid "Desk has been modified elsewhere. Please reload the desks."
 msgstr "Deskoppsett er endret. Last inn på nytt."
+
+#: scripts/apps/desks/views/desk-config-modal.html:51
+msgid "Desk language"
+msgstr ""
 
 #: scripts/apps/desks/views/settings.html:5
 msgid "Desk management"
@@ -1611,7 +1639,7 @@ msgid "Desk with name  already exists."
 msgstr "Desken finnes allerede"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:10
-#: scripts/apps/search/directives/ItemList.js:355
+#: scripts/apps/search/directives/ItemList.js:332
 msgid "desk:"
 msgstr "desk:"
 
@@ -1671,7 +1699,7 @@ msgstr "Ordlisteadministrasjon"
 msgid "Dictionary name"
 msgstr "Ordlistenavn"
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:10
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:12
 msgid "Dictionary saved successfully"
 msgstr "Ordliste lagret"
 
@@ -1713,7 +1741,7 @@ msgstr "Vis lignende "
 msgid "Displaying similar items"
 msgstr "Viser lignende saker"
 
-#: scripts/core/keyboard/keyboard.js:383 scripts/core/keyboard/keyboard.js:387
+#: scripts/core/keyboard/keyboard.js:391 scripts/core/keyboard/keyboard.js:399
 msgid "Displays active keyboard shortcuts"
 msgstr "Viser aktive tastatur-kortkommandoer"
 
@@ -1729,7 +1757,7 @@ msgstr "Hvis du sletter saken kan den ikke gjenopprettes. Vil du slette?"
 msgid "Do you want to delete these items permanently?"
 msgstr "Vil du slette disse sakene permanent?"
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:132
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:136
 msgid "Do you want to remove Abbreviation?"
 msgstr "Vil du fjerne forkortelse?"
 
@@ -1748,10 +1776,10 @@ msgstr "ferdig"
 #: scripts/apps/authoring/editor/views/find-replace.html:35
 #: scripts/apps/dashboard/views/workspace.html:100
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:9
-#: scripts/apps/desks/views/desk-config-modal.html:261
-#: scripts/apps/desks/views/desk-config-modal.html:289
-#: scripts/apps/desks/views/desk-config-modal.html:309
-#: scripts/apps/desks/views/desk-config-modal.html:90
+#: scripts/apps/desks/views/desk-config-modal.html:101
+#: scripts/apps/desks/views/desk-config-modal.html:272
+#: scripts/apps/desks/views/desk-config-modal.html:300
+#: scripts/apps/desks/views/desk-config-modal.html:320
 #: scripts/apps/groups/views/groups-config-modal.html:57
 #: scripts/apps/monitoring/views/aggregate-settings.html:138
 #: scripts/apps/users/views/change-avatar.html:73
@@ -1811,7 +1839,7 @@ msgstr "Til red:"
 msgid "ED. NOTE"
 msgstr "Til red"
 
-#: scripts/apps/authoring/authoring/index.js:91
+#: scripts/apps/authoring/authoring/index.js:93
 #: scripts/apps/authoring/views/authoring-topbar.html:60
 #: scripts/apps/desks/views/settings.html:24
 #: scripts/apps/desks/views/stage-item-list.html:24
@@ -1862,11 +1890,11 @@ msgstr "Rediger innholdsfilter"
 msgid "Edit Content Profile"
 msgstr "Rediger innholdsprofil"
 
-#: scripts/apps/authoring/authoring/index.js:161
+#: scripts/apps/authoring/authoring/index.js:165
 msgid "Edit Crop"
 msgstr "Beskjær bilde"
 
-#: scripts/apps/authoring/views/article-edit.html:180
+#: scripts/apps/authoring/views/article-edit.html:224
 msgid "EDIT CROPS"
 msgstr "Rediger utsnitt"
 
@@ -2026,12 +2054,12 @@ msgid "Email User"
 msgstr "Epostbruker"
 
 #: scripts/apps/archive/views/item-state.html:2
-#: scripts/apps/search/directives/ItemList.js:911
-#: scripts/apps/search/directives/ItemList.js:912
+#: scripts/apps/search/directives/ItemList.js:905
+#: scripts/apps/search/directives/ItemList.js:906
 msgid "embargo"
 msgstr "sperrefrist"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:269
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:270
 #: scripts/apps/authoring/views/send-item.html:44
 msgid "Embargo"
 msgstr "Sperrefrist"
@@ -2086,8 +2114,8 @@ msgstr "feil"
 msgid "Error"
 msgstr "Feil"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:185
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:195
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:186
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:196
 msgid "Error creating highlight."
 msgstr "Feil ved utvalg"
 
@@ -2095,12 +2123,12 @@ msgstr "Feil ved utvalg"
 msgid "Error sending as"
 msgstr "Feil ved sending som"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:139
-#: scripts/apps/authoring/macros/macros.js:75
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:60
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:62
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:65
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:82
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:140
+#: scripts/apps/authoring/macros/macros.js:74
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:61
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:63
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:66
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:83
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:125
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:127
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:47
@@ -2108,12 +2136,12 @@ msgstr "Feil ved sending som"
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:52
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:55
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:74
-#: scripts/apps/content-filters/controllers/ProductionTestController.js:115
-#: scripts/apps/content-filters/controllers/ProductionTestController.js:117
+#: scripts/apps/content-filters/controllers/ProductionTestController.js:111
+#: scripts/apps/content-filters/controllers/ProductionTestController.js:113
 #: scripts/apps/desks/controllers/DeskConfigController.js:46
 #: scripts/apps/desks/directives/DeskeditPeople.js:57
-#: scripts/apps/desks/directives/DeskeditStages.js:186
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:18
+#: scripts/apps/desks/directives/DeskeditStages.js:184
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:20
 #: scripts/apps/ingest/directives/IngestRoutingContent.js:99
 #: scripts/apps/ingest/directives/IngestRulesContent.js:47
 #: scripts/apps/products/controllers/ProductsConfigController.js:123
@@ -2121,17 +2149,17 @@ msgstr "Feil ved sending som"
 #: scripts/apps/products/controllers/ProductsConfigController.js:74
 #: scripts/apps/products/controllers/ProductsConfigController.js:76
 #: scripts/apps/products/controllers/ProductsConfigController.js:89
-#: scripts/apps/publish/controllers/PublishQueueController.js:150
+#: scripts/apps/publish/controllers/PublishQueueController.js:156
 #: scripts/apps/publish/directives/SubscribersDirective.js:142
 #: scripts/apps/search-providers/directive.js:39
-#: scripts/apps/templates/directives/TemplatesDirective.js:262
+#: scripts/apps/templates/directives/TemplatesDirective.js:266
 #: scripts/apps/templates/helpers.js:4 scripts/apps/templates/helpers.js:8
 #: scripts/apps/users/controllers/UserDeleteCommand.js:19
 #: scripts/apps/users/controllers/UserDeleteCommand.js:21
 #: scripts/apps/users/controllers/UserEnableCommand.js:15
 #: scripts/apps/users/controllers/UserEnableCommand.js:17
-#: scripts/apps/users/directives/UserEditDirective.js:113
-#: scripts/apps/users/directives/UserRolesDirective.js:60
+#: scripts/apps/users/directives/UserEditDirective.js:116
+#: scripts/apps/users/directives/UserRolesDirective.js:58
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.js:33
 msgid "Error:"
 msgstr "Feil:"
@@ -2144,11 +2172,11 @@ msgstr "Feil: Databasesøket eksisterer fra før."
 msgid "Error: Failed to delete product."
 msgstr "Feil: Kunne ikke slette produktet"
 
-#: scripts/apps/content-filters/controllers/ProductionTestController.js:119
+#: scripts/apps/content-filters/controllers/ProductionTestController.js:115
 msgid "Error: Failed to fetch production test results."
 msgstr "Feil: Kunne ikke hente testresultater."
 
-#: scripts/apps/publish/controllers/PublishQueueController.js:153
+#: scripts/apps/publish/controllers/PublishQueueController.js:159
 msgid "Error: Failed to re-schedule"
 msgstr "Feil: Kunne ikke endre utsendingstidspunkt."
 
@@ -2156,7 +2184,7 @@ msgstr "Feil: Kunne ikke endre utsendingstidspunkt."
 msgid "Error: Failed to save content filter."
 msgstr "Feil: Kunne ikke lagre innholdsfilter."
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:67
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:68
 msgid "Error: Failed to save filter condition."
 msgstr "Feil: Kunne ikke lagre filtreringsbetingelser."
 
@@ -2180,14 +2208,14 @@ msgstr "Feil: Kunne ikke teste innholdsfilter."
 msgid "Error: Internal error in Filter testing"
 msgstr "Feil: Testing av innholdsfilter feilet."
 
-#: scripts/apps/publish/directives/SubscribersDirective.js:223
+#: scripts/apps/publish/directives/SubscribersDirective.js:225
 msgid ""
 "Error: Please re-assign new format for each destination as the changed "
 "subscriber type has formats which are not supported by existing "
 "destination(s)."
 msgstr "Feil: Lag nytt format for hver adresse. Endret mottaker-type har formater som ikke støttes på eksisterende adresser."
 
-#: scripts/core/itemList/itemList.js:430 scripts/core/itemList/itemList.js:483
+#: scripts/core/itemList/itemList.js:432 scripts/core/itemList/itemList.js:485
 msgid "Error: Slugline required."
 msgstr "Feilmelding: Stikkord kreves"
 
@@ -2199,11 +2227,11 @@ msgstr "Feil: Mottaker må ha minst én adresse."
 msgid "Error: Subscriber with Name  already exists."
 msgstr "Feil: Mottaker finnes fra før."
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:20
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:22
 msgid "Error: The dictionary already exists."
 msgstr "Feil: Ordlisten finnes fra før."
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:99
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:100
 msgid "Error: Unable to delete Ingest Source"
 msgstr "Feil: Kunne ikke slette kilde."
 
@@ -2211,23 +2239,23 @@ msgstr "Feil: Kunne ikke slette kilde."
 msgid "Error: Unable to delete Search Provider."
 msgstr "Feil: Kunne ikke slette databasesøk"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:137
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:138
 msgid "Error: Unique Name is not unique."
 msgstr "Feil: ID finnes fra før."
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:24
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:26
 msgid "Error. Dictionary not saved."
 msgstr "Feil. Ordliste ikke lagret."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:491
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:493
 msgid "Error. Item not published."
 msgstr "Feil. Saken ble ikke publisert."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:144
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:145
 msgid "Error. Item not updated."
 msgstr "Feil. Saken ble ikke oppdatert."
 
-#: scripts/apps/search/directives/SavedSearches.js:84
+#: scripts/apps/search/directives/SavedSearches.js:85
 msgid "Error. Saved search not deleted."
 msgstr "Feil. Lagret søk ble ikke slettet."
 
@@ -2262,8 +2290,8 @@ msgstr "Avslutt"
 
 #: scripts/apps/archive/views/item-preview.html:19
 #: scripts/apps/archive/views/preview.html:86
-#: scripts/apps/search/directives/ItemList.js:1040
-#: scripts/apps/search/directives/ItemList.js:403
+#: scripts/apps/search/directives/ItemList.js:1044
+#: scripts/apps/search/directives/ItemList.js:378
 msgid "expires"
 msgstr "utløper"
 
@@ -2301,7 +2329,7 @@ msgstr ""
 msgid "Failed to generate new take."
 msgstr "Failed to generate new take."
 
-#: scripts/apps/authoring/authoring/services/AuthoringService.js:82
+#: scripts/apps/authoring/authoring/services/AuthoringService.js:80
 msgid "Failed to generate update:"
 msgstr "Kunne ikke lage oppdatering:"
 
@@ -2309,7 +2337,7 @@ msgstr "Kunne ikke lage oppdatering:"
 msgid "Failed to get a lock on the item!"
 msgstr "Kunne ikke låse saken!"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:520
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:522
 msgid "Failed to publish and continue."
 msgstr "Kunne ikke publisere og fortsette"
 
@@ -2341,11 +2369,11 @@ msgstr "Featurevisning"
 msgid "Featured"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:43
+#: scripts/apps/authoring/views/article-edit.html:56
 msgid "Featured Image"
 msgstr "Bilde for publisering"
 
-#: scripts/apps/authoring/views/article-edit.html:53
+#: scripts/apps/authoring/views/article-edit.html:66
 msgid "Featured Media"
 msgstr "Mediefil for publisering"
 
@@ -2398,7 +2426,7 @@ msgid "Fetched as"
 msgstr "Hentet som"
 
 #: scripts/apps/archive/views/fetched-desks.html:2
-#: scripts/apps/search/directives/ItemList.js:782
+#: scripts/apps/search/directives/ItemList.js:775
 msgid "fetched in"
 msgstr "hentet i "
 
@@ -2420,6 +2448,10 @@ msgstr "File Extension"
 msgid "File name/line"
 msgstr "Filnavn"
 
+#: scripts/apps/monitoring/views/monitoring-view.html:94
+msgid "File types"
+msgstr ""
+
 #: scripts/apps/ingest/views/settings/emailConfig.html:36
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:72
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:15
@@ -2427,7 +2459,7 @@ msgstr "Filnavn"
 msgid "Filter"
 msgstr "Filter"
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:54
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:55
 msgid "Filter condition saved."
 msgstr "Filterbetingelser lagret"
 
@@ -2505,7 +2537,8 @@ msgstr "Flash"
 msgid "Focal length"
 msgstr "brennvidde"
 
-#: scripts/apps/authoring/views/article-edit.html:234
+#: scripts/apps/authoring/views/article-edit.html:289
+#: scripts/apps/authoring/views/article-edit.html:312
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:27
 msgid "Footer"
 msgstr "Footer"
@@ -2583,13 +2616,13 @@ msgstr "Funksjon"
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:37
 #: scripts/apps/publish/views/subscribers.html:33
 #: scripts/apps/users/views/edit-form.html:29
-#: scripts/core/keyboard/keyboard.js:383 scripts/core/keyboard/keyboard.js:387
+#: scripts/core/keyboard/keyboard.js:391 scripts/core/keyboard/keyboard.js:398
 msgid "General"
 msgstr "Generelt"
 
 #: scripts/apps/archive/views/metadata-view.html:57
 #: scripts/apps/authoring/views/full-preview.html:54
-#: scripts/apps/search/services/SearchService.js:12
+#: scripts/apps/search/services/SearchService.js:28
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:9
 msgid "Genre"
 msgstr "Stofftype"
@@ -2614,12 +2647,12 @@ msgstr "Få kode."
 msgid "Global Block"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:120
-#: scripts/apps/desks/views/desk-config-modal.html:200
+#: scripts/apps/desks/views/desk-config-modal.html:131
+#: scripts/apps/desks/views/desk-config-modal.html:211
 msgid "Global Read"
 msgstr "Synlig for alle"
 
-#: scripts/apps/desks/views/desk-config-modal.html:169
+#: scripts/apps/desks/views/desk-config-modal.html:180
 msgid "Global Read:"
 msgstr "Synlig for alle:"
 
@@ -2670,11 +2703,11 @@ msgstr "Gruppeadministrasjon"
 msgid "GUID"
 msgstr "GUID"
 
-#: scripts/core/editor2/editor.js:889
+#: scripts/core/editor2/editor.js:897
 msgid "H1"
 msgstr "O1"
 
-#: scripts/core/editor2/editor.js:902
+#: scripts/core/editor2/editor.js:910
 msgid "H2"
 msgstr "O2"
 
@@ -2686,14 +2719,15 @@ msgstr "Halv"
 msgid "Have password? Sign in."
 msgstr "Har du passord? Logg inn."
 
-#: scripts/core/editor2/editor.js:887
+#: scripts/core/editor2/editor.js:895
 msgid "header type 1"
 msgstr "Infolinje"
 
-#: scripts/core/editor2/editor.js:900
+#: scripts/core/editor2/editor.js:908
 msgid "header type 2"
 msgstr "Mellomtittel"
 
+#: scripts/apps/authoring/views/article-edit.html:18
 #: scripts/apps/authoring/views/article-edit.html:2
 #: scripts/apps/content-filters/views/production-test-view.html:20
 #: scripts/apps/legal-archive/views/legal_archive.html:42
@@ -2708,7 +2742,7 @@ msgstr "Infolinje"
 msgid "Help us translate Superdesk"
 msgstr "Hjelp oss å oversette Superdesk"
 
-#: scripts/apps/authoring/views/article-edit.html:214
+#: scripts/apps/authoring/views/article-edit.html:269
 msgid "Helplines/Contact Information"
 msgstr "Hjelp/Kontaktinformasjon"
 
@@ -2724,8 +2758,8 @@ msgstr "Skjul sendte saker"
 msgid "high"
 msgstr "høy"
 
-#: scripts/apps/monitoring/views/monitoring-view.html:103
-#: scripts/apps/monitoring/views/monitoring-view.html:80
+#: scripts/apps/monitoring/views/monitoring-view.html:105
+#: scripts/apps/monitoring/views/monitoring-view.html:75
 msgid "Highlight Package"
 msgstr "Utvalgspakke"
 
@@ -2740,7 +2774,7 @@ msgstr "utvalg"
 #: scripts/apps/authoring/views/authoring-topbar.html:163
 #: scripts/apps/highlights/index.js:61
 #: scripts/apps/monitoring/views/item-actions-menu.html:24
-#: scripts/apps/search/directives/ItemList.js:1106
+#: scripts/apps/search/directives/ItemList.js:1110
 #: scripts/apps/templates/services/TemplatesService.js:57
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:17
 msgid "Highlights"
@@ -2785,7 +2819,7 @@ msgstr "kl"
 msgid "hrs"
 msgstr "kl"
 
-#: scripts/core/editor2/editor.js:932
+#: scripts/core/editor2/editor.js:940
 msgid "I"
 msgstr "K"
 
@@ -2793,7 +2827,7 @@ msgstr "K"
 msgid "I'm sorry but a role with that name already exists."
 msgstr "Beklager, men en rolle med det navnet finnes fra før."
 
-#: scripts/apps/users/directives/UserRolesDirective.js:43
+#: scripts/apps/users/directives/UserRolesDirective.js:42
 msgid "I'm sorry but there was an error when saving the role."
 msgstr "Beklager, det oppsto en feil da rollen skulle lagres."
 
@@ -2809,8 +2843,8 @@ msgstr " Beklager, det oppsto en feil da reglene skulle lagres."
 msgid "If not set, the UTC+0 time zone is assumed."
 msgstr "Hvis ikke annen tidssone er valgt benyttes UTC+0"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:30
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:43
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:32
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:45
 msgid "Ignore"
 msgstr "Ignorer"
 
@@ -2818,7 +2852,7 @@ msgstr "Ignorer"
 msgid "Ignore word"
 msgstr "Ignorer ord"
 
-#: scripts/core/upload/crop-directive.js:38
+#: scripts/core/upload/crop-directive.js:39
 msgid ""
 "Image is bigger than {{ maxFileSize }}MB, upload file size may be limited!"
 msgstr "Bildet er større en maksstørrelselsen: {{ maxFileSize }}MB. "
@@ -2881,16 +2915,16 @@ msgstr "inaktiv"
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: scripts/apps/desks/views/desk-config-modal.html:230
+#: scripts/apps/desks/views/desk-config-modal.html:241
 msgid "Incoming Rule"
 msgstr "Innkommende regel"
 
-#: scripts/apps/desks/views/desk-config-modal.html:185
+#: scripts/apps/desks/views/desk-config-modal.html:196
 msgid "Incoming Rule:"
 msgstr "Regel for innkommende:"
 
-#: scripts/apps/desks/views/desk-config-modal.html:166
-#: scripts/apps/desks/views/desk-config-modal.html:212
+#: scripts/apps/desks/views/desk-config-modal.html:177
+#: scripts/apps/desks/views/desk-config-modal.html:223
 msgid "Incoming Stage"
 msgstr "Innkommende stadium"
 
@@ -2899,7 +2933,7 @@ msgstr "Innkommende stadium"
 msgid "Indefinite Usage"
 msgstr "Ubegrenset bruk"
 
-#: scripts/apps/authoring/metadata/metadata.js:1079
+#: scripts/apps/authoring/metadata/metadata.js:1088
 msgid "Info"
 msgstr "Info"
 
@@ -2943,7 +2977,7 @@ msgstr "Eksterne kilder rutingplan"
 msgid "Ingest Rule sets"
 msgstr "Eksterne kilder regelsett"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:93
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:94
 msgid "Ingest Source deleted."
 msgstr "Kilde slettet."
 
@@ -2959,7 +2993,7 @@ msgstr "Importstatistikk"
 msgid "ingested"
 msgstr "importert"
 
-#: scripts/core/editor2/editor.js:999
+#: scripts/core/editor2/editor.js:1008
 msgid "insert table"
 msgstr "Sett inn tabell"
 
@@ -2987,7 +3021,7 @@ msgstr "Lager ny mal."
 msgid "It will update existing template."
 msgstr "Oppdaterer eksisterende mal."
 
-#: scripts/core/editor2/editor.js:930
+#: scripts/core/editor2/editor.js:938
 msgid "italic"
 msgstr "kursiv"
 
@@ -2999,7 +3033,7 @@ msgstr "Saken er allerede åpen"
 msgid "Item Duplicated"
 msgstr "Saken er duplisert"
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:632
+#: scripts/apps/authoring/authoring/directives/SendItem.js:630
 msgid "Item fetched."
 msgstr "Saken er hentet."
 
@@ -3011,7 +3045,7 @@ msgstr "Saken er trukket"
 msgid "Item has been resent."
 msgstr "Saken er sendt på nytt"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:387
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:388
 msgid ""
 "Item has changed since it was opened. Please close and reopen the item to "
 "continue. Regrettably, your changes cannot be saved."
@@ -3031,7 +3065,7 @@ msgstr "Saken ligger allerede i pakken."
 msgid "item is associated as a take."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:119
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:124
 msgid "Item locked"
 msgstr "Saken er låst"
 
@@ -3043,12 +3077,12 @@ msgstr "metadata"
 msgid "Item not found..."
 msgstr "Kunne ikke finne saken..."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:323
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:324
 msgid "Item published."
 msgstr "Saken er publisert."
 
-#: scripts/apps/dashboard/workspace-tasks/tasks.js:196
-#: scripts/apps/dashboard/workspace-tasks/tasks.js:260
+#: scripts/apps/dashboard/workspace-tasks/tasks.js:192
+#: scripts/apps/dashboard/workspace-tasks/tasks.js:256
 msgid "Item saved."
 msgstr "Saken er lagret."
 
@@ -3057,7 +3091,7 @@ msgid "Item sent to Subscriber"
 msgstr "Saken er sendt til mottaker."
 
 #: scripts/apps/authoring/authoring/directives/SendItem.js:525
-#: scripts/apps/authoring/authoring/directives/SendItem.js:605
+#: scripts/apps/authoring/authoring/directives/SendItem.js:603
 msgid "Item sent."
 msgstr "Saken er sendt."
 
@@ -3069,11 +3103,11 @@ msgstr "Sak oversatt"
 msgid "Item type stats"
 msgstr "Item type stats"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:107
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:112
 msgid "Item Unlocked"
 msgstr "Saken er låst opp"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:130
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:131
 msgid "Item updated."
 msgstr "Saken er oppdatert"
 
@@ -3101,7 +3135,7 @@ msgstr "Stikkord"
 msgid "Kill"
 msgstr "Trekk melding"
 
-#: scripts/apps/authoring/authoring/index.js:107
+#: scripts/apps/authoring/authoring/index.js:109
 msgid "Kill item"
 msgstr "Trekk saken"
 
@@ -3120,6 +3154,7 @@ msgstr "Etikett:"
 
 #: scripts/apps/archive/views/metadata-view.html:112
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:47
+#: scripts/apps/desks/views/settings.html:53
 #: scripts/apps/templates/views/template-editor-modal.html:100
 #: scripts/apps/users/views/edit-form.html:113
 msgid "Language"
@@ -3202,9 +3237,9 @@ msgstr "Siste uke"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:29
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:76
 #: scripts/apps/authoring/views/authoring-header.html:39
-#: scripts/apps/search/directives/ItemList.js:427
-#: scripts/apps/search/directives/ItemList.js:982
+#: scripts/apps/search/directives/ItemList.js:402
 #: scripts/apps/search/directives/ItemList.js:984
+#: scripts/apps/search/directives/ItemList.js:986
 #: scripts/apps/search/views/search-filters.html:103
 #: scripts/core/itemList/views/item-list-widget.html:73
 #: scripts/core/itemList/views/item-list-widget.html:90
@@ -3224,7 +3259,7 @@ msgstr "Lengde"
 msgid "Line: {{ cursor.line }}, Column: {{ cursor.column }}"
 msgstr "Linje: {{ cursor.line }}, Kolonne: {{ cursor.column }}"
 
-#: scripts/core/editor2/editor.js:939
+#: scripts/core/editor2/editor.js:947
 msgid "link"
 msgstr "lenke"
 
@@ -3270,15 +3305,15 @@ msgstr "Laster..."
 msgid "Local Path"
 msgstr "Local Path"
 
-#: scripts/apps/desks/views/desk-config-modal.html:204
+#: scripts/apps/desks/views/desk-config-modal.html:215
 msgid "Local Read Only"
 msgstr "Bare for meg"
 
-#: scripts/apps/desks/views/desk-config-modal.html:173
+#: scripts/apps/desks/views/desk-config-modal.html:184
 msgid "Local Read Only:"
 msgstr "Bare for meg:"
 
-#: scripts/apps/desks/views/desk-config-modal.html:123
+#: scripts/apps/desks/views/desk-config-modal.html:134
 msgid "Local Readonly"
 msgstr "Bare for meg"
 
@@ -3288,7 +3323,7 @@ msgstr "Bare for meg"
 msgid "Located"
 msgstr "Located"
 
-#: scripts/apps/search/directives/ItemList.js:359
+#: scripts/apps/search/directives/ItemList.js:335
 msgid "location:"
 msgstr "sted:"
 
@@ -3318,8 +3353,8 @@ msgstr "lav"
 msgid "Macro"
 msgstr "Makro"
 
-#: scripts/apps/authoring/macros/macros.js:190
-#: scripts/apps/desks/views/desk-config-modal.html:297
+#: scripts/apps/authoring/macros/macros.js:189
+#: scripts/apps/desks/views/desk-config-modal.html:308
 msgid "Macros"
 msgstr "Makroer"
 
@@ -3376,7 +3411,7 @@ msgid "Mark items for Highlights/Summary Lists"
 msgstr "Marker saker for utvalgslister"
 
 #: scripts/apps/highlights/views/highlights_title_directive.html:14
-#: scripts/apps/search/directives/ItemList.js:555
+#: scripts/apps/search/directives/ItemList.js:543
 msgid "Marked For"
 msgstr "Markert for"
 
@@ -3468,7 +3503,7 @@ msgstr "Minimér"
 msgid "Minimum"
 msgstr "Minimum"
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:52
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:54
 msgid "Minimum height and width should be greater than or equal to 200"
 msgstr "Minimum høyde og bredde er 200"
 
@@ -3537,11 +3572,11 @@ msgstr ""
 msgid "Move Content to another desk"
 msgstr "Flytt innhold til en annen desk"
 
-#: scripts/apps/desks/views/desk-config-modal.html:239
+#: scripts/apps/desks/views/desk-config-modal.html:250
 msgid "Moved onto stage Rule"
 msgstr "Flyttet til regelstadium"
 
-#: scripts/apps/desks/views/desk-config-modal.html:189
+#: scripts/apps/desks/views/desk-config-modal.html:200
 msgid "Moved onto stage Rule:"
 msgstr "Flyttet til regelstadium:"
 
@@ -3556,7 +3591,7 @@ msgstr "Flyttet til "
 msgid "Multiedit"
 msgstr "Rediger flere"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:44
+#: scripts/core/directives/PasswordStrengthDirective.js:47
 msgid ""
 "Must be {{ MIN_LENGTH }} characters long and contain {{ MIN_STRENGTH }} out "
 "of 4 of the following:<ul><li>a lower case letter (a-z)</li><li>an upper "
@@ -3587,7 +3622,7 @@ msgstr "Mine maler"
 msgid "Name"
 msgstr "Navn"
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:60
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:61
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:50
 #: scripts/apps/products/controllers/ProductsConfigController.js:74
 msgid "Name needs to be unique"
@@ -3634,7 +3669,7 @@ msgstr "Neste bruker"
 
 #: scripts/apps/highlights/views/mark_highlights_dropdown_directive.html:8
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:13
-#: scripts/apps/search/directives/ItemList.js:1281
+#: scripts/apps/search/directives/ItemList.js:1295
 msgid "No available highlights"
 msgstr "Ingen utvalg tilgjengelig."
 
@@ -3642,7 +3677,7 @@ msgstr "Ingen utvalg tilgjengelig."
 msgid "No available languages"
 msgstr "Ingen språk tilgjengelig"
 
-#: scripts/apps/search/directives/ItemList.js:1282
+#: scripts/apps/search/directives/ItemList.js:1296
 msgid "No available translations"
 msgstr "Ingen oversettelse tilgjengelig"
 
@@ -3654,7 +3689,7 @@ msgstr "Ingen klokke her!"
 msgid "No comments so far."
 msgstr "Ingen kommentarer så langt."
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:291
+#: scripts/apps/templates/directives/TemplatesDirective.js:295
 msgid "No Desk"
 msgstr "Ingen desk"
 
@@ -3666,7 +3701,7 @@ msgstr "Ingen feltnavn definert."
 msgid "No Filter"
 msgstr "Ingen filtre"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:738
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:740
 msgid "No formatters found for"
 msgstr "Ingen formattering funnet for "
 
@@ -3702,7 +3737,7 @@ msgstr ""
 msgid "No recent templates."
 msgstr "Ingen nylig brukte maler"
 
-#: scripts/apps/content-filters/controllers/FilterSearchController.js:109
+#: scripts/apps/content-filters/controllers/FilterSearchController.js:110
 msgid "no results found"
 msgstr "ingen resultater funnet"
 
@@ -3778,8 +3813,8 @@ msgstr "Ikke sendt til noen mottaker"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:18
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:75
 #: scripts/apps/authoring/views/authoring-header.html:41
-#: scripts/apps/search/directives/ItemList.js:974
 #: scripts/apps/search/directives/ItemList.js:976
+#: scripts/apps/search/directives/ItemList.js:978
 #: scripts/apps/templates/views/template-editor-modal.html:88
 msgid "Not For Publication"
 msgstr "Ikke for publisering"
@@ -3841,12 +3876,12 @@ msgstr "AV"
 msgid "Ok"
 msgstr "OK"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:107
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:119
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:112
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:124
 #: scripts/apps/authoring/macros/views/macros-replace.html:3
-#: scripts/core/auth/auth.js:160
-#: scripts/core/directives/PasswordStrengthDirective.js:38
-#: scripts/core/services/modalService.js:5
+#: scripts/core/auth/auth.js:161
+#: scripts/core/directives/PasswordStrengthDirective.js:41
+#: scripts/core/services/modalService.js:6
 msgid "OK"
 msgstr "OK"
 
@@ -3878,7 +3913,7 @@ msgstr "Ugyldig brukernavn eller passord. <br> Prøv igjen."
 msgid "Oops! There are no items."
 msgstr "Ingen treff"
 
-#: scripts/apps/authoring/authoring/index.js:143
+#: scripts/apps/authoring/authoring/index.js:147
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:142
 msgid "Open"
 msgstr "Åpne"
@@ -3887,15 +3922,8 @@ msgstr "Åpne"
 #: scripts/apps/desks/views/desk-tasks.html:3
 #: scripts/apps/desks/views/desk.html:3
 #: scripts/apps/desks/views/slugline.html:3
-#: scripts/apps/monitoring/views/monitoring-group-header.html:29
-#: scripts/apps/monitoring/views/monitoring-group-header.html:41
-#: scripts/apps/monitoring/views/monitoring-group-header.html:45
 msgid "Open desk content"
 msgstr "Åpne deskinnhold"
-
-#: scripts/apps/monitoring/views/monitoring-group-header.html:33
-msgid "Open stage content"
-msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:18
 msgid "Opened"
@@ -3952,7 +3980,7 @@ msgstr "Rekkefølge"
 
 #: scripts/apps/archive/views/item-preview.html:24
 #: scripts/apps/archive/views/preview.html:92
-#: scripts/apps/authoring/views/article-edit.html:174
+#: scripts/apps/authoring/views/article-edit.html:218
 #: scripts/apps/authoring/views/change-image.html:116
 #: scripts/apps/authoring/views/change-image.html:23
 msgid "Original"
@@ -3970,11 +3998,11 @@ msgstr "Opprinnelig kilde"
 msgid "Original Source"
 msgstr "Opprinnelig kilde"
 
-#: scripts/apps/desks/views/desk-config-modal.html:248
+#: scripts/apps/desks/views/desk-config-modal.html:259
 msgid "Outgoing Rule"
 msgstr "Utgående regel"
 
-#: scripts/apps/desks/views/desk-config-modal.html:193
+#: scripts/apps/desks/views/desk-config-modal.html:204
 msgid "Outgoing Rule:"
 msgstr "Regler for utgående:"
 
@@ -4020,7 +4048,7 @@ msgid "Packages"
 msgstr "Pakker"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:20
-#: scripts/apps/search/directives/ItemList.js:1105
+#: scripts/apps/search/directives/ItemList.js:1109
 msgid "Packaging"
 msgstr "Pakking"
 
@@ -4066,7 +4094,7 @@ msgstr "passord"
 msgid "Password"
 msgstr "Passord"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:71
+#: scripts/core/directives/PasswordStrengthDirective.js:74
 msgid "Password is too weak."
 msgstr "Passordet er for svakt"
 
@@ -4082,7 +4110,7 @@ msgstr "passordene må være like"
 msgid "paste a block"
 msgstr "lim inn blokk"
 
-#: scripts/core/editor2/editor.js:776
+#: scripts/core/editor2/editor.js:778
 msgid "Paste or type a full link"
 msgstr "Skriv eller lim inn en komplett URL"
 
@@ -4103,7 +4131,7 @@ msgstr "på vent"
 msgid "Pending"
 msgstr "På vent"
 
-#: scripts/apps/desks/views/desk-config-modal.html:266
+#: scripts/apps/desks/views/desk-config-modal.html:277
 #: scripts/apps/desks/views/settings.html:38
 #: scripts/apps/groups/views/groups-config-modal.html:38
 msgid "People"
@@ -4115,11 +4143,11 @@ msgstr "Tillater"
 
 #: scripts/apps/dictionaries/views/settings.html:26
 #: scripts/apps/monitoring/config.js:32
-#: scripts/apps/monitoring/controllers/AggregateCtrl.js:403
+#: scripts/apps/monitoring/controllers/AggregateCtrl.js:408
 #: scripts/apps/monitoring/views/aggregate-settings.html:102
 #: scripts/apps/monitoring/views/aggregate-settings.html:126
 #: scripts/apps/monitoring/views/aggregate-settings.html:37
-#: scripts/apps/templates/directives/TemplatesDirective.js:290
+#: scripts/apps/templates/directives/TemplatesDirective.js:294
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:46
 msgid "Personal"
 msgstr "Personlig "
@@ -4143,7 +4171,7 @@ msgstr "telefonnummer"
 msgid "Phrase"
 msgstr "Frase"
 
-#: scripts/apps/dashboard/workspace-tasks/tasks.js:388
+#: scripts/apps/dashboard/workspace-tasks/tasks.js:384
 msgid "Pick task"
 msgstr "Velg oppgave"
 
@@ -4287,9 +4315,9 @@ msgstr "Skriv ut"
 #: scripts/apps/archive/directives/ItemPriority.js:18
 #: scripts/apps/archive/views/metadata-view.html:13
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:12
-#: scripts/apps/search/directives/ItemList.js:123
-#: scripts/apps/search/directives/ItemList.js:132
-#: scripts/apps/search/services/SearchService.js:11
+#: scripts/apps/search/directives/ItemList.js:102
+#: scripts/apps/search/directives/ItemList.js:93
+#: scripts/apps/search/services/SearchService.js:27
 #: scripts/apps/search/views/search-filters.html:87
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:12
 msgid "Priority"
@@ -4312,7 +4340,7 @@ msgstr "Rettigheter"
 msgid "Privileges not found."
 msgstr "Rettigheter ikke funnet"
 
-#: scripts/apps/users/directives/RolesPrivilegesDirective.js:31
+#: scripts/apps/users/directives/RolesPrivilegesDirective.js:30
 #: scripts/apps/users/directives/UserPrivilegesDirective.js:73
 msgid "Privileges updated."
 msgstr "Rettigheter oppdatert"
@@ -4408,7 +4436,7 @@ msgstr "Leverandør {{name}} er inaktiv. Siste sak kom {{last}}"
 msgid "Provider Name"
 msgstr "Leverandørnavn"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:253
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:255
 msgid "Provider saved!"
 msgstr "Leverandør lagret!"
 
@@ -4447,7 +4475,7 @@ msgid "Publish Queue"
 msgstr "Publiseringskø"
 
 #: scripts/apps/archive/views/metadata-view.html:131
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:284
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:285
 #: scripts/apps/authoring/views/send-item.html:56
 msgid "Publish Schedule"
 msgstr "Publiseres:"
@@ -4505,7 +4533,7 @@ msgstr ""
 msgid "Queued at"
 msgstr "Lagt i kø"
 
-#: scripts/core/editor2/editor.js:946
+#: scripts/core/editor2/editor.js:954
 msgid "quote"
 msgstr "sitat"
 
@@ -4513,11 +4541,7 @@ msgstr "sitat"
 msgid "Raw"
 msgstr ""
 
-#: scripts/apps/monitoring/views/monitoring-view.html:83
-msgid "Re-Arrange Groups"
-msgstr ""
-
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:29
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:31
 msgid "Re-Open"
 msgstr "Gjenåpne"
 
@@ -4537,8 +4561,8 @@ msgstr ""
 msgid "Real Life Subservice"
 msgstr ""
 
-#: scripts/apps/monitoring/views/monitoring-view.html:85
-msgid "Rearrange groups"
+#: scripts/apps/monitoring/views/monitoring-view.html:118
+msgid "Rearrange Groups"
 msgstr ""
 
 #: scripts/apps/dashboard/views/workspace.html:6
@@ -4554,7 +4578,9 @@ msgstr "Nylig lagt til"
 msgid "Recipients"
 msgstr "Mottakere"
 
-#: scripts/apps/monitoring/views/monitoring-group-header.html:54
+#: scripts/apps/monitoring/views/monitoring-group-header.html:24
+#: scripts/apps/monitoring/views/monitoring-group-header.html:45
+#: scripts/apps/monitoring/views/monitoring-group-header.html:60
 #: scripts/apps/monitoring/views/monitoring-view.html:48
 #: scripts/apps/profiling/views/profiling.html:23
 #: scripts/apps/publish/views/publish-queue.html:64
@@ -4601,7 +4627,7 @@ msgstr "Relaterte saker"
 msgid "Remove"
 msgstr "Fjern"
 
-#: scripts/apps/search/directives/ItemList.js:542
+#: scripts/apps/search/directives/ItemList.js:530
 msgid "REMOVE"
 msgstr "FJERN"
 
@@ -4633,7 +4659,7 @@ msgstr "Fjern filter"
 msgid "Remove Filter Condition"
 msgstr "Fjern filtreringsvalg"
 
-#: scripts/core/editor2/editor.js:953
+#: scripts/core/editor2/editor.js:961
 msgid "remove formatting"
 msgstr "fjern formattering"
 
@@ -4722,11 +4748,11 @@ msgid "replaced item {{ type }} about {{ subject }}"
 msgstr "erstattet {{ type }} om {{ subject }}"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:23
-#: scripts/core/ui/ui.js:1312
+#: scripts/core/ui/ui.js:1308
 msgid "Required"
 msgstr "Kreves"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:400
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:401
 msgid "Required field {{ key }} is missing. ..."
 msgstr "Obligatorisk felt {{ key }} mangler..."
 
@@ -4873,7 +4899,7 @@ msgid "Saturday"
 msgstr "Lørdag"
 
 #: scripts/apps/archive/views/upload.html:97
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:42
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:44
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-article.html:3
 #: scripts/apps/authoring/views/authoring-topbar.html:93
 #: scripts/apps/authoring/views/change-image.html:10
@@ -4884,15 +4910,15 @@ msgstr "Lørdag"
 #: scripts/apps/dashboard/views/workspace.html:10
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:11
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:87
-#: scripts/apps/desks/views/desk-config-modal.html:114
-#: scripts/apps/desks/views/desk-config-modal.html:147
+#: scripts/apps/desks/views/desk-config-modal.html:125
+#: scripts/apps/desks/views/desk-config-modal.html:158
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:119
 #: scripts/apps/highlights/views/highlights_config_modal.html:53
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:99
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:67
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:174
 #: scripts/apps/products/views/products-config-modal.html:58
-#: scripts/apps/publish/views/subscribers.html:151
+#: scripts/apps/publish/views/subscribers.html:157
 #: scripts/apps/search-providers/views/search-provider-config.html:80
 #: scripts/apps/templates/views/create-template.html:44
 #: scripts/apps/templates/views/template-editor-modal.html:189
@@ -4907,8 +4933,8 @@ msgstr "Lørdag"
 msgid "Save"
 msgstr "Lagre"
 
-#: scripts/apps/desks/views/desk-config-modal.html:288
-#: scripts/apps/desks/views/desk-config-modal.html:89
+#: scripts/apps/desks/views/desk-config-modal.html:100
+#: scripts/apps/desks/views/desk-config-modal.html:299
 msgid "Save & Continue"
 msgstr "Lagre & fortsett"
 
@@ -4916,11 +4942,11 @@ msgstr "Lagre & fortsett"
 msgid "Save &amp; Continue"
 msgstr "Lagre &amp; fortsett"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:56
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:59
 msgid "Save and publish"
 msgstr "Lagre og publiser"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:69
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:73
 msgid "Save and send"
 msgstr "Lagre og send"
 
@@ -4938,10 +4964,10 @@ msgstr "Lagre som mal"
 msgid "Save Changes"
 msgstr "Lagre endringer"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:28
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:41
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:55
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:68
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:30
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:43
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:58
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:72
 msgid "Save changes?"
 msgstr "Lagre endringer?"
 
@@ -4961,7 +4987,7 @@ msgstr "Lagre søk"
 msgid "Saved"
 msgstr "Lagret"
 
-#: scripts/apps/search/directives/SavedSearches.js:81
+#: scripts/apps/search/directives/SavedSearches.js:82
 msgid "Saved search removed"
 msgstr "Lagret søk er fjernet"
 
@@ -4969,16 +4995,16 @@ msgstr "Lagret søk er fjernet"
 msgid "Saved Searches"
 msgstr "Lagrede søk"
 
-#: scripts/apps/authoring/authoring/index.js:201
+#: scripts/apps/authoring/authoring/index.js:205
 msgid "Saves current item"
 msgstr "Lagrer denne saken"
 
 #: scripts/apps/desks/directives/DeskeditBasic.js:38
 #: scripts/apps/desks/directives/DeskeditPeople.js:40
-#: scripts/apps/desks/directives/DeskeditStages.js:100
+#: scripts/apps/desks/directives/DeskeditStages.js:98
 #: scripts/apps/groups/directives/GroupeditBasicDirective.js:24
-#: scripts/apps/users/directives/UserEditDirective.js:84
-#: scripts/core/notify/notify.js:54
+#: scripts/apps/users/directives/UserEditDirective.js:87
+#: scripts/core/notify/notify.js:50
 msgid "Saving..."
 msgstr "Lagrer..."
 
@@ -5219,7 +5245,7 @@ msgstr "Servermappe"
 msgid "Service"
 msgstr "Tjeneste"
 
-#: scripts/apps/desks/views/desk-config-modal.html:51
+#: scripts/apps/desks/views/desk-config-modal.html:62
 msgid "SERVICE"
 msgstr "TJENESTE"
 
@@ -5240,7 +5266,7 @@ msgstr "Sett maks antall saker for visning per stadium/lagret søk "
 msgid "Settings"
 msgstr "Innstillinger"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:35
+#: scripts/core/directives/PasswordStrengthDirective.js:38
 msgid "Short"
 msgstr "Kort"
 
@@ -5294,7 +5320,7 @@ msgid "SIGN OUT"
 msgstr "LOGG UT"
 
 #: scripts/apps/archive/views/metadata-view.html:77
-#: scripts/apps/authoring/views/article-edit.html:257
+#: scripts/apps/authoring/views/article-edit.html:328
 #: scripts/apps/users/views/edit-form.html:68
 msgid "Sign-Off"
 msgstr "Signatur"
@@ -5312,7 +5338,7 @@ msgstr "siden"
 msgid "Single Usage"
 msgstr "Engangsbruk"
 
-#: scripts/apps/content-filters/controllers/FilterSearchController.js:27
+#: scripts/apps/content-filters/controllers/FilterSearchController.js:28
 msgid "single value is required"
 msgstr "enkeltverdi kreves"
 
@@ -5328,7 +5354,7 @@ msgstr "stikkord"
 #: scripts/apps/authoring/views/full-preview.html:25
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:11
 #: scripts/apps/legal-archive/views/legal_archive.html:49
-#: scripts/apps/search/services/SearchService.js:10
+#: scripts/apps/search/services/SearchService.js:26
 #: scripts/apps/search/views/search-parameters.html:134
 #: scripts/apps/search/views/search-parameters.html:6
 msgid "Slugline"
@@ -5351,7 +5377,7 @@ msgstr "stikkord"
 #: scripts/apps/archive/views/preview.html:41
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:77
 #: scripts/apps/authoring/views/authoring-header.html:40
-#: scripts/apps/search/directives/ItemList.js:991
+#: scripts/apps/search/directives/ItemList.js:993
 #: scripts/apps/search/views/search-filters.html:110
 #: scripts/core/itemList/views/item-list-widget.html:74
 #: scripts/core/itemList/views/item-list-widget.html:91
@@ -5359,12 +5385,12 @@ msgstr "stikkord"
 msgid "Sms"
 msgstr "SMS"
 
-#: scripts/apps/authoring/views/article-edit.html:18
+#: scripts/apps/authoring/views/article-edit.html:31
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:25
 msgid "SMS"
 msgstr "SMS"
 
-#: scripts/apps/authoring/views/article-edit.html:25
+#: scripts/apps/authoring/views/article-edit.html:38
 msgid "SMS Message"
 msgstr "SMS"
 
@@ -5372,7 +5398,7 @@ msgstr "SMS"
 msgid "sorry, a user with this email already exists"
 msgstr "en bruker med denne epostadressen finnes fra før"
 
-#: scripts/core/upload/crop-directive.js:51
+#: scripts/core/upload/crop-directive.js:52
 msgid "Sorry, but avatar must be at least 200x200 pixels big."
 msgstr "Avartar må være minst 200x200 piksler."
 
@@ -5382,7 +5408,7 @@ msgstr "Avartar må være minst 200x200 piksler."
 msgid "Sorry, but can't reach the server now.<br>Please try again later."
 msgstr "Får ikke kontakt med serveren.<br> Forsøk igjen senere."
 
-#: scripts/core/upload/image-crop-directive.js:259
+#: scripts/core/upload/image-crop-directive.js:260
 msgid ""
 "Sorry, but image must be at least {{ r.width }}x{{ r.height }}, (it is {{ "
 "img.width }}x{{ img.height }})."
@@ -5418,7 +5444,11 @@ msgstr "brukernavnet er opptatt"
 msgid "Sort:"
 msgstr "Sorter:"
 
-#: scripts/apps/search/directives/ItemList.js:392
+#: scripts/apps/monitoring/views/monitoring-view.html:110
+msgid "Sorting"
+msgstr ""
+
+#: scripts/apps/search/directives/ItemList.js:367
 #: scripts/core/itemList/views/item-list-widget.html:87
 msgid "source"
 msgstr "kilde"
@@ -5503,23 +5533,23 @@ msgstr "stadium"
 msgid "Stage"
 msgstr "Stadium"
 
-#: scripts/apps/desks/views/desk-config-modal.html:218
+#: scripts/apps/desks/views/desk-config-modal.html:229
 msgid "Stage description"
 msgstr "Stadium beskrivelse"
 
-#: scripts/apps/desks/views/desk-config-modal.html:177
+#: scripts/apps/desks/views/desk-config-modal.html:188
 msgid "Stage description:"
 msgstr "Beskrivelse av stadium:"
 
-#: scripts/apps/desks/views/desk-config-modal.html:161
+#: scripts/apps/desks/views/desk-config-modal.html:172
 msgid "Stage Details"
 msgstr "Stadium detaljer"
 
-#: scripts/apps/desks/directives/DeskeditStages.js:138
+#: scripts/apps/desks/directives/DeskeditStages.js:136
 msgid "Stage has been modified elsewhere. Please reload the desks"
 msgstr "Deskoppsett er endret. Last inn på nytt."
 
-#: scripts/apps/desks/views/desk-config-modal.html:154
+#: scripts/apps/desks/views/desk-config-modal.html:165
 msgid "Stage with name"
 msgstr "Stadium:"
 
@@ -5527,7 +5557,7 @@ msgstr "Stadium:"
 msgid "stage:"
 msgstr "stadium:"
 
-#: scripts/apps/desks/views/desk-config-modal.html:99
+#: scripts/apps/desks/views/desk-config-modal.html:110
 #: scripts/apps/desks/views/settings.html:34
 msgid "Stages"
 msgstr "Stadier"
@@ -5578,11 +5608,11 @@ msgstr "Saken er registrert som oppdatering"
 msgid "Story Text"
 msgstr "Brødtekst"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:61
+#: scripts/core/directives/PasswordStrengthDirective.js:64
 msgid "Strength"
 msgstr "Styrke"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:39
+#: scripts/core/directives/PasswordStrengthDirective.js:42
 msgid "Strong"
 msgstr "Sterk"
 
@@ -5611,7 +5641,7 @@ msgstr "Abonnent"
 msgid "Subscriber codes"
 msgstr "abonnementskoder"
 
-#: scripts/apps/publish/directives/SubscribersDirective.js:198
+#: scripts/apps/publish/directives/SubscribersDirective.js:200
 msgid "Subscriber could not be initialized!"
 msgstr "Abonnenten kunne ikke initialiseres!"
 
@@ -5707,7 +5737,7 @@ msgstr ""
 msgid "TAKEKEY"
 msgstr "Oppdatering"
 
-#: scripts/apps/search/directives/ItemList.js:1014
+#: scripts/apps/search/directives/ItemList.js:1017
 #: scripts/core/itemList/views/relatedItem-list-widget.html:40
 msgid "Takes"
 msgstr ""
@@ -5720,12 +5750,12 @@ msgstr "takes cannot be scheduled."
 msgid "Takes cannot have Embargo."
 msgstr "Takes cannot have Embargo"
 
-#: scripts/apps/monitoring/views/monitoring-view.html:101
-#: scripts/apps/monitoring/views/monitoring-view.html:79
+#: scripts/apps/monitoring/views/monitoring-view.html:103
+#: scripts/apps/monitoring/views/monitoring-view.html:74
 msgid "Takes Package"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:430
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:431
 msgid ""
 "Tansa is not responding. You can continue editing or publish the story."
 msgstr "Tansa svarer ikke. Du kan fortsette å redigere eller publisere saken."
@@ -5785,7 +5815,7 @@ msgstr "Navn på mal"
 msgid "Template Name"
 msgstr "Malnavn"
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:204
+#: scripts/apps/templates/directives/TemplatesDirective.js:208
 msgid "Template saved."
 msgstr "Mal lagret."
 
@@ -5797,7 +5827,7 @@ msgstr "Maltype"
 msgid "Template Type"
 msgstr "Maltype"
 
-#: scripts/apps/templates/index.js:32
+#: scripts/apps/templates/index.js:36
 #: scripts/apps/templates/views/templates.html:3
 msgid "Templates"
 msgstr "Maler"
@@ -5838,7 +5868,7 @@ msgstr "Passordet er endret."
 msgid "The password has been reset."
 msgstr "Passordet har blitt resatt"
 
-#: scripts/apps/search/directives/ItemList.js:1708
+#: scripts/apps/search/directives/ItemList.js:1733
 msgid "There are currently no items"
 msgstr "Ingen elementer"
 
@@ -5846,28 +5876,28 @@ msgstr "Ingen elementer"
 msgid "There are failed uploads."
 msgstr "Det finnes mislykkede opplastinger."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:191
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:192
 msgid "There are items locked or not published. Do you want to continue?"
 msgstr "Det finnes låste eller upubliserte saker. Vil du fortsette?"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:53
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:55
 msgid ""
 "There are some unsaved changes, do you want to save and publish it now?"
 msgstr "Noen endringer er ikke lagret. Vil du lagre og publisere nå?"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:66
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:69
 msgid "There are some unsaved changes, do you want to save and send it now?"
 msgstr "Noen endringer er ikke lagret. Vil du lagre og sende nå?"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:40
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:42
 msgid "There are some unsaved changes, do you want to save it now?"
 msgstr "Noen endringer er ikke lagret. Vil du lagre nå?"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:27
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:29
 msgid "There are some unsaved changes, re-open the article to save changes?"
 msgstr "Noen endringer er ikke lagret. Vil du gjenåpne saken for å lagre endringene?"
 
-#: scripts/core/auth/auth.js:159
+#: scripts/core/auth/auth.js:160
 msgid "There are some unsaved changes. Please save them before signing out."
 msgstr "Noen endringer er ikke lagret. Lagre dem før du logger ut."
 
@@ -5884,7 +5914,7 @@ msgstr "Feilmelding: Kunne ikke registreres som oppdatering."
 msgid "There is an error. Failed to associated as take."
 msgstr ""
 
-#: scripts/apps/highlights/controllers/HighlightsConfig.js:54
+#: scripts/apps/highlights/controllers/HighlightsConfig.js:55
 msgid "There was a problem while saving highlights configuration"
 msgstr "Det oppsto et problem ved lagring av utvalgskonfigurasjonen"
 
@@ -5918,19 +5948,19 @@ msgstr "Det oppsto et problem, medlemmene ble ikke lagret."
 msgid "There was a problem, members not saved. Refresh Desks."
 msgstr "Feilmelding: Nye deskmedlemmer kunne ikke lagres. Oppdater desken."
 
-#: scripts/apps/desks/views/desk-config-modal.html:156
+#: scripts/apps/desks/views/desk-config-modal.html:167
 msgid "There was a problem, stage not created/updated."
 msgstr "Det oppsto et problem, stadium kunne ikke etableres/oppdateres."
 
-#: scripts/apps/desks/directives/DeskeditStages.js:188
+#: scripts/apps/desks/directives/DeskeditStages.js:186
 msgid "There was a problem, stage was not deleted."
 msgstr "Det oppsto et problem, stadiet kunne ikke slettes"
 
-#: scripts/apps/search/directives/ItemList.js:1308
+#: scripts/apps/search/directives/ItemList.js:1329
 msgid "There was an error archiving this item"
 msgstr "Det oppsto et problem ved arkivering av denne saken"
 
-#: scripts/apps/users/directives/UserEditDirective.js:109
+#: scripts/apps/users/directives/UserEditDirective.js:112
 msgid "There was an error when saving the user account."
 msgstr "Feilmelding: Kunne ikke lagre brukeren."
 
@@ -5938,15 +5968,15 @@ msgstr "Feilmelding: Kunne ikke lagre brukeren."
 msgid "There was an error. Content filter cannot be deleted."
 msgstr "Feilmelding: Innholdsfilteret kunne ikke slettes."
 
-#: scripts/apps/authoring/authoring/services/AuthoringService.js:84
+#: scripts/apps/authoring/authoring/services/AuthoringService.js:82
 msgid "There was an error. Failed to generate update."
 msgstr "Feilmelding: Kunne ikke generere oppdatering."
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:84
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:85
 msgid "There was an error. Filter condition cannot be deleted."
 msgstr "Feilmelding: Filtreringsbetingelser kan ikke slettes."
 
-#: scripts/apps/users/directives/UserRolesDirective.js:62
+#: scripts/apps/users/directives/UserRolesDirective.js:60
 msgid "There was an error. Role cannot be deleted."
 msgstr "Feilmelling: Rollen kan ikke slettes."
 
@@ -5958,11 +5988,11 @@ msgstr "Feilmelding: Rutingplanen kan ikke slettes."
 msgid "There was an error. Rule set cannot be deleted."
 msgstr "Feilmelding: Regelsettet kan ikke slettes."
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:264
+#: scripts/apps/templates/directives/TemplatesDirective.js:268
 msgid "There was an error. Template cannot be deleted."
 msgstr "Feilmelling: Malen kan ikke slettes."
 
-#: scripts/core/ui/ui.js:1292
+#: scripts/core/ui/ui.js:1287
 msgid "This field is required"
 msgstr "Dette feltet må fylles ut"
 
@@ -5970,7 +6000,7 @@ msgstr "Dette feltet må fylles ut"
 msgid "This is a corrected repeat."
 msgstr "Dette er en rettelse."
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:118
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:123
 msgid "This item was locked by <b></b>."
 msgstr "Denne saken ble låst av <b></b>."
 
@@ -6026,7 +6056,7 @@ msgstr "Oppgaveliste"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:19
 #: scripts/apps/highlights/views/highlights_config_modal.html:40
-#: scripts/core/datetime/absdate-directive.js:15
+#: scripts/core/datetime/absdate-directive.js:16
 #: scripts/core/ui/views/datepicker-wrapper.html:6
 msgid "Today"
 msgstr "I dag"
@@ -6039,7 +6069,7 @@ msgstr "Endre font og farge"
 msgid "Toggles search view"
 msgstr "Veksle mellom søkevisninger"
 
-#: scripts/apps/authoring/widgets/widgets.js:174
+#: scripts/apps/authoring/widgets/widgets.js:177
 msgid "Toggles widget #"
 msgstr "Veksle mellom widgeter #"
 
@@ -6122,7 +6152,7 @@ msgstr "Ikke tildelt"
 msgid "Uncheck all"
 msgstr "Fjern alle"
 
-#: scripts/core/editor2/editor.js:922
+#: scripts/core/editor2/editor.js:930
 msgid "underline"
 msgstr "understrek"
 
@@ -6150,7 +6180,7 @@ msgstr "Ukjent feil: Kan ikke trekke saken"
 msgid "Unknown Error: Cannot resend the item"
 msgstr "Ukjent feil: Kan ikke sende saken på nytt"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:330
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:331
 msgid "Unknown Error: Item not published."
 msgstr "Ukjent feil: Saken ble ikke publisert"
 
@@ -6168,7 +6198,7 @@ msgstr "Lås opp"
 msgid "Unlock content"
 msgstr "Lås opp"
 
-#: scripts/apps/authoring/authoring/index.js:199
+#: scripts/apps/authoring/authoring/index.js:203
 msgid "Unlocks current item"
 msgstr "Låser opp denne saken"
 
@@ -6215,11 +6245,11 @@ msgstr "Oppdatering"
 msgid "UPDATE"
 msgstr "OPPDATERING"
 
-#: scripts/apps/search/directives/ItemList.js:922
+#: scripts/apps/search/directives/ItemList.js:921
 msgid "Update {{ seq }}"
 msgstr "Ny {{ seq }}"
 
-#: scripts/apps/authoring/authoring/services/AuthoringService.js:78
+#: scripts/apps/authoring/authoring/services/AuthoringService.js:76
 msgid "Update Created."
 msgstr "Oppdatert"
 
@@ -6231,7 +6261,7 @@ msgstr "Oppdateringsplan"
 msgid "Update every"
 msgstr "Oppdater hver"
 
-#: scripts/apps/search/directives/ItemList.js:398
+#: scripts/apps/search/directives/ItemList.js:373
 msgid "updated"
 msgstr "oppdatert"
 
@@ -6241,8 +6271,8 @@ msgstr "oppdatert"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:78
 #: scripts/apps/authoring/views/authoring-header.html:42
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:7
-#: scripts/apps/search/directives/ItemList.js:938
-#: scripts/apps/search/services/SearchService.js:6
+#: scripts/apps/search/directives/ItemList.js:940
+#: scripts/apps/search/services/SearchService.js:22
 #: scripts/apps/workspace/content/views/profile-settings.html:40
 #: scripts/core/itemList/views/item-list-widget.html:92
 #: scripts/core/itemList/views/relatedItem-list-widget.html:43
@@ -6281,9 +6311,9 @@ msgstr "lastet opp mediefil {{ name }}"
 #: scripts/apps/archive/views/metadata-view.html:9
 #: scripts/apps/authoring/views/authoring-header.html:168
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:9
-#: scripts/apps/search/directives/ItemList.js:146
-#: scripts/apps/search/directives/ItemList.js:156
-#: scripts/apps/search/services/SearchService.js:8
+#: scripts/apps/search/directives/ItemList.js:116
+#: scripts/apps/search/directives/ItemList.js:128
+#: scripts/apps/search/services/SearchService.js:24
 #: scripts/apps/search/views/search-filters.html:75
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:13
 msgid "Urgency"
@@ -6341,7 +6371,7 @@ msgid "User not found."
 msgstr "Finner ikke bruker"
 
 #: scripts/apps/users/directives/UserPreferencesDirective.js:70
-#: scripts/core/services/preferencesService.js:184
+#: scripts/core/services/preferencesService.js:221
 msgid "User preferences could not be saved..."
 msgstr "Kunne ikke lagre..."
 
@@ -6374,7 +6404,7 @@ msgstr "Brukerrolle oppdatert"
 msgid "User Roles"
 msgstr "Brukerroller"
 
-#: scripts/apps/users/directives/UserEditDirective.js:90
+#: scripts/apps/users/directives/UserEditDirective.js:93
 msgid "user saved."
 msgstr "bruker lagret"
 
@@ -6386,7 +6416,7 @@ msgstr "Brukerinnstillinger"
 msgid "User was not found, sorry."
 msgstr "Finner ikke bruker."
 
-#: scripts/apps/users/directives/UserEditDirective.js:107
+#: scripts/apps/users/directives/UserEditDirective.js:110
 msgid "User was not found. The account might have been deleted."
 msgstr "Bruker ble ikke funnet. Kontoen kan være slettet."
 
@@ -6495,15 +6525,15 @@ msgstr "vokabular er oppdatert. Logg inn på nytt for å se det oppdaterte vokab
 msgid "Vocabulary saved successfully"
 msgstr "Vokabular lagret"
 
-#: scripts/core/auth/auth.js:160
+#: scripts/core/auth/auth.js:161
 msgid "Warning"
 msgstr "Advarsel"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:106
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:111
 msgid "was unlocked by <b></b>."
 msgstr "ble låst opp av <b></b>"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:36
+#: scripts/core/directives/PasswordStrengthDirective.js:39
 msgid "Weak"
 msgstr "Svak"
 
@@ -6532,26 +6562,26 @@ msgstr[1] "ORD"
 msgid "Word Count"
 msgstr "Ordtelling"
 
-#: scripts/apps/authoring/authoring/directives/WordCount.js:10
+#: scripts/apps/authoring/authoring/directives/WordCount.js:11
 msgid "words"
 msgstr "ord"
 
-#: scripts/apps/desks/views/desk-config-modal.html:104
+#: scripts/apps/desks/views/desk-config-modal.html:115
 msgid "Work stages"
 msgstr "Arbeidsstadier"
 
-#: scripts/apps/desks/views/desk-config-modal.html:164
-#: scripts/apps/desks/views/desk-config-modal.html:208
+#: scripts/apps/desks/views/desk-config-modal.html:175
+#: scripts/apps/desks/views/desk-config-modal.html:219
 msgid "Working Stage"
 msgstr "Arbeidsstadium"
 
-#: scripts/apps/search/directives/ItemList.js:360
+#: scripts/apps/search/directives/ItemList.js:336
 msgid "workspace"
 msgstr "arbeidsområde"
 
 #: scripts/apps/archive/index.js:70 scripts/apps/dashboard/index.js:41
 #: scripts/apps/dashboard/views/workspace.html:22
-#: scripts/apps/dashboard/workspace-tasks/tasks.js:379
+#: scripts/apps/dashboard/workspace-tasks/tasks.js:375
 #: scripts/apps/ingest/index.js:56 scripts/apps/stream/index.js:15
 msgid "Workspace"
 msgstr "Arbeidsområde"
@@ -6580,8 +6610,8 @@ msgstr "Verdensur widget"
 msgid "You don't have the privileges to perform any action"
 msgstr "Du har ikke tillatelse til å utføre noen handlinger"
 
-#: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:95
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:165
+#: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:97
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:166
 msgid "You have unsaved changes, do you want to continue?"
 msgstr "Du har gjort endringer som ikke er lagret. Vil du fortsette?"
 
