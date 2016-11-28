@@ -51,7 +51,7 @@ export function SearchResults(
                 LIST_VIEW = 'compact';
 
             var projections = search.getProjectedFields();
-	    var multiSelectable = attr.multiSelectable !== undefined;
+            var multiSelectable = typeof attr.multiSelectable !== 'undefined';
 
             scope.previewingBroadcast = false;
             scope.shouldRefresh = true;

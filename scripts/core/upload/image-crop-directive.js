@@ -117,7 +117,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                          $timeout(function() {
                              angular.extend(scope.cropData, nextData);
                              scope.onChange({
-                                 renditionName: scope.rendition && scope.rendition.name || undefined,
+                                 renditionName: scope.rendition && scope.rendition.name || null,
                                  cropData: nextData
                              });
                          });

@@ -21,7 +21,7 @@ describe('spellcheck', function() {
         errors = [];
 
     beforeEach(window.module(function($provide) {
-        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
+        $provide.constant('config', {server: {}, iframely: {key: '123'}, editor: {}});
     }));
 
     beforeEach(window.module('superdesk.apps.editor2'));

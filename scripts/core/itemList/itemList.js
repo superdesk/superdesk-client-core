@@ -136,8 +136,8 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             if (options[field + 'Before'] || options[field + 'After']) {
                 dateQuery = {};
                 dateQuery[key] = {
-                    lte: options[field + 'Before'] || undefined,
-                    gte: options[field + 'After'] || undefined
+                    lte: options[field + 'Before'],
+                    gte: options[field + 'After']
                 };
                 query.source.query.filtered.filter.and.push({range: dateQuery});
             }
@@ -259,7 +259,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
     this.fetch = function(options) {
         let opt = _.extend({}, DEFAULT_OPTIONS, options);
         return $q.when(getQuery(opt)).then(function(query) {
-            return api(opt.endpoint, opt.endpointParam || undefined)
+            return api(opt.endpoint, opt.endpointParam || null)
                 .query(query);
         });
     };

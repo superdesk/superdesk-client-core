@@ -12,7 +12,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             blockType: attrs.blockType,
             embedType: attrs.embedType,
             association: attrs.association,
-            lowerAddEmbedIsExtended: undefined,
+            lowerAddEmbedIsExtended: null,
             showAndFocusLowerAddAnEmbedBox: function() {
                 self.lowerAddEmbedIsExtended = true;
             }
@@ -56,9 +56,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         * push the current block into the blocks collection if it is not empty
         */
         function commitBlock() {
-            if (block !== undefined && block.body.trim() !== '') {
+            if (block !== null && block.body.trim() !== '') {
                 blocks.push(block);
-                block = undefined;
+                block = null;
             }
         }
         $('<div>' + bodyHtml + '</div>')
@@ -102,7 +102,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 }
                 // if it's not a paragraph or an embed, we update the current block
             } else {
-                if (block === undefined) {
+                if (block === null) {
                     block = new Block({body: ''});
                 }
                 // we want the outerHTML (ex: '<b>text</b>') or the node value for text and comment
@@ -110,7 +110,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             }
         });
         // at the end of the loop, we push the last current block
-        if (block !== undefined && block.body.trim() !== '') {
+        if (block !== null && block.body.trim() !== '') {
             blocks.push(block);
         }
         // Complete embeds with metadata (from association datadata or html)
@@ -329,7 +329,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             self.renderBlocks();
             return $timeout(self.commitChanges);
         },
-        clipboard: undefined,
+        clipboard: null,
         cutBlock: function(block) {
             self.clipboard = angular.copy(block);
             return self.removeBlock(block);
@@ -337,7 +337,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         getCutBlock: function(remove) {
             var block = self.clipboard;
             if (remove) {
-                self.clipboard = undefined;
+                self.clipboard = null;
             }
             return block;
         },

@@ -23,7 +23,7 @@ describe('elastic query builder', function() {
         ];
 
         var body = es({}, filters);
-        expect(body.query.filtered.query).toBe(undefined);
+        expect(body.query.filtered.query).toBeUndefined();
         expect(body.query.filtered.filter.and.length).toBe(2);
     }));
 

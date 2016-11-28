@@ -14,7 +14,7 @@ export default angular.module('superdesk.core.directives.throttle', [])
             require: 'ngModel',
             link: function($scope, element, attrs, ngModel) {
                 let interval = 1000;
-                if (attrs.interval !== '' && attrs.interval !== undefined) {
+                if (attrs.interval) {
                     interval = attrs.interval;
                 }
                 element.off('input').off('keydown').off('change');

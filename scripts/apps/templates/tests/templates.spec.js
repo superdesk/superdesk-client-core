@@ -76,7 +76,7 @@ describe('templates', function() {
             expect(api.query).not.toHaveBeenCalledWith('content_templates');
         }));
         it('can fetch templates using page parameters', inject(function(api, templates) {
-            templates.fetchTemplatesByUserDesk('foo', undefined, 2, 25);
+            templates.fetchTemplatesByUserDesk('foo', null, 2, 25);
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 25,
                 page: 2,
@@ -88,7 +88,7 @@ describe('templates', function() {
             });
         }));
         it('can fetch templates using type parameter', inject(function(api, templates) {
-            templates.fetchTemplatesByUserDesk('foo', undefined, undefined, undefined, 'create');
+            templates.fetchTemplatesByUserDesk('foo', null, null, null, 'create');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
                 page: 1,
@@ -111,7 +111,7 @@ describe('templates', function() {
             });
         }));
         it('can fetch templates using keyword parameter', inject(function(api, templates) {
-            templates.fetchTemplatesByUserDesk('foo', undefined, undefined, undefined, undefined, 'keyword');
+            templates.fetchTemplatesByUserDesk('foo', null, null, null, null, 'keyword');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
                 max_results: 10,

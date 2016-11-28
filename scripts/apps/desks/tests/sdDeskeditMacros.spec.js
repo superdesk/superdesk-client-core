@@ -100,7 +100,7 @@ describe('sdDeskeditMacros directive', function() {
         var scopeValues,
             $element;
 
-        scopeValues = {desk: undefined};
+        scopeValues = {};
 
         $element = compileDirective(scopeValues);
         scope = $element.scope();
@@ -114,7 +114,7 @@ describe('sdDeskeditMacros directive', function() {
             scopeValues,
             $element;
 
-        scopeValues = {desk: undefined};
+        scopeValues = {};
 
         $element = compileDirective(scopeValues);
         scope = $element.scope();

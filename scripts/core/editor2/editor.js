@@ -547,8 +547,8 @@ SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions', 
 function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) {
     var self = this;
     angular.extend(self, {
-        embedCode: undefined,  // defined below
-        caption: undefined,  // defined below
+        embedCode: null,  // defined below
+        caption: null,  // defined below
         editable: false,
         toggleEdition: function() {
             self.editable = !self.editable;
@@ -1033,7 +1033,7 @@ angular.module('superdesk.apps.editor2', [
                             scope.node.focus();
                             vm.restoreSelection();
                         // clear the saved position
-                            scope.sdTextEditorBlockText.caretPosition = undefined;
+                            scope.sdTextEditorBlockText.caretPosition = null;
                         }
                     // listen for paste event and insert a block if exists in clipboard
                         scope.medium.subscribe('editablePaste', function(e) {
@@ -1282,8 +1282,8 @@ angular.module('superdesk.apps.editor2', [
                     function(scope, editor, api , superdesk, renditions, config) {
                         var self = this;
                         angular.extend(self, {
-                            block: undefined, // provided in link method
-                            sdEditorCtrl: undefined, // provided in link method
+                            block: null, // provided in link method
+                            sdEditorCtrl: null, // provided in link method
                             selectElement: function(element) {
                                 scope.medium.selectElement(element);
                         // save position

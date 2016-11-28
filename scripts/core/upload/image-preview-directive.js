@@ -11,7 +11,7 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
         link: function(scope, elem) {
 
             function setProgress(val) {
-                if (scope.progressWidth !== undefined) {
+                if (typeof scope.progressWidth !== 'undefined') {
                     scope.progressWidth = val;
                 }
             }

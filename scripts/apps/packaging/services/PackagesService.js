@@ -119,7 +119,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return {
             type: item.type || '',
             headline: item.headline || '',
-            residRef: item._id,
+            residRef: item._id || null,
             location: 'archive',
             slugline: item.slugline || '',
             renditions: item.renditions || {},
@@ -155,12 +155,13 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         if (item) {
             refs.push({
                 headline: item.headline || '',
-                residRef: item._id,
+                residRef: item._id || null,
                 location: 'archive',
                 slugline: item.slugline || '',
                 renditions: item.renditions || {}
             });
         }
+
         return {
             refs: refs,
             id: idRef,

@@ -487,7 +487,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     };
 
     this.getExpandedState = function(key) {
-        return this.state.expanded[key] === undefined ? true : this.state.expanded[key];
+        return typeof this.state.expanded[key] === 'undefined' ? true : this.state.expanded[key];
     };
 
     this.setSoloGroup = function(group) {

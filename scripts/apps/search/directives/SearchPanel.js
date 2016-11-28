@@ -93,7 +93,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 tags.initSelectedFacets().then(function(currentTags) {
                     scope.tags = currentTags;
 
-                    if (!scope.items || scope.items._aggregations === undefined) {
+                    if (!scope.items || typeof scope.items._aggregations === 'undefined') {
                         return;
                     }
 

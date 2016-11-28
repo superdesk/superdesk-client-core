@@ -104,6 +104,6 @@ describe('familyService', function() {
     inject(function($rootScope, $q, familyService) {
         spyOn(familyService, 'fetchItems').and.returnValue($q.when({}));
         familyService.fetchDesks({_id: 'id', family_id: 'family_id', state: 'ingested'});
-        expect(familyService.fetchItems).toHaveBeenCalledWith('id', undefined);
+        expect(familyService.fetchItems).toHaveBeenCalledWith('id', null);
     }));
 });

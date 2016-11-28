@@ -61,7 +61,7 @@ describe('superdesk.apps.workspace.content', function() {
                 task: {desk: '1', stage: '2', user: '1'},
                 groups: [
                 {role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
-                    {refs: [{headline: '', residRef: undefined, location: 'archive',
+                    {refs: [{headline: '', residRef: null, location: 'archive',
                         slugline: '', renditions: {}, itemClass: '', type: ''}],
                         id: 'main', role: 'grpRole:main'}]});
         }));

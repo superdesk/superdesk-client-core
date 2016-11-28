@@ -72,7 +72,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         // in template management only see the templates that are create by the user
         criteria.$or = [{user: session.identity._id}];
 
-        if (type !== undefined) {
+        if (type) {
             criteria.template_type = type;
         }
 
@@ -130,7 +130,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
         criteria.$or = [{$or: deskCriteria}, {user: user, is_public: false}];
 
-        if (type !== undefined) {
+        if (type) {
             criteria.template_type = type;
         }
 

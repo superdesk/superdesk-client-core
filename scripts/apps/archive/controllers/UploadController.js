@@ -154,7 +154,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                 item.upload.abort();
             }
         }
-        if (index !== undefined) {
+        if (typeof index !== 'undefined') {
             $scope.items.splice(index, 1);
         }
         if (_.isEmpty($scope.items)) {

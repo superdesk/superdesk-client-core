@@ -3,7 +3,7 @@
 describe('text editor', function() {
 
     beforeEach(window.module(function($provide) {
-        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}});
+        $provide.constant('config', {server: {}, iframely: {key: '123'}});
     }));
 
     beforeEach(window.module('superdesk.apps.publish'));

@@ -82,7 +82,7 @@ describe('Superdesk service', function() {
         $rootScope.$digest();
 
         expect(successResult).toBe('test');
-        expect(failureResult).toBe(undefined);
+        expect(failureResult).toBeUndefined();
     }));
 
     it('can find activities', inject(function(superdesk) {

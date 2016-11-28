@@ -151,8 +151,8 @@ describe('authoring', function() {
         $rootScope.$broadcast('savework', 'test');
         $rootScope.$digest();
 
-        expect($location.search().item).toBe(undefined);
-        expect($location.search().action).toBe(undefined);
+        expect($location.search().item).toBeUndefined();
+        expect($location.search().action).toBeUndefined();
         expect(reloadService.forceReload).toHaveBeenCalled();
     }));
 
@@ -1986,7 +1986,7 @@ describe('authoring themes', function() {
 
 describe('send item directive', function() {
     beforeEach(window.module(function($provide) {
-        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
+        $provide.constant('config', {server: {}, iframely: {key: '123'}, editor: {}});
     }));
 
     beforeEach(window.module('superdesk.apps.editor2'));

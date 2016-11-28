@@ -88,7 +88,7 @@ export function UserListService(api, $q, $cacheFactory) {
      * @returns {Promise}
      */
     userservice.getUser = function(id, forced) {
-        return api('users').getById(id, undefined, !forced);
+        return api('users').getById(id, null, !forced);
     };
 
     /**

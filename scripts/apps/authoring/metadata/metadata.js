@@ -148,7 +148,7 @@ function MetadataCtrl(
 
     $scope.$watch('item.embargo_date', function(newValue, oldValue) {
         //set embargo time default on initial date selection
-        if (newValue && oldValue === undefined) {
+        if (newValue && typeof oldValue === 'undefined') {
             $scope.item.embargo_time = moment('00:01', 'HH:mm')
                 .format(config.model.timeformat);
         }
