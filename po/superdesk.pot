@@ -97,19 +97,19 @@ msgstr ""
 msgid "[none]"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:250
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:251
 msgid "{{ field }} cannot be earlier than now!"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:238
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:239
 msgid "{{ field }} date is required!"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:246
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:247
 msgid "{{ field }} is not a valid date!"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:242
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:243
 msgid "{{ field }} time is required!"
 msgstr ""
 
@@ -569,12 +569,12 @@ msgstr ""
 msgid "Alt Text"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:261
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:262
 msgid "An Item can't have both Embargo and Publish Schedule."
 msgstr ""
 
 #: scripts/apps/content-filters/views/production-test-view.html:23
-#: scripts/apps/search/services/SearchService.js:25
+#: scripts/apps/search/services/SearchService.js:29
 msgid "ANPA Category"
 msgstr ""
 
@@ -622,7 +622,7 @@ msgstr ""
 msgid "Archived Management"
 msgstr ""
 
-#: scripts/apps/highlights/controllers/HighlightsConfig.js:62
+#: scripts/apps/highlights/controllers/HighlightsConfig.js:64
 msgid "Are you sure you want to delete configuration?"
 msgstr ""
 
@@ -642,7 +642,7 @@ msgstr ""
 msgid "Are you sure you want to delete group?"
 msgstr ""
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:89
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:90
 msgid "Are you sure you want to delete Ingest Source?"
 msgstr ""
 
@@ -763,7 +763,7 @@ msgstr ""
 msgid "Available clock"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:923
+#: scripts/core/editor2/editor.js:924
 msgid "B"
 msgstr ""
 
@@ -826,7 +826,7 @@ msgstr ""
 msgid "Body HTML"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:921
+#: scripts/core/editor2/editor.js:922
 msgid "bold"
 msgstr ""
 
@@ -1110,7 +1110,7 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
-#: scripts/apps/highlights/controllers/HighlightsConfig.js:66
+#: scripts/apps/highlights/controllers/HighlightsConfig.js:68
 msgid "Configuration deleted."
 msgstr ""
 
@@ -1337,7 +1337,7 @@ msgstr ""
 #: scripts/apps/authoring/suggest/SuggestView.html:69
 #: scripts/apps/authoring/views/authoring.html:7
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:8
-#: scripts/apps/search/services/SearchService.js:23
+#: scripts/apps/search/services/SearchService.js:27
 #: scripts/apps/users/views/list.html:32
 msgid "Created"
 msgstr ""
@@ -1611,7 +1611,7 @@ msgstr ""
 msgid "Desk Type"
 msgstr ""
 
-#: scripts/apps/desks/directives/DeskeditBasic.js:69
+#: scripts/apps/desks/directives/DeskeditBasic.js:70
 msgid "Desk with name  already exists."
 msgstr ""
 
@@ -2036,7 +2036,7 @@ msgstr ""
 msgid "embargo"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:270
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:271
 #: scripts/apps/authoring/views/send-item.html:44
 msgid "Embargo"
 msgstr ""
@@ -2091,8 +2091,8 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:186
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:196
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:187
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:197
 msgid "Error creating highlight."
 msgstr ""
 
@@ -2100,7 +2100,7 @@ msgstr ""
 msgid "Error sending as"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:140
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:141
 #: scripts/apps/authoring/macros/macros.js:74
 #: scripts/apps/content-filters/controllers/FilterConditionsController.js:61
 #: scripts/apps/content-filters/controllers/FilterConditionsController.js:63
@@ -2117,7 +2117,7 @@ msgstr ""
 #: scripts/apps/content-filters/controllers/ProductionTestController.js:113
 #: scripts/apps/desks/controllers/DeskConfigController.js:46
 #: scripts/apps/desks/directives/DeskeditPeople.js:57
-#: scripts/apps/desks/directives/DeskeditStages.js:184
+#: scripts/apps/desks/directives/DeskeditStages.js:185
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.js:20
 #: scripts/apps/ingest/directives/IngestRoutingContent.js:99
 #: scripts/apps/ingest/directives/IngestRulesContent.js:47
@@ -2126,7 +2126,7 @@ msgstr ""
 #: scripts/apps/products/controllers/ProductsConfigController.js:74
 #: scripts/apps/products/controllers/ProductsConfigController.js:76
 #: scripts/apps/products/controllers/ProductsConfigController.js:89
-#: scripts/apps/publish/controllers/PublishQueueController.js:156
+#: scripts/apps/publish/controllers/PublishQueueController.js:158
 #: scripts/apps/publish/directives/SubscribersDirective.js:142
 #: scripts/apps/search-providers/directive.js:39
 #: scripts/apps/templates/directives/TemplatesDirective.js:266
@@ -2138,7 +2138,7 @@ msgstr ""
 #: scripts/apps/users/controllers/UserEnableCommand.js:17
 #: scripts/apps/users/directives/UserEditDirective.js:116
 #: scripts/apps/users/directives/UserRolesDirective.js:58
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:33
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:35
 msgid "Error:"
 msgstr ""
 
@@ -2154,7 +2154,7 @@ msgstr ""
 msgid "Error: Failed to fetch production test results."
 msgstr ""
 
-#: scripts/apps/publish/controllers/PublishQueueController.js:159
+#: scripts/apps/publish/controllers/PublishQueueController.js:161
 msgid "Error: Failed to re-schedule"
 msgstr ""
 
@@ -2207,7 +2207,7 @@ msgstr ""
 msgid "Error: The dictionary already exists."
 msgstr ""
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:100
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:101
 msgid "Error: Unable to delete Ingest Source"
 msgstr ""
 
@@ -2215,7 +2215,7 @@ msgstr ""
 msgid "Error: Unable to delete Search Provider."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:138
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:139
 msgid "Error: Unique Name is not unique."
 msgstr ""
 
@@ -2223,11 +2223,11 @@ msgstr ""
 msgid "Error. Dictionary not saved."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:493
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:494
 msgid "Error. Item not published."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:145
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:146
 msgid "Error. Item not updated."
 msgstr ""
 
@@ -2251,7 +2251,7 @@ msgstr ""
 msgid "Error. User Profile cannot be enabled."
 msgstr ""
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:36
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:38
 msgid "Error. Vocabulary not saved."
 msgstr ""
 
@@ -2313,15 +2313,15 @@ msgstr ""
 msgid "Failed to get a lock on the item!"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:522
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:523
 msgid "Failed to publish and continue."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:470
+#: scripts/apps/authoring/authoring/directives/SendItem.js:472
 msgid "Failed to send and continue."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:438
+#: scripts/apps/authoring/authoring/directives/SendItem.js:440
 msgid "Failed to send and publish."
 msgstr ""
 
@@ -2369,7 +2369,7 @@ msgstr ""
 msgid "Feeding Service"
 msgstr ""
 
-#: scripts/apps/ingest/index.js:108
+#: scripts/apps/ingest/index.js:109
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:5
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:28
 #: scripts/apps/search/views/multi-action-bar.html:42
@@ -2389,7 +2389,7 @@ msgid "Fetch to"
 msgstr ""
 
 #: scripts/apps/authoring/views/send-item.html:13
-#: scripts/apps/ingest/index.js:98
+#: scripts/apps/ingest/index.js:99
 msgid "Fetch To"
 msgstr ""
 
@@ -2599,7 +2599,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/metadata-view.html:57
 #: scripts/apps/authoring/views/full-preview.html:54
-#: scripts/apps/search/services/SearchService.js:28
+#: scripts/apps/search/services/SearchService.js:32
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:9
 msgid "Genre"
 msgstr ""
@@ -2612,7 +2612,7 @@ msgstr ""
 msgid "Genres"
 msgstr ""
 
-#: scripts/apps/ingest/index.js:124
+#: scripts/apps/ingest/index.js:125
 msgid "Get from external source"
 msgstr ""
 
@@ -2680,11 +2680,11 @@ msgstr ""
 msgid "GUID"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:897
+#: scripts/core/editor2/editor.js:898
 msgid "H1"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:910
+#: scripts/core/editor2/editor.js:911
 msgid "H2"
 msgstr ""
 
@@ -2696,11 +2696,11 @@ msgstr ""
 msgid "Have password? Sign in."
 msgstr ""
 
-#: scripts/core/editor2/editor.js:895
+#: scripts/core/editor2/editor.js:896
 msgid "header type 1"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:908
+#: scripts/core/editor2/editor.js:909
 msgid "header type 2"
 msgstr ""
 
@@ -2796,7 +2796,7 @@ msgstr ""
 msgid "hrs"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:940
+#: scripts/core/editor2/editor.js:941
 msgid "I"
 msgstr ""
 
@@ -2837,7 +2837,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: scripts/apps/users/import/import.js:48
+#: scripts/apps/users/import/import.js:49
 msgid "Import user"
 msgstr ""
 
@@ -2909,11 +2909,11 @@ msgstr ""
 msgid "Indefinite Usage"
 msgstr ""
 
-#: scripts/apps/authoring/metadata/metadata.js:1088
+#: scripts/apps/authoring/metadata/metadata.js:1090
 msgid "Info"
 msgstr ""
 
-#: scripts/apps/ingest/index.js:67
+#: scripts/apps/ingest/index.js:68
 #: scripts/apps/search/views/item-repo.html:7
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:75
 msgid "Ingest"
@@ -2923,7 +2923,7 @@ msgstr ""
 msgid "Ingest Channels"
 msgstr ""
 
-#: scripts/apps/ingest/index.js:75
+#: scripts/apps/ingest/index.js:76
 #: scripts/apps/ingest/views/dashboard/dashboard.html:2
 msgid "Ingest Dashboard"
 msgstr ""
@@ -2954,7 +2954,7 @@ msgstr ""
 msgid "Ingest Rule sets"
 msgstr ""
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:94
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:95
 msgid "Ingest Source deleted."
 msgstr ""
 
@@ -2970,7 +2970,7 @@ msgstr ""
 msgid "ingested"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:1008
+#: scripts/core/editor2/editor.js:1009
 msgid "insert table"
 msgstr ""
 
@@ -2998,7 +2998,7 @@ msgstr ""
 msgid "It will update existing template."
 msgstr ""
 
-#: scripts/core/editor2/editor.js:938
+#: scripts/core/editor2/editor.js:939
 msgid "italic"
 msgstr ""
 
@@ -3010,7 +3010,7 @@ msgstr ""
 msgid "Item Duplicated"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:630
+#: scripts/apps/authoring/authoring/directives/SendItem.js:632
 msgid "Item fetched."
 msgstr ""
 
@@ -3022,7 +3022,7 @@ msgstr ""
 msgid "Item has been resent."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:388
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:389
 msgid "Item has changed since it was opened. Please close and reopen the item to continue. Regrettably, your changes cannot be saved."
 msgstr ""
 
@@ -3052,7 +3052,7 @@ msgstr ""
 msgid "Item not found..."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:324
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:325
 msgid "Item published."
 msgstr ""
 
@@ -3065,8 +3065,8 @@ msgstr ""
 msgid "Item sent to Subscriber"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:525
-#: scripts/apps/authoring/authoring/directives/SendItem.js:603
+#: scripts/apps/authoring/authoring/directives/SendItem.js:527
+#: scripts/apps/authoring/authoring/directives/SendItem.js:605
 msgid "Item sent."
 msgstr ""
 
@@ -3082,7 +3082,7 @@ msgstr ""
 msgid "Item Unlocked"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:131
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:132
 msgid "Item updated."
 msgstr ""
 
@@ -3234,7 +3234,7 @@ msgstr ""
 msgid "Line: {{ cursor.line }}, Column: {{ cursor.column }}"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:947
+#: scripts/core/editor2/editor.js:948
 msgid "link"
 msgstr ""
 
@@ -3261,7 +3261,7 @@ msgid "loading"
 msgstr ""
 
 #: scripts/apps/desks/directives/DeskeditPeople.js:10
-#: scripts/apps/desks/directives/DeskeditStages.js:33
+#: scripts/apps/desks/directives/DeskeditStages.js:34
 msgid "loading..."
 msgstr ""
 
@@ -3478,7 +3478,7 @@ msgstr ""
 msgid "Minimum"
 msgstr ""
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:54
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:56
 msgid "Minimum height and width should be greater than or equal to 200"
 msgstr ""
 
@@ -3618,7 +3618,7 @@ msgid "New Take"
 msgstr ""
 
 #: scripts/apps/archive/index.js:220
-#: scripts/apps/authoring/authoring/directives/SendItem.js:465
+#: scripts/apps/authoring/authoring/directives/SendItem.js:467
 msgid "New take created."
 msgstr ""
 
@@ -3670,7 +3670,7 @@ msgstr ""
 msgid "No Filter"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:740
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:741
 msgid "No formatters found for"
 msgstr ""
 
@@ -3706,7 +3706,7 @@ msgstr ""
 msgid "No recent templates."
 msgstr ""
 
-#: scripts/apps/content-filters/controllers/FilterSearchController.js:110
+#: scripts/apps/content-filters/controllers/FilterSearchController.js:112
 msgid "no results found"
 msgstr ""
 
@@ -4079,7 +4079,7 @@ msgstr ""
 msgid "paste a block"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:778
+#: scripts/core/editor2/editor.js:779
 msgid "Paste or type a full link"
 msgstr ""
 
@@ -4112,7 +4112,7 @@ msgstr ""
 
 #: scripts/apps/dictionaries/views/settings.html:26
 #: scripts/apps/monitoring/config.js:32
-#: scripts/apps/monitoring/controllers/AggregateCtrl.js:408
+#: scripts/apps/monitoring/controllers/AggregateCtrl.js:410
 #: scripts/apps/monitoring/views/aggregate-settings.html:102
 #: scripts/apps/monitoring/views/aggregate-settings.html:126
 #: scripts/apps/monitoring/views/aggregate-settings.html:37
@@ -4282,7 +4282,7 @@ msgstr ""
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:12
 #: scripts/apps/search/directives/ItemList.js:102
 #: scripts/apps/search/directives/ItemList.js:93
-#: scripts/apps/search/services/SearchService.js:27
+#: scripts/apps/search/services/SearchService.js:31
 #: scripts/apps/search/views/search-filters.html:87
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:12
 msgid "Priority"
@@ -4398,7 +4398,7 @@ msgstr ""
 msgid "Provider Name"
 msgstr ""
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:255
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:256
 msgid "Provider saved!"
 msgstr ""
 
@@ -4437,7 +4437,7 @@ msgid "Publish Queue"
 msgstr ""
 
 #: scripts/apps/archive/views/metadata-view.html:131
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:285
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:286
 #: scripts/apps/authoring/views/send-item.html:56
 msgid "Publish Schedule"
 msgstr ""
@@ -4495,7 +4495,7 @@ msgstr ""
 msgid "Queued at"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:954
+#: scripts/core/editor2/editor.js:955
 msgid "quote"
 msgstr ""
 
@@ -4572,7 +4572,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/settings.html:26
 #: scripts/apps/highlights/views/highlights_title_directive.html:21
-#: scripts/apps/ingest/index.js:85
+#: scripts/apps/ingest/index.js:86
 #: scripts/apps/ingest/views/settings/rssConfig.html:75
 #: scripts/apps/search/views/multi-action-bar.html:48
 #: scripts/apps/search/views/search-filters.html:105
@@ -4621,7 +4621,7 @@ msgstr ""
 msgid "Remove Filter Condition"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:961
+#: scripts/core/editor2/editor.js:962
 msgid "remove formatting"
 msgstr ""
 
@@ -4714,7 +4714,7 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:401
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:402
 msgid "Required field {{ key }} is missing. ..."
 msgstr ""
 
@@ -4961,10 +4961,10 @@ msgstr ""
 msgid "Saves current item"
 msgstr ""
 
-#: scripts/apps/desks/directives/DeskeditBasic.js:38
+#: scripts/apps/desks/directives/DeskeditBasic.js:39
 #: scripts/apps/desks/directives/DeskeditPeople.js:40
-#: scripts/apps/desks/directives/DeskeditStages.js:98
-#: scripts/apps/groups/directives/GroupeditBasicDirective.js:24
+#: scripts/apps/desks/directives/DeskeditStages.js:99
+#: scripts/apps/groups/directives/GroupeditBasicDirective.js:26
 #: scripts/apps/users/directives/UserEditDirective.js:87
 #: scripts/core/notify/notify.js:50
 msgid "Saving..."
@@ -5300,7 +5300,7 @@ msgstr ""
 msgid "Single Usage"
 msgstr ""
 
-#: scripts/apps/content-filters/controllers/FilterSearchController.js:28
+#: scripts/apps/content-filters/controllers/FilterSearchController.js:30
 msgid "single value is required"
 msgstr ""
 
@@ -5316,7 +5316,7 @@ msgstr ""
 #: scripts/apps/authoring/views/full-preview.html:25
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:11
 #: scripts/apps/legal-archive/views/legal_archive.html:49
-#: scripts/apps/search/services/SearchService.js:26
+#: scripts/apps/search/services/SearchService.js:30
 #: scripts/apps/search/views/search-parameters.html:134
 #: scripts/apps/search/views/search-parameters.html:6
 msgid "Slugline"
@@ -5505,7 +5505,7 @@ msgstr ""
 msgid "Stage Details"
 msgstr ""
 
-#: scripts/apps/desks/directives/DeskeditStages.js:136
+#: scripts/apps/desks/directives/DeskeditStages.js:137
 msgid "Stage has been modified elsewhere. Please reload the desks"
 msgstr ""
 
@@ -5702,11 +5702,11 @@ msgstr ""
 msgid "Takes"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:336
+#: scripts/apps/authoring/authoring/directives/SendItem.js:338
 msgid "Takes cannot be scheduled."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:341
+#: scripts/apps/authoring/authoring/directives/SendItem.js:343
 msgid "Takes cannot have Embargo."
 msgstr ""
 
@@ -5715,7 +5715,7 @@ msgstr ""
 msgid "Takes Package"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:431
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:432
 msgid "Tansa is not responding. You can continue editing or publish the story."
 msgstr ""
 
@@ -5835,7 +5835,7 @@ msgstr ""
 msgid "There are failed uploads."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:192
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:193
 msgid "There are items locked or not published. Do you want to continue?"
 msgstr ""
 
@@ -5871,7 +5871,7 @@ msgstr ""
 msgid "There is an error. Failed to associated as take."
 msgstr ""
 
-#: scripts/apps/highlights/controllers/HighlightsConfig.js:55
+#: scripts/apps/highlights/controllers/HighlightsConfig.js:57
 msgid "There was a problem while saving highlights configuration"
 msgstr ""
 
@@ -5880,7 +5880,7 @@ msgstr ""
 msgid "There was a problem with your upload"
 msgstr ""
 
-#: scripts/apps/desks/directives/DeskeditBasic.js:65
+#: scripts/apps/desks/directives/DeskeditBasic.js:66
 msgid "There was a problem, desk not created/updated."
 msgstr ""
 
@@ -5909,7 +5909,7 @@ msgstr ""
 msgid "There was a problem, stage not created/updated."
 msgstr ""
 
-#: scripts/apps/desks/directives/DeskeditStages.js:186
+#: scripts/apps/desks/directives/DeskeditStages.js:187
 msgid "There was a problem, stage was not deleted."
 msgstr ""
 
@@ -6109,7 +6109,7 @@ msgstr ""
 msgid "Uncheck all"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:930
+#: scripts/core/editor2/editor.js:931
 msgid "underline"
 msgstr ""
 
@@ -6137,7 +6137,7 @@ msgstr ""
 msgid "Unknown Error: Cannot resend the item"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:331
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:332
 msgid "Unknown Error: Item not published."
 msgstr ""
 
@@ -6229,7 +6229,7 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-header.html:42
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:7
 #: scripts/apps/search/directives/ItemList.js:940
-#: scripts/apps/search/services/SearchService.js:22
+#: scripts/apps/search/services/SearchService.js:26
 #: scripts/apps/workspace/content/views/profile-settings.html:40
 #: scripts/core/itemList/views/item-list-widget.html:92
 #: scripts/core/itemList/views/relatedItem-list-widget.html:43
@@ -6270,7 +6270,7 @@ msgstr ""
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:9
 #: scripts/apps/search/directives/ItemList.js:116
 #: scripts/apps/search/directives/ItemList.js:128
-#: scripts/apps/search/services/SearchService.js:24
+#: scripts/apps/search/services/SearchService.js:28
 #: scripts/apps/search/views/search-filters.html:75
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:13
 msgid "Urgency"
@@ -6477,7 +6477,7 @@ msgstr ""
 msgid "vocabulary has been updated. Please re-login to see updated vocabulary values"
 msgstr ""
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:25
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:27
 msgid "Vocabulary saved successfully"
 msgstr ""
 
@@ -6539,7 +6539,7 @@ msgstr ""
 #: scripts/apps/dashboard/index.js:41
 #: scripts/apps/dashboard/views/workspace.html:22
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:375
-#: scripts/apps/ingest/index.js:56
+#: scripts/apps/ingest/index.js:57
 #: scripts/apps/stream/index.js:15
 msgid "Workspace"
 msgstr ""
@@ -6569,7 +6569,7 @@ msgid "You don't have the privileges to perform any action"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:97
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:166
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:167
 msgid "You have unsaved changes, do you want to continue?"
 msgstr ""
 
