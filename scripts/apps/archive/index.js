@@ -111,7 +111,7 @@ angular.module('superdesk.apps.archive', [
                 condition: function(item) {
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).spike;
                 }]
             })
@@ -127,7 +127,7 @@ angular.module('superdesk.apps.archive', [
                 }],
                 filters: [{action: 'list', type: 'spike'}],
                 action: 'unspike',
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).unspike;
                 }]
             })
@@ -142,7 +142,7 @@ angular.module('superdesk.apps.archive', [
                 condition: function(item) {
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).duplicate;
                 }]
             })
@@ -164,7 +164,7 @@ angular.module('superdesk.apps.archive', [
                 condition: function(item) {
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).create_broadcast;
                 }]
             })
@@ -190,7 +190,7 @@ angular.module('superdesk.apps.archive', [
                 condition: function(item) {
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).copy;
                 }]
             })
@@ -200,7 +200,7 @@ angular.module('superdesk.apps.archive', [
                 filters: [{action: 'list', type: 'archive'}],
                 keyboardShortcut: 'ctrl+alt+t',
                 privileges: {archive: 1},
-                additionalCondition:['authoring', 'item', 'config', function(authoring, item, config) {
+                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
                     return authoring.itemActions(item).new_take && !(config.features && config.features.noTakes);
                 }],
                 controller: ['data', '$rootScope', 'desks', 'authoring', 'authoringWorkspace', 'notify', 'superdesk',
@@ -235,7 +235,7 @@ angular.module('superdesk.apps.archive', [
                     $rootScope.$broadcast('open:resend', data.item);
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).resend;
                 }],
                 privileges: {resend: 1}
@@ -249,7 +249,7 @@ angular.module('superdesk.apps.archive', [
                 condition: function(item) {
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
-                additionalCondition:['authoring', 'item', function(authoring, item) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).re_write;
                 }],
                 controller: ['data', 'authoring', function(data, authoring) {

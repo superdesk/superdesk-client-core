@@ -457,7 +457,7 @@ export function SearchService($location, gettext, config, session) {
             {term: {last_published_version: false}}]}});
 
         // remove other users drafts.
-        this.filter({or:[{and: [{term: {state: 'draft'}},
+        this.filter({or: [{and: [{term: {state: 'draft'}},
                                {term: {'original_creator': session.identity._id}}]},
                          {not: {terms: {state: ['draft']}}}]});
 

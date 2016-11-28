@@ -285,7 +285,7 @@ export function ItemList(
                         React.createElement(
                             'small',
                             {title: headlineText,
-                                dangerouslySetInnerHTML:createMarkUp(headline)}
+                                dangerouslySetInnerHTML: createMarkUp(headline)}
                         ),
                         React.createElement(ItemContainer, {item: item, desk: props.desk})
                     ),
@@ -385,7 +385,7 @@ export function ItemList(
                 info.push(React.createElement(
                     'h5',
                     {key: 1,
-                        dangerouslySetInnerHTML:createMarkUp(item.headline || item.slugline || item.type)}
+                        dangerouslySetInnerHTML: createMarkUp(item.headline || item.slugline || item.type)}
 
                 ));
 
@@ -771,7 +771,7 @@ export function ItemList(
                     var items = [];
                     items.push(React.createElement('dt', {
                         key: 'dt',
-                        style: {paddingRight:'5px'}
+                        style: {paddingRight: '5px'}
                     }, gettext('fetched in')));
 
                     if (this.state.desks.length) {
@@ -833,7 +833,7 @@ export function ItemList(
                     return React.createElement(
                         'span',
                         {className: 'item-heading', key: 'headline',
-                            dangerouslySetInnerHTML:createMarkUp(headline)}
+                            dangerouslySetInnerHTML: createMarkUp(headline)}
                     );
                 },
 
@@ -842,7 +842,7 @@ export function ItemList(
                         return React.createElement(
                             'span',
                             {className: 'keyword', key: 'slugline',
-                                dangerouslySetInnerHTML:createMarkUp(props.item.slugline)}
+                                dangerouslySetInnerHTML: createMarkUp(props.item.slugline)}
                         );
                     }
                 },

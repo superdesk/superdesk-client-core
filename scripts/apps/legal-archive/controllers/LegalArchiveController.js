@@ -14,7 +14,7 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
     $scope.openAdvanceSearch = false;
 
     // Required to display action icons in grid view
-    $scope.extras = {'activity':{'action':'list'}};
+    $scope.extras = {'activity': {'action': 'list'}};
 
     $scope.search = function() {
         $location.search('page', null);

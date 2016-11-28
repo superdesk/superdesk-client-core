@@ -497,7 +497,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
 
     this.getMaxHeightStyle = function(maxItems) {
         var maxHeight = 32 * (maxItems || defaultMaxItems);
-        return {'max-height':  maxHeight.toString() + 'px'};
+        return {'max-height': maxHeight.toString() + 'px'};
     };
 
     $scope.$on('open:archived_kill', function(evt, item) {

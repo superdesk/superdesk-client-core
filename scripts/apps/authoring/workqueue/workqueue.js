@@ -242,7 +242,7 @@ function ArticleDashboardDirective() {
             _closeItem: '&closeItem',
             _link: '&link',
             active: '=active',
-            items:'=items'
+            items: '=items'
         },
         link: function(scope, elem, attrs) {
             scope.closeItem = function(item) {

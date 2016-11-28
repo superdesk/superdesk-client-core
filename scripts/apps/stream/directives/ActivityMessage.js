@@ -2,7 +2,7 @@ ActivityMessage.$inject = ['gettextCatalog'];
 export function ActivityMessage(gettextCatalog) {
     return {
         scope: {activity: '='},
-        template:'{{display_message}}',
+        template: '{{display_message}}',
         link: function(scope, element, attrs) {
             if (scope.activity.name !== 'notify') {
                 scope.display_message = gettextCatalog.getString(scope.activity.message);

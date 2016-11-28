@@ -58,7 +58,7 @@ angular.module('superdesk.apps.packaging', [
                 keyboardShortcut: 'ctrl+p',
                 controller: ctrl.PackageItemCtrl,
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition:['authoring', 'item', '$rootScope', function(authoring, item, $rootScope) {
+                additionalCondition: ['authoring', 'item', '$rootScope', function(authoring, item, $rootScope) {
                     return authoring.itemActions(item).package_item &&
                         !($rootScope.config && $rootScope.config.features
                         && $rootScope.config.features.hideCreatePackage);
@@ -73,7 +73,7 @@ angular.module('superdesk.apps.packaging', [
                 icon: 'package-plus',
                 templateUrl: 'scripts/apps/packaging/views/add-to-package.html',
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition:['authoringWorkspace', 'item', 'authoring', 'packages',
+                additionalCondition: ['authoringWorkspace', 'item', 'authoring', 'packages',
                     function(authoringWorkspace, item, authoring, packages) {
                         var pkg = authoringWorkspace.getItem();
                         var actions = authoring.itemActions(item);
@@ -91,7 +91,7 @@ angular.module('superdesk.apps.packaging', [
                 keyboardShortcut: 'ctrl+alt+p',
                 controller: ctrl.CombinePackageCtrl,
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition:['authoringWorkspace', 'item', 'authoring',
+                additionalCondition: ['authoringWorkspace', 'item', 'authoring',
                     function(authoringWorkspace, item, authoring) {
                         var openItem = authoringWorkspace.getItem();
                         var actions = authoring.itemActions(item);

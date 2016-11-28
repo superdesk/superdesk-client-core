@@ -121,8 +121,10 @@
         "computed-property-spacing": 2,
         "consistent-this": [2, "self"],
         "func-call-spacing": 2,
-
         "indent": [2, 4],
+        "jsx-quotes": 2,
+        "key-spacing": 2,
+
         "quotes": [2, "single"],
         "linebreak-style": [2, "unix"],
         "semi": [2, "always"],

@@ -84,7 +84,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
                           taStyle.getPropertyValue('-moz-box-sizing') === 'border-box' ||
                           taStyle.getPropertyValue('-webkit-box-sizing') === 'border-box';
                 boxOuter = !borderBox ? {width: 0, height: 0} : {
-                    width:  parseInt(taStyle.getPropertyValue('border-right-width'), 10) +
+                    width: parseInt(taStyle.getPropertyValue('border-right-width'), 10) +
                             parseInt(taStyle.getPropertyValue('padding-right'), 10) +
                             parseInt(taStyle.getPropertyValue('padding-left'), 10) +
                             parseInt(taStyle.getPropertyValue('border-left-width'), 10),

@@ -104,7 +104,7 @@ export function CardsService(api, search, session, desks, config) {
 
         if (card.fileType) {
             var termsHighlightsPackage = {and: [
-                {bool: {must: {'exists':{'field': 'highlight'}}}},
+                {bool: {must: {'exists': {'field': 'highlight'}}}},
                 {terms: {'type': ['composite']}}
             ]};
 
@@ -118,7 +118,7 @@ export function CardsService(api, search, session, desks, config) {
             // Normal package
             if (_.includes(JSON.parse(card.fileType), 'composite')) {
                 termsFileType = {and: [
-                    {bool: {must_not: {'exists':{'field': 'highlight'}}}},
+                    {bool: {must_not: {'exists': {'field': 'highlight'}}}},
                     {bool: {must_not: {term: {'package_type': 'takes'}}}},
                     {terms: {'type': JSON.parse(card.fileType)}}
                 ]};

@@ -26,7 +26,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
         {id: 'Non-Matching', value: 'false'}
     ];
 
-    $scope.model = {selectedType:'true'};
+    $scope.model = {selectedType: 'true'};
 
     $scope.close = function() {
         $scope.filter_test = null;

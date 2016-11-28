@@ -35,7 +35,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                 '</div>'];
             return html.join('\n');
         },
-        retrieveEmbed:function() {
+        retrieveEmbed: function() {
             function retrieveEmbedFromUrl() {
                 return embedService.get(self.input).then(function(data) {
                     var embed = data.html;

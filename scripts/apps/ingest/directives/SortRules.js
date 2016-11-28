@@ -1,6 +1,6 @@
 export function SortRules() {
     return {
-        link:function(scope, element) {
+        link: function(scope, element) {
             element.sortable({
                 items: 'li',
                 connectWith: '.rule-list',

@@ -522,7 +522,7 @@ function PopupService($document) {
         var docHeight = $document.height();
         var docWidth = $document.width();
 
-        var position = {top: 0, left:0};
+        var position = {top: 0, left: 0};
 
         if (elOffset.top + elHeight + height + tolerance > docHeight) {
             position.top = elOffset.top - height;

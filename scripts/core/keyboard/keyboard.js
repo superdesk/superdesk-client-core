@@ -62,12 +62,12 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 .service('keyboardManager', ['$window', '$timeout', function($window, $timeout) {
     var stack = [],
         defaultOpt = {
-            'type':             'keydown',
-            'propagate':        false,
-            'inputDisabled':    false,
-            'target':           $window.document,
-            'keyCode':          false,
-            'global':           false
+            'type': 'keydown',
+            'propagate': false,
+            'inputDisabled': false,
+            'target': $window.document,
+            'keyCode': false,
+            'global': false
         },
         shiftNums = {
             '`': '~',
@@ -205,20 +205,20 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             // Some modifiers key
             var modifiers = {
                 shift: {
-                    wanted:     false,
-                    pressed:    !!e.shiftKey
+                    wanted: false,
+                    pressed: !!e.shiftKey
                 },
                 ctrl: {
-                    wanted:     false,
-                    pressed:    !!e.ctrlKey
+                    wanted: false,
+                    pressed: !!e.ctrlKey
                 },
                 alt: {
-                    wanted:     false,
-                    pressed:    !!e.altKey
+                    wanted: false,
+                    pressed: !!e.altKey
                 },
                 meta: { //Meta is Mac specific
-                    wanted:     false,
-                    pressed:    !!e.metaKey
+                    wanted: false,
+                    pressed: !!e.metaKey
                 }
             };
             // Foreach keys in label (split on +)
@@ -284,8 +284,8 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         // Store shortcut
         this.keyboardEvent[lbl] = {
             'callback': fct,
-            'target':   elt,
-            'event':    options.type,
+            'target': elt,
+            'event': options.type,
             '_callback': callback,
             'opt': options,
             'label': lbl
