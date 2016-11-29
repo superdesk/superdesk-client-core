@@ -445,7 +445,8 @@ function MetaTagsDirective(api, $timeout) {
                 var body = (scope.item[scope.sourceField] || '')
                     .replace(/<br[^>]*>/gi, '&nbsp;')
                     .replace(/(<figcaption\b[^>]*>)[^<>]*(<\/figcaption>)/gi, '')
-                    .replace(/<\/?[^>]+>/gi, '').trim()
+                    .replace(/<\/?[^>]+>/gi, '')
+                    .trim()
                     .replace(/&nbsp;/g, ' ');
                 if (body) {
                     api.save('keywords', {text: body})

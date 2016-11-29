@@ -46,7 +46,8 @@ export default function SearchProviderConfigDirective(searchProviderService, get
                                 notify.error(gettext('Error: Failed to save Search Provider.'));
                             }
                         }
-                    ).then(fetchSearchProviders);
+                    )
+                    .then(fetchSearchProviders);
             };
 
             /**
@@ -77,7 +78,8 @@ export default function SearchProviderConfigDirective(searchProviderService, get
                                         notify.error(gettext('Error: Unable to delete Search Provider.'));
                                     }
                                 }
-                            ).then(fetchSearchProviders);
+                            )
+                            .then(fetchSearchProviders);
                     }
                 );
             };

@@ -59,7 +59,8 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
                         notify.error(gettext('Error: Failed to test content filter.'));
                     }
                 }
-            ).then(fetchContentFilters);
+            )
+            .then(fetchContentFilters);
     };
 
     $scope.remove = function(pf) {

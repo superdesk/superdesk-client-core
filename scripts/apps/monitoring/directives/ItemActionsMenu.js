@@ -18,8 +18,12 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
 
                 if (!isOpen) {
                     // After close, return focus to parent of selected element
-                    angular.element('.media-text.selected').parents('li').focus();
-                    angular.element('.dropdown--noarrow.open').removeClass('open');
+                    angular.element('.media-text.selected')
+                        .parents('li')
+                        .focus();
+
+                    angular.element('.dropdown--noarrow.open')
+                        .removeClass('open');
                 } else {
                     $rootScope.itemToogle = scope.toggleActions;
                 }

@@ -436,14 +436,20 @@ function DropdownFocus(Keys) {
                         });
 
                         inputField.on('keyup', function(event) {
-                            var mainList = elem.find('.main-list').children('ul').find('li > button')[0];
+                            var mainList = elem.find('.main-list')
+                                .children('ul')
+                                .find('li > button')[0];
+
                             if (event.keyCode === Keys.down && mainList) {
                                 mainList.focus();
                             }
                         });
 
                         handlers[Keys.up] = function handleUp() {
-                            var prevElem = elem.find('button:focus').parent('li').prev().children('button'),
+                            var prevElem = elem.find('button:focus')
+                                    .parent('li')
+                                    .prev()
+                                    .children('button'),
                                 categoryButton = elem.find('.levelup button');
 
                             if (prevElem.length > 0) {
@@ -455,7 +461,10 @@ function DropdownFocus(Keys) {
                         };
 
                         handlers[Keys.down] = function handleDown() {
-                            var nextElem = elem.find('button:focus').parent('li').next().children('button'),
+                            var nextElem = elem.find('button:focus')
+                                    .parent('li')
+                                    .next()
+                                    .children('button'),
                                 categoryButton = elem.find('.levelup button');
 
                             /*
@@ -469,7 +478,10 @@ function DropdownFocus(Keys) {
 
                             if (inputField.is(':focus') || categoryButton.is(':focus')) {
                                 if (_.isEmpty(inputField.val())) {
-                                    var mainList = elem.find('.main-list').children('ul').find('li > button');
+                                    var mainList = elem.find('.main-list')
+                                        .children('ul')
+                                        .find('li > button');
+
                                     if (mainList[0] !== undefined) {
                                         mainList[0].focus();
                                     }
@@ -645,7 +657,9 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             // select one of predefined dates
             scope.select = function(offset) {
-                var day = moment().startOf('day').add(offset, 'days');
+                var day = moment().startOf('day')
+                    .add(offset, 'days');
+
                 scope.dateSelection(day);
             };
 
@@ -988,7 +1002,9 @@ function TimepickerPopupDirective($timeout, config) {
             scope.submit = function(offset) {
                 var local, time;
                 if (offset) {
-                    local = moment().add(offset, 'minutes').format(MODEL_TIME_FORMAT);
+                    local = moment()
+                        .add(offset, 'minutes')
+                        .format(MODEL_TIME_FORMAT);
                 } else {
                     local = scope.hour + ':' + scope.minute + ':' + scope.second;
                 }

@@ -69,10 +69,12 @@ export default angular.module('superdesk.core.directives.slider', [])
                             });
                         },
                         start: function() {
-                            $(this).find('.ui-slider-thumb').addClass('ui-slider-thumb-active');
+                            $(this).find('.ui-slider-thumb')
+                                .addClass('ui-slider-thumb-active');
                         },
                         stop: function() {
-                            $(this).find('.ui-slider-thumb').removeClass('ui-slider-thumb-active');
+                            $(this).find('.ui-slider-thumb')
+                                .removeClass('ui-slider-thumb-active');
                         }
                     });
                 });

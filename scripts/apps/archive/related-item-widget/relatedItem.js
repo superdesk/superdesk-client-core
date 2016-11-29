@@ -71,8 +71,9 @@ function RelatedItemController(
 
     function today() {
         if (config.search && config.search.useDefaultTimezone) {
-            return moment().tz(config.defaultTimezone).format('YYYY-MM-DD') +
-                'T00:00:00' + moment.tz(config.defaultTimezone).format('ZZ');
+            return moment()
+                .tz(config.defaultTimezone)
+                .format('YYYY-MM-DD') + 'T00:00:00' + moment.tz(config.defaultTimezone).format('ZZ');
         }
         return moment().format('YYYY-MM-DD') + 'T00:00:00' + moment().format('ZZ');
     }

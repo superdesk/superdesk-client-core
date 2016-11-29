@@ -57,7 +57,8 @@ export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
                     } else {
                         scope._errorMessage = gettext('There was a problem, members not saved. Refresh Desks.');
                     }
-                }).finally(function() {
+                })
+                .finally(function() {
                     scope.saving = false;
                     scope.message = null;
                 });

@@ -87,7 +87,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                         }
 
                         return $q.reject(response);
-                    }).then(setPreferences);
+                    })
+                    .then(setPreferences);
 
                 /**
                  * Fetch preferences for current session
@@ -220,7 +221,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                         console.error(response);
                         notify.error(gettext('User preferences could not be saved...'));
                         deferUpdate.reject(response);
-                    }).finally(function() {
+                    })
+                    .finally(function() {
                         deferUpdate = null;
                     });
             }

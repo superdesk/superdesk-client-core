@@ -34,7 +34,8 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
                     desks.fetchDeskStages(scope.desk.edit._id, true).then(function(stages) {
                         scope.stages = stages;
                         scope.message = null;
-                    }).finally(function() { /* no-op */ });
+                    })
+                    .finally(function() { /* no-op */ });
                 } else {
                     WizardHandler.wizard('desks').goTo(previous);
                 }
@@ -109,7 +110,8 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
                             desks.fetchDeskById(item.desk).then(function(desk) {
                                 scope.desk.edit = desk;
                             });
-                        }, errorMessage).finally(function() {
+                        }, errorMessage)
+                        .finally(function() {
                             scope.saving = false;
                             scope.message = null;
                         });
@@ -124,7 +126,8 @@ export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, d
                             desks.fetchDeskById(item.desk).then(function(desk) {
                                 scope.desk.edit = desk;
                             });
-                        }, errorMessage).finally(function() {
+                        }, errorMessage)
+                        .finally(function() {
                             scope.saving = false;
                             scope.message = null;
                         });

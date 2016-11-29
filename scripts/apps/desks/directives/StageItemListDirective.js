@@ -81,16 +81,17 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 scope.loading = true;
                 scope.items = scope.total = null;
 
-                api(getProvider(criteria)).query(criteria).then(function(items) {
-                    scope.items = items._items;
-                    scope.total = items._meta.total;
+                api(getProvider(criteria)).query(criteria)
+                    .then(function(items) {
+                        scope.items = items._items;
+                        scope.total = items._meta.total;
 
-                    scope.cachePreviousItems = items._items;
-                    setNextItems(criteria);
-                })
-                .finally(function() {
-                    scope.loading = false;
-                });
+                        scope.cachePreviousItems = items._items;
+                        setNextItems(criteria);
+                    })
+                    .finally(function() {
+                        scope.loading = false;
+                    });
             }
 
             scope.$watch('filter', queryItems);

@@ -43,7 +43,9 @@ export default angular.module('superdesk.core.directives.avatar', [])
                     figure.removeClass('no-bg');
 
                     if (figure.has('> span').length) {
-                        figure.children('span').text(initials).show();
+                        figure.children('span')
+                            .text(initials)
+                            .show();
                     } else {
                         figure.prepend('<span>' + initials + '</span>');
                     }

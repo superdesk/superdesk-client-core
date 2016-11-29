@@ -371,7 +371,10 @@ describe('authoring', function() {
 
         it('can validate schedule for pre utc timezone', inject(function(authoring, moment) {
             // utc - 1h and matching server tz format
-            var timestamp = moment.utc().subtract(1, 'hours').format().replace('+00:00', '+0000');
+            var timestamp = moment.utc()
+                .subtract(1, 'hours')
+                .format()
+                .replace('+00:00', '+0000');
             expect(authoring.validateSchedule(
                 timestamp.slice(0, 10),
                 timestamp.slice(11, 19),

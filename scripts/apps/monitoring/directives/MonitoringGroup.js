@@ -260,10 +260,18 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     highlightDropdown.find('button:not([disabled])')[0].focus();
 
                     keyboardManager.push('up', function() {
-                        highlightDropdown.find('button:focus').parent('li').prev().children('button').focus();
+                        highlightDropdown.find('button:focus')
+                            .parent('li')
+                            .prev()
+                            .children('button')
+                            .focus();
                     });
                     keyboardManager.push('down', function() {
-                        highlightDropdown.find('button:focus').parent('li').next().children('button').focus();
+                        highlightDropdown.find('button:focus')
+                            .parent('li')
+                            .next()
+                            .children('button')
+                            .focus();
                     });
                 }
             }
@@ -334,7 +342,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     apiquery(previewCriteria, false).then(function(completeItems) {
                         let completeItem = search.mergeHighlightFields(completeItems._items[0]);
                         select(completeItem);
-                    }).finally(function() {
+                    })
+                    .finally(function() {
                         scope.loading = false;
                     });
                 } else {
@@ -422,11 +431,12 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         // update scope items only with the matching fetched items
                         scope.items = search.updateItems(items, scope.items);
                     }
-                }).finally(function() {
-                    if (originalQuery) {
-                        criteria.source.query = originalQuery;
-                    }
-                });
+                })
+               .finally(function() {
+                   if (originalQuery) {
+                       criteria.source.query = originalQuery;
+                   }
+               });
             }
 
             function render(next) {

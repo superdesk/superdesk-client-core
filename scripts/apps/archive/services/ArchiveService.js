@@ -68,7 +68,8 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
      *  @return {Object} the list of archive items
      */
     this.getRelatedItems = function(slugline, fromDateTime, itemId) {
-        var beforeDateTime = fromDateTime || moment().subtract(1, 'days').format(config.view.dateformat);
+        var beforeDateTime = fromDateTime || moment().subtract(1, 'days')
+            .format(config.view.dateformat);
         var params = {};
         params.q = 'slugline.phrase:"' + slugline + '"'; // exact match
         params.ignoreKilled = true;

@@ -246,8 +246,13 @@ describe('superdesk.apps.workspace.content', function() {
             var fields = el.find('li.schema-item');
 
             expect(fields.length).toBe(Object.keys(content.contentProfileSchema).length);
-            expect($(fields[0]).find('span.sd-toggle').hasClass('checked')).toBeFalsy();
-            expect($(fields[11]).find('span.sd-toggle').hasClass('checked')).toBeTruthy();
+            expect($(fields[0]).find('span.sd-toggle')
+                .hasClass('checked'))
+                .toBeFalsy();
+
+            expect($(fields[11]).find('span.sd-toggle')
+                .hasClass('checked'))
+                .toBeTruthy();
         }));
 
         it('should dirty parent form when toggling fields', function() {
@@ -266,7 +271,9 @@ describe('superdesk.apps.workspace.content', function() {
             var form = el.controller('form');
 
             expect(form.$dirty).toBeFalsy();
-            $(fields[1]).find('span.sd-toggle').click();
+            $(fields[1])
+                .find('span.sd-toggle')
+                .click();
             expect(form.$dirty).toBeTruthy();
         });
     });

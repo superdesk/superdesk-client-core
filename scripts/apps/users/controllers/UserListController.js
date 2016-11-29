@@ -6,10 +6,12 @@ export function UserListController($scope, $location, api, _) {
     $scope.createdUsers = [];
     $scope.online_users = false;
 
-    api('roles').query().then(function(result) {
-        $scope.roles = _.keyBy(result._items, '_id');
-        $scope.noRolesWarning = result._items.length === 0;
-    });
+    api('roles')
+        .query()
+        .then(function(result) {
+            $scope.roles = _.keyBy(result._items, '_id');
+            $scope.noRolesWarning = result._items.length === 0;
+        });
 
     $scope.preview = function(user) {
         $scope.selected.user = user;

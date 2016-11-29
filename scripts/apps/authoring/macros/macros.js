@@ -89,7 +89,8 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
         } else {
             $scope.macros = macros.macros;
         }
-    }).finally(function() {
+    })
+    .finally(function() {
         $scope.loading = false;
     });
 
@@ -104,9 +105,10 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
                 $rootScope.$broadcast('macro:diff', res.diff);
             }
             $scope.closeWidget();
-        }).finally(function() {
-            $scope.loading = false;
-        });
+        })
+       .finally(function() {
+           $scope.loading = false;
+       });
     };
 }
 

@@ -49,20 +49,26 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
                 },
                 mouseenter: function(e) {
                     el = $(this).find('.highlights-list');
-                    el.not('.open').children('.dropdown__toggle').click();
+                    el.not('.open')
+                        .children('.dropdown__toggle')
+                        .click();
 
                     angular.element('.highlights-list-menu.open').on({
                         mouseenter: function() {
                             $timeout.cancel(closeTimeout);
                         },
                         mouseleave: function() {
-                            el.filter('.open').children('.dropdown__toggle').click();
+                            el.filter('.open')
+                                .children('.dropdown__toggle')
+                                .click();
                         }
                     });
                 },
                 mouseleave: function() {
                     closeTimeout = $timeout(function() {
-                        el.filter('.open').children('.dropdown__toggle').click();
+                        el.filter('.open')
+                            .children('.dropdown__toggle')
+                            .click();
                     }, 100, false);
                 }
             });

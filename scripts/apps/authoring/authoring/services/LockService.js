@@ -27,13 +27,14 @@ export function LockService($q, api, session, privileges, notify) {
      * Unlock an item
      */
     this.unlock = function unlock(item) {
-        return api('archive_unlock', item).save({}).then(function(lock) {
-            _.extend(item, lock);
-            item._locked = false;
-            return item;
-        }, function(err) {
-            return item;
-        });
+        return api('archive_unlock', item).save({})
+            .then(function(lock) {
+                _.extend(item, lock);
+                item._locked = false;
+                return item;
+            }, function(err) {
+                return item;
+            });
     };
 
     /**

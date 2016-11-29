@@ -96,7 +96,8 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 scope.missing_link = false;
                 if (scope.item.slugline && scope.item.type === 'text') {
                     // get the midnight based on the defaultTimezone not the user timezone.
-                    var fromDateTime = moment().tz(config.defaultTimezone).format(config.view.dateformat);
+                    var fromDateTime = moment().tz(config.defaultTimezone)
+                        .format(config.view.dateformat);
                     archiveService.getRelatedItems(scope.item.slugline, fromDateTime, scope.item._id)
                         .then(function(items) {
                             scope.relatedItems = items;

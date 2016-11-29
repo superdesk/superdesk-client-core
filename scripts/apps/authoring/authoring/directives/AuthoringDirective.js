@@ -310,7 +310,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         let issues = response.data._issues;
                         if (angular.isDefined(issues['validator exception'])) {
                             var errors = issues['validator exception'];
-                            var modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
+                            var modifiedErrors = errors.replace(/\[/g, '')
+                                .replace(/\]/g, '')
+                                .split(',');
+
                             for (var i = 0; i < modifiedErrors.length; i++) {
                                 notify.error(_.trim(modifiedErrors[i]));
                             }

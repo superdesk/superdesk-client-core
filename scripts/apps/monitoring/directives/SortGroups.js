@@ -16,7 +16,13 @@ export function SortGroups() {
                     update: function() { /* no-op */ }
                 },
                 start: function(event, ui) {
-                    ui.item.data('start_index', ui.item.parent().find('li.sort-item').index(ui.item));
+                    ui.item
+                        .data('start_index',
+                            ui.item
+                                .parent()
+                                .find('li.sort-item')
+                                .index(ui.item)
+                        );
                 },
                 stop: function(event, ui) {
                     if (updated) {
@@ -25,7 +31,10 @@ export function SortGroups() {
                             index: ui.item.data('start_index')
                         };
                         var end = {
-                            index: ui.item.parent().find('li.sort-item').index(ui.item)
+                            index: ui.item
+                                .parent()
+                                .find('li.sort-item')
+                                .index(ui.item)
                         };
 
                         scope.reorder(start, end, ui.item);

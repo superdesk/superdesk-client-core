@@ -71,9 +71,11 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
 
                 // update it
                 if (previous) {
-                    api('roles').getById(previous._id).then(function(result) {
-                        _.extend(previous, {_etag: result._etag, is_default: false});
-                    });
+                    api('roles')
+                        .getById(previous._id)
+                        .then(function(result) {
+                            _.extend(previous, {_etag: result._etag, is_default: false});
+                        });
                 }
             }
 

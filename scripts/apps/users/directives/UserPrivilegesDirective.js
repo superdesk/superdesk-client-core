@@ -34,23 +34,26 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
             }
 
             function getPrivileges() {
-                return api('privileges').query().then(function(result) {
-                    scope.privileges = result._items;
-                }, function(error) {
-                    notify.error(gettext('Privileges not found.'));
-                    console.error(error);
-                    return $q.reject(error);
-                });
+                return api('privileges').query()
+                    .then(function(result) {
+                        scope.privileges = result._items;
+                    }, function(error) {
+                        notify.error(gettext('Privileges not found.'));
+                        console.error(error);
+                        return $q.reject(error);
+                    });
             }
 
             function getUserRole() {
-                return api('roles').getById(scope.user.role).then(function(role) {
-                    scope.role = role;
-                }, function(error) {
-                    notify.error(gettext('User role not found.'));
-                    console.error(error);
-                    return $q.reject(error);
-                });
+                return api('roles')
+                    .getById(scope.user.role)
+                    .then(function(role) {
+                        scope.role = role;
+                    }, function(error) {
+                        notify.error(gettext('User role not found.'));
+                        console.error(error);
+                        return $q.reject(error);
+                    });
             }
 
             /**

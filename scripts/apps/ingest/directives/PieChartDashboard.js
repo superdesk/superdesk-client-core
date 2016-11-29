@@ -61,7 +61,8 @@ export function PieChartDashboard(colorSchemes) {
 
                         var g = svg.selectAll('.arc')
                             .data(pie(newData[0]))
-                            .enter().append('g')
+                            .enter()
+                            .append('g')
                             .attr('class', 'arc');
 
                         g.append('path')

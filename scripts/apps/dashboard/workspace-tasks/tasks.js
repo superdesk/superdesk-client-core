@@ -147,8 +147,13 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
      * Fetch templates scheduled for today on current desk
      */
     function fetchScheduled() {
-        var startTime = moment().hours(0).minutes(0).seconds(0);
-        var endTime = moment().hours(23).minutes(59).seconds(59);
+        var startTime = moment().hours(0)
+            .minutes(0)
+            .seconds(0);
+
+        var endTime = moment().hours(23)
+            .minutes(59)
+            .seconds(59);
 
         var filter = {
             schedule_desk: desks.getCurrentDeskId(),

@@ -55,7 +55,8 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
                     } else {
                         WizardHandler.wizard('desks').finish();
                     }
-                }, errorMessage).finally(function() {
+                }, errorMessage)
+                .finally(function() {
                     scope.saving = false;
                     scope.message = null;
                 });

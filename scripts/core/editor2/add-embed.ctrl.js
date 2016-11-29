@@ -97,7 +97,9 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
         updatePreview: function() {
             self.previewLoading = true;
             self.retrieveEmbed().then(function(embed) {
-                angular.element($element).find('.preview').html(embed.body.replace('\\n', ''));
+                angular.element($element)
+                    .find('.preview')
+                    .html(embed.body.replace('\\n', ''));
                 self.previewLoading = false;
             });
         },
@@ -131,7 +133,9 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
         if (angular.isDefined(extended)) {
             if (extended) {
                 $timeout(function() {
-                    angular.element($element).find('input').focus();
+                    angular.element($element)
+                        .find('input')
+                        .focus();
                 }, 500, false); // positive timeout because of a chrome issue
             // on leave, clear field
             } else if (wasExtended) {

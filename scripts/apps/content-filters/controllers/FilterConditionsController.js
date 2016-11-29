@@ -68,7 +68,8 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
                         notify.error(gettext('Error: Failed to save filter condition.'));
                     }
                 }
-            ).then(fetchFilterConditions);
+            )
+            .then(fetchFilterConditions);
     };
 
     $scope.remove = function(filterCondition) {

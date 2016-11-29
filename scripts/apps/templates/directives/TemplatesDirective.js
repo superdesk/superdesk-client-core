@@ -211,7 +211,8 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                         function(response) {
                             notifySaveError(response, notify);
                         }
-                    ).then(fetchTemplates);
+                    )
+                    .then(fetchTemplates);
                 }
             };
 

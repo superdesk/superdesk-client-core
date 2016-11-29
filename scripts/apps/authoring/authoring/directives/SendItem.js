@@ -556,7 +556,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                             return deferred.promise;
                         }
                     });
-                }).finally(function() {
+                })
+                .finally(function() {
                     scope.loading = false;
                 });
             }
@@ -609,7 +610,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     } else {
                         $rootScope.$broadcast('item:fetch');
                     }
-                }).finally(function() {
+                })
+                .finally(function() {
                     scope.loading = false;
                 });
             }
@@ -635,7 +637,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     } else {
                         $rootScope.$broadcast('item:fetch');
                     }
-                }).finally(function() {
+                })
+                .finally(function() {
                     scope.loading = false;
                 });
             }

@@ -75,7 +75,8 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
                     notify.error(gettext('Error: ' + JSON.stringify(response.data._issues)));
                 }
             }
-        }).then($scope.cancel);
+        })
+        .then($scope.cancel);
     };
 
     $scope.remove = function(product) {
@@ -91,7 +92,8 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
                     }
                 });
             }
-        ).then($scope.cancel);
+        )
+        .then($scope.cancel);
     };
 
     $scope.test = function() {
@@ -119,7 +121,8 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
         }, function(response) {
             var msg = response.data && response.data._message ? response.data._message : JSON.stringify(response);
             notify.error(gettext('Error: ' + msg));
-        }).finally(function() {
+        })
+        .finally(function() {
             $scope.loading = false;
         });
     };

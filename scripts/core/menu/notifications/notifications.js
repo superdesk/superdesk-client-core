@@ -58,10 +58,12 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
         var recipient = _.find(recipients, {user_id: session.identity._id});
         if (recipient && !recipient.read) {
             recipient.read = true;
-            return api('activity').save(_notification, {recipients: recipients}).then(() => {
-                this.unread = _.max([0, this.unread - 1]);
-                notification._unread = null;
-            });
+            return api('activity')
+                .save(_notification, {recipients: recipients})
+                .then(() => {
+                    this.unread = _.max([0, this.unread - 1]);
+                    notification._unread = null;
+                });
         }
     };
 
@@ -161,10 +163,12 @@ function DeskNotificationsService($rootScope, api, session) {
         if (recipient && !recipient.read) {
             recipient.read = true;
             recipient.user_id = session.identity._id;
-            return api('activity').save(_notification, {recipients: recipients}).then(() => {
-                this.unread = _.max([0, this.unread - 1]);
-                notification._unread = null;
-            });
+            return api('activity')
+                .save(_notification, {recipients: recipients})
+                .then(() => {
+                    this.unread = _.max([0, this.unread - 1]);
+                    notification._unread = null;
+                });
         }
     };
 

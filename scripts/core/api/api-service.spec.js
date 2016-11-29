@@ -364,9 +364,10 @@ describe('API Provider', function() {
             $httpBackend.expectGET(USERS_URL + '?limit=1').respond(200, {_items: []});
 
             var users;
-            api('users').query({limit: 1}).then(function(_users) {
-                users = _users;
-            });
+            api('users').query({limit: 1})
+                .then(function(_users) {
+                    users = _users;
+                });
 
             $httpBackend.flush();
 
@@ -389,7 +390,8 @@ describe('API Provider', function() {
             var success = jasmine.createSpy('success'),
                 error = jasmine.createSpy('error');
 
-            api('users').query().then(success, error);
+            api('users').query()
+                .then(success, error);
 
             $httpBackend.flush();
 
@@ -403,7 +405,9 @@ describe('API Provider', function() {
             var success = jasmine.createSpy('success'),
                 error = jasmine.createSpy('error');
 
-            api('users').save({}).then(success, error);
+            api('users')
+                .save({})
+                .then(success, error);
 
             $httpBackend.flush();
 
@@ -420,9 +424,10 @@ describe('API Provider', function() {
         it('can fetch an item by id', inject(function(api, $httpBackend) {
             var data = {_id: 1}, user;
             $httpBackend.expectGET(USER_URL).respond(200, data);
-            api('users').getById(1).then(function(_user) {
-                user = _user;
-            });
+            api('users').getById(1)
+                .then(function(_user) {
+                    user = _user;
+                });
             $httpBackend.flush();
             expect(user._id).toBe(1);
         }));

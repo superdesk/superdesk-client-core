@@ -127,13 +127,15 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     var originalBody = angular.element(angular.copy(block.body));
                     if (originalBody.get(0).nodeName === 'FIGURE') {
                         block.body = '';
-                        originalBody.contents().toArray().forEach(function(element) {
-                            if (element.nodeName === 'FIGCAPTION') {
-                                block.caption = element.innerHTML;
-                            } else {
-                                block.body += element.outerHTML || element.nodeValue || '';
-                            }
-                        });
+                        originalBody.contents()
+                            .toArray()
+                            .forEach(function(element) {
+                                if (element.nodeName === 'FIGCAPTION') {
+                                    block.caption = element.innerHTML;
+                                } else {
+                                    block.body += element.outerHTML || element.nodeValue || '';
+                                }
+                            });
                     }
                 }
             }

@@ -76,7 +76,8 @@ export function LegalArchiveService($q, api, notify, $location, gettext, config)
         function prepareDate(val, timeSuffix) {
             var local = moment(val, config.view.dateformat).format('YYYY-MM-DD') + timeSuffix +
             moment.tz(config.defaultTimezone).format('ZZ');
-            return moment(local, 'YYYY-MM-DDTHH:mm:ssZZ').utc().format('YYYY-MM-DDTHH:mm:ssZZ');
+            return moment(local, 'YYYY-MM-DDTHH:mm:ssZZ').utc()
+                .format('YYYY-MM-DDTHH:mm:ssZZ');
         }
 
         var hasId = false;

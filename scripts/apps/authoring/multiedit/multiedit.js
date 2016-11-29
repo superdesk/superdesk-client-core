@@ -253,7 +253,9 @@ function MultieditFloatMenuDirective($document) {
                 if (!open) {
                     event.preventDefault();
                     event.stopPropagation();
-                    $('#multiedit-float').css(getPosition(event.pageX, event.pageY)).show();
+                    $('#multiedit-float')
+                        .css(getPosition(event.pageX, event.pageY))
+                        .show();
                 } else {
                     $('#multiedit-float').hide();
                 }

@@ -217,7 +217,8 @@ export function SearchResults(
                         // update scope items only with the matching fetched items
                         scope.items = search.updateItems(items, scope.items);
                     }
-                }).finally(function() {
+                })
+                .finally(function() {
                     scope.loading = false;
                     if (originalQuery) {
                         criteria.source.query = originalQuery;
@@ -301,9 +302,12 @@ export function SearchResults(
                     criteria.source.size = 50;
                     criteria.projections = JSON.stringify(projections);
 
-                    api.query(getProvider(criteria), criteria).then(setScopeItems).finally(function() {
-                        scope.loading = false;
-                    });
+                    api
+                        .query(getProvider(criteria), criteria)
+                        .then(setScopeItems)
+                        .finally(function() {
+                            scope.loading = false;
+                        });
                 } else {
                     var query = _.omit($location.search(), '_id');
 
@@ -319,9 +323,12 @@ export function SearchResults(
                     scope.loading = true;
                     criteria.projections = JSON.stringify(projections);
 
-                    api.query(getProvider(criteria), criteria).then(setScopeItems).finally(function() {
-                        scope.loading = false;
-                    });
+                    api
+                        .query(getProvider(criteria), criteria)
+                        .then(setScopeItems)
+                        .finally(function() {
+                            scope.loading = false;
+                        });
                     oldQuery = query;
                 }
 
@@ -365,7 +372,8 @@ export function SearchResults(
                         }
 
                         $location.search('_id', item ? item._id : null);
-                    }).finally(function() {
+                    })
+                    .finally(function() {
                         scope.loading = false;
                     });
                 } else {

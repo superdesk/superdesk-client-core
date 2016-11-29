@@ -134,7 +134,8 @@ export function cleanHtml(data) {
     .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
     .replace(/<br[^>]*>/gi, '&nbsp;')
     .replace(/<\/?[^>]+><\/?[^>]+>/gi, '')
-    .replace(/<\/?[^>]+>/gi, '').trim()
+    .replace(/<\/?[^>]+>/gi, '')
+    .trim()
     .replace(/&nbsp;/g, ' ')
     .replace(/\s\s+/g, ' ');
 }

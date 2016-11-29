@@ -101,7 +101,8 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
                     $and: [criteria]
                 });
                 return params;
-            }).then(params => api.query('content_templates', params));
+            })
+            .then(params => api.query('content_templates', params));
     };
 
     this.fetchTemplatesByUserDesk = function(user, desk, page, pageSize, type, templateName) {

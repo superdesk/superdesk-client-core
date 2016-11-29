@@ -53,9 +53,11 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
              * @param {Object} template
              */
             scope.createFromTemplate = function(template) {
-                content.createItemFromTemplate(template).then(edit).then(function() {
-                    getRecentTemplates(desks.activeDeskId);
-                });
+                content.createItemFromTemplate(template)
+                    .then(edit)
+                    .then(function() {
+                        getRecentTemplates(desks.activeDeskId);
+                    });
             };
 
             /**

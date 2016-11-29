@@ -17,7 +17,10 @@ export default angular.module('superdesk.core.directives.throttle', [])
                 if (attrs.interval !== '' && attrs.interval !== undefined) {
                     interval = attrs.interval;
                 }
-                element.off('input').off('keydown').off('change');
+                element.off('input')
+                    .off('keydown')
+                    .off('change');
+
                 element.on('input', _.throttle(function() {
                     $scope.$apply(function() {
                         ngModel.$setViewValue(element.val());

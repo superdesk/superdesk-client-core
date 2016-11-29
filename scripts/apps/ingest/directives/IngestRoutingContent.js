@@ -21,9 +21,10 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
             scope.contentFilters = [];
 
             function initSchemes() {
-                api('routing_schemes').query().then(function(result) {
-                    scope.schemes = $filter('sortByName')(result._items);
-                });
+                api('routing_schemes').query()
+                    .then(function(result) {
+                        scope.schemes = $filter('sortByName')(result._items);
+                    });
 
                 contentFilters.getAllContentFilters(
                     filtersStartPage, scope.contentFilters

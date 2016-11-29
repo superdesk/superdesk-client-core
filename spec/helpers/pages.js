@@ -1,3 +1,5 @@
+/* eslint-disable newline-per-chained-call */
+
 'use strict';
 
 exports.login = LoginModal;

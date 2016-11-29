@@ -6,9 +6,10 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
             var _orig = null;
             scope.editRuleset = null;
 
-            api('rule_sets').query().then(function(result) {
-                scope.rulesets = $filter('sortByName')(result._items);
-            });
+            api('rule_sets').query()
+                .then(function(result) {
+                    scope.rulesets = $filter('sortByName')(result._items);
+                });
 
             scope.edit = function(ruleset) {
                 scope.editRuleset = _.create(ruleset);

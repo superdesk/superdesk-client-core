@@ -84,9 +84,18 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     .directive('sdClock', function() {
         var pi = Math.PI,
             scales = {
-                s: d3.scale.linear().domain([0, 59 + 999 / 1000]).range([0, 2 * pi]),
-                m: d3.scale.linear().domain([0, 59 + 59 / 60]).range([0, 2 * pi]),
-                h: d3.scale.linear().domain([0, 11 + 59 / 60]).range([0, 2 * pi])
+                s: d3.scale
+                    .linear()
+                    .domain([0, 59 + 999 / 1000])
+                    .range([0, 2 * pi]),
+                m: d3.scale
+                    .linear()
+                    .domain([0, 59 + 59 / 60])
+                    .range([0, 2 * pi]),
+                h: d3.scale
+                    .linear()
+                    .domain([0, 11 + 59 / 60])
+                    .range([0, 2 * pi])
             };
 
         return {

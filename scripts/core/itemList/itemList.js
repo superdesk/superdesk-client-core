@@ -320,11 +320,12 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             var self = this;
 
             return preferencesService.get(PREF_KEY)
-            .then(function(result) {
-                self.items = result;
-            }).then(function() {
-                self.updateListeners();
-            });
+                .then(function(result) {
+                    self.items = result;
+                })
+                .then(function() {
+                    self.updateListeners();
+                });
         },
         save: function() {
             var self = this;

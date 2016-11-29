@@ -68,13 +68,15 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                 openProviderModal();
             });
 
-            api('rule_sets').query().then(function(result) {
-                $scope.rulesets = $filter('sortByName')(result._items);
-            });
+            api('rule_sets').query()
+                .then(function(result) {
+                    $scope.rulesets = $filter('sortByName')(result._items);
+                });
 
-            api('routing_schemes').query().then(function(result) {
-                $scope.routingScheme = $filter('sortByName')(result._items);
-            });
+            api('routing_schemes').query()
+                .then(function(result) {
+                    $scope.routingScheme = $filter('sortByName')(result._items);
+                });
 
             $scope.fetchSourceErrors = function() {
                 if ($scope.provider && $scope.provider.feeding_service) {
@@ -101,7 +103,8 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                                         notify.error(gettext('Error: Unable to delete Ingest Source'));
                                     }
                                 }
-                            ).then(fetchProviders);
+                            )
+                            .then(fetchProviders);
                     }
                 );
             };
@@ -252,10 +255,11 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                 delete $scope.provider.source_errors;
 
                 api.ingestProviders.save($scope.origProvider, $scope.provider)
-                .then(function() {
-                    notify.success(gettext('Provider saved!'));
-                    $scope.cancel();
-                }).then(fetchProviders);
+                    .then(function() {
+                        notify.success(gettext('Provider saved!'));
+                        $scope.cancel();
+                    })
+                    .then(fetchProviders);
             };
 
             $scope.gotoIngest = function(source) {

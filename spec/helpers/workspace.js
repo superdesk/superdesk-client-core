@@ -120,7 +120,11 @@ function Workspace() {
      */
     this.getHighlightListItem = function(name) {
         var menu = element(by.id('highlightPackage'));
-        browser.actions().mouseMove(menu).perform();
+
+        browser.actions()
+            .mouseMove(menu)
+            .perform();
+
         return menu.element(by.css('[option="' + name + '"]'));
     };
 
@@ -150,7 +154,10 @@ function Workspace() {
      * @return {promise} title
      */
     this.getItemText = function(index) {
-        return this.getItem(index).all(by.id('title')).first().getText();
+        return this.getItem(index)
+            .all(by.id('title'))
+            .first()
+            .getText();
     };
 
     /**
@@ -161,7 +168,9 @@ function Workspace() {
      */
     this.openItemMenu = function(index) {
         var itemElem = this.getItem(index);
-        browser.actions().mouseMove(itemElem).perform();
+        browser.actions()
+            .mouseMove(itemElem)
+            .perform();
         itemElem.element(by.className('icon-dots-vertical')).click();
         return element(by.css('.dropdown__menu.open'));
     };
@@ -188,7 +197,9 @@ function Workspace() {
      */
     this.actionOnItemSubmenu = function(action, submenu, item) {
         var menu = this.openItemMenu(item);
-        browser.actions().mouseMove(menu.element(by.partialLinkText(action))).perform();
+        browser.actions()
+            .mouseMove(menu.element(by.partialLinkText(action)))
+            .perform();
         menu.element(by.partialButtonText(submenu)).click();
     };
 
@@ -208,7 +219,10 @@ function Workspace() {
         }, 300);
 
         // toggle to list view if possible
-        var listViewBtn = element(by.className('view-select')).all(by.tagName('button')).get(1);
+        var listViewBtn = element(by.className('view-select'))
+            .all(by.tagName('button'))
+            .get(1);
+
         return listViewBtn.isDisplayed().then(function(isDisplayed) {
             if (isDisplayed) {
                 return listViewBtn.click();
@@ -229,14 +243,16 @@ function Workspace() {
 
     this.duplicateItem = function(item, desk) {
         return this.switchToDesk(desk || 'PERSONAL')
-        .then(content.setListView)
-        .then(function() {
-            return content.actionOnItem('Duplicate', item);
-        });
+            .then(content.setListView)
+            .then(function() {
+                return content.actionOnItem('Duplicate', item);
+            });
     };
 
     this.filterItems = function(type) {
         element(by.css('.filter-trigger')).click();
-        element(by.css('.content-type-filters')).element(by.css('.filetype-icon-' + type)).click();
+        element(by.css('.content-type-filters'))
+            .element(by.css('.filetype-icon-' + type))
+            .click();
     };
 }

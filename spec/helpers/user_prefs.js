@@ -26,7 +26,9 @@ function UserPrefs() {
 
     // the Profile tab (Overview);
     this.setLang = function(lang) {
-        element(by.css('[name="user_language"]')).element(by.cssContainingText('option', lang)).click();
+        element(by.css('[name="user_language"]'))
+            .element(by.cssContainingText('option', lang))
+            .click();
     };
 
     this.navigateTo = function() {

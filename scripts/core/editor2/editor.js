@@ -606,7 +606,8 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
                 });
                 // update caption
                 self.saveCaption(self.model.association.description_text);
-            }).finally(function() {
+            })
+            .finally(function() {
                 self.model.loading = false;
             });
         }
@@ -1303,11 +1304,12 @@ angular.module('superdesk.apps.editor2', [
                                 var remainingElementsContainer = document.createElement('div');
                                 remainingElementsContainer.appendChild(extractBlockContentsFromCaret().cloneNode(true));
                         // remove the first line if empty
-                                $(remainingElementsContainer).find('p:first').each(function() {
-                                    if ($(this).text() === '') {
-                                        this.remove();
-                                    }
-                                });
+                                $(remainingElementsContainer).find('p:first')
+                                    .each(function() {
+                                        if ($(this).text() === '') {
+                                            this.remove();
+                                        }
+                                    });
                                 return remainingElementsContainer;
                             },
                             updateModel: function() {
@@ -1462,7 +1464,11 @@ function EditorUtilsFactory() {
         getFindReplaceTokens: function(node, settings) {
             var tokens = [];
             var diff = settings.findreplace.diff || {};
-            var pattern = Object.keys(diff).sort(reverseLengthSort).map(escapeRegExp).join('|');
+            var pattern = Object.keys(diff)
+                .sort(reverseLengthSort)
+                .map(escapeRegExp)
+                .join('|');
+
             if (!pattern) {
                 return tokens;
             }

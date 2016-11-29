@@ -18,7 +18,8 @@ angular.module('superdesk.apps.users.activity', [
             description: 'Activity stream widget',
             icon: 'stream'
         });
-    }]).controller('ActivityController', ['$scope', 'profileService',
+    }])
+    .controller('ActivityController', ['$scope', 'profileService',
         function($scope, profileService) {
             var page = 1;
             var currentConfig = null;
@@ -53,7 +54,8 @@ angular.module('superdesk.apps.users.activity', [
                     refresh(config);
                 }
             }, true);
-        }]).controller('ActivityConfigController', ['$scope',
+        }])
+        .controller('ActivityConfigController', ['$scope',
             function($scope) {
                 $scope.notIn = function(haystack) {
                     return function(needle) {

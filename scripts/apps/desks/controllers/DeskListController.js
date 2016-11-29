@@ -25,9 +25,10 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
     $scope.statuses = tasks.statuses;
     $scope.online_users = false;
 
-    api('roles').query().then(function(result) {
-        $scope.roles = sorted(result);
-    });
+    api('roles').query()
+        .then(function(result) {
+            $scope.roles = sorted(result);
+        });
 
     $scope.privileges = privileges.privileges;
 

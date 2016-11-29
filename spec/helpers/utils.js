@@ -49,16 +49,19 @@ function openUrl(url) {
 }
 
 function printLogs(prefix) {
-    return browser.manage().logs().get('browser').then(function(browserLog) {
-        var logs = browserLog.filter(function(log) {
-            return log.level.value >= 1000;
-        });
+    return browser.manage()
+        .logs()
+        .get('browser')
+        .then(function(browserLog) {
+            var logs = browserLog.filter(function(log) {
+                return log.level.value >= 1000;
+            });
 
-        console.info(
-            (prefix ? prefix + ' ' : '') +
-            'log: ' + require('util').inspect(logs, {dept: 3})
-        );
-    });
+            console.info(
+                (prefix ? prefix + ' ' : '') +
+                'log: ' + require('util').inspect(logs, {dept: 3})
+            );
+        });
 }
 
 function waitForSuperdesk() {
@@ -114,7 +117,8 @@ function getListOption(dropdown, n) {
  */
 function ctrlKey(key) {
     var Key = protractor.Key;
-    browser.actions().sendKeys(Key.chord(Key.CONTROL, key)).perform();
+    browser.actions().sendKeys(Key.chord(Key.CONTROL, key))
+        .perform();
 }
 
 /**
@@ -124,7 +128,8 @@ function ctrlKey(key) {
  */
 function commandKey(key) {
     var Key = protractor.Key;
-    browser.actions().sendKeys(Key.chord(Key.COMMAND, key)).perform();
+    browser.actions().sendKeys(Key.chord(Key.COMMAND, key))
+        .perform();
 }
 
 /**
@@ -134,7 +139,8 @@ function commandKey(key) {
  */
 function ctrlShiftKey(key) {
     var Key = protractor.Key;
-    browser.actions().sendKeys(Key.chord(Key.CONTROL, Key.SHIFT, key)).perform();
+    browser.actions().sendKeys(Key.chord(Key.CONTROL, Key.SHIFT, key))
+        .perform();
 }
 
 /**
@@ -144,7 +150,8 @@ function ctrlShiftKey(key) {
  */
 function altKey(key) {
     var Key = protractor.Key;
-    browser.actions().sendKeys(Key.chord(Key.ALT, key)).perform();
+    browser.actions().sendKeys(Key.chord(Key.ALT, key))
+        .perform();
 }
 
 /**
@@ -191,5 +198,6 @@ function wait(elem, time) {
  * @param {Element} elem
  */
 function hover(elem) {
-    browser.actions().mouseMove(elem, {x: 3, y: 3}).perform();
+    browser.actions().mouseMove(elem, {x: 3, y: 3})
+        .perform();
 }

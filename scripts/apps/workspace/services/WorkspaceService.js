@@ -170,7 +170,8 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
                 }
 
                 return createUserWorkspace();
-            }).then(updateActive);
+            })
+            .then(updateActive);
     }
 
     /**
@@ -220,7 +221,8 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
     function queryUserWorkspaces() {
         return session.getIdentity().then(function(identity) {
             return api.query(RESOURCE, {where: {user: identity._id}});
-        }).then(function(response) {
+        })
+        .then(function(response) {
             return response._items;
         });
     }

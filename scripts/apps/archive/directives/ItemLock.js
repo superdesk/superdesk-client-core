@@ -10,10 +10,11 @@ export function ItemLock(api, lock, privileges, desks) {
                 init();
 
                 if (scope.item && lock.isLocked(scope.item)) {
-                    api('users').getById(scope.item.lock_user).then(function(user) {
-                        scope.lock.user = user;
-                        scope.lock.lockbyme = lock.isLockedByMe(scope.item);
-                    });
+                    api('users').getById(scope.item.lock_user)
+                        .then(function(user) {
+                            scope.lock.user = user;
+                            scope.lock.lockbyme = lock.isLockedByMe(scope.item);
+                        });
                 }
             });
 

@@ -149,7 +149,8 @@ export function SubscribersDirective(
                                 notify.error(gettext('Error: Failed to save Subscriber.'));
                             }
                         }
-                    ).then(fetchSubscribers);
+                    )
+                    .then(fetchSubscribers);
             };
 
             /**

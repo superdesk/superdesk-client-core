@@ -28,12 +28,18 @@ describe('sdPasswordStrength', function() {
 
     it('should start of with strength as "Short" if empty', function() {
         var $el = compileDirective();
-        expect($el.next().find('.label').text()).toBe('Short');
+        expect($el.next()
+            .find('.label')
+            .text()
+        ).toBe('Short');
     });
 
     it('should start of with correct strength when model is pre-populated', function() {
         var $el = compileDirective({pwd: 'abcdE123'});
-        expect($el.next().find('.label').text()).toBe('OK');
+        expect($el.next()
+            .find('.label')
+            .text()
+        ).toBe('OK');
     });
 
     it('should update strength when model changes', function() {

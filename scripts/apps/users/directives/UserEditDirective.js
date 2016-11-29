@@ -42,9 +42,10 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 scope.dirty = !angular.equals(user, scope.origUser);
             });
 
-            api('roles').query().then(function(result) {
-                scope.roles = result._items;
-            });
+            api('roles').query()
+                .then(function(result) {
+                    scope.roles = result._items;
+                });
             // get available translation languages
             var noBaseLanguage = true;
             scope.languages = _.map(gettextCatalog.strings, function(translation, lang) {

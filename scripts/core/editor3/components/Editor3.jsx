@@ -96,7 +96,9 @@ export class Editor3 extends React.Component {
         let className = 'Editor3-editor';
         var contentState = editorState.getCurrentContent();
         if (!contentState.hasText()) {
-            if (contentState.getBlockMap().first().getType() !== 'unstyled') {
+            if (contentState.getBlockMap()
+                .first()
+                .getType() !== 'unstyled') {
                 className += ' Editor3-hidePlaceholder';
             }
         }
