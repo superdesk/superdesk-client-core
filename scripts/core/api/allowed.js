@@ -27,11 +27,8 @@ function AllowedService(_, api, $q) {
      * @param {String} field
      * @return {Promise}
      */
-    this.get = (resource, field) => {
-        return fetch().then(() => {
-            return values[resource + '.' + field] || [];
-        });
-    };
+    this.get = (resource, field) =>
+        fetch().then(() => values[resource + '.' + field] || []);
 
     /**
      * Filter object keys using allowed values
@@ -41,13 +38,11 @@ function AllowedService(_, api, $q) {
      * @param {String} field
      * @return {Promise}
      */
-    this.filterKeys = (all, resource, field) => {
-        return this.get(resource, field).then(allowed => {
+    this.filterKeys = (all, resource, field) =>
+        this.get(resource, field).then(allowed => {
             var filtered = {};
             Object.keys(all).forEach(key => {
-                var isAllowed = _.find(allowed, val => {
-                    return key.indexOf(val) === 0;
-                });
+                var isAllowed = _.find(allowed, val => key.indexOf(val) === 0);
 
                 if (isAllowed) {
                     filtered[key] = all[key];
@@ -56,5 +51,4 @@ function AllowedService(_, api, $q) {
 
             return filtered;
         });
-    };
 }

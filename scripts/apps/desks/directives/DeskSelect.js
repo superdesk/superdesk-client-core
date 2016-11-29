@@ -89,9 +89,7 @@ export function DeskSelect(Keys, _, preferencesService) {
             function filterDesks() {
                 if (scope.allDesks) {
                     var filterRegexp = new RegExp('^' + scope.filter, 'i');
-                    scope.desks = scope.allDesks.filter(desk => {
-                        return !scope.filter || filterRegexp.test(desk.name);
-                    });
+                    scope.desks = scope.allDesks.filter(desk => !scope.filter || filterRegexp.test(desk.name));
 
                     // in case active item is filtered out keep focus
                     if (scope.ctrl.active && !scope.desks.find(filterActive)) {

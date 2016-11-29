@@ -116,6 +116,7 @@
         "array-bracket-spacing": [2, "never"],
         "block-spacing": 2,
         "brace-style": [2, "1tbs"],
+        "camelcase": [2, {"properties": "never"}],
         "comma-spacing": 2,
         "comma-style": 2,
         "computed-property-spacing": 2,
@@ -125,6 +126,7 @@
         "jsx-quotes": 2,
         "key-spacing": 2,
         "keyword-spacing": 2,
+        "linebreak-style": [2, "unix"],
         "max-depth": [2, 3],
         "max-len": [2, 120, 4],
         "new-parens": 2,
@@ -134,6 +136,7 @@
         "no-multiple-empty-lines": 2,
         "no-nested-ternary": 2,
         "no-trailing-spaces": 2,
+        "no-underscore-dangle": 0,
         "no-unneeded-ternary": 2,
         "no-whitespace-before-property": 2,
         "object-curly-spacing": [2, "never"],
@@ -150,8 +153,6 @@
         "space-unary-ops": 2,
         "spaced-comment": 2,
 
-        "linebreak-style": [2, "unix"],
-        "camelcase": [2, {"properties": "never"}],
-        "no-underscore-dangle": 0
+        "arrow-body-style": [2, "as-needed"]
     }
 }

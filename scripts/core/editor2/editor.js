@@ -1195,9 +1195,9 @@ angular.module('superdesk.apps.editor2', [
                                         value: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1)
                                     });
 
-                                    scope.suggestions = suggestions.filter(suggestion => {
-                                        return suggestion.key !== scope.replaceWord;
-                                    });
+                                    scope.suggestions = suggestions.filter(suggestion =>
+                                        suggestion.key !== scope.replaceWord
+                                    );
                                 } else {
                                     scope.suggestions = suggestions;
                                 }
