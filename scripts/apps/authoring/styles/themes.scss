@@ -484,13 +484,11 @@ body, html {
     }
 
     .text-editor {
-        //font-size: 16px;
-        //line-height: 150%;
         p {
-            padding: 0 !important;
-            margin-bottom: 10px !important;
-            font-size:16px !important;
-            line-height: 150% !important;
+            padding: 0;
+            margin-bottom: 10px;
+            font-size:16px;
+            line-height: 150%;
             @include text-light();
         }
         p:last-of-type {
@@ -513,6 +511,19 @@ body, html {
                 line-height: inherit;
                 font-weight: inherit;
             }
+        }
+        li {
+            padding: 0;
+            font-size: 16px;
+            line-height: 150%;
+            @include text-light();
+        }
+        ol, ul {
+            padding-left: 30px;
+            margin: 10px 0;
+        }
+        ul {
+            list-style-type: disc;
         }
     }
 
