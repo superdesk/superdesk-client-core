@@ -1,3 +1,5 @@
+var angular = require('angular');
+
 /**
  * @ngdoc provider
  * @name apiProvider
@@ -40,6 +42,8 @@ function APIProvider() {
 
     apiServiceFactory.$inject = ['$injector', '$q', '$http', 'urls', 'lodash', 'HttpEndpointFactory'];
     function apiServiceFactory($injector, $q, $http, urls, _, HttpEndpointFactory) {
+        const CACHE_TTL = 100;
+
         var endpoints = {
             http: HttpEndpointFactory
         };
@@ -52,13 +56,41 @@ function APIProvider() {
             return response.status >= 200 && response.status < 300 && !isErrData(response.data);
         }
 
+        var cache = {};
+
         /**
          * Call $http once url is resolved
+         *
+         * Detect duplicate requests and serve these from cache.
          */
         function http(config) {
             return $q.when(config.url).then(function(url) {
                 config.url = url;
-                return $http(config);
+
+                if (config.method !== 'GET') {
+                    return $http(config);
+                }
+
+                let now = Date.now();
+                let key = config.url + angular.toJson(config.params || {});
+                let last = cache[key] || null;
+                if (last && now - last.now < CACHE_TTL) {
+                    console.warn('duplicate request',
+                        config.url,
+                        'after', now - last.now, 'ms',
+                        config.params
+                    );
+                    return last.promise;
+                }
+
+                let promise = $http(config);
+
+                cache[key] = {
+                    now: now,
+                    promise: promise
+                };
+
+                return promise;
             }).then(function(response) {
                 return isOK(response) ? response.data : $q.reject(response);
             });

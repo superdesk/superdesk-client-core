@@ -1803,7 +1803,7 @@ export function ItemList(
                 }
 
                 scope.$watch('items', function(items) {
-                    if (!items) {
+                    if (!items || !items._items) {
                         return;
                     }
 
