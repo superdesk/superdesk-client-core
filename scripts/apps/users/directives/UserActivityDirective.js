@@ -10,6 +10,7 @@ export function UserActivityDirective(profileService, asset) {
         link: function(scope, element, attrs) {
             var page = 1;
             var maxResults = 5;
+
             scope.max_results = maxResults;
 
             scope.$watch('user', function() {

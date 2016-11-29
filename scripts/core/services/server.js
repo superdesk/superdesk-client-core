@@ -14,6 +14,7 @@ export default angular.module('superdesk.core.services.server', [])
         return {
             _makeUrl: function() {
                 var url = config.server.url;
+
                 for (var i = 0; i < arguments.length; i++) {
                     url += '/' + arguments[i];
                 }
@@ -31,6 +32,7 @@ export default angular.module('superdesk.core.services.server', [])
             _cleanData: function(item) {
                 var data = _.cloneDeep(item);
                 var fields = ['_id', '_links', 'etag', 'updated', 'created'];
+
                 _.forEach(fields, function(field) {
                     delete data[field];
                 });
@@ -47,6 +49,7 @@ export default angular.module('superdesk.core.services.server', [])
                 }
 
                 var promises = [];
+
                 _.forEach(items, function(item) {
                     if (resource !== undefined) {
                         promises.push(self[functionName](resource, item));
@@ -88,6 +91,7 @@ export default angular.module('superdesk.core.services.server', [])
                         delay.resolve(responseData);
                     } else if (method === 'PATCH') {
                         var fields = ['_id', '_links', 'etag', 'updated'];
+
                         _.forEach(fields, function(field) {
                             data[field] = responseData[field];
                         });
@@ -221,6 +225,7 @@ export default angular.module('superdesk.core.services.server', [])
 
                 if (params.search) {
                     var search = {};
+
                     search[params.searchField] = params.search;
                     angular.extend(serverParams.where, search);
                 }

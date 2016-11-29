@@ -18,6 +18,7 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
         }
 
         var params = {};
+
         params.q = $scope.query;
         params.ignoreKilled = true;
         params.ignoreDigital = true;
@@ -33,6 +34,7 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
         }
 
         var criteria = query.getCriteria(true);
+
         criteria.repo = 'archive,published';
 
         api.query('search', criteria)
@@ -87,6 +89,7 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
 
     function getPackageItems() {
         var items = [];
+
         if ($scope.item.groups) {
             _.each($scope.item.groups, function(group) {
                 if (group.id !== 'root') {

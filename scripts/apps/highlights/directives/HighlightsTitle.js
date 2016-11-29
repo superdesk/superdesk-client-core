@@ -19,6 +19,7 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
 
             scope.$on('item:highlight', function($event, data) {
                 var highlights = scope.item.highlights || [];
+
                 if (scope.item._id === data.item_id) {
                     scope.$apply(function() {
                         if (data.marked) {

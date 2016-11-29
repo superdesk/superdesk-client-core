@@ -95,6 +95,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
         var mistakes = spellingErrors > 1 ? 'mistakes' : 'mistake';
         var confirmMessage = 'You have {{ spellingErrors }} spelling {{ mistakes }}. ' +
             'Are you sure you want to continue?';
+
         return modal.confirm($interpolate(gettextCatalog.getString(confirmMessage))({
             message: spellingErrors, mistakes: mistakes}));
     };
@@ -109,6 +110,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
         api.find('users', userId).then(function(user) {
             var itemHeading = headline ? 'Item <b>' + headline + '</b>' : 'This item';
             var msg = gettext(itemHeading + ' was unlocked by <b>' + $filter('username')(user) + '</b>.');
+
             return modal.confirm(msg, gettextCatalog.getString('Item Unlocked'), gettextCatalog.getString('OK'), false);
         });
     };
@@ -121,6 +123,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
     this.lock = function lock(userId) {
         api.find('users', userId).then(function(user) {
             var msg = gettextCatalog.getString('This item was locked by <b>' + $filter('username')(user) + '</b>.');
+
             return modal.confirm(msg, gettextCatalog.getString('Item locked'), gettext('OK'), false);
         });
     };

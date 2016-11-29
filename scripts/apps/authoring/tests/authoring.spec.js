@@ -66,6 +66,7 @@ describe('authoring', function() {
     it('does lock item only once',
     inject(function(superdesk, api, lock, autosave, session, $injector, $q, $rootScope) {
         var lockedItem = ITEM;
+
         lockedItem.lock_user = USER;
         lockedItem.lock_session = session.sessionId;
 
@@ -83,6 +84,7 @@ describe('authoring', function() {
 
         var lockedItem = {guid: GUID, _id: GUID, _locked: true, lock_user: 'user:5', task: 'desk:1'};
         var $scope = startAuthoring(lockedItem, 'edit');
+
         $rootScope.$digest();
 
         $scope.unlock();
@@ -119,6 +121,7 @@ describe('authoring', function() {
 
     it('can use a previously created autosave', inject(function() {
         var $scope = startAuthoring({_autosave: {headline: 'test'}}, 'edit');
+
         expect($scope.item._autosave.headline).toBe('test');
         expect($scope.item.headline).toBe('test');
     }));
@@ -158,6 +161,7 @@ describe('authoring', function() {
     it('can populate content metadata for undo', inject(function($rootScope) {
         var orig = {headline: 'foo'};
         var scope = startAuthoring(orig, 'edit');
+
         expect(scope.origItem.headline).toBe('foo');
         expect(scope.item.headline).toBe('foo');
         expect(scope.item.slugline).toBe('');
@@ -211,6 +215,7 @@ describe('authoring', function() {
 
         it('can close a read-only item', inject(function(authoring, confirm, lock, $rootScope) {
             var done = jasmine.createSpy('done');
+
             authoring.close({}).then(done);
             $rootScope.$digest();
 
@@ -231,6 +236,7 @@ describe('authoring', function() {
         it('confirms if an item is dirty and saves',
         inject(function(authoring, confirm, lock, $q, $rootScope) {
             var edit = Object.create(ITEM);
+
             edit.headline = 'test';
 
             authoring.close(edit, ITEM, true);
@@ -250,6 +256,7 @@ describe('authoring', function() {
         it('confirms if an item is dirty on opening new or existing item and not unlocking on save',
         inject(function(authoring, confirm, lock, $q, $rootScope) {
             var edit = Object.create(ITEM);
+
             edit.headline = 'test';
 
             authoring.close(edit, ITEM, true, true);
@@ -268,6 +275,7 @@ describe('authoring', function() {
 
         it('can unlock an item', inject(function(authoring, session, confirm, autosave) {
             var item = {lock_user: session.identity._id, lock_session: session.sessionId};
+
             expect(authoring.isEditable(item)).toBe(true);
             spyOn(confirm, 'unlock');
             spyOn(autosave, 'stop');
@@ -278,6 +286,7 @@ describe('authoring', function() {
         }));
         it('can publish items', inject(function(authoring, api, $q) {
             var item = {_id: 1, state: 'submitted'};
+
             spyOn(api, 'update').and.returnValue($q.when());
             authoring.publish(item);
             expect(api.update).toHaveBeenCalledWith('archive_publish', item, {});
@@ -286,6 +295,7 @@ describe('authoring', function() {
         it('confirms if an item is dirty and saves and publish',
         inject(function(authoring, api, confirm, lock, $q, $rootScope) {
             var edit = Object.create(ITEM);
+
             _.extend(edit, {
                 _id: 1,
                 headline: 'test',
@@ -311,6 +321,7 @@ describe('authoring', function() {
         it('confirms if an item is dirty and save work in personal',
         inject(function(authoring, api, confirm, lock, $q, $rootScope) {
             var edit = Object.create(ITEM);
+
             _.extend(edit, {
                 task: {desk: null, stage: null, user: 1},
                 type: 'text',
@@ -333,8 +344,10 @@ describe('authoring', function() {
         it('close the published dirty item without confirmation',
         inject(function(authoring, api, confirm, lock, autosave, $q, $rootScope) {
             var publishedItem = Object.create(ITEM);
+
             publishedItem.state = 'published';
             var edit = Object.create(publishedItem);
+
             edit.headline = 'test';
             spyOn(authoring, 'isEditable').and.returnValue(true);
             spyOn(autosave, 'drop').and.returnValue($q.when({}));
@@ -348,8 +361,10 @@ describe('authoring', function() {
         it('close the corrected dirty item without confirmation',
         inject(function(authoring, api, confirm, lock, autosave, $q, $rootScope) {
             var publishedItem = Object.create(ITEM);
+
             publishedItem.state = 'corrected';
             var edit = Object.create(publishedItem);
+
             edit.headline = 'test';
             spyOn(authoring, 'isEditable').and.returnValue(true);
             spyOn(autosave, 'drop').and.returnValue($q.when({}));
@@ -362,6 +377,7 @@ describe('authoring', function() {
 
         it('can validate schedule', inject(function(authoring) {
             var errors = authoring.validateSchedule('2010-10-10', '08:10:10', '2010-10-10T08:10:10', 'Europe/Prague');
+
             expect(errors).toBeTruthy();
             expect(errors.future).toBeTruthy();
 
@@ -375,6 +391,7 @@ describe('authoring', function() {
                 .subtract(1, 'hours')
                 .format()
                 .replace('+00:00', '+0000');
+
             expect(authoring.validateSchedule(
                 timestamp.slice(0, 10),
                 timestamp.slice(11, 19),
@@ -387,6 +404,7 @@ describe('authoring', function() {
         inject(function(authoring, $rootScope, $httpBackend, api, $q, urls) {
             var item = {headline: 'foo'};
             var orig = {_links: {self: {href: 'archive/foo'}}};
+
             spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
             $httpBackend.expectPATCH(orig._links.self.href, item)
                 .respond(200, {_etag: 'new', _current_version: 2});
@@ -482,6 +500,7 @@ describe('autosave', function() {
     it('can create an autosave', inject(function(autosave, api, $q, $timeout, $rootScope) {
         var orig = {_id: 1, _etag: 'x', _locked: true, _editable: true};
         var item = Object.create(orig);
+
         item.headline = 'test';
         spyOn(api, 'save').and.returnValue($q.when({_id: 2}));
         autosave.save(item, orig);
@@ -497,6 +516,7 @@ describe('autosave', function() {
     it('can save multiple items', inject(function(autosave, api, $q, $timeout, $rootScope) {
         var item1 = {_id: 1, _etag: '1', _locked: true, _editable: true},
             item2 = {_id: 2, _etag: '2', _locked: true, _editable: true};
+
         spyOn(api, 'save').and.returnValue($q.when({}));
 
         autosave.save(_.create(item1), item1);
@@ -566,6 +586,7 @@ describe('lock service', function() {
         expect(lock.can_unlock({lock_user: user._id, state: 'draft'})).toBe(true);
         expect(lock.can_unlock({lock_user: user._id, state: 'draft', lock_session: 'another_session'})).toBe(true);
         var item = {lock_user: anotherUser._id, state: 'draft', lock_session: 'another_session'};
+
         expect(lock.can_unlock(item)).toBe(false);
     }));
 });
@@ -619,6 +640,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['save', 'edit', 'copy', 'spike', 'multi_edit']);
         }));
 
@@ -648,6 +670,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
         }));
@@ -678,6 +701,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
         }));
@@ -708,6 +732,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
                 'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
         }));
@@ -738,6 +763,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item', 'package_item', 'multi_edit', 'add_to_current']);
         }));
@@ -768,6 +794,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['view', 're_write', 'new_take']);
         }));
 
@@ -795,6 +822,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['view']);
         }));
 
@@ -819,6 +847,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['view', 'package_item', 'multi_edit', 'add_to_current', 'resend']);
         }));
 
@@ -846,6 +875,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['view', 'unspike']);
         }));
 
@@ -874,6 +904,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
                 'mark_item', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
 
@@ -924,6 +955,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item', 'package_item', 'multi_edit', 'publish', 'add_to_current']);
 
@@ -995,6 +1027,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
                 'mark_item', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
                 'create_broadcast', 'resend']);
@@ -1039,6 +1072,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
                 'mark_item', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
                 'create_broadcast', 'resend']);
@@ -1087,6 +1121,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['new_take', 'duplicate', 'view', 'add_to_current',
                 'mark_item', 'package_item', 'multi_edit', 're_write', 'resend']);
         }));
@@ -1129,6 +1164,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['view']);
         }));
 
@@ -1170,6 +1206,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['view', 'duplicate', 'deschedule']);
         }));
 
@@ -1212,6 +1249,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['correct', 'kill', 'new_take', 're_write', 'add_to_current',
                 'mark_item', 'duplicate', 'view', 'package_item', 'multi_edit', 'resend']);
         }));
@@ -1246,6 +1284,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 'mark_item', 'package_item', 'multi_edit', 'publish']);
         }));
@@ -1280,6 +1319,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 'mark_item', 'package_item', 'multi_edit', 'publish']);
         }));
@@ -1314,6 +1354,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 're_write', 'mark_item', 'package_item', 'multi_edit', 'publish']);
         }));
@@ -1348,6 +1389,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['new_take', 'save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 're_write', 'mark_item', 'package_item', 'multi_edit', 'publish', 'send']);
         }));
@@ -1383,6 +1425,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 'mark_item', 'multi_edit', 'publish', 'send']);
         }));
@@ -1418,6 +1461,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 'mark_item', 'multi_edit', 'publish', 'send']);
         }));
@@ -1425,6 +1469,7 @@ describe('authoring actions', function() {
     it('Can do new take, rewrite and package item for scheduled item after passing publish schedule.',
         inject(function(privileges, desks, authoring, $q, $rootScope) {
             var pastTimestamp = new Date();
+
             pastTimestamp.setHours(pastTimestamp.getHours() - 1);
 
             var item = {
@@ -1456,6 +1501,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['correct', 'kill', 'duplicate', 'add_to_current', 'new_take', 're_write',
                 'view', 'package_item', 'mark_item', 'multi_edit', 'resend']);
         }));
@@ -1501,6 +1547,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item', 'multi_edit',
                 'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
         }));
@@ -1546,6 +1593,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['duplicate', 'new_take', 're_write', 'mark_item', 'multi_edit',
                 'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend']);
         }));
@@ -1597,6 +1645,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['duplicate', 'mark_item', 'multi_edit',
                 'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
         }));
@@ -1639,6 +1688,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['view', 'add_to_current']);
         }));
 
@@ -1676,6 +1726,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['view']);
         }));
 
@@ -1726,6 +1777,7 @@ describe('authoring actions', function() {
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
+
             allowedActions(itemActions, ['duplicate', 'mark_item', 'multi_edit', 'create_broadcast',
                 'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend']);
         }));
@@ -1798,6 +1850,7 @@ describe('authoring workspace', function() {
         expect(authoring.open).toHaveBeenCalledWith(item._id, true, null);
 
         var archived = {_id: 'bar'};
+
         spyOn(send, 'one').and.returnValue($q.when(archived));
         item._type = 'ingest';
         authoringWorkspace.open(item);
@@ -1813,6 +1866,7 @@ describe('authoring workspace', function() {
             $rootScope.$digest();
 
             var authoringWorkspace = $injector.get('authoringWorkspace');
+
             $rootScope.$digest();
 
             expect(authoringWorkspace.item).toBe(lockedItem);
@@ -1824,6 +1878,7 @@ describe('authoring workspace', function() {
             $location.search('action', 'view');
             $rootScope.$digest();
             var authoringWorkspace = $injector.get('authoringWorkspace');
+
             $rootScope.$digest();
             expect(authoringWorkspace.item).toBe(lockedItem);
             expect(authoringWorkspace.action).toBe('view');
@@ -1916,8 +1971,10 @@ describe('authoring container directive', function() {
 
                     var elemEmbed = $compile('<div sd-authoring-embedded data-item="authoring.item"' +
                 ' data-action="authoring.action"></div>')(iscope);
+
                     iscope.$digest();
                     var iscopeEmbed = elemEmbed.isolateScope();
+
                     expect(iscopeEmbed.action).toBe('kill');
                     expect(api.save)
                         .toHaveBeenCalledWith('content_templates_apply', {}, {
@@ -1961,6 +2018,7 @@ describe('authoring themes', function() {
 
     it('can get normal theme', inject(function(authThemes, $rootScope) {
         var theme = null;
+
         authThemes.get('theme').then(function(_theme) {
             theme = _theme;
         });
@@ -1970,6 +2028,7 @@ describe('authoring themes', function() {
 
     it('can get proofread theme', inject(function(authThemes, $rootScope) {
         var proofreadTheme = null;
+
         authThemes.get('proofreadTheme').then(function(_theme) {
             proofreadTheme = _theme;
         });
@@ -1997,6 +2056,7 @@ describe('send item directive', function() {
     it('can hide embargo and publish schedule if take items more than one',
         inject(function($compile, $rootScope, privileges) {
             var scope, elem, iscope;
+
             scope = $rootScope.$new();
             scope.item = {
                 _id: 'foo',
@@ -2024,6 +2084,7 @@ describe('send item directive', function() {
     it('can show embargo and publish schedule if only one take item',
         inject(function($compile, $rootScope, privileges) {
             var scope, elem, iscope;
+
             scope = $rootScope.$new();
             scope.item = {
                 _id: 'foo',
@@ -2051,6 +2112,7 @@ describe('send item directive', function() {
     it('can hide embargo if user does not have the privilege',
         inject(function($compile, $rootScope, privileges) {
             var scope, elem, iscope;
+
             scope = $rootScope.$new();
             scope.item = {
                 _id: 'foo',
@@ -2078,6 +2140,7 @@ describe('send item directive', function() {
     it('can show embargo and publish schedule if not a take item',
         inject(function($compile, $rootScope, privileges) {
             var scope, elem, iscope;
+
             scope = $rootScope.$new();
             scope.item = {
                 _id: 'foo',
@@ -2102,6 +2165,7 @@ describe('send item directive', function() {
     it('can show embargo date',
         inject(function($compile, $rootScope, privileges) {
             var scope, elem, iscope;
+
             scope = $rootScope.$new();
             scope.item = {
                 _id: 'foo',
@@ -2127,6 +2191,7 @@ describe('send item directive', function() {
     it('can show published schedule date',
         inject(function($compile, $rootScope) {
             var scope, elem, iscope;
+
             scope = $rootScope.$new();
             scope.item = {
                 _id: 'foo',
@@ -2146,6 +2211,7 @@ describe('send item directive', function() {
     it('can get last destination desk and stage',
         inject(function($compile, $rootScope, preferencesService, $q) {
             var scope, elem, iscope;
+
             scope = $rootScope.$new();
             scope.item = {
                 _id: '123456',
@@ -2153,6 +2219,7 @@ describe('send item directive', function() {
             };
 
             var destination = {desk: '123', stage: '456'};
+
             spyOn(preferencesService, 'get').and.returnValue($q.when(destination));
 
             scope.action = 'edit';
@@ -2180,6 +2247,7 @@ describe('send item directive', function() {
     it('can show send and publish button',
         inject(function($compile, $rootScope, config) {
             var scope, elem, iscope;
+
             scope = $rootScope.$new();
             scope.item = {
                 _id: 'foo',

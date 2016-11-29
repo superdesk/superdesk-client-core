@@ -89,6 +89,7 @@ export function DeskSelect(Keys, _, preferencesService) {
             function filterDesks() {
                 if (scope.allDesks) {
                     var filterRegexp = new RegExp('^' + scope.filter, 'i');
+
                     scope.desks = scope.allDesks.filter((desk) => !scope.filter || filterRegexp.test(desk.name));
 
                     // in case active item is filtered out keep focus
@@ -142,6 +143,7 @@ export function DeskSelect(Keys, _, preferencesService) {
                         if (scope.ctrl.active || scope.desks.length) {
                             scope.$apply(function() {
                                 var desk = scope.ctrl.active || scope.desks[0];
+
                                 scope.onChange({desk: desk});
                             });
                         } else {

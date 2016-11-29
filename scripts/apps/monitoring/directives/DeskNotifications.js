@@ -63,6 +63,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
              */
             scope.isRead = function(notification) {
                 var recipient = getRecipient(notification);
+
                 return recipient && recipient.read;
             };
 
@@ -74,6 +75,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
              */
             scope.readBy = function(notification) {
                 var recipient = getRecipient(notification);
+
                 if (recipient && recipient.read) {
                     return desks.userLookup[recipient.user_id].display_name;
                 }

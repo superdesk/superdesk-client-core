@@ -44,6 +44,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     if (!triggerLogin[0] && triggerLogin[1] === true) {
                         scope.active = true;
                         var focusElem = scope.username ? 'password' : 'username';
+
                         element.find('#login-' + focusElem).focus();
                     } else {
                         scope.active = false;

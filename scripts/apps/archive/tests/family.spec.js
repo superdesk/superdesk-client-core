@@ -49,6 +49,7 @@ describe('familyService', function() {
 
     it('can fetch members of a family', inject(function($rootScope, familyService, api) {
         var members = null;
+
         familyService.fetchItems('family1')
         .then(function(result) {
             members = result;
@@ -59,6 +60,7 @@ describe('familyService', function() {
 
     it('can fetch members of a family with exclusion', inject(function($rootScope, familyService, api) {
         var members = null;
+
         familyService.fetchItems('family1', {unique_id: 1, _id: 'z'})
         .then(function(result) {
             members = result;
@@ -69,6 +71,7 @@ describe('familyService', function() {
 
     it('can fetch desks of members of a family', inject(function($rootScope, familyService, api, desks) {
         var memberDesks = null;
+
         familyService.fetchDesks({_id: 'z', family_id: 'family1'})
         .then(function(result) {
             memberDesks = result;
@@ -80,6 +83,7 @@ describe('familyService', function() {
     it('can determine weather a user is member of fetched desk',
     inject(function($rootScope, familyService, api, desks) {
         var memberDesks = null;
+
         familyService.fetchDesks({_id: 'z', family_id: 'family1', task: {desk: 'desk1'}})
         .then(function(result) {
             memberDesks = result;
@@ -92,6 +96,7 @@ describe('familyService', function() {
     it('can fetch desks of members of a family with exclusion',
     inject(function($rootScope, familyService, api, desks) {
         var memberDesks = null;
+
         familyService.fetchDesks({unique_id: 1, _id: 'z', family_id: 'family1'}, true)
         .then(function(result) {
             memberDesks = result;

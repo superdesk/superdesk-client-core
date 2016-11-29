@@ -12,6 +12,7 @@ export function ItemPriority(metadata, gettext) {
             scope.$watch('priority', function(priority) {
                 if (priority) {
                     var spec = metadata.priorityByValue(priority);
+
                     if (spec) {
                         scope.color = spec.color;
                         scope.short = spec.short || priority;

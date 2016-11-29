@@ -11,6 +11,7 @@ export function TaskStatusItemsDirective(search, api, desks) {
             scope.users = desks.userLookup;
 
             var query = search.query({});
+
             query.filter({and: [
                 {term: {'task.status': scope.status}},
                 {term: {'task.desk': scope.desk}}

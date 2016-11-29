@@ -17,6 +17,7 @@ export function MultiMarkHighlightsDropdown(desks, highlightsService, multi) {
                 var result = _.find(multi.getItems(), function(item) {
                     return !item.highlights || item.highlights.indexOf(highlight._id) === -1;
                 });
+
                 return !result;
             };
 

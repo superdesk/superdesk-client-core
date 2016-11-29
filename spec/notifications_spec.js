@@ -30,6 +30,7 @@ describe('notifications', function() {
 
         logout();
         var modal = new Login();
+
         modal.login('admin1', 'admin');
 
         expect(element(by.id('unread-count')).getText()).toBe('3');

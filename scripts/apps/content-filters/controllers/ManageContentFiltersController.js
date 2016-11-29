@@ -138,12 +138,14 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
     var parseContentFilter = function(contentFilter) {
         var previews = [];
+
         _.each(contentFilter, function(filterRow) {
             var statementPreviews = [];
 
             if ('pf' in filterRow.expression) {
                 _.each(filterRow.expression.pf, function(filterId) {
                     var f = $scope.contentFiltersLookup[filterId];
+
                     statementPreviews.push(parseContentFilter(f.content_filter));
                 });
             }
@@ -151,6 +153,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
             if ('fc' in filterRow.expression) {
                 _.each(filterRow.expression.fc, function(filterId) {
                     var f = $scope.filterConditionLookup[filterId];
+
                     statementPreviews.push('(' + f.field + ' ' + f.operator + ' "' + f.value + '")');
                 });
             }

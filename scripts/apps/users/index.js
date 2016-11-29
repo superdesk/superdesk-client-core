@@ -62,8 +62,10 @@ export default angular.module('superdesk.apps.users', [
             // directive factory creates a link function
             return function(scope, element, attrs) {
                 var value = scope.$eval(attrs.compile);
+
                 element.html(value);
                 var nscope = scope.$new(true);
+
                 _.each(scope.$eval(attrs.data), function(value, key) {
                     nscope[key] = value;
                 });

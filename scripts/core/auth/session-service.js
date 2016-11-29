@@ -45,6 +45,7 @@ angular.module('superdesk.core.auth.session').service('session', [
      */
         this.updateIdentity = function(updates) {
             var identity = this.identity || {};
+
             _.extend(identity, updates);
             this.identity = _.omit(identity, IDENTITY_BLACKLIST);
             storage.setItem(IDENTITY_KEY, this.identity);

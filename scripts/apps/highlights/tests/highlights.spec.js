@@ -25,6 +25,7 @@ describe('highlights', function() {
 
         it('can set highlights', inject(function(desks, highlightsService, $q, $rootScope) {
             var active = desks.active;
+
             expect(active.desk).toEqual('123');
             $rootScope.$digest();
             expect(highlightsService.get).toHaveBeenCalledWith(active.desk);
@@ -36,11 +37,13 @@ describe('highlights', function() {
         inject(function($compile, $rootScope, $q, api, authoringWorkspace, authoring) {
             var scope = $rootScope.$new();
             var elem = $compile('<div sd-create-highlights-button highlight="\'foo\'"></div>')(scope);
+
             scope.$digest();
             var iscope = elem.isolateScope();
 
             var highlight = {_id: 'foo_highlight', name: 'Foo', task: {desk: '123'}};
             var pkg = {_id: 'foo_package'};
+
             spyOn(api, 'find').and.returnValue($q.when(highlight));
             spyOn(api, 'save').and.returnValue($q.when(pkg));
             spyOn(authoring, 'open').and.returnValue($q.when(pkg));
@@ -69,6 +72,7 @@ describe('highlights', function() {
                 groups: ['main'],
                 name: 'Today highlight'
             };
+
             highlightsService.saveConfig(config, configEdit);
             expect(api.highlights.save).toHaveBeenCalledWith(config, configEdit);
         }));
@@ -82,6 +86,7 @@ describe('highlights', function() {
                 groups: ['main'],
                 name: 'Today highlight'
             };
+
             highlightsService.removeConfig(config);
             expect(api.highlights.remove).toHaveBeenCalledWith(config);
         }));
@@ -93,6 +98,7 @@ describe('highlights', function() {
                 groups: ['main'],
                 name: 'Hourly highlight'
             };
+
             expect(highlightsService.isInDateRange(post, 0)).toEqual(true);
             expect(highlightsService.isInDateRange(post, 0.5)).toEqual(true);
             expect(highlightsService.isInDateRange(post, 2)).toEqual(false);

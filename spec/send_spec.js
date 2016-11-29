@@ -10,6 +10,7 @@ var workspace = require('./helpers/workspace'),
 describe('send', function() {
     function getItemState(index) {
         var label = content.getItem(index).element(by.css('.state-label'));
+
         return label.getText();
     }
 
@@ -164,6 +165,7 @@ describe('send', function() {
         expect(dropdownSelected.getText()).toEqual('Sports Desk'); // desk remembered
 
         var btnStage = element(by.buttonText('Working Stage'));
+
         expect(btnStage.getAttribute('class')).toContain('active'); // stage remembered
     });
 });

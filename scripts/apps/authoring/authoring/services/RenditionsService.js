@@ -1,9 +1,11 @@
 RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash'];
 export function RenditionsService(metadata, $q, api, superdesk, _) {
     var self = this;
+
     this.ingest = function(item) {
         var performRenditions = $q.when(item);
         // ingest picture if it comes from an external source (create renditions)
+
         if (item._type && item._type === 'externalsource') {
             performRenditions = superdesk.intent('list', 'externalsource', {item: item}).then(function(item) {
                 return api.find('archive', item._id);
@@ -19,11 +21,13 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
     };
     this.crop = function(picture) {
         var poi = {x: 0.5, y: 0.5};
+
         return self.get().then(function(renditions) {
             // we want to crop only renditions that change the ratio
             let withRatio = _.filter(renditions, function(rendition) {
                 return angular.isDefined(rendition.ratio);
             });
+
             return superdesk.intent('edit', 'crop', {
                 item: picture,
                 renditions: withRatio,
@@ -35,6 +39,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
             .then(function(result) {
                 var renditionNames = [];
                 var savingImagePromises = [];
+
                 angular.forEach(result.cropData, function(croppingData, renditionName) {
                     // if croppingData are defined
                     if (angular.isDefined(croppingData.CropLeft) && !isNaN(croppingData.CropLeft)) {
@@ -54,6 +59,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                     croppedImages.forEach(function(image, index) {
                         var url = image.href;
                         // update association
+
                         picture.poi = result.poi;
                         // update association renditions
                         picture.renditions[renditionNames[index]] = angular.extend(

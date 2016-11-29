@@ -54,6 +54,7 @@ function FindReplaceDirective($timeout, $rootScope, editor, macros) {
                 var input = document.getElementById('find-replace-what');
                 var selectionStart = input.selectionStart;
                 var selectionEnd = input.selectionEnd;
+
                 editor.setSettings({findreplace: {diff: getDiff(), caseSensitive: scope.caseSensitive}});
                 editor.render();
                 editor.selectNext();
@@ -62,6 +63,7 @@ function FindReplaceDirective($timeout, $rootScope, editor, macros) {
 
             function getDiff() {
                 var diff = {};
+
                 diff[scope.from || ''] = scope.to || '';
                 return diff;
             }

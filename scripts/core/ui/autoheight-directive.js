@@ -31,6 +31,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             // force text reflow
             var text = ta.value;
+
             ta.value = '';
             ta.value = text;
 

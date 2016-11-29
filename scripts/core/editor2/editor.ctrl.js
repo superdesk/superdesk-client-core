@@ -3,8 +3,10 @@ angular.module('superdesk.apps.editor2.ctrl', []).controller('SdTextEditorContro
 SdTextEditorController.$inject = ['lodash', 'EMBED_PROVIDERS', '$timeout', '$element', 'editor', 'config', '$q'];
 function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, config, $q) {
     var self = this;
+
     function Block(attrs = {}) {
         var self = this;
+
         angular.extend(self, _.defaults({
             body: attrs.body,
             loading: attrs.loading,
@@ -28,6 +30,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
     */
     function prepareBlocks(blocks) {
         var newBlocks = [];
+
         blocks.forEach(function(block, i) {
             // if not the first block and there is a text block following another one
             if (i > 0 && block.blockType === 'text' && blocks[i - 1].blockType === 'text') {
@@ -55,6 +58,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         /**
         * push the current block into the blocks collection if it is not empty
         */
+
         function commitBlock() {
             if (block !== undefined && block.body.trim() !== '') {
                 blocks.push(block);
@@ -81,6 +85,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     var embedType;
                     var embedTypeRegex = /EMBED START ([\w-]+)/;
                     var match;
+
                     if ((match = embedTypeRegex.exec(angular.copy(element.nodeValue).trim())) !== null) {
                         embedType = match[1];
                     } else {
@@ -89,6 +94,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     // retrieve the association reference
                     var association;
                     var embedAssoKey = /{id: "(embedded\d+)"}/;
+
                     if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null
                         && self.associations) {
                         association = angular.copy(self.associations[match[1]]);
@@ -125,6 +131,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 } else {
                     // extract body and caption from embed block html
                     var originalBody = angular.element(angular.copy(block.body));
+
                     if (originalBody.get(0).nodeName === 'FIGURE') {
                         block.body = '';
                         originalBody.contents()
@@ -159,6 +166,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             // parse the given model and create blocks per paragraph and embed
             var content = model.$modelValue || '';
             // update the actual blocks value at the end to prevent more digest cycle as needed
+
             self.blocks = splitIntoBlock(content);
             self.renderBlocks();
         },
@@ -168,12 +176,14 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 return '';
             }
             var newBody = '';
+
             if (self.config.multiBlockEdition) {
                 blocks.forEach(function(block) {
                     if (angular.isDefined(block.body) && block.body.trim() !== '') {
                         if (block.blockType === 'embed') {
                             var blockName = block.embedType.trim();
                             // add an id to the image in order to retrieve it in `assocations` field
+
                             if (block.association) {
                                 blockName += ' {id: "embedded' + self.generateBlockId(block) + '"}';
                             }
@@ -202,6 +212,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         commitChanges: function() {
             var associations = angular.copy(self.associations);
             // initialize associations if doesn't exist
+
             if (typeof associations !== 'object') {
                 associations = {};
             }
@@ -219,6 +230,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
 
             // save model with latest state of blocks
             var serialized = self.serializeBlock();
+
             if (serialized !== self.model.$viewValue) {
                 self.model.$setViewValue(self.serializeBlock());
             }
@@ -228,6 +240,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         */
         getAssociations: function() {
             var association = {};
+
             self.blocks.forEach(function(block) {
                 // we keep the association only for Superdesk images
                 if (block.association) {
@@ -243,11 +256,13 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         splitAndInsert: function(textBlockCtrl, blocksToInsert) {
             // index where to add the new block
             var index = self.getBlockPosition(textBlockCtrl.block) + 1;
+
             if (index === 0) {
                 throw 'Block to split not found';
             }
             // cut the text that is after the caret in the block and save it in order to add it after the embed later
             var after = textBlockCtrl.extractEndOfBlock().innerHTML;
+
             return $q.when((function() {
                 if (after) {
                     // save the blocks (with removed leading text)
@@ -268,9 +283,11 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                     }
                     var waitFor = $q.when();
                     var createdBlocks = [];
+
                     arrayBlocks.forEach(function(bti) {
                         waitFor = waitFor.then(function() {
                             var newBlock = self.insertNewBlock(index, bti);
+
                             createdBlocks.push(newBlock);
                             return newBlock;
                         });
@@ -295,6 +312,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         */
         insertNewBlock: function(position, attrs, doNotRenderBlocks) {
             var newBlock = new Block(attrs);
+
             return $q(function(resolve) {
                 $timeout(function() {
                     self.blocks.splice(position, 0, newBlock);
@@ -321,6 +339,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         removeBlock: function(block) {
             // remove block only if it's not the only one
             var blockPosition = self.getBlockPosition(block);
+
             if (self.blocks.length > 1) {
                 self.blocks.splice(blockPosition, 1);
             } else {
@@ -337,6 +356,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         },
         getCutBlock: function(remove) {
             var block = self.clipboard;
+
             if (remove) {
                 self.clipboard = undefined;
             }
@@ -349,6 +369,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
         generateBlockId: function(block) {
             function hashCode(string) {
                 var hash = 0, i, chr, len;
+
                 if (string.length === 0) {
                     return hash;
                 }

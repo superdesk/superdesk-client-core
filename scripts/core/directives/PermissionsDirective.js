@@ -39,6 +39,7 @@ export default angular.module('superdesk.core.directives.permissions', [])
                 scope.model = false;
                 if (permissions[scope.permission]) {
                     var requiredPermissions = permissions[scope.permission].permissions;
+
                     if (scope.role) {
                         scope.model = permissionsService.isRoleAllowed(requiredPermissions, scope.role);
                     } else if (scope.user) {

@@ -11,6 +11,7 @@ describe('Embed Code Handlers', function() {
 
     beforeEach(inject(function($controller, $rootScope) {
         var element = angular.element('<div></div>');
+
         scope = $rootScope.$new();
         ctrl = $controller('SdAddEmbedController', {$scope: scope, $element: element});
     }));
@@ -73,6 +74,7 @@ describe('Embed Code Handlers', function() {
             '?bcid=538612f0e4b00fbb8e898655&w=640&h=360',
             width: 640
         };
+
         $httpBackend
             .expectGET(config.server.url + '/vidible/bcid/538612f0e4b00fbb8e898655/pid/56bb474de4b0568f54a23ed7')
             .respond(apiResponse);

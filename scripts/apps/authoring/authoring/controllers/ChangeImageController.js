@@ -11,12 +11,14 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         var original = $scope.data.item.renditions.original;
         // only extend the item renditions if the original image can fit the rendition dimensions
         // otherwise we will get an error saving
+
         if (original.height >= rendition.height && original.width >= rendition.width) {
             sizes[rendition.name] = {width: rendition.width, height: rendition.height};
             $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
         }
     });
     var poiOrig = angular.extend({}, $scope.data.poi);
+
     $scope.data.isDirty = false;
     $scope.isNew = $scope.data.isNew === true;
     // should show the metadata form in the view
@@ -45,6 +47,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         function poiIsInsideEachCrop() {
             var originalImage = $scope.data.metadata.renditions.original;
             var originalPoi = {x: originalImage.width * $scope.data.poi.x, y: originalImage.height * $scope.data.poi.y};
+
             _.forEach($scope.data.cropData, function(cropData, cropName) {
                 if (originalPoi.y < cropData.CropTop ||
                     originalPoi.y > cropData.CropBottom ||
@@ -59,6 +62,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
             _.each($scope.data.requiredFields, function(key) {
                 var value = $scope.data.metadata[key];
                 var regex = new RegExp('^\<*br\/*\>*$', 'i');
+
                 if (!value || value.match(regex)) {
                     throw gettext('Required field(s) missing');
                 }
@@ -87,6 +91,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         var meta = _.pick($scope.data.item, [
             'title', 'description', 'alt_text', 'credit', 'copyrightnotice', 'copyrightholder'
         ]);
+
         api.archive.update(item, meta).then(function() {
             notify.success(gettext('Crop changes have been recorded'));
         });

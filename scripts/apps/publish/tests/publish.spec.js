@@ -203,6 +203,7 @@ describe('publish queue', function() {
 
     it('sets the selected filter subscriber', inject(function() {
         var subscriberValue = {foo: 'bar'};
+
         $scope.selectedFilterSubscriber = null;
         $scope.filterPublishQueue(subscriberValue, 'subscriber');
         expect($scope.selectedFilterSubscriber).toEqual(subscriberValue);
@@ -210,6 +211,7 @@ describe('publish queue', function() {
 
     it('sets the selected filter ingest provider', inject(function() {
         var value = {foo: 'bar'};
+
         $scope.selectedFilterIngestProvider = null;
         $scope.filterPublishQueue(value, 'ingest_provider');
         expect($scope.selectedFilterIngestProvider).toEqual(value);
@@ -217,6 +219,7 @@ describe('publish queue', function() {
 
     it('sets the selected filter status', inject(function() {
         var statusValue = 'success';
+
         $scope.selectedFilterStatus = null;
         $scope.filterPublishQueue(statusValue, 'status');
         expect($scope.selectedFilterStatus).toEqual(statusValue);
@@ -232,6 +235,7 @@ describe('publish queue', function() {
         $scope.search('dugan stars');
         $scope.$digest();
         var reQuery = new RegExp($scope.searchQuery, 'i');
+
         expect($scope.publish_queue[0].headline).toMatch(reQuery);
     }));
 
@@ -257,6 +261,7 @@ describe('publish queue', function() {
         $scope.page = 2;
 
         var pagedPublishQueue = {_items: [publishQueue._items[1]], _meta: {total: 3}};
+
         api.publish_queue.query = jasmine.createSpy().and.returnValue($q.when(pagedPublishQueue));
 
         $scope.reload = jasmine.createSpy('reload');

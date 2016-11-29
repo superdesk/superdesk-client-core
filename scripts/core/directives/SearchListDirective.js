@@ -45,6 +45,7 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
         var defaults = {
             pageSize: 25
         };
+
         return {
             scope: {
                 endpoint: '@',
@@ -73,8 +74,10 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
 
                 var _update = function() {
                     var criteria = scope.criteria || {};
+
                     if (scope.keyword && scope.searchKey) {
                         var search = {};
+
                         search[scope.searchKey] = {$regex: scope.keyword, $options: '-i'};
                         criteria.where = JSON.stringify({$or: [search]});
                     }
@@ -84,11 +87,13 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                     }))
                     .then(function(result) {
                         var pageSize = scope.pageSize || defaults.pageSize;
+
                         scope.maxPage = Math.ceil(result._meta.total / pageSize) || 0;
                         scope.items = result._items;
                     });
                 };
                 var update = _.debounce(_update, 500);
+
                 scope.$watch('keyword', function() {
                     scope.page = 1;
                     update();

@@ -160,6 +160,7 @@ describe('content', function() {
         browser.sleep(500);
 
         var storyNameEl = element(by.model('meta.unique_name'));
+
         expect(storyNameEl.isDisplayed()).toBe(true);
 
         storyNameEl.clear();
@@ -181,6 +182,7 @@ describe('content', function() {
         browser.sleep(500);
 
         var storyNameEl = element(by.model('meta.unique_name'));
+
         expect(storyNameEl.isDisplayed()).toBe(true);
 
         storyNameEl.clear();

@@ -95,8 +95,10 @@ describe('superdesk.apps.workspace.content', function() {
 
         it('can fetch content types', inject(function(api, content, $rootScope, $q) {
             var types = [{_id: 'foo'}];
+
             spyOn(api, 'query').and.returnValue($q.when({_items: types}));
             var success = jasmine.createSpy('ok');
+
             content.getTypes().then(success);
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalledWith('content_types', {where: {enabled: true}}, false);
@@ -108,6 +110,7 @@ describe('superdesk.apps.workspace.content', function() {
             spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo'}, {_id: 'bar'}]));
 
             var profiles;
+
             content.getDeskProfiles({content_profiles: {bar: 1}}).then(function(_profiles) {
                 profiles = _profiles;
             });
@@ -120,6 +123,7 @@ describe('superdesk.apps.workspace.content', function() {
         it('can generate content types lookup dict', inject(function(content, $q, $rootScope) {
             spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo', name: 'Foo'}, {_id: 'bar'}]));
             var lookup;
+
             content.getTypesLookup().then(function(_lookup) {
                 lookup = _lookup;
             });
@@ -130,8 +134,10 @@ describe('superdesk.apps.workspace.content', function() {
 
         it('can get content type', inject(function(api, content, $rootScope, $q) {
             var type = {_id: 'foo'};
+
             spyOn(api, 'find').and.returnValue($q.when(type));
             var success = jasmine.createSpy('ok');
+
             content.getType('foo').then(success);
             $rootScope.$digest();
             expect(api.find).toHaveBeenCalledWith('content_types', 'foo');
@@ -141,6 +147,7 @@ describe('superdesk.apps.workspace.content', function() {
         it('can create item using content type', inject(function(api, content, desks, session) {
             var type = {_id: 'test'};
             var success = jasmine.createSpy('ok');
+
             spyOn(desks, 'getCurrentDesk').and.returnValue({_id: 'sports', working_stage: 'inbox'});
             session.identity = {_id: 'foo'};
             content.createItemFromContentType(type).then(success);
@@ -154,11 +161,13 @@ describe('superdesk.apps.workspace.content', function() {
 
         it('can get schema for content type', inject(function(content) {
             var schema = content.schema();
+
             expect(schema.headline).toBeTruthy();
             expect(schema.slugline).toBeTruthy();
             expect(schema.body_html).toBeTruthy();
 
             var contentType = {schema: {foo: 1}};
+
             schema = content.schema(contentType);
             expect(schema.headline).toBeFalsy();
             expect(schema.foo).toBeTruthy();
@@ -167,9 +176,11 @@ describe('superdesk.apps.workspace.content', function() {
 
         it('can get editor config for content type', inject(function(content) {
             var editor = content.editor();
+
             expect(editor.slugline.order).toBe(1);
 
             var contentType = {editor: {foo: 2}};
+
             editor = content.editor(contentType);
             expect(editor.foo).toBe(2);
             expect(editor.slugline).toBeFalsy();
@@ -184,6 +195,7 @@ describe('superdesk.apps.workspace.content', function() {
             spyOn(content, 'getTypes').and.returnValue($q.when('list'));
             var scope = $rootScope.$new();
             var ctrl = $controller('ContentProfilesController', {$scope: scope});
+
             scope.$digest();
             expect(content.getTypes).toHaveBeenCalledWith(true);
             expect(ctrl.items).toBe('list');
@@ -197,6 +209,7 @@ describe('superdesk.apps.workspace.content', function() {
             var errorFn = spyOn(notify, 'error');
             var scope = $rootScope.$new();
             var ctrl = $controller('ContentProfilesController', {$scope: scope});
+
             ctrl.save();
             scope.$digest();
             expect(errorFn).toHaveBeenCalledWith(ctrl.duplicateErrorTxt);
@@ -210,6 +223,7 @@ describe('superdesk.apps.workspace.content', function() {
             var errorFn = spyOn(notify, 'error');
             var scope = $rootScope.$new();
             var ctrl = $controller('ContentProfilesController', {$scope: scope});
+
             ctrl.save();
             scope.$digest();
             expect(errorFn).not.toHaveBeenCalledWith(ctrl.duplicateErrorTxt);
@@ -224,6 +238,7 @@ describe('superdesk.apps.workspace.content', function() {
         beforeEach(inject(function(_$compile_, _$rootScope_) {
             compile = function(props) {
                 var scope = _$rootScope_.$new();
+
                 angular.extend(scope, props);
                 return _$compile_(
                     '<form><sd-content-schema-editor ng-model="model"></sd-content-schema-editor></form>'

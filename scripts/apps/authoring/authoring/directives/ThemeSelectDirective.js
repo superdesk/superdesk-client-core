@@ -10,12 +10,14 @@ export function ThemeSelectDirective(authThemes) {
             scope.large = {};
             authThemes.get('theme').then(function(theme) {
                 var selectedTheme = _.find(authThemes.availableThemes, {key: themeKey(theme)});
+
                 scope.theme = selectedTheme;
                 scope.large.theme = themeLarge(theme);
                 applyTheme('theme');
             });
             authThemes.get('proofreadTheme').then(function(theme) {
                 var selectedTheme = _.find(authThemes.availableThemes, {key: themeKey(theme)});
+
                 scope.proofreadTheme = selectedTheme;
                 scope.large.proofreadTheme = themeLarge(theme);
                 applyTheme('proofreadTheme');

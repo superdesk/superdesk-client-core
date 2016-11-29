@@ -28,6 +28,7 @@ describe('dictionaries', function() {
         spyOn(api, 'find').and.returnValue($q.when({}));
 
         var items;
+
         dictionaries.getActive(LANG).then(function(_items) {
             items = _items;
         });
@@ -53,6 +54,7 @@ describe('dictionaries', function() {
             spyOn(api, 'find').and.returnValue($q.when({}));
 
             var items;
+
             dictionaries.getActive('en-US', 'en').then(function(_items) {
                 items = _items;
             });
@@ -74,6 +76,7 @@ describe('dictionaries', function() {
 
     it('can get and update user dictionary', inject(function(api, dictionaries, $q, $rootScope) {
         var userDict = {};
+
         spyOn(api, 'query').and.returnValue($q.when({_items: [userDict]}));
         dictionaries.getUserDictionary(LANG);
         $rootScope.$digest();
@@ -85,6 +88,7 @@ describe('dictionaries', function() {
                 ]
             }
         };
+
         expect(api.query).toHaveBeenCalledWith('dictionaries', where);
     }));
 

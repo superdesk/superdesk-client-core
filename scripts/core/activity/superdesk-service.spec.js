@@ -96,11 +96,13 @@ describe('Superdesk service', function() {
 
     it('can check features required by activity', inject(function(superdesk, features) {
         var list = superdesk.findActivities({type: 'features', action: 'test'});
+
         expect(list.length).toBe(0);
     }));
 
     it('can filter activities based on privileges', inject(function(superdesk, privileges) {
         var list = superdesk.findActivities({type: 'privileges', action: 'test'});
+
         expect(list.length).toBe(0);
 
         privileges.setUserPrivileges({missing: 1});
@@ -113,6 +115,7 @@ describe('Superdesk service', function() {
         privileges.loaded = $q.when();
 
         var menu;
+
         superdesk.getMenu(superdesk.MENU_MAIN).then(function(_menu) {
             menu = _menu;
         });
@@ -123,6 +126,7 @@ describe('Superdesk service', function() {
 
     it('can get link for given activity', inject(function(activityService) {
         var routeActivity = {href: '/test/:_id'};
+
         expect(activityService.getLink(routeActivity, {})).toBe(null);
         expect(activityService.getLink(routeActivity, {_id: 1})).toBe('/test/1');
     }));

@@ -33,6 +33,7 @@ describe('superdesk.core.api.allowed', function() {
         };
 
         var filtered;
+
         allowed.filterKeys(all, 'resource', 'value').then(function(_filtered) {
             filtered = _filtered;
         });

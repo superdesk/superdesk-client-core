@@ -26,18 +26,21 @@ export function MediaView(keyboardManager, packages) {
                 scope.item = item;
                 scope.openItem(item);
                 var index = getIndex(scope.item);
+
                 scope.prevEnabled = index > -1 && !!scope.items[index - 1];
                 scope.nextEnabled = index > -1 && !!scope.items[index + 1];
             };
 
             scope.prev = function() {
                 var index = getIndex(scope.item);
+
                 if (index > 0) {
                     setItem(scope.items[index - 1]);
                 }
             };
             scope.next = function() {
                 var index = getIndex(scope.item);
+
                 if (index !== -1 && index < scope.items.length - 1) {
                     setItem(scope.items[index + 1]);
                 }

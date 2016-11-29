@@ -4,6 +4,7 @@ export function DataConsistencyController($scope, api) {
 
     function fetchConsistencyRecords() {
         var criteria = criteria || {};
+
         criteria.max_results = 200;
         return api.consistency.query(criteria);
     }

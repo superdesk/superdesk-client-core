@@ -163,6 +163,7 @@ function SuperdeskProvider($routeProvider, _) {
 
             function checkFeatures(activity) {
                 var isMatch = true;
+
                 angular.forEach(activity.features, function(val, key) {
                     isMatch = isMatch && features[key] && val;
                 });
@@ -211,6 +212,7 @@ function SuperdeskProvider($routeProvider, _) {
                  */
                 resolve: function(intent) {
                     var activities = this.findActivities(intent);
+
                     switch (activities.length) {
                     case 0:
                         return $q.reject();
@@ -232,6 +234,7 @@ function SuperdeskProvider($routeProvider, _) {
                  */
                 findActivities: function(intent, item) {
                     var criteria = {};
+
                     if (intent.action) {
                         criteria.action = intent.action;
                     }
@@ -331,6 +334,7 @@ function SuperdeskProvider($routeProvider, _) {
                 getMenu: function getMenu(category) {
                     return privileges.loaded.then(function() {
                         var menu = [];
+
                         angular.forEach(activities, function(activity) {
                             if (activity.category === category && isAllowed(activity) &&
                                 (activity.beta === false || $rootScope.beta)) {
@@ -387,6 +391,7 @@ angular.module('superdesk.core.activity', [
 .service('activityService', ['$location', '$injector', '$q', '$timeout', 'gettext', 'modal', 'lodash',
     function($location, $injector, $q, $timeout, gettext, modal, _) {
         var activityStack = [];
+
         this.activityStack = activityStack;
 
     /**
@@ -443,6 +448,7 @@ angular.module('superdesk.core.activity', [
         this.start = function startActivity(activity, locals) {
             function execute(activity, locals) {
                 var path = getPath(activity, locals && locals.data);
+
                 if (path) { // trigger route
                     $location.path(path);
                     return $q.when(locals);
@@ -450,6 +456,7 @@ angular.module('superdesk.core.activity', [
 
                 if (activity.modal) {
                     var defer = $q.defer();
+
                     activityStack.push({
                         defer: defer,
                         activity: activity,
@@ -483,6 +490,7 @@ angular.module('superdesk.core.activity', [
 
     $rootScope.link = function() {
         var path = superdesk.link.apply(superdesk, arguments);
+
         return path ? '#' + path : null;
     };
 }])
@@ -555,6 +563,7 @@ angular.module('superdesk.core.activity', [
     };
 
     var referrerURL;
+
     this.setReferrerUrl = function(refURL) {
         referrerURL = refURL;
     };
@@ -586,6 +595,7 @@ angular.module('superdesk.core.activity', [
      */
     function prepareUrl(refRoute) {
         var completeUrl;
+
         if (refRoute) {
             completeUrl = refRoute.$$route.href.replace('/:_id', '');
             if (!_.isEqual({}, refRoute.pathParams)) {
@@ -607,6 +617,7 @@ angular.module('superdesk.core.activity', [
     $rootScope.$on('$routeChangeStart', function() {
         if (activityService.activityStack.length) {
             var item = activityService.activityStack.pop();
+
             item.defer.reject();
         }
     });

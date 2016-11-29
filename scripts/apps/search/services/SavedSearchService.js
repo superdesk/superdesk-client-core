@@ -6,6 +6,7 @@ export function SavedSearchService(api, $filter, $q, $rootScope) {
             .then(function(result) {
                 let pg = page;
                 let merged = items.concat(result._items);
+
                 if (result._links.next) {
                     pg++;
                     return _getAll(endPoint, pg, merged, params);

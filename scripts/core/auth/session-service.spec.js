@@ -55,6 +55,7 @@ describe('session service', function() {
 
         var nextInjector = angular.injector(['superdesk.core.auth.session', 'superdesk.core.services.storage', 'ng']);
         var nextSession = nextInjector.get('session');
+
         nextInjector.get('$rootScope').$digest();
         $rootScope.$digest();
 
@@ -110,6 +111,7 @@ describe('session service', function() {
 
         var nextInjector = angular.injector(['superdesk.core.auth.session', 'superdesk.core.services.storage', 'ng']);
         var nextSession = nextInjector.get('session');
+
         nextInjector.get('$rootScope').$digest();
 
         $rootScope.$apply();
@@ -121,6 +123,7 @@ describe('session service', function() {
         $rootScope.$digest();
 
         var success = jasmine.createSpy('success');
+
         session.getIdentity().then(success);
 
         $rootScope.$digest();
@@ -135,6 +138,7 @@ describe('session service', function() {
         $rootScope.$digest();
 
         var success = jasmine.createSpy('success');
+
         session.getIdentity().then(success);
 
         $rootScope.$digest();

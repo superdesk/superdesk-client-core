@@ -17,6 +17,7 @@ describe('spike', function() {
         content.setListView();
 
         var personalCount;
+
         content.getItems().count().then(function(count) {
             personalCount = count;
         });

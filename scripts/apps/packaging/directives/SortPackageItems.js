@@ -11,6 +11,7 @@ export function SortPackageItems() {
                 placeholder: {
                     element: function(current) {
                         var height = current.height() - 40;
+
                         return $('<li class="placeholder" style="height:' + height + 'px"></li>')[0];
                     },
                     update: function() { /* no-op */ }
@@ -53,6 +54,7 @@ export function SortPackageItems() {
                                 .parent()
                                 .data('group')
                         };
+
                         ui.item.remove();
                         scope.reorder(start, end);
                         scope.$apply();

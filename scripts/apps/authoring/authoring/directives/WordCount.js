@@ -14,6 +14,7 @@ export function WordCount(gettextCatalog) {
             scope.numWords = 0;
             scope.$watch('item', function() {
                 var input = scope.item || '';
+
                 input = scope.html ? helpers.cleanHtml(input) : input;
                 scope.numWords = _.compact(input.split(/\s+/)).length || 0;
             });

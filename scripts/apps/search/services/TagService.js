@@ -17,6 +17,7 @@ import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
 TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search', 'ingestSources', 'gettextCatalog'];
 export function TagService($location, desks, userList, metadata, search, ingestSources, gettextCatalog) {
     var tags = {};
+
     tags.selectedFacets = {};
     tags.selectedParameters = [];
     tags.selectedKeywords = [];
@@ -47,6 +48,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
 
     function initSelectedParameters(params) {
         let parameters = params;
+
         tags.selectedParameters = [];
         while (parameters.indexOf(':') > 0 &&
                parameters.indexOf(':') < parameters.indexOf('(', parameters.indexOf(':')) &&
@@ -61,6 +63,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                     var value = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')),
                         codeList = metadata.values[cv.list],
                         name = _.result(_.find(codeList, {qcode: value}), 'name');
+
                     if (name) {
                         tags.selectedParameters.push(tag(cv.id + '.name:(' + name + ')'));
                         added = true;
@@ -71,6 +74,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             if (!added) {
                 var paramArr = parameter.split(':');
                 var parameterTranslated = gettextCatalog.getString(paramArr[0]) + ':' + paramArr[1];
+
                 tags.selectedParameters.push(tag(parameterTranslated, paramArr.join(':')));
             }
 
@@ -85,12 +89,15 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      */
     function initSelectedKeywords(kwds) {
         let keywords = kwds;
+
         tags.selectedKeywords = [];
         while (keywords.indexOf('(') >= 0 && keywords.indexOf(')') > 0) {
             var closeIndex = keywords.indexOf('(');
             var counter = 1;
+
             while (counter > 0 && closeIndex < keywords.length) {
                 var c = keywords[++closeIndex];
+
                 if (c === '(') {
                     counter++;
                 } else if (c === ')') {
@@ -98,6 +105,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 }
             }
             var keyword = keywords.substring(keywords.indexOf('('), closeIndex + 1);
+
             tags.selectedKeywords.push(keyword);
             keywords = keywords.replace(keyword, '');
         }
@@ -133,15 +141,19 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 var processSelectedItems = function(selectedItems, codeList) {
                     _.forEach(selecteditems, function(selecteditem) {
                         var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
+
                         if (name) {
                             tags.selectedParameters.push(tag(value + ':(' + name + ')'));
                         }
                     });
                 };
+
                 for (var i = 0; i < cvs.length; i++) {
                     var cv = cvs[i];
+
                     if (cv.field === key) {
                         var codeList = metadata.values[cv.list];
+
                         selecteditems = JSON.parse(params[key]);
                         processSelectedItems(selecteditems, codeList);
                     }
@@ -173,9 +185,11 @@ export function TagService($location, desks, userList, metadata, search, ingestS
 
             tags.removedFacets[key] = [];
             var removedFacets = JSON.parse(params[key]);
+
             _.each(removedFacets, function(facet) {
                 // Tags will display the desk name but the $location.search object has desk id.
                 var displayValue = key === 'notdesk' ? desks.deskLookup[facet].name : facet;
+
                 tags.removedFacets[key].push({
                     label: label,
                     displayValue: displayValue,
@@ -196,8 +210,10 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             removeDateFacet();
         } else {
             var search = $location.search();
+
             if (search[type]) {
                 var keys = JSON.parse(search[type]);
+
                 keys.splice(keys.indexOf(key), 1);
                 if (keys.length > 0) {
                     $location.search(type, JSON.stringify(keys));
@@ -221,6 +237,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      */
     function removeDateFacet() {
         var search = $location.search();
+
         if (search.after || search.afterfirstcreated || search.beforefirstcreated ||
                 search.afterversioncreated || search.beforeversioncreated) {
             $location.search('after', null);
@@ -249,8 +266,10 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             tags.currentSearch = $location.search();
 
             var parameters = tags.currentSearch.q;
+
             if (parameters) {
                 var keywords = initSelectedParameters(parameters);
+
                 initSelectedKeywords(keywords);
             }
 
@@ -264,6 +283,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                     switch (key) {
                     case 'desk':
                         var selectedDesks = JSON.parse(type);
+
                         _.forEach(selectedDesks, function(selectedDesk) {
                             tags.selectedFacets[key].push({
                                 label: desks.deskLookup[selectedDesk].name,

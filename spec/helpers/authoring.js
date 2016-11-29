@@ -60,6 +60,7 @@ function Authoring() {
      */
     this.findItemTypeIcons = function(itemType) {
         var selector = '.filetype-icon-' + itemType;
+
         return this.infoIconsBox.all(by.css(selector));
     };
 
@@ -148,6 +149,7 @@ function Authoring() {
 
     this.addEmbed = function(embedCode, context) {
         let ctx = context;
+
         if (!context) {
             ctx = element(by.tagName('body'));
         }
@@ -168,6 +170,7 @@ function Authoring() {
 
     this.blockContains = function blockContains(position, expectedValue) {
         var block = this.getBlock(position);
+
         block.element(by.css('.editor-type-html')).isPresent().then(function(isText) {
             if (isText) {
                 return block.element(by.css('.editor-type-html')).getText();
@@ -208,6 +211,7 @@ function Authoring() {
 
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
+
             modal.isPresent().then(function(click) {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
@@ -234,6 +238,7 @@ function Authoring() {
 
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
+
             modal.isPresent().then(function(click) {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
@@ -263,6 +268,7 @@ function Authoring() {
 
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
+
             modal.isPresent().then(function(click) {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
@@ -322,6 +328,7 @@ function Authoring() {
 
     this.setKeywords = function(keyword) {
         var keywords = element(by.css('[data-field="keywords"]')).all(by.model('term'));
+
         keywords.sendKeys(keyword);
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
     };
@@ -378,9 +385,11 @@ function Authoring() {
 
     this.addToGroup = function(item, group) {
         var crtItem = this.getSearchItem(item);
+
         browser.actions().mouseMove(crtItem).perform();
         crtItem.element(by.css('[title="Add to package"]')).click();
         var groups = crtItem.all(by.repeater('t in groupList'));
+
         return groups.all(by.css('[option="' + group.toUpperCase() + '"]')).click();
     };
 
@@ -391,6 +400,7 @@ function Authoring() {
                 return elem.click();
             }).then(function() {
                 var groups = element(by.repeater('t in groupList'));
+
                 return groups.all(by.css('[option="' + group.toUpperCase() + '"]'))
                     .click();
             });
@@ -407,6 +417,7 @@ function Authoring() {
 
     this.removeGroupItem = function(group, index) {
         var groupItem = this.getGroupItems(group).get(index);
+
         groupItem.all(by.css('[ng-click="remove(group.id, item.residRef)"]')).get(index).click();
     };
 
@@ -417,6 +428,7 @@ function Authoring() {
     this.moveToGroup = function(srcGroup, scrItem, dstGroup, dstItem) {
         var src = this.getGroupItem(srcGroup, scrItem).element(by.className('package-item'));
         var dst = this.getGroupItem(dstGroup, dstItem).element(by.className('package-item'));
+
         return browser.actions()
             .mouseMove(src, {x: 5, y: 5})
             .mouseDown()
@@ -432,6 +444,7 @@ function Authoring() {
     this.selectSearchItem = function(item) {
         var crtItem = this.getSearchItem(item);
         var icon = crtItem.all(by.tagName('i')).first();
+
         return icon.waitReady().then(function() {
             browser.actions()
                 .mouseMove(icon)
@@ -443,6 +456,7 @@ function Authoring() {
 
     function openAuthoringDropdown() {
         var toggle = element(by.id('authoring-extra-dropdown')).element(by.className('icon-dots-vertical'));
+
         browser.wait(function() {
             return toggle.isDisplayed();
         });
@@ -606,6 +620,7 @@ function Authoring() {
 
     this.searchRelatedItems = function(searchText) {
         var elm = element(by.model('itemListOptions.keyword'));
+
         elm.clear();
         elm.sendKeys(searchText);
         browser.sleep(2000);
@@ -638,43 +653,51 @@ function Authoring() {
 
     this.getRelatedItemBySlugline = function(item) {
         var relItems = element.all(by.repeater('item in processedItems')).get(item);
+
         return relItems.element(by.binding('item.slugline')).getText();
     };
 
     this.actionOpenRelatedItem = function(item) {
         var relItem = element.all(by.repeater('item in processedItems')).get(item);
+
         relItem.element(by.className('icon-dots-vertical')).click();
         relItem.element(by.id('Open')).click();
     };
 
     this.actionRelatedItem = function(item, actionId) {
         var relItem = element.all(by.repeater('item in processedItems')).get(item);
+
         relItem.element(by.className('icon-dots-vertical')).click();
         relItem.element(by.css('[id="' + actionId + '"]')).click();
     };
 
     this.getHeaderSluglineText = function() {
         var headerDetails = element(by.className('authoring-header__detailed'));
+
         return headerDetails.all(by.model('item.slugline')).get(0).getAttribute('value');
     };
 
     this.setHeaderSluglineText = function(text) {
         var headerDetails = element(by.className('authoring-header__detailed'));
+
         return headerDetails.all(by.model('item.slugline')).sendKeys(text);
     };
 
     this.setHeaderEdNoteText = function(text) {
         var headerDetails = element(by.className('authoring-header__detailed'));
+
         return headerDetails.all(by.model('item.ednote')).sendKeys(text);
     };
 
     this.getHeaderEdNoteText = function(text) {
         var headerDetails = element(by.className('authoring-header__detailed'));
+
         return headerDetails.all(by.model('item.ednote')).get(0).getAttribute('value');
     };
 
     this.getDuplicatedItemState = function(item) {
         var duplicatedItem = element.all(by.repeater('relatedItem in relatedItems._items')).get(item);
+
         return duplicatedItem.element(by.className('state-label')).getText();
     };
 
@@ -707,12 +730,14 @@ function Authoring() {
 
     this.getANPATakeKeyValue = function() {
         var takeKey = element(by.className('authoring-header__detailed')).all(by.id('anpa_take_key'));
+
         return takeKey.get(0).getAttribute('value');
     };
 
     // set first filtered item as per inital term provided
     this.setlocation = function(term) {
         var location = element.all(by.css('[data-field="located"]')).all(by.model('term'));
+
         location.sendKeys(term);
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
@@ -720,6 +745,7 @@ function Authoring() {
 
     this.getSelectedLocation = function(term) {
         var location = element.all(by.css('[data-field="located"]')).all(by.model('term'));
+
         return location.first().getAttribute('value');
     };
 
@@ -733,11 +759,13 @@ function Authoring() {
 
     this.getGenreDropdown = function() {
         var genre = element(by.className('authoring-header__detailed')).all(by.css('[data-field="genre"]'));
+
         return genre.all(by.className('dropdown__toggle'));
     };
 
     this.getPackageItems = function(group) {
         var _list = element(by.css('[data-title="' + group + '"]')).all(by.tagName('UL')).all(by.tagName('LI'));
+
         return _list;
     };
 }

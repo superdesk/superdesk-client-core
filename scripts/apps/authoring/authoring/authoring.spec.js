@@ -45,6 +45,7 @@ describe('authoring', function() {
         spyOn(vocabularies, 'getVocabularies').and.returnValue($q.when({_items: vocabulariesData}));
 
         var scope = $rootScope.$new();
+
         scope.item = {profile: 'motoring'};
 
         $compile('<div sd-authoring-header></div>')(scope);

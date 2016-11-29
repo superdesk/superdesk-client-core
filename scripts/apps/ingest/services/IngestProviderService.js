@@ -7,6 +7,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
             .then(function(result) {
                 let pg = page;
                 let merged = providers.concat(result._items);
+
                 if (result._links.next) {
                     pg++;
                     return _getAllIngestProviders(criteria, pg, merged);
@@ -51,8 +52,10 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
         },
         fetchDashboardProviders: function() {
             var deferred = $q.defer();
+
             _getAllIngestProviders().then(function(result) {
                 var ingestProviders = result;
+
                 preferencesService.get('dashboard:ingest').then(function(userIngestProviders) {
                     _.forEach(ingestProviders, function(provider) {
                         var userProvider = _.find(
@@ -75,6 +78,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
             return deferred.promise;
         }
     };
+
     return service;
 }
 

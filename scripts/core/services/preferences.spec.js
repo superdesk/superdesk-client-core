@@ -78,6 +78,7 @@ describe('Preferences Service', function() {
         $rootScope.$digest();
 
         var preferences;
+
         preferencesService.get().then(function(_preferences) {
             preferences = _preferences;
         });
@@ -94,6 +95,7 @@ describe('Preferences Service', function() {
         $rootScope.$digest();
 
         var preferences;
+
         preferencesService.get('archive:view').then(function(_preferences) {
             preferences = _preferences;
         });
@@ -104,6 +106,7 @@ describe('Preferences Service', function() {
 
     it('can get user preferences by key bypass the cache', inject(function(api, $rootScope) {
         var preferences;
+
         preferencesService.get('feature:preview', true).then(function(_preferences) {
             preferences = _preferences;
         });
@@ -122,6 +125,7 @@ describe('Preferences Service', function() {
         expect(api.save.calls.count()).toBe(1);
 
         var preferences;
+
         preferencesService.get('feature:preview').then(function(_preferences) {
             preferences = _preferences;
         });
@@ -135,6 +139,7 @@ describe('Preferences Service', function() {
         $rootScope.$digest();
 
         var privileges;
+
         preferencesService.getPrivileges().then(function(_privileges) {
             privileges = _privileges;
         });
@@ -159,6 +164,7 @@ describe('preferences error handling', function() {
     it('can reload on session expiry', inject(function(preferencesService, session, $rootScope, $httpBackend) {
         var success = jasmine.createSpy('success');
         var error = jasmine.createSpy('error');
+
         preferencesService.get().then(success, error);
         $rootScope.$digest();
         session.sessionId = 'sess2';

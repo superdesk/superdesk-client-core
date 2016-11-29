@@ -59,6 +59,7 @@ export function UserSelectList($filter, api) {
 
             function previous() {
                 var selectedIndex = getSelectedIndex();
+
                 if (selectedIndex > 0) {
                     scope.select(scope.users._items[_.max([0, selectedIndex - 1])]);
                 }
@@ -66,6 +67,7 @@ export function UserSelectList($filter, api) {
 
             function next() {
                 var selectedIndex = getSelectedIndex();
+
                 scope.select(scope.users._items[_.min([scope.users._items.length - 1, selectedIndex + 1])]);
             }
 

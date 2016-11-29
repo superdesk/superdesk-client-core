@@ -11,6 +11,7 @@ export function TansaScopeSyncDirective($rootScope) {
 
             var deregisterTansa = $rootScope.$on('tansa:after', () => {
                 var nodeValue = getValue(elem[0]);
+
                 if (nodeValue !== ngModel.$viewValue) {
                     ngModel.$setViewValue(nodeValue);
                 }
@@ -22,6 +23,7 @@ export function TansaScopeSyncDirective($rootScope) {
                 }
 
                 var txt = $(node).find('.text-editor');
+
                 return _.find(txt, (elem) => $(elem).is(':visible')).innerHTML;
             }
 

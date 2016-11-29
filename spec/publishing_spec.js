@@ -33,6 +33,7 @@ describe('publishing', function() {
 
         // can search item by unique name
         var _uniqueName = publishQueue.getUniqueName(0).getText();
+
         publishQueue.searchAction(_uniqueName);
         expect(publishQueue.getItemCount()).toBe(1);
     });

@@ -14,6 +14,7 @@ angular.module('superdesk.config', [])
 
             for (var i = 0; i + 1 < keyPieces.length; i++) {
                 var k = keyPieces[i];
+
                 if (!dest.hasOwnProperty(k)) {
                     dest[k] = {};
                 }
@@ -22,6 +23,7 @@ angular.module('superdesk.config', [])
             }
 
             var lastKey = keyPieces[keyPieces.length - 1];
+
             if (!dest.hasOwnProperty(lastKey)) {
                 dest[lastKey] = val;
             }

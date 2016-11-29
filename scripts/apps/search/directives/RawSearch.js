@@ -14,6 +14,7 @@
          templateUrl: asset.templateUrl('apps/search/views/raw-search.html'),
          link: function(scope) {
              var params = $location.search();
+
              scope.rawquery = params.raw;
 
              const ENTER = 13;

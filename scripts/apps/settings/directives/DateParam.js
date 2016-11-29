@@ -5,6 +5,7 @@ export function DateParam($location) {
         scope: true,
         link: function(scope, elem, attrs) {
             var search = $location.search();
+
             if (search[attrs.location]) {
                 scope.date = search[attrs.location];
             }

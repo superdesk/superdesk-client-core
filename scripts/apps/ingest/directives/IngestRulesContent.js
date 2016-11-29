@@ -4,6 +4,7 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-rules-content.html',
         link: function(scope) {
             var _orig = null;
+
             scope.editRuleset = null;
 
             api('rule_sets').query()
@@ -19,6 +20,7 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
 
             scope.save = function(ruleset) {
                 var _new = !ruleset._id;
+
                 api('rule_sets').save(_orig, ruleset)
                 .then(function() {
                     if (_new) {

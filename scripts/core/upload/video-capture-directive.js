@@ -40,6 +40,7 @@ angular.module('superdesk.core.upload').directive('sdVideoCapture', [function() 
 
             elem.click(function(e) {
                 var img = elem[0];
+
                 canvas[0].width = img.videoWidth;
                 canvas[0].height = img.videoHeight;
                 ctx.drawImage(img, 0, 0);

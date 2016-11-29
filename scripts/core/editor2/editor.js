@@ -57,6 +57,7 @@ function HistoryStack(initialValue) {
      */
     this.get = function() {
         var state = index > -1 ? stack[index] : initialValue;
+
         return state;
     };
 
@@ -165,6 +166,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         scope.history = new HistoryStack(scope.model.$viewValue || '');
         scope.$on('$destroy', function() {
             var index = scopes.indexOf(scope);
+
             scopes.splice(index, 1);
         });
     };
@@ -207,6 +209,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
      */
     function renderFindreplace(node) {
         var tokens = utils.getFindReplaceTokens(node, self.settings);
+
         utils.hilite(node, tokens, FINDREPLACE_CLASS);
     }
 
@@ -231,9 +234,11 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes.item(i);
+
             if (node.classList.contains(ACTIVE_CLASS)) {
                 node.classList.remove(ACTIVE_CLASS);
                 var nextNode = nodes.item((i + 1) % nodes.length);
+
                 nextNode.classList.add(ACTIVE_CLASS);
                 angular.element('.page-content-container').scrollTop(nextNode.offsetTop);
                 return node;
@@ -251,8 +256,10 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
      */
     this.selectPrev = function() {
         var nodes = document.body.getElementsByClassName(HILITE_CLASS);
+
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes.item(i);
+
             if (node.classList.contains(ACTIVE_CLASS)) {
                 node.classList.remove(ACTIVE_CLASS);
                 nodes.item(i === 0 ? nodes.length - 1 : i - 1).classList.add(ACTIVE_CLASS);
@@ -265,6 +272,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         var nodes = scope.node.parentNode.getElementsByClassName(className);
         var nodesLength = nodes.length;
         var replacementOffset = self.replaceNodes(nodes, text, scope);
+
         if (replacementOffset && className === ACTIVE_CLASS) {
             updateIndexOnReplace(scope.node, replacementOffset);
         }
@@ -275,8 +283,10 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
     function updateIndexOnReplace(node, replacementOffset) {
         var nodes = node.parentNode.getElementsByClassName(HILITE_CLASS);
         var nextElem, newIndex, activeIndex;
+
         for (var i = 0; i < nodes.length; i++) {
             var currentNode = nodes.item(i);
+
             if (currentNode.classList.contains(ACTIVE_CLASS)) {
                 currentNode.classList.remove(FINDREPLACE_CLASS);
                 activeIndex = i;
@@ -313,6 +323,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
     this.replaceAll = function(text) {
         scopes.forEach(function(scope) {
             var nodes = scope.node.parentNode.getElementsByClassName(HILITE_CLASS);
+
             this.replaceNodes(nodes, text, scope);
             this.commitScope(scope);
         }.bind(this));
@@ -330,6 +341,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         var node = scope.node;
         var start = utils.findWordNode(node, index, length);
         var characters = start.node.textContent.split('');
+
         characters.splice(start.offset, length, word);
         start.node.textContent = characters.join('');
     };
@@ -342,9 +354,11 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
      */
     this.replaceNodes = function(nodes, text, scope) {
         var index, replacementOffset = 0;
+
         for (var i = 0, l = nodes.length; i < l; i++) {
             var node = nodes.item(i);
             var word = node.dataset.word;
+
             index = parseInt(node.dataset.index, 10) + replacementOffset;
             this.replaceWord(scope, index, word.length, text);
             replacementOffset += text.length - word.length;
@@ -394,6 +408,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                         return escapeRegExp(item);
                     }).join('|') + ')(\\*)';
                     var found = scope.node.innerText.match(new RegExp(pattern, 'g'));
+
                     if (found) {
                         // store old settings
                         var oldSettings = angular.extend({}, self.settings);
@@ -401,14 +416,18 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
 
                         _.forEach(_.uniq(found), function(val) {
                             var replacementValue = abbreviations[val.replace('*', '')];
+
                             if (replacementValue) {
                                 var diff = {};
+
                                 diff[val] = replacementValue;
                                 self.setSettings({findreplace: {diff: diff, caseSensitive: true}});
                                 renderFindreplace(scope.node);
                                 var nodesLength = replaceText(scope, replacementValue, FINDREPLACE_CLASS);
+
                                 if (nodesLength > 0) {
                                     var incrementCaretPosition = (replacementValue.length - val.length) * nodesLength;
+
                                     caretPosition.start += incrementCaretPosition;
                                     caretPosition.end += incrementCaretPosition;
                                 }
@@ -434,6 +453,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
     this.commitScope = function(scope) {
         replaceAbbreviations(scope).then(function() {
             var nodeValue = scope.node.innerHTML;
+
             if (nodeValue !== scope.model.$viewValue) {
                 scope.model.$setViewValue(nodeValue);
                 scope.history.add(scope.model.$viewValue);
@@ -457,8 +477,10 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
      */
     this.getActiveText = function() {
         var active;
+
         scopes.forEach(function(scope) {
             var nodes = scope.node.parentNode.getElementsByClassName(ACTIVE_CLASS);
+
             active = nodes.length ? nodes.item(0) : active;
         });
 
@@ -469,6 +491,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
         var mediaTypes = {
             video: function() {
                 var videoTag = ['<video controls="controls">'];
+
                 angular.forEach(data.renditions, function(rendition, name) {
                     if (_.some(['.mp4', '.webm', '.ogv'], function(ext) {
                         return _.endsWith(rendition.href, ext);
@@ -483,11 +506,13 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 var url = data.url, altText = data.altText;
                 var promiseFinished;
                 // if this is a SD archive, we use its properties
+
                 if (data._type === 'archive' || data.type === 'picture' || data.type === 'graphic') {
                     // get expected renditions list
                     promiseFinished = renditionsService.get().then(function(renditionsList) {
                         // ]use the first rendtion as default
                         var firstRendition = data.renditions[renditionsList[0].name];
+
                         if (angular.isDefined(firstRendition)) {
                             url = firstRendition.href;
                         } else {
@@ -507,11 +532,14 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                     // add a `srcset` attribute if renditions are availables
                     // NOTE: if renditions from renditionsService are not available For
                     // this picture, we should maybe use its own renditons
+
                     if (renditionsList && data.renditions) {
                         var renditionsHtml = [];
+
                         renditionsList.forEach(function(r) {
                             if (r.width) {
                                 var rendition = data.renditions[r.name];
+
                                 if (angular.isDefined(rendition)) {
                                     renditionsHtml.push(rendition.href.replace('http://', '//')
                                             + ' ' + rendition.width + 'w');
@@ -527,12 +555,14 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 });
             }
         };
+
         mediaTypes.graphic = mediaTypes.picture;
         return $q.when(mediaTypes[data.type]());
     };
 
     this.getSelectedText = function() {
         var text = '';
+
         if (window.getSelection) {
             text = window.getSelection().toString();
         } else if (document.selection && document.selection.type !== 'Control') {
@@ -545,6 +575,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
 SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions', 'config'];
 function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) {
     var self = this;
+
     angular.extend(self, {
         embedCode: undefined,  // defined below
         caption: undefined,  // defined below
@@ -646,6 +677,7 @@ angular.module('superdesk.apps.editor2', [
             bindToController: true,
             link: function(scope, element, attrs, controllers) {
                 var vm = controllers[0];
+
                 angular.extend(vm, {
                     editorCtrl: controllers[1]
                 });
@@ -663,6 +695,7 @@ angular.module('superdesk.apps.editor2', [
     .directive('sdTextEditorDropZone', ['editor',
         function(editor) {
             var dragOverClass = 'medium-editor-dragover';
+
             return {
                 require: '^sdTextEditorBlockText',
                 scope: {sdTextEditorDropZone: '@'},
@@ -672,12 +705,14 @@ angular.module('superdesk.apps.editor2', [
                     }
                     var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.graphic',
                         'application/superdesk.item.video'];
+
                     element.on('drop dragdrop', function(event) {
                         event.preventDefault();
                         event.stopPropagation();
                         var mediaType = event.originalEvent.dataTransfer.types[0];
                         var item = angular.fromJson(event.originalEvent.dataTransfer.getData(mediaType));
                         var paragraph = angular.element(event.target);
+
                         paragraph.removeClass(dragOverClass);
                         if (paragraph.text() === '') {
                         // select paragraph element in order to know position
@@ -687,6 +722,7 @@ angular.module('superdesk.apps.editor2', [
                     })
                 .on('dragover', function(event) {
                     var paragraph = angular.element(event.target);
+
                     if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
                         // allow to overwite the drop binder (see above)
                         event.preventDefault();
@@ -701,6 +737,7 @@ angular.module('superdesk.apps.editor2', [
                 })
                 .on('dragleave', function(event) {
                     var paragraph = angular.element(event.target);
+
                     paragraph.removeClass(dragOverClass);
                 });
                 }
@@ -717,6 +754,7 @@ angular.module('superdesk.apps.editor2', [
             link: function(scope, element, attr, controllers) {
                 var controller = controllers[0];
                 var ngModel = controllers[1];
+
                 function init() {
                     scope.$applyAsync(function() {
                         if (controller.config.multiBlockEdition) {
@@ -789,6 +827,7 @@ angular.module('superdesk.apps.editor2', [
                 spellcheck: false,
                 targetBlank: true
             };
+
             if (config.editor) {
                 angular.extend(EDITOR_CONFIG, config.editor);
             }
@@ -822,9 +861,11 @@ angular.module('superdesk.apps.editor2', [
             function getLineColumn() {
                 var column, lines,
                     selection = window.getSelection();
+
                 if (selection.anchorNode.nodeType === Node.TEXT_NODE) {
                     var text = selection.anchorNode.wholeText.substring(0, selection.anchorOffset);
                     var node = selection.anchorNode;
+
                     column = text.length + 1;
                     while (node.nodeName !== 'P') {
                         if (node.previousSibling) {
@@ -861,16 +902,20 @@ angular.module('superdesk.apps.editor2', [
                     }
                 }
                 var sel = window.getSelection();
+
                 if (sel.rangeCount) {
                     var selRange = sel.getRangeAt(0);
                     var blockEl = getBlockContainer(selRange.endContainer);
+
                     if (blockEl) {
                         var range = selRange.cloneRange();
+
                         range.selectNodeContents(blockEl);
                         range.setStart(selRange.endContainer, selRange.endOffset);
                         var remaining = range.extractContents();
                         var $blockEl = $(blockEl);
                     // clear if empty of text
+
                         if ($blockEl.text() === '') {
                             $blockEl.html('');
                         }
@@ -979,9 +1024,11 @@ angular.module('superdesk.apps.editor2', [
                 link: function(scope, elem, attrs, controllers) {
                     var ngModel = controllers[0];
                     var sdTextEditor = controllers[1];
+
                     scope.model = ngModel;
                 // give the block model and the editor controller to the text block controller
                     var vm = controllers[2];
+
                     angular.extend(vm, {
                         block: scope.sdTextEditorBlockText,
                         sdEditorCtrl: sdTextEditor
@@ -990,6 +1037,7 @@ angular.module('superdesk.apps.editor2', [
                     var editorElem;
                     var updateTimeout;
                     var renderTimeout;
+
                     ngModel.$viewChangeListeners.push(changeListener);
                     ngModel.$render = function() {
                         editor.registerScope(scope);
@@ -1037,6 +1085,7 @@ angular.module('superdesk.apps.editor2', [
                     // listen for paste event and insert a block if exists in clipboard
                         scope.medium.subscribe('editablePaste', function(e) {
                             var clipboard = vm.sdEditorCtrl.getCutBlock(true);
+
                             if (clipboard) {
                                 e.preventDefault();
                                 vm.sdEditorCtrl.splitAndInsert(vm, clipboard);
@@ -1071,6 +1120,7 @@ angular.module('superdesk.apps.editor2', [
                     // wrong place if offset of block has changed
                         scope.medium.subscribe('focus', function() {
                             var toolbar = scope.medium.getExtensionByName('toolbar');
+
                             if (toolbar) {
                                 toolbar.positionStaticToolbar(scope.medium.getFocusedElement());
                             }
@@ -1080,6 +1130,7 @@ angular.module('superdesk.apps.editor2', [
                         scope.medium.subscribe('positionedToolbar', function(e, elem) {
                             var toolbar = scope.medium.getExtensionByName('toolbar'),
                                 elemPosition = elem.getBoundingClientRect();
+
                             if (toolbar) {
                                 toolbar.toolbar.hidden = elemPosition.top + elemPosition.height < TOP_OFFSET;
                             }
@@ -1093,12 +1144,14 @@ angular.module('superdesk.apps.editor2', [
                         function changeSelectedParagraph(direction) {
                             var selectedParagraph = angular.element(scope.medium.getSelectedParentElement());
                             var paragraphToBeSelected = selectedParagraph[direction > 0 ? 'next' : 'prev']('p');
+
                             if (paragraphToBeSelected.length > 0) {
                             // select the paragraph
                                 scope.medium.selectElement(paragraphToBeSelected.get(0));
                             // scroll to the paragraph
                                 var $scrollableParent = $('.page-content-container');
                                 var offset = $scrollableParent.scrollTop();
+
                                 offset += paragraphToBeSelected.position().top;
                                 offset += paragraphToBeSelected.closest('.block__container').offset().top;
                                 offset -= 100; //  margin to prevent the top bar to hide the selected paragraph
@@ -1108,6 +1161,7 @@ angular.module('superdesk.apps.editor2', [
 
                         function toggleCase() {
                             var selectedText = editor.getSelectedText();
+
                             if (selectedText.length > 0) {
                             // looks the first character, and inverse the case of the all selection
                                 if (selectedText[0].toUpperCase() === selectedText[0]) {
@@ -1123,6 +1177,7 @@ angular.module('superdesk.apps.editor2', [
                         }
 
                         var ctrlOperations = {}, shiftOperations = {};
+
                         ctrlOperations[editor.KEY_CODES.UP] = changeSelectedParagraph.bind(null, -1);
                         ctrlOperations[editor.KEY_CODES.DOWN] = changeSelectedParagraph.bind(null, 1);
                         shiftOperations[editor.KEY_CODES.F3] = toggleCase;
@@ -1165,6 +1220,7 @@ angular.module('superdesk.apps.editor2', [
                             var err, pos;
                             var point = {x: event.clientX, y: event.clientY};
                             var errors = elem[0].parentNode.getElementsByClassName('sderror');
+
                             for (var i = 0, l = errors.length; i < l; i++) {
                                 err = errors.item(i);
                                 pos = err.getBoundingClientRect();
@@ -1205,6 +1261,7 @@ angular.module('superdesk.apps.editor2', [
                                 scope.replaceTarget = node;
                                 scope.$applyAsync(function() {
                                     var menu = elem[0].getElementsByClassName('dropdown__menu')[0];
+
                                     menu.style.left = node.offsetLeft + 'px';
                                     menu.style.top = node.offsetTop + node.offsetHeight + 'px';
                                     menu.style.position = 'absolute';
@@ -1254,12 +1311,14 @@ angular.module('superdesk.apps.editor2', [
 
                     scope.addWordToDictionary = function() {
                         var word = scope.replaceTarget.textContent;
+
                         spellcheck.addWordToUserDictionary(word);
                         editor.render();
                     };
 
                     scope.ignoreWord = function() {
                         var word = scope.replaceTarget.textContent;
+
                         spellcheck.ignoreWord(word);
                         editor.render();
                     };
@@ -1280,6 +1339,7 @@ angular.module('superdesk.apps.editor2', [
                 controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', 'config',
                     function(scope, editor, api, superdesk, renditions, config) {
                         var self = this;
+
                         angular.extend(self, {
                             block: undefined, // provided in link method
                             sdEditorCtrl: undefined, // provided in link method
@@ -1302,6 +1362,7 @@ angular.module('superdesk.apps.editor2', [
                                 self.restoreSelection();
                         // extract the text after the cursor
                                 var remainingElementsContainer = document.createElement('div');
+
                                 remainingElementsContainer.appendChild(extractBlockContentsFromCaret().cloneNode(true));
                         // remove the first line if empty
                                 $(remainingElementsContainer).find('p:first')
@@ -1328,6 +1389,7 @@ angular.module('superdesk.apps.editor2', [
                                     loading: true,
                                     association: media
                                 };
+
                                 self.sdEditorCtrl.splitAndInsert(self, imageBlock).then(function(block) {
                             // load the media and update the block
                                     $q.when((function() {
@@ -1361,6 +1423,7 @@ angular.module('superdesk.apps.editor2', [
             '<div class="pb_feed" data-game="$_URL" data-recommend="false" ',
             'data-game-info="false" data-comments="false" data-shares="false" ></div>'
         ].join('');
+
         embedService.registerHandler({
             name: 'PlayBuzz',
             patterns: [playBuzzPattern],
@@ -1381,11 +1444,13 @@ angular.module('superdesk.apps.editor2', [
             '<div class="sam-embed" data-href="embed.samdesk.io/embed/$_ID"></div>'
         ].join('');
         var samDeskPattern = 'https?://embed.samdesk.io/(?:embed|preview)/(.+)';
+
         embedService.registerHandler({
             name: 'SAMDesk',
             patterns: [samDeskPattern],
             embed: function(url) {
                 var embed = samdeskEmbed.replace('$_ID', url.match(samDeskPattern)[1]);
+
                 return {
                     provider_name: 'SAMDesk',
                     html: embed,
@@ -1399,6 +1464,7 @@ angular.module('superdesk.apps.editor2', [
         function(embedServiceProvider, iframelyServiceProvider, $injector) {
             var config = $injector.get('config');
         // iframe.ly private key
+
             iframelyServiceProvider.setKey(config.iframely.key);
         // don't use noembed as first choice
             embedServiceProvider.setConfig('useOnlyFallback', true);
@@ -1437,6 +1503,7 @@ function EditorUtilsFactory() {
         var currentLength;
         var currentOffset = 0;
         var ZERO_WIDTH_SPACE = String.fromCharCode(65279);
+
         while (tree.nextNode()) {
             tree.currentNode.textContent = tree.currentNode.textContent.replace(ZERO_WIDTH_SPACE, '');
             currentLength = tree.currentNode.textContent.length;
@@ -1487,6 +1554,7 @@ function EditorUtilsFactory() {
 
             function isTokenActive(index) {
                 var active, matched;
+
                 if (elementFindReplace && elementFindReplace.length) {
                     matched = _.filter(elementFindReplace, function(elem) {
                         return parseInt(elem.getAttribute('data-index'), 10) === index;
@@ -1498,6 +1566,7 @@ function EditorUtilsFactory() {
             }
 
             var tree = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+
             while (tree.nextNode()) {
                 text = tree.currentNode.textContent;
 
@@ -1537,6 +1606,7 @@ function EditorUtilsFactory() {
 
             // create a clone
             var hiliteNode = node.cloneNode(true);
+
             hiliteNode.classList.add(CLONE_CLASS);
 
             // generate hilite markup in clone
@@ -1586,6 +1656,7 @@ function EditorUtilsFactory() {
         removeHilites: function(node) {
             var parentNode = node.parentNode;
             var clones = parentNode.getElementsByClassName(CLONE_CLASS);
+
             if (clones.length) {
                 parentNode.removeChild(clones.item(0));
             }

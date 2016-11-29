@@ -141,6 +141,7 @@ export function SearchResults(
 
             function updateItem(e, data) {
                 var item = _.find(scope.items._items, {_id: data.item._id});
+
                 if (item) {
                     angular.extend(item, data.item);
                 }
@@ -278,6 +279,7 @@ export function SearchResults(
              */
             function getProvider(criteria) {
                 var provider = 'search';
+
                 if (criteria.repo && criteria.repo.indexOf(',') === -1) {
                     provider = criteria.repo;
                 }
@@ -364,6 +366,7 @@ export function SearchResults(
 
                     api.query(getProvider(previewCriteria), previewCriteria).then(function(completeItems) {
                         let completeItem = search.mergeHighlightFields(completeItems._items[0]);
+
                         scope.selected.preview = completeItem;
                         scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
 
@@ -398,6 +401,7 @@ export function SearchResults(
             scope.setview = setView;
 
             var savedView;
+
             preferencesService.get('archive:view').then(function(result) {
                 savedView = result.view;
                 scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
@@ -421,6 +425,7 @@ export function SearchResults(
 
             function toggleView() {
                 var nextView = scope.view === LIST_VIEW ? GRID_VIEW : LIST_VIEW;
+
                 return setView(nextView);
             }
 

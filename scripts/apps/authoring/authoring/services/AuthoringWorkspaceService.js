@@ -41,6 +41,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     this.open = function(item) {
         var _open = function(_item) {
             var actions = authoring.itemActions(_item);
+
             if (actions.edit) {
                 this.edit(_item);
             } else {

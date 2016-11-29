@@ -39,6 +39,7 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
             scope.getActionString = function(action) {
                 if (scope.deskLookup[action.desk] && scope.stageLookup[action.stage]) {
                     var actionValues = [];
+
                     actionValues.push(scope.deskLookup[action.desk].name);
                     actionValues.push(scope.stageLookup[action.stage].name);
                     if (action.macro) {
@@ -53,6 +54,7 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
                     }
                     if (action.target_types && action.target_types.length > 0) {
                         var targets = [];
+
                         _.forEach(action.target_types, function(targetType) {
                             targets.push((!targetType.allow ? gettext('Not ') : '') + targetType.name);
                         });

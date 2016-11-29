@@ -15,6 +15,7 @@ function getBackendUrl(uri) {
 
 function backendRequest(params, callback) {
     let cb = callback || function() { /* no-op */ };
+
     if (params.uri) {
         params.url = getBackendUrl(params.uri);
         delete params.uri;
@@ -96,6 +97,7 @@ function withToken(callback) {
 function backendRequestAuth(params, callback) {
     withToken(function() {
         var token = browser.params.token;
+
         params.headers = params.headers || {};
         params.headers.authorization = 'Basic ' + bt(token + ':');
         backendRequest(params, callback || function() { /* no-op */ });

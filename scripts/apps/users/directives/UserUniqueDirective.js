@@ -9,8 +9,10 @@ export function UserUniqueDirective($q, api) {
              */
             function testUnique(modelValue, viewValue) {
                 var value = modelValue || viewValue;
+
                 if (value && attrs.uniqueField) {
                     var criteria = {where: {}};
+
                     criteria.where[attrs.uniqueField] = value;
                     return api.users.query(criteria)
                         .then(function(users) {

@@ -2,6 +2,7 @@ export function Package() {
     var solveRefs = function(item, groups) {
         var items = {childId: '_items', childData: []};
         var tree = [items];
+
         _.each(item.refs, function(ref) {
             if (ref.idRef) {
                 tree.push({childId: ref.idRef, childData: solveRefs(_.find(groups, {id: ref.idRef}), groups)});

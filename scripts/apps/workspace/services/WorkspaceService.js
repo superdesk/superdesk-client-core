@@ -50,6 +50,7 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
      */
     function setActiveDesk(desk) {
         var updates = {};
+
         updates[PREFERENCE_KEY] = {workspace: desk._id};
         preferences.update(updates, PREFERENCE_KEY);
         return getDeskWorkspace(desk._id).then(updateActive);
@@ -63,6 +64,7 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
     function setActiveWorkspace(workspace) {
         updateActive(workspace);
         var updates = {};
+
         updates[PREFERENCE_KEY] = {workspace: workspace ? workspace._id : ''};
         preferences.update(updates, PREFERENCE_KEY);
     }

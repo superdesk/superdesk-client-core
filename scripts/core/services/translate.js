@@ -24,6 +24,7 @@ export default angular.module('superdesk.core.translate', ['gettext', 'superdesk
             });
 
             var params = $location.search();
+
             if ('lang' in params) {
                 gettextCatalog.currentLanguage = params.lang;
                 gettextCatalog.debug = true;

@@ -14,6 +14,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             var img;
             var $cropBox = elem.find('.crop-box');
             var $img = elem.find('img');
+
             elem.css({
                 position: 'relative'
             });
@@ -39,6 +40,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                     var cLeft = scope.cropData.CropLeft * ratio;
                     var cBottom = $img.height() - scope.cropData.CropBottom * ratio;
                     var cRight = $img.width() - scope.cropData.CropRight * ratio;
+
                     $cropBox.css({
                         width: $img.width(),
                         height: $img.height(),
@@ -111,6 +113,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                       */
                  function updateScope(cords) {
                      var nextData = formatCoordinates(cords);
+
                      selectionWidth = nextData.CropRight - nextData.CropLeft;
                      selectionHeight = nextData.CropBottom - nextData.CropTop;
                      if (!isEqualCrop(nextData, scope.cropData)) {
@@ -159,6 +162,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                  scope.$watch('src', function(src) {
                      var cropSelect = parseCoordinates(scope.cropInit) ||
                          getDefaultCoordinates(scope.original, scope.rendition || {});
+
                      refreshImage(src, cropSelect);
                  });
 
@@ -203,6 +207,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                          CropRight: Math.round(center.x + selectionWidth / 2),
                          CropBottom: Math.round(center.y + selectionHeight / 2)
                      };
+
                      angular.extend(cropData, crop);
 
                      refreshImage(img.src, [
@@ -224,6 +229,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                          }
                          elem.append(img);
                          var ratio, minSize;
+
                          if (angular.isDefined(scope.rendition)) {
                              if (angular.isDefined(scope.rendition.ratio)) {
                                  ratio = scope.rendition.ratio.split(':');
@@ -262,6 +268,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                              r: rendition,
                              img: img
                          });
+
                          elem.append('<p class="error">' + text);
                          return false;
                      }
@@ -285,6 +292,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                      var height = Math.floor(ratio * rendition.height);
                      var x0 = Math.floor((img.width - width) / 2);
                      var y0 = Math.floor((img.height - height) / 2);
+
                      return [x0, y0, x0 + width, y0 + height];
                  }
              }
@@ -313,6 +321,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             controllerAs: 'vm',
             controller: ['$rootScope', function($rootScope) {
                 var self = this;
+
                 angular.extend(self, {
                     updatePOI: function(poi) {
                         angular.extend(self.poi, poi);
@@ -335,11 +344,13 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 var $poiRight = element.find('.image-point__poi__cross-right');
                 var $poiTop = element.find('.image-point__poi__cross-top');
                 var $poiBottom = element.find('.image-point__poi__cross-bottom');
+
                 function drawPoint(img, poi = vm.poi) {
                     var topOffset = poi.y * img.height - circleRadius;
                     var leftOffset = poi.x * img.width - circleRadius;
                     var verticalLeftOffset = leftOffset + circleRadius - lineThickness / 2;
                     var horizontalTopffset = topOffset + circleRadius - lineThickness / 2;
+
                     $poiContainer.css({
                         width: img.width,
                         height: img.height
@@ -369,6 +380,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 }
                 function updateWhenImageIsReady() {
                     var $img = element.find('.image-point__image').get(0);
+
                     function drawPointsFromModel() {
                         drawPoint($img);
                     }
@@ -379,12 +391,14 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         var debouncedPoiUpdateModel = _.debounce(function(newPoi) {
                             vm.updatePOI(newPoi);
                         }, 500);
+
                         function updatePOIModel(e) {
                             var newPoi = {
                                 x: Math.round(e.offsetX * 100 / $img.width) / 100,
                                 y: Math.round(e.offsetY * 100 / $img.height) / 100
                             };
                             // refresh the points
+
                             drawPoint($img, newPoi);
                             // and notice the controller that points have been moved
                             debouncedPoiUpdateModel(newPoi);
@@ -393,6 +407,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         var overlay = element.find('.image-point__poi__overlay');
                         var mousedown = false;
                         /** enable drag mode */
+
                         function enableDragMode(e) {
                             mousedown = true;
                             updatePOIModel(e);
@@ -409,6 +424,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             }
                         }
                         var onExistEvents = ['mouseleave', 'mouseup'];
+
                         overlay.on('mousedown', enableDragMode);
                         overlay.on('mousemove', updateOnMouseDrag);
                         onExistEvents.forEach(function(eventName) {

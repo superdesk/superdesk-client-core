@@ -170,6 +170,7 @@ describe('spellcheck', function() {
     it('can reset dict when language is set to null', inject(function(spellcheck, $rootScope) {
         spellcheck.setLanguage(null);
         var then = jasmine.createSpy('then');
+
         spellcheck.errors('test').then(then);
         $rootScope.$digest();
         expect(then).not.toHaveBeenCalled();
@@ -178,6 +179,7 @@ describe('spellcheck', function() {
     it('can ignore word', inject(function(spellcheck, $rootScope, $location) {
         $location.search('item', 'foo');
         var p = createParagraph('ignore errors');
+
         spellcheck.errors(p).then(assignErrors);
         $rootScope.$digest();
         expect(errors.length).toBe(2);
@@ -209,6 +211,7 @@ describe('spellcheck', function() {
 
     it('can resolve abbreviations without language specified', inject(function(spellcheck, $rootScope) {
         var spy = jasmine.createSpy('success');
+
         spellcheck.setLanguage('');
         spellcheck.getAbbreviationsDict().then(spy);
         $rootScope.$digest();
@@ -222,6 +225,7 @@ describe('spellcheck', function() {
 
     function createParagraph(text) {
         var p = document.createElement('p');
+
         p.contentEditable = 'true';
         p.innerHTML = text;
         document.body.appendChild(p);
@@ -231,6 +235,7 @@ describe('spellcheck', function() {
     describe('spellcheck menu', function() {
         it('can toggle auto spellcheck', inject(function(editor, $controller, $rootScope, preferencesService) {
             var ctrl = $controller('SpellcheckMenu');
+
             expect(ctrl.isAuto).toBe(null);
 
             $rootScope.$digest();

@@ -7,6 +7,7 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
         default: 'mgrid',
         label: 'Users archive view format',
         type: 'string'}};
+
     $scope.criteria = {};
     $scope.items = legal.default_items;
     $scope.loading = false;
@@ -64,6 +65,7 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
 
     preferencesService.get('archive:view').then(function(result) {
         var savedView = result.view;
+
         $scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
     });
 }

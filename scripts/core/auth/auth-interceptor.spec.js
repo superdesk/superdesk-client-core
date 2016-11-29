@@ -34,6 +34,7 @@ describe('auth interceptor', function() {
         spyOn(request, 'resend');
 
         var result;
+
         interceptor.responseError(response).then(function(success) {
             result = success;
         }, function(rejection) {

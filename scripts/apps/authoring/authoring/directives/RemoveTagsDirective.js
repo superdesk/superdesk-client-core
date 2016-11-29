@@ -3,6 +3,7 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 RemoveTagsDirective.$inject = [];
 export function RemoveTagsDirective() {
     var htmlRegex = /(<([^>]+)>)/ig;
+
     return {
         require: 'ngModel',
         scope: {

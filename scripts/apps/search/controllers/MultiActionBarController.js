@@ -17,6 +17,7 @@ export function MultiActionBarController(
 
     this.canRemoveIngestItems = function() {
         var canRemove = true;
+
         multi.getItems().forEach(function(item) {
             canRemove = canRemove && remove.canRemove(item);
         });
@@ -79,6 +80,7 @@ export function MultiActionBarController(
 
     this.canPackageItems = function() {
         var canPackage = true;
+
         multi.getItems().forEach(function(item) {
             canPackage = canPackage && item._type !== 'archived' && !item.lock_user &&
                 !_.includes(['ingested', 'spiked', 'killed', 'draft'], item.state);

@@ -15,6 +15,7 @@ function LegalArchive() {
     this.open = function() {
         return nav('/legal_archive').then(function() {
             var list = element(by.className('icon-th-list'));
+
             return list.isDisplayed().then(function(isVisible) {
                 if (isVisible) {
                     list.click();

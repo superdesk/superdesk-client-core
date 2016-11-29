@@ -9,6 +9,7 @@ angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', [
             bindToController: true,
             link: function(scope, element, attrs, ctrls) {
                 var vm = ctrls[0];
+
                 angular.extend(vm, {
                     textBlockCtrl: ctrls[1],
                     sdEditorCtrl: ctrls[2]
@@ -24,6 +25,7 @@ angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', [
                         vm.updateState(event, editorElem);
                     });
             // update on resize
+
                 angular.element($window).on('resize', vm.updateState);
                 scope.$on('$destroy', function() {
                     angular.element($window).off('resize', vm.updateState);
@@ -37,6 +39,7 @@ AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout
 function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q) {
     var elementHolder = element.find('div:first-child').first();
     var self = this;
+
     angular.extend(self, {
         expanded: false,
         config: angular.extend({embeds: true}, config.editor || {}), // should be on by default
@@ -58,6 +61,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
                 return self.hide();
             }
             var currentParagraph;
+
             try {
                 currentParagraph = angular.element(scope.medium.getSelectedParentElement());
             } catch (e) {
@@ -65,6 +69,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
             }
             var position = currentParagraph.position().top;
             // move the (+) button at the caret position
+
             elementHolder.css('top', position > 0 ? position : 0);
             // handle resize: Do nothing, only positioning was needed
             if (event && event.type === 'resize') {

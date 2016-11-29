@@ -35,6 +35,7 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
 
     $scope.save = function() {
         var _new = !_config._id;
+
         $scope.configEdit.desks = assignedDesks();
         $scope.configEdit.groups = ['main'];
 

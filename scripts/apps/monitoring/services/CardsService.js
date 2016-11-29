@@ -64,6 +64,7 @@ export function CardsService(api, search, session, desks, config) {
             var deskId = card._id.substring(0, card._id.indexOf(':'));
             var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
             var states = ['scheduled', 'published', 'corrected', 'killed'];
+
             if (config.monitoring && config.monitoring.scheduled) {
                 states = ['published', 'corrected', 'killed'];
             }
@@ -173,6 +174,7 @@ export function CardsService(api, search, session, desks, config) {
         case 'deskOutput':
         case 'scheduledDeskOutput':
             var deskId = card._id.substring(0, card._id.indexOf(':'));
+
             if (deskId) {
                 return data.desks && !!data.desks[deskId];
             }

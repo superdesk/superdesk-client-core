@@ -11,6 +11,7 @@ export function SortGroups() {
                 placeholder: {
                     element: function(current) {
                         var height = current.height() - 20;
+
                         return $('<li class="placeholder" style="height:' + height + 'px"></li>')[0];
                     },
                     update: function() { /* no-op */ }

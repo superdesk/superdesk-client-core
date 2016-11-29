@@ -131,6 +131,7 @@ export function UserListController($scope, $location, api, _) {
 
     function formatSort(key, dir) {
         var val = dir === 'asc' ? 1 : -1;
+
         switch (key) {
         case 'full_name':
             return '[("first_name", ' + val + '), ("last_name", ' + val + ')]';

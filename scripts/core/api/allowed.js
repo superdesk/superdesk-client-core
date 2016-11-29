@@ -41,6 +41,7 @@ function AllowedService(_, api, $q) {
     this.filterKeys = (all, resource, field) =>
         this.get(resource, field).then((allowed) => {
             var filtered = {};
+
             Object.keys(all).forEach((key) => {
                 var isAllowed = _.find(allowed, (val) => key.indexOf(val) === 0);
 

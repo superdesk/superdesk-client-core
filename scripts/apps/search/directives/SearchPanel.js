@@ -154,6 +154,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                                     'Desk (key: ', desk.key, ') not found in ',
                                     'deskLookup, probable storage inconsistency.'
                                 ].join('');
+
                                 console.warn(msg);
                                 return;
                             }
@@ -241,6 +242,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
              */
             function setUrlParameter(type, key) {
                 var currentKeys = $location.search()[type];
+
                 if (currentKeys) {
                     currentKeys = JSON.parse(currentKeys);
                     currentKeys.push(key);

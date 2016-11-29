@@ -250,6 +250,7 @@ describe('sdUserPreferences directive', function() {
             scope.checkDefault();
             scope.categories.forEach(function(cat) {
                 var expectSelected = _.includes(['b', 'c'], cat.qcode);
+
                 expect(cat.selected).toBe(expectSelected);
             });
         });

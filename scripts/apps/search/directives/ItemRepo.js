@@ -27,6 +27,7 @@ export function ItemRepo(
              */
             function init() {
                 var params = $location.search();
+
                 scope.query = params.q;
 
                 scope.search_config = metadata.search_config;
@@ -45,6 +46,7 @@ export function ItemRepo(
 
                 if (params.repo) {
                     var paramList = params.repo.split(',');
+
                     scope.repo.archive = paramList.indexOf('archive') >= 0;
                     scope.repo.ingest = paramList.indexOf('ingest') >= 0;
                     scope.repo.published = paramList.indexOf('published') >= 0;

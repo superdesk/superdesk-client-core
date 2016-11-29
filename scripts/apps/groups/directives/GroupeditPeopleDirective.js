@@ -41,6 +41,7 @@ export function GroupeditPeopleDirective(gettext, api, WizardHandler, groups) {
                     _.extend(scope.group.edit, result);
                     groups.groupMembers[scope.group.edit._id] = scope.groupMembers;
                     var orig = _.find(groups.groups._items, {_id: scope.group.edit._id});
+
                     _.extend(orig, scope.group.edit);
                     WizardHandler.wizard('usergroups').finish();
                 }, function(response) {

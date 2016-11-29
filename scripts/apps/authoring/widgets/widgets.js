@@ -119,6 +119,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
     $scope.$watch('item._locked', function() {
         if ($scope.active) {
             var widget = $scope.active;
+
             $scope.closeWidget(widget);
             $scope.activate(widget);
         }

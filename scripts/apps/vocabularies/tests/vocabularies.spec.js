@@ -8,8 +8,10 @@ describe('vocabularies', function() {
 
     it('can fetch vocabularies', inject(function(api, vocabularies, $q, $rootScope) {
         var fixture = {foo: 'bar'};
+
         spyOn(api, 'query').and.returnValue($q.when(fixture));
         var result;
+
         vocabularies.getVocabularies().then(
             function(vocabs) {
                 result = vocabs;
@@ -97,6 +99,7 @@ describe('vocabularies', function() {
 
             it('can cancel editing vocabulary', inject(function(api, $q, $rootScope, metadata) {
                 var vocabularyLink = scope.vocabulary;
+
                 scope.vocabulary.items[0].foo = 'furret';
                 scope.vocabulary.items[0].bar = 'buizel';
 

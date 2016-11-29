@@ -2,6 +2,7 @@ export default angular.module('superdesk.core.workflow', [])
     .run(['workflowService', angular.noop]) // make sure it's loaded
     .service('workflowService', ['preferencesService', '$rootScope', function(preferencesService, $rootScope) {
         var _actions = [];
+
         this.isActionAllowed = function isActionAllowed(item, actionName) {
             if (_.isUndefined(actionName) || _.isUndefined(item.state)) {
                 return true;

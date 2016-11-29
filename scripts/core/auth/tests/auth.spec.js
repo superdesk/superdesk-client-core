@@ -16,6 +16,7 @@ describe('auth', function() {
     it('can reload a route after login', inject(function($compile, $rootScope, $route, $q, auth) {
         var elem = $compile('<div sd-login-modal></div>')($rootScope.$new()),
             scope = elem.scope();
+
         $rootScope.$digest();
         $rootScope.$digest();
 

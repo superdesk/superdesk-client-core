@@ -9,6 +9,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
             var fetchedPages = [];
 
             var container = elem.children()[0];
+
             elem.children().bind('scroll', function() {
                 if (container.scrollTop + container.offsetHeight >= container.scrollHeight - 3) {
                     container.scrollTop = container.scrollTop - 3;
@@ -19,6 +20,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
             // Calculates the next page and calls fetchItems for new items
             scope.fetchNext = function() {
                 var page = scope.users.length / 10 + 1;
+
                 fetchItems(scope.prefix, page);
             };
 
@@ -26,6 +28,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
             function fetchItems(prefix, page) {
                 if (!scope.fetching && !_.includes(fetchedPages, page)) {
                     var promises = [];
+
                     scope.fetching = true;
 
                     promises.push(getFilteredUsers(prefix, scope.users, page));
@@ -48,6 +51,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
             function getFilteredUsers(prefix, list, page) {
                 return userList.get(prefix, page, 10).then(function(result) {
                     var filteredUsers = result._items.slice((page - 1) * 10, page * 10);
+
                     _.each(filteredUsers, function(user) {
                         list.push({type: 'user', item: user});
                     });
@@ -58,6 +62,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
             function getFilteredDesks(prefix, list, page) {
                 return desks.initialize().then(function() {
                     var filteredDesks = desks.desks._items;
+
                     if (scope.prefix) {
                         filteredDesks = _.filter(desks.desks._items, function(item) {
                             return _.startsWith(item.name.toLowerCase(), prefix.toLowerCase());

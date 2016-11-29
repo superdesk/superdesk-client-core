@@ -9,6 +9,7 @@ describe('multiedit', function() {
 
     it('can open an item', inject(function(multiEdit) {
         var items = multiEdit.items;
+
         expect(items.length).toBe(0);
         multiEdit.edit('foo', 0);
         expect(multiEdit.items.length).toBe(1);
@@ -19,6 +20,7 @@ describe('multiedit', function() {
         multiEdit.edit('foo', 0);
         multiEdit.edit('bar', 1);
         var items = multiEdit.items;
+
         multiEdit.remove('foo');
         expect(multiEdit.items.length).toBe(2);
         expect(multiEdit.items).toEqual(items);

@@ -78,8 +78,10 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
     function getQuery(options) {
         var query = {source: {query: {filtered: {}}}};
         // process filter aliases and shortcuts
+
         if (options.sortField && options.sortDirection) {
             var sort = {};
+
             sort[options.sortField] = options.sortDirection;
             options.sort = [sort];
         }
@@ -124,6 +126,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         // process state
         if (options.states) {
             var stateQuery = [];
+
             _.each(options.states, function(state) {
                 stateQuery.push({term: {state: state}});
             });
@@ -132,6 +135,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         // process creation date
         var dateKeys = {creationDate: '_created', modificationDate: 'versioncreated'};
         var dateQuery = null;
+
         _.each(dateKeys, function(key, field) {
             if (options[field + 'Before'] || options[field + 'After']) {
                 dateQuery = {};
@@ -146,6 +150,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         _.each(['provider', 'source', 'urgency'], function(field) {
             if (options[field]) {
                 var directQuery = {};
+
                 directQuery[field] = options[field];
                 query.source.query.filtered.filter.and.push({term: directQuery});
             }
@@ -160,6 +165,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             body: 'body_html'
         };
         var queryContent = [];
+
         _.each(fields, function(dbField, field) {
             if (options[field]) {
                 queryContent.push(dbField + ':(*' + options[field] + '*)');
@@ -178,6 +184,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         // process search
         if (options.search) {
             var queryContentAny = [];
+
             _.each(_.values(fields), function(dbField) {
                 queryContentAny.push(dbField + ':(*' + options.search + '*)');
             });
@@ -203,6 +210,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             var queryRelatedItem = [];
             var sanitizedKeyword = options.keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
             var queryWords = sanitizedKeyword.split(' ');
+
             options.sluglineMatch = options.sluglineMatch || '';
 
             switch (options.sluglineMatch) {
@@ -261,6 +269,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 
     this.fetch = function(options) {
         let opt = _.extend({}, DEFAULT_OPTIONS, options);
+
         return $q.when(getQuery(opt)).then(function(query) {
             return api(opt.endpoint, opt.endpointParam || undefined)
                 .query(query);
@@ -334,6 +343,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                 return item._id;
             });
             var update = {};
+
             update[PREF_KEY] = this.items;
             return preferencesService.update(update, PREF_KEY)
             .then(function() {
@@ -390,6 +400,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             });
         }
     };
+
     itemPinService.load();
 
     return itemPinService;

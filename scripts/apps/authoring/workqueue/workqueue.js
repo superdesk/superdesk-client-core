@@ -31,6 +31,7 @@ function WorkqueueService(session, api) {
      */
     this.updateItem = function(itemId) {
         var old = _.find(this.items, {_id: itemId});
+
         if (old) {
             return api.find('archive', itemId).then(function(item) {
                 return angular.extend(old, item);
@@ -65,6 +66,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
         // only update the workqueue for content:update items in the workqueue
         if (data && data.items) {
             var updateItems = _.keys(data.items);
+
             if (updateItems.length) {
                 var item = _.find(workqueue.items, function(item) {
                     return _.includes(updateItems, item._id);
@@ -84,6 +86,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     });
     $scope.$on('item:unlock', function(_e, data) {
         var item = _.find(workqueue.items, {_id: data.item});
+
         if (item && lock.isLocked(item) && session.sessionId !== data.lock_session && $scope.active !== item) {
             authoring.unlock(item, data.user, item.headline);
         }
@@ -91,6 +94,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
         if (item && item.linked_in_packages) {
             _.each(item.linked_in_packages, function(item) {
                 var pck = _.find(workqueue.items, {_id: item.package});
+
                 if (pck) {
                     authoringWorkspace.edit(pck);
                 }
@@ -114,6 +118,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     function updateWorkqueue() {
         workqueue.fetch().then(function() {
             var route = $route.current || {_id: null, params: {}};
+
             $scope.isMultiedit = route._id === 'multiedit';
             $scope.active = null;
             if (route.params.item) {

@@ -78,10 +78,12 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     */
     function fetchPublishQueue() {
         var criteria = criteria || {};
+
         criteria.max_results = $scope.pageSize;
         criteria.page = $scope.page;
 
         var orTerms = null;
+
         if (!_.isEmpty($scope.searchQuery)) {
             orTerms = {$or: [
                 {headline: {
@@ -92,6 +94,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         }
 
         var filterTerms = [];
+
         if (!_.isNil($scope.selectedFilterSubscriber)) {
             filterTerms.push({subscriber_id: $scope.selectedFilterSubscriber._id});
         }
@@ -104,6 +107,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         }
 
         var andTerms = [];
+
         _.each(filterTerms, function(term) {
             andTerms.push(term);
         });
@@ -133,6 +137,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             'item_encoding', 'encoded_item_id'];
 
         var newItem = _.pick(item, pickFields);
+
         return newItem;
     };
 
@@ -166,6 +171,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
     $scope.cancelSend = function(item) {
         var itemList = [];
+
         if (angular.isDefined(item)) {
             itemList.push(item);
         } else if ($scope.multiSelectCount > 0) {
@@ -263,6 +269,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
         if (item) {
             var fields = ['error_message', 'completed_at', 'state'];
+
             angular.extend(item, _.pick(data, fields));
             $scope.$apply();
         }
@@ -274,6 +281,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
     function previewItem() {
         var queueItem = _.find($scope.publish_queue, {_id: $location.search()._id}) || null;
+
         if (queueItem) {
             api.archive.getById(queueItem.item_id, {version: queueItem.item_version})
                 .then(function(item) {

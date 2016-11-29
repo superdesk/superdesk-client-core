@@ -12,6 +12,7 @@ describe('packaging', function() {
 
         it('listens to package:addItems event', inject(function($compile, $rootScope) {
             var scope = $rootScope.$new();
+
             scope.autosave = jasmine.createSpy('autosave');
             scope.groups = [{id: 'root', refs: [{idRef: 'main'}]}, {id: 'main', refs: [], items: []}];
             $compile('<div sd-package-items-edit ng-model="groups"></div>')(scope);
@@ -20,6 +21,7 @@ describe('packaging', function() {
             expect(scope.groups[1].refs.length).toBe(0);
 
             var item = {_id: 'foo'};
+
             addItem(item);
 
             expect(scope.groups[1].refs.length).toBe(1);
@@ -48,9 +50,11 @@ describe('packaging', function() {
 
         beforeEach(inject(function($rootScope, $compile) {
             var parentScope = $rootScope.$new();
+
             parentScope.item = {_id: 'foo'};
             item = {_id: 'bar'};
             var elem = $compile('<div sd-package-item-preview data-item="item"></div>')(parentScope);
+
             parentScope.$digest();
             scope = elem.isolateScope();
         }));

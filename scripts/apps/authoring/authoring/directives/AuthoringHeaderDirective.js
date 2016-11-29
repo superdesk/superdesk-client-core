@@ -69,6 +69,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     scope.previewMasterStory = function() {
                         var itemId = item.broadcast.takes_package_id ?
                             item.broadcast.takes_package_id : item.broadcast.master_id;
+
                         return api.find('archive', itemId).then(function(item) {
                             $rootScope.$broadcast('broadcast:preview', {item: item});
                         });
@@ -98,6 +99,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     // get the midnight based on the defaultTimezone not the user timezone.
                     var fromDateTime = moment().tz(config.defaultTimezone)
                         .format(config.view.dateformat);
+
                     archiveService.getRelatedItems(scope.item.slugline, fromDateTime, scope.item._id)
                         .then(function(items) {
                             scope.relatedItems = items;
@@ -106,6 +108,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                                     return linkedPackage && linkedPackage.package_type === 'takes';
                                 });
                                 // if takes package is missing or not rewrite of.
+
                                 scope.missing_link = !takesPackage && !scope.item.rewrite_of &&
                                     !scope.item.rewritten_by;
                             }
@@ -134,10 +137,12 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                         }
                         vocabularies.getVocabularies().then(function(vocabulariesColl) {
                             var vocabulary = _.find(vocabulariesColl._items, {_id: subjectName});
+
                             if (vocabulary) {
                                 var qcode = _.keys(vocabulary.service).pop();
                                 var categoriesVocabulary = _.find(vocabulariesColl._items, {_id: 'categories'});
                                 var category = _.find(categoriesVocabulary.items, {qcode: qcode});
+
                                 if (category && _.findIndex(scope.item.anpa_category, {name: category.name}) === -1) {
                                     if (!scope.item.anpa_category) {
                                         scope.item.anpa_category = [];

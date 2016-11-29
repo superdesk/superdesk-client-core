@@ -1,6 +1,7 @@
 Features.$inject = ['urls'];
 function Features(urls) {
     var self = this;
+
     urls.links().then(function(links) {
         angular.extend(self, links);
     });

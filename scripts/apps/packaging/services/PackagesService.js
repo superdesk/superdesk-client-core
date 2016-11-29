@@ -35,6 +35,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         },
             getGroupFor(null, idRef)
         ];
+
         newPackage = setDefaults(newPackage, defaults);
         newPackage.groups = groups;
         if (!newPackage.task || !newPackage.task.desk) {
@@ -60,6 +61,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
                 getGroupFor(null, idRef)
             ]
         };
+
         newPackage = setDefaults(newPackage, defaults);
 
         if (!newPackage.task || !newPackage.task.desk) {
@@ -78,6 +80,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
 
         if (!targetGroup) {
             var rootGroup = _.find(origGroups, {id: 'root'});
+
             rootGroup.refs.push({idRef: groupId});
             targetGroup = {
                 id: groupId,
@@ -99,11 +102,13 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             });
         }) : false;
         var addedToPkg = this.isAddedToPackage(pkg, item);
+
         return added || addedToPkg;
     };
 
     this.fetchItem = function(packageItem) {
         var repo = packageItem.location || 'ingest';
+
         return api(repo).getById(packageItem.residRef)
             .then(function(item) {
                 return item;
@@ -129,6 +134,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.addPackageGroupItem = function(group, item, broadcast) {
         var pkg = authoringWorkspace.getItem();
         var pkgId = pkg._id;
+
         if (typeof this.packageGroupItems[pkgId] === 'undefined') {
             this.packageGroupItems[pkgId] = [];
         }
@@ -142,6 +148,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
 
     this.removePackageGroupItem = function(group, item) {
         var pkg = authoringWorkspace.getItem();
+
         _.remove(this.packageGroupItems[pkg._id], item._id);
     };
 
@@ -151,6 +158,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
 
     function getGroupFor(item, idRef) {
         var refs = [];
+
         if (item) {
             refs.push({
                 headline: item.headline || '',
@@ -169,6 +177,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
 
     function setDefaults(item, defaults) {
         let obj = defaults;
+
         if (angular.isUndefined(defaults) || !_.isObject(defaults)) {
             obj = {};
         }

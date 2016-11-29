@@ -7,6 +7,7 @@ describe('user import', function() {
 
     it('can import a user', inject(function($q, userImport, api) {
         var model = {username: 'foo', password: 'bar', profile_to_import: 'baz'};
+
         spyOn(api, 'save').and.returnValue($q.when({}));
         userImport.importUser(model);
         expect(api.save).toHaveBeenCalledWith('import_profile', model);

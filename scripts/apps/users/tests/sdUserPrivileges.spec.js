@@ -53,6 +53,7 @@ describe('sdUserPrivileges directive', function() {
         };
 
         var user = {_id: 1, role: '€d1t0r', privileges: [{name: 'foo'}, {name: 'bar'}]};
+
         spyOn(userList, 'getUser').and.returnValue($q.when(user));
     }));
 
@@ -163,6 +164,7 @@ describe('sdUserPrivileges directive', function() {
                 name: 'John Doe',
                 privileges: [{name: 'can_edit'}]
             };
+
             isoScope.user = userJohn;
 
             isoScope.save();

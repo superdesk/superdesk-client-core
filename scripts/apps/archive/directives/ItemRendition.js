@@ -10,6 +10,7 @@ export function ItemRendition() {
                 var figure = elem.find('figure'),
                     oldImg = figure.find('img').css('opacity', 0.5),
                     previewHover = '<div class="preview-overlay"><i class="icon-fullscreen"></i></div>';
+
                 if (href) {
                     var img = new Image();
 

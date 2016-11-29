@@ -87,6 +87,7 @@ export function PieChartDashboard(colorSchemes) {
                 });
                 function arrangeLabels() {
                     var move = 1;
+
                     while (move > 0) {
                         move = 0;
                         svg.selectAll('.place-label')
@@ -101,6 +102,7 @@ export function PieChartDashboard(colorSchemes) {
                                 .each(function() {
                                     if (this !== self) {
                                         var b = this.getBoundingClientRect();
+
                                         if (Math.abs(a.left - b.left) * 2 < a.width + b.width &&
                                                 Math.abs(a.top - b.top) * 2 < a.height + b.height) {
                                             var dx = (Math.max(0, a.right - b.left) +
@@ -109,6 +111,7 @@ export function PieChartDashboard(colorSchemes) {
                                                             Math.min(0, a.top - b.bottom)) * 0.02,
                                                 tt = d3.transform(d3.select(this).attr('transform')),
                                                 to = d3.transform(d3.select(self).attr('transform'));
+
                                             move += Math.abs(dx) + Math.abs(dy);
                                             to.translate = [to.translate[0] + dx, to.translate[1] + dy];
                                             tt.translate = [tt.translate[0] - dx, tt.translate[1] - dy];

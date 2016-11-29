@@ -3,6 +3,7 @@
 'use strict';
 
 var openUrl = require('./utils').open;
+
 module.exports = new Dashboard();
 
 function Dashboard() {

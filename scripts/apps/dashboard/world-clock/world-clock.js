@@ -145,6 +145,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                                 .outerRadius(r * 0.9)
                                 .startAngle(angle)
                                 .endAngle(angle);
+
                             return arc();
                         })
                     .attr('class', 'number-lines')
@@ -153,6 +154,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 // format data for given time
                 function getData(timeStr) {
                     var time = timeStr.split(':');
+
                     return [
                         {unit: 'h', val: parseInt(time[0], 10) + parseInt(time[1], 10) / 60, r: 0.5},
                         {unit: 'm', val: parseInt(time[1], 10), r: 0.8}
@@ -186,6 +188,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                                 .outerRadius(r * d.r)
                                 .startAngle(angle)
                                 .endAngle(angle);
+
                             return arc();
                         })
                         .attr('class', 'clockhand')

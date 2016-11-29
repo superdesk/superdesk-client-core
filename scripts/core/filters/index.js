@@ -8,8 +8,10 @@ export default angular.module('superdesk.core.filters', [])
         return function(content) {
             var lines = $(content);
             var texts = [];
+
             for (var i = 0; i < lines.length; i++) {
                 var el = $(lines[i]);
+
                 if (el.is('p')) {
                     texts.push(el[0].outerHTML);
                 }
@@ -21,8 +23,10 @@ export default angular.module('superdesk.core.filters', [])
     .filter('mergeWords', ['lodash', function(_) {
         return function(array, propertyName, schemeName, returnArray) {
             var subjectMerged = [];
+
             _.forEach(array, function(item) {
                 var value = _.isNil(propertyName) ? item : item[propertyName];
+
                 if (value) {
                     subjectMerged.push(value);
 
@@ -42,8 +46,10 @@ export default angular.module('superdesk.core.filters', [])
     .filter('splitWords', function() {
         return function(word) {
             var split = [];
+
             _.forEach(word.split(','), function(w) {
                 var trim = w.replace(/^\s+|\s+$/g, '');
+
                 split.push({name: trim});
             });
             return split;
@@ -57,6 +63,7 @@ export default angular.module('superdesk.core.filters', [])
     .filter('filterObject', ['$filter', function($filter) {
         return function(items, fields) {
             var filtered = [];
+
             angular.forEach(items, function(item) {
                 filtered.push(item);
             });
@@ -79,6 +86,7 @@ export default angular.module('superdesk.core.filters', [])
     .filter('formatDateTimeString', [function() {
         return function(input, formatString) {
             var momentTimestamp = angular.isDefined(input) ? moment(input).utc() : moment.utc();
+
             return angular.isDefined(formatString) ? momentTimestamp.format(formatString)
                 : momentTimestamp.format();
         };
@@ -86,6 +94,7 @@ export default angular.module('superdesk.core.filters', [])
     .filter('formatLocalDateTimeString', [function() {
         return function(input, formatString) {
             var momentTimestamp = angular.isDefined(input) ? moment(input).utc() : moment.utc();
+
             return angular.isDefined(formatString) ? momentTimestamp.local().format(formatString) :
             momentTimestamp.local().format();
         };
@@ -118,6 +127,7 @@ export default angular.module('superdesk.core.filters', [])
     .filter('mergeTargets', function() {
         return function(array) {
             var merged = [];
+
             _.forEach(array, function(item) {
                 if ('allow' in item) {
                     merged.push(item.allow === false ? 'Not ' + item.name : item.name);
@@ -197,6 +207,7 @@ export default angular.module('superdesk.core.filters', [])
     .filter('relativeUTCTimestamp', function() {
         return function(located, month, date) {
             var currentTSInLocated = located.tz === 'UTC' ? moment.utc() : moment().tz(located.tz);
+
             currentTSInLocated.month(month).date(date);
 
             return currentTSInLocated.toISOString();
@@ -215,6 +226,7 @@ export default angular.module('superdesk.core.filters', [])
 
             if (filterCondition.field === 'anpa_category' || filterCondition.field === 'subject') {
                 var values = filterCondition.value.split(',');
+
                 _.each(values, function(value) {
                     var v = _.find(valueLookup, function(val) {
                         return val.qcode.toString() === value;
@@ -225,6 +237,7 @@ export default angular.module('superdesk.core.filters', [])
             }
 
             var conditionValue = labels.length > 0 ? labels.join(', ') : filterCondition.value;
+
             return '(' + filterCondition.field + ' ' + filterCondition.operator + ' ' + conditionValue + ')';
         };
     })

@@ -8,6 +8,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;
+
     this.loading = true;
     this.selected = null;
     this.groups = [];
@@ -163,6 +164,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     function customWorkspaceMonitoringConfig(activeWorkspace) {
         return preferencesService.get(PREFERENCES_KEY).then(function(preference) {
             let groups = [];
+
             if (preference && preference[activeWorkspace.id] && preference[activeWorkspace.id].groups) {
                 groups = preference[activeWorkspace.id].groups;
             }
@@ -178,6 +180,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     function widgetMonitoringConfig(objWidget) {
         return workspaces.readActive().then(function(workspace) {
             let groups = [];
+
             self.widget.configuration = objWidget.configuration || {groups: [], label: ''};
             _.each(workspace.widgets, function(widget) {
                 if (widget.configuration && self.widget._id === widget._id
@@ -198,6 +201,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     function deskSettingsMonitoringConfig(objDesk) {
         let groups = [];
         let desk = self.deskLookup[objDesk._id];
+
         if (desk && desk.monitoring_settings) {
             groups = desk.monitoring_settings;
         }
@@ -231,6 +235,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             });
 
             var currentDesk = desks.getCurrentDesk();
+
             if (currentDesk) {
                 self.groups.push({_id: currentDesk._id + ':output', type: 'deskOutput', header: currentDesk.name});
                 if (config.monitoring && config.monitoring.scheduled) {
@@ -249,6 +254,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             });
 
             var editingDesk = settings.desk;
+
             if (editingDesk) {
                 self.groups.push({_id: editingDesk._id + ':output', type: 'deskOutput', header: editingDesk.name});
             }
@@ -267,12 +273,14 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      */
     function initSpikeGroups(isDesk) {
         var spikeDesks = {};
+
         if (self.spikeGroups.length > 0) {
             self.spikeGroups.length = 0;
         }
 
         if (isDesk) {
             var desk = desks.getCurrentDesk();
+
             if (desk) {
                 self.spikeGroups = [{_id: desk._id, type: 'spike'}];
             }
@@ -286,6 +294,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
         _.each(self.groups, function(item, index) {
             if (item.type === 'stage') {
                 var stage = self.stageLookup[item._id];
+
                 spikeDesks[stage.desk] = self.deskLookup[stage.desk];
             } else if (item.type === 'personal') {
                 spikeDesks.personal = {_id: 'personal', name: 'personal'};
@@ -370,6 +379,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             this.selectedFileType = [];
         } else {
             var index = this.selectedFileType.indexOf(fileType);
+
             if (index > -1) {
                 this.selectedFileType.splice(index, 1);
             } else {
@@ -387,6 +397,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      */
     function setupCards() {
         var cards = self.groups;
+
         angular.forEach(cards, setupCard);
         self.cards = cards;
 
@@ -397,11 +408,13 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             if (card.type === 'stage') {
                 var stage = self.stageLookup[card._id];
                 var desk = self.deskLookup[stage.desk];
+
                 card.deskId = stage.desk;
                 card.header = desk.name;
                 card.subheader = stage.name;
             } else if (desks.isOutputType(card.type)) {
                 var deskId = card._id.substring(0, card._id.indexOf(':'));
+
                 card.header = self.deskLookup[deskId].name;
             } else if (card.type === 'search') {
                 card.search = self.searchLookup[card._id];
@@ -422,6 +435,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     this.edit = function(currentStep, displayOnlyCurrentStep) {
         this.editGroups = {};
         var _groups = this.groups;
+
         this.refreshGroups().then(function() {
             _.each(_groups, function(item, index) {
                 self.editGroups[item._id] = {
@@ -433,6 +447,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 };
                 if (item.type === 'stage') {
                     var stage = self.stageLookup[item._id];
+
                     self.editGroups[stage.desk] = {
                         _id: stage._id,
                         selected: true,
@@ -441,6 +456,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                     };
                 } else if (desks.isOutputType(item.type)) {
                     var deskId = item._id.substring(0, item._id.indexOf(':'));
+
                     self.editGroups[deskId] = {
                         _id: item._id,
                         selected: true,
@@ -459,6 +475,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
 
     this.searchOnEnter = function($event, query) {
         var ENTER = 13;
+
         if ($event.keyCode === ENTER) {
             this.search(query);
             $event.stopPropagation();
@@ -497,6 +514,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
 
     this.getMaxHeightStyle = function(maxItems) {
         var maxHeight = 32 * (maxItems || defaultMaxItems);
+
         return {'max-height': maxHeight.toString() + 'px'};
     };
 

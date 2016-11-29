@@ -15,6 +15,7 @@ describe('desks service', function() {
         spyOn(preferencesService, 'update');
 
         var userDesks;
+
         desks.fetchCurrentUserDesks().then(function(_userDesks) {
             userDesks = _userDesks;
         });
@@ -78,6 +79,7 @@ describe('desks service', function() {
 
     it('has active property with desk&stage', inject(function(desks, preferencesService) {
         var active = desks.active;
+
         spyOn(preferencesService, 'update');
 
         // change desk
@@ -108,6 +110,7 @@ describe('desks service', function() {
         }));
 
         var stages;
+
         desks.fetchDeskStages('foo').then(function(_stages) {
             stages = _stages;
         });

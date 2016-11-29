@@ -12,6 +12,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk) {
                 if (_.includes(multi.getIds(), data.item)) {
                     // locked item is in the selections so update lock info
                     var selectedItems = multi.getItems();
+
                     _.find(selectedItems, function(_item) {
                         return _item._id === data.item;
                     }).lock_user = data.user;
@@ -21,6 +22,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk) {
 
             scope.isOpenItemType = function(type) {
                 var openItem = authoringWorkspace.getItem();
+
                 return openItem && openItem.type === type;
             };
 
@@ -34,11 +36,13 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk) {
                 var types = {};
                 var states = [];
                 var activities = {};
+
                 angular.forEach(items, function(item) {
                     types[item._type] = 1;
                     states.push(item.state);
 
                     var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
+
                     _activities.forEach(function(activity) {
                         if (!item.lock_user) { // ignore activities if the item is locked
                             activities[activity._id] = activities[activity._id] ? activities[activity._id] + 1 : 1;
@@ -54,6 +58,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk) {
                 });
 
                 var typesList = Object.keys(types);
+
                 scope.type = typesList.length === 1 ? typesList[0] : null;
                 scope.state = typesList.length === 1 ? states[0] : null;
                 scope.activity = activities;

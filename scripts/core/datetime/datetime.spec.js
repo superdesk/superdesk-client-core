@@ -5,6 +5,7 @@ describe('superdesk.core.datetime module', function() {
     describe('reldate filter', function() {
         it('can convert js Date into a string', inject(function($filter) {
             var date = new Date();
+
             expect($filter('reldate')(date)).toBe('a few seconds ago');
         }));
     });
@@ -24,14 +25,17 @@ describe('superdesk.core.datetime module', function() {
 
             // on monday do tuesday, otherwise day before
             var week = day === 1 ? now.add(1, 'days') : now.subtract(1, 'days');
+
             expect(week.format('dddd, HH:mm')).toBe(datetime.shortFormat(week.format()));
 
             var next = now.add(8, 'days');
+
             expect(next.format('MM/DD')).toBe(datetime.shortFormat(next.format()));
         }));
 
         it('can long format datetime', inject(function(datetime, moment) {
             var now = moment();
+
             expect(now.format('LLL')).toBe(datetime.longFormat(now.format()));
         }));
     });
@@ -39,6 +43,7 @@ describe('superdesk.core.datetime module', function() {
     describe('datetime helper service', function() {
         it('can merge date time and tz', inject(function(datetimeHelper) {
             var merged = datetimeHelper.mergeDateTime('19/04/2016', '15:36:00', 'Europe/Prague');
+
             expect(merged).toBe('2016-04-19T15:36:00');
         }));
     });

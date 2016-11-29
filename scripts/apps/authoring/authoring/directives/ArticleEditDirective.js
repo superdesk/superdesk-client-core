@@ -81,9 +81,11 @@ export function ArticleEditDirective(
                     /* Creates a copy of dateline object from item.__proto__.dateline */
                     if (item.dateline) {
                         var updates = {dateline: {}};
+
                         updates.dateline = _.pick(item.dateline, ['source', 'date', 'located', 'text']);
                         if (item.dateline.located) {
                             var monthAndDay = $filter('parseDateline')(item.dateline.date, item.dateline.located);
+
                             scope.dateline.month = monthAndDay.month;
                             scope.dateline.day = monthAndDay.day;
                             scope.resetNumberOfDays(false);
@@ -230,6 +232,7 @@ export function ArticleEditDirective(
 
             scope.applyCrop = function() {
                 var poi = {x: 0.5, y: 0.5};
+
                 superdesk.intent('edit', 'crop', {
                     item: scope.item,
                     renditions: scope.metadata.crop_sizes,
@@ -241,6 +244,7 @@ export function ArticleEditDirective(
                         var renditions = _.create(scope.item.renditions || {});
                         // always mark dirty as poi could have changed with no
                         // cropData changes
+
                         mainEditScope.dirty = true;
                         // mark dirty in multiedit mode
                         if (scope.articleEdit) {
@@ -260,6 +264,7 @@ export function ArticleEditDirective(
             scope.addHelplineToFooter = function() {
                 // determine and ignore if footer text have empty tags
                 var container = document.createElement('div');
+
                 container.innerHTML = scope.item.body_footer;
 
                 if (!scope.item.body_footer || container.textContent === '') {
@@ -275,6 +280,7 @@ export function ArticleEditDirective(
                 // first option should always be selected, as multiple helplines could be added in footer
                 _.defer(function() {
                     var ddlHelpline = elem.find('#helplines');
+
                     ddlHelpline[0].options[0].selected = true;
                 });
             };

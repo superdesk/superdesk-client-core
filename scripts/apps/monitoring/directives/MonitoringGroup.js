@@ -229,6 +229,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 }
 
                 var intent = {action: 'list'};
+
                 superdesk.findActivities(intent, item).forEach(function(activity) {
                     if (activity.keyboardShortcut && workflowService.isActionAllowed(item, activity.action)) {
                         monitoring.bindedItems.push(
@@ -341,6 +342,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                     apiquery(previewCriteria, false).then(function(completeItems) {
                         let completeItem = search.mergeHighlightFields(completeItems._items[0]);
+
                         select(completeItem);
                     })
                     .finally(function() {
@@ -425,6 +427,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     if (!scope.showRefresh || data && data.force) {
                         scope.total = items._meta.total;
                         let onlyHighlighted = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
+
                         monitoring.totalItems = onlyHighlighted._meta.total;
                         scope.items = search.mergeItems(onlyHighlighted, scope.items, null, true);
                     } else {
@@ -446,6 +449,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                             scope.total = items._meta.total;
                         }
                         let onlyHighlighted = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
+
                         scope.items = search.mergeItems(onlyHighlighted, scope.items, next);
                     });
                 });
@@ -462,6 +466,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              */
             function apiquery(searchCriteria, applyProjections) {
                 var provider = 'search';
+
                 if (scope.group.type === 'search' || desks.isPublishType(scope.group.type)) {
                     if (searchCriteria.repo && searchCriteria.repo.indexOf(',') === -1) {
                         provider = searchCriteria.repo;

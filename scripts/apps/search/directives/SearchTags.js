@@ -53,6 +53,7 @@ export function SearchTags($location, tags, asset, metadata) {
                     parameterValue = param.substring(param.indexOf('(') + 1, param.lastIndexOf(')'));
                 } else {
                     var type = param.split(':')[0];
+
                     _.each(PARAMETERS, function(value, key) {
                         if (type === value && searchParameters[key]) {
                             $location.search(key, null);

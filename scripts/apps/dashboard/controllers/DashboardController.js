@@ -84,6 +84,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
     function extendWidgets(currentWidgets) {
         return _.map(currentWidgets, function(widget) {
             var original = _.find(dashboardWidgets, {_id: widget._id});
+
             return angular.extend({}, original, widget);
         });
     }
@@ -105,6 +106,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
     this.save = function() {
         this.edit = false;
         var diff = angular.extend({}, this.current);
+
         this.widgets = _.filter(this.widgets, {active: true});
         diff.widgets = pickWidgets(this.widgets);
         api.save('workspaces', this.current, diff);

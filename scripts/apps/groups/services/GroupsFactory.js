@@ -36,6 +36,7 @@ export function GroupsFactory($q, api, storage, userList) {
                 self.groupMembers[group._id] = [];
                 _.each(group.members, function(member, index) {
                     var user = _.find(self.users._items, {_id: member.user});
+
                     if (user) {
                         self.groupMembers[group._id].push(user);
                     }
@@ -72,5 +73,6 @@ export function GroupsFactory($q, api, storage, userList) {
             return this.loading;
         }
     };
+
     return groupsService;
 }

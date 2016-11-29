@@ -85,6 +85,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                 var deskIndex = _.findIndex($scope.template.template_desks, function(val) {
                     return val === desk._id;
                 });
+
                 if (desk.selected && deskIndex === -1) {
                     $scope.template.template_desks.push(desk._id);
                 }
@@ -112,6 +113,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                         var deskIndex = _.findIndex(desksIds, function(deskId) {
                             return deskId === desk._id;
                         });
+
                         desk.selected = deskIndex !== -1;
                     });
                 }
@@ -158,8 +160,10 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              */
             $scope.getTemplateDesks = function(template) {
                 var templateDesks = [];
+
                 _.forEach(template.template_desks, function(deskId) {
                     var desk = _.find($scope.desks._items, {_id: deskId});
+
                     if (desk) {
                         templateDesks.splice(-1, 0, desk.name);
                     }

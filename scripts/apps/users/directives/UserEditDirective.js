@@ -48,11 +48,13 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 });
             // get available translation languages
             var noBaseLanguage = true;
+
             scope.languages = _.map(gettextCatalog.strings, function(translation, lang) {
                 if (lang === gettextCatalog.baseLanguage) {
                     noBaseLanguage = false;
                 }
                 var langCode = lang.replace('_', '-');
+
                 if (langmap[langCode]) {
                     return {code: lang, nativeName: langmap[langCode].nativeName};
                 }

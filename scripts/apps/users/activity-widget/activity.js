@@ -23,6 +23,7 @@ angular.module('superdesk.apps.users.activity', [
         function($scope, profileService) {
             var page = 1;
             var currentConfig = null;
+
             $scope.max_results = 0;
 
             function refresh(config) {

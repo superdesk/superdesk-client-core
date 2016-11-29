@@ -15,6 +15,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         },
         link: function(scope, elem) {
             var containerElem = elem.find('.content-list');
+
             containerElem.on('scroll', handleContainerScroll);
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
@@ -39,6 +40,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             };
 
             var updateTimeout;
+
             function handleContainerScroll($event) {
                 if ($rootScope.itemToogle) {
                     scope.$applyAsync(function() {

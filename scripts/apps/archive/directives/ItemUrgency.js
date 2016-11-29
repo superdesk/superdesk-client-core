@@ -12,6 +12,7 @@ export function ItemUrgency(metadata, gettext) {
             scope.$watch('urgency', function(urgency) {
                 if (urgency) {
                     var spec = metadata.urgencyByValue(urgency);
+
                     if (spec) {
                         scope.color = spec.color;
                         scope.short = spec.short || urgency;

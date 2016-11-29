@@ -160,6 +160,7 @@ export function SubscribersDirective(
              */
             $scope.edit = function(subscriber) {
                 var promises = [];
+
                 promises.push(fetchPublishErrors());
                 promises.push(fetchProducts());
                 promises.push(fetchGlobalContentFilters());
@@ -218,6 +219,7 @@ export function SubscribersDirective(
                 if ($scope.destinations.length > 0 && $scope.subscriberType !== '' &&
                     $scope.subscriberType !== newSubscriberType) {
                     var oldFormats = _.result(_.find($scope.subTypes, {qcode: $scope.subscriberType}), 'formats');
+
                     if (!_.isEqual(oldFormats, formats)) {
                         notify.error(gettext('Error: Please re-assign new format for each destination as the changed ' +
                             'subscriber type has formats which are not supported by existing destination(s).'));

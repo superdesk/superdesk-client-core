@@ -48,6 +48,7 @@ function FileValidatorDirective() {
         link: function(scope, elem, attrs, ngModel) {
             ngModel.$validators.fileType = function(modelValue, viewValue) {
                 var value = modelValue || viewValue;
+
                 return !value || !attrs.accept || isAcceptedFileType(value, attrs.accept);
             };
         }

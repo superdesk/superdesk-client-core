@@ -18,6 +18,7 @@ var HTTP_API = {
         this.queryLog = [];
 
         var query = this.query;
+
         this.query = function(criteria) {
             this.queryLog.push(criteria);
             return query.call(this, criteria);
@@ -83,6 +84,7 @@ describe('API Provider', function() {
 
         it('can query', inject(function(api, urls, $q, $httpBackend, $http) {
             var headers = $http.defaults.headers.common;
+
             headers['X-Filter'] = 'User.*';
 
             spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
@@ -90,6 +92,7 @@ describe('API Provider', function() {
             $httpBackend.expectGET(USERS_URL, headers).respond(collection([{}]));
 
             var users;
+
             api.http.query().then(function(_users) {
                 users = _users;
             });
@@ -106,6 +109,7 @@ describe('API Provider', function() {
             spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
 
             var reject;
+
             api.http.query().then(null, function(reason) {
                 reject = true;
             });
@@ -364,6 +368,7 @@ describe('API Provider', function() {
             $httpBackend.expectGET(USERS_URL + '?limit=1').respond(200, {_items: []});
 
             var users;
+
             api('users').query({limit: 1})
                 .then(function(_users) {
                     users = _users;
@@ -423,6 +428,7 @@ describe('API Provider', function() {
 
         it('can fetch an item by id', inject(function(api, $httpBackend) {
             var data = {_id: 1}, user;
+
             $httpBackend.expectGET(USER_URL).respond(200, data);
             api('users').getById(1)
                 .then(function(_user) {
@@ -434,6 +440,7 @@ describe('API Provider', function() {
 
         it('can remove an item', inject(function(api, $httpBackend) {
             var user = {_links: {self: {href: USER_PATH}}, _etag: ETAG};
+
             $httpBackend.expectDELETE(USER_URL, testEtagHeader).respond(200);
             api('users').remove(user);
             $httpBackend.flush();
@@ -447,6 +454,7 @@ describe('API Provider', function() {
 
         it('can update given resource', inject(function(api, $httpBackend) {
             var data = {name: 'foo'};
+
             $httpBackend.expectPATCH(USER_URL, data).respond(200);
             api.update('users', {_id: 1}, data);
             $httpBackend.flush();
@@ -455,6 +463,7 @@ describe('API Provider', function() {
         it('can clean diff data for update', inject(function(api, $httpBackend) {
             var user = {_links: {self: {href: USER_PATH}}, username: 'foo'};
             var diff = Object.create(user);
+
             diff.last_name = false;
 
             $httpBackend.expectPATCH(USER_URL, {last_name: false}).respond(200, {});

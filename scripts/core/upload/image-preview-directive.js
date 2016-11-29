@@ -1,5 +1,6 @@
 angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePreview', [function() {
     var IS_IMG_REGEXP = /^image\//;
+
     return {
         scope: {
             file: '=',
@@ -35,6 +36,7 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
             scope.$watch('file', function(file) {
                 if (file && IS_IMG_REGEXP.test(file.type)) {
                     var fileReader = new FileReader();
+
                     fileReader.onload = updatePreview;
                     fileReader.readAsDataURL(file);
                     setProgress(30);

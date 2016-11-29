@@ -20,6 +20,7 @@ describe('workspace', function() {
 
     it('can open active workspace', inject(function($controller, workspaces, $q, $rootScope) {
         var workspace = {name: 'foo', widgets: [{_id: 'foo'}]};
+
         workspaces.active = workspace;
         spyOn(workspaces, 'getActive');
 
@@ -42,6 +43,7 @@ describe('workspace', function() {
         session.testUser('foo');
 
         var items;
+
         workspaces.queryUserWorkspaces().then(function(_items) {
             items = _items;
         });
@@ -55,6 +57,7 @@ describe('workspace', function() {
     describe('active workspace', function() {
         it('can set active workspace', inject(function(workspaces, preferencesService) {
             var active = {_id: 'test'};
+
             spyOn(preferencesService, 'update');
             workspaces.setActive(active);
             expect(workspaces.active).toBe(active);
@@ -66,6 +69,7 @@ describe('workspace', function() {
             spyOn(preferencesService, 'update');
 
             var desk = {_id: 'foo'};
+
             desks.deskLookup = [];
             desks.deskLookup.foo = desk;
             workspaces.setActiveDesk(desk);
@@ -81,6 +85,7 @@ describe('workspace', function() {
             spyOn(api, 'save').and.returnValue($q.when({_id: 'w1'}));
             session.testUser('foo');
             var workspace = {name: 'test'};
+
             workspaces.save(workspace);
             $rootScope.$digest();
             expect(workspaces.active._id).toBe('w1');
@@ -90,6 +95,7 @@ describe('workspace', function() {
         it('can use last active workspace',
         inject(function(workspaces, api, preferencesService, $q, $rootScope) {
             var active = {};
+
             spyOn(preferencesService, 'get').and.returnValue($q.when({workspace: 'w'}));
             spyOn(api, 'find').and.returnValue($q.when(active));
             workspaces.getActive();
@@ -145,6 +151,7 @@ describe('workspace', function() {
         describe('selectDesk() scope method', function() {
             it('can set workspace type', inject(function() {
                 var desk = {_id: 'foo'};
+
                 scope.workspaceType = null;
                 scope.selectDesk(desk);
 

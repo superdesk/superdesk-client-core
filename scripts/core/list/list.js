@@ -35,6 +35,7 @@ function ListItemDirectiveFactory() {
  * @description The list module provides alternative listing functionalities.
  */
 var mod = angular.module('superdesk.core.list', ['superdesk.core.keyboard', 'superdesk.core.services.asset']);
+
 mod.directive('sdListView', ['$location', 'keyboardManager', 'asset', function($location, keyboardManager, asset) {
     return {
         scope: {
@@ -55,6 +56,7 @@ mod.directive('sdListView', ['$location', 'keyboardManager', 'asset', function($
                 }
 
                 var match = _.find(scope.items, {_id: itemId});
+
                 if (match) {
                     scope.clickItem(match);
                 }
@@ -64,11 +66,13 @@ mod.directive('sdListView', ['$location', 'keyboardManager', 'asset', function($
                 return function() {
                     if (scope.items) {
                         var index = _.indexOf(scope.items, scope.selected);
+
                         if (index === -1) { // selected not in current items, select first
                             return scope.clickItem(_.head(scope.items));
                         }
 
                         var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
+
                         if (nextIndex < 0) {
                             return scope.clickItem(_.last(scope.items));
                         }
@@ -109,6 +113,7 @@ mod.directive('sdSearchbar', ['$location', 'asset', function($location, asset) {
         templateUrl: asset.templateUrl('core/list/views/searchbar.html'),
         link: function(scope, elem) {
             var input = elem.find('#search-input');
+
             scope.q = $location.search().q || null;
             scope.flags = {extended: !!scope.q};
 
@@ -147,6 +152,7 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
                     }
 
                     var match = _.find(scope.items, {_id: itemId});
+
                     if (match) {
                         clickItem(match);
                     }
@@ -159,10 +165,12 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
                     return function() {
                         if (scope.items) {
                             var index = _.findIndex(scope.items, {_id: $location.search()._id});
+
                             if (index === -1) { // selected not in current items, select first
                                 return clickItem(_.head(scope.items));
                             }
                             var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
+
                             if (nextIndex < 0) {
                                 return clickItem(_.last(scope.items));
                             }
@@ -217,6 +225,7 @@ mod.directive('sdPagination', ['$location', 'asset', 'lodash', function($locatio
         },
         link: function(scope, element, attrs) {
             var size = 25;
+
             scope.pgsizes = [25, 50, 100];
             scope.$watch('items._meta', function(meta) {
                 scope.total = 0;

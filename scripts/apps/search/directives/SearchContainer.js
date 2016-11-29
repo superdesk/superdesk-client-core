@@ -4,6 +4,7 @@ export function SearchContainer() {
             function SearchContainerController($scope, $location, gettext, pageTitle) {
                 this.flags = $scope.flags || {};
                 var query = _.omit($location.search(), '_id');
+
                 this.flags.facets = !_.isEmpty(query);
                 pageTitle.setUrl(gettext('Search'));
             }]

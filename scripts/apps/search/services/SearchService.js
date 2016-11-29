@@ -38,17 +38,20 @@ export function SearchService($location, gettext, config, session) {
 
     function getSort() {
         var sort = ($location.search().sort || 'versioncreated:desc').split(':');
+
         return angular.extend(_.find(sortOptions, {field: sort[0]}), {dir: sort[1]});
     }
 
     function sort(field) {
         var option = _.find(sortOptions, {field: field});
+
         setSortSearch(option.field, option.defaultDir || 'desc');
     }
 
     function toggleSortDir() {
         var sort = getSort();
         var dir = sort.dir === 'asc' ? 'desc' : 'asc';
+
         setSortSearch(sort.field, dir);
     }
 
@@ -68,6 +71,7 @@ export function SearchService($location, gettext, config, session) {
             }
 
             var desk;
+
             switch (key) {
             case 'from_desk':
                 desk = params[key].split('-');
@@ -85,6 +89,7 @@ export function SearchService($location, gettext, config, session) {
                     filters.push({term: {'task.desk': desk[0]}});
                     if (!params.from_desk) {
                         var field = desk[1] === 'authoring' ? 'task.last_production_desk' : 'task.last_authoring_desk';
+
                         filters.push({exists: {field: field}});
                     }
                 }
@@ -100,6 +105,7 @@ export function SearchService($location, gettext, config, session) {
                 break;
             default:
                 var filter = {term: {}};
+
                 filter.term[key] = params[key];
                 filters.push(filter);
             }
@@ -147,11 +153,13 @@ export function SearchService($location, gettext, config, session) {
      */
     this.getSelectedCodes = function(currentTags, codeList, field) {
         var queryArray = currentTags.selectedParameters, filteredArray = [];
+
         if (!$location.search().q) {
             return filteredArray;
         }
         for (var i = 0, queryArrayLength = queryArray.length; i < queryArrayLength; i++) {
             var queryArrayElement = queryArray[i];
+
             if (queryArrayElement.indexOf(field + '.qcode') === -1 &&
                 queryArrayElement.indexOf(field + '.name') === -1) {
                 continue;
@@ -160,6 +168,7 @@ export function SearchService($location, gettext, config, session) {
                     queryArrayElement.lastIndexOf('(') + 1,
                     queryArrayElement.lastIndexOf(')')
             );
+
             for (var j = 0, codeListLength = codeList.length; j < codeListLength; j++) {
                 if (codeList[j].qcode === elementName || codeList[j].name === elementName) {
                     filteredArray.push(codeList[j]);
@@ -214,6 +223,7 @@ export function SearchService($location, gettext, config, session) {
      */
     function formatDate(date, timeSuffix) {
         var local = moment(date, config.view.dateformat).format('YYYY-MM-DD') + timeSuffix;
+
         if (config.search && config.search.useDefaultTimezone) {
             // use the default timezone of the server.
             local += moment.tz(config.defaultTimezone).format('ZZ');
@@ -281,12 +291,14 @@ export function SearchService($location, gettext, config, session) {
 
             if (params.after) {
                 var facetrange = {firstcreated: {}};
+
                 facetrange.firstcreated.gte = params.after;
                 query.post_filter({range: facetrange});
             }
 
             if (params.scheduled_after) {
                 var schedulerange = {utc_publish_schedule: {}};
+
                 schedulerange.utc_publish_schedule.gte = params.scheduled_after;
                 query.post_filter({range: schedulerange});
             }
@@ -295,6 +307,7 @@ export function SearchService($location, gettext, config, session) {
                 var type = {
                     type: JSON.parse(params.type)
                 };
+
                 query.post_filter({terms: type});
             }
 
@@ -346,6 +359,7 @@ export function SearchService($location, gettext, config, session) {
         this.getCriteria = function getCriteria(withSource) {
             var search = params;
             var sort = getSort();
+
             setParameters(filters, params);
             var criteria = {
                 query: {filtered: {filter: {and: filters}}},
@@ -358,6 +372,7 @@ export function SearchService($location, gettext, config, session) {
 
             // Construct the query string by combining the q parameter and the raw parameter, if both present
             var queryString = null;
+
             if (search.q && search.raw) {
                 queryString = [search.q, search.raw]
                     .filter((q) => q)
@@ -573,6 +588,7 @@ export function SearchService($location, gettext, config, session) {
             return newItems;
         } else if (append && scopeItems) {
             var nextItems = scopeItems._items.concat(newItems._items);
+
             return angular.extend({}, newItems, {_items: nextItems});
         }
 
@@ -592,6 +608,7 @@ export function SearchService($location, gettext, config, session) {
 
         if (!_.isEmpty(diffToAdd)) {
             var index = 0;
+
             _.map(newItems._items, function(item) {
                 if (_.includes(diffToAdd, item._id)) {
                     // insert item at its place from the fetched sorted items
@@ -620,6 +637,7 @@ export function SearchService($location, gettext, config, session) {
      */
     this.getItemQuery = function(items) {
         var updatedItems = _.keys(items);
+
         return {filtered: {filter: {terms: {_id: updatedItems}}}};
     };
 
@@ -648,11 +666,13 @@ export function SearchService($location, gettext, config, session) {
      */
     this.getSingleItemCriteria = function(item, criteria) {
         let itemCriteria = criteria || this.query($location.search()).getCriteria(true);
+
         itemCriteria.source.from = 0;
         itemCriteria.source.size = 1;
         itemCriteria.es_highlight = this.getElasticHighlight();
 
         let itemId = {};
+
         if (item._type !== 'published') {
             itemId[item._id] = 1;
         } else {
@@ -679,6 +699,7 @@ export function SearchService($location, gettext, config, session) {
 
             // remove gone flag to prevent item remaining grey, if gone item moves back to this stage.
             let itm = item;
+
             if (angular.isDefined(item.gone)) {
                 itm = _.omit(item, 'gone');
             }
@@ -704,6 +725,7 @@ export function SearchService($location, gettext, config, session) {
         var uiFields = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
 
         let projectedFields = [];
+
         uiFields.forEach((uiField) => {
             if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {
                 projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);

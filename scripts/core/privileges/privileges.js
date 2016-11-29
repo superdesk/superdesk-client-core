@@ -1,6 +1,7 @@
 PrivilegesService.$inject = ['$rootScope', '$q', 'preferencesService'];
 function PrivilegesService($rootScope, $q, preferencesService) {
     var _privileges = {};
+
     this.privileges = _privileges;
     $rootScope.privileges = _privileges;
 

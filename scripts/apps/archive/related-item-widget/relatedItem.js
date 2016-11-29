@@ -112,6 +112,7 @@ function RelatedItemController(
             method: function(item) {
                 var target = {_id: item.package_type === 'takes' ? item.last_take : item._id};
                 var originalItem = $scope.item;
+
                 authoring.linkItem(target, $scope.item._id).then(function(_item) {
                     notify.success(gettext('item is associated as a take.'));
                     authoringWorkspace.close(false);
@@ -128,6 +129,7 @@ function RelatedItemController(
             icon: 'icon-expand',
             condition: function(item) {
                 var canHaveNewTake = authoring.itemActions(item).new_take;
+
                 return (item.package_type === 'takes' || canHaveNewTake) &&
                         $scope.item.type === 'text' &&
                         !$scope.item.takes &&

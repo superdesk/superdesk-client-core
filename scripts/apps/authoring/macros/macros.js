@@ -82,6 +82,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
 
     macros.get().then(function() {
         var currentDeskId = desks.getCurrentDeskId();
+
         if (currentDeskId !== null) {
             macros.getByDesk(desks.getCurrentDesk().name).then(function(_macros) {
                 $scope.macros = _macros;
@@ -96,6 +97,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
 
     $scope.call = function(macro) {
         var item = _.extend({}, $scope.origItem, $scope.item);
+
         $scope.loading = true;
         return macros.call(macro, item).then(function(res) {
             if (!res.diff) {
@@ -150,6 +152,7 @@ function MacrosReplaceDirective(macros, editor) {
 
             scope.replace = function() {
                 var to = getCurrentReplace();
+
                 if (to) {
                     editor.replace(to);
                     editor.selectNext();
@@ -164,6 +167,7 @@ function MacrosReplaceDirective(macros, editor) {
 
             function getCurrentReplace() {
                 var from = editor.getActiveText();
+
                 return scope.diff[from] || null;
             }
 

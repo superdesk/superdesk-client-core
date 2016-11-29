@@ -136,6 +136,7 @@ function Templates() {
      **/
     this.getDeskScheduleElement = function(deskName) {
         var deskSelector = element(by.model('template.schedule_desk'));
+
         return deskSelector.element(by.cssContainingText('option', deskName));
     };
 
@@ -154,6 +155,7 @@ function Templates() {
      **/
     this.getStageScheduleElement = function(stageName) {
         var stageSelector = element(by.model('template.schedule_stage'));
+
         return stageSelector.element(by.cssContainingText('option', stageName));
     };
 

@@ -29,6 +29,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                     return archiveItem;
                 }, function(response) {
                     var message = 'Failed to fetch the item';
+
                     if (angular.isDefined(response.data._message)) {
                         message = message + ': ' + response.data._message;
                     }
@@ -64,6 +65,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      */
     function sendOneAs(item, config) {
         var data = getData(config);
+
         if (item._type === 'ingest') {
             return api.save('fetch', {}, data, item).then(function(archived) {
                 item.archived = archived._created;

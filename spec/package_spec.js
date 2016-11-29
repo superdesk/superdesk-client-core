@@ -27,6 +27,7 @@ describe('package', function() {
         // Open menu.
         var menu = monitoring.openItemMenu(2, 0);
         var header = menu.element(by.partialLinkText('Add to current'));
+
         expect(header.isPresent()).toBeFalsy();
         // Close menu.
         menu.element(by.css('.dropdown__menu-close')).click();

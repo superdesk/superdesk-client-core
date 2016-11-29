@@ -9,6 +9,7 @@ export class BaseListController {
 
         $scope.fetchNext = (from) => {
             var criteria = this.getQuery();
+
             criteria.from = from;
             this.fetchItems({source: criteria}, true);
         };
@@ -49,6 +50,7 @@ export class BaseListController {
             this.$location.search('page', null);
         }
         var query = this.buildQuery(params, filterDesk);
+
         this.lastQueryParams = params;
         return query;
     }
@@ -63,6 +65,7 @@ export class BaseListController {
 
     refresh(filterDesk) {
         var query = this.getQuery(_.omit(this.$location.search(), '_id'), filterDesk);
+
         this.fetchItems({source: query});
     }
 }

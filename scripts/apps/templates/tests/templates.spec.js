@@ -17,6 +17,7 @@ describe('templates', function() {
         it('can create template', inject(function($controller, api, $q, $rootScope) {
             var item = _.create({slugline: 'FOO', headline: 'foo'});
             var ctrl = $controller('CreateTemplateController', {item: item});
+
             expect(ctrl.name).toBe('FOO');
             expect(ctrl.type).toBe('create');
             ctrl.name = 'test';
@@ -38,6 +39,7 @@ describe('templates', function() {
         it('can update template', inject(function($controller, api, $rootScope) {
             var item = _.create({slugline: 'FOO', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
+
             $rootScope.$digest();
             expect(api.find).toHaveBeenCalledWith('content_templates', '123');
             expect(ctrl.name).toBe(existingTemplate.template_name);
@@ -50,6 +52,7 @@ describe('templates', function() {
         it('can create new using old template data', inject(function($controller, api, $rootScope) {
             var item = _.create({slugline: 'foo', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
+
             $rootScope.$digest();
             ctrl.name = 'rename it';
             ctrl.is_public = true;
@@ -159,6 +162,7 @@ describe('templates', function() {
             spyOn(api, 'save').and.returnValue($q.when({}));
             var orig = {};
             var data = {hasCrops: 1};
+
             templates.save(orig, data);
             expect(api.save).toHaveBeenCalledWith('content_templates', orig, {data: {headline: '', body_html: ''}});
         }));
@@ -254,14 +258,18 @@ describe('templates', function() {
                 {_id: 'private', is_public: false}
             ], _meta: {total: 3}}));
             var scope = $rootScope.$new();
+
             scope.open = {};
             var elem = $compile('<div sd-template-select data-open="open"></div>')(scope);
+
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalled();
             var args = api.query.calls.argsFor(0);
+
             expect(args[0]).toBe('content_templates');
             $rootScope.$digest();
             var iscope = elem.isolateScope();
+
             expect(iscope.publicTemplates.length).toBe(2);
             expect(iscope.privateTemplates.length).toBe(1);
         }));

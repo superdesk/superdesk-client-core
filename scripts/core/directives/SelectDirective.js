@@ -5,6 +5,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
     return {
         parse: function(input) {
             var match = input.match(TYPEAHEAD_REGEXP);
+
             if (!match) {
                 throw new Error(
                 'Expected typeahead specification in form of _modelValue_ (as _label_)? for _item_ in _collection_' +
@@ -115,11 +116,13 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                 function parseModel() {
                     scope.items.length = 0;
                     var model = parsedResult.source(originalScope);
+
                     if (!angular.isDefined(model)) {
                         return;
                     }
                     for (var i = 0; i < model.length; i++) {
                         var local = {};
+
                         local[parsedResult.itemName] = model[i];
                         scope.items.push({
                             label: parsedResult.viewMapper(local),
@@ -143,6 +146,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                         scope.header = modelCtrl.$modelValue.length + ' selected';
                     } else {
                         var local = {};
+
                         local[parsedResult.itemName] = modelCtrl.$modelValue;
                         scope.header = parsedResult.viewMapper(local);
                     }
@@ -168,6 +172,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                         return true;
                     }
                     var value = modelCtrl.$modelValue;
+
                     return angular.isArray(value) && value.length > 0 || !angular.isArray(value) && value !== null;
                 };
 

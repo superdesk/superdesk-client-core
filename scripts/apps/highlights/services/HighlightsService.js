@@ -32,6 +32,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
         }
 
         var criteria = {};
+
         if (desk) {
             criteria = {where: {$or: [
                                         {desks: desk},
@@ -143,6 +144,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
                 return hourDifference <= 168; // 24*7
             } else if (_.startsWith(highlight.auto_insert, 'now-')) {
                 var trimmedValue = _.trimStart(highlight.auto_insert, 'now-');
+
                 trimmedValue = _.trimEnd(trimmedValue, 'h');
                 return hourDifference <= _.parseInt(trimmedValue);
             }

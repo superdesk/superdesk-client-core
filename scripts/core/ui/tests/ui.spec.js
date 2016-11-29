@@ -118,6 +118,7 @@ describe('superdesk ui', function() {
                     'Foo/Bar': []
                 }
             };
+
             fakeTzData.zones = serverTzData.zones;
             fakeTzData.links = serverTzData.links;
             fakeTzData.getTzNames = function() {
@@ -144,6 +145,7 @@ describe('superdesk ui', function() {
                     'Foo/Bar': []
                 }
             };
+
             fakeTzData.zones = serverTzData.zones;
             fakeTzData.links = serverTzData.links;
             fakeTzData.getTzNames = function() {
@@ -232,6 +234,7 @@ describe('superdesk ui', function() {
 
     describe('multiple emails', function() {
         var scope, form, html;
+
         html = '<form name="form">' +
                     '<input type="text" name="email" ng-model="model.email" required sd-multiple-emails> ' +
                '</form>';

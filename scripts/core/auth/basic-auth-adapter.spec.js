@@ -28,6 +28,7 @@ describe('basic auth adapter', function() {
         spyOn(urls, 'resource').and.returnValue($q.when(LOGIN_URL));
 
         var identity;
+
         authAdapter.authenticate(username, password).then(function(_identity) {
             identity = _identity;
         });

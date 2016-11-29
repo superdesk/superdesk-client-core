@@ -8,6 +8,7 @@ export function HistoryFactory(History, $window, $timeout) {
         ['Z'.charCodeAt(0)]: History.undo,
         ['Y'.charCodeAt(0)]: History.redo
     };
+
     return {
         watch: function(expression, scope) {
             $timeout(function() {
@@ -15,6 +16,7 @@ export function HistoryFactory(History, $window, $timeout) {
             }, 0, false);
             var onHistoryKey = function(event, cb) {
                 var modifier = event.ctrlKey || event.metaKey;
+
                 if (modifier && KeyOperations[event.keyCode]) {
                     cb();
                 }
@@ -34,6 +36,7 @@ export function HistoryFactory(History, $window, $timeout) {
                     event.preventDefault();
                 });
             };
+
             angular.element($window).on('keydown', onHistoryKeydown);
             angular.element($window).on('keyup', onHistoryKeyup);
             scope.$on('$destroy', function() {

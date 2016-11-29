@@ -18,6 +18,7 @@ describe('text editor', function() {
 
     function createScope(text, $rootScope) {
         var scope = $rootScope.$new();
+
         scope.node = document.createElement('p');
         scope.node.innerHTML = text;
         scope.model = {
@@ -42,6 +43,7 @@ describe('text editor', function() {
         spyOn(spellcheck, 'getDictionary').and.returnValue($q.when([{language_id: 'en'}]));
 
         var scope = createScope('test', $rootScope);
+
         editor.registerScope(scope);
         editor.renderScope(scope);
         $rootScope.$digest();
@@ -54,6 +56,7 @@ describe('text editor', function() {
     it('can replace word in node', inject(function(editor, $q, $rootScope) {
         var content = 'test <b>foo</b>';
         var scope = createScope(content, $rootScope);
+
         editor.replaceWord(scope, 5, 3, 'bars');
         expect(scope.node.innerHTML).toBe('test <b>bars</b>');
     }));
@@ -63,6 +66,7 @@ describe('text editor', function() {
         spyOn(spellcheck, 'getDictionary').and.returnValue($q.when([{language_id: 'en'}]));
 
         var scope = createScope('test foo and foo', $rootScope);
+
         editor.registerScope(scope);
 
         editor.setSettings({findreplace: {diff: {foo: '', bar: ''}}});
@@ -114,8 +118,10 @@ describe('text editor', function() {
             WHO: 'World Health Organisation',
             UN: 'United Nations'
         };
+
         spyOn(spellcheck, 'getAbbreviationsDict').and.returnValue($q.when(abbreviations));
         var scope = createScope('test', $rootScope);
+
         editor.registerScope(scope);
         scope.node.parentNode.classList.add('typing');
 

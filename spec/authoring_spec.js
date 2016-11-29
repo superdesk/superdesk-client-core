@@ -24,6 +24,7 @@ describe('authoring', function() {
         authoring.writeText('line\n');
         authoring.addEmbed('embed');
         var thirdBlockContext = element(by.model('item.body_html')).all(by.repeater('block in vm.blocks')).get(2);
+
         thirdBlockContext.element(by.css('.editor-type-html')).sendKeys('line\n');
         authoring.addEmbed('embed', thirdBlockContext);
         authoring.blockContains(0, 'line');
@@ -37,6 +38,7 @@ describe('authoring', function() {
         authoring.cleanBodyHtmlElement();
         function generateLines(from, to) {
             var lines = '';
+
             for (var i = from; i < to; i++) {
                 lines += 'line ' + i + '\n';
             }
@@ -45,6 +47,7 @@ describe('authoring', function() {
         var body1 = generateLines(0, 8);
         var body2 = generateLines(8, 15);
         var body3 = generateLines(15, 20);
+
         authoring.writeText(body1 + body2 + body3);
         for (var i = 0; i < 5; i++) {
             authoring.writeText(protractor.Key.UP);
@@ -251,6 +254,7 @@ describe('authoring', function() {
         expect(authoring.getHistoryItems().count()).toBe(1);
         expect(authoring.getHistoryItem(0).getText()).toMatch(/Published by.*/);
         var transmissionDetails = authoring.showTransmissionDetails(0);
+
         expect(transmissionDetails.count()).toBe(1);
         transmissionDetails.get(0).click();
         expect(element(by.className('modal-body')).getText()).toMatch(/Kids Helpline*/);
@@ -439,6 +443,7 @@ describe('authoring', function() {
         // Perform right arrow would navigate to next level of focused category and selected as input term
         browser.actions().sendKeys(protractor.Key.RIGHT).perform();
         var selectedTerm = authoring.getNextLevelSelectedCategory();
+
         expect(selectedTerm.get(0).getText()).toBe('arts, culture and entertainment');
 
         // Perform Left arrow key would back to one level up in tree and should be focused/active

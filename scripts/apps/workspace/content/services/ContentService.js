@@ -29,6 +29,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.createItem = function(type) {
         var item = newItem(type);
+
         archiveService.addTaskToArticle(item);
         return save(item);
     };
@@ -41,6 +42,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.createPackageItem = function(item) {
         var data = item ? {items: [item]} : {};
+
         return packages.createEmptyPackage(data);
     };
 
@@ -62,6 +64,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.createItemFromTemplate = function(template) {
         var item = newItem(template.data.type || null);
+
         angular.extend(item, templates.pickItemData(template.data || {}), {template: template._id});
         // set the dateline date to default utc date.
         if (item.dateline && item.dateline.located) {

@@ -727,6 +727,7 @@ describe('monitoring', function() {
         var textField = element(by.className('text-editor'));
         // expect contenteditable=true attribute is missing/null for text-editor field,
         // hence editing is disabled for published item
+
         expect(textField.getAttribute('contenteditable')).toBe(null);
     });
 
@@ -735,6 +736,7 @@ describe('monitoring', function() {
         monitoring.previewAction(3, 2);
         expect(monitoring.getPreviewTitle()).toBe('item6');
         var previewPane = element(by.id('item-preview'));
+
         expect(previewPane.isPresent()).toBe(true);
         monitoring.actionOnItem('Edit', 3, 2);
         expect(previewPane.isPresent()).toBe(false);

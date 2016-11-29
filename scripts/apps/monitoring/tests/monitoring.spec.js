@@ -70,6 +70,7 @@ describe('monitoring', function() {
             session.identity = {_id: 'foo'};
             var card = {_id: '123'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 term: {'task.stage': card._id}
             });
@@ -82,8 +83,10 @@ describe('monitoring', function() {
 
         it('can get criteria for personal', inject(function(cards, session) {
             var card = {type: 'personal'};
+
             session.identity = {_id: 'foo'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 bool: {
                     must: {term: {original_creator: session.identity._id}},
@@ -96,6 +99,7 @@ describe('monitoring', function() {
             session.identity = {_id: 'foo'};
             var card = {type: 'search', search: {filter: {query: {q: 'foo'}}}};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('foo');
         }));
 
@@ -103,6 +107,7 @@ describe('monitoring', function() {
             session.identity = {_id: 'foo'};
             var card = {type: 'spike'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 term: {'task.desk': card._id}
             });
@@ -116,6 +121,7 @@ describe('monitoring', function() {
             var card = {type: 'highlights'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 and: [{term: {highlights: queryParam.highlight}}]
             });
@@ -125,13 +131,16 @@ describe('monitoring', function() {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', query: 'test'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
         it('can get criteria for personal with search', inject(function(cards, session) {
             var card = {type: 'personal', query: 'test'};
+
             session.identity = {_id: 'foo'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
@@ -139,6 +148,7 @@ describe('monitoring', function() {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'spike', query: 'test'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
@@ -147,6 +157,7 @@ describe('monitoring', function() {
             var card = {type: 'highlights', query: 'test'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
@@ -154,6 +165,7 @@ describe('monitoring', function() {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text'])};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 terms: {type: ['text']}
             });
@@ -165,6 +177,7 @@ describe('monitoring', function() {
                 search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}}
             };
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('(test) foo');
             expect(criteria.source.post_filter.and).toContain({terms: {type: ['picture']}});
         }));
@@ -173,6 +186,7 @@ describe('monitoring', function() {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text']), query: 'test'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 terms: {type: ['text']}
             });
@@ -182,6 +196,7 @@ describe('monitoring', function() {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text', 'picture'])};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 terms: {type: ['text', 'picture']}
             });
@@ -203,6 +218,7 @@ describe('monitoring', function() {
         inject(function($rootScope, $compile, $q, api, $timeout, session) {
             session.identity = {_id: 'foo'};
             var scope = $rootScope.$new();
+
             $compile('<div sd-monitoring-view></div>')(scope);
             scope.$digest();
 
@@ -223,6 +239,7 @@ describe('monitoring', function() {
             session.identity = {_id: 'foo'};
             var scope = $rootScope.$new(),
                 $elm = $compile('<div sd-monitoring-view></div>')(scope);
+
             scope.$digest();
             spyOn(authoringWorkspace, 'edit');
 
@@ -261,10 +278,12 @@ describe('monitoring', function() {
                 spyOn(deskNotifications, 'getUnreadCount').and.returnValue(1);
 
                 var elem = $compile('<div sd-desk-notifications data-stage="1"></div>')(scope);
+
                 scope.$digest();
                 expect(deskNotifications.getNotifications).toHaveBeenCalled();
 
                 var iScope = elem.isolateScope();
+
                 expect(iScope.notificationCount).toBe(1);
             }));
     });

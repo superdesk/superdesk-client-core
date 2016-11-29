@@ -14,6 +14,7 @@ export function ItemGlobalSearch(
         link: function(scope, elem) {
             var ENTER = 13;
             var ESC = 27;
+
             scope.meta = {};
             scope.flags = {enabled: false};
             keyboardManager.bind('ctrl+0', function() {
@@ -48,6 +49,7 @@ export function ItemGlobalSearch(
             }
             function searchUserContent(criteria) {
                 var resource = api('user_content', session.identity);
+
                 resource.query(criteria).then(function(result) {
                     openItem(result._items);
                 }, function(response) {
@@ -73,6 +75,7 @@ export function ItemGlobalSearch(
                         }}}
                     }
                 };
+
                 api.query('search', criteria).then(function(result) {
                     scope.items = result._items;
                     if (scope.items.length > 0) {

@@ -4,6 +4,7 @@
 UserDeleteCommand.$inject = ['api', 'data', '$q', 'notify', 'gettext', '$rootScope'];
 export function UserDeleteCommand(api, data, $q, notify, gettext, $rootScope) {
     var user = data.item;
+
     return api.users.remove(user).then(
         function(response) {
             return api.users.getById(user._id)

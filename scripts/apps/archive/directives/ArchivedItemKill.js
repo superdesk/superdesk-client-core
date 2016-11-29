@@ -10,6 +10,7 @@ export function ArchivedItemKill(authoring, api, notify, gettext) {
             scope._editable = true;
 
             var itemToDelete = {_id: scope.item._id, _etag: scope.item._etag};
+
             api.remove(itemToDelete, {}, 'archived').then(
                 function(response) {
                     var fields = _.union(_.keys(authoring.getContentFieldDefaults()), ['_id', 'versioncreated']);

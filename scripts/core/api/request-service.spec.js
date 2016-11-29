@@ -16,6 +16,7 @@ describe('request service', function() {
         $httpBackend.expectGET('test').respond('data');
 
         var response;
+
         request.resend(config).then(function(_response) {
             response = _response;
         });
@@ -27,6 +28,7 @@ describe('request service', function() {
 
     it('can resend upload request', inject(function(request, upload) {
         var config = {url: 'upload', method: 'POST'};
+
         upload.start(config);
         spyOn(upload, 'restart');
         request.resend(config);
@@ -35,6 +37,7 @@ describe('request service', function() {
 
     it('can check if request is upload', inject(function(request, upload) {
         var config = {};
+
         spyOn(upload, 'isUpload').and.returnValue(1);
         expect(request.isUpload(config)).toBe(1);
         expect(upload.isUpload).toHaveBeenCalledWith(config);

@@ -58,6 +58,7 @@ export default angular.module('superdesk.core.services.entity', [])
              */
             set: function(key, val) {
                 var locVar = key in this.defaults && angular.equals(this.defaults[key], val) ? null : val;
+
                 $location.search(key, locVar);
                 return this;
             },
@@ -87,6 +88,7 @@ export default angular.module('superdesk.core.services.entity', [])
              */
             makeQuery: function(params, defaults = {}) {
                 var parts = [];
+
                 _.forEach(params, function(val, key) {
                     if (!angular.equals(defaults[key], val)) {
                         _.forEach(_.isArray(val) ? val : [val], function(item) {
@@ -95,6 +97,7 @@ export default angular.module('superdesk.core.services.entity', [])
                     }
                 }, this);
                 var query = parts.length === 0 ? '' : '?' + parts.join('&');
+
                 return query;
             },
 

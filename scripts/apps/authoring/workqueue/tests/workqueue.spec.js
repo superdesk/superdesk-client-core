@@ -57,6 +57,7 @@ describe('workqueue', function() {
         $rootScope.$digest();
 
         var scope = $rootScope.$new();
+
         $controller('Workqueue', {$scope: scope});
         $rootScope.$digest();
         expect(scope.active._id).toBe('foo');
@@ -71,11 +72,13 @@ describe('workqueue', function() {
         $rootScope.$digest();
 
         var scope = $rootScope.$new();
+
         $controller('Workqueue', {$scope: scope});
         $rootScope.$digest();
         expect(scope.active._id).toBe('foo');
 
         var confirmDefer;
+
         confirmDefer = $q.defer();
         // Spy On autosave.get(), testing first call would return with success and second with error.
         spyOn(autosave, 'get').and.returnValues($q.when(scope.active), $q.reject({statusText: 'NOT FOUND'}));

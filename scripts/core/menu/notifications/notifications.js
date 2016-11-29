@@ -15,6 +15,7 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
      */
     function getFilter() {
         var filter = {};
+
         filter = {'recipients.user_id': session.identity._id};
 
         // filter out system messages for non-admin users
@@ -43,8 +44,10 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
                 this._items = response._items;
                 this.unread = 0;
                 var identity = session.identity || {};
+
                 _.each(this._items, (item) => {
                     var recipients = item.recipients || {};
+
                     item._unread = !isRead(recipients, identity._id, true);
                     this.unread += item._unread ? 1 : 0;
                 });
@@ -56,6 +59,7 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
         var _notification = angular.extend({}, notification);
         var recipients = notification.recipients;
         var recipient = _.find(recipients, {user_id: session.identity._id});
+
         if (recipient && !recipient.read) {
             recipient.read = true;
             return api('activity')
@@ -75,12 +79,14 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
     // Checks if the current message is read
     function isRead(activity, userId) {
         var userReadRecord = getFilteredRecipients(activity, userId);
+
         return userReadRecord && userReadRecord.read;
     }
 
     // Checks if the user in the message is the current user
     function isCurrentUser(extras) {
         var dest = extras._dest || [];
+
         return session.identity && getFilteredRecipients(dest, session.identity._id);
     }
 
@@ -115,6 +121,7 @@ function DeskNotificationsService($rootScope, api, session) {
      */
     function getFilter() {
         var filter = {'recipients.desk_id': {$exists: true}};
+
         return filter;
     }
 
@@ -140,6 +147,7 @@ function DeskNotificationsService($rootScope, api, session) {
                 this.unread = {};
                 _.each(response._items, (item) => {
                     var recipients = item.recipients || {};
+
                     _.each(recipients, (recipient) => {
                         if (recipient.desk_id) {
                             if (!(recipient.desk_id in this.unread)) {
@@ -160,6 +168,7 @@ function DeskNotificationsService($rootScope, api, session) {
         var _notification = angular.extend({}, notification);
         var recipients = _.clone(notification.recipients);
         var recipient = _.find(recipients, {desk_id: deskId});
+
         if (recipient && !recipient.read) {
             recipient.read = true;
             recipient.user_id = session.identity._id;
@@ -181,11 +190,13 @@ function DeskNotificationsService($rootScope, api, session) {
      */
     function isRead(recipients, deskId) {
         var deskReadRecord = _.find(recipients, {desk_id: deskId});
+
         return deskReadRecord && deskReadRecord.read;
     }
 
     this.reload();
     var reload = angular.bind(this, this.reload);
+
     $rootScope.$on('desk:mention', reload);
 }
 
@@ -195,6 +206,7 @@ function DeskNotificationsService($rootScope, api, session) {
 MarkAsReadDirective.$inject = ['userNotifications', '$timeout'];
 function MarkAsReadDirective(userNotifications, $timeout) {
     var TIMEOUT = 1500;
+
     return {
         link: function(scope) {
             if (!scope.notification._unread) {

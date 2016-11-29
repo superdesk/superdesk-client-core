@@ -291,6 +291,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                                     return chr === focusedElem;
                                 });
                                     // select previous item on key UP
+
                                 if (indexValue > 0 && indexValue < buttonList.length) {
                                     buttonList[indexValue - 1].focus();
                                 }
@@ -304,6 +305,7 @@ function MetadropdownFocusDirective(keyboardManager) {
                                     return chr === focusedElem;
                                 });
                                     // select next item on key DOWN
+
                                 if (indexValue < buttonList.length - 1) {
                                     buttonList[indexValue + 1].focus();
                                 }
@@ -390,6 +392,7 @@ function MetaTagsDirective(api, $timeout) {
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-tags.html',
         link: function(scope, element) {
             var inputElem = element.find('input')[0];
+
             scope.adding = false;
             scope.refreshing = false;
             scope.newTag = null;
@@ -448,6 +451,7 @@ function MetaTagsDirective(api, $timeout) {
                     .replace(/<\/?[^>]+>/gi, '')
                     .trim()
                     .replace(/&nbsp;/g, ' ');
+
                 if (body) {
                     api.save('keywords', {text: body})
                         .then(function(result) {
@@ -525,6 +529,7 @@ function MetaWordsListDirective() {
                     t.push(keyword.toUpperCase());
 
                     var o = {};
+
                     o[scope.field] = t;
                     _.extend(scope.item, o);
                     scope.change({item: scope.item});
@@ -541,6 +546,7 @@ function MetaWordsListDirective() {
 
                 // build object
                 var o = {};
+
                 o[scope.field] = temp;
 
                 _.extend(scope.item, o);
@@ -587,6 +593,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             var reloadList = scope.reloadList === 'true';
             var includeParent = scope.includeParent === 'true';
             var searchUnique = scope.searchUnique === 'true';
+
             scope.combinedList = [];
 
             scope.tree = {};
@@ -602,12 +609,14 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 }
 
                 var tree = {}, updates = {};
+
                 if (scope.cv && scope.cv.dependent) {
                     updates[scope.field] = [];
                 }
 
                 angular.forEach(items, function(item) {
                     var parent = item.parent || null;
+
                     if (!tree.hasOwnProperty(parent)) {
                         tree[parent] = [item];
                     } else {
@@ -659,6 +668,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
             scope.openParent = function(term, $event) {
                 var parent = _.find(scope.list, {qcode: term.parent});
+
                 scope.openTree(parent, $event);
             };
 
@@ -681,8 +691,10 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     scope.activeList = false;
                 } else {
                     var searchList = reloadList ? scope.list : scope.combinedList;
+
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), function(t) {
                         var searchObj = {};
+
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
                         if (searchUnique) {
                             return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 ||
@@ -700,6 +712,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
             function filterSelected(terms) {
                 var selected = {};
+
                 angular.forEach(scope.item[scope.field], function(term) {
                     if (term) {
                         selected[term[scope.uniqueField]] = 1;
@@ -952,6 +965,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         _priorityByValue: {},
         fetchMetadataValues: function() {
             var self = this;
+
             return vocabularies.getAllActiveVocabularies().then(function(result) {
                 _.each(result._items, function(vocabulary) {
                     self.values[vocabulary._id] = vocabulary.items;
@@ -977,6 +991,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         },
         fetchSubscribers: function() {
             var self = this;
+
             self.values.customSubscribers = [];
             return subscribersService.fetchTargetableSubscribers().then(function(items) {
                 _.each(items, function(item) {
@@ -986,6 +1001,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         },
         fetchSubjectcodes: function(code) {
             var self = this;
+
             return api.get('/subjectcodes').then(function(result) {
                 self.values.subjectcodes = result._items;
             });
@@ -1017,12 +1033,14 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         },
         fetchCities: function() {
             var self = this;
+
             return api.get('/cities').then(function(result) {
                 self.values.cities = result._items;
             });
         },
         filterCvs: function(qcodes, cvs) {
             var self = this;
+
             self.cvs.forEach(function(cv) {
                 var cvService = cv.service || {};
                 var match = false;
@@ -1045,6 +1063,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         filterByService: function(items, qcodes) {
             return _.filter(items, function(item) {
                 var match = false;
+
                 if (item.service) {
                     qcodes.forEach(function(qcode) {
                         match = match || item.service[qcode];

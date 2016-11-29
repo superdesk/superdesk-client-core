@@ -70,6 +70,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 var updates = {
                     desk_id: desks.getCurrentDeskId() || item.task.desk
                 };
+
                 return api.save('archive_rewrite', {}, updates, item);
             })
             .then(function(newItem) {
@@ -95,6 +96,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      */
     this.close = function closeAuthoring(diff, orig, isDirty, closeItem) {
         var promise = $q.when();
+
         if (this.isEditable(diff)) {
             if (isDirty) {
                 if (!_.includes(['published', 'corrected'], orig.state)) {
@@ -134,6 +136,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      */
     this.publishConfirmation = function publishAuthoring(orig, diff, isDirty, action) {
         var promise = $q.when();
+
         if (this.isEditable(diff) && isDirty) {
             promise = confirm.confirmPublish(action)
                 .then(angular.bind(this, function save() {
@@ -174,6 +177,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         // If the text equivalent of the body_html is empty then set the body empty
         if (angular.isDefined(updates.body_html)) {
             var elem = document.createElement('div');
+
             elem.innerHTML = updates.body_html;
             if (elem.textContent === '') {
                 updates.body_html = '';
@@ -183,9 +187,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     this.publish = function publish(orig, diff, action = 'publish') {
         let extDiff = helpers.extendItem({}, diff);
+
         this.cleanUpdatesBeforePublishing(orig, extDiff);
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
+
         return api.update(endpoint, orig, extDiff)
         .then(function(result) {
             return lock.unlock(result)
@@ -207,6 +213,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {
         var promise = $q.when();
+
         if (isDirty) {
             if (this.isEditable(diff)) {
                 promise = confirm.confirmSaveWork(message)
@@ -240,6 +247,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.save = function saveAuthoring(origItem, item) {
         var diff = helpers.extendItem({}, item);
         // Finding if all the keys are dirty for real
+
         if (angular.isDefined(origItem)) {
             angular.forEach(_.keys(diff), function(key) {
                 if (_.isEqual(diff[key], origItem[key])) {
@@ -286,6 +294,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var _orig = {type: orig.type, version: 1, task: {desk: null, stage: null, user: orig.task.user}};
         var _diff = _.omit(item, ['unique_name', 'unique_id', '_id', 'guid']);
         var diff = helpers.extendItem(_orig, _diff);
+
         return api.save('archive', {}, diff).then(function(_item) {
             _item._autosave = null;
             return _item;
@@ -348,6 +357,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     */
     this.linkItem = function link(item, linkId, desk) {
         var data = {};
+
         if (linkId) {
             data.link_id = linkId;
         }
@@ -385,6 +395,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                                 digitalPackage;
 
         var lockedByMe = !lock.isLocked(currentItem);
+
         action.view = !lockedByMe;
 
         var isBroadcast = currentItem.genre && currentItem.genre.length > 0 &&
@@ -480,6 +491,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state);
 
             var desk = _.find(self.userDesks, {_id: currentItem.task.desk});
+
             if (!desk) {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 // user can action `update` even if the user is not a member.
@@ -522,6 +534,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.validateSchedule = function(datePart, timePart, timestamp, timezone) {
         function errors(key) {
             var _errors = {};
+
             _errors[key] = 1;
             return _errors;
         }

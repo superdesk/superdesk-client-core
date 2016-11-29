@@ -7,6 +7,7 @@ export function CreatePackageCtrl(data, packages, authoringWorkspace) {
         packages.createPackageFromItems(data.items, data.defaults).then(edit);
     } else {
         var defaultData = data && data.defaults ? data.defaults : {};
+
         packages.createEmptyPackage(defaultData).then(edit);
     }
 }

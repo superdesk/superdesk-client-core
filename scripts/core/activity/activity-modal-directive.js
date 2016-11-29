@@ -9,6 +9,7 @@ angular.module('superdesk.core.activity.modal', [])
                 scope.activity = null;
                 if (len) {
                     var config = scope.stack[len - 1];
+
                     scope.activity = config.activity;
                     scope.locals = config.locals;
 

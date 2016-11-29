@@ -32,6 +32,7 @@ describe('fetch', function() {
     // @todo(petr): figure out how it should work for authoring+list
     xit('can fetch from ingest with keyboards', function() {
         var body;
+
         workspace.openIngest();
         // select & fetch item
         body = $('body');
@@ -75,6 +76,7 @@ describe('fetch', function() {
         content.actionOnItem('Fetch To', 0);
 
         var btnFetchAndOpen = element(by.css('[ng-disabled="disableFetchAndOpenButton()"]'));
+
         expect(btnFetchAndOpen.getAttribute('disabled')).toBeFalsy();
 
         // Adding a new desk with no member, which serves as a non-member desk when selected

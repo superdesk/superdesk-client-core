@@ -62,6 +62,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
 
     $scope.save = function() {
         var product = _.omit($scope.product, 'edit');
+
         api.products.save(product, $scope.product.edit).then(function() {
             notify.success(gettext('Product is saved.'));
         }, function(response) {
@@ -120,6 +121,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
             });
         }, function(response) {
             var msg = response.data && response.data._message ? response.data._message : JSON.stringify(response);
+
             notify.error(gettext('Error: ' + msg));
         })
         .finally(function() {

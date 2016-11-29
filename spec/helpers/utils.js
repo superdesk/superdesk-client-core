@@ -28,6 +28,7 @@ function login(username, password) {
     let usr = username || 'admin';
     let pwd = password || 'admin';
     var modal = new LoginModal();
+
     return modal.btn.isDisplayed()
         .then(function(needLogin) {
             if (needLogin) {
@@ -107,6 +108,7 @@ function route(location) {
  */
 function getListOption(dropdown, n) {
     var cssSelector = 'option:nth-child(' + n + ')';
+
     return dropdown.$(cssSelector);
 }
 
@@ -117,6 +119,7 @@ function getListOption(dropdown, n) {
  */
 function ctrlKey(key) {
     var Key = protractor.Key;
+
     browser.actions().sendKeys(Key.chord(Key.CONTROL, key))
         .perform();
 }
@@ -128,6 +131,7 @@ function ctrlKey(key) {
  */
 function commandKey(key) {
     var Key = protractor.Key;
+
     browser.actions().sendKeys(Key.chord(Key.COMMAND, key))
         .perform();
 }
@@ -139,6 +143,7 @@ function commandKey(key) {
  */
 function ctrlShiftKey(key) {
     var Key = protractor.Key;
+
     browser.actions().sendKeys(Key.chord(Key.CONTROL, Key.SHIFT, key))
         .perform();
 }
@@ -150,6 +155,7 @@ function ctrlShiftKey(key) {
  */
 function altKey(key) {
     var Key = protractor.Key;
+
     browser.actions().sendKeys(Key.chord(Key.ALT, key))
         .perform();
 }

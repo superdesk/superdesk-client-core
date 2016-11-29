@@ -54,6 +54,7 @@ export function UserPreferencesDirective(
                 preSaveCategoriesCheck()
                 .then(function() {
                     var update = createPatchObject();
+
                     return preferencesService.update(update).then(function() {
                         userList.getUser(scope.user._id, true).then(function(u) {
                             scope.user = u;
@@ -168,11 +169,13 @@ export function UserPreferencesDirective(
 
                 initNeeded = buckets.some(function(bucketName) {
                     var values = metadata.values || {};
+
                     return angular.isUndefined(values[bucketName]);
                 });
 
                 if (initNeeded) {
                     var initPromises = [];
+
                     initPromises.push(metadata.initialize(), desks.initialize());
                     $q.all(initPromises).then(function() {
                         updateScopeData(metadata.values, data);
@@ -211,6 +214,7 @@ export function UserPreferencesDirective(
                 helperData.categories.forEach(function(cat) {
                     var newObj = _.create(cat),
                         selectedCats = userPrefs['categories:preferred'].selected;
+
                     newObj.selected = !!selectedCats[cat.qcode];
                     scope.categories.push(newObj);
                 });
@@ -229,6 +233,7 @@ export function UserPreferencesDirective(
                 _.each(desks.deskLookup, function(desk) {
                     var newObj = _.create(desk),
                         selectedDesks = userPrefs['desks:preferred'].selected;
+
                     newObj.selected = !!selectedDesks[desk._id];
                     scope.desks.push(newObj);
                 });
@@ -292,6 +297,7 @@ export function UserPreferencesDirective(
                 _.each(orig, function(val, key) {
                     if (key === 'dateline:located') {
                         var $input = element.find('.input-term > input');
+
                         scope.changeDatelinePreview(scope.preferences[key], $input[0].value);
                     }
 

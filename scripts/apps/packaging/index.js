@@ -78,6 +78,7 @@ angular.module('superdesk.apps.packaging', [
                         var pkg = authoringWorkspace.getItem();
                         var actions = authoring.itemActions(item);
                         var added = pkg ? packages.isAdded(pkg, item) : false;
+
                         return pkg && pkg.type === 'composite' && pkg._id !== item._id
                             && actions.add_to_current && !added;
                     }],
@@ -95,6 +96,7 @@ angular.module('superdesk.apps.packaging', [
                     function(authoringWorkspace, item, authoring) {
                         var openItem = authoringWorkspace.getItem();
                         var actions = authoring.itemActions(item);
+
                         return openItem && openItem.type !== 'composite' && openItem._id !== item._id &&
                             actions.add_to_current;
                     }],

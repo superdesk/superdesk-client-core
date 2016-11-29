@@ -14,6 +14,7 @@ describe('url resolver', function() {
         $httpBackend.expectGET(SERVER_URL).respond(RESOURCES);
 
         var url;
+
         urls.resource('users').then(function(_url) {
             url = _url;
         });

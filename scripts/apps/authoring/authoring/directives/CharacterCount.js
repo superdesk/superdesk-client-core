@@ -17,6 +17,7 @@ export function CharacterCount() {
             scope.numChars = 0;
             scope.$watch('item', function() {
                 var input = scope.item || '';
+
                 input = scope.html ? helpers.cleanHtml(input) : input;
                 scope.numChars = input.length || 0;
             });

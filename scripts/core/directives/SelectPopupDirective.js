@@ -17,6 +17,7 @@ export default angular.module('superdesk.core.directives.selectPopup', ['superde
 
                 scope.focus = function focus() {
                     var searchBox = element.find('input')[0];
+
                     searchBox.focus();
                 };
             }

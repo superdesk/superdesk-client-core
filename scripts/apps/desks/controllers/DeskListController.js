@@ -4,6 +4,7 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
 
     function sorted(result) {
         var items = result._items || [];
+
         items.sort(compareNames);
         return items;
 
@@ -34,6 +35,7 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
 
     beta.isBeta().then(function(isBeta) {
         var views = ['content', 'users', 'sluglines'];
+
         if (isBeta) {
             views = ['content', 'tasks', 'users', 'sluglines'];
         }

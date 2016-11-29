@@ -13,6 +13,7 @@ function DateTimeDirective(datetime, moment) {
             function renderDate(date) {
                 var momentDate = moment(date);
                 var txt = scope.fromNow ? momentDate.fromNow() : datetime.shortFormat(momentDate);
+
                 elem.text(txt);
                 elem.attr('title', momentDate.format('LLLL'));
             }
@@ -94,11 +95,13 @@ function DateTimeHelperService(moment, config) {
 
     this.isValidTime = function(value, format) {
         var timeFormat = format || config.model.timeformat;
+
         return moment(value, timeFormat, true).isValid();
     };
 
     this.isValidDate = function(value, format) {
         var dateFormat = format || config.model.dateformat;
+
         return moment(value, dateFormat, true).isValid();
     };
 
@@ -173,6 +176,7 @@ export default angular.module('superdesk.core.datetime', [
             var difference = moment().diff(moment(date));
             var d = moment.duration(difference);
             var s = Math.floor(d.asHours());
+
             return s;
         };
     })
@@ -180,8 +184,10 @@ export default angular.module('superdesk.core.datetime', [
     // format datetime obj to time string
     .filter('time', ['config', function timeFilterFactory(config) {
         var TIME_FORMAT = config.view ? config.view.timeformat : 'h:mm';
+
         return function timeFilter(time) {
             var m = moment(time, 'HH:mm:ss');
+
             return m.format(TIME_FORMAT);
         };
     }])

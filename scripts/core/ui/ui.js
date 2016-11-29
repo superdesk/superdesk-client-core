@@ -37,6 +37,7 @@ function ShadowDirective($timeout) {
 
             function shadowTimeout() {
                 var shadow = angular.element('<div class="scroll-shadow"><div class="inner"></div></div>');
+
                 element.parent().prepend(shadow);
                 element.on('scroll', function scroll() {
                     if ($(this).scrollTop() > 0) {
@@ -91,6 +92,7 @@ function WizardHandlerFactory() {
 
     service.wizard = function(name) {
         var nameToUse = name || service.defaultName;
+
         return wizards[nameToUse];
     };
 
@@ -117,6 +119,7 @@ function WizardDirective() {
             $scope.steps = [];
 
             var stopWatch;
+
             this.addStep = function(step) {
                 $scope.steps.push(step);
                 if (!stopWatch) {
@@ -147,6 +150,7 @@ function WizardDirective() {
 
             this.goTo = function(step) {
                 var stepTo;
+
                 if (_.isNumber(step)) {
                     stepTo = $scope.steps[step];
                 } else {
@@ -157,6 +161,7 @@ function WizardDirective() {
 
             this.next = function() {
                 var index = _.indexOf($scope.steps, $scope.selectedStep);
+
                 if (index === $scope.steps.length - 1) {
                     this.finish();
                 } else {
@@ -166,6 +171,7 @@ function WizardDirective() {
 
             this.previous = function() {
                 var index = _.indexOf($scope.steps, $scope.selectedStep);
+
                 $scope.goTo($scope.steps[index - 1]);
             };
 
@@ -210,6 +216,7 @@ function AutofocusDirective() {
         link: function(scope, element) {
             _.defer(function() {
                 var value = element.val();
+
                 element.val('').focus();
                 element.val(value);
             });
@@ -226,6 +233,7 @@ function AutoexpandDirective() {
             function resize() {
                 var e = element[0];
                 var vlen = e.value.length;
+
                 if (vlen !== e.valLength) {
                     if (vlen < e.valLength) {
                         e.style.height = '0px';
@@ -319,6 +327,7 @@ function DropdownPositionDirective($document) {
 
             function closeToBottom() {
                 var docHeight = $document.height();
+
                 return element.offset().top > docHeight - tolerance;
             }
 
@@ -351,6 +360,7 @@ function DropdownPositionAbsoluteDirective($position) {
         link: function(scope, elem, attrs, dropdown) {
             var icon = elem.find('[class*="icon-"]');
             // ported from bootstrap 0.13.1
+
             scope.$watch(dropdown.isOpen, function(isOpen) {
                 if (isOpen) {
                     var pos = $position.positionElements(icon, dropdown.dropdownMenu, 'bottom-right', true),
@@ -473,6 +483,7 @@ function DropdownFocus(Keys) {
                              */
                             if (categoryButton.length > 0) {
                                 var newList = elem.find('button:not([disabled]):not(.dropdown__toggle)');
+
                                 buttonList = _.without(newList, categoryButton[0]);
                             }
 
@@ -487,6 +498,7 @@ function DropdownFocus(Keys) {
                                     }
                                 } else {
                                     var buttonSet = elem.find('button:not([disabled]):not(.dropdown__toggle)');
+
                                     if (buttonSet[0] !== undefined) {
                                         buttonSet[0].focus();
                                     }
@@ -504,6 +516,7 @@ function DropdownFocus(Keys) {
 
                         handlers[Keys.right] = function handleRight() {
                             var selectedElem = elem.find('button:focus').parent('li');
+
                             selectedElem.find('.nested-toggle').click();
                         };
                     });
@@ -590,6 +603,7 @@ function DatepickerDirective($document) {
 
             function handleDatePicker(event) {
                 var isChild = element.find(event.target).length > 0;
+
                 if (scope.state.opened && !isChild) {  // outside Datepicker click
                     scope.$apply(function() {
                         close();
@@ -714,6 +728,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             var $popupWrapper = $compile(popup)(scope);
+
             popup.remove();
             $document.find('body').append($popupWrapper);
 
@@ -748,6 +763,7 @@ function TimepickerDirective($document) {
 
             function handleTimePicker(event) {
                 var isChild = element.find(event.target).length > 0;
+
                 if (scope.opened && !isChild) {  // outside Timepicker click
                     scope.$apply(function() {
                         close();
@@ -767,6 +783,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
     var popupTpl = '<div sd-timepicker-popup ' +
         'data-open="open" data-time="time" data-select="timeSelection({time: time})" data-keydown="keydown(e)">' +
         '</div>';
+
     return {
         scope: {
             open: '=opened'
@@ -865,6 +882,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             var $popupWrapper = $compile(popup)(scope);
+
             popup.remove();
             $document.find('body').append($popupWrapper);
 
@@ -987,6 +1005,7 @@ function TimepickerPopupDirective($timeout, config) {
 
             scope.$watch('time', function(newVal, oldVal) {
                 var local;
+
                 if (newVal) {
                     local = moment(newVal, MODEL_TIME_FORMAT);
                 } else {
@@ -1001,6 +1020,7 @@ function TimepickerPopupDirective($timeout, config) {
 
             scope.submit = function(offset) {
                 var local, time;
+
                 if (offset) {
                     local = moment()
                         .add(offset, 'minutes')
@@ -1102,6 +1122,7 @@ function splitterWidget(superdesk, superdeskFlags, $timeout) {
                 minWidth: 400,
                 start: function(e, ui) {
                     var container = ui.element.parent();
+
                     workspace.resizable({maxWidth: container.width() - 730});
                 },
                 resize: function(e, ui) {
@@ -1164,11 +1185,13 @@ function HeaderResizeDirective($rootScope, $timeout, $window, workspaces) {
         link: function(scope, element) {
             let window = angular.element($window);
             let resize = _.debounce(calcSize, 250);
+
             window.on('resize', resize);
 
             function calcSize() {
                 let stageContainer = element.find('.stage.swimlane');
                 let headerContainer = element.find('.column-header.swimlane');
+
                 if (stageContainer && headerContainer) {
                     if (headerContainer.width() !== stageContainer.width()) {
                         scope.$applyAsync(function() {
@@ -1213,10 +1236,12 @@ function mediaQuery($window) {
         link: function(scope, elem) {
             var window = angular.element($window);
             var resize = _.debounce(calcSize, 300);
+
             window.on('resize', resize);
 
             function calcSize() {
                 var width = elem.width();
+
                 if (width < scope.minWidth) {
                     scope.$parent.$applyAsync(function() {
                         scope.$parent.elementState = 'compact';
@@ -1290,6 +1315,7 @@ function validationDirective(gettext, gettextCatalog) {
         link: function(scope, elem, attrs, ctrl) {
             var invalidText = '<span id="required_span" class="sd-invalid-text">' +
             gettextCatalog.getString('This field is required') + '</span>';
+
             scope.$watch(attrs.required, function(required) {
                 if (!required) {
                     if (elem.hasClass('sd-validate')) {
@@ -1335,6 +1361,7 @@ function MultipleEmailsValidation() {
         link: function(scope, elem, attrs, ctrl) {
             // eslint-disable-next-line max-len
             var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+
             ctrl.$validators.multipleEmails = function(modelValue, viewValue) {
                 if (ctrl.$isEmpty(modelValue)) {
                     return true;

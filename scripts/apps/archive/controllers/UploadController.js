@@ -105,6 +105,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
     $scope.upload = function() {
         var promises = [];
+
         _.each($scope.items, function(item) {
             if (!item.model && !item.progress) {
                 item.upload = null;

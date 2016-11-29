@@ -18,6 +18,7 @@ describe('search', function() {
         globalSearch.searchInput.clear();
         globalSearch.searchInput.sendKeys('item3');
         var focused = browser.driver.switchTo().activeElement().getAttribute('id');
+
         expect(globalSearch.searchInput.getAttribute('id')).toEqual(focused);
         element(by.id('search-button')).click();
         expect(globalSearch.getItems().count()).toBe(3);
@@ -48,6 +49,7 @@ describe('search', function() {
         globalSearch.toggleSearchTabs('filters');
         expect(globalSearch.getPriorityElements().count()).toBe(3);
         var priority = globalSearch.getPriorityElementByIndex(0);
+
         priority.click();
         expect(globalSearch.getItems().count()).toBe(1);
         globalSearch.clickClearFilters();
@@ -56,6 +58,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openParameters();
         var bylineTextbox = element(by.id('search-byline'));
+
         bylineTextbox.clear();
         bylineTextbox.sendKeys('Billy The Fish');
         globalSearch.goButton.click();
@@ -105,6 +108,7 @@ describe('search', function() {
         globalSearch.toggleSearchTabs('filters');
         expect(globalSearch.getGenreElements().count()).toBe(2);
         var genre = globalSearch.getGenreElementByIndex(0);
+
         genre.click();
         expect(globalSearch.getItems().count()).toBe(10);
         globalSearch.clickClearFilters();
@@ -170,6 +174,7 @@ describe('search', function() {
         globalSearch.clickClearFilters();
         globalSearch.openRawSearchTab();
         var rawTextbox = element(by.id('raw-query'));
+
         rawTextbox.clear();
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
@@ -180,6 +185,7 @@ describe('search', function() {
         // DOWN arrow key selects an item and opens preview pane
         expect(globalSearch.getItems().count()).toBe(14);
         var previewPane = element(by.id('item-preview'));
+
         expect(previewPane.isPresent()).toBe(false);
         globalSearch.itemClick(2);
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
@@ -216,6 +222,7 @@ describe('search', function() {
         browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, '0')).perform();
         browser.sleep(200);
         var storyNameEl = element(by.model('meta.unique_name'));
+
         expect(storyNameEl.isPresent()).toBe(true);
         storyNameEl.click();
         browser.actions().sendKeys('item1-in-archived').perform();
@@ -261,6 +268,7 @@ describe('search', function() {
         globalSearch.openParameters();
         globalSearch.toggleSearchTabs('filters');
         var scheduleDay = element(by.id('search_scheduled_24h'));
+
         scheduleDay.click();
         expect(globalSearch.getItems().count()).toBe(2);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);

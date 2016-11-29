@@ -46,6 +46,7 @@ export function MonitoringState($q, $rootScope, ingestSources, desks, highlights
                 usersById: setState({usersById: desks.userLookup}),
                 highlightsById: highlightsService.get().then(function(result) {
                     var highlightsById = {};
+
                     result._items.forEach(function(item) {
                         highlightsById[item._id] = item;
                     });
@@ -73,6 +74,7 @@ export function MonitoringState($q, $rootScope, ingestSources, desks, highlights
     function moveActiveGroup(diff) {
         var groups = self.state.groups;
         var next = groups.indexOf(self.state.activeGroup) + diff;
+
         if (next >= groups.length) {
             next = 0;
         } else if (next < 0) {

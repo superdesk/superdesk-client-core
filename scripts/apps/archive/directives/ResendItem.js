@@ -21,6 +21,7 @@ export function ResendItem(subscribersService, authoring, api, notify, gettext) 
 
             function getSubscriberIds() {
                 var subscriberIds = [];
+
                 _.forEach(scope.selectedSubscribers.items, function(item) {
                     subscriberIds.push(item.qcode);
                 });
@@ -29,6 +30,7 @@ export function ResendItem(subscribersService, authoring, api, notify, gettext) 
 
             scope.resendItem = function() {
                 var data = {subscribers: getSubscriberIds(), version: scope.item._current_version};
+
                 api.save('archive_resend', {}, data, scope.item)
                     .then(function() {
                         notify.success(gettext('Item has been resent.'));

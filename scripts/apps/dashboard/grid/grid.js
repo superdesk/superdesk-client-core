@@ -53,6 +53,7 @@ angular.module('superdesk.apps.dashboard.grid', [])
                     angular.forEach(scope.widgets, function(widget) {
                         if (widget.active) {
                             var sizes = scope.gridster.serialize(widget.el);
+
                             angular.extend(widget, {
                                 row: sizes[0].row,
                                 col: sizes[0].col,
@@ -64,6 +65,7 @@ angular.module('superdesk.apps.dashboard.grid', [])
                 };
 
                 var root = element.find('ul');
+
                 scope.gridster = root.gridster({
                     widget_margins: [20, 20],
                     widget_base_dimensions: [320, 250],

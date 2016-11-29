@@ -27,11 +27,13 @@ function Workspace() {
 
     this.getDesk = function(name) {
         var desks = element.all(by.repeater('desk in userDesks'));
+
         return desks.all(by.css('[option="' + name.toUpperCase() + '"]'));
     };
 
     this.getCurrentDesk = function() {
         var dropdownBtn = element(by.id('selected-desk'));
+
         return dropdownBtn.element(by.css('[ng-if="selected.name"]')).getText();
     };
 
@@ -80,12 +82,15 @@ function Workspace() {
 
     this.createWorkspace = function(name) {
         var dropdownBtn = element(by.id('selected-desk'));
+
         dropdownBtn.click();
 
         var newWorkspaceBtn = element(by.className('action-btn'));
+
         newWorkspaceBtn.click();
 
         var workspaceName = element(by.model('workspace.name'));
+
         workspaceName.sendKeys(name);
 
         element(by.css('[ng-click="save()"]')).click();
@@ -107,6 +112,7 @@ function Workspace() {
      */
     this.showHighlightList = function(name) {
         var item = this.getHighlightListItem(name);
+
         waitFor(item);
         item.click();
     };
@@ -168,6 +174,7 @@ function Workspace() {
      */
     this.openItemMenu = function(index) {
         var itemElem = this.getItem(index);
+
         browser.actions()
             .mouseMove(itemElem)
             .perform();
@@ -184,6 +191,7 @@ function Workspace() {
      */
     this.actionOnItem = function(action, item) {
         var menu = this.openItemMenu(item);
+
         menu.element(by.partialLinkText(action)).click();
     };
 
@@ -197,6 +205,7 @@ function Workspace() {
      */
     this.actionOnItemSubmenu = function(action, submenu, item) {
         var menu = this.openItemMenu(item);
+
         browser.actions()
             .mouseMove(menu.element(by.partialLinkText(action)))
             .perform();
@@ -232,6 +241,7 @@ function Workspace() {
 
     this.selectStage = function(stage) {
         var stages = element(by.css('.desk-stages'));
+
         return stages.element(by.cssContainingText('.stage-label', stage)).click();
     };
 

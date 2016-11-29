@@ -4,8 +4,10 @@ function PackagesCtrl($scope, $location, superdesk, api, search) {
 
     function fetchPackages() {
         var query = search.query();
+
         query.clear_filters();
         var filter = [];
+
         _.forEach($scope.item.linked_in_packages, function(packageRef) {
             filter.push(packageRef.package);
         });

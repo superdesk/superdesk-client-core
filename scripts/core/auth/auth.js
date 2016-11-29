@@ -7,6 +7,7 @@ function AuthExpiredInterceptor(session, $q, $injector, $rootScope, config, _) {
         session.expire();
         return session.getIdentity().then(function() {
             var $http = $injector.get('$http');
+
             $http.defaults.headers.common.Authorization = session.token;
             response.config.headers.Authorization = session.token;
             return $injector.get('request').resend(response.config);
@@ -74,6 +75,7 @@ function ResetPassworController($scope, $location, api, notify, gettext) {
     resetForm();
 
     var query = $location.search();
+
     if (query.token) {
         api.resetPassword.create({token: query.token})
         .then(function(result) {
@@ -150,6 +152,7 @@ export default angular.module('superdesk.core.auth', [
                 }
 
                 var canLogout = true;
+
                 if (superdeskFlags.flags.authoring) {
                     var item = authoringWorkspace.getItem();
 

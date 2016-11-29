@@ -7,6 +7,7 @@ export function PackageItemsEdit(packages, notify) {
         link: function(scope, elem, attrs, ngModel) {
             scope.$on('package:addItems', function(event, data) {
                 var groupIndex = _.findIndex(scope.list, {id: data.group});
+
                 if (groupIndex === -1) {
                     scope.list.push({id: data.group, items: []});
                     groupIndex = scope.list.length - 1;
@@ -30,6 +31,7 @@ export function PackageItemsEdit(packages, notify) {
 
             ngModel.$parsers.unshift(function(viewValue) {
                 var groups = null;
+
                 if (viewValue && viewValue.list) {
                     groups = [];
                     groups.push({
@@ -52,6 +54,7 @@ export function PackageItemsEdit(packages, notify) {
 
             ngModel.$formatters.unshift(function(modelValue) {
                 var root = _.find(modelValue, {id: 'root'});
+
                 if (typeof root === 'undefined') {
                     return;
                 }
@@ -70,6 +73,7 @@ export function PackageItemsEdit(packages, notify) {
                 function visit(groupId) {
                     var _group = _.find(modelValue, {id: groupId});
                     var items = [];
+
                     _.each(_group.refs, function(ref) {
                         if (_isNode(ref)) {
                             items = _.union(items, visit(ref.idRef));
@@ -90,6 +94,7 @@ export function PackageItemsEdit(packages, notify) {
             scope.remove = function(groupId, residRef) {
                 var group = _.find(scope.list, {id: groupId});
                 var item = _.find(group.items, {residRef: residRef});
+
                 _.remove(group.items, {residRef: residRef});
                 packages.removePackageGroupItem(group, item);
                 autosave();
@@ -98,8 +103,10 @@ export function PackageItemsEdit(packages, notify) {
             scope.reorder = function(start, end) {
                 var src = _.find(scope.list, {id: start.group});
                 var dest = _.find(scope.list, {id: end.group});
+
                 if (start.index !== end.index || start.group !== end.group) {
                     var item = src.items.splice(start.index, 1)[0];
+
                     dest.items.splice(end.index, 0, item);
                     packages.addPackageGroupItem(dest, item, false);
                 } else {

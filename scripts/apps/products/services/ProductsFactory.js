@@ -54,5 +54,6 @@ export function ProductsFactory($q, api, contentFilters, $filter) {
                 .then(angular.bind(this, this.fetchContentFilters));
         }
     };
+
     return productsService;
 }

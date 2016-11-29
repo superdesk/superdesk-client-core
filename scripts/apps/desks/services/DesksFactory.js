@@ -5,6 +5,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             .then(function(result) {
                 let pg = page;
                 let extended = items.concat(result._items);
+
                 if (result._links.next) {
                     pg++;
                     return _fetchAll(endpoint, parent, pg, extended);
@@ -64,6 +65,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
 
         fetchUsers: function() {
             var self = this;
+
             return userList.getAll()
             .then(function(result) {
                 self.users = {};
@@ -106,6 +108,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
                 self.deskMembers[desk._id] = [];
                 _.each(desk.members, function(member, index) {
                     var user = _.find(self.users._items, {_id: member.user});
+
                     if (user) {
                         self.deskMembers[desk._id].push(user);
                     } else {
@@ -137,6 +140,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
          */
         fetchCurrentUserDesks: function() {
             var self = this;
+
             if (self.userDesks) {
                 return $q.when(self.userDesks);
             }
@@ -153,6 +157,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
 
         fetchCurrentDeskId: function() {
             var self = this;
+
             if (self.activeDeskId) {
                 return $q.when(self.activeDeskId);
             }
@@ -170,6 +175,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
         },
         fetchCurrentStageId: function() {
             var self = this;
+
             if (self.activeStageId) {
                 return $q.when(self.activeStageId);
             }
@@ -187,6 +193,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             if (!this.activeDeskId || !_.find(this.userDesks, {_id: this.activeDeskId})) {
                 if (session.identity.desk) {
                     var defaultDesk = _.find(this.userDesks, {_id: session.identity.desk});
+
                     return defaultDesk && defaultDesk._id || this.userDesks[0]._id;
                 }
                 return this.userDesks[0]._id;

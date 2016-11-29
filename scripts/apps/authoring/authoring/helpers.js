@@ -89,6 +89,7 @@ export function filterDefaultValues(diff, orig) {
 export function stripHtmlRaw(content) {
     if (content) {
         var elem = document.createElement('div');
+
         elem.innerHTML = content;
         return elem.textContent;
     }
@@ -97,6 +98,7 @@ export function stripHtmlRaw(content) {
 
 export function stripHtml(item) {
     var fields = ['headline'];
+
     _.each(fields, function(key) {
         if (angular.isDefined(item[key])) {
             item[key] = stripHtmlRaw(item[key]);

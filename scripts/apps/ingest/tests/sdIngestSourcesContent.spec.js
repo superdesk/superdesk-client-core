@@ -212,6 +212,7 @@ describe('sdIngestSourcesContent directive', function() {
            'name is given',
             function() {
                 var fieldNames = scope.availableFieldOptions(null);
+
                 expect(fieldNames).toEqual(['field_1', 'field_3']);
             }
         );
@@ -220,6 +221,7 @@ describe('sdIngestSourcesContent directive', function() {
            'plus the given field name',
             function() {
                 var fieldNames = scope.availableFieldOptions('field_4');
+
                 expect(fieldNames).toEqual(['field_1', 'field_3', 'field_4']);
             }
         );

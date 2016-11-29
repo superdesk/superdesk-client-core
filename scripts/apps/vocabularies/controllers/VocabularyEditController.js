@@ -50,6 +50,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
             var activeItems = _.filter($scope.vocabulary.items, function(o) {
                 return o.is_active;
             });
+
             _.each(_.union(_.map(activeItems, 'width'), _.map(activeItems, 'height')), function(item) {
                 if (parseInt(item, 10) < 200) {
                     $scope.errorMessage = gettext('Minimum height and width should be greater than or equal to 200');
@@ -78,6 +79,7 @@ export function VocabularyEditController($scope, gettext, notify, api, vocabular
      */
     $scope.addItem = function() {
         var newVocabulary = {};
+
         _.extend(newVocabulary, $scope.model);
         newVocabulary.is_active = true;
 

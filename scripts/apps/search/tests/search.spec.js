@@ -10,6 +10,7 @@ describe('search service', function() {
         var query = search.query();
         var criteria = query.getCriteria();
         var filters = criteria.query.filtered.filter.and;
+
         expect(filters).toContain({not: {term: {state: 'spiked'}}});
         expect(filters).toContain({not: {and: [{term: {package_type: 'takes'}}, {term: {_type: 'archive'}}]}});
         expect(filters).toContain({not: {and: [{term: {_type: 'published'}},
@@ -21,6 +22,7 @@ describe('search service', function() {
     it('can create query string query', inject(function($rootScope, search, session) {
         session.identity = {_id: 'foo'};
         var criteria = search.query({q: 'test'}).getCriteria();
+
         expect(criteria.query.filtered.query.query_string.query).toBe('test');
     }));
 
@@ -29,6 +31,7 @@ describe('search service', function() {
         session.identity = {_id: 'foo'};
         var criteria = search.query({from_desk: 'test-authoring'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
+
         expect(filters).toContain({term: {'task.last_authoring_desk': 'test'}});
         criteria = search.query({from_desk: 'test-production'}).getCriteria();
         filters = criteria.query.filtered.filter.and;
@@ -40,6 +43,7 @@ describe('search service', function() {
         session.identity = {_id: 'foo'};
         var criteria = search.query({to_desk: '456-authoring'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
+
         expect(filters).toContain({term: {'task.desk': '456'}});
         expect(filters).toContain({exists: {field: 'task.last_production_desk'}});
         criteria = search.query({to_desk: '456-production'}).getCriteria();
@@ -53,6 +57,7 @@ describe('search service', function() {
         session.identity = {_id: 'foo'};
         var criteria = search.query({from_desk: '123-authoring', to_desk: '456-production'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
+
         expect(filters).toContain({term: {'task.last_authoring_desk': '123'}});
         expect(filters).toContain({term: {'task.desk': '456'}});
     }));
@@ -62,6 +67,7 @@ describe('search service', function() {
         session.identity = {_id: 'foo'};
         var criteria = search.query({original_creator: '123'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
+
         expect(filters).toContain({term: {original_creator: '123'}});
     }));
 
@@ -70,6 +76,7 @@ describe('search service', function() {
         session.identity = {_id: 'foo'};
         var criteria = search.query({ingest_provider: '123'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
+
         expect(filters).toContain({term: {ingest_provider: '123'}});
     }));
 
@@ -78,6 +85,7 @@ describe('search service', function() {
         session.identity = {_id: 'foo'};
         var criteria = search.query({unique_name: '123'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
+
         expect(filters).toContain({term: {unique_name: '123'}});
     }));
 
@@ -95,6 +103,7 @@ describe('search service', function() {
     it('can be watched for changes', inject(function(search, $rootScope, session) {
         session.identity = {_id: 'foo'};
         var criteria = search.query().getCriteria();
+
         expect(criteria).toEqual(search.query().getCriteria());
         expect(criteria).not.toEqual(search.query({q: 'test'}).getCriteria());
     }));
@@ -128,6 +137,7 @@ describe('search service', function() {
 
     it('can evalute canShowRefresh for refresh button display', inject(function(search) {
         var newItems, scopeItems, scrollTop, isItemPreviewing, _data;
+
         newItems = {_items: [{_id: 'foo', _current_version: 1}]};
         scopeItems = {_items: [{_id: 'bar', _current_version: 1}]};
         // consider item is not currently previewing but scroll is not on top.
@@ -159,6 +169,7 @@ describe('search service', function() {
         session.identity = {_id: 'foo'};
         var criteria = search.query({notdesk: '["123"]'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
+
         expect(filters).toContain({not: {terms: {'task.desk': ['123']}}});
     }));
 
@@ -167,18 +178,21 @@ describe('search service', function() {
         session.identity = {_id: 'foo'};
         var criteria = search.query({noturgency: '["1"]'}).getCriteria();
         var filters = criteria.query.filtered.filter.and;
+
         expect(filters).toContain({not: {terms: {urgency: ['1']}}});
     }));
 
     it('can create raw string query', inject(function($rootScope, search, session) {
         session.identity = {_id: 'foo'};
         var criteria = search.query({raw: 'slugline:item3 OR slugline:item4'}).getCriteria();
+
         expect(criteria.query.filtered.query.query_string.query).toBe('slugline:item3 OR slugline:item4');
     }));
 
     it('can create a combined raw and q query', inject(function($rootScope, search, session) {
         session.identity = {_id: 'foo'};
         var criteria = search.query({raw: 'item3 OR item4', q: 'item5'}).getCriteria();
+
         expect(criteria.query.filtered.query.query_string.query).toBe('(item5) AND (item3 OR item4)');
     }));
 
@@ -200,6 +214,7 @@ describe('search service', function() {
 
         beforeEach(inject(function($rootScope, $compile) {
             var elem = $compile('<div sd-multi-action-bar></div>')($rootScope.$new());
+
             scope = elem.scope();
             scope.$digest();
         }));

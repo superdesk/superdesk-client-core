@@ -51,6 +51,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.publish = function() {
                 scope.loading = true;
                 var result = scope._publish();
+
                 return $q.resolve(result).then(null, (e) => $q.reject(false))
                     .finally(() => {
                         scope.loading = false;
@@ -137,6 +138,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.$on('item:nextStage', function(_e, data) {
                 if (scope.item && scope.item._id === data.itemId) {
                     var oldStage = scope.selectedStage;
+
                     scope.selectedStage = data.stage;
 
                     scope.send().then(function(sent) {
@@ -187,6 +189,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              */
             scope.disableFetchAndOpenButton = function() {
                 var _isNonMember = _.isEmpty(_.find(desks.userDesks, {_id: scope.selectedDesk._id}));
+
                 return _isNonMember;
             };
 
@@ -364,6 +367,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              */
             scope.canSendItem = function() {
                 var itemType = [], typesList;
+
                 if (scope.multiItems) {
                     angular.forEach(scope.multiItems, function(item) {
                         itemType[item._type] = 1;
@@ -411,6 +415,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 var deskId = scope.selectedDesk._id;
                 var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
                 // send releases lock, increment version.
+
                 return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
                     .then(function(item) {
                         scope.loading = true;
@@ -455,6 +460,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
                     .then(function() {
                         var itemDeskId = null;
+
                         scope.loading = true;
 
                         if (scope.item.task && scope.item.task.desk) {
@@ -503,6 +509,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              */
             function sendAuthoring(deskId, stageId, macro, sendAndContinue) {
                 var deferred, msg;
+
                 scope.loading = true;
 
                 if (sendAndContinue) {
@@ -529,6 +536,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         if (scope.currentUserAction === ctrl.userActions.send_to) {
                             // Remember last destination desk and stage for send_to.
                             var lastDestination = scope.destination_last[scope.currentUserAction];
+
                             if (!lastDestination ||
                                 (lastDestination.desk !== deskId || lastDestination.stage !== stageId)) {
                                 updateLastDestination(deskId, stageId, PREFERENCE_KEY);
@@ -570,6 +578,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              */
             function updateLastDestination(deskId, stageId, key) {
                 var updates = {};
+
                 updates[key] = {desk: deskId, stage: stageId};
                 preferencesService.update(updates, key);
             }
@@ -583,6 +592,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              */
             function sendContent(deskId, stageId, macro, open) {
                 var finalItem;
+
                 scope.loading = true;
 
                 return api.save('duplicate', {}, {desk: scope.item.task.desk}, scope.item)
@@ -690,6 +700,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     // set the last selected desk or current desk
                     var itemDesk = desks.getItemDesk(scope.item);
                     var lastDestination = scope.destination_last[scope.currentUserAction];
+
                     if (itemDesk) {
                         if (lastDestination && !_.isNil(lastDestination.desk)) {
                             scope.selectDesk(desks.deskLookup[lastDestination.desk]);

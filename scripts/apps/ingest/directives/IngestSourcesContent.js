@@ -45,6 +45,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             function openProviderModal() {
                 var providerId = $location.search()._id;
                 var provider;
+
                 if (providerId) {
                     if ($scope.providers && $scope.providers._items) {
                         provider = _.find($scope.providers._items, function(item) {
@@ -128,6 +129,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                     && $scope.origProvider.config.field_aliases || [];
 
                 var aliasObj = {};
+
                 aliases.forEach(function(item) {
                     _.extend(aliasObj, item);
                 });
@@ -187,6 +189,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             */
             $scope.removeFieldAlias = function(itemIdx) {
                 var removed = $scope.fieldAliases.splice(itemIdx, 1);
+
                 if (removed[0].fieldName) {
                     $scope.fieldsNotSelected.push(removed[0].fieldName);
                 }
@@ -243,6 +246,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                 $scope.fieldAliases.forEach(function(item) {
                     if (item.fieldName && item.alias) {
                         var newAlias = {};
+
                         newAlias[item.fieldName] = item.alias;
                         newAliases.push(newAlias);
                     }
@@ -277,6 +281,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                 }
 
                 var index = $scope.provider.content_types.indexOf(fileType);
+
                 if (index > -1) {
                     $scope.provider.content_types.splice(index, 1);
                 } else {
@@ -300,6 +305,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
              */
             $scope.initProviderConfig = function() {
                 var service = getCurrentService();
+
                 if (service && service.config) {
                     $scope.provider.config = angular.extend({}, service.config);
                 } else {
@@ -313,6 +319,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
              */
             $scope.getConfigTemplateURL = function() {
                 var feedingService = getCurrentService();
+
                 return feedingService ? feedingService.templateUrl : '';
             };
 

@@ -45,6 +45,7 @@ export function SubscribersService(api, $q, $filter) {
 
         fetchSubscribersByIds: function(ids) {
             var parts = [];
+
             _.each(ids, function(id) {
                 parts.push({_id: id});
             });

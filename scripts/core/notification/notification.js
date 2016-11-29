@@ -54,6 +54,7 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
     var bindEvents = function() {
         ws.onmessage = function(event) {
             var msg = angular.fromJson(event.data);
+
             $rootScope.$broadcast(msg.event, msg.extra);
             if (_.includes(ReloadEvents, msg.event)) {
                 $rootScope.$broadcast('reload', msg);
@@ -94,6 +95,7 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
 NotifyConnectionService.$inject = ['$rootScope', 'notify', 'gettext', '$timeout', 'session'];
 function NotifyConnectionService($rootScope, notify, gettext, $timeout, session) {
     var self = this;
+
     self.message = null;
 
     $rootScope.$on('disconnected', function(event) {
@@ -125,6 +127,7 @@ function NotifyConnectionService($rootScope, notify, gettext, $timeout, session)
 ReloadService.$inject = ['$window', '$rootScope', 'session', 'desks', 'gettext', 'superdeskFlags', 'lodash'];
 function ReloadService($window, $rootScope, session, desks, gettext, superdeskFlags, _) {
     var self = this;
+
     self.userDesks = [];
     self.result = null;
     self.activeDesk = null;
@@ -179,6 +182,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
             reload: false,
             message: null
         };
+
         if (_.has(userEvents, msg.event)) {
             if (!_.isNil(msg.extra.user_id)) {
                 if (msg.extra.user_id.indexOf(session.identity._id) !== -1) {

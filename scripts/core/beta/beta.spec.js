@@ -5,6 +5,7 @@ describe('beta service', function() {
     inject(function(betaService, $rootScope, $http, $httpBackend) {
         $rootScope.beta = false;
         var isBeta = null;
+
         betaService.isBeta().then(function(_beta) {
             isBeta = _beta;
         });

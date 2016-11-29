@@ -47,6 +47,7 @@ describe('templates', function() {
     describe('Aggregate Widget', function() {
         var fakeEndpoints = {};
         var queryDeferred;
+
         beforeEach(window.module('superdesk.apps.aggregate', 'superdesk.templates-cache'));
 
         beforeEach(window.module(function($provide) {
@@ -81,6 +82,7 @@ describe('templates', function() {
 
         it('it responds to changes query', inject(function($rootScope, $controller, $compile, api, cards) {
             var scope = $rootScope.$new();
+
             scope.agg = {
                 total: 1,
                 cards: [

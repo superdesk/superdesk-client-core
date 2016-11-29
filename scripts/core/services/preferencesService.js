@@ -78,6 +78,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              */
             function getPreferences(cached) {
                 var api = $injector.get('api');
+
                 preferences = null;
                 preferencesPromise = session.getIdentity()
                     .then(fetchPreferences)

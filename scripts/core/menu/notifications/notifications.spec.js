@@ -34,9 +34,11 @@ describe('user notifications', function() {
         expect(api.query).toHaveBeenCalled();
 
         var args = api.query.calls.argsFor(0);
+
         expect(args[0]).toBe('activity');
 
         var query = args[1].where;
+
         expect(query.user).toEqual({$exists: true});
     }));
 
@@ -47,6 +49,7 @@ describe('user notifications', function() {
         $rootScope.$digest();
         var args = api.query.calls.argsFor(0);
         var query = args[1].where;
+
         expect(query.user).toBeUndefined();
         expect(query.item).toBeUndefined();
     }));
@@ -82,6 +85,7 @@ describe('desk notifications', function() {
         expect(api.query).toHaveBeenCalled();
 
         var args = api.query.calls.argsFor(0);
+
         expect(args[0]).toBe('activity');
     }));
 });

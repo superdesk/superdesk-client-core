@@ -11,6 +11,7 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
         templateUrl: 'scripts/apps/authoring/views/item-association.html',
         link: function(scope, elem) {
             var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.graphic'];
+
             if (scope.allowVideo === 'true') {
                 MEDIA_TYPES.push('application/superdesk.item.video');
             }
@@ -39,6 +40,7 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
                 event.stopPropagation();
                 var item = getItem(event, event.originalEvent.dataTransfer.types[0]);
                 // ingest picture if it comes from an external source (create renditions)
+
                 if (scope.isEditable()) {
                     scope.loading = true;
                     renditions.ingest(item)
@@ -55,6 +57,7 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
 
             function updateItemAssociation(updated) {
                 var data = {};
+
                 data[scope.rel] = updated;
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
                 scope.onchange({item: scope.item, data: data});

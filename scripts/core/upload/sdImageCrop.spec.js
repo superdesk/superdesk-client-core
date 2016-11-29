@@ -56,6 +56,7 @@ describe('Image Crop', function() {
 
         describe('onload handler', function() {
             var mySpy;
+
             beforeEach(inject(function() {
                 mySpy = spyOn($.fn, 'Jcrop');
             }));
@@ -70,10 +71,12 @@ describe('Image Crop', function() {
                 expect(typeof fakeImg.onload).toEqual('function');
 
                 var handler = fakeImg.onload;
+
                 handler.apply(fakeImg);
                 expect(mySpy.calls.count()).toEqual(1);
 
                 var retObj = mySpy.calls.argsFor(0);
+
                 expect(retObj[0].aspectRatio).toBe(4 / 3);
                 expect(retObj[0].minSize).toEqual([800, 600]);
                 expect(retObj[0].trueSize).toEqual([900, 600]);
@@ -91,6 +94,7 @@ describe('Image Crop', function() {
                 expect(typeof fakeImg.onload).toEqual('function');
 
                 var handler = fakeImg.onload;
+
                 handler.apply(fakeImg);
                 expect(mySpy.calls.count()).toEqual(0);
                 expect($elm.text())
@@ -103,6 +107,7 @@ describe('Image Crop', function() {
                 scope.$digest();
 
                 var handler = fakeImg.onload;
+
                 handler.apply(fakeImg);
 
                 var coords = {x: 0, x2: 100, y: 0, y2: 100};

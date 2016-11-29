@@ -16,6 +16,7 @@ describe('archived', function() {
         globalSearch.getArchivedContent();
         expect(globalSearch.getItems().count()).toBe(3);
         var itemText = globalSearch.getTextItem(0);
+
         globalSearch.itemClick(0);
         expect(monitoring.getPreviewTitle()).toBe(itemText);
     });

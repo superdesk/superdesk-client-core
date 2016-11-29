@@ -32,6 +32,7 @@ describe('content', function() {
 
     it('can unspike items', inject(function(spike, api, send, $q, $rootScope) {
         var config = {desk: 'foo', stage: 'working'};
+
         spyOn(api, 'update').and.returnValue($q.when());
         spyOn(send, 'startConfig').and.returnValue($q.when(config));
         spike.unspike(item);
@@ -92,6 +93,7 @@ describe('content', function() {
             archiveService.getRelatedItems('test');
             expect(api.query).toHaveBeenCalled();
             var criteria = api.query.calls.mostRecent().args[1];
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('slugline.phrase:"test"');
         }));
 
@@ -157,6 +159,7 @@ describe('content', function() {
 
         it('can get list of items', inject(function(multi) {
             var items = [{_id: 1, selected: true}, {_id: 2, selected: true}];
+
             multi.toggle(items[0]);
             multi.toggle(items[1]);
             expect(multi.getItems()).toEqual(items);
@@ -166,12 +169,15 @@ describe('content', function() {
     describe('media-related directive', function() {
         it('can view item', inject(function(familyService, $rootScope, $compile, superdesk, $q) {
             var scope = $rootScope.$new();
+
             scope.item = {_id: 1, family_id: 1};
 
             var elem = $compile('<div sd-media-related data-item=\'item\'></div>')(scope);
+
             scope.$digest();
 
             var iscope = elem.isolateScope();
+
             expect(iscope.item).toBe(scope.item);
 
             scope.relatedItems = {_items: [{_id: 2, family_id: 1}]};
@@ -185,12 +191,15 @@ describe('content', function() {
         it('can fetch related items when item duplicated',
             inject(function(familyService, $rootScope, $compile, superdesk, $q) {
                 var scope = $rootScope.$new();
+
                 scope.item = {_id: 1, family_id: 1};
 
                 var elem = $compile('<div sd-media-related data-item=\'item\'></div>')(scope);
+
                 scope.$digest();
 
                 var iscope = elem.isolateScope();
+
                 expect(iscope.item).toBe(scope.item);
 
                 spyOn(familyService, 'fetchItems').and.returnValue($q.when());
@@ -205,9 +214,11 @@ describe('content', function() {
         it('can handle preview:item intent', inject(function($rootScope, $compile, superdesk) {
             var scope = $rootScope.$new();
             var elem = $compile('<div sd-item-preview-container></div>')(scope);
+
             scope.$digest();
 
             var iscope = elem.isolateScope();
+
             expect(iscope.item).toBe(null);
 
             scope.$apply(function() {

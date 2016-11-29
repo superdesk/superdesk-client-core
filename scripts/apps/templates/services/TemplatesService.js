@@ -70,6 +70,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
         var criteria = {};
         // in template management only see the templates that are create by the user
+
         criteria.$or = [{user: session.identity._id}];
 
         if (type !== undefined) {
@@ -85,6 +86,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
             criteria.$or.push({is_public: true});
         } else if (self.isAdmin()) {
             var _criteria = criteria;
+
             criteria = desks.fetchCurrentUserDesks().then((desks) => {
                 _criteria.$or.push({
                     is_public: true,
@@ -176,6 +178,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
      */
     this.isAdmin = function(strict) {
         let admin = session.identity.user_type === 'administrator';
+
         if (strict) {
             return admin;
         }
@@ -220,6 +223,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
      */
     this.save = function(orig, updates) {
         var template = angular.extend({data: {}}, updates);
+
         delete template._datelinedate;
         delete template.hasCrops;
         template.data.headline = trimSpaces(template.data.headline);

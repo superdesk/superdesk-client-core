@@ -141,6 +141,7 @@ describe('metadata terms directive', function() {
 
     function compileDirective(html, scopeValues) {
         var scope = $rootScope.$new();
+
         angular.extend(scope, scopeValues);
         return $compile(html)(scope);
     }
@@ -161,6 +162,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         expect(iScope.terms.length).toBe(4);
@@ -184,6 +186,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         expect(iScope.terms.length).toBe(4);
@@ -207,6 +210,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.selectTerm(availableCategories[0]);
@@ -230,6 +234,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         expect(iScope.item[iScope.field].length).toBe(2);
@@ -258,6 +263,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.searchTerms('racing');
@@ -280,6 +286,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.searchTerms('racing');
@@ -304,6 +311,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.removeTerm(iScope.item[iScope.field][0]);
@@ -327,6 +335,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         expect(iScope.terms.length).toBe(8);
@@ -349,6 +358,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.searchTerms('foo');
@@ -371,6 +381,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         expect(iScope.item[iScope.field].length).toBe(2);
@@ -399,6 +410,7 @@ describe('metadata terms directive', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.openTree({name: 'test', qcode: '111'}, event);
@@ -449,6 +461,7 @@ describe('dateline dropdown', function() {
 
     function compileDirective(html, scopeValues) {
         var scope = $rootScope.$new();
+
         angular.extend(scope, scopeValues);
         return $compile(html)(scope);
     }
@@ -472,6 +485,7 @@ describe('dateline dropdown', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.$digest();
@@ -500,6 +514,7 @@ describe('dateline dropdown', function() {
         };
 
         var elm = compileDirective(elmHtml, scopeValues);
+
         $rootScope.$digest();
         iScope = elm.isolateScope();
         iScope.$digest();

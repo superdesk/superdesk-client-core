@@ -17,6 +17,7 @@ ElementFinder.prototype.waitReady = function(optStr) {
     var specTimeoutMs = browser.allScriptsTimeout * 2;
     var driverWaitIterations = 0;
     var lastWebdriverError;
+
     function _throwError() {
         throw new Error('Expected "' + self.locator().toString() +
             '" to be present and visible. ' +

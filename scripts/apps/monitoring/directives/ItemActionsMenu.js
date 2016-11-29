@@ -65,9 +65,11 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
             function getActions(item) {
                 var intent = {action: 'list', type: getType(item)};
                 var groups = {};
+
                 superdesk.findActivities(intent, item).forEach(function(activity) {
                     if (workflowService.isActionAllowed(scope.item, activity.action)) {
                         var group = activity.group || 'default';
+
                         groups[group] = groups[group] || [];
                         groups[group].push(activity);
                     }

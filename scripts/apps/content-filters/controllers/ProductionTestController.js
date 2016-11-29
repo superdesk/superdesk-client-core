@@ -60,6 +60,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
     }
     $scope.handleKeyEvent = function(event) {
         var code = event.keyCode || event.which;
+
         if (MOVES[code]) {
             event.preventDefault();
             event.stopPropagation();

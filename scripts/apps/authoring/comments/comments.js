@@ -39,6 +39,7 @@ function CommentsCtrl($scope, $routeParams, commentsService, api, $q) {
 
     $scope.save = function() {
         var text = $scope.text || '';
+
         if (!text.length) {
             return;
         }
@@ -92,8 +93,10 @@ function CommentTextDirective($compile) {
 
             // map user mentions
             var mentionedUsers = html.match(/\@([a-zA-Z0-9-_.]\w+)/g);
+
             _.each(mentionedUsers, function(token) {
                 var username = token.substring(1, token.length);
+
                 if (scope.comment.mentioned_users && scope.comment.mentioned_users[username]) {
                     html = html.replace(token,
                     '<i sd-user-info data-user="' + scope.comment.mentioned_users[username] + '">' + token + '</i>');
@@ -102,8 +105,10 @@ function CommentTextDirective($compile) {
 
             // map desk mentions
             var mentionedDesks = html.match(/\#([a-zA-Z0-9-_.]\w+)/g);
+
             _.each(mentionedDesks, function(token) {
                 var deskname = token.substring(1, token.length);
+
                 if (scope.comment.mentioned_desks && scope.comment.mentioned_desks[deskname]) {
                     html = html.replace(token,
                     '<a href="">' + token + '</a>');

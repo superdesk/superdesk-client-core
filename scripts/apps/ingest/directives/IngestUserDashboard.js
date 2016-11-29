@@ -102,6 +102,7 @@ export function IngestUserDashboard(api, userList, privileges) {
                 if (scope.item.last_item_update && !scope.item.is_closed) {
                     var idleTime = scope.item.idle_time || constant.DEFAULT_IDLE_TIME;
                     var lastItemUpdate = moment(scope.item.last_item_update);
+
                     if (idleTime && !angular.equals(idleTime, constant.DEFAULT_IDLE_TIME)) {
                         lastItemUpdate.add(idleTime.hours, 'h').add(idleTime.minutes, 'm');
                         if (moment() > lastItemUpdate) {

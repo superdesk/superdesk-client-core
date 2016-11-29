@@ -9,6 +9,7 @@ describe('upload module', function() {
             var scope = $rootScope.$new();
             var elem = $compile('<input accept="text/*" ng-model="upload" sd-file-type-validator>')(scope);
             var ngModel = elem.controller('ngModel');
+
             ngModel.$setViewValue({type: 'text/plain'});
             expect(ngModel.$valid).toBe(true);
             ngModel.$setViewValue({type: 'image/jpeg'});

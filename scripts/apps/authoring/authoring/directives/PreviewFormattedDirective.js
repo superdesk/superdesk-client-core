@@ -11,6 +11,7 @@ export function PreviewFormattedDirective(api, config, notify, storage) {
                 scope.loading = true;
                 storage.setItem('selectedFormatter', formatterString);
                 var formatter = JSON.parse(formatterString);
+
                 api.save('formatters', {}, {article_id: scope.item._id, formatter_name: formatter.name})
                 .then(function(item) {
                     if (formatter.outputType === 'json') {

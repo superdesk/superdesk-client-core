@@ -48,9 +48,11 @@ describe('ingest', function() {
             spyOn(api, 'save').and.returnValue($q.when({_id: 'foo', _created: 'now'}));
 
             var items = [{_id: 1, _type: 'ingest'}, {_id: 2, _type: 'ingest'}];
+
             expect(send.config).toBe(null);
 
             var archives;
+
             send.allAs(items).then(function(_archives) {
                 archives = _archives;
             });

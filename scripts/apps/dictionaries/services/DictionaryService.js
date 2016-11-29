@@ -71,6 +71,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
 
     this.update = function(dictionary, data, success, error) {
         var sendData = {};
+
         angular.forEach(data, function(val, key) {
             if (key[0] !== '_') {
                 sendData[key] = key === 'is_active' ? val.toString() : val;
@@ -97,6 +98,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
     function getUserAbbreviations(lang, baseLang) {
         return session.getIdentity().then(function(identity) {
             var languageIds = [{language_id: lang}];
+
             if (baseLang) {
                 languageIds.push({language_id: baseLang});
             }
@@ -121,6 +123,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
     function getActive(lang, baseLang) {
         return session.getIdentity().then(function(identity) {
             var languageIds = [{language_id: lang}];
+
             if (baseLang) {
                 languageIds.push({language_id: baseLang});
             }
@@ -157,6 +160,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                     ]
                 }
             };
+
             return api.query('dictionaries', where)
                 .then(function(response) {
                     return response._items.length ? response._items[0] : {
@@ -178,6 +182,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
     function addWordToUserDictionary(word, lang) {
         return getUserDictionary(lang).then(function(userDict) {
             var words = userDict.content || {};
+
             words[word] = words[word] ? words[word] + 1 : 1;
             userDict.content = words;
             return api.save('dictionaries', userDict);

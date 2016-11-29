@@ -207,6 +207,7 @@ angular.module('superdesk.apps.archive', [
                     function(data, $rootScope, desks, authoring, authoringWorkspace, notify) {
                         // get the desk of the item to create the new take.
                         var deskId = null;
+
                         deskId = desks.getCurrentDeskId();
 
                         if (!deskId) {

@@ -180,18 +180,21 @@ function Highlights() {
 
     this.exportHighlightsConfirm = function() {
         var btn = element(by.className('modal-footer')).element(by.buttonText('OK'));
+
         wait(btn, 500);
         btn.click();
     };
 
     this.saveTextHighlightsConfirm = function() {
         var btn = element(by.className('modal-footer')).element(by.buttonText('Save'));
+
         wait(btn, 500);
         btn.click();
     };
 
     this.multiMarkHighlight = function(name) {
         var elem = element(by.css('[class="multi-action-bar ng-scope"]'));
+
         elem.element(by.className('big-icon-marked-star')).click();
         browser.sleep(200);
         elem.all(by.repeater('h in highlights track by h._id')).all(by.css('[option="' + name + '"]')).click();

@@ -48,6 +48,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             scope.edit = function(item) {
                 if (item._type === 'ingest') {
                     var activity = superdesk.findActivities({action: 'list', type: 'ingest'}, item)[0];
+
                     activityService.start(activity, {data: {item: item}}).then(function(item) {
                         initEdit(item);
                     });
@@ -154,6 +155,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             var container = elem[0];
             var offsetY = 0;
             var itemHeight = 0;
+
             elem.bind('scroll', function() {
                 scope.$apply(function() {
                     if (container.scrollTop + container.offsetHeight >= container.scrollHeight - 3) {
@@ -243,6 +245,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 DOWN = 1;
 
             var code;
+
             elem.on('keydown', function(e) {
                 scope.$apply(function() {
                     if (e.keyCode) {
@@ -265,8 +268,10 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             scope.move = function(diff, event) {
                 if (!_.isNil(scope.selected) && $rootScope.config.features.customMonitoringWidget && scope.items) {
                     var index = _.findIndex(scope.items, {_id: scope.selected._id});
+
                     if (!itemHeight) {
                         var containerItems = container.getElementsByTagName('li');
+
                         if (containerItems.length) {
                             itemHeight = containerItems[0].offsetHeight;
                         }
@@ -276,6 +281,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                         clickItem(_.head(scope.items), event);
                     }
                     var nextIndex = _.max([0, _.min([scope.items.length - 1, index + diff])]);
+
                     if (nextIndex < 0) {
                         clickItem(_.last(scope.items), event);
                     }

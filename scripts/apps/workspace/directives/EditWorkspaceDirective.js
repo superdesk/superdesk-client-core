@@ -17,6 +17,7 @@ export function EditWorkspaceDirective(workspaces) {
                 .then(function() {
                     scope.errors = null;
                     var workspace = scope.workspace;
+
                     scope.workspace = null;
                     if (scope.done) {
                         return scope.done(workspace);

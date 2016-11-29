@@ -57,6 +57,7 @@ module.exports = {
         options: {
             bootstrap: function() {
                 var locale = getConfig().i18n || '';
+
                 if (locale === '') {
                     return 'export default [];\r\n';
                 }
@@ -64,6 +65,7 @@ module.exports = {
                     'angular-i18n',
                     'angular-locale_' + locale + '.js'
                 );
+
                 return `require('${f}');\r\n`;
             }
         }

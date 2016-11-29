@@ -14,6 +14,7 @@ export default angular.module('superdesk.core.directives.debounce', [])
             require: 'ngModel',
             link: function($scope, element, attrs, ngModel) {
                 let interval = 1000;
+
                 if (attrs.interval !== '' && attrs.interval !== undefined) {
                     interval = attrs.interval;
                 }

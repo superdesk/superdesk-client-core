@@ -54,6 +54,7 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
              */
             function initialize() {
                 var activeWorkspace = null;
+
                 workspaces.getActiveId()
                 .then(function(workspace) {
                     activeWorkspace = workspace;

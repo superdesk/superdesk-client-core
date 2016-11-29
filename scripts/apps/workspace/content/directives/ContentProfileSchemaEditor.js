@@ -64,6 +64,7 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
                 };
                 metadata.cvs.forEach(function(cv) {
                     var cvId = constant.CV_ALIAS[cv._id] || cv._id;
+
                     if (scope.schema[cvId]) {
                         scope.options[cvId] = cv.items;
                     }

@@ -1,6 +1,7 @@
 DuplicateController.$inject = ['api', 'notify', '$rootScope', 'data', 'desks', '$location', 'workspaces', 'session'];
 export function DuplicateController(api, notify, $rootScope, data, desks, $location, workspaces, session) {
     var currentDeskId;
+
     if ($location.path() === '/search' || workspaces.isCustom()) {
         currentDeskId = session.identity.desk || data.item.task.desk;
     } else {

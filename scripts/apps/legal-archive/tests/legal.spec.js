@@ -24,6 +24,7 @@ describe('legal archive service', function() {
 
     it('can create base query', inject(function(legal) {
         var criteria = legal.getCriteria();
+
         expect(criteria.sort).toEqual('[("versioncreated", -1)]');
         expect(criteria.max_results).toBe(25);
     }));
@@ -32,6 +33,7 @@ describe('legal archive service', function() {
         legal.updateSearchQuery({headline: 'test'});
         $rootScope.$digest();
         var criteria = legal.getCriteria();
+
         expect(criteria.where).toBe('{"$and":[{"headline":{"$regex":"test","$options":"-i"}}]}');
 
         legal.updateSearchQuery({_id: '123', headline: 'test'});

@@ -53,6 +53,7 @@ export function ContentResults($location, preferencesService, packages, tags, as
             scope.setview = setView;
 
             var savedView;
+
             preferencesService.get('archive:view').then(function(result) {
                 savedView = result.view;
                 scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
@@ -68,6 +69,7 @@ export function ContentResults($location, preferencesService, packages, tags, as
 
             function toggleView() {
                 var nextView = scope.view === LIST_VIEW ? GRID_VIEW : LIST_VIEW;
+
                 return setView(nextView);
             }
 

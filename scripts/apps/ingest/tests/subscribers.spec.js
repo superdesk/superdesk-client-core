@@ -17,6 +17,7 @@ describe('subscribers service', function() {
 
     it('can get all subscribers', inject(function(subscribersService, api, $q, $rootScope) {
         var allSubscribers;
+
         subscribersService.fetchSubscribers().then(function(subs) {
             allSubscribers = subs;
         });
@@ -33,6 +34,7 @@ describe('subscribers service', function() {
 
     it('can get all active subscribers', inject(function(subscribersService, api, $q, $rootScope) {
         var allSubscribers;
+
         subscribersService.fetchActiveSubscribers().then(function(subs) {
             allSubscribers = subs;
         });
@@ -43,6 +45,7 @@ describe('subscribers service', function() {
 
     it('can get all targetable subscribers', inject(function(subscribersService, api, $q, $rootScope) {
         var allSubscribers;
+
         subscribersService.fetchTargetableSubscribers().then(function(subs) {
             allSubscribers = subs;
         });

@@ -26,6 +26,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
              */
             function init(loadData) {
                 var params = $location.search();
+
                 scope.query = params.q;
                 scope.flags = false;
                 scope.common = common;
@@ -121,10 +122,12 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                         scope.fields[cv.field] = [];
                         scope.selecteditems[cv.field] = scope.selecteditems[cv.field] || [];
                         var itemList = JSON.parse($location.search()[cv.field]);
+
                         angular.forEach(itemList, function(qcode) {
                             var match = _.find(scope.metadata[cv.list], function(m) {
                                 return m.qcode === qcode;
                             });
+
                             if (match) {
                                 scope.selecteditems[cv.field].push(angular.extend(match, {
                                     scheme: cv.id
@@ -146,6 +149,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             function initFromToDesk(param, field) {
                 if (param) {
                     var deskParams = param.split('-');
+
                     if (deskParams.length === 2) {
                         scope.fields[field] = deskParams[0];
                     }
@@ -211,6 +215,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 angular.forEach(scope.meta, function(val, key) {
                     // checkbox boolean values.
                     let v = val;
+
                     if (typeof val === 'boolean') {
                         v = booleanToBinaryString(val);
                     }
@@ -223,6 +228,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                         metas.push(v.join(' '));
                     } else if (v) {
                         let k = key;
+
                         if (key.indexOf('scanpix_') === 0) {
                             k = key.substring(8);
                         }
@@ -236,6 +242,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                             });
                         } else {
                             var subkey = getFirstKey(v);
+
                             if (v[subkey]) {
                                 metas.push(k + '.' + subkey + ':(' + v[subkey] + ')');
                             }
@@ -279,6 +286,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
              */
             function getDeskParam(field) {
                 var deskId = '';
+
                 if (scope.fields[field]) {
                     deskId = scope.fields[field];
                     var deskType = _.result(_.find(scope.desks._items, function(item) {

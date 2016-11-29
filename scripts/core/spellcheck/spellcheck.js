@@ -65,6 +65,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
 
                 // Abbreviations found in dictionary.
                 var re = /\w+(?:\.\w*)+/g;
+
                 abbreviationList = _.words(Object.keys(dict.content), re);
 
                 return dict.content;
@@ -106,6 +107,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
                 self.abbreviationsDict.content = {};
 
                 let langItems = items;
+
                 if (baseLang && _.find(items, {language_id: lang}) && _.find(items, {language_id: baseLang})) {
                     langItems = _.filter(items, {language_id: lang});
                 }
@@ -157,6 +159,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
 
         // consider only abbreviations in content that found in dictionary
         var _abbrevArr = [];
+
         _.forEach(abbreviationWords, function(abbrevWord) {
             _.filter(abbreviationList, function(item) {
                 if (item === abbrevWord) {
@@ -173,6 +176,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         // Words that come after an abbreviation in content.
         var _reNonSentenceWords = '\\s+(?:' + _abbreviationString + ')(\\s+\\w+)';
         var reNonSentenceWords = new RegExp(_reNonSentenceWords, 'g');
+
         while (!_.isNil(match = reNonSentenceWords.exec(textContent))) {
             wordIndex = match.index + match[0].indexOf(_.trim(match[1]));
             nonSentenceWords[currentOffset + wordIndex] = _.trim(match[1]);
@@ -197,6 +201,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         var match, wordIndex;
         var sentenceWords = {};
         // Replace quotes (",“,”,‘,’,'), that might occur at start/end of sentence/paragraph before applying regex.
+
         while (!_.isNil(match = reSentenceWords.exec(textContent.replace(/["“”‘’']/g, ' ')))) {
             wordIndex = match.index + match[0].indexOf(match[1]);
             sentenceWords[currentOffset + wordIndex] = match[1];
@@ -220,6 +225,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
     function wordExistInDict(word, i) {
         if (i) {
             var lowerCaseWord = word.toLowerCase();
+
             return _.find(Object.keys(dict.content), function(val) {
                 return val.toLowerCase() === lowerCaseWord;
             });
@@ -241,6 +247,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         } else if (sentenceWord && isFirstLetterCapital(word)) {
             // first word, maybe it is in dict with capital, maybe not, check both
             var lowercase = word[0].toLowerCase() + word.slice(1);
+
             return !wordExistInDict(word) && !wordExistInDict(lowercase);
         }
 
@@ -289,6 +296,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
                 while (!_.isNil(match = regexp.exec(tree.currentNode.textContent))) {
                     var word = match[0];
                     var isSentenceWord = !!objSentenceWords[currentOffset + match.index];
+
                     if (isNaN(word) && !isIgnored(word) && isSpellingMistake(word, isSentenceWord)) {
                         errors.push({
                             word: word,
@@ -367,6 +375,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
      */
     function getItemIgnored() {
         var item = $location.search().item || '';
+
         ignored[item] = ignored[item] || {};
         return ignored[item];
     }
@@ -392,6 +401,7 @@ function SpellcheckMenuController(editor, preferencesService) {
      */
     function setStatus(status) {
         var updates = {};
+
         updates[PREFERENCES_KEY] = {
             type: 'bool',
             enabled: status,
@@ -406,6 +416,7 @@ function SpellcheckMenuController(editor, preferencesService) {
      */
     function getStatus() {
         var status = true;
+
         return preferencesService.get(PREFERENCES_KEY).then(function(result) {
             if (angular.isDefined(result)) {
                 status = result.enabled;

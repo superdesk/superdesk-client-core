@@ -12,6 +12,7 @@ describe('ingest_provider', function() {
     function addProvider() {
         ingestDashboard.openDropDown();
         var providerButton = ingestDashboard.getProviderButton(ingestDashboard.getProvider(0));
+
         expect(providerButton.getAttribute('class')).not.toContain('checked');
         providerButton.click();
         expect(providerButton.getAttribute('class')).toContain('checked');
@@ -32,6 +33,7 @@ describe('ingest_provider', function() {
         addProvider();
         ingestDashboard.openDropDown();
         var providerButton = ingestDashboard.getProviderButton(ingestDashboard.getProvider(0));
+
         expect(providerButton.getAttribute('class')).toContain('checked');
         providerButton.click();
         expect(providerButton.getAttribute('class')).not.toContain('checked');
@@ -43,6 +45,7 @@ describe('ingest_provider', function() {
         expect(ingestDashboard.getDashboardList().count()).toEqual(1);
         var dashboard = ingestDashboard.getDashboard(0);
         var settings = ingestDashboard.getDashboardSettings(dashboard);
+
         settings.click();
 
         // status
@@ -71,6 +74,7 @@ describe('ingest_provider', function() {
         addProvider();
         var dashboard = ingestDashboard.getDashboard(0);
         var settings = ingestDashboard.getDashboardSettings(dashboard);
+
         settings.click();
         settings.element(by.css('.icon-pencil')).click();
 

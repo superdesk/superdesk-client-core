@@ -67,6 +67,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                 });
 
                 var _new = !scope.editScheme._id;
+
                 api('routing_schemes').save(_orig, scope.editScheme)
                 .then(function() {
                     if (_new) {
@@ -128,6 +129,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                         hour_of_day_to: '23:55:00'
                     }
                 };
+
                 scope.editScheme.rules.push(rule);
                 scope.editRule(rule);
             };

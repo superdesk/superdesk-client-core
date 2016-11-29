@@ -266,6 +266,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 var errorMessage;
+
                 if (item.embargo_date || item.embargo_time) {
                     errorMessage = validateTimestamp(
                         item.embargo_date, item.embargo_time, item.embargo,
@@ -297,6 +298,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function publishItem(orig, item) {
                 var action = $scope.action === 'edit' ? 'publish' : $scope.action;
+
                 validate(orig, item);
 
                 return authoring.publish(orig, item, action)
@@ -308,6 +310,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                     if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
                         let issues = response.data._issues;
+
                         if (angular.isDefined(issues['validator exception'])) {
                             var errors = issues['validator exception'];
                             var modifiedErrors = errors.replace(/\[/g, '')
@@ -348,6 +351,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function validate(orig, item) {
                 let updated = _.cloneDeep(orig);
+
                 $scope.error = {};
                 tryPublish = true;
                 helpers.extendItem(updated, item);
@@ -360,10 +364,12 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                         if (cv) {
                             var field = cv.schema_field || 'subject';
+
                             angular.forEach(cv.items, function(row) {
                                 var element = _.find(updated[field], function(item) {
                                     return item.qcode === row.qcode;
                                 });
+
                                 if (element) {
                                     found = true;
                                 }
@@ -373,6 +379,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         $scope.error[key] = !found;
                     } else {
                         var value = updated[key];
+
                         if (value) {
                             if (typeof value === 'object' && hasNullValue(value)) {
                                 $scope.error[key] = true;
@@ -406,6 +413,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function validateForPublish(item) {
                 var requiredFields = $rootScope.config.requiredMediaMetadata;
+
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
                     _.each(requiredFields, function(key) {
@@ -452,6 +460,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 // continueAfterPublish is passed only from $scope.publishAndContinue as bool,
                 // in other cases this is object (don't use parameter in those cases)
                 let publishFn = continueAfterPublish === true ? $scope.publishAndContinue : $scope.publish;
+
                 if (isCancelled) {
                     isCheckedByTansa = true;
                     publishFn();
@@ -474,6 +483,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.publish = function(continueOnPublish) {
                 if ($scope.useTansaProofing() && $scope.item.urgency >= minTansaUrgency && !isCheckedByTansa) {
                     var act = 'publish';
+
                     if ($scope.origItem && $scope.origItem.state === 'published') {
                         act = 'correct';
                     }
@@ -492,6 +502,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     });
                 } else if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                     var message = 'publish';
+
                     if ($scope.action && $scope.action !== 'edit') {
                         message = $scope.action;
                     }
@@ -614,8 +625,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 // populate content fields so that it can undo to initial (empty) version later
                 var autosave = $scope.origItem._autosave || {};
+
                 Object.keys(helpers.CONTENT_FIELDS_DEFAULTS).forEach(function(key) {
                     var value = autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
+
                     $scope.item[key] = angular.copy(value);
                 });
             };
@@ -677,12 +690,14 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 var autosavedItem = authoring.autosave($scope.item, $scope.origItem);
+
                 authoringWorkspace.addAutosave();
                 return autosavedItem;
             };
 
             $scope.sendToNextStage = function() {
                 var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
+
                 for (var i = 0; i < stageList.length; i++) {
                     if (stageList[i]._id === $scope.stage._id) {
                         stageIndex = i + 1 === stageList.length ? 0 : i + 1;
@@ -705,6 +720,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.$on('savework', function(e, msg) {
                 var changeMsg = msg;
+
                 authoring.saveWorkConfirmation($scope.origItem, $scope.item, $scope.dirty, changeMsg)
                 .then(function(res) {
                     // after saving work make sure this item won't be open again

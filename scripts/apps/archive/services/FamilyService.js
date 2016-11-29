@@ -29,10 +29,13 @@ export function FamilyService(api, desks) {
         return this.fetchItems(item.state === 'ingested' ? item._id : item.family_id, excludeSelf ? item : undefined)
         .then(function(items) {
             var deskList = [];
-            var deskIdList = []; _.each(items._items, function(i) {
+            var deskIdList = [];
+
+            _.each(items._items, function(i) {
                 if (i.task && i.task.desk && desks.deskLookup[i.task.desk]) {
                     if (deskIdList.indexOf(i.task.desk) < 0) {
                         var _isMember = !_.isEmpty(_.find(desks.userDesks, {_id: i.task.desk}));
+
                         deskList.push(
                             {
                                 desk: desks.deskLookup[i.task.desk],

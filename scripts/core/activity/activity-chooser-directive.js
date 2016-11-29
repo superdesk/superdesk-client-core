@@ -14,6 +14,7 @@ angular.module('superdesk.core.activity.chooser', [])
                 function move(diff, items) {
                     var index = _.indexOf(items, scope.selected),
                         next = _.max([0, _.min([items.length - 1, index + diff])]);
+
                     scope.selected = items[next];
                 }
 

@@ -8,6 +8,7 @@ describe('profile service', function() {
         profileService.getAllUsersActivity(5, 1);
         expect(api.query).toHaveBeenCalled();
         var args = api.query.calls.argsFor(0);
+
         expect(args[0]).toBe('activity');
         expect(args[1].where).toEqual({user: {$exists: true}, item: {$exists: true}});
     }));

@@ -12,6 +12,7 @@ export default angular.module('superdesk.core.services.asset', [])
         this.templateUrl = function(path) {
             var config = $injector.get('config'),
                 ret = path;
+
             if (!/^(https?:\/\/|\/\/|\/|.\/|..\/)/.test(path)) {
                 ret = 'scripts/' + ret;
             }

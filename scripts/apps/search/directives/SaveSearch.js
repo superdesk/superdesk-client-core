@@ -67,6 +67,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                 }
 
                 var search = getFilters(_.clone($location.search()));
+
                 editSearch.filter = {query: search};
                 var originalSearch = {};
 

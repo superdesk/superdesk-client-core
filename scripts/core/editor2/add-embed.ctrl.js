@@ -7,6 +7,7 @@ SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'l
 function SdAddEmbedController(embedService, $element, $timeout, $q, _,
 EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
     var self = this;
+
     angular.extend(self, {
         editorCtrl: undefined,  // defined in link method
         previewLoading: false,
@@ -33,12 +34,14 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                 '  </div>',
                 '  <div class="embed--link__description">' + description + '</div>',
                 '</div>'];
+
             return html.join('\n');
         },
         retrieveEmbed: function() {
             function retrieveEmbedFromUrl() {
                 return embedService.get(self.input).then(function(data) {
                     var embed = data.html;
+
                     if (!angular.isDefined(embed)) {
                         if (data.type === 'link') {
                             embed = self.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
@@ -60,18 +63,21 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                     body: self.input,
                     provider: EMBED_PROVIDERS.custom
                 };
+
                 function updateEmbedBlock(partialUpdate) {
                     angular.extend(embedBlock, partialUpdate);
                 }
                 // try to guess the provider of the custom embed
                 for (var i = 0; i < embedCodeHandlers.length; i++) {
                     var provider = $injector.invoke(embedCodeHandlers[i]);
+
                     if (angular.isDefined(provider.condition)) {
                         if (!provider.condition()) {
                             continue;
                         }
                     }
                     var match = provider.pattern.exec(self.input);
+
                     if (match) {
                         updateEmbedBlock({provider: provider.name});
                         if (provider.callback) {
@@ -86,6 +92,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
             }
             var embedCode;
             // if it's an url, use embedService to retrieve the embed code
+
             if (_.startsWith(self.input, 'http')) {
                 embedCode = retrieveEmbedFromUrl(self.input);
             // otherwise we use the content of the field directly

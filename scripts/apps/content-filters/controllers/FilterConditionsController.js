@@ -91,6 +91,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
     var getFilterValue = function() {
         if ($scope.isListValue()) {
             var values = [];
+
             _.each($scope.filterCondition.values, function(value) {
                 values.push(value[$scope.valueFieldLookup[$scope.filterCondition.field]]);
             });
@@ -104,6 +105,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
         var labels = [];
 
         var values = filterCondition.value.split(',');
+
         _.each(values, function(value) {
             if ($scope.valueLookup[filterCondition.field]) {
                 var v = _.find($scope.valueLookup[filterCondition.field], function(val) {
@@ -115,6 +117,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
         });
 
         var conditionValue = labels.length > 0 ? labels.join(', ') : filterCondition.value;
+
         return '(' + filterCondition.field + ' ' + filterCondition.operator + ' ' + conditionValue + ')';
     };
 

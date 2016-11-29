@@ -51,9 +51,11 @@ export function UserListService(api, $q, $cacheFactory) {
      */
     userservice.get = function(search, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE) {
         var key = search || DEFAULT_CACHE_KEY;
+
         key = buildKey(key, page, perPage);
 
         var value = cache.get(key);
+
         if (value) {
             return $q.when(value);
         }

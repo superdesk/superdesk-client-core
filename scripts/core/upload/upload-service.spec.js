@@ -15,6 +15,7 @@ describe('upload service', function() {
 
     it('can start uploading', inject(function(upload, Upload) {
         var config = {url: 'test', method: 'POST', data: 'test'};
+
         spyOn(Upload, 'upload').and.callThrough();
         upload.start(config);
         expect(Upload.upload).toHaveBeenCalledWith(config);
@@ -22,6 +23,7 @@ describe('upload service', function() {
 
     it('can restart uploading', inject(function(upload, Upload) {
         var config = {url: 'test'};
+
         spyOn(Upload, 'http');
         upload.restart(config);
         expect(Upload.http).toHaveBeenCalledWith(config);
@@ -29,6 +31,7 @@ describe('upload service', function() {
 
     it('should know that config after calling start is an upload', inject(function(upload) {
         var config = {url: 'test'};
+
         upload.start(config);
         expect(upload.isUpload(config)).toBe(true);
     }));

@@ -147,6 +147,7 @@ export function ItemList(
 
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
+
             monitoringState.setState({
                 groups: groups.concat(scope.$id),
                 activeGroup: monitoringState.state.activeGroup || groupId
@@ -174,6 +175,7 @@ export function ItemList(
                 menuHolderElem.style.zIndex = -1;
                 var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem));
                 // make sure it's rendered
+
                 node.style.display = 'block';
                 var rect = node.getBoundingClientRect();
                 var width = rect.width;
@@ -297,6 +299,7 @@ export function ItemList(
                     event.stopPropagation();
                     if (isCheckAllowed(this.props.item)) {
                         var selected = !this.props.item.selected;
+
                         this.props.onMultiSelect([this.props.item], selected);
                     }
                 },
@@ -358,6 +361,7 @@ export function ItemList(
                 var item = props.item;
                 var meta = [];
                 var source = props.ingestProvider ? props.ingestProvider.source : '';
+
                 if (item.source) {
                     source = item.source;
                 }
@@ -451,6 +455,7 @@ export function ItemList(
 
                 render: function() {
                     var showSelect = this.state.hover || this.props.item.selected;
+
                     return React.createElement(
                         'div',
                         {
@@ -481,6 +486,7 @@ export function ItemList(
                         'urgency-reduced-rowheight': listConfig.thinRows
                     })
                 };
+
                 return renderArea('priority', props, css) || React.createElement('div', css);
             };
 
@@ -518,6 +524,7 @@ export function ItemList(
 
                     var createHighlight = function(id) {
                         var highlight = highlightsById[id];
+
                         if (highlight) {
                             return React.createElement(
                                 'li',
@@ -585,8 +592,10 @@ export function ItemList(
                 getHighlightStatuses: function(highlights, item) {
                     var highlightStatuses = {};
                     var highlightsById = this.props.highlightsById;
+
                     _.forEach(highlights, function(highlight) {
                         var hours = $filter('hoursFromNow')(item.versioncreated);
+
                         highlightStatuses[highlight] = highlightsService.isInDateRange(
                             highlightsById[highlight], hours
                         );
@@ -597,6 +606,7 @@ export function ItemList(
 
                 getHighlights: function() {
                     var itemHighlights = [];
+
                     if (isCheckAllowed(this.props.item)) {
                         if (this.props.item.archive_item && this.props.item.archive_item.highlights &&
                             this.props.item.archive_item.highlights.length) {
@@ -768,6 +778,7 @@ export function ItemList(
 
                 render: function() {
                     var items = [];
+
                     items.push(React.createElement('dt', {
                         key: 'dt',
                         style: {paddingRight: '5px'}
@@ -776,6 +787,7 @@ export function ItemList(
                     if (this.state.desks.length) {
                         var desk = this.state.desks[0];
                         var name = this.formatDeskName(desk.desk.name);
+
                         items.push(React.createElement('dd', {key: 'dd1'}, desk.isUserDeskMember ?
                             React.createElement('a', {onClick: this.openDesk(desk)}, name) :
                             React.createElement('span', {className: 'container'}, name)
@@ -820,6 +832,7 @@ export function ItemList(
                     return null;
                 }).filter(angular.identity);
                 var elemProps = angular.extend({key: area}, props);
+
                 return contents.length ? React.createElement('div', elemProps, contents) : null;
             }
 
@@ -829,6 +842,7 @@ export function ItemList(
             var fields = {
                 headline: function(props) {
                     var headline = props.item.headline ? props.item.headline : props.item.type;
+
                     return React.createElement(
                         'span',
                         {className: 'item-heading', key: 'headline',
@@ -955,6 +969,7 @@ export function ItemList(
 
                 broadcast: function(props) {
                     var broadcast = props.item.broadcast || {};
+
                     if (broadcast.status) {
                         return React.createElement(
                             'span',
@@ -991,6 +1006,7 @@ export function ItemList(
                                 gettext('Sms'))
                             : null
                     ].filter(angular.identity);
+
                     return elems.length ? React.createElement('div', {key: 'flags'}, elems) : null;
                 },
 
@@ -1019,6 +1035,7 @@ export function ItemList(
 
                 category: function(props) {
                     var anpa = props.item.anpa_category || {};
+
                     if (anpa.name) {
                         return React.createElement('div', {className: 'category', key: 'category'}, anpa.name);
                     }
@@ -1026,6 +1043,7 @@ export function ItemList(
 
                 provider: function(props) {
                     var provider = props.ingestProvider ? props.ingestProvider.source : '';
+
                     if (props.item.source) {
                         provider = props.item.source;
                     }
@@ -1088,9 +1106,11 @@ export function ItemList(
                     var type = this.getType();
                     var intent = {action: 'list', type: type};
                     var groups = {};
+
                     superdesk.findActivities(intent, item).forEach(function(activity) {
                         if (workflowService.isActionAllowed(item, activity.action)) {
                             var group = activity.group || 'default';
+
                             groups[group] = groups[group] || [];
                             groups[group].push(activity);
                         }
@@ -1122,6 +1142,7 @@ export function ItemList(
                     };
 
                     var actions = this.getActions();
+
                     this.groups.map(function(group) {
                         if (actions[group._id]) {
                             if (group.label === 'Actions') {
@@ -1266,6 +1287,7 @@ export function ItemList(
 
                 render: function() {
                     var activity = this.props.activity;
+
                     if (activity.dropdown) {
                         return React.createElement(
                             'li',
@@ -1478,8 +1500,10 @@ export function ItemList(
 
                 multiSelect: function(items, selected) {
                     var itemsById = angular.extend({}, this.state.itemsById);
+
                     items.forEach(function(item) {
                         var itemId = search.generateTrackByIdentifier(item);
+
                         itemsById[itemId] = angular.extend({}, item, {selected: selected});
                         scope.$applyAsync(function() {
                             multi.toggle(itemsById[itemId]);
@@ -1513,6 +1537,7 @@ export function ItemList(
                 selectItem: function(item) {
                     if (isCheckAllowed(item)) {
                         var selected = !item.selected;
+
                         this.multiSelect([item], selected);
                     }
                 },
@@ -1529,6 +1554,7 @@ export function ItemList(
 
                     for (var i = positionStart; i <= positionEnd; i++) {
                         var item = this.state.itemsById[this.state.itemsList[i]];
+
                         if (isCheckAllowed(item)) {
                             selectedItems.push(item);
                         }
@@ -1576,6 +1602,7 @@ export function ItemList(
 
                 updateAllItems: function(itemId, changes) {
                     var itemsById = angular.extend({}, this.state.itemsById);
+
                     _.forOwn(itemsById, function(value, key) {
                         if (_.startsWith(key, itemId)) {
                             itemsById[key] = angular.extend({}, value, changes);
@@ -1609,13 +1636,16 @@ export function ItemList(
 
                 getSelectedItem: function() {
                     var selected = this.state.selected;
+
                     return this.state.itemsById[selected];
                 },
 
                 updateItem: function(itemId, changes) {
                     var item = this.state.itemsById[itemId] || null;
+
                     if (item) {
                         var itemsById = angular.extend({}, this.state.itemsById);
+
                         itemsById[itemId] = angular.extend({}, item, changes);
                         this.setState({itemsById: itemsById});
                     }
@@ -1658,6 +1688,7 @@ export function ItemList(
                         for (var i = 0; i < this.state.itemsList.length; i++) {
                             if (this.state.itemsList[i] === this.state.selected) {
                                 var next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
+
                                 this.select(this.state.itemsById[this.state.itemsList[next]]);
                                 return;
                             }
@@ -1718,6 +1749,7 @@ export function ItemList(
                         });
                     }.bind(this);
                     var isEmpty = !this.state.itemsList.length;
+
                     return React.createElement(
                         'ul',
                         {
@@ -1856,6 +1888,7 @@ export function ItemList(
 
                 scope.$on('item:lock', function(_e, data) {
                     var itemId = search.getTrackByIdentifier(data.item, data.item_version);
+
                     listComponent.updateItem(itemId, {
                         lock_user: data.user,
                         lock_session: data.lock_session,
@@ -1874,6 +1907,7 @@ export function ItemList(
                 scope.$on('item:expired', function(_e, data) {
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
                     var shouldUpdate = false;
+
                     _.forOwn(itemsById, function(item, key) {
                         if (data.items[item._id]) {
                             itemsById[key] = angular.extend({gone: true}, item);
@@ -1888,9 +1922,11 @@ export function ItemList(
 
                 scope.$on('item:highlight', function(_e, data) {
                     var item = listComponent.findItemByPrefix(data.item_id);
+
                     if (item) {
                         var itemId = search.generateTrackByIdentifier(item);
                         var highlights = item.highlights || [];
+
                         if (data.marked) {
                             highlights = highlights.concat([data.highlight_id]);
                         } else {
@@ -1907,6 +1943,7 @@ export function ItemList(
                     var ids = data.ids || [];
                     var shouldUpdate = false;
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
+
                     _.forOwn(itemsById, function(value, key) {
                         ids.forEach(function(id) {
                             if (_.startsWith(key, id)) {

@@ -32,6 +32,7 @@ describe('Tag Service', function() {
 
     it('can populate keywords from location', inject(function($location, tags, $rootScope, desks, $q) {
         var members = null;
+
         $location.search('q=(Obama)');
         $rootScope.$apply();
 
@@ -49,6 +50,7 @@ describe('Tag Service', function() {
     it('can populate parameters from location',
     inject(function($location, tags, $rootScope, desks, $q, gettextCatalog) {
         var members = null;
+
         $location.search('q=headline:(Obama)');
         $rootScope.$apply();
 
@@ -68,6 +70,7 @@ describe('Tag Service', function() {
 
     it('can populate type facet from location', inject(function($location, tags, $rootScope, desks, $q) {
         var members = null;
+
         $location.search('type=["text"]');
         $rootScope.$apply();
 
@@ -84,6 +87,7 @@ describe('Tag Service', function() {
 
     it('can populate date facet from location', inject(function($location, tags, $rootScope, desks, $q) {
         var members = null;
+
         $location.search('after=now-1M');
         $rootScope.$apply();
 
@@ -101,6 +105,7 @@ describe('Tag Service', function() {
 
     it('can populate complete filters from location', inject(function($location, tags, $rootScope, desks, $q) {
         var members = null;
+
         $location.search([
             'type=["text","composite"]',
             'q=slugline:(FBI) (Obama) (Australia)'
@@ -122,6 +127,7 @@ describe('Tag Service', function() {
 
     it('create tags for from desk and to desk', inject(function($location, $rootScope, $q, tags, _desks_) {
         var desks = _desks_;
+
         desks.deskLookup = {
             from: {
                 name: 'National'
@@ -137,6 +143,7 @@ describe('Tag Service', function() {
         spyOn(desks, 'initialize').and.returnValue($q.when([]));
 
         var tagsList = null;
+
         tags.initSelectedFacets()
             .then(function(value) {
                 tagsList = value;
@@ -162,6 +169,7 @@ describe('Tag Service', function() {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
 
         var tagsList = null;
+
         tags.initSelectedFacets()
             .then(function(value) {
                 tagsList = value;
@@ -181,6 +189,7 @@ describe('Tag Service', function() {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
 
         var tagsList = null;
+
         tags.initSelectedFacets()
             .then(function(value) {
                 tagsList = value;
@@ -197,6 +206,7 @@ describe('Tag Service', function() {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
 
         var tagsList = null;
+
         tags.initSelectedFacets()
             .then(function(value) {
                 tagsList = value;
@@ -218,6 +228,7 @@ describe('Tag Service', function() {
         $location.search('ingest_provider', '123');
 
         var tagsList = null;
+
         tags.initSelectedFacets()
             .then(function(value) {
                 tagsList = value;
@@ -235,6 +246,7 @@ describe('Tag Service', function() {
         $location.search('notsource', '["REUTERS", "NTB"]');
 
         var tagsList = null;
+
         tags.initSelectedFacets()
             .then(function(value) {
                 tagsList = value;
@@ -253,6 +265,7 @@ describe('Tag Service', function() {
         $location.search('notdesk', '["123"]');
         desks.deskLookup = deskList;
         var tagsList = null;
+
         tags.initSelectedFacets()
             .then(function(value) {
                 tagsList = value;
@@ -270,6 +283,7 @@ describe('Tag Service', function() {
         $location.search('notcategory', '["International Sports", "Domestic Sports"]');
 
         var tagsList = null;
+
         tags.initSelectedFacets()
             .then(function(value) {
                 tagsList = value;
@@ -288,6 +302,7 @@ describe('Tag Service', function() {
         $location.search('noturgency', '["1", "2"]');
 
         var tagsList = null;
+
         tags.initSelectedFacets()
             .then(function(value) {
                 tagsList = value;

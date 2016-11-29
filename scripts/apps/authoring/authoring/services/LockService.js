@@ -73,6 +73,7 @@ export function LockService($q, api, session, privileges, notify) {
      */
     this.isLockedByMe = function isLockedByMe(item) {
         var userId = getLockedUserId(item);
+
         return !!userId && userId === session.identity._id;
     };
 

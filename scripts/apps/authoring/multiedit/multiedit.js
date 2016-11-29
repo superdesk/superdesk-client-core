@@ -17,6 +17,7 @@ function MultieditService(storage, superdesk, authoringWorkspace, referrer, $loc
     var STORAGE_KEY = 'multiedit';
 
     var saved = storage.getItem(STORAGE_KEY);
+
     this.items = saved === null ? [] : saved;
 
     this.minBoards = function() {
@@ -25,6 +26,7 @@ function MultieditService(storage, superdesk, authoringWorkspace, referrer, $loc
 
     this.create = function(_ids) {
         var self = this;
+
         self.items = [];
 
         if (_ids) {
@@ -280,6 +282,7 @@ function MultieditFloatMenuDirective($document) {
                 var position = {
                     right: docWidth - crdL
                 };
+
                 if (docHeight - crdT < 400) {
                     position.bottom = docHeight - crdT;
                     position.top = 'auto';

@@ -67,6 +67,7 @@ describe('userlist service', function() {
 
     it('can fetch users', inject(function(userList, $rootScope) {
         var res = null;
+
         userList.get()
         .then(function(result) {
             res = result;
@@ -80,6 +81,7 @@ describe('userlist service', function() {
         $rootScope.$digest();
 
         let spy = jasmine.createSpy('api');
+
         userList.get();
         $rootScope.$digest();
 
@@ -88,6 +90,7 @@ describe('userlist service', function() {
 
     it('can fetch single user', inject(function(userList, $rootScope) {
         var res = null;
+
         userList.getUser(1)
         .then(function(result) {
             res = result;
@@ -101,6 +104,7 @@ describe('userlist service', function() {
         $rootScope.$digest();
 
         let spy = jasmine.createSpy('api');
+
         userList.getUser(1);
         $rootScope.$digest();
 
@@ -153,9 +157,11 @@ describe('mentio directive', function() {
     it('can return sorted users', inject(function($rootScope, $compile) {
         var scope = $rootScope.$new(true);
         var elem = $compile('<div sd-user-mentio></div>')(scope);
+
         scope.$digest();
 
         var iscope = elem.scope();
+
         iscope.searchUsersAndDesks();
         $rootScope.$digest();
         expect(iscope.users).toEqual(
@@ -200,6 +206,7 @@ describe('user edit form', function() {
 
             spyOn(userList, 'getUser').and.returnValue($q.when(user));
             var elm = $compile('<div sd-user-edit data-user="user"></div>')(scope);
+
             scope.$digest();
 
             expect($(elm.find('input[name=first_name]')[0]).attr('readonly')).toBeDefined();
@@ -218,6 +225,7 @@ describe('user edit form', function() {
             };
 
             var elm = $compile('<div sd-user-edit data-user="user"></div>')(scope);
+
             scope.$digest();
             expect($(elm.find('input[name=first_name]')[0]).attr('readonly')).not.toBeDefined();
             expect($(elm.find('input[name=last_name]')[0]).attr('readonly')).not.toBeDefined();

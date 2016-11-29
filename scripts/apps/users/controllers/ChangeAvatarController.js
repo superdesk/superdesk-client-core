@@ -26,6 +26,7 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, gett
 
     $scope.upload = function(config) {
         var form = {};
+
         form.CropLeft = Math.round(Math.min(config.cords.x, config.cords.x2));
         form.CropRight = Math.round(Math.max(config.cords.x, config.cords.x2));
         form.CropTop = Math.round(Math.min(config.cords.y, config.cords.y2));
@@ -51,6 +52,7 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, gett
                 }
 
                 var pictureUrl = response.data.renditions.viewImage.href;
+
                 $scope.locals.data.avatar = response.data._id;
 
                 return $scope.resolve(pictureUrl);

@@ -145,8 +145,10 @@ export class ArchiveListController extends BaseListController {
 
         // reload on route change if there is still the same _id
         var oldQuery = _.omit($location.search(), '_id', 'fetch');
+
         $scope.$on('$routeUpdate', function(e, route) {
             var query = _.omit($location.search(), '_id', 'fetch');
+
             if (!angular.equals(oldQuery, query)) {
                 refreshItems();
             }

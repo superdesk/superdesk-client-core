@@ -5,6 +5,7 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
         templateUrl: 'scripts/apps/users/views/settings-roles.html',
         link: function(scope) {
             var _orig = null;
+
             scope.editRole = null;
 
             api('roles').query()
@@ -20,6 +21,7 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
 
             scope.save = function(role) {
                 var _new = !role._id;
+
                 api('roles').save(_orig, role)
                 .then(function() {
                     if (_new) {

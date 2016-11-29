@@ -15,6 +15,7 @@ describe('macros', function() {
     it('can trigger macro with diff', inject(function(macros, api, $q, $rootScope) {
         var diff = {foo: 'bar'};
         var item = {_id: '1'};
+
         spyOn(api, 'save').and.returnValue($q.when({item: item, diff: diff}));
         macros.call('test', item);
         expect(api.save).toHaveBeenCalled();
@@ -25,6 +26,7 @@ describe('macros', function() {
         var diff = {foo: 'bar'};
         var item = {_id: '1'};
         var $scope = $rootScope.$new();
+
         spyOn(macros, 'call').and.returnValue($q.when({item: item, diff: diff}));
         spyOn($rootScope, '$broadcast');
         $scope.origItem = {};

@@ -27,6 +27,7 @@ export function SubjectService(api) {
         },
         getPath: function(item) {
             var path = '';
+
             if (item.parent) {
                 path = this.getPath(this.qcodeLookup[item.parent]) + this.qcodeLookup[item.parent].name + ' / ';
             }
@@ -40,5 +41,6 @@ export function SubjectService(api) {
             return this.fetched;
         }
     };
+
     return service;
 }

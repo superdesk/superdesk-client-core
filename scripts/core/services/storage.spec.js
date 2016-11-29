@@ -25,6 +25,7 @@ describe('Storage', function() {
 
     it('can save objects', inject(function(storage) {
         var data = {id: 1, name: 'test'};
+
         storage.setItem('test', data);
         expect(storage.getItem('test')).toEqual(data);
     }));

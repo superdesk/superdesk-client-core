@@ -24,6 +24,7 @@ export default angular.module('superdesk.core.directives.checkAll', [])
             template: '<span class="sd-checkbox"></span>',
             link: function($scope, element, attrs, ngModel) {
                 var checked = false;
+
                 if (attrs.checkAttribute !== undefined) {
                     checkAttribute = attrs.checkAttribute;
                 }
@@ -39,6 +40,7 @@ export default angular.module('superdesk.core.directives.checkAll', [])
                     checked = !checked;
 
                     var model = ngModel.$viewValue;
+
                     _.forEach(model, function(item) {
                         item[checkAttribute] = checked;
                     });

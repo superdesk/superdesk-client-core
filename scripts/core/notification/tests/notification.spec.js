@@ -13,6 +13,7 @@ describe('Reload Service', function() {
     };
 
     var rootScope, reloadService, msg;
+
     beforeEach(function() {
         inject(function($rootScope, _reloadService_, session, $q, api, preferencesService, desks, $window) {
             rootScope = $rootScope;
@@ -46,6 +47,7 @@ describe('Reload Service', function() {
         };
 
         var reload = spyOn(reloadService, 'reload');
+
         rootScope.$broadcast('reload', msg);
         expect(reload).toHaveBeenCalledWith(Object({reload: true, message: 'User removed from desk'}));
         expect(reloadService.result.reload).toBe(true);
@@ -62,6 +64,7 @@ describe('Reload Service', function() {
         reloadService.activeDesk = '5567ff31102454c7bac47644';
 
         var reload = spyOn(reloadService, 'reload');
+
         rootScope.$broadcast('reload', msg);
         expect(reload).toHaveBeenCalledWith(Object({
             reload: true,
@@ -76,6 +79,7 @@ describe('Notify Connection Service', function() {
     beforeEach(window.module('superdesk.templates-cache'));
 
     var rootScope, msg;
+
     beforeEach(function() {
         inject(function($rootScope) {
             rootScope = $rootScope;

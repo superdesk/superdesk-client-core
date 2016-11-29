@@ -42,6 +42,7 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
             filters.push({term: {'task.status': status}});
         } else {
             var allStatuses = [];
+
             _.each(self.statuses, function(s) {
                 allStatuses.push({term: {'task.status': s._id}});
             });
@@ -49,6 +50,7 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
         }
 
         var andFilter = {and: filters};
+
         return andFilter;
     };
 
@@ -185,6 +187,7 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
         archiveService.addTaskToArticle($scope.newTask, desks.getCurrentDesk());
 
         var taskDate = new Date();
+
         $scope.newTask.task.due_date = $filter('formatDateTimeString')(taskDate);
         $scope.newTask.task.due_time = $filter('formatDateTimeString')(taskDate, 'HH:mm:ss');
     };
@@ -220,6 +223,7 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
     $scope.$on('task:new', fetchTasks);
     $scope.$on('task:stage', function(event, data) {
         var deskId = desks.getCurrentDeskId();
+
         if (deskId === data.old_desk || deskId === data.new_desk) {
             fetchTasks();
         }
@@ -229,6 +233,7 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
 TaskPreviewDirective.$inject = ['tasks', 'desks', 'notify', '$filter'];
 function TaskPreviewDirective(tasks, desks, notify, $filter) {
     var promise = desks.initialize();
+
     return {
         templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/task-preview.html',
         scope: {
@@ -237,6 +242,7 @@ function TaskPreviewDirective(tasks, desks, notify, $filter) {
         },
         link: function(scope) {
             var _orig;
+
             scope.task = null;
             scope.task_details = null;
             scope.editmode = false;
@@ -302,6 +308,7 @@ function TaskKanbanBoardDirective() {
 AssigneeViewDirective.$inject = ['desks'];
 function AssigneeViewDirective(desks) {
     var promise = desks.initialize();
+
     return {
         templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/assignee-view.html',
         scope: {
@@ -314,6 +321,7 @@ function AssigneeViewDirective(desks) {
                 var task = angular.extend({desk: null, user: null}, scope.task);
                 var desk = desks.deskLookup[task.desk] || {};
                 var user = desks.userLookup[task.user] || {};
+
                 scope.deskName = desk.name || null;
                 scope.userName = user.display_name || null;
                 scope.user = user || null;
@@ -326,8 +334,10 @@ function AssigneeViewDirective(desks) {
 StagesCtrlFactory.$inject = ['api', 'desks'];
 function StagesCtrlFactory(api, desks) {
     var promise = desks.initialize();
+
     return function StagesCtrl($scope) {
         var self = this;
+
         promise.then(function() {
             self.stages = null;
             self.selected = null;
@@ -335,6 +345,7 @@ function StagesCtrlFactory(api, desks) {
             // select a stage as active
             self.select = function(stage) {
                 var stageId = stage ? stage._id : null;
+
                 self.selected = stage || null;
                 desks.setCurrentStageId(stageId);
             };

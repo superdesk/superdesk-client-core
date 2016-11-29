@@ -46,6 +46,7 @@ describe('users', function() {
             // go back to original lanuages
             userPrefs.setLang('English');
             var btnSave = $('.action-bar').element(by.buttonText('Speichern'));
+
             browser.wait(() => btnSave.isDisplayed(), 3000);
             browser.sleep(200); // animation
             btnSave.click();
@@ -65,6 +66,7 @@ describe('users', function() {
 
         it('list online users', function() {
             var online = element(by.id('user-filter')).all(by.tagName('option')).get(1);
+
             expect(online.getText()).toBe('Online');
             online.click();
             expect(element.all(by.repeater('user in users')).count()).toBe(3);
@@ -114,6 +116,7 @@ describe('users', function() {
             }).then(function() {
                 browser.wait(function() {
                     var elem = element.all(by.repeater('users')).first().element(by.className('disabled-label'));
+
                     return elem.isDisplayed();
                 }, 5000);
             });
@@ -134,6 +137,7 @@ describe('users', function() {
                     elem.click();
                 });
             var pageNavTitle = $('.page-nav-title');
+
             browser.wait(function() {
                 return pageNavTitle.getText().then(function(text) {
                     if (text.indexOf('Users Profile') === 0) {
@@ -216,6 +220,7 @@ describe('users', function() {
                 authoring.setCategoryBtn.click();
 
                 var catListItems = authoring.getCategoryListItems;
+
                 expect(catListItems.count()).toBe(2);
                 expect(catListItems.get(0).getText()).toEqual('Entertainment');
                 expect(catListItems.get(1).getText()).toEqual('Finance');
@@ -244,6 +249,7 @@ describe('users', function() {
                 browser.sleep(100); // wait a bit
 
                 var catListItems = authoring.getCategoryListItems;
+
                 expect(catListItems.count()).toBe(2);
                 expect(catListItems.get(0).getText()).toEqual('Entertainment');
                 expect(catListItems.get(1).getText()).toEqual('Finance');
@@ -321,6 +327,7 @@ describe('users', function() {
 
         it('while pre-viewing and user clicks on create new user', function() {
             var buttonCreate = element(by.className('sd-create-btn'));
+
             element.all(by.repeater('users')).first().click();
 
             buttonCreate.click();

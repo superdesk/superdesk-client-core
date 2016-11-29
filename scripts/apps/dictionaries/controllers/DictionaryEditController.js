@@ -84,6 +84,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
         }
 
         var key = search[0].toLowerCase();
+
         if (!wordsTrie[key]) {
             return;
         }
@@ -92,6 +93,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
             length = searchWords.length,
             words = [],
             word;
+
         for (var i = 0; i < length; i++) {
             word = searchWords[i];
             if ($scope.dictionary.content[word] > 0 && isPrefix(search, word)) {
@@ -106,12 +108,14 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     };
 
     var wordsTrie = {};
+
     $scope.wordsCount = 0;
     generateTrie();
     $scope.stopLoading();
 
     function addWordToTrie(word) {
         var key = word[0].toLowerCase();
+
         if (wordsTrie.hasOwnProperty(key)) {
             wordsTrie[key].push(word);
         } else {
@@ -122,6 +126,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     function generateTrie() {
         var content = $scope.origDictionary.content || $scope.dictionary.content;
         var words = Object.keys(content || {});
+
         $scope.wordsCount = words.length;
         for (var i = 0; i < $scope.wordsCount; i++) {
             addWordToTrie(words[i]);

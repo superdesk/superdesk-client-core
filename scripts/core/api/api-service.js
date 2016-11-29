@@ -174,6 +174,7 @@ function APIProvider() {
 
                     if (this.parent) {
                         var newUrl = resolve(url, this.parent);
+
                         if (newUrl !== addr) {
                             return newUrl;
                         }
@@ -309,6 +310,7 @@ function APIProvider() {
          */
         api.remove = function apiRemove(item, params, resource) {
             var url = resource ? getResourceUrl(resource, item, item._id) : urls.item(item._links.self.href);
+
             return http({
                 method: 'DELETE',
                 url: url,
@@ -368,6 +370,7 @@ function APIProvider() {
 
         angular.forEach(apis, function(config, apiName) {
             var service = config.service || _.noop;
+
             service.prototype = new endpoints[config.type](apiName, config.backend);
             api[apiName] = $injector.instantiate(service, {resource: service.prototype});
         });

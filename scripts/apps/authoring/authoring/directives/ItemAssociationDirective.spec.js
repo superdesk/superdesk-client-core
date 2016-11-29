@@ -20,6 +20,7 @@ describe('item association directive', function() {
 
     it('can trigger onchange handler on drop', inject(function($rootScope) {
         var event = new window.$.Event('drop');
+
         event.originalEvent = {dataTransfer: {
             types: [{type: 'video'}],
             getData: () => angular.toJson({headline: 'foo'})

@@ -15,6 +15,7 @@ function openBaseUrl() {
 
 function resize(width, height) {
     var win = browser.driver.manage().window();
+
     return win.getSize().then(function(size) {
         if (size.width !== width || size.height !== height) {
             return win.setSize(width, height);

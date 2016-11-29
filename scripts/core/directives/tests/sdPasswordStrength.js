@@ -15,6 +15,7 @@ describe('sdPasswordStrength', function() {
 
             angular.extend(newScope, scopeValues);
             var el = $compile(html)(newScope);
+
             newScope.$digest();
 
             return el;
@@ -23,11 +24,13 @@ describe('sdPasswordStrength', function() {
 
     it('should insert strength indicator after input', function() {
         var $el = compileDirective();
+
         expect($el.next().hasClass('password-strength')).toBeTruthy();
     });
 
     it('should start of with strength as "Short" if empty', function() {
         var $el = compileDirective();
+
         expect($el.next()
             .find('.label')
             .text()
@@ -36,6 +39,7 @@ describe('sdPasswordStrength', function() {
 
     it('should start of with correct strength when model is pre-populated', function() {
         var $el = compileDirective({pwd: 'abcdE123'});
+
         expect($el.next()
             .find('.label')
             .text()

@@ -40,6 +40,7 @@ describe('WorldClockController', function() {
                 'Foo/Bar': []
             }
         };
+
         fakeTzdata.zones = serverTzdata.zones;
         fakeTzdata.links = serverTzdata.links;
 

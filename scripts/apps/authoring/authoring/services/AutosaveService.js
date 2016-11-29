@@ -48,8 +48,10 @@ export class AutosaveService {
         this.stop(item);
 
         let id = item._id;
+
         this.timeouts[id] = $timeout(function() {
             var diff = helpers.extendItem({_id: id}, item);
+
             helpers.filterDefaultValues(diff, orig);
             return api.save(RESOURCE, {}, diff).then((_autosave) => {
                 orig._autosave = _autosave;

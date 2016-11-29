@@ -30,6 +30,7 @@ describe('desk select directive', function() {
 
     function keydown(key) {
         var event = new $.Event('keydown');
+
         event.which = typeof key === 'number' ? key : key.charCodeAt(0);
         event.key = typeof key === 'number' ? 'unknown' : key;
         elem.triggerHandler(event);

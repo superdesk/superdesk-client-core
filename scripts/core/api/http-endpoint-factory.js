@@ -33,6 +33,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
      */
     function getHeaders(resource, item) {
         var headers = _.extend({}, resource.config.headers || {});
+
         if (item && item._etag) {
             headers['If-Match'] = item._etag;
         }
@@ -140,6 +141,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
     HttpEndpoint.prototype.getById = function(id, params, cache) {
         return getUrl(this).then(_.bind(function(resourceUrl) {
             var url = resourceUrl.replace(/\/+$/, '') + '/' + id;
+
             return http({
                 method: 'GET',
                 url: url,
@@ -194,6 +196,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
         }
 
         var url = item._links.self.href;
+
         return http({
             method: 'PATCH',
             url: urls.item(url),
