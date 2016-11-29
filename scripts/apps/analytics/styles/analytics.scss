@@ -7,7 +7,13 @@
 
 .report-page-container {
     .report-content {
-        height: 100%;
+        position: absolute;
+        left: 300px;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        overflow-y: auto;
+        padding: 18px;
     }
 }
 
