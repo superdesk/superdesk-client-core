@@ -301,7 +301,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
             scope.hasFilter = function(type, key) {
                 if (type === 'desk') {
                     return scope.tags.selectedFacets[type] &&
-                        _.find(scope.tags.selectedFacets[type], facet => facet.value === key);
+                        _.find(scope.tags.selectedFacets[type], (facet) => facet.value === key);
                 }
 
                 return scope.tags && scope.tags.selectedFacets[type] &&

@@ -7,7 +7,7 @@ export class BaseListController {
 
         $scope.selected = {};
 
-        $scope.fetchNext = from => {
+        $scope.fetchNext = (from) => {
             var criteria = this.getQuery();
             criteria.from = from;
             this.fetchItems({source: criteria}, true);

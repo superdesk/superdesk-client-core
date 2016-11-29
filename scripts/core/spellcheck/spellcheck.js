@@ -327,7 +327,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
 
             angular.extend(result.corrections, Object.keys(wordFoundInDict));
 
-            return result.corrections.map(key => ({key: key, value: key}));
+            return result.corrections.map((key) => ({key: key, value: key}));
         });
     };
 

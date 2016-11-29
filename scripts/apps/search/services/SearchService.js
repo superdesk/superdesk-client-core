@@ -360,13 +360,13 @@ export function SearchService($location, gettext, config, session) {
             var queryString = null;
             if (search.q && search.raw) {
                 queryString = [search.q, search.raw]
-                    .filter(q => q)
-                    .map(q => '(' + q.replace(/\//g, '\\/') + ')')
+                    .filter((q) => q)
+                    .map((q) => '(' + q.replace(/\//g, '\\/') + ')')
                     .join(' AND ');
             } else {
                 queryString = [search.q, search.raw]
-                    .filter(q => q)
-                    .map(q => q.replace(/\//g, '\\/'))
+                    .filter((q) => q)
+                    .map((q) => q.replace(/\//g, '\\/'))
                     .join('');
             }
 
@@ -704,7 +704,7 @@ export function SearchService($location, gettext, config, session) {
         var uiFields = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
 
         let projectedFields = [];
-        uiFields.forEach(uiField => {
+        uiFields.forEach((uiField) => {
             if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {
                 projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);
             }

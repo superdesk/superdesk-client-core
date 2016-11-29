@@ -48,7 +48,7 @@ export default angular.module('superdesk.apps.users', [
     .directive('sdUserMentio', directive.UserMentioDirective)
     .directive('sdUserInfo', directive.UserInfoDirective)
 
-    .filter('username', () => user => user ?
+    .filter('username', () => (user) => user ?
         user.display_name || user.username : null)
 
     .config(config.Permissions)

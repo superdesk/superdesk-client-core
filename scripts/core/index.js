@@ -76,7 +76,7 @@ let core = angular.module('superdesk.core', [
 
 core.constant('lodash', _);
 
-core.config(['$routeProvider', $routeProvider => {
+core.config(['$routeProvider', ($routeProvider) => {
     $routeProvider.when('/', {
         redirectTo: appConfig.defaultRoute
     });

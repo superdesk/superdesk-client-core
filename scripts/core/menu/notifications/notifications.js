@@ -39,11 +39,11 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
         };
 
         return api.query('activity', criteria)
-            .then(response => {
+            .then((response) => {
                 this._items = response._items;
                 this.unread = 0;
                 var identity = session.identity || {};
-                _.each(this._items, item => {
+                _.each(this._items, (item) => {
                     var recipients = item.recipients || {};
                     item._unread = !isRead(recipients, identity._id, true);
                     this.unread += item._unread ? 1 : 0;
@@ -135,12 +135,12 @@ function DeskNotificationsService($rootScope, api, session) {
         };
 
         return api.query('activity', criteria)
-            .then(response => {
+            .then((response) => {
                 this._items = {};
                 this.unread = {};
-                _.each(response._items, item => {
+                _.each(response._items, (item) => {
                     var recipients = item.recipients || {};
-                    _.each(recipients, recipient => {
+                    _.each(recipients, (recipient) => {
                         if (recipient.desk_id) {
                             if (!(recipient.desk_id in this.unread)) {
                                 this._items[recipient.desk_id] = [];

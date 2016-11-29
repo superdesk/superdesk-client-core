@@ -59,7 +59,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 item._editable = true; // not locked at all, try to lock
                 return lock.lock(item);
             })
-            .then(item => autosave.open(item).then(null, err => item));
+            .then((item) => autosave.open(item).then(null, (err) => item));
     };
 
     this.rewrite = function(item) {

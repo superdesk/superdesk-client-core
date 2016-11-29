@@ -63,7 +63,7 @@ export function DeskSelect(Keys, _, preferencesService) {
 
             scope.$watch('isOpen', reset);
 
-            let filterActive = desk => desk._id === scope.ctrl.active._id;
+            let filterActive = (desk) => desk._id === scope.ctrl.active._id;
 
             /**
              * Move active item up or down
@@ -89,7 +89,7 @@ export function DeskSelect(Keys, _, preferencesService) {
             function filterDesks() {
                 if (scope.allDesks) {
                     var filterRegexp = new RegExp('^' + scope.filter, 'i');
-                    scope.desks = scope.allDesks.filter(desk => !scope.filter || filterRegexp.test(desk.name));
+                    scope.desks = scope.allDesks.filter((desk) => !scope.filter || filterRegexp.test(desk.name));
 
                     // in case active item is filtered out keep focus
                     if (scope.ctrl.active && !scope.desks.find(filterActive)) {
@@ -108,19 +108,19 @@ export function DeskSelect(Keys, _, preferencesService) {
                 });
             }
 
-            scope.$on('key:down', e => {
+            scope.$on('key:down', (e) => {
                 if (scope.isOpen) {
                     moveActive(DOWN);
                 }
             });
 
-            scope.$on('key:up', e => {
+            scope.$on('key:up', (e) => {
                 if (scope.isOpen) {
                     moveActive(UP);
                 }
             });
 
-            scope.$on('key:backspace', e => {
+            scope.$on('key:backspace', (e) => {
                 if (scope.isOpen) {
                     backspaceAction();
                 }
@@ -129,7 +129,7 @@ export function DeskSelect(Keys, _, preferencesService) {
             // regexp for characters including unicode
             let charRegexp = /^[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]$/;
 
-            elem.on('keydown', e => {
+            elem.on('keydown', (e) => {
                 if (e.ctrlKey || e.metaKey || e.altKey) { // ignore when ctrl/alt/meta is used
                     return;
                 }

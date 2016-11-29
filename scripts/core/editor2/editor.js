@@ -1053,7 +1053,7 @@ angular.module('superdesk.apps.editor2', [
                             });
                     // listen updates by medium editor to update the model
                         scope.medium.subscribe('editableInput', function(e, elem) {
-                            elem.querySelectorAll('span[style]').forEach(span => {
+                            elem.querySelectorAll('span[style]').forEach((span) => {
                                 span.before(span.firstChild);
                                 span.remove();
                             });
@@ -1196,7 +1196,7 @@ angular.module('superdesk.apps.editor2', [
                                         value: scope.replaceWord[0].toUpperCase() + scope.replaceWord.slice(1)
                                     });
 
-                                    scope.suggestions = suggestions.filter(suggestion =>
+                                    scope.suggestions = suggestions.filter((suggestion) =>
                                         suggestion.key !== scope.replaceWord
                                     );
                                 } else {

@@ -42,7 +42,7 @@ export function SpikeService($location, api, notify, gettext, send, $q) {
      * @param {Object} item
      */
     this.unspike = function(item) {
-        return getUnspikeDestination().then(config => unspike(item, config));
+        return getUnspikeDestination().then((config) => unspike(item, config));
     };
 
     function getUnspikeDestination() {
@@ -74,8 +74,8 @@ export function SpikeService($location, api, notify, gettext, send, $q) {
      * @param {Object} items
      */
     this.unspikeMultiple = function unspikeMultiple(items) {
-        getUnspikeDestination().then(config => {
-            items.forEach(item => {
+        getUnspikeDestination().then((config) => {
+            items.forEach((item) => {
                 unspike(item, config);
             });
         });

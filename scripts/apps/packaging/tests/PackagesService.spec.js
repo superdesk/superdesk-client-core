@@ -1,7 +1,7 @@
 describe('packages service', () => {
     beforeEach(window.module('superdesk.apps.packaging'));
 
-    it('can get reference for an item', inject(packages => {
+    it('can get reference for an item', inject((packages) => {
         var item = {headline: 'foo', type: 'text', _id: 'foo:1'};
         var ref = packages.getReferenceFor(item);
         expect(ref.type).toBe(item.type);

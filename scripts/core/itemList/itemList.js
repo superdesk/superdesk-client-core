@@ -191,7 +191,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         }
 
         var addSlugs = function(list, words) {
-            words.forEach(w => {
+            words.forEach((w) => {
                 if (w) {
                     list.push('slugline:(' + w + ')');
                 }

@@ -26,7 +26,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     this.searchQuery = null;
 
     if (config.features && config.features.noTakes) {
-        this.fileTypes = this.fileTypes.filter(type => type !== 'takesPackage');
+        this.fileTypes = this.fileTypes.filter((type) => type !== 'takesPackage');
     }
 
     this.isOutputType = desks.isOutputType;
@@ -138,7 +138,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                     } else {
                         // update groups in preferences with any changes in desk's monitoring settings groups.
                         activePrefGroups.forEach(function(group) {
-                            return angular.extend(group, monitoringSettings.find(grp => grp._id === group._id));
+                            return angular.extend(group, monitoringSettings.find((grp) => grp._id === group._id));
                         });
 
                         groups = activePrefGroups;

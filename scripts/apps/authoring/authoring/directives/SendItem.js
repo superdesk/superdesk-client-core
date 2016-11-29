@@ -51,7 +51,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.publish = function() {
                 scope.loading = true;
                 var result = scope._publish();
-                return $q.resolve(result).then(null, e => $q.reject(false))
+                return $q.resolve(result).then(null, (e) => $q.reject(false))
                     .finally(() => {
                         scope.loading = false;
                     });
@@ -127,7 +127,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     .then(function(spellcheckErrors) {
                         if (scope.mode === 'authoring') {
                             return confirm.confirmSpellcheck(spellcheckErrors)
-                                .then(runSend, err => false);
+                                .then(runSend, (err) => false);
                         }
 
                         return runSend(open);
@@ -346,7 +346,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
                 return editor.countErrors()
                     .then(confirm.confirmSpellcheck)
-                    .then(runSendAndContinue, err => false);
+                    .then(runSendAndContinue, (err) => false);
             };
 
             /*
@@ -355,7 +355,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.sendAndPublish = function() {
                 return editor.countErrors()
                     .then(confirm.confirmSpellcheck)
-                    .then(runSendAndPublish, err => false);
+                    .then(runSendAndPublish, (err) => false);
             };
 
             /*

@@ -85,7 +85,7 @@ module.exports = {
                     return 'export default [];\r\n';
                 }
 
-                let abs = p => path.join(process.cwd(), 'node_modules', p);
+                let abs = (p) => path.join(process.cwd(), 'node_modules', p);
                 let data = 'export default [\r\n\trequire("' + abs(paths[0]) + '").default.name';
 
                 for (var i = 1; i < paths.length; i++) {

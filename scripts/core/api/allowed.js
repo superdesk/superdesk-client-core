@@ -13,7 +13,7 @@ function AllowedService(_, api, $q) {
         return api.get('allowed_values')
             .then(function(response) {
                 values = {};
-                response._items.forEach(item => {
+                response._items.forEach((item) => {
                     values[item._id] = item.items;
                 });
                 return values;
@@ -39,10 +39,10 @@ function AllowedService(_, api, $q) {
      * @return {Promise}
      */
     this.filterKeys = (all, resource, field) =>
-        this.get(resource, field).then(allowed => {
+        this.get(resource, field).then((allowed) => {
             var filtered = {};
-            Object.keys(all).forEach(key => {
-                var isAllowed = _.find(allowed, val => key.indexOf(val) === 0);
+            Object.keys(all).forEach((key) => {
+                var isAllowed = _.find(allowed, (val) => key.indexOf(val) === 0);
 
                 if (isAllowed) {
                     filtered[key] = all[key];

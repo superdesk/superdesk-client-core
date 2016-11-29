@@ -8,7 +8,7 @@ function RequestService($injector) {
     /**
      * @link upload:isUpload
      */
-    this.isUpload = config => $injector.get('upload').isUpload(config);
+    this.isUpload = (config) => $injector.get('upload').isUpload(config);
 
     /**
      * Request again using given config

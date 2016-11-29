@@ -56,7 +56,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 parameters.indexOf(')', colonIndex) + 1);
             var added = false;
 
-            cvs.forEach(cv => {
+            cvs.forEach((cv) => {
                 if (parameter.indexOf(cv.id + '.qcode') !== -1) {
                     var value = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')),
                         codeList = metadata.values[cv.list],

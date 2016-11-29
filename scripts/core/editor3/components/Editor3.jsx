@@ -214,7 +214,7 @@ const BlockStyleControls = (props) => {
 
     return (
         <span>
-            {options.filter(type => type in BLOCK_TYPES_STYLE).map((type) =>
+            {options.filter((type) => type in BLOCK_TYPES_STYLE).map((type) =>
                 <StyleButton
                     key={type}
                     active={BLOCK_TYPES_STYLE[type] === blockType}
@@ -240,7 +240,7 @@ const InlineStyleControls = (props) => {
     const {options} = props;
     return (
         <span>
-            {options.filter(type => type in INLINE_STYLES).map(type =>
+            {options.filter((type) => type in INLINE_STYLES).map((type) =>
                 <StyleButton
                     key={type}
                     active={currentStyle.has(INLINE_STYLES[type])}
