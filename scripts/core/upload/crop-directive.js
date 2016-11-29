@@ -11,8 +11,8 @@ angular.module('superdesk.core.upload.crop', [])
         link: function(scope, elem) {
             var bounds, boundx, boundy;
 
-            var updateScope = _.throttle(function(c) {
-                scope.$apply(function() {
+            var updateScope = _.throttle((c) => {
+                scope.$apply(() => {
                     scope.cords = c;
                     var rx = 120 / scope.cords.w;
                     var ry = 120 / scope.cords.h;
@@ -31,7 +31,7 @@ angular.module('superdesk.core.upload.crop', [])
                 });
             }
 
-            scope.$watch('src', function(src) {
+            scope.$watch('src', (src) => {
                 elem.empty();
                 if (scope.file && scope.maxFileSize
                     && scope.file.size / 1048576 > parseInt(scope.maxFileSize, 10)) {
@@ -48,7 +48,7 @@ angular.module('superdesk.core.upload.crop', [])
                         var size = [this.width, this.height];
 
                         if (this.width < 200 || this.height < 200) {
-                            scope.$apply(function() {
+                            scope.$apply(() => {
                                 notify.pop();
                                 notify.error(gettext('Sorry, but avatar must be at least 200x200 pixels big.'));
                                 scope.src = null;

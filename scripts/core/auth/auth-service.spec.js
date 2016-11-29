@@ -1,12 +1,12 @@
-describe('auth service', function() {
-    beforeEach(function() {
+describe('auth service', () => {
+    beforeEach(() => {
         window.module('superdesk.core.preferences');
         window.module('superdesk.core.services.storage');
         window.module('superdesk.core.auth');
         window.module('superdesk.core.auth.session');
         window.module('superdesk.core.menu');
         window.module('superdesk.apps.authoring');
-        window.module(function($provide) {
+        window.module(($provide) => {
             $provide.service('api', function($q) {
                 this.users = {
                     getById: function(id) {
@@ -16,14 +16,14 @@ describe('auth service', function() {
             });
         });
     });
-    beforeEach(inject(function(session, preferencesService, authAdapter, urls, $q) {
+    beforeEach(inject((session, preferencesService, authAdapter, urls, $q) => {
         session.clear();
         spyOn(preferencesService, 'get').and.returnValue($q.when({}));
         spyOn(urls, 'resource').and.returnValue($q.when('http://localhost:5000/api/auth'));
         spyOn(session, 'start').and.returnValue(true);
     }));
 
-    it('can login', inject(function(auth, session, $httpBackend, $rootScope) {
+    it('can login', inject((auth, session, $httpBackend, $rootScope) => {
         expect(session.identity).toBe(null);
         expect(session.token).toBe(null);
 
@@ -33,10 +33,10 @@ describe('auth service', function() {
             user: 'foo'
         });
 
-        auth.login('admin', 'admin').then(function(identity) {
+        auth.login('admin', 'admin').then((identity) => {
             expect(session.start).toHaveBeenCalled();
             resolved.login = true;
-        }, function() {
+        }, () => {
             resolved.login = false;
         });
 
@@ -46,14 +46,14 @@ describe('auth service', function() {
         expect(resolved.login).toBe(true);
     }));
 
-    it('checks credentials', inject(function(auth, $httpBackend, $rootScope) {
+    it('checks credentials', inject((auth, $httpBackend, $rootScope) => {
         var resolved = false, rejected = false;
 
         $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(403, {});
 
-        auth.login('wrong', 'credentials').then(function() {
+        auth.login('wrong', 'credentials').then(() => {
             resolved = true;
-        }, function() {
+        }, () => {
             rejected = true;
         });
 

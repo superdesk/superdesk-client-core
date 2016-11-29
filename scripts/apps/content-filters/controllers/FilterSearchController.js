@@ -44,18 +44,18 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
     };
 
     function fetchContentFilters() {
-        contentFilters.getAllContentFilters().then(function(_filters) {
+        contentFilters.getAllContentFilters().then((_filters) => {
             $scope.contentFilters = _filters;
-            _.each($scope.contentFilters, function(filter) {
+            _.each($scope.contentFilters, (filter) => {
                 $scope.contentFiltersLookup[filter._id] = filter;
             });
         });
     }
 
     function populateData() {
-        return contentFilters.getFilterConditionParameters().then(function(params) {
+        return contentFilters.getFilterConditionParameters().then((params) => {
             $scope.filterConditionParameters = $filter('sortByName')(params, 'field');
-            _.each(params, function(param) {
+            _.each(params, (param) => {
                 $scope.operatorLookup[param.field] = param.operators;
                 $scope.valueLookup[param.field] = param.values;
                 $scope.valueFieldLookup[param.field] = param.value_field;
@@ -73,10 +73,8 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
         var allValues = $scope.valueLookup[$scope.filterCondition.field];
         var valueField = $scope.valueFieldLookup[$scope.filterCondition.field];
 
-        _.each(values, function(value) {
-            var v = _.find(allValues, function(val) {
-                return val[valueField].toString() === value;
-            });
+        _.each(values, (value) => {
+            var v = _.find(allValues, (val) => val[valueField].toString() === value);
 
             $scope.filterCondition.values.push(v);
         });
@@ -86,7 +84,7 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
         if ($scope.isListValue()) {
             var values = [];
 
-            _.each($scope.filterCondition.values, function(value) {
+            _.each($scope.filterCondition.values, (value) => {
                 values.push(value[$scope.valueFieldLookup[$scope.filterCondition.field]]);
             });
             return values.join();
@@ -106,7 +104,7 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
             };
 
             $scope.loading = true;
-            contentFilters.getFilterSearchResults(inputs).then(function(result) {
+            contentFilters.getFilterSearchResults(inputs).then((result) => {
                 if (result[0].filter_conditions.length === 0 &&
                     result[0].content_filters.length === 0 &&
                     result[0].selected_subscribers.length === 0) {
@@ -117,13 +115,13 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
 
                 $scope.filterCondition.value = null;
             })
-            .finally(function() {
+            .finally(() => {
                 $scope.loading = false;
             });
         }
     };
 
-    populateData().then(function() {
+    populateData().then(() => {
         fetchContentFilters();
     });
 }

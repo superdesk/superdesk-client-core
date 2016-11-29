@@ -12,12 +12,12 @@ export function SpikeService($location, api, notify, gettext, send, $q) {
      */
     this.spike = function(item) {
         return api.update(SPIKE_RESOURCE, item, {state: 'spiked'})
-            .then(function() {
+            .then(() => {
                 if ($location.search()._id === item._id) {
                     $location.search('_id', null);
                 }
                 return item;
-            }, function(response) {
+            }, (response) => {
                 item.error = response;
                 if (angular.isDefined(response.data._issues) &&
                     angular.isDefined(response.data._issues['validator exception'])) {
@@ -58,12 +58,12 @@ export function SpikeService($location, api, notify, gettext, send, $q) {
         };
 
         return api.update(UNSPIKE_RESOURCE, item, data)
-            .then(function() {
+            .then(() => {
                 if ($location.search()._id === item._id) {
                     $location.search('_id', null);
                 }
                 return item;
-            }, function(response) {
+            }, (response) => {
                 item.error = response;
             });
     }

@@ -31,7 +31,7 @@ export class AutosaveService {
      * Get the resource.
      */
     get(item) {
-        return api.find(RESOURCE, item._id).then(function(autosave) {
+        return api.find(RESOURCE, item._id).then((autosave) => {
             item._autosave = autosave;
             return item;
         });
@@ -49,7 +49,7 @@ export class AutosaveService {
 
         let id = item._id;
 
-        this.timeouts[id] = $timeout(function() {
+        this.timeouts[id] = $timeout(() => {
             var diff = helpers.extendItem({_id: id}, item);
 
             helpers.filterDefaultValues(diff, orig);

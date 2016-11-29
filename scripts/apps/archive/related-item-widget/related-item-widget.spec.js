@@ -1,10 +1,10 @@
 
 'use strict';
 
-describe('related item widget', function() {
+describe('related item widget', () => {
     beforeEach(window.module('superdesk.apps.dashboard.widgets.relatedItem'));
 
-    it('can open item', inject(function($rootScope, $controller, superdesk) {
+    it('can open item', inject(($rootScope, $controller, superdesk) => {
         var scope = $rootScope.$new();
 
         $controller('relatedItemController', {$scope: scope});
@@ -17,7 +17,7 @@ describe('related item widget', function() {
         expect(superdesk.intent).toHaveBeenCalledWith('edit', 'item', item);
     }));
 
-    it('can associate item', inject(function($rootScope, api, $q, $controller, superdesk) {
+    it('can associate item', inject(($rootScope, api, $q, $controller, superdesk) => {
         var scope = $rootScope.$new();
 
         scope.options = {};

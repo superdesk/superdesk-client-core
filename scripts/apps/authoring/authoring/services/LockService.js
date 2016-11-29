@@ -5,13 +5,13 @@ export function LockService($q, api, session, privileges, notify) {
      */
     this.lock = function lock(item, force) {
         if (!item.lock_user && item._editable || force) {
-            return api.save('archive_lock', {}, {}, item).then(function(lock) {
+            return api.save('archive_lock', {}, {}, item).then((lock) => {
                 _.extend(item, lock);
                 item._locked = true;
                 item.lock_user = session.identity._id;
                 item.lock_session = session.sessionId;
                 return item;
-            }, function(err) {
+            }, (err) => {
                 notify.error(gettext('Failed to get a lock on the item!'));
                 item._locked = false;
                 item._editable = false;
@@ -28,13 +28,11 @@ export function LockService($q, api, session, privileges, notify) {
      */
     this.unlock = function unlock(item) {
         return api('archive_unlock', item).save({})
-            .then(function(lock) {
+            .then((lock) => {
                 _.extend(item, lock);
                 item._locked = false;
                 return item;
-            }, function(err) {
-                return item;
-            });
+            }, (err) => item);
     };
 
     /**

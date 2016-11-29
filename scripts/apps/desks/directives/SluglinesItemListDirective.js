@@ -8,10 +8,10 @@ export function SluglinesItemListDirective(api) {
         link: function(scope, elem) {
             scope.items = [];
             scope.loading = true;
-            api.get('desks/' + scope.desk + '/sluglines').then(function(items) {
+            api.get('desks/' + scope.desk + '/sluglines').then((items) => {
                 scope.items = items._items;
             })
-            .finally(function() {
+            .finally(() => {
                 scope.loading = false;
             });
         }

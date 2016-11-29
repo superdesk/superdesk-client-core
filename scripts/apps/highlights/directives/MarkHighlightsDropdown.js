@@ -12,9 +12,9 @@ export function MarkHighlightsDropdown(desks, highlightsService, $timeout) {
                 return scope.item && scope.item.highlights && scope.item.highlights.indexOf(highlight._id) >= 0;
             };
 
-            highlightsService.get(desks.getCurrentDeskId()).then(function(result) {
+            highlightsService.get(desks.getCurrentDeskId()).then((result) => {
                 scope.highlights = result._items;
-                $timeout(function() {
+                $timeout(() => {
                     var highlightDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
                     var buttons = highlightDropdown.find('button:not([disabled])');
 

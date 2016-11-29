@@ -4,7 +4,7 @@ export function ItemProfileDirective(content) {
         scope: {profileId: '=profile'},
         template: '{{ profile }}',
         link: function(scope) {
-            content.getTypesLookup().then(function(lookup) {
+            content.getTypesLookup().then((lookup) => {
                 scope.profile = lookup[scope.profileId] ?
                     lookup[scope.profileId].label :
                     scope.profileId;

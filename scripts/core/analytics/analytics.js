@@ -70,7 +70,7 @@ angular.module('superdesk.core.analytics', [])
 }])
 
 .run(['$rootScope', 'analytics', function($rootScope, analytics) {
-    $rootScope.$on('$routeChangeSuccess', function(ev, route) {
+    $rootScope.$on('$routeChangeSuccess', (ev, route) => {
         if (angular.isDefined(route)) {
             analytics.track(route);
         }

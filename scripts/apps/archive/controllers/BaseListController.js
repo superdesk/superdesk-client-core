@@ -20,7 +20,7 @@ export class BaseListController {
             }
             if ($location.search().fetch) {
                 this.fetchItem(decodeURIComponent($location.search().fetch))
-                .then(function(item) {
+                .then((item) => {
                     $scope.selected.preview = null;
                     $scope.selected.fetch = item;
                 });

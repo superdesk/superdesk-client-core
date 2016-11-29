@@ -17,11 +17,11 @@ function Dictionaries() {
     };
 
     this.getRow = function(name) {
-        return this.list.filter(function(elem, index) {
-            return elem.element(by.binding('dictionary.name')).getText().then(function(text) {
-                return text.toUpperCase() === name.toUpperCase();
-            });
-        });
+        return this.list.filter((elem, index) =>
+            elem.element(by.binding('dictionary.name'))
+                .getText()
+                .then((text) => text.toUpperCase() === name.toUpperCase())
+        );
     };
 
     this.getPersonalRow = function(languageId) {
@@ -33,7 +33,7 @@ function Dictionaries() {
     };
 
     this.edit = function(name) {
-        this.getRow(name).then(function(rows) {
+        this.getRow(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-pencil')).click();
             browser.sleep(500);
@@ -41,7 +41,7 @@ function Dictionaries() {
     };
 
     this.remove = function(name) {
-        this.getRow(name).then(function(rows) {
+        this.getRow(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-trash')).click();
             browser.sleep(500);

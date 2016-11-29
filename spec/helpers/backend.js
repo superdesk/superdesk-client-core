@@ -74,7 +74,7 @@ function withToken(callback) {
                 username: browser.params.username,
                 password: browser.params.password
             }
-        }, function(error, response, json) {
+        }, (error, response, json) => {
             if (error) {
                 throw new Error(error);
             }
@@ -95,11 +95,11 @@ function withToken(callback) {
  * @param {function} callback
  */
 function backendRequestAuth(params, callback) {
-    withToken(function() {
+    withToken(() => {
         var token = browser.params.token;
 
         params.headers = params.headers || {};
         params.headers.authorization = 'Basic ' + bt(token + ':');
-        backendRequest(params, callback || function() { /* no-op */ });
+        backendRequest(params, callback || function noop() { /* no-op */ });
     });
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Tag Service', function() {
+describe('Tag Service', () => {
     var deskList = {
         123: {_id: '123', name: 'desk1'},
         456: {_id: '456', name: 'desk2'}
@@ -17,7 +17,7 @@ describe('Tag Service', function() {
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         fakeMetadata = {
             values: {subjectcodes: []},
             fetchSubjectcodes: jasmine.createSpy()
@@ -26,11 +26,11 @@ describe('Tag Service', function() {
         $provide.value('metadata', fakeMetadata);
     }));
 
-    beforeEach(inject(function($q) {
+    beforeEach(inject(($q) => {
         fakeMetadata.fetchSubjectcodes.and.returnValue($q.when());
     }));
 
-    it('can populate keywords from location', inject(function($location, tags, $rootScope, desks, $q) {
+    it('can populate keywords from location', inject(($location, tags, $rootScope, desks, $q) => {
         var members = null;
 
         $location.search('q=(Obama)');
@@ -39,7 +39,7 @@ describe('Tag Service', function() {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
 
         tags.initSelectedFacets()
-            .then(function(currentTags) {
+            .then((currentTags) => {
                 members = currentTags;
             });
 
@@ -48,7 +48,7 @@ describe('Tag Service', function() {
     }));
 
     it('can populate parameters from location',
-    inject(function($location, tags, $rootScope, desks, $q, gettextCatalog) {
+    inject(($location, tags, $rootScope, desks, $q, gettextCatalog) => {
         var members = null;
 
         $location.search('q=headline:(Obama)');
@@ -58,7 +58,7 @@ describe('Tag Service', function() {
         gettextCatalog.setStrings(gettextCatalog.getCurrentLanguage(), {headline: 'foo'});
 
         tags.initSelectedFacets()
-            .then(function(currentTags) {
+            .then((currentTags) => {
                 members = currentTags;
             });
 
@@ -68,7 +68,7 @@ describe('Tag Service', function() {
         expect(members.selectedParameters[0].value).toBe('headline:(Obama)');
     }));
 
-    it('can populate type facet from location', inject(function($location, tags, $rootScope, desks, $q) {
+    it('can populate type facet from location', inject(($location, tags, $rootScope, desks, $q) => {
         var members = null;
 
         $location.search('type=["text"]');
@@ -77,7 +77,7 @@ describe('Tag Service', function() {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
 
         tags.initSelectedFacets()
-            .then(function(currentTags) {
+            .then((currentTags) => {
                 members = currentTags;
             });
 
@@ -85,7 +85,7 @@ describe('Tag Service', function() {
         expect(members.selectedFacets.type.length).toBe(1);
     }));
 
-    it('can populate date facet from location', inject(function($location, tags, $rootScope, desks, $q) {
+    it('can populate date facet from location', inject(($location, tags, $rootScope, desks, $q) => {
         var members = null;
 
         $location.search('after=now-1M');
@@ -94,7 +94,7 @@ describe('Tag Service', function() {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
 
         tags.initSelectedFacets()
-            .then(function(currentTags) {
+            .then((currentTags) => {
                 members = currentTags;
             });
 
@@ -103,7 +103,7 @@ describe('Tag Service', function() {
         expect(members.selectedFacets.date[0]).toBe('Last Month');
     }));
 
-    it('can populate complete filters from location', inject(function($location, tags, $rootScope, desks, $q) {
+    it('can populate complete filters from location', inject(($location, tags, $rootScope, desks, $q) => {
         var members = null;
 
         $location.search([
@@ -115,7 +115,7 @@ describe('Tag Service', function() {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
 
         tags.initSelectedFacets()
-            .then(function(currentTags) {
+            .then((currentTags) => {
                 members = currentTags;
             });
 
@@ -125,7 +125,7 @@ describe('Tag Service', function() {
         expect(members.selectedParameters.length).toBe(1);
     }));
 
-    it('create tags for from desk and to desk', inject(function($location, $rootScope, $q, tags, _desks_) {
+    it('create tags for from desk and to desk', inject(($location, $rootScope, $q, tags, _desks_) => {
         var desks = _desks_;
 
         desks.deskLookup = {
@@ -145,7 +145,7 @@ describe('Tag Service', function() {
         var tagsList = null;
 
         tags.initSelectedFacets()
-            .then(function(value) {
+            .then((value) => {
                 tagsList = value;
             });
 
@@ -155,7 +155,7 @@ describe('Tag Service', function() {
         expect(tagsList.selectedParameters[1].label).toEqual('To Desk:Sport');
     }));
 
-    it('create tags original creator', inject(function($location, $rootScope, $q, tags, desks, _userList_) {
+    it('create tags original creator', inject(($location, $rootScope, $q, tags, desks, _userList_) => {
         var userList = _userList_;
 
         $location.search('original_creator', '123');
@@ -171,7 +171,7 @@ describe('Tag Service', function() {
         var tagsList = null;
 
         tags.initSelectedFacets()
-            .then(function(value) {
+            .then((value) => {
                 tagsList = value;
             });
 
@@ -180,7 +180,7 @@ describe('Tag Service', function() {
         expect(tagsList.selectedParameters[0].label).toEqual('Creator:Test User');
     }));
 
-    it('create tags if creator is not known', inject(function($location, $rootScope, $q, tags, desks, _userList_) {
+    it('create tags if creator is not known', inject(($location, $rootScope, $q, tags, desks, _userList_) => {
         var userList = _userList_;
 
         $location.search('original_creator', '123');
@@ -191,7 +191,7 @@ describe('Tag Service', function() {
         var tagsList = null;
 
         tags.initSelectedFacets()
-            .then(function(value) {
+            .then((value) => {
                 tagsList = value;
             });
 
@@ -200,7 +200,7 @@ describe('Tag Service', function() {
         expect(tagsList.selectedParameters[0].label).toEqual('Creator:Unknown');
     }));
 
-    it('create tags for unique name', inject(function($location, $rootScope, $q, tags, desks) {
+    it('create tags for unique name', inject(($location, $rootScope, $q, tags, desks) => {
         $location.search('unique_name', '123');
 
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
@@ -208,7 +208,7 @@ describe('Tag Service', function() {
         var tagsList = null;
 
         tags.initSelectedFacets()
-            .then(function(value) {
+            .then((value) => {
                 tagsList = value;
             });
 
@@ -217,7 +217,7 @@ describe('Tag Service', function() {
         expect(tagsList.selectedParameters[0].label).toEqual('Unique Name:123');
     }));
 
-    it('create tags for ingest provider', inject(function($location, $rootScope, $q, tags, desks, ingestSources) {
+    it('create tags for ingest provider', inject(($location, $rootScope, $q, tags, desks, ingestSources) => {
         var providers = [{
             name: 'Test Provider',
             _id: 123
@@ -230,7 +230,7 @@ describe('Tag Service', function() {
         var tagsList = null;
 
         tags.initSelectedFacets()
-            .then(function(value) {
+            .then((value) => {
                 tagsList = value;
             });
 
@@ -241,14 +241,14 @@ describe('Tag Service', function() {
         );
     }));
 
-    it('create tags for remove source facet', inject(function($location, $rootScope, $q, tags, desks) {
+    it('create tags for remove source facet', inject(($location, $rootScope, $q, tags, desks) => {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
         $location.search('notsource', '["REUTERS", "NTB"]');
 
         var tagsList = null;
 
         tags.initSelectedFacets()
-            .then(function(value) {
+            .then((value) => {
                 tagsList = value;
             });
 
@@ -260,14 +260,14 @@ describe('Tag Service', function() {
         ]);
     }));
 
-    it('create tags for remove desk facet', inject(function($location, $rootScope, $q, tags, desks) {
+    it('create tags for remove desk facet', inject(($location, $rootScope, $q, tags, desks) => {
         spyOn(desks, 'initialize').and.returnValue($q.when({}));
         $location.search('notdesk', '["123"]');
         desks.deskLookup = deskList;
         var tagsList = null;
 
         tags.initSelectedFacets()
-            .then(function(value) {
+            .then((value) => {
                 tagsList = value;
             });
 
@@ -278,14 +278,14 @@ describe('Tag Service', function() {
         );
     }));
 
-    it('create tags for remove category facet', inject(function($location, $rootScope, $q, tags, desks) {
+    it('create tags for remove category facet', inject(($location, $rootScope, $q, tags, desks) => {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
         $location.search('notcategory', '["International Sports", "Domestic Sports"]');
 
         var tagsList = null;
 
         tags.initSelectedFacets()
-            .then(function(value) {
+            .then((value) => {
                 tagsList = value;
             });
 
@@ -297,14 +297,14 @@ describe('Tag Service', function() {
         ]);
     }));
 
-    it('create tags for remove urgency facet', inject(function($location, $rootScope, $q, tags, desks) {
+    it('create tags for remove urgency facet', inject(($location, $rootScope, $q, tags, desks) => {
         spyOn(desks, 'initialize').and.returnValue($q.when({deskLookup: deskList}));
         $location.search('noturgency', '["1", "2"]');
 
         var tagsList = null;
 
         tags.initSelectedFacets()
-            .then(function(value) {
+            .then((value) => {
                 tagsList = value;
             });
 

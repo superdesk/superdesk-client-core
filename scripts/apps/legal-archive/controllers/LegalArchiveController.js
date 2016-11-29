@@ -25,7 +25,7 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
     function refresh() {
         $scope.loading = true;
         $scope.preview(null);
-        legal.query().then(function(items) {
+        legal.query().then((items) => {
             $scope.loading = false;
             $scope.items = items;
         });
@@ -63,7 +63,7 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
 
     $scope.search();
 
-    preferencesService.get('archive:view').then(function(result) {
+    preferencesService.get('archive:view').then((result) => {
         var savedView = result.view;
 
         $scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';

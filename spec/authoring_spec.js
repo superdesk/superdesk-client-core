@@ -12,12 +12,12 @@ var monitoring = require('./helpers/monitoring'),
     dictionaries = require('./helpers/dictionaries'),
     workspace = require('./helpers/workspace');
 
-describe('authoring', function() {
-    beforeEach(function() {
+describe('authoring', () => {
+    beforeEach(() => {
         monitoring.openMonitoring();
     });
 
-    it('add an embed and respect the order', function() {
+    it('add an embed and respect the order', () => {
         // try with same block content
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.cleanBodyHtmlElement();
@@ -65,7 +65,7 @@ describe('authoring', function() {
         authoring.blockContains(4, body3.replace(/\n$/, ''));
     });
 
-    it('authoring operations', function() {
+    it('authoring operations', () => {
         // undo and redo operations by using CTRL+Z and CTRL+y ...
         // ... from a new item
         authoring.createTextItem();
@@ -191,7 +191,7 @@ describe('authoring', function() {
         expect(monitoring.getTextItem(5, 0)).toBe('item7');
     });
 
-    it('authoring history', function() {
+    it('authoring history', () => {
         // view item history create-fetch operation
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
@@ -290,14 +290,12 @@ describe('authoring', function() {
         authoring.close();
     });
 
-    it('keyboard shortcuts', function() {
+    it('keyboard shortcuts', () => {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.writeText('z');
         element(by.cssContainingText('span', 'Dateline')).click();
         ctrlShiftKey('s');
-        browser.wait(function() {
-            return element(by.buttonText('Save')).getAttribute('disabled');
-        }, 500);
+        browser.wait(() => element(by.buttonText('Save')).getAttribute('disabled'), 500);
         authoring.close();
         monitoring.actionOnItem('Edit', 2, 0);
         browser.sleep(300);
@@ -311,7 +309,7 @@ describe('authoring', function() {
         expect(element.all(by.css('.authoring-embedded .embedded-auth-view')).count()).toBe(0);
     });
 
-    it('can display monitoring after publishing an item using full view of authoring', function() {
+    it('can display monitoring after publishing an item using full view of authoring', () => {
         monitoring.actionOnItem('Edit', 3, 2);
         monitoring.showHideList();
 
@@ -319,7 +317,7 @@ describe('authoring', function() {
         expect(monitoring.getGroups().count()).toBe(6);
     });
 
-    it('broadcast operation', function() {
+    it('broadcast operation', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
@@ -328,7 +326,7 @@ describe('authoring', function() {
         expect(authoring.getHeaderSluglineText()).toContain('item5');
     });
 
-    it('toggle auto spellcheck and hold changes', function() {
+    it('toggle auto spellcheck and hold changes', () => {
         monitoring.actionOnItem('Edit', 2, 1);
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
         authoring.toggleAutoSpellCheck();
@@ -338,7 +336,7 @@ describe('authoring', function() {
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
     });
 
-    it('spellcheck hilite sentence word for capitalization and ignore the word after abbreviations', function() {
+    it('spellcheck hilite sentence word for capitalization and ignore the word after abbreviations', () => {
         openUrl('/#/settings/dictionaries');
         dictionaries.edit('Test 1');
         expect(dictionaries.getWordsCount()).toBe(0);
@@ -363,7 +361,7 @@ describe('authoring', function() {
         'data-index="57">few</span>');
     });
 
-    it('related item widget', function() {
+    it('related item widget', () => {
         monitoring.actionOnItem('Duplicate', 2, 1); // duplicate item9 text published item
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.writeTextToHeadline('Duplicate Item 9');
@@ -384,7 +382,7 @@ describe('authoring', function() {
         expect(authoring.getRelatedItems().count()).toBe(2);
     });
 
-    it('related item widget can open published item', function() {
+    it('related item widget can open published item', () => {
         expect(monitoring.getGroups().count()).toBe(6);
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
         expect(monitoring.getTextItemBySlugline(2, 1)).toContain('ITEM9 SLUGLINE');
@@ -402,7 +400,7 @@ describe('authoring', function() {
         expect(authoring.getHeaderSluglineText()).toContain('item9 slugline');
     });
 
-    it('Kill Template apply', function() {
+    it('Kill Template apply', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
@@ -416,7 +414,7 @@ describe('authoring', function() {
         expect(authoring.kill_button.isDisplayed()).toBe(true);
     });
 
-    it('Emptied body text fails to validate', function() {
+    it('Emptied body text fails to validate', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.writeText('');
@@ -427,7 +425,7 @@ describe('authoring', function() {
         assertToastMsg('error', 'BODY_HTML empty values not allowed');
     });
 
-    it('keyboard navigation operations on subject dropdown', function() {
+    it('keyboard navigation operations on subject dropdown', () => {
         // Open any item in Edit mode
         monitoring.actionOnItem('Edit', 2, 1);
 
@@ -458,7 +456,7 @@ describe('authoring', function() {
         expect(browser.driver.switchTo().activeElement().getText()).toEqual('crime, law and justice');
     });
 
-    it('hide multi-edit option when action is kill', function() {
+    it('hide multi-edit option when action is kill', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.moreActionsButton.click();
@@ -470,7 +468,7 @@ describe('authoring', function() {
         expect(authoring.multieditButton.isDisplayed()).toBe(false);
     });
 
-    it('open publish item with footer text without <br> tag', function() {
+    it('open publish item with footer text without <br> tag', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.addHelpline('Suicide');
@@ -483,7 +481,7 @@ describe('authoring', function() {
         expect(authoring.getBodyFooterPreview()).not.toContain('<br>');
     });
 
-    it('maintains helpline first option always selected', function() {
+    it('maintains helpline first option always selected', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.addHelpline('Suicide');
@@ -498,7 +496,7 @@ describe('authoring', function() {
         expect(authoring.getHelplineSelectedOption(2)).toBe(null);      // Children not remained selected
     });
 
-    it('Not be able to Ctrl-z to the original, actionable text when killing an item', function() {
+    it('Not be able to Ctrl-z to the original, actionable text when killing an item', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         expect(authoring.getHeadlineText()).toBe('item5');  // original, actionable headline text
@@ -549,7 +547,7 @@ describe('authoring', function() {
         expect(authoring.kill_button.isDisplayed()).toBe(true);
     });
 
-    it('after undo/redo save last version', function() {
+    it('after undo/redo save last version', () => {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.cleanBodyHtmlElement();
         browser.sleep(2000);
@@ -565,7 +563,7 @@ describe('authoring', function() {
         expect(authoring.getBodyText()).toBe('one\ntwo\nthree');
     });
 
-    it('can send and publish', function() {
+    it('can send and publish', () => {
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(0).count()).toBe(0);
         expect(monitoring.getGroupItems(1).count()).toBe(0);

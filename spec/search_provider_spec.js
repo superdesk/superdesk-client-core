@@ -5,12 +5,12 @@ var openUrl = require('./helpers/utils').open,
     searchProvider = require('./helpers/pages').searchProvider,
     globalSearch = require('./helpers/search');
 
-describe('search_provider', function() {
-    beforeEach(function(done) {
+describe('search_provider', () => {
+    beforeEach((done) => {
         openUrl('/#/settings/searchProviders').then(done);
     });
 
-    xit('Add Search Provider', function() {
+    xit('Add Search Provider', () => {
         // create default search provider
         searchProvider.addProvider('AAP Multimedia', 'AAP Multimedia', true);
 

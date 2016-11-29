@@ -48,7 +48,7 @@ function ShadowDirective($timeout) {
                 });
             }
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 element.off('scroll');
             });
 
@@ -111,7 +111,7 @@ function WizardDirective() {
         transclude: true,
         controller: ['$scope', '$element', 'WizardHandler', function($scope, element, WizardHandler) {
             WizardHandler.addWizard($scope.name || WizardHandler.defaultName, this);
-            $scope.$on('$destroy', function() {
+            $scope.$on('$destroy', () => {
                 WizardHandler.removeWizard($scope.name || WizardHandler.defaultName);
             });
 
@@ -123,7 +123,7 @@ function WizardDirective() {
             this.addStep = function(step) {
                 $scope.steps.push(step);
                 if (!stopWatch) {
-                    stopWatch = $scope.$watch('currentStep', function(stepCode) {
+                    stopWatch = $scope.$watch('currentStep', (stepCode) => {
                         if (stepCode && ($scope.selectedStep && $scope.selectedStep.code !== stepCode
                             || !$scope.selectedStep)) {
                             $scope.goTo(_.find($scope.steps, {code: stepCode}));
@@ -133,7 +133,7 @@ function WizardDirective() {
             };
 
             function unselectAll() {
-                _.each($scope.steps, function(step) {
+                _.each($scope.steps, (step) => {
                     step.selected = false;
                 });
                 $scope.selectedStep = null;
@@ -214,7 +214,7 @@ AutofocusDirective.$inject = [];
 function AutofocusDirective() {
     return {
         link: function(scope, element) {
-            _.defer(function() {
+            _.defer(() => {
                 var value = element.val();
 
                 element.val('').focus();
@@ -249,7 +249,7 @@ function AutoexpandDirective() {
 
             resize();
 
-            element.on('keyup change', function() {
+            element.on('keyup change', () => {
                 resize();
             });
         }
@@ -265,7 +265,7 @@ function DropdownPositionDirective($document) {
                 isInlineOriented = null,
                 menu = null, workspace = null;
 
-            element.bind('click', function() {
+            element.bind('click', () => {
                 if (!element.hasClass('open')) {
                     return false;
                 }
@@ -361,7 +361,7 @@ function DropdownPositionAbsoluteDirective($position) {
             var icon = elem.find('[class*="icon-"]');
             // ported from bootstrap 0.13.1
 
-            scope.$watch(dropdown.isOpen, function(isOpen) {
+            scope.$watch(dropdown.isOpen, (isOpen) => {
                 if (isOpen) {
                     var pos = $position.positionElements(icon, dropdown.dropdownMenu, 'bottom-right', true),
                         windowHeight = window.innerHeight - 30; // Substracting 30 is for submenu bar
@@ -374,12 +374,12 @@ function DropdownPositionAbsoluteDirective($position) {
                         right: Math.max(5, window.innerWidth - pos.left)
                     };
 
-                    scope.$evalAsync(function() {
+                    scope.$evalAsync(() => {
                         // Hide it to avoid flickering
                         dropdown.dropdownMenu.css({opacity: '0', left: 'auto'});
                     });
 
-                    scope.$applyAsync(function() {
+                    scope.$applyAsync(() => {
                         /*
                          * Calculate if there is enough space for showing after the icon
                          * if not, show it above the icon
@@ -418,11 +418,11 @@ function DropdownFocus(Keys) {
     return {
         require: 'dropdown',
         link: function(scope, elem, attrs, dropdown) {
-            scope.$watch(dropdown.isOpen, function(isOpen) {
+            scope.$watch(dropdown.isOpen, (isOpen) => {
                 var inputField = elem.find('input[type="text"]');
 
                 if (isOpen) {
-                    _.defer(function() {
+                    _.defer(() => {
                         var buttonList = elem.find('button:not([disabled]):not(.dropdown__toggle)');
                         var handlers = {};
 
@@ -437,7 +437,7 @@ function DropdownFocus(Keys) {
                         }
 
                         elem.tabindex = ''; // make parent element receive keyboard events
-                        elem.on('keydown', function(event) {
+                        elem.on('keydown', (event) => {
                             if (handlers[event.keyCode] && !event.ctrlKey && !event.metaKey) {
                                 event.preventDefault();
                                 event.stopPropagation();
@@ -445,7 +445,7 @@ function DropdownFocus(Keys) {
                             }
                         });
 
-                        inputField.on('keyup', function(event) {
+                        inputField.on('keyup', (event) => {
                             var mainList = elem.find('.main-list')
                                 .children('ul')
                                 .find('li > button')[0];
@@ -565,7 +565,7 @@ function DatepickerWrapper() {
         transclude: true,
         templateUrl: 'scripts/core/ui/views/datepicker-wrapper.html',
         link: function(scope, element) {
-            element.bind('click', function(event) {
+            element.bind('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
             });
@@ -605,13 +605,13 @@ function DatepickerDirective($document) {
                 var isChild = element.find(event.target).length > 0;
 
                 if (scope.state.opened && !isChild) {  // outside Datepicker click
-                    scope.$apply(function() {
+                    scope.$apply(() => {
                         close();
                     });
                 }
             }
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 $document.off('click', handleDatePicker);
             });
         }
@@ -702,7 +702,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                 };
             });
 
-            scope.$watch('open', function(value) {
+            scope.$watch('open', (value) => {
                 if (value) {
                     $popupWrapper.offset(popupService.position(260, 270, element));
                     scope.$broadcast('datepicker.focus');
@@ -714,7 +714,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                     evt.preventDefault();
                     scope.close();
                 } else if (evt.which === DOWN_ARROW && !scope.open) {
-                    scope.$apply(function() {
+                    scope.$apply(() => {
                         scope.open = true;
                     });
                 }
@@ -732,7 +732,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             popup.remove();
             $document.find('body').append($popupWrapper);
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 $popupWrapper.remove();
                 element.unbind('keydown', scope.keydown);
             });
@@ -765,13 +765,13 @@ function TimepickerDirective($document) {
                 var isChild = element.find(event.target).length > 0;
 
                 if (scope.opened && !isChild) {  // outside Timepicker click
-                    scope.$apply(function() {
+                    scope.$apply(() => {
                         close();
                     });
                 }
             }
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 $document.off('click', handleTimePicker);
             });
         }
@@ -856,7 +856,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                 };
             });
 
-            scope.$watch('open', function(value) {
+            scope.$watch('open', (value) => {
                 if (value) {
                     $popupWrapper.offset(popupService.position(200, 310, element));
                     scope.$broadcast('timepicker.focus');
@@ -868,7 +868,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                     evt.preventDefault();
                     scope.close();
                 } else if (evt.which === DOWN_ARROW && !scope.open) {
-                    scope.$apply(function() {
+                    scope.$apply(() => {
                         scope.open = true;
                     });
                 }
@@ -886,7 +886,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
             popup.remove();
             $document.find('body').append($popupWrapper);
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 $popupWrapper.remove();
                 element.unbind('keydown', scope.keydown);
             });
@@ -910,7 +910,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
             // user-provided search term
             scope.matchingTimeZones = [];
 
-            tzdata.$promise.then(function() {
+            tzdata.$promise.then(() => {
                 scope.timeZones = tzdata.getTzNames();
                 if (!scope.timezone && config.defaultTimezone) {
                     scope.selectTimeZone(config.defaultTimezone);
@@ -938,9 +938,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
                 termLower = searchTerm.toLowerCase();
                 scope.matchingTimeZones = _.filter(
                     scope.timeZones,
-                    function(item) {
-                        return item.toLowerCase().indexOf(termLower) >= 0;
-                    }
+                    (item) => item.toLowerCase().indexOf(termLower) >= 0
                 );
             };
 
@@ -963,7 +961,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
              * @method clearSelectedTimeZone
              */
             scope.clearSelectedTimeZone = function() {
-                $timeout(function() {
+                $timeout(() => {
                     el.find('input')[0].focus();
                 }, 0, false);
                 delete scope.timezone;
@@ -988,14 +986,14 @@ function TimepickerPopupDirective($timeout, config) {
             var POPUP = '.timepicker-popup';
 
             var focusElement = function() {
-                $timeout(function() {
+                $timeout(() => {
                     element.find(POPUP).focus();
                 }, 0, false);
             };
 
             scope.$on('timepicker.focus', focusElement);
 
-            element.bind('click', function(event) {
+            element.bind('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
             });
@@ -1003,7 +1001,7 @@ function TimepickerPopupDirective($timeout, config) {
             scope.hours = _.range(24);
             scope.minutes = _.range(0, 60, 5);
 
-            scope.$watch('time', function(newVal, oldVal) {
+            scope.$watch('time', (newVal, oldVal) => {
                 var local;
 
                 if (newVal) {
@@ -1111,7 +1109,7 @@ function splitterWidget(superdesk, superdeskFlags, $timeout) {
              * switching from settings back to monitoring
              */
             if (!authoring.length) {
-                $timeout(function() {
+                $timeout(() => {
                     authoring = element.next('#authoring-container');
                     authoring.width(superdesk.authoringWidth);
                 }, 0, false);
@@ -1194,24 +1192,22 @@ function HeaderResizeDirective($rootScope, $timeout, $window, workspaces) {
 
                 if (stageContainer && headerContainer) {
                     if (headerContainer.width() !== stageContainer.width()) {
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             headerContainer.width(stageContainer.width());
                         });
                     }
                 }
             }
 
-            scope.$watch(function() {
-                return workspaces.active;
-            }, resize);
+            scope.$watch(() => workspaces.active, resize);
 
-            $rootScope.$on('resize:header', function() {
-                $timeout(function() {
+            $rootScope.$on('resize:header', () => {
+                $timeout(() => {
                     resize();
                 }, 0, false);
             });
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 window.off('resize', resize);
             });
         }
@@ -1243,17 +1239,17 @@ function mediaQuery($window) {
                 var width = elem.width();
 
                 if (width < scope.minWidth) {
-                    scope.$parent.$applyAsync(function() {
+                    scope.$parent.$applyAsync(() => {
                         scope.$parent.elementState = 'compact';
                     });
                     elem.removeClass('comfort').addClass('compact');
                 } else if (width > scope.maxWidth) {
-                    scope.$parent.$applyAsync(function() {
+                    scope.$parent.$applyAsync(() => {
                         scope.$parent.elementState = 'comfort';
                     });
                     elem.removeClass('compact').addClass('comfort');
                 } else {
-                    scope.$parent.$applyAsync(function() {
+                    scope.$parent.$applyAsync(() => {
                         scope.$parent.elementState = null;
                     });
                     elem.removeClass('compact comfort');
@@ -1263,7 +1259,7 @@ function mediaQuery($window) {
             // init
             resize();
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 window.off('resize', resize);
             });
         }
@@ -1291,11 +1287,11 @@ function focusElement() {
                 element = elem.find(dataElement);
             }
 
-            element.on('focus', function() {
+            element.on('focus', () => {
                 element.closest(dataAppendElement).addClass(dataClass);
             });
 
-            element.on('blur', function() {
+            element.on('blur', () => {
                 element.closest(dataAppendElement).removeClass(dataClass);
             });
         }
@@ -1316,7 +1312,7 @@ function validationDirective(gettext, gettextCatalog) {
             var invalidText = '<span id="required_span" class="sd-invalid-text">' +
             gettextCatalog.getString('This field is required') + '</span>';
 
-            scope.$watch(attrs.required, function(required) {
+            scope.$watch(attrs.required, (required) => {
                 if (!required) {
                     if (elem.hasClass('sd-validate')) {
                         elem.removeClass('sd-validate');
@@ -1343,7 +1339,7 @@ function validationDirective(gettext, gettextCatalog) {
                 }
             });
 
-            scope.$watch(attrs.sdValidationError, function(isError) {
+            scope.$watch(attrs.sdValidationError, (isError) => {
                 if (isError === true) {
                     elem.addClass('sd-invalid').removeClass('sd-valid');
                 } else if (isError === false) {
@@ -1431,7 +1427,7 @@ function multiSelectDirective() {
                 updateItem();
             };
 
-            scope.$watch('item', function(item) {
+            scope.$watch('item', (item) => {
                 if (!item) {
                     return false;
                 }
@@ -1456,14 +1452,12 @@ function multiSelectDirective() {
             // Typeahead search
             scope.searchTerms = function(term) {
                 if (!term) {
-                    scope.$applyAsync(function() {
+                    scope.$applyAsync(() => {
                         scope.activeList = false;
                     });
                 }
 
-                scope.terms = _.filter(scope.list, function(t) {
-                    return t.toLowerCase().indexOf(term.toLowerCase()) !== -1;
-                });
+                scope.terms = _.filter(scope.list, (t) => t.toLowerCase().indexOf(term.toLowerCase()) !== -1);
 
                 scope.activeList = true;
             };

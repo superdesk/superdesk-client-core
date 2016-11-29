@@ -65,7 +65,7 @@ function APIProvider() {
          */
         function http(config) {
             return $q.when(config.url)
-                .then(function(url) {
+                .then((url) => {
                     config.url = url;
 
                     if (config.method !== 'GET') {
@@ -111,7 +111,7 @@ function APIProvider() {
                 },
                 cleanData = {};
 
-            angular.forEach(data, function(val, key) {
+            angular.forEach(data, (val, key) => {
                 if (!blacklist[key]) {
                     cleanData[key] = val;
                 }
@@ -206,7 +206,7 @@ function APIProvider() {
                 data: diff ? clean(diff, !item._links) : clean(item, !item._links),
                 params: params,
                 headers: getHeaders(item)
-            }).then(function(data) {
+            }).then((data) => {
                 angular.extend(item, diff || {});
                 angular.extend(item, data);
                 return item;
@@ -368,7 +368,7 @@ function APIProvider() {
             });
         };
 
-        angular.forEach(apis, function(config, apiName) {
+        angular.forEach(apis, (config, apiName) => {
             var service = config.service || _.noop;
 
             service.prototype = new endpoints[config.type](apiName, config.backend);

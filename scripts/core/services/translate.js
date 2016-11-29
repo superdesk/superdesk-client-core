@@ -7,7 +7,7 @@
 export default angular.module('superdesk.core.translate', ['gettext', 'superdesk.core.auth.session'])
     .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS',
         function(gettextCatalog, $location, $rootScope, SESSION_EVENTS) {
-            $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, function(event) {
+            $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
                 if ($rootScope.$root.currentUser
                     && gettextCatalog.strings.hasOwnProperty($rootScope.$root.currentUser.language)) {
                     // if the current logged in user has a saved language preference that is available

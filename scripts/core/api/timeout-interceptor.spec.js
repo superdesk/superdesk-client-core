@@ -1,10 +1,10 @@
 var RequestService = window.RequestService;
 var TimeoutHttpInterceptor = window.TimeoutHttpInterceptor;
 
-describe('timeout http interceptor', function() {
+describe('timeout http interceptor', () => {
     var service;
 
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.service('request', RequestService);
         $provide.service('upload', function() {
             this.isUpload = function() {
@@ -13,11 +13,11 @@ describe('timeout http interceptor', function() {
         });
     }));
 
-    beforeEach(inject(function($injector) {
+    beforeEach(inject(($injector) => {
         service = $injector.invoke(TimeoutHttpInterceptor);
     }));
 
-    xit('monitors requests and stop them after while', inject(function($rootScope) {
+    xit('monitors requests and stop them after while', inject(($rootScope) => {
         var config = {
             method: 'GET',
             url: 'test'

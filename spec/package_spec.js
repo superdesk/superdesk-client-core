@@ -2,14 +2,14 @@ var search = require('./helpers/search'),
     authoring = require('./helpers/pages').authoring,
     monitoring = require('./helpers/monitoring');
 
-describe('package', function() {
+describe('package', () => {
     'use strict';
 
-    beforeEach(function() {
+    beforeEach(() => {
         monitoring.openMonitoring();
     });
 
-    it('increment package version', function() {
+    it('increment package version', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         // Add item to current package.
         monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 0);
@@ -21,7 +21,7 @@ describe('package', function() {
         authoring.showVersions(); // close version panel
     });
 
-    it('add to current package removed', function() {
+    it('add to current package removed', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 0);
         // Open menu.
@@ -33,7 +33,7 @@ describe('package', function() {
         menu.element(by.css('.dropdown__menu-close')).click();
     });
 
-    it('reorder group package items', function() {
+    it('reorder group package items', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 0);
         monitoring.actionOnItemSubmenu('Add to current', 'story', 3, 2);
@@ -43,21 +43,21 @@ describe('package', function() {
         expect(authoring.getGroupItems('STORY').count()).toBe(2);
     });
 
-    it('create package from multiple items', function() {
+    it('create package from multiple items', () => {
         monitoring.selectItem(2, 0);
         monitoring.selectItem(2, 1);
         monitoring.createPackageFromItems();
         expect(authoring.getGroupItems('MAIN').count()).toBe(2);
     });
 
-    it('create package by combining an item with open item', function() {
+    it('create package by combining an item with open item', () => {
         monitoring.openAction(2, 1);
         browser.sleep(500);
         monitoring.actionOnItem('Combine with current', 3, 0);
         expect(authoring.getGroupItems('MAIN').count()).toBe(2);
     });
 
-    it('add multiple items to package', function() {
+    it('add multiple items to package', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         monitoring.selectItem(2, 0);
         monitoring.selectItem(3, 1);
@@ -65,7 +65,7 @@ describe('package', function() {
         expect(authoring.getGroupItems('MAIN').count()).toBe(2);
     });
 
-    it('create package from published item', function() {
+    it('create package from published item', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.writeText('some text');
@@ -81,7 +81,7 @@ describe('package', function() {
         expect(authoring.getGroupItems('MAIN').count()).toBe(1);
     });
 
-    xit('can preview package in a package', function() {
+    xit('can preview package in a package', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         monitoring.actionOnItemSubmenu('Add to current', 'main', 3, 1);
         authoring.save();

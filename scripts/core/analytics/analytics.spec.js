@@ -1,12 +1,12 @@
-describe('analytics', function() {
+describe('analytics', () => {
     beforeEach(window.module('superdesk.core.analytics'));
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.constant('config', {
             analytics: {piwik: {}, ga: {}}
         });
     }));
 
-    it('can track activity', inject(function(analytics, $rootScope) {
+    it('can track activity', inject((analytics, $rootScope) => {
         spyOn(analytics, 'track');
 
         var activity = {

@@ -18,7 +18,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             elem.css({
                 position: 'relative'
             });
-            scope.$watch('src', function() {
+            scope.$watch('src', () => {
                 img = new Image();
                 img.onload = function() {
                     $img.css({
@@ -117,7 +117,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                      selectionWidth = nextData.CropRight - nextData.CropLeft;
                      selectionHeight = nextData.CropBottom - nextData.CropTop;
                      if (!isEqualCrop(nextData, scope.cropData)) {
-                         $timeout(function() {
+                         $timeout(() => {
                              angular.extend(scope.cropData, nextData);
                              scope.onChange({
                                  renditionName: scope.rendition && scope.rendition.name || undefined,
@@ -159,14 +159,14 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                      }
                  }
 
-                 scope.$watch('src', function(src) {
+                 scope.$watch('src', (src) => {
                      var cropSelect = parseCoordinates(scope.cropInit) ||
                          getDefaultCoordinates(scope.original, scope.rendition || {});
 
                      refreshImage(src, cropSelect);
                  });
 
-                 scope.$watch('cropData', function() {
+                 scope.$watch('cropData', () => {
                      cropData = scope.cropData || {};
                      if (cropData && cropData.CropBottom) {
                          refreshImage(img.src, [
@@ -178,7 +178,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                      }
                  }, true);
 
-                 scope.$on('poiUpdate', function(e, point) {
+                 scope.$on('poiUpdate', (e, point) => {
                      angular.element('.crop-area.thumbnails').css({
                          height: angular.element('.crop-area.thumbnails').height()
                      });
@@ -298,17 +298,15 @@ export default angular.module('superdesk.core.upload.imagecrop', [
              }
          };
      }])
-    .directive('imageonload', function() {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attrs) {
-                element.bind('load', function() {
+    .directive('imageonload', () => ({
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.bind('load', () => {
                     // call the function that was passed
-                    scope.$apply(attrs.imageonload);
-                });
-            }
-        };
-    })
+                scope.$apply(attrs.imageonload);
+            });
+        }
+    }))
     .directive('sdImagePoint', ['$window', 'lodash', '$timeout', function($window, _, $timeout) {
         return {
             scope: {
@@ -388,7 +386,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                     drawPointsFromModel();
                     // setup overlay to listen mouse events
                     (function onMouseEvents($img) {
-                        var debouncedPoiUpdateModel = _.debounce(function(newPoi) {
+                        var debouncedPoiUpdateModel = _.debounce((newPoi) => {
                             vm.updatePOI(newPoi);
                         }, 500);
 
@@ -427,13 +425,13 @@ export default angular.module('superdesk.core.upload.imagecrop', [
 
                         overlay.on('mousedown', enableDragMode);
                         overlay.on('mousemove', updateOnMouseDrag);
-                        onExistEvents.forEach(function(eventName) {
+                        onExistEvents.forEach((eventName) => {
                             overlay.on(eventName, exitDragMode);
                         });
-                        scope.$on('$destroy', function() {
+                        scope.$on('$destroy', () => {
                             overlay.off('mousedown', enableDragMode);
                             overlay.off('mousemove', updateOnMouseDrag);
-                            onExistEvents.forEach(function(eventName) {
+                            onExistEvents.forEach((eventName) => {
                                 overlay.off(eventName, exitDragMode);
                             });
                         });
@@ -445,7 +443,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                 scope.$on('poiUpdate', updateWhenImageIsReady);
                 angular.element($window).on('resize', updateWhenImageIsReady);
                 // on destroy
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', () => {
                     angular.element($window).off('resize', updateWhenImageIsReady);
                 });
             }

@@ -17,14 +17,14 @@ export function ItemGlobalSearch(
 
             scope.meta = {};
             scope.flags = {enabled: false};
-            keyboardManager.bind('ctrl+0', function() {
+            keyboardManager.bind('ctrl+0', () => {
                 scope.flags.enabled = true;
             }, {global: true});
-            keyboardManager.bind('esc', function() {
+            keyboardManager.bind('esc', () => {
                 scope.flags.enabled = false;
             }, {global: true});
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 keyboardManager.unbind('ctrl+0');
                 keyboardManager.unbind('esc');
             });
@@ -50,9 +50,9 @@ export function ItemGlobalSearch(
             function searchUserContent(criteria) {
                 var resource = api('user_content', session.identity);
 
-                resource.query(criteria).then(function(result) {
+                resource.query(criteria).then((result) => {
                     openItem(result._items);
-                }, function(response) {
+                }, (response) => {
                     scope.message = gettext('There was a problem, item can not open.');
                 });
             }
@@ -76,7 +76,7 @@ export function ItemGlobalSearch(
                     }
                 };
 
-                api.query('search', criteria).then(function(result) {
+                api.query('search', criteria).then((result) => {
                     scope.items = result._items;
                     if (scope.items.length > 0) {
                         openItem(scope.items);
@@ -84,7 +84,7 @@ export function ItemGlobalSearch(
                     } else {
                         searchUserContent(criteria);
                     }
-                }, function(response) {
+                }, (response) => {
                     scope.message = gettext('There was a problem, item can not open.');
                 });
             }

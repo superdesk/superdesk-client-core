@@ -23,14 +23,14 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             scope.dirty = false;
             scope.errorMessage = null;
 
-            scope.$watch('origUser', function() {
+            scope.$watch('origUser', () => {
                 scope.user = _.create(scope.origUser);
             });
 
             resetUser(scope.origUser);
 
-            scope.$watchCollection('user', function(user) {
-                _.each(user, function(value, key) {
+            scope.$watchCollection('user', (user) => {
+                _.each(user, (value, key) => {
                     if (value === '') {
                         if (key !== 'phone' || key !== 'byline') {
                             user[key] = null;
@@ -43,13 +43,13 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             });
 
             api('roles').query()
-                .then(function(result) {
+                .then((result) => {
                     scope.roles = result._items;
                 });
             // get available translation languages
             var noBaseLanguage = true;
 
-            scope.languages = _.map(gettextCatalog.strings, function(translation, lang) {
+            scope.languages = _.map(gettextCatalog.strings, (translation, lang) => {
                 if (lang === gettextCatalog.baseLanguage) {
                     noBaseLanguage = false;
                 }
@@ -80,7 +80,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             };
 
             scope.editPicture = function() {
-                superdesk.intent('edit', 'avatar', scope.user).then(function(avatar) {
+                superdesk.intent('edit', 'avatar', scope.user).then((avatar) => {
                     scope.user.picture_url = avatar; // prevent replacing Avatar which would get into diff
                 });
             };
@@ -103,7 +103,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 scope.error = null;
                 notify.info(gettext('Saving...'));
                 return usersService.save(scope.origUser, scope.user)
-                .then(function(response) {
+                .then((response) => {
                     scope.origUser = response;
                     resetUser(scope.origUser);
                     notify.pop();
@@ -115,7 +115,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                     }
 
                     userList.clearCache();
-                }, function(response) {
+                }, (response) => {
                     notify.pop();
                     if (response.status === 404) {
                         if ($location.path() === '/users/') {
@@ -146,7 +146,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             };
 
             scope.toggleStatus = function(active) {
-                usersService.toggleStatus(scope.origUser, active).then(function() {
+                usersService.toggleStatus(scope.origUser, active).then(() => {
                     resetUser(scope.origUser);
                     scope.onupdate({user: scope.origUser});
                 });
@@ -155,7 +155,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
             function resetUser(user) {
                 scope.dirty = false;
                 if (angular.isDefined(user._id)) {
-                    return userList.getUser(user._id, true).then(function(u) {
+                    return userList.getUser(user._id, true).then((u) => {
                         scope.error = null;
                         scope.origUser = u;
                         scope.user = _.create(u);
@@ -166,7 +166,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                         scope.profile = scope.user._id === session.identity._id;
                         scope.userDesks = [];
                         if (angular.isDefined(u) && angular.isDefined(u._links)) {
-                            desks.fetchUserDesks(u).then(function(response) {
+                            desks.fetchUserDesks(u).then((response) => {
                                 scope.userDesks = response;
                             });
                         }
@@ -174,7 +174,7 @@ export function UserEditDirective(api, gettext, notify, usersService, userList, 
                 }
             }
 
-            scope.$on('user:updated', function(event, user) {
+            scope.$on('user:updated', (event, user) => {
                 resetUser(user);
             });
         }

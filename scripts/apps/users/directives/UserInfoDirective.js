@@ -3,9 +3,9 @@ export function UserInfoDirective(userPopup) {
     return {
         link: function(scope, element, attrs) {
             element.addClass('user-link');
-            element.hover(function() {
+            element.hover(() => {
                 userPopup.set(attrs.user, element, scope);
-            }, function() {
+            }, () => {
                 userPopup.close();
             });
         }

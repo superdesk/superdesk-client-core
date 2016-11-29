@@ -8,9 +8,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.packageGroupItems = {};
 
     this.fetch = function fetch(_id) {
-        return api.find('archive', _id).then(function(result) {
-            return result;
-        });
+        return api.find('archive', _id).then((result) => result);
     };
 
     this.open = function open(_id, readOnly) {
@@ -74,9 +72,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.addItemsToPackage = function(current, groupId, items) {
         var origGroups = _.cloneDeep(current.groups);
 
-        var targetGroup = _.find(origGroups, function(group) {
-            return group.id.toLowerCase() === groupId;
-        });
+        var targetGroup = _.find(origGroups, (group) => group.id.toLowerCase() === groupId);
 
         if (!targetGroup) {
             var rootGroup = _.find(origGroups, {id: 'root'});
@@ -89,18 +85,16 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             };
             origGroups.push(targetGroup);
         }
-        _.each(items, function(item) {
+        _.each(items, (item) => {
             targetGroup.refs.push(self.getReferenceFor(item));
         });
         _.extend(current, {groups: origGroups});
     };
 
     this.isAdded = function(pkg, item) {
-        var added = pkg.groups ? pkg.groups.some(function(group) {
-            return group.refs.some(function(ref) {
-                return ref.guid === item._id || ref.residRef === item._id;
-            });
-        }) : false;
+        var added = pkg.groups ?
+            pkg.groups.some((group) => group.refs.some((ref) => ref.guid === item._id || ref.residRef === item._id))
+            : false;
         var addedToPkg = this.isAddedToPackage(pkg, item);
 
         return added || addedToPkg;
@@ -110,9 +104,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         var repo = packageItem.location || 'ingest';
 
         return api(repo).getById(packageItem.residRef)
-            .then(function(item) {
-                return item;
-            }, function(response) {
+            .then((item) => item, (response) => {
                 if (response.status === 404) {
                     console.error('Item not found.');
                 }

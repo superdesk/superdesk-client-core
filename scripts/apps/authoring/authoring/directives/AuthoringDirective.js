@@ -54,14 +54,14 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
             $scope.openSuggestions = () => suggest.setActive();
 
-            $scope.$watch('origItem', function(newValue, oldValue) {
+            $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
                 if (newValue) {
                     $scope.itemActions = authoring.itemActions(newValue);
                 }
             }, true);
 
-            $scope.$watch('item.flags', function(newValue, oldValue) {
+            $scope.$watch('item.flags', (newValue, oldValue) => {
                 if (newValue !== oldValue) {
                     $scope.item.flags = _.clone($scope.origItem.flags);
                     $scope.item.flags = newValue;
@@ -87,11 +87,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         $scope.stage = $scope.origItem.task.stage;
                     } else {
                         api('stages').getById($scope.origItem.task.stage)
-                            .then(function(result) {
+                            .then((result) => {
                                 $scope.stage = result;
                             });
 
-                        desks.fetchDeskById($scope.origItem.task.desk).then(function(desk) {
+                        desks.fetchDeskById($scope.origItem.task.desk).then((desk) => {
                             $scope.deskName = desk.name;
                         });
                     }
@@ -120,7 +120,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Create a new version
              */
             $scope.save = function() {
-                return authoring.save($scope.origItem, $scope.item).then(function(res) {
+                return authoring.save($scope.origItem, $scope.item).then((res) => {
                     $scope.dirty = false;
 
                     if (res.cropData) {
@@ -134,7 +134,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     notify.success(gettext('Item updated.'));
 
                     return $scope.origItem;
-                }, function(response) {
+                }, (response) => {
                     if (angular.isDefined(response.data._issues)) {
                         if (angular.isDefined(response.data._issues.unique_name) &&
                             response.data._issues.unique_name.unique === 1) {
@@ -167,7 +167,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.exportHighlight = function(item) {
                 if ($scope.save_enabled()) {
                     modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
-                        .then(function() {
+                        .then(() => {
                             _exportHighlight(item._id);
                         }
                     );
@@ -182,7 +182,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function _exportHighlight(_id) {
                 api.generate_highlights.save({}, {package: _id})
-                .then(authoringWorkspace.edit, function(response) {
+                .then(authoringWorkspace.edit, (response) => {
                     if (response.status === 403) {
                         _forceExportHighlight(_id);
                     } else {
@@ -193,9 +193,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function _forceExportHighlight(_id) {
                 modal.confirm(gettext('There are items locked or not published. Do you want to continue?'))
-                    .then(function() {
+                    .then(() => {
                         api.generate_highlights.save({}, {package: _id, export: true})
-                        .then(authoringWorkspace.edit, function(response) {
+                        .then(authoringWorkspace.edit, (response) => {
                             notify.error(gettext('Error creating highlight.'));
                         });
                     });
@@ -203,9 +203,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function _previewHighlight(_id) {
                 api.generate_highlights.save({}, {package: _id, preview: true})
-                .then(function(response) {
+                .then((response) => {
                     $scope.highlight_preview = response.body_html;
-                }, function(data) {
+                }, (data) => {
                     $scope.highlight_preview = data.message;
                 });
             }
@@ -302,7 +302,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 validate(orig, item);
 
                 return authoring.publish(orig, item, action)
-                .then(function(response) {
+                .then((response) => {
                     if (!response) {
                         notify.error(gettext('Unknown Error: Item not published.'));
                         return false;
@@ -322,7 +322,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                             }
 
                             if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
-                                authoring.open(item._id, true).then(function(res) {
+                                authoring.open(item._id, true).then((res) => {
                                     $scope.origItem = res;
                                     $scope.dirty = false;
                                     $scope.item = _.create($scope.origItem);
@@ -355,20 +355,16 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 $scope.error = {};
                 tryPublish = true;
                 helpers.extendItem(updated, item);
-                angular.forEach(authoring.editor, function(editor, key) {
+                angular.forEach(authoring.editor, (editor, key) => {
                     if (!authoring.schema[key]) {
                         var found = false;
-                        var cv = _.find(metadata.cvs, function(item) {
-                            return item._id === key;
-                        });
+                        var cv = _.find(metadata.cvs, (item) => item._id === key);
 
                         if (cv) {
                             var field = cv.schema_field || 'subject';
 
-                            angular.forEach(cv.items, function(row) {
-                                var element = _.find(updated[field], function(item) {
-                                    return item.qcode === row.qcode;
-                                });
+                            angular.forEach(cv.items, (row) => {
+                                var element = _.find(updated[field], (item) => item.qcode === row.qcode);
 
                                 if (element) {
                                     found = true;
@@ -416,7 +412,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
-                    _.each(requiredFields, function(key) {
+                    _.each(requiredFields, (key) => {
                         if (_.isNil(item[key]) || _.isEmpty(item[key])) {
                             notify.error($interpolate(gettext(
                                 'Required field {{ key }} is missing. ...'))({key: key}));
@@ -488,7 +484,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         act = 'correct';
                     }
                     return authoring.validateBeforeTansa($scope.origItem, $scope.item, act)
-                    .then(function(response) {
+                    .then((response) => {
                         continueAfterPublish = continueOnPublish;
                         if (response.errors.length) {
                             validate($scope.origItem, $scope.item);
@@ -510,11 +506,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     if ($scope.dirty && message === 'publish') {
                         // confirmation only required for publish
                         return authoring.publishConfirmation($scope.origItem, $scope.item, $scope.dirty, message)
-                        .then(function(res) {
+                        .then((res) => {
                             if (res) {
                                 return publishItem($scope.origItem, $scope.item);
                             }
-                        }, function(response) {
+                        }, (response) => {
                             notify.error(gettext('Error. Item not published.'));
                             return false;
                         });
@@ -539,11 +535,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             $scope.publishAndContinue = function() {
-                $scope.publish(true).then(function(published) {
+                $scope.publish(true).then((published) => {
                     if (published) {
                         authoring.rewrite($scope.item);
                     }
-                }, function(err) {
+                }, (err) => {
                     notify.error(gettext('Failed to publish and continue.'));
                 });
             };
@@ -558,7 +554,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              */
             $scope.close = function() {
                 _closing = true;
-                authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(function() {
+                authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
                     authoringWorkspace.close(true);
                 });
             };
@@ -572,7 +568,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.closeOpenNew = function(createFunction, paramValue) {
                 _closing = true;
-                authoring.close($scope.item, $scope.origItem, $scope.dirty, true).then(function() {
+                authoring.close($scope.item, $scope.origItem, $scope.dirty, true).then(() => {
                     createFunction(paramValue);
                 });
             };
@@ -588,13 +584,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 $scope.sending = true;
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
-                    .then(function() {
-                        return $scope.save().then(function() {
-                            return lock.unlock($scope.origItem);
-                        });
-                    }, function() { // cancel
-                        return $q.reject();
-                    });
+                    .then(() => $scope.save().then(() => lock.unlock($scope.origItem)), () =>  // cancel
+                         $q.reject());
                 }
 
                 return lock.unlock($scope.origItem);
@@ -626,7 +617,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 // populate content fields so that it can undo to initial (empty) version later
                 var autosave = $scope.origItem._autosave || {};
 
-                Object.keys(helpers.CONTENT_FIELDS_DEFAULTS).forEach(function(key) {
+                Object.keys(helpers.CONTENT_FIELDS_DEFAULTS).forEach((key) => {
                     var value = autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
 
                     $scope.item[key] = angular.copy(value);
@@ -652,7 +643,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             // call the function to unlock and lock the story for editing.
             $scope.unlock = function() {
                 $scope.unlockClicked = true;
-                lock.unlock($scope.item).then(function(unlockedItem) {
+                lock.unlock($scope.item).then((unlockedItem) => {
                     $scope.edit(unlockedItem);
                 });
             };
@@ -710,7 +701,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function refreshItem() {
                 authoring.open($scope.item._id, true)
-                    .then(function(item) {
+                    .then((item) => {
                         $scope.origItem = item;
                         $scope.dirty = false;
                         $scope.closePreview();
@@ -718,11 +709,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     });
             }
 
-            $scope.$on('savework', function(e, msg) {
+            $scope.$on('savework', (e, msg) => {
                 var changeMsg = msg;
 
                 authoring.saveWorkConfirmation($scope.origItem, $scope.item, $scope.dirty, changeMsg)
-                .then(function(res) {
+                .then((res) => {
                     // after saving work make sure this item won't be open again
                     desks.setCurrentDeskId(null);
                     $location.search('item', null);
@@ -731,14 +722,14 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 .finally(reloadService.forceReload);
             });
 
-            $scope.$on('item:lock', function(_e, data) {
+            $scope.$on('item:lock', (_e, data) => {
                 if ($scope.item._id === data.item && !_closing &&
                     session.sessionId !== data.lock_session) {
                     authoring.lock($scope.item, data.user);
                 }
             });
 
-            $scope.$on('item:unlock', function(_e, data) {
+            $scope.$on('item:unlock', (_e, data) => {
                 if ($scope.item._id === data.item && !_closing &&
                     (session.sessionId !== data.lock_session || lock.previewUnlock)) {
                     if (lock.previewUnlock) {
@@ -759,20 +750,20 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             });
 
-            $scope.$on('content:update', function(_e, data) {
+            $scope.$on('content:update', (_e, data) => {
                 if (!$scope._editable && data.items && data.items[$scope.origItem._id]) {
                     refreshItem();
                 }
             });
 
-            $scope.$on('item:publish:wrong:format', function(_e, data) {
+            $scope.$on('item:publish:wrong:format', (_e, data) => {
                 if (data.item === $scope.item._id) {
                     notify.error(gettext('No formatters found for ') + data.formats.join(',') +
                         ' while publishing item having unique name ' + data.unique_name);
                 }
             });
 
-            $scope.$on('item:highlight', function(e, data) {
+            $scope.$on('item:highlight', (e, data) => {
                 if ($scope.item._id === data.item_id) {
                     if (!$scope.item.highlights) {
                         $scope.item.highlights = [data.highlight_id];

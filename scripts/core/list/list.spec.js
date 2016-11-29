@@ -1,14 +1,14 @@
 'use strict';
 
-describe('superdesk.core.list module', function() {
+describe('superdesk.core.list module', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.list'));
 
-    describe('pagination', function() {
+    describe('pagination', () => {
         var TEMPLATE = '<div sd-pagination items="items"></div>';
 
         beforeEach(window.module('superdesk.templates-cache'));
-        beforeEach(window.module(function($provide) {
+        beforeEach(window.module(($provide) => {
             $provide.provider('translateFilter', function() {
                 this.$get = function() {
                     return function(text) {
@@ -18,7 +18,7 @@ describe('superdesk.core.list module', function() {
             });
         }));
 
-        it('can do the math', inject(function($compile, $rootScope) {
+        it('can do the math', inject(($compile, $rootScope) => {
             var $scope = $rootScope.$new();
 
             $scope.items = {_meta: {total: 23}};
@@ -37,7 +37,7 @@ describe('superdesk.core.list module', function() {
             expect(scope.to).toBe(23);
         }));
 
-        it('can calculate last of multiple pages', inject(function($compile, $rootScope, $location) {
+        it('can calculate last of multiple pages', inject(($compile, $rootScope, $location) => {
             var $scope = $rootScope.$new(true);
 
             $scope.items = {_meta: {total: 26}};
@@ -56,7 +56,7 @@ describe('superdesk.core.list module', function() {
             expect(scope.to).toBe(26);
         }));
 
-        it('can do the math when max_results defined', inject(function($compile, $rootScope, $location) {
+        it('can do the math when max_results defined', inject(($compile, $rootScope, $location) => {
             var $scope = $rootScope.$new();
 
             $scope.items = {_meta: {total: 48}};
@@ -77,7 +77,7 @@ describe('superdesk.core.list module', function() {
         }));
 
         it('can calculate last of multiple pages when max_results defined',
-        inject(function($compile, $rootScope, $location) {
+        inject(($compile, $rootScope, $location) => {
             var $scope = $rootScope.$new(true);
 
             $scope.items = {_meta: {total: 55}};

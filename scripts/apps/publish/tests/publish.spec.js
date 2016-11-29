@@ -1,6 +1,6 @@
 'use strict';
 
-describe('publish queue', function() {
+describe('publish queue', () => {
     var subscribers = {_items: [
         {
             _created: '2015-05-11T06:00:48+0000',
@@ -122,7 +122,7 @@ describe('publish queue', function() {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(inject(function($rootScope, $controller, subscribersService, $q, api, ingestSources) {
+    beforeEach(inject(($rootScope, $controller, subscribersService, $q, api, ingestSources) => {
         spyOn(subscribersService, 'fetchSubscribers').and.returnValue($q.when(subscribers));
         spyOn(ingestSources, 'fetchAllIngestProviders').and.returnValue($q.when(providers));
         spyOn(api.publish_queue, 'query').and.returnValue($q.when(publishQueue));
@@ -138,17 +138,17 @@ describe('publish queue', function() {
         );
     }));
 
-    it('can load items from publish_queue', inject(function($rootScope) {
+    it('can load items from publish_queue', inject(($rootScope) => {
         $rootScope.$digest();
         expect($scope.publish_queue.length).toBe(3);
-        _.each($scope.publish_queue, function(item) {
+        _.each($scope.publish_queue, (item) => {
             expect(item.selected).toBe(false);
         });
         expect($scope.showResendBtn).toBe(false);
         expect($scope.showCancelBtn).toBe(false);
     }));
 
-    it('can select multiple queue items', inject(function($rootScope) {
+    it('can select multiple queue items', inject(($rootScope) => {
         $rootScope.$digest();
         expect($scope.publish_queue.length).toBe(3);
         $scope.publish_queue[0].selected = true;
@@ -163,7 +163,7 @@ describe('publish queue', function() {
         expect($scope.showCancelBtn).toBe(false);
     }));
 
-    it('can deselect queue items', inject(function($rootScope) {
+    it('can deselect queue items', inject(($rootScope) => {
         $rootScope.$digest();
         expect($scope.publish_queue.length).toBe(3);
         $scope.publish_queue[0].selected = true;
@@ -185,7 +185,7 @@ describe('publish queue', function() {
         expect($scope.showCancelBtn).toBe(false);
     }));
 
-    it('can deselect all queue items', inject(function($rootScope) {
+    it('can deselect all queue items', inject(($rootScope) => {
         $rootScope.$digest();
         expect($scope.publish_queue.length).toBe(3);
         $scope.publish_queue[0].selected = true;
@@ -201,7 +201,7 @@ describe('publish queue', function() {
         expect($scope.multiSelectCount).toBe(0);
     }));
 
-    it('sets the selected filter subscriber', inject(function() {
+    it('sets the selected filter subscriber', inject(() => {
         var subscriberValue = {foo: 'bar'};
 
         $scope.selectedFilterSubscriber = null;
@@ -209,7 +209,7 @@ describe('publish queue', function() {
         expect($scope.selectedFilterSubscriber).toEqual(subscriberValue);
     }));
 
-    it('sets the selected filter ingest provider', inject(function() {
+    it('sets the selected filter ingest provider', inject(() => {
         var value = {foo: 'bar'};
 
         $scope.selectedFilterIngestProvider = null;
@@ -217,7 +217,7 @@ describe('publish queue', function() {
         expect($scope.selectedFilterIngestProvider).toEqual(value);
     }));
 
-    it('sets the selected filter status', inject(function() {
+    it('sets the selected filter status', inject(() => {
         var statusValue = 'success';
 
         $scope.selectedFilterStatus = null;
@@ -225,13 +225,13 @@ describe('publish queue', function() {
         expect($scope.selectedFilterStatus).toEqual(statusValue);
     }));
 
-    it('can search by headline', inject(function($rootScope) {
+    it('can search by headline', inject(($rootScope) => {
         $scope.search(publishQueue._items[0].headline);
         $scope.$digest();
         expect($scope.publish_queue[0].headline).toEqual(publishQueue._items[0].headline);
     }));
 
-    it('can perform word(s) search on headline', inject(function($rootScope) {
+    it('can perform word(s) search on headline', inject(($rootScope) => {
         $scope.search('dugan stars');
         $scope.$digest();
         var reQuery = new RegExp($scope.searchQuery, 'i');
@@ -239,16 +239,16 @@ describe('publish queue', function() {
         expect($scope.publish_queue[0].headline).toMatch(reQuery);
     }));
 
-    it('can search by unique name', inject(function($rootScope) {
+    it('can search by unique name', inject(($rootScope) => {
         $scope.search(publishQueue._items[0].unique_name);
         $scope.$digest();
         expect($scope.publish_queue[0].unique_name).toEqual(publishQueue._items[0].unique_name);
     }));
 
-    it('can resend single publish queue item', inject(function($rootScope, api, $q) {
+    it('can resend single publish queue item', inject(($rootScope, api, $q) => {
         $rootScope.$digest();
         expect($scope.publish_queue.length).toBe(3);
-        spyOn(api.publish_queue, 'save').and.callFake(function() {
+        spyOn(api.publish_queue, 'save').and.callFake(() => {
             publishQueue._items.push($scope.buildNewSchedule($scope.publish_queue[0]));
             return $q.when();
         });
@@ -256,7 +256,7 @@ describe('publish queue', function() {
         expect($scope.publish_queue.length).toBe(4);
     }));
 
-    it('can observe pagination and load page data', inject(function($rootScope, api, $q) {
+    it('can observe pagination and load page data', inject(($rootScope, api, $q) => {
         $scope.pageSize = 1;
         $scope.page = 2;
 

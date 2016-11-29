@@ -33,7 +33,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
              * If the item gets locked by another user when the activity menu is open then close the menu
              * as the actions for locked and unlocked are different.
              */
-            scope.$on('item:lock', function(_e, data) {
+            scope.$on('item:lock', (_e, data) => {
                 if (scope.open && scope.item && scope.item._id === data.item) {
                     scope.open = false;
                 }
@@ -66,7 +66,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                 var intent = {action: 'list', type: getType(item)};
                 var groups = {};
 
-                superdesk.findActivities(intent, item).forEach(function(activity) {
+                superdesk.findActivities(intent, item).forEach((activity) => {
                     if (workflowService.isActionAllowed(scope.item, activity.action)) {
                         var group = activity.group || 'default';
 

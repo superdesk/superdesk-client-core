@@ -1,12 +1,12 @@
 'use strict';
 
-describe('sdPasswordStrength', function() {
+describe('sdPasswordStrength', () => {
     var $compile, $rootScope, compileDirective;
 
     beforeEach(window.module('gettext'));
     beforeEach(window.module('superdesk.core.directives.passwordStrength'));
 
-    beforeEach(inject(function(_$compile_, _$rootScope_) {
+    beforeEach(inject((_$compile_, _$rootScope_) => {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
         compileDirective = function compileDirective(scopeValues) {
@@ -22,13 +22,13 @@ describe('sdPasswordStrength', function() {
         };
     }));
 
-    it('should insert strength indicator after input', function() {
+    it('should insert strength indicator after input', () => {
         var $el = compileDirective();
 
         expect($el.next().hasClass('password-strength')).toBeTruthy();
     });
 
-    it('should start of with strength as "Short" if empty', function() {
+    it('should start of with strength as "Short" if empty', () => {
         var $el = compileDirective();
 
         expect($el.next()
@@ -37,7 +37,7 @@ describe('sdPasswordStrength', function() {
         ).toBe('Short');
     });
 
-    it('should start of with correct strength when model is pre-populated', function() {
+    it('should start of with correct strength when model is pre-populated', () => {
         var $el = compileDirective({pwd: 'abcdE123'});
 
         expect($el.next()
@@ -46,7 +46,7 @@ describe('sdPasswordStrength', function() {
         ).toBe('OK');
     });
 
-    it('should update strength when model changes', function() {
+    it('should update strength when model changes', () => {
         var $el = compileDirective();
         var $scope = $el.scope();
         var label = $el.next().find('.label');
@@ -59,7 +59,7 @@ describe('sdPasswordStrength', function() {
         expect(label.text()).toBe('Weak');
     });
 
-    it('should update strength as input progresses', function() {
+    it('should update strength as input progresses', () => {
         var $el = compileDirective();
         var label = $el.next().find('.label');
         var $scope = $el.scope();
@@ -83,14 +83,14 @@ describe('sdPasswordStrength', function() {
         expect(label.text()).toBe('Strong');
     });
 
-    it('should invalidate model when password is not good enough', function() {
+    it('should invalidate model when password is not good enough', () => {
         var $el = compileDirective({pwd: 'abcd'});
         var ctrl = $el.controller('ngModel');
 
         expect(ctrl.$invalid).toBeTruthy();
     });
 
-    it('should validate model when password becomes good enough', function() {
+    it('should validate model when password becomes good enough', () => {
         var $el = compileDirective({pwd: 'abcd'});
         var $scope = $el.scope();
         var ctrl = $el.controller('ngModel');

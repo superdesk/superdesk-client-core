@@ -28,7 +28,7 @@ const testItems = [
     }
 ];
 
-describe('suggest', function() {
+describe('suggest', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.authoring.autosave'));
     beforeEach(window.module('superdesk.apps.authoring.suggest'));

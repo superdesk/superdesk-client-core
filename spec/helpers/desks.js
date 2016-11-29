@@ -35,11 +35,12 @@ function Desks() {
      * @return {promise} desk element
      **/
     this.getRow = function(name) {
-        return this.list.filter(function(elem, index) {
-            return elem.element(by.binding('desk.name')).getText().then(function(text) {
-                return text.toUpperCase() === name.toUpperCase();
-            });
-        });
+        return this.list
+            .filter((elem, index) =>
+                elem.element(by.binding('desk.name'))
+                    .getText()
+                    .then((text) => text.toUpperCase() === name.toUpperCase())
+            );
     };
 
     /**
@@ -56,11 +57,8 @@ function Desks() {
      * @return {Promise.<string>} a promise which is resolved with the stage count
      **/
     this.getStageCount = function(name) {
-        return this.getRow(name).then(function(rows) {
-            return rows[0].element(by.binding('getDeskStages(desk).length')).getText().then(function(count) {
-                return count;
-            });
-        });
+        return this.getRow(name).then((rows) =>
+            rows[0].element(by.binding('getDeskStages(desk).length')).getText().then((count) => count));
     };
 
     /**
@@ -68,7 +66,7 @@ function Desks() {
      * @param {string} name of desk
      **/
     this.edit = function(name) {
-        this.getRow(name).then(function(rows) {
+        this.getRow(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-dots-vertical')).click();
             rows[0].element(by.className('icon-pencil')).click();
@@ -81,14 +79,12 @@ function Desks() {
      * @param {string} name of desk
      **/
     this.showMonitoringSettings = function(name) {
-        this.getRow(name).then(function(rows) {
+        this.getRow(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-dots-vertical')).click();
             rows[0].element(by.className('icon-settings')).click();
 
-            browser.wait(function() {
-                return element.all(by.css('.aggregate-widget-config')).isDisplayed();
-            });
+            browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed());
             element.all(by.css('[ng-click="goTo(step)"]')).first().click();
         });
     };
@@ -98,7 +94,7 @@ function Desks() {
      * @param {string} name of desk
      **/
     this.remove = function(name) {
-        this.getRow(name).then(function(rows) {
+        this.getRow(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-dots-vertical')).click();
             rows[0].element(by.className('icon-trash')).click();
@@ -113,11 +109,11 @@ function Desks() {
      * @return {promise} tab element
      **/
     this.getTab = function(name) {
-        return this.tabs.filter(function(elem, index) {
-            return elem.element(by.binding('step.title')).getText().then(function(text) {
-                return text.toUpperCase() === name.toUpperCase();
-            });
-        });
+        return this.tabs.filter((elem, index) =>
+            elem.element(by.binding('step.title'))
+                .getText()
+                .then((text) => text.toUpperCase() === name.toUpperCase())
+        );
     };
 
     /**
@@ -125,7 +121,7 @@ function Desks() {
      * @param {string} name of tab
      **/
     this.showTab = function(name) {
-        this.getTab(name).then(function(rows) {
+        this.getTab(name).then((rows) => {
             rows[0].click();
             browser.sleep(500);
         });
@@ -137,11 +133,11 @@ function Desks() {
      * @return {promise} stage element
      **/
     this.getStage = function(name) {
-        return this.stages.filter(function(elem, index) {
-            return elem.element(by.binding('stage.name')).getText().then(function(text) {
-                return text.toUpperCase() === name.toUpperCase();
-            });
-        });
+        return this.stages.filter((elem, index) =>
+            elem.element(by.binding('stage.name'))
+                .getText()
+                .then((text) => text.toUpperCase() === name.toUpperCase())
+        );
     };
 
     /**
@@ -149,7 +145,7 @@ function Desks() {
      * @param {string} name of stage
      **/
     this.editStage = function(name) {
-        this.getStage(name).then(function(rows) {
+        this.getStage(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-pencil')).click();
             browser.sleep(500);
@@ -161,7 +157,7 @@ function Desks() {
      * @param {string} name of stage
      **/
     this.removeStage = function(name) {
-        this.getStage(name).then(function(rows) {
+        this.getStage(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-trash')).click();
         });
@@ -324,7 +320,7 @@ function Desks() {
     };
 
     this.confirmStageDeleteButton = function(stageName) {
-        this.getStage(stageName).then(function(rows) {
+        this.getStage(stageName).then((rows) => {
             browser.actions().mouseMove(rows[0]).perform();
             expect(rows[0].element(by.className('icon-trash')).isPresent()).toBe(true);
         });

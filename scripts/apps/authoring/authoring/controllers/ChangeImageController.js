@@ -7,7 +7,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
     $scope.data.requiredFields = config.requiredMediaMetadata;
     var sizes = {};
 
-    $scope.data.renditions.forEach(function(rendition) {
+    $scope.data.renditions.forEach((rendition) => {
         var original = $scope.data.item.renditions.original;
         // only extend the item renditions if the original image can fit the rendition dimensions
         // otherwise we will get an error saving
@@ -48,7 +48,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
             var originalImage = $scope.data.metadata.renditions.original;
             var originalPoi = {x: originalImage.width * $scope.data.poi.x, y: originalImage.height * $scope.data.poi.y};
 
-            _.forEach($scope.data.cropData, function(cropData, cropName) {
+            _.forEach($scope.data.cropData, (cropData, cropName) => {
                 if (originalPoi.y < cropData.CropTop ||
                     originalPoi.y > cropData.CropBottom ||
                     originalPoi.x < cropData.CropLeft ||
@@ -59,7 +59,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         }
         /* Throw an exception if a required metadata field is missing */
         function validateMediaFields() {
-            _.each($scope.data.requiredFields, function(key) {
+            _.each($scope.data.requiredFields, (key) => {
                 var value = $scope.data.metadata[key];
                 var regex = new RegExp('^\<*br\/*\>*$', 'i');
 
@@ -92,7 +92,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
             'title', 'description', 'alt_text', 'credit', 'copyrightnotice', 'copyrightholder'
         ]);
 
-        api.archive.update(item, meta).then(function() {
+        api.archive.update(item, meta).then(() => {
             notify.success(gettext('Crop changes have been recorded'));
         });
     };
@@ -100,7 +100,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
     $scope.close = function() {
         if ($scope.data.isDirty) {
             modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
-            .then(function() { // Ok = continue w/o saving
+            .then(() => { // Ok = continue w/o saving
                 angular.extend($scope.data.poi, poiOrig);
                 return $scope.reject();
             });
@@ -121,7 +121,7 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
     $scope.saveAreaOfInterest = function(croppingData) {
         $scope.loaderForAoI = true;
         api.save('picture_crop', {item: $scope.data.item, crop: croppingData})
-        .then(function(result) {
+        .then((result) => {
             angular.extend(result.item.renditions.original, {
                 href: result.href,
                 width: result.width,
@@ -129,20 +129,20 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
                 media: result._id
             });
             $scope.data.isDirty = true;
-            return api.save('picture_renditions', {item: result.item}).then(function(item) {
+            return api.save('picture_renditions', {item: result.item}).then((item) => {
                 $scope.data.item.renditions = item.renditions;
                 $scope.data.metadata = $scope.data.item;
                 $scope.data.poi = {x: 0.5, y: 0.5};
                 $rootScope.$broadcast('poiUpdate', $scope.data.poi);
             });
         })
-        .then(function() {
+        .then(() => {
             $scope.showAreaOfInterestView(false);
         });
     };
 
     $scope.onChange = function(renditionName, cropData) {
-        $scope.$applyAsync(function() {
+        $scope.$applyAsync(() => {
             if (angular.isDefined(renditionName)) {
                 $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
                 $scope.data.isDirty = true;

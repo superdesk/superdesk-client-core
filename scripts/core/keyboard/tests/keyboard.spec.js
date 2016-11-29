@@ -1,6 +1,6 @@
 'use strict';
 
-describe('keyboardManager', function() {
+describe('keyboardManager', () => {
     beforeEach(window.module('superdesk.core.keyboard'));
 
     var km, elem, $timeout,
@@ -15,16 +15,16 @@ describe('keyboardManager', function() {
         $timeout.flush(100);
     }
 
-    beforeEach(inject(function($injector) {
+    beforeEach(inject(($injector) => {
         $timeout = $injector.get('$timeout');
         km = $injector.get('keyboardManager');
         elem = $('<input type="text" />');
     }));
 
-    it('can bind and unbind', function() {
+    it('can bind and unbind', () => {
         var status = false;
 
-        km.bind('up', function() {
+        km.bind('up', () => {
             status = true;
         }, options);
 
@@ -39,14 +39,14 @@ describe('keyboardManager', function() {
         expect(km.keyboardEvent.up).toBe(undefined);
     });
 
-    it('can push and pop an event', function() {
+    it('can push and pop an event', () => {
         var from;
 
-        km.push('up', function() {
+        km.push('up', () => {
             from = '1';
         }, options);
 
-        km.push('up', function() {
+        km.push('up', () => {
             from = '2';
         }, options);
 
@@ -67,7 +67,7 @@ describe('keyboardManager', function() {
         expect(from).toBe('1'); // no change
     });
 
-    it('can broadcast keydown events', inject(function($rootScope, $document) {
+    it('can broadcast keydown events', inject(($rootScope, $document) => {
         var handler = jasmine.createSpy('handler');
 
         $rootScope.$on('key:t', handler);
@@ -81,7 +81,7 @@ describe('keyboardManager', function() {
         expect(handler).toHaveBeenCalled();
     }));
 
-    it('can broadcast shortcut events', inject(function($rootScope, $document) {
+    it('can broadcast shortcut events', inject(($rootScope, $document) => {
         var handlerCtrl = jasmine.createSpy('handle');
         var handlerCtrlShift = jasmine.createSpy('handle');
 
@@ -101,7 +101,7 @@ describe('keyboardManager', function() {
         expect(handlerCtrlShift).toHaveBeenCalled();
     }));
 
-    it('can catch ctrl+shift events', inject(function($rootScope) {
+    it('can catch ctrl+shift events', inject(($rootScope) => {
         var p = document.createElement('p');
 
         p.contentEditable = true;

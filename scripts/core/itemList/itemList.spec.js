@@ -1,28 +1,26 @@
 'use strict';
 
-describe('itemListService', function() {
+describe('itemListService', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.itemList'));
-    beforeEach(window.module(function($provide) {
-        $provide.service('api', function($q) {
-            return function ApiService(endpoint, endpointParam) {
-                return {
-                    query: function(params) {
-                        params._endpoint = endpoint;
-                        params._endpointParam = endpointParam;
-                        return $q.when(params);
-                    }
-                };
+    beforeEach(window.module(($provide) => {
+        $provide.service('api', ($q) => function ApiService(endpoint, endpointParam) {
+            return {
+                query: function(params) {
+                    params._endpoint = endpoint;
+                    params._endpointParam = endpointParam;
+                    return $q.when(params);
+                }
             };
         });
     }));
 
-    it('can query with default values', inject(function($rootScope, itemListService, api) {
+    it('can query with default values', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch()
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -40,14 +38,14 @@ describe('itemListService', function() {
         });
     }));
 
-    it('can query with endpoint', inject(function($rootScope, itemListService, api) {
+    it('can query with endpoint', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             endpoint: 'archive',
             endpointParam: 'param'
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -55,14 +53,14 @@ describe('itemListService', function() {
         expect(queryParams._endpointParam).toBe('param');
     }));
 
-    it('can query with page', inject(function($rootScope, itemListService, api) {
+    it('can query with page', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             pageSize: 15,
             page: 3
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -70,40 +68,40 @@ describe('itemListService', function() {
         expect(queryParams.source.from).toBe(30);
     }));
 
-    it('can query with sort', inject(function($rootScope, itemListService, api) {
+    it('can query with sort', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             sortField: '_id',
             sortDirection: 'asc'
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
         expect(queryParams.source.sort).toEqual([{_id: 'asc'}]);
     }));
 
-    it('can query with repos', inject(function($rootScope, itemListService, api) {
+    it('can query with repos', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             repos: ['archive', 'ingest']
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
         expect(queryParams.repo).toBe('archive,ingest');
     }));
 
-    it('can query with types', inject(function($rootScope, itemListService, api) {
+    it('can query with types', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             types: ['text', 'picture', 'composite']
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -112,13 +110,13 @@ describe('itemListService', function() {
         );
     }));
 
-    it('can query with states', inject(function($rootScope, itemListService, api) {
+    it('can query with states', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             states: ['spiked', 'published']
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -128,13 +126,13 @@ describe('itemListService', function() {
         ]);
     }));
 
-    it('can query with notStates', inject(function($rootScope, itemListService, api) {
+    it('can query with notStates', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             notStates: ['spiked', 'published']
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -144,7 +142,7 @@ describe('itemListService', function() {
         ]);
     }));
 
-    it('can query with dates', inject(function($rootScope, itemListService, api) {
+    it('can query with dates', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
@@ -153,7 +151,7 @@ describe('itemListService', function() {
             modificationDateBefore: 3,
             modificationDateAfter: 4
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -163,7 +161,7 @@ describe('itemListService', function() {
         ]);
     }));
 
-    it('can query with provider, source and urgency', inject(function($rootScope, itemListService, api) {
+    it('can query with provider, source and urgency', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
@@ -171,7 +169,7 @@ describe('itemListService', function() {
             source: 'reuters_1',
             urgency: 5
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -183,7 +181,7 @@ describe('itemListService', function() {
     }));
 
     it('can query with headline, subject, keyword, uniqueName and body search',
-    inject(function($rootScope, itemListService, api) {
+    inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
@@ -193,7 +191,7 @@ describe('itemListService', function() {
             uniqueName: 'u',
             body: 'b'
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -206,13 +204,13 @@ describe('itemListService', function() {
         });
     }));
 
-    it('can query with general search', inject(function($rootScope, itemListService, api) {
+    it('can query with general search', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             search: 's'
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -225,7 +223,7 @@ describe('itemListService', function() {
         });
     }));
 
-    it('can query with saved search', inject(function($rootScope, itemListService, api, $q, session) {
+    it('can query with saved search', inject(($rootScope, itemListService, api, $q, session) => {
         session.identity = {_id: 'foo'};
         var params;
 
@@ -233,7 +231,7 @@ describe('itemListService', function() {
         spyOn(api, 'get').and.returnValue($q.when({filter: {query: {type: '["text"]'}}}));
         itemListService.fetch({
             savedSearch: {_links: {self: {href: 'url'}}}
-        }).then(function(_params) {
+        }).then((_params) => {
             params = _params;
         });
 
@@ -244,14 +242,14 @@ describe('itemListService', function() {
         });
     }));
 
-    it('related items query without backslash and colon', inject(function($rootScope, itemListService, api) {
+    it('related items query without backslash and colon', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             keyword: 'kilo',
             related: true
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -264,14 +262,14 @@ describe('itemListService', function() {
         });
     }));
 
-    it('related items query with colon', inject(function($rootScope, itemListService, api) {
+    it('related items query with colon', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             keyword: 'kilo: gram:',
             related: true
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -284,14 +282,14 @@ describe('itemListService', function() {
         });
     }));
 
-    it('related items query with forwardslash', inject(function($rootScope, itemListService, api) {
+    it('related items query with forwardslash', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             keyword: 'kilo/ gram/',
             related: true
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();
@@ -304,14 +302,14 @@ describe('itemListService', function() {
         });
     }));
 
-    it('related items query with backwardslash', inject(function($rootScope, itemListService, api) {
+    it('related items query with backwardslash', inject(($rootScope, itemListService, api) => {
         var queryParams = null;
 
         itemListService.fetch({
             keyword: 'kilo\\ gram\\',
             related: true
         })
-        .then(function(params) {
+        .then((params) => {
             queryParams = params;
         });
         $rootScope.$digest();

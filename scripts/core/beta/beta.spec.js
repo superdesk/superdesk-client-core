@@ -1,12 +1,12 @@
-describe('beta service', function() {
+describe('beta service', () => {
     beforeEach(window.module('superdesk.core.services.beta'));
 
     it('can filter out sd-beta from html when beta is off',
-    inject(function(betaService, $rootScope, $http, $httpBackend) {
+    inject((betaService, $rootScope, $http, $httpBackend) => {
         $rootScope.beta = false;
         var isBeta = null;
 
-        betaService.isBeta().then(function(_beta) {
+        betaService.isBeta().then((_beta) => {
             isBeta = _beta;
         });
 
@@ -18,7 +18,7 @@ describe('beta service', function() {
 
         $httpBackend.expectGET('view_off.html').respond(200, template);
 
-        $http.get('view_off.html').then(function(response) {
+        $http.get('view_off.html').then((response) => {
             data = response.data;
         });
 
@@ -28,12 +28,12 @@ describe('beta service', function() {
     }));
 
     it('keeps it there when beta is on',
-    inject(function(betaService, preferencesService, $rootScope, $http, $httpBackend, $q) {
+    inject((betaService, preferencesService, $rootScope, $http, $httpBackend, $q) => {
         $rootScope.beta = true;
 
         spyOn(preferencesService, 'get').and.returnValue($q.when({enabled: true}));
 
-        betaService.isBeta().then(function(_beta) {
+        betaService.isBeta().then((_beta) => {
             expect(_beta).toBe(true);
         });
 
@@ -44,7 +44,7 @@ describe('beta service', function() {
 
         $httpBackend.expectGET('view_on.html').respond(200, template);
 
-        $http.get('view_on.html').then(function(response) {
+        $http.get('view_on.html').then((response) => {
             data = response.data;
         });
 

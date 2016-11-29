@@ -11,28 +11,26 @@ export default angular.module('superdesk.core.directives.check', [])
      * @param {Boolean} ngModel model for checkbox value
      * @description Creates a custom-styled checkbox.
      */
-    .directive('sdCheck', function() {
-        return {
-            require: 'ngModel',
-            replace: true,
-            transclude: true,
-            template: '<span class="sd-checkbox" ng-transclude></span>',
-            link: function($scope, element, attrs, ngModel) {
-                ngModel.$render = function() {
-                    render(element, ngModel.$viewValue);
-                };
+    .directive('sdCheck', () => ({
+        require: 'ngModel',
+        replace: true,
+        transclude: true,
+        template: '<span class="sd-checkbox" ng-transclude></span>',
+        link: function($scope, element, attrs, ngModel) {
+            ngModel.$render = function() {
+                render(element, ngModel.$viewValue);
+            };
 
-                $scope.$watch(attrs.ngModel, function() {
-                    render(element, ngModel.$viewValue);
+            $scope.$watch(attrs.ngModel, () => {
+                render(element, ngModel.$viewValue);
+            });
+
+            element.on('click', (e) => {
+                $scope.$apply(() => {
+                    ngModel.$setViewValue(!ngModel.$viewValue);
                 });
 
-                element.on('click', function(e) {
-                    $scope.$apply(function() {
-                        ngModel.$setViewValue(!ngModel.$viewValue);
-                    });
-
-                    return false;
-                });
-            }
-        };
-    });
+                return false;
+            });
+        }
+    }));

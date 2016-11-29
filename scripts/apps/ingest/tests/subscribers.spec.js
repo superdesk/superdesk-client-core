@@ -1,10 +1,10 @@
 'use strict';
 
-describe('subscribers service', function() {
+describe('subscribers service', () => {
     beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.apps.publish'));
 
-    beforeEach(inject(function(subscribersService, $q, api) {
+    beforeEach(inject((subscribersService, $q, api) => {
         spyOn(api, 'query').and.returnValue($q.when({
             _items: [{name: 'sub-1', is_active: false},
             {name: 'sub-2', is_active: true, is_targetable: true},
@@ -15,10 +15,10 @@ describe('subscribers service', function() {
         }));
     }));
 
-    it('can get all subscribers', inject(function(subscribersService, api, $q, $rootScope) {
+    it('can get all subscribers', inject((subscribersService, api, $q, $rootScope) => {
         var allSubscribers;
 
-        subscribersService.fetchSubscribers().then(function(subs) {
+        subscribersService.fetchSubscribers().then((subs) => {
             allSubscribers = subs;
         });
 
@@ -26,16 +26,16 @@ describe('subscribers service', function() {
         expect(allSubscribers.length).toBe(5);
     }));
 
-    it('can get all subscribers with criteria', inject(function(subscribersService, api, $q, $rootScope) {
+    it('can get all subscribers with criteria', inject((subscribersService, api, $q, $rootScope) => {
         subscribersService.fetchSubscribers({name: 'sub-2'});
         $rootScope.$digest();
         expect(api.query).toHaveBeenCalledWith('subscribers', {max_results: 200, page: 1, name: 'sub-2'});
     }));
 
-    it('can get all active subscribers', inject(function(subscribersService, api, $q, $rootScope) {
+    it('can get all active subscribers', inject((subscribersService, api, $q, $rootScope) => {
         var allSubscribers;
 
-        subscribersService.fetchActiveSubscribers().then(function(subs) {
+        subscribersService.fetchActiveSubscribers().then((subs) => {
             allSubscribers = subs;
         });
 
@@ -43,10 +43,10 @@ describe('subscribers service', function() {
         expect(allSubscribers.length).toBe(3);
     }));
 
-    it('can get all targetable subscribers', inject(function(subscribersService, api, $q, $rootScope) {
+    it('can get all targetable subscribers', inject((subscribersService, api, $q, $rootScope) => {
         var allSubscribers;
 
-        subscribersService.fetchTargetableSubscribers().then(function(subs) {
+        subscribersService.fetchTargetableSubscribers().then((subs) => {
             allSubscribers = subs;
         });
 

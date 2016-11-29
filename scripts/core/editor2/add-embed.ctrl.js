@@ -39,7 +39,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
         },
         retrieveEmbed: function() {
             function retrieveEmbedFromUrl() {
-                return embedService.get(self.input).then(function(data) {
+                return embedService.get(self.input).then((data) => {
                     var embed = data.html;
 
                     if (!angular.isDefined(embed)) {
@@ -49,12 +49,10 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                             embed = editor.generateMediaTag({url: data.url, altText: data.description});
                         }
                     }
-                    return $q.when(embed).then(function(embed) {
-                        return {
-                            body: embed,
-                            provider: data.provider_name || EMBED_PROVIDERS.custom
-                        };
-                    });
+                    return $q.when(embed).then((embed) => ({
+                        body: embed,
+                        provider: data.provider_name || EMBED_PROVIDERS.custom
+                    }));
                 });
             }
             function parseRawEmbedCode() {
@@ -86,9 +84,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                         break;
                     }
                 }
-                return $q.all(waitFor).then(function() {
-                    return embedBlock;
-                });
+                return $q.all(waitFor).then(() => embedBlock);
             }
             var embedCode;
             // if it's an url, use embedService to retrieve the embed code
@@ -103,7 +99,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
         },
         updatePreview: function() {
             self.previewLoading = true;
-            self.retrieveEmbed().then(function(embed) {
+            self.retrieveEmbed().then((embed) => {
                 angular.element($element)
                     .find('.preview')
                     .html(embed.body.replace('\\n', ''));
@@ -116,7 +112,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
             return self.editorCtrl.insertNewBlock(self.addToPosition, data);
         },
         createBlockFromEmbed: function() {
-            self.retrieveEmbed().then(function(embed) {
+            self.retrieveEmbed().then((embed) => {
                 self.createFigureBlock({
                     embedType: embed.provider,
                     body: embed.body,
@@ -133,13 +129,11 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
     });
 
     // toggle when the `extended` directive attribute changes
-    $scope.$watch(function() {
-        return self.extended;
-    }, function(extended, wasExtended) {
+    $scope.$watch(() => self.extended, (extended, wasExtended) => {
         // on enter, focus on input
         if (angular.isDefined(extended)) {
             if (extended) {
-                $timeout(function() {
+                $timeout(() => {
                     angular.element($element)
                         .find('input')
                         .focus();

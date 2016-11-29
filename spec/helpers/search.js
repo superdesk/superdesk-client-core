@@ -31,7 +31,7 @@ function GlobalSearch() {
         var list = element(by.css('i.icon-th-list'));
 
         return list.isDisplayed()
-            .then(function(isVisible) {
+            .then((isVisible) => {
                 if (isVisible) {
                     list.click();
                     browser.sleep(1000);
@@ -47,7 +47,7 @@ function GlobalSearch() {
     this.setGridView = function() {
         var grid = element(by.css('[tooltip="switch to grid view"]'));
 
-        return grid.then(function(isVisible) {
+        return grid.then((isVisible) => {
             if (isVisible) {
                 grid.click();
                 browser.sleep(1000);
@@ -130,7 +130,7 @@ function GlobalSearch() {
         var menu = this.openItemMenu(index);
 
         menu.element(by.partialLinkText(action)).waitReady()
-        .then(function(elem) {
+        .then((elem) => {
             elem.click();
         });
     };

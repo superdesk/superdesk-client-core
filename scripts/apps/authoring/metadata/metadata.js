@@ -8,28 +8,26 @@ function MetadataCtrl(
     $scope, desks, metadata, $filter, privileges, datetimeHelper,
     preferencesService, archiveService, config, moment, content) {
     desks.initialize()
-    .then(function() {
+    .then(() => {
         $scope.deskLookup = desks.deskLookup;
         $scope.userLookup = desks.userLookup;
     });
 
     $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1;
 
-    metadata.initialize().then(function() {
+    metadata.initialize().then(() => {
         $scope.metadata = metadata.values;
         return preferencesService.get();
     })
     .then(setAvailableCategories)
     .then(setAvailableCompanyCodes);
 
-    content.getTypes().then(function() {
+    content.getTypes().then(() => {
         $scope.content_types = content.types;
     });
 
     $scope.processGenre = function() {
-        $scope.item.genre = _.map($scope.item.genre, function(g) {
-            return _.pick(g, 'name');
-        });
+        $scope.item.genre = _.map($scope.item.genre, (g) => _.pick(g, 'name'));
     };
 
     /**
@@ -56,13 +54,11 @@ function MetadataCtrl(
         // gather article's existing category codes
         itemCategories = $scope.item.anpa_category || [];
 
-        itemCategories.forEach(function(cat) {
+        itemCategories.forEach((cat) => {
             assigned[cat.qcode] = true;
         });
 
-        filtered = _.filter(all, function(cat) {
-            return !assigned[cat.qcode] && (_.isEmpty(userPrefs) || userPrefs[cat.qcode]);
-        });
+        filtered = _.filter(all, (cat) => !assigned[cat.qcode] && (_.isEmpty(userPrefs) || userPrefs[cat.qcode]));
 
         $scope.availableCategories = _.sortBy(filtered, 'name');
     }
@@ -81,33 +77,31 @@ function MetadataCtrl(
 
         all = _.cloneDeep(metadata.values.company_codes || []);
 
-        all.forEach(function(companyCode) {
+        all.forEach((companyCode) => {
             companyCode.name = companyCode.name + ' (' + companyCode.qcode + ')';
         });
 
         // gather article's existing company codes
         itemCompanyCodes = $scope.item.company_codes || [];
 
-        itemCompanyCodes.forEach(function(companyCode) {
+        itemCompanyCodes.forEach((companyCode) => {
             assigned[companyCode.qcode] = true;
         });
 
-        filtered = _.filter(all, function(companyCode) {
-            return !assigned[companyCode.qcode];
-        });
+        filtered = _.filter(all, (companyCode) => !assigned[companyCode.qcode]);
 
         $scope.availableCompanyCodes = _.sortBy(filtered, 'name');
     }
 
-    $scope.$watch('item.publish_schedule_date', function(newValue, oldValue) {
+    $scope.$watch('item.publish_schedule_date', (newValue, oldValue) => {
         setPublishScheduleDate(newValue, oldValue);
     });
 
-    $scope.$watch('item.publish_schedule_time', function(newValue, oldValue) {
+    $scope.$watch('item.publish_schedule_time', (newValue, oldValue) => {
         setPublishScheduleDate(newValue, oldValue);
     });
 
-    $scope.$watch('item.time_zone', function(newValue, oldValue) {
+    $scope.$watch('item.time_zone', (newValue, oldValue) => {
         if ((newValue || oldValue) && newValue !== oldValue) {
             setTimeZone();
             setPublishScheduleDate(newValue, oldValue);
@@ -145,7 +139,7 @@ function MetadataCtrl(
         }
     }
 
-    $scope.$watch('item.embargo_date', function(newValue, oldValue) {
+    $scope.$watch('item.embargo_date', (newValue, oldValue) => {
         // set embargo time default on initial date selection
         if (newValue && oldValue === undefined) {
             $scope.item.embargo_time = moment('00:01', 'HH:mm')
@@ -155,7 +149,7 @@ function MetadataCtrl(
         setEmbargoTS(newValue, oldValue);
     });
 
-    $scope.$watch('item.embargo_time', function(newValue, oldValue) {
+    $scope.$watch('item.embargo_time', (newValue, oldValue) => {
         setEmbargoTS(newValue, oldValue);
     });
 
@@ -273,9 +267,9 @@ function MetadropdownFocusDirective(keyboardManager) {
     return {
         require: 'dropdown',
         link: function(scope, elem, attrs, dropdown) {
-            scope.$watch(dropdown.isOpen, function(isOpen) {
+            scope.$watch(dropdown.isOpen, (isOpen) => {
                 if (isOpen) {
-                    _.defer(function() {
+                    _.defer(() => {
                         var keyboardOptions = {inputDisabled: false};
                             // narrow the selection to consider only dropdown list's button items
                         var buttonList = elem.find('.dropdown__menu button');
@@ -284,12 +278,10 @@ function MetadropdownFocusDirective(keyboardManager) {
                             buttonList[0].focus();
                         }
 
-                        keyboardManager.push('up', function() {
+                        keyboardManager.push('up', () => {
                             if (buttonList.length > 0) {
                                 var focusedElem = elem.find('button:focus')[0];
-                                var indexValue = _.findIndex(buttonList, function(chr) {
-                                    return chr === focusedElem;
-                                });
+                                var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
                                     // select previous item on key UP
 
                                 if (indexValue > 0 && indexValue < buttonList.length) {
@@ -298,12 +290,10 @@ function MetadropdownFocusDirective(keyboardManager) {
                             }
                         }, keyboardOptions);
 
-                        keyboardManager.push('down', function() {
+                        keyboardManager.push('down', () => {
                             if (buttonList.length > 0) {
                                 var focusedElem = elem.find('button:focus')[0];
-                                var indexValue = _.findIndex(buttonList, function(chr) {
-                                    return chr === focusedElem;
-                                });
+                                var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
                                     // select next item on key DOWN
 
                                 if (indexValue < buttonList.length - 1) {
@@ -350,7 +340,7 @@ function MetaDropdownDirective($filter, keyboardManager) {
                 scope.change({item: scope.item, field: scope.field});
 
                 // retain focus on same dropdown control after selection.
-                _.defer(function() {
+                _.defer(() => {
                     elem.find('.dropdown__toggle').focus();
                 });
 
@@ -359,11 +349,11 @@ function MetaDropdownDirective($filter, keyboardManager) {
                 }
             };
 
-            scope.$watch(':: list', function() {
+            scope.$watch(':: list', () => {
                 scope.values = _.keyBy(scope.list, 'qcode');
             });
 
-            scope.$applyAsync(function() {
+            scope.$applyAsync(() => {
                 if (scope.list) {
                     if (scope.field === 'place') {
                         scope.places = _.groupBy(scope.list, 'group');
@@ -412,9 +402,9 @@ function MetaTagsDirective(api, $timeout) {
                 scope.adding = false;
             };
 
-            scope.$watch('adding', function() {
+            scope.$watch('adding', () => {
                 if (scope.adding) {
-                    $timeout(function() {
+                    $timeout(() => {
                         inputElem.focus();
                     }, 0, false);
                 }
@@ -454,7 +444,7 @@ function MetaTagsDirective(api, $timeout) {
 
                 if (body) {
                     api.save('keywords', {text: body})
-                        .then(function(result) {
+                        .then((result) => {
                             scope.extractedTags = _.map(result.keywords, 'text');
                             scope.tags = _.uniq(scope.extractedTags.concat(scope.item[scope.field]));
                             scope.refreshing = false;
@@ -485,7 +475,7 @@ function MetaWordsListDirective() {
             scope.words = [];
             scope.selectedTerm = '';
 
-            scope.$applyAsync(function() {
+            scope.$applyAsync(() => {
                 element.find('input, select').addClass('line-input');
 
                 if (scope.list) {
@@ -503,9 +493,8 @@ function MetaWordsListDirective() {
                 if (!wordToFind) {
                     scope.words = scope.list;
                 } else {
-                    scope.words = _.filter(scope.list, function(t) {
-                        return t.name.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1;
-                    });
+                    scope.words = _.filter(scope.list,
+                        (t) => t.name.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1);
                 }
 
                 scope.selectedTerm = wordToFind;
@@ -521,9 +510,7 @@ function MetaWordsListDirective() {
             scope.select = function(item) {
                 var keyword = item ? item.qcode : scope.selectedTerm;
                 var t = _.clone(scope.item[scope.field]) || [];
-                var index = _.findIndex(t, function(word) {
-                    return word.toLowerCase() === keyword.toLowerCase();
-                });
+                var index = _.findIndex(t, (word) => word.toLowerCase() === keyword.toLowerCase());
 
                 if (index < 0) {
                     t.push(keyword.toUpperCase());
@@ -599,11 +586,11 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             scope.tree = {};
             scope.termPath = [];
 
-            scope.$watch('unique', function(value) {
+            scope.$watch('unique', (value) => {
                 scope.uniqueField = value || 'qcode';
             });
 
-            scope.$watch('list', function(items) {
+            scope.$watch('list', (items) => {
                 if (!items || items.length === 0) {
                     return;
                 }
@@ -614,7 +601,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     updates[scope.field] = [];
                 }
 
-                angular.forEach(items, function(item) {
+                angular.forEach(items, (item) => {
                     var parent = item.parent || null;
 
                     if (!tree.hasOwnProperty(parent)) {
@@ -624,7 +611,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     }
 
                     // checks for dependent dropdowns to remain selected items if new list has them (not to reset)
-                    angular.forEach(scope.item[scope.field], function(selectedItem) {
+                    angular.forEach(scope.item[scope.field], (selectedItem) => {
                         if (scope.cv && scope.cv.dependent) {
                             if (selectedItem.scheme === scope.cv._id) {
                                 if (item.name === selectedItem.name) {
@@ -646,7 +633,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.combinedList = _.union(scope.list, scope.item[scope.field] ? scope.item[scope.field] : []);
             });
 
-            scope.$watch('item[field]', function(selected) {
+            scope.$watch('item[field]', (selected) => {
                 if (!selected) {
                     scope.selectedItems = [];
                     return;
@@ -654,15 +641,13 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
 
                 scope.terms = filterSelected(scope.list);
                 if (scope.cv) { // filter out items from current cv
-                    scope.selectedItems = _.filter(selected, function(term) {
-                        return term.scheme === (scope.cv._id || scope.cv.id);
-                    });
+                    scope.selectedItems = _.filter(selected, (term) => term.scheme === (scope.cv._id || scope.cv.id));
                 } else {
                     scope.selectedItems = selected;
                 }
             });
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 metadata.subjectScope = null;
             });
 
@@ -677,7 +662,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 scope.termPath.push(term);
                 scope.activeTree = scope.tree[term ? term.qcode : null];
                 $event.stopPropagation();
-                _.defer(function() {
+                _.defer(() => {
                     elem.find('button:not([disabled]):not(.dropdown__toggle)')[0].focus();
                 });
             };
@@ -692,7 +677,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                 } else {
                     var searchList = reloadList ? scope.list : scope.combinedList;
 
-                    scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), function(t) {
+                    scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
 
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
@@ -713,15 +698,13 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
             function filterSelected(terms) {
                 var selected = {};
 
-                angular.forEach(scope.item[scope.field], function(term) {
+                angular.forEach(scope.item[scope.field], (term) => {
                     if (term) {
                         selected[term[scope.uniqueField]] = 1;
                     }
                 });
 
-                return _.filter(terms, function(term) {
-                    return term && !selected[term[scope.uniqueField]];
-                });
+                return _.filter(terms, (term) => term && !selected[term[scope.uniqueField]]);
             }
 
             function addTerm(term) {
@@ -741,9 +724,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     }
 
                     if (scope.cv && scope.cv.single_value) {
-                        t = _.filter(t, function(term) {
-                            return term.scheme !== scope.cv._id;
-                        });
+                        t = _.filter(t, (term) => term.scheme !== scope.cv._id);
                     }
 
                     // build object
@@ -767,7 +748,7 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                     addTerm(term);
 
                     if (includeParent) {
-                        scope.termPath.forEach(function(term) {
+                        scope.termPath.forEach((term) => {
                             addTerm(term);
                         });
                     }
@@ -783,15 +764,15 @@ function MetaTermsDirective(metadata, $filter, $timeout) {
                         scope.activeTree = scope.terms;
                     }
 
-                    $timeout(function() {
-                        scope.$applyAsync(function() {
+                    $timeout(() => {
+                        scope.$applyAsync(() => {
                             scope.postprocessing();
                             scope.change({item: scope.item, field: scope.field});
                         });
                     }, 50, false);
 
                     // retain focus and initialise activeTree on same dropdown control after selection.
-                    _.defer(function() {
+                    _.defer(() => {
                         if (!_.isEmpty(elem.find('.dropdown__toggle'))) {
                             elem.find('.dropdown__toggle').focus();
                         }
@@ -855,7 +836,7 @@ function MetaLocatorsDirective() {
             scope.selectedTerm = '';
             scope.locators = [];
 
-            scope.$applyAsync(function() {
+            scope.$applyAsync(() => {
                 if (scope.item) {
                     if (scope.fieldprefix && scope.item[scope.fieldprefix]
                         && scope.item[scope.fieldprefix][scope.field]) {
@@ -876,7 +857,7 @@ function MetaLocatorsDirective() {
             }
 
             // update visible city on some external change, like after undo/redo
-            scope.$watch('item[fieldprefix][field].city || item[field].city', function(located) {
+            scope.$watch('item[fieldprefix][field].city || item[field].city', (located) => {
                 scope.selectedTerm = located;
             });
 
@@ -890,9 +871,8 @@ function MetaLocatorsDirective() {
                 if (!locatorToFind) {
                     setLocators(scope.list);
                 } else {
-                    setLocators(_.filter(scope.list, function(t) {
-                        return t.city.toLowerCase().indexOf(locatorToFind.toLowerCase()) !== -1;
-                    }));
+                    setLocators(_.filter(scope.list,
+                        (t) => t.city.toLowerCase().indexOf(locatorToFind.toLowerCase()) !== -1));
                 }
 
                 scope.selectedTerm = locatorToFind;
@@ -966,18 +946,16 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         fetchMetadataValues: function() {
             var self = this;
 
-            return vocabularies.getAllActiveVocabularies().then(function(result) {
-                _.each(result._items, function(vocabulary) {
+            return vocabularies.getAllActiveVocabularies().then((result) => {
+                _.each(result._items, (vocabulary) => {
                     self.values[vocabulary._id] = vocabulary.items;
                 });
                 self.cvs = result._items;
-                self.values.regions = _.sortBy(self.values.geographical_restrictions, function(target) {
-                    return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
-                }
+                self.values.regions = _.sortBy(self.values.geographical_restrictions,
+                    (target) => target.value && target.value.toLowerCase() === 'all' ? '' : target.name
                 );
-                self.values.subscriberTypes = _.sortBy(self.values.subscriber_types, function(target) {
-                    return target.value && target.value.toLowerCase() === 'all' ? '' : target.name;
-                }
+                self.values.subscriberTypes = _.sortBy(self.values.subscriber_types,
+                    (target) => target.value && target.value.toLowerCase() === 'all' ? '' : target.name
                 );
 
                 if (self.values.urgency) {
@@ -993,8 +971,8 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
             var self = this;
 
             self.values.customSubscribers = [];
-            return subscribersService.fetchTargetableSubscribers().then(function(items) {
-                _.each(items, function(item) {
+            return subscribersService.fetchTargetableSubscribers().then((items) => {
+                _.each(items, (item) => {
                     self.values.customSubscribers.push({_id: item._id, name: item.name});
                 });
             });
@@ -1002,7 +980,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         fetchSubjectcodes: function(code) {
             var self = this;
 
-            return api.get('/subjectcodes').then(function(result) {
+            return api.get('/subjectcodes').then((result) => {
                 self.values.subjectcodes = result._items;
             });
         },
@@ -1014,7 +992,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
             var self = this,
                 tempItem = {};
 
-            angular.forEach(this.search_cvs || [], function(cv) {
+            angular.forEach(this.search_cvs || [], (cv) => {
                 if (_.isNil(term)) { // clear subject scope
                     self.subjectScope.item[cv.id].length = 0;
                 } else {
@@ -1034,14 +1012,14 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
         fetchCities: function() {
             var self = this;
 
-            return api.get('/cities').then(function(result) {
+            return api.get('/cities').then((result) => {
                 self.values.cities = result._items;
             });
         },
         filterCvs: function(qcodes, cvs) {
             var self = this;
 
-            self.cvs.forEach(function(cv) {
+            self.cvs.forEach((cv) => {
                 var cvService = cv.service || {};
                 var match = false;
 
@@ -1049,7 +1027,7 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
                     match = true;
                     cv.terms = self.filterByService(cv.items, qcodes);
                 } else {
-                    qcodes.forEach(function(qcode) {
+                    qcodes.forEach((qcode) => {
                         match = match || cvService[qcode];
                     });
                     cv.terms = cv.items;
@@ -1061,11 +1039,11 @@ function MetadataService(api, $q, subscribersService, config, vocabularies) {
             });
         },
         filterByService: function(items, qcodes) {
-            return _.filter(items, function(item) {
+            return _.filter(items, (item) => {
                 var match = false;
 
                 if (item.service) {
-                    qcodes.forEach(function(qcode) {
+                    qcodes.forEach((qcode) => {
                         match = match || item.service[qcode];
                     });
                 } else {

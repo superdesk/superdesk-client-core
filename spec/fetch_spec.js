@@ -6,15 +6,15 @@ var workspace = require('./helpers/pages').workspace,
     authoring = require('./helpers/authoring'),
     desks = require('./helpers/desks');
 
-describe('fetch', function() {
-    beforeEach(function() {
+describe('fetch', () => {
+    beforeEach(() => {
         workspace.open();
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
     });
 
     xit('items in personal should have copy icon and in desk should have duplicate icon',
-        function() {
+        () => {
             var menu = content.openItemMenu('item4');
 
             expect(menu.element(by.partialLinkText('Duplicate')).isDisplayed()).toBe(true);
@@ -30,7 +30,7 @@ describe('fetch', function() {
     );
 
     // @todo(petr): figure out how it should work for authoring+list
-    xit('can fetch from ingest with keyboards', function() {
+    xit('can fetch from ingest with keyboards', () => {
         var body;
 
         workspace.openIngest();
@@ -43,21 +43,21 @@ describe('fetch', function() {
         expect(content.count()).toBe(3);
     });
 
-    it('can fetch from ingest with menu', function() {
+    it('can fetch from ingest with menu', () => {
         workspace.openIngest();
         content.actionOnItem('Fetch', 0);
         workspace.openContent();
         expect(content.count()).toBe(3);
     });
 
-    it('can fetch from content with menu', function() {
+    it('can fetch from content with menu', () => {
         workspace.openIngest();
         content.actionOnItem('Fetch', 0);
         workspace.openContent();
         expect(content.count()).toBe(3);
     });
 
-    it('can fetch as', function() {
+    it('can fetch as', () => {
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
         content.send();
@@ -65,13 +65,13 @@ describe('fetch', function() {
         expect(content.count()).toBe(3);
     });
 
-    it('can remove ingest item', function() {
+    it('can remove ingest item', () => {
         workspace.openIngest();
         content.actionOnItem('Remove', 0);
         expect(content.count()).toBe(0);
     });
 
-    it('can not Fetch-and-Open if selected desk as a non-member', function() {
+    it('can not Fetch-and-Open if selected desk as a non-member', () => {
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
 
@@ -94,7 +94,7 @@ describe('fetch', function() {
         expect(btnFetchAndOpen.getAttribute('disabled')).toBeTruthy();
     });
 
-    it('can fetch multiple items', function() {
+    it('can fetch multiple items', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
@@ -103,7 +103,7 @@ describe('fetch', function() {
         expect(content.count()).toBe(3);
     });
 
-    it('can fetch as multiple items', function() {
+    it('can fetch as multiple items', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
@@ -113,7 +113,7 @@ describe('fetch', function() {
         expect(content.count()).toBe(3);
     });
 
-    it('can remove multiple ingest item', function() {
+    it('can remove multiple ingest item', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation

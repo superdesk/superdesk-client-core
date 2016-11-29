@@ -125,7 +125,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
             scope.send = function(open) {
                 return editor.countErrors()
-                    .then(function(spellcheckErrors) {
+                    .then((spellcheckErrors) => {
                         if (scope.mode === 'authoring') {
                             return confirm.confirmSpellcheck(spellcheckErrors)
                                 .then(runSend, (err) => false);
@@ -135,13 +135,13 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     });
             };
 
-            scope.$on('item:nextStage', function(_e, data) {
+            scope.$on('item:nextStage', (_e, data) => {
                 if (scope.item && scope.item._id === data.itemId) {
                     var oldStage = scope.selectedStage;
 
                     scope.selectedStage = data.stage;
 
-                    scope.send().then(function(sent) {
+                    scope.send().then((sent) => {
                         if (!sent) {
                             scope.selectedStage = oldStage;
                         }
@@ -269,7 +269,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     // Remember last destination desk and stage
                     updateLastDestination(deskId, stageId, PREFERENCE_KEY);
 
-                    scope.config.promise.finally(function() {
+                    scope.config.promise.finally(() => {
                         scope.loading = false;
                     });
 
@@ -369,7 +369,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 var itemType = [], typesList;
 
                 if (scope.multiItems) {
-                    angular.forEach(scope.multiItems, function(item) {
+                    angular.forEach(scope.multiItems, (item) => {
                         itemType[item._type] = 1;
                     });
                     typesList = Object.keys(itemType);
@@ -417,12 +417,12 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 // send releases lock, increment version.
 
                 return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
-                    .then(function(item) {
+                    .then((item) => {
                         scope.loading = true;
                         // open the item for locking and publish
                         return authoring.open(scope.item._id, false);
                     })
-                    .then(function(item) {
+                    .then((item) => {
                         // update the original item to avoid 412 error.
                         scope.orig._etag = scope.item._etag = item._etag;
                         scope.orig._locked = scope.item._locked = item._locked;
@@ -436,15 +436,15 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
                         return $q.reject();
                     })
-                    .then(function(result) {
+                    .then((result) => {
                         if (result) {
                             authoringWorkspace.close(false);
                         }
                     })
-                    .catch(function(error) {
+                    .catch((error) => {
                         notify.error(gettext('Failed to send and publish.'));
                     })
-                    .finally(function() {
+                    .finally(() => {
                         scope.loading = false;
                     });
             }
@@ -458,7 +458,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
                 scope.item.sendTo = true;
                 return sendAuthoring(deskId, stageId, scope.selectedMacro, true)
-                    .then(function() {
+                    .then(() => {
                         var itemDeskId = null;
 
                         scope.loading = true;
@@ -468,16 +468,16 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         }
                         return authoring.linkItem(scope.item, null, itemDeskId);
                     })
-                    .then(function(item) {
+                    .then((item) => {
                         authoringWorkspace.close(false);
                         notify.success(gettext('New take created.'));
                         authoringWorkspace.edit(item);
                     })
-                    .catch(function() {
+                    .catch(() => {
                         scope.item.sendTo = false;
                         notify.error(gettext('Failed to send and continue.'));
                     })
-                    .finally(function() {
+                    .finally(() => {
                         scope.loading = false;
                     });
             }
@@ -490,9 +490,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              */
             function runMacro(item, macro) {
                 if (macro) {
-                    return macros.call(macro, item, true).then(function(res) {
-                        return angular.extend(item, res);
-                    });
+                    return macros.call(macro, item, true).then((res) => angular.extend(item, res));
                 }
 
                 return $q.when(item);
@@ -517,20 +515,19 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 }
 
                 return runMacro(scope.item, macro)
-                .then(function(item) {
-                    return api.find('tasks', scope.item._id)
-                    .then(function(task) {
+                .then((item) => api.find('tasks', scope.item._id)
+                    .then((task) => {
                         scope.task = task;
                         msg = sendAndContinue ? 'Send & Continue' : 'Send';
                         return scope.beforeSend({action: msg});
                     })
-                    .then(function(result) {
+                    .then((result) => {
                         if (result && result._etag) {
                             scope.task._etag = result._etag;
                         }
                         return api.save('move', {}, {task: {desk: deskId, stage: stageId}}, scope.item);
                     })
-                    .then(function(value) {
+                    .then((value) => {
                         notify.success(gettext('Item sent.'));
 
                         if (scope.currentUserAction === ctrl.userActions.send_to) {
@@ -550,7 +547,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
 
                         authoringWorkspace.close(true);
                         return true;
-                    }, function(err) {
+                    }, (err) => {
                         if (err) {
                             if (angular.isDefined(err.data._message)) {
                                 notify.error(err.data._message);
@@ -563,9 +560,8 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                             deferred.reject(err);
                             return deferred.promise;
                         }
-                    });
-                })
-                .finally(function() {
+                    }))
+                .finally(() => {
                     scope.loading = false;
                 });
             }
@@ -596,23 +592,19 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 scope.loading = true;
 
                 return api.save('duplicate', {}, {desk: scope.item.task.desk}, scope.item)
-                .then(function(item) {
-                    return api.find('archive', item._id);
-                })
-                .then(function(item) {
-                    return runMacro(item, macro);
-                })
-                .then(function(item) {
+                .then((item) => api.find('archive', item._id))
+                .then((item) => runMacro(item, macro))
+                .then((item) => {
                     finalItem = item;
                     return api.find('tasks', item._id);
                 })
-                .then(function(_task) {
+                .then((_task) => {
                     scope.task = _task;
                     api.save('tasks', scope.task, {
                         task: _.extend(scope.task.task, {desk: deskId, stage: stageId})
                     });
                 })
-                .then(function() {
+                .then(() => {
                     notify.success(gettext('Item sent.'));
                     scope.close();
                     if (open) {
@@ -621,7 +613,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         $rootScope.$broadcast('item:fetch');
                     }
                 })
-                .finally(function() {
+                .finally(() => {
                     scope.loading = false;
                 });
             }
@@ -640,7 +632,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     desk: deskId,
                     stage: stageId,
                     macro: macro ? macro.name : macro
-                }).then(function(finalItem) {
+                }).then((finalItem) => {
                     notify.success(gettext('Item fetched.'));
                     if (open) {
                         authoringWorkspace.edit(finalItem);
@@ -648,7 +640,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                         $rootScope.$broadcast('item:fetch');
                     }
                 })
-                .finally(function() {
+                .finally(() => {
                     scope.loading = false;
                 });
             }
@@ -659,17 +651,17 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
              */
             function fetchDesks() {
                 return desks.initialize()
-                    .then(function() {
+                    .then(() => {
                         // get all desks
                         scope.allDesks = desks.desks;
                         // get user desks
                         return desks.fetchCurrentUserDesks();
                     })
-                    .then(function(deskList) {
+                    .then((deskList) => {
                         scope.userDesks = deskList;
                         return preferencesService.get(PREFERENCE_KEY);
                     })
-                    .then(function(result) {
+                    .then((result) => {
                         if (result) {
                             scope.destination_last.send_to = {
                                 desk: result.desk,
@@ -751,7 +743,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                     return;
                 }
                 macros.getByDesk(scope.selectedDesk.name)
-                .then(function(_macros) {
+                .then((_macros) => {
                     scope.macros = _macros;
                 });
             }

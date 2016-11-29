@@ -32,9 +32,9 @@ export function AddToPackageDropdown(item, className, authoringWorkspace, packag
 
             if (pkg.highlight) {
                 api.find('highlights', pkg.highlight)
-                    .then(function(result) {
+                    .then((result) => {
                         this.setState({groups: result.groups});
-                    }.bind(this));
+                    });
             } else {
                 // set it here to avoid flickering
                 this.setState({groups: packages.groupList});

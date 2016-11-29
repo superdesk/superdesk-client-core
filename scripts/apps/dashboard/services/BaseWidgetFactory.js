@@ -3,7 +3,7 @@ export function BaseWidgetFactory() {
         $scope.options = $scope.options || {};
         $scope.itemListOptions = $scope.itemListOptions || {};
         $scope.actions = $scope.actions || {};
-        $scope.$watch('widget.configuration', function(config) {
+        $scope.$watch('widget.configuration', (config) => {
             if (config) {
                 $scope.itemListOptions.savedSearch = config.savedSearch;
                 $scope.itemListOptions.pageSize = config.maxItems;

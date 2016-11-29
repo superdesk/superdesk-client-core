@@ -54,7 +54,7 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
             link: function modalLinkFunction(scope, element, attrs) {
                 var content, _initialized = false;
 
-                scope.$watch('model', function() {
+                scope.$watch('model', () => {
                     if (scope.model) {
                         if (!initialized()) {
                             content = element.children();
@@ -79,7 +79,7 @@ export default angular.module('superdesk.core.services.modal', ['ui.bootstrap', 
                     return _initialized && content;
                 }
 
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', () => {
                     if (initialized()) {
                         content.modal('hide');
                         content.remove();

@@ -9,24 +9,22 @@ export default angular.module('superdesk.core.directives.debounce', [])
      *
      * @description Debounces model update.
      */
-    .directive('sdDebounce', function() {
-        return {
-            require: 'ngModel',
-            link: function($scope, element, attrs, ngModel) {
-                let interval = 1000;
+    .directive('sdDebounce', () => ({
+        require: 'ngModel',
+        link: function($scope, element, attrs, ngModel) {
+            let interval = 1000;
 
-                if (attrs.interval !== '' && attrs.interval !== undefined) {
-                    interval = attrs.interval;
-                }
-                element.off('input')
+            if (attrs.interval !== '' && attrs.interval !== undefined) {
+                interval = attrs.interval;
+            }
+            element.off('input')
                     .off('keydown')
                     .off('change');
 
-                element.on('input', _.debounce(function() {
-                    $scope.$apply(function() {
-                        ngModel.$setViewValue(element.val());
-                    });
-                }, interval));
-            }
-        };
-    });
+            element.on('input', _.debounce(() => {
+                $scope.$apply(() => {
+                    ngModel.$setViewValue(element.val());
+                });
+            }, interval));
+        }
+    }));

@@ -5,7 +5,7 @@ export function ItemPreviewContainer() {
         link: function(scope) {
             scope.item = null;
 
-            scope.$on('intent:preview:item', function(event, intent) {
+            scope.$on('intent:preview:item', (event, intent) => {
                 scope.item = intent.data;
             });
 

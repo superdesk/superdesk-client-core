@@ -17,7 +17,7 @@ export function ContentProfilesController($scope, notify, content, modal, $q) {
      * @private
      */
     function refreshList() {
-        return content.getTypes(true).then(function(types) {
+        return content.getTypes(true).then((types) => {
             self.items = types;
         });
     }
@@ -97,7 +97,7 @@ export function ContentProfilesController($scope, notify, content, modal, $q) {
         var e = $scope.editing;
         var diff = {};
 
-        Object.keys(e.form).forEach(function(k) {
+        Object.keys(e.form).forEach((k) => {
             if (!_.isEqual(e.form[k], e.original[k])) {
                 diff[k] = e.form[k];
             }
@@ -112,11 +112,11 @@ export function ContentProfilesController($scope, notify, content, modal, $q) {
      * @description Queries the user for confirmation and deletes the content profile.
      */
     this.delete = function(item) {
-        modal.confirm('Are you sure you want to delete this profile?').then(function() {
+        modal.confirm('Are you sure you want to delete this profile?').then(() => {
             content.removeProfile(item)
                 .then(refreshList, reportError)
                 .then(this.toggleEdit.bind(this, null));
-        }.bind(this));
+        });
     };
 
     refreshList();

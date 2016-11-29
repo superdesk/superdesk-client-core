@@ -1,9 +1,9 @@
 'use strict';
 
-describe('list directives', function() {
+describe('list directives', () => {
     beforeEach(window.module('superdesk.core.list'));
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.provider('translateFilter', function() {
             this.$get = function() {
                 return function(text) {
@@ -13,7 +13,7 @@ describe('list directives', function() {
         });
     }));
 
-    it('renders list', inject(function($compile, $rootScope) {
+    it('renders list', inject(($compile, $rootScope) => {
         var scope = $rootScope.$new(true);
 
         scope.items = [{href: 1, name: 'foo'}, {href: 2, name: 'bar'}];
@@ -27,7 +27,7 @@ describe('list directives', function() {
         expect(elem.find('.item').length).toBe(2);
     }));
 
-    it('renders searchbar', inject(function($compile, $location, $rootScope) {
+    it('renders searchbar', inject(($compile, $location, $rootScope) => {
         var scope = $rootScope.$new(true);
         var elem = $compile('<div sd-searchbar></div>')(scope);
 

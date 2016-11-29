@@ -28,8 +28,8 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     }
 
     // listen for the file selected event
-    $scope.$on('fileSelected', function(event, args) {
-        $scope.$apply(function() {
+    $scope.$on('fileSelected', (event, args) => {
+        $scope.$apply(() => {
             $scope.file = args.file;
         });
     });
@@ -39,7 +39,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
         $scope.progress = {width: 1};
         if ($scope.file) {
             dictionaries.upload($scope.origDictionary, $scope.dictionary, $scope.file,
-                onSuccess, onError, function(update) {
+                onSuccess, onError, (update) => {
                     $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
                 }
             );
@@ -143,7 +143,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
 
     $scope.removeAbbreviation = function(abbreviation) {
         modal.confirm(gettext('Do you want to remove Abbreviation?'))
-            .then(function() {
+            .then(() => {
                 delete $scope.dictionary.content[abbreviation];
                 init();
             });
@@ -152,18 +152,14 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     function confirmAdd() {
         if ($scope.dictionary.content[$scope.abbreviation.key]) {
             return modal.confirm(gettext('Abbreviation already exists. Do you want to overwrite it?'))
-                .then(function() {
-                    return true;
-                }, function() {
-                    return false;
-                });
+                .then(() => true, () => false);
         }
 
         return $q.when(true);
     }
 
     $scope.addAbbreviation = function() {
-        confirmAdd().then(function(result) {
+        confirmAdd().then((result) => {
             if (result) {
                 $scope.dictionary.content[$scope.abbreviation.key] = $scope.abbreviation.phrase;
                 init();

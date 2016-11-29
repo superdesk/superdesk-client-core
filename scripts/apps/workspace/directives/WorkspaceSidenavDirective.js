@@ -33,7 +33,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
              */
             if ($rootScope.config && $rootScope.config.features && $rootScope.config.features.scanpixSearchShortcut) {
                 api.search_providers.query({max_results: 200})
-                    .then(function(result) {
+                    .then((result) => {
                         scope.providers = $filter('sortByName')(result._items, 'search_provider');
                     });
             }

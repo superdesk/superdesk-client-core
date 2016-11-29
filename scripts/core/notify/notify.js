@@ -32,7 +32,7 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
                 }
 
                 if (ttl) {
-                    $timeout(function() {
+                    $timeout(() => {
                         self.pop();
                     }, ttl);
                 }

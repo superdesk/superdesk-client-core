@@ -31,14 +31,14 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             scope.globalSavedSearches = [];
 
             desks.initialize()
-            .then(function() {
+            .then(() => {
                 scope.userLookup = desks.userLookup;
                 scope.setCurrentStep();
             });
 
-            scope.$watch('step.current', function(step) {
+            scope.$watch('step.current', (step) => {
                 if (step === 'searches') {
-                    workspaces.getActiveId().then(function(activeWorkspace) {
+                    workspaces.getActiveId().then((activeWorkspace) => {
                         if (activeWorkspace.type === 'workspace') {
                             scope.showPrivateSavedSearches = true;
                         } else {
@@ -175,7 +175,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 if (scope.privateSavedSearches.length > 0) {
                     scope.privateSavedSearches.length = 0;
                 }
-                _.each($filter('sortByName')(scope.searches), function(item) {
+                _.each($filter('sortByName')(scope.searches), (item) => {
                     if (item.user === user && !item.is_global) {
                         scope.privateSavedSearches.push(item);
                     }
@@ -190,7 +190,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 if (scope.globalSavedSearches.length > 0) {
                     scope.globalSavedSearches.length = 0;
                 }
-                _.each($filter('sortByName')(scope.searches), function(item) {
+                _.each($filter('sortByName')(scope.searches), (item) => {
                     if (item.is_global) {
                         scope.globalSavedSearches.push(item);
                         var group = scope.editGroups[item._id];
@@ -207,11 +207,9 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
              * @return {Array} list of groups
              */
             scope.getValues = function() {
-                var values = Object.keys(scope.editGroups).map(function(key) {
-                    return scope.editGroups[key];
-                });
+                var values = Object.keys(scope.editGroups).map((key) => scope.editGroups[key]);
 
-                values = _.filter(values, function(item) {
+                values = _.filter(values, (item) => {
                     if (item.type === 'desk' || !item.selected) {
                         return false;
                     }
@@ -226,11 +224,9 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                     }
                     return true;
                 });
-                values = _.sortBy(values, function(item) {
-                    return item.order;
-                });
+                values = _.sortBy(values, (item) => item.order);
 
-                _.each(values, function(item) {
+                _.each(values, (item) => {
                     if (desks.isOutputType(item.type)) {
                         var deskId = item._id.substring(0, item._id.indexOf(':'));
 
@@ -246,7 +242,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
 
                 if (end.index !== start.index) {
                     values.splice(end.index, 0, values.splice(start.index, 1)[0]);
-                    _.each(values, function(item, index) {
+                    _.each(values, (item, index) => {
                         item.order = index;
                     });
                 }
@@ -255,7 +251,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             scope.save = function() {
                 var groups = [];
 
-                _.each(scope.getValues(), function(item, index) {
+                _.each(scope.getValues(), (item, index) => {
                     if (item.selected && item.type !== 'desk') {
                         groups.push({
                             _id: item._id,
@@ -267,10 +263,10 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
 
                 if (scope.widget) {
                     workspaces.getActive()
-                    .then(function(workspace) {
+                    .then((workspace) => {
                         var widgets = angular.copy(workspace.widgets);
 
-                        _.each(widgets, function(widget) {
+                        _.each(widgets, (widget) => {
                             if (scope.widget._id === widget._id && scope.widget.multiple_id === widget.multiple_id) {
                                 widget.configuration = {};
                                 widget.configuration.groups = groups;
@@ -280,22 +276,22 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                             }
                         });
                         workspaces.save(workspace, {widgets: widgets})
-                        .then(function() {
+                        .then(() => {
                             scope.showGlobalSavedSearches = false;
                             scope.onclose();
                         });
                     });
                 } else if (scope.settings && scope.settings.desk) {
                     desks.save(scope.deskLookup[scope.settings.desk._id], {monitoring_settings: groups})
-                    .then(function() {
+                    .then(() => {
                         WizardHandler.wizard('aggregatesettings').finish();
                     });
                 } else {
                     workspaces.getActiveId()
-                    .then(function(activeWorkspace) {
+                    .then((activeWorkspace) => {
                         if (activeWorkspace.type === 'workspace' || activeWorkspace.type === 'desk') {
                             preferencesService.get(PREFERENCES_KEY)
-                            .then(function(preferences) {
+                            .then((preferences) => {
                                 var updates = {};
 
                                 if (preferences) {
@@ -303,7 +299,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                                 }
                                 updates[PREFERENCES_KEY][activeWorkspace.id] = {groups: groups};
                                 preferencesService.update(updates, PREFERENCES_KEY)
-                                .then(function() {
+                                .then(() => {
                                     WizardHandler.wizard('aggregatesettings').finish();
                                 });
                             });

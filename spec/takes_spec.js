@@ -6,14 +6,14 @@ var authoring = require('./helpers/authoring'),
     monitoring = require('./helpers/monitoring'),
     assertToastMsg = require('./helpers/utils').assertToastMsg;
 
-describe('takes', function() {
-    beforeEach(function() {
+describe('takes', () => {
+    beforeEach(() => {
         monitoring.openMonitoring();
     });
 
     // TODO(x): This test will no longer pass when running as a suite and is causing
     // all builds to become failed. Needs to be fixed. Could be a backend issue.
-    xit('performs send and continue and reopens scenarios', function() {
+    xit('performs send and continue and reopens scenarios', () => {
         /*
         * Scenario: Send and Continue
         */
@@ -176,7 +176,7 @@ describe('takes', function() {
         expect(monitoring.getTextItemBySlugline(5, 0)).toBe('REOPENS SLUGLINE');
     });
 
-    it('performs Associate as a take scenario', function() {
+    it('performs Associate as a take scenario', () => {
         /*
         * Scenario: Associate as a take.
         */

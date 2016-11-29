@@ -8,7 +8,7 @@ export function UserListController($scope, $location, api, _) {
 
     api('roles')
         .query()
-        .then(function(result) {
+        .then((result) => {
             $scope.roles = _.keyBy(result._items, '_id');
             $scope.noRolesWarning = result._items.length === 0;
         });
@@ -49,9 +49,7 @@ export function UserListController($scope, $location, api, _) {
             return false;
         }
 
-        return _.find(list, function(item) {
-            return item._links.self.href === user._links.self.href;
-        });
+        return _.find(list, (item) => item._links.self.href === user._links.self.href);
     }
 
     function getCriteria() {
@@ -123,7 +121,7 @@ export function UserListController($scope, $location, api, _) {
 
     function fetchUsers(criteria) {
         api.users.query(criteria)
-            .then(function(users) {
+            .then((users) => {
                 $scope.users = users;
                 $scope.createdUsers = [];
             });

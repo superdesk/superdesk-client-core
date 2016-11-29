@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 HighlightsConfig.$inject = ['$scope', 'highlightsService', 'desks', 'api', 'gettext', 'notify', 'modal'];
 export function HighlightsConfig($scope, highlightsService, desks, api, gettext, notify, modal) {
-    highlightsService.get().then(function(items) {
+    highlightsService.get().then((items) => {
         $scope.configurations = items;
     });
 
@@ -39,13 +39,13 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
         $scope.configEdit.desks = assignedDesks();
         $scope.configEdit.groups = ['main'];
 
-        highlightsService.saveConfig(_config, $scope.configEdit).then(function(item) {
+        highlightsService.saveConfig(_config, $scope.configEdit).then((item) => {
             $scope.message = null;
             if (_new) {
                 $scope.configurations._items.unshift(item);
             }
             $scope.modalActive = false;
-        }, function(response) {
+        }, (response) => {
             errorMessage(response);
         });
 
@@ -61,8 +61,8 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
 
     $scope.remove = function(config) {
         modal.confirm(gettext('Are you sure you want to delete configuration?'))
-        .then(function() {
-            highlightsService.removeConfig(config).then(function() {
+        .then(() => {
+            highlightsService.removeConfig(config).then(() => {
                 _.remove($scope.configurations._items, config);
                 notify.success(gettext('Configuration deleted.'), 3000);
             });
@@ -74,26 +74,20 @@ export function HighlightsConfig($scope, highlightsService, desks, api, gettext,
     };
 
     function deskList(arr) {
-        return _.map($scope.desks, function(d) {
-            return {
-                _id: d._id,
-                name: d.name,
-                included: isIncluded(arr, d._id)
-            };
-        });
+        return _.map($scope.desks, (d) => ({
+            _id: d._id,
+            name: d.name,
+            included: isIncluded(arr, d._id)
+        }));
     }
 
     function isIncluded(arr, id) {
-        return _.findIndex(arr, function(c) {
-            return c === id;
-        }) > -1;
+        return _.findIndex(arr, (c) => c === id) > -1;
     }
 
     function assignedDesks() {
         return _.map(_.filter($scope.assignedDesks, {included: true}),
-            function(desk) {
-                return desk._id;
-            });
+            (desk) => desk._id);
     }
 
     $scope.handleEdit = function($event) {

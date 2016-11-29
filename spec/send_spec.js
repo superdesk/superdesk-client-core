@@ -7,7 +7,7 @@ var workspace = require('./helpers/workspace'),
     monitoring = require('./helpers/monitoring'),
     content = require('./helpers/content');
 
-describe('send', function() {
+describe('send', () => {
     function getItemState(index) {
         var label = content.getItem(index).element(by.css('.state-label'));
 
@@ -15,18 +15,14 @@ describe('send', function() {
     }
 
     function waitForItems(count) {
-        return browser.wait(function() {
-            return content.getItems().count().then(function(_count) {
-                return _count === count;
-            });
-        }, 500);
+        return browser.wait(() => content.getItems().count().then((_count) => _count === count), 500);
     }
-    beforeEach(function() {
+    beforeEach(() => {
         workspace.open();
         workspace.createWorkspace('Personal');
     });
 
-    it('can submit item to a desk', function() {
+    it('can submit item to a desk', () => {
         workspace.editItem(1);
         authoring.sendTo('Sports Desk');
         // modal for the incorrect spelling.
@@ -36,14 +32,14 @@ describe('send', function() {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('warns that there are spelling mistakes', function() {
+    it('warns that there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
         expect(element(by.className('modal-content')).isDisplayed()).toBe(true);
     });
 
-    it('can submit item to a desk although there are spelling mistakes', function() {
+    it('can submit item to a desk although there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -59,7 +55,7 @@ describe('send', function() {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('can cancel submit request because there are spelling mistakes', function() {
+    it('can cancel submit request because there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -67,7 +63,7 @@ describe('send', function() {
         expect(element(by.className('authoring-embedded')).isDisplayed()).toBe(true);
     });
 
-    it('can open send to panel when monitoring list is hidden', function() {
+    it('can open send to panel when monitoring list is hidden', () => {
         monitoring.openMonitoring(true);
         workspace.selectDesk('Sports Desk');
 
@@ -79,7 +75,7 @@ describe('send', function() {
         expect(authoring.sendItemContainer.isDisplayed()).toBe(true);
     });
 
-    it('can display monitoring after submitting an item to a desk using full view of authoring', function() {
+    it('can display monitoring after submitting an item to a desk using full view of authoring', () => {
         monitoring.openMonitoring(true);
         workspace.selectDesk('Sports Desk');
 
@@ -90,7 +86,7 @@ describe('send', function() {
         expect(monitoring.getGroups().count()).toBe(6);
     });
 
-    it('can confirm before submitting unsaved item to a desk', function() {
+    it('can confirm before submitting unsaved item to a desk', () => {
         workspace.openPersonal();
         workspace.editItem(1);
 
@@ -112,7 +108,7 @@ describe('send', function() {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('can remember last sent destination desk and stage', function() {
+    it('can remember last sent destination desk and stage', () => {
         monitoring.openMonitoring(true);
         workspace.selectDesk('Sports Desk');
 
@@ -138,7 +134,7 @@ describe('send', function() {
         expect(dropdownSelected.getText()).toEqual('Politic Desk');
     });
 
-    it('can remember last sent destination desk and stage on multi selection sendTo panel', function() {
+    it('can remember last sent destination desk and stage on multi selection sendTo panel', () => {
         monitoring.openMonitoring(true);
         workspace.selectDesk('Politic Desk');
 

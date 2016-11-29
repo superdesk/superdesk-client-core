@@ -1,11 +1,11 @@
 'use strict';
 
-describe('search service', function() {
+describe('search service', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.search'));
     beforeEach(window.module('superdesk.core.services.pageTitle'));
 
-    it('can create base query', inject(function(search, session) {
+    it('can create base query', inject((search, session) => {
         session.identity = {_id: 'foo'};
         var query = search.query();
         var criteria = query.getCriteria();
@@ -19,14 +19,14 @@ describe('search service', function() {
         expect(criteria.sort).toEqual([{versioncreated: 'desc'}]);
     }));
 
-    it('can create query string query', inject(function($rootScope, search, session) {
+    it('can create query string query', inject(($rootScope, search, session) => {
         session.identity = {_id: 'foo'};
         var criteria = search.query({q: 'test'}).getCriteria();
 
         expect(criteria.query.filtered.query.query_string.query).toBe('test');
     }));
 
-    it('can create query for from_desk', inject(function($rootScope, search, session) {
+    it('can create query for from_desk', inject(($rootScope, search, session) => {
         // only from desk is specified
         session.identity = {_id: 'foo'};
         var criteria = search.query({from_desk: 'test-authoring'}).getCriteria();
@@ -38,7 +38,7 @@ describe('search service', function() {
         expect(filters).toContain({term: {'task.last_production_desk': 'test'}});
     }));
 
-    it('can create query for to_desk', inject(function($rootScope, search, session) {
+    it('can create query for to_desk', inject(($rootScope, search, session) => {
         // only to desk is specified
         session.identity = {_id: 'foo'};
         var criteria = search.query({to_desk: '456-authoring'}).getCriteria();
@@ -52,7 +52,7 @@ describe('search service', function() {
         expect(filters).toContain({exists: {field: 'task.last_authoring_desk'}});
     }));
 
-    it('can create query for from_desk and to_desk', inject(function($rootScope, search, session) {
+    it('can create query for from_desk and to_desk', inject(($rootScope, search, session) => {
         // both from desk and to desk are specified
         session.identity = {_id: 'foo'};
         var criteria = search.query({from_desk: '123-authoring', to_desk: '456-production'}).getCriteria();
@@ -62,7 +62,7 @@ describe('search service', function() {
         expect(filters).toContain({term: {'task.desk': '456'}});
     }));
 
-    it('can create query for original_creator', inject(function($rootScope, search, session) {
+    it('can create query for original_creator', inject(($rootScope, search, session) => {
         // only to desk is specified
         session.identity = {_id: 'foo'};
         var criteria = search.query({original_creator: '123'}).getCriteria();
@@ -71,7 +71,7 @@ describe('search service', function() {
         expect(filters).toContain({term: {original_creator: '123'}});
     }));
 
-    it('can create query for ingest provider', inject(function($rootScope, search, session) {
+    it('can create query for ingest provider', inject(($rootScope, search, session) => {
         // only to desk is specified
         session.identity = {_id: 'foo'};
         var criteria = search.query({ingest_provider: '123'}).getCriteria();
@@ -80,7 +80,7 @@ describe('search service', function() {
         expect(filters).toContain({term: {ingest_provider: '123'}});
     }));
 
-    it('can create query for unique_name', inject(function($rootScope, search, session) {
+    it('can create query for unique_name', inject(($rootScope, search, session) => {
         // only to desk is specified
         session.identity = {_id: 'foo'};
         var criteria = search.query({unique_name: '123'}).getCriteria();
@@ -89,7 +89,7 @@ describe('search service', function() {
         expect(filters).toContain({term: {unique_name: '123'}});
     }));
 
-    it('can sort items', inject(function(search, $location, $rootScope) {
+    it('can sort items', inject((search, $location, $rootScope) => {
         search.setSort('urgency');
         $rootScope.$digest();
         expect($location.search().sort).toBe('urgency:desc');
@@ -100,7 +100,7 @@ describe('search service', function() {
         expect(search.getSort()).toEqual({label: 'Urgency', field: 'urgency', dir: 'asc'});
     }));
 
-    it('can be watched for changes', inject(function(search, $rootScope, session) {
+    it('can be watched for changes', inject((search, $rootScope, session) => {
         session.identity = {_id: 'foo'};
         var criteria = search.query().getCriteria();
 
@@ -108,7 +108,7 @@ describe('search service', function() {
         expect(criteria).not.toEqual(search.query({q: 'test'}).getCriteria());
     }));
 
-    it('can merge items', inject(function(search) {
+    it('can merge items', inject((search) => {
         var nextItems;
 
         nextItems = search.mergeItems({_items: [{_id: 'foo'}]});
@@ -135,7 +135,7 @@ describe('search service', function() {
         expect(nextItems._items[0].slugline).toBe('slugline updated');
     }));
 
-    it('can evalute canShowRefresh for refresh button display', inject(function(search) {
+    it('can evalute canShowRefresh for refresh button display', inject((search) => {
         var newItems, scopeItems, scrollTop, isItemPreviewing, _data;
 
         newItems = {_items: [{_id: 'foo', _current_version: 1}]};
@@ -164,7 +164,7 @@ describe('search service', function() {
         expect(search.canShowRefresh(_data)).toBe(undefined);
     }));
 
-    it('can create query for notdesk facet', inject(function($rootScope, search, session) {
+    it('can create query for notdesk facet', inject(($rootScope, search, session) => {
         // only to desk is specified
         session.identity = {_id: 'foo'};
         var criteria = search.query({notdesk: '["123"]'}).getCriteria();
@@ -173,7 +173,7 @@ describe('search service', function() {
         expect(filters).toContain({not: {terms: {'task.desk': ['123']}}});
     }));
 
-    it('can create query for noturgency facet', inject(function($rootScope, search, session) {
+    it('can create query for noturgency facet', inject(($rootScope, search, session) => {
         // only to desk is specified
         session.identity = {_id: 'foo'};
         var criteria = search.query({noturgency: '["1"]'}).getCriteria();
@@ -182,14 +182,14 @@ describe('search service', function() {
         expect(filters).toContain({not: {terms: {urgency: ['1']}}});
     }));
 
-    it('can create raw string query', inject(function($rootScope, search, session) {
+    it('can create raw string query', inject(($rootScope, search, session) => {
         session.identity = {_id: 'foo'};
         var criteria = search.query({raw: 'slugline:item3 OR slugline:item4'}).getCriteria();
 
         expect(criteria.query.filtered.query.query_string.query).toBe('slugline:item3 OR slugline:item4');
     }));
 
-    it('can create a combined raw and q query', inject(function($rootScope, search, session) {
+    it('can create a combined raw and q query', inject(($rootScope, search, session) => {
         session.identity = {_id: 'foo'};
         var criteria = search.query({raw: 'item3 OR item4', q: 'item5'}).getCriteria();
 
@@ -205,21 +205,21 @@ describe('search service', function() {
         };
     }
 
-    describe('multi action bar directive', function() {
+    describe('multi action bar directive', () => {
         var scope;
 
         beforeEach(window.module('superdesk.apps.archive'));
         beforeEach(window.module('superdesk.apps.packaging'));
         beforeEach(window.module('superdesk.apps.authoring.multiedit'));
 
-        beforeEach(inject(function($rootScope, $compile) {
+        beforeEach(inject(($rootScope, $compile) => {
             var elem = $compile('<div sd-multi-action-bar></div>')($rootScope.$new());
 
             scope = elem.scope();
             scope.$digest();
         }));
 
-        it('can show how many items are selected', inject(function() {
+        it('can show how many items are selected', inject(() => {
             expect(scope.multi.count).toBe(0);
 
             scope.multi.toggle({_id: 1, selected: true});
@@ -229,7 +229,7 @@ describe('search service', function() {
             expect(scope.multi.count).toBe(0);
         }));
 
-        it('can trigger multi editing', inject(function(multiEdit) {
+        it('can trigger multi editing', inject((multiEdit) => {
             spyOn(multiEdit, 'create');
             spyOn(multiEdit, 'open');
 
@@ -243,7 +243,7 @@ describe('search service', function() {
     });
 });
 
-describe('sdSearchPanel directive', function() {
+describe('sdSearchPanel directive', () => {
     var desks,
         facetsInit,
         fakeApi,
@@ -262,7 +262,7 @@ describe('sdSearchPanel directive', function() {
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
@@ -293,16 +293,16 @@ describe('sdSearchPanel directive', function() {
     /**
      * Mock some of the dependencies of the tag service
      */
-    beforeEach(inject(function($q) {
+    beforeEach(inject(($q) => {
         fakeMetadata.fetchSubjectcodes.and.returnValue($q.when());
     }));
 
     /**
      * Mock even more dependencies and compile the directive under test.
      */
-    beforeEach(inject(function(
+    beforeEach(inject((
         $templateCache, $compile, $rootScope, $q, _desks_, tags, search
-    ) {
+    ) => {
         var html,
             scope;
 
@@ -334,8 +334,8 @@ describe('sdSearchPanel directive', function() {
         isoScope = $element.isolateScope();
     }));
 
-    describe('reacting to changes in the item list', function() {
-        beforeEach(function() {
+    describe('reacting to changes in the item list', () => {
+        beforeEach(() => {
             isoScope.items = {
                 _aggregations: {
                     desk: {buckets: []},
@@ -353,7 +353,7 @@ describe('sdSearchPanel directive', function() {
             };
         });
 
-        xit('does not throw an error if desk not in deskLookup', function() {
+        xit('does not throw an error if desk not in deskLookup', () => {
             isoScope.desk = null;
 
             isoScope.items._aggregations.desk.buckets = [
@@ -372,7 +372,7 @@ describe('sdSearchPanel directive', function() {
             }
         });
 
-        xit('outputs a warning if desk not in deskLookup', function() {
+        xit('outputs a warning if desk not in deskLookup', () => {
             isoScope.desk = null;
 
             isoScope.items._aggregations.desk.buckets = [

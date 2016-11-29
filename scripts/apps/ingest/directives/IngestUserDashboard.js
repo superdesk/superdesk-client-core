@@ -27,16 +27,16 @@ export function IngestUserDashboard(api, userList, privileges) {
                     }
                 };
 
-                api.ingest.query(criteria).then(function(result) {
+                api.ingest.query(criteria).then((result) => {
                     scope.ingested_count = result._meta.total;
                 });
             }
 
             function updateProvider() {
-                api.ingestProviders.getById(scope.item._id).then(function(result) {
+                api.ingestProviders.getById(scope.item._id).then((result) => {
                     angular.extend(scope.item, result);
                     getUser();
-                }, function(error) {
+                }, (error) => {
                     if (error.status === 404) {
                         scope.item.dashboard_enabled = false;
                         scope.setUserPreferences();
@@ -63,7 +63,7 @@ export function IngestUserDashboard(api, userList, privileges) {
                     $and: where
                 });
 
-                api.query('activity', criteria).then(function(result) {
+                api.query('activity', criteria).then((result) => {
                     scope.log_messages = result._items;
                 });
             }
@@ -78,11 +78,11 @@ export function IngestUserDashboard(api, userList, privileges) {
 
             function getUser() {
                 if (scope.item.is_closed && scope.item.last_closed && scope.item.last_closed.closed_by) {
-                    userList.getUser(scope.item.last_closed.closed_by).then(function(result) {
+                    userList.getUser(scope.item.last_closed.closed_by).then((result) => {
                         scope.item.last_closed.display_name = result.display_name;
                     });
                 } else if (!scope.item.is_closed && scope.item.last_opened && scope.item.last_opened.opened_by) {
-                    userList.getUser(scope.item.last_opened.opened_by).then(function(result) {
+                    userList.getUser(scope.item.last_opened.opened_by).then((result) => {
                         scope.item.last_opened.display_name = result.display_name;
                     });
                 }
@@ -120,11 +120,11 @@ export function IngestUserDashboard(api, userList, privileges) {
                 getLogMessages();
             };
 
-            scope.$on('ingest:update', function(evt, extras) {
+            scope.$on('ingest:update', (evt, extras) => {
                 refreshItem(extras);
             });
 
-            scope.$on('ingest_provider:update', function(evt, extras) {
+            scope.$on('ingest_provider:update', (evt, extras) => {
                 refreshItem(extras);
             });
         }

@@ -6,12 +6,12 @@ var openUrl = require('./helpers/utils').open,
     content = require('./helpers/content'),
     monitoring = require('./helpers/monitoring');
 
-describe('archived', function() {
-    beforeEach(function() {
+describe('archived', () => {
+    beforeEach(() => {
         openUrl('/#/search').then(globalSearch.setListView());
     });
 
-    it('display items and open an item preview', function() {
+    it('display items and open an item preview', () => {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.getArchivedContent();
         expect(globalSearch.getItems().count()).toBe(3);
@@ -21,7 +21,7 @@ describe('archived', function() {
         expect(monitoring.getPreviewTitle()).toBe(itemText);
     });
 
-    it('open an item in authoring', function() {
+    it('open an item in authoring', () => {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.getArchivedContent();
         expect(globalSearch.getItems().count()).toBe(3);

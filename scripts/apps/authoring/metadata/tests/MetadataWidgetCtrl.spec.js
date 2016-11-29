@@ -1,6 +1,6 @@
 'use strict';
 
-describe('MetadataWidgetCtrl controller', function() {
+describe('MetadataWidgetCtrl controller', () => {
     var metadata,  // the metadata service
         metaInit,  // deferred initialization of the metadata service
         prefsGet,  // deferred result of the preferences service's get() method
@@ -13,7 +13,7 @@ describe('MetadataWidgetCtrl controller', function() {
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
@@ -28,9 +28,9 @@ describe('MetadataWidgetCtrl controller', function() {
         });
     }));
 
-    beforeEach(inject(function(
+    beforeEach(inject((
         $rootScope, $controller, $q, _metadata_, preferencesService
-    ) {
+    ) => {
         metadata = _metadata_;
 
         metaInit = $q.defer();
@@ -47,12 +47,12 @@ describe('MetadataWidgetCtrl controller', function() {
         $controller('MetadataWidgetCtrl', {$scope: scope});
     }));
 
-    it('can resolve schedule datetime', function() {
+    it('can resolve schedule datetime', () => {
         expect(scope.item.publish_schedule_date).toBe('01/08/2015');
         expect(scope.item.publish_schedule_time).toBe('15:12:34');
     });
 
-    it('initializes the list of categories to pick from in scope', function() {
+    it('initializes the list of categories to pick from in scope', () => {
         var userPrefs = {
             'categories:preferred': {
                 selected: {a: true, b: false, c: true, d: true}
@@ -79,7 +79,7 @@ describe('MetadataWidgetCtrl controller', function() {
         );
     });
 
-    it('can pupulate list of categories for new users', function() {
+    it('can pupulate list of categories for new users', () => {
         metadata.values = {
             categories: [
                 {qcode: 'a'}, {qcode: 'b'}, {qcode: 'c'}, {qcode: 'd'}
@@ -94,7 +94,7 @@ describe('MetadataWidgetCtrl controller', function() {
     });
 });
 
-describe('metadata terms directive', function() {
+describe('metadata terms directive', () => {
     var $rootScope,
         $compile,
         itemCategories,
@@ -134,7 +134,7 @@ describe('metadata terms directive', function() {
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    beforeEach(inject(function(_$rootScope_, _$compile_) {
+    beforeEach(inject((_$rootScope_, _$compile_) => {
         $rootScope = _$rootScope_;
         $compile = _$compile_;
     }));
@@ -146,7 +146,7 @@ describe('metadata terms directive', function() {
         return $compile(html)(scope);
     }
 
-    it('combined list contains all company_codes and terms contains only available company_codes', inject(function() {
+    it('combined list contains all company_codes and terms contains only available company_codes', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="company_codes" data-unique="qcode" ' +
                       'data-list="availableCompanyCodes" data-header="true" ' +
@@ -171,7 +171,7 @@ describe('metadata terms directive', function() {
         expect(iScope.combinedList.length).toBe(6);
     }));
 
-    it('combined list all categories and terms contains only available category', inject(function() {
+    it('combined list all categories and terms contains only available category', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
                       'data-list="availableCategories" data-header="true" data-reload-list="false"></div>';
@@ -195,7 +195,7 @@ describe('metadata terms directive', function() {
         expect(iScope.combinedList.length).toBe(6);
     }));
 
-    it('select a metadata term', inject(function() {
+    it('select a metadata term', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
                       'data-list="availableCategories" data-header="true" data-reload-list="false"></div>';
@@ -219,7 +219,7 @@ describe('metadata terms directive', function() {
         expect(iScope.combinedList.length).toBe(6);
     }));
 
-    it('select all metadata terms', inject(function() {
+    it('select all metadata terms', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
                       'data-list="availableCategories" data-header="true" data-reload-list="false"></div>';
@@ -240,7 +240,7 @@ describe('metadata terms directive', function() {
         expect(iScope.item[iScope.field].length).toBe(2);
         expect(iScope.terms.length).toBe(4);
         expect(iScope.activeTree.length).toBe(4);
-        _.each(availableCategories, function(category) {
+        _.each(availableCategories, (category) => {
             iScope.selectTerm(category);
         });
         expect(iScope.terms.length).toBe(0);
@@ -248,7 +248,7 @@ describe('metadata terms directive', function() {
         expect(iScope.item[iScope.field].length).toBe(6);
     }));
 
-    it('search a metadata term', inject(function() {
+    it('search a metadata term', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
                       'data-list="availableCategories" data-header="true" data-reload-list="false"></div>';
@@ -273,7 +273,7 @@ describe('metadata terms directive', function() {
         expect(iScope.combinedList.length).toBe(6);
     }));
 
-    it('search a metadata term if field not set', inject(function() {
+    it('search a metadata term if field not set', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
                       'data-list="availableCategories" data-header="true" data-reload-list="false"></div>';
@@ -296,7 +296,7 @@ describe('metadata terms directive', function() {
         expect(iScope.combinedList.length).toBe(4);
     }));
 
-    it('remove a metadata term', inject(function() {
+    it('remove a metadata term', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="anpa_category" data-unique="qcode" ' +
                       'data-list="availableCategories" data-header="true" data-reload-list="false"></div>';
@@ -320,7 +320,7 @@ describe('metadata terms directive', function() {
         expect(iScope.combinedList.length).toBe(6);
     }));
 
-    it('list of tree type', inject(function() {
+    it('list of tree type', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="subjects" data-unique="qcode" ' +
                       'data-list="subjects" data-header="true" data-reload-list="true"></div>';
@@ -343,7 +343,7 @@ describe('metadata terms directive', function() {
         expect(iScope.uniqueField).toBe('qcode');
     }));
 
-    it('search of tree type', inject(function() {
+    it('search of tree type', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="subjects" data-unique="qcode" ' +
                       'data-list="subjects" data-header="true" data-reload-list="true"></div>';
@@ -366,7 +366,7 @@ describe('metadata terms directive', function() {
         expect(iScope.activeTree.length).toBe(2);
     }));
 
-    it('select metadata term from tree type metadata dropdown', inject(function() {
+    it('select metadata term from tree type metadata dropdown', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="subjects" data-unique="qcode" ' +
                       'data-list="subjects" data-header="true" data-reload-list="true"></div>';
@@ -392,7 +392,7 @@ describe('metadata terms directive', function() {
         expect(iScope.activeTree.length).toBe(2);
     }));
 
-    it('open tree', inject(function() {
+    it('open tree', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="subjects" data-unique="qcode" ' +
                       'data-list="subjects" data-header="true" data-reload-list="true"></div>';
@@ -420,7 +420,7 @@ describe('metadata terms directive', function() {
     }));
 });
 
-describe('dateline dropdown', function() {
+describe('dateline dropdown', () => {
     var $rootScope,
         $compile,
         cities;
@@ -454,7 +454,7 @@ describe('dateline dropdown', function() {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
 
-    beforeEach(inject(function(_$rootScope_, _$compile_) {
+    beforeEach(inject((_$rootScope_, _$compile_) => {
         $rootScope = _$rootScope_;
         $compile = _$compile_;
     }));
@@ -466,7 +466,7 @@ describe('dateline dropdown', function() {
         return $compile(html)(scope);
     }
 
-    it('select city within the list', inject(function() {
+    it('select city within the list', inject(() => {
         var elmHtml = '<div sd-meta-locators class="dateline-city" ng-disabled="!_editable" ' +
                       'data-item="item" data-list="cities" data-fieldprefix="dateline" ' +
                       'data-field="located"></div>';
@@ -495,7 +495,7 @@ describe('dateline dropdown', function() {
         expect(iScope.item.dateline.located.city).toBe('Sydney');
     }));
 
-    it('select city not within the list', inject(function() {
+    it('select city not within the list', inject(() => {
         var elmHtml = '<div sd-meta-locators class="dateline-city" ng-disabled="!_editable" ' +
                       'data-item="item" data-list="cities" data-fieldprefix="dateline" ' +
                       'data-field="located"></div>';

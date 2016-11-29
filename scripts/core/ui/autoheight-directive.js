@@ -102,7 +102,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
             function setMirrorStyle() {
                 taStyle = $window.getComputedStyle(ta);
                 mirrorStyle = mirrorStyleBasic;
-                angular.forEach(copyStyle, function(val) {
+                angular.forEach(copyStyle, (val) => {
                     mirrorStyle += val + ':' + taStyle[val] + ';';
                 });
 
@@ -157,7 +157,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
                     }
 
                     // small delay to prevent an infinite loop
-                    _.delay(function() {
+                    _.delay(() => {
                         active = false;
                     }, 1);
                 }
@@ -182,9 +182,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             $win.bind('resize', forceAdjust);
 
-            scope.$watch(function() {
-                return ngModel.$modelValue;
-            }, function(newval, oldval) {
+            scope.$watch(() => ngModel.$modelValue, (newval, oldval) => {
                 if (newval !== oldval) {
                     forceAdjust();
                 }
@@ -196,7 +194,7 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
              * destroy
              */
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 $mirror.remove();
                 $win.unbind('resize', forceAdjust);
             });

@@ -2,7 +2,7 @@ DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify',
 export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter) {
     var _fetchAll = function(endpoint, parent, page = 1, items = []) {
         return api.query(endpoint, {max_results: 200, page: page}, parent)
-            .then(function(result) {
+            .then((result) => {
                 let pg = page;
                 let extended = items.concat(result._items);
 
@@ -52,11 +52,11 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             var self = this;
 
             return _fetchAll('desks')
-            .then(function(items) {
+            .then((items) => {
                 let byName = $filter('sortByName')(items);
 
                 self.desks = {_items: byName};
-                _.each(byName, function(item) {
+                _.each(byName, (item) => {
                     self.deskLookup[item._id] = item;
                 });
                 return self.desks;
@@ -67,10 +67,10 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             var self = this;
 
             return userList.getAll()
-            .then(function(result) {
+            .then((result) => {
                 self.users = {};
                 self.users._items = result;
-                _.each(result, function(user) {
+                _.each(result, (user) => {
                     self.userLookup[user._id] = user;
                 });
             });
@@ -79,9 +79,9 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             var self = this;
 
             return _fetchAll('stages')
-            .then(function(items) {
+            .then((items) => {
                 self.stages = {_items: items};
-                _.each(items, function(item) {
+                _.each(items, (item) => {
                     self.stageLookup[item._id] = item;
                 });
             });
@@ -104,9 +104,9 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
         generateDeskMembers: function() {
             var self = this;
 
-            _.each(this.desks._items, function(desk) {
+            _.each(this.desks._items, (desk) => {
                 self.deskMembers[desk._id] = [];
-                _.each(desk.members, function(member, index) {
+                _.each(desk.members, (member, index) => {
                     var user = _.find(self.users._items, {_id: member.user});
 
                     if (user) {
@@ -127,7 +127,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
             return $q.when();
         },
         fetchUserDesks: function(user) {
-            return _fetchAll('user_desks', {_id: user._id}).then(function(response) {
+            return _fetchAll('user_desks', {_id: user._id}).then((response) => {
                 if (!response) {
                     return;
                 }
@@ -162,7 +162,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
                 return $q.when(self.activeDeskId);
             }
 
-            return preferencesService.get('desk:last_worked').then(function(result) {
+            return preferencesService.get('desk:last_worked').then((result) => {
                 self.activeDeskId = null;
                 if (angular.isDefined(result) && result !== '') {
                     self.activeDeskId = result;
@@ -180,7 +180,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
                 return $q.when(self.activeStageId);
             }
 
-            return preferencesService.get('stage:items').then(function(result) {
+            return preferencesService.get('stage:items').then((result) => {
                 if (angular.isDefined(result)) {
                     self.activeStageId = angular.isArray(result) ? result[0] : result;
                 }

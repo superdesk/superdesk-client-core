@@ -1,27 +1,25 @@
 'use strict';
 
-describe('Upload controller', function() {
+describe('Upload controller', () => {
     var files = [{type: 'text/plain'}],
         UPLOAD_URL = 'upload_url';
 
     beforeEach(window.module('superdesk.apps.archive'));
 
-    beforeEach(window.module(function($provide) {
-        $provide.service('api', function($q) {
-            return {
-                archive: {
-                    getUrl: function() {
-                        return $q.when(UPLOAD_URL);
-                    },
-                    getHeaders: function() {
-                        return {};
-                    },
-                    update: function(dest, diff) {
-                        return $q.when({});
-                    }
+    beforeEach(window.module(($provide) => {
+        $provide.service('api', ($q) => ({
+            archive: {
+                getUrl: function() {
+                    return $q.when(UPLOAD_URL);
+                },
+                getHeaders: function() {
+                    return {};
+                },
+                update: function(dest, diff) {
+                    return $q.when({});
                 }
-            };
-        });
+            }
+        }));
 
         $provide.service('upload', function($q) {
             this.start = function(config) {
@@ -34,11 +32,11 @@ describe('Upload controller', function() {
             this.addTaskToArticle = function(item) { /* no-op */ };
         });
     }));
-    beforeEach(inject(function(session) {
+    beforeEach(inject((session) => {
         session.identity = {_id: 'user:1', byline: 'Admin'};
     }));
 
-    it('can upload files when added', inject(function($controller, $rootScope, $q, api, upload) {
+    it('can upload files when added', inject(($controller, $rootScope, $q, api, upload) => {
         var scope = $rootScope.$new(true);
 
         spyOn(upload, 'start').and.callThrough();
@@ -93,7 +91,7 @@ describe('Upload controller', function() {
     }));
 
     it('can display error message if any of metadata field missing',
-        inject(function($controller, $rootScope, $q, api, upload, config) {
+        inject(($controller, $rootScope, $q, api, upload, config) => {
             var scope = $rootScope.$new(true);
 
             $controller('UploadController', {$scope: scope});
@@ -116,7 +114,7 @@ describe('Upload controller', function() {
             expect(scope.errorMessage).toBe('Required field(s) are missing');
         }));
     it('can try again to upload when try again is clicked',
-        inject(function($controller, $rootScope, $q, api, upload) {
+        inject(($controller, $rootScope, $q, api, upload) => {
             var scope = $rootScope.$new(true);
 
             spyOn(upload, 'start').and.callThrough();

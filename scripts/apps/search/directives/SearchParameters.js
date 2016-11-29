@@ -35,7 +35,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 scope.cvs = metadata.search_cvs;
                 scope.search_config = metadata.search_config;
                 scope.lookupCvs = {};
-                angular.forEach(scope.cvs, function(cv) {
+                angular.forEach(scope.cvs, (cv) => {
                     scope.lookupCvs[cv.id] = cv;
                 });
 
@@ -66,9 +66,9 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
              */
             function fetchUsers() {
                 userList.getAll()
-                .then(function(result) {
+                .then((result) => {
                     scope.userList = {};
-                    _.each(result, function(user) {
+                    _.each(result, (user) => {
                         scope.userList[user._id] = user;
                     });
 
@@ -84,7 +84,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             function fetchDesks() {
                 scope.desks = [];
                 desks.initialize()
-                    .then(function() {
+                    .then(() => {
                         scope.desks = desks.desks;
                         initializeDesksDropDown();
                     });
@@ -94,7 +94,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
              * Initialize the provider dropdown
              */
             function fetchProviders() {
-                ingestSources.fetchAllIngestProviders().then(function(items) {
+                ingestSources.fetchAllIngestProviders().then((items) => {
                     scope.providers = items;
                     initializeProviders();
                 });
@@ -117,16 +117,14 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             }
 
             function initializeItems() {
-                angular.forEach(scope.cvs, function(cv) {
+                angular.forEach(scope.cvs, (cv) => {
                     if ($location.search()[cv.field]) {
                         scope.fields[cv.field] = [];
                         scope.selecteditems[cv.field] = scope.selecteditems[cv.field] || [];
                         var itemList = JSON.parse($location.search()[cv.field]);
 
-                        angular.forEach(itemList, function(qcode) {
-                            var match = _.find(scope.metadata[cv.list], function(m) {
-                                return m.qcode === qcode;
-                            });
+                        angular.forEach(itemList, (qcode) => {
+                            var match = _.find(scope.metadata[cv.list], (m) => m.qcode === qcode);
 
                             if (match) {
                                 scope.selecteditems[cv.field].push(angular.extend(match, {
@@ -163,23 +161,23 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             function fetchMetadata() {
                 metadata
                     .initialize()
-                    .then(function() {
+                    .then(() => {
                         scope.keywords = metadata.values.keywords;
                         return metadata.fetchSubjectcodes();
                     })
-                    .then(function() {
+                    .then(() => {
                         scope.subjectcodes = metadata.values.subjectcodes;
                         scope.metadata = metadata.values;
                         return tags.initSelectedFacets();
                     })
-                    .then(function(currentTags) {
+                    .then((currentTags) => {
                         scope.selecteditems = {};
                         scope.selectedCodes = {};
                         initializeItems();
                     });
             }
 
-            scope.$on('$locationChangeSuccess', function() {
+            scope.$on('$locationChangeSuccess', () => {
                 if (scope.query !== $location.search().q ||
                     scope.fields.from_desk !== $location.search().from_desk ||
                     scope.fields.to_desk !== $location.search().to_desk ||
@@ -212,7 +210,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 var metas = [];
                 var pattern = /[()]/g;
 
-                angular.forEach(scope.meta, function(val, key) {
+                angular.forEach(scope.meta, (val, key) => {
                     // checkbox boolean values.
                     let v = val;
 
@@ -237,7 +235,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                                 metas.push(k + ':(' + v + ')');
                             }
                         } else if (angular.isArray(v)) {
-                            angular.forEach(v, function(value) {
+                            angular.forEach(v, (value) => {
                                 metas.push(k + ':(' + value.replace(pattern, '') + ')');
                             });
                         } else {
@@ -250,7 +248,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     }
                 });
 
-                angular.forEach(scope.fields, function(val, key) {
+                angular.forEach(scope.fields, (val, key) => {
                     if (key === 'from_desk') {
                         $location.search('from_desk', getDeskParam('from_desk'));
                     } else if (key === 'to_desk') {
@@ -289,9 +287,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
                 if (scope.fields[field]) {
                     deskId = scope.fields[field];
-                    var deskType = _.result(_.find(scope.desks._items, function(item) {
-                        return item._id === deskId;
-                    }), 'desk_type');
+                    var deskType = _.result(_.find(scope.desks._items, (item) => item._id === deskId), 'desk_type');
 
                     return deskId + '-' + deskType;
                 }

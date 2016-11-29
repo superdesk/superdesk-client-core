@@ -66,7 +66,7 @@ export default angular.module('superdesk.apps.users', [
                 element.html(value);
                 var nscope = scope.$new(true);
 
-                _.each(scope.$eval(attrs.data), function(value, key) {
+                _.each(scope.$eval(attrs.data), (value, key) => {
                     nscope[key] = value;
                 });
                 $compile(element.contents())(nscope);
@@ -86,9 +86,7 @@ angular.module('superdesk.apps.users.profile', ['superdesk.core.api', 'superdesk
             templateUrl: asset.templateUrl('apps/users/views/edit.html'),
             resolve: {
                 user: ['session', 'api', function(session, api) {
-                    return session.getIdentity().then(function(identity) {
-                        return api.get(identity._links.self.href);
-                    });
+                    return session.getIdentity().then((identity) => api.get(identity._links.self.href));
                 }]
             }
         });

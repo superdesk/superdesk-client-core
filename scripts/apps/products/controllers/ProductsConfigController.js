@@ -8,10 +8,10 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
     $scope.resultType = 'All';
 
     var initProducts = function() {
-        products.initialize().then(function() {
+        products.initialize().then(() => {
             $scope.products = products.products;
             $scope.contentFilters = products.contentFilters;
-            _.each(products.products, function(product) {
+            _.each(products.products, (product) => {
                 $scope.productLookup[product._id] = product;
             });
         });
@@ -19,7 +19,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
 
     var initSubscribers = function() {
         if (!$scope.subscribers) {
-            subscribersService.fetchSubscribers().then(function(items) {
+            subscribersService.fetchSubscribers().then((items) => {
                 $scope.subscribers = items;
             });
         }
@@ -29,7 +29,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
         if (angular.isDefined(metadata.values.geographical_restrictions)) {
             $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
         } else {
-            metadata.fetchMetadataValues().then(function() {
+            metadata.fetchMetadataValues().then(() => {
                 $scope.geoRestrictions = $filter('sortByName')(metadata.values.geographical_restrictions);
             });
         }
@@ -63,9 +63,9 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
     $scope.save = function() {
         var product = _.omit($scope.product, 'edit');
 
-        api.products.save(product, $scope.product.edit).then(function() {
+        api.products.save(product, $scope.product.edit).then(() => {
             notify.success(gettext('Product is saved.'));
-        }, function(response) {
+        }, (response) => {
             if (angular.isDefined(response.data._issues) &&
                 angular.isDefined(response.data._issues['validator exception'])) {
                 notify.error(gettext('Error: ' + response.data._issues['validator exception']));
@@ -83,9 +83,9 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
     $scope.remove = function(product) {
         modal.confirm(gettext('Are you sure you want to delete product?')).then(
             function removeProduct() {
-                api.products.remove(product).then(function() {
+                api.products.remove(product).then(() => {
                     notify.success(gettext('Product deleted.'), 3000);
-                }, function(response) {
+                }, (response) => {
                     if (angular.isDefined(response.data._message)) {
                         notify.error(gettext('Error: ' + response.data._message));
                     } else {
@@ -104,14 +104,14 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
         }
 
         $scope.loading = true;
-        products.testProducts({article_id: $scope.articleId}).then(function(results) {
+        products.testProducts({article_id: $scope.articleId}).then((results) => {
             $scope.rawResults = results;
             $scope.filteredProducts = [];
 
             if ($scope.resultType === 'All') {
                 $scope.filteredProducts = $scope.products;
             }
-            _.each(results._id, function(result) {
+            _.each(results._id, (result) => {
                 $scope.testLookup[result.product_id] = result;
 
                 if (result.matched && $scope.resultType === 'Match' ||
@@ -119,12 +119,12 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
                     $scope.filteredProducts.push($scope.productLookup[result.product_id]);
                 }
             });
-        }, function(response) {
+        }, (response) => {
             var msg = response.data && response.data._message ? response.data._message : JSON.stringify(response);
 
             notify.error(gettext('Error: ' + msg));
         })
-        .finally(function() {
+        .finally(() => {
             $scope.loading = false;
         });
     };

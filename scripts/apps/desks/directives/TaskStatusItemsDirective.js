@@ -22,11 +22,11 @@ export function TaskStatusItemsDirective(search, api, desks) {
             scope.loading = true;
 
             api('archive').query(criteria)
-                .then(function(items) {
+                .then((items) => {
                     scope.loading = false;
                     scope.items = items._items;
                     scope.total = items._meta.total;
-                }, function() {
+                }, () => {
                     scope.loading = false;
                 });
         }

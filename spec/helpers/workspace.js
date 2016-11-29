@@ -51,9 +51,7 @@ function Workspace() {
 
         function textFilter(elem) {
             return elem.element(by.tagName('button')).getText()
-            .then(function(text) {
-                return text.toUpperCase().indexOf(desk.toUpperCase()) >= 0;
-            });
+            .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
         }
 
         function clickFiltered(filtered) {
@@ -73,7 +71,7 @@ function Workspace() {
             .then(clickFiltered);
 
         // close dropdown if opened
-        dropdownMenu.isDisplayed().then(function(shouldClose) {
+        dropdownMenu.isDisplayed().then((shouldClose) => {
             if (shouldClose) {
                 dropdownBtn.click();
             }
@@ -223,16 +221,14 @@ function Workspace() {
         this.selectDesk(desk);
         openContent();
 
-        browser.wait(function() {
-            return element(by.className('list-view')).isPresent();
-        }, 300);
+        browser.wait(() => element(by.className('list-view')).isPresent(), 300);
 
         // toggle to list view if possible
         var listViewBtn = element(by.className('view-select'))
             .all(by.tagName('button'))
             .get(1);
 
-        return listViewBtn.isDisplayed().then(function(isDisplayed) {
+        return listViewBtn.isDisplayed().then((isDisplayed) => {
             if (isDisplayed) {
                 return listViewBtn.click();
             }
@@ -254,9 +250,7 @@ function Workspace() {
     this.duplicateItem = function(item, desk) {
         return this.switchToDesk(desk || 'PERSONAL')
             .then(content.setListView)
-            .then(function() {
-                return content.actionOnItem('Duplicate', item);
-            });
+            .then(() => content.actionOnItem('Duplicate', item));
     };
 
     this.filterItems = function(type) {

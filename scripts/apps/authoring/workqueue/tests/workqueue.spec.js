@@ -1,11 +1,11 @@
 
 'use strict';
 
-describe('workqueue', function() {
+describe('workqueue', () => {
     var USER_ID = 'u1';
 
     angular.module('mock.route', ['ngRoute'])
-        .config(function($routeProvider) {
+        .config(($routeProvider) => {
             $routeProvider.when('/mock', {
                 template: ''
             });
@@ -16,16 +16,16 @@ describe('workqueue', function() {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.authoring'));
 
-    beforeEach(inject(function(session, $q) {
+    beforeEach(inject((session, $q) => {
         spyOn(session, 'getIdentity').and.returnValue($q.when({_id: USER_ID}));
     }));
 
-    it('loads locked items of current user', inject(function(workqueue, api, session, $q, $rootScope) {
+    it('loads locked items of current user', inject((workqueue, api, session, $q, $rootScope) => {
         var items;
 
         spyOn(api, 'query').and.returnValue($q.when({_items: [{}]}));
 
-        workqueue.fetch().then(function() {
+        workqueue.fetch().then(() => {
             items = workqueue.items;
         });
 
@@ -37,7 +37,7 @@ describe('workqueue', function() {
         expect(session.getIdentity).toHaveBeenCalled();
     }));
 
-    it('can update single item', inject(function(workqueue, api, $q, $rootScope) {
+    it('can update single item', inject((workqueue, api, $q, $rootScope) => {
         spyOn(api, 'find').and.returnValue($q.when({_etag: 'xy'}));
 
         workqueue.items = [{_id: '1'}];
@@ -50,7 +50,7 @@ describe('workqueue', function() {
     }));
 
     it('can get active item from url', inject(
-    function(api, $location, $controller, $q, $rootScope) {
+    (api, $location, $controller, $q, $rootScope) => {
         spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
         $location.path('/mock');
         $location.search('item', 'foo');
@@ -64,7 +64,7 @@ describe('workqueue', function() {
     }));
 
     it('can confirm before closing autosaved or not autosaved, but dirty active item', inject(
-    function(api, $location, $controller, $q, $rootScope, autosave, confirm) {
+    (api, $location, $controller, $q, $rootScope, autosave, confirm) => {
         // first get active item from url.
         spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
         $location.path('/mock');

@@ -17,7 +17,7 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
             }
 
             function updatePreview(e) {
-                scope.$apply(function() {
+                scope.$apply(() => {
                     scope.sdImagePreview = e.target.result;
                     setProgress(50);
                 });
@@ -25,7 +25,7 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
                 var img = document.createElement('img');
 
                 img.onload = function() {
-                    scope.$apply(function() {
+                    scope.$apply(() => {
                         scope.width = img.width;
                         scope.height = img.height;
                     });
@@ -33,7 +33,7 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
                 img.src = e.target.result;
             }
 
-            scope.$watch('file', function(file) {
+            scope.$watch('file', (file) => {
                 if (file && IS_IMG_REGEXP.test(file.type)) {
                     var fileReader = new FileReader();
 
@@ -43,7 +43,7 @@ angular.module('superdesk.core.upload.imagepreview', []).directive('sdImagePrevi
                 }
             });
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 window.URL.revokeObjectURL(scope.sdImagePreview);
             });
         }

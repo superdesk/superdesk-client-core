@@ -9,12 +9,12 @@ var openUrl = require('./helpers/utils').open,
 
 var Login = require('./helpers/pages').login;
 
-describe('saved_search', function() {
-    beforeEach(function() {
+describe('saved_search', () => {
+    beforeEach(() => {
         openUrl('/#/search').then(globalSearch.setListView());
     });
 
-    it('can save a private search', function() {
+    it('can save a private search', () => {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');
@@ -36,7 +36,7 @@ describe('saved_search', function() {
         expect(savedSearch.element(by.css('.search-name')).getText()).toBe('A Search');
     });
 
-    it('can save a global search and another user sees it', function() {
+    it('can save a global search and another user sees it', () => {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');
@@ -59,9 +59,7 @@ describe('saved_search', function() {
         element(by.css('button.current-user')).click();
 
         // wait for sidebar animation to finish
-        browser.wait(function() {
-            return element(by.buttonText('SIGN OUT')).isDisplayed();
-        }, 200);
+        browser.wait(() => element(by.buttonText('SIGN OUT')).isDisplayed(), 200);
 
         element(by.buttonText('SIGN OUT')).click();
 

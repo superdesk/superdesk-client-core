@@ -17,11 +17,11 @@ export function ContentExpiry() {
                 Header: 'Content Expiry'
             };
 
-            scope.$watch('item', function() {
+            scope.$watch('item', () => {
                 setContentExpiry(scope.item);
             });
 
-            scope.$watch('ContentExpiry', function() {
+            scope.$watch('ContentExpiry', () => {
                 if (!scope.item) {
                     scope.item = {};
                 }

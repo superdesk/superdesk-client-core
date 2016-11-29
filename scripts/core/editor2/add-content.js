@@ -21,13 +21,13 @@ angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', [
                 vm.updateState();
             // listen for update state signals
                 var unbindListener = scope.$parent.$on('sdAddContent::updateState',
-                    function(signal, event, editorElem) {
+                    (signal, event, editorElem) => {
                         vm.updateState(event, editorElem);
                     });
             // update on resize
 
                 angular.element($window).on('resize', vm.updateState);
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', () => {
                     angular.element($window).off('resize', vm.updateState);
                     unbindListener();
                 });
@@ -99,7 +99,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
             return self.hide();
         },
         hide: function() {
-            $timeout(function() {
+            $timeout(() => {
                 elementHolder.css({
                     display: 'none'
                 });
@@ -107,7 +107,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
             });
         },
         show: function() {
-            $timeout(function() {
+            $timeout(() => {
                 elementHolder.css({
                     display: 'block'
                 });
@@ -125,27 +125,23 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
         },
         actions: {
             addEmbed: function() {
-                self.sdEditorCtrl.splitAndInsert(self.textBlockCtrl).then(function() {
+                self.sdEditorCtrl.splitAndInsert(self.textBlockCtrl).then(() => {
                     // show the add-embed form
                     self.textBlockCtrl.block.showAndFocusLowerAddAnEmbedBox();
                 });
             },
             addPicture: function() {
-                superdesk.intent('upload', 'media').then(function(images) {
-                    $q.all(images.map(function(image) {
-                        return editor.generateMediaTag(image).then(function(imgTag) {
-                            return {
-                                blockType: 'embed',
-                                embedType: 'Image',
-                                body: imgTag,
-                                caption: image.description_text,
-                                association: image
-                            };
-                        });
-                    })).then(function(renderedImages) {
+                superdesk.intent('upload', 'media').then((images) => {
+                    $q.all(images.map((image) => editor.generateMediaTag(image).then((imgTag) => ({
+                        blockType: 'embed',
+                        embedType: 'Image',
+                        body: imgTag,
+                        caption: image.description_text,
+                        association: image
+                    })))).then((renderedImages) => {
                         self.sdEditorCtrl.splitAndInsert(self.textBlockCtrl, renderedImages);
                     });
-                }, function() {
+                }, () => {
                     scope.node.focus();
                     self.textBlockCtrl.restoreSelection();
                 });

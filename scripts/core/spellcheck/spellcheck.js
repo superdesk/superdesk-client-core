@@ -51,7 +51,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         var baseLang = getBaseLanguage(lang);
 
         if (!dict) {
-            dict = dictionaries.getActive(lang, baseLang).then(function(items) {
+            dict = dictionaries.getActive(lang, baseLang).then((items) => {
                 dict = dict || {};
                 dict.content = {};
 
@@ -82,9 +82,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
      * @returns {Object} List of dictionaries
      */
     this.getDictionary = function(lang) {
-        return dictionaries.getActive(lang, getBaseLanguage(lang)).then(function(items) {
-            return items;
-        });
+        return dictionaries.getActive(lang, getBaseLanguage(lang)).then((items) => items);
     };
 
     /**
@@ -102,7 +100,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         var baseLang = getBaseLanguage(lang);
 
         if (!self.abbreviationsDict || force) {
-            return dictionaries.getUserAbbreviations(lang, baseLang).then(function(items) {
+            return dictionaries.getUserAbbreviations(lang, baseLang).then((items) => {
                 self.abbreviationsDict = self.abbreviationsDict || {};
                 self.abbreviationsDict.content = {};
 
@@ -112,7 +110,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
                     langItems = _.filter(items, {language_id: lang});
                 }
 
-                angular.forEach(langItems, function(item) {
+                angular.forEach(langItems, (item) => {
                     angular.extend(self.abbreviationsDict.content, JSON.parse(item.content) || {});
                 });
 
@@ -129,7 +127,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         }
     }
 
-    $rootScope.$on('abbreviations:updated', angular.bind(self, function(evt, data) {
+    $rootScope.$on('abbreviations:updated', angular.bind(self, (evt, data) => {
         updateAbbreviations(data);
     }));
 
@@ -160,8 +158,8 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         // consider only abbreviations in content that found in dictionary
         var _abbrevArr = [];
 
-        _.forEach(abbreviationWords, function(abbrevWord) {
-            _.filter(abbreviationList, function(item) {
+        _.forEach(abbreviationWords, (abbrevWord) => {
+            _.filter(abbreviationList, (item) => {
                 if (item === abbrevWord) {
                     _abbrevArr.push(abbrevWord);
                 }
@@ -226,9 +224,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         if (i) {
             var lowerCaseWord = word.toLowerCase();
 
-            return _.find(Object.keys(dict.content), function(val) {
-                return val.toLowerCase() === lowerCaseWord;
-            });
+            return _.find(Object.keys(dict.content), (val) => val.toLowerCase() === lowerCaseWord);
         }
 
         return dict.content[word];
@@ -271,7 +267,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
      * @param {Node} node
      */
     this.errors = function check(node) {
-        return getDict().then(function(d) {
+        return getDict().then((d) => {
             var errors = [],
                 regexp = /[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]+/g,
                 dblSpacesRegExp = /\S(\s{2,})\S/g,
@@ -325,9 +321,9 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         return api.save('spellcheck', {
             word: word,
             language_id: lang
-        }).then(function(result) {
+        }).then((result) => {
             var allDict = getDict();
-            var wordFoundInDict = _.pick(allDict.content, function(value, key) {
+            var wordFoundInDict = _.pick(allDict.content, (value, key) => {
                 if (key.toLowerCase() === word.toLowerCase()) {
                     return key;
                 }
@@ -381,7 +377,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
     }
 
     // reset ignore list for an item if it was unlocked
-    $rootScope.$on('item:unlock', function(event, data) {
+    $rootScope.$on('item:unlock', (event, data) => {
         if (ignored.hasOwnProperty(data.item)) {
             ignored[data.item] = {};
         }
@@ -417,14 +413,12 @@ function SpellcheckMenuController(editor, preferencesService) {
     function getStatus() {
         var status = true;
 
-        return preferencesService.get(PREFERENCES_KEY).then(function(result) {
+        return preferencesService.get(PREFERENCES_KEY).then((result) => {
             if (angular.isDefined(result)) {
                 status = result.enabled;
             }
             return status;
-        }, function(error) {
-            return status;
-        });
+        }, (error) => status);
     }
 
     /**
@@ -450,7 +444,7 @@ function SpellcheckMenuController(editor, preferencesService) {
         setStatus(self.isAuto);
     }
 
-    getStatus().then(function(status) {
+    getStatus().then((status) => {
         self.isAuto = status;
         render();
     });

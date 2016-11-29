@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Preferences Service', function() {
+describe('Preferences Service', () => {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.core.api'));
 
@@ -56,8 +56,8 @@ describe('Preferences Service', function() {
         }
     };
 
-    beforeEach(inject(function(api, $q) {
-        spyOn(api, 'find').and.callFake(function(resource, id, params, cache) {
+    beforeEach(inject((api, $q) => {
+        spyOn(api, 'find').and.callFake((resource, id, params, cache) => {
             if (cache) {
                 return $q.when(testPreferences);
             }
@@ -67,19 +67,19 @@ describe('Preferences Service', function() {
         spyOn(api, 'save').and.returnValue($q.when({user_preferences: update}));
     }));
 
-    beforeEach(inject(function($injector, $q, session) {
+    beforeEach(inject(($injector, $q, session) => {
         preferencesService = $injector.get('preferencesService');
         spyOn(session, 'getIdentity').and.returnValue($q.when({sessionId: 1}));
         session.sessionId = 1;
     }));
 
-    it('can get user preferences', inject(function(api, $rootScope) {
+    it('can get user preferences', inject((api, $rootScope) => {
         preferencesService.get();
         $rootScope.$digest();
 
         var preferences;
 
-        preferencesService.get().then(function(_preferences) {
+        preferencesService.get().then((_preferences) => {
             preferences = _preferences;
         });
 
@@ -90,13 +90,13 @@ describe('Preferences Service', function() {
         expect(api.find).toHaveBeenCalledWith('preferences', 1, null, true);
     }));
 
-    it('can get user preferences by key', inject(function(api, $rootScope) {
+    it('can get user preferences by key', inject((api, $rootScope) => {
         preferencesService.get();
         $rootScope.$digest();
 
         var preferences;
 
-        preferencesService.get('archive:view').then(function(_preferences) {
+        preferencesService.get('archive:view').then((_preferences) => {
             preferences = _preferences;
         });
 
@@ -104,10 +104,10 @@ describe('Preferences Service', function() {
         expect(preferences.view).toBe('mgrid');
     }));
 
-    it('can get user preferences by key bypass the cache', inject(function(api, $rootScope) {
+    it('can get user preferences by key bypass the cache', inject((api, $rootScope) => {
         var preferences;
 
-        preferencesService.get('feature:preview', true).then(function(_preferences) {
+        preferencesService.get('feature:preview', true).then((_preferences) => {
             preferences = _preferences;
         });
 
@@ -115,7 +115,7 @@ describe('Preferences Service', function() {
         expect(preferences.enabled).toBe(false);
     }));
 
-    it('update user preferences by key', inject(function(api, $q, $rootScope) {
+    it('update user preferences by key', inject((api, $q, $rootScope) => {
         preferencesService.get();
         $rootScope.$digest();
 
@@ -126,7 +126,7 @@ describe('Preferences Service', function() {
 
         var preferences;
 
-        preferencesService.get('feature:preview').then(function(_preferences) {
+        preferencesService.get('feature:preview').then((_preferences) => {
             preferences = _preferences;
         });
 
@@ -134,13 +134,13 @@ describe('Preferences Service', function() {
         expect(preferences.enabled).toBe(false);
     }));
 
-    it('can get all active privileges', inject(function(api, $rootScope) {
+    it('can get all active privileges', inject((api, $rootScope) => {
         preferencesService.get();
         $rootScope.$digest();
 
         var privileges;
 
-        preferencesService.getPrivileges().then(function(_privileges) {
+        preferencesService.getPrivileges().then((_privileges) => {
             privileges = _privileges;
         });
 
@@ -149,11 +149,11 @@ describe('Preferences Service', function() {
     }));
 });
 
-describe('preferences error handling', function() {
+describe('preferences error handling', () => {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.core.api'));
 
-    beforeEach(inject(function(session, urls, $q, $httpBackend) {
+    beforeEach(inject((session, urls, $q, $httpBackend) => {
         spyOn(session, 'getIdentity').and.returnValue($q.when());
         session.sessionId = 'sess1';
         spyOn(urls, 'resource').and.returnValue($q.when('/preferences'));
@@ -161,7 +161,7 @@ describe('preferences error handling', function() {
         $httpBackend.expectGET('/preferences/sess2').respond({});
     }));
 
-    it('can reload on session expiry', inject(function(preferencesService, session, $rootScope, $httpBackend) {
+    it('can reload on session expiry', inject((preferencesService, session, $rootScope, $httpBackend) => {
         var success = jasmine.createSpy('success');
         var error = jasmine.createSpy('error');
 

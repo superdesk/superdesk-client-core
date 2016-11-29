@@ -35,7 +35,7 @@ export function DeskSelect(Keys, _, preferencesService) {
 
             scope.filter = '';
 
-            preferencesService.get('desks:preferred').then(function(result) {
+            preferencesService.get('desks:preferred').then((result) => {
                 scope.preferredDesks = result;
             });
 
@@ -78,7 +78,7 @@ export function DeskSelect(Keys, _, preferencesService) {
                 var index = scope.ctrl.active ? _.findIndex(scope.desks, filterActive) : -diff;
                 var next = Math.min(Math.max(0, index + diff), scope.desks.length - 1);
 
-                scope.$apply(function() {
+                scope.$apply(() => {
                     scope.ctrl.setActive(scope.desks[next]);
                 });
             }
@@ -141,7 +141,7 @@ export function DeskSelect(Keys, _, preferencesService) {
                     if (scope.isOpen) {
                             // on enter select active or first
                         if (scope.ctrl.active || scope.desks.length) {
-                            scope.$apply(function() {
+                            scope.$apply(() => {
                                 var desk = scope.ctrl.active || scope.desks[0];
 
                                 scope.onChange({desk: desk});

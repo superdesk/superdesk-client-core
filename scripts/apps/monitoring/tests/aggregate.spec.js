@@ -1,31 +1,31 @@
-describe('templates', function() {
+describe('templates', () => {
     'use strict';
 
     beforeEach(window.module('superdesk.apps.aggregate'));
 
-    describe('aggregate widget controller', function() {
+    describe('aggregate widget controller', () => {
         var scope, ctrl;
 
-        beforeEach(inject(function($rootScope, $controller) {
+        beforeEach(inject(($rootScope, $controller) => {
             scope = $rootScope.$new();
             ctrl = $controller('AggregateCtrl', {$scope: scope});
         }));
-        it('can fetch the saved expanded state on init', inject(function(storage) {
+        it('can fetch the saved expanded state on init', inject((storage) => {
             storage.clear();
             expect(ctrl.state.expanded).toEqual({});
         }));
-        it('can assume unset expanded state is true', inject(function(storage) {
+        it('can assume unset expanded state is true', inject((storage) => {
             storage.clear();
             expect(ctrl.getExpandedState('test')).toBe(true);
         }));
-        it('can switch expanded state', inject(function(storage) {
+        it('can switch expanded state', inject((storage) => {
             storage.clear();
             ctrl.switchExpandedState('test');
             expect(ctrl.getExpandedState('test')).toBe(false);
             ctrl.switchExpandedState('test');
             expect(ctrl.getExpandedState('test')).toBe(true);
         }));
-        it('can remember expanded state', inject(function($rootScope, $controller) {
+        it('can remember expanded state', inject(($rootScope, $controller) => {
             ctrl.switchExpandedState('test');
             expect(ctrl.getExpandedState('test')).toBe(false);
 
@@ -34,23 +34,23 @@ describe('templates', function() {
 
             expect(ctrl.getExpandedState('test')).toBe(false);
         }));
-        it('can set solo group', inject(function(storage) {
+        it('can set solo group', inject((storage) => {
             storage.clear();
             ctrl.setSoloGroup({_id: 'test'});
             expect(ctrl.state.solo._id).toBe('test');
         }));
-        it('can remember solo group', inject(function() {
+        it('can remember solo group', inject(() => {
             expect(ctrl.state.solo._id).toBe('test');
         }));
     });
 
-    describe('Aggregate Widget', function() {
+    describe('Aggregate Widget', () => {
         var fakeEndpoints = {};
         var queryDeferred;
 
         beforeEach(window.module('superdesk.apps.aggregate', 'superdesk.templates-cache'));
 
-        beforeEach(window.module(function($provide) {
+        beforeEach(window.module(($provide) => {
             function fakeApi() {
                 function apiMock(endpointName) {
                     return fakeEndpoints[endpointName];
@@ -72,7 +72,7 @@ describe('templates', function() {
             $provide.value('cards', fakeCards);
         }));
 
-        beforeEach(inject(function($templateCache, $q) {
+        beforeEach(inject(($templateCache, $q) => {
             $templateCache.put('scripts/apps/desks/views/stage-item-list.html', '<div></div>');
             queryDeferred = $q.defer();
             fakeEndpoints.archive = {
@@ -80,7 +80,7 @@ describe('templates', function() {
             };
         }));
 
-        it('it responds to changes query', inject(function($rootScope, $controller, $compile, api, cards) {
+        it('it responds to changes query', inject(($rootScope, $controller, $compile, api, cards) => {
             var scope = $rootScope.$new();
 
             scope.agg = {

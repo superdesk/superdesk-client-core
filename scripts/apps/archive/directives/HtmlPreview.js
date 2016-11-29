@@ -5,7 +5,7 @@ export function HtmlPreview($sce) {
         scope: {sdHtmlPreview: '='},
         template: '<div ng-bind-html="html"></div>',
         link: function(scope, elem, attrs) {
-            scope.$watch('sdHtmlPreview', function(html) {
+            scope.$watch('sdHtmlPreview', (html) => {
                 scope.html = $sce.trustAsHtml(html);
             });
         }

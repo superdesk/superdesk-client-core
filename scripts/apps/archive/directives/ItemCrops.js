@@ -7,7 +7,7 @@ export function ItemCrops(metadata) {
             item: '='
         },
         link: function(scope, elem) {
-            metadata.initialize().then(function() {
+            metadata.initialize().then(() => {
                 scope.crop_sizes = metadata.values.crop_sizes;
             });
         }

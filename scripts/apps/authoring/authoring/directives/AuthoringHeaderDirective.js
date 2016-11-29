@@ -36,7 +36,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 }
 
                 if (!display && scope.item.subject) {
-                    financeCategory = _.find(scope.item.subject, function(category) {
+                    financeCategory = _.find(scope.item.subject, (category) => {
                         if (category.qcode === '04000000' || category.qcode === '04006018'
                             || category.qcode === '04019000') {
                             return category;
@@ -49,7 +49,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 return display;
             };
 
-            scope.$watch('item', function(item) {
+            scope.$watch('item', (item) => {
                 if (!item) {
                     return;
                 }
@@ -58,9 +58,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 scope.missing_link = false;
 
                 if (!archiveService.isLegal(scope.item)) {
-                    var relatedItemWidget = _.filter(authoringWidgets, function(widget) {
-                        return widget._id === 'related-item';
-                    });
+                    var relatedItemWidget = _.filter(authoringWidgets, (widget) => widget._id === 'related-item');
 
                     scope.activateWidget = function() {
                         WidgetsManagerCtrl.activate(relatedItemWidget[0]);
@@ -70,17 +68,17 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                         var itemId = item.broadcast.takes_package_id ?
                             item.broadcast.takes_package_id : item.broadcast.master_id;
 
-                        return api.find('archive', itemId).then(function(item) {
+                        return api.find('archive', itemId).then((item) => {
                             $rootScope.$broadcast('broadcast:preview', {item: item});
                         });
                     };
                 }
             });
 
-            scope.$watch('item.profile', function(profile) {
+            scope.$watch('item.profile', (profile) => {
                 if (profile) {
                     content.getType(profile)
-                        .then(function(type) {
+                        .then((type) => {
                             scope.contentType = type;
                             scope.editor = authoring.editor = content.editor(type);
                             scope.schema = authoring.schema = content.schema(type);
@@ -101,12 +99,11 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                         .format(config.view.dateformat);
 
                     archiveService.getRelatedItems(scope.item.slugline, fromDateTime, scope.item._id)
-                        .then(function(items) {
+                        .then((items) => {
                             scope.relatedItems = items;
                             if (items && items._items.length) {
-                                var takesPackage = _.find(scope.item.linked_in_packages, function(linkedPackage) {
-                                    return linkedPackage && linkedPackage.package_type === 'takes';
-                                });
+                                var takesPackage = _.find(scope.item.linked_in_packages,
+                                    (linkedPackage) => linkedPackage && linkedPackage.package_type === 'takes');
                                 // if takes package is missing or not rewrite of.
 
                                 scope.missing_link = !takesPackage && !scope.item.rewrite_of &&
@@ -117,7 +114,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
             }
 
             if (!archiveService.isLegal(scope.item)) {
-                scope.$watch('item.slugline', function() {
+                scope.$watch('item.slugline', () => {
                     $timeout(getRelatedItems, 800);
                 });
             }
@@ -131,11 +128,11 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
              */
             function initAnpaCategories() {
                 if (scope.schema.subject && scope.schema.subject.mandatory_in_list) {
-                    _.forEach(scope.schema.subject.mandatory_in_list.scheme, function(subjectName) {
+                    _.forEach(scope.schema.subject.mandatory_in_list.scheme, (subjectName) => {
                         if (!_.startsWith(subjectName, 'subservice_')) {
                             return;
                         }
-                        vocabularies.getVocabularies().then(function(vocabulariesColl) {
+                        vocabularies.getVocabularies().then((vocabulariesColl) => {
                             var vocabulary = _.find(vocabulariesColl._items, {_id: subjectName});
 
                             if (vocabulary) {
@@ -156,8 +153,8 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                 }
             }
 
-            metadata.initialize().then(function() {
-                scope.$watch('item.anpa_category', function(services) {
+            metadata.initialize().then(() => {
+                scope.$watch('item.anpa_category', (services) => {
                     var qcodes = _.map(services, 'qcode');
                     var cvs = [];
 
@@ -170,13 +167,13 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     scope.shouldDisplayCompanyCodes();
                 });
 
-                scope.$watch('item.subject', function() {
+                scope.$watch('item.subject', () => {
                     scope.shouldDisplayCompanyCodes();
                 });
             });
 
             // If correction set focus to the ednote to encourage user to fill it in
-            _.defer(function() {
+            _.defer(() => {
                 if (scope.action === 'correct') {
                     elem.find('#ednote').focus();
                 } else {

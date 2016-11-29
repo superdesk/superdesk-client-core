@@ -9,17 +9,17 @@ export function SubjectService(api) {
             var self = this;
 
             return api.get('/subjectcodes')
-            .then(function(result) {
+            .then((result) => {
                 self.rawSubjects = result;
             });
         },
         process: function() {
             var self = this;
 
-            _.each(this.rawSubjects._items, function(item) {
+            _.each(this.rawSubjects._items, (item) => {
                 self.qcodeLookup[item.qcode] = item;
             });
-            _.each(this.rawSubjects._items, function(item) {
+            _.each(this.rawSubjects._items, (item) => {
                 self.subjects.push({qcode: item.qcode, name: item.name, path: self.getPath(item)});
             });
 

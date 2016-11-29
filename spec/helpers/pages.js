@@ -24,15 +24,11 @@ function LoginModal() {
         let usr = username || browser.params.username;
         let pwd = password || browser.params.password;
 
-        return self.username.waitReady().then(function() {
-            return self.username.clear();
-        }).then(function() {
-            return self.username.sendKeys(usr);
-        }).then(function() {
-            return self.password.sendKeys(pwd);
-        }).then(function() {
-            return self.btn.click();
-        });
+        return self.username.waitReady()
+            .then(() => self.username.clear())
+            .then(() => self.username.sendKeys(usr))
+            .then(() => self.password.sendKeys(pwd))
+            .then(() => self.btn.click());
     };
 }
 
@@ -79,7 +75,7 @@ function SearchProvider() {
     };
 
     this.setIsDefault = function(isDefault) {
-        self.checkbox.isSelected().then(function(selected) {
+        self.checkbox.isSelected().then((selected) => {
             if (selected && !isDefault || !selected && isDefault) {
                 self.checkbox.click();
             }
@@ -221,9 +217,7 @@ function logout() {
 
     element(by.css('button.current-user')).click();
 
-    browser.wait(function() {
-        return signOutBtn.isDisplayed();
-    }, 200);
+    browser.wait(() => signOutBtn.isDisplayed(), 200);
 
     signOutBtn.click();
     browser.sleep(500);

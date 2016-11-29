@@ -30,7 +30,7 @@ function MultieditService(storage, superdesk, authoringWorkspace, referrer, $loc
         self.items = [];
 
         if (_ids) {
-            _.each(_ids, function(_id) {
+            _.each(_ids, (_id) => {
                 self.items.push(createBoard(_id));
             });
         }
@@ -90,9 +90,7 @@ function MultieditService(storage, superdesk, authoringWorkspace, referrer, $loc
 
 MultieditController.$inject = ['$scope', 'multiEdit', 'lock', 'workqueue'];
 function MultieditController($scope, multiEdit, lock, workqueue) {
-    $scope.$watch(function() {
-        return multiEdit.items;
-    }, function(items) {
+    $scope.$watch(() => multiEdit.items, (items) => {
         $scope.boards = items;
     });
 
@@ -115,9 +113,7 @@ function MultieditDropdownDirective(workqueue, multiEdit, $route) {
             scope.current = $route.current.params.item;
             scope.queue = [scope.current];
 
-            scope.$watch(function() {
-                return workqueue.items;
-            }, function(items) {
+            scope.$watch(() => workqueue.items, (items) => {
                 scope.items = items;
             });
 
@@ -151,26 +147,18 @@ function MultieditDropdownInnerDirective(workqueue, multiEdit) {
             var workqueueItems = [],
                 multieditItems = [];
 
-            scope.$watch(function() {
-                return multiEdit.items;
-            }, function(items) {
-                multieditItems = _.map(multiEdit.items, function(board) {
-                    return board.article;
-                });
+            scope.$watch(() => multiEdit.items, (items) => {
+                multieditItems = _.map(multiEdit.items, (board) => board.article);
                 filter();
             }, true);
 
-            scope.$watch(function() {
-                return workqueue.items;
-            }, function(items) {
+            scope.$watch(() => workqueue.items, (items) => {
                 workqueueItems = items;
                 filter();
             });
 
             function filter() {
-                scope.items = _.filter(workqueueItems, function(item) {
-                    return _.indexOf(multieditItems, item._id) === -1;
-                });
+                scope.items = _.filter(workqueueItems, (item) => _.indexOf(multieditItems, item._id) === -1);
             }
 
             scope.open = function(_id) {
@@ -186,20 +174,20 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-article.html',
         scope: {article: '=', focus: '='},
         link: function(scope, elem) {
-            scope.$watch('article', function(newVal, oldVal) {
+            scope.$watch('article', (newVal, oldVal) => {
                 if (newVal && newVal !== oldVal) {
                     openItem();
                 }
             });
 
             function openItem() {
-                authoring.open(scope.article).then(function(item) {
+                authoring.open(scope.article).then((item) => {
                     scope.origItem = item;
                     scope.item = _.create(item);
                     scope._editable = authoring.isEditable(item);
                     scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type);
                     if (scope.focus) {
-                        $timeout(function() {
+                        $timeout(() => {
                             elem.children().focus();
                         }, 0, false);
                     }
@@ -214,7 +202,7 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
                 authoring.autosave(item, scope.origItem);
             };
 
-            scope.$watch('item.flags', function(newValue, oldValue) {
+            scope.$watch('item.flags', (newValue, oldValue) => {
                 if (newValue !== oldValue) {
                     scope.item.flags = newValue;
                     scope.origItem.flags = oldValue;
@@ -223,7 +211,7 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
             }, true);
 
             scope.save = function(item, form) {
-                return authoring.save(scope.origItem, item).then(function(res) {
+                return authoring.save(scope.origItem, item).then((res) => {
                     if (form) {
                         form.$setPristine();
                     }
@@ -251,7 +239,7 @@ function MultieditFloatMenuDirective($document) {
         link: function(scope, elem) {
             var open = false;
 
-            elem.bind('click', function(event) {
+            elem.bind('click', (event) => {
                 if (!open) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -266,7 +254,7 @@ function MultieditFloatMenuDirective($document) {
 
             $document.bind('click', closeOnClick);
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 $document.unbind('click', closeOnClick);
                 elem.unbind('click');
             });

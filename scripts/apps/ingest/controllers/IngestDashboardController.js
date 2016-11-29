@@ -6,7 +6,7 @@ export function IngestDashboardController($scope, $api, ingestSources, preferenc
     $scope.dashboard_items = [];
 
     $scope.fetchItems = function() {
-        ingestSources.fetchDashboardProviders().then(function(result) {
+        ingestSources.fetchDashboardProviders().then((result) => {
             $scope.items = result;
             $scope.dashboard_items = _.filter(result, {dashboard_enabled: true});
         });
@@ -17,17 +17,17 @@ export function IngestDashboardController($scope, $api, ingestSources, preferenc
         var update = {};
 
         _.forEach(_.filter($scope.items, {dashboard_enabled: true}),
-            function(item) {
+            (item) => {
                 preferences.push(_.pick(item, _.union(['_id'], _.keys(constant.PROVIDER_DASHBOARD_DEFAULTS))));
             }
         );
 
         update['dashboard:ingest'] = preferences;
-        preferencesService.update(update).then(function(result) {
+        preferencesService.update(update).then((result) => {
             if (refresh) {
                 $scope.fetchItems();
             }
-        }, function(error) {
+        }, (error) => {
             notify.error(gettext('Ingest Dashboard preferences could not be saved.'), 2000);
         });
     };

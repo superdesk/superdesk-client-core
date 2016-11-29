@@ -160,11 +160,9 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         };
 
         return api.query('content_templates', params)
-        .then(function(result) {
+        .then((result) => {
             if (result && result._items) {
-                result._items.sort(function(a, b) {
-                    return templateIds.indexOf(a._id) - templateIds.indexOf(b._id);
-                });
+                result._items.sort((a, b) => templateIds.indexOf(a._id) - templateIds.indexOf(b._id));
             }
             return result;
         });
@@ -188,12 +186,10 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
     this.addRecentTemplate = function(deskId, templateId) {
         return preferencesService.get()
-        .then(function(result = {}) {
+        .then((result = {}) => {
             result[PREFERENCES_KEY] = result[PREFERENCES_KEY] || {};
             result[PREFERENCES_KEY][deskId] = result[PREFERENCES_KEY][deskId] || [];
-            _.remove(result[PREFERENCES_KEY][deskId], function(i) {
-                return i === templateId;
-            });
+            _.remove(result[PREFERENCES_KEY][deskId], (i) => i === templateId);
             result[PREFERENCES_KEY][deskId].unshift(templateId);
             return preferencesService.update(result);
         });
@@ -201,7 +197,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
     this.getRecentTemplateIds = function(deskId, limit = PAGE_SIZE) {
         return preferencesService.get()
-            .then(function(result) {
+            .then((result) => {
                 if (result && result[PREFERENCES_KEY] && result[PREFERENCES_KEY][deskId]) {
                     return _.take(result[PREFERENCES_KEY][deskId], limit);
                 }

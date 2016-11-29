@@ -9,7 +9,7 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
             scope.editRole = null;
 
             api('roles').query()
-            .then(function(result) {
+            .then((result) => {
                 scope.roles = $filter('sortByName')(result._items);
             });
 
@@ -23,7 +23,7 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
                 var _new = !role._id;
 
                 api('roles').save(_orig, role)
-                .then(function() {
+                .then(() => {
                     if (_new) {
                         scope.roles.push(_orig);
                         notify.success(gettext('User role created.'));
@@ -34,7 +34,7 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
                         updatePreviousDefault(role);
                     }
                     scope.cancel();
-                }, function(response) {
+                }, (response) => {
                     if (response.status === 400 && typeof response.data._issues.name !== 'undefined' &&
                     response.data._issues.name.unique === 1) {
                         notify.error(gettext('I\'m sorry but a role with that name already exists.'));
@@ -51,11 +51,11 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
             };
 
             scope.remove = function(role) {
-                confirm().then(function() {
+                confirm().then(() => {
                     api('roles').remove(role)
-                    .then(function(result) {
+                    .then((result) => {
                         _.remove(scope.roles, role);
-                    }, function(response) {
+                    }, (response) => {
                         if (angular.isDefined(response.data._message)) {
                             notify.error(gettext('Error: ' + response.data._message));
                         } else {
@@ -67,15 +67,13 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
 
             function updatePreviousDefault(role) {
                 // find previous role with flag 'default'
-                var previous = _.find(scope.roles, function(r) {
-                    return r._id !== role._id && r.is_default;
-                });
+                var previous = _.find(scope.roles, (r) => r._id !== role._id && r.is_default);
 
                 // update it
                 if (previous) {
                     api('roles')
                         .getById(previous._id)
-                        .then(function(result) {
+                        .then((result) => {
                             _.extend(previous, {_etag: result._etag, is_default: false});
                         });
                 }

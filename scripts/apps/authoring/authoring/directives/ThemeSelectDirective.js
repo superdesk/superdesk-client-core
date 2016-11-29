@@ -8,14 +8,14 @@ export function ThemeSelectDirective(authThemes) {
 
             scope.themes = authThemes.availableThemes;
             scope.large = {};
-            authThemes.get('theme').then(function(theme) {
+            authThemes.get('theme').then((theme) => {
                 var selectedTheme = _.find(authThemes.availableThemes, {key: themeKey(theme)});
 
                 scope.theme = selectedTheme;
                 scope.large.theme = themeLarge(theme);
                 applyTheme('theme');
             });
-            authThemes.get('proofreadTheme').then(function(theme) {
+            authThemes.get('proofreadTheme').then((theme) => {
                 var selectedTheme = _.find(authThemes.availableThemes, {key: themeKey(theme)});
 
                 scope.proofreadTheme = selectedTheme;

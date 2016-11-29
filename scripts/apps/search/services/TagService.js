@@ -118,16 +118,16 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     function initParameters(params) {
         var selecteditems = [];
 
-        _.each(PARAMETERS, function(value, key) {
+        _.each(PARAMETERS, (value, key) => {
             if (!angular.isDefined(params[key])) {
                 return;
             }
 
             switch (key) {
             case 'original_creator':
-                userList.getUser(params[key]).then(function(user) {
+                userList.getUser(params[key]).then((user) => {
                     tags.selectedParameters.push(tag(value + ':' + user.display_name));
-                }, function(error) {
+                }, (error) => {
                     tags.selectedParameters.push(tag(value + ':Unknown'));
                 });
                 break;
@@ -139,7 +139,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             case 'company_codes':
             case 'subject':
                 var processSelectedItems = function(selectedItems, codeList) {
-                    _.forEach(selecteditems, function(selecteditem) {
+                    _.forEach(selecteditems, (selecteditem) => {
                         var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
 
                         if (name) {
@@ -178,7 +178,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @param {object} params - $location.search
      */
     function initExcludedFacets(params) {
-        _.each(EXCLUDE_FACETS, function(label, key) {
+        _.each(EXCLUDE_FACETS, (label, key) => {
             if (!angular.isDefined(params[key])) {
                 return;
             }
@@ -186,7 +186,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             tags.removedFacets[key] = [];
             var removedFacets = JSON.parse(params[key]);
 
-            _.each(removedFacets, function(facet) {
+            _.each(removedFacets, (facet) => {
                 // Tags will display the desk name but the $location.search object has desk id.
                 var displayValue = key === 'notdesk' ? desks.deskLookup[facet].name : facet;
 
@@ -258,7 +258,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @return {Promise} List of items
      */
     function initSelectedFacets() {
-        return desks.initialize().then(function(result) {
+        return desks.initialize().then((result) => {
             tags.selectedFacets = {};
             tags.selectedParameters = [];
             tags.selectedKeywords = [];
@@ -276,7 +276,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             initParameters(tags.currentSearch);
             initExcludedFacets(tags.currentSearch);
 
-            _.forEach(tags.currentSearch, function(type, key) {
+            _.forEach(tags.currentSearch, (type, key) => {
                 if (key !== 'q' && !EXCLUDE_FACETS[key]) {
                     tags.selectedFacets[key] = [];
 
@@ -284,7 +284,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                     case 'desk':
                         var selectedDesks = JSON.parse(type);
 
-                        _.forEach(selectedDesks, function(selectedDesk) {
+                        _.forEach(selectedDesks, (selectedDesk) => {
                             tags.selectedFacets[key].push({
                                 label: desks.deskLookup[selectedDesk].name,
                                 value: selectedDesk});

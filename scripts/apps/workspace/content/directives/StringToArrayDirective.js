@@ -8,14 +8,8 @@ export function StringToArrayDirective() {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, elem, attr, ngModel) {
-            ngModel.$parsers.push(function(v) {
-                return typeof v === 'string' ? v.split(',').map(function(x) {
-                    return x.trim();
-                }) : [];
-            });
-            ngModel.$formatters.push(function(v) {
-                return Array.isArray(v) ? v.join(', ') : '';
-            });
+            ngModel.$parsers.push((v) => typeof v === 'string' ? v.split(',').map((x) => x.trim()) : []);
+            ngModel.$formatters.push((v) => Array.isArray(v) ? v.join(', ') : '');
         }
     };
 }

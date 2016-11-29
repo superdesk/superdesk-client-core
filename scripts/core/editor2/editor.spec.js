@@ -1,7 +1,7 @@
 'use strict';
 
-describe('text editor', function() {
-    beforeEach(window.module(function($provide) {
+describe('text editor', () => {
+    beforeEach(window.module(($provide) => {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}});
     }));
 
@@ -11,7 +11,7 @@ describe('text editor', function() {
     beforeEach(window.module('superdesk.apps.spellcheck'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    beforeEach(function() {
+    beforeEach(() => {
         // remove all elements from body
         document.body = document.createElement('body');
     });
@@ -38,7 +38,7 @@ describe('text editor', function() {
         return scope;
     }
 
-    it('can spellcheck', inject(function(editor, spellcheck, $q, $rootScope) {
+    it('can spellcheck', inject((editor, spellcheck, $q, $rootScope) => {
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
         spyOn(spellcheck, 'getDictionary').and.returnValue($q.when([{language_id: 'en'}]));
 
@@ -53,7 +53,7 @@ describe('text editor', function() {
             .toBe('<span class="sderror sdhilite" data-word="test" data-index="0">test</span>');
     }));
 
-    it('can replace word in node', inject(function(editor, $q, $rootScope) {
+    it('can replace word in node', inject((editor, $q, $rootScope) => {
         var content = 'test <b>foo</b>';
         var scope = createScope(content, $rootScope);
 
@@ -61,7 +61,7 @@ describe('text editor', function() {
         expect(scope.node.innerHTML).toBe('test <b>bars</b>');
     }));
 
-    it('can findreplace', inject(function(editor, spellcheck, $q, $rootScope) {
+    it('can findreplace', inject((editor, spellcheck, $q, $rootScope) => {
         spyOn(spellcheck, 'errors').and.returnValue($q.when([{word: 'test', index: 0}]));
         spyOn(spellcheck, 'getDictionary').and.returnValue($q.when([{language_id: 'en'}]));
 
@@ -111,7 +111,7 @@ describe('text editor', function() {
         expect(scope.node.innerHTML).toBe('bars tic and foo');
     }));
 
-    it('can replace abbreviations', inject(function(editor, spellcheck, $q, $rootScope, $timeout) {
+    it('can replace abbreviations', inject((editor, spellcheck, $q, $rootScope, $timeout) => {
         editor.setSettings({spellcheck: true});
         var abbreviations = {
             IMF: 'International Monetory Fund',
@@ -148,7 +148,7 @@ describe('text editor', function() {
         expect(scope.node.innerHTML).toBe('foo ' + abbreviations.IMF + ' ' + abbreviations.WHO);
     }));
 
-    it('can check if keyboard event is important or not', inject(function(editor) {
+    it('can check if keyboard event is important or not', inject((editor) => {
         expect(editor.shouldIgnore({keyCode: 16})).toBe(true);
         expect(editor.shouldIgnore({shiftKey: true, ctrlKey: true, keyCode: 65})).toBe(true);
         expect(editor.shouldIgnore({keyCode: 65})).toBe(false);

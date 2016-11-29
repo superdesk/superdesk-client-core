@@ -1,20 +1,20 @@
-describe('templates', function() {
+describe('templates', () => {
     'use strict';
 
     beforeEach(window.module('superdesk.core.auth.session'));
     beforeEach(window.module('superdesk.apps.templates'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    describe('templates widget', function() {
+    describe('templates widget', () => {
         var existingTemplate = {template_name: 'template1', template_desks: ['sports']};
 
-        beforeEach(inject(function(desks, api, $q) {
+        beforeEach(inject((desks, api, $q) => {
             spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: []}));
             spyOn(api, 'save').and.returnValue($q.when({}));
             spyOn(api, 'find').and.returnValue($q.when(existingTemplate));
         }));
 
-        it('can create template', inject(function($controller, api, $q, $rootScope) {
+        it('can create template', inject(($controller, api, $q, $rootScope) => {
             var item = _.create({slugline: 'FOO', headline: 'foo'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
@@ -36,7 +36,7 @@ describe('templates', function() {
             }, null);
         }));
 
-        it('can update template', inject(function($controller, api, $rootScope) {
+        it('can update template', inject(($controller, api, $rootScope) => {
             var item = _.create({slugline: 'FOO', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
@@ -49,7 +49,7 @@ describe('templates', function() {
             expect(api.save.calls.argsFor(0)[1]).toBe(existingTemplate);
         }));
 
-        it('can create new using old template data', inject(function($controller, api, $rootScope) {
+        it('can create new using old template data', inject(($controller, api, $rootScope) => {
             var item = _.create({slugline: 'foo', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
@@ -64,20 +64,20 @@ describe('templates', function() {
         }));
     });
 
-    describe('templates service', function() {
-        beforeEach(inject(function($q, api) {
+    describe('templates service', () => {
+        beforeEach(inject(($q, api) => {
             spyOn(api, 'query').and.returnValue($q.when());
         }));
 
-        beforeEach(inject(function(session) {
+        beforeEach(inject((session) => {
             session.identity = {_id: 'foo', user_type: 'user'};
         }));
 
-        it('can fetch templates using default parameters', inject(function(api, templates) {
+        it('can fetch templates using default parameters', inject((api, templates) => {
             templates.fetchTemplatesByUserDesk();
             expect(api.query).not.toHaveBeenCalledWith('content_templates');
         }));
-        it('can fetch templates using page parameters', inject(function(api, templates) {
+        it('can fetch templates using page parameters', inject((api, templates) => {
             templates.fetchTemplatesByUserDesk('foo', undefined, 2, 25);
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 25,
@@ -89,7 +89,7 @@ describe('templates', function() {
                 '{"user":"foo","is_public":false}]}]}'
             });
         }));
-        it('can fetch templates using type parameter', inject(function(api, templates) {
+        it('can fetch templates using type parameter', inject((api, templates) => {
             templates.fetchTemplatesByUserDesk('foo', undefined, undefined, undefined, 'create');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
@@ -100,7 +100,7 @@ describe('templates', function() {
                        '{"user":"foo","is_public":false}],"template_type":"create"}]}'
             });
         }));
-        it('can fetch templates using desk parameter', inject(function(api, templates) {
+        it('can fetch templates using desk parameter', inject((api, templates) => {
             templates.fetchTemplatesByUserDesk('foo', 'desk1', 2, 10);
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
@@ -112,7 +112,7 @@ describe('templates', function() {
                 '{"user":"foo","is_public":false}]}]}'
             });
         }));
-        it('can fetch templates using keyword parameter', inject(function(api, templates) {
+        it('can fetch templates using keyword parameter', inject((api, templates) => {
             templates.fetchTemplatesByUserDesk('foo', undefined, undefined, undefined, undefined, 'keyword');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 page: 1,
@@ -124,7 +124,7 @@ describe('templates', function() {
                 '"template_name":{"$regex":"keyword","$options":"-i"}}]}'
             });
         }));
-        it('can fetch templates by id', inject(function(api, templates) {
+        it('can fetch templates by id', inject((api, templates) => {
             templates.fetchTemplatesByIds([123, 456]);
             expect(api.query).toHaveBeenCalledWith('content_templates', {
                 max_results: 10,
@@ -132,7 +132,7 @@ describe('templates', function() {
                 where: '{"_id":{"$in":[123,456]}}'
             });
         }));
-        it('can add recent templates', inject(function(api, templates, preferencesService, $q, $rootScope) {
+        it('can add recent templates', inject((api, templates, preferencesService, $q, $rootScope) => {
             spyOn(preferencesService, 'get').and.returnValue($q.when({}));
             spyOn(preferencesService, 'update').and.returnValue($q.when());
             templates.addRecentTemplate('desk1', 'template1');
@@ -143,7 +143,7 @@ describe('templates', function() {
                 }
             });
         }));
-        it('can get recent templates', inject(function(api, templates, preferencesService, $q, $rootScope) {
+        it('can get recent templates', inject((api, templates, preferencesService, $q, $rootScope) => {
             spyOn(preferencesService, 'get').and.returnValue($q.when({
                 'templates:recent': {
                     desk2: ['template2', 'template3']
@@ -158,7 +158,7 @@ describe('templates', function() {
             });
         }));
 
-        it('can save template', inject(function(api, templates, $q, $rootScope) {
+        it('can save template', inject((api, templates, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({}));
             var orig = {};
             var data = {hasCrops: 1};
@@ -167,7 +167,7 @@ describe('templates', function() {
             expect(api.save).toHaveBeenCalledWith('content_templates', orig, {data: {headline: '', body_html: ''}});
         }));
 
-        it('can fetch templates all templates with user type as user', inject(function(api, templates, $rootScope) {
+        it('can fetch templates all templates with user type as user', inject((api, templates, $rootScope) => {
             templates.fetchAllTemplates();
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalledWith('content_templates', {
@@ -207,7 +207,7 @@ describe('templates', function() {
         }));
 
         it('can fetch templates all templates with user type as administrator',
-            inject(function(api, templates, session, $rootScope) {
+            inject((api, templates, session, $rootScope) => {
                 session.identity = {_id: 'foo', user_type: 'administrator'};
                 templates.fetchAllTemplates(1, 50);
                 $rootScope.$digest();
@@ -220,7 +220,7 @@ describe('templates', function() {
             }));
 
         it('can fetch templates all templates with type parameter as administrator',
-            inject(function(api, templates, session, $rootScope) {
+            inject((api, templates, session, $rootScope) => {
                 session.identity = {_id: 'foo', user_type: 'administrator'};
                 templates.fetchAllTemplates(1, 50, 'create');
                 $rootScope.$digest();
@@ -233,7 +233,7 @@ describe('templates', function() {
             }));
 
         it('can fetch templates all templates with type parameter and template name',
-            inject(function(api, templates, $rootScope) {
+            inject((api, templates, $rootScope) => {
                 templates.fetchAllTemplates(1, 50, 'create', 'test');
                 $rootScope.$digest();
                 expect(api.query).toHaveBeenCalledWith('content_templates', {
@@ -246,9 +246,9 @@ describe('templates', function() {
             }));
     });
 
-    describe('template select directive', function() {
+    describe('template select directive', () => {
         it('can fetch desk templates and user private templates together',
-        inject(function(api, session, desks, $rootScope, $compile, $q) {
+        inject((api, session, desks, $rootScope, $compile, $q) => {
             $rootScope.$digest(); // let it reset identity in auth
             session.identity = {_id: 'foo'};
             spyOn(desks, 'getCurrentDeskId').and.returnValue('sports');

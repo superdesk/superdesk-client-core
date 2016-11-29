@@ -10,7 +10,7 @@ export function SearchTags($location, tags, asset, metadata) {
 
             scope.$watch(function getSearchParams() {
                 return _.omit($location.search(), ['_id', 'item', 'action']);
-            }, function(newValue, oldValue) {
+            }, (newValue, oldValue) => {
                 if (newValue !== oldValue) {
                     reloadTags();
                 }
@@ -19,7 +19,7 @@ export function SearchTags($location, tags, asset, metadata) {
             function init() {
                 metadata
                     .initialize()
-                    .then(function() {
+                    .then(() => {
                         scope.metadata = metadata.values;
                     });
 
@@ -27,7 +27,7 @@ export function SearchTags($location, tags, asset, metadata) {
             }
 
             function reloadTags() {
-                tags.initSelectedFacets().then(function(currentTags) {
+                tags.initSelectedFacets().then((currentTags) => {
                     scope.tags = currentTags;
                 });
             }
@@ -54,19 +54,18 @@ export function SearchTags($location, tags, asset, metadata) {
                 } else {
                     var type = param.split(':')[0];
 
-                    _.each(PARAMETERS, function(value, key) {
+                    _.each(PARAMETERS, (value, key) => {
                         if (type === value && searchParameters[key]) {
                             $location.search(key, null);
                         }
                     });
                 }
 
-                angular.forEach(scope.cvs, function(cv) {
+                angular.forEach(scope.cvs, (cv) => {
                     if (param.toLowerCase().indexOf(cv.field) !== -1) {
                         var codeList = scope.metadata[cv.list];
-                        var qcode = _.result(_.find(codeList, function(code) {
-                            return code.name === parameterValue || code.qcode === parameterValue;
-                        }), 'qcode');
+                        var qcode = _.result(_.find(codeList,
+                            (code) => code.name === parameterValue || code.qcode === parameterValue), 'qcode');
 
                         if (qcode) {
                             if (searchParameters[cv.field]) {

@@ -9,7 +9,7 @@ export function ItemPriority(metadata, gettext) {
             'ng-style="{backgroundColor: color}" title="{{ title }}">{{ short }}</span>'
         ].join(''),
         link: function(scope, elem) {
-            scope.$watch('priority', function(priority) {
+            scope.$watch('priority', (priority) => {
                 if (priority) {
                     var spec = metadata.priorityByValue(priority);
 

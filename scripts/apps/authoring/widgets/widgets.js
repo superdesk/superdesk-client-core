@@ -17,7 +17,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
     keyboardManager, $location, desks, lock) {
     $scope.active = null;
 
-    $scope.$watch('item', function(item) {
+    $scope.$watch('item', (item) => {
         if (!item) {
             $scope.widgets = null;
             unbindAllShortcuts();
@@ -37,9 +37,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
             }
         }
 
-        $scope.widgets = authoringWidgets.filter(function(widget) {
-            return !!widget.display[display];
-        });
+        $scope.widgets = authoringWidgets.filter((widget) => !!widget.display[display]);
 
         bindAllShortcuts();
     });
@@ -47,14 +45,14 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
     var shortcuts = [];
 
     function unbindAllShortcuts() {
-        shortcuts.forEach(function(unbind) {
+        shortcuts.forEach((unbind) => {
             unbind();
         });
         shortcuts = [];
     }
 
     function bindKeyShortcutToWidget(shortcut, widget) {
-        shortcuts.push($scope.$on('key:' + shortcut.replace('+', ':'), function() {
+        shortcuts.push($scope.$on('key:' + shortcut.replace('+', ':'), () => {
             $scope.activate(widget);
         }));
     }
@@ -64,7 +62,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
          * Navigate throw right tab widgets with keyboard combination
          * Combination: Ctrl + {{widget number}} and custom keys from `keyboardShortcut` property
          */
-        angular.forEach(_.sortBy($scope.widgets, 'order'), function(widget, index) {
+        angular.forEach(_.sortBy($scope.widgets, 'order'), (widget, index) => {
             // binding ctrl + {{widget number}}
             bindKeyShortcutToWidget('ctrl+' + (index + 1), widget);
             // binding keys from `widget.keyboardShortcut` property
@@ -110,13 +108,13 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
     };
 
     // activate widget based on query string
-    angular.forEach($scope.widgets, function(widget) {
+    angular.forEach($scope.widgets, (widget) => {
         if ($routeParams[widget._id]) {
             $scope.activate(widget);
         }
     });
 
-    $scope.$watch('item._locked', function() {
+    $scope.$watch('item._locked', () => {
         if ($scope.active) {
             var widget = $scope.active;
 
@@ -139,7 +137,7 @@ function AuthoringWidgetsDir(desks, commentsService) {
             var scrollHandler = _.debounce(clipHeader, 100);
 
             editor.on('scroll', scrollHandler);
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 editor.off('scroll', scrollHandler);
             });
 
@@ -153,13 +151,13 @@ function AuthoringWidgetsDir(desks, commentsService) {
 
             function reload() {
                 if (scope.item) {
-                    commentsService.fetch(scope.item._id).then(function() {
+                    commentsService.fetch(scope.item._id).then(() => {
                         scope.comments = commentsService.comments;
                     });
                 }
             }
 
-            scope.$on('item:comment', function(e, data) {
+            scope.$on('item:comment', (e, data) => {
                 if (data.item === scope.item.guid) {
                     reload();
                 }

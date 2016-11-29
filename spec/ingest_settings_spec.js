@@ -3,12 +3,12 @@ var openUrl = require('./helpers/utils').open,
     ingestSettings = require('./helpers/pages').ingestSettings,
     utils = require('./helpers/utils');
 
-describe('ingest_settings', function() {
-    beforeEach(function(done) {
+describe('ingest_settings', () => {
+    beforeEach((done) => {
         openUrl('/#/settings/ingest').then(done);
     });
 
-    xit('unselecting options in dropdown lists on the Actions pane', function() {
+    xit('unselecting options in dropdown lists on the Actions pane', () => {
         var deskList,   // dropdown list for choosing a desk
             macroList,  // dropdown list for choosing a macro
             stageList,  // dropdown list for choosing a desk stage
@@ -71,7 +71,7 @@ describe('ingest_settings', function() {
         expect(macroList.$('option:checked').getAttribute('value')).toEqual('');
     });
 
-    it('contains the Schedule tab for editing routing schedules', function() {
+    it('contains the Schedule tab for editing routing schedules', () => {
         var ruleSettings,
             tzOption;
 
@@ -108,7 +108,7 @@ describe('ingest_settings', function() {
         utils.assertToastMsg('success', 'Routing scheme saved');
     });
 
-    it('cannot add blank rule', function() {
+    it('cannot add blank rule', () => {
         ingestSettings.tabs.routingTab.click();
         ingestSettings.newSchemeBtn.click();
         ingestSettings.writeTextToSchemeName('Test Scheme');

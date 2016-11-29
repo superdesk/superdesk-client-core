@@ -1,7 +1,7 @@
 
 'use strict';
 
-describe('spellcheck', function() {
+describe('spellcheck', () => {
     var DICT = {
             what: 1,
             foo: 1,
@@ -20,7 +20,7 @@ describe('spellcheck', function() {
         LANG = 'en-US',
         errors = [];
 
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
     }));
 
@@ -29,7 +29,7 @@ describe('spellcheck', function() {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    beforeEach(inject(function(dictionaries, spellcheck, $q, preferencesService) {
+    beforeEach(inject((dictionaries, spellcheck, $q, preferencesService) => {
         spyOn(dictionaries, 'getActive').and.returnValue($q.when([
             {_id: 'foo', content: DICT},
             {_id: 'bar', content: {bar: 1}},
@@ -42,7 +42,7 @@ describe('spellcheck', function() {
     }));
 
     it('can spellcheck using multiple dictionaries',
-    inject(function(spellcheck, dictionaries, $q, $rootScope) {
+    inject((spellcheck, dictionaries, $q, $rootScope) => {
         var p = createParagraph('test what if foo bar baz');
 
         spellcheck.errors(p).then(assignErrors);
@@ -53,7 +53,7 @@ describe('spellcheck', function() {
     }));
 
     it('can spellcheck using base dictionary',
-    inject(function(spellcheck, dictionaries, $q, $rootScope) {
+    inject((spellcheck, dictionaries, $q, $rootScope) => {
         spellcheck.setLanguage('en');
         var p = createParagraph('test what if foo bar baz');
 
@@ -65,7 +65,7 @@ describe('spellcheck', function() {
         expect(dictionaries.getActive).toHaveBeenCalledWith('en', null);
     }));
 
-    it('can add words to user dictionary', inject(function(spellcheck, api, $rootScope) {
+    it('can add words to user dictionary', inject((spellcheck, api, $rootScope) => {
         var p = createParagraph('Test');
 
         spyOn(api, 'save');
@@ -81,7 +81,7 @@ describe('spellcheck', function() {
         expect(errors.length).toBe(0);
     }));
 
-    it('can report error if paragraph starts with small letter', inject(function(spellcheck, api, $rootScope) {
+    it('can report error if paragraph starts with small letter', inject((spellcheck, api, $rootScope) => {
         // Test with existing words in dictionary
         var p = createParagraph('Foo what');
 
@@ -99,7 +99,7 @@ describe('spellcheck', function() {
     }));
 
     it('can report error if word comes after .|?|!|: (i.e, after : or at new sentence) starts with small letter',
-    inject(function(spellcheck, api, $rootScope) {
+    inject((spellcheck, api, $rootScope) => {
         // Test with existing words in dictionary
         var p = createParagraph('Foo what? Foo is foo. Foo is foo! What foo: Foo?');
 
@@ -115,7 +115,7 @@ describe('spellcheck', function() {
         expect(errors.length).toBe(4);
     }));
 
-    it('can report if text contains multiple spaces', inject(function(spellcheck, api, $rootScope) {
+    it('can report if text contains multiple spaces', inject((spellcheck, api, $rootScope) => {
         // Test with existing words in dictionary
         var p = createParagraph('Foo what? Foo is foo.');
 
@@ -132,7 +132,7 @@ describe('spellcheck', function() {
     }));
 
     it('can report error for sentences beginning with any quotes and starts with small letter',
-    inject(function(spellcheck, api, $rootScope) {
+    inject((spellcheck, api, $rootScope) => {
         // Test with existing words in dictionary.
         var p = createParagraph('"Foo what."');
 
@@ -161,13 +161,13 @@ describe('spellcheck', function() {
         expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
     }));
 
-    it('can suggest', inject(function(spellcheck, api, $q) {
+    it('can suggest', inject((spellcheck, api, $q) => {
         spyOn(api, 'save').and.returnValue($q.when({}));
         spellcheck.suggest('test');
         expect(api.save).toHaveBeenCalledWith('spellcheck', {word: 'test', language_id: LANG});
     }));
 
-    it('can reset dict when language is set to null', inject(function(spellcheck, $rootScope) {
+    it('can reset dict when language is set to null', inject((spellcheck, $rootScope) => {
         spellcheck.setLanguage(null);
         var then = jasmine.createSpy('then');
 
@@ -176,7 +176,7 @@ describe('spellcheck', function() {
         expect(then).not.toHaveBeenCalled();
     }));
 
-    it('can ignore word', inject(function(spellcheck, $rootScope, $location) {
+    it('can ignore word', inject((spellcheck, $rootScope, $location) => {
         $location.search('item', 'foo');
         var p = createParagraph('ignore errors');
 
@@ -209,7 +209,7 @@ describe('spellcheck', function() {
         expect(errors.length).toBe(2);
     }));
 
-    it('can resolve abbreviations without language specified', inject(function(spellcheck, $rootScope) {
+    it('can resolve abbreviations without language specified', inject((spellcheck, $rootScope) => {
         var spy = jasmine.createSpy('success');
 
         spellcheck.setLanguage('');
@@ -232,8 +232,8 @@ describe('spellcheck', function() {
         return p;
     }
 
-    describe('spellcheck menu', function() {
-        it('can toggle auto spellcheck', inject(function(editor, $controller, $rootScope, preferencesService) {
+    describe('spellcheck menu', () => {
+        it('can toggle auto spellcheck', inject((editor, $controller, $rootScope, preferencesService) => {
             var ctrl = $controller('SpellcheckMenu');
 
             expect(ctrl.isAuto).toBe(null);

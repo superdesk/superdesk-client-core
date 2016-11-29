@@ -49,7 +49,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 if (item._type === 'ingest') {
                     var activity = superdesk.findActivities({action: 'list', type: 'ingest'}, item)[0];
 
-                    activityService.start(activity, {data: {item: item}}).then(function(item) {
+                    activityService.start(activity, {data: {item: item}}).then((item) => {
                         initEdit(item);
                     });
                 } else {
@@ -57,7 +57,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 }
 
                 function initEdit(item) {
-                    superdesk.intent('edit', 'item', item).then(null, function() {
+                    superdesk.intent('edit', 'item', item).then(null, () => {
                         superdesk.intent('view', 'item', item);
                     });
                 }
@@ -83,32 +83,32 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 scope.items = scope.total = null;
 
                 api(getProvider(criteria)).query(criteria)
-                    .then(function(items) {
+                    .then((items) => {
                         scope.items = items._items;
                         scope.total = items._meta.total;
 
                         scope.cachePreviousItems = items._items;
                         setNextItems(criteria);
                     })
-                    .finally(function() {
+                    .finally(() => {
                         scope.loading = false;
                     });
             }
 
             scope.$watch('filter', queryItems);
-            scope.$on('task:stage', function(_e, data) {
+            scope.$on('task:stage', (_e, data) => {
                 if (scope.stage && (data.new_stage === scope.stage || data.old_stage === scope.stage)) {
                     scheduleQuery();
                 }
             });
 
-            scope.$on('content:update', function(_e, data) {
+            scope.$on('content:update', (_e, data) => {
                 if (cards.shouldUpdate(scope.stage, data)) {
                     scheduleQuery();
                 }
             });
 
-            scope.$on('item:move', function(_e, data) {
+            scope.$on('item:move', (_e, data) => {
                 if (data.to_desk && data.from_desk !== data.to_desk ||
                     data.to_stage && data.from_stage !== data.to_stage) {
                     scheduleQuery(2000); // smaller delay.
@@ -117,16 +117,16 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
 
             scope.$on('content:expired', scheduleQuery);
 
-            scope.$on('item:lock', function(_e, data) {
-                _.each(scope.items, function(item) {
+            scope.$on('item:lock', (_e, data) => {
+                _.each(scope.items, (item) => {
                     if (item._id === data.item) {
                         item.lock_user = data.user;
                     }
                 });
             });
 
-            scope.$on('item:unlock', function(_e, data) {
-                _.each(scope.items, function(item) {
+            scope.$on('item:unlock', (_e, data) => {
+                _.each(scope.items, (item) => {
                     if (item._id === data.item) {
                         item.lock_user = null;
                     }
@@ -142,9 +142,9 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
              */
             function scheduleQuery(delay = 5000) {
                 if (!queryTimeout) {
-                    queryTimeout = $timeout(function() {
+                    queryTimeout = $timeout(() => {
                         queryItems();
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             // ignore any updates requested in current $digest
                             queryTimeout = null;
                         });
@@ -156,8 +156,8 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             var offsetY = 0;
             var itemHeight = 0;
 
-            elem.bind('scroll', function() {
-                scope.$apply(function() {
+            elem.bind('scroll', () => {
+                scope.$apply(() => {
                     if (container.scrollTop + container.offsetHeight >= container.scrollHeight - 3) {
                         container.scrollTop -= 3;
                         scope.fetchNext();
@@ -182,7 +182,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                             scope.cachePreviousItems = _.slice(scope.items, 0, criteria.source.size);
                             scope.items.splice(0, criteria.source.size);
                         }
-                        $timeout(function() {
+                        $timeout(() => {
                             if (!_.isEqual(scope.items, scope.cacheNextItems)) {
                                 scope.items = scope.items.concat(scope.cacheNextItems);
                             }
@@ -190,10 +190,10 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                         }, 100);
 
                         api(getProvider(criteria)).query(criteria)
-                        .then(function(items) {
+                        .then((items) => {
                             scope.cacheNextItems = items._items;
                         })
-                        .finally(function() {
+                        .finally(() => {
                             scope.loading = false;
                         });
                     }
@@ -213,20 +213,20 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                         scope.items.splice(criteria.source.size, scope.items.length - criteria.source.size);
                     }
 
-                    $timeout(function() {
+                    $timeout(() => {
                         scope.items.unshift.apply(scope.items, scope.cachePreviousItems);
                         scope.fetching = false;
                     }, 100)
-                    .then($timeout(function() {
+                    .then($timeout(() => {
                         // when load previous items, scroll back to focus selected item
                         container.scrollTop += scope.cachePreviousItems.length * itemHeight;
                     }, 100));
 
                     api(getProvider(criteria)).query(criteria)
-                    .then(function(items) {
+                    .then((items) => {
                         scope.cachePreviousItems = items._items;
                     })
-                    .finally(function() {
+                    .finally(() => {
                         scope.loading = false;
                     });
                 } else {
@@ -236,7 +236,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
             function setNextItems(criteria) {
                 criteria.source.from = scope.page * criteria.source.size;
                 return api(getProvider(criteria)).query(criteria)
-                    .then(function(items) {
+                    .then((items) => {
                         scope.cacheNextItems = items._items;
                     });
             }
@@ -246,8 +246,8 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
 
             var code;
 
-            elem.on('keydown', function(e) {
-                scope.$apply(function() {
+            elem.on('keydown', (e) => {
+                scope.$apply(() => {
                     if (e.keyCode) {
                         code = e.keyCode;
                     } else if (e.which) {

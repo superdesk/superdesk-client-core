@@ -25,10 +25,10 @@ angular.module('superdesk.apps.dashboard.widgets.ingeststats', [])
     .controller('IngestStatsController', ['$scope', '$timeout', 'api',
         function($scope, $timeout, api) {
             function updateData() {
-                api.ingest.query().then(function(items) {
+                api.ingest.query().then((items) => {
                     $scope.items = items;
 
-                    $timeout(function() {
+                    $timeout(() => {
                         updateData();
                     }, $scope.widget.configuration.updateInterval * 1000 * 60);
                 });
@@ -38,7 +38,7 @@ angular.module('superdesk.apps.dashboard.widgets.ingeststats', [])
         }])
     .controller('IngestStatsConfigController', ['$scope', 'colorSchemes',
         function($scope, colorSchemes) {
-            colorSchemes.get(function(colorsData) {
+            colorSchemes.get((colorsData) => {
                 $scope.schemes = colorsData.schemes;
             });
         }]);

@@ -18,7 +18,7 @@ export function MultiActionBarController(
     this.canRemoveIngestItems = function() {
         var canRemove = true;
 
-        multi.getItems().forEach(function(item) {
+        multi.getItems().forEach((item) => {
             canRemove = canRemove && remove.canRemove(item);
         });
         return canRemove;
@@ -28,7 +28,7 @@ export function MultiActionBarController(
      * Remove multiple ingest items
      */
     this.removeIngestItems = function() {
-        multi.getItems().forEach(function(item) {
+        multi.getItems().forEach((item) => {
             remove.remove(item);
         });
         multi.reset();
@@ -41,9 +41,9 @@ export function MultiActionBarController(
 
     this.createPackage = function() {
         packages.createPackageFromItems(multi.getItems())
-        .then(function(newPackage) {
+        .then((newPackage) => {
             superdesk.intent('edit', 'item', newPackage);
-        }, function(response) {
+        }, (response) => {
             if (response.status === 403 && response.data && response.data._message) {
                 notify.error(gettext(response.data._message), 3000);
             }
@@ -62,7 +62,7 @@ export function MultiActionBarController(
         var isPersonal = $location.path() === '/workspace/personal';
 
         return $q.when(isPersonal ? modal.confirm(txt) : 0)
-            .then(function() {
+            .then(() => {
                 spike.spikeMultiple(multi.getItems());
                 $rootScope.$broadcast('item:spike');
                 multi.reset();
@@ -81,7 +81,7 @@ export function MultiActionBarController(
     this.canPackageItems = function() {
         var canPackage = true;
 
-        multi.getItems().forEach(function(item) {
+        multi.getItems().forEach((item) => {
             canPackage = canPackage && item._type !== 'archived' && !item.lock_user &&
                 !_.includes(['ingested', 'spiked', 'killed', 'draft'], item.state);
         });

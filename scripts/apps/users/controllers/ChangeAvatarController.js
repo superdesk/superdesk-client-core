@@ -6,7 +6,7 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, gett
         {id: 'web', label: gettext('Use a Web URL')}
     ];
 
-    beta.isBeta().then(function(beta) {
+    beta.isBeta().then((beta) => {
         if (!beta) {
             $scope.methods = _.reject($scope.methods, {beta: true});
         }
@@ -40,29 +40,27 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, gett
             return;
         }
 
-        return urls.resource('upload').then(function(uploadUrl) {
-            return upload.start({
-                url: uploadUrl,
-                method: 'POST',
-                data: form
-            }).then(function(response) {
-                if (response.data._status === 'ERR') {
-                    notify.error(gettext('There was a problem with your upload'));
-                    return;
-                }
+        return urls.resource('upload').then((uploadUrl) => upload.start({
+            url: uploadUrl,
+            method: 'POST',
+            data: form
+        }).then((response) => {
+            if (response.data._status === 'ERR') {
+                notify.error(gettext('There was a problem with your upload'));
+                return;
+            }
 
-                var pictureUrl = response.data.renditions.viewImage.href;
+            var pictureUrl = response.data.renditions.viewImage.href;
 
-                $scope.locals.data.avatar = response.data._id;
+            $scope.locals.data.avatar = response.data._id;
 
-                return $scope.resolve(pictureUrl);
-            }, function(error) {
-                notify.error(error.statusText !== '' ?
+            return $scope.resolve(pictureUrl);
+        }, (error) => {
+            notify.error(error.statusText !== '' ?
                                 error.statusText :
                                 gettext('There was a problem with your upload'));
-            }, function(update) {
-                $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
-            });
-        });
+        }, (update) => {
+            $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
+        }));
     };
 }

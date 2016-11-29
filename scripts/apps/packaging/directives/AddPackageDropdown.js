@@ -8,7 +8,7 @@ export function AddPackageDropdown($rootScope, api, packages, authoringWorkspace
             scope.groupList = null;
             if (pkg.highlight) {
                 api('highlights').getById(pkg.highlight)
-                .then(function(result) {
+                .then((result) => {
                     scope.groupList = result.groups;
                 });
             }

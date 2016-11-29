@@ -22,12 +22,12 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
         return api
             .save('fetch', {}, {desk: desks.getCurrentDeskId()}, item)
             .then(
-                function(archiveItem) {
+                (archiveItem) => {
                     item.task_id = archiveItem.task_id;
                     item.archived = archiveItem._created;
                     multi.reset();
                     return archiveItem;
-                }, function(response) {
+                }, (response) => {
                     var message = 'Failed to fetch the item';
 
                     if (angular.isDefined(response.data._message)) {
@@ -37,7 +37,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                     item.error = response;
                 }
             )
-            .finally(function() {
+            .finally(() => {
                 if (item.actioning) {
                     item.actioning.archive = false;
                 }
@@ -67,7 +67,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
         var data = getData(config);
 
         if (item._type === 'ingest') {
-            return api.save('fetch', {}, data, item).then(function(archived) {
+            return api.save('fetch', {}, data, item).then((archived) => {
                 item.archived = archived._created;
                 if (config.open) {
                     $injector.get('authoringWorkspace').edit(archived);
@@ -75,7 +75,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                 return archived;
             });
         } else if (!item.lock_user) {
-            return api.save('move', {}, {task: data}, item).then(function(item) {
+            return api.save('move', {}, {task: data}, item).then((item) => {
                 $rootScope.$broadcast('item:update', {item: item});
                 return item;
             });
@@ -110,12 +110,10 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      */
     function sendAllAs(items) {
         self.config = $q.defer();
-        return self.config.promise.then(function(config) {
+        return self.config.promise.then((config) => {
             self.config = null;
             multi.reset();
-            return $q.all(items.map(function(item) {
-                return sendOneAs(item, config);
-            }));
+            return $q.all(items.map((item) => sendOneAs(item, config)));
         });
     }
 
@@ -135,7 +133,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      */
     function startConfig() {
         self.config = $q.defer();
-        return self.config.promise.then(function(val) {
+        return self.config.promise.then((val) => {
             self.config = null;
             return val;
         });

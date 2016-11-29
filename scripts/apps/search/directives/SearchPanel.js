@@ -40,7 +40,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
             scope.privileges = privileges.privileges;
             scope.search_config = metadata.search_config;
 
-            scope.$on('edit:search', function(event, args) {
+            scope.$on('edit:search', (event, args) => {
                 scope.sTab = 'advancedSearch';
                 scope.innerTab = 'parameters';
                 scope.activateSearchPane = false;
@@ -89,8 +89,8 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
 
             initAggregations();
 
-            scope.$watch('items', function() {
-                tags.initSelectedFacets().then(function(currentTags) {
+            scope.$watch('items', () => {
+                tags.initSelectedFacets().then((currentTags) => {
                     scope.tags = currentTags;
 
                     if (!scope.items || scope.items._aggregations === undefined) {
@@ -100,13 +100,13 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                     initAggregations();
 
                     if (angular.isDefined(scope.items._aggregations.type)) {
-                        _.forEach(scope.items._aggregations.type.buckets, function(type) {
+                        _.forEach(scope.items._aggregations.type.buckets, (type) => {
                             scope.aggregations.type[type.key] = type.doc_count;
                         });
                     }
 
                     if (angular.isDefined(scope.items._aggregations.category)) {
-                        _.forEach(scope.items._aggregations.category.buckets, function(cat) {
+                        _.forEach(scope.items._aggregations.category.buckets, (cat) => {
                             if (cat.key !== '') {
                                 scope.aggregations.category[cat.key] = cat.doc_count;
                             }
@@ -114,7 +114,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                     }
 
                     if (angular.isDefined(scope.items._aggregations.genre)) {
-                        _.forEach(scope.items._aggregations.genre.buckets, function(g) {
+                        _.forEach(scope.items._aggregations.genre.buckets, (g) => {
                             if (g.key !== '') {
                                 scope.aggregations.genre[g.key] = g.doc_count;
                             }
@@ -122,31 +122,31 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                     }
 
                     if (angular.isDefined(scope.items._aggregations.urgency)) {
-                        _.forEach(scope.items._aggregations.urgency.buckets, function(urgency) {
+                        _.forEach(scope.items._aggregations.urgency.buckets, (urgency) => {
                             scope.aggregations.urgency[urgency.key] = urgency.doc_count;
                         });
                     }
 
                     if (angular.isDefined(scope.items._aggregations.priority)) {
-                        _.forEach(scope.items._aggregations.priority.buckets, function(priority) {
+                        _.forEach(scope.items._aggregations.priority.buckets, (priority) => {
                             scope.aggregations.priority[priority.key] = priority.doc_count;
                         });
                     }
 
                     if (angular.isDefined(scope.items._aggregations.source)) {
-                        _.forEach(scope.items._aggregations.source.buckets, function(source) {
+                        _.forEach(scope.items._aggregations.source.buckets, (source) => {
                             scope.aggregations.source[source.key] = source.doc_count;
                         });
                     }
 
                     if (angular.isDefined(scope.items._aggregations.credit)) {
-                        _.forEach(scope.items._aggregations.credit.buckets, function(credit) {
+                        _.forEach(scope.items._aggregations.credit.buckets, (credit) => {
                             scope.aggregations.credit[credit.key] = {count: credit.doc_count, qcode: credit.qcode};
                         });
                     }
 
                     if (angular.isDefined(scope.items._aggregations.desk)) {
-                        _.forEach(scope.items._aggregations.desk.buckets, function(desk) {
+                        _.forEach(scope.items._aggregations.desk.buckets, (desk) => {
                             var lookedUpDesk = desks.deskLookup[desk.key];
 
                             if (typeof lookedUpDesk === 'undefined') {
@@ -167,7 +167,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                     }
 
                     if (angular.isDefined(scope.items._aggregations.legal)) {
-                        _.forEach(scope.items._aggregations.legal.buckets, function(l) {
+                        _.forEach(scope.items._aggregations.legal.buckets, (l) => {
                             if (l.key === 'T' && l.doc_count > 0) {
                                 scope.aggregations.legal = {count: l.doc_count};
                             }
@@ -175,7 +175,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                     }
 
                     if (angular.isDefined(scope.items._aggregations.sms)) {
-                        _.forEach(scope.items._aggregations.sms.buckets, function(l) {
+                        _.forEach(scope.items._aggregations.sms.buckets, (l) => {
                             if (l.key === 'T' && l.doc_count > 0) {
                                 scope.aggregations.sms = {count: l.doc_count};
                             }
@@ -184,7 +184,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 });
             });
 
-            scope.$watch('tags.currentSearch', function(currentSearch) {
+            scope.$watch('tags.currentSearch', (currentSearch) => {
                 scope.showSaveSearch = !_.isEmpty(currentSearch);
             }, true);
 

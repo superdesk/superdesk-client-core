@@ -30,7 +30,7 @@ function login(username, password) {
     var modal = new LoginModal();
 
     return modal.btn.isDisplayed()
-        .then(function(needLogin) {
+        .then((needLogin) => {
             if (needLogin) {
                 return modal.login(usr, pwd);
             }
@@ -53,10 +53,8 @@ function printLogs(prefix) {
     return browser.manage()
         .logs()
         .get('browser')
-        .then(function(browserLog) {
-            var logs = browserLog.filter(function(log) {
-                return log.level.value >= 1000;
-            });
+        .then((browserLog) => {
+            var logs = browserLog.filter((log) => log.level.value >= 1000);
 
             console.info(
                 (prefix ? prefix + ' ' : '') +
@@ -66,9 +64,10 @@ function printLogs(prefix) {
 }
 
 function waitForSuperdesk() {
-    return browser.driver.wait(function() {
-        return browser.driver.executeScript('return window.superdeskIsReady || false');
-    }, 5000, '"window.superdeskIsReady" is not here');
+    return browser.driver.wait(() =>
+        browser.driver.executeScript('return window.superdeskIsReady || false'),
+        5000,
+        '"window.superdeskIsReady" is not here');
 }
 
 /**
@@ -80,9 +79,7 @@ function waitForSuperdesk() {
  * @return {Promise}
  */
 function nav(location) {
-    return login().then(function() {
-        return browser.setLocation(location);
-    });
+    return login().then(() => browser.setLocation(location));
 }
 
 /**
@@ -193,9 +190,7 @@ function assertToastMsg(type, msg) {
  * @return {Promise}
  */
 function wait(elem, time) {
-    return browser.wait(function() {
-        return elem.isDisplayed();
-    }, time || 500);
+    return browser.wait(() => elem.isDisplayed(), time || 500);
 }
 
 /**

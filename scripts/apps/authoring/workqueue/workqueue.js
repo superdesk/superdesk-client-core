@@ -33,9 +33,7 @@ function WorkqueueService(session, api) {
         var old = _.find(this.items, {_id: itemId});
 
         if (old) {
-            return api.find('archive', itemId).then(function(item) {
-                return angular.extend(old, item);
-            });
+            return api.find('archive', itemId).then((item) => angular.extend(old, item));
         }
     };
 }
@@ -62,15 +60,13 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;
 
-    $scope.$on('content:update', function(_e, data) {
+    $scope.$on('content:update', (_e, data) => {
         // only update the workqueue for content:update items in the workqueue
         if (data && data.items) {
             var updateItems = _.keys(data.items);
 
             if (updateItems.length) {
-                var item = _.find(workqueue.items, function(item) {
-                    return _.includes(updateItems, item._id);
-                });
+                var item = _.find(workqueue.items, (item) => _.includes(updateItems, item._id));
 
                 if (item) {
                     updateWorkqueue();
@@ -78,13 +74,13 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
             }
         }
     });
-    $scope.$on('item:lock', function(_e, data) {
+    $scope.$on('item:lock', (_e, data) => {
         // Update Workqueue only if the user has locked an item.
         if (data && data.user === session.identity._id) {
             updateWorkqueue();
         }
     });
-    $scope.$on('item:unlock', function(_e, data) {
+    $scope.$on('item:unlock', (_e, data) => {
         var item = _.find(workqueue.items, {_id: data.item});
 
         if (item && lock.isLocked(item) && session.sessionId !== data.lock_session && $scope.active !== item) {
@@ -92,7 +88,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
         }
 
         if (item && item.linked_in_packages) {
-            _.each(item.linked_in_packages, function(item) {
+            _.each(item.linked_in_packages, (item) => {
                 var pck = _.find(workqueue.items, {_id: item.package});
 
                 if (pck) {
@@ -106,7 +102,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
         }
     });
 
-    $scope.$on('media_archive', function(e, data) {
+    $scope.$on('media_archive', (e, data) => {
         workqueue.updateItem(data.item);
     });
 
@@ -116,7 +112,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
      * Update list of opened items and set one active if its id is in current route path.
      */
     function updateWorkqueue() {
-        workqueue.fetch().then(function() {
+        workqueue.fetch().then(() => {
             var route = $route.current || {_id: null, params: {}};
 
             $scope.isMultiedit = route._id === 'multiedit';
@@ -143,16 +139,14 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
      */
     $scope.closeItem = function(item) {
         autosave.get(item)
-            .then(function(result) {
-                return confirm.reopen();
-            })
-            .then(function(reopen) {
+            .then((result) => confirm.reopen())
+            .then((reopen) => {
                 _reOpenItem(item);
-            }, function(err) {
+            }, (err) => {
                 if (angular.isDefined(err)) {
                     // confirm dirty checking for current item just incase if it's before autosaved.
                     if (confirm.dirty && $scope.active && $scope.active._id === item._id) {
-                        return confirm.reopen().then(function(reopen) {
+                        return confirm.reopen().then((reopen) => {
                             _reOpenItem(item);
                         });
                     }

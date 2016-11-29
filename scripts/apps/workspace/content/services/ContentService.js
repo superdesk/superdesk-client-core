@@ -72,7 +72,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             item.dateline.date = $filter('formatDateTimeString')();
         }
         archiveService.addTaskToArticle(item);
-        return save(item).then(function(_item) {
+        return save(item).then((_item) => {
             templates.addRecentTemplate(desks.activeDeskId, template._id);
             return _item;
         });
@@ -142,12 +142,11 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
         }
 
         // cache when fetching all types
-        return api.query('content_types', params, !!includeDisabled).then(function(result) {
-            self.types = result._items.sort(function(a, b) {
-                return b.priority - a.priority; // with higher priority goes up
-            });
+        return api.query('content_types', params, !!includeDisabled).then((result) => {
+            self.types = result._items.sort((a, b) => b.priority - a.priority // with higher priority goes up
+            );
             return self.types;
-        }, function(reason) {
+        }, (reason) => {
             self.types = [];
             return self.types;
         });
@@ -159,10 +158,10 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Promise}
      */
     this.getTypesLookup = function() {
-        return this.getTypes(true).then(function(profiles) {
+        return this.getTypes(true).then((profiles) => {
             var lookup = {};
 
-            profiles.forEach(function(profile) {
+            profiles.forEach((profile) => {
                 lookup[profile._id] = profile;
             });
 
@@ -207,14 +206,10 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Promise}
      */
     this.getDeskProfiles = function(desk) {
-        return this.getTypes().then(function(profiles) {
-            return !desk || _.isEmpty(desk.content_profiles) ?
+        return this.getTypes().then((profiles) => !desk || _.isEmpty(desk.content_profiles) ?
                 profiles :
-                profiles.filter(function(profile) {
-                    return desk.content_profiles[profile._id];
-                }
-            );
-        });
+                profiles.filter((profile) => desk.content_profiles[profile._id]
+            ));
     };
 
     this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);

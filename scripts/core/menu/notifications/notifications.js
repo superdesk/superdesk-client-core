@@ -213,11 +213,11 @@ function MarkAsReadDirective(userNotifications, $timeout) {
                 return;
             }
 
-            var timeout = $timeout(function() {
+            var timeout = $timeout(() => {
                 userNotifications.markAsRead(scope.notification);
             }, TIMEOUT);
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 $timeout.cancel(timeout);
             });
         }

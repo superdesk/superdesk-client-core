@@ -24,7 +24,7 @@ export function UserListDirective(keyboardManager, usersService, asset) {
                 bindKeys();
             };
 
-            scope.$watch('selected', function(selected) {
+            scope.$watch('selected', (selected) => {
                 if (_.isNil(selected)) {
                     bindKeys();
                 }

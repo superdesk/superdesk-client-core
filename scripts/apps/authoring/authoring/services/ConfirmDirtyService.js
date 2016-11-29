@@ -12,7 +12,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
                     'be lost.');
             }
 
-            $scope.$on('$destroy', function() {
+            $scope.$on('$destroy', () => {
                 $window.onbeforeunload = angular.noop;
             });
         };
@@ -107,7 +107,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      * @param {string} headline Headline of item which is unlocked
      */
     this.unlock = function unlock(userId, headline) {
-        api.find('users', userId).then(function(user) {
+        api.find('users', userId).then((user) => {
             var itemHeading = headline ? 'Item <b>' + headline + '</b>' : 'This item';
             var msg = gettext(itemHeading + ' was unlocked by <b>' + $filter('username')(user) + '</b>.');
 
@@ -121,7 +121,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      * @param {string} userId Id of user who locked an item.
      */
     this.lock = function lock(userId) {
-        api.find('users', userId).then(function(user) {
+        api.find('users', userId).then((user) => {
             var msg = gettextCatalog.getString('This item was locked by <b>' + $filter('username')(user) + '</b>.');
 
             return modal.confirm(msg, gettextCatalog.getString('Item locked'), gettext('OK'), false);

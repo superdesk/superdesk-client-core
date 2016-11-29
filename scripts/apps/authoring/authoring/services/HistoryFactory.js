@@ -11,7 +11,7 @@ export function HistoryFactory(History, $window, $timeout) {
 
     return {
         watch: function(expression, scope) {
-            $timeout(function() {
+            $timeout(() => {
                 History.watch(expression, scope);
             }, 0, false);
             var onHistoryKey = function(event, cb) {
@@ -22,24 +22,24 @@ export function HistoryFactory(History, $window, $timeout) {
                 }
             };
             var onHistoryKeydown = function(event) {
-                onHistoryKey(event, function() {
+                onHistoryKey(event, () => {
                     event.preventDefault();
                     // action is on keydown becuase command key (event.metakey) on OSX is not detected on keyup events
                     // for some reason.
-                    scope.$apply(function() {
+                    scope.$apply(() => {
                         KeyOperations[event.keyCode].bind(History)(expression, scope);
                     });
                 });
             };
             var onHistoryKeyup = function(event) {
-                onHistoryKey(event, function() {
+                onHistoryKey(event, () => {
                     event.preventDefault();
                 });
             };
 
             angular.element($window).on('keydown', onHistoryKeydown);
             angular.element($window).on('keyup', onHistoryKeyup);
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 angular.element($window).unbind('keydown', onHistoryKeydown);
                 angular.element($window).unbind('keyup', onHistoryKeyup);
                 History.forget(scope, expression);

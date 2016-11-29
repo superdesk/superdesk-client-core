@@ -7,32 +7,28 @@ var openUrl = require('./helpers/utils').open,
     content = require('./helpers/pages').content,
     monitoring = require('./helpers/monitoring');
 
-describe('spike', function() {
-    beforeEach(function(done) {
+describe('spike', () => {
+    beforeEach((done) => {
         openUrl('/#/workspace/content').then(done);
     });
 
-    it('can spike item', function() {
+    it('can spike item', () => {
         workspace.switchToDesk('PERSONAL');
         content.setListView();
 
         var personalCount;
 
-        content.getItems().count().then(function(count) {
+        content.getItems().count().then((count) => {
             personalCount = count;
         });
 
         content.actionOnItem('Spike Item', 0);
 
         // check that there are less items than before
-        browser.wait(function() {
-            return content.getItems().count().then(function(count) {
-                return count < personalCount;
-            });
-        }, 3000);
+        browser.wait(() => content.getItems().count().then((count) => count < personalCount), 3000);
     });
 
-    it('can spike and unspike multiple items', function() {
+    it('can spike and unspike multiple items', () => {
         monitoring.openMonitoring();
 
         monitoring.selectItem(2, 2);

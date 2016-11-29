@@ -1,13 +1,13 @@
-describe('multiedit', function() {
+describe('multiedit', () => {
     'use strict';
 
-    beforeEach(function() {
+    beforeEach(() => {
         localStorage.clear();
     });
 
     beforeEach(window.module('superdesk.apps.authoring.multiedit'));
 
-    it('can open an item', inject(function(multiEdit) {
+    it('can open an item', inject((multiEdit) => {
         var items = multiEdit.items;
 
         expect(items.length).toBe(0);
@@ -16,7 +16,7 @@ describe('multiedit', function() {
         expect(multiEdit.items).toEqual(items);
     }));
 
-    it('can remove an item from a board', inject(function(multiEdit) {
+    it('can remove an item from a board', inject((multiEdit) => {
         multiEdit.edit('foo', 0);
         multiEdit.edit('bar', 1);
         var items = multiEdit.items;
@@ -26,7 +26,7 @@ describe('multiedit', function() {
         expect(multiEdit.items).toEqual(items);
     }));
 
-    it('can remove borad', inject(function(multiEdit) {
+    it('can remove borad', inject((multiEdit) => {
         multiEdit.edit('foo', 0);
         multiEdit.edit('bar', 1);
         multiEdit.edit('joe', 2);

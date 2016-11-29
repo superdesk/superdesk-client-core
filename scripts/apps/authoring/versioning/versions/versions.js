@@ -10,12 +10,12 @@ function VersioningController($scope, authoring, api, notify, lock, desks, archi
 
     function fetchVersions() {
         desks.initialize()
-            .then(function() {
+            .then(() => {
                 $scope.desks = desks.desks;
                 $scope.stages = desks.deskStages;
                 $scope.users = desks.users;
 
-                archiveService.getVersionHistory($scope.item, desks, 'versions').then(function(versions) {
+                archiveService.getVersionHistory($scope.item, desks, 'versions').then((versions) => {
                     $scope.versions = versions;
                     $scope.last = archiveService.lastVersion($scope.item, $scope.versions);
 

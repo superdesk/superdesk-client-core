@@ -1,12 +1,12 @@
 
-describe('ingest', function() {
+describe('ingest', () => {
     'use strict';
 
-    describe('send service', function() {
+    describe('send service', () => {
         beforeEach(window.module('superdesk.apps.ingest.send'));
         beforeEach(window.module('superdesk.templates-cache'));
 
-        it('can send an item', inject(function(send, api, $q, $rootScope) {
+        it('can send an item', inject((send, api, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({_created: 'now'}));
             var item = {_id: '1'};
 
@@ -17,7 +17,7 @@ describe('ingest', function() {
             expect(item.archived).toBe('now');
         }));
 
-        it('can send multiple items', inject(function(send, api, $q, $rootScope) {
+        it('can send multiple items', inject((send, api, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({}));
             var items = [{_id: 1}, {_id: 2}];
 
@@ -27,7 +27,7 @@ describe('ingest', function() {
             expect(api.save.calls.count()).toBe(2);
         }));
 
-        it('can send an item as', inject(function(send, api, $q, $rootScope) {
+        it('can send an item as', inject((send, api, $q, $rootScope) => {
             var item = {_id: 1, _type: 'ingest'},
                 config = {
                     desk: 'desk1',
@@ -44,7 +44,7 @@ describe('ingest', function() {
             expect(item.archived).toBe('now');
         }));
 
-        it('can send multiple items as', inject(function(send, api, $q, $rootScope) {
+        it('can send multiple items as', inject((send, api, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({_id: 'foo', _created: 'now'}));
 
             var items = [{_id: 1, _type: 'ingest'}, {_id: 2, _type: 'ingest'}];
@@ -53,7 +53,7 @@ describe('ingest', function() {
 
             var archives;
 
-            send.allAs(items).then(function(_archives) {
+            send.allAs(items).then((_archives) => {
                 archives = _archives;
             });
 
@@ -66,20 +66,20 @@ describe('ingest', function() {
         }));
     });
 
-    describe('registering activities in superdesk.apps.ingest module', function() {
+    describe('registering activities in superdesk.apps.ingest module', () => {
         beforeEach(window.module('superdesk.apps.ingest'));
 
-        describe('the "archive" activity', function() {
+        describe('the "archive" activity', () => {
             var activity;
 
-            beforeEach(inject(function(superdesk) {
+            beforeEach(inject((superdesk) => {
                 activity = superdesk.activities.archive;
                 if (angular.isUndefined(activity)) {
                     fail('Activity "archive" is not registered.');
                 }
             }));
 
-            it('is allowed if the current desk is not "personal"', function() {
+            it('is allowed if the current desk is not "personal"', () => {
                 var extraCondition = activity.additionalCondition,
                     fakeDesks;
 
@@ -94,7 +94,7 @@ describe('ingest', function() {
                 expect(extraCondition(fakeDesks)).toBe(true);
             });
 
-            it('is not allowed if the current desk is "personal"', function() {
+            it('is not allowed if the current desk is "personal"', () => {
                 var extraCondition = activity.additionalCondition,
                     fakeDesks;
 

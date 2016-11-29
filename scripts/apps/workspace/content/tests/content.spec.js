@@ -1,31 +1,31 @@
 
 'use strict';
 
-describe('superdesk.apps.workspace.content', function() {
+describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.workspace.content'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    describe('content service', function() {
+    describe('content service', () => {
         var done;
         var ITEM = {};
 
-        beforeEach(inject(function(api, $q, preferencesService) {
+        beforeEach(inject((api, $q, preferencesService) => {
             spyOn(api, 'save').and.returnValue($q.when(ITEM));
             done = jasmine.createSpy('done');
             spyOn(preferencesService, 'update').and.returnValue(true);
         }));
 
-        it('can create plain text items', inject(function(api, content, $rootScope) {
+        it('can create plain text items', inject((api, content, $rootScope) => {
             content.createItem().then(done);
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {type: 'text', version: 0});
             expect(done).toHaveBeenCalledWith(ITEM);
         }));
 
-        it('can create packages', inject(function(api, content, desks, session, $rootScope) {
+        it('can create packages', inject((api, content, desks, session, $rootScope) => {
             session.identity = {_id: '1'};
             desks.userDesks = {_items: []};
             spyOn(desks, 'getCurrentDesk')
@@ -42,7 +42,7 @@ describe('superdesk.apps.workspace.content', function() {
             expect(done).toHaveBeenCalledWith(ITEM);
         }));
 
-        it('can create packages from items', inject(function(api, content, session, desks, $rootScope) {
+        it('can create packages from items', inject((api, content, session, desks, $rootScope) => {
             session.identity = {_id: '1'};
 
             spyOn(desks, 'getCurrentDesk')
@@ -65,7 +65,7 @@ describe('superdesk.apps.workspace.content', function() {
                         id: 'main', role: 'grpRole:main'}]});
         }));
 
-        it('can create items from template', inject(function(api, content, desks, session, $rootScope) {
+        it('can create items from template', inject((api, content, desks, session, $rootScope) => {
             session.identity = {_id: 'user:1'};
 
             spyOn(desks, 'getCurrentDesk')
@@ -93,7 +93,7 @@ describe('superdesk.apps.workspace.content', function() {
             });
         }));
 
-        it('can fetch content types', inject(function(api, content, $rootScope, $q) {
+        it('can fetch content types', inject((api, content, $rootScope, $q) => {
             var types = [{_id: 'foo'}];
 
             spyOn(api, 'query').and.returnValue($q.when({_items: types}));
@@ -106,12 +106,12 @@ describe('superdesk.apps.workspace.content', function() {
             expect(content.types).toBe(types);
         }));
 
-        it('can fetch content types and filter by desk', inject(function(content, $rootScope, $q) {
+        it('can fetch content types and filter by desk', inject((content, $rootScope, $q) => {
             spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo'}, {_id: 'bar'}]));
 
             var profiles;
 
-            content.getDeskProfiles({content_profiles: {bar: 1}}).then(function(_profiles) {
+            content.getDeskProfiles({content_profiles: {bar: 1}}).then((_profiles) => {
                 profiles = _profiles;
             });
 
@@ -120,11 +120,11 @@ describe('superdesk.apps.workspace.content', function() {
             expect(profiles[0]._id).toBe('bar');
         }));
 
-        it('can generate content types lookup dict', inject(function(content, $q, $rootScope) {
+        it('can generate content types lookup dict', inject((content, $q, $rootScope) => {
             spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo', name: 'Foo'}, {_id: 'bar'}]));
             var lookup;
 
-            content.getTypesLookup().then(function(_lookup) {
+            content.getTypesLookup().then((_lookup) => {
                 lookup = _lookup;
             });
 
@@ -132,7 +132,7 @@ describe('superdesk.apps.workspace.content', function() {
             expect(lookup.foo.name).toBe('Foo');
         }));
 
-        it('can get content type', inject(function(api, content, $rootScope, $q) {
+        it('can get content type', inject((api, content, $rootScope, $q) => {
             var type = {_id: 'foo'};
 
             spyOn(api, 'find').and.returnValue($q.when(type));
@@ -144,7 +144,7 @@ describe('superdesk.apps.workspace.content', function() {
             expect(success).toHaveBeenCalledWith(type);
         }));
 
-        it('can create item using content type', inject(function(api, content, desks, session) {
+        it('can create item using content type', inject((api, content, desks, session) => {
             var type = {_id: 'test'};
             var success = jasmine.createSpy('ok');
 
@@ -159,7 +159,7 @@ describe('superdesk.apps.workspace.content', function() {
             });
         }));
 
-        it('can get schema for content type', inject(function(content) {
+        it('can get schema for content type', inject((content) => {
             var schema = content.schema();
 
             expect(schema.headline).toBeTruthy();
@@ -174,7 +174,7 @@ describe('superdesk.apps.workspace.content', function() {
             expect(schema).not.toBe(content.schema(contentType)); // check it is a copy
         }));
 
-        it('can get editor config for content type', inject(function(content) {
+        it('can get editor config for content type', inject((content) => {
             var editor = content.editor();
 
             expect(editor.slugline.order).toBe(1);
@@ -187,11 +187,11 @@ describe('superdesk.apps.workspace.content', function() {
         }));
     });
 
-    describe('content profiles controller', function() {
+    describe('content profiles controller', () => {
         beforeEach(window.module('superdesk.mocks'));
         beforeEach(window.module('superdesk.apps.workspace.content'));
 
-        it('should load profiles on start', inject(function($controller, content, $q, $rootScope) {
+        it('should load profiles on start', inject(($controller, content, $q, $rootScope) => {
             spyOn(content, 'getTypes').and.returnValue($q.when('list'));
             var scope = $rootScope.$new();
             var ctrl = $controller('ContentProfilesController', {$scope: scope});
@@ -201,8 +201,8 @@ describe('superdesk.apps.workspace.content', function() {
             expect(ctrl.items).toBe('list');
         }));
 
-        it('should notify appropriate error when created profile is not unique', inject(function(
-            notify, $controller, content, $q, $rootScope) {
+        it('should notify appropriate error when created profile is not unique', inject((
+            notify, $controller, content, $q, $rootScope) => {
             spyOn(content, 'createProfile').and.returnValue($q.reject({
                 data: {_issues: {label: {unique: 1}}}
             }));
@@ -215,8 +215,8 @@ describe('superdesk.apps.workspace.content', function() {
             expect(errorFn).toHaveBeenCalledWith(ctrl.duplicateErrorTxt);
         }));
 
-        it('should log appropriate error when created profile is unique', inject(function(
-            notify, $controller, content, $q, $rootScope) {
+        it('should log appropriate error when created profile is unique', inject((
+            notify, $controller, content, $q, $rootScope) => {
             spyOn(content, 'createProfile').and.returnValue($q.reject({
                 data: {_issues: {label: {other_error: 1}}}
             }));
@@ -230,12 +230,12 @@ describe('superdesk.apps.workspace.content', function() {
         }));
     });
 
-    describe('content profiles schema editor', function() {
+    describe('content profiles schema editor', () => {
         var compile;
 
         beforeEach(window.module('superdesk.apps.workspace.content'));
 
-        beforeEach(inject(function(_$compile_, _$rootScope_) {
+        beforeEach(inject((_$compile_, _$rootScope_) => {
             compile = function(props) {
                 var scope = _$rootScope_.$new();
 
@@ -246,7 +246,7 @@ describe('superdesk.apps.workspace.content', function() {
             };
         }));
 
-        it('render correctly all fields', inject(function(content) {
+        it('render correctly all fields', inject((content) => {
             var el = compile({
                 model: {
                     schema: {
@@ -270,7 +270,7 @@ describe('superdesk.apps.workspace.content', function() {
                 .toBeTruthy();
         }));
 
-        it('should dirty parent form when toggling fields', function() {
+        it('should dirty parent form when toggling fields', () => {
             var el = compile({
                 model: {
                     schema: {

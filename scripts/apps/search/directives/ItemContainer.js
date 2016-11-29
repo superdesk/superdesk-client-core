@@ -8,7 +8,7 @@ export function ItemContainer(desks) {
         link: function(scope, elem) {
             if (scope.item._type !== 'ingest') {
                 if (scope.item.task && scope.item.task.desk) {
-                    desks.initialize().then(function() {
+                    desks.initialize().then(() => {
                         if (desks.deskLookup[scope.item.task.desk]) {
                             scope.item.label = 'desk:';
                             scope.item.value = desks.deskLookup[scope.item.task.desk].name;

@@ -10,7 +10,7 @@ export function GroupeditBasicDirective(gettext, api, WizardHandler) {
 
             scope.limits = limits;
 
-            scope.$watch('step.current', function(step) {
+            scope.$watch('step.current', (step) => {
                 if (step === 'general') {
                     scope.edit(scope.group.edit);
                     scope.message = null;
@@ -25,7 +25,7 @@ export function GroupeditBasicDirective(gettext, api, WizardHandler) {
                 scope.message = gettext('Saving...');
                 var _new = !group._id;
 
-                api.groups.save(scope.group.edit, group).then(function() {
+                api.groups.save(scope.group.edit, group).then(() => {
                     if (_new) {
                         scope.edit(scope.group.edit);
                         scope.groups._items.unshift(scope.group.edit);

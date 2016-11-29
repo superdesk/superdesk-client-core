@@ -10,7 +10,7 @@ export function DataConsistencyController($scope, api) {
     }
 
     $scope.reload = function() {
-        fetchConsistencyRecords().then(function(data) {
+        fetchConsistencyRecords().then((data) => {
             $scope.consistency_records = data._items;
             $scope.lastRefreshedAt = new Date();
         });

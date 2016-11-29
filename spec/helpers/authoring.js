@@ -99,7 +99,7 @@ function Authoring() {
     };
 
     this.confirmSendTo = function() {
-        element.all(by.className('modal-content')).count().then(function(closeModal) {
+        element.all(by.className('modal-content')).count().then((closeModal) => {
             if (closeModal) {
                 element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
             }
@@ -138,9 +138,9 @@ function Authoring() {
     };
 
     this.createTextItem = function() {
-        return element(by.css('[class="dropdown__toggle sd-create-btn dropdown-toggle"]')).click().then(function() {
-            return element(by.id('create_text_article')).click();
-        });
+        return element(by.css('[class="dropdown__toggle sd-create-btn dropdown-toggle"]'))
+            .click()
+            .then(() => element(by.id('create_text_article')).click());
     };
 
     this.close = function() {
@@ -153,9 +153,7 @@ function Authoring() {
         if (!context) {
             ctx = element(by.tagName('body'));
         }
-        browser.wait(function() {
-            return ctx.element(this.add_content_button).isDisplayed();
-        }.bind(this), 1000);
+        browser.wait(() => ctx.element(this.add_content_button).isDisplayed(), 1000);
         ctx.element(this.add_content_button).click();
         ctx.element(by.css('[ng-click="vm.triggerAction(\'addEmbed\')"]')).click();
         ctx.element(by.css('.add-embed__input input')).sendKeys(embedCode || 'embed code');
@@ -171,13 +169,13 @@ function Authoring() {
     this.blockContains = function blockContains(position, expectedValue) {
         var block = this.getBlock(position);
 
-        block.element(by.css('.editor-type-html')).isPresent().then(function(isText) {
+        block.element(by.css('.editor-type-html')).isPresent().then((isText) => {
             if (isText) {
                 return block.element(by.css('.editor-type-html')).getText();
             }
 
             return block.element(by.css('.preview--embed')).getText();
-        }).then(function(value) {
+        }).then((value) => {
             expect(value).toBe(expectedValue);
         });
     };
@@ -195,16 +193,12 @@ function Authoring() {
     };
 
     this.publish = function(skipConfirm) {
-        browser.wait(function() {
-            return this.sendToButton.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
 
         this.publish_panel.click();
 
-        browser.wait(function() {
-            return this.publish_button.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.publish_button.isPresent(), 1000);
 
         this.publish_panel.click();
         this.publish_button.click();
@@ -212,7 +206,7 @@ function Authoring() {
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
 
-            modal.isPresent().then(function(click) {
+            modal.isPresent().then((click) => {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
                 }
@@ -221,16 +215,12 @@ function Authoring() {
     };
 
     this.sendAndpublish = function(desk, skipConfirm) {
-        browser.wait(function() {
-            return this.sendToButton.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
 
         this.publish_panel.click();
 
-        browser.wait(function() {
-            return this.publish_button.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.publish_button.isPresent(), 1000);
 
         this.publish_panel.click();
         this.selectDeskforSendTo(desk);
@@ -239,7 +229,7 @@ function Authoring() {
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
 
-            modal.isPresent().then(function(click) {
+            modal.isPresent().then((click) => {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
                 }
@@ -248,14 +238,10 @@ function Authoring() {
     };
 
     this.schedule = function(skipConfirm) {
-        browser.wait(function() {
-            return this.sendToButton.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
 
-        browser.wait(function() {
-            return this.publish_button.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.publish_button.isPresent(), 1000);
 
         var scheduleDate = '09/09/' + ((new Date()).getFullYear() + 1);
         var scheduleTime = '04:00';
@@ -269,7 +255,7 @@ function Authoring() {
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
 
-            modal.isPresent().then(function(click) {
+            modal.isPresent().then((click) => {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
                 }
@@ -284,9 +270,7 @@ function Authoring() {
 
     this.save = function() {
         element(by.css('[ng-click="saveTopbar()"]')).click();
-        return browser.wait(function() {
-            return element(by.buttonText('Save')).getAttribute('disabled');
-        });
+        return browser.wait(() => element(by.buttonText('Save')).getAttribute('disabled'));
     };
 
     this.edit = function() {
@@ -396,9 +380,7 @@ function Authoring() {
     this.addMultiToGroup = function(group) {
         return element.all(by.css('[class="icon-package-plus"]')).first()
             .waitReady()
-            .then(function(elem) {
-                return elem.click();
-            }).then(function() {
+            .then((elem) => elem.click()).then(() => {
                 var groups = element(by.repeater('t in groupList'));
 
                 return groups.all(by.css('[option="' + group.toUpperCase() + '"]'))
@@ -433,7 +415,7 @@ function Authoring() {
             .mouseMove(src, {x: 5, y: 5})
             .mouseDown()
             .perform()
-            .then(function() {
+            .then(() => {
                 browser.actions()
                     .mouseMove(dst, {x: 10, y: 1})
                     .mouseUp()
@@ -445,11 +427,11 @@ function Authoring() {
         var crtItem = this.getSearchItem(item);
         var icon = crtItem.all(by.tagName('i')).first();
 
-        return icon.waitReady().then(function() {
+        return icon.waitReady().then(() => {
             browser.actions()
                 .mouseMove(icon)
                 .perform();
-        }).then(function() {
+        }).then(() => {
             crtItem.element(by.css('[ng-click="addToSelected(pitem)"]')).click();
         });
     };
@@ -457,9 +439,7 @@ function Authoring() {
     function openAuthoringDropdown() {
         var toggle = element(by.id('authoring-extra-dropdown')).element(by.className('icon-dots-vertical'));
 
-        browser.wait(function() {
-            return toggle.isDisplayed();
-        });
+        browser.wait(() => toggle.isDisplayed());
         toggle.click();
     }
 
@@ -489,7 +469,7 @@ function Authoring() {
     this.checkMarkedForHighlight = function(highlight, item) {
         expect(element(by.className('icon-star')).isDisplayed()).toBeTruthy();
         browser.actions().click(element(by.className('icon-star'))).perform();
-        element.all(by.css('.dropdown__menu.open li')).then(function(items) {
+        element.all(by.css('.dropdown__menu.open li')).then((items) => {
             expect(items[1].getText()).toContain(highlight);
         });
     };
@@ -528,9 +508,7 @@ function Authoring() {
     };
 
     this.writeTextToPackageSlugline = function(text) {
-        browser.wait(function() {
-            return packageSlugline.isDisplayed();
-        }, 100);
+        browser.wait(() => packageSlugline.isDisplayed(), 100);
         packageSlugline.sendKeys(text);
     };
 
@@ -707,9 +685,7 @@ function Authoring() {
 
     this.isPublishedState = function() {
         return this.getItemState().getText()
-            .then(function(state) {
-                return ['published', 'corrected', 'killed'].indexOf(state.toLowerCase()) !== -1;
-            });
+            .then((state) => ['published', 'corrected', 'killed'].indexOf(state.toLowerCase()) !== -1);
     };
 
     this.getSubjectMetadataDropdownOpened = function() {

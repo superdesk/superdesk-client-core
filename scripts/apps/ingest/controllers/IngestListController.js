@@ -17,11 +17,11 @@ export class IngestListController extends BaseListController {
             $scope.loading = true;
             criteria.aggregations = 1;
             criteria.es_highlight = search.getElasticHighlight();
-            api.query('ingest', criteria).then(function(items) {
+            api.query('ingest', criteria).then((items) => {
                 $scope.items = search.mergeItems(items, $scope.items, next);
                 $scope.total = items._meta.total;
             })
-            .finally(function() {
+            .finally(() => {
                 $scope.loading = false;
             });
         };

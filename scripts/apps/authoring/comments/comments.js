@@ -59,13 +59,13 @@ function CommentsCtrl($scope, $routeParams, commentsService, api, $q) {
 
     function reload() {
         if ($scope.item) {
-            commentsService.fetch($scope.item._id).then(function() {
+            commentsService.fetch($scope.item._id).then(() => {
                 $scope.comments = commentsService.comments;
             });
         }
     }
 
-    $scope.$on('item:comment', function(e, data) {
+    $scope.$on('item:comment', (e, data) => {
         if (data.item === $scope.item.guid) {
             reload();
         }
@@ -94,7 +94,7 @@ function CommentTextDirective($compile) {
             // map user mentions
             var mentionedUsers = html.match(/\@([a-zA-Z0-9-_.]\w+)/g);
 
-            _.each(mentionedUsers, function(token) {
+            _.each(mentionedUsers, (token) => {
                 var username = token.substring(1, token.length);
 
                 if (scope.comment.mentioned_users && scope.comment.mentioned_users[username]) {
@@ -106,7 +106,7 @@ function CommentTextDirective($compile) {
             // map desk mentions
             var mentionedDesks = html.match(/\#([a-zA-Z0-9-_.]\w+)/g);
 
-            _.each(mentionedDesks, function(token) {
+            _.each(mentionedDesks, (token) => {
                 var deskname = token.substring(1, token.length);
 
                 if (scope.comment.mentioned_desks && scope.comment.mentioned_desks[deskname]) {

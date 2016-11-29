@@ -8,13 +8,13 @@ function PackagesCtrl($scope, $location, superdesk, api, search) {
         query.clear_filters();
         var filter = [];
 
-        _.forEach($scope.item.linked_in_packages, function(packageRef) {
+        _.forEach($scope.item.linked_in_packages, (packageRef) => {
             filter.push(packageRef.package);
         });
 
         query.size(25).filter({terms: {guid: filter}});
         api.archive.query(query.getCriteria(true))
-        .then(function(result) {
+        .then((result) => {
             $scope.contentItems = result._items;
         });
     }

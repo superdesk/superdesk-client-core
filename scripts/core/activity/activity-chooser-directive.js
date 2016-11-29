@@ -20,19 +20,19 @@ angular.module('superdesk.core.activity.chooser', [])
 
                 scope.$watch(function watchActivities() {
                     return activityChooser.activities;
-                }, function(activities, prev) {
+                }, (activities, prev) => {
                     scope.selected = activities ? _.head(activities) : null;
 
                     if (activities) {
-                        keyboardManager.push('up', function() {
+                        keyboardManager.push('up', () => {
                             move(UP, activities);
                         });
 
-                        keyboardManager.push('down', function() {
+                        keyboardManager.push('down', () => {
                             move(DOWN, activities);
                         });
 
-                        keyboardManager.push('enter', function() {
+                        keyboardManager.push('enter', () => {
                             activityChooser.resolve(scope.selected);
                         });
                     } else if (prev) {

@@ -1,9 +1,9 @@
 
-describe('superdesk.config', function() {
+describe('superdesk.config', () => {
     'use strict';
 
     angular.module('test.config', ['superdesk.config'])
-        .config(function(defaultConfigProvider) {
+        .config((defaultConfigProvider) => {
             defaultConfigProvider.set('foo', 'bar');
             defaultConfigProvider.set('foo', 'baz');
             defaultConfigProvider.set('a.b.c', true);
@@ -14,7 +14,7 @@ describe('superdesk.config', function() {
 
     beforeEach(window.module('test.config'));
 
-    it('can set default config', inject(function(config) {
+    it('can set default config', inject((config) => {
         expect(config.foo).toBe('bar');
         expect(config.a.b.c).toBe(true);
         expect(config.server.protocol).toBe('foo');

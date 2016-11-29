@@ -1,5 +1,5 @@
 'use strict';
-describe('Reload Service', function() {
+describe('Reload Service', () => {
     beforeEach(window.module('superdesk.apps.notification'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.api'));
@@ -14,8 +14,8 @@ describe('Reload Service', function() {
 
     var rootScope, reloadService, msg;
 
-    beforeEach(function() {
-        inject(function($rootScope, _reloadService_, session, $q, api, preferencesService, desks, $window) {
+    beforeEach(() => {
+        inject(($rootScope, _reloadService_, session, $q, api, preferencesService, desks, $window) => {
             rootScope = $rootScope;
             reloadService = _reloadService_;
             session.start({}, USER);
@@ -28,7 +28,7 @@ describe('Reload Service', function() {
             spyOn(preferencesService, 'get').and.returnValue($q.when([]));
             spyOn(preferencesService, 'update');
 
-            desks.fetchCurrentUserDesks().then(function(_userDesks) {
+            desks.fetchCurrentUserDesks().then((_userDesks) => {
                 reloadService.userDesks = _userDesks;
             });
 
@@ -37,7 +37,7 @@ describe('Reload Service', function() {
         });
     });
 
-    it('can check reloadEvents on raised event for desk', inject(function() {
+    it('can check reloadEvents on raised event for desk', inject(() => {
         msg = {
             event: 'desk_membership_revoked',
             extra: {
@@ -53,7 +53,7 @@ describe('Reload Service', function() {
         expect(reloadService.result.reload).toBe(true);
     }));
 
-    it('can check reloadEvents on raised event for stage', inject(function() {
+    it('can check reloadEvents on raised event for stage', inject(() => {
         msg = {
             event: 'stage',
             extra: {
@@ -74,26 +74,26 @@ describe('Reload Service', function() {
     }));
 });
 
-describe('Notify Connection Service', function() {
+describe('Notify Connection Service', () => {
     beforeEach(window.module('superdesk.apps.notification'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     var rootScope, msg;
 
-    beforeEach(function() {
-        inject(function($rootScope) {
+    beforeEach(() => {
+        inject(($rootScope) => {
             rootScope = $rootScope;
         });
     });
 
-    it('can show disconnection message when websocket disconnected', inject(function(notifyConnectionService) {
+    it('can show disconnection message when websocket disconnected', inject((notifyConnectionService) => {
         msg = 'Disconnected from Notification Server!';
         rootScope.$broadcast('disconnected');
         rootScope.$digest();
         expect(notifyConnectionService.message).toEqual(msg);
     }));
 
-    it('can show success message when websocket connected', inject(function(notifyConnectionService) {
+    it('can show success message when websocket connected', inject((notifyConnectionService) => {
         msg = 'Connected to Notification Server!';
         rootScope.$broadcast('connected');
         rootScope.$digest();

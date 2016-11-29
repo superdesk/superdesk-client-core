@@ -47,7 +47,7 @@ export default angular.module('superdesk.core.services.permissions', [])
                 if (typeof usr.role === 'string') {
                     em.repository('user_roles')
                         .find(usr.role)
-                        .then(function(role) {
+                        .then((role) => {
                             delay.resolve(self.isRoleAllowed(permissions, role));
                         });
                 } else {
@@ -70,7 +70,7 @@ export default angular.module('superdesk.core.services.permissions', [])
             } else if (role.extends) {
                 em.repository('user_roles')
                     .find(role.extends)
-                    .then(function(extendedFrom) {
+                    .then((extendedFrom) => {
                         delay.resolve(self._isRoleAllowedSingle(resource, method, extendedFrom));
                     });
             }
@@ -85,13 +85,13 @@ export default angular.module('superdesk.core.services.permissions', [])
 
             var promises = [];
 
-            _.forEach(permissions, function(methods, resource) {
-                _.forEach(methods, function(status, method) {
+            _.forEach(permissions, (methods, resource) => {
+                _.forEach(methods, (status, method) => {
                     promises.push(self._isRoleAllowedSingle(resource, method, role));
                 });
             });
 
-            $q.all(promises).then(function(results) {
+            $q.all(promises).then((results) => {
                 if (results.indexOf(false) === -1) {
                     delay.resolve(true);
                 } else {

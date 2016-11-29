@@ -13,26 +13,26 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
             scope.target_types = [];
 
             desks.initialize()
-            .then(function() {
+            .then(() => {
                 scope.deskLookup = desks.deskLookup;
                 scope.stageLookup = desks.stageLookup;
             });
 
-            macros.get(true).then(function(macros) {
-                _.transform(macros, function(lookup, macro, idx) {
+            macros.get(true).then((macros) => {
+                _.transform(macros, (lookup, macro, idx) => {
                     scope.macroLookup[macro.name] = macro;
                 });
             });
 
-            subscribersService.fetchActiveSubscribers().then(function(items) {
+            subscribersService.fetchActiveSubscribers().then((items) => {
                 scope.customSubscribers = [];
-                _.each(items, function(item) {
+                _.each(items, (item) => {
                     scope.customSubscribers.push({_id: item._id, name: item.name});
                 });
             });
 
             metadata.initialize()
-                .then(function() {
+                .then(() => {
                     scope.target_types = metadata.values.subscriberTypes;
                 });
 
@@ -55,8 +55,8 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
                     if (action.target_types && action.target_types.length > 0) {
                         var targets = [];
 
-                        _.forEach(action.target_types, function(targetType) {
-                            targets.push((!targetType.allow ? gettext('Not ') : '') + targetType.name);
+                        _.forEach(action.target_types, (targetType) => {
+                            targets.push((!targetType.deny ? gettext('Not ') : '') + targetType.name);
                         });
                         actionValues.push(targets.join(','));
                     }
@@ -73,9 +73,7 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
             };
 
             scope.removeFetch = function(fetchAction) {
-                _.remove(scope.rule.actions.fetch, function(f) {
-                    return f === fetchAction;
-                });
+                _.remove(scope.rule.actions.fetch, (f) => f === fetchAction);
             };
 
             scope.addPublish = function() {
@@ -88,9 +86,7 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
             };
 
             scope.removePublish = function(publishAction) {
-                _.remove(scope.rule.actions.publish, function(p) {
-                    return p === publishAction;
-                });
+                _.remove(scope.rule.actions.publish, (p) => p === publishAction);
             };
         }
     };

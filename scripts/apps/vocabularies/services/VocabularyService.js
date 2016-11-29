@@ -30,7 +30,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
     this.getAllActiveVocabularies = function() {
         if (_.isNil(self.AllActiveVocabularies)) {
             return api.query('vocabularies', {max_results: 50}).then(
-                function(result) {
+                (result) => {
                     self.AllActiveVocabularies = result;
                     return self.AllActiveVocabularies;
                 }
@@ -50,7 +50,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
     this.getVocabularies = function() {
         if (_.isNil(self.vocabularies)) {
             return api.query('vocabularies', {where: {type: 'manageable'}}).then(
-                function(result) {
+                (result) => {
                     result._items = $filter('sortByName')(result._items, 'display_name');
                     self.vocabularies = result;
                     return self.vocabularies;

@@ -10,16 +10,14 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
     this.is_public = false;
 
     this.types = templates.types;
-    this.createTypes = _.filter(templates.types, function(element) {
-        return element._id !== 'kill';
-    });
+    this.createTypes = _.filter(templates.types, (element) => element._id !== 'kill');
     this.save = save;
 
     activate();
 
     function activate() {
         if (item.template) {
-            api.find('content_templates', item.template).then(function(template) {
+            api.find('content_templates', item.template).then((template) => {
                 self.name = template.template_name;
                 self.desk = !_.isNil(template.template_desks) ? template.template_desks[0] : null;
                 self.is_public = template.is_public !== false;
@@ -27,7 +25,7 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
             });
         }
 
-        desks.fetchCurrentUserDesks().then(function(desks) {
+        desks.fetchCurrentUserDesks().then((desks) => {
             self.desks = desks;
         });
     }
@@ -51,10 +49,10 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
         }
 
         return api.save('content_templates', template, diff)
-        .then(function(data) {
+        .then((data) => {
             self._issues = null;
             return data;
-        }, function(response) {
+        }, (response) => {
             notifySaveError(response, notify);
             self._issues = response.data._issues;
             return $q.reject(self._issues);

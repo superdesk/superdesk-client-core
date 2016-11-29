@@ -26,7 +26,7 @@ export function PieChartDashboard(colorSchemes) {
                 height = graphSettings.blockHeight * vertBlocks + graphSettings.mergeSpaceBottom * (vertBlocks - 1),
                 radius = Math.min(width, height) / 2;
 
-            colorSchemes.get(function(colorsData) {
+            colorSchemes.get((colorsData) => {
                 var colorScheme = colorsData.schemes[0];
 
                 var arc = d3.svg.arc()
@@ -35,12 +35,8 @@ export function PieChartDashboard(colorSchemes) {
 
                 var sort = attrs.sort || null;
                 var pie = d3.layout.pie()
-                    .value(function(d) {
-                        return d.doc_count;
-                    })
-                    .sort(sort ? function(a, b) {
-                        return d3.ascending(a[sort], b[sort]);
-                    } : null);
+                    .value((d) => d.doc_count)
+                    .sort(sort ? (a, b) => d3.ascending(a[sort], b[sort]) : null);
 
                 var svg = d3.select(appendTarget).append('svg')
                     .attr('width', width)
@@ -67,20 +63,14 @@ export function PieChartDashboard(colorSchemes) {
 
                         g.append('path')
                             .attr('d', arc)
-                            .style('fill', function(d) {
-                                return colorScale(d.data.key);
-                            });
+                            .style('fill', (d) => colorScale(d.data.key));
 
                         g.append('text')
                             .attr('class', 'place-label')
-                            .attr('transform', function(d) {
-                                return 'translate(' + arc.centroid(d) + ')';
-                            })
+                            .attr('transform', (d) => 'translate(' + arc.centroid(d) + ')')
                             .style('text-anchor', 'middle')
                             .style('fill', colorScheme.text)
-                            .text(function(d) {
-                                return d.data.key;
-                            });
+                            .text((d) => d.data.key);
 
                         arrangeLabels();
                     }

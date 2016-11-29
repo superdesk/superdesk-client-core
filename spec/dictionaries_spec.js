@@ -2,15 +2,15 @@
 var openUrl = require('./helpers/utils').open,
     dictionaries = require('./helpers/dictionaries');
 
-describe('dictionaries', function() {
+describe('dictionaries', () => {
     'use strict';
 
-    describe('add dictionary', function() {
-        beforeEach(function() {
+    describe('add dictionary', () => {
+        beforeEach(() => {
             openUrl('/#/settings/dictionaries');
         });
 
-        it('add dictionary', function() {
+        it('add dictionary', () => {
             dictionaries.addDictionary();
             dictionaries.setName('Test');
             dictionaries.setLanguageId('en');
@@ -18,7 +18,7 @@ describe('dictionaries', function() {
             expect(dictionaries.getRow('Test').count()).toBe(1);
         });
 
-        it('add dictionary', function() {
+        it('add dictionary', () => {
             dictionaries.addPersonalDictionary();
             dictionaries.setLanguageId('en');
             dictionaries.save();
@@ -26,12 +26,12 @@ describe('dictionaries', function() {
         });
     });
 
-    describe('edit dictionary', function() {
-        beforeEach(function() {
+    describe('edit dictionary', () => {
+        beforeEach(() => {
             openUrl('/#/settings/dictionaries');
         });
 
-        it('change dictionary name', function() {
+        it('change dictionary name', () => {
             dictionaries.edit('Test 1');
             dictionaries.setName('Test 2');
             dictionaries.save();
@@ -39,7 +39,7 @@ describe('dictionaries', function() {
             expect(dictionaries.getRow('Test 1').count()).toBe(0);
         });
 
-        it('add/remove word in dictionary', function() {
+        it('add/remove word in dictionary', () => {
             dictionaries.edit('Test 1');
             dictionaries.search('theta');
             expect(dictionaries.getWordsCount()).toBe(0);
@@ -50,12 +50,12 @@ describe('dictionaries', function() {
         });
     });
 
-    describe('delete dictionary', function() {
-        beforeEach(function() {
+    describe('delete dictionary', () => {
+        beforeEach(() => {
             openUrl('/#/settings/dictionaries');
         });
 
-        it('delete dictionary', function() {
+        it('delete dictionary', () => {
             expect(dictionaries.getRow('Test 1').count()).toBe(1);
             dictionaries.remove('Test 1');
             expect(dictionaries.getRow('Test 1').count()).toBe(0);

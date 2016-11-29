@@ -1,16 +1,16 @@
 
 'use strict';
 
-describe('packaging', function() {
+describe('packaging', () => {
     beforeEach(window.module('superdesk.apps.packaging'));
 
-    describe('package-items-edit directive', function() {
+    describe('package-items-edit directive', () => {
         // ignore template
-        beforeEach(inject(function($templateCache) {
+        beforeEach(inject(($templateCache) => {
             $templateCache.put('scripts/apps/packaging/views/sd-package-items-edit.html', '');
         }));
 
-        it('listens to package:addItems event', inject(function($compile, $rootScope) {
+        it('listens to package:addItems event', inject(($compile, $rootScope) => {
             var scope = $rootScope.$new();
 
             scope.autosave = jasmine.createSpy('autosave');
@@ -40,15 +40,15 @@ describe('packaging', function() {
         }));
     });
 
-    describe('package-item-preview directive', function() {
+    describe('package-item-preview directive', () => {
         // ignore template
-        beforeEach(inject(function($templateCache) {
+        beforeEach(inject(($templateCache) => {
             $templateCache.put('scripts/apps/packaging/views/sd-package-item-preview.html', '');
         }));
 
         var scope, item;
 
-        beforeEach(inject(function($rootScope, $compile) {
+        beforeEach(inject(($rootScope, $compile) => {
             var parentScope = $rootScope.$new();
 
             parentScope.item = {_id: 'foo'};
@@ -59,14 +59,14 @@ describe('packaging', function() {
             scope = elem.isolateScope();
         }));
 
-        it('can preview item', inject(function($rootScope, $q, superdesk) {
+        it('can preview item', inject(($rootScope, $q, superdesk) => {
             spyOn(superdesk, 'intent').and.returnValue($q.when());
             scope.preview(item);
             $rootScope.$apply();
             expect(superdesk.intent).toHaveBeenCalledWith('preview', 'item', item);
         }));
 
-        it('can open item', inject(function($rootScope, $q, authoringWorkspace) {
+        it('can open item', inject(($rootScope, $q, authoringWorkspace) => {
             spyOn(authoringWorkspace, 'open').and.returnValue($q.when());
             scope.open(item);
             $rootScope.$apply();

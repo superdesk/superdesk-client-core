@@ -1,13 +1,13 @@
 'use strict';
 
-describe('content filters', function() {
+describe('content filters', () => {
     var $scope;
 
     beforeEach(window.module('superdesk.apps.content_filters'));
     beforeEach(window.module('superdesk.mocks'));
 
-    beforeEach(inject(function($rootScope, $controller, contentFilters,
-        $q, api, $location, $window, notify) {
+    beforeEach(inject(($rootScope, $controller, contentFilters,
+        $q, api, $location, $window, notify) => {
         $scope = $rootScope.$new();
         $controller('ProductionTestCtrl',
             {
@@ -21,7 +21,7 @@ describe('content filters', function() {
     }));
 
     it('can call production test for matching results',
-    inject(function($rootScope, notify, contentFilters, $timeout, $q, api, $window) {
+    inject(($rootScope, notify, contentFilters, $timeout, $q, api, $window) => {
         var diff = {filter_id: '559ba1c91024548825803cc4', return_matching: true};
         var toMatch = [{source: 'test'}];
 
@@ -37,7 +37,7 @@ describe('content filters', function() {
     }));
 
     it('can call production test for non-matching results',
-    inject(function($rootScope, notify, contentFilters, $timeout, $q, api, $window) {
+    inject(($rootScope, notify, contentFilters, $timeout, $q, api, $window) => {
         var diff = {filter_id: '559ba1c91024548825803cc5', return_matching: false};
         var toMatch = [];
 

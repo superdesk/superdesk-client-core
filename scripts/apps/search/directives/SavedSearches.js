@@ -20,16 +20,16 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
             var originalGlobalSavedSearches = [];
 
             desks.initialize()
-            .then(function() {
+            .then(() => {
                 scope.userLookup = desks.userLookup;
             });
 
             function initSavedSearches() {
-                savedSearch.getUserSavedSearches(session.identity).then(function(searches) {
+                savedSearch.getUserSavedSearches(session.identity).then((searches) => {
                     scope.userSavedSearches.length = 0;
                     scope.globalSavedSearches.length = 0;
                     scope.searches = searches;
-                    _.forEach(scope.searches, function(savedSearch) {
+                    _.forEach(scope.searches, (savedSearch) => {
                         savedSearch.filter.query = search.setFilters(savedSearch.filter.query);
                         if (savedSearch.user === session.identity._id) {
                             scope.userSavedSearches.push(savedSearch);
@@ -63,13 +63,11 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                 scope.globalSavedSearches = _.clone(originalGlobalSavedSearches);
 
                 if (scope.searchText || scope.searchText !== '') {
-                    scope.userSavedSearches = _.filter(originalUserSavedSearches, function(n) {
-                        return n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0;
-                    });
+                    scope.userSavedSearches = _.filter(originalUserSavedSearches,
+                        (n) => n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0);
 
-                    scope.globalSavedSearches = _.filter(originalGlobalSavedSearches, function(n) {
-                        return n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0;
-                    });
+                    scope.globalSavedSearches = _.filter(originalGlobalSavedSearches,
+                        (n) => n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0);
                 }
             };
 
@@ -77,11 +75,11 @@ export function SavedSearches($rootScope, api, session, modal, notify, gettext, 
                 modal.confirm(
                     gettext('Are you sure you want to delete saved search?')
                 )
-                .then(function() {
-                    resource.remove(searches).then(function() {
+                .then(() => {
+                    resource.remove(searches).then(() => {
                         notify.success(gettext('Saved search removed'));
                         initSavedSearches();
-                    }, function() {
+                    }, () => {
                         notify.error(gettext('Error. Saved search not deleted.'));
                     });
                 });

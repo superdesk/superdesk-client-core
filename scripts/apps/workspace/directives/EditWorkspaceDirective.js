@@ -14,7 +14,7 @@ export function EditWorkspaceDirective(workspaces) {
              */
             scope.save = function() {
                 workspaces.save(scope.workspace)
-                .then(function() {
+                .then(() => {
                     scope.errors = null;
                     var workspace = scope.workspace;
 
@@ -22,7 +22,7 @@ export function EditWorkspaceDirective(workspaces) {
                     if (scope.done) {
                         return scope.done(workspace);
                     }
-                }, function(response) {
+                }, (response) => {
                     scope.errors = response.data._issues;
                 });
             };

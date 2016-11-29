@@ -65,7 +65,7 @@ export function SearchService($location, gettext, config, session) {
      */
     function setParameters(filters, params) {
         // set the filters for parameters defined in the parameters panel.
-        _.each(PARAMETERS, function(value, key) {
+        _.each(PARAMETERS, (value, key) => {
             if (!params[key]) {
                 return;
             }
@@ -112,7 +112,7 @@ export function SearchService($location, gettext, config, session) {
         });
 
         // Set filters for Aggregates when facet is removed from the filter panel.
-        _.each(EXCLUDE_FACETS, function(value, key) {
+        _.each(EXCLUDE_FACETS, (value, key) => {
             if (!params[key]) {
                 return;
             }
@@ -205,7 +205,7 @@ export function SearchService($location, gettext, config, session) {
      * @return {Object} the updated search object
      */
     this.setFilters = function(search) {
-        _.forOwn(search, function(value, key) {
+        _.forOwn(search, (value, key) => {
             if (_.includes(['priority', 'urgency'], key)) {
                 search[key] = JSON.stringify(value);
             }
@@ -247,12 +247,12 @@ export function SearchService($location, gettext, config, session) {
             zeroHourSuffix = 'T00:00:00',
             midnightSuffix = 'T23:59:59';
 
-        angular.forEach(_params, function(value, key) {
+        angular.forEach(_params, (value, key) => {
             params[key] = value;
         });
 
         if (params.q) {
-            angular.forEach(this.cvs, function(cv) {
+            angular.forEach(this.cvs, (cv) => {
                 if (cv.field !== cv.id) {
                     params.q = params.q.replace(cv.id + '.qcode:(', cv.field + '.qcode:(');
                 }
@@ -516,7 +516,7 @@ export function SearchService($location, gettext, config, session) {
      * helper to compare if items in 'a' are different with 'b' on _id and _current_version, if type is published.
      */
     function compareWith(a, b) {
-        return _.filter(a._items, function(item) {
+        return _.filter(a._items, (item) => {
             if (item._type === 'published') {
                 return !_.find(b._items, {_id: item._id, _current_version: item._current_version});
             }
@@ -561,7 +561,7 @@ export function SearchService($location, gettext, config, session) {
      */
     this.mergeHighlightFields = function(item) {
         if (item.es_highlight) {
-            _.forEach(_.keys(item.es_highlight), function(key) {
+            _.forEach(_.keys(item.es_highlight), (key) => {
                 item[key] = item.es_highlight[key][0];
             });
         } else {
@@ -601,15 +601,13 @@ export function SearchService($location, gettext, config, session) {
         // if fetched items are new or removed then update current scope.items
         // by adding or removing items found in diffToAdd or diffToMinus respectively.
         if (!_.isEmpty(diffToMinus)) {
-            _.remove(scopeItems._items, function(item) {
-                return _.includes(diffToMinus, item._id);
-            });
+            _.remove(scopeItems._items, (item) => _.includes(diffToMinus, item._id));
         }
 
         if (!_.isEmpty(diffToAdd)) {
             var index = 0;
 
-            _.map(newItems._items, function(item) {
+            _.map(newItems._items, (item) => {
                 if (_.includes(diffToAdd, item._id)) {
                     // insert item at its place from the fetched sorted items
                     scopeItems._items.splice(index, 0, item);
@@ -691,7 +689,7 @@ export function SearchService($location, gettext, config, session) {
      * @return {Object}
      */
     this.updateItems = function(newItems, scopeItems) {
-        _.map(scopeItems._items, function(item) {
+        _.map(scopeItems._items, (item) => {
             if (item._type === 'published') {
                 return _.extend(item, _.find(newItems._items,
                     {_id: item._id, _current_version: item._current_version}));

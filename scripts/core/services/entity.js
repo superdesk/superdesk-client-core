@@ -89,9 +89,9 @@ export default angular.module('superdesk.core.services.entity', [])
             makeQuery: function(params, defaults = {}) {
                 var parts = [];
 
-                _.forEach(params, function(val, key) {
+                _.forEach(params, (val, key) => {
                     if (!angular.equals(defaults[key], val)) {
-                        _.forEach(_.isArray(val) ? val : [val], function(item) {
+                        _.forEach(_.isArray(val) ? val : [val], (item) => {
                             parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(item));
                         });
                     }

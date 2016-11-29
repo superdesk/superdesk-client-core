@@ -36,7 +36,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
 
             function fetchProviders() {
                 return api.ingestProviders.query({max_results: 200})
-                    .then(function(result) {
+                    .then((result) => {
                         result._items = $filter('sortByName')(result._items);
                         $scope.providers = result;
                     });
@@ -48,13 +48,11 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
 
                 if (providerId) {
                     if ($scope.providers && $scope.providers._items) {
-                        provider = _.find($scope.providers._items, function(item) {
-                            return item._id === providerId;
-                        });
+                        provider = _.find($scope.providers._items, (item) => item._id === providerId);
                     }
 
                     if (_.isNil(provider)) {
-                        api.ingestProviders.getById(providerId).then(function(result) {
+                        api.ingestProviders.getById(providerId).then((result) => {
                             provider = result;
                         });
                     }
@@ -65,24 +63,24 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                 }
             }
 
-            fetchProviders().then(function() {
+            fetchProviders().then(() => {
                 openProviderModal();
             });
 
             api('rule_sets').query()
-                .then(function(result) {
+                .then((result) => {
                     $scope.rulesets = $filter('sortByName')(result._items);
                 });
 
             api('routing_schemes').query()
-                .then(function(result) {
+                .then((result) => {
                     $scope.routingScheme = $filter('sortByName')(result._items);
                 });
 
             $scope.fetchSourceErrors = function() {
                 if ($scope.provider && $scope.provider.feeding_service) {
                     return api('io_errors').query({source_type: $scope.provider.feeding_service})
-                        .then(function(result) {
+                        .then((result) => {
                             $scope.provider.source_errors = result._items[0].source_errors;
                             $scope.provider.all_errors = result._items[0].all_errors;
                         });
@@ -94,10 +92,10 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                     function removeIngestProviderChannel() {
                         api.ingestProviders.remove(provider)
                             .then(
-                                function() {
+                                () => {
                                     notify.success(gettext('Ingest Source deleted.'));
                                 },
-                                function(response) {
+                                (response) => {
                                     if (angular.isDefined(response.data._message)) {
                                         notify.error(response.data._message);
                                     } else {
@@ -130,19 +128,17 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
 
                 var aliasObj = {};
 
-                aliases.forEach(function(item) {
+                aliases.forEach((item) => {
                     _.extend(aliasObj, item);
                 });
 
-                Object.keys(aliasObj).forEach(function(fieldName) {
+                Object.keys(aliasObj).forEach((fieldName) => {
                     $scope.fieldAliases.push(
                         {fieldName: fieldName, alias: aliasObj[fieldName]});
                 });
 
                 $scope.fieldsNotSelected = $scope.contentFields.filter(
-                    function(fieldName) {
-                        return !(fieldName in aliasObj);
-                    }
+                    (fieldName) => !(fieldName in aliasObj)
                 );
             };
 
@@ -204,16 +200,14 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             $scope.fieldSelectionChanged = function() {
                 var selectedFields = {};
 
-                $scope.fieldAliases.forEach(function(item) {
+                $scope.fieldAliases.forEach((item) => {
                     if (item.fieldName) {
                         selectedFields[item.fieldName] = true;
                     }
                 });
 
                 $scope.fieldsNotSelected = $scope.contentFields.filter(
-                    function(fieldName) {
-                        return !(fieldName in selectedFields);
-                    }
+                    (fieldName) => !(fieldName in selectedFields)
                 );
             };
 
@@ -243,7 +237,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
             $scope.save = function() {
                 var newAliases = [];
 
-                $scope.fieldAliases.forEach(function(item) {
+                $scope.fieldAliases.forEach((item) => {
                     if (item.fieldName && item.alias) {
                         var newAlias = {};
 
@@ -259,7 +253,7 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                 delete $scope.provider.source_errors;
 
                 api.ingestProviders.save($scope.origProvider, $scope.provider)
-                    .then(function() {
+                    .then(() => {
                         notify.success(gettext('Provider saved!'));
                         $scope.cancel();
                     })

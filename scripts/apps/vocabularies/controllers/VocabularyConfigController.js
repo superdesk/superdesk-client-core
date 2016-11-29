@@ -7,17 +7,17 @@ export function VocabularyConfigController($scope, vocabularies, $timeout) {
      */
     $scope.openVocabulary = function(vocabulary) {
         $scope.loading = true;
-        $timeout(function() {
+        $timeout(() => {
             $scope.vocabulary = vocabulary;
         }, 200, true);
     };
 
-    $scope.$on('vocabularies:loaded', function() {
+    $scope.$on('vocabularies:loaded', () => {
         $scope.loading = false;
     });
 
     // load the list of vocabularies into component:
-    vocabularies.getVocabularies().then(function(vocabularies) {
+    vocabularies.getVocabularies().then((vocabularies) => {
         $scope.vocabularies = vocabularies;
     });
 }

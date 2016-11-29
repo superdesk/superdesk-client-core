@@ -159,6 +159,12 @@
         "arrow-spacing": 2,
         "constructor-super": 2,
         "no-class-assign": 2,
-        "no-const-assign": 2
+        "no-const-assign": 2,
+        "no-useless-computed-key": 2,
+        "no-useless-constructor": 2,
+        "no-useless-rename": 2,
+        "no-var": 0,
+        "object-shorthand": [2, "consistent"],
+        "prefer-arrow-callback": [2, {"allowNamedFunctions": true}]
     }
 }

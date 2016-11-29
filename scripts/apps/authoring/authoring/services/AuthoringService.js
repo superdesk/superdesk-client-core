@@ -18,7 +18,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         return helpers.CONTENT_FIELDS_DEFAULTS;
     };
 
-    desks.fetchCurrentUserDesks().then(function(desksList) {
+    desks.fetchCurrentUserDesks().then((desksList) => {
         self.userDesks = desksList;
     });
 
@@ -34,7 +34,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             superdeskFlags.flags.authoring = true;
         }
         if (_.includes(['legal_archive', 'archived'], repo)) {
-            return api.find(repo, _id).then(function(item) {
+            return api.find(repo, _id).then((item) => {
                 item._editable = false;
                 return item;
             });
@@ -66,17 +66,17 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var authoringWorkspace = $injector.get('authoringWorkspace');
 
         session.getIdentity()
-            .then(function(user) {
+            .then((user) => {
                 var updates = {
                     desk_id: desks.getCurrentDeskId() || item.task.desk
                 };
 
                 return api.save('archive_rewrite', {}, updates, item);
             })
-            .then(function(newItem) {
+            .then((newItem) => {
                 notify.success(gettext('Update Created.'));
                 authoringWorkspace.edit(newItem._id);
-            }, function(response) {
+            }, (response) => {
                 if (angular.isDefined(response.data._message)) {
                     notify.error(gettext('Failed to generate update: ' + response.data._message));
                 } else {
@@ -103,9 +103,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     promise = confirm.confirm()
                         .then(angular.bind(this, function save() {
                             return this.save(orig, diff);
-                        }), function() { // ignore saving
-                            return $q.when('ignore');
-                        });
+                        }), () =>  // ignore saving
+                             $q.when('ignore'));
                 } else {
                     promise = $q.when('ignore');
                 }
@@ -141,9 +140,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             promise = confirm.confirmPublish(action)
                 .then(angular.bind(this, function save() {
                     return true;
-                }), function() { // cancel
-                    return false;
-                });
+                }), () =>  // cancel
+                     false);
         }
 
         return promise;
@@ -193,14 +191,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var endpoint = 'archive_' + action;
 
         return api.update(endpoint, orig, extDiff)
-        .then(function(result) {
-            return lock.unlock(result)
-                .then(function(result) {
-                    return result;
-                });
-        }, function(response) {
-            return response;
-        });
+        .then((result) => lock.unlock(result)
+                .then((result) => result), (response) => response);
     };
 
     this.validateBeforeTansa = function(orig, diff, act) {
@@ -219,9 +211,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 promise = confirm.confirmSaveWork(message)
                     .then(angular.bind(this, function save() {
                         return this.saveWork(orig, diff);
-                    }), function(err) { // cancel
-                        return $q.when();
-                    });
+                    }), (err) =>  // cancel
+                         $q.when());
             }
         }
 
@@ -249,7 +240,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         // Finding if all the keys are dirty for real
 
         if (angular.isDefined(origItem)) {
-            angular.forEach(_.keys(diff), function(key) {
+            angular.forEach(_.keys(diff), (key) => {
                 if (_.isEqual(diff[key], origItem[key])) {
                     delete diff[key];
                 }
@@ -266,7 +257,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(diff, origItem);
 
         if (_.size(diff) > 0) {
-            return api.save('archive', origItem, diff).then(function(_item) {
+            return api.save('archive', origItem, diff).then((_item) => {
                 origItem._autosave = null;
                 origItem._autosaved = false;
                 origItem._locked = lock.isLockedInCurrentSession(item);
@@ -295,7 +286,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var _diff = _.omit(item, ['unique_name', 'unique_id', '_id', 'guid']);
         var diff = helpers.extendItem(_orig, _diff);
 
-        return api.save('archive', {}, diff).then(function(_item) {
+        return api.save('archive', {}, diff).then((_item) => {
             _item._autosave = null;
             return _item;
         });
@@ -341,9 +332,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      */
     this.lock = function lock(item, userId) {
         autosave.stop(item);
-        api.find('users', userId).then(function(user) {
+        api.find('users', userId).then((user) => {
             item.lock_user = user;
-        }, function(rejection) {
+        }, (rejection) => {
             item.lock_user = userId;
         });
         item._locked = true;

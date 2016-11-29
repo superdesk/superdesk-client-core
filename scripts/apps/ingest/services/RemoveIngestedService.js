@@ -12,8 +12,8 @@ export function RemoveIngestedService(api, $rootScope) {
     function fetchProviders() {
         if (api.ingestProviders) {
             return api.ingestProviders.query({max_results: 200})
-            .then(function(result) {
-                _.each(result._items, function(provider) {
+            .then((result) => {
+                _.each(result._items, (provider) => {
                     providers[provider._id] = provider.allow_remove_ingested || false;
                 });
             });

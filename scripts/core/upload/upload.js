@@ -26,7 +26,7 @@ function SourcesDirective() {
                     .appendTo(elem);
             }
 
-            scope.$watch('renditions', function(renditions) {
+            scope.$watch('renditions', (renditions) => {
                 pause();
                 elem.empty();
                 angular.forEach(renditions, createSource);

@@ -70,13 +70,13 @@ export function ArticleEditDirective(
 
             function triggerAutosave() {
                 if (mainEditScope) {
-                    mainEditScope.$applyAsync(function() {
+                    mainEditScope.$applyAsync(() => {
                         mainEditScope.autosave(mainEditScope.item);
                     });
                 }
             }
 
-            scope.$watch('item', function(item) {
+            scope.$watch('item', (item) => {
                 if (item) {
                     /* Creates a copy of dateline object from item.__proto__.dateline */
                     if (item.dateline) {
@@ -100,14 +100,14 @@ export function ArticleEditDirective(
                 }
             });
 
-            metadata.initialize().then(function() {
+            metadata.initialize().then(() => {
                 scope.metadata = metadata.values;
 
                 if (scope.item && (scope.item.type === 'picture' || scope.item.type === 'graphic')) {
                     scope.item.hasCrops = false;
-                    scope.item.hasCrops = scope.metadata.crop_sizes.some(function(crop) {
-                        return scope.item.renditions && scope.item.renditions[crop.name];
-                    });
+                    scope.item.hasCrops = scope.metadata.crop_sizes.some(
+                        (crop) => scope.item.renditions && scope.item.renditions[crop.name]
+                    );
                 }
 
                 if (scope.item && !scope.item.sign_off) {
@@ -135,9 +135,7 @@ export function ArticleEditDirective(
 
                     item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
                         $interpolate('{{ month | translate }}')({
-                            month: _.findKey(scope.monthNames, function(m) {
-                                return m === scope.dateline.month;
-                            })
+                            month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month)
                         }),
                         scope.dateline.day, item.dateline.source);
                 }
@@ -219,9 +217,7 @@ export function ArticleEditDirective(
 
                     scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
                         $interpolate('{{ month | translate }}')({
-                            month: _.findKey(scope.monthNames, function(m) {
-                                return m === scope.dateline.month;
-                            })
+                            month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month)
                         }),
                         scope.dateline.day, scope.item.dateline.source);
 
@@ -240,7 +236,7 @@ export function ArticleEditDirective(
                     showMetadataEditor: true,
                     isNew: false
                 })
-                    .then(function(result) {
+                    .then((result) => {
                         var renditions = _.create(scope.item.renditions || {});
                         // always mark dirty as poi could have changed with no
                         // cropData changes
@@ -250,7 +246,7 @@ export function ArticleEditDirective(
                         if (scope.articleEdit) {
                             scope.articleEdit.$setDirty();
                         }
-                        angular.forEach(result.cropData, function(crop, rendition) {
+                        angular.forEach(result.cropData, (crop, rendition) => {
                             renditions[rendition] = angular.extend({}, renditions[rendition] || {}, crop);
                         });
 
@@ -278,7 +274,7 @@ export function ArticleEditDirective(
                 }
 
                 // first option should always be selected, as multiple helplines could be added in footer
-                _.defer(function() {
+                _.defer(() => {
                     var ddlHelpline = elem.find('#helplines');
 
                     ddlHelpline[0].options[0].selected = true;
@@ -287,7 +283,7 @@ export function ArticleEditDirective(
 
             scope.$watch('item.body_html', () => suggest.trigger(scope.item, scope.origItem));
 
-            scope.$watch('item.flags.marked_for_sms', function(isMarked) {
+            scope.$watch('item.flags.marked_for_sms', (isMarked) => {
                 if (isMarked) {
                     scope.item.sms_message = scope.item.sms_message || scope.item.abstract || '';
                 } else if (scope.item) {
@@ -295,10 +291,10 @@ export function ArticleEditDirective(
                 }
             });
 
-            scope.$watch('item.profile', function(profile) {
+            scope.$watch('item.profile', (profile) => {
                 if (profile) {
                     content.getType(profile)
-                        .then(function(type) {
+                        .then((type) => {
                             scope.contentType = type;
                             scope.editor = authoring.editor = content.editor(type);
                             scope.schema = authoring.schema = content.schema(type);

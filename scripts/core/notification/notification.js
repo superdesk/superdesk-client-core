@@ -74,7 +74,7 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
             $rootScope.$broadcast('disconnected');
 
             $interval.cancel(connectTimer);
-            connectTimer = $interval(function() {
+            connectTimer = $interval(() => {
                 if (ws && session.sessionId) {
                     connect();  // Retry to connect for every TIMEOUT interval.
                 }
@@ -98,26 +98,26 @@ function NotifyConnectionService($rootScope, notify, gettext, $timeout, session)
 
     self.message = null;
 
-    $rootScope.$on('disconnected', function(event) {
+    $rootScope.$on('disconnected', (event) => {
         self.message = gettext('Disconnected from Notification Server!');
-        $rootScope.$applyAsync(function() {
+        $rootScope.$applyAsync(() => {
             notify.warning(self.message);
         });
     });
 
-    $rootScope.$on('connected', function(event) {
+    $rootScope.$on('connected', (event) => {
         self.message = gettext('Connected to Notification Server!');
-        $rootScope.$applyAsync(function() {
+        $rootScope.$applyAsync(() => {
             notify.pop();   // removes disconnection warning, once connected.
             notify.success(self.message);
         });
     });
 
-    $rootScope.$on('vocabularies:updated', function(event, data) {
+    $rootScope.$on('vocabularies:updated', (event, data) => {
         if (!data.user || data.user !== session.identity._id) {
             self.message = gettext(data.vocabulary +
                 ' vocabulary has been updated. Please re-login to see updated vocabulary values');
-            $timeout(function() {
+            $timeout(() => {
                 notify.error(self.message);
             }, 100);
         }
@@ -131,7 +131,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
     self.userDesks = [];
     self.result = null;
     self.activeDesk = null;
-    desks.fetchCurrentUserDesks().then(function(deskList) {
+    desks.fetchCurrentUserDesks().then((deskList) => {
         self.userDesks = deskList;
         self.activeDesk = desks.active.desk;
     });
@@ -155,7 +155,7 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
         stage_visibility_updated: 'Stage visibility change'
     };
 
-    $rootScope.$on('reload', function(event, msg) {
+    $rootScope.$on('reload', (event, msg) => {
         self.result = self.reloadIdentifier(msg);
         self.reload(self.result);
     });

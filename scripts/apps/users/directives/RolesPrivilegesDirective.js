@@ -8,29 +8,29 @@ export function RolesPrivilegesDirective(api, gettext, notify, $q, $filter) {
         link: function(scope) {
             api('roles')
                 .query()
-                .then(function(result) {
+                .then((result) => {
                     scope.roles = $filter('sortByName')(result._items);
                 });
 
             api('privileges').query()
-                .then(function(result) {
+                .then((result) => {
                     scope.privileges = result._items;
                 });
 
             scope.saveAll = function(rolesForm) {
                 var promises = [];
 
-                _.each(scope.roles, function(role) {
+                _.each(scope.roles, (role) => {
                     promises.push(api.save('roles', role, _.pick(role, 'privileges'))
-                    .then(null, function(error) {
+                    .then(null, (error) => {
                         console.error(error);
                     }));
                 });
 
-                $q.all(promises).then(function() {
+                $q.all(promises).then(() => {
                     notify.success(gettext('Privileges updated.'));
                     rolesForm.$setPristine();
-                }, function(response) {
+                }, (response) => {
                     notify.error(gettext(handleError(response)));
                 });
             };

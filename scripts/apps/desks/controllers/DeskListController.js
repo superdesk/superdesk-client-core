@@ -14,11 +14,11 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
     }
 
     desks.initialize()
-    .then(function() {
+    .then(() => {
         $scope.desks = desks.desks;
         $scope.deskStages = desks.deskStages;
 
-        desks.fetchCurrentUserDesks().then(function(deskList) {
+        desks.fetchCurrentUserDesks().then((deskList) => {
             userDesks = deskList;
         });
     });
@@ -27,20 +27,20 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
     $scope.online_users = false;
 
     api('roles').query()
-        .then(function(result) {
+        .then((result) => {
             $scope.roles = sorted(result);
         });
 
     $scope.privileges = privileges.privileges;
 
-    beta.isBeta().then(function(isBeta) {
+    beta.isBeta().then((isBeta) => {
         var views = ['content', 'users', 'sluglines'];
 
         if (isBeta) {
             views = ['content', 'tasks', 'users', 'sluglines'];
         }
 
-        $scope.$applyAsync(function() {
+        $scope.$applyAsync(() => {
             $scope.views = views;
             $scope.view = $scope.views[0];
         });
@@ -63,8 +63,8 @@ export function DeskListController($scope, desks, superdesk, privileges, tasks, 
         superdesk.intent('view', target);
     };
 
-    $scope.$on('desks:refresh:stages', function(e, deskId) {
-        desks.refreshStages().then(function() {
+    $scope.$on('desks:refresh:stages', (e, deskId) => {
+        desks.refreshStages().then(() => {
             $scope.deskStages[deskId] = desks.deskStages[deskId];
         });
     });

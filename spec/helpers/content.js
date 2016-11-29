@@ -17,7 +17,7 @@ function Content() {
         var list = element(by.css('i.icon-th-list'));
 
         return list.isDisplayed()
-            .then(function(isVisible) {
+            .then((isVisible) => {
                 if (isVisible) {
                     list.click();
                 }
@@ -27,7 +27,7 @@ function Content() {
     this.setGridView = function() {
         var grid = element(by.css('[tooltip="switch to grid view"]'));
 
-        return grid.then(function(isVisible) {
+        return grid.then((isVisible) => {
             if (isVisible) {
                 grid.click();
             }
@@ -48,9 +48,7 @@ function Content() {
             }
 
             return elem.element(by.className('item-heading')).getText()
-                .then(function(text) {
-                    return text.toLowerCase().indexOf(item) >= 0;
-                });
+                .then((text) => text.toLowerCase().indexOf(item) >= 0);
         }
     };
 
@@ -65,9 +63,7 @@ function Content() {
     };
 
     function waitFor(elem, time) {
-        return browser.wait(function() {
-            return elem.isDisplayed();
-        }, time || 800);
+        return browser.wait(() => elem.isDisplayed(), time || 800);
     }
 
     this.openItemMenu = function(item) {

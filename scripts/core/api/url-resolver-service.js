@@ -14,7 +14,7 @@ function URLResolver($http, $q, $log, config) {
      * @returns Promise
      */
     this.resource = function(resource) {
-        return this.links().then(function() {
+        return this.links().then(() => {
             if (_links[resource]) {
                 return _links[resource];
             }
@@ -59,11 +59,11 @@ function URLResolver($http, $q, $log, config) {
             method: 'GET',
             url: baseUrl,
             cache: true
-        }).then(function(response) {
+        }).then((response) => {
             _links = {};
 
             if (response.status === 200) {
-                _.each(response.data._links.child, function(link) {
+                _.each(response.data._links.child, (link) => {
                     _links[link.title] = basejoin(link.href);
                 });
             } else {

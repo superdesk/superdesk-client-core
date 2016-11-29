@@ -1,7 +1,7 @@
-describe('widgets provider', function() {
+describe('widgets provider', () => {
     var dashboardWidgetsProvider;
 
-    beforeEach(function() {
+    beforeEach(() => {
         angular.module('superdesk.apps.dashboard.widgets.tests', [])
         .config(['dashboardWidgetsProvider', function(_dashboardWidgetsProvider_) {
             dashboardWidgetsProvider = _dashboardWidgetsProvider_;
@@ -10,19 +10,19 @@ describe('widgets provider', function() {
         window.module('superdesk.apps.dashboard.widgets', 'superdesk.apps.dashboard.widgets.tests');
 
         // init the tests module to get the actual provider
-        inject(function() { /* no-op */ });
+        inject(() => { /* no-op */ });
     });
 
-    beforeEach(function() {
+    beforeEach(() => {
         dashboardWidgetsProvider.addWidget('id', {label: 'first'}, 'true');
         dashboardWidgetsProvider.addWidget('id', {label: 'second'}, 'true');
     });
 
-    it('is defined', inject(function(dashboardWidgets) {
+    it('is defined', inject((dashboardWidgets) => {
         expect(dashboardWidgets).not.toBe(undefined);
     }));
 
-    it('can register widgets', inject(function(dashboardWidgets) {
+    it('can register widgets', inject((dashboardWidgets) => {
         expect(dashboardWidgets.length).toBe(1);
         expect(dashboardWidgets[0]._id).toBe('id');
         expect(dashboardWidgets[0].label).toBe('second');

@@ -1,13 +1,13 @@
 'use strict';
 
-describe('legal archive service', function() {
+describe('legal archive service', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.legal_archive'));
 
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
@@ -22,14 +22,14 @@ describe('legal archive service', function() {
         });
     }));
 
-    it('can create base query', inject(function(legal) {
+    it('can create base query', inject((legal) => {
         var criteria = legal.getCriteria();
 
         expect(criteria.sort).toEqual('[("versioncreated", -1)]');
         expect(criteria.max_results).toBe(25);
     }));
 
-    it('can create query string query', inject(function($rootScope, legal) {
+    it('can create query string query', inject(($rootScope, legal) => {
         legal.updateSearchQuery({headline: 'test'});
         $rootScope.$digest();
         var criteria = legal.getCriteria();
@@ -65,7 +65,7 @@ describe('legal archive service', function() {
         ].join(',') + ']}');
     }));
 
-    it('can sort items', inject(function(legal, $location, $rootScope) {
+    it('can sort items', inject((legal, $location, $rootScope) => {
         legal.setSort('urgency');
         $rootScope.$digest();
         expect($location.search().sort).toBe('urgency:desc');

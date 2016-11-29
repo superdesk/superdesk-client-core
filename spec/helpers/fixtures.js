@@ -11,7 +11,7 @@ function resetApp(profile, callback) {
         uri: '/prepopulate',
         method: 'POST',
         json: {profile: profile}
-    }, function(e, r, j) {
+    }, (e, r, j) => {
         browser.params.token = null;
         callback(e, r, j);
     });

@@ -50,7 +50,7 @@ function FindReplaceDirective($timeout, $rootScope, editor, macros) {
                 editor.replaceAll(scope.to || '');
             };
 
-            scope.$watch('from', function(needle) {
+            scope.$watch('from', (needle) => {
                 var input = document.getElementById('find-replace-what');
                 var selectionStart = input.selectionStart;
                 var selectionEnd = input.selectionEnd;
@@ -68,12 +68,12 @@ function FindReplaceDirective($timeout, $rootScope, editor, macros) {
                 return diff;
             }
 
-            scope.$watch('caseSensitive', function(caseSensitive) {
+            scope.$watch('caseSensitive', (caseSensitive) => {
                 editor.setSettings({findreplace: {diff: getDiff(), caseSensitive: caseSensitive}});
                 editor.render();
             });
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 editor.setSettings({findreplace: null});
                 editor.render();
             });

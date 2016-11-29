@@ -34,13 +34,12 @@ export function DeskConfigController($scope, $controller, gettext, notify, desks
         modal.confirm(gettext('Please confirm you want to delete desk.')).then(
             function runConfirmed() {
                 desks.remove(desk).then(
-                    function(response) {
-                        _.remove($scope.desks._items, function(deskToBeRemoved) {
-                            return deskToBeRemoved.name.toLowerCase() === desk.name.toLowerCase();
-                        });
+                    (response) => {
+                        _.remove($scope.desks._items,
+                            (deskToBeRemoved) => deskToBeRemoved.name.toLowerCase() === desk.name.toLowerCase());
                         notify.success(gettext('Desk deleted.'), 3000);
                     },
-                    function(response) {
+                    (response) => {
                         if (angular.isDefined(response.data._message)) {
                             notify.error(gettext('Error: ' + response.data._message));
                         } else {
@@ -52,7 +51,7 @@ export function DeskConfigController($scope, $controller, gettext, notify, desks
         );
     };
 
-    $scope.$on('desks:refresh:stages', function() {
+    $scope.$on('desks:refresh:stages', () => {
         desks.refreshStages();
     });
 

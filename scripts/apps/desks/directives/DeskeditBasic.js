@@ -10,7 +10,7 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
             scope.saving = false;
             scope.message = null;
 
-            scope.$watch('step.current', function(step) {
+            scope.$watch('step.current', (step) => {
                 if (step === 'general') {
                     if (scope.desk.edit && scope.desk.edit._id) {
                         scope.edit(scope.desk.edit);
@@ -39,7 +39,7 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
                 scope.message = gettext('Saving...');
                 var _new = !desk._id;
 
-                desks.save(scope.desk.edit, desk).then(function(res) {
+                desks.save(scope.desk.edit, desk).then((res) => {
                     if (_new) {
                         scope.edit(scope.desk.edit);
                         scope.desks._items.unshift(scope.desk.edit);
@@ -57,7 +57,7 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
                         WizardHandler.wizard('desks').finish();
                     }
                 }, errorMessage)
-                .finally(function() {
+                .finally(() => {
                     scope.saving = false;
                     scope.message = null;
                 });
@@ -97,7 +97,7 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, $filter, 
                 scope.deskTypes = metadata.values.desk_types;
             } else {
                 metadata.fetchMetadataValues()
-                    .then(function() {
+                    .then(() => {
                         scope.deskTypes = metadata.values.desk_types;
                     });
             }

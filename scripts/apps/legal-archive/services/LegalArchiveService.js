@@ -89,7 +89,7 @@ export function LegalArchiveService($q, api, notify, $location, gettext, config)
 
         var hasId = false;
 
-        _.forEach(search, function(n, key) {
+        _.forEach(search, (n, key) => {
             var val = _.trim(n);
 
             if (val) {

@@ -4,12 +4,12 @@
 var dashboard = require('./helpers/dashboard'),
     altKey = require('./helpers/utils').altKey;
 
-describe('workspace', function() {
-    beforeEach(function() {
+describe('workspace', () => {
+    beforeEach(() => {
         dashboard.openDashboard();
     });
 
-    it('can switch views by keyboard', function() {
+    it('can switch views by keyboard', () => {
         // wait for icons
         browser.wait(() => element(by.className('big-icon-view')).isDisplayed(), 2000);
 

@@ -74,14 +74,11 @@ function Monitoring() {
     this.getItem = function(group, item) {
         var all = this.getGroupItems(group);
 
-        browser.wait(function() {
-            return all.count();
-        }, 7500);
+        browser.wait(() => all.count(), 7500);
 
         if (item.type) {
-            return all.filter(function(elem) {
-                return elem.all(by.className('filetype-icon-' + item.type)).count();
-            }).get(item.index || 0);
+            return all.filter((elem) =>
+                elem.all(by.className('filetype-icon-' + item.type)).count()).get(item.index || 0);
         }
 
         return all.get(item);
@@ -335,9 +332,7 @@ function Monitoring() {
 
     this.showMonitoringSettings = function() {
         element(by.css('.icon-settings')).click();
-        browser.wait(function() {
-            return element.all(by.css('.aggregate-widget-config')).isDisplayed();
-        });
+        browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed());
         element.all(by.css('[ng-click="goTo(step)"]')).first().click();
     };
 
@@ -390,11 +385,7 @@ function Monitoring() {
 
         btn.click();
         // wait for modal to be removed
-        browser.wait(function() {
-            return btn.isPresent().then(function(isPresent) {
-                return !isPresent;
-            });
-        }, 500);
+        browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 500);
     };
 
     /**
@@ -485,13 +476,13 @@ function Monitoring() {
         var src = this.getOrderItem(start);
         var dst = this.getOrderItem(end);
 
-        return src.waitReady().then(function() {
+        return src.waitReady().then(() => {
             browser.actions()
                 .mouseMove(src)
                 .mouseDown()
                 .perform()
-                .then(function() {
-                    dst.waitReady().then(function() {
+                .then(() => {
+                    dst.waitReady().then(() => {
                         browser.actions()
                             .mouseMove(dst)
                             .mouseUp()
@@ -513,9 +504,7 @@ function Monitoring() {
     };
 
     this.hasClass = function(element, cls) {
-        return element.getAttribute('class').then(function(classes) {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
+        return element.getAttribute('class').then((classes) => classes.split(' ').indexOf(cls) !== -1);
     };
 
     this.showHideList = function() {
@@ -646,9 +635,7 @@ function Monitoring() {
 
         function textFilter(elem) {
             return elem.element(by.tagName('button')).getText()
-            .then(function(text) {
-                return text.toUpperCase().indexOf(desk.toUpperCase()) >= 0;
-            });
+            .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
         }
 
         function clickFiltered(filtered) {
@@ -668,7 +655,7 @@ function Monitoring() {
             .then(clickFiltered);
 
         // close dropdown if opened
-        dropdownMenu.isDisplayed().then(function(shouldClose) {
+        dropdownMenu.isDisplayed().then((shouldClose) => {
             if (shouldClose) {
                 dropdownBtn.click();
             }
@@ -687,9 +674,7 @@ function Monitoring() {
 
         this.openMonitoring();
 
-        return browser.wait(function() {
-            return element(by.className('list-view')).isPresent();
-        }, 300);
+        return browser.wait(() => element(by.className('list-view')).isPresent(), 300);
     };
 
     this.turnOffWorkingStage = function(deskIndex, canCloseSettingsModal) {

@@ -85,7 +85,7 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                         max_results: scope.pageSize,
                         page: scope.page
                     }))
-                    .then(function(result) {
+                    .then((result) => {
                         var pageSize = scope.pageSize || defaults.pageSize;
 
                         scope.maxPage = Math.ceil(result._meta.total / pageSize) || 0;
@@ -94,7 +94,7 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                 };
                 var update = _.debounce(_update, 500);
 
-                scope.$watch('keyword', function() {
+                scope.$watch('keyword', () => {
                     scope.page = 1;
                     update();
                 });
@@ -110,21 +110,19 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                 };
 
                 scope.unselectItem = function(item) {
-                    _.remove(scope.selectedItems, function(i) {
-                        return i._id === item._id;
-                    });
+                    _.remove(scope.selectedItems, (i) => i._id === item._id);
                 };
 
                 scope.isSelected = function(item) {
-                    return scope.selectedItems ? _.findIndex(scope.selectedItems, function(i) {
-                        return i._id === item._id;
-                    }) !== -1 : false;
+                    return scope.selectedItems ?
+                        _.findIndex(scope.selectedItems, (i) => i._id === item._id) !== -1
+                        : false;
                 };
 
                 scope.isDisabled = function(item) {
-                    return scope.disabledItems ? _.findIndex(scope.disabledItems, function(i) {
-                        return i._id === item._id;
-                    }) !== -1 : false;
+                    return scope.disabledItems ?
+                        _.findIndex(scope.disabledItems, (i) => i._id === item._id) !== -1
+                        : false;
                 };
             }
         };

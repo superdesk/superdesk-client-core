@@ -29,10 +29,10 @@ export default angular.module('superdesk.core.directives.switch', [])
                     render(element, ngModel.$viewValue);
                 };
 
-                element.bind('keydown', function(e) {
+                element.bind('keydown', (e) => {
                     if (e.keyCode === Keys.enter || e.keyCode === Keys.space) {
                         e.preventDefault();
-                        $scope.$apply(function() {
+                        $scope.$apply(() => {
                             ngModel.$setViewValue(!ngModel.$viewValue);
                         });
 
@@ -40,19 +40,19 @@ export default angular.module('superdesk.core.directives.switch', [])
                     }
                 });
 
-                $scope.$watch(attrs.ngModel, function() {
+                $scope.$watch(attrs.ngModel, () => {
                     render(element, ngModel.$viewValue);
                 });
 
-                element.on('click', function(e) {
-                    $scope.$apply(function() {
+                element.on('click', (e) => {
+                    $scope.$apply(() => {
                         ngModel.$setViewValue(!ngModel.$viewValue);
                     });
 
                     return false;
                 });
 
-                $scope.$on('$destroy', function() {
+                $scope.$on('$destroy', () => {
                     element.unbind('keydown');
                     element.off('click');
                 });

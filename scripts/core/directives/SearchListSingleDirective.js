@@ -47,7 +47,7 @@ export default angular.module('superdesk.core.directives.searchListSingle', ['su
             link: function(scope, element, attrs) {
                 scope.selectedItems = [];
 
-                scope.$watch('selectedItems', function() {
+                scope.$watch('selectedItems', () => {
                     if (Array.isArray(scope.selectedItems)) {
                         scope.selectedItem = _.last(scope.selectedItems);
                     }

@@ -1,13 +1,13 @@
-describe('auth interceptor', function() {
+describe('auth interceptor', () => {
     beforeEach(window.module('superdesk.core.auth.interceptor'));
 
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.constant('lodash', _);
         $provide.constant('config', {server: {url: 'http://localhost:5000'}});
     }));
 
     it('should intercept 401 response, run auth and resend request',
-    inject(function($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) {
+    inject(($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) => {
         var interceptor = AuthExpiredInterceptor,
             config = {method: 'GET', url: 'http://localhost:5000/test', headers: {}},
             response = {status: 401, config: config};
@@ -24,7 +24,7 @@ describe('auth interceptor', function() {
     }));
 
     it('should intercept 401 response and reject the request if payload has credentials 1',
-    inject(function($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) {
+    inject(($injector, $q, $rootScope, session, request, AuthExpiredInterceptor) => {
         var interceptor = AuthExpiredInterceptor,
             config = {method: 'POST', url: 'http://localhost:5000/auth', headers: {}},
             response = {status: 401, config: config, data: {_issues: {credentials: 1}}};
@@ -35,9 +35,9 @@ describe('auth interceptor', function() {
 
         var result;
 
-        interceptor.responseError(response).then(function(success) {
+        interceptor.responseError(response).then((success) => {
             result = success;
-        }, function(rejection) {
+        }, (rejection) => {
             result = rejection;
         });
 

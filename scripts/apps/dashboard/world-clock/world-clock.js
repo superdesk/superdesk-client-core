@@ -24,7 +24,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
         function($scope, notify, tzdata) {
             $scope.availableZones = [];
 
-            tzdata.$promise.then(function() {
+            tzdata.$promise.then(() => {
                 $scope.availableZones = tzdata.getTzNames();
             });
 
@@ -67,7 +67,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
         // RequireJS to the testing code which does not use the latter
             this._moment = moment;
 
-            tzdata.$promise.then(function() {
+            tzdata.$promise.then(() => {
                 moment.tz.add(
                 _.pick(tzdata, ['zones', 'links'])
             );
@@ -81,7 +81,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     /**
      * sdClock analog clock
      */
-    .directive('sdClock', function() {
+    .directive('sdClock', () => {
         var pi = Math.PI,
             scales = {
                 s: d3.scale
@@ -138,7 +138,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                     .data(_.range(0, 59, 5))
                     .enter()
                     .append('path')
-                        .attr('d', function(d) {
+                        .attr('d', (d) => {
                             var angle = scales.m(d);
                             var arc = d3.svg.arc()
                                 .innerRadius(r * 0.7)
@@ -161,7 +161,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                     ];
                 }
 
-                scope.$watch('utc', function(utc) {
+                scope.$watch('utc', (utc) => {
                     var time = utc ? utc.tz(scope.tz).format('HH:mm:ss') : '00:00:00';
                     var data = getData(time);
                     var isDay = data[0].val >= 8 && data[0].val < 20;
@@ -181,7 +181,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                         .data(data)
                         .enter()
                         .append('path')
-                        .attr('d', function(d) {
+                        .attr('d', (d) => {
                             var angle = scales[d.unit](d.val);
                             var arc = d3.svg.arc()
                                 .innerRadius(r * 0)

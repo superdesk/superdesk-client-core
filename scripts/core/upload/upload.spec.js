@@ -1,11 +1,11 @@
 
 'use strict';
 
-describe('upload module', function() {
+describe('upload module', () => {
     beforeEach(window.module('superdesk.core.upload'));
 
-    describe('file type validator directive', function() {
-        it('can check', inject(function($rootScope, $compile) {
+    describe('file type validator directive', () => {
+        it('can check', inject(($rootScope, $compile) => {
             var scope = $rootScope.$new();
             var elem = $compile('<input accept="text/*" ng-model="upload" sd-file-type-validator>')(scope);
             var ngModel = elem.controller('ngModel');

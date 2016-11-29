@@ -22,7 +22,7 @@ angular.module('superdesk.core.upload').directive('sdVideoCapture', [function() 
             navigator.getMedia({
                 video: true,
                 audio: false
-            }, function(stream) {
+            }, (stream) => {
                 if (tooLate) {
                     stream.stop();
                     return;
@@ -34,11 +34,11 @@ angular.module('superdesk.core.upload').directive('sdVideoCapture', [function() 
                 } else {
                     elem[0].src = URL.createObjectURL(stream);
                 }
-            }, function(err) {
+            }, (err) => {
                 console.error('There was an error when getting media: ' + err);
             });
 
-            elem.click(function(e) {
+            elem.click((e) => {
                 var img = elem[0];
 
                 canvas[0].width = img.videoWidth;
@@ -46,12 +46,12 @@ angular.module('superdesk.core.upload').directive('sdVideoCapture', [function() 
                 ctx.drawImage(img, 0, 0);
 
                 // todo(petr): use canvas.toBlog once available in chrome
-                scope.$apply(function() {
+                scope.$apply(() => {
                     scope.sdVideoCapture = canvas[0].toDataURL('image/jpeg', 0.95);
                 });
             });
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 try {
                     tooLate = true;
                     elem[0].pause();

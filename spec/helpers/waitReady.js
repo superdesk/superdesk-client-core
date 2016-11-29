@@ -31,7 +31,7 @@ ElementFinder.prototype.waitReady = function(optStr) {
         return false;
     }
 
-    return browser.driver.wait(function() {
+    return browser.driver.wait(() => {
         driverWaitIterations++;
         if (optStr === 'withRefresh') {
             // Refresh page after more than some retries
@@ -39,9 +39,9 @@ ElementFinder.prototype.waitReady = function(optStr) {
                 _refreshPage();
             }
         }
-        return self.isPresent().then(function(present) {
+        return self.isPresent().then((present) => {
             if (present) {
-                return self.isDisplayed().then(function(visible) {
+                return self.isDisplayed().then((visible) => {
                     lastWebdriverError = 'visible:' + visible;
                     return visible;
                 }, _isPresentError);
@@ -50,12 +50,12 @@ ElementFinder.prototype.waitReady = function(optStr) {
             lastWebdriverError = 'present:' + present;
             return false;
         }, _isPresentError);
-    }, specTimeoutMs).then(function(waitResult) {
+    }, specTimeoutMs).then((waitResult) => {
         if (!waitResult) {
             _throwError();
         }
         return self;
-    }, function(err) {
+    }, (err) => {
         _isPresentError(err);
         _throwError();
         return false;

@@ -8,7 +8,7 @@ export function ProductsFactory($q, api, contentFilters, $filter) {
     var _getAllProducts = function(page = 1, products = []) {
         return api('products')
             .query({max_results: 200, page: page})
-            .then(function(result) {
+            .then((result) => {
                 let pg = page;
                 let merged = products.concat(result._items);
 
@@ -29,9 +29,9 @@ export function ProductsFactory($q, api, contentFilters, $filter) {
             var self = this;
 
             return _getAllProducts()
-                .then(function(result) {
+                .then((result) => {
                     self.products = result;
-                    _.each(result._items, function(product) {
+                    _.each(result._items, (product) => {
                         self.productLookup[product._id] = product;
                     });
                 });
@@ -42,7 +42,7 @@ export function ProductsFactory($q, api, contentFilters, $filter) {
         fetchContentFilters: function() {
             var self = this;
 
-            return contentFilters.getAllContentFilters().then(function(filters) {
+            return contentFilters.getAllContentFilters().then((filters) => {
                 self.contentFilters = $filter('sortByName')(filters);
             });
         },

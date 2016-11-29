@@ -10,12 +10,12 @@
 'use strict';
 var templates = require('./helpers/templates');
 
-describe('templates', function() {
-    beforeEach(function() {
+describe('templates', () => {
+    beforeEach(() => {
         templates.openTemplatesSettings();
     });
 
-    it('add create template', function() {
+    it('add create template', () => {
         // add a new template
         templates.add();
         templates.getTemplateNameElement().sendKeys('New Template');
@@ -44,7 +44,7 @@ describe('templates', function() {
         expect(templates.getListCount()).toEqual(1);
     });
 
-    it('error adding empty template', function() {
+    it('error adding empty template', () => {
         templates.add();
         templates.save();
         expect(templates.getValidationElement('template_name').getAttribute('class')).toContain('sd-invalid');

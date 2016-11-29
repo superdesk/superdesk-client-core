@@ -18,7 +18,7 @@ export function RoleUnique(api, $q) {
                         criteria.where._id = {$ne: scope.editRole._id};
                     }
                     return api.roles.query(criteria)
-                        .then(function(roles) {
+                        .then((roles) => {
                             if (roles._items.length) {
                                 return $q.reject(roles);
                             }

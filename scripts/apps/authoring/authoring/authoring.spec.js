@@ -1,4 +1,4 @@
-describe('authoring', function() {
+describe('authoring', () => {
     'use strict';
 
     beforeEach(window.module('superdesk.apps.vocabularies'));
@@ -6,7 +6,7 @@ describe('authoring', function() {
     beforeEach(window.module('superdesk.apps.authoring'));
 
     it('set anpa category value for required subservice',
-    inject(function($httpBackend, $q, $rootScope, $compile, vocabularies, archiveService, content, $templateCache) {
+    inject(($httpBackend, $q, $rootScope, $compile, vocabularies, archiveService, content, $templateCache) => {
         $templateCache.put(
             'scripts/apps/authoring/views/authoring-header.html',
             '<div>{{scope.item}}</div>'

@@ -1,9 +1,9 @@
 'use strict';
 
-describe('profile service', function() {
+describe('profile service', () => {
     beforeEach(window.module('superdesk.apps.users.profile'));
 
-    it('can get activity of all users', inject(function(profileService, api, $q) {
+    it('can get activity of all users', inject((profileService, api, $q) => {
         spyOn(api, 'query').and.returnValue($q.when({}));
         profileService.getAllUsersActivity(5, 1);
         expect(api.query).toHaveBeenCalled();

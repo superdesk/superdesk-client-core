@@ -29,11 +29,10 @@ export function UserSelectList($filter, api) {
                         {email: {$regex: scope.search, $options: '-i'}}
                     ]
                 })})
-                .then(function(result) {
+                .then((result) => {
                     scope.users = result;
-                    scope.users._items = _.filter(scope.users._items, function(item) {
-                        return _.findIndex(scope.exclude, {_id: item._id}) === -1;
-                    });
+                    scope.users._items = _.filter(scope.users._items,
+                        (item) => _.findIndex(scope.exclude, {_id: item._id}) === -1);
                     scope.selected = null;
                     if (scope.onsearch) {
                         scope.onsearch({search: scope.search});
@@ -42,7 +41,7 @@ export function UserSelectList($filter, api) {
             };
             var refresh = _.debounce(_refresh, 1000);
 
-            scope.$watch('search', function() {
+            scope.$watch('search', () => {
                 if (scope.search && scope.refresh) {
                     refresh();
                 }
@@ -71,8 +70,8 @@ export function UserSelectList($filter, api) {
                 scope.select(scope.users._items[_.min([scope.users._items.length - 1, selectedIndex + 1])]);
             }
 
-            elem.bind('keydown keypress', function(event) {
-                scope.$apply(function() {
+            elem.bind('keydown keypress', (event) => {
+                scope.$apply(() => {
                     switch (event.which) {
                     case ARROW_UP:
                         event.preventDefault();

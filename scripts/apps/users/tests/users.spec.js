@@ -1,10 +1,10 @@
 'use strict';
 
-describe('users api', function() {
+describe('users api', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
 
-    it('can create user', inject(function(usersService, api, $q, $rootScope) {
+    it('can create user', inject((usersService, api, $q, $rootScope) => {
         var user = {},
             data = {UserName: 'foo', Password: 'bar'};
 
@@ -17,7 +17,7 @@ describe('users api', function() {
         expect(api.save).toHaveBeenCalled();
     }));
 
-    it('can update user', inject(function(usersService, api, $q, $rootScope) {
+    it('can update user', inject((usersService, api, $q, $rootScope) => {
         var user = {UserName: 'foo', FirstName: 'a'},
             data = {FirstName: 'foo', LastName: 'bar'};
 
@@ -32,7 +32,7 @@ describe('users api', function() {
         expect(user.LastName).toBe('bar');
     }));
 
-    xit('can change user password', inject(function(usersService, resource, $rootScope) {
+    xit('can change user password', inject((usersService, resource, $rootScope) => {
         var user = {UserPassword: {href: 'pwd_url'}};
 
         spyOn(resource, 'replace');
@@ -46,37 +46,35 @@ describe('users api', function() {
     }));
 });
 
-describe('userlist service', function() {
+describe('userlist service', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
 
-    beforeEach(window.module(function($provide) {
-        $provide.service('api', function($q) {
-            return function(resource) {
-                return {
-                    query: function() {
-                        return $q.when({_items: [{_id: 1}, {_id: 2}, {_id: 3}]});
-                    },
-                    getById: function() {
-                        return $q.when({_id: 1});
-                    }
-                };
+    beforeEach(window.module(($provide) => {
+        $provide.service('api', ($q) => function(resource) {
+            return {
+                query: function() {
+                    return $q.when({_items: [{_id: 1}, {_id: 2}, {_id: 3}]});
+                },
+                getById: function() {
+                    return $q.when({_id: 1});
+                }
             };
         });
     }));
 
-    it('can fetch users', inject(function(userList, $rootScope) {
+    it('can fetch users', inject((userList, $rootScope) => {
         var res = null;
 
         userList.get()
-        .then(function(result) {
+        .then((result) => {
             res = result;
         });
         $rootScope.$digest();
         expect(res).toEqual({_items: [{_id: 1}, {_id: 2}, {_id: 3}]});
     }));
 
-    it('can return users from cache', inject(function(userList, $rootScope, api) {
+    it('can return users from cache', inject((userList, $rootScope, api) => {
         userList.get();
         $rootScope.$digest();
 
@@ -88,18 +86,18 @@ describe('userlist service', function() {
         expect(spy).not.toHaveBeenCalled();
     }));
 
-    it('can fetch single user', inject(function(userList, $rootScope) {
+    it('can fetch single user', inject((userList, $rootScope) => {
         var res = null;
 
         userList.getUser(1)
-        .then(function(result) {
+        .then((result) => {
             res = result;
         });
         $rootScope.$digest();
         expect(res).toEqual({_id: 1});
     }));
 
-    it('can return single user from default cacher', inject(function(userList, $rootScope, api) {
+    it('can return single user from default cacher', inject((userList, $rootScope, api) => {
         userList.get();
         $rootScope.$digest();
 
@@ -112,7 +110,7 @@ describe('userlist service', function() {
     }));
 });
 
-describe('mentio directive', function() {
+describe('mentio directive', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
@@ -130,31 +128,27 @@ describe('mentio directive', function() {
         _items: [{_id: 'desk1'}]
     };
 
-    beforeEach(window.module(function($provide) {
-        $provide.service('api', function($q) {
-            return function(resource) {
-                return {
-                    query: function() {
-                        return $q.when({_items: [{_id: 1, username: 'moo'},
-                            {_id: 2, username: 'foo'}, {_id: 3, username: 'fast'}]});
-                    }
-                };
-            };
-        });
-
-        $provide.service('desks', function($q) {
+    beforeEach(window.module(($provide) => {
+        $provide.service('api', ($q) => function(resource) {
             return {
-                deskLookup: deskList,
-                userDesks: userDesks,
-                desks: deskItems,
-                initialize: function() {
-                    return $q.when([]);
+                query: function() {
+                    return $q.when({_items: [{_id: 1, username: 'moo'},
+                            {_id: 2, username: 'foo'}, {_id: 3, username: 'fast'}]});
                 }
             };
         });
+
+        $provide.service('desks', ($q) => ({
+            deskLookup: deskList,
+            userDesks: userDesks,
+            desks: deskItems,
+            initialize: function() {
+                return $q.when([]);
+            }
+        }));
     }));
 
-    it('can return sorted users', inject(function($rootScope, $compile) {
+    it('can return sorted users', inject(($rootScope, $compile) => {
         var scope = $rootScope.$new(true);
         var elem = $compile('<div sd-user-mentio></div>')(scope);
 
@@ -173,27 +167,25 @@ describe('mentio directive', function() {
     }));
 });
 
-describe('user edit form', function() {
+describe('user edit form', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(window.module(function($provide) {
-        $provide.service('session', function($q) {
-            return {
-                identity: {_id: 1},
-                getIdentity: function() {
-                    return $q.when(
+    beforeEach(window.module(($provide) => {
+        $provide.service('session', ($q) => ({
+            identity: {_id: 1},
+            getIdentity: function() {
+                return $q.when(
                         {who: 'cares', this: 'is', totaly: 'fake'}
                     );
-                }
-            };
-        });
+            }
+        }));
     }));
 
     it('check if first_name, last_name, phone and email are readonly',
-        inject(function($rootScope, $compile, $q, userList) {
+        inject(($rootScope, $compile, $q, userList) => {
             var scope = $rootScope.$new(true);
             var user = {
                 _id: 1,
@@ -215,7 +207,7 @@ describe('user edit form', function() {
         }));
 
     it('check if first_name, last_name, phone and email are not readonly',
-        inject(function($rootScope, $compile) {
+        inject(($rootScope, $compile) => {
             var scope = $rootScope.$new(true);
 
             scope.user = {

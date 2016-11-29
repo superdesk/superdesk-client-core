@@ -1,9 +1,9 @@
 'use strict';
 
-describe('upload service', function() {
+describe('upload service', () => {
     beforeEach(window.module('superdesk.core.upload'));
 
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.service('$upload', ['$q', function($q) {
             // angular-file-upload api
             this.upload = function() {
@@ -13,7 +13,7 @@ describe('upload service', function() {
         }]);
     }));
 
-    it('can start uploading', inject(function(upload, Upload) {
+    it('can start uploading', inject((upload, Upload) => {
         var config = {url: 'test', method: 'POST', data: 'test'};
 
         spyOn(Upload, 'upload').and.callThrough();
@@ -21,7 +21,7 @@ describe('upload service', function() {
         expect(Upload.upload).toHaveBeenCalledWith(config);
     }));
 
-    it('can restart uploading', inject(function(upload, Upload) {
+    it('can restart uploading', inject((upload, Upload) => {
         var config = {url: 'test'};
 
         spyOn(Upload, 'http');
@@ -29,14 +29,14 @@ describe('upload service', function() {
         expect(Upload.http).toHaveBeenCalledWith(config);
     }));
 
-    it('should know that config after calling start is an upload', inject(function(upload) {
+    it('should know that config after calling start is an upload', inject((upload) => {
         var config = {url: 'test'};
 
         upload.start(config);
         expect(upload.isUpload(config)).toBe(true);
     }));
 
-    it('should know that config without using start is not an upload', inject(function(upload) {
+    it('should know that config without using start is not an upload', inject((upload) => {
         expect(upload.isUpload({})).toBe(false);
     }));
 });

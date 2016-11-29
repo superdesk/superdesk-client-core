@@ -94,7 +94,7 @@ export function SearchResults(
             scope.$on('content:update', queryItems);
             scope.$on('item:move', scheduleIfShouldUpdate);
 
-            scope.$on('$routeUpdate', function(event, data) {
+            scope.$on('$routeUpdate', (event, data) => {
                 if (scope.shouldRefresh) {
                     scope.scrollTop = 0;
                     data.force = true;
@@ -107,18 +107,18 @@ export function SearchResults(
 
             scope.$on('aggregations:changed', queryItems);
 
-            scope.$on('broadcast:preview', function(event, args) {
+            scope.$on('broadcast:preview', (event, args) => {
                 scope.previewingBroadcast = true;
                 scope.preview(args.item);
             });
 
-            scope.$on('broadcast:created', function(event, args) {
+            scope.$on('broadcast:created', (event, args) => {
                 scope.previewingBroadcast = true;
                 queryItems();
                 scope.preview(args.item);
             });
 
-            scope.$watch('selected', function(newVal, oldVal) {
+            scope.$watch('selected', (newVal, oldVal) => {
                 if (!newVal && scope.previewingBroadcast) {
                     scope.previewingBroadcast = false;
                 }
@@ -126,7 +126,7 @@ export function SearchResults(
 
             scope.$watch(function getSearchParams() {
                 return _.omit($location.search(), '_id');
-            }, function(newValue, oldValue) {
+            }, (newValue, oldValue) => {
                 if (newValue !== oldValue) {
                     queryItems();
                 }
@@ -153,9 +153,9 @@ export function SearchResults(
             function queryItems(event, data) {
                 if (!nextUpdate) {
                     scope.loading = true;
-                    nextUpdate = $timeout(function() {
+                    nextUpdate = $timeout(() => {
                         _queryItems(event, data);
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             nextUpdate = null; // reset for next $digest
                         });
                     }, 1000, false);
@@ -196,7 +196,7 @@ export function SearchResults(
                 criteria.aggregations = $rootScope.aggregations;
                 criteria.es_highlight = search.getElasticHighlight();
                 criteria.projections = JSON.stringify(projections);
-                return api.query(getProvider(criteria), criteria).then(function(items) {
+                return api.query(getProvider(criteria), criteria).then((items) => {
                     if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
                         var isItemPreviewing = !!scope.selected.preview;
                         var _data = {
@@ -211,7 +211,7 @@ export function SearchResults(
 
                     if (!scope.showRefresh || data && data.force) {
                         scope.total = items._meta.total;
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             render(items, null, true);
                         });
                     } else {
@@ -219,7 +219,7 @@ export function SearchResults(
                         scope.items = search.updateItems(items, scope.items);
                     }
                 })
-                .finally(function() {
+                .finally(() => {
                     scope.loading = false;
                     if (originalQuery) {
                         criteria.source.query = originalQuery;
@@ -246,8 +246,8 @@ export function SearchResults(
             }
 
             function extendItem(itemId, updates) {
-                scope.$apply(function() {
-                    scope.items._items = scope.items._items.map(function(item) {
+                scope.$apply(() => {
+                    scope.items._items = scope.items._items.map((item) => {
                         if (item._id === itemId) {
                             return angular.extend(item, updates);
                         }
@@ -259,12 +259,12 @@ export function SearchResults(
                 });
             }
 
-            scope.$on('refresh:list', function(event, group) {
+            scope.$on('refresh:list', (event, group) => {
                 scope.refreshList();
             });
 
             scope.refreshList = function() {
-                scope.$applyAsync(function() {
+                scope.$applyAsync(() => {
                     scope.scrollTop = 0;
                 });
                 scope.showRefresh = false;
@@ -307,7 +307,7 @@ export function SearchResults(
                     api
                         .query(getProvider(criteria), criteria)
                         .then(setScopeItems)
-                        .finally(function() {
+                        .finally(() => {
                             scope.loading = false;
                         });
                 } else {
@@ -328,7 +328,7 @@ export function SearchResults(
                     api
                         .query(getProvider(criteria), criteria)
                         .then(setScopeItems)
-                        .finally(function() {
+                        .finally(() => {
                             scope.loading = false;
                         });
                     oldQuery = query;
@@ -364,7 +364,7 @@ export function SearchResults(
                     scope.loading = true;
                     let previewCriteria = search.getSingleItemCriteria(item);
 
-                    api.query(getProvider(previewCriteria), previewCriteria).then(function(completeItems) {
+                    api.query(getProvider(previewCriteria), previewCriteria).then((completeItems) => {
                         let completeItem = search.mergeHighlightFields(completeItems._items[0]);
 
                         scope.selected.preview = completeItem;
@@ -376,7 +376,7 @@ export function SearchResults(
 
                         $location.search('_id', item ? item._id : null);
                     })
-                    .finally(function() {
+                    .finally(() => {
                         scope.loading = false;
                     });
                 } else {
@@ -393,7 +393,7 @@ export function SearchResults(
             };
 
             scope.openSingleItem = function(packageItem) {
-                packages.fetchItem(packageItem).then(function(item) {
+                packages.fetchItem(packageItem).then((item) => {
                     scope.selected.view = item;
                 });
             };
@@ -402,18 +402,18 @@ export function SearchResults(
 
             var savedView;
 
-            preferencesService.get('archive:view').then(function(result) {
+            preferencesService.get('archive:view').then((result) => {
                 savedView = result.view;
                 scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
             });
 
             scope.$on('key:v', toggleView);
 
-            scope.$on('open:archived_kill', function(evt, item) {
+            scope.$on('open:archived_kill', (evt, item) => {
                 scope.selected.archived_kill = item;
             });
 
-            scope.$on('open:resend', function(evt, item) {
+            scope.$on('open:resend', (evt, item) => {
                 scope.selected.resend = item;
             });
 

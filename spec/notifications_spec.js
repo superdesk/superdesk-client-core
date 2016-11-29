@@ -8,12 +8,12 @@ var authoring = require('./helpers/authoring'),
 var Login = require('./helpers/pages').login;
 var logout = require('./helpers/pages').logout;
 
-describe('notifications', function() {
-    beforeEach(function() {
+describe('notifications', () => {
+    beforeEach(() => {
         monitoring.openMonitoring();
     });
 
-    it('create a new user mention', function() {
+    it('create a new user mention', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.showComments();
@@ -21,9 +21,7 @@ describe('notifications', function() {
 
         var comments = element.all(by.repeater('comment in comments'));
 
-        browser.wait(function() {
-            return comments.count();
-        }, 2000);
+        browser.wait(() => comments.count(), 2000);
 
         expect(comments.count()).toBe(1);
         expect(element(by.id('unread-count')).getText()).toBe('2');
@@ -38,7 +36,7 @@ describe('notifications', function() {
         expect(element(by.id('unread-count')).getText()).toBe('');
     });
 
-    it('create a new desk mention', function() {
+    it('create a new desk mention', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
 
         desks.openDesksSettings();

@@ -63,11 +63,11 @@ export class ArchiveListController extends BaseListController {
             $scope.loading = true;
             criteria.aggregations = 1;
             criteria.es_highlight = search.getElasticHighlight();
-            resource.query(criteria).then(function(items) {
+            resource.query(criteria).then((items) => {
                 $scope.loading = false;
                 $scope.items = search.mergeItems(items, $scope.items, next);
                 $scope.total = items._meta.total;
-            }, function() {
+            }, () => {
                 $scope.loading = false;
             });
         };
@@ -108,7 +108,7 @@ export class ArchiveListController extends BaseListController {
             refreshItems();
         }
 
-        $scope.$on('task:stage', function(_e, data) {
+        $scope.$on('task:stage', (_e, data) => {
             if ($scope.stages.selected && (
                 $scope.stages.selected._id === data.new_stage ||
                 $scope.stages.selected._id === data.old_stage)) {
@@ -128,11 +128,9 @@ export class ArchiveListController extends BaseListController {
         $scope.$on('item:spike', reset);
         $scope.$on('item:unspike', reset);
 
-        desks.fetchCurrentUserDesks().then(function() {
+        desks.fetchCurrentUserDesks().then(() => {
             // only watch desk/stage after we get current user desk
-            $scope.$watch(function() {
-                return desks.active;
-            }, function(active) {
+            $scope.$watch(() => desks.active, (active) => {
                 $scope.selected = active;
                 if ($location.search().page) {
                     $location.search('page', null);
@@ -146,7 +144,7 @@ export class ArchiveListController extends BaseListController {
         // reload on route change if there is still the same _id
         var oldQuery = _.omit($location.search(), '_id', 'fetch');
 
-        $scope.$on('$routeUpdate', function(e, route) {
+        $scope.$on('$routeUpdate', (e, route) => {
             var query = _.omit($location.search(), '_id', 'fetch');
 
             if (!angular.equals(oldQuery, query)) {

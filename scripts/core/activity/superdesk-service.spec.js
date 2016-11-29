@@ -1,4 +1,4 @@
-describe('Superdesk service', function() {
+describe('Superdesk service', () => {
     var provider;
     var intent = {action: 'testAction', type: 'testType'};
     var testWidget = {testData: 123};
@@ -13,7 +13,7 @@ describe('Superdesk service', function() {
     };
 
     angular.module('superdesk.core.activity.test', ['superdesk.core.activity'])
-        .config(function(superdeskProvider) {
+        .config((superdeskProvider) => {
             provider = superdeskProvider;
             provider.widget('testWidget', testWidget);
             provider.pane('testPane', testPane);
@@ -37,27 +37,27 @@ describe('Superdesk service', function() {
     beforeEach(window.module('superdesk.core.activity.test'));
     beforeEach(window.module('superdesk.mocks'));
 
-    it('exists', inject(function(superdesk) {
+    it('exists', inject((superdesk) => {
         expect(superdesk).toBeDefined();
     }));
 
-    it('can add widgets', inject(function(superdesk) {
+    it('can add widgets', inject((superdesk) => {
         expect(superdesk.widgets.testWidget.testData).toBe(testWidget.testData);
     }));
 
-    it('can add panes', inject(function(superdesk) {
+    it('can add panes', inject((superdesk) => {
         expect(superdesk.panes.testPane.testData).toBe(testPane.testData);
     }));
 
-    it('can add activities', inject(function(superdesk) {
+    it('can add activities', inject((superdesk) => {
         expect(superdesk.activities.testActivity.label).toBe(testActivity.label);
     }));
 
-    it('can run activities', inject(function($rootScope, superdesk, activityService) {
+    it('can run activities', inject(($rootScope, superdesk, activityService) => {
         var result = null;
 
         activityService.start(superdesk.activities.testActivity)
-        .then(function(res) {
+        .then((res) => {
             result = res;
         });
 
@@ -66,16 +66,16 @@ describe('Superdesk service', function() {
         expect(result).toBe('test');
     }));
 
-    it('can run activities by intent', inject(function($rootScope, superdesk) {
+    it('can run activities by intent', inject(($rootScope, superdesk) => {
         var successResult = null;
         var failureResult = null;
 
         superdesk.intent('testAction', 'testType', 'testData')
-        .then(function(result) {
+        .then((result) => {
             successResult = result;
         });
         superdesk.intent('testAction2', 'testType2', 'testData2')
-        .then(null, function(result) {
+        .then(null, (result) => {
             failureResult = result;
         });
 
@@ -85,7 +85,7 @@ describe('Superdesk service', function() {
         expect(failureResult).toBe(undefined);
     }));
 
-    it('can find activities', inject(function(superdesk) {
+    it('can find activities', inject((superdesk) => {
         var success = superdesk.findActivities(intent);
         var failure = superdesk.findActivities({type: 'testType2', action: 'testAction2'});
 
@@ -94,13 +94,13 @@ describe('Superdesk service', function() {
         expect(failure.length).toBe(0);
     }));
 
-    it('can check features required by activity', inject(function(superdesk, features) {
+    it('can check features required by activity', inject((superdesk, features) => {
         var list = superdesk.findActivities({type: 'features', action: 'test'});
 
         expect(list.length).toBe(0);
     }));
 
-    it('can filter activities based on privileges', inject(function(superdesk, privileges) {
+    it('can filter activities based on privileges', inject((superdesk, privileges) => {
         var list = superdesk.findActivities({type: 'privileges', action: 'test'});
 
         expect(list.length).toBe(0);
@@ -111,12 +111,12 @@ describe('Superdesk service', function() {
     }));
 
     it('can get main menu and filter out based on features/permissions',
-    inject(function(superdesk, $rootScope, privileges, $q) {
+    inject((superdesk, $rootScope, privileges, $q) => {
         privileges.loaded = $q.when();
 
         var menu;
 
-        superdesk.getMenu(superdesk.MENU_MAIN).then(function(_menu) {
+        superdesk.getMenu(superdesk.MENU_MAIN).then((_menu) => {
             menu = _menu;
         });
 
@@ -124,7 +124,7 @@ describe('Superdesk service', function() {
         expect(menu.length).toBe(1);
     }));
 
-    it('can get link for given activity', inject(function(activityService) {
+    it('can get link for given activity', inject((activityService) => {
         var routeActivity = {href: '/test/:_id'};
 
         expect(activityService.getLink(routeActivity, {})).toBe(null);

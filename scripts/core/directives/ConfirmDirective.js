@@ -6,7 +6,7 @@ export default angular.module('superdesk.core.directives.confirm', [])
                 confirmAction: '&'
             },
             link: function(scope, element, attrs) {
-                element.click(function(e) {
+                element.click((e) => {
                     if ($window.confirm(scope.msg)) {
                         scope.confirmAction();
                     }

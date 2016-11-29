@@ -33,7 +33,7 @@ export function StreamController($scope, api, $rootScope, desks) {
         }
 
         api('activity').query(filter)
-        .then(function(result) {
+        .then((result) => {
             $scope.activities = result;
         });
     };

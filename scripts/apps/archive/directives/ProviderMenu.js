@@ -10,9 +10,7 @@ export function ProviderMenu($location) {
                 $location.search('provider', scope.selected);
             };
 
-            scope.$watchCollection(function() {
-                return $location.search();
-            }, function(search) {
+            scope.$watchCollection(() => $location.search(), (search) => {
                 if (search.provider) {
                     scope.selected = search.provider;
                 }

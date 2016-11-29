@@ -59,11 +59,11 @@ function Templates() {
      * @returns {ElementFinder} desk selection element
      **/
     this.getDeskElement = function(deskName) {
-        return element.all(by.css('[ng-click="toggleDesk(desk)"]')).filter(function(elem, index) {
-            return elem.getText().then(function(text) {
-                return text.toUpperCase() === deskName.toUpperCase();
-            });
-        }).first().element(by.xpath('..')).element(by.model('desk.selected'));
+        return element.all(by.css('[ng-click="toggleDesk(desk)"]'))
+            .filter((elem, index) => elem.getText().then((text) => text.toUpperCase() === deskName.toUpperCase()))
+            .first()
+            .element(by.xpath('..'))
+            .element(by.model('desk.selected'));
     };
 
     /**
@@ -95,11 +95,9 @@ function Templates() {
      * @returns {ElementFinder} week day element
      **/
     this.getWeekDayElement = function(weekDay) {
-        return element.all(by.repeater('day in weekdayList')).filter(function(elem, index) {
-            return elem.getText().then(function(text) {
-                return text.toUpperCase() === weekDay.toUpperCase();
-            });
-        }).first();
+        return element.all(by.repeater('day in weekdayList'))
+            .filter((elem, index) => elem.getText().then((text) => text.toUpperCase() === weekDay.toUpperCase()))
+            .first();
     };
 
     /**
@@ -183,7 +181,7 @@ function Templates() {
      * @param {string} name of template
      **/
     this.edit = function(name) {
-        this.getRow(name).then(function(rows) {
+        this.getRow(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-dots-vertical')).click();
             rows[0].element(by.className('icon-pencil')).click();
@@ -196,7 +194,7 @@ function Templates() {
      * @param {string} name of template
      **/
     this.remove = function(name) {
-        this.getRow(name).then(function(rows) {
+        this.getRow(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-dots-vertical')).click();
             rows[0].element(by.className('icon-trash')).click();
@@ -211,11 +209,11 @@ function Templates() {
      * @return {promise} template element
      **/
     this.getRow = function(name) {
-        return this.list.filter(function(elem, index) {
-            return elem.element(by.binding('template.template_name')).getText().then(function(text) {
-                return text.toUpperCase() === name.toUpperCase();
-            });
-        });
+        return this.list.filter((elem, index) =>
+            elem.element(by.binding('template.template_name'))
+                .getText()
+                .then((text) => text.toUpperCase() === name.toUpperCase())
+        );
     };
 
     /**

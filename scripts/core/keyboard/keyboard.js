@@ -15,8 +15,8 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 
 // unbind all keyboard shortcuts when switching route
 .run(['$rootScope', 'keyboardManager', function($rootScope, kb) {
-    $rootScope.$on('$routeChangeStart', function() {
-        angular.forEach(kb.keyboardEvent, function(e, key) {
+    $rootScope.$on('$routeChangeStart', () => {
+        angular.forEach(kb.keyboardEvent, (e, key) => {
             if (!e.opt.global) {
                 kb.unbind(key);
             }
@@ -34,7 +34,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         BUTTON: true
     };
 
-    $document.on('keydown', function(e) {
+    $document.on('keydown', (e) => {
         var ctrlKey = e.ctrlKey || e.metaKey,
             altKey = e.altKey,
             shiftKey = e.shiftKey,
@@ -49,7 +49,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             modifier += shiftKey ? 'shift:' : '';
 
             // also handle arrows, enter/escape, etc.
-            angular.forEach(Object.keys(Keys), function(key) {
+            angular.forEach(Object.keys(Keys), (key) => {
                 if (e.which === Keys[key]) {
                     character = key;
                 }
@@ -264,7 +264,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 modifiers.shift.pressed === modifiers.shift.wanted &&
                 modifiers.alt.pressed === modifiers.alt.wanted &&
                 modifiers.meta.pressed === modifiers.meta.wanted) {
-                $timeout(function() {
+                $timeout(() => {
                     callback(e);
                 }, 1);
 
@@ -354,7 +354,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 callback = scope.$eval(attrs.sdHotkeyCallback),
                 options = scope.$eval(attrs.sdHotkeyOptions);
 
-            keyboardManager.bind(hotkey, function(e) {
+            keyboardManager.bind(hotkey, (e) => {
                 e.preventDefault();
                 if (callback) {
                     callback();
@@ -366,11 +366,11 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             /*
              * On scope $destroy unbind binded shortcuts
              */
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 keyboardManager.unbind(hotkey);
             });
 
-            $timeout(function() {
+            $timeout(() => {
                 if (elem.attr('title')) {
                     elem.attr('title', elem.attr('title') + ' (' + hotkey + ')');
                 } else if (elem.attr('tooltip')) {
@@ -391,12 +391,12 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             scope.enabled = false;
             scope.data = {};
 
-            keyboardManager.bind('alt+k', function() {
+            keyboardManager.bind('alt+k', () => {
                 scope.enabled = true;
                 scope.data = keyboardManager.registry;
             }, {global: true, group: gettext('General'), description: gettext('Displays active keyboard shortcuts')});
 
-            keyboardManager.bind('alt+k', function() {
+            keyboardManager.bind('alt+k', () => {
                 scope.enabled = false;
             }, {
                 global: true,

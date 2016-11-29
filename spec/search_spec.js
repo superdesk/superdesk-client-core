@@ -7,12 +7,12 @@ var openUrl = require('./helpers/utils').open,
     authoring = require('./helpers/authoring'),
     monitoring = require('./helpers/monitoring');
 
-describe('search', function() {
-    beforeEach(function() {
+describe('search', () => {
+    beforeEach(() => {
         openUrl('/#/search').then(globalSearch.setListView());
     });
 
-    it('can search by search field', function() {
+    it('can search by search field', () => {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.searchInput.click();
         globalSearch.searchInput.clear();
@@ -181,7 +181,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(2);
     });
 
-    it('can action on items', function() {
+    it('can action on items', () => {
         // DOWN arrow key selects an item and opens preview pane
         expect(globalSearch.getItems().count()).toBe(14);
         var previewPane = element(by.id('item-preview'));
@@ -278,7 +278,7 @@ describe('search', function() {
         expect(globalSearch.getItems().count()).toBe(15);
     });
 
-    it('can search by facet and exclude facet', function() {
+    it('can search by facet and exclude facet', () => {
         expect(globalSearch.getItems().count()).toBe(14);
         globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');

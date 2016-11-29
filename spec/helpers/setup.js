@@ -16,7 +16,7 @@ function openBaseUrl() {
 function resize(width, height) {
     var win = browser.driver.manage().window();
 
-    return win.getSize().then(function(size) {
+    return win.getSize().then((size) => {
         if (size.width !== width || size.height !== height) {
             return win.setSize(width, height);
         }
@@ -25,11 +25,11 @@ function resize(width, height) {
 
 module.exports = function(params) {
     // runs before every spec
-    beforeEach(function(done) {
+    beforeEach((done) => {
         require('./waitReady');
         resize(1280, 800)
-        .then(function() {
-            resetApp(params.fixture_profile, function() {
+        .then(() => {
+            resetApp(params.fixture_profile, () => {
                 openBaseUrl()
                     .then(clearStorage)
                     .then(openBaseUrl)

@@ -3,14 +3,14 @@ function ListItemDirectiveFactory() {
         link: function(scope, element, attrs, controller, $transclude) {
             var itemScope;
 
-            scope.$watch('item', function() {
+            scope.$watch('item', () => {
                 destroyItemScope();
                 itemScope = scope.$parent.$parent.$new();
                 itemScope.item = scope.item;
                 itemScope.items = scope.items;
                 itemScope.extras = scope.extras;
                 itemScope.$index = scope.$index;
-                $transclude(itemScope, function(clone) {
+                $transclude(itemScope, (clone) => {
                     element.empty();
                     element.append(clone);
                 });
@@ -99,7 +99,7 @@ mod.directive('sdListView', ['$location', 'keyboardManager', 'asset', function($
                 }
             };
 
-            scope.$watch('items', function() {
+            scope.$watch('items', () => {
                 fetchSelectedItem($location.search()._id);
                 elem.find('.list-view').focus();
             });
@@ -197,7 +197,7 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
                     }
                 }
 
-                scope.$watch('items', function() {
+                scope.$watch('items', () => {
                     fetchSelectedItem($location.search()._id);
                     elem.find('.list-view').focus();
                 });
@@ -227,7 +227,7 @@ mod.directive('sdPagination', ['$location', 'asset', 'lodash', function($locatio
             var size = 25;
 
             scope.pgsizes = [25, 50, 100];
-            scope.$watch('items._meta', function(meta) {
+            scope.$watch('items._meta', (meta) => {
                 scope.total = 0;
                 if (meta) {
                     scope.total = meta.total;
