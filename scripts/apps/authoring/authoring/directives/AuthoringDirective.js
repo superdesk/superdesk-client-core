@@ -40,6 +40,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             var continueAfterPublish = false;
             var isCheckedByTansa = false;
 
+            const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
+
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
             $scope.views = {send: false};
@@ -136,7 +138,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     if (angular.isDefined(response.data._issues)) {
                         if (angular.isDefined(response.data._issues.unique_name) &&
                             response.data._issues.unique_name.unique === 1) {
-                            notify.error(gettext('Error: Unique Name is not unique.'));
+                            notify.error(UNIQUE_NAME_ERROR);
                         } else if (angular.isDefined(response.data._issues['validator exception'])) {
                             notify.error(gettext('Error: ' + response.data._issues['validator exception']));
                         }
@@ -305,8 +307,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     }
 
                     if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
-                        if (angular.isDefined(response.data._issues['validator exception'])) {
-                            var errors = response.data._issues['validator exception'];
+                        let issues = response.data._issues;
+                        if (angular.isDefined(issues['validator exception'])) {
+                            var errors = issues['validator exception'];
                             var modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
                             for (var i = 0; i < modifiedErrors.length; i++) {
                                 notify.error(_.trim(modifiedErrors[i]));
@@ -320,6 +323,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                                 });
                             }
 
+                            return false;
+                        }
+
+                        if (issues.unique_name && issues.unique_name.unique) {
+                            notify.error(UNIQUE_NAME_ERROR);
                             return false;
                         }
                     } else if (response.status === 412) {
