@@ -1,1 +1,1 @@
-export { SavedActivityReports } from './SavedActivityReports';
+export {SavedActivityReports} from './SavedActivityReports';

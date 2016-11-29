@@ -26,8 +26,8 @@ export function SaveActivityReport($location, asset, api, session, notify, confi
                 }
 
                 var originalActivityReport = {};
-
                 var activityReportEdit = _.clone(activityReport);
+
                 if (activityReportEdit._id) {
                     originalActivityReport = activityReportEdit;
                 }
@@ -35,8 +35,9 @@ export function SaveActivityReport($location, asset, api, session, notify, confi
                 activityReportEdit.operation_date = formatDate(activityReport.operation_date);
                 $rootScope.$broadcast('savedactivityreport:update');
 
-                api('saved_activity_reports', session.identity).save(originalActivityReport, activityReportEdit).then(onSuccess, onFail);
-            }
+                api('saved_activity_reports', session.identity).save(originalActivityReport, activityReportEdit)
+                    .then(onSuccess, onFail);
+            };
 
             /**
              * Clears the activity report form
@@ -53,7 +54,7 @@ export function SaveActivityReport($location, asset, api, session, notify, confi
              */
             function formatDate(date) {
                 return date ? moment(date, config.model.dateformat).format('YYYY-MM-DD') : null; // jshint ignore:line
-            };
+            }
         }
     };
 }

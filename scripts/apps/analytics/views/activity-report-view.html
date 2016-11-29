@@ -1,4 +1,4 @@
-<div>
+<div ng-if="activityReport">
     <h3 translate>Activity Report</h3>
     <div ng-if="reportType === 'simple'">
         <table>
@@ -9,9 +9,9 @@
     <div ng-if="reportType === 'groupByDesk'">
         <table>
             <tr><th translate>Desk</th><th translate>Items</th></tr>
-            <tr ng-repeat="desk in activityReport.report | orderBy:'name'">
-                <td>{{ desk.name }}</td>
-                <td>{{ desk.items }}</td>
+            <tr ng-repeat="group in activityReport.report | orderBy:'desk'">
+                <td>{{ group.desk }}</td>
+                <td>{{ group.items }}</td>
             </tr>
         </table>
     </div>

@@ -1,34 +1,33 @@
 SavedActivityReports.$inject = [
     '$rootScope', 'api', 'session', 'modal', 'notify', 'gettext', 'asset',
-    '$location', 'desks', 'privileges', 'config', 'savedActivityReports',
+    '$location', 'desks', 'privileges', 'config', 'savedActivityReports'
 ];
-
 export function SavedActivityReports($rootScope, api, session, modal, notify, gettext, asset,
-        $location, desks, privileges, config, savedActivityReports) {
+    $location, desks, privileges, config, savedActivityReports) {
     return {
         templateUrl: asset.templateUrl('apps/analytics/views/saved-activity-reports.html'),
         scope: {},
         link: function(scope) {
-
             var resource = api('saved_activity_reports', session.identity);
+            var originalUserActivityReports = [];
+            var originalGlobalActivityReports = [];
+
             scope.searchText = null;
             scope.userSavedActivityReports = [];
             scope.globalSavedActivityReports = [];
             scope.privileges = privileges.privileges;
-            var originalUserActivityReports = [];
-            var originalGlobalActivityReports = [];
 
-            desks.initialize().then(function() {
+            desks.initialize().then(() => {
                 scope.userLookup = desks.userLookup;
             });
 
             function initSavedActivityReports() {
                 savedActivityReports.resetSavedActivityReports();
-                savedActivityReports.getAllSavedActivityReports().then(function(activityReports) {
+                savedActivityReports.getAllSavedActivityReports().then((activityReports) => {
                     scope.userSavedActivityReports = [];
                     scope.globalSavedActivityReports = [];
                     scope.activityReports = activityReports;
-                    _.forEach(scope.activityReports, function(savedActivityReport) {
+                    _.forEach(scope.activityReports, (savedActivityReport) => {
                         savedActivityReport.operation_date = formatDate(savedActivityReport.operation_date);
                         if (savedActivityReport.owner === session.identity._id) {
                             scope.userSavedActivityReports.push(savedActivityReport);
@@ -61,13 +60,11 @@ export function SavedActivityReports($rootScope, api, session, modal, notify, ge
                 scope.globalSavedActivityReports = _.clone(originalGlobalActivityReports);
 
                 if (scope.searchText || scope.searchText !== '') {
-                    scope.userSavedActivityReports = _.filter(originalUserActivityReports, function(n) {
-                        return n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0;
-                    });
+                    scope.userSavedActivityReports = _.filter(originalUserActivityReports,
+                        (n) => n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0);
 
-                    scope.globalSavedActivityReports = _.filter(originalGlobalActivityReports, function(n) {
-                        return n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0;
-                    });
+                    scope.globalSavedActivityReports = _.filter(originalGlobalActivityReports,
+                        (n) => n.name.toUpperCase().indexOf(scope.searchText.toUpperCase()) >= 0);
                 }
             };
 
@@ -78,11 +75,11 @@ export function SavedActivityReports($rootScope, api, session, modal, notify, ge
             scope.remove = function(activityReport) {
                 modal.confirm(
                     gettext('Are you sure you want to delete the activity report?')
-                ).then(function() {
-                    resource.remove(activityReport).then(function() {
+                ).then(() => {
+                    resource.remove(activityReport).then(() => {
                         notify.success(gettext('Activity report deleted'));
                         initSavedActivityReports();
-                    }, function() {
+                    }, () => {
                         notify.error(gettext('Error. Activity report not deleted.'));
                     });
                 });
@@ -94,7 +91,7 @@ export function SavedActivityReports($rootScope, api, session, modal, notify, ge
              */
             function formatDate(date) {
                 return date ? moment(date).format(config.model.dateformat) : null; // jshint ignore:line
-            };
+            }
         }
     };
 }

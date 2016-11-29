@@ -5,8 +5,8 @@
                 <label for="parameters-operation" translate="">Operation</label>
                 <select id="parameters-operation" ng-model="activityReport.operation"
                     selected="publish" required>
-                    <option value="publish" translate>Publish</option>
-                    <option value="correct" translate>Correct</option>
+                    <option label="Publish" value="publish" translate>Publish</option>
+                    <option label="Correct" value="correct" translate>Correct</option>
                 </select>
             </div>
 
@@ -27,7 +27,7 @@
             <div class="field"
                  sd-validation-error="error.subject">
                 <label for="parameters-subject">{{:: 'Subject' | translate}}</label>
-              <div id="parameters-subjects"
+              <div id="parameters-subject"
                    sd-meta-terms
                    class="data"
                    data-item="activityReport"

@@ -12,7 +12,7 @@ export function ActivityReportView($location, asset) {
             scope.activityReport = null;
             scope.reportType = null;
 
-            scope.$on('view:activity_report', function(event, args)  {
+            scope.$on('view:activity_report', (event, args) => {
                 scope.activityReport = args;
                 initActivityReport();
             });
@@ -22,12 +22,12 @@ export function ActivityReportView($location, asset) {
              *
              */
             function initActivityReport() {
-                if (typeof scope.activityReport.group_by === 'array' && scope.activityReport.group_by.desk === true) {
+                if (scope.activityReport.group_by instanceof Array && scope.activityReport.group_by[0] === 'desk') {
                     scope.reportType = 'groupByDesk';
                 } else {
                     scope.reportType = 'simple';
                 }
-            };
+            }
         }
     };
 }

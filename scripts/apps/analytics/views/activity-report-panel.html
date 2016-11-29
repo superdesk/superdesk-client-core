@@ -1,10 +1,10 @@
 <div>
     <div class="header">
         <ul>
-            <li ng-click="changeTab('editingActivityReport')"
+            <li id="activity-report-edit" ng-click="changeTab('editingActivityReport')"
                 ng-class="{active: panelTab === 'editingActivityReport'}" translate>Activity Report
             </li>
-            <li id="saved_activity_report_tab" 
+            <li id="saved-activity-reports" 
                 ng-class="{active: panelTab === 'savedReports'}" 
                 ng-click="changeTab('savedReports')" translate>Saved
             </li>
