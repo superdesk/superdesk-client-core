@@ -119,7 +119,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         publisher.manageRoute({route: _.pick($scope.newRoute, updatedKeys($scope.newRoute, self.selectedRoute))}, self.selectedRoute.id)
             .then(route => {
                 self.routePaneOpen = false;
-                refreshRoutes(self.routeType);
+                refreshRoutes();
             });
     };
 
@@ -131,8 +131,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
      */
     self.deleteRoute = id => {
         modal.confirm(gettext('Please confirm you want to delete route.')).then(
-            () => publisher.removeRoute(id).then(
-                () => refreshRoutes(self.routeType)));
+            () => publisher.removeRoute(id).then(refreshRoutes));
     };
 
     // compares 2 objects and returns keys of fields that are updated
@@ -146,8 +145,8 @@ export function WebPublisherManagerController($scope, publisher, modal) {
     function loadLists(tabName) {
         switch (tabName) {
             case 'routes':
-                self.routeType = '';
-                refreshRoutes(self.routeType);
+                self.changeRouteFilter('');
+                refreshRoutes();
                 break;
             case 'navigation':
                 refreshMenus();
@@ -155,8 +154,8 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         }
     }
 
-    function refreshRoutes(type) {
-        publisher.queryRoutes({type: type}).then(routes => $scope.routes = routes);
+    function refreshRoutes() {
+        publisher.queryRoutes().then(routes => $scope.routes = routes);
     }
 
     function refreshMenus() {
