@@ -220,7 +220,7 @@ describe('spellcheck', () => {
 
     function assignErrors(_errors) {
         errors.splice(0, errors.length);
-        errors.push.apply(errors, _errors);
+        errors.push(..._errors);
     }
 
     function createParagraph(text) {

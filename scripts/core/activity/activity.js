@@ -479,11 +479,11 @@ angular.module('superdesk.core.activity', [
     $rootScope.superdesk = superdesk; // add superdesk reference so we can use constants in templates
 
     $rootScope.intent = function() {
-        return superdesk.intent.apply(superdesk, arguments);
+        return superdesk.intent(...arguments);
     };
 
     $rootScope.link = function() {
-        var path = superdesk.link.apply(superdesk, arguments);
+        var path = superdesk.link(...arguments);
 
         return path ? '#' + path : null;
     };

@@ -214,7 +214,7 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                     }
 
                     $timeout(() => {
-                        scope.items.unshift.apply(scope.items, scope.cachePreviousItems);
+                        scope.items.unshift(...scope.cachePreviousItems);
                         scope.fetching = false;
                     }, 100)
                     .then($timeout(() => {

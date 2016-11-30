@@ -1161,7 +1161,7 @@ export function ItemList(
                                 );
                             }
 
-                            menu.push.apply(menu, actions[group._id].map(createAction));
+                            menu.push(...actions[group._id].map(createAction));
                         }
                         return null;
                     });
