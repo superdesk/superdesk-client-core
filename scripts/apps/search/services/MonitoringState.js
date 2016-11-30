@@ -52,6 +52,14 @@ export function MonitoringState($q, $rootScope, ingestSources, desks, highlights
                     });
                     setState({highlightsById: highlightsById});
                 }),
+                markedDesksById: desks.fetchDesks().then((result) => {
+                    var markedDesksById = {};
+
+                    result._items.forEach((item) => {
+                        markedDesksById[item._id] = item;
+                    });
+                    setState({markedDesksById: markedDesksById});
+                }),
                 profilesById: content.getTypesLookup().then((profilesLookup) => {
                     setState({profilesById: profilesLookup});
                 }),

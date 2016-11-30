@@ -363,7 +363,7 @@ function DropdownPositionAbsoluteDirective($position) {
     return {
         require: 'dropdown',
         link: function(scope, elem, attrs, dropdown) {
-            var icon = elem.find('[class*="icon-"]');
+            var icon = elem.find('[class*="icon-open"]');
             // ported from bootstrap 0.13.1
 
             scope.$watch(dropdown.isOpen, (isOpen) => {

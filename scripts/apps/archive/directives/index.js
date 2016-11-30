@@ -21,3 +21,4 @@ export {ArchivedItemKill} from './ArchivedItemKill';
 export {ResendItem} from './ResendItem';
 export {ItemPriority} from './ItemPriority';
 export {ItemUrgency} from './ItemUrgency';
+export {MarkedItemTitle} from './MarkedItemTitle';

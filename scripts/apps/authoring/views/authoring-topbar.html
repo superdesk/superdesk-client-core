@@ -30,7 +30,8 @@
     <div class="subnav__authoring-topbar" ng-class="{'has-highlights': item.highlights}">
         <span class="stage" tooltip="{{deskName}} / {{ stage.name }}" tooltip-placement="bottom" ng-show="stage" ng-if="item._type !== 'legal_archive'"><b>{{deskName}}</b> / {{ stage.name }}</span>
         <span class="stage" tooltip="{{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage" ng-if="item._type === 'legal_archive'"><b>{{deskName}}</b> / {{ stage }}</span>
-        <span ng-if="item.highlights" sd-highlights-title data-item="item"></span>
+        <span ng-if="item.highlights" sd-highlights-title data-item="highlights"></span>
+        <span ng-if="item.marked_desks" sd-highlights-title data-item="marked_desks"></span>
     </div>
 
     <div class="subnav__stretch-bar" ng-if="showCustomButtons(item)">
@@ -158,16 +159,25 @@
                   </li>
                 </ul>
 
-                <ul ng-if="item.task.desk && itemActions.mark_item">
+                <ul ng-if="item.task.desk && (itemActions.mark_item_for_desks || itemActions.mark_item_for_highlight)">
                   <li class="divider"></li>
-                  <li><span class="dropdown__menu-label" translate>Highlights</span></li>
-                  <li>
+                  <li><span class="dropdown__menu-label" translate>Mark item for</span></li>
+                  <li ng-if="itemActions.mark_item_for_highlight">
                     <div class="dropdown highlights-toggle" dropdown>
-                      <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Mark item for' | translate }}
+                      <button class="dropdown__toggle" dropdown-toggle>
+                        {{ :: 'Highlights' | translate }}
                         <i class="icon-chevron-right-thin dropdown__submenu-icon"></i>
                       </button>
                       <ul class="dropdown__menu right-submenu" sd-mark-highlights-dropdown></ul>
+                    </div>
+                  </li>
+                  <li ng-if="itemActions.mark_item_for_desks">
+                    <div class="dropdown highlights-toggle" dropdown>
+                      <button class="dropdown__toggle" dropdown-toggle>
+                        {{ :: 'Desks' | translate }}
+                        <i class="icon-chevron-right-thin dropdown__submenu-icon"></i>
+                      </button>
+                      <ul class="dropdown__menu right-submenu" sd-mark-desks-dropdown></ul>
                     </div>
                   </li>
                 </ul>

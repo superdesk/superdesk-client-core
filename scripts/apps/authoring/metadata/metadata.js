@@ -937,7 +937,7 @@ function MetadataService(api, subscribersService, config, vocabularies) {
         search_config: config.search || {
             slugline: 1, headline: 1, unique_name: 1, story_text: 1, byline: 1,
             keywords: 1, creator: 1, from_desk: 1, to_desk: 1, spike: 1,
-            scheduled: 1, company_codes: 1, ingest_provider: 1
+            scheduled: 1, company_codes: 1, ingest_provider: 1, marked_desks: 1
         },
         subjectScope: null,
         loaded: null,

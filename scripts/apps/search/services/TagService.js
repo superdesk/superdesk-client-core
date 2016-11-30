@@ -136,6 +136,11 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 tags.selectedParameters.push(tag(value + ':' +
                         desks.deskLookup[params[key].split('-')[0]].name));
                 break;
+            case 'marked_desks':
+                JSON.parse(params[key]).forEach((id) => {
+                    tags.selectedParameters.push(tag(value + ':' + desks.deskLookup[id].name));
+                });
+                break;
             case 'company_codes':
             case 'subject':
                 var processSelectedItems = function(selectedItems, codeList) {

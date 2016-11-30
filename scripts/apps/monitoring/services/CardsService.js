@@ -27,7 +27,6 @@ export function CardsService(api, search, session, desks, config) {
         return params;
     }
 
-
     function filterQueryByCardType(query, queryParam, card) {
         let deskId;
 
@@ -84,24 +83,24 @@ export function CardsService(api, search, session, desks, config) {
         if (config.monitoring && config.monitoring.scheduled) {
             states = ['published', 'corrected', 'killed'];
         }
-
-        if (!desk) {
-            return;
-        }
-
-        if (desk.desk_type === 'authoring') {
-            query.filter({or: [
-                {term: {'task.last_authoring_desk': deskId}},
-                {and: [
-                    {term: {'task.desk': deskId}},
-                    {terms: {state: states}}
-                ]}
-            ]});
-        } else if (desk.desk_type === 'production') {
-            query.filter({and: [
-                {term: {'task.desk': deskId}},
-                {terms: {state: states}}
-            ]});
+        if (desk) {
+            if (desk.desk_type === 'authoring') {
+                query.filter({or: [
+                    {term: {'task.last_authoring_desk': deskId}},
+                    {terms: {'marked_desks.desk_id': [deskId]}},
+                    {and: [
+                        {term: {'task.desk': deskId}},
+                        {terms: {state: states}}
+                    ]}
+                ]});
+            } else if (desk.desk_type === 'production') {
+                query.filter({or: [
+                    {and: [
+                        {term: {'task.desk': deskId}},
+                        {terms: {state: states}}]},
+                    {terms: {'marked_desks.desk_id': [deskId]}}
+                ]});
+            }
         }
     }
 

@@ -1,6 +1,5 @@
-DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify', 'session', '$filter', '$rootScope'];
-export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter, $rootScope) {
-    let _cache = {};
+DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify', 'session', '$filter', 'privileges', '$rootScope'];
+export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter, privileges, $rootScope) {
     var _fetchAll = function(endpoint, parent, page = 1, items = []) {
         let key;
 
@@ -307,6 +306,12 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
         },
         isReadOnlyStage: function(stageId) {
             return this.stageLookup[stageId] ? this.stageLookup[stageId].local_readonly : false;
+        },
+        markItem: function(desk, markedItem) {
+            return api.save('marked_for_desks', {marked_desk: desk, marked_item: markedItem._id});
+        },
+        hasMarkItemPrivilege: function() {
+            return !!privileges.privileges.marked_for_desks;
         }
     };
 

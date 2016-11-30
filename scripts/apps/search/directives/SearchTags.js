@@ -54,10 +54,13 @@ export function SearchTags($location, tags, asset, metadata) {
                 } else {
                     var type = param.split(':')[0];
 
-                    _.each(PARAMETERS, (value, key) => {
-                        if (type === value && searchParameters[key]) {
-                            $location.search(key, null);
+                    Object.keys(PARAMETERS).some((k) => {
+                        if (PARAMETERS[k] === type && searchParameters[k]) {
+                            $location.search(k, null);
+                            return true;
                         }
+
+                        return false;
                     });
                 }
 

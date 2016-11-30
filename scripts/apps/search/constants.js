@@ -10,6 +10,7 @@ export const PARAMETERS = Object.freeze({
     spike: 'In Spiked',
     subject: 'Subject',
     company_codes: 'Company Codes',
+    marked_desks: 'Marked Desks',
     ingest_provider: 'Provider'
 });
 
@@ -69,6 +70,7 @@ export const DEFAULT_LIST_CONFIG = {
 export const CORE_PROJECTED_FIELDS = {
     fields: [
         'highlights',
+        'marked_desks',
         '_created',
         '_updated',
         '_etag',

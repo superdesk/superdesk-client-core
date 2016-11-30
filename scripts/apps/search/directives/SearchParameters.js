@@ -32,6 +32,8 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 scope.common = common;
                 scope.meta = _.extend({}, common.meta);
                 scope.fields = {};
+                scope.selecteditems = {};
+                scope.selectedCodes = {};
                 scope.cvs = metadata.search_cvs;
                 scope.search_config = metadata.search_config;
                 scope.lookupCvs = {};
@@ -55,6 +57,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 } else {
                     initializeDesksDropDown();
                     initializeItems();
+                    initializeMarkedDesks();
                     initializeProviders();
                 }
             }
@@ -116,6 +119,18 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 }
             }
 
+            function initializeMarkedDesks() {
+                if ($location.search().marked_desks) {
+                    scope.fields.marked_desks = [];
+                    scope.selecteditems.marked_desks = scope.selecteditems.marked_desks || [];
+                    var markedDesks = JSON.parse($location.search().marked_desks);
+
+                    markedDesks.map((d) => scope.selecteditems.marked_desks.push(desks.deskLookup[d]));
+                } else {
+                    scope.selecteditems.marked_desks = [];
+                }
+            }
+
             function initializeItems() {
                 angular.forEach(scope.cvs, (cv) => {
                     if ($location.search()[cv.field]) {
@@ -171,8 +186,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                         return tags.initSelectedFacets();
                     })
                     .then((currentTags) => {
-                        scope.selecteditems = {};
-                        scope.selectedCodes = {};
+                        initializeMarkedDesks();
                         initializeItems();
                     });
             }
@@ -185,6 +199,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     scope.fields.original_creator !== $location.search().original_creator ||
                     scope.fields.subject !== $location.search().subject ||
                     scope.fields.company_codes !== $location.search().company_codes ||
+                    scope.fields.marked_desks !== $location.search().marked_desks ||
                     scope.fields.spike !== $location.search().spike ||
                     scope.fields.ingest_provider !== $location.search().ingest_provider) {
                     init();
@@ -255,6 +270,8 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                         $location.search('to_desk', getDeskParam('to_desk'));
                     } else if (_.includes(['subject', 'company_codes'], key)) {
                         $location.search(key, JSON.stringify(_.map(val, 'qcode')));
+                    } else if (key === 'marked_desks') {
+                        $location.search(key, JSON.stringify(_.map(val, '_id')));
                     } else {
                         $location.search(key, val);
                     }
