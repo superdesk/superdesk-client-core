@@ -1,5 +1,5 @@
+/* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 var nav = require('./utils').nav;
 
@@ -14,8 +14,9 @@ function Content() {
         }
 
         var list = element(by.css('i.icon-th-list'));
+
         return list.isDisplayed()
-            .then(function(isVisible) {
+            .then((isVisible) => {
                 if (isVisible) {
                     list.click();
                 }
@@ -24,7 +25,8 @@ function Content() {
 
     this.setGridView = function() {
         var grid = element(by.css('[tooltip="switch to grid view"]'));
-        return grid.then(function(isVisible) {
+
+        return grid.then((isVisible) => {
             if (isVisible) {
                 grid.click();
             }
@@ -45,14 +47,13 @@ function Content() {
             }
 
             return elem.element(by.className('item-heading')).getText()
-                .then(function(text) {
-                    return text.toLowerCase().indexOf(item) >= 0;
-                });
+                .then((text) => text.toLowerCase().indexOf(item) >= 0);
         }
     };
 
     this.actionOnItem = function(action, item) {
         var menu = this.openItemMenu(item);
+
         return menu.element(by.partialLinkText(action)).click();
     };
 
@@ -61,23 +62,24 @@ function Content() {
     };
 
     function waitFor(elem, time) {
-        return browser.wait(function() {
-            return elem.isDisplayed();
-        }, time || 800);
+        return browser.wait(() => elem.isDisplayed(), time || 800);
     }
 
     this.openItemMenu = function(item) {
         this.getItem(item).click();
 
         var preview = element(by.id('item-preview'));
+
         waitFor(preview);
 
         var toggle = preview.element(by.className('icon-dots-vertical'));
+
         waitFor(toggle);
 
         toggle.click();
 
         var menu = element(by.css('.dropdown__menu.open'));
+
         waitFor(menu);
         return menu;
     };
@@ -86,6 +88,7 @@ function Content() {
         this.getItem(item).click();
 
         var preview = element(by.id('item-preview'));
+
         waitFor(preview);
     };
 
@@ -95,6 +98,7 @@ function Content() {
 
     this.checkMarkedForHighlight = function(highlight, item) {
         var crtItem = this.getItem(item);
+
         expect(crtItem.element(by.className('icon-star')).isDisplayed()).toBeTruthy();
         expect(crtItem.element(by.className('icon-star')).getAttribute('tooltip-html-unsafe'))
             .toContain(highlight);
@@ -120,6 +124,7 @@ function Content() {
     this.selectItem = function(item) {
         var crtItem = this.getItem(item);
         var typeIcon = crtItem.element(by.className('type-icon'));
+
         expect(typeIcon.isDisplayed()).toBe(true);
         browser.actions()
             .mouseMove(typeIcon)
@@ -144,6 +149,7 @@ function Content() {
 
     this.createPackageFromItems = function() {
         var elem = element(by.css('[class="multi-action-bar ng-scope"]'));
+
         elem.element(by.className('big-icon-package-create')).click();
         browser.sleep(500);
     };
@@ -154,6 +160,7 @@ function Content() {
 
     this.getItemType = function(itemType) {
         var itemTypeClass = 'filetype-icon-' + itemType;
+
         return element(by.className('authoring-header__general-info')).all(by.className(itemTypeClass)).first();
     };
 

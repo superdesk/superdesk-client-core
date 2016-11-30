@@ -16,7 +16,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
             // is the user allowed to configure widgets on this desk?
             $scope.configurable = workspaces.isCustom() || privileges.userHasPrivileges({desks: 1});
             // do this async so that it can clean up previous grid
-            $scope.$applyAsync(function() {
+            $scope.$applyAsync(() => {
                 self.current = workspace;
                 self.widgets = extendWidgets(workspace.widgets || []);
                 self.availableWidgets = dashboardWidgets;
@@ -31,9 +31,8 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      * @return {promise} list of widgets
      */
     function getAvailableWidgets(userWidgets) {
-        return _.filter(dashboardWidgets, function(widget) {
-            return widget.multiple || _.isNil(_.find(userWidgets, {_id: widget._id}));
-        });
+        return _.filter(dashboardWidgets,
+            (widget) => widget.multiple || _.isNil(_.find(userWidgets, {_id: widget._id})));
     }
 
     /**
@@ -48,7 +47,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
             w = angular.copy(widget);
             w.multiple_id = 0;
 
-            angular.forEach(this.widgets, function(item) {
+            angular.forEach(this.widgets, (item) => {
                 if (item._id === w._id && item.multiple_id >= w.multiple_id) {
                     w.multiple_id = item.multiple_id + 1;
                 }
@@ -82,8 +81,9 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
     };
 
     function extendWidgets(currentWidgets) {
-        return _.map(currentWidgets, function(widget) {
+        return _.map(currentWidgets, (widget) => {
             var original = _.find(dashboardWidgets, {_id: widget._id});
+
             return angular.extend({}, original, widget);
         });
     }
@@ -94,9 +94,17 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      * @return {promise} widget
      */
     function pickWidgets(widgets) {
-        return _.map(widgets, function(widget) {
-            return _.pick(widget, ['_id', 'configuration', 'sizex', 'sizey', 'col', 'row', 'active', 'multiple_id']);
-        });
+        return _.map(widgets, (widget) =>
+            _.pick(widget, [
+                '_id',
+                'configuration',
+                'sizex',
+                'sizey',
+                'col',
+                'row',
+                'active',
+                'multiple_id'
+            ]));
     }
 
     /*
@@ -105,6 +113,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
     this.save = function() {
         this.edit = false;
         var diff = angular.extend({}, this.current);
+
         this.widgets = _.filter(this.widgets, {active: true});
         diff.widgets = pickWidgets(this.widgets);
         api.save('workspaces', this.current, diff);
@@ -117,9 +126,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
         modal.confirm(
             gettext('Are you sure you want to delete current workspace?')
         )
-        .then(function() {
-            return workspaces.delete(self.current);
-        });
+        .then(() => workspaces.delete(self.current));
     };
 
     /*

@@ -1,4 +1,4 @@
-'use strict';
+
 
 var template = [
     '<form name="userForm">',
@@ -10,12 +10,12 @@ var template = [
     '</form>'
 ].join(' ');
 
-describe('sdUserUnique Directive', function() {
+describe('sdUserUnique Directive', () => {
     var scope;
 
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.service('api', function($q) {
             this.users = {
                 // make it find foo but not any other
@@ -32,11 +32,11 @@ describe('sdUserUnique Directive', function() {
         });
     }));
 
-    beforeEach(inject(function($rootScope) {
+    beforeEach(inject(($rootScope) => {
         scope = $rootScope.$new(true);
     }));
 
-    it('fails on unique constraint', inject(function($compile) {
+    it('fails on unique constraint', inject(($compile) => {
         scope.user = {_id: 3, username: 'test'};
         $compile(template)(scope);
 
@@ -48,7 +48,7 @@ describe('sdUserUnique Directive', function() {
         expect(scope.$eval('userForm.username.$error.unique')).toBe(true);
     }));
 
-    it('succeeds on unique constraint', inject(function($compile) {
+    it('succeeds on unique constraint', inject(($compile) => {
         scope.user = {_id: 6, username: 'baz'};
         $compile(template)(scope);
 
@@ -62,7 +62,7 @@ describe('sdUserUnique Directive', function() {
         expect(scope.$eval('userForm.username.$modelValue')).toBe('bar');
     }));
 
-    it('succeeds failing test using exclusion', inject(function($compile) {
+    it('succeeds failing test using exclusion', inject(($compile) => {
         scope.user = {_id: 9, username: 'foo'};
         $compile(template)(scope);
 
@@ -72,7 +72,7 @@ describe('sdUserUnique Directive', function() {
         expect(scope.$eval('userForm.username.$valid')).toBe(true);
     }));
 
-    it('fails confirming password', inject(function($compile) {
+    it('fails confirming password', inject(($compile) => {
         scope.user = {password: 'test'};
         $compile(template)(scope);
 
@@ -84,7 +84,7 @@ describe('sdUserUnique Directive', function() {
         expect(scope.$eval('userForm.passwordConfirm.$error.confirm')).toBe(true);
     }));
 
-    it('succeeds confirming password', inject(function($compile) {
+    it('succeeds confirming password', inject(($compile) => {
         scope.user = {password: 'test'};
         $compile(template)(scope);
 
@@ -96,13 +96,13 @@ describe('sdUserUnique Directive', function() {
     }));
 });
 
-describe('user edit directive', function() {
+describe('user edit directive', () => {
     var noop = angular.noop;
 
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.service('gettext', noop);
         $provide.service('api', noop);
         $provide.service('notify', noop);
@@ -116,7 +116,7 @@ describe('user edit directive', function() {
         });
     }));
 
-    it('checks username for valid characters', inject(function(usersService) {
+    it('checks username for valid characters', inject((usersService) => {
         expect(usersService.usernamePattern.test('!')).toBe(false);
         expect(usersService.usernamePattern.test('@')).toBe(false);
         expect(usersService.usernamePattern.test('#')).toBe(false);
@@ -132,7 +132,7 @@ describe('user edit directive', function() {
         expect(usersService.usernamePattern.test('1')).toBe(true);
     }));
 
-    it('checks phone number for valid characters', inject(function(usersService) {
+    it('checks phone number for valid characters', inject((usersService) => {
         expect(usersService.phonePattern.test('z')).toBe(false);
         expect(usersService.phonePattern.test('zxcvbnmas')).toBe(false);
 

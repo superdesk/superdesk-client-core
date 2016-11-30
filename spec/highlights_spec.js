@@ -7,13 +7,11 @@ var route = require('./helpers/utils').route,
     highlights = require('./helpers/highlights'),
     desks = require('./helpers/desks');
 
-describe('highlights', function() {
-    'use strict';
-
-    describe('add highlights configuration:', function() {
+describe('highlights', () => {
+    describe('add highlights configuration:', () => {
         beforeEach(route('/settings/highlights'));
 
-        it('highlights management', function() {
+        it('highlights management', () => {
             // add highlights configuration with one desk and open it in monitoring
             highlights.add();
             highlights.setName('highlight new');
@@ -109,10 +107,10 @@ describe('highlights', function() {
         });
     });
 
-    describe('mark for highlights in a desk:', function() {
+    describe('mark for highlights in a desk:', () => {
         beforeEach(route('/workspace/monitoring'));
 
-        it('create highlight package', function() {
+        it('create highlight package', () => {
             // Setup Desk Monitoring Settings
             expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
             desks.openDesksSettings();

@@ -1,24 +1,22 @@
+/* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 var workspace = require('./helpers/pages').workspace,
     content = require('./helpers/content'),
     authoring = require('./helpers/authoring');
 
-describe('content', function() {
+describe('content', () => {
     var body = element(by.tagName('body'));
 
     function selectedHeadline() {
         var headline = element.all(by.css('.preview-headline')).first();
 
-        browser.wait(function() {
-            return headline.isDisplayed();
-        }, 200); // animated sidebar
+        browser.wait(() => headline.isDisplayed(), 200); // animated sidebar
 
         return headline.getText();
     }
 
-    beforeEach(function() {
+    beforeEach(() => {
         workspace.open();
         workspace.createWorkspace('Personal');
         workspace.switchToDesk('PERSONAL');
@@ -43,7 +41,7 @@ describe('content', function() {
         element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
     }
 
-    it('can navigate with keyboard', function() {
+    it('can navigate with keyboard', () => {
         body.click();
 
         pressKey(protractor.Key.UP);
@@ -62,16 +60,16 @@ describe('content', function() {
         expect(selectedHeadline()).toBe('item1');
     });
 
-    it('can open search with s', function() {
+    it('can open search with s', () => {
         pressKey('s');
         expect(element(by.id('search-input')).isDisplayed()).toBe(true);
     });
 
-    it('can toggle view with v', function() {
+    it('can toggle view with v', () => {
         var gridBtn = element.all(by.css('.view-select button')).first();
 
         // reset to grid view first
-        gridBtn.isDisplayed().then(function(isList) {
+        gridBtn.isDisplayed().then((isList) => {
             if (isList) {
                 gridBtn.click();
             }
@@ -89,7 +87,7 @@ describe('content', function() {
         selectbox.element(by.css('.sd-checkbox')).click();
     }
 
-    it('can select multiple items', function() {
+    it('can select multiple items', () => {
         content.setListView();
         var count = element(by.id('multi-select-count')),
             boxes = element.all(by.css('.list-field.type-icon'));
@@ -105,7 +103,7 @@ describe('content', function() {
         expect(element.all(by.repeater('board in boards')).count()).toBe(2);
     });
 
-    it('can create text article in a desk', function() {
+    it('can create text article in a desk', () => {
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
 
@@ -119,7 +117,7 @@ describe('content', function() {
         expect(content.count()).toBe(3);
     });
 
-    it('can create empty package in a desk', function() {
+    it('can create empty package in a desk', () => {
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
 
@@ -133,7 +131,7 @@ describe('content', function() {
         expect(content.count()).toBe(3);
     });
 
-    xit('can close unsaved empty package in a desk', function() {
+    xit('can close unsaved empty package in a desk', () => {
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
 
@@ -145,20 +143,17 @@ describe('content', function() {
 
         element.all(by.className('btn--warning')).first().click();
 
-        browser.wait(function() {
-            return content.count().then(function(contentCount) {
-                return contentCount && contentCount === 2;
-            });
-        }, 500);
+        browser.wait(() => content.count().then((contentCount) => contentCount && contentCount === 2), 500);
     });
 
-    it('can open item using hotkey ctrl+0', function() {
+    it('can open item using hotkey ctrl+0', () => {
         content.setListView();
 
         browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, '0')).perform();
         browser.sleep(500);
 
         var storyNameEl = element(by.model('meta.unique_name'));
+
         expect(storyNameEl.isDisplayed()).toBe(true);
 
         storyNameEl.clear();
@@ -173,13 +168,14 @@ describe('content', function() {
         element(by.id('closeAuthoringBtn')).click();
     });
 
-    it('can open package using hotkey ctrl+0', function() {
+    it('can open package using hotkey ctrl+0', () => {
         content.setListView();
 
         browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, '0')).perform();
         browser.sleep(500);
 
         var storyNameEl = element(by.model('meta.unique_name'));
+
         expect(storyNameEl.isDisplayed()).toBe(true);
 
         storyNameEl.clear();
@@ -194,7 +190,7 @@ describe('content', function() {
         element(by.id('closeAuthoringBtn')).click();
     });
 
-    it('can display embargo in metadata when set', function() {
+    it('can display embargo in metadata when set', () => {
         workspace.editItem('item3', 'SPORTS');
         authoring.sendToButton.click();
 
@@ -212,14 +208,14 @@ describe('content', function() {
         content.closePreview();
     });
 
-    it('can enable/disable send and continue based on embargo', function() {
+    it('can enable/disable send and continue based on embargo', () => {
         // Initial steps before proceeding, to get initial state of send buttons.
         workspace.editItem('item3', 'SPORTS');
         authoring.sendTo('Sports Desk', 'Incoming Stage');
         authoring.confirmSendTo();
 
         workspace.editItem('item3', 'SPORTS');
-        authoring.sendToButton.click().then(function() {
+        authoring.sendToButton.click().then(() => {
             // Initial State
             expect(authoring.sendAndContinueBtn.isEnabled()).toBe(false);
             expect(authoring.sendBtn.isEnabled()).toBe(false);

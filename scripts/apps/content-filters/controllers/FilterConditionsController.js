@@ -26,10 +26,8 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
             var allValues = $scope.valueLookup[$scope.filterCondition.field];
             var valueField = $scope.valueFieldLookup[$scope.filterCondition.field];
 
-            _.each(values, function(value) {
-                var v = _.find(allValues, function(val) {
-                    return val[valueField].toString() === value;
-                });
+            _.each(values, (value) => {
+                var v = _.find(allValues, (val) => val[valueField].toString() === value);
 
                 $scope.filterCondition.values.push(v);
             });
@@ -51,11 +49,11 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
         delete $scope.filterCondition.values;
         contentFilters.saveFilterCondition($scope.origFilterCondition, $scope.filterCondition)
             .then(
-                function() {
+                () => {
                     notify.success(gettext('Filter condition saved.'));
                     $scope.cancel();
                 },
-                function(response) {
+                (response) => {
                     if (angular.isDefined(response.data._issues)) {
                         if (response.data._issues.name && response.data._issues.name.unique) {
                             notify.error(gettext('Error: ' + gettext('Name needs to be unique')));
@@ -68,17 +66,16 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
                         notify.error(gettext('Error: Failed to save filter condition.'));
                     }
                 }
-            ).then(fetchFilterConditions);
+            )
+            .then(fetchFilterConditions);
     };
 
     $scope.remove = function(filterCondition) {
         modal.confirm(gettext('Are you sure you want to delete filter condition?'))
-        .then(function() {
-            return contentFilters.remove(filterCondition);
-        })
-        .then(function(result) {
+        .then(() => contentFilters.remove(filterCondition))
+        .then((result) => {
             _.remove($scope.filterConditions, filterCondition);
-        }, function(response) {
+        }, (response) => {
             if (angular.isDefined(response.data._message)) {
                 notify.error(gettext('Error: ' + response.data._message));
             } else {
@@ -90,7 +87,8 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
     var getFilterValue = function() {
         if ($scope.isListValue()) {
             var values = [];
-            _.each($scope.filterCondition.values, function(value) {
+
+            _.each($scope.filterCondition.values, (value) => {
                 values.push(value[$scope.valueFieldLookup[$scope.filterCondition.field]]);
             });
             return values.join();
@@ -103,28 +101,29 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
         var labels = [];
 
         var values = filterCondition.value.split(',');
-        _.each(values, function(value) {
+
+        _.each(values, (value) => {
             if ($scope.valueLookup[filterCondition.field]) {
-                var v = _.find($scope.valueLookup[filterCondition.field], function(val) {
-                    return val[$scope.valueFieldLookup[filterCondition.field]].toString() === value;
-                });
+                var v = _.find($scope.valueLookup[filterCondition.field],
+                    (val) => val[$scope.valueFieldLookup[filterCondition.field]].toString() === value);
 
                 labels.push(v.name);
             }
         });
 
         var conditionValue = labels.length > 0 ? labels.join(', ') : filterCondition.value;
+
         return '(' + filterCondition.field + ' ' + filterCondition.operator + ' ' + conditionValue + ')';
     };
 
     var fetchFilterConditions = function() {
-        contentFilters.getAllFilterConditions().then(function(_filterConditions) {
+        contentFilters.getAllFilterConditions().then((_filterConditions) => {
             $scope.filterConditions = $filter('sortByName')(_filterConditions);
         });
 
-        contentFilters.getFilterConditionParameters().then(function(params) {
+        contentFilters.getFilterConditionParameters().then((params) => {
             $scope.filterConditionParameters = params;
-            _.each(params, function(param) {
+            _.each(params, (param) => {
                 $scope.operatorLookup[param.field] = param.operators;
                 $scope.valueLookup[param.field] = param.values;
                 $scope.valueFieldLookup[param.field] = param.value_field;

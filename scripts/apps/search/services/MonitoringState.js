@@ -37,21 +37,22 @@ export function MonitoringState($q, $rootScope, ingestSources, desks, highlights
     function init() {
         if (!ready) {
             ready = $q.all({
-                ingestProvidersById: ingestSources.initialize().then(function() {
+                ingestProvidersById: ingestSources.initialize().then(() => {
                     setState({ingestProvidersById: ingestSources.providersLookup});
                 }),
-                desksById: desks.initialize().then(function() {
+                desksById: desks.initialize().then(() => {
                     setState({desksById: desks.deskLookup});
                 }),
                 usersById: setState({usersById: desks.userLookup}),
-                highlightsById: highlightsService.get().then(function(result) {
+                highlightsById: highlightsService.get().then((result) => {
                     var highlightsById = {};
-                    result._items.forEach(function(item) {
+
+                    result._items.forEach((item) => {
                         highlightsById[item._id] = item;
                     });
                     setState({highlightsById: highlightsById});
                 }),
-                profilesById: content.getTypesLookup().then(function(profilesLookup) {
+                profilesById: content.getTypesLookup().then((profilesLookup) => {
                     setState({profilesById: profilesLookup});
                 }),
 
@@ -73,6 +74,7 @@ export function MonitoringState($q, $rootScope, ingestSources, desks, highlights
     function moveActiveGroup(diff) {
         var groups = self.state.groups;
         var next = groups.indexOf(self.state.activeGroup) + diff;
+
         if (next >= groups.length) {
             next = 0;
         } else if (next < 0) {

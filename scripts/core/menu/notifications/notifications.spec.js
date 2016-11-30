@@ -1,6 +1,6 @@
-'use strict';
 
-describe('user notifications', function() {
+
+describe('user notifications', () => {
     var notifications = {_items: [
         {recipients: [{user_id: 'foo', read: 0}, {user_id: 'bar', read: 1}]},
         {recipients: [{user_id: 'foo', read: 1}, {user_id: 'bar', read: 1}]},
@@ -11,15 +11,15 @@ describe('user notifications', function() {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.core.menu.notifications'));
 
-    beforeEach(inject(function(api, $q) {
+    beforeEach(inject((api, $q) => {
         spyOn(api, 'query').and.returnValue($q.when(notifications));
     }));
 
-    beforeEach(inject(function(session, $q) {
+    beforeEach(inject((session, $q) => {
         spyOn(session, 'getIdentity').and.returnValue($q.reject());
     }));
 
-    it('can fetch user notifications', inject(function(userNotifications, session, api, $rootScope) {
+    it('can fetch user notifications', inject((userNotifications, session, api, $rootScope) => {
         session.identity = {_id: 'foo', user_type: 'user'};
 
         expect(userNotifications._items).toBe(null);
@@ -34,25 +34,28 @@ describe('user notifications', function() {
         expect(api.query).toHaveBeenCalled();
 
         var args = api.query.calls.argsFor(0);
+
         expect(args[0]).toBe('activity');
 
         var query = args[1].where;
+
         expect(query.user).toEqual({$exists: true});
     }));
 
     it('can fetch system notification for admins',
-    inject(function(userNotifications, session, api, $rootScope) {
+    inject((userNotifications, session, api, $rootScope) => {
         session.identity = {_id: 'foo', user_type: 'administrator'};
         userNotifications.reload();
         $rootScope.$digest();
         var args = api.query.calls.argsFor(0);
         var query = args[1].where;
+
         expect(query.user).toBeUndefined();
         expect(query.item).toBeUndefined();
     }));
 });
 
-describe('desk notifications', function() {
+describe('desk notifications', () => {
     var notifications = {_items: [
         {recipients: [{desk_id: 'desk1', read: 0}, {desk_id: 'desk2', read: 1}]},
         {recipients: [{desk_id: 'desk1', read: 1}, {desk_id: 'desk2', read: 0}]},
@@ -63,11 +66,11 @@ describe('desk notifications', function() {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.core.menu.notifications'));
 
-    beforeEach(inject(function(api, $q) {
+    beforeEach(inject((api, $q) => {
         spyOn(api, 'query').and.returnValue($q.when(notifications));
     }));
 
-    it('can fetch desk notifications', inject(function(deskNotifications, session, api, $rootScope) {
+    it('can fetch desk notifications', inject((deskNotifications, session, api, $rootScope) => {
         session.identity = {_id: 'foo', user_type: 'user'};
 
         expect(deskNotifications._items).toEqual({});
@@ -82,6 +85,7 @@ describe('desk notifications', function() {
         expect(api.query).toHaveBeenCalled();
 
         var args = api.query.calls.argsFor(0);
+
         expect(args[0]).toBe('activity');
     }));
 });

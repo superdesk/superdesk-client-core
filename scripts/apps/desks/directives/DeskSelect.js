@@ -35,7 +35,7 @@ export function DeskSelect(Keys, _, preferencesService) {
 
             scope.filter = '';
 
-            preferencesService.get('desks:preferred').then(function(result) {
+            preferencesService.get('desks:preferred').then((result) => {
                 scope.preferredDesks = result;
             });
 
@@ -63,7 +63,7 @@ export function DeskSelect(Keys, _, preferencesService) {
 
             scope.$watch('isOpen', reset);
 
-            let filterActive = desk => desk._id === scope.ctrl.active._id;
+            let filterActive = (desk) => desk._id === scope.ctrl.active._id;
 
             /**
              * Move active item up or down
@@ -78,7 +78,7 @@ export function DeskSelect(Keys, _, preferencesService) {
                 var index = scope.ctrl.active ? _.findIndex(scope.desks, filterActive) : -diff;
                 var next = Math.min(Math.max(0, index + diff), scope.desks.length - 1);
 
-                scope.$apply(function() {
+                scope.$apply(() => {
                     scope.ctrl.setActive(scope.desks[next]);
                 });
             }
@@ -89,9 +89,8 @@ export function DeskSelect(Keys, _, preferencesService) {
             function filterDesks() {
                 if (scope.allDesks) {
                     var filterRegexp = new RegExp('^' + scope.filter, 'i');
-                    scope.desks = scope.allDesks.filter(desk => {
-                        return !scope.filter || filterRegexp.test(desk.name);
-                    });
+
+                    scope.desks = scope.allDesks.filter((desk) => !scope.filter || filterRegexp.test(desk.name));
 
                     // in case active item is filtered out keep focus
                     if (scope.ctrl.active && !scope.desks.find(filterActive)) {
@@ -110,19 +109,19 @@ export function DeskSelect(Keys, _, preferencesService) {
                 });
             }
 
-            scope.$on('key:down', e => {
+            scope.$on('key:down', (e) => {
                 if (scope.isOpen) {
                     moveActive(DOWN);
                 }
             });
 
-            scope.$on('key:up', e => {
+            scope.$on('key:up', (e) => {
                 if (scope.isOpen) {
                     moveActive(UP);
                 }
             });
 
-            scope.$on('key:backspace', e => {
+            scope.$on('key:backspace', (e) => {
                 if (scope.isOpen) {
                     backspaceAction();
                 }
@@ -131,7 +130,7 @@ export function DeskSelect(Keys, _, preferencesService) {
             // regexp for characters including unicode
             let charRegexp = /^[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]$/;
 
-            elem.on('keydown', e => {
+            elem.on('keydown', (e) => {
                 if (e.ctrlKey || e.metaKey || e.altKey) { // ignore when ctrl/alt/meta is used
                     return;
                 }
@@ -142,8 +141,9 @@ export function DeskSelect(Keys, _, preferencesService) {
                     if (scope.isOpen) {
                             // on enter select active or first
                         if (scope.ctrl.active || scope.desks.length) {
-                            scope.$apply(function() {
+                            scope.$apply(() => {
                                 var desk = scope.ctrl.active || scope.desks[0];
+
                                 scope.onChange({desk: desk});
                             });
                         } else {

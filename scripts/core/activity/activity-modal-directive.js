@@ -5,10 +5,11 @@ angular.module('superdesk.core.activity.modal', [])
         templateUrl: asset.templateUrl('core/activity/views/activity-modal.html'),
         link: function(scope, elem) {
             scope.stack = activityService.activityStack;
-            scope.$watch('stack.length', function(len) {
+            scope.$watch('stack.length', (len) => {
                 scope.activity = null;
                 if (len) {
                     var config = scope.stack[len - 1];
+
                     scope.activity = config.activity;
                     scope.locals = config.locals;
 
@@ -20,7 +21,7 @@ angular.module('superdesk.core.activity.modal', [])
                         return config.defer.resolve(result);
                     };
 
-                    config.defer.promise.finally(function() {
+                    config.defer.promise.finally(() => {
                         scope.stack.pop();
                     });
                 }

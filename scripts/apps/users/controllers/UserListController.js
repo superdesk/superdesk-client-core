@@ -6,10 +6,12 @@ export function UserListController($scope, $location, api, _) {
     $scope.createdUsers = [];
     $scope.online_users = false;
 
-    api('roles').query().then(function(result) {
-        $scope.roles = _.keyBy(result._items, '_id');
-        $scope.noRolesWarning = result._items.length === 0;
-    });
+    api('roles')
+        .query()
+        .then((result) => {
+            $scope.roles = _.keyBy(result._items, '_id');
+            $scope.noRolesWarning = result._items.length === 0;
+        });
 
     $scope.preview = function(user) {
         $scope.selected.user = user;
@@ -47,9 +49,7 @@ export function UserListController($scope, $location, api, _) {
             return false;
         }
 
-        return _.find(list, function(item) {
-            return item._links.self.href === user._links.self.href;
-        });
+        return _.find(list, (item) => item._links.self.href === user._links.self.href);
     }
 
     function getCriteria() {
@@ -121,7 +121,7 @@ export function UserListController($scope, $location, api, _) {
 
     function fetchUsers(criteria) {
         api.users.query(criteria)
-            .then(function(users) {
+            .then((users) => {
                 $scope.users = users;
                 $scope.createdUsers = [];
             });
@@ -129,6 +129,7 @@ export function UserListController($scope, $location, api, _) {
 
     function formatSort(key, dir) {
         var val = dir === 'asc' ? 1 : -1;
+
         switch (key) {
         case 'full_name':
             return '[("first_name", ' + val + '), ("last_name", ' + val + ')]';

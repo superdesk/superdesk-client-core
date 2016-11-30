@@ -1,10 +1,10 @@
-describe('desk select directive', function() {
+describe('desk select directive', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     var scope, elem, iscope;
 
-    beforeEach(inject(function($rootScope, $compile) {
+    beforeEach(inject(($rootScope, $compile) => {
         scope = $rootScope.$new();
 
         scope.desks = [
@@ -30,12 +30,13 @@ describe('desk select directive', function() {
 
     function keydown(key) {
         var event = new $.Event('keydown');
+
         event.which = typeof key === 'number' ? key : key.charCodeAt(0);
         event.key = typeof key === 'number' ? 'unknown' : key;
         elem.triggerHandler(event);
     }
 
-    it('can use keyboard to filter out desks', inject(function(Keys) {
+    it('can use keyboard to filter out desks', inject((Keys) => {
         iscope.isOpen = true;
         scope.$apply();
         expect(iscope.isOpen).toBe(true);

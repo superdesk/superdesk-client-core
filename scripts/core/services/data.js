@@ -45,6 +45,7 @@ export default angular.module('superdesk.core.services.data', [])
                  */
                 function getQueryCriteria() {
                     var criteria = angular.extend({}, defaultParams, state.get());
+
                     angular.extend(criteria.where, _.pick(state.get(), defaultParams.filters));
 
                     if (criteria.hasOwnProperty('_id')) {
@@ -81,7 +82,8 @@ export default angular.module('superdesk.core.services.data', [])
                     self.loading = true;
                     var query = {resource: resource, criteria: criteria, start: Date.now()};
                     var promise = em.getRepository(resource).matching(criteria);
-                    promise.then(function(data) {
+
+                    promise.then((data) => {
                         self.loading = false;
                         slowQueryLog(query);
                         angular.extend(self, data);
@@ -197,9 +199,7 @@ export default angular.module('superdesk.core.services.data', [])
                     }, params);
 
                     // main loop - update when query criteria change
-                    cancelWatch = $rootScope.$watchCollection(function() {
-                        return getQueryCriteria();
-                    }, function(criteria) {
+                    cancelWatch = $rootScope.$watchCollection(() => getQueryCriteria(), (criteria) => {
                         self.query(criteria);
                     });
                 };

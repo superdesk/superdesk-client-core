@@ -19,21 +19,21 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         };
 
         return item.upload || api.archive.getUrl()
-            .then(function(url) {
+            .then((url) => {
                 item.upload = upload.start({
                     method: 'POST',
                     url: url,
                     data: {media: item.file},
                     headers: api.archive.getHeaders()
                 });
-                item.upload.then(function(response) {
+                item.upload.then((response) => {
                     if (response.data._issues) {
                         return handleError(response);
                     }
 
                     item.model = response.data;
                     return item;
-                }, handleError, function(progress) {
+                }, handleError, (progress) => {
                     item.progress = Math.round(progress.loaded / progress.total * 100.0);
                 });
 
@@ -48,8 +48,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     var validateFields = function() {
         $scope.errorMessage = null;
         if (!_.isEmpty($scope.items)) {
-            _.each($scope.items, function(item) {
-                _.each($scope.requiredFields, function(key) {
+            _.each($scope.items, (item) => {
+                _.each($scope.requiredFields, (key) => {
                     if (_.isNil(item.meta[key]) || _.isEmpty(item.meta[key])) {
                         $scope.errorMessage = 'Required field(s) are missing';
                         return false;
@@ -60,7 +60,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
     };
 
     $scope.setAllMeta = function(field, val) {
-        _.each($scope.items, function(item) {
+        _.each($scope.items, (item) => {
             item.meta[field] = val;
         });
     };
@@ -81,12 +81,12 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         if (!files.length) {
             return false;
         }
-        _.each(files, function(file) {
+        _.each(files, (file) => {
             if (/^image/.test(file.type)) {
                 EXIF.getData(file, function() {
                     var fileMeta = this.iptcdata;
 
-                    $scope.$apply(function() {
+                    $scope.$apply(() => {
                         initFile(file, {
                             byline: fileMeta.byline,
                             headline: fileMeta.headline,
@@ -105,7 +105,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
     $scope.upload = function() {
         var promises = [];
-        _.each($scope.items, function(item) {
+
+        _.each($scope.items, (item) => {
             if (!item.model && !item.progress) {
                 item.upload = null;
                 promises.push(uploadFile(item));
@@ -121,15 +122,15 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         validateFields();
         if (_.isNil($scope.errorMessage)) {
             $scope.saving = true;
-            return $scope.upload().then(function(results) {
-                $q.all(_.map($scope.items, function(item) {
+            return $scope.upload().then((results) => {
+                $q.all(_.map($scope.items, (item) => {
                     archiveService.addTaskToArticle(item.meta);
                     return api.archive.update(item.model, item.meta);
-                })).then(function(results) {
+                })).then((results) => {
                     $scope.resolve(results);
                 });
             })
-            .finally(function() {
+            .finally(() => {
                 $scope.saving = false;
                 checkFail();
             });

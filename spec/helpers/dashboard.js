@@ -1,7 +1,8 @@
+/* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 var openUrl = require('./utils').open;
+
 module.exports = new Dashboard();
 
 function Dashboard() {
@@ -36,13 +37,14 @@ function Dashboard() {
      * @return {promise} widget element
      */
     this.getSettingsWidget = function(name) {
-        return this.getSettingsWidgets().filter(function(elem) {
-            return elem.element(by.className('title')).getText().then(function(text) {
-                return text.toLowerCase().indexOf(name.toLowerCase()) > -1;
-            });
-        }).then(function(widgets) {
-            return widgets[0];
-        });
+        return this.getSettingsWidgets()
+            .filter((elem) =>
+                elem
+                    .element(by.className('title'))
+                    .getText()
+                    .then((text) => text.toLowerCase().indexOf(name.toLowerCase()) > -1)
+            )
+            .then((widgets) => widgets[0]);
     };
 
     /**
@@ -52,7 +54,7 @@ function Dashboard() {
      * @param {string} name
      */
     this.addWidget = function(name) {
-        this.getSettingsWidget(name).then(function(widget) {
+        this.getSettingsWidget(name).then((widget) => {
             widget.click();
         });
         element.all(by.css('[ng-click="dashboard.addWidget(dashboard.selectedWidget)"]')).first().click();
@@ -102,9 +104,7 @@ function Dashboard() {
      */
     this.showMonitoringSettings = function(index) {
         this.getWidget(index).all(by.css('[ng-click="openConfiguration()"]')).first().click();
-        browser.wait(function() {
-            return element.all(by.css('.aggregate-widget-config')).isDisplayed();
-        });
+        browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed());
     };
 
     /**

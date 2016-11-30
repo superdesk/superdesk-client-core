@@ -60,6 +60,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
     }
     $scope.handleKeyEvent = function(event) {
         var code = event.keyCode || event.which;
+
         if (MOVES[code]) {
             event.preventDefault();
             event.stopPropagation();
@@ -92,7 +93,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
     $scope.fetchResults = function() {
         fetchProductionTestResult();
     };
-    $scope.$on('triggerTest', function(event, filter) {
+    $scope.$on('triggerTest', (event, filter) => {
         $scope.productionTest = true;
         $scope.testResult = null;
         $scope.selectedfilter = filter._id;
@@ -103,10 +104,10 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
             filter_id: $scope.selectedfilter,
             return_matching: $scope.$eval($scope.model.selectedType
         )}).then(
-            function(result) {
+            (result) => {
                 $scope.testResult = result.match_results;
             },
-            function(response) {
+            (response) => {
                 if (angular.isDefined(response.data._issues)) {
                     notify.error(gettext('Error: ' + response.data._issues));
                 } else if (angular.isDefined(response.data._message)) {

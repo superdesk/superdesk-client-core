@@ -35,9 +35,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 preferences,
                 preferencesPromise;
 
-            $rootScope.$watch(function() {
-                return session.token;
-            }, resetPreferences);
+            $rootScope.$watch(() => session.token, resetPreferences);
 
             /**
              * @ngdoc method
@@ -48,9 +46,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * @description Get privileges for current user.
              */
             this.getPrivileges = function getPrivileges() {
-                return this.get().then(function() {
-                    return preferences[ACTIVE_PRIVILEGES] || {};
-                });
+                return this.get().then(() => preferences[ACTIVE_PRIVILEGES] || {});
             };
 
             /**
@@ -63,9 +59,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * @description Get available content actions for current user.
              */
             this.getActions = function getActions() {
-                return this.get().then(function() {
-                    return preferences[ACTIONS] || [];
-                });
+                return this.get().then(() => preferences[ACTIONS] || []);
             };
 
             /**
@@ -78,16 +72,18 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              */
             function getPreferences(cached) {
                 var api = $injector.get('api');
+
                 preferences = null;
                 preferencesPromise = session.getIdentity()
                     .then(fetchPreferences)
-                    .then(null, function(response) {
+                    .then(null, (response) => {
                         if (response && response.status === 404) {
                             return fetchPreferences();
                         }
 
                         return $q.reject(response);
-                    }).then(setPreferences);
+                    })
+                    .then(setPreferences);
 
                 /**
                  * Fetch preferences for current session
@@ -212,15 +208,16 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
 
                 updates = null;
                 return api.save('preferences', preferences, serverUpdates)
-                    .then(function(result) {
+                    .then((result) => {
                         preferences._etag = result._etag;
                         deferUpdate.resolve(result);
                         return result;
-                    }, function(response) {
+                    }, (response) => {
                         console.error(response);
                         notify.error(gettext('User preferences could not be saved...'));
                         deferUpdate.reject(response);
-                    }).finally(function() {
+                    })
+                    .finally(() => {
                         deferUpdate = null;
                     });
             }
@@ -243,7 +240,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     SESSION_PREFERENCES,
                     ACTIVE_PRIVILEGES,
                     ACTIONS
-                ], function(key) {
+                ], (key) => {
                     if (_.isNil(preferences[key])) {
                         preferences[key] = {};
                     }

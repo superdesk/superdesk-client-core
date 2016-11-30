@@ -41,6 +41,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     this.open = function(item) {
         var _open = function(_item) {
             var actions = authoring.itemActions(_item);
+
             if (actions.edit) {
                 this.edit(_item);
             } else {
@@ -162,7 +163,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      */
     function authoringOpen(itemId, action, repo) {
         return authoring.open(itemId, action === 'view', repo)
-            .then(function(item) {
+            .then((item) => {
                 self.item = item;
                 self.action = action !== 'view' && item._editable ? action : 'view';
             })

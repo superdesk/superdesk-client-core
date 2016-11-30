@@ -33,7 +33,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
              */
             if ($rootScope.config && $rootScope.config.features && $rootScope.config.features.scanpixSearchShortcut) {
                 api.search_providers.query({max_results: 200})
-                    .then(function(result) {
+                    .then((result) => {
                         scope.providers = $filter('sortByName')(result._items, 'search_provider');
                     });
             }
@@ -49,12 +49,22 @@ export function WorkspaceSidenavDirective(superdeskFlags, $location, Keys, gette
 
             elem.on('keydown', function WorkspaceKeyboard(event) {
                 if (event.which === Keys.up) {
-                    elem.find('.dropdown__menu button:focus').parent('li').prev().children('button').focus();
+                    elem.find('.dropdown__menu button:focus')
+                        .parent('li')
+                        .prev()
+                        .children('button')
+                        .focus();
+
                     return false;
                 }
 
                 if (event.which === Keys.down) {
-                    elem.find('.dropdown__menu button:focus').parent('li').next().children('button').focus();
+                    elem.find('.dropdown__menu button:focus')
+                        .parent('li')
+                        .next()
+                        .children('button')
+                        .focus();
+
                     return false;
                 }
             });

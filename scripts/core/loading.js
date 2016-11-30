@@ -3,10 +3,11 @@ angular.module('superdesk.core.loading', [])
     .run(['$rootScope', '$route', '$location', '$http', 'session', 'preferencesService',
         function($rootScope, $route, $location, $http, session, preferencesService) {
             var stopListener = angular.noop;
+
             $rootScope.loading = true;
 
         // fetch preferences on load
-            preferencesService.get().then(function() {
+            preferencesService.get().then(() => {
                 stopListener();
                 $http.defaults.headers.common.Authorization = session.token;
                 $rootScope.loading = false;
@@ -16,7 +17,7 @@ angular.module('superdesk.core.loading', [])
             });
 
         // prevent routing when there is no token
-            stopListener = $rootScope.$on('$locationChangeStart', function(e) {
+            stopListener = $rootScope.$on('$locationChangeStart', (e) => {
                 $rootScope.requiredLogin = requiresLogin($location.path());
                 if ($rootScope.loading && $rootScope.requiredLogin) {
                     e.preventDefault();
@@ -30,6 +31,7 @@ angular.module('superdesk.core.loading', [])
          */
             function requiresLogin(url) {
                 var routes = _.values($route.routes);
+
                 for (var i = routes.length - 1; i >= 0; i--) {
                     if (routes[i].regexp.test(url)) {
                         return routes[i].auth;

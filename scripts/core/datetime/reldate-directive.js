@@ -15,6 +15,7 @@ angular.module('superdesk.core.datetime.reldate', []).directive('sdReldate', [fu
         link: function(scope, element, attrs, ngModel) {
             ngModel.$render = function() {
                 var date = moment.utc(ngModel.$viewValue);
+
                 scope.datetime = date.toISOString();
 
                 date.local(); // switch to local time zone

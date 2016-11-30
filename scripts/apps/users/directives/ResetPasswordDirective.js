@@ -2,7 +2,7 @@ ResetPasswordDirective.$inject = ['usersService', 'notify', 'gettext'];
 export function ResetPasswordDirective(usersService, notify, gettext) {
     return {
         link: function(scope, element) {
-            scope.$watch('user', function() {
+            scope.$watch('user', () => {
                 scope.oldPasswordInvalid = false;
             });
 
@@ -11,11 +11,11 @@ export function ResetPasswordDirective(usersService, notify, gettext) {
              */
             scope.resetPassword = function() {
                 return usersService.resetPassword(scope.user)
-                    .then(function(response) {
+                    .then((response) => {
                         scope.oldPasswordInvalid = false;
                         notify.success(gettext('The password has been reset.'), 3000);
                         scope.show.reset_password = false;
-                    }, function(response) {
+                    }, (response) => {
                         scope.oldPasswordInvalid = true;
                     });
             };

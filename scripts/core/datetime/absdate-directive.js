@@ -14,6 +14,7 @@ angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['g
         var DISPLAY_CDATE_FORMAT = 'D. MMMM HH:mm';
         var DISPLAY_DAY_FORMAT = 'dddd, ';
         var DISPLAY_TODAY_FORMAT = '[' + gettextCatalog.getString('Today') + '], ';
+
         return {
             require: 'ngModel',
             template: '<time datetime="{{ datetime }}">' +
@@ -21,6 +22,7 @@ angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['g
             link: function(scope, element, attrs, ngModel) {
                 ngModel.$render = function() {
                     var date = moment.utc(ngModel.$viewValue);
+
                     scope.datetime = date.toISOString();
 
                     date.local(); // switch to local time zone

@@ -14,6 +14,7 @@ export default angular.module('superdesk.core.services.server', [])
         return {
             _makeUrl: function() {
                 var url = config.server.url;
+
                 for (var i = 0; i < arguments.length; i++) {
                     url += '/' + arguments[i];
                 }
@@ -31,7 +32,8 @@ export default angular.module('superdesk.core.services.server', [])
             _cleanData: function(item) {
                 var data = _.cloneDeep(item);
                 var fields = ['_id', '_links', 'etag', 'updated', 'created'];
-                _.forEach(fields, function(field) {
+
+                _.forEach(fields, (field) => {
                     delete data[field];
                 });
                 return data;
@@ -47,7 +49,8 @@ export default angular.module('superdesk.core.services.server', [])
                 }
 
                 var promises = [];
-                _.forEach(items, function(item) {
+
+                _.forEach(items, (item) => {
                     if (resource !== undefined) {
                         promises.push(self[functionName](resource, item));
                     } else {
@@ -55,7 +58,7 @@ export default angular.module('superdesk.core.services.server', [])
                     }
                 });
 
-                $q.all(promises).then(function(response) {
+                $q.all(promises).then((response) => {
                     delay.resolve(response);
                 });
 
@@ -83,12 +86,13 @@ export default angular.module('superdesk.core.services.server', [])
                 }
 
                 $http(options)
-                .success(function(responseData) {
+                .success((responseData) => {
                     if (method === 'POST') {
                         delay.resolve(responseData);
                     } else if (method === 'PATCH') {
                         var fields = ['_id', '_links', 'etag', 'updated'];
-                        _.forEach(fields, function(field) {
+
+                        _.forEach(fields, (field) => {
                             data[field] = responseData[field];
                         });
                         data.created = created;
@@ -97,7 +101,7 @@ export default angular.module('superdesk.core.services.server', [])
                         delay.resolve(responseData);
                     }
                 })
-                .error(function(responseData) {
+                .error((responseData) => {
                     delay.reject(responseData);
                 });
 
@@ -221,6 +225,7 @@ export default angular.module('superdesk.core.services.server', [])
 
                 if (params.search) {
                     var search = {};
+
                     search[params.searchField] = params.search;
                     angular.extend(serverParams.where, search);
                 }

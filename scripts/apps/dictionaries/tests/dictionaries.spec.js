@@ -1,18 +1,16 @@
 
-describe('dictionaries', function() {
-    'use strict';
-
+describe('dictionaries', () => {
     var USER_ID = 'foo',
         LANG = 'en';
 
     beforeEach(window.module('superdesk.apps.dictionaries'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(inject(function(session, $q) {
+    beforeEach(inject((session, $q) => {
         spyOn(session, 'getIdentity').and.returnValue($q.when({_id: USER_ID}));
     }));
 
-    it('can fetch global dictionaries', inject(function(api, dictionaries, $q, $rootScope) {
+    it('can fetch global dictionaries', inject((api, dictionaries, $q, $rootScope) => {
         spyOn(api, 'query').and.returnValue($q.when());
         dictionaries.fetch();
         $rootScope.$digest();
@@ -23,12 +21,13 @@ describe('dictionaries', function() {
             ]}});
     }));
 
-    it('can get dictionaries for given language', inject(function(api, dictionaries, $q, $rootScope) {
+    it('can get dictionaries for given language', inject((api, dictionaries, $q, $rootScope) => {
         spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 1}]}));
         spyOn(api, 'find').and.returnValue($q.when({}));
 
         var items;
-        dictionaries.getActive(LANG).then(function(_items) {
+
+        dictionaries.getActive(LANG).then((_items) => {
             items = _items;
         });
 
@@ -48,12 +47,13 @@ describe('dictionaries', function() {
     }));
 
     it('can get dictionaries for given language and the base language',
-        inject(function(api, dictionaries, $q, $rootScope) {
+        inject((api, dictionaries, $q, $rootScope) => {
             spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 1}]}));
             spyOn(api, 'find').and.returnValue($q.when({}));
 
             var items;
-            dictionaries.getActive('en-US', 'en').then(function(_items) {
+
+            dictionaries.getActive('en-US', 'en').then((_items) => {
                 items = _items;
             });
 
@@ -72,8 +72,9 @@ describe('dictionaries', function() {
             expect(api.find).toHaveBeenCalledWith('dictionaries', 1);
         }));
 
-    it('can get and update user dictionary', inject(function(api, dictionaries, $q, $rootScope) {
+    it('can get and update user dictionary', inject((api, dictionaries, $q, $rootScope) => {
         var userDict = {};
+
         spyOn(api, 'query').and.returnValue($q.when({_items: [userDict]}));
         dictionaries.getUserDictionary(LANG);
         $rootScope.$digest();
@@ -85,10 +86,11 @@ describe('dictionaries', function() {
                 ]
             }
         };
+
         expect(api.query).toHaveBeenCalledWith('dictionaries', where);
     }));
 
-    it('can create dict when adding word', inject(function(dictionaries, api, $q, $rootScope) {
+    it('can create dict when adding word', inject((dictionaries, api, $q, $rootScope) => {
         spyOn(api, 'query').and.returnValue($q.when({_items: []}));
         spyOn(api, 'save').and.returnValue($q.when());
 
@@ -103,10 +105,10 @@ describe('dictionaries', function() {
         });
     }));
 
-    describe('config modal directive', function() {
+    describe('config modal directive', () => {
         var scope;
 
-        beforeEach(inject(function($rootScope, $controller) {
+        beforeEach(inject(($rootScope, $controller) => {
             scope = $rootScope.$new();
             scope.origDictionary = {content: {foo: 1, bar: 1}};
             scope.dictionary = Object.create(scope.origDictionary);
@@ -114,13 +116,13 @@ describe('dictionaries', function() {
             $controller('DictionaryEdit', {$scope: scope});
         }));
 
-        it('can search words', function() {
+        it('can search words', () => {
             scope.filterWords('test');
             expect(scope.isNew).toBe(true);
             expect(scope.wordsCount).toBe(2);
         });
 
-        it('can prevent addition of existing word case-sensitively in dictionary', function() {
+        it('can prevent addition of existing word case-sensitively in dictionary', () => {
             scope.filterWords('foo');
             expect(scope.isNew).toBe(false);
             expect(scope.wordsCount).toBe(2);
@@ -129,14 +131,14 @@ describe('dictionaries', function() {
             expect(scope.wordsCount).toBe(2);
         });
 
-        it('can add words', function() {
+        it('can add words', () => {
             scope.addWord('test');
             expect(scope.dictionary.content.test).toBe(1);
             expect(scope.words.length).toBe(1);
             expect(scope.wordsCount).toBe(3);
         });
 
-        it('can remove words', function() {
+        it('can remove words', () => {
             scope.filterWords('foo');
             expect(scope.isNew).toBe(false);
             expect(scope.words.length).toBe(1);

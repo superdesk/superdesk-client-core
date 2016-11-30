@@ -4,9 +4,7 @@
 *
 * @module WorldClockController tests
 */
-describe('WorldClockController', function() {
-    'use strict';
-
+describe('WorldClockController', () => {
     var ctrl,
         getTzdataDeferred,
         fakeTzdata,
@@ -14,7 +12,7 @@ describe('WorldClockController', function() {
 
     beforeEach(window.module('superdesk.apps.dashboard.world-clock'));
 
-    beforeEach(inject(function($controller, $rootScope, $q) {
+    beforeEach(inject(($controller, $rootScope, $q) => {
         scope = $rootScope.$new();
 
         getTzdataDeferred = $q.defer();
@@ -30,7 +28,7 @@ describe('WorldClockController', function() {
         });
     }));
 
-    it('adds time zone data to Moment library on initialization', function() {
+    it('adds time zone data to Moment library on initialization', () => {
         var serverTzdata = {
             zones: {
                 'Europe/Rome': ['1 - CET'],
@@ -40,6 +38,7 @@ describe('WorldClockController', function() {
                 'Foo/Bar': []
             }
         };
+
         fakeTzdata.zones = serverTzdata.zones;
         fakeTzdata.links = serverTzdata.links;
 

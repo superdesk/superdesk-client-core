@@ -4,10 +4,11 @@ export function AddPackageDropdown($rootScope, api, packages, authoringWorkspace
         templateUrl: 'scripts/apps/packaging/views/sd-add-package-dropdown.html',
         link: function(scope) {
             var pkg = authoringWorkspace.getItem();
+
             scope.groupList = null;
             if (pkg.highlight) {
                 api('highlights').getById(pkg.highlight)
-                .then(function(result) {
+                .then((result) => {
                     scope.groupList = result.groups;
                 });
             }

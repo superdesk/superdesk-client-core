@@ -28,16 +28,16 @@ const testItems = [
     }
 ];
 
-describe('suggest', function() {
+describe('suggest', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.authoring.autosave'));
     beforeEach(window.module('superdesk.apps.authoring.suggest'));
 
-    it('should initialize as inactive', inject(suggest => {
+    it('should initialize as inactive', inject((suggest) => {
         expect(suggest.active).toBe(false);
     }));
 
-    it('should correctly set active state', inject(suggest => {
+    it('should correctly set active state', inject((suggest) => {
         expect(suggest.active).toBe(false);
         suggest.setActive();
         expect(suggest.active).toBe(true);
@@ -103,7 +103,7 @@ describe('suggest', function() {
         spyOn(suggest, 'onUpdate').and.callThrough();
 
         suggest.setActive();
-        suggest.onUpdate(v => {
+        suggest.onUpdate((v) => {
             response = v;
         });
         suggest.trigger(item, item);

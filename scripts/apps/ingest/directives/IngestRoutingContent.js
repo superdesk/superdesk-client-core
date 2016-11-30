@@ -21,14 +21,15 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
             scope.contentFilters = [];
 
             function initSchemes() {
-                api('routing_schemes').query().then(function(result) {
-                    scope.schemes = $filter('sortByName')(result._items);
-                });
+                api('routing_schemes').query()
+                    .then((result) => {
+                        scope.schemes = $filter('sortByName')(result._items);
+                    });
 
                 contentFilters.getAllContentFilters(
                     filtersStartPage, scope.contentFilters
                 )
-                .then(function(filters) {
+                .then((filters) => {
                     scope.contentFilters = filters;
                 });
             }
@@ -60,21 +61,22 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
 
                 scope.editScheme.rules = _.reject(scope.editScheme.rules, {name: null});
 
-                _.forEach(scope.editScheme.rules, function(r) {
+                _.forEach(scope.editScheme.rules, (r) => {
                     // filterName was only needed to display it in the UI
                     delete r.filterName;
                 });
 
                 var _new = !scope.editScheme._id;
+
                 api('routing_schemes').save(_orig, scope.editScheme)
-                .then(function() {
+                .then(() => {
                     if (_new) {
                         scope.schemes.push(_orig);
                     }
                     scope.schemes = $filter('sortByName')(scope.schemes);
                     notify.success(gettext('Routing scheme saved.'));
                     scope.cancel();
-                }, function(response) {
+                }, (response) => {
                     notify.error(gettext('I\'m sorry but there was an error when saving the routing scheme.'));
                 });
             };
@@ -89,11 +91,11 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
             };
 
             scope.remove = function(scheme) {
-                confirm('scheme').then(function() {
+                confirm('scheme').then(() => {
                     api('routing_schemes').remove(scheme)
-                    .then(function(result) {
+                    .then((result) => {
                         _.remove(scope.schemes, scheme);
-                    }, function(response) {
+                    }, (response) => {
                         if (angular.isDefined(response.data._message)) {
                             notify.error(gettext('Error: ' + response.data._message));
                         } else {
@@ -104,7 +106,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
             };
 
             scope.removeRule = function(rule) {
-                confirm('rule').then(function() {
+                confirm('rule').then(() => {
                     if (rule === scope.rule) {
                         scope.rule = null;
                     }
@@ -127,6 +129,7 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
                         hour_of_day_to: '23:55:00'
                     }
                 };
+
                 scope.editScheme.rules.push(rule);
                 scope.editRule(rule);
             };

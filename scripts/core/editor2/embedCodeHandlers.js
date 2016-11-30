@@ -1,4 +1,4 @@
-'use strict';
+
 module.exports = [
     ['EMBED_PROVIDERS', function(EMBED_PROVIDERS) {
         return {
@@ -17,8 +17,8 @@ module.exports = [
             pattern: /src=".*vidible\.tv.*pid=(.+)\/(.+).js/g,
             name: EMBED_PROVIDERS.vidible,
             condition: () => config.editor && config.editor.vidible,
-            callback: match => api.get(`vidible/bcid/${match[2]}/pid/${match[1]}`)
-                .then(data => ({association: data}))
+            callback: (match) => api.get(`vidible/bcid/${match[2]}/pid/${match[1]}`)
+                .then((data) => ({association: data}))
         };
     }]
 ];

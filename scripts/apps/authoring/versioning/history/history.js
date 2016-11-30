@@ -9,12 +9,12 @@ function HistoryController($scope, authoring, api, notify, desks, archiveService
 
     function fetchHistory() {
         desks.initialize()
-            .then(function() {
+            .then(() => {
                 $scope.desks = desks.desks;
                 $scope.stages = desks.deskStages;
                 $scope.users = desks.users;
 
-                archiveService.getVersionHistory($scope.item, desks, 'operations').then(function(versions) {
+                archiveService.getVersionHistory($scope.item, desks, 'operations').then((versions) => {
                     $scope.versions = versions;
                     $scope.last = archiveService.lastVersion($scope.item, $scope.versions);
 
@@ -113,8 +113,8 @@ function TransmissionDetailsDirective(api, archiveService) {
                         promise = api.publish_queue.query(criteria);
                     }
 
-                    promise.then(function(response) {
-                        _.each(response._items, function(item) {
+                    promise.then((response) => {
+                        _.each(response._items, (item) => {
                             if (angular.isUndefined(item.completed_at)) {
                                 item.completed_at = item._updated;
                             }

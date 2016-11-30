@@ -3,9 +3,10 @@ SavedSearchService.$inject = ['api', '$filter', '$q', '$rootScope'];
 export function SavedSearchService(api, $filter, $q, $rootScope) {
     var _getAll = function(endPoint, page = 1, items = [], params = null) {
         return api.query(endPoint, {max_results: 200, page: page}, params)
-            .then(function(result) {
+            .then((result) => {
                 let pg = page;
                 let merged = items.concat(result._items);
+
                 if (result._links.next) {
                     pg++;
                     return _getAll(endPoint, pg, merged, params);
@@ -25,10 +26,10 @@ export function SavedSearchService(api, $filter, $q, $rootScope) {
         }
 
         return _getAll('all_saved_searches', page, items)
-        .then(function(savedSearches) {
+        .then((savedSearches) => {
             self.savedSearches = savedSearches;
             self.savedSearchLookup = {};
-            _.each(savedSearches, function(item) {
+            _.each(savedSearches, (item) => {
                 self.savedSearchLookup[item._id] = item;
             });
             return savedSearches;

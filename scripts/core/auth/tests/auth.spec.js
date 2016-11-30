@@ -1,21 +1,22 @@
-'use strict';
 
-describe('auth', function() {
+
+describe('auth', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.activity'));
     beforeEach(window.module('superdesk.core.auth'));
     beforeEach(window.module('superdesk.core.menu'));
     beforeEach(window.module('superdesk.apps.authoring'));
 
-    it('can use routes with auth=false without identity', inject(function($rootScope, $location, $route) {
+    it('can use routes with auth=false without identity', inject(($rootScope, $location, $route) => {
         $location.path('/reset-password/');
         $rootScope.$digest();
         expect($location.path()).toBe('/reset-password/');
     }));
 
-    it('can reload a route after login', inject(function($compile, $rootScope, $route, $q, auth) {
+    it('can reload a route after login', inject(($compile, $rootScope, $route, $q, auth) => {
         var elem = $compile('<div sd-login-modal></div>')($rootScope.$new()),
             scope = elem.scope();
+
         $rootScope.$digest();
         $rootScope.$digest();
 

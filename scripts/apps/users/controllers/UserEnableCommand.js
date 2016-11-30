@@ -6,10 +6,10 @@ export function UserEnableCommand(api, data, $q, notify, gettext, usersService, 
     var user = data.item;
 
     return usersService.save(user, {is_enabled: true, is_active: true}).then(
-        function(response) {
+        (response) => {
             $rootScope.$broadcast('user:updated', response);
         },
-        function(response) {
+        (response) => {
             if (angular.isDefined(response.data._issues) &&
                 angular.isDefined(response.data._issues['validator exception'])) {
                 notify.error(gettext('Error: ' + response.data._issues['validator exception']));

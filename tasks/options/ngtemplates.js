@@ -1,4 +1,4 @@
-'use strict';
+
 
 var path = require('path');
 var rootDir = path.dirname(path.dirname(__dirname));
@@ -57,6 +57,7 @@ module.exports = {
         options: {
             bootstrap: function() {
                 var locale = getConfig().i18n || '';
+
                 if (locale === '') {
                     return 'export default [];\r\n';
                 }
@@ -64,6 +65,7 @@ module.exports = {
                     'angular-i18n',
                     'angular-locale_' + locale + '.js'
                 );
+
                 return `require('${f}');\r\n`;
             }
         }
@@ -85,7 +87,7 @@ module.exports = {
                     return 'export default [];\r\n';
                 }
 
-                let abs = p => path.join(process.cwd(), 'node_modules', p);
+                let abs = (p) => path.join(process.cwd(), 'node_modules', p);
                 let data = 'export default [\r\n\trequire("' + abs(paths[0]) + '").default.name';
 
                 for (var i = 1; i < paths.length; i++) {

@@ -4,14 +4,12 @@
 *
 * @module sdIngestSourcesContent directive tests
 */
-describe('sdIngestSourcesContent directive', function() {
-    'use strict';
-
+describe('sdIngestSourcesContent directive', () => {
     var scope;
 
     beforeEach(window.module('superdesk.apps.ingest'));
 
-    beforeEach(inject(function($compile, $rootScope, $templateCache) {
+    beforeEach(inject(($compile, $rootScope, $templateCache) => {
         var html,
             templateUrl;
 
@@ -30,20 +28,20 @@ describe('sdIngestSourcesContent directive', function() {
         scope.$digest();
     }));
 
-    it('initializes the list of available field names in scope', function() {
+    it('initializes the list of available field names in scope', () => {
         expect(scope.contentFields).toEqual([
             'body_text', 'guid', 'published_parsed',
             'summary', 'title', 'updated_parsed'
         ]);
     });
 
-    it('initializes field aliases in scope to an empty list', function() {
+    it('initializes field aliases in scope to an empty list', () => {
         expect(scope.fieldAliases).toEqual([]);
     });
 
     it('initializes the list of field names without aliases to all ' +
        'content fields',
-        function() {
+        () => {
             expect(scope.fieldsNotSelected).toEqual([
                 'body_text', 'guid', 'published_parsed',
                 'summary', 'title', 'updated_parsed'
@@ -51,10 +49,10 @@ describe('sdIngestSourcesContent directive', function() {
         }
     );
 
-    describe('setRssConfig() method', function() {
+    describe('setRssConfig() method', () => {
         var fakeProvider;
 
-        beforeEach(function() {
+        beforeEach(() => {
             scope.provider = {
                 config: {}
             };
@@ -67,7 +65,7 @@ describe('sdIngestSourcesContent directive', function() {
             };
         });
 
-        it('stores provider configuration in scope', function() {
+        it('stores provider configuration in scope', () => {
             scope.setRssConfig(fakeProvider);
             expect(scope.provider.config).toEqual({
                 auth_required: true, username: 'user', password: 'password'
@@ -76,7 +74,7 @@ describe('sdIngestSourcesContent directive', function() {
 
         it('removes username and password from provider config if ' +
            'authenticationration is not required',
-           function() {
+           () => {
                fakeProvider.config.auth_required = false;
                scope.setRssConfig(fakeProvider);
                expect(scope.provider.config).toEqual({
@@ -86,10 +84,10 @@ describe('sdIngestSourcesContent directive', function() {
         );
     });
 
-    describe('edit() method', function() {
+    describe('edit() method', () => {
         var fakeProvider;
 
-        beforeEach(function() {
+        beforeEach(() => {
             fakeProvider = {
                 config: {
                     field_aliases: [
@@ -103,7 +101,7 @@ describe('sdIngestSourcesContent directive', function() {
 
         it('updates the list of field name aliases to match ' +
            'provider\'s configuration',
-            function() {
+            () => {
                 scope.fieldAliases = [{fieldName: 'body', alias: 'content'}];
                 scope.edit(fakeProvider);
                 expect(scope.fieldAliases).toEqual([
@@ -114,7 +112,7 @@ describe('sdIngestSourcesContent directive', function() {
         );
 
         it('updates the list of field names that don\'t have an alias set',
-            function() {
+            () => {
                 scope.fieldsNotSelected = [];
                 scope.edit(fakeProvider);
                 expect(scope.fieldsNotSelected).toEqual(
@@ -124,8 +122,8 @@ describe('sdIngestSourcesContent directive', function() {
         );
     });
 
-    describe('addFieldAlias() method', function() {
-        it('appends a new item to the list of field aliases', function() {
+    describe('addFieldAlias() method', () => {
+        it('appends a new item to the list of field aliases', () => {
             scope.fieldAliases = [
                 {fieldName: 'foo', alias: 'bar'},
                 {fieldName: 'foo2', alias: 'bar2'}
@@ -141,8 +139,8 @@ describe('sdIngestSourcesContent directive', function() {
         });
     });
 
-    describe('removeFieldAlias() method', function() {
-        beforeEach(function() {
+    describe('removeFieldAlias() method', () => {
+        beforeEach(() => {
             scope.fieldAliases = [
                 {fieldName: 'foo', alias: 'bar'},
                 {fieldName: 'foo2', alias: 'bar2'},
@@ -151,7 +149,7 @@ describe('sdIngestSourcesContent directive', function() {
         });
 
         it('removes an item at given index from the list of field aliases',
-            function() {
+            () => {
                 scope.removeFieldAlias(1);
                 expect(scope.fieldAliases).toEqual([
                     {fieldName: 'foo', alias: 'bar'},
@@ -162,7 +160,7 @@ describe('sdIngestSourcesContent directive', function() {
 
         it('adds removed items\'s selected field name to the list of ' +
            'not selected fields',
-            function() {
+            () => {
                 scope.fieldsNotSelected = ['field_x'];
                 scope.removeFieldAlias(1);
                 expect(scope.fieldsNotSelected).toEqual(['field_x', 'foo2']);
@@ -171,7 +169,7 @@ describe('sdIngestSourcesContent directive', function() {
 
         it('does not modify the list of not selected fields if removed ' +
            'alias item did not have a field name selected',
-            function() {
+            () => {
                 scope.fieldsNotSelected = ['field_x'];
                 scope.fieldAliases[1].fieldName = null;
 
@@ -182,12 +180,12 @@ describe('sdIngestSourcesContent directive', function() {
         );
     });
 
-    describe('fieldSelectionChanged() method', function() {
-        beforeEach(function() {
+    describe('fieldSelectionChanged() method', () => {
+        beforeEach(() => {
             scope.contentFields = ['field_1', 'field_2', 'field_3', 'field_4'];
         });
 
-        it('updates the list of fields not selected', function() {
+        it('updates the list of fields not selected', () => {
             scope.fieldsNotSelected = ['field_2'];
 
             // let's say an alias for field_3 gets removed:
@@ -202,33 +200,35 @@ describe('sdIngestSourcesContent directive', function() {
         });
     });
 
-    describe('availableFieldOptions() method', function() {
-        beforeEach(function() {
+    describe('availableFieldOptions() method', () => {
+        beforeEach(() => {
             scope.contentFields = ['field_1', 'field_2', 'field_3', 'field_4'];
             scope.fieldsNotSelected = ['field_1', 'field_3'];
         });
 
         it('returns only the field names currently not selected if no field ' +
            'name is given',
-            function() {
+            () => {
                 var fieldNames = scope.availableFieldOptions(null);
+
                 expect(fieldNames).toEqual(['field_1', 'field_3']);
             }
         );
 
         it('returns field names currently not selected ' +
            'plus the given field name',
-            function() {
+            () => {
                 var fieldNames = scope.availableFieldOptions('field_4');
+
                 expect(fieldNames).toEqual(['field_1', 'field_3', 'field_4']);
             }
         );
     });
 
-    describe('save() method', function() {
+    describe('save() method', () => {
         var deferredSave;
 
-        beforeEach(inject(function($q, api) {
+        beforeEach(inject(($q, api) => {
             deferredSave = $q.defer();
 
             api.ingestProviders = {
@@ -242,7 +242,7 @@ describe('sdIngestSourcesContent directive', function() {
             };
         }));
 
-        it('updates field aliases in provider configuration', function() {
+        it('updates field aliases in provider configuration', () => {
             scope.fieldAliases = [
                 {fieldName: 'foo', alias: 'bar'},
                 {fieldName: 'foo2', alias: 'bar2'}
@@ -255,7 +255,7 @@ describe('sdIngestSourcesContent directive', function() {
 
         it('does not add field aliases with missing data to ' +
            ' provider configuration',
-           function() {
+           () => {
                scope.fieldAliases = [
                     {fieldName: 'headline', alias: ''},
                     {fieldName: null, alias: 'some_alias'},

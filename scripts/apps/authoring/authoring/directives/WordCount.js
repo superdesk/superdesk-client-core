@@ -12,8 +12,9 @@ export function WordCount(gettextCatalog) {
         link: function wordCountLink(scope, elem, attrs) {
             scope.html = scope.html || false;
             scope.numWords = 0;
-            scope.$watch('item', function() {
+            scope.$watch('item', () => {
                 var input = scope.item || '';
+
                 input = scope.html ? helpers.cleanHtml(input) : input;
                 scope.numWords = _.compact(input.split(/\s+/)).length || 0;
             });

@@ -6,10 +6,11 @@ export function ItemRendition() {
             rendition: '@'
         },
         link: function(scope, elem, attrs) {
-            scope.$watch('item.renditions[rendition].href', function(href) {
+            scope.$watch('item.renditions[rendition].href', (href) => {
                 var figure = elem.find('figure'),
                     oldImg = figure.find('img').css('opacity', 0.5),
                     previewHover = '<div class="preview-overlay"><i class="icon-fullscreen"></i></div>';
+
                 if (href) {
                     var img = new Image();
 

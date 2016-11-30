@@ -1,6 +1,6 @@
-'use strict';
 
-describe('content', function() {
+
+describe('content', () => {
     var item = {_id: 1};
 
     beforeEach(window.module('superdesk.templates-cache'));
@@ -9,7 +9,7 @@ describe('content', function() {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
@@ -24,14 +24,15 @@ describe('content', function() {
         });
     }));
 
-    it('can spike items', inject(function(spike, api, $q) {
+    it('can spike items', inject((spike, api, $q) => {
         spyOn(api, 'update').and.returnValue($q.when());
         spike.spike(item);
         expect(api.update).toHaveBeenCalledWith('archive_spike', item, {state: 'spiked'});
     }));
 
-    it('can unspike items', inject(function(spike, api, send, $q, $rootScope) {
+    it('can unspike items', inject((spike, api, send, $q, $rootScope) => {
         var config = {desk: 'foo', stage: 'working'};
+
         spyOn(api, 'update').and.returnValue($q.when());
         spyOn(send, 'startConfig').and.returnValue($q.when(config));
         spike.unspike(item);
@@ -39,8 +40,8 @@ describe('content', function() {
         expect(api.update).toHaveBeenCalledWith('archive_unspike', item, {task: config});
     }));
 
-    describe('archive service', function() {
-        beforeEach(inject(function(desks, session, preferencesService) {
+    describe('archive service', () => {
+        beforeEach(inject((desks, session, preferencesService) => {
             session.identity = {_id: 'user:1'};
 
             spyOn(preferencesService, 'update').and.returnValue(true);
@@ -52,50 +53,51 @@ describe('content', function() {
             item = {_id: '123'};
         }));
 
-        it('can add an item to personal workspace', inject(function($location, archiveService, desks) {
+        it('can add an item to personal workspace', inject(($location, archiveService, desks) => {
             spyOn(desks, 'getCurrentDesk').and.returnValue({_id: '2', working_stage: '4'});
             $location.path('/workspace/personal');
             archiveService.addTaskToArticle(item);
             expect(item.task).not.toBeDefined();
         }));
 
-        it('can add an item to user\'s active desk', inject(function(archiveService, desks) {
+        it('can add an item to user\'s active desk', inject((archiveService, desks) => {
             spyOn(desks, 'getCurrentDesk').and.returnValue({_id: '2', working_stage: '4'});
             archiveService.addTaskToArticle(item);
             expect(item.task.desk).toBe('2');
             expect(item.task.stage).toBe('4');
         }));
 
-        it('can add an item to a desk', inject(function(archiveService, desks) {
+        it('can add an item to a desk', inject((archiveService, desks) => {
             archiveService.addTaskToArticle(item, desks.userDesks._items[0]);
 
             expect(item.task.desk).toBe('1');
             expect(item.task.stage).toBe('2');
         }));
 
-        it('verifies if item is from Legal Archive or not', inject(function(archiveService) {
+        it('verifies if item is from Legal Archive or not', inject((archiveService) => {
             expect(archiveService.isLegal(item)).toBe(false);
 
             item._type = 'legal_archive';
             expect(archiveService.isLegal(item)).toBe(true);
         }));
 
-        it('verifies if item is from Archived repo or not', inject(function(archiveService) {
+        it('verifies if item is from Archived repo or not', inject((archiveService) => {
             expect(archiveService.isArchived(item)).toBe(false);
 
             item._type = 'archived';
             expect(archiveService.isArchived(item)).toBe(true);
         }));
 
-        it('returns the related items', inject(function(archiveService, api, $q, search) {
+        it('returns the related items', inject((archiveService, api, $q, search) => {
             spyOn(api, 'query').and.returnValue($q.when());
             archiveService.getRelatedItems('test');
             expect(api.query).toHaveBeenCalled();
             var criteria = api.query.calls.mostRecent().args[1];
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('slugline.phrase:"test"');
         }));
 
-        it('can verify if the item is published or not', inject(function(archiveService) {
+        it('can verify if the item is published or not', inject((archiveService) => {
             item.state = 'submitted';
             expect(archiveService.isPublished(item)).toBe(false);
 
@@ -103,7 +105,7 @@ describe('content', function() {
             expect(archiveService.isPublished(item)).toBe(true);
         }));
 
-        it('return type based on state and repository', inject(function(archiveService) {
+        it('return type based on state and repository', inject((archiveService) => {
             item.state = 'spiked';
             expect(archiveService.getType(item)).toBe('spike');
 
@@ -127,7 +129,7 @@ describe('content', function() {
             expect(archiveService.getType(item)).toBe('externalsource');
         }));
 
-        it('can fetch version history', inject(function(archiveService, api, $q) {
+        it('can fetch version history', inject((archiveService, api, $q) => {
             spyOn(api, 'find').and.returnValue($q.when());
             spyOn(api.legal_archive_versions, 'getByUrl').and.returnValue($q.when());
 
@@ -143,8 +145,8 @@ describe('content', function() {
         }));
     });
 
-    describe('multi service', function() {
-        it('can reset on route change', inject(function(multi, $rootScope) {
+    describe('multi service', () => {
+        it('can reset on route change', inject((multi, $rootScope) => {
             multi.toggle({_id: 1, selected: true});
             expect(multi.count).toBe(1);
             expect(multi.getIds()).toEqual([1]);
@@ -155,23 +157,27 @@ describe('content', function() {
             expect(multi.count).toBe(0);
         }));
 
-        it('can get list of items', inject(function(multi) {
+        it('can get list of items', inject((multi) => {
             var items = [{_id: 1, selected: true}, {_id: 2, selected: true}];
+
             multi.toggle(items[0]);
             multi.toggle(items[1]);
             expect(multi.getItems()).toEqual(items);
         }));
     });
 
-    describe('media-related directive', function() {
-        it('can view item', inject(function(familyService, $rootScope, $compile, superdesk, $q) {
+    describe('media-related directive', () => {
+        it('can view item', inject((familyService, $rootScope, $compile, superdesk, $q) => {
             var scope = $rootScope.$new();
+
             scope.item = {_id: 1, family_id: 1};
 
             var elem = $compile('<div sd-media-related data-item=\'item\'></div>')(scope);
+
             scope.$digest();
 
             var iscope = elem.isolateScope();
+
             expect(iscope.item).toBe(scope.item);
 
             scope.relatedItems = {_items: [{_id: 2, family_id: 1}]};
@@ -183,14 +189,17 @@ describe('content', function() {
             expect(superdesk.intent).toHaveBeenCalledWith('view', 'item', scope.relatedItems._items[0]);
         }));
         it('can fetch related items when item duplicated',
-            inject(function(familyService, $rootScope, $compile, superdesk, $q) {
+            inject((familyService, $rootScope, $compile, superdesk, $q) => {
                 var scope = $rootScope.$new();
+
                 scope.item = {_id: 1, family_id: 1};
 
                 var elem = $compile('<div sd-media-related data-item=\'item\'></div>')(scope);
+
                 scope.$digest();
 
                 var iscope = elem.isolateScope();
+
                 expect(iscope.item).toBe(scope.item);
 
                 spyOn(familyService, 'fetchItems').and.returnValue($q.when());
@@ -201,16 +210,18 @@ describe('content', function() {
             }));
     });
 
-    describe('item preview container', function() {
-        it('can handle preview:item intent', inject(function($rootScope, $compile, superdesk) {
+    describe('item preview container', () => {
+        it('can handle preview:item intent', inject(($rootScope, $compile, superdesk) => {
             var scope = $rootScope.$new();
             var elem = $compile('<div sd-item-preview-container></div>')(scope);
+
             scope.$digest();
 
             var iscope = elem.isolateScope();
+
             expect(iscope.item).toBe(null);
 
-            scope.$apply(function() {
+            scope.$apply(() => {
                 superdesk.intent('preview', 'item', item);
             });
 

@@ -27,7 +27,7 @@ export function DeskConfigModal(metadata, content, api) {
              * Initialize metadata
              * @return {Object} metadata
              */
-            metadata.initialize().then(function() {
+            metadata.initialize().then(() => {
                 scope.metadata = metadata.values;
             });
 
@@ -35,7 +35,7 @@ export function DeskConfigModal(metadata, content, api) {
              * Initialize content types
              * @return {Object} profiles
              */
-            content.getTypes().then(function(profiles) {
+            content.getTypes().then((profiles) => {
                 scope.profiles = profiles;
             });
 
@@ -43,7 +43,7 @@ export function DeskConfigModal(metadata, content, api) {
              * Initialize languages
              * @return {Object} languages
              */
-            api.query('languages').then(function(languages) {
+            api.query('languages').then((languages) => {
                 scope.languages = languages._items;
             });
         }

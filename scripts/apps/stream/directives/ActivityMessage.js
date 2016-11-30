@@ -9,6 +9,7 @@ export function ActivityMessage(gettextCatalog) {
                 for (var tag in scope.activity.data) {
                     if (scope.activity.data.hasOwnProperty(tag)) {
                         var tagRegex = new RegExp('{{\\s*' + tag + '\\s*}}', 'gi');
+
                         scope.display_message =
                             scope.display_message.replace(tagRegex, scope.activity.data[tag]);
                     }

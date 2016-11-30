@@ -33,6 +33,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
      */
     function getHeaders(resource, item) {
         var headers = _.extend({}, resource.config.headers || {});
+
         if (item && item._etag) {
             headers['If-Match'] = item._etag;
         }
@@ -51,11 +52,11 @@ function HttpEndpointFactory($http, $q, urls, _) {
      */
     function http(config) {
         return $q.when(config.url)
-            .then(function(url) {
+            .then((url) => {
                 config.url = url;
                 return $http(config);
             })
-            .then(function(response) {
+            .then((response) => {
                 if (response.status >= 200 && response.status < 300 &&
                 (!response.data || !response.data._status || response.data._status !== 'ERR')) {
                     return response;
@@ -83,7 +84,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             },
             cleanData = {};
 
-        angular.forEach(data, function(val, key) {
+        angular.forEach(data, (val, key) => {
             if (!blacklist[key]) {
                 cleanData[key] = val;
             }
@@ -121,9 +122,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             method: 'GET',
             url: urls.item(url),
             cache: cache
-        }).then(function(response) {
-            return response.data;
-        });
+        }).then((response) => response.data);
     };
 
     /**
@@ -138,16 +137,15 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * Get entity by given id
      */
     HttpEndpoint.prototype.getById = function(id, params, cache) {
-        return getUrl(this).then(_.bind(function(resourceUrl) {
+        return getUrl(this).then(_.bind((resourceUrl) => {
             var url = resourceUrl.replace(/\/+$/, '') + '/' + id;
+
             return http({
                 method: 'GET',
                 url: url,
                 params: params,
                 cache: cache
-            }).then(function(response) {
-                return response.data;
-            });
+            }).then((response) => response.data);
         }, this));
     };
 
@@ -168,9 +166,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             url: getUrl(this),
             headers: getHeaders(this),
             cache: cache
-        }).then(function(response) {
-            return response.data;
-        });
+        }).then((response) => response.data);
     };
 
     /**
@@ -194,13 +190,14 @@ function HttpEndpointFactory($http, $q, urls, _) {
         }
 
         var url = item._links.self.href;
+
         return http({
             method: 'PATCH',
             url: urls.item(url),
             data: clean(diff2, !item._links),
             params: params,
             headers: getHeaders(this, item)
-        }).then(function(response) {
+        }).then((response) => {
             _.extend(item, response.data);
             return item;
         });
@@ -223,7 +220,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             url: getUrl(this),
             data: itemData,
             headers: getHeaders(this)
-        }).then(function(response) {
+        }).then((response) => {
             delete response.data._status;
             _.extend(itemData, response.data);
             return itemData;
@@ -264,7 +261,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             url: urls.item(dest),
             data: item,
             headers: getHeaders(this, item)
-        }).then(function(response) {
+        }).then((response) => {
             _.extend(item, response.data);
             return item;
         });
@@ -286,9 +283,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
             method: 'DELETE',
             url: urls.item(item._links.self.href),
             headers: getHeaders(this, item)
-        }).then(null, function(response) {
-            return response.status === 404 ? $q.when(response) : $q.reject(response);
-        });
+        }).then(null, (response) => response.status === 404 ? $q.when(response) : $q.reject(response));
     };
 
     /**

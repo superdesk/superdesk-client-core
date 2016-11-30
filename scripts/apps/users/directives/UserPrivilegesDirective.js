@@ -22,11 +22,11 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
                 .then(getUserRole);
 
             function getUser() {
-                return userList.getUser(scope.user._id, true).then(function(u) {
+                return userList.getUser(scope.user._id, true).then((u) => {
                     scope.user = u;
                     // the last user privileges that were saved on the server
                     scope.origPrivileges = angular.copy(scope.user.privileges);
-                }, function(error) {
+                }, (error) => {
                     notify.error(gettext('User not found.'));
                     console.error(error);
                     return $q.reject(error);
@@ -34,23 +34,26 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
             }
 
             function getPrivileges() {
-                return api('privileges').query().then(function(result) {
-                    scope.privileges = result._items;
-                }, function(error) {
-                    notify.error(gettext('Privileges not found.'));
-                    console.error(error);
-                    return $q.reject(error);
-                });
+                return api('privileges').query()
+                    .then((result) => {
+                        scope.privileges = result._items;
+                    }, (error) => {
+                        notify.error(gettext('Privileges not found.'));
+                        console.error(error);
+                        return $q.reject(error);
+                    });
             }
 
             function getUserRole() {
-                return api('roles').getById(scope.user.role).then(function(role) {
-                    scope.role = role;
-                }, function(error) {
-                    notify.error(gettext('User role not found.'));
-                    console.error(error);
-                    return $q.reject(error);
-                });
+                return api('roles')
+                    .getById(scope.user.role)
+                    .then((role) => {
+                        scope.role = role;
+                    }, (error) => {
+                        notify.error(gettext('User role not found.'));
+                        console.error(error);
+                        return $q.reject(error);
+                    });
             }
 
             /**
@@ -65,12 +68,12 @@ export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
                     scope.user,
                     _.pick(scope.user, 'privileges')
                 )
-                .then(function() {
+                .then(() => {
                     scope.origPrivileges = angular.copy(
                         scope.user.privileges);
                     scope.userPrivileges.$setPristine();
                     notify.success(gettext('Privileges updated.'));
-                }, function(response) {
+                }, (response) => {
                     notify.error(
                         gettext(handleError(response)));
                 });

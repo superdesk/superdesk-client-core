@@ -64,36 +64,37 @@ function APIProvider() {
          * Detect duplicate requests and serve these from cache.
          */
         function http(config) {
-            return $q.when(config.url).then(function(url) {
-                config.url = url;
+            return $q.when(config.url)
+                .then((url) => {
+                    config.url = url;
 
-                if (config.method !== 'GET') {
-                    return $http(config);
-                }
+                    if (config.method !== 'GET') {
+                        return $http(config);
+                    }
 
-                let now = Date.now();
-                let key = config.url + angular.toJson(config.params || {});
-                let last = cache[key] || null;
-                if (last && now - last.now < CACHE_TTL) {
-                    console.warn('duplicate request',
-                        config.url,
-                        'after', now - last.now, 'ms',
-                        config.params
-                    );
-                    return last.promise;
-                }
+                    let now = Date.now();
+                    let key = config.url + angular.toJson(config.params || {});
+                    let last = cache[key] || null;
 
-                let promise = $http(config);
+                    if (last && now - last.now < CACHE_TTL) {
+                        console.warn('duplicate request',
+                            config.url,
+                            'after', now - last.now, 'ms',
+                            config.params
+                        );
+                        return last.promise;
+                    }
 
-                cache[key] = {
-                    now: now,
-                    promise: promise
-                };
+                    let promise = $http(config);
 
-                return promise;
-            }).then(function(response) {
-                return isOK(response) ? response.data : $q.reject(response);
-            });
+                    cache[key] = {
+                        now: now,
+                        promise: promise
+                    };
+
+                    return promise;
+                })
+                .then((response) => isOK(response) ? response.data : $q.reject(response));
         }
 
         /**
@@ -110,7 +111,7 @@ function APIProvider() {
                 },
                 cleanData = {};
 
-            angular.forEach(data, function(val, key) {
+            angular.forEach(data, (val, key) => {
                 if (!blacklist[key]) {
                     cleanData[key] = val;
                 }
@@ -173,6 +174,7 @@ function APIProvider() {
 
                     if (this.parent) {
                         var newUrl = resolve(url, this.parent);
+
                         if (newUrl !== addr) {
                             return newUrl;
                         }
@@ -204,7 +206,7 @@ function APIProvider() {
                 data: diff ? clean(diff, !item._links) : clean(item, !item._links),
                 params: params,
                 headers: getHeaders(item)
-            }).then(function(data) {
+            }).then((data) => {
                 angular.extend(item, diff || {});
                 angular.extend(item, data);
                 return item;
@@ -308,6 +310,7 @@ function APIProvider() {
          */
         api.remove = function apiRemove(item, params, resource) {
             var url = resource ? getResourceUrl(resource, item, item._id) : urls.item(item._links.self.href);
+
             return http({
                 method: 'DELETE',
                 url: url,
@@ -365,8 +368,9 @@ function APIProvider() {
             });
         };
 
-        angular.forEach(apis, function(config, apiName) {
+        angular.forEach(apis, (config, apiName) => {
             var service = config.service || _.noop;
+
             service.prototype = new endpoints[config.type](apiName, config.backend);
             api[apiName] = $injector.instantiate(service, {resource: service.prototype});
         });

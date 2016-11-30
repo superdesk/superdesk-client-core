@@ -35,8 +35,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 scope.limited = scope.forceLimited;
             }
 
-            scope.$on('view:column', function(event, data) {
-                scope.$applyAsync(function() {
+            scope.$on('view:column', (event, data) => {
+                scope.$applyAsync(() => {
                     scope.viewColumn = data.viewColumn;
                     updateGroupStyle();
                     scheduleQuery(null, {force: true});
@@ -51,7 +51,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.renderNew = renderNew;
             scope.viewSingleGroup = viewSingleGroup;
 
-            scope.$watchCollection('group', function() {
+            scope.$watchCollection('group', () => {
                 if (scope.limited) {
                     updateGroupStyle();
                 }
@@ -64,13 +64,13 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('item:copy', scheduleQuery);
             scope.$on('item:duplicate', scheduleQuery);
             scope.$on('item:translate', scheduleQuery);
-            scope.$on('broadcast:created', function(event, args) {
+            scope.$on('broadcast:created', (event, args) => {
                 scope.previewingBroadcast = true;
                 queryItems();
                 preview(args.item);
             });
             scope.$on('item:unspike', scheduleIfShouldUpdate);
-            scope.$on('$routeUpdate', function(event, data) {
+            scope.$on('$routeUpdate', (event, data) => {
                 scope.scrollTop = 0;
                 data.force = true;
                 scope.showRefresh = false;
@@ -79,7 +79,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     updateGroupStyle();
                 }
             });
-            scope.$on('broadcast:preview', function(event, args) {
+            scope.$on('broadcast:preview', (event, args) => {
                 scope.previewingBroadcast = true;
                 if (!_.isNil(args.item)) {
                     preview(args.item);
@@ -123,8 +123,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             }
 
             function extendItem(itemId, updates) {
-                scope.$apply(function() {
-                    scope.items._items = scope.items._items.map(function(item) {
+                scope.$apply(() => {
+                    scope.items._items = scope.items._items.map((item) => {
                         if (item._id === itemId) {
                             return angular.extend(item, updates);
                         }
@@ -141,7 +141,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             scope.$on('$destroy', unbindActionKeyShortcuts);
 
-            scope.$watch('selected', function(newVal, oldVal) {
+            scope.$watch('selected', (newVal, oldVal) => {
                 if (!newVal && scope.previewingBroadcast) {
                     scope.previewingBroadcast = false;
                 }
@@ -151,7 +151,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              * Change between single stage view and grouped view by keyboard
              * Keyboard shortcut: Ctrl + g
              */
-            scope.$on('key:ctrl:g', function() {
+            scope.$on('key:ctrl:g', () => {
                 if (scope.selected) {
                     if (_.isNil(monitoring.singleGroup)) {
                         monitoring.viewSingleGroup(monitoring.selectedGroup, 'stage');
@@ -162,7 +162,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             });
 
             // refreshes the list for matching group or view type only or if swimlane view is ON.
-            scope.$on('refresh:list', function(event, group) {
+            scope.$on('refresh:list', (event, group) => {
                 var _viewType = event.currentScope.viewType || '';
 
                 if (group && group._id === scope.group._id ||
@@ -172,8 +172,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 }
             });
 
-            scope.$on('render:next', function(event) {
-                scope.$applyAsync(function() {
+            scope.$on('render:next', (event) => {
+                scope.$applyAsync(() => {
                     if (scope.items) {
                         scope.fetchNext(scope.items._items.length);
                     }
@@ -184,7 +184,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              * Change between single desk view and grouped view by keyboard
              * Keyboard shortcut: Ctrl + g
              */
-            scope.$on('key:ctrl:alt:g', function() {
+            scope.$on('key:ctrl:alt:g', () => {
                 if (scope.selected) {
                     if (_.isNil(monitoring.singleGroup)) {
                         monitoring.viewSingleGroup(monitoring.selectedGroup, 'desk');
@@ -196,7 +196,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             // forced refresh on refresh button click or on refresh:list
             scope.refreshGroup = function() {
-                scope.$applyAsync(function() {
+                scope.$applyAsync(() => {
                     scope.scrollTop = 0;
                     monitoring.scrollTop = 0;
                 });
@@ -229,11 +229,12 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 }
 
                 var intent = {action: 'list'};
-                superdesk.findActivities(intent, item).forEach(function(activity) {
+
+                superdesk.findActivities(intent, item).forEach((activity) => {
                     if (activity.keyboardShortcut && workflowService.isActionAllowed(item, activity.action)) {
                         monitoring.bindedItems.push(
                             scope.$on('key:' + activity.keyboardShortcut.replace('+', ':'),
-                            function() {
+                            () => {
                                 if (activity._id === 'mark.item') {
                                     bindMarkItemShortcut();
                                 } else {
@@ -259,11 +260,19 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 if (highlightDropdown.find('button').length > 0) {
                     highlightDropdown.find('button:not([disabled])')[0].focus();
 
-                    keyboardManager.push('up', function() {
-                        highlightDropdown.find('button:focus').parent('li').prev().children('button').focus();
+                    keyboardManager.push('up', () => {
+                        highlightDropdown.find('button:focus')
+                            .parent('li')
+                            .prev()
+                            .children('button')
+                            .focus();
                     });
-                    keyboardManager.push('down', function() {
-                        highlightDropdown.find('button:focus').parent('li').next().children('button').focus();
+                    keyboardManager.push('down', () => {
+                        highlightDropdown.find('button:focus')
+                            .parent('li')
+                            .next()
+                            .children('button')
+                            .focus();
                     });
                 }
             }
@@ -272,7 +281,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              * Unbind all item actions
              */
             function unbindActionKeyShortcuts() {
-                monitoring.bindedItems.forEach(function(func) {
+                monitoring.bindedItems.forEach((func) => {
                     func();
                 });
                 monitoring.bindedItems = [];
@@ -285,9 +294,9 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              */
             function scheduleQuery(event, data) {
                 if (!queryTimeout) {
-                    queryTimeout = $timeout(function() {
+                    queryTimeout = $timeout(() => {
                         queryItems(event, data);
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             // ignore any updates requested in current $digest
                             queryTimeout = null;
                         });
@@ -304,7 +313,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                             activity = superdesk.findActivities(intent, item)[0];
 
                         activityService.start(activity, {data: {item: item}})
-                            .then(function(item) {
+                            .then((item) => {
                                 authoringWorkspace.edit(item);
                             });
                     } else if (item.type === 'composite' && item.package_type === 'takes') {
@@ -331,10 +340,12 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                     let previewCriteria = search.getSingleItemCriteria(item, criteria);
 
-                    apiquery(previewCriteria, false).then(function(completeItems) {
+                    apiquery(previewCriteria, false).then((completeItems) => {
                         let completeItem = search.mergeHighlightFields(completeItems._items[0]);
+
                         select(completeItem);
-                    }).finally(function() {
+                    })
+                    .finally(() => {
                         scope.loading = false;
                     });
                 } else {
@@ -348,9 +359,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             // For highlight page return only highlights items, i.e, include only last version if item type is published
             function getOnlyHighlightsItems(items) {
-                items._items = _.filter(items._items, function(item) {
-                    return item._type === 'published' && item.last_published_version || item._type !== 'published';
-                });
+                items._items = _.filter(items._items, (item) =>
+                    item._type === 'published' && item.last_published_version || item._type !== 'published');
                 return items;
             }
 
@@ -400,7 +410,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     criteria.source.query = search.getItemQuery(items);
                 }
 
-                return apiquery(criteria, true).then(function(items) {
+                return apiquery(criteria, true).then((items) => {
                     if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
                         var itemPreviewing = isItemPreviewing();
                         var _data = {
@@ -416,26 +426,29 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     if (!scope.showRefresh || data && data.force) {
                         scope.total = items._meta.total;
                         let onlyHighlighted = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
+
                         monitoring.totalItems = onlyHighlighted._meta.total;
                         scope.items = search.mergeItems(onlyHighlighted, scope.items, null, true);
                     } else {
                         // update scope items only with the matching fetched items
                         scope.items = search.updateItems(items, scope.items);
                     }
-                }).finally(function() {
-                    if (originalQuery) {
-                        criteria.source.query = originalQuery;
-                    }
-                });
+                })
+               .finally(() => {
+                   if (originalQuery) {
+                       criteria.source.query = originalQuery;
+                   }
+               });
             }
 
             function render(next) {
-                return apiquery(criteria, true).then(function(items) {
-                    scope.$applyAsync(function() {
+                return apiquery(criteria, true).then((items) => {
+                    scope.$applyAsync(() => {
                         if (scope.total !== items._meta.total) {
                             scope.total = items._meta.total;
                         }
                         let onlyHighlighted = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
+
                         scope.items = search.mergeItems(onlyHighlighted, scope.items, next);
                     });
                 });
@@ -452,6 +465,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
              */
             function apiquery(searchCriteria, applyProjections) {
                 var provider = 'search';
+
                 if (scope.group.type === 'search' || desks.isPublishType(scope.group.type)) {
                     if (searchCriteria.repo && searchCriteria.repo.indexOf(',') === -1) {
                         provider = searchCriteria.repo;

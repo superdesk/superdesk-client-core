@@ -11,7 +11,7 @@ export function IngestRoutingGeneral(weekdays, desks, macros) {
             scope.macroLookup = {};
 
             desks.initialize()
-            .then(function() {
+            .then(() => {
                 scope.deskLookup = desks.deskLookup;
                 scope.stageLookup = desks.stageLookup;
             });
@@ -22,8 +22,8 @@ export function IngestRoutingGeneral(weekdays, desks, macros) {
                 }
             };
 
-            macros.get().then(function(macros) {
-                _.transform(macros, function(lookup, macro, idx) {
+            macros.get().then((macros) => {
+                _.transform(macros, (lookup, macro, idx) => {
                     scope.macroLookup[macro.name] = macro;
                 });
             });

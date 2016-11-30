@@ -11,6 +11,7 @@ export function TaskStatusItemsDirective(search, api, desks) {
             scope.users = desks.userLookup;
 
             var query = search.query({});
+
             query.filter({and: [
                 {term: {'task.status': scope.status}},
                 {term: {'task.desk': scope.desk}}
@@ -20,13 +21,14 @@ export function TaskStatusItemsDirective(search, api, desks) {
 
             scope.loading = true;
 
-            api('archive').query(criteria).then(function(items) {
-                scope.loading = false;
-                scope.items = items._items;
-                scope.total = items._meta.total;
-            }, function() {
-                scope.loading = false;
-            });
+            api('archive').query(criteria)
+                .then((items) => {
+                    scope.loading = false;
+                    scope.items = items._items;
+                    scope.total = items._meta.total;
+                }, () => {
+                    scope.loading = false;
+                });
         }
     };
 }

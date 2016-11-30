@@ -15,7 +15,7 @@ export default angular.module('superdesk.core.directives.checkAll', [])
      * @scope {string} checkAttribute - name of attribute to set in model elements
      *
      */
-    .directive('sdCheckAll', function() {
+    .directive('sdCheckAll', () => {
         var checkAttribute = '_checked';
 
         return {
@@ -24,25 +24,27 @@ export default angular.module('superdesk.core.directives.checkAll', [])
             template: '<span class="sd-checkbox"></span>',
             link: function($scope, element, attrs, ngModel) {
                 var checked = false;
+
                 if (attrs.checkAttribute !== undefined) {
                     checkAttribute = attrs.checkAttribute;
                 }
 
-                $scope.$watch(attrs.ngModel, function(model) {
+                $scope.$watch(attrs.ngModel, (model) => {
                     if (model) {
                         checked = _.every(ngModel.$viewValue, checkAttribute) && ngModel.$viewValue.length > 0;
                         render(element, checked);
                     }
                 }, true);
 
-                element.on('click', function() {
+                element.on('click', () => {
                     checked = !checked;
 
                     var model = ngModel.$viewValue;
-                    _.forEach(model, function(item) {
+
+                    _.forEach(model, (item) => {
                         item[checkAttribute] = checked;
                     });
-                    $scope.$apply(function() {
+                    $scope.$apply(() => {
                         ngModel.$setViewValue(model);
                     });
 

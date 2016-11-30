@@ -5,6 +5,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
     return {
         parse: function(input) {
             var match = input.match(TYPEAHEAD_REGEXP);
+
             if (!match) {
                 throw new Error(
                 'Expected typeahead specification in form of _modelValue_ (as _label_)? for _item_ in _collection_' +
@@ -58,7 +59,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                 scope.disabled = false;
                 scope.showfilter = !!attrs.showfilter;
 
-                originalScope.$on('$destroy', function() {
+                originalScope.$on('$destroy', () => {
                     scope.$destroy();
                 });
 
@@ -68,37 +69,29 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                 if (attrs.required || attrs.ngRequired) {
                     required = true;
                 }
-                attrs.$observe('required', function(newVal) {
+                attrs.$observe('required', (newVal) => {
                     required = newVal;
                 });
 
             // watch disabled state
-                scope.$watch(function() {
-                    return $parse(attrs.disabled)(originalScope);
-                }, function(newVal) {
+                scope.$watch(() => $parse(attrs.disabled)(originalScope), (newVal) => {
                     scope.disabled = newVal;
                 });
 
             // watch single/multiple state for dynamically change single to multiple
-                scope.$watch(function() {
-                    return $parse(attrs.multiple)(originalScope);
-                }, function(newVal) {
+                scope.$watch(() => $parse(attrs.multiple)(originalScope), (newVal) => {
                     isMultiple = newVal || false;
                 });
 
             // watch option changes for options that are populated dynamically
-                scope.$watch(function() {
-                    return parsedResult.source(originalScope);
-                }, function(newVal) {
+                scope.$watch(() => parsedResult.source(originalScope), (newVal) => {
                     if (angular.isDefined(newVal)) {
                         parseModel();
                     }
                 }, true);
 
             // watch model change
-                scope.$watch(function() {
-                    return modelCtrl.$modelValue;
-                }, function(newVal, oldVal) {
+                scope.$watch(() => modelCtrl.$modelValue, (newVal, oldVal) => {
                     // when directive initialize, newVal usually undefined. Also, if model
                     // value already set in the controller for preselected list then we need
                     // to mark checked in our scope item. But we don't want to do this every
@@ -115,11 +108,13 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                 function parseModel() {
                     scope.items.length = 0;
                     var model = parsedResult.source(originalScope);
+
                     if (!angular.isDefined(model)) {
                         return;
                     }
                     for (var i = 0; i < model.length; i++) {
                         var local = {};
+
                         local[parsedResult.itemName] = model[i];
                         scope.items.push({
                             label: parsedResult.viewMapper(local),
@@ -143,6 +138,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                         scope.header = modelCtrl.$modelValue.length + ' selected';
                     } else {
                         var local = {};
+
                         local[parsedResult.itemName] = modelCtrl.$modelValue;
                         scope.header = parsedResult.viewMapper(local);
                     }
@@ -168,6 +164,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                         return true;
                     }
                     var value = modelCtrl.$modelValue;
+
                     return angular.isArray(value) && value.length > 0 || !angular.isArray(value) && value !== null;
                 };
 
@@ -191,13 +188,13 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
 
                     if (isMultiple) {
                         value = [];
-                        angular.forEach(scope.items, function(item) {
+                        angular.forEach(scope.items, (item) => {
                             if (item.checked) {
                                 value.push(item.model);
                             }
                         });
                     } else {
-                        angular.forEach(scope.items, function(item) {
+                        angular.forEach(scope.items, (item) => {
                             if (item.checked) {
                                 value = item.model;
                                 return false;
@@ -209,15 +206,15 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
 
                 function markChecked(newVal) {
                     if (!angular.isArray(newVal)) {
-                        angular.forEach(scope.items, function(item) {
+                        angular.forEach(scope.items, (item) => {
                             if (angular.equals(item.model, newVal)) {
                                 item.checked = true;
                                 return false;
                             }
                         });
                     } else {
-                        angular.forEach(newVal, function(i) {
-                            angular.forEach(scope.items, function(item) {
+                        angular.forEach(newVal, (i) => {
+                            angular.forEach(scope.items, (item) => {
                                 if (angular.equals(item.model, i)) {
                                     item.checked = true;
                                 }
@@ -230,14 +227,14 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                     if (!isMultiple) {
                         return;
                     }
-                    angular.forEach(scope.items, function(item) {
+                    angular.forEach(scope.items, (item) => {
                         item.checked = true;
                     });
                     setModelValue(true);
                 };
 
                 scope.uncheckAll = function() {
-                    angular.forEach(scope.items, function(item) {
+                    angular.forEach(scope.items, (item) => {
                         item.checked = false;
                     });
                     setModelValue(true);

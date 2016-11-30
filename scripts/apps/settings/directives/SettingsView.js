@@ -5,7 +5,7 @@ export function SettingsView($route, superdesk, pageTitle) {
         transclude: true,
         templateUrl: 'scripts/apps/settings/views/settings-view.html',
         link: function(scope, elem, attrs) {
-            superdesk.getMenu(superdesk.MENU_SETTINGS).then(function(menu) {
+            superdesk.getMenu(superdesk.MENU_SETTINGS).then((menu) => {
                 scope.settings = menu;
             });
 

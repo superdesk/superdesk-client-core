@@ -2,14 +2,14 @@ DeskeditPeople.$inject = ['gettext', 'WizardHandler', 'desks', '$rootScope'];
 export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
     return {
         link: function(scope, elem, attrs) {
-            scope.$watch('step.current', function(step, previous) {
+            scope.$watch('step.current', (step, previous) => {
                 if (step === 'people') {
                     scope.search = null;
                     scope.deskMembers = [];
                     scope.message = gettext('loading...');
 
                     if (scope.desk.edit && scope.desk.edit._id) {
-                        desks.fetchUsers().then(function(result) {
+                        desks.fetchUsers().then((result) => {
                             scope.users = desks.users._items;
                             scope.deskMembers = desks.deskMembers[scope.desk.edit._id] || [];
                             scope.message = null;
@@ -37,12 +37,10 @@ export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
              */
             scope.save = function(done) {
                 scope.message = gettext('Saving...');
-                var members = _.map(scope.deskMembers, function(obj) {
-                    return {user: obj._id};
-                });
+                var members = _.map(scope.deskMembers, (obj) => ({user: obj._id}));
 
                 scope.saving = true;
-                desks.save(scope.desk.edit, {members: members}).then(function(res) {
+                desks.save(scope.desk.edit, {members: members}).then((res) => {
                     angular.extend(scope.desk.edit, res);
                     desks.deskMembers[scope.desk.edit._id] = scope.deskMembers;
                     angular.extend(scope.desk.orig, res);
@@ -51,13 +49,14 @@ export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
                     } else {
                         WizardHandler.wizard('desks').finish();
                     }
-                }, function(response) {
+                }, (response) => {
                     if (angular.isDefined(response.data._message)) {
                         scope.message = gettext('Error: ' + response.data._message);
                     } else {
                         scope._errorMessage = gettext('There was a problem, members not saved. Refresh Desks.');
                     }
-                }).finally(function() {
+                })
+                .finally(() => {
                     scope.saving = false;
                     scope.message = null;
                 });

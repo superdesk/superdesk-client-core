@@ -1,9 +1,9 @@
-'use strict';
 
-describe('Workflow Service', function() {
+
+describe('Workflow Service', () => {
     beforeEach(window.module('superdesk.core.workflow'));
 
-    beforeEach(inject(function(preferencesService, $q, workflowService) {
+    beforeEach(inject((preferencesService, $q, workflowService) => {
         var actions = [
             {
                 name: 'spike',
@@ -20,7 +20,7 @@ describe('Workflow Service', function() {
         workflowService.setActions(actions);
     }));
 
-    it('can perform actions', inject(function(workflowService, $rootScope) {
+    it('can perform actions', inject((workflowService, $rootScope) => {
         expect(workflowService.isActionAllowed({state: 'fetched'}, 'spike')).toBe(true);
         expect(workflowService.isActionAllowed({state: 'spiked'}, 'spike')).toBe(false);
         expect(workflowService.isActionAllowed({state: 'ingested'}, 'fetch_from_ingest')).toBe(true);

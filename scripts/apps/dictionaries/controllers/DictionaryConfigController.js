@@ -9,11 +9,9 @@ export function DictionaryConfigController($scope, dictionaries, gettext, sessio
     };
 
     $scope.fetchDictionaries = function() {
-        dictionaries.fetch(function(result) {
+        dictionaries.fetch((result) => {
             if (!$scope.isAdmin()) {
-                $scope.dictionaries = _.filter(result._items, function(f) {
-                    return f.user === session.identity._id;
-                });
+                $scope.dictionaries = _.filter(result._items, (f) => f.user === session.identity._id);
             } else {
                 $scope.dictionaries = result._items;
             }
@@ -28,7 +26,7 @@ export function DictionaryConfigController($scope, dictionaries, gettext, sessio
     };
 
     $scope.createPersonalDictionary = function() {
-        return session.getIdentity().then(function(identity) {
+        return session.getIdentity().then((identity) => {
             $scope.dictionary = {
                 is_active: 'true',
                 type: 'dictionary',
@@ -44,7 +42,7 @@ export function DictionaryConfigController($scope, dictionaries, gettext, sessio
     };
 
     $scope.createAbbreviationsDictionary = function() {
-        return session.getIdentity().then(function(identity) {
+        return session.getIdentity().then((identity) => {
             $scope.dictionary = {
                 is_active: 'true',
                 type: 'abbreviations',
@@ -58,7 +56,7 @@ export function DictionaryConfigController($scope, dictionaries, gettext, sessio
 
     $scope.openDictionary = function(dictionary) {
         $scope.loading = true;
-        dictionaries.open(dictionary, function(result) {
+        dictionaries.open(dictionary, (result) => {
             $scope.origDictionary = result;
             $scope.dictionary = Object.create(result);
             $scope.dictionary.content = Object.create(result.content || {});
@@ -81,7 +79,7 @@ export function DictionaryConfigController($scope, dictionaries, gettext, sessio
     $scope.remove = function(dictionary) {
         modal.confirm(gettext('Please confirm you want to delete dictionary.')).then(
             function runConfirmed() {
-                dictionaries.remove(dictionary, function() {
+                dictionaries.remove(dictionary, () => {
                     _.remove($scope.dictionaries, dictionary);
                     notify.success(gettext('Dictionary deleted.'), 3000);
                 });

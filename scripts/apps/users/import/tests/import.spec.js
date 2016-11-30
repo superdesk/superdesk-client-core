@@ -1,18 +1,18 @@
 
-'use strict';
 
-describe('user import', function() {
+describe('user import', () => {
     beforeEach(window.module('superdesk.apps.users.import'));
     beforeEach(window.module('superdesk.mocks'));
 
-    it('can import a user', inject(function($q, userImport, api) {
+    it('can import a user', inject(($q, userImport, api) => {
         var model = {username: 'foo', password: 'bar', profile_to_import: 'baz'};
+
         spyOn(api, 'save').and.returnValue($q.when({}));
         userImport.importUser(model);
         expect(api.save).toHaveBeenCalledWith('import_profile', model);
     }));
 
-    it('can return an error', inject(function($q, $rootScope, userImport, api) {
+    it('can return an error', inject(($q, $rootScope, userImport, api) => {
         var success = jasmine.createSpy('success'),
             error = jasmine.createSpy('error');
 

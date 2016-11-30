@@ -11,6 +11,7 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
         templateUrl: 'scripts/apps/authoring/views/item-association.html',
         link: function(scope, elem) {
             var MEDIA_TYPES = ['application/superdesk.item.picture', 'application/superdesk.item.graphic'];
+
             if (scope.allowVideo === 'true') {
                 MEDIA_TYPES.push('application/superdesk.item.video');
             }
@@ -26,7 +27,7 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
             }
 
             // it should prevent default as long as this is valid image
-            elem.on('dragover', function(event) {
+            elem.on('dragover', (event) => {
                 if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -34,20 +35,21 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
             });
 
             // update item associations on drop
-            elem.on('drop dragdrop', function(event) {
+            elem.on('drop dragdrop', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
                 var item = getItem(event, event.originalEvent.dataTransfer.types[0]);
                 // ingest picture if it comes from an external source (create renditions)
+
                 if (scope.isEditable()) {
                     scope.loading = true;
                     renditions.ingest(item)
                     .then(scope.edit)
-                    .finally(function() {
+                    .finally(() => {
                         scope.loading = false;
                     });
                 } else {
-                    scope.$apply(function() {
+                    scope.$apply(() => {
                         updateItemAssociation(item);
                     });
                 }
@@ -55,13 +57,14 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
 
             function updateItemAssociation(updated) {
                 var data = {};
+
                 data[scope.rel] = updated;
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
                 scope.onchange({item: scope.item, data: data});
             }
 
             // init associated item for preview
-            scope.$watch('item.associations[rel]', function(related) {
+            scope.$watch('item.associations[rel]', (related) => {
                 scope.related = related;
             });
 
@@ -72,7 +75,7 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
                     scope.loading = true;
                     return renditions.crop(item)
                     .then(updateItemAssociation)
-                    .finally(function() {
+                    .finally(() => {
                         scope.loading = false;
                     });
                 }
@@ -85,9 +88,7 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
                     return true;
                 }
 
-                return _.some(['.mp4', '.webm', '.ogv', '.ogg'], function(ext) {
-                    return _.endsWith(rendition.href, ext);
-                });
+                return _.some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => _.endsWith(rendition.href, ext));
             };
 
             scope.isImage = function(rendition) {
@@ -105,10 +106,10 @@ export function ItemAssociationDirective(superdesk, renditions, api, $q, config)
 
             scope.upload = function() {
                 if (scope.editable) {
-                    superdesk.intent('upload', 'media', {uniqueUpload: true}).then(function(images) {
+                    superdesk.intent('upload', 'media', {uniqueUpload: true}).then((images) => {
                         // open the view to edit the PoI and the cropping areas
                         if (images) {
-                            scope.$applyAsync(function() {
+                            scope.$applyAsync(() => {
                                 scope.edit(images[0]);
                             });
                         }

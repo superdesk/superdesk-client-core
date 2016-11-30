@@ -19,7 +19,7 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
             function getRecentTemplates(deskId) {
                 var NUM_ITEMS = 5;
 
-                return templates.getRecentTemplates(desks.activeDeskId, NUM_ITEMS).then(function(result) {
+                return templates.getRecentTemplates(desks.activeDeskId, NUM_ITEMS).then((result) => {
                     scope.contentTemplates = result._items;
                 });
             }
@@ -53,9 +53,11 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
              * @param {Object} template
              */
             scope.createFromTemplate = function(template) {
-                content.createItemFromTemplate(template).then(edit).then(function() {
-                    getRecentTemplates(desks.activeDeskId);
-                });
+                content.createItemFromTemplate(template)
+                    .then(edit)
+                    .then(() => {
+                        getRecentTemplates(desks.activeDeskId);
+                    });
             };
 
             /**
@@ -67,27 +69,25 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
 
             scope.contentTemplates = null;
 
-            desks.initialize().then(function() {
-                scope.$watch(function() {
-                    return desks.active.desk;
-                }, function(activeDeskId) {
+            desks.initialize().then(() => {
+                scope.$watch(() => desks.active.desk, (activeDeskId) => {
                     getRecentTemplates(activeDeskId);
 
                     content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null)
-                        .then(function(profiles) {
+                        .then((profiles) => {
                             scope.profiles = profiles;
                         });
                 });
             });
 
-            keyboardManager.bind('ctrl+m', function(e) {
+            keyboardManager.bind('ctrl+m', (e) => {
                 if (e) {
                     e.preventDefault();
                 }
                 scope.create();
             });
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 keyboardManager.unbind('ctrl+m');
             });
 

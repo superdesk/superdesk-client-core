@@ -29,18 +29,18 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     $scope.pageSize = 25;
     $scope.page = 1;
 
-    $scope.$watch('page', function() {
+    $scope.$watch('page', () => {
         $scope.reload();
     });
 
     var promises = [];
 
-    promises.push(subscribersService.fetchSubscribers().then(function(items) {
+    promises.push(subscribersService.fetchSubscribers().then((items) => {
         $scope.subscribers = items;
         $scope.subscriberLookup = _.keyBy(items, '_id');
     }));
 
-    promises.push(ingestSources.fetchAllIngestProviders().then(function(items) {
+    promises.push(ingestSources.fetchAllIngestProviders().then((items) => {
         $scope.ingestProviders = items;
         $scope.ingestProvidersLookup = _.keyBy($scope.ingestProviders, '_id');
     }));
@@ -59,10 +59,10 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     * Populates the publish queue and update the flags after fetch operation.
     */
     function populatePublishQueue() {
-        fetchPublishQueue().then(function(queue) {
+        fetchPublishQueue().then((queue) => {
             var queuedItems = queue._items;
 
-            _.forEach(queuedItems, function(item) {
+            _.forEach(queuedItems, (item) => {
                 angular.extend(item, {selected: false});
             });
 
@@ -78,10 +78,12 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     */
     function fetchPublishQueue() {
         var criteria = criteria || {};
+
         criteria.max_results = $scope.pageSize;
         criteria.page = $scope.page;
 
         var orTerms = null;
+
         if (!_.isEmpty($scope.searchQuery)) {
             orTerms = {$or: [
                 {headline: {
@@ -92,6 +94,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         }
 
         var filterTerms = [];
+
         if (!_.isNil($scope.selectedFilterSubscriber)) {
             filterTerms.push({subscriber_id: $scope.selectedFilterSubscriber._id});
         }
@@ -104,7 +107,8 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         }
 
         var andTerms = [];
-        _.each(filterTerms, function(term) {
+
+        _.each(filterTerms, (term) => {
             andTerms.push(term);
         });
 
@@ -121,7 +125,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     }
 
     $scope.reload = function() {
-        $q.all(promises).then(function() {
+        $q.all(promises).then(() => {
             populatePublishQueue();
             previewItem();
         });
@@ -133,6 +137,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             'item_encoding', 'encoded_item_id'];
 
         var newItem = _.pick(item, pickFields);
+
         return newItem;
     };
 
@@ -142,17 +147,17 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         if (angular.isDefined(item)) {
             queueItems.push($scope.buildNewSchedule(item));
         } else if ($scope.multiSelectCount > 0) {
-            _.forEach($scope.selectedQueueItems, function(item) {
+            _.forEach($scope.selectedQueueItems, (item) => {
                 queueItems.push($scope.buildNewSchedule(item));
             });
         }
 
         api.publish_queue.save([], queueItems).then(
-            function(response) {
+            (response) => {
                 $scope.reload();
                 $scope.cancelSelection();
             },
-            function(response) {
+            (response) => {
                 if (angular.isDefined(response.data._issues)) {
                     if (angular.isDefined(response.data._issues['validator exception'])) {
                         notify.error(gettext('Error: ' + response.data._issues['validator exception']));
@@ -166,10 +171,11 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
     $scope.cancelSend = function(item) {
         var itemList = [];
+
         if (angular.isDefined(item)) {
             itemList.push(item);
         } else if ($scope.multiSelectCount > 0) {
-            _.forEach($scope.selectedQueueItems, function(item) {
+            _.forEach($scope.selectedQueueItems, (item) => {
                 if (item.state === 'pending' || item.state === 'retrying') {
                     item.state = 'canceled';
                     itemList.push(item);
@@ -177,7 +183,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             });
         }
 
-        _.forEach(itemList, function(item) {
+        _.forEach(itemList, (item) => {
             api.publish_queue.update(item, {state: 'canceled'});
         });
         $scope.cancelSelection();
@@ -213,9 +219,8 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         }
 
         /* look for any items in states that cannot be resent */
-        var idx = _.findIndex($scope.selectedQueueItems, function(item) {
-            return _.includes(['pending', 'in-progress', 'retrying'], item.state);
-        });
+        var idx = _.findIndex($scope.selectedQueueItems,
+            (item) => _.includes(['pending', 'in-progress', 'retrying'], item.state));
 
         /* All selected items can be resent */
         if (idx === -1) {
@@ -224,18 +229,16 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             $scope.showCanceSelectionlBtn = false;
         } else {
             /* Find the index of any item that can be resent */
-            idx = _.findIndex($scope.selectedQueueItems, function(item) {
-                return item.state === 'success' || item.state === 'in-progress' || item.state === 'canceled' ||
-                    item.state === 'error' || item.state === 'retrying';
-            });
+            idx = _.findIndex($scope.selectedQueueItems,
+                (item) => item.state === 'success' || item.state === 'in-progress' || item.state === 'canceled' ||
+                    item.state === 'error' || item.state === 'retrying');
             /* Nothing to resend found */
             if (idx === -1) {
                 $scope.showResendBtn = false;
                 $scope.showCancelSelectionBtn = true;
                 /* look for items that can be canceled */
-                idx = _.findIndex($scope.selectedQueueItems, function(item) {
-                    return item.state === 'pending' || item.state === 'retrying';
-                });
+                idx = _.findIndex($scope.selectedQueueItems,
+                    (item) => item.state === 'pending' || item.state === 'retrying');
                 /* Something can be canceled so show the button */
                 if (idx !== -1) {
                     $scope.showCancelBtn = true;
@@ -263,6 +266,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
         if (item) {
             var fields = ['error_message', 'completed_at', 'state'];
+
             angular.extend(item, _.pick(data, fields));
             $scope.$apply();
         }
@@ -274,9 +278,10 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
     function previewItem() {
         var queueItem = _.find($scope.publish_queue, {_id: $location.search()._id}) || null;
+
         if (queueItem) {
             api.archive.getById(queueItem.item_id, {version: queueItem.item_version})
-                .then(function(item) {
+                .then((item) => {
                     $scope.selected.preview = item;
                 });
         } else {
@@ -286,7 +291,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
     $scope.$on('$routeUpdate', previewItem);
 
-    $scope.$on('publish_queue:update', function(evt, data) {
+    $scope.$on('publish_queue:update', (evt, data) => {
         refreshQueueState(data);
     });
     $scope.reload();

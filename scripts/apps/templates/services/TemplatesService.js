@@ -70,6 +70,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
         var criteria = {};
         // in template management only see the templates that are create by the user
+
         criteria.$or = [{user: session.identity._id}];
 
         if (type !== undefined) {
@@ -85,10 +86,11 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
             criteria.$or.push({is_public: true});
         } else if (self.isAdmin()) {
             var _criteria = criteria;
-            criteria = desks.fetchCurrentUserDesks().then(desks => {
+
+            criteria = desks.fetchCurrentUserDesks().then((desks) => {
                 _criteria.$or.push({
                     is_public: true,
-                    template_desks: {$in: desks.map(desk => desk._id)}
+                    template_desks: {$in: desks.map((desk) => desk._id)}
                 });
 
                 return _criteria;
@@ -96,14 +98,13 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         }
 
         return $q.when(criteria)
-            .then(criteria => {
+            .then((criteria) => {
                 params.where = JSON.stringify({
                     $and: [criteria]
                 });
                 return params;
-            }).then(params => {
-                return api.query('content_templates', params);
-            });
+            })
+            .then((params) => api.query('content_templates', params));
     };
 
     this.fetchTemplatesByUserDesk = function(user, desk, page, pageSize, type, templateName) {
@@ -159,11 +160,9 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
         };
 
         return api.query('content_templates', params)
-        .then(function(result) {
+        .then((result) => {
             if (result && result._items) {
-                result._items.sort(function(a, b) {
-                    return templateIds.indexOf(a._id) - templateIds.indexOf(b._id);
-                });
+                result._items.sort((a, b) => templateIds.indexOf(a._id) - templateIds.indexOf(b._id));
             }
             return result;
         });
@@ -177,6 +176,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
      */
     this.isAdmin = function(strict) {
         let admin = session.identity.user_type === 'administrator';
+
         if (strict) {
             return admin;
         }
@@ -186,12 +186,10 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
     this.addRecentTemplate = function(deskId, templateId) {
         return preferencesService.get()
-        .then(function(result = {}) {
+        .then((result = {}) => {
             result[PREFERENCES_KEY] = result[PREFERENCES_KEY] || {};
             result[PREFERENCES_KEY][deskId] = result[PREFERENCES_KEY][deskId] || [];
-            _.remove(result[PREFERENCES_KEY][deskId], function(i) {
-                return i === templateId;
-            });
+            _.remove(result[PREFERENCES_KEY][deskId], (i) => i === templateId);
             result[PREFERENCES_KEY][deskId].unshift(templateId);
             return preferencesService.update(result);
         });
@@ -199,7 +197,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
 
     this.getRecentTemplateIds = function(deskId, limit = PAGE_SIZE) {
         return preferencesService.get()
-            .then(function(result) {
+            .then((result) => {
                 if (result && result[PREFERENCES_KEY] && result[PREFERENCES_KEY][deskId]) {
                     return _.take(result[PREFERENCES_KEY][deskId], limit);
                 }
@@ -221,6 +219,7 @@ export function TemplatesService(api, session, $q, gettext, preferencesService, 
      */
     this.save = function(orig, updates) {
         var template = angular.extend({data: {}}, updates);
+
         delete template._datelinedate;
         delete template.hasCrops;
         template.data.headline = trimSpaces(template.data.headline);

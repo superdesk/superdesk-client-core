@@ -27,11 +27,12 @@ export function ItemRepo(
              */
             function init() {
                 var params = $location.search();
+
                 scope.query = params.q;
 
                 scope.search_config = metadata.search_config;
 
-                searchProviderService.getAllowedProviderTypes().then(function(providerTypes) {
+                searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                     scope.searchProviderTypes = providerTypes;
                 });
 
@@ -45,6 +46,7 @@ export function ItemRepo(
 
                 if (params.repo) {
                     var paramList = params.repo.split(',');
+
                     scope.repo.archive = paramList.indexOf('archive') >= 0;
                     scope.repo.ingest = paramList.indexOf('ingest') >= 0;
                     scope.repo.published = paramList.indexOf('published') >= 0;
@@ -78,7 +80,7 @@ export function ItemRepo(
              */
             function fetchProviders(params) {
                 return api.search_providers.query({max_results: 200})
-                    .then(function(result) {
+                    .then((result) => {
                         scope.providers = $filter('sortByName')(result._items, 'search_provider');
                         setDefaultSearch(params);
                     });
@@ -86,7 +88,7 @@ export function ItemRepo(
 
             function setDefaultSearch(params) {
                 if (scope.providers.length > 0 && (!params || !params.repo)) {
-                    scope.providers.forEach(function(provider, index, array) {
+                    scope.providers.forEach((provider, index, array) => {
                         if (provider.is_default) {
                             scope.repo = {search: provider.source};
                         }
@@ -99,11 +101,11 @@ export function ItemRepo(
 
                 if (scope.repo.search === 'local') {
                     // turn off other providers
-                    scope.providers.forEach(function(provider, index, array) {
+                    scope.providers.forEach((provider, index, array) => {
                         scope.repo[provider.source] = false;
                     });
 
-                    angular.forEach(scope.repo, function(val, key) {
+                    angular.forEach(scope.repo, (val, key) => {
                         if (val && val !== 'local') {
                             repos.push(key);
                         }
@@ -115,7 +117,7 @@ export function ItemRepo(
                 return scope.repo.search;
             }
 
-            scope.$on('$locationChangeSuccess', function() {
+            scope.$on('$locationChangeSuccess', () => {
                 if (getActiveRepos() !== $location.search().repo) {
                     init();
                 }

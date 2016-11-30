@@ -7,7 +7,7 @@ function MacrosService(api, notify, $filter) {
      */
     var _getAllMacros = function(criteria = {}, page = 1, macros = []) {
         return api.query('macros', _.extend({max_results: 200, page: page}, criteria))
-            .then(function(result) {
+            .then((result) => {
                 let all = macros.concat(result._items);
                 let pg = page;
 
@@ -48,10 +48,10 @@ function MacrosService(api, notify, $filter) {
     };
 
     this.setupShortcuts = function($scope) {
-        this.get().then(function(macros) {
-            angular.forEach(macros, function(macro) {
+        this.get().then((macros) => {
+            angular.forEach(macros, (macro) => {
                 if (macro.shortcut) {
-                    $scope.$on('key:ctrl:' + macro.shortcut, function() {
+                    $scope.$on('key:ctrl:' + macro.shortcut, () => {
                         triggerMacro(macro, $scope.item);
                     });
                 }
@@ -66,9 +66,7 @@ function MacrosService(api, notify, $filter) {
             macro: macro.name,
             item: item,
             commit: !!commit
-        }).then(function(res) {
-            return res;
-        }, function(err) {
+        }).then((res) => res, (err) => {
             if (angular.isDefined(err.data._message)) {
                 notify.error(gettext('Error: ' + err.data._message));
             }
@@ -80,23 +78,26 @@ MacrosController.$inject = ['$scope', 'macros', 'desks', 'autosave', '$rootScope
 function MacrosController($scope, macros, desks, autosave, $rootScope) {
     $scope.loading = true;
 
-    macros.get().then(function() {
+    macros.get().then(() => {
         var currentDeskId = desks.getCurrentDeskId();
+
         if (currentDeskId !== null) {
-            macros.getByDesk(desks.getCurrentDesk().name).then(function(_macros) {
+            macros.getByDesk(desks.getCurrentDesk().name).then((_macros) => {
                 $scope.macros = _macros;
             });
         } else {
             $scope.macros = macros.macros;
         }
-    }).finally(function() {
+    })
+    .finally(() => {
         $scope.loading = false;
     });
 
     $scope.call = function(macro) {
         var item = _.extend({}, $scope.origItem, $scope.item);
+
         $scope.loading = true;
-        return macros.call(macro, item).then(function(res) {
+        return macros.call(macro, item).then((res) => {
             if (!res.diff) {
                 angular.extend($scope.item, _.omit(res.item, ['_etag']));
                 autosave.save($scope.item, $scope.origItem);
@@ -104,9 +105,10 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
                 $rootScope.$broadcast('macro:diff', res.diff);
             }
             $scope.closeWidget();
-        }).finally(function() {
-            $scope.loading = false;
-        });
+        })
+       .finally(() => {
+           $scope.loading = false;
+       });
     };
 }
 
@@ -118,7 +120,7 @@ function MacrosReplaceDirective(macros, editor) {
         link: function(scope) {
             scope.diff = null;
 
-            scope.$on('macro:diff', function(evt, diff) {
+            scope.$on('macro:diff', (evt, diff) => {
                 scope.diff = diff;
                 init(scope.diff);
             });
@@ -148,6 +150,7 @@ function MacrosReplaceDirective(macros, editor) {
 
             scope.replace = function() {
                 var to = getCurrentReplace();
+
                 if (to) {
                     editor.replace(to);
                     editor.selectNext();
@@ -162,6 +165,7 @@ function MacrosReplaceDirective(macros, editor) {
 
             function getCurrentReplace() {
                 var from = editor.getActiveText();
+
                 return scope.diff[from] || null;
             }
 

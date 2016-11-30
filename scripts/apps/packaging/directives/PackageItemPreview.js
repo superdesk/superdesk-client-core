@@ -28,7 +28,7 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
                 }
 
                 api[endpoint].getByUrl(url)
-                .then(function(result) {
+                .then((result) => {
                     scope.data = result;
                     if (scope.data.abstract) {
                         scope.data.abstract = $sce.trustAsHtml(scope.data.abstract);
@@ -36,32 +36,32 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
                     scope.isLocked = lock.isLocked(scope.data);
                     scope.isPublished = _.includes(['published', 'corrected'], scope.data.state);
                     scope.isKilled = scope.data.state === 'killed';
-                }, function(response) {
+                }, (response) => {
                     scope.error = true;
                 });
             }
 
-            scope.$on('item:lock', function(_e, data) {
+            scope.$on('item:lock', (_e, data) => {
                 if (scope.data && scope.data._id === data.item) {
-                    scope.$applyAsync(function() {
+                    scope.$applyAsync(() => {
                         scope.data.lock_user = data.user;
                         scope.isLocked = lock.isLocked(scope.data);
                     });
                 }
             });
 
-            scope.$on('item:unlock', function(_e, data) {
+            scope.$on('item:unlock', (_e, data) => {
                 if (scope.data && scope.data._id === data.item) {
-                    scope.$applyAsync(function() {
+                    scope.$applyAsync(() => {
                         scope.data.lock_user = null;
                         scope.isLocked = false;
                     });
                 }
             });
 
-            scope.$on('item:publish', function(_e, data) {
+            scope.$on('item:publish', (_e, data) => {
                 if (scope.data && scope.data._id === data.item) {
-                    scope.$applyAsync(function() {
+                    scope.$applyAsync(() => {
                         scope.isPublished = true;
                     });
                 }

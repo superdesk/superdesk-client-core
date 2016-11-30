@@ -24,7 +24,7 @@ export function UserListDirective(keyboardManager, usersService, asset) {
                 bindKeys();
             };
 
-            scope.$watch('selected', function(selected) {
+            scope.$watch('selected', (selected) => {
                 if (_.isNil(selected)) {
                     bindKeys();
                 }
@@ -47,6 +47,7 @@ export function UserListDirective(keyboardManager, usersService, asset) {
 
             function moveDown() {
                 var selectedIndex = getSelectedIndex();
+
                 if (selectedIndex !== -1) {
                     scope.select(scope.users[_.min([scope.users.length - 1, selectedIndex + 1])]);
                 }
@@ -54,6 +55,7 @@ export function UserListDirective(keyboardManager, usersService, asset) {
 
             function moveUp() {
                 var selectedIndex = getSelectedIndex();
+
                 if (selectedIndex !== -1) {
                     scope.select(scope.users[_.max([0, selectedIndex - 1])]);
                 }

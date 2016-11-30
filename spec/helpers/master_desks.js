@@ -1,5 +1,5 @@
+/* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 module.exports = new MasterDesks();
 
@@ -30,9 +30,8 @@ function MasterDesks() {
     this.editItem = function(desk, stage, item) {
         this.getItem(desk, stage, item).click();
         this.getItem(desk, stage, item).element(by.className('icon-pencil')).click();
-        browser.wait(function() {
-            return element(by.className('auth-screen')).isDisplayed();
-        }, 200); // wait for editor sidebar animation
+        // wait for editor sidebar animation
+        browser.wait(() => element(by.className('auth-screen')).isDisplayed(), 200);
     };
 
     this.getStatus = function(desk, status) {

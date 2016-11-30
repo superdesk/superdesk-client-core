@@ -64,13 +64,13 @@ angular.module('superdesk.core.menu', [
 
                     superdesk.getMenu(superdesk.MENU_MAIN)
                             .then(filterSettingsIfEmpty)
-                            .then(function(menu) {
+                            .then((menu) => {
                                 scope.menu = menu;
                                 setActiveMenuItem($route.current);
                             });
 
                     function filterSettingsIfEmpty(menu) {
-                        return superdesk.getMenu(superdesk.MENU_SETTINGS).then(function(settingsMenu) {
+                        return superdesk.getMenu(superdesk.MENU_SETTINGS).then((settingsMenu) => {
                             if (!settingsMenu.length) {
                                 _.remove(menu, {_settings: 1});
                             }
@@ -92,19 +92,19 @@ angular.module('superdesk.core.menu', [
                     };
 
                     function setActiveMenuItem(route) {
-                        _.each(scope.menu, function(activity) {
+                        _.each(scope.menu, (activity) => {
                             activity.isActive = route && route.href &&
                                     route.href.substr(0, activity.href.length) === activity.href;
                         });
                     }
 
-                    scope.$on('$locationChangeStart', function() {
+                    scope.$on('$locationChangeStart', () => {
                         ctrl.flags.menu = false;
                     });
 
                     scope.$watch(function currentRoute() {
                         return $route.current;
-                    }, function(route) {
+                    }, (route) => {
                         scope.currentRoute = route || null;
                         setActiveMenuItem(scope.currentRoute);
                         ctrl.flags.workspace = route ? !!route.sideTemplateUrl : false;
@@ -112,7 +112,7 @@ angular.module('superdesk.core.menu', [
 
                     scope.notifications = userNotifications;
 
-                    privileges.loaded.then(function() {
+                    privileges.loaded.then(() => {
                         scope.privileges = privileges.privileges;
                     });
 
@@ -130,7 +130,7 @@ angular.module('superdesk.core.menu', [
             templateUrl: asset.templateUrl('core/menu/views/about.html'),
             link: function(scope) {
                 api.query('backend_meta', {}).then(
-                    function(metadata) {
+                    (metadata) => {
                         scope.build_rev = metadata.meta_rev;
                         scope.build_rev_core = metadata.meta_rev_core;
                         scope.build_rev_client = metadata.meta_rev_client;

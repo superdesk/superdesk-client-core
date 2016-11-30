@@ -7,11 +7,11 @@ export function DraggableItem(dragitem) {
                 elem.attr('draggable', true);
 
                 // set item data on event
-                elem.on('dragstart', function(event) {
+                elem.on('dragstart', (event) => {
                     dragitem.start(event, scope.item);
                 });
 
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', () => {
                     elem.off('dragstart');
                 });
             }

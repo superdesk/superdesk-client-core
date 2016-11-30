@@ -8,6 +8,7 @@ export function AddToPackageDropdown(item, className, authoringWorkspace, packag
         },
         render: function() {
             var group = this.props.group;
+
             return React.createElement(
                 'li',
                 {},
@@ -28,11 +29,12 @@ export function AddToPackageDropdown(item, className, authoringWorkspace, packag
 
         componentDidMount: function() {
             var pkg = this.props.package;
+
             if (pkg.highlight) {
                 api.find('highlights', pkg.highlight)
-                    .then(function(result) {
+                    .then((result) => {
                         this.setState({groups: result.groups});
-                    }.bind(this));
+                    });
             } else {
                 // set it here to avoid flickering
                 this.setState({groups: packages.groupList});
@@ -51,5 +53,6 @@ export function AddToPackageDropdown(item, className, authoringWorkspace, packag
             );
         }
     });
+
     return React.createElement(PackageGroupList, {item: item, package: authoringWorkspace.getItem()});
 }

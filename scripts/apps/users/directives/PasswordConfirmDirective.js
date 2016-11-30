@@ -1,5 +1,6 @@
 export function PasswordConfirmDirective() {
     var NAME = 'confirm';
+
     return {
         require: 'ngModel',
         scope: {password: '='},
@@ -10,10 +11,11 @@ export function PasswordConfirmDirective() {
 
             ctrl.$validators[NAME] = function(modelValue, viewValue) {
                 var value = modelValue || viewValue;
+
                 return isMatch(scope.password, value);
             };
 
-            scope.$watch('password', function(password) {
+            scope.$watch('password', (password) => {
                 ctrl.$setValidity(NAME, isMatch(password, ctrl.$viewValue));
             });
         }

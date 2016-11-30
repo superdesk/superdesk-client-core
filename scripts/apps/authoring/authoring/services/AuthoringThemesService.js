@@ -44,16 +44,17 @@ export function AuthoringThemesService(storage, preferencesService) {
     ];
 
     service.save = function(key, themeScope) {
-        return preferencesService.get().then(function(result) {
+        return preferencesService.get().then((result) => {
             result[PREFERENCES_KEY][key] = themeScope[key].key + (themeScope.large[key] ? '-large' : '');
             return preferencesService.update(result);
         });
     };
 
     service.get = function(key) {
-        return preferencesService.get().then(function(result) {
+        return preferencesService.get().then((result) => {
             var theme = result[PREFERENCES_KEY] && result[PREFERENCES_KEY][key] ?
                 result[PREFERENCES_KEY][key] : THEME_DEFAULT;
+
             return theme;
         });
     };

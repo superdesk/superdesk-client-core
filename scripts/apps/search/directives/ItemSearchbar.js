@@ -24,7 +24,8 @@ export function ItemSearchbar($location, $document, asset) {
 
                 if (scope.query) {
                     var newQuery = _.uniq(scope.query.split(/[\s,]+/));
-                    _.each(newQuery, function(item, key) {
+
+                    _.each(newQuery, (item, key) => {
                         if (item) {
                             output += key !== 0 ? ' (' + item + ')' : '(' + item + ')';
                         }
@@ -44,6 +45,7 @@ export function ItemSearchbar($location, $document, asset) {
 
             // initial query
             var srch = $location.search();
+
             if (srch.q && srch.q !== '') {
                 scope.query = srch.q.replace(/[()]/g, '');
             } else {
@@ -51,14 +53,14 @@ export function ItemSearchbar($location, $document, asset) {
             }
 
             function closeOnClick() {
-                scope.$applyAsync(function() {
+                scope.$applyAsync(() => {
                     scope.focused = false;
                 });
             }
 
             $document.bind('click', closeOnClick);
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 $document.unbind('click', closeOnClick);
             });
         }

@@ -99,12 +99,10 @@ angular.module('superdesk.apps.archive', [
                         var isPersonal = $location.path() === '/workspace/personal';
 
                         return $q.when(isPersonal ? modal.confirm(txt) : 0)
-                            .then(function() {
-                                return spike.spike(data.item).then(function(item) {
-                                    $rootScope.$broadcast('item:spike');
-                                    return item;
-                                });
-                            });
+                            .then(() => spike.spike(data.item).then((item) => {
+                                $rootScope.$broadcast('item:spike');
+                                return item;
+                            }));
                     }],
                 filters: [{action: 'list', type: 'archive'}],
                 action: 'spike',
@@ -120,7 +118,7 @@ angular.module('superdesk.apps.archive', [
                 icon: 'unspike',
                 monitor: true,
                 controller: ['spike', 'data', '$rootScope', function unspikeActivity(spike, data, $rootScope) {
-                    return spike.unspike(data.item).then(function(item) {
+                    return spike.unspike(data.item).then((item) => {
                         $rootScope.$broadcast('item:unspike');
                         return item;
                     });
@@ -153,7 +151,7 @@ angular.module('superdesk.apps.archive', [
                 controller: ['api', 'notify', '$rootScope', 'data', 'desks', 'authoringWorkspace',
                     function(api, notify, $rootScope, data, desks, authoringWorkspace) {
                         api.save('archive_broadcast', {}, {desk: desks.getCurrentDeskId()}, data.item)
-                        .then(function(broadcastItem) {
+                        .then((broadcastItem) => {
                             authoringWorkspace.edit(broadcastItem);
                             $rootScope.$broadcast('broadcast:created', {item: data.item});
                         });
@@ -175,14 +173,14 @@ angular.module('superdesk.apps.archive', [
                 controller: ['api', 'data', '$rootScope', function(api, data, $rootScope) {
                     api
                         .save('copy', {}, {}, data.item)
-                        .then(function(archiveItem) {
+                        .then((archiveItem) => {
                             data.item.task_id = archiveItem.task_id;
                             data.item.created = archiveItem._created;
                             $rootScope.$broadcast('item:copy');
-                        }, function(response) {
+                        }, (response) => {
                             data.item.error = response;
                         })
-                        .finally(function() {
+                        .finally(() => {
                             data.item.actioning.archiveContent = false;
                         });
                 }],
@@ -207,6 +205,7 @@ angular.module('superdesk.apps.archive', [
                     function(data, $rootScope, desks, authoring, authoringWorkspace, notify) {
                         // get the desk of the item to create the new take.
                         var deskId = null;
+
                         deskId = desks.getCurrentDeskId();
 
                         if (!deskId) {
@@ -216,11 +215,11 @@ angular.module('superdesk.apps.archive', [
                         }
 
                         authoring.linkItem(data.item, null, deskId)
-                            .then(function(item) {
+                            .then((item) => {
                                 notify.success(gettext('New take created.'));
                                 $rootScope.$broadcast('item:take');
                                 authoringWorkspace.edit(item);
-                            }, function(response) {
+                            }, (response) => {
                                 data.item.error = response;
                                 notify.error(gettext('Failed to generate new take.'));
                             });

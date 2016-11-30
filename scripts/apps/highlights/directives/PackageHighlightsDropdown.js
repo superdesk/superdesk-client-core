@@ -4,11 +4,9 @@ export function PackageHighlightsDropdown(desks, highlightsService, $location, $
         scope: true,
         templateUrl: 'scripts/apps/highlights/views/package_highlights_dropdown_directive.html',
         link: function(scope) {
-            scope.$watch(function() {
-                return desks.active;
-            }, function(active) {
+            scope.$watch(() => desks.active, (active) => {
                 scope.selected = active;
-                highlightsService.get(desks.getCurrentDeskId()).then(function(result) {
+                highlightsService.get(desks.getCurrentDeskId()).then((result) => {
                     scope.highlights = result._items;
                     scope.hasHighlights = _.size(scope.highlights) > 0;
                 });

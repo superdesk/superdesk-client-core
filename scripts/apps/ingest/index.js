@@ -153,6 +153,6 @@ angular.module('superdesk.apps.ingest', [
         });
     }])
 
-    .run(['remove', remove => {
+    .run(['remove', (remove) => {
         remove.fetchProviders();
     }]);

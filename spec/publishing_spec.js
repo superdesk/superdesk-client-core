@@ -1,11 +1,11 @@
-'use strict';
+
 
 var monitoring = require('./helpers/monitoring'),
     authoring = require('./helpers/authoring'),
     publishQueue = require('./helpers/publish_queue');
 
-describe('publishing', function() {
-    beforeEach(function() {
+describe('publishing', () => {
+    beforeEach(() => {
         monitoring.openMonitoring();
 
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
@@ -14,7 +14,7 @@ describe('publishing', function() {
         publishQueue.openPublishQueue();
     });
 
-    it('publish using HTTP Push delivery type and can preview content and search publish queue', function() {
+    it('publish using HTTP Push delivery type and can preview content and search publish queue', () => {
         expect(publishQueue.getHeadline(0).getText()).toMatch(/item5/);
         expect(publishQueue.getDestination(0).getText()).toMatch(/HTTP Push/);
 
@@ -33,6 +33,7 @@ describe('publishing', function() {
 
         // can search item by unique name
         var _uniqueName = publishQueue.getUniqueName(0).getText();
+
         publishQueue.searchAction(_uniqueName);
         expect(publishQueue.getItemCount()).toBe(1);
     });

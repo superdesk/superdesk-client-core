@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = new LegalArchive();
 
@@ -13,9 +13,10 @@ function LegalArchive() {
     };
 
     this.open = function() {
-        return nav('/legal_archive').then(function() {
+        return nav('/legal_archive').then(() => {
             var list = element(by.className('icon-th-list'));
-            return list.isDisplayed().then(function(isVisible) {
+
+            return list.isDisplayed().then((isVisible) => {
                 if (isVisible) {
                     list.click();
                 }

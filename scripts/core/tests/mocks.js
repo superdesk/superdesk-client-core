@@ -1,4 +1,4 @@
-beforeEach(window.module(function($provide) {
+beforeEach(window.module(($provide) => {
     $provide.constant('lodash', window._);
 }));
 
@@ -19,7 +19,7 @@ angular.module('superdesk.mocks', [])
         },
         requiredMediaMetadata: ['headline', 'description_text', 'alt_text']
     })
-    .service('features', function() { /* no-op */ })
+    .service('features', () => { /* no-op */ })
     .service('preferencesService', function($q) {
         this.mock = true;
 

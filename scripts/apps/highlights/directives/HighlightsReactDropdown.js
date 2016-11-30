@@ -33,6 +33,7 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
             var item = this.props.item;
             var highlight = this.props.highlight;
             var isMarked = item.highlights && item.highlights.indexOf(highlight._id) >= 0;
+
             return React.createElement(
                 'button',
                 {disabled: isMarked, onClick: this.markHighlight},

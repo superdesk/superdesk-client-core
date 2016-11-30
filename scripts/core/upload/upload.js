@@ -26,7 +26,7 @@ function SourcesDirective() {
                     .appendTo(elem);
             }
 
-            scope.$watch('renditions', function(renditions) {
+            scope.$watch('renditions', (renditions) => {
                 pause();
                 elem.empty();
                 angular.forEach(renditions, createSource);
@@ -48,6 +48,7 @@ function FileValidatorDirective() {
         link: function(scope, elem, attrs, ngModel) {
             ngModel.$validators.fileType = function(modelValue, viewValue) {
                 var value = modelValue || viewValue;
+
                 return !value || !attrs.accept || isAcceptedFileType(value, attrs.accept);
             };
         }

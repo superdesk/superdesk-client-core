@@ -7,16 +7,16 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-'use strict';
+
 var desks = require('./helpers/desks');
 var assertToastMsg = require('./helpers/utils').assertToastMsg;
 
-describe('desks', function() {
-    beforeEach(function() {
+describe('desks', () => {
+    beforeEach(() => {
         desks.openDesksSettings();
     });
 
-    it('edit desk', function() {
+    it('edit desk', () => {
         desks.edit('Politic Desk');
         desks.deskDescriptionElement().sendKeys('New Description');
         desks.deskSourceElement().sendKeys('Test');

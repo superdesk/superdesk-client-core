@@ -1,4 +1,5 @@
-'use strict';
+/* eslint-disable newline-per-chained-call */
+
 
 var openUrl = require('./utils').open;
 
@@ -15,11 +16,11 @@ function Subscribers() {
     };
 
     this.getSubscriber = function(name) {
-        return this.list.filter(function(elem, index) {
-            return elem.element(by.binding('subscriber.name')).getText().then(function(text) {
-                return text.toUpperCase() === name.toUpperCase();
-            });
-        });
+        return this.list.filter((elem, index) =>
+            elem.element(by.binding('subscriber.name'))
+                .getText()
+                .then((text) => text.toUpperCase() === name.toUpperCase())
+        );
     };
 
     this.getCount = function(index) {
@@ -27,7 +28,7 @@ function Subscribers() {
     };
 
     this.edit = function(name) {
-        this.getSubscriber(name).then(function(rows) {
+        this.getSubscriber(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-pencil')).click();
             browser.sleep(500);
@@ -35,13 +36,11 @@ function Subscribers() {
     };
 
     this.setType = function(ingestType) {
-        element(by.id('subType')).all(by.tagName('option')).filter(function(elem, index) {
-            return elem.getText().then(function(label) {
-                return label.toLowerCase().indexOf(ingestType) > -1;
+        element(by.id('subType')).all(by.tagName('option'))
+            .filter((elem, index) => elem.getText().then((label) => label.toLowerCase().indexOf(ingestType) > -1))
+            .then((options) => {
+                options[0].click();
             });
-        }).then(function(options) {
-            options[0].click();
-        });
     };
 
     this.cancel = function() {

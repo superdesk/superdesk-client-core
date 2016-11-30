@@ -20,31 +20,29 @@ export default angular.module('superdesk.core.directives.switchInverted', [])
      * <input sd-switch-inverted ng-model="provider.is_closed">
      * ```
      */
-    .directive('sdSwitchInverted', function() {
-        return {
-            require: 'ngModel',
-            replace: true,
-            template: [
-                '<span class="sd-toggle">',
-                '<span class="inner"></span>',
-                '</span>'
-            ].join(''),
-            link: function($scope, element, attrs, ngModel) {
-                ngModel.$render = function() {
-                    render(element, ngModel.$viewValue);
-                };
+    .directive('sdSwitchInverted', () => ({
+        require: 'ngModel',
+        replace: true,
+        template: [
+            '<span class="sd-toggle">',
+            '<span class="inner"></span>',
+            '</span>'
+        ].join(''),
+        link: function($scope, element, attrs, ngModel) {
+            ngModel.$render = function() {
+                render(element, ngModel.$viewValue);
+            };
 
-                $scope.$watch(attrs.ngModel, function() {
-                    render(element, !ngModel.$viewValue);
+            $scope.$watch(attrs.ngModel, () => {
+                render(element, !ngModel.$viewValue);
+            });
+
+            element.on('click', (e) => {
+                $scope.$apply(() => {
+                    ngModel.$setViewValue(!ngModel.$viewValue);
                 });
 
-                element.on('click', function(e) {
-                    $scope.$apply(function() {
-                        ngModel.$setViewValue(!ngModel.$viewValue);
-                    });
-
-                    return false;
-                });
-            }
-        };
-    });
+                return false;
+            });
+        }
+    }));

@@ -1,5 +1,5 @@
+/* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 var openUrl = require('./utils').open;
 var wait = require('./utils').wait;
@@ -18,11 +18,11 @@ function Highlights() {
     };
 
     this.getRow = function(name) {
-        return this.list.filter(function(elem, index) {
-            return elem.element(by.binding('config.name')).getText().then(function(text) {
-                return text.toUpperCase() === name.toUpperCase();
-            });
-        });
+        return this.list.filter((elem, index) =>
+            elem.element(by.binding('config.name'))
+                .getText()
+                .then((text) => text.toUpperCase() === name.toUpperCase())
+        );
     };
 
     this.getCount = function(index) {
@@ -35,7 +35,7 @@ function Highlights() {
     };
 
     this.edit = function(name) {
-        this.getRow(name).then(function(rows) {
+        this.getRow(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-pencil')).click();
             browser.sleep(500);
@@ -43,7 +43,7 @@ function Highlights() {
     };
 
     this.remove = function(name) {
-        this.getRow(name).then(function(rows) {
+        this.getRow(name).then((rows) => {
             rows[0].click();
             rows[0].element(by.className('icon-trash')).click();
             browser.sleep(500);
@@ -65,21 +65,21 @@ function Highlights() {
     };
 
     this.getDesk = function(name) {
-        return this.desks.filter(function(elem, index) {
-            return elem.element(by.binding('desk.name')).getText().then(function(text) {
-                return text.toUpperCase() === name.toUpperCase();
-            });
-        });
+        return this.desks.filter((elem, index) =>
+            elem.element(by.binding('desk.name'))
+                .getText()
+                .then((text) => text.toUpperCase() === name.toUpperCase())
+        );
     };
 
     this.toggleDesk = function(name) {
-        this.getDesk(name).then(function(desks) {
+        this.getDesk(name).then((desks) => {
             desks[0].element(by.className('sd-checkbox')).click();
         });
     };
 
     this.expectDeskSelection = function(name, selected) {
-        this.getDesk(name).then(function(desks) {
+        this.getDesk(name).then((desks) => {
             if (selected) {
                 expect(desks[0].element(by.className('sd-checkbox')).getAttribute('checked')).toBe('true');
             } else {
@@ -89,11 +89,11 @@ function Highlights() {
     };
 
     this.getGroup = function(name) {
-        return this.groups.filter(function(elem, index) {
-            return elem.element(by.binding('group')).getText().then(function(text) {
-                return text.toUpperCase() === name.toUpperCase();
-            });
-        });
+        return this.groups.filter((elem, index) =>
+            elem.element(by.binding('group'))
+                .getText()
+                .then((text) => text.toUpperCase() === name.toUpperCase())
+        );
     };
 
     this.addGroup = function(name) {
@@ -104,7 +104,7 @@ function Highlights() {
 
     this.editGroup = function(name, newName) {
         this.getGroup(name).click();
-        this.getGroup(name).then(function(groups) {
+        this.getGroup(name).then((groups) => {
             groups[0].element(by.css('[ng-click="editGroup(group)"]')).click();
         });
         element(by.id('edit-group')).clear();
@@ -114,7 +114,7 @@ function Highlights() {
 
     this.deleteGroup = function(name) {
         this.getGroup(name).click();
-        this.getGroup(name).then(function(groups) {
+        this.getGroup(name).then((groups) => {
             groups[0].element(by.css('[ng-click="removeGroup(group)"]')).click();
         });
     };
@@ -148,11 +148,8 @@ function Highlights() {
     };
 
     this.getHighlights = function(elem) {
-        return elem.all(by.repeater('h in highlights track by h._id')).filter(function(highlight, index) {
-            return highlight.getText().then(function(text) {
-                return text;
-            });
-        });
+        return elem.all(by.repeater('h in highlights track by h._id'))
+            .filter((highlight, index) => highlight.getText().then((text) => text));
     };
 
     this.errorUniquenessElement = function() {
@@ -179,18 +176,21 @@ function Highlights() {
 
     this.exportHighlightsConfirm = function() {
         var btn = element(by.className('modal-footer')).element(by.buttonText('OK'));
+
         wait(btn, 500);
         btn.click();
     };
 
     this.saveTextHighlightsConfirm = function() {
         var btn = element(by.className('modal-footer')).element(by.buttonText('Save'));
+
         wait(btn, 500);
         btn.click();
     };
 
     this.multiMarkHighlight = function(name) {
         var elem = element(by.css('[class="multi-action-bar ng-scope"]'));
+
         elem.element(by.className('big-icon-marked-star')).click();
         browser.sleep(200);
         elem.all(by.repeater('h in highlights track by h._id')).all(by.css('[option="' + name + '"]')).click();

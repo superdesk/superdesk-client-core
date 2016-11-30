@@ -22,6 +22,7 @@ export class Editor3 extends React.Component {
         super(props);
 
         const initialContentState = stateFromHTML(props.value);
+
         this.state = {editorState: EditorState.createWithContent(initialContentState)};
 
         this.readOnly = props.readOnly || false;
@@ -54,6 +55,7 @@ export class Editor3 extends React.Component {
     handleKeyCommand(command) {
         const {editorState} = this.state;
         const newState = RichUtils.handleKeyCommand(editorState, command);
+
         if (newState) {
             this.onChange(newState);
             return true;
@@ -64,6 +66,7 @@ export class Editor3 extends React.Component {
     /** Handle the editor tab key pressed event */
     onTab(e) {
         const maxDepth = 4;
+
         this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
     }
 
@@ -95,8 +98,11 @@ export class Editor3 extends React.Component {
         // either style the placeholder or hide it. Let's just hide it now.
         let className = 'Editor3-editor';
         var contentState = editorState.getCurrentContent();
+
         if (!contentState.hasText()) {
-            if (contentState.getBlockMap().first().getType() !== 'unstyled') {
+            if (contentState.getBlockMap()
+                .first()
+                .getType() !== 'unstyled') {
                 className += ' Editor3-hidePlaceholder';
             }
         }
@@ -176,6 +182,7 @@ class StyleButton extends React.Component {
 
     render() {
         let className = 'Editor3-styleButton';
+
         if (this.props.active) {
             className += ' Editor3-activeButton';
         }
@@ -212,7 +219,7 @@ const BlockStyleControls = (props) => {
 
     return (
         <span>
-            {options.filter(type => type in BLOCK_TYPES_STYLE).map((type) =>
+            {options.filter((type) => type in BLOCK_TYPES_STYLE).map((type) =>
                 <StyleButton
                     key={type}
                     active={BLOCK_TYPES_STYLE[type] === blockType}
@@ -236,9 +243,10 @@ var INLINE_STYLES = {
 const InlineStyleControls = (props) => {
     var currentStyle = props.editorState.getCurrentInlineStyle();
     const {options} = props;
+
     return (
         <span>
-            {options.filter(type => type in INLINE_STYLES).map(type =>
+            {options.filter((type) => type in INLINE_STYLES).map((type) =>
                 <StyleButton
                     key={type}
                     active={currentStyle.has(INLINE_STYLES[type])}

@@ -1,12 +1,12 @@
 
-describe('item association directive', function() {
+describe('item association directive', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
     var elem, scope, item = {};
 
-    beforeEach(inject(function($compile, $rootScope) {
+    beforeEach(inject(($compile, $rootScope) => {
         scope = $rootScope.$new();
         scope.rel = 'featured';
         scope.item = item;
@@ -18,8 +18,9 @@ describe('item association directive', function() {
         $rootScope.$digest();
     }));
 
-    it('can trigger onchange handler on drop', inject(function($rootScope) {
+    it('can trigger onchange handler on drop', inject(($rootScope) => {
         var event = new window.$.Event('drop');
+
         event.originalEvent = {dataTransfer: {
             types: [{type: 'video'}],
             getData: () => angular.toJson({headline: 'foo'})

@@ -29,11 +29,11 @@ angular.module('superdesk.core.activity.list', [])
                         return;
                     }
 
-                    scope.activities = _.filter(superdesk.findActivities(intent, scope.item), function(activity) {
+                    scope.activities = _.filter(superdesk.findActivities(intent, scope.item), (activity) => {
                         if (activity.monitor) {
                             scope.item.actioning = {};
                             scope.item.actioning[activity._id] = false;
-                            scope.$watchCollection('item.actioning', function(newValue, oldValue) {
+                            scope.$watchCollection('item.actioning', (newValue, oldValue) => {
                                 if (scope.item.actioning &&
                                 !scope.item.actioning[activity._id] &&
                                 oldValue &&
@@ -57,12 +57,12 @@ angular.module('superdesk.core.activity.list', [])
 
                 // register key shortcuts for single instance of activity list - in preview sidebar
                     if (scope.single) {
-                        angular.forEach(scope.activities, function(activity) {
+                        angular.forEach(scope.activities, (activity) => {
                             if (activity.key) {
                                 if (activity.unbind) {
                                     activity.unbind();
                                 }
-                                activity.unbind = scope.$on('key:' + activity.key, function() {
+                                activity.unbind = scope.$on('key:' + activity.key, () => {
                                     scope.run(activity);
                                 });
                             }
@@ -84,7 +84,7 @@ angular.module('superdesk.core.activity.list', [])
                     }
 
                     activityService.start(activity, {data: {item: scope.item}})
-                    .then(function() {
+                    .then(() => {
                         if (typeof scope.done === 'function') {
                             scope.done(scope.data);
                         }

@@ -51,7 +51,7 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace) 
             language: language.language
         };
 
-        api.save('translate', params).then(function(item) {
+        api.save('translate', params).then((item) => {
             authoringWorkspace.open(item);
             $rootScope.$broadcast('item:translate');
             notify.success(gettext('Item Translated'));
@@ -66,13 +66,13 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace) 
      * @return {boolean}
      */
     service.checkAvailability = function(item) {
-        return !service.languages ? false : _.find(service.languages._items, function(language) {
-            return language.source && language.language === item.language;
-        });
+        return !service.languages ?
+            false
+            : _.find(service.languages._items, (language) => language.source && language.language === item.language);
     };
 
     // Fetch languages from database on service initialization
-    service.fetch().then(function(languages) {
+    service.fetch().then((languages) => {
         service.languages = languages;
     });
 

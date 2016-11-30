@@ -18,22 +18,24 @@ angular.module('superdesk.apps.users.activity', [
             description: 'Activity stream widget',
             icon: 'stream'
         });
-    }]).controller('ActivityController', ['$scope', 'profileService',
+    }])
+    .controller('ActivityController', ['$scope', 'profileService',
         function($scope, profileService) {
             var page = 1;
             var currentConfig = null;
+
             $scope.max_results = 0;
 
             function refresh(config) {
                 currentConfig = config;
-                profileService.getAllUsersActivity(config.maxItems).then(function(list) {
+                profileService.getAllUsersActivity(config.maxItems).then((list) => {
                     $scope.activityFeed = list;
                     $scope.max_results = parseInt(config.maxItems, 10);
                 });
 
                 $scope.loadMore = function() {
                     page++;
-                    profileService.getAllUsersActivity(config.maxItems, page).then(function(next) {
+                    profileService.getAllUsersActivity(config.maxItems, page).then((next) => {
                         Array.prototype.push.apply($scope.activityFeed._items, next._items);
                         $scope.activityFeed._links = next._links;
                         $scope.max_results += parseInt(config.maxItems, 10);
@@ -41,19 +43,20 @@ angular.module('superdesk.apps.users.activity', [
                 };
             }
 
-            $scope.$on('changes in activity', function() {
+            $scope.$on('changes in activity', () => {
                 if (currentConfig) {
                     refresh(currentConfig);
                 }
             });
 
-            $scope.$watch('widget.configuration', function(config) {
+            $scope.$watch('widget.configuration', (config) => {
                 page = 1;
                 if (config) {
                     refresh(config);
                 }
             }, true);
-        }]).controller('ActivityConfigController', ['$scope',
+        }])
+        .controller('ActivityConfigController', ['$scope',
             function($scope) {
                 $scope.notIn = function(haystack) {
                     return function(needle) {

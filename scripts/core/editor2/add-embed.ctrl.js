@@ -7,6 +7,7 @@ SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'l
 function SdAddEmbedController(embedService, $element, $timeout, $q, _,
 EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
     var self = this;
+
     angular.extend(self, {
         editorCtrl: undefined,  // defined in link method
         previewLoading: false,
@@ -33,12 +34,14 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                 '  </div>',
                 '  <div class="embed--link__description">' + description + '</div>',
                 '</div>'];
+
             return html.join('\n');
         },
         retrieveEmbed: function() {
             function retrieveEmbedFromUrl() {
-                return embedService.get(self.input).then(function(data) {
+                return embedService.get(self.input).then((data) => {
                     var embed = data.html;
+
                     if (!angular.isDefined(embed)) {
                         if (data.type === 'link') {
                             embed = self.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
@@ -46,12 +49,10 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                             embed = editor.generateMediaTag({url: data.url, altText: data.description});
                         }
                     }
-                    return $q.when(embed).then(function(embed) {
-                        return {
-                            body: embed,
-                            provider: data.provider_name || EMBED_PROVIDERS.custom
-                        };
-                    });
+                    return $q.when(embed).then((embed) => ({
+                        body: embed,
+                        provider: data.provider_name || EMBED_PROVIDERS.custom
+                    }));
                 });
             }
             function parseRawEmbedCode() {
@@ -60,18 +61,21 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                     body: self.input,
                     provider: EMBED_PROVIDERS.custom
                 };
+
                 function updateEmbedBlock(partialUpdate) {
                     angular.extend(embedBlock, partialUpdate);
                 }
                 // try to guess the provider of the custom embed
                 for (var i = 0; i < embedCodeHandlers.length; i++) {
                     var provider = $injector.invoke(embedCodeHandlers[i]);
+
                     if (angular.isDefined(provider.condition)) {
                         if (!provider.condition()) {
                             continue;
                         }
                     }
                     var match = provider.pattern.exec(self.input);
+
                     if (match) {
                         updateEmbedBlock({provider: provider.name});
                         if (provider.callback) {
@@ -80,12 +84,11 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
                         break;
                     }
                 }
-                return $q.all(waitFor).then(function() {
-                    return embedBlock;
-                });
+                return $q.all(waitFor).then(() => embedBlock);
             }
             var embedCode;
             // if it's an url, use embedService to retrieve the embed code
+
             if (_.startsWith(self.input, 'http')) {
                 embedCode = retrieveEmbedFromUrl(self.input);
             // otherwise we use the content of the field directly
@@ -96,8 +99,10 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
         },
         updatePreview: function() {
             self.previewLoading = true;
-            self.retrieveEmbed().then(function(embed) {
-                angular.element($element).find('.preview').html(embed.body.replace('\\n', ''));
+            self.retrieveEmbed().then((embed) => {
+                angular.element($element)
+                    .find('.preview')
+                    .html(embed.body.replace('\\n', ''));
                 self.previewLoading = false;
             });
         },
@@ -107,7 +112,7 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
             return self.editorCtrl.insertNewBlock(self.addToPosition, data);
         },
         createBlockFromEmbed: function() {
-            self.retrieveEmbed().then(function(embed) {
+            self.retrieveEmbed().then((embed) => {
                 self.createFigureBlock({
                     embedType: embed.provider,
                     body: embed.body,
@@ -124,14 +129,14 @@ EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
     });
 
     // toggle when the `extended` directive attribute changes
-    $scope.$watch(function() {
-        return self.extended;
-    }, function(extended, wasExtended) {
+    $scope.$watch(() => self.extended, (extended, wasExtended) => {
         // on enter, focus on input
         if (angular.isDefined(extended)) {
             if (extended) {
-                $timeout(function() {
-                    angular.element($element).find('input').focus();
+                $timeout(() => {
+                    angular.element($element)
+                        .find('input')
+                        .focus();
                 }, 500, false); // positive timeout because of a chrome issue
             // on leave, clear field
             } else if (wasExtended) {

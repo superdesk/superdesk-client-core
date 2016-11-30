@@ -17,10 +17,11 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
 
             scope.hasMarkItemPrivilege = authoring.itemActions(scope.item).mark_item;
 
-            scope.$on('item:highlight', function($event, data) {
+            scope.$on('item:highlight', ($event, data) => {
                 var highlights = scope.item.highlights || [];
+
                 if (scope.item._id === data.item_id) {
-                    scope.$apply(function() {
+                    scope.$apply(() => {
                         if (data.marked) {
                             scope.item.highlights = highlights.concat(data.highlight_id);
                         } else {
@@ -30,12 +31,10 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
                 }
             });
 
-            scope.$watch('item.highlights', function(items) {
+            scope.$watch('item.highlights', (items) => {
                 if (items) {
-                    highlightsService.get().then(function(result) {
-                        scope.highlights = _.filter(result._items, function(highlight) {
-                            return items.indexOf(highlight._id) >= 0;
-                        });
+                    highlightsService.get().then((result) => {
+                        scope.highlights = _.filter(result._items, (highlight) => items.indexOf(highlight._id) >= 0);
                     });
                 }
             });
@@ -49,20 +48,26 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
                 },
                 mouseenter: function(e) {
                     el = $(this).find('.highlights-list');
-                    el.not('.open').children('.dropdown__toggle').click();
+                    el.not('.open')
+                        .children('.dropdown__toggle')
+                        .click();
 
                     angular.element('.highlights-list-menu.open').on({
                         mouseenter: function() {
                             $timeout.cancel(closeTimeout);
                         },
                         mouseleave: function() {
-                            el.filter('.open').children('.dropdown__toggle').click();
+                            el.filter('.open')
+                                .children('.dropdown__toggle')
+                                .click();
                         }
                     });
                 },
                 mouseleave: function() {
-                    closeTimeout = $timeout(function() {
-                        el.filter('.open').children('.dropdown__toggle').click();
+                    closeTimeout = $timeout(() => {
+                        el.filter('.open')
+                            .children('.dropdown__toggle')
+                            .click();
                     }, 100, false);
                 }
             });
@@ -72,7 +77,7 @@ export function HighlightsTitle(highlightsService, $timeout, authoring) {
              * @param {string} highlight
              */
             scope.unmarkHighlight = function(highlight) {
-                highlightsService.markItem(highlight, scope.item).then(function() {
+                highlightsService.markItem(highlight, scope.item).then(() => {
                     scope.item.highlights = _.without(scope.item.highlights, highlight);
                 });
             };

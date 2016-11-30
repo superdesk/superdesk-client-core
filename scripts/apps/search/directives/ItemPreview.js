@@ -37,13 +37,13 @@ export function ItemPreview(asset, storage) {
              * available only when screen size is smaller and authoring is open.
              */
             scope.shiftPreview = function() {
-                scope.$applyAsync(function() {
+                scope.$applyAsync(() => {
                     scope.toggleLeft = !scope.toggleLeft;
                     storage.setItem('shiftLeft', scope.toggleLeft);
                 });
             };
 
-            scope.$watch('item', function(item) {
+            scope.$watch('item', (item) => {
                 scope.selected = {preview: item || null};
             });
 

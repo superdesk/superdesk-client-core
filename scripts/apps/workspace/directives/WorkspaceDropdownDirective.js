@@ -9,11 +9,11 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
             scope.wsList = null;
             scope.edited = null;
 
-            scope.$watch('selected', function() {
+            scope.$watch('selected', () => {
                 pageTitle.setWorkspace(scope.selected ? scope.selected.name || '' : '');
             });
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 pageTitle.setWorkspace('');
             });
 
@@ -54,16 +54,17 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
              */
             function initialize() {
                 var activeWorkspace = null;
+
                 workspaces.getActiveId()
-                .then(function(workspace) {
+                .then((workspace) => {
                     activeWorkspace = workspace;
                 })
                 .then(angular.bind(desks, desks.fetchCurrentUserDesks))
-                .then(function(userDesks) {
+                .then((userDesks) => {
                     scope.desks = userDesks;
                 })
                 .then(workspaces.queryUserWorkspaces)
-                .then(function(_workspaces) {
+                .then((_workspaces) => {
                     scope.wsList = _workspaces;
                     scope.workspaceType = activeWorkspace.type;
                     if (activeWorkspace.type === 'desk') {
@@ -73,14 +74,13 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
                     } else {
                         scope.selected = null;
                     }
-                }).then(function() {
+                })
+                .then(() => {
                     deskNotifications.reload();
                 });
             }
 
-            scope.$watch(function() {
-                return workspaces.active;
-            }, initialize, true);
+            scope.$watch(() => workspaces.active, initialize, true);
         }
     };
 }

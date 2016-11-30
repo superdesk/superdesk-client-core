@@ -24,6 +24,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
      */
     this.getType = function(item) {
         var itemType;
+
         if (this.isLegal(item)) {
             itemType = item._type;
         } else if (this.isArchived(item)) {
@@ -68,14 +69,17 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
      *  @return {Object} the list of archive items
      */
     this.getRelatedItems = function(slugline, fromDateTime, itemId) {
-        var beforeDateTime = fromDateTime || moment().subtract(1, 'days').format(config.view.dateformat);
+        var beforeDateTime = fromDateTime || moment().subtract(1, 'days')
+            .format(config.view.dateformat);
         var params = {};
+
         params.q = 'slugline.phrase:"' + slugline + '"'; // exact match
         params.ignoreKilled = true;
         params.ignoreDigital = true;
         params.afterversioncreated = beforeDateTime;
 
         var query = search.query(params);
+
         query.size(200);
 
         if (itemId) {
@@ -83,11 +87,10 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
         }
 
         var criteria = query.getCriteria(true);
+
         criteria.repo = 'archive,published';
 
-        return api.query('search', criteria).then(function(result) {
-            return result;
-        });
+        return api.query('search', criteria).then((result) => result);
     };
 
     /**
@@ -112,8 +115,8 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
     this.getVersionHistory = function(item, desks, historyType) {
         if (this.isLegal(item)) {
             return api.find('legal_archive', item._id, {version: 'all', max_results: 200})
-                .then(function(result) {
-                    _.each(result._items, function(version) {
+                .then((result) => {
+                    _.each(result._items, (version) => {
                         version.desk = version.task && version.task.desk ? version.task.desk : '';
                         version.stage = version.task && version.task.stage ? version.task.stage : '';
                         version.creator = version.version_creator || version.original_creator;
@@ -134,20 +137,23 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
         }
 
         return api.find('archive', item._id, {version: 'all', embedded: {user: 1}, max_results: 200})
-            .then(function(result) {
-                _.each(result._items, function(version) {
+            .then((result) => {
+                _.each(result._items, (version) => {
                     if (version.task) {
                         if (version.task.desk) {
                             var versiondesk = desks.deskLookup[version.task.desk];
+
                             version.desk = versiondesk && versiondesk.name;
                         }
                         if (version.task.stage) {
                             var versionstage = desks.stageLookup[version.task.stage];
+
                             version.stage = versionstage && versionstage.name;
                         }
                     }
                     if (version.version_creator || version.original_creator) {
                         var versioncreator = desks.userLookup[version.version_creator || version.original_creator];
+
                         version.creator = versioncreator && versioncreator.display_name;
                     }
 
@@ -178,8 +184,6 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
             return _.find(versions, {_current_version: item._latest_version});
         }
 
-        return _.max(versions, function(version) {
-            return version._current_version || version.version;
-        });
+        return _.max(versions, (version) => version._current_version || version.version);
     };
 }

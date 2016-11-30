@@ -5,9 +5,7 @@ export default function SearchProviderService(providerTypes, $filter, api, allow
         },
         getSearchProviders: function() {
             return api.search_providers.query({}).then(
-                function(result) {
-                    return $filter('sortByName')(result._items, 'search_provider');
-                }
+                (result) => $filter('sortByName')(result._items, 'search_provider')
             );
         }
     };

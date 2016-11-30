@@ -7,7 +7,7 @@ export default function SearchProviderConfigDirective(searchProviderService, get
             $scope.providers = null;
             $scope.newDestination = null;
 
-            searchProviderService.getAllowedProviderTypes().then(function(providerTypes) {
+            searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                 $scope.providerTypes = providerTypes;
                 $scope.noProvidersAllowed = !Object.keys($scope.providerTypes).length;
             });
@@ -17,7 +17,7 @@ export default function SearchProviderConfigDirective(searchProviderService, get
              */
             function fetchSearchProviders() {
                 searchProviderService.getSearchProviders().then(
-                    function(result) {
+                    (result) => {
                         $scope.providers = result;
                     }
                 );
@@ -29,11 +29,11 @@ export default function SearchProviderConfigDirective(searchProviderService, get
             $scope.save = function() {
                 api.search_providers.save($scope.origProvider, $scope.provider)
                     .then(
-                        function() {
+                        () => {
                             notify.success(gettext('Search Provider saved.'));
                             $scope.cancel();
                         },
-                        function(response) {
+                        (response) => {
                             if (angular.isDefined(response.data._issues)) {
                                 if (angular.isDefined(response.data._issues['validator exception'])) {
                                     notify.error(gettext('Error: ' + response.data._issues['validator exception']));
@@ -46,7 +46,8 @@ export default function SearchProviderConfigDirective(searchProviderService, get
                                 notify.error(gettext('Error: Failed to save Search Provider.'));
                             }
                         }
-                    ).then(fetchSearchProviders);
+                    )
+                    .then(fetchSearchProviders);
             };
 
             /**
@@ -67,17 +68,18 @@ export default function SearchProviderConfigDirective(searchProviderService, get
                     function removeSearchProvider() {
                         api.search_providers.remove(provider)
                             .then(
-                                function() {
+                                () => {
                                     notify.success(gettext('Search Provider deleted.'));
                                 },
-                                function(response) {
+                                (response) => {
                                     if (angular.isDefined(response.data._message)) {
                                         notify.error(response.data._message);
                                     } else {
                                         notify.error(gettext('Error: Unable to delete Search Provider.'));
                                     }
                                 }
-                            ).then(fetchSearchProviders);
+                            )
+                            .then(fetchSearchProviders);
                     }
                 );
             };

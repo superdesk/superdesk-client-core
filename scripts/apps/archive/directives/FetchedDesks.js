@@ -7,10 +7,10 @@ export function FetchedDesks(desks, familyService, $location, superdesk) {
         },
         templateUrl: 'scripts/apps/archive/views/fetched-desks.html',
         link: function(scope, elem) {
-            scope.$watchGroup(['item', 'item.archived'], function() {
+            scope.$watchGroup(['item', 'item.archived'], () => {
                 if (scope.item) {
                     familyService.fetchDesks(scope.item, false)
-                        .then(function(fetchedDesks) {
+                        .then((fetchedDesks) => {
                             scope.desks = fetchedDesks;
                         });
                 }

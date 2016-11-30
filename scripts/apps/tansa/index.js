@@ -32,6 +32,7 @@ document.write(`
 
 /* globals tansa: true */
 var script = document.createElement('script');
+
 script.src = `${tansa.settings.baseUrl}tansaLoader.js?${new Date().getTime()}`;
 document.write(script.outerHTML);
 

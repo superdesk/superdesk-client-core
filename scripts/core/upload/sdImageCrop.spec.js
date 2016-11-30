@@ -1,21 +1,19 @@
-'use strict';
 
-describe('Image Crop', function() {
+
+describe('Image Crop', () => {
     beforeEach(window.module('superdesk.core.upload'));
     beforeEach(window.module('superdesk.core.services.imageFactory'));
 
-    describe('sdImageCrop directive', function() {
+    describe('sdImageCrop directive', () => {
         var scope, isoScope, fakeImg, $elm;
         var url = 'http://master.dev.superdesk.org/api/upload/55dbf92936b0650033518780/raw?_schema=http';
         var newUrl = 'http://master.dev.superdesk.org/api/upload/55ca5972b8e27e006385b6e3/raw?_schema=http';
 
-        beforeEach(inject(function($rootScope, imageFactory, $compile) {
+        beforeEach(inject(($rootScope, imageFactory, $compile) => {
             scope = $rootScope.$new();
 
             fakeImg = {};
-            spyOn(imageFactory, 'makeInstance').and.callFake(function() {
-                return fakeImg;
-            });
+            spyOn(imageFactory, 'makeInstance').and.callFake(() => fakeImg);
 
             scope.boxWidth = 640;
             scope.boxHeight = 480;
@@ -29,12 +27,12 @@ describe('Image Crop', function() {
                 ' data-box-height="boxHeight" crop-data="cropData" data-on-change="onChange()"></div>')(scope);
         }));
 
-        it('invokes watch', inject(function() {
+        it('invokes watch', inject(() => {
             scope.$digest();
             expect(fakeImg.src).toEqual(url);
         }));
 
-        it('observes changes', inject(function() {
+        it('observes changes', inject(() => {
             scope.$digest();
 
             isoScope = $elm.isolateScope();
@@ -44,7 +42,7 @@ describe('Image Crop', function() {
             expect(fakeImg.src).toEqual(newUrl);
         }));
 
-        it('defines image onload handler', inject(function() {
+        it('defines image onload handler', inject(() => {
             scope.$digest();
 
             isoScope = $elm.isolateScope();
@@ -54,13 +52,14 @@ describe('Image Crop', function() {
             expect(typeof fakeImg.onload).toEqual('function');
         }));
 
-        describe('onload handler', function() {
+        describe('onload handler', () => {
             var mySpy;
-            beforeEach(inject(function() {
+
+            beforeEach(inject(() => {
                 mySpy = spyOn($.fn, 'Jcrop');
             }));
 
-            it('executes with validation passed for default aspect-ratio(4:3)', inject(function() {
+            it('executes with validation passed for default aspect-ratio(4:3)', inject(() => {
                 scope.$digest();
 
                 isoScope = $elm.isolateScope();
@@ -70,17 +69,19 @@ describe('Image Crop', function() {
                 expect(typeof fakeImg.onload).toEqual('function');
 
                 var handler = fakeImg.onload;
+
                 handler.apply(fakeImg);
                 expect(mySpy.calls.count()).toEqual(1);
 
                 var retObj = mySpy.calls.argsFor(0);
+
                 expect(retObj[0].aspectRatio).toBe(4 / 3);
                 expect(retObj[0].minSize).toEqual([800, 600]);
                 expect(retObj[0].trueSize).toEqual([900, 600]);
                 expect(retObj[0].setSelect).toEqual([50, 0, 850, 600]);
             }));
 
-            it('executes with validation failed', inject(function($compile) {
+            it('executes with validation failed', inject(($compile) => {
                 scope.original.width = 500;
                 scope.$digest();
 
@@ -91,6 +92,7 @@ describe('Image Crop', function() {
                 expect(typeof fakeImg.onload).toEqual('function');
 
                 var handler = fakeImg.onload;
+
                 handler.apply(fakeImg);
                 expect(mySpy.calls.count()).toEqual(0);
                 expect($elm.text())
@@ -98,11 +100,12 @@ describe('Image Crop', function() {
                           ', (it is 500x600).');
             }));
 
-            it('calls onChange callback on change only', inject(function($timeout) {
+            it('calls onChange callback on change only', inject(($timeout) => {
                 scope.onChange = jasmine.createSpy('onchange');
                 scope.$digest();
 
                 var handler = fakeImg.onload;
+
                 handler.apply(fakeImg);
 
                 var coords = {x: 0, x2: 100, y: 0, y2: 100};

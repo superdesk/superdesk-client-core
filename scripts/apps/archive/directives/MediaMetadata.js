@@ -13,7 +13,7 @@ export function MediaMetadata(userList, archiveService, metadata) {
                 var qcodes = [];
                 var cvs = [];
 
-                metadata.fetchMetadataValues().then(function() {
+                metadata.fetchMetadataValues().then(() => {
                     metadata.filterCvs(qcodes, cvs);
                     scope.cvs = _.sortBy(cvs, 'priority');
                     scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
@@ -26,13 +26,13 @@ export function MediaMetadata(userList, archiveService, metadata) {
                 if (!archiveService.isLegal(scope.item)) {
                     if (scope.item.original_creator) {
                         userList.getUser(scope.item.original_creator)
-                            .then(function(user) {
+                            .then((user) => {
                                 scope.originalCreator = user.display_name;
                             });
                     }
                     if (scope.item.version_creator) {
                         userList.getUser(scope.item.version_creator)
-                            .then(function(user) {
+                            .then((user) => {
                                 scope.versionCreator = user.display_name;
                             });
                     }

@@ -78,7 +78,7 @@ export function extendItem(dest, src) {
  * @param {Object} orig
  */
 export function filterDefaultValues(diff, orig) {
-    Object.keys(CONTENT_FIELDS_DEFAULTS).forEach(function(key) {
+    Object.keys(CONTENT_FIELDS_DEFAULTS).forEach((key) => {
         if (diff.hasOwnProperty(key) && angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key])
             && !orig.hasOwnProperty(key)) {
             delete diff[key];
@@ -89,6 +89,7 @@ export function filterDefaultValues(diff, orig) {
 export function stripHtmlRaw(content) {
     if (content) {
         var elem = document.createElement('div');
+
         elem.innerHTML = content;
         return elem.textContent;
     }
@@ -97,7 +98,8 @@ export function stripHtmlRaw(content) {
 
 export function stripHtml(item) {
     var fields = ['headline'];
-    _.each(fields, function(key) {
+
+    _.each(fields, (key) => {
         if (angular.isDefined(item[key])) {
             item[key] = stripHtmlRaw(item[key]);
         }
@@ -112,7 +114,7 @@ export function stripHtml(item) {
  * @param {Object} src
  */
 export function forcedExtend(dest, src) {
-    _.each(CONTENT_FIELDS_DEFAULTS, function(value, key) {
+    _.each(CONTENT_FIELDS_DEFAULTS, (value, key) => {
         if (dest[key]) {
             if (src[key]) {
                 dest[key] = src[key];
@@ -134,7 +136,8 @@ export function cleanHtml(data) {
     .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
     .replace(/<br[^>]*>/gi, '&nbsp;')
     .replace(/<\/?[^>]+><\/?[^>]+>/gi, '')
-    .replace(/<\/?[^>]+>/gi, '').trim()
+    .replace(/<\/?[^>]+>/gi, '')
+    .trim()
     .replace(/&nbsp;/g, ' ')
     .replace(/\s\s+/g, ' ');
 }

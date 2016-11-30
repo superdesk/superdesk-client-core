@@ -23,7 +23,7 @@ export function GroupsConfigController($scope, gettext, notify, api, groups, Wiz
     $scope.remove = function(group) {
         modal.confirm(gettext('Are you sure you want to delete group?')).then(
             function removeGroup() {
-                api.groups.remove(group).then(function() {
+                api.groups.remove(group).then(() => {
                     _.remove($scope.groups._items, group);
                     notify.success(gettext('Group deleted.'), 3000);
                 });

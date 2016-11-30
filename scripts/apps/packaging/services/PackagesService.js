@@ -8,9 +8,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.packageGroupItems = {};
 
     this.fetch = function fetch(_id) {
-        return api.find('archive', _id).then(function(result) {
-            return result;
-        });
+        return api.find('archive', _id).then((result) => result);
     };
 
     this.open = function open(_id, readOnly) {
@@ -35,6 +33,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         },
             getGroupFor(null, idRef)
         ];
+
         newPackage = setDefaults(newPackage, defaults);
         newPackage.groups = groups;
         if (!newPackage.task || !newPackage.task.desk) {
@@ -60,6 +59,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
                 getGroupFor(null, idRef)
             ]
         };
+
         newPackage = setDefaults(newPackage, defaults);
 
         if (!newPackage.task || !newPackage.task.desk) {
@@ -72,12 +72,11 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.addItemsToPackage = function(current, groupId, items) {
         var origGroups = _.cloneDeep(current.groups);
 
-        var targetGroup = _.find(origGroups, function(group) {
-            return group.id.toLowerCase() === groupId;
-        });
+        var targetGroup = _.find(origGroups, (group) => group.id.toLowerCase() === groupId);
 
         if (!targetGroup) {
             var rootGroup = _.find(origGroups, {id: 'root'});
+
             rootGroup.refs.push({idRef: groupId});
             targetGroup = {
                 id: groupId,
@@ -86,28 +85,26 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             };
             origGroups.push(targetGroup);
         }
-        _.each(items, function(item) {
+        _.each(items, (item) => {
             targetGroup.refs.push(self.getReferenceFor(item));
         });
         _.extend(current, {groups: origGroups});
     };
 
     this.isAdded = function(pkg, item) {
-        var added = pkg.groups ? pkg.groups.some(function(group) {
-            return group.refs.some(function(ref) {
-                return ref.guid === item._id || ref.residRef === item._id;
-            });
-        }) : false;
+        var added = pkg.groups ?
+            pkg.groups.some((group) => group.refs.some((ref) => ref.guid === item._id || ref.residRef === item._id))
+            : false;
         var addedToPkg = this.isAddedToPackage(pkg, item);
+
         return added || addedToPkg;
     };
 
     this.fetchItem = function(packageItem) {
         var repo = packageItem.location || 'ingest';
+
         return api(repo).getById(packageItem.residRef)
-            .then(function(item) {
-                return item;
-            }, function(response) {
+            .then((item) => item, (response) => {
                 if (response.status === 404) {
                     console.error('Item not found.');
                 }
@@ -129,6 +126,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.addPackageGroupItem = function(group, item, broadcast) {
         var pkg = authoringWorkspace.getItem();
         var pkgId = pkg._id;
+
         if (typeof this.packageGroupItems[pkgId] === 'undefined') {
             this.packageGroupItems[pkgId] = [];
         }
@@ -142,6 +140,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
 
     this.removePackageGroupItem = function(group, item) {
         var pkg = authoringWorkspace.getItem();
+
         _.remove(this.packageGroupItems[pkg._id], item._id);
     };
 
@@ -151,6 +150,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
 
     function getGroupFor(item, idRef) {
         var refs = [];
+
         if (item) {
             refs.push({
                 headline: item.headline || '',
@@ -169,6 +169,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
 
     function setDefaults(item, defaults) {
         let obj = defaults;
+
         if (angular.isUndefined(defaults) || !_.isObject(defaults)) {
             obj = {};
         }

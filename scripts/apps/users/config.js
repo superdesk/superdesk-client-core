@@ -97,7 +97,7 @@ export function Activities(superdesk, asset) {
                     type: 'user'
                 }
             ],
-            condition: data => data.is_enabled,
+            condition: (data) => data.is_enabled,
             privileges: {users: 1}
         })
 
@@ -111,7 +111,7 @@ export function Activities(superdesk, asset) {
                     type: 'user'
                 }
             ],
-            condition: data => !data.is_enabled,
+            condition: (data) => !data.is_enabled,
             privileges: {users: 1}
         })
 

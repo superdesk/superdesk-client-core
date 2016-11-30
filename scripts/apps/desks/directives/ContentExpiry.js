@@ -8,6 +8,7 @@ export function ContentExpiry() {
         },
         link: function(scope, elem, attrs) {
             var expiryfield = attrs.expiryfield;
+
             scope.ContentExpiry = {
                 Expire: true,
                 Days: 0,
@@ -16,11 +17,11 @@ export function ContentExpiry() {
                 Header: 'Content Expiry'
             };
 
-            scope.$watch('item', function() {
+            scope.$watch('item', () => {
                 setContentExpiry(scope.item);
             });
 
-            scope.$watch('ContentExpiry', function() {
+            scope.$watch('ContentExpiry', () => {
                 if (!scope.item) {
                     scope.item = {};
                 }

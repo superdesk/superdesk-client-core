@@ -19,7 +19,7 @@ export function UserListService(api, $q, $cacheFactory) {
         function _getAll(page = DEFAULT_PAGE, items = []) {
             api('users')
                 .query({max_results: 200, page: page})
-                .then(function(result) {
+                .then((result) => {
                     let pg = page;
                     let merged = items.concat(result._items);
 
@@ -36,9 +36,7 @@ export function UserListService(api, $q, $cacheFactory) {
         }
 
         p = _getAll();
-        return p.then(function(res) {
-            return res;
-        });
+        return p.then((res) => res);
     };
 
     /**
@@ -51,9 +49,11 @@ export function UserListService(api, $q, $cacheFactory) {
      */
     userservice.get = function(search, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE) {
         var key = search || DEFAULT_CACHE_KEY;
+
         key = buildKey(key, page, perPage);
 
         var value = cache.get(key);
+
         if (value) {
             return $q.when(value);
         }
@@ -73,7 +73,7 @@ export function UserListService(api, $q, $cacheFactory) {
         }
 
         return api('users').query(criteria)
-            .then(function(result) {
+            .then((result) => {
                 cache.put(key, result);
                 return result;
             });

@@ -6,14 +6,15 @@ export function ItemLock(api, lock, privileges, desks) {
         link: function(scope) {
             init();
 
-            scope.$watch('item.lock_session', function() {
+            scope.$watch('item.lock_session', () => {
                 init();
 
                 if (scope.item && lock.isLocked(scope.item)) {
-                    api('users').getById(scope.item.lock_user).then(function(user) {
-                        scope.lock.user = user;
-                        scope.lock.lockbyme = lock.isLockedByMe(scope.item);
-                    });
+                    api('users').getById(scope.item.lock_user)
+                        .then((user) => {
+                            scope.lock.user = user;
+                            scope.lock.lockbyme = lock.isLockedByMe(scope.item);
+                        });
                 }
             });
 
@@ -24,7 +25,7 @@ export function ItemLock(api, lock, privileges, desks) {
 
             scope.unlock = function() {
                 lock.previewUnlock = true;
-                lock.unlock(scope.item).then(function() {
+                lock.unlock(scope.item).then(() => {
                     scope.item.lock_user = null;
                     scope.item.lock_session = null;
                     scope.lock = null;
@@ -44,7 +45,7 @@ export function ItemLock(api, lock, privileges, desks) {
                 return false;
             };
 
-            scope.$on('item:lock', function(_e, data) {
+            scope.$on('item:lock', (_e, data) => {
                 if (scope.item && scope.item._id === data.item) {
                     scope.item.lock_user = data.user;
                     scope.item.lock_time = data.lock_time;
@@ -53,7 +54,7 @@ export function ItemLock(api, lock, privileges, desks) {
                 }
             });
 
-            scope.$on('item:unlock', function(_e, data) {
+            scope.$on('item:unlock', (_e, data) => {
                 if (scope.item && scope.item._id === data.item) {
                     scope.item.lock_user = null;
                     scope.item.lock_session = null;

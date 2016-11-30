@@ -21,7 +21,7 @@ export default angular.module('superdesk.core.directives.draggable', [])
                         dragDropService.item = scope.item;
                     }
                 });
-                scope.$watch('cursor', function(val) {
+                scope.$watch('cursor', (val) => {
                     if (val) {
                         element.draggable('option', 'cursorAt', {
                             left: 5,

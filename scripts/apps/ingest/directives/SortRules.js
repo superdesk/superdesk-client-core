@@ -10,6 +10,7 @@ export function SortRules() {
                 },
                 stop: function(event, ui) {
                     var start = ui.item.data('start'), end = ui.item.index();
+
                     scope.reorder(start, end);
                     scope.$apply();
                 }

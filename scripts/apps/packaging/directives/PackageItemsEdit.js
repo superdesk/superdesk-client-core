@@ -5,8 +5,9 @@ export function PackageItemsEdit(packages, notify) {
         require: 'ngModel',
         templateUrl: 'scripts/apps/packaging/views/sd-package-items-edit.html',
         link: function(scope, elem, attrs, ngModel) {
-            scope.$on('package:addItems', function(event, data) {
+            scope.$on('package:addItems', (event, data) => {
                 var groupIndex = _.findIndex(scope.list, {id: data.group});
+
                 if (groupIndex === -1) {
                     scope.list.push({id: data.group, items: []});
                     groupIndex = scope.list.length - 1;
@@ -20,7 +21,7 @@ export function PackageItemsEdit(packages, notify) {
                 }
                 autosave();
             });
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 packages.packageGroupItems = {};
             });
 
@@ -28,18 +29,17 @@ export function PackageItemsEdit(packages, notify) {
                 scope.list = ngModel.$viewValue || [];
             };
 
-            ngModel.$parsers.unshift(function(viewValue) {
+            ngModel.$parsers.unshift((viewValue) => {
                 var groups = null;
+
                 if (viewValue && viewValue.list) {
                     groups = [];
                     groups.push({
                         role: 'grpRole:NEP',
-                        refs: _.map(viewValue.list, function(r) {
-                            return {idRef: r.id};
-                        }),
+                        refs: _.map(viewValue.list, (r) => ({idRef: r.id})),
                         id: 'root'
                     });
-                    _.each(viewValue.list, function(l) {
+                    _.each(viewValue.list, (l) => {
                         groups.push({
                             id: l.id,
                             role: 'grpRole:' + l.id,
@@ -50,27 +50,27 @@ export function PackageItemsEdit(packages, notify) {
                 return groups;
             });
 
-            ngModel.$formatters.unshift(function(modelValue) {
+            ngModel.$formatters.unshift((modelValue) => {
                 var root = _.find(modelValue, {id: 'root'});
+
                 if (typeof root === 'undefined') {
                     return;
                 }
 
-                var firstLevelGroups = _.map(root.refs, function(group) {
-                    return {
-                        id: group.idRef,
-                        items: []
-                    };
-                });
+                var firstLevelGroups = _.map(root.refs, (group) => ({
+                    id: group.idRef,
+                    items: []
+                }));
 
-                _.each(firstLevelGroups, function(group) {
+                _.each(firstLevelGroups, (group) => {
                     group.items = visit(group.id);
                 });
 
                 function visit(groupId) {
                     var _group = _.find(modelValue, {id: groupId});
                     var items = [];
-                    _.each(_group.refs, function(ref) {
+
+                    _.each(_group.refs, (ref) => {
                         if (_isNode(ref)) {
                             items = _.union(items, visit(ref.idRef));
                         } else {
@@ -90,6 +90,7 @@ export function PackageItemsEdit(packages, notify) {
             scope.remove = function(groupId, residRef) {
                 var group = _.find(scope.list, {id: groupId});
                 var item = _.find(group.items, {residRef: residRef});
+
                 _.remove(group.items, {residRef: residRef});
                 packages.removePackageGroupItem(group, item);
                 autosave();
@@ -98,8 +99,10 @@ export function PackageItemsEdit(packages, notify) {
             scope.reorder = function(start, end) {
                 var src = _.find(scope.list, {id: start.group});
                 var dest = _.find(scope.list, {id: end.group});
+
                 if (start.index !== end.index || start.group !== end.group) {
                     var item = src.items.splice(start.index, 1)[0];
+
                     dest.items.splice(end.index, 0, item);
                     packages.addPackageGroupItem(dest, item, false);
                 } else {
@@ -115,11 +118,7 @@ export function PackageItemsEdit(packages, notify) {
             }
 
             function isAdded(item) {
-                return scope.list.some(function(group) {
-                    return group.items.some(function(i) {
-                        return i.residRef === item._id;
-                    });
-                });
+                return scope.list.some((group) => group.items.some((i) => i.residRef === item._id));
             }
         }
     };

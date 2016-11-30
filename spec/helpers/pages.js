@@ -1,4 +1,5 @@
-'use strict';
+/* eslint-disable newline-per-chained-call */
+
 
 exports.login = LoginModal;
 exports.logout = logout;
@@ -21,20 +22,18 @@ function LoginModal() {
         var self = this;
         let usr = username || browser.params.username;
         let pwd = password || browser.params.password;
-        return self.username.waitReady().then(function() {
-            return self.username.clear();
-        }).then(function() {
-            return self.username.sendKeys(usr);
-        }).then(function() {
-            return self.password.sendKeys(pwd);
-        }).then(function() {
-            return self.btn.click();
-        });
+
+        return self.username.waitReady()
+            .then(() => self.username.clear())
+            .then(() => self.username.sendKeys(usr))
+            .then(() => self.password.sendKeys(pwd))
+            .then(() => self.btn.click());
     };
 }
 
 function SearchProvider() {
     var self = this;
+
     this.checkbox = element(by.model('provider.is_default'));
     this.addSourceButton = element(by.css('[ng-click="edit()"]'));
 
@@ -48,6 +47,7 @@ function SearchProvider() {
 
     this.editProvider = function(index) {
         var providerElement = element.all(by.repeater('provider in providers')).get(index);
+
         browser.actions().mouseMove(providerElement).perform();
         providerElement.element(by.css('[ng-click="edit(provider)"]')).click();
     };
@@ -74,7 +74,7 @@ function SearchProvider() {
     };
 
     this.setIsDefault = function(isDefault) {
-        self.checkbox.isSelected().then(function(selected) {
+        self.checkbox.isSelected().then((selected) => {
             if (selected && !isDefault || !selected && isDefault) {
                 self.checkbox.click();
             }
@@ -84,6 +84,7 @@ function SearchProvider() {
 
 function IngestDashboard() {
     var self = this;
+
     this.dropDown = element(by.id('ingest-dashboard-dropdown'));
     this.ingestDashboard = element(by.css('.ingest-dashboard-list'));
 
@@ -101,6 +102,7 @@ function IngestDashboard() {
 
     this.getProviderButton = function(provider) {
         var toggleButton = provider.element(by.model('item.dashboard_enabled'));
+
         return toggleButton;
     };
 
@@ -158,11 +160,13 @@ function IngestSettings() {
     this.newRoutingRuleBtn = element(by.partialButtonText('New Rule'));
 
     var newSchemeInput = element(by.model('editScheme.name'));
+
     this.writeTextToSchemeName = function(text) {
         newSchemeInput.sendKeys(text);
     };
 
     var newRuleInput = element(by.model('rule.name'));
+
     this.writeTextToRuleName = function(text) {
         newRuleInput.sendKeys(text);
     };
@@ -209,11 +213,10 @@ function IngestSettings() {
 
 function logout() {
     var signOutBtn = element(by.buttonText('SIGN OUT'));
+
     element(by.css('button.current-user')).click();
 
-    browser.wait(function() {
-        return signOutBtn.isDisplayed();
-    }, 200);
+    browser.wait(() => signOutBtn.isDisplayed(), 200);
 
     signOutBtn.click();
     browser.sleep(500);

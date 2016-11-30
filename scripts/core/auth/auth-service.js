@@ -13,12 +13,10 @@ angular.module('superdesk.core.auth.auth', []).service('auth', ['$q', 'api', 'se
             }
 
             return authAdapter.authenticate(username, password)
-            .then(function(sessionData) {
-                return fetchIdentity(sessionData)
-                    .then(function(userData) {
+            .then((sessionData) => fetchIdentity(sessionData)
+                    .then((userData) => {
                         session.start(sessionData, userData);
                         return session.identity;
-                    });
-            });
+                    }));
         };
     }]);

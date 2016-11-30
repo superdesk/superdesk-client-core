@@ -13,6 +13,7 @@ angular.module('superdesk.core.elastic').service('es', [function() {
      */
     function paginate(query, params) {
         var page = params.page || 1;
+
         query.size = params.size || SIZE_DEFAULT;
         query.from = (page - 1) * query.size;
         return query;

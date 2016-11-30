@@ -18,7 +18,7 @@ export function FilterTemplatesFilter() {
      * @returns {Array<Object>} The filtered array.
      */
     return function(all, f) {
-        return (all || []).filter(function(item) {
+        return (all || []).filter((item) => {
             switch (f.value) {
             case 'All':
                 return all;
@@ -27,9 +27,7 @@ export function FilterTemplatesFilter() {
             case 'Personal':
                 return !item.is_public;
             default:
-                return _.find(item.template_desks, function(desk) {
-                    return desk === f.value;
-                });
+                return _.find(item.template_desks, (desk) => desk === f.value);
             }
         });
     };

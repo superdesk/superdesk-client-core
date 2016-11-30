@@ -26,12 +26,12 @@ export function AuthoringContainerDirective(authoring, authoringWorkspace) {
         scope: {},
         require: 'sdAuthoringContainer',
         link: function(scope, elem, attrs, ctrl) {
-            scope.$watch(authoringWorkspace.getState, function(state) {
+            scope.$watch(authoringWorkspace.getState, (state) => {
                 if (state) {
                     ctrl.edit(null, null);
                     // do this in next digest cycle so that it can
                     // destroy authoring/packaging-embedded in current cycle
-                    scope.$applyAsync(function() {
+                    scope.$applyAsync(() => {
                         ctrl.edit(state.item, state.action);
                     });
                 }

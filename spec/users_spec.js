@@ -1,3 +1,4 @@
+/* eslint-disable newline-per-chained-call */
 
 var authoring = require('./helpers/authoring'),
     monitoring = require('./helpers/monitoring'),
@@ -6,10 +7,8 @@ var authoring = require('./helpers/authoring'),
     userPrefs = require('./helpers/user_prefs'),
     workspace = require('./helpers/workspace');
 
-describe('users', function() {
-    'use strict';
-
-    beforeEach(function(done) {
+describe('users', () => {
+    beforeEach((done) => {
         post({
             uri: '/users',
             json: {
@@ -22,11 +21,11 @@ describe('users', function() {
         }, done);
     });
 
-    describe('profile:', function() {
-        beforeEach(function(done) {
+    describe('profile:', () => {
+        beforeEach((done) => {
             openUrl('/#/profile').then(done);
         });
-        it('can render user profile', function() {
+        it('can render user profile', () => {
             expect(bindingValue('user.username')).toBe('admin');
             expect(modelValue('user.first_name')).toBe('first name');
             expect(modelValue('user.last_name')).toBe('last name');
@@ -34,36 +33,38 @@ describe('users', function() {
             expect(modelValue('user.sign_off')).toBe('fl');
         });
 
-        it('can save and use language preferences', function() {
+        it('can save and use language preferences', () => {
             userPrefs.setLang('Deutsch');
             browser.wait(() => userPrefs.btnSave.isDisplayed(), 3000);
             userPrefs.btnSave.click();
-            element(by.css('[ng-hide="currentRoute.topTemplateUrl"]')).getText().then(function(text) {
+            element(by.css('[ng-hide="currentRoute.topTemplateUrl"]')).getText().then((text) => {
                 expect(text).toEqual('Mein Profil');
             });
             browser.sleep(500);
             // go back to original lanuages
             userPrefs.setLang('English');
             var btnSave = $('.action-bar').element(by.buttonText('Speichern'));
+
             browser.wait(() => btnSave.isDisplayed(), 3000);
             browser.sleep(200); // animation
             btnSave.click();
         });
     });
 
-    describe('users list:', function() {
-        beforeEach(function() {
+    describe('users list:', () => {
+        beforeEach(() => {
             openUrl('/#/users');
         });
 
-        it('can list users', function() {
+        it('can list users', () => {
             expect(element.all(by.repeater('user in users')).count()).toBe(6);
             expect(element(by.repeater('user in users').row(0).column('username')).getText())
                 .toBe('test_user');
         });
 
-        it('list online users', function() {
+        it('list online users', () => {
             var online = element(by.id('user-filter')).all(by.tagName('option')).get(1);
+
             expect(online.getText()).toBe('Online');
             online.click();
             expect(element.all(by.repeater('user in users')).count()).toBe(3);
@@ -73,93 +74,84 @@ describe('users', function() {
                 .toBe('admin');
         });
 
-        it('can disable user', function() {
+        it('can disable user', () => {
             var user = element.all(by.repeater('users')).first(),
                 activity = user.element(by.className('icon-trash'));
 
             user.waitReady()
-                .then(function(elem) {
-                    return browser.actions().mouseMove(elem).perform();
-                })
-                .then(function() {
-                    activity.waitReady().then(function(elem) {
+                .then((elem) => browser.actions().mouseMove(elem).perform())
+                .then(() => {
+                    activity.waitReady().then((elem) => {
                         elem.click();
                     });
                 });
 
-            element(by.css('.modal-dialog')).waitReady().then(function(elem) {
-                browser.wait(function() {
-                    return elem.element(by.binding('bodyText'))
+            element(by.css('.modal-dialog')).waitReady().then((elem) => {
+                browser.wait(() => elem.element(by.binding('bodyText'))
                         .getText()
-                        .then(function(text) {
+                        .then((text) => {
                             if (text === 'Please confirm that you want to disable a user.') {
                                 return true;
                             }
-                        });
-                }, 5000);
+                        }), 5000);
                 return elem;
-            }).then(function(elem) {
-                browser.wait(function() {
+            }).then((elem) => {
+                browser.wait(() => {
                     try {
                         return elem.element(by.partialButtonText('OK'))
                             .click()
-                            .then(function() {
-                                return true;
-                            });
+                            .then(() => true);
                     } catch (err) {
                         console.error(err);
                     }
                 }, 5000);
-            }).then(function() {
-                browser.wait(function() {
+            }).then(() => {
+                browser.wait(() => {
                     var elem = element.all(by.repeater('users')).first().element(by.className('disabled-label'));
+
                     return elem.isDisplayed();
                 }, 5000);
             });
         });
     });
 
-    describe('user detail:', function() {
-        beforeEach(function(done) {
+    describe('user detail:', () => {
+        beforeEach((done) => {
             openUrl('/#/users').then(done);
         });
 
-        it('can open user detail', function() {
+        it('can open user detail', () => {
             element.all(by.repeater('users')).first().click();
             expect(modelValue('user.display_name'))
                 .toBe('first name last name');
             $('#open-user-profile').waitReady()
-                .then(function(elem) {
+                .then((elem) => {
                     elem.click();
                 });
             var pageNavTitle = $('.page-nav-title');
-            browser.wait(function() {
-                return pageNavTitle.getText().then(function(text) {
-                    if (text.indexOf('Users Profile') === 0) {
-                        return true;
-                    }
-                });
-            }, 2000);
+
+            browser.wait(() => pageNavTitle.getText().then((text) => {
+                if (text.indexOf('Users Profile') === 0) {
+                    return true;
+                }
+            }), 2000);
             expect(pageNavTitle.getText())
                 .toBe('Users Profile: first name last name');
         });
     });
 
-    describe('user edit:', function() {
-        beforeEach(function(done) {
-            openUrl('/#/users').then(function() {
-                return element(by.repeater('user in users').row(0).column('username'))
-                    .waitReady();
-            }).then(function(elem) {
-                return elem.click();
-            }).then(function() {
-                return $('#open-user-profile').waitReady();
-            }).then(function(elem) {
-                return elem.click();
-            }).then(done);
+    describe('user edit:', () => {
+        beforeEach((done) => {
+            openUrl('/#/users')
+                .then(() =>
+                    element(by.repeater('user in users').row(0)
+                        .column('username'))
+                        .waitReady())
+                .then((elem) => elem.click())
+                .then(() => $('#open-user-profile').waitReady()).then((elem) => elem.click()).then(done);
         });
 
-        it('can enable/disable buttons based on form status', function() {
+        it('can enable/disable buttons based on form status', () => {
             var buttonSave = element(by.id('save-edit-btn'));
             var buttonCancel = element(by.id('cancel-edit-btn'));
             var inputFirstName = element(by.model('user.first_name'));
@@ -187,16 +179,14 @@ describe('users', function() {
         });
     });
 
-    describe('editing user preferences:', function() {
-        beforeEach(function(done) {
-            userPrefs.navigateTo().then(function() {
-                return userPrefs.prefsTab.click();
-            }).then(done);
+    describe('editing user preferences:', () => {
+        beforeEach((done) => {
+            userPrefs.navigateTo().then(() => userPrefs.prefsTab.click()).then(done);
         });
 
         it('should filter categories in the Authoring metadata head menu ' +
            'based on the user\'s preferred categories settings',
-            function() {
+            () => {
                 userPrefs.btnCheckNone.click();  // uncheck all categories
 
                 // select the Entertainment and Finance categories
@@ -215,6 +205,7 @@ describe('users', function() {
                 authoring.setCategoryBtn.click();
 
                 var catListItems = authoring.getCategoryListItems;
+
                 expect(catListItems.count()).toBe(2);
                 expect(catListItems.get(0).getText()).toEqual('Entertainment');
                 expect(catListItems.get(1).getText()).toEqual('Finance');
@@ -223,7 +214,7 @@ describe('users', function() {
 
         it('should filter and navigate filtered list via keyboard action in the ' +
            'Authoring metadata based on the user\'s preferred categories settings',
-            function() {
+            () => {
                 userPrefs.btnCheckNone.click();  // uncheck all categories
 
                 // select the Entertainment and Finance categories
@@ -243,6 +234,7 @@ describe('users', function() {
                 browser.sleep(100); // wait a bit
 
                 var catListItems = authoring.getCategoryListItems;
+
                 expect(catListItems.count()).toBe(2);
                 expect(catListItems.get(0).getText()).toEqual('Entertainment');
                 expect(catListItems.get(1).getText()).toEqual('Finance');
@@ -256,16 +248,14 @@ describe('users', function() {
         //
     });
 
-    describe('editing user privileges:', function() {
-        beforeEach(function(done) {
-            userPrefs.navigateTo().then(function() {
-                return userPrefs.privlTab.click();
-            }).then(done);
+    describe('editing user privileges:', () => {
+        beforeEach((done) => {
+            userPrefs.navigateTo().then(() => userPrefs.privlTab.click()).then(done);
         });
 
         it('should reset the form to the last saved state when the Cancel ' +
             'button is clicked',
-            function() {
+            () => {
                 var checkboxes = userPrefs.privlCheckboxes;
 
                 // Initially all checboxes are unchecked. Now let's select
@@ -306,20 +296,21 @@ describe('users', function() {
         );
     });
 
-    describe('default desk field should not be visible', function() {
-        beforeEach(function(done) {
+    describe('default desk field should not be visible', () => {
+        beforeEach((done) => {
             openUrl('/#/users').then(done);
         });
 
-        it('while creating a new user', function() {
+        it('while creating a new user', () => {
             var buttonCreate = element(by.className('sd-create-btn'));
 
             buttonCreate.click();
             expect(browser.driver.isElementPresent(by.id('user_default_desk'))).toBe(false);
         });
 
-        it('while pre-viewing and user clicks on create new user', function() {
+        it('while pre-viewing and user clicks on create new user', () => {
             var buttonCreate = element(by.className('sd-create-btn'));
+
             element.all(by.repeater('users')).first().click();
 
             buttonCreate.click();

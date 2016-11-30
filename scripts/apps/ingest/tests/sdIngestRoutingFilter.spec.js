@@ -4,9 +4,7 @@
 *
 * @module sdIngestRoutingFilter directive tests
 */
-describe('sdIngestRoutingFilter directive', function() {
-    'use strict';
-
+describe('sdIngestRoutingFilter directive', () => {
     var scope,  // the directive's own isolate scope
         $compile,
         $rootScope;
@@ -14,7 +12,7 @@ describe('sdIngestRoutingFilter directive', function() {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.ingest'));
 
-    beforeEach(inject(function(_$compile_, _$rootScope_) {
+    beforeEach(inject((_$compile_, _$rootScope_) => {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
     }));
@@ -48,7 +46,7 @@ describe('sdIngestRoutingFilter directive', function() {
         return $element;
     }
 
-    beforeEach(inject(function() {
+    beforeEach(inject(() => {
         var parentScopeValues = {rule: {filter: 'foobar'}},
             $element;
 
@@ -56,16 +54,16 @@ describe('sdIngestRoutingFilter directive', function() {
         scope = $element.isolateScope();
     }));
 
-    describe('on scope initialization', function() {
-        it('makes the list of matching filters empty', function() {
+    describe('on scope initialization', () => {
+        it('makes the list of matching filters empty', () => {
             expect(scope.matchingFilters).toEqual([]);
         });
 
-        it('clears the current content filter search term', function() {
+        it('clears the current content filter search term', () => {
             expect(scope.filterSearchTerm).toBe(null);
         });
 
-        it('sets the selected content filter if it exists', function() {
+        it('sets the selected content filter if it exists', () => {
             var parentScopeValues,
                 $element;
 
@@ -81,7 +79,7 @@ describe('sdIngestRoutingFilter directive', function() {
         });
 
         it('sets the selected content to null if it does not exist',
-            function() {
+            () => {
                 var parentScopeValues,
                     $element;
 
@@ -98,10 +96,10 @@ describe('sdIngestRoutingFilter directive', function() {
         );
     });
 
-    describe('searchFilters() scope method', function() {
+    describe('searchFilters() scope method', () => {
         it('changes the matching filters list to only contain those content ' +
             'filters that match the search term',
-            function() {
+            () => {
                 var expectedIds,
                     matchIds;
 
@@ -123,61 +121,61 @@ describe('sdIngestRoutingFilter directive', function() {
         );
     });
 
-    describe('selectFilter() scope method', function() {
+    describe('selectFilter() scope method', () => {
         var contentFilter;
 
-        beforeEach(function() {
+        beforeEach(() => {
             contentFilter = {_id: 'abcd123', name: 'My Filter'};
             scope.rule = {};
         });
 
         it('sets the selected filter in scope to the given filter',
-            function() {
+            () => {
                 scope.selectedFilter = null;
                 scope.selectFilter(contentFilter);
                 expect(scope.selectedFilter).toEqual(contentFilter);
             }
         );
 
-        it('sets the routing rule\'s filter to the given filter', function() {
+        it('sets the routing rule\'s filter to the given filter', () => {
             scope.rule.filter = null;
             scope.selectFilter(contentFilter);
             expect(scope.rule.filter).toEqual('abcd123');
         });
 
         it('sets the routing rule\'s filter name to the given filter',
-            function() {
+            () => {
                 scope.rule.filterName = null;
                 scope.selectFilter(contentFilter);
                 expect(scope.rule.filterName).toEqual('My Filter');
             }
         );
 
-        it('clears the filter search term', function() {
+        it('clears the filter search term', () => {
             scope.filterSearchTerm = 'foo';
             scope.selectFilter(contentFilter);
             expect(scope.filterSearchTerm).toBe(null);
         });
     });
 
-    describe('clearSelectedFilter() scope method', function() {
-        beforeEach(function() {
+    describe('clearSelectedFilter() scope method', () => {
+        beforeEach(() => {
             scope.rule = {};
         });
 
-        it('clears the selected filter in scope', function() {
+        it('clears the selected filter in scope', () => {
             scope.selectedFilter = {};
             scope.clearSelectedFilter();
             expect(scope.selectedFilter).toBe(null);
         });
 
-        it('clears the routing rule\'s filter', function() {
+        it('clears the routing rule\'s filter', () => {
             scope.rule.filter = 'f1lt3rId';
             scope.clearSelectedFilter();
             expect(scope.rule.filter).toBe(null);
         });
 
-        it('sets the routing rule\'s filter name', function() {
+        it('sets the routing rule\'s filter name', () => {
             scope.rule.filterName = 'Some Filter';
             scope.clearSelectedFilter();
             expect(scope.rule.filterName).toBe(null);

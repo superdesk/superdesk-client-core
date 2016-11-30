@@ -18,6 +18,7 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
         }
 
         var params = {};
+
         params.q = $scope.query;
         params.ignoreKilled = true;
         params.ignoreDigital = true;
@@ -33,31 +34,32 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
         }
 
         var criteria = query.getCriteria(true);
+
         criteria.repo = 'archive,published';
 
         api.query('search', criteria)
-        .then(function(result) {
+        .then((result) => {
             $scope.contentItems = result._items;
         });
     }
 
-    $scope.$watch('query', function(query) {
+    $scope.$watch('query', (query) => {
         fetchContentItems();
     });
 
-    $scope.$watch('highlight', function(highlight) {
+    $scope.$watch('highlight', (highlight) => {
         fetchContentItems();
     });
 
-    $scope.$watch('item', function(item) {
+    $scope.$watch('item', (item) => {
         $scope.highlight = item.highlight;
         if ($scope.highlight) {
             api('highlights').getById($scope.highlight)
-            .then(function(result) {
+            .then((result) => {
                 $scope.groupList = result.groups;
                 init = true;
                 fetchContentItems();
-            }, function(response) {
+            }, (response) => {
                 init = true;
                 fetchContentItems();
             });
@@ -67,7 +69,7 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
         }
     });
 
-    $scope.$watch('item.groups', function() {
+    $scope.$watch('item.groups', () => {
         getPackageItems();
     }, true);
 
@@ -87,10 +89,11 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
 
     function getPackageItems() {
         var items = [];
+
         if ($scope.item.groups) {
-            _.each($scope.item.groups, function(group) {
+            _.each($scope.item.groups, (group) => {
                 if (group.id !== 'root') {
-                    _.each(group.refs, function(item) {
+                    _.each(group.refs, (item) => {
                         items.push(item.residRef);
                     });
                 }
@@ -117,7 +120,7 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
         $scope.autosave($scope.item);
 
         // uncheck all
-        _.each($scope.multiSelected, function(item) {
+        _.each($scope.multiSelected, (item) => {
             item.multi = false;
             packages.addPackageGroupItem(group, item, false);
         });

@@ -10,7 +10,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
             scope.edit = null;
             scope.activateSearchPane = false;
 
-            scope.$on('edit:search', function(event, args) {
+            scope.$on('edit:search', (event, args) => {
                 scope.activateSearchPane = false;
                 scope.editingSearch = args;
                 scope.edit = _.create(scope.editingSearch) || {};
@@ -67,6 +67,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                 }
 
                 var search = getFilters(_.clone($location.search()));
+
                 editSearch.filter = {query: search};
                 var originalSearch = {};
 
@@ -74,7 +75,9 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
                     originalSearch = scope.editingSearch;
                 }
 
-                api('saved_searches').save(originalSearch, editSearch).then(onSuccess, onFail);
+                api('saved_searches')
+                    .save(originalSearch, editSearch)
+                    .then(onSuccess, onFail);
             };
 
             /**
@@ -84,7 +87,7 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
              * @return {Object} the updated search object
              */
             function getFilters(search) {
-                _.forOwn(search, function(value, key) {
+                _.forOwn(search, (value, key) => {
                     if (_.includes(['priority', 'urgency'], key)) {
                         search[key] = JSON.parse(value);
                     }

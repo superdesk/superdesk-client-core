@@ -1,5 +1,5 @@
+/* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 module.exports = new Authoring();
 
@@ -59,6 +59,7 @@ function Authoring() {
      */
     this.findItemTypeIcons = function(itemType) {
         var selector = '.filetype-icon-' + itemType;
+
         return this.infoIconsBox.all(by.css(selector));
     };
 
@@ -97,7 +98,7 @@ function Authoring() {
     };
 
     this.confirmSendTo = function() {
-        element.all(by.className('modal-content')).count().then(function(closeModal) {
+        element.all(by.className('modal-content')).count().then((closeModal) => {
             if (closeModal) {
                 element(by.className('modal-content')).all(by.css('[ng-click="ok()"]')).click();
             }
@@ -136,9 +137,9 @@ function Authoring() {
     };
 
     this.createTextItem = function() {
-        return element(by.css('[class="dropdown__toggle sd-create-btn dropdown-toggle"]')).click().then(function() {
-            return element(by.id('create_text_article')).click();
-        });
+        return element(by.css('[class="dropdown__toggle sd-create-btn dropdown-toggle"]'))
+            .click()
+            .then(() => element(by.id('create_text_article')).click());
     };
 
     this.close = function() {
@@ -147,12 +148,11 @@ function Authoring() {
 
     this.addEmbed = function(embedCode, context) {
         let ctx = context;
+
         if (!context) {
             ctx = element(by.tagName('body'));
         }
-        browser.wait(function() {
-            return ctx.element(this.add_content_button).isDisplayed();
-        }.bind(this), 1000);
+        browser.wait(() => ctx.element(this.add_content_button).isDisplayed(), 1000);
         ctx.element(this.add_content_button).click();
         ctx.element(by.css('[ng-click="vm.triggerAction(\'addEmbed\')"]')).click();
         ctx.element(by.css('.add-embed__input input')).sendKeys(embedCode || 'embed code');
@@ -167,13 +167,14 @@ function Authoring() {
 
     this.blockContains = function blockContains(position, expectedValue) {
         var block = this.getBlock(position);
-        block.element(by.css('.editor-type-html')).isPresent().then(function(isText) {
+
+        block.element(by.css('.editor-type-html')).isPresent().then((isText) => {
             if (isText) {
                 return block.element(by.css('.editor-type-html')).getText();
             }
 
             return block.element(by.css('.preview--embed')).getText();
-        }).then(function(value) {
+        }).then((value) => {
             expect(value).toBe(expectedValue);
         });
     };
@@ -191,23 +192,20 @@ function Authoring() {
     };
 
     this.publish = function(skipConfirm) {
-        browser.wait(function() {
-            return this.sendToButton.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
 
         this.publish_panel.click();
 
-        browser.wait(function() {
-            return this.publish_button.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.publish_button.isPresent(), 1000);
 
         this.publish_panel.click();
         this.publish_button.click();
 
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
-            modal.isPresent().then(function(click) {
+
+            modal.isPresent().then((click) => {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
                 }
@@ -216,16 +214,12 @@ function Authoring() {
     };
 
     this.sendAndpublish = function(desk, skipConfirm) {
-        browser.wait(function() {
-            return this.sendToButton.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
 
         this.publish_panel.click();
 
-        browser.wait(function() {
-            return this.publish_button.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.publish_button.isPresent(), 1000);
 
         this.publish_panel.click();
         this.selectDeskforSendTo(desk);
@@ -233,7 +227,8 @@ function Authoring() {
 
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
-            modal.isPresent().then(function(click) {
+
+            modal.isPresent().then((click) => {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
                 }
@@ -242,14 +237,10 @@ function Authoring() {
     };
 
     this.schedule = function(skipConfirm) {
-        browser.wait(function() {
-            return this.sendToButton.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
 
-        browser.wait(function() {
-            return this.publish_button.isPresent();
-        }.bind(this), 1000);
+        browser.wait(() => this.publish_button.isPresent(), 1000);
 
         var scheduleDate = '09/09/' + ((new Date()).getFullYear() + 1);
         var scheduleTime = '04:00';
@@ -262,7 +253,8 @@ function Authoring() {
 
         if (!skipConfirm) {
             var modal = element(by.className('modal-dialog'));
-            modal.isPresent().then(function(click) {
+
+            modal.isPresent().then((click) => {
                 if (click) {
                     modal.element(by.className('btn--primary')).click();
                 }
@@ -277,9 +269,7 @@ function Authoring() {
 
     this.save = function() {
         element(by.css('[ng-click="saveTopbar()"]')).click();
-        return browser.wait(function() {
-            return element(by.buttonText('Save')).getAttribute('disabled');
-        });
+        return browser.wait(() => element(by.buttonText('Save')).getAttribute('disabled'));
     };
 
     this.edit = function() {
@@ -321,6 +311,7 @@ function Authoring() {
 
     this.setKeywords = function(keyword) {
         var keywords = element(by.css('[data-field="keywords"]')).all(by.model('term'));
+
         keywords.sendKeys(keyword);
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
     };
@@ -377,19 +368,20 @@ function Authoring() {
 
     this.addToGroup = function(item, group) {
         var crtItem = this.getSearchItem(item);
+
         browser.actions().mouseMove(crtItem).perform();
         crtItem.element(by.css('[title="Add to package"]')).click();
         var groups = crtItem.all(by.repeater('t in groupList'));
+
         return groups.all(by.css('[option="' + group.toUpperCase() + '"]')).click();
     };
 
     this.addMultiToGroup = function(group) {
         return element.all(by.css('[class="icon-package-plus"]')).first()
             .waitReady()
-            .then(function(elem) {
-                return elem.click();
-            }).then(function() {
+            .then((elem) => elem.click()).then(() => {
                 var groups = element(by.repeater('t in groupList'));
+
                 return groups.all(by.css('[option="' + group.toUpperCase() + '"]'))
                     .click();
             });
@@ -406,6 +398,7 @@ function Authoring() {
 
     this.removeGroupItem = function(group, index) {
         var groupItem = this.getGroupItems(group).get(index);
+
         groupItem.all(by.css('[ng-click="remove(group.id, item.residRef)"]')).get(index).click();
     };
 
@@ -416,11 +409,12 @@ function Authoring() {
     this.moveToGroup = function(srcGroup, scrItem, dstGroup, dstItem) {
         var src = this.getGroupItem(srcGroup, scrItem).element(by.className('package-item'));
         var dst = this.getGroupItem(dstGroup, dstItem).element(by.className('package-item'));
+
         return browser.actions()
             .mouseMove(src, {x: 5, y: 5})
             .mouseDown()
             .perform()
-            .then(function() {
+            .then(() => {
                 browser.actions()
                     .mouseMove(dst, {x: 10, y: 1})
                     .mouseUp()
@@ -431,20 +425,20 @@ function Authoring() {
     this.selectSearchItem = function(item) {
         var crtItem = this.getSearchItem(item);
         var icon = crtItem.all(by.tagName('i')).first();
-        return icon.waitReady().then(function() {
+
+        return icon.waitReady().then(() => {
             browser.actions()
                 .mouseMove(icon)
                 .perform();
-        }).then(function() {
+        }).then(() => {
             crtItem.element(by.css('[ng-click="addToSelected(pitem)"]')).click();
         });
     };
 
     function openAuthoringDropdown() {
         var toggle = element(by.id('authoring-extra-dropdown')).element(by.className('icon-dots-vertical'));
-        browser.wait(function() {
-            return toggle.isDisplayed();
-        });
+
+        browser.wait(() => toggle.isDisplayed());
         toggle.click();
     }
 
@@ -474,7 +468,7 @@ function Authoring() {
     this.checkMarkedForHighlight = function(highlight, item) {
         expect(element(by.className('icon-star')).isDisplayed()).toBeTruthy();
         browser.actions().click(element(by.className('icon-star'))).perform();
-        element.all(by.css('.dropdown__menu.open li')).then(function(items) {
+        element.all(by.css('.dropdown__menu.open li')).then((items) => {
             expect(items[1].getText()).toContain(highlight);
         });
     };
@@ -513,9 +507,7 @@ function Authoring() {
     };
 
     this.writeTextToPackageSlugline = function(text) {
-        browser.wait(function() {
-            return packageSlugline.isDisplayed();
-        }, 100);
+        browser.wait(() => packageSlugline.isDisplayed(), 100);
         packageSlugline.sendKeys(text);
     };
 
@@ -605,6 +597,7 @@ function Authoring() {
 
     this.searchRelatedItems = function(searchText) {
         var elm = element(by.model('itemListOptions.keyword'));
+
         elm.clear();
         elm.sendKeys(searchText);
         browser.sleep(2000);
@@ -637,43 +630,51 @@ function Authoring() {
 
     this.getRelatedItemBySlugline = function(item) {
         var relItems = element.all(by.repeater('item in processedItems')).get(item);
+
         return relItems.element(by.binding('item.slugline')).getText();
     };
 
     this.actionOpenRelatedItem = function(item) {
         var relItem = element.all(by.repeater('item in processedItems')).get(item);
+
         relItem.element(by.className('icon-dots-vertical')).click();
         relItem.element(by.id('Open')).click();
     };
 
     this.actionRelatedItem = function(item, actionId) {
         var relItem = element.all(by.repeater('item in processedItems')).get(item);
+
         relItem.element(by.className('icon-dots-vertical')).click();
         relItem.element(by.css('[id="' + actionId + '"]')).click();
     };
 
     this.getHeaderSluglineText = function() {
         var headerDetails = element(by.className('authoring-header__detailed'));
+
         return headerDetails.all(by.model('item.slugline')).get(0).getAttribute('value');
     };
 
     this.setHeaderSluglineText = function(text) {
         var headerDetails = element(by.className('authoring-header__detailed'));
+
         return headerDetails.all(by.model('item.slugline')).sendKeys(text);
     };
 
     this.setHeaderEdNoteText = function(text) {
         var headerDetails = element(by.className('authoring-header__detailed'));
+
         return headerDetails.all(by.model('item.ednote')).sendKeys(text);
     };
 
     this.getHeaderEdNoteText = function(text) {
         var headerDetails = element(by.className('authoring-header__detailed'));
+
         return headerDetails.all(by.model('item.ednote')).get(0).getAttribute('value');
     };
 
     this.getDuplicatedItemState = function(item) {
         var duplicatedItem = element.all(by.repeater('relatedItem in relatedItems._items')).get(item);
+
         return duplicatedItem.element(by.className('state-label')).getText();
     };
 
@@ -683,9 +684,7 @@ function Authoring() {
 
     this.isPublishedState = function() {
         return this.getItemState().getText()
-            .then(function(state) {
-                return ['published', 'corrected', 'killed'].indexOf(state.toLowerCase()) !== -1;
-            });
+            .then((state) => ['published', 'corrected', 'killed'].indexOf(state.toLowerCase()) !== -1);
     };
 
     this.getSubjectMetadataDropdownOpened = function() {
@@ -706,12 +705,14 @@ function Authoring() {
 
     this.getANPATakeKeyValue = function() {
         var takeKey = element(by.className('authoring-header__detailed')).all(by.id('anpa_take_key'));
+
         return takeKey.get(0).getAttribute('value');
     };
 
     // set first filtered item as per inital term provided
     this.setlocation = function(term) {
         var location = element.all(by.css('[data-field="located"]')).all(by.model('term'));
+
         location.sendKeys(term);
         browser.actions().sendKeys(protractor.Key.DOWN).perform();
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
@@ -719,6 +720,7 @@ function Authoring() {
 
     this.getSelectedLocation = function(term) {
         var location = element.all(by.css('[data-field="located"]')).all(by.model('term'));
+
         return location.first().getAttribute('value');
     };
 
@@ -732,11 +734,13 @@ function Authoring() {
 
     this.getGenreDropdown = function() {
         var genre = element(by.className('authoring-header__detailed')).all(by.css('[data-field="genre"]'));
+
         return genre.all(by.className('dropdown__toggle'));
     };
 
     this.getPackageItems = function(group) {
         var _list = element(by.css('[data-title="' + group + '"]')).all(by.tagName('UL')).all(by.tagName('LI'));
+
         return _list;
     };
 }

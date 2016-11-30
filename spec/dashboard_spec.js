@@ -1,17 +1,16 @@
 
-'use strict';
 
 var dashboard = require('./helpers/dashboard'),
     workspace = require('./helpers/workspace'),
     authoring = require('./helpers/authoring'),
     monitoring = require('./helpers/monitoring');
 
-describe('dashboard', function() {
-    beforeEach(function() {
+describe('dashboard', () => {
+    beforeEach(() => {
         dashboard.openDashboard();
     });
 
-    it('add a widget to a desk', function() {
+    it('add a widget to a desk', () => {
         expect(dashboard.getWidgets().count()).toBe(0);
         dashboard.showDashboardSettings();
         dashboard.addWidget('monitoring');
@@ -23,7 +22,7 @@ describe('dashboard', function() {
         expect(dashboard.getWidgets().count()).toBe(1);
     });
 
-    it('add multiple monitoring widgets', function() {
+    it('add multiple monitoring widgets', () => {
         dashboard.showDashboardSettings();
         dashboard.addWidget('monitoring');
         dashboard.addWidget('monitoring');
@@ -51,7 +50,7 @@ describe('dashboard', function() {
         expect(dashboard.getTextItem(1, 3, 2)).toBe('item6');
     });
 
-    it('configure a label for the view', function() {
+    it('configure a label for the view', () => {
         dashboard.showDashboardSettings();
         dashboard.addWidget('monitoring');  // the monitoring widget
         dashboard.doneAction();
@@ -66,7 +65,7 @@ describe('dashboard', function() {
         expect(dashboard.getWidgetLabel(0)).toBe('test');
     });
 
-    it('search in monitoring widget', function() {
+    it('search in monitoring widget', () => {
         dashboard.showDashboardSettings();
         dashboard.addWidget('monitoring');  // the monitoring widget
         dashboard.doneAction();
@@ -77,7 +76,7 @@ describe('dashboard', function() {
         expect(dashboard.getTextItem(0, 2, 0)).toBe('item7');
     });
 
-    it('can display desk output in monitoring widget when an item gets published', function() {
+    it('can display desk output in monitoring widget when an item gets published', () => {
         monitoring.openMonitoring();
 
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
@@ -93,7 +92,7 @@ describe('dashboard', function() {
         expect(dashboard.getTextItem(0, 5, 1)).toBe('item6');
     });
 
-    it('can display \'not for publication\' state in monitoring widget for such item', function() {
+    it('can display \'not for publication\' state in monitoring widget for such item', () => {
         monitoring.openMonitoring();
 
         expect(monitoring.getTextItem(3, 2)).toBe('item6');

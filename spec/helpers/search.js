@@ -1,7 +1,8 @@
+/* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 var openUrl = require('./utils').open;
+
 module.exports = new GlobalSearch();
 
 function GlobalSearch() {
@@ -27,8 +28,9 @@ function GlobalSearch() {
      */
     this.setListView = function() {
         var list = element(by.css('i.icon-th-list'));
+
         return list.isDisplayed()
-            .then(function(isVisible) {
+            .then((isVisible) => {
                 if (isVisible) {
                     list.click();
                     browser.sleep(1000);
@@ -43,7 +45,8 @@ function GlobalSearch() {
      */
     this.setGridView = function() {
         var grid = element(by.css('[tooltip="switch to grid view"]'));
-        return grid.then(function(isVisible) {
+
+        return grid.then((isVisible) => {
             if (isVisible) {
                 grid.click();
                 browser.sleep(1000);
@@ -73,6 +76,7 @@ function GlobalSearch() {
 
     this.itemClick = function(index) {
         var itemElem = this.getItem(index);
+
         itemElem.click();
     };
 
@@ -95,6 +99,7 @@ function GlobalSearch() {
      */
     this.openItemMenu = function(index) {
         var itemElem = this.getItem(index);
+
         itemElem.click();
         browser.actions()
             .mouseMove(itemElem, {x: -50, y: -50}) // first move out
@@ -122,8 +127,9 @@ function GlobalSearch() {
      */
     this.actionOnItem = function(action, index) {
         var menu = this.openItemMenu(index);
+
         menu.element(by.partialLinkText(action)).waitReady()
-        .then(function(elem) {
+        .then((elem) => {
             elem.click();
         });
     };
@@ -208,6 +214,7 @@ function GlobalSearch() {
      */
     this.checkMarkedForHighlight = function(highlight, item) {
         var crtItem = this.getItem(item);
+
         expect(crtItem.element(by.className('icon-star')).isDisplayed()).toBeTruthy();
         expect(crtItem.element(by.className('icon-star')).getAttribute('tooltip-html-unsafe'))
             .toContain(highlight);
@@ -372,6 +379,7 @@ function GlobalSearch() {
      */
     this.excludeDeskFacet = function(index) {
         var deskFacet = this.getDeskElementByIndex(index);
+
         browser.actions()
             .mouseMove(deskFacet)
             .perform();

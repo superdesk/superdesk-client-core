@@ -38,17 +38,20 @@ export function SearchService($location, gettext, config, session) {
 
     function getSort() {
         var sort = ($location.search().sort || 'versioncreated:desc').split(':');
+
         return angular.extend(_.find(sortOptions, {field: sort[0]}), {dir: sort[1]});
     }
 
     function sort(field) {
         var option = _.find(sortOptions, {field: field});
+
         setSortSearch(option.field, option.defaultDir || 'desc');
     }
 
     function toggleSortDir() {
         var sort = getSort();
         var dir = sort.dir === 'asc' ? 'desc' : 'asc';
+
         setSortSearch(sort.field, dir);
     }
 
@@ -62,12 +65,13 @@ export function SearchService($location, gettext, config, session) {
      */
     function setParameters(filters, params) {
         // set the filters for parameters defined in the parameters panel.
-        _.each(PARAMETERS, function(value, key) {
+        _.each(PARAMETERS, (value, key) => {
             if (!params[key]) {
                 return;
             }
 
             var desk;
+
             switch (key) {
             case 'from_desk':
                 desk = params[key].split('-');
@@ -85,6 +89,7 @@ export function SearchService($location, gettext, config, session) {
                     filters.push({term: {'task.desk': desk[0]}});
                     if (!params.from_desk) {
                         var field = desk[1] === 'authoring' ? 'task.last_production_desk' : 'task.last_authoring_desk';
+
                         filters.push({exists: {field: field}});
                     }
                 }
@@ -100,13 +105,14 @@ export function SearchService($location, gettext, config, session) {
                 break;
             default:
                 var filter = {term: {}};
+
                 filter.term[key] = params[key];
                 filters.push(filter);
             }
         });
 
         // Set filters for Aggregates when facet is removed from the filter panel.
-        _.each(EXCLUDE_FACETS, function(value, key) {
+        _.each(EXCLUDE_FACETS, (value, key) => {
             if (!params[key]) {
                 return;
             }
@@ -147,11 +153,13 @@ export function SearchService($location, gettext, config, session) {
      */
     this.getSelectedCodes = function(currentTags, codeList, field) {
         var queryArray = currentTags.selectedParameters, filteredArray = [];
+
         if (!$location.search().q) {
             return filteredArray;
         }
         for (var i = 0, queryArrayLength = queryArray.length; i < queryArrayLength; i++) {
             var queryArrayElement = queryArray[i];
+
             if (queryArrayElement.indexOf(field + '.qcode') === -1 &&
                 queryArrayElement.indexOf(field + '.name') === -1) {
                 continue;
@@ -160,6 +168,7 @@ export function SearchService($location, gettext, config, session) {
                     queryArrayElement.lastIndexOf('(') + 1,
                     queryArrayElement.lastIndexOf(')')
             );
+
             for (var j = 0, codeListLength = codeList.length; j < codeListLength; j++) {
                 if (codeList[j].qcode === elementName || codeList[j].name === elementName) {
                     filteredArray.push(codeList[j]);
@@ -196,7 +205,7 @@ export function SearchService($location, gettext, config, session) {
      * @return {Object} the updated search object
      */
     this.setFilters = function(search) {
-        _.forOwn(search, function(value, key) {
+        _.forOwn(search, (value, key) => {
             if (_.includes(['priority', 'urgency'], key)) {
                 search[key] = JSON.stringify(value);
             }
@@ -214,6 +223,7 @@ export function SearchService($location, gettext, config, session) {
      */
     function formatDate(date, timeSuffix) {
         var local = moment(date, config.view.dateformat).format('YYYY-MM-DD') + timeSuffix;
+
         if (config.search && config.search.useDefaultTimezone) {
             // use the default timezone of the server.
             local += moment.tz(config.defaultTimezone).format('ZZ');
@@ -237,12 +247,12 @@ export function SearchService($location, gettext, config, session) {
             zeroHourSuffix = 'T00:00:00',
             midnightSuffix = 'T23:59:59';
 
-        angular.forEach(_params, function(value, key) {
+        angular.forEach(_params, (value, key) => {
             params[key] = value;
         });
 
         if (params.q) {
-            angular.forEach(this.cvs, function(cv) {
+            angular.forEach(this.cvs, (cv) => {
                 if (cv.field !== cv.id) {
                     params.q = params.q.replace(cv.id + '.qcode:(', cv.field + '.qcode:(');
                 }
@@ -281,12 +291,14 @@ export function SearchService($location, gettext, config, session) {
 
             if (params.after) {
                 var facetrange = {firstcreated: {}};
+
                 facetrange.firstcreated.gte = params.after;
                 query.post_filter({range: facetrange});
             }
 
             if (params.scheduled_after) {
                 var schedulerange = {utc_publish_schedule: {}};
+
                 schedulerange.utc_publish_schedule.gte = params.scheduled_after;
                 query.post_filter({range: schedulerange});
             }
@@ -295,6 +307,7 @@ export function SearchService($location, gettext, config, session) {
                 var type = {
                     type: JSON.parse(params.type)
                 };
+
                 query.post_filter({terms: type});
             }
 
@@ -346,6 +359,7 @@ export function SearchService($location, gettext, config, session) {
         this.getCriteria = function getCriteria(withSource) {
             var search = params;
             var sort = getSort();
+
             setParameters(filters, params);
             var criteria = {
                 query: {filtered: {filter: {and: filters}}},
@@ -358,15 +372,16 @@ export function SearchService($location, gettext, config, session) {
 
             // Construct the query string by combining the q parameter and the raw parameter, if both present
             var queryString = null;
+
             if (search.q && search.raw) {
                 queryString = [search.q, search.raw]
-                    .filter(q => q)
-                    .map(q => '(' + q.replace(/\//g, '\\/') + ')')
+                    .filter((q) => q)
+                    .map((q) => '(' + q.replace(/\//g, '\\/') + ')')
                     .join(' AND ');
             } else {
                 queryString = [search.q, search.raw]
-                    .filter(q => q)
-                    .map(q => q.replace(/\//g, '\\/'))
+                    .filter((q) => q)
+                    .map((q) => q.replace(/\//g, '\\/'))
                     .join('');
             }
 
@@ -501,7 +516,7 @@ export function SearchService($location, gettext, config, session) {
      * helper to compare if items in 'a' are different with 'b' on _id and _current_version, if type is published.
      */
     function compareWith(a, b) {
-        return _.filter(a._items, function(item) {
+        return _.filter(a._items, (item) => {
             if (item._type === 'published') {
                 return !_.find(b._items, {_id: item._id, _current_version: item._current_version});
             }
@@ -546,7 +561,7 @@ export function SearchService($location, gettext, config, session) {
      */
     this.mergeHighlightFields = function(item) {
         if (item.es_highlight) {
-            _.forEach(_.keys(item.es_highlight), function(key) {
+            _.forEach(_.keys(item.es_highlight), (key) => {
                 item[key] = item.es_highlight[key][0];
             });
         } else {
@@ -573,6 +588,7 @@ export function SearchService($location, gettext, config, session) {
             return newItems;
         } else if (append && scopeItems) {
             var nextItems = scopeItems._items.concat(newItems._items);
+
             return angular.extend({}, newItems, {_items: nextItems});
         }
 
@@ -585,14 +601,13 @@ export function SearchService($location, gettext, config, session) {
         // if fetched items are new or removed then update current scope.items
         // by adding or removing items found in diffToAdd or diffToMinus respectively.
         if (!_.isEmpty(diffToMinus)) {
-            _.remove(scopeItems._items, function(item) {
-                return _.includes(diffToMinus, item._id);
-            });
+            _.remove(scopeItems._items, (item) => _.includes(diffToMinus, item._id));
         }
 
         if (!_.isEmpty(diffToAdd)) {
             var index = 0;
-            _.map(newItems._items, function(item) {
+
+            _.map(newItems._items, (item) => {
                 if (_.includes(diffToAdd, item._id)) {
                     // insert item at its place from the fetched sorted items
                     scopeItems._items.splice(index, 0, item);
@@ -620,6 +635,7 @@ export function SearchService($location, gettext, config, session) {
      */
     this.getItemQuery = function(items) {
         var updatedItems = _.keys(items);
+
         return {filtered: {filter: {terms: {_id: updatedItems}}}};
     };
 
@@ -648,11 +664,13 @@ export function SearchService($location, gettext, config, session) {
      */
     this.getSingleItemCriteria = function(item, criteria) {
         let itemCriteria = criteria || this.query($location.search()).getCriteria(true);
+
         itemCriteria.source.from = 0;
         itemCriteria.source.size = 1;
         itemCriteria.es_highlight = this.getElasticHighlight();
 
         let itemId = {};
+
         if (item._type !== 'published') {
             itemId[item._id] = 1;
         } else {
@@ -671,7 +689,7 @@ export function SearchService($location, gettext, config, session) {
      * @return {Object}
      */
     this.updateItems = function(newItems, scopeItems) {
-        _.map(scopeItems._items, function(item) {
+        _.map(scopeItems._items, (item) => {
             if (item._type === 'published') {
                 return _.extend(item, _.find(newItems._items,
                     {_id: item._id, _current_version: item._current_version}));
@@ -679,6 +697,7 @@ export function SearchService($location, gettext, config, session) {
 
             // remove gone flag to prevent item remaining grey, if gone item moves back to this stage.
             let itm = item;
+
             if (angular.isDefined(item.gone)) {
                 itm = _.omit(item, 'gone');
             }
@@ -704,7 +723,8 @@ export function SearchService($location, gettext, config, session) {
         var uiFields = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
 
         let projectedFields = [];
-        uiFields.forEach(uiField => {
+
+        uiFields.forEach((uiField) => {
             if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {
                 projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);
             }

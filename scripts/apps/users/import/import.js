@@ -2,6 +2,7 @@ UserImportService.$inject = ['api', '$q'];
 function UserImportService(api, $q) {
     function reject(key, message) {
         var error = {};
+
         error[key] = 1;
         error.message = message;
         return $q.reject(error);

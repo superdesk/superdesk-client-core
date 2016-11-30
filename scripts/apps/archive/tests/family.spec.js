@@ -1,6 +1,6 @@
-'use strict';
 
-describe('familyService', function() {
+
+describe('familyService', () => {
     var items = [
         {unique_id: 1, _id: 'z', family_id: 'family1', task: {desk: 'desk1'}},
         {unique_id: 2, _id: 'x', family_id: 'family1', task: {desk: 'desk2'}},
@@ -17,60 +17,59 @@ describe('familyService', function() {
     beforeEach(window.module('superdesk.apps.archive.directives'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(window.module(function($provide) {
-        $provide.service('api', function($q) {
-            return function() {
-                return {
-                    find: function() {
-                        return $q.reject({});
-                    },
-                    query: function(params) {
-                        var familyId = params.source.query.filtered.filter.and[1].term.family_id;
-                        var members = _.filter(items, {family_id: familyId});
+    beforeEach(window.module(($provide) => {
+        $provide.service('api', ($q) => function() {
+            return {
+                find: function() {
+                    return $q.reject({});
+                },
+                query: function(params) {
+                    var familyId = params.source.query.filtered.filter.and[1].term.family_id;
+                    var members = _.filter(items, {family_id: familyId});
 
-                        if (params.source.query.filtered.filter.and[2]) {
-                            _.remove(members,
+                    if (params.source.query.filtered.filter.and[2]) {
+                        _.remove(members,
                                 {unique_id: params.source.query.filtered.filter.and[2].not.term.unique_id}
                             );
-                        }
-
-                        return $q.when({_items: members});
                     }
-                };
+
+                    return $q.when({_items: members});
+                }
             };
         });
-        $provide.service('desks', function() {
-            return {
-                deskLookup: deskList,
-                userDesks: userDesks
-            };
-        });
+        $provide.service('desks', () => ({
+            deskLookup: deskList,
+            userDesks: userDesks
+        }));
     }));
 
-    it('can fetch members of a family', inject(function($rootScope, familyService, api) {
+    it('can fetch members of a family', inject(($rootScope, familyService, api) => {
         var members = null;
+
         familyService.fetchItems('family1')
-        .then(function(result) {
+        .then((result) => {
             members = result;
         });
         $rootScope.$digest();
         expect(members._items.length).toBe(2);
     }));
 
-    it('can fetch members of a family with exclusion', inject(function($rootScope, familyService, api) {
+    it('can fetch members of a family with exclusion', inject(($rootScope, familyService, api) => {
         var members = null;
+
         familyService.fetchItems('family1', {unique_id: 1, _id: 'z'})
-        .then(function(result) {
+        .then((result) => {
             members = result;
         });
         $rootScope.$digest();
         expect(members._items.length).toBe(1);
     }));
 
-    it('can fetch desks of members of a family', inject(function($rootScope, familyService, api, desks) {
+    it('can fetch desks of members of a family', inject(($rootScope, familyService, api, desks) => {
         var memberDesks = null;
+
         familyService.fetchDesks({_id: 'z', family_id: 'family1'})
-        .then(function(result) {
+        .then((result) => {
             memberDesks = result;
         });
         $rootScope.$digest();
@@ -78,10 +77,11 @@ describe('familyService', function() {
     }));
 
     it('can determine weather a user is member of fetched desk',
-    inject(function($rootScope, familyService, api, desks) {
+    inject(($rootScope, familyService, api, desks) => {
         var memberDesks = null;
+
         familyService.fetchDesks({_id: 'z', family_id: 'family1', task: {desk: 'desk1'}})
-        .then(function(result) {
+        .then((result) => {
             memberDesks = result;
         });
         $rootScope.$digest();
@@ -90,10 +90,11 @@ describe('familyService', function() {
     }));
 
     it('can fetch desks of members of a family with exclusion',
-    inject(function($rootScope, familyService, api, desks) {
+    inject(($rootScope, familyService, api, desks) => {
         var memberDesks = null;
+
         familyService.fetchDesks({unique_id: 1, _id: 'z', family_id: 'family1'}, true)
-        .then(function(result) {
+        .then((result) => {
             memberDesks = result;
         });
         $rootScope.$digest();
@@ -101,7 +102,7 @@ describe('familyService', function() {
     }));
 
     it('can use item._id for ingest items instead of family id',
-    inject(function($rootScope, $q, familyService) {
+    inject(($rootScope, $q, familyService) => {
         spyOn(familyService, 'fetchItems').and.returnValue($q.when({}));
         familyService.fetchDesks({_id: 'id', family_id: 'family_id', state: 'ingested'});
         expect(familyService.fetchItems).toHaveBeenCalledWith('id', undefined);

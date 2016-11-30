@@ -13,7 +13,7 @@ export function FullPreviewDirective(api, $timeout, config, content) {
 
             if (scope.item.profile) {
                 content.getType(scope.item.profile)
-                    .then(function(type) {
+                    .then((type) => {
                         scope.editor = content.editor(type);
                     });
             } else {
@@ -29,7 +29,8 @@ export function FullPreviewDirective(api, $timeout, config, content) {
 
                 if (window.matchMedia) {
                     var mediaQueryList = window.matchMedia('print');
-                    mediaQueryList.addListener(function(mql) {
+
+                    mediaQueryList.addListener((mql) => {
                         if (!mql.matches) {
                             afterPrint();
                         }
@@ -38,7 +39,7 @@ export function FullPreviewDirective(api, $timeout, config, content) {
 
                 window.onafterprint = afterPrint;
 
-                $timeout(function() {
+                $timeout(() => {
                     window.print();
                 }, 200, false);
                 return false;

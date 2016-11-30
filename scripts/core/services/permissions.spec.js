@@ -1,11 +1,11 @@
-'use strict';
 
-describe('PermissionsService', function() {
+
+describe('PermissionsService', () => {
     beforeEach(window.module('superdesk.core.services.entity'));
     beforeEach(window.module('superdesk.core.services.server'));
     beforeEach(window.module('superdesk.core.services.permissions'));
 
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         $provide.constant('config', {server: {url: 'http://localhost'}});
     }));
 
@@ -17,34 +17,34 @@ describe('PermissionsService', function() {
         testResource_3: {read: true, write: true}
     };
 
-    beforeEach(function() {
-        inject(function($rootScope, $httpBackend, _em_, _permissionsService_) {
+    beforeEach(() => {
+        inject(($rootScope, $httpBackend, _em_, _permissionsService_) => {
             rootScope = $rootScope;
             httpBackend = $httpBackend;
             permissionsService = _permissionsService_;
         });
     });
 
-    it('can succeed checking role', function() {
+    it('can succeed checking role', () => {
         permissionsService.isRoleAllowed(testPermissions, {
             permissions: testPermissions
-        }).then(function(result) {
+        }).then((result) => {
             expect(result).toBe(true);
         });
     });
 
-    it('can fail checking role', function() {
+    it('can fail checking role', () => {
         permissionsService.isRoleAllowed(testPermissions, {
             permissions: {
                 testResource_1: {read: true},
                 testResource_3: {write: true}
             }
-        }).then(function(result) {
+        }).then((result) => {
             expect(result).toBe(false);
         });
     });
 
-    it('can succeed checking user', function() {
+    it('can succeed checking user', () => {
         var result = false;
 
         httpBackend
@@ -53,7 +53,7 @@ describe('PermissionsService', function() {
 
         permissionsService.isUserAllowed(testPermissions, {
             role: 'testRoleId'
-        }).then(function(isAllowed) {
+        }).then((isAllowed) => {
             result = isAllowed;
         });
 
@@ -62,7 +62,7 @@ describe('PermissionsService', function() {
         expect(result).toBe(true);
     });
 
-    it('can fail checking user', function() {
+    it('can fail checking user', () => {
         var result = false;
 
         httpBackend
@@ -71,7 +71,7 @@ describe('PermissionsService', function() {
 
         permissionsService.isUserAllowed(testPermissions, {
             role: 'testRoleId'
-        }).then(function(isAllowed) {
+        }).then((isAllowed) => {
             result = isAllowed;
         });
 
@@ -80,7 +80,7 @@ describe('PermissionsService', function() {
         expect(result).toBe(false);
     });
 
-    it('can succeed checking current user', function() {
+    it('can succeed checking current user', () => {
         var result = false;
 
         rootScope.currentUser = {role: 'testRoleId'};
@@ -89,7 +89,7 @@ describe('PermissionsService', function() {
             .expectGET('http://localhost/user_roles/testRoleId')
             .respond(200, {permissions: testPermissions});
 
-        permissionsService.isUserAllowed(testPermissions, false).then(function(isAllowed) {
+        permissionsService.isUserAllowed(testPermissions, false).then((isAllowed) => {
             result = isAllowed;
         });
 
@@ -98,7 +98,7 @@ describe('PermissionsService', function() {
         expect(result).toBe(true);
     });
 
-    it('can fail checking current user', function() {
+    it('can fail checking current user', () => {
         var result = false;
 
         rootScope.currentUser = {role: 'testRoleId'};
@@ -107,7 +107,7 @@ describe('PermissionsService', function() {
             .expectGET('http://localhost/user_roles/testRoleId')
             .respond(200, {permissions: {testResource_1: {read: true}}});
 
-        permissionsService.isUserAllowed(testPermissions, false).then(function(isAllowed) {
+        permissionsService.isUserAllowed(testPermissions, false).then((isAllowed) => {
             result = isAllowed;
         });
 

@@ -20,7 +20,7 @@ export function SubscribersDirective(
             if (angular.isDefined(metadata.values.subscriber_types)) {
                 $scope.subTypes = metadata.values.subscriber_types;
             } else {
-                metadata.fetchMetadataValues().then(function() {
+                metadata.fetchMetadataValues().then(() => {
                     $scope.subTypes = metadata.values.subscriber_types;
                 });
             }
@@ -30,7 +30,7 @@ export function SubscribersDirective(
              */
             function fetchSubscribers() {
                 subscribersService.fetchSubscribers().then(
-                    function(result) {
+                    (result) => {
                         $scope.subscribers = result;
                     }
                 );
@@ -42,10 +42,10 @@ export function SubscribersDirective(
              * @return {*}
              */
             var fetchProducts = function() {
-                return products.fetchAllProducts().then(function(items) {
+                return products.fetchAllProducts().then((items) => {
                     $scope.availableProducts = items;
                     $scope.productLookup = [];
-                    _.each(items, function(item) {
+                    _.each(items, (item) => {
                         $scope.productLookup[item._id] = item;
                     });
                 });
@@ -63,7 +63,7 @@ export function SubscribersDirective(
                     $scope.subscriber.global_filters = {};
                 }
 
-                _.each($scope.globalFilters, function(filter) {
+                _.each($scope.globalFilters, (filter) => {
                     if (!(filter._id in $scope.subscriber.global_filters)) {
                         $scope.subscriber.global_filters[filter._id] = true;
                     }
@@ -76,7 +76,7 @@ export function SubscribersDirective(
              * @return {*}
              */
             var fetchGlobalContentFilters = function() {
-                return contentFilters.getGlobalContentFilters().then(function(filters) {
+                return contentFilters.getGlobalContentFilters().then((filters) => {
                     $scope.globalFilters = filters;
                 });
             };
@@ -87,7 +87,7 @@ export function SubscribersDirective(
              * @return {*}
              */
             function fetchPublishErrors() {
-                return adminPublishSettingsService.fetchPublishErrors().then(function(result) {
+                return adminPublishSettingsService.fetchPublishErrors().then((result) => {
                     $scope.all_errors = result._items[0].all_errors;
                 });
             }
@@ -130,11 +130,11 @@ export function SubscribersDirective(
 
                 api.subscribers.save($scope.origSubscriber, $scope.subscriber)
                     .then(
-                        function() {
+                        () => {
                             notify.success(gettext('Subscriber saved.'));
                             $scope.cancel();
                         },
-                        function(response) {
+                        (response) => {
                             if (angular.isDefined(response.data._issues)) {
                                 if (angular.isDefined(response.data._issues['validator exception'])) {
                                     notify.error(gettext('Error: ' + response.data._issues['validator exception']));
@@ -149,7 +149,8 @@ export function SubscribersDirective(
                                 notify.error(gettext('Error: Failed to save Subscriber.'));
                             }
                         }
-                    ).then(fetchSubscribers);
+                    )
+                    .then(fetchSubscribers);
             };
 
             /**
@@ -159,11 +160,12 @@ export function SubscribersDirective(
              */
             $scope.edit = function(subscriber) {
                 var promises = [];
+
                 promises.push(fetchPublishErrors());
                 promises.push(fetchProducts());
                 promises.push(fetchGlobalContentFilters());
 
-                $q.all(promises).then(function() {
+                $q.all(promises).then(() => {
                     $scope.origSubscriber = subscriber || {};
                     $scope.subscriber = _.create($scope.origSubscriber);
                     $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
@@ -175,7 +177,7 @@ export function SubscribersDirective(
 
                     $scope.subscriber.products = [];
                     if ($scope.origSubscriber.products) {
-                        _.each($scope.origSubscriber.products, function(p) {
+                        _.each($scope.origSubscriber.products, (p) => {
                             $scope.subscriber.products.push($scope.productLookup[p]);
                         });
                     }
@@ -193,7 +195,7 @@ export function SubscribersDirective(
                     $scope.subscriberType = $scope.subscriber.subscriber_type || '';
                     $scope.changeFormats($scope.subscriberType);
                     initGlobalFilters();
-                }, function() {
+                }, () => {
                     notify.error(gettext('Subscriber could not be initialized!'));
                 });
             };
@@ -217,11 +219,12 @@ export function SubscribersDirective(
                 if ($scope.destinations.length > 0 && $scope.subscriberType !== '' &&
                     $scope.subscriberType !== newSubscriberType) {
                     var oldFormats = _.result(_.find($scope.subTypes, {qcode: $scope.subscriberType}), 'formats');
+
                     if (!_.isEqual(oldFormats, formats)) {
                         notify.error(gettext('Error: Please re-assign new format for each destination as the changed ' +
                             'subscriber type has formats which are not supported by existing destination(s).'));
 
-                        _.each($scope.destinations, function(destination) {
+                        _.each($scope.destinations, (destination) => {
                             destination.format = null;
                         });
                     }

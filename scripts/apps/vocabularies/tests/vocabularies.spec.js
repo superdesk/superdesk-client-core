@@ -1,17 +1,17 @@
-describe('vocabularies', function() {
-    'use strict';
-
+describe('vocabularies', () => {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    it('can fetch vocabularies', inject(function(api, vocabularies, $q, $rootScope) {
+    it('can fetch vocabularies', inject((api, vocabularies, $q, $rootScope) => {
         var fixture = {foo: 'bar'};
+
         spyOn(api, 'query').and.returnValue($q.when(fixture));
         var result;
+
         vocabularies.getVocabularies().then(
-            function(vocabs) {
+            (vocabs) => {
                 result = vocabs;
             }
         );
@@ -21,11 +21,11 @@ describe('vocabularies', function() {
         expect(vocabularies.vocabularies).toBe(fixture);
     }));
 
-    describe('config modal', function() {
-        describe('model', function() {
+    describe('config modal', () => {
+        describe('model', () => {
             var scope;
 
-            beforeEach(inject(function($rootScope, $controller) {
+            beforeEach(inject(($rootScope, $controller) => {
                 scope = $rootScope.$new();
                 scope.vocabulary = {items: [
                     {foo: 'flareon', bar: 'beedrill', is_active: true},
@@ -35,31 +35,31 @@ describe('vocabularies', function() {
                 $controller('VocabularyEdit', {$scope: scope});
             }));
 
-            it('being detected correctly', function() {
+            it('being detected correctly', () => {
                 expect(scope.model).toEqual(
                     {foo: null, bar: null, spam: null, qux: null, corge: null, is_active: null}
                 );
             });
         });
 
-        describe('controller', function() {
+        describe('controller', () => {
             var scope;
             var testItem;
 
-            beforeEach(inject(function($rootScope, $controller) {
+            beforeEach(inject(($rootScope, $controller) => {
                 scope = $rootScope.$new();
                 testItem = {foo: 'flareon', bar: 'beedrill', is_active: true};
                 scope.vocabulary = {items: [testItem]};
                 $controller('VocabularyEdit', {$scope: scope});
             }));
 
-            it('can add items', function() {
+            it('can add items', () => {
                 scope.addItem();
                 expect(scope.vocabulary.items.length).toBe(2);
                 expect(scope.vocabulary.items[0]).toEqual({foo: null, bar: null, is_active: true});
             });
 
-            it('can save vocabulary', inject(function(api, $q, $rootScope, metadata) {
+            it('can save vocabulary', inject((api, $q, $rootScope, metadata) => {
                 scope.vocabulary.items[0].foo = 'feraligatr';
                 scope.vocabulary.items[0].bar = 'bayleef';
                 scope.vocabulary.items[0].is_active = true;
@@ -76,7 +76,7 @@ describe('vocabularies', function() {
             }));
 
             it('can validate crop_size vocabulary for minimum value(200)',
-                    inject(function(api, $q, $rootScope, metadata) {
+                    inject((api, $q, $rootScope, metadata) => {
                         scope.vocabulary._id = 'crop_sizes';
                         scope.vocabulary.items[0].name = '4-3';
                         scope.vocabulary.items[0].is_active = true;
@@ -95,8 +95,9 @@ describe('vocabularies', function() {
                         expect(metadata.initialize).toHaveBeenCalled();
                     }));
 
-            it('can cancel editing vocabulary', inject(function(api, $q, $rootScope, metadata) {
+            it('can cancel editing vocabulary', inject((api, $q, $rootScope, metadata) => {
                 var vocabularyLink = scope.vocabulary;
+
                 scope.vocabulary.items[0].foo = 'furret';
                 scope.vocabulary.items[0].bar = 'buizel';
 

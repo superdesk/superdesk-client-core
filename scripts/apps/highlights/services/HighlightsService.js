@@ -32,6 +32,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
         }
 
         var criteria = {};
+
         if (desk) {
             criteria = {where: {$or: [
                                         {desks: desk},
@@ -42,7 +43,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
         }
 
         promise[key] = api('highlights').query(criteria)
-            .then(function(result) {
+            .then((result) => {
                 setLabel(result._items);
                 cache.put(key, result);
                 promise[key] = null;
@@ -53,7 +54,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
     };
 
     function setLabel(objItems) {
-        _.forEach(objItems, function(item) {
+        _.forEach(objItems, (item) => {
             item.label = item.desks.length ? item.name : item.name + ' ' + gettext('(Global)');
         });
     }
@@ -70,7 +71,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
      * Saves highlight configuration
      */
     service.saveConfig = function(config, configEdit) {
-        return api.highlights.save(config, configEdit).then(function(item) {
+        return api.highlights.save(config, configEdit).then((item) => {
             service.clearCache();
             return item;
         });
@@ -80,7 +81,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
      * Removes highlight configuration
      */
     service.removeConfig = function(config) {
-        return api.highlights.remove(config).then(function() {
+        return api.highlights.remove(config).then(() => {
             service.clearCache();
         });
     };
@@ -143,6 +144,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
                 return hourDifference <= 168; // 24*7
             } else if (_.startsWith(highlight.auto_insert, 'now-')) {
                 var trimmedValue = _.trimStart(highlight.auto_insert, 'now-');
+
                 trimmedValue = _.trimEnd(trimmedValue, 'h');
                 return hourDifference <= _.parseInt(trimmedValue);
             }

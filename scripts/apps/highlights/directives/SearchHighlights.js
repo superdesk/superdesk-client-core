@@ -15,7 +15,7 @@ export function SearchHighlights(highlightsService) {
                 return _.size(scope.highlights) > 0;
             };
 
-            highlightsService.get().then(function(result) {
+            highlightsService.get().then((result) => {
                 scope.highlights = result._items;
             });
         }

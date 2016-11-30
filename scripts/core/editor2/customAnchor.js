@@ -16,6 +16,7 @@ class CustomAnchorButton extends MediumEditor.extensions.anchor {
         }
 
         let input = form.getElementsByTagName('input')[0];
+
         input.setAttribute('type', 'url');
         input.setAttribute('required', '');
         if (this.pattern) {
@@ -28,6 +29,7 @@ class CustomAnchorButton extends MediumEditor.extensions.anchor {
     doFormSave() {
         let input = this.getForm().getElementsByTagName('input')[0];
         let isValid = input.checkValidity();
+
         if (isValid) {
             super.doFormSave();
         }

@@ -24,7 +24,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
         function($scope, notify, tzdata) {
             $scope.availableZones = [];
 
-            tzdata.$promise.then(function() {
+            tzdata.$promise.then(() => {
                 $scope.availableZones = tzdata.getTzNames();
             });
 
@@ -67,7 +67,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
         // RequireJS to the testing code which does not use the latter
             this._moment = moment;
 
-            tzdata.$promise.then(function() {
+            tzdata.$promise.then(() => {
                 moment.tz.add(
                 _.pick(tzdata, ['zones', 'links'])
             );
@@ -81,12 +81,21 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     /**
      * sdClock analog clock
      */
-    .directive('sdClock', function() {
+    .directive('sdClock', () => {
         var pi = Math.PI,
             scales = {
-                s: d3.scale.linear().domain([0, 59 + 999 / 1000]).range([0, 2 * pi]),
-                m: d3.scale.linear().domain([0, 59 + 59 / 60]).range([0, 2 * pi]),
-                h: d3.scale.linear().domain([0, 11 + 59 / 60]).range([0, 2 * pi])
+                s: d3.scale
+                    .linear()
+                    .domain([0, 59 + 999 / 1000])
+                    .range([0, 2 * pi]),
+                m: d3.scale
+                    .linear()
+                    .domain([0, 59 + 59 / 60])
+                    .range([0, 2 * pi]),
+                h: d3.scale
+                    .linear()
+                    .domain([0, 11 + 59 / 60])
+                    .range([0, 2 * pi])
             };
 
         return {
@@ -129,13 +138,14 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                     .data(_.range(0, 59, 5))
                     .enter()
                     .append('path')
-                        .attr('d', function(d) {
+                        .attr('d', (d) => {
                             var angle = scales.m(d);
                             var arc = d3.svg.arc()
                                 .innerRadius(r * 0.7)
                                 .outerRadius(r * 0.9)
                                 .startAngle(angle)
                                 .endAngle(angle);
+
                             return arc();
                         })
                     .attr('class', 'number-lines')
@@ -144,13 +154,14 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 // format data for given time
                 function getData(timeStr) {
                     var time = timeStr.split(':');
+
                     return [
                         {unit: 'h', val: parseInt(time[0], 10) + parseInt(time[1], 10) / 60, r: 0.5},
                         {unit: 'm', val: parseInt(time[1], 10), r: 0.8}
                     ];
                 }
 
-                scope.$watch('utc', function(utc) {
+                scope.$watch('utc', (utc) => {
                     var time = utc ? utc.tz(scope.tz).format('HH:mm:ss') : '00:00:00';
                     var data = getData(time);
                     var isDay = data[0].val >= 8 && data[0].val < 20;
@@ -170,13 +181,14 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                         .data(data)
                         .enter()
                         .append('path')
-                        .attr('d', function(d) {
+                        .attr('d', (d) => {
                             var angle = scales[d.unit](d.val);
                             var arc = d3.svg.arc()
                                 .innerRadius(r * 0)
                                 .outerRadius(r * d.r)
                                 .startAngle(angle)
                                 .endAngle(angle);
+
                             return arc();
                         })
                         .attr('class', 'clockhand')

@@ -71,8 +71,9 @@ function RelatedItemController(
 
     function today() {
         if (config.search && config.search.useDefaultTimezone) {
-            return moment().tz(config.defaultTimezone).format('YYYY-MM-DD') +
-                'T00:00:00' + moment.tz(config.defaultTimezone).format('ZZ');
+            return moment()
+                .tz(config.defaultTimezone)
+                .format('YYYY-MM-DD') + 'T00:00:00' + moment.tz(config.defaultTimezone).format('ZZ');
         }
         return moment().format('YYYY-MM-DD') + 'T00:00:00' + moment().format('ZZ');
     }
@@ -95,7 +96,7 @@ function RelatedItemController(
                 $scope.options.item.priority = item.priority;
                 $scope.options.item.slugline = item.slugline;
                 $scope.options.item.related_to = item._id;
-                api.save('archive', $scope.origItem, $scope.options.item).then(function(_item) {
+                api.save('archive', $scope.origItem, $scope.options.item).then((_item) => {
                     notify.success(gettext('item metadata associated.'));
                     return item;
                 });
@@ -111,11 +112,12 @@ function RelatedItemController(
             method: function(item) {
                 var target = {_id: item.package_type === 'takes' ? item.last_take : item._id};
                 var originalItem = $scope.item;
-                authoring.linkItem(target, $scope.item._id).then(function(_item) {
+
+                authoring.linkItem(target, $scope.item._id).then((_item) => {
                     notify.success(gettext('item is associated as a take.'));
                     authoringWorkspace.close(false);
                     authoringWorkspace.edit(originalItem);
-                }, function(err) {
+                }, (err) => {
                     if (angular.isDefined(err.data._message)) {
                         notify.error(gettext('Failed to associated as take: ' + err.data._message));
                     } else {
@@ -127,6 +129,7 @@ function RelatedItemController(
             icon: 'icon-expand',
             condition: function(item) {
                 var canHaveNewTake = authoring.itemActions(item).new_take;
+
                 return (item.package_type === 'takes' || canHaveNewTake) &&
                         $scope.item.type === 'text' &&
                         !$scope.item.takes &&
@@ -140,10 +143,10 @@ function RelatedItemController(
                 api.save('archive_rewrite', {},
                     {update: angular.extend({}, $scope.origItem, $scope.item)},
                     item)
-                .then(function(newItem) {
+                .then((newItem) => {
                     notify.success(gettext('Story is associated as update.'));
                     authoringWorkspace.edit(newItem._id);
-                }, function(response) {
+                }, (response) => {
                     if (angular.isDefined(response.data._message)) {
                         notify.error(gettext('Failed to associate update: ' + response.data._message));
                     } else {
@@ -169,7 +172,7 @@ function RelatedItemController(
         open: {
             title: 'Open',
             method: function(item) {
-                $q.when(superdesk.intent('edit', 'item', item)).then(null, function(value) {
+                $q.when(superdesk.intent('edit', 'item', item)).then(null, (value) => {
                     superdesk.intent('view', 'item', item);
                 });
             },
@@ -187,7 +190,7 @@ function RelatedItemController(
 
     BaseWidgetController.call(this, $scope);
 
-    $scope.$watch('widget.configuration', function(config) {
+    $scope.$watch('widget.configuration', (config) => {
         if (config && config.sluglineMatch && config.sluglineMatch !== $scope.itemListOptions.sluglineMatch) {
             $scope.itemListOptions.sluglineMatch = config.sluglineMatch;
         }

@@ -11,7 +11,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
                 // Update the figures if there's a desk mention message
                 initNotifications();
                 if (scope.default_incoming) {
-                    scope.$on('desk:mention', function() {
+                    scope.$on('desk:mention', () => {
                         $timeout(reload, 5000, true);
                     });
                 }
@@ -63,6 +63,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
              */
             scope.isRead = function(notification) {
                 var recipient = getRecipient(notification);
+
                 return recipient && recipient.read;
             };
 
@@ -74,6 +75,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
              */
             scope.readBy = function(notification) {
                 var recipient = getRecipient(notification);
+
                 if (recipient && recipient.read) {
                     return desks.userLookup[recipient.user_id].display_name;
                 }

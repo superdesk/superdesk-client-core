@@ -9,7 +9,7 @@ export function DestinationDirective(transmissionTypes) {
         link: function($scope) {
             $scope.types = transmissionTypes;
 
-            $scope.$watch('destination.delivery_type', function(type) {
+            $scope.$watch('destination.delivery_type', (type) => {
                 if (type && !$scope.destination.config && $scope.types[type].config) {
                     $scope.destination.config = angular.extend({}, $scope.types[type].config);
                 }

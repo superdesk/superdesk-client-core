@@ -12,12 +12,12 @@ export function SpikeService($location, api, notify, gettext, send, $q) {
      */
     this.spike = function(item) {
         return api.update(SPIKE_RESOURCE, item, {state: 'spiked'})
-            .then(function() {
+            .then(() => {
                 if ($location.search()._id === item._id) {
                     $location.search('_id', null);
                 }
                 return item;
-            }, function(response) {
+            }, (response) => {
                 item.error = response;
                 if (angular.isDefined(response.data._issues) &&
                     angular.isDefined(response.data._issues['validator exception'])) {
@@ -42,9 +42,7 @@ export function SpikeService($location, api, notify, gettext, send, $q) {
      * @param {Object} item
      */
     this.unspike = function(item) {
-        return getUnspikeDestination().then(config => {
-            return unspike(item, config);
-        });
+        return getUnspikeDestination().then((config) => unspike(item, config));
     };
 
     function getUnspikeDestination() {
@@ -60,12 +58,12 @@ export function SpikeService($location, api, notify, gettext, send, $q) {
         };
 
         return api.update(UNSPIKE_RESOURCE, item, data)
-            .then(function() {
+            .then(() => {
                 if ($location.search()._id === item._id) {
                     $location.search('_id', null);
                 }
                 return item;
-            }, function(response) {
+            }, (response) => {
                 item.error = response;
             });
     }
@@ -76,8 +74,8 @@ export function SpikeService($location, api, notify, gettext, send, $q) {
      * @param {Object} items
      */
     this.unspikeMultiple = function unspikeMultiple(items) {
-        getUnspikeDestination().then(config => {
-            items.forEach(item => {
+        getUnspikeDestination().then((config) => {
+            items.forEach((item) => {
                 unspike(item, config);
             });
         });

@@ -1,9 +1,10 @@
+/* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 var openUrl = require('./utils').open,
     nav = require('./utils').nav,
     waitFor = require('./utils').wait;
+
 module.exports = new Monitoring();
 
 function Monitoring() {
@@ -71,14 +72,12 @@ function Monitoring() {
      */
     this.getItem = function(group, item) {
         var all = this.getGroupItems(group);
-        browser.wait(function() {
-            return all.count();
-        }, 7500);
+
+        browser.wait(() => all.count(), 7500);
 
         if (item.type) {
-            return all.filter(function(elem) {
-                return elem.all(by.className('filetype-icon-' + item.type)).count();
-            }).get(item.index || 0);
+            return all.filter((elem) =>
+                elem.all(by.className('filetype-icon-' + item.type)).count()).get(item.index || 0);
         }
 
         return all.get(item);
@@ -91,6 +90,7 @@ function Monitoring() {
     this.actionOnDeskSingleView = function() {
         var elem = element.all(by.className('stage-header__name'));
         var header = elem.all(by.css('[ng-click="viewSingleGroup(group, \'desk\')"]')).first();
+
         header.click();
     };
 
@@ -101,6 +101,7 @@ function Monitoring() {
     this.actionOnStageSingleView = function() {
         var elem = element.all(by.className('stage-header__name'));
         var subheader = elem.all(by.css('[ng-click="viewSingleGroup(group, \'stage\')"]')).first();
+
         subheader.click();
     };
 
@@ -198,6 +199,7 @@ function Monitoring() {
 
     this.getPreviewTitle = function() {
         var headline = element(by.css('.content-container')).element(by.css('.preview-headline'));
+
         return headline.getText();
     };
 
@@ -221,6 +223,7 @@ function Monitoring() {
 
     this.openRelatedItem = function(index) {
         var relatedItem = element.all(by.repeater('relatedItem in relatedItems._items')).get(index);
+
         relatedItem.all(by.className('related-item')).get(index).click();
     };
 
@@ -234,11 +237,13 @@ function Monitoring() {
      */
     this.actionOnItem = function(action, group, item) {
         var menu = this.openItemMenu(group, item);
+
         menu.element(by.partialLinkText(action)).click();
     };
 
     this.getMenuActionElement = function(action, group, item) {
         var menu = this.openItemMenu(group, item);
+
         return menu.element(by.partialLinkText(action));
     };
 
@@ -255,6 +260,7 @@ function Monitoring() {
         var menu = this.openItemMenu(group, item);
         var header = menu.element(by.partialLinkText(action));
         var btn = menu.element(by.partialButtonText(submenu));
+
         browser.actions()
             .mouseMove(header, {x: -50, y: -50})
             .mouseMove(header)
@@ -273,8 +279,10 @@ function Monitoring() {
 
     this.selectGivenItem = function(item) {
         var itemTypeIcon = item.element(by.css('.type-icon'));
+
         browser.actions().mouseMove(itemTypeIcon, {x: -100, y: -100}).mouseMove(itemTypeIcon).perform();
         var checkbox = item.element(by.className('sd-checkbox'));
+
         waitFor(checkbox, 500);
         return checkbox.click();
     };
@@ -290,10 +298,12 @@ function Monitoring() {
 
     this.unspikeItem = function(item, desk, stage) {
         var itemElem = this.getSpikedItem(item);
+
         browser.actions().mouseMove(itemElem).perform();
         itemElem.element(by.className('icon-dots-vertical')).click();
 
         var menu = element(by.css('.dropdown__menu.open'));
+
         menu.element(by.partialLinkText('Unspike')).click();
 
         var sidebar = element.all(by.css('.slide-pane')).last();
@@ -307,11 +317,13 @@ function Monitoring() {
 
     this.openItemMenu = function(group, item) {
         var itemElem = this.getItem(group, item);
+
         browser.actions()
             .mouseMove(itemElem, {x: -50, y: -50}) // first move out
             .mouseMove(itemElem) // now it can mouseover for sure
             .perform();
         var dotsElem = itemElem.element(by.className('icon-dots-vertical'));
+
         waitFor(dotsElem, 1000);
         dotsElem.click();
         return element(by.css('.dropdown__menu.open'));
@@ -319,9 +331,7 @@ function Monitoring() {
 
     this.showMonitoringSettings = function() {
         element(by.css('.icon-settings')).click();
-        browser.wait(function() {
-            return element.all(by.css('.aggregate-widget-config')).isDisplayed();
-        });
+        browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed());
         element.all(by.css('[ng-click="goTo(step)"]')).first().click();
     };
 
@@ -371,13 +381,10 @@ function Monitoring() {
 
     this.saveSettings = function() {
         var btn = element(by.css('[ng-click="save()"]'));
+
         btn.click();
         // wait for modal to be removed
-        browser.wait(function() {
-            return btn.isPresent().then(function(isPresent) {
-                return !isPresent;
-            });
-        }, 500);
+        browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 500);
     };
 
     /**
@@ -467,13 +474,14 @@ function Monitoring() {
     this.moveOrderItem = function(start, end) {
         var src = this.getOrderItem(start);
         var dst = this.getOrderItem(end);
-        return src.waitReady().then(function() {
+
+        return src.waitReady().then(() => {
             browser.actions()
                 .mouseMove(src)
                 .mouseDown()
                 .perform()
-                .then(function() {
-                    dst.waitReady().then(function() {
+                .then(() => {
+                    dst.waitReady().then(() => {
                         browser.actions()
                             .mouseMove(dst)
                             .mouseUp()
@@ -489,14 +497,13 @@ function Monitoring() {
 
     this.setMaxItems = function(item, value) {
         var maxItemsInput = this.getMaxItem(item).element(by.id('maxItems'));
+
         maxItemsInput.clear();
         maxItemsInput.sendKeys(value);
     };
 
     this.hasClass = function(element, cls) {
-        return element.getAttribute('class').then(function(classes) {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
+        return element.getAttribute('class').then((classes) => classes.split(' ').indexOf(cls) !== -1);
     };
 
     this.showHideList = function() {
@@ -560,6 +567,7 @@ function Monitoring() {
 
     this.addToCurrentMultipleItems = function() {
         var elem = element(by.className('multi-action-bar'));
+
         elem.element(by.css('[ng-click="action.addToPackage()"]')).click();
     };
 
@@ -571,8 +579,10 @@ function Monitoring() {
      */
     this.checkMarkedForHighlight = function(highlight, group, item) {
         var crtItem = this.getItem(group, item);
+
         crtItem.element(by.className('icon-star')).click();
         var highlightList = element(by.className('highlights-list-menu'));
+
         waitFor(highlightList);
         expect(highlightList.getText()).toContain(highlight);
     };
@@ -586,9 +596,11 @@ function Monitoring() {
     this.checkMarkedForMultiHighlight = function(highlight, group, item) {
         var crtItem = this.getItem(group, item);
         var star = crtItem.element(by.className('icon-multi-star'));
+
         expect(star.isPresent()).toBe(true);
         star.click();
         var highlightList = element(by.className('highlights-list-menu'));
+
         waitFor(highlightList);
         expect(highlightList.getText()).toContain(highlight);
     };
@@ -600,8 +612,10 @@ function Monitoring() {
      */
     this.removeFromFirstHighlight = function(group, item) {
         var crtItem = this.getItem(group, item);
+
         crtItem.element(by.className('icon-multi-star')).click();
         var highlightList = element(by.className('highlights-list-menu'));
+
         waitFor(highlightList);
         highlightList.all(by.className('btn--mini')).first().click();
     };
@@ -620,9 +634,7 @@ function Monitoring() {
 
         function textFilter(elem) {
             return elem.element(by.tagName('button')).getText()
-            .then(function(text) {
-                return text.toUpperCase().indexOf(desk.toUpperCase()) >= 0;
-            });
+            .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
         }
 
         function clickFiltered(filtered) {
@@ -642,7 +654,7 @@ function Monitoring() {
             .then(clickFiltered);
 
         // close dropdown if opened
-        dropdownMenu.isDisplayed().then(function(shouldClose) {
+        dropdownMenu.isDisplayed().then((shouldClose) => {
             if (shouldClose) {
                 dropdownBtn.click();
             }
@@ -661,9 +673,7 @@ function Monitoring() {
 
         this.openMonitoring();
 
-        return browser.wait(function() {
-            return element(by.className('list-view')).isPresent();
-        }, 300);
+        return browser.wait(() => element(by.className('list-view')).isPresent(), 300);
     };
 
     this.turnOffWorkingStage = function(deskIndex, canCloseSettingsModal) {

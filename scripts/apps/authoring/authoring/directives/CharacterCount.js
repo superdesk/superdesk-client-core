@@ -15,8 +15,9 @@ export function CharacterCount() {
         link: function characterCountLink(scope, elem, attrs) {
             scope.html = scope.html || false;
             scope.numChars = 0;
-            scope.$watch('item', function() {
+            scope.$watch('item', () => {
                 var input = scope.item || '';
+
                 input = scope.html ? helpers.cleanHtml(input) : input;
                 scope.numChars = input.length || 0;
             });

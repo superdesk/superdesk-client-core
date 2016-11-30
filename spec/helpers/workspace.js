@@ -1,5 +1,4 @@
 
-'use strict';
 
 module.exports = new Workspace();
 
@@ -27,11 +26,13 @@ function Workspace() {
 
     this.getDesk = function(name) {
         var desks = element.all(by.repeater('desk in userDesks'));
+
         return desks.all(by.css('[option="' + name.toUpperCase() + '"]'));
     };
 
     this.getCurrentDesk = function() {
         var dropdownBtn = element(by.id('selected-desk'));
+
         return dropdownBtn.element(by.css('[ng-if="selected.name"]')).getText();
     };
 
@@ -49,9 +50,7 @@ function Workspace() {
 
         function textFilter(elem) {
             return elem.element(by.tagName('button')).getText()
-            .then(function(text) {
-                return text.toUpperCase().indexOf(desk.toUpperCase()) >= 0;
-            });
+            .then((text) => text.toUpperCase().indexOf(desk.toUpperCase()) >= 0);
         }
 
         function clickFiltered(filtered) {
@@ -71,7 +70,7 @@ function Workspace() {
             .then(clickFiltered);
 
         // close dropdown if opened
-        dropdownMenu.isDisplayed().then(function(shouldClose) {
+        dropdownMenu.isDisplayed().then((shouldClose) => {
             if (shouldClose) {
                 dropdownBtn.click();
             }
@@ -80,12 +79,15 @@ function Workspace() {
 
     this.createWorkspace = function(name) {
         var dropdownBtn = element(by.id('selected-desk'));
+
         dropdownBtn.click();
 
         var newWorkspaceBtn = element(by.className('action-btn'));
+
         newWorkspaceBtn.click();
 
         var workspaceName = element(by.model('workspace.name'));
+
         workspaceName.sendKeys(name);
 
         element(by.css('[ng-click="save()"]')).click();
@@ -107,6 +109,7 @@ function Workspace() {
      */
     this.showHighlightList = function(name) {
         var item = this.getHighlightListItem(name);
+
         waitFor(item);
         item.click();
     };
@@ -120,7 +123,11 @@ function Workspace() {
      */
     this.getHighlightListItem = function(name) {
         var menu = element(by.id('highlightPackage'));
-        browser.actions().mouseMove(menu).perform();
+
+        browser.actions()
+            .mouseMove(menu)
+            .perform();
+
         return menu.element(by.css('[option="' + name + '"]'));
     };
 
@@ -150,7 +157,10 @@ function Workspace() {
      * @return {promise} title
      */
     this.getItemText = function(index) {
-        return this.getItem(index).all(by.id('title')).first().getText();
+        return this.getItem(index)
+            .all(by.id('title'))
+            .first()
+            .getText();
     };
 
     /**
@@ -161,7 +171,10 @@ function Workspace() {
      */
     this.openItemMenu = function(index) {
         var itemElem = this.getItem(index);
-        browser.actions().mouseMove(itemElem).perform();
+
+        browser.actions()
+            .mouseMove(itemElem)
+            .perform();
         itemElem.element(by.className('icon-dots-vertical')).click();
         return element(by.css('.dropdown__menu.open'));
     };
@@ -175,6 +188,7 @@ function Workspace() {
      */
     this.actionOnItem = function(action, item) {
         var menu = this.openItemMenu(item);
+
         menu.element(by.partialLinkText(action)).click();
     };
 
@@ -188,7 +202,10 @@ function Workspace() {
      */
     this.actionOnItemSubmenu = function(action, submenu, item) {
         var menu = this.openItemMenu(item);
-        browser.actions().mouseMove(menu.element(by.partialLinkText(action))).perform();
+
+        browser.actions()
+            .mouseMove(menu.element(by.partialLinkText(action)))
+            .perform();
         menu.element(by.partialButtonText(submenu)).click();
     };
 
@@ -203,13 +220,14 @@ function Workspace() {
         this.selectDesk(desk);
         openContent();
 
-        browser.wait(function() {
-            return element(by.className('list-view')).isPresent();
-        }, 300);
+        browser.wait(() => element(by.className('list-view')).isPresent(), 300);
 
         // toggle to list view if possible
-        var listViewBtn = element(by.className('view-select')).all(by.tagName('button')).get(1);
-        return listViewBtn.isDisplayed().then(function(isDisplayed) {
+        var listViewBtn = element(by.className('view-select'))
+            .all(by.tagName('button'))
+            .get(1);
+
+        return listViewBtn.isDisplayed().then((isDisplayed) => {
             if (isDisplayed) {
                 return listViewBtn.click();
             }
@@ -218,6 +236,7 @@ function Workspace() {
 
     this.selectStage = function(stage) {
         var stages = element(by.css('.desk-stages'));
+
         return stages.element(by.cssContainingText('.stage-label', stage)).click();
     };
 
@@ -229,14 +248,14 @@ function Workspace() {
 
     this.duplicateItem = function(item, desk) {
         return this.switchToDesk(desk || 'PERSONAL')
-        .then(content.setListView)
-        .then(function() {
-            return content.actionOnItem('Duplicate', item);
-        });
+            .then(content.setListView)
+            .then(() => content.actionOnItem('Duplicate', item));
     };
 
     this.filterItems = function(type) {
         element(by.css('.filter-trigger')).click();
-        element(by.css('.content-type-filters')).element(by.css('.filetype-icon-' + type)).click();
+        element(by.css('.content-type-filters'))
+            .element(by.css('.filetype-icon-' + type))
+            .click();
     };
 }

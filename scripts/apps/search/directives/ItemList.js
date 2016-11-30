@@ -147,14 +147,13 @@ export function ItemList(
 
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
+
             monitoringState.setState({
                 groups: groups.concat(scope.$id),
                 activeGroup: monitoringState.state.activeGroup || groupId
             });
 
-            scope.$watch(function() {
-                return monitoringState.state.activeGroup;
-            }, function(activeGroup) {
+            scope.$watch(() => monitoringState.state.activeGroup, (activeGroup) => {
                 if (activeGroup === groupId) {
                     elem.focus();
                 }
@@ -174,6 +173,7 @@ export function ItemList(
                 menuHolderElem.style.zIndex = -1;
                 var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem));
                 // make sure it's rendered
+
                 node.style.display = 'block';
                 var rect = node.getBoundingClientRect();
                 var width = rect.width;
@@ -297,6 +297,7 @@ export function ItemList(
                     event.stopPropagation();
                     if (isCheckAllowed(this.props.item)) {
                         var selected = !this.props.item.selected;
+
                         this.props.onMultiSelect([this.props.item], selected);
                     }
                 },
@@ -358,6 +359,7 @@ export function ItemList(
                 var item = props.item;
                 var meta = [];
                 var source = props.ingestProvider ? props.ingestProvider.source : '';
+
                 if (item.source) {
                     source = item.source;
                 }
@@ -451,6 +453,7 @@ export function ItemList(
 
                 render: function() {
                     var showSelect = this.state.hover || this.props.item.selected;
+
                     return React.createElement(
                         'div',
                         {
@@ -481,6 +484,7 @@ export function ItemList(
                         'urgency-reduced-rowheight': listConfig.thinRows
                     })
                 };
+
                 return renderArea('priority', props, css) || React.createElement('div', css);
             };
 
@@ -518,6 +522,7 @@ export function ItemList(
 
                     var createHighlight = function(id) {
                         var highlight = highlightsById[id];
+
                         if (highlight) {
                             return React.createElement(
                                 'li',
@@ -585,8 +590,10 @@ export function ItemList(
                 getHighlightStatuses: function(highlights, item) {
                     var highlightStatuses = {};
                     var highlightsById = this.props.highlightsById;
-                    _.forEach(highlights, function(highlight) {
+
+                    _.forEach(highlights, (highlight) => {
                         var hours = $filter('hoursFromNow')(item.versioncreated);
+
                         highlightStatuses[highlight] = highlightsService.isInDateRange(
                             highlightsById[highlight], hours
                         );
@@ -597,6 +604,7 @@ export function ItemList(
 
                 getHighlights: function() {
                     var itemHighlights = [];
+
                     if (isCheckAllowed(this.props.item)) {
                         if (this.props.item.archive_item && this.props.item.archive_item.highlights &&
                             this.props.item.archive_item.highlights.length) {
@@ -619,9 +627,7 @@ export function ItemList(
                             return statuses[$location.search().highlight];
                         }
 
-                        return highlights.some(function(h) {
-                            return statuses[h];
-                        });
+                        return highlights.some((h) => statuses[h]);
                     }.call(this);
 
                     return React.createElement(
@@ -672,7 +678,7 @@ export function ItemList(
                     if (cancel === true && closeTimeout) {
                         $timeout.cancel(closeTimeout);
                     } else {
-                        closeTimeout = $timeout(function() {
+                        closeTimeout = $timeout(() => {
                             closeActionsMenu();
                         }, 200, false);
                     }
@@ -701,8 +707,7 @@ export function ItemList(
                 },
 
                 renderDropdown: function() {
-                    var desks = this.props.desks.map(function(desk, index) {
-                        return React.createElement(
+                    var desks = this.props.desks.map((desk, index) => React.createElement(
                                 'li',
                                 {key: 'desk' + index},
                                 React.createElement(
@@ -710,8 +715,7 @@ export function ItemList(
                                         {disabled: !desk.isUserDeskMember, onClick: this.props.openDesk(desk)},
                                         desk.desk.name + ' (' + desk.count + ')'
                                         )
-                                );
-                    }.bind(this));
+                                ));
 
                     var elem = React.createElement('div',
                         {
@@ -735,17 +739,17 @@ export function ItemList(
 
                 componentDidMount: function() {
                     familyService.fetchDesks(this.props.item, false)
-                        .then(function(fetchedDesks) {
+                        .then((fetchedDesks) => {
                             this.setState({desks: fetchedDesks});
-                        }.bind(this));
+                        });
                 },
 
                 componentDidUpdate: function(prevProps, prevState) {
                     if (prevProps.item !== this.props.item) {
                         familyService.fetchDesks(this.props.item, false)
-                        .then(function(fetchedDesks) {
+                        .then((fetchedDesks) => {
                             this.setState({desks: fetchedDesks});
-                        }.bind(this));
+                        });
                     }
                 },
 
@@ -768,6 +772,7 @@ export function ItemList(
 
                 render: function() {
                     var items = [];
+
                     items.push(React.createElement('dt', {
                         key: 'dt',
                         style: {paddingRight: '5px'}
@@ -776,6 +781,7 @@ export function ItemList(
                     if (this.state.desks.length) {
                         var desk = this.state.desks[0];
                         var name = this.formatDeskName(desk.desk.name);
+
                         items.push(React.createElement('dd', {key: 'dd1'}, desk.isUserDeskMember ?
                             React.createElement('a', {onClick: this.openDesk(desk)}, name) :
                             React.createElement('span', {className: 'container'}, name)
@@ -811,7 +817,7 @@ export function ItemList(
 
             function renderArea(area, itemProps, props) {
                 var specs = listConfig[area] || [];
-                var contents = specs.map(function(field) {
+                var contents = specs.map((field) => {
                     if (fields[field]) {
                         return fields[field](itemProps);
                     }
@@ -820,6 +826,7 @@ export function ItemList(
                     return null;
                 }).filter(angular.identity);
                 var elemProps = angular.extend({key: area}, props);
+
                 return contents.length ? React.createElement('div', elemProps, contents) : null;
             }
 
@@ -829,6 +836,7 @@ export function ItemList(
             var fields = {
                 headline: function(props) {
                     var headline = props.item.headline ? props.item.headline : props.item.type;
+
                     return React.createElement(
                         'span',
                         {className: 'item-heading', key: 'headline',
@@ -955,6 +963,7 @@ export function ItemList(
 
                 broadcast: function(props) {
                     var broadcast = props.item.broadcast || {};
+
                     if (broadcast.status) {
                         return React.createElement(
                             'span',
@@ -991,6 +1000,7 @@ export function ItemList(
                                 gettext('Sms'))
                             : null
                     ].filter(angular.identity);
+
                     return elems.length ? React.createElement('div', {key: 'flags'}, elems) : null;
                 },
 
@@ -1019,6 +1029,7 @@ export function ItemList(
 
                 category: function(props) {
                     var anpa = props.item.anpa_category || {};
+
                     if (anpa.name) {
                         return React.createElement('div', {className: 'category', key: 'category'}, anpa.name);
                     }
@@ -1026,6 +1037,7 @@ export function ItemList(
 
                 provider: function(props) {
                     var provider = props.ingestProvider ? props.ingestProvider.source : '';
+
                     if (props.item.source) {
                         provider = props.item.source;
                     }
@@ -1088,9 +1100,11 @@ export function ItemList(
                     var type = this.getType();
                     var intent = {action: 'list', type: type};
                     var groups = {};
-                    superdesk.findActivities(intent, item).forEach(function(activity) {
+
+                    superdesk.findActivities(intent, item).forEach((activity) => {
                         if (workflowService.isActionAllowed(item, activity.action)) {
                             var group = activity.group || 'default';
+
                             groups[group] = groups[group] || [];
                             groups[group].push(activity);
                         }
@@ -1122,7 +1136,8 @@ export function ItemList(
                     };
 
                     var actions = this.getActions();
-                    this.groups.map(function(group) {
+
+                    this.groups.map((group) => {
                         if (actions[group._id]) {
                             if (group.label === 'Actions') {
                                 menu.push(
@@ -1146,7 +1161,7 @@ export function ItemList(
                                 );
                             }
 
-                            menu.push.apply(menu, actions[group._id].map(createAction));
+                            menu.push(...actions[group._id].map(createAction));
                         }
                         return null;
                     });
@@ -1211,10 +1226,10 @@ export function ItemList(
                     // Stop event propagation so that click on item action
                     // won't select that item for preview/authoring.
                     event.stopPropagation();
-                    scope.$apply(function() {
+                    scope.$apply(() => {
                         $rootScope.$broadcast('broadcast:preview', {item: null}); // closes preview if already opened
                         activityService.start(this.props.activity, {data: {item: this.props.item}});
-                    }.bind(this));
+                    });
 
                     closeActionsMenu();
                 },
@@ -1246,10 +1261,10 @@ export function ItemList(
 
                 close: function() {
                     if (this.state.open && !this.closeTimeout) {
-                        this.closeTimeout = $timeout(function() {
+                        this.closeTimeout = $timeout(() => {
                             this.closeTimeout = null;
                             this.setState({open: false});
-                        }.bind(this), 100, false);
+                        }, 100, false);
                     }
                 },
 
@@ -1266,6 +1281,7 @@ export function ItemList(
 
                 render: function() {
                     var activity = this.props.activity;
+
                     if (activity.dropdown) {
                         return React.createElement(
                             'li',
@@ -1478,10 +1494,12 @@ export function ItemList(
 
                 multiSelect: function(items, selected) {
                     var itemsById = angular.extend({}, this.state.itemsById);
-                    items.forEach(function(item) {
+
+                    items.forEach((item) => {
                         var itemId = search.generateTrackByIdentifier(item);
+
                         itemsById[itemId] = angular.extend({}, item, {selected: selected});
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             multi.toggle(itemsById[itemId]);
                         });
                     });
@@ -1501,9 +1519,9 @@ export function ItemList(
                     }
 
                     $timeout.cancel(this.updateTimeout);
-                    this.updateTimeout = $timeout(function() {
+                    this.updateTimeout = $timeout(() => {
                         if (item && scope.preview) {
-                            scope.$apply(function() {
+                            scope.$apply(() => {
                                 scope.preview(item);
                             });
                         }
@@ -1513,6 +1531,7 @@ export function ItemList(
                 selectItem: function(item) {
                     if (isCheckAllowed(item)) {
                         var selected = !item.selected;
+
                         this.multiSelect([item], selected);
                     }
                 },
@@ -1529,6 +1548,7 @@ export function ItemList(
 
                     for (var i = positionStart; i <= positionEnd; i++) {
                         var item = this.state.itemsById[this.state.itemsList[i]];
+
                         if (isCheckAllowed(item)) {
                             selectedItems.push(item);
                         }
@@ -1546,11 +1566,11 @@ export function ItemList(
                     $timeout.cancel(this.updateTimeout);
 
                     if (canEdit && scope.edit) {
-                        scope.$apply(function() {
+                        scope.$apply(() => {
                             scope.edit(item);
                         });
                     } else {
-                        scope.$apply(function() {
+                        scope.$apply(() => {
                             authoringWorkspace.open(item);
                         });
                     }
@@ -1560,11 +1580,11 @@ export function ItemList(
                     this.setSelectedItem(item);
                     $timeout.cancel(this.updateTimeout);
                     if (item && scope.edit) {
-                        scope.$apply(function() {
+                        scope.$apply(() => {
                             scope.edit(item);
                         });
                     } else if (item) {
-                        scope.$apply(function() {
+                        scope.$apply(() => {
                             authoringWorkspace.open(item);
                         });
                     }
@@ -1576,7 +1596,8 @@ export function ItemList(
 
                 updateAllItems: function(itemId, changes) {
                     var itemsById = angular.extend({}, this.state.itemsById);
-                    _.forOwn(itemsById, function(value, key) {
+
+                    _.forOwn(itemsById, (value, key) => {
                         if (_.startsWith(key, itemId)) {
                             itemsById[key] = angular.extend({}, value, changes);
                         }
@@ -1588,7 +1609,7 @@ export function ItemList(
                 findItemByPrefix: function(prefix) {
                     var item;
 
-                    _.forOwn(this.state.itemsById, function(val, key) {
+                    _.forOwn(this.state.itemsById, (val, key) => {
                         if (_.startsWith(key, prefix)) {
                             item = val;
                         }
@@ -1609,13 +1630,16 @@ export function ItemList(
 
                 getSelectedItem: function() {
                     var selected = this.state.selected;
+
                     return this.state.itemsById[selected];
                 },
 
                 updateItem: function(itemId, changes) {
                     var item = this.state.itemsById[itemId] || null;
+
                     if (item) {
                         var itemsById = angular.extend({}, this.state.itemsById);
+
                         itemsById[itemId] = angular.extend({}, item, changes);
                         this.setState({itemsById: itemsById});
                     }
@@ -1648,7 +1672,7 @@ export function ItemList(
                         event.preventDefault();
                         event.stopPropagation();
                         this.select(); // deselect active item
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
                         });
                         return;
@@ -1658,6 +1682,7 @@ export function ItemList(
                         for (var i = 0; i < this.state.itemsList.length; i++) {
                             if (this.state.itemsList[i] === this.state.selected) {
                                 var next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
+
                                 this.select(this.state.itemsById[this.state.itemsList[next]]);
                                 return;
                             }
@@ -1718,6 +1743,7 @@ export function ItemList(
                         });
                     }.bind(this);
                     var isEmpty = !this.state.itemsList.length;
+
                     return React.createElement(
                         'ul',
                         {
@@ -1738,7 +1764,7 @@ export function ItemList(
                 }
             });
 
-            monitoringState.init().then(function() {
+            monitoringState.init().then(() => {
                 var itemList = React.createElement(ItemList, monitoringState.state);
                 var listComponent = ReactDOM.render(itemList, elem[0]);
 
@@ -1802,7 +1828,7 @@ export function ItemList(
                     return false;
                 }
 
-                scope.$watch('items', function(items) {
+                scope.$watch('items', (items) => {
                     if (!items || !items._items) {
                         return;
                     }
@@ -1811,7 +1837,7 @@ export function ItemList(
                     var currentItems = {};
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
 
-                    items._items.forEach(function(item) {
+                    items._items.forEach((item) => {
                         var itemId = search.generateTrackByIdentifier(item);
                         var oldItem = itemsById[itemId] || null;
 
@@ -1830,7 +1856,7 @@ export function ItemList(
                         itemsList: itemsList,
                         itemsById: itemsById,
                         view: scope.view
-                    }, function() {
+                    }, () => {
                         // updates scroll position to top, such as when forced refresh
                         if (scope.scrollTop === 0) {
                             elem[0].scrollTop = scope.scrollTop;
@@ -1839,23 +1865,24 @@ export function ItemList(
                     });
                 }, true);
 
-                scope.$watch('view', function(newValue, oldValue) {
+                scope.$watch('view', (newValue, oldValue) => {
                     if (newValue !== oldValue) {
                         listComponent.setState({view: newValue});
                     }
                 });
 
-                scope.$watch('viewColumn', function(newValue, oldValue) {
+                scope.$watch('viewColumn', (newValue, oldValue) => {
                     if (newValue !== oldValue) {
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             listComponent.setState({swimlane: newValue});
                             scope.refreshGroup();
                         });
                     }
                 });
 
-                scope.$on('item:lock', function(_e, data) {
+                scope.$on('item:lock', (_e, data) => {
                     var itemId = search.getTrackByIdentifier(data.item, data.item_version);
+
                     listComponent.updateItem(itemId, {
                         lock_user: data.user,
                         lock_session: data.lock_session,
@@ -1863,7 +1890,7 @@ export function ItemList(
                     });
                 });
 
-                scope.$on('item:unlock', function(_e, data) {
+                scope.$on('item:unlock', (_e, data) => {
                     listComponent.updateAllItems(data.item, {
                         lock_user: null,
                         lock_session: null,
@@ -1871,10 +1898,11 @@ export function ItemList(
                     });
                 });
 
-                scope.$on('item:expired', function(_e, data) {
+                scope.$on('item:expired', (_e, data) => {
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
                     var shouldUpdate = false;
-                    _.forOwn(itemsById, function(item, key) {
+
+                    _.forOwn(itemsById, (item, key) => {
                         if (data.items[item._id]) {
                             itemsById[key] = angular.extend({gone: true}, item);
                             shouldUpdate = true;
@@ -1886,29 +1914,30 @@ export function ItemList(
                     }
                 });
 
-                scope.$on('item:highlight', function(_e, data) {
+                scope.$on('item:highlight', (_e, data) => {
                     var item = listComponent.findItemByPrefix(data.item_id);
+
                     if (item) {
                         var itemId = search.generateTrackByIdentifier(item);
                         var highlights = item.highlights || [];
+
                         if (data.marked) {
                             highlights = highlights.concat([data.highlight_id]);
                         } else {
-                            highlights = highlights.filter(function(highlight) {
-                                return highlight !== data.highlight_id;
-                            });
+                            highlights = highlights.filter((highlight) => highlight !== data.highlight_id);
                         }
 
                         listComponent.updateItem(itemId, {highlights: highlights});
                     }
                 });
 
-                scope.$on('multi:reset', function(e, data) {
+                scope.$on('multi:reset', (e, data) => {
                     var ids = data.ids || [];
                     var shouldUpdate = false;
                     var itemsById = angular.extend({}, listComponent.state.itemsById);
-                    _.forOwn(itemsById, function(value, key) {
-                        ids.forEach(function(id) {
+
+                    _.forOwn(itemsById, (value, key) => {
+                        ids.forEach((id) => {
                             if (_.startsWith(key, id)) {
                                 shouldUpdate = true;
                                 itemsById[key] = angular.extend({}, value, {selected: null});
@@ -1933,7 +1962,7 @@ export function ItemList(
                     // If scroll bar leaves top position update scope.scrollTop
                     // which is used to display refresh button on list item updates
                     if (elem[0].scrollTop >= 0 && elem[0].scrollTop < 100) {
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             scope.scrollTop = elem[0].scrollTop;
                             // force refresh the group or list, if scroll bar hits the top of list.
                             if (scope.scrollTop === 0) {
@@ -1983,7 +2012,7 @@ export function ItemList(
                 elem.on('scroll', handleScroll);
 
                 // remove react elem on destroy
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', () => {
                     elem.off();
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });

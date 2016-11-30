@@ -9,9 +9,10 @@ export function ItemUrgency(metadata, gettext) {
             'ng-style="{backgroundColor: color}" title="{{ title }}">{{ short }}</span>'
         ].join(''),
         link: function(scope, elem) {
-            scope.$watch('urgency', function(urgency) {
+            scope.$watch('urgency', (urgency) => {
                 if (urgency) {
                     var spec = metadata.urgencyByValue(urgency);
+
                     if (spec) {
                         scope.color = spec.color;
                         scope.short = spec.short || urgency;

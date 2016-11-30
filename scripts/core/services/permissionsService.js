@@ -45,9 +45,11 @@ export default angular.module('superdesk.core.services.permissions', [])
 
             if (usr.role) {
                 if (typeof usr.role === 'string') {
-                    em.repository('user_roles').find(usr.role).then(function(role) {
-                        delay.resolve(self.isRoleAllowed(permissions, role));
-                    });
+                    em.repository('user_roles')
+                        .find(usr.role)
+                        .then((role) => {
+                            delay.resolve(self.isRoleAllowed(permissions, role));
+                        });
                 } else {
                     delay.resolve(this.isRoleAllowed(permissions, usr.role));
                 }
@@ -66,9 +68,11 @@ export default angular.module('superdesk.core.services.permissions', [])
             if (role.permissions && role.permissions[resource] && role.permissions[resource][method]) {
                 delay.resolve(true);
             } else if (role.extends) {
-                em.repository('user_roles').find(role.extends).then(function(extendedFrom) {
-                    delay.resolve(self._isRoleAllowedSingle(resource, method, extendedFrom));
-                });
+                em.repository('user_roles')
+                    .find(role.extends)
+                    .then((extendedFrom) => {
+                        delay.resolve(self._isRoleAllowedSingle(resource, method, extendedFrom));
+                    });
             }
 
             return delay.promise;
@@ -81,13 +85,13 @@ export default angular.module('superdesk.core.services.permissions', [])
 
             var promises = [];
 
-            _.forEach(permissions, function(methods, resource) {
-                _.forEach(methods, function(status, method) {
+            _.forEach(permissions, (methods, resource) => {
+                _.forEach(methods, (status, method) => {
                     promises.push(self._isRoleAllowedSingle(resource, method, role));
                 });
             });
 
-            $q.all(promises).then(function(results) {
+            $q.all(promises).then((results) => {
                 if (results.indexOf(false) === -1) {
                     delay.resolve(true);
                 } else {

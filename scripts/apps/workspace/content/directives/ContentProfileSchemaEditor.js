@@ -56,14 +56,15 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
             scope.schema = angular.extend({}, content.contentProfileSchema);
             scope.editor = angular.extend({}, content.contentProfileEditor);
 
-            metadata.initialize().then(function() {
+            metadata.initialize().then(() => {
                 scope.options = {subject: metadata.values.subjectcodes};
                 scope.terms = {
                     subject: metadata.values.subjectcodes,
                     anpa_category: metadata.values.categories
                 };
-                metadata.cvs.forEach(function(cv) {
+                metadata.cvs.forEach((cv) => {
                     var cvId = constant.CV_ALIAS[cv._id] || cv._id;
+
                     if (scope.schema[cvId]) {
                         scope.options[cvId] = cv.items;
                     }

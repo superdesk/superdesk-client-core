@@ -24,6 +24,7 @@ export default class SuggestController {
      */
     displayName(userId) {
         let usr = this.desks.userLookup[userId];
+
         return usr ? usr.display_name || '-' : '-';
     }
 

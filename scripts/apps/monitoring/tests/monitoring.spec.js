@@ -1,11 +1,9 @@
-describe('monitoring', function() {
-    'use strict';
-
+describe('monitoring', () => {
     beforeEach(window.module('superdesk.apps.monitoring'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    it('can switch between list and swimlane view', inject(function($controller, $rootScope, storage, config) {
+    it('can switch between list and swimlane view', inject(($controller, $rootScope, storage, config) => {
         config.features = {
             swimlane: {columnsLimit: 4}
         };
@@ -35,7 +33,7 @@ describe('monitoring', function() {
         expect(ctrl.columnsLimit).toBe(null);
     }));
 
-    it('can preview an item', inject(function($controller, $rootScope) {
+    it('can preview an item', inject(($controller, $rootScope) => {
         var scope = $rootScope.$new(),
             ctrl = $controller('Monitoring', {$scope: scope}),
             item = {};
@@ -52,7 +50,7 @@ describe('monitoring', function() {
         expect(ctrl.state['with-preview']).toBeFalsy();
     }));
 
-    it('can edit item', inject(function($controller, $rootScope, session) {
+    it('can edit item', inject(($controller, $rootScope, session) => {
         session.identity = {_id: 'foo'};
         var scope = $rootScope.$new(),
             ctrl = $controller('Monitoring', {$scope: scope}),
@@ -65,11 +63,12 @@ describe('monitoring', function() {
         expect(ctrl.state['with-authoring']).toBeTruthy();
     }));
 
-    describe('cards service', function() {
-        it('can get criteria for stage', inject(function(cards, session) {
+    describe('cards service', () => {
+        it('can get criteria for stage', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 term: {'task.stage': card._id}
             });
@@ -80,10 +79,12 @@ describe('monitoring', function() {
             });
         }));
 
-        it('can get criteria for personal', inject(function(cards, session) {
+        it('can get criteria for personal', inject((cards, session) => {
             var card = {type: 'personal'};
+
             session.identity = {_id: 'foo'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 bool: {
                     must: {term: {original_creator: session.identity._id}},
@@ -92,17 +93,19 @@ describe('monitoring', function() {
             });
         }));
 
-        it('can get criteria for saved search', inject(function(cards, session) {
+        it('can get criteria for saved search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {type: 'search', search: {filter: {query: {q: 'foo'}}}};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('foo');
         }));
 
-        it('can get criteria for spike desk', inject(function(cards, session) {
+        it('can get criteria for spike desk', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {type: 'spike'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 term: {'task.desk': card._id}
             });
@@ -111,98 +114,109 @@ describe('monitoring', function() {
             });
         }));
 
-        it('can get criteria for highlight', inject(function(cards, session) {
+        it('can get criteria for highlight', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {type: 'highlights'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 and: [{term: {highlights: queryParam.highlight}}]
             });
         }));
 
-        it('can get criteria for stage with search', inject(function(cards, session) {
+        it('can get criteria for stage with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', query: 'test'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
-        it('can get criteria for personal with search', inject(function(cards, session) {
+        it('can get criteria for personal with search', inject((cards, session) => {
             var card = {type: 'personal', query: 'test'};
+
             session.identity = {_id: 'foo'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
-        it('can get criteria for spike with search', inject(function(cards, session) {
+        it('can get criteria for spike with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'spike', query: 'test'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
-        it('can get criteria for highlight with search', inject(function(cards, session) {
+        it('can get criteria for highlight with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {type: 'highlights', query: 'test'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
-        it('can get criteria for file type filter', inject(function(cards, session) {
+        it('can get criteria for file type filter', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text'])};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 terms: {type: ['text']}
             });
         }));
 
-        it('can get criteria for saved search with search', inject(function(cards, session) {
+        it('can get criteria for saved search with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'search', query: 'test',
                 search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}}
             };
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.query.query_string.query).toBe('(test) foo');
             expect(criteria.source.post_filter.and).toContain({terms: {type: ['picture']}});
         }));
 
-        it('can get criteria for file type filter with search', inject(function(cards, session) {
+        it('can get criteria for file type filter with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text']), query: 'test'};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 terms: {type: ['text']}
             });
         }));
 
-        it('can get criteria for multiple file type filter', inject(function(cards, session) {
+        it('can get criteria for multiple file type filter', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text', 'picture'])};
             var criteria = cards.criteria(card);
+
             expect(criteria.source.query.filtered.filter.and).toContain({
                 terms: {type: ['text', 'picture']}
             });
         }));
     });
 
-    describe('monitoring group directive', function() {
+    describe('monitoring group directive', () => {
         beforeEach(window.module('superdesk.templates-cache'));
         beforeEach(window.module('superdesk.apps.searchProviders'));
         beforeEach(window.module('superdesk.core.services.pageTitle'));
 
-        beforeEach(inject(function($templateCache) {
+        beforeEach(inject(($templateCache) => {
             // change template not to require aggregate config but rather render single group
             $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
                 '<div id="group" sd-monitoring-group data-group="{type: \'stage\', _id: \'foo\'}"></div>');
         }));
 
         it('can update items on item:move event',
-        inject(function($rootScope, $compile, $q, api, $timeout, session) {
+        inject(($rootScope, $compile, $q, api, $timeout, session) => {
             session.identity = {_id: 'foo'};
             var scope = $rootScope.$new();
+
             $compile('<div sd-monitoring-view></div>')(scope);
             scope.$digest();
 
@@ -219,10 +233,11 @@ describe('monitoring', function() {
             expect(api.query).toHaveBeenCalled();
         }));
 
-        it('can edit non spiked item', inject(function($controller, $rootScope, $compile, authoringWorkspace, session) {
+        it('can edit non spiked item', inject(($controller, $rootScope, $compile, authoringWorkspace, session) => {
             session.identity = {_id: 'foo'};
             var scope = $rootScope.$new(),
                 $elm = $compile('<div sd-monitoring-view></div>')(scope);
+
             scope.$digest();
             spyOn(authoringWorkspace, 'edit');
 
@@ -239,17 +254,17 @@ describe('monitoring', function() {
         }));
     });
 
-    describe('desk notification directive', function() {
+    describe('desk notification directive', () => {
         beforeEach(window.module('superdesk.templates-cache'));
 
-        beforeEach(inject(function(desks, api, $q) {
+        beforeEach(inject((desks, api, $q) => {
             desks.stageLookup = {1: {desk: 'desk1', default_incoming: true}};
             desks.userLookup = {1: {display_name: 'user1'}};
             spyOn(api, 'activity').and.returnValue($q.when({_items: []}));
         }));
 
         it('can initiate the desk notifications',
-            inject(function($rootScope, $compile, deskNotifications) {
+            inject(($rootScope, $compile, deskNotifications) => {
                 var scope = $rootScope.$new();
 
                 var notifications = [{
@@ -261,10 +276,12 @@ describe('monitoring', function() {
                 spyOn(deskNotifications, 'getUnreadCount').and.returnValue(1);
 
                 var elem = $compile('<div sd-desk-notifications data-stage="1"></div>')(scope);
+
                 scope.$digest();
                 expect(deskNotifications.getNotifications).toHaveBeenCalled();
 
                 var iScope = elem.isolateScope();
+
                 expect(iScope.notificationCount).toBe(1);
             }));
     });

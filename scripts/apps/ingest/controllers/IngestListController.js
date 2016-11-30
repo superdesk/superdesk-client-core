@@ -17,11 +17,11 @@ export class IngestListController extends BaseListController {
             $scope.loading = true;
             criteria.aggregations = 1;
             criteria.es_highlight = search.getElasticHighlight();
-            api.query('ingest', criteria).then(function(items) {
+            api.query('ingest', criteria).then((items) => {
                 $scope.items = search.mergeItems(items, $scope.items, next);
                 $scope.total = items._meta.total;
             })
-            .finally(function() {
+            .finally(() => {
                 $scope.loading = false;
             });
         };
@@ -33,10 +33,12 @@ export class IngestListController extends BaseListController {
         var oldQuery = _.omit($location.search(), '_id');
         var update = angular.bind(this, function searchUpdated() {
             var newquery = _.omit($location.search(), '_id');
+
             if (!_.isEqual(_.omit(newquery, 'page'), _.omit(oldQuery, 'page'))) {
                 $location.search('page', null);
             }
             var query = this.getQuery($location.search());
+
             this.fetchItems({source: query});
             oldQuery = newquery;
         });

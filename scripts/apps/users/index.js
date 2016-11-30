@@ -48,7 +48,7 @@ export default angular.module('superdesk.apps.users', [
     .directive('sdUserMentio', directive.UserMentioDirective)
     .directive('sdUserInfo', directive.UserInfoDirective)
 
-    .filter('username', () => user => user ?
+    .filter('username', () => (user) => user ?
         user.display_name || user.username : null)
 
     .config(config.Permissions)
@@ -62,9 +62,11 @@ export default angular.module('superdesk.apps.users', [
             // directive factory creates a link function
             return function(scope, element, attrs) {
                 var value = scope.$eval(attrs.compile);
+
                 element.html(value);
                 var nscope = scope.$new(true);
-                _.each(scope.$eval(attrs.data), function(value, key) {
+
+                _.each(scope.$eval(attrs.data), (value, key) => {
                     nscope[key] = value;
                 });
                 $compile(element.contents())(nscope);
@@ -84,9 +86,7 @@ angular.module('superdesk.apps.users.profile', ['superdesk.core.api', 'superdesk
             templateUrl: asset.templateUrl('apps/users/views/edit.html'),
             resolve: {
                 user: ['session', 'api', function(session, api) {
-                    return session.getIdentity().then(function(identity) {
-                        return api.get(identity._links.self.href);
-                    });
+                    return session.getIdentity().then((identity) => api.get(identity._links.self.href));
                 }]
             }
         });

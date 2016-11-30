@@ -4,9 +4,10 @@ IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter', '
 export function IngestProviderService(api, $q, preferencesService, $filter, searchProviderService) {
     var _getAllIngestProviders = function(criteria = {}, page = 1, providers = []) {
         return api.query('ingest_providers', _.extend({max_results: 200, page: page}, criteria))
-            .then(function(result) {
+            .then((result) => {
                 let pg = page;
                 let merged = providers.concat(result._items);
+
                 if (result._links.next) {
                     pg++;
                     return _getAllIngestProviders(criteria, pg, merged);
@@ -23,10 +24,10 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
             var self = this;
             var providersPromise = $q.all([_getAllIngestProviders(), searchProviderService.getSearchProviders()]);
 
-            return providersPromise.then(function(results) {
+            return providersPromise.then((results) => {
                 self.providers = [];
 
-                results.forEach(function(result) {
+                results.forEach((result) => {
                     self.providers = self.providers.concat(result);
                 });
             });
@@ -51,10 +52,12 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
         },
         fetchDashboardProviders: function() {
             var deferred = $q.defer();
-            _getAllIngestProviders().then(function(result) {
+
+            _getAllIngestProviders().then((result) => {
                 var ingestProviders = result;
-                preferencesService.get('dashboard:ingest').then(function(userIngestProviders) {
-                    _.forEach(ingestProviders, function(provider) {
+
+                preferencesService.get('dashboard:ingest').then((userIngestProviders) => {
+                    _.forEach(ingestProviders, (provider) => {
                         var userProvider = _.find(
                             _.isArray ? userIngestProviders : [userIngestProviders],
                             (item) => item._id === provider._id
@@ -65,21 +68,22 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
                     });
 
                     deferred.resolve(ingestProviders);
-                }, function(error) {
+                }, (error) => {
                     deferred.reject(error);
                 });
-            }, function(error) {
+            }, (error) => {
                 deferred.reject(error);
             });
 
             return deferred.promise;
         }
     };
+
     return service;
 }
 
 function forcedExtend(dest, src) {
-    _.each(PROVIDER_DASHBOARD_DEFAULTS, function(value, key) {
+    _.each(PROVIDER_DASHBOARD_DEFAULTS, (value, key) => {
         if (_.has(src, key)) {
             dest[key] = src[key];
         } else {

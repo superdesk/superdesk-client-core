@@ -15,8 +15,8 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 
 // unbind all keyboard shortcuts when switching route
 .run(['$rootScope', 'keyboardManager', function($rootScope, kb) {
-    $rootScope.$on('$routeChangeStart', function() {
-        angular.forEach(kb.keyboardEvent, function(e, key) {
+    $rootScope.$on('$routeChangeStart', () => {
+        angular.forEach(kb.keyboardEvent, (e, key) => {
             if (!e.opt.global) {
                 kb.unbind(key);
             }
@@ -34,20 +34,22 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         BUTTON: true
     };
 
-    $document.on('keydown', function(e) {
+    $document.on('keydown', (e) => {
         var ctrlKey = e.ctrlKey || e.metaKey,
             altKey = e.altKey,
             shiftKey = e.shiftKey,
             isGlobal = ctrlKey && shiftKey;
+
         if (isGlobal || !ignoreNodes[e.target.nodeName]) { // $document.body is empty when testing
             var character = String.fromCharCode(e.which).toLowerCase(),
                 modifier = '';
+
             modifier += ctrlKey ? 'ctrl:' : '';
             modifier += altKey ? 'alt:' : '';
             modifier += shiftKey ? 'shift:' : '';
 
             // also handle arrows, enter/escape, etc.
-            angular.forEach(Object.keys(Keys), function(key) {
+            angular.forEach(Object.keys(Keys), (key) => {
                 if (e.which === Keys[key]) {
                     character = key;
                 }
@@ -158,6 +160,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         // Initialize options object
         let options = angular.extend({}, defaultOpt, opt);
         let lbl = label.toLowerCase();
+
         elt = options.target;
         if (typeof options.target === 'string') {
             elt = document.getElementById(options.target);
@@ -167,6 +170,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             // Disable event handler when focus input and textarea
             if (options.inputDisabled) {
                 var elt;
+
                 if (e.target) {
                     elt = e.target;
                 } else if (e.srcElement) {
@@ -221,6 +225,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 }
             };
             // Foreach keys in label (split on +)
+
             for (var i = 0, l = keys.length; k = keys[i], i < l; i++) {
                 switch (k) {
                 case 'ctrl':
@@ -259,7 +264,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 modifiers.shift.pressed === modifiers.shift.wanted &&
                 modifiers.alt.pressed === modifiers.alt.wanted &&
                 modifiers.meta.pressed === modifiers.meta.wanted) {
-                $timeout(function() {
+                $timeout(() => {
                     callback(e);
                 }, 1);
 
@@ -300,6 +305,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 
     this.push = function push(label, callback, options) {
         var e = this.keyboardEvent[label.toLowerCase()];
+
         if (e) {
             stack.push(e);
             this.unbind(label);
@@ -311,6 +317,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
     this.pop = function pop(label) {
         this.unbind(label);
         var index = _.findLastIndex(stack, {label: label.toLowerCase()});
+
         if (index !== -1) {
             this.bind(label, stack[index]._callback, stack[index].opt);
             stack.splice(index, 0);
@@ -321,6 +328,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
     this.unbind = function unbind(label) {
         let lbl = label.toLowerCase();
         var binding = this.keyboardEvent[lbl];
+
         delete this.keyboardEvent[lbl];
         if (!binding) {
             return;
@@ -328,6 +336,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         var type = binding.event,
             elt = binding.target,
             callback = binding.callback;
+
         if (elt.detachEvent) {
             elt.detachEvent('on' + type, callback);
         } else if (elt.removeEventListener) {
@@ -345,7 +354,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 callback = scope.$eval(attrs.sdHotkeyCallback),
                 options = scope.$eval(attrs.sdHotkeyOptions);
 
-            keyboardManager.bind(hotkey, function(e) {
+            keyboardManager.bind(hotkey, (e) => {
                 e.preventDefault();
                 if (callback) {
                     callback();
@@ -357,11 +366,11 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             /*
              * On scope $destroy unbind binded shortcuts
              */
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 keyboardManager.unbind(hotkey);
             });
 
-            $timeout(function() {
+            $timeout(() => {
                 if (elem.attr('title')) {
                     elem.attr('title', elem.attr('title') + ' (' + hotkey + ')');
                 } else if (elem.attr('tooltip')) {
@@ -382,12 +391,12 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             scope.enabled = false;
             scope.data = {};
 
-            keyboardManager.bind('alt+k', function() {
+            keyboardManager.bind('alt+k', () => {
                 scope.enabled = true;
                 scope.data = keyboardManager.registry;
             }, {global: true, group: gettext('General'), description: gettext('Displays active keyboard shortcuts')});
 
-            keyboardManager.bind('alt+k', function() {
+            keyboardManager.bind('alt+k', () => {
                 scope.enabled = false;
             }, {
                 global: true,

@@ -1,12 +1,10 @@
-describe('authoring', function() {
-    'use strict';
-
+describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.authoring'));
 
     it('set anpa category value for required subservice',
-    inject(function($httpBackend, $q, $rootScope, $compile, vocabularies, archiveService, content, $templateCache) {
+    inject(($httpBackend, $q, $rootScope, $compile, vocabularies, archiveService, content, $templateCache) => {
         $templateCache.put(
             'scripts/apps/authoring/views/authoring-header.html',
             '<div>{{scope.item}}</div>'
@@ -45,6 +43,7 @@ describe('authoring', function() {
         spyOn(vocabularies, 'getVocabularies').and.returnValue($q.when({_items: vocabulariesData}));
 
         var scope = $rootScope.$new();
+
         scope.item = {profile: 'motoring'};
 
         $compile('<div sd-authoring-header></div>')(scope);

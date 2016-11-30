@@ -1,20 +1,21 @@
-describe('url resolver', function() {
+describe('url resolver', () => {
     var SERVER_URL = 'http://localhost:5000/api',
         USERS_URL = '/users',
         RESOURCES = {_links: {child: [{title: 'users', href: USERS_URL}]}};
 
     beforeEach(window.module('superdesk.core.api'));
 
-    beforeEach(window.module(function($provide) {
+    beforeEach(window.module(($provide) => {
         // $provide.service('urls', URLResolver);
         $provide.constant('config', {server: {url: SERVER_URL}});
     }));
 
-    it('can resolve resource urls', inject(function(urls, $httpBackend, $rootScope) {
+    it('can resolve resource urls', inject((urls, $httpBackend, $rootScope) => {
         $httpBackend.expectGET(SERVER_URL).respond(RESOURCES);
 
         var url;
-        urls.resource('users').then(function(_url) {
+
+        urls.resource('users').then((_url) => {
             url = _url;
         });
 
@@ -24,11 +25,11 @@ describe('url resolver', function() {
         expect(url).toBe(SERVER_URL + USERS_URL);
     }));
 
-    it('can resolve item urls', inject(function(urls) {
+    it('can resolve item urls', inject((urls) => {
         expect(urls.item('/users/1')).toBe(SERVER_URL + '/users/1');
     }));
 
-    it('can warn if there is missing endpoint', inject(function(urls, $log, $httpBackend, $rootScope) {
+    it('can warn if there is missing endpoint', inject((urls, $log, $httpBackend, $rootScope) => {
         $httpBackend.expectGET(SERVER_URL).respond(RESOURCES);
 
         urls.resource('foo');

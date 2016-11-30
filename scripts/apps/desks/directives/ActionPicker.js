@@ -12,15 +12,15 @@ export function ActionPicker(desks, macros) {
             scope.deskStages = null;
             scope.deskMacros = null;
 
-            scope.$watchGroup(['desk', 'stage'], function() {
+            scope.$watchGroup(['desk', 'stage'], () => {
                 if (!scope.desks || !scope.deskStages) {
                     desks.initialize()
-                    .then(function() {
+                    .then(() => {
                         scope.desks = desks.desks._items;
                         scope.deskStages = desks.deskStages;
                     });
                 } else if (scope.desk) {
-                    macros.getByDesk(desks.deskLookup[scope.desk].name, true).then(function(macros) {
+                    macros.getByDesk(desks.deskLookup[scope.desk].name, true).then((macros) => {
                         scope.deskMacros = _.filter(macros, {action_type: 'direct'});
                     });
 

@@ -5,22 +5,22 @@ var SERVER_URL = 'http://localhost/resource',
     password = 'admin',
     session = 'xyz';
 
-describe('basic auth adapter', function() {
+describe('basic auth adapter', () => {
     var $httpBackend;
 
     beforeEach(window.module('superdesk.core.auth'));
     beforeEach(window.module('superdesk.core.menu'));
     beforeEach(window.module('superdesk.apps.authoring'));
-    beforeEach(inject(function(_$httpBackend_) {
+    beforeEach(inject((_$httpBackend_) => {
         $httpBackend = _$httpBackend_;
     }));
 
-    afterEach(function() {
+    afterEach(() => {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('can login', inject(function(authAdapter, urls, $q) {
+    it('can login', inject((authAdapter, urls, $q) => {
         $httpBackend
             .expectPOST(LOGIN_URL, {username: username, password: password})
                 .respond({token: session, user: '1'});
@@ -28,7 +28,8 @@ describe('basic auth adapter', function() {
         spyOn(urls, 'resource').and.returnValue($q.when(LOGIN_URL));
 
         var identity;
-        authAdapter.authenticate(username, password).then(function(_identity) {
+
+        authAdapter.authenticate(username, password).then((_identity) => {
             identity = _identity;
         });
 
@@ -38,7 +39,7 @@ describe('basic auth adapter', function() {
         expect(identity.token).toBe('Basic ' + btoa(session + ':'));
     }));
 
-    it('can reject on failed auth', inject(function(authAdapter, urls, $q) {
+    it('can reject on failed auth', inject((authAdapter, urls, $q) => {
         var resolved = false, rejected = false;
 
         spyOn(urls, 'resource').and.returnValue($q.when(LOGIN_URL));
@@ -46,9 +47,9 @@ describe('basic auth adapter', function() {
         $httpBackend.expectPOST(LOGIN_URL).respond(400);
 
         authAdapter.authenticate(username, password)
-            .then(function() {
+            .then(() => {
                 resolved = true;
-            }, function() {
+            }, () => {
                 rejected = true;
             });
 

@@ -16,6 +16,7 @@ function ReldateComplex(config, gettextCatalog) {
     var DISPLAY_DATE_FORMAT = DATE_FORMAT + ' ' + TIME_FORMAT;
     var DISPLAY_DAY_FORMAT = 'dddd, ';
     var DISPLAY_TODAY_FORMAT = '[Today]';
+
     return {
         scope: {useutc: '='},
         require: 'ngModel',
@@ -26,6 +27,7 @@ function ReldateComplex(config, gettextCatalog) {
 
             ngModel.$render = function() {
                 var date = moment.utc(ngModel.$viewValue);
+
                 scope.datetime = date.toISOString();
 
                 if (useutc) {

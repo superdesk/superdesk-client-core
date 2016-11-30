@@ -10,6 +10,7 @@ function PiwikTracking(config) {
         _paq.push(['setSiteId', config.id]);
         _paq.push(['setTrackerUrl', config.url + '/piwik.php']);
         var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+
         g.type = 'text/javascript';
         g.defer = true;
         g.async = true;
@@ -69,7 +70,7 @@ angular.module('superdesk.core.analytics', [])
 }])
 
 .run(['$rootScope', 'analytics', function($rootScope, analytics) {
-    $rootScope.$on('$routeChangeSuccess', function(ev, route) {
+    $rootScope.$on('$routeChangeSuccess', (ev, route) => {
         if (angular.isDefined(route)) {
             analytics.track(route);
         }

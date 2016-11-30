@@ -5,8 +5,9 @@ AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', '$rootScope', 'c
 function AuthExpiredInterceptor(session, $q, $injector, $rootScope, config, _) {
     function handleAuthExpired(response) {
         session.expire();
-        return session.getIdentity().then(function() {
+        return session.getIdentity().then(() => {
             var $http = $injector.get('$http');
+
             $http.defaults.headers.common.Authorization = session.token;
             response.config.headers.Authorization = session.token;
             return $injector.get('request').resend(response.config);
@@ -51,10 +52,10 @@ function ResetPassworController($scope, $location, api, notify, gettext) {
     $scope.sendToken = function() {
         $scope.sendTokenError = null;
         api.resetPassword.create({email: $scope.email})
-        .then(function(result) {
+        .then((result) => {
             notify.success(gettext('Link sent. Please check your email inbox.'));
             $scope.flowStep = 2;
-        }, function(rejection) {
+        }, (rejection) => {
             $scope.sendTokenError = rejection.status;
         });
         resetForm();
@@ -62,10 +63,10 @@ function ResetPassworController($scope, $location, api, notify, gettext) {
     $scope.resetPassword = function() {
         $scope.setPasswordError = null;
         api.resetPassword.create({token: $scope.token, password: $scope.password})
-        .then(function(result) {
+        .then((result) => {
             notify.success(gettext('Password was changed. You can login using your new password.'));
             $location.path('/').search({});
-        }, function(rejection) {
+        }, (rejection) => {
             $scope.setPasswordError = rejection.status;
         });
         resetForm();
@@ -74,12 +75,13 @@ function ResetPassworController($scope, $location, api, notify, gettext) {
     resetForm();
 
     var query = $location.search();
+
     if (query.token) {
         api.resetPassword.create({token: query.token})
-        .then(function(result) {
+        .then((result) => {
             $scope.token = query.token;
             $scope.flowStep = 3;
-        }, function(rejection) {
+        }, (rejection) => {
             $scope.setPasswordError = rejection.status;
             $scope.flowStep = 1;
         });
@@ -150,6 +152,7 @@ export default angular.module('superdesk.core.auth', [
                 }
 
                 var canLogout = true;
+
                 if (superdeskFlags.flags.authoring) {
                     var item = authoringWorkspace.getItem();
 
@@ -161,7 +164,7 @@ export default angular.module('superdesk.core.auth', [
                 }
 
                 if (canLogout) {
-                    api.auth.getById(session.sessionId).then(function(sessionData) {
+                    api.auth.getById(session.sessionId).then((sessionData) => {
                         api.auth.remove(sessionData).then(replace, replace);
                     });
                 }
@@ -170,7 +173,7 @@ export default angular.module('superdesk.core.auth', [
         // populate current user
             $rootScope.$watch(function watchSessionIdentity() {
                 return session.identity;
-            }, function(identity) {
+            }, (identity) => {
                 $rootScope.currentUser = session.identity;
                 $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
             });
@@ -178,7 +181,7 @@ export default angular.module('superdesk.core.auth', [
         // set auth header
             $rootScope.$watch(function watchSessionToken() {
                 return session.token;
-            }, function(token) {
+            }, (token) => {
                 if (token) {
                     $http.defaults.headers.common.Authorization = token;
                     $rootScope.sessionId = session.sessionId;

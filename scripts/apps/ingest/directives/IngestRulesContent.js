@@ -4,11 +4,13 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-rules-content.html',
         link: function(scope) {
             var _orig = null;
+
             scope.editRuleset = null;
 
-            api('rule_sets').query().then(function(result) {
-                scope.rulesets = $filter('sortByName')(result._items);
-            });
+            api('rule_sets').query()
+                .then((result) => {
+                    scope.rulesets = $filter('sortByName')(result._items);
+                });
 
             scope.edit = function(ruleset) {
                 scope.editRuleset = _.create(ruleset);
@@ -18,8 +20,9 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
 
             scope.save = function(ruleset) {
                 var _new = !ruleset._id;
+
                 api('rule_sets').save(_orig, ruleset)
-                .then(function() {
+                .then(() => {
                     if (_new) {
                         scope.rulesets.push(_orig);
                     }
@@ -27,7 +30,7 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
                     scope.rulesets = $filter('sortByName')(scope.rulesets);
                     notify.success(gettext('Rule set saved.'));
                     scope.cancel();
-                }, function(response) {
+                }, (response) => {
                     notify.error(gettext('I\'m sorry but there was an error when saving the rule set.'));
                 });
             };
@@ -37,11 +40,11 @@ export function IngestRulesContent(api, gettext, notify, modal, $filter) {
             };
 
             scope.remove = function(ruleset) {
-                confirm().then(function() {
+                confirm().then(() => {
                     api('rule_sets').remove(ruleset)
-                    .then(function(result) {
+                    .then((result) => {
                         _.remove(scope.rulesets, ruleset);
-                    }, function(response) {
+                    }, (response) => {
                         if (angular.isDefined(response.data._message)) {
                             notify.error(gettext('Error: ' + response.data._message));
                         } else {

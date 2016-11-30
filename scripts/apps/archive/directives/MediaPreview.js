@@ -5,7 +5,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk) {
         templateUrl: 'scripts/apps/archive/views/preview.html',
         link: function(scope) {
             scope.previewRewriteStory = function() {
-                return api.find('archive', scope.item.rewrite_id).then(function(item) {
+                return api.find('archive', scope.item.rewrite_id).then((item) => {
                     $rootScope.$broadcast('broadcast:preview', {item: item});
                 });
             };
@@ -18,7 +18,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk) {
                 return _.map(scope.item.company_codes, 'qcode').join(', ');
             };
 
-            desks.initialize().then(function() {
+            desks.initialize().then(() => {
                 scope.userLookup = desks.userLookup;
             });
         }

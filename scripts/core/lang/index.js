@@ -7,7 +7,7 @@ import './lang.generated';
 let lang = appConfig.langOverride;
 
 if (Object.keys(lang).length > 0) {
-    angular.module('gettext').run(['gettextCatalog', catalog => {
+    angular.module('gettext').run(['gettextCatalog', (catalog) => {
         for (let k of Object.keys(lang)) {
             catalog.setStrings(k, lang[k]);
         }

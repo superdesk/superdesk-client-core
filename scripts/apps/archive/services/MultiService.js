@@ -52,7 +52,8 @@ export function MultiService($rootScope) {
      */
     this.reset = function() {
         var ids = [];
-        _.each(items, function(item) {
+
+        _.each(items, (item) => {
             item.selected = false;
             ids.push(item._id);
         });
@@ -73,23 +74,23 @@ export function MultiService($rootScope) {
     // main
     this.reset();
     $rootScope.$on('$routeChangeStart', angular.bind(this, this.reset));
-    $rootScope.$on('multi:remove', function(_e, itemId) {
+    $rootScope.$on('multi:remove', (_e, itemId) => {
         self.remove(itemId);
     });
-    $rootScope.$on('item:spike', function(e, data) {
+    $rootScope.$on('item:spike', (e, data) => {
         if (!_.isNil(data)) {
             self.remove(data.item);
         }
     });
-    $rootScope.$on('item:unspike', function(e, data) {
+    $rootScope.$on('item:unspike', (e, data) => {
         if (!_.isNil(data)) {
             self.remove(data.item);
         }
     });
-    $rootScope.$on('item:publish', function(e, data) {
+    $rootScope.$on('item:publish', (e, data) => {
         self.remove(data.item);
     });
-    $rootScope.$on('item:move', function(e, data) {
+    $rootScope.$on('item:move', (e, data) => {
         self.remove(data.item);
     });
 }

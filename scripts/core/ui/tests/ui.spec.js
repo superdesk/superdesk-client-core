@@ -1,8 +1,7 @@
 
-'use strict';
 
-describe('superdesk ui', function() {
-    beforeEach(window.module(function($provide) {
+describe('superdesk ui', () => {
+    beforeEach(window.module(($provide) => {
         $provide.constant('config', {
             model: {
                 timeformat: 'HH:mm:ss',
@@ -22,16 +21,16 @@ describe('superdesk ui', function() {
 
     var datetimeHelper;
 
-    describe('datetimeHelper service', function() {
-        beforeEach(inject(function(_datetimeHelper_) {
+    describe('datetimeHelper service', () => {
+        beforeEach(inject((_datetimeHelper_) => {
             datetimeHelper = _datetimeHelper_;
         }));
 
-        it('should be defined', function() {
+        it('should be defined', () => {
             expect(datetimeHelper).toBeDefined();
         });
 
-        it('should validate time', function() {
+        it('should validate time', () => {
             expect(datetimeHelper.isValidTime('15:14:13')).toBe(true);
             expect(datetimeHelper.isValidTime('00:00:00')).toBe(true);
             expect(datetimeHelper.isValidTime('23:00:11')).toBe(true);
@@ -41,7 +40,7 @@ describe('superdesk ui', function() {
             expect(datetimeHelper.isValidTime('24:01:15')).toBe(false);
         });
 
-        it('should validate date', function() {
+        it('should validate date', () => {
             expect(datetimeHelper.isValidDate('23/09/2015')).toBe(true);
             expect(datetimeHelper.isValidDate('23/09/15')).toBe(false);
             expect(datetimeHelper.isValidDate('23/O9/2015')).toBe(false);
@@ -52,13 +51,13 @@ describe('superdesk ui', function() {
         });
     });
 
-    describe('sdTimezone directive', function() {
+    describe('sdTimezone directive', () => {
         var fakeTzData,
             getTzDataDeferred,
             isoScope;  // the directive's isolate scope
 
         beforeEach(window.module('superdesk.apps.ingest'));
-        beforeEach(window.module(function($provide) {
+        beforeEach(window.module(($provide) => {
             var childDirectives = [
                 'sdWeekdayPicker', 'sdTimepickerAlt', 'sdTypeahead'
             ];
@@ -73,16 +72,14 @@ describe('superdesk ui', function() {
             // Mock child directives to test the directive under test in
             // isolation, avoiding the need to create more complex fixtures
             // that satisfy any special child directives' requirements.
-            childDirectives.forEach(function(directiveName) {
+            childDirectives.forEach((directiveName) => {
                 // Internally, Angular appends the "Directive" suffix to
                 // directive name, thus we need to do the same for mocking.
-                $provide.factory(directiveName + 'Directive', function() {
-                    return {};
-                });
+                $provide.factory(directiveName + 'Directive', () => ({}));
             });
         }));
 
-        beforeEach(inject(function($compile, $rootScope, $q, tzdata) {
+        beforeEach(inject(($compile, $rootScope, $q, tzdata) => {
             var element,
                 html = '<div sd-timezone data-timezone="timezone"></div>',
                 scope;
@@ -98,17 +95,17 @@ describe('superdesk ui', function() {
             isoScope = element.isolateScope();
         }));
 
-        it('initially clears the time zone search term', function() {
+        it('initially clears the time zone search term', () => {
             expect(isoScope.tzSearchTerm).toEqual('');
         });
 
         it('initializes the list of matching time zones to an empty list',
-            function() {
+            () => {
                 expect(isoScope.matchingTimeZones).toEqual([]);
             }
         );
 
-        it('initializes the list of all available time zones', function() {
+        it('initializes the list of all available time zones', () => {
             var serverTzData = {
                 zones: {
                     'Europe/Rome': ['1 - CET'],
@@ -118,6 +115,7 @@ describe('superdesk ui', function() {
                     'Foo/Bar': []
                 }
             };
+
             fakeTzData.zones = serverTzData.zones;
             fakeTzData.links = serverTzData.links;
             fakeTzData.getTzNames = function() {
@@ -134,7 +132,7 @@ describe('superdesk ui', function() {
             );
         });
 
-        it('applies the default timezone', inject(function($compile, $rootScope, config) {
+        it('applies the default timezone', inject(($compile, $rootScope, config) => {
             var serverTzData = {
                 zones: {
                     'Europe/Rome': ['1 - CET'],
@@ -144,6 +142,7 @@ describe('superdesk ui', function() {
                     'Foo/Bar': []
                 }
             };
+
             fakeTzData.zones = serverTzData.zones;
             fakeTzData.links = serverTzData.links;
             fakeTzData.getTzNames = function() {
@@ -166,9 +165,9 @@ describe('superdesk ui', function() {
             expect(isoScope.timezone).toEqual('Europe/Rome');
         }));
 
-        describe('scope\'s searchTimeZones() method', function() {
+        describe('scope\'s searchTimeZones() method', () => {
             it('sets the time zone search term to the given term ',
-                function() {
+                () => {
                     isoScope.tzSearchTerm = 'foo';
                     isoScope.searchTimeZones('bar');
                     expect(isoScope.tzSearchTerm).toEqual('bar');
@@ -177,7 +176,7 @@ describe('superdesk ui', function() {
 
             it('sets the matching time zones to an empty list if given ' +
                 'an empty search term',
-                function() {
+                () => {
                     isoScope.matchingTimeZones = ['foo', 'bar'];
                     isoScope.searchTimeZones('');
                     expect(isoScope.matchingTimeZones).toEqual([]);
@@ -186,7 +185,7 @@ describe('superdesk ui', function() {
 
             it('sets the matching time zones to those matching the given ' +
                 'search term',
-                function() {
+                () => {
                     isoScope.timeZones = [
                         'Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz'
                     ];
@@ -198,24 +197,24 @@ describe('superdesk ui', function() {
             );
         });
 
-        describe('scope\'s selectTimeZone() method', function() {
+        describe('scope\'s selectTimeZone() method', () => {
             it('sets the routing rule\'s time zone to the one given',
-                function() {
+                () => {
                     isoScope.timezone = null;
                     isoScope.selectTimeZone('foo');
                     expect(isoScope.timezone).toEqual('foo');
                 }
             );
 
-            it('clears the time zone search term', function() {
+            it('clears the time zone search term', () => {
                 isoScope.tzSearchTerm = 'Europe';
                 isoScope.selectTimeZone('foo');
                 expect(isoScope.tzSearchTerm).toEqual('');
             });
         });
 
-        describe('scope\'s clearSelectedTimeZone() method', function() {
-            it('clears the time zone', function() {
+        describe('scope\'s clearSelectedTimeZone() method', () => {
+            it('clears the time zone', () => {
                 isoScope.timezone = 'foo';
                 isoScope.clearSelectedTimeZone();
                 expect(isoScope.timezone).not.toBeDefined();
@@ -223,19 +222,20 @@ describe('superdesk ui', function() {
         });
     });
 
-    describe('default ui config', function() {
-        it('ui.italicAbstract is on', inject(function(config) {
+    describe('default ui config', () => {
+        it('ui.italicAbstract is on', inject((config) => {
             expect(config.ui).toBeDefined();
             expect(config.ui.italicAbstract).toBeTruthy();
         }));
     });
 
-    describe('multiple emails', function() {
+    describe('multiple emails', () => {
         var scope, form, html;
+
         html = '<form name="form">' +
                     '<input type="text" name="email" ng-model="model.email" required sd-multiple-emails> ' +
                '</form>';
-        beforeEach(inject(function($compile, $rootScope) {
+        beforeEach(inject(($compile, $rootScope) => {
             scope = $rootScope.$new();
             scope.model = {email: null};
             $compile(html)(scope);
@@ -243,21 +243,21 @@ describe('superdesk ui', function() {
             form = scope.form;
         }));
 
-        it('validates single email address', function() {
+        it('validates single email address', () => {
             form.email.$setViewValue('test@test.com');
             scope.$digest();
             expect(scope.model.email).toEqual('test@test.com');
             expect(form.email.$valid).toBe(true);
         });
 
-        it('validates multiple email address', function() {
+        it('validates multiple email address', () => {
             form.email.$setViewValue('test@test.com,test@test.com');
             scope.$digest();
             expect(scope.model.email).toEqual('test@test.com,test@test.com');
             expect(form.email.$valid).toBe(true);
         });
 
-        it('should not validate if one of the email address is wrong', function() {
+        it('should not validate if one of the email address is wrong', () => {
             form.email.$setViewValue('test@test.com,test');
             scope.$digest();
             expect(form.email.$valid).toBe(false);

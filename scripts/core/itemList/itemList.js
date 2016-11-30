@@ -59,7 +59,7 @@ function extendScope(scope, itemList, itemPinService) {
     };
     var pinListener = function(pinnedItems) {
         scope.pinnedItems = pinnedItems;
-        _.each(scope.pinnedItems, function(item) {
+        _.each(scope.pinnedItems, (item) => {
             item.pinnedInstance = true;
         });
         processItems();
@@ -67,7 +67,7 @@ function extendScope(scope, itemList, itemPinService) {
 
     itemList.addListener(itemListListener);
     itemPinService.addListener(scope.options.pinMode, pinListener);
-    scope.$on('$destroy', function() {
+    scope.$on('$destroy', () => {
         itemList.removeListener(itemListListener);
         itemPinService.removeListener(pinListener);
     });
@@ -78,8 +78,10 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
     function getQuery(options) {
         var query = {source: {query: {filtered: {}}}};
         // process filter aliases and shortcuts
+
         if (options.sortField && options.sortDirection) {
             var sort = {};
+
             sort[options.sortField] = options.sortDirection;
             options.sort = [sort];
         }
@@ -117,14 +119,15 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         }
         // process notState
         if (options.notStates) {
-            _.each(options.notStates, function(notState) {
+            _.each(options.notStates, (notState) => {
                 query.source.query.filtered.filter.and.push({not: {term: {state: notState}}});
             });
         }
         // process state
         if (options.states) {
             var stateQuery = [];
-            _.each(options.states, function(state) {
+
+            _.each(options.states, (state) => {
                 stateQuery.push({term: {state: state}});
             });
             query.source.query.filtered.filter.and.push({or: stateQuery});
@@ -132,7 +135,8 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         // process creation date
         var dateKeys = {creationDate: '_created', modificationDate: 'versioncreated'};
         var dateQuery = null;
-        _.each(dateKeys, function(key, field) {
+
+        _.each(dateKeys, (key, field) => {
             if (options[field + 'Before'] || options[field + 'After']) {
                 dateQuery = {};
                 dateQuery[key] = {
@@ -143,9 +147,10 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             }
         });
         // process provider, source, urgency
-        _.each(['provider', 'source', 'urgency'], function(field) {
+        _.each(['provider', 'source', 'urgency'], (field) => {
             if (options[field]) {
                 var directQuery = {};
+
                 directQuery[field] = options[field];
                 query.source.query.filtered.filter.and.push({term: directQuery});
             }
@@ -160,7 +165,8 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             body: 'body_html'
         };
         var queryContent = [];
-        _.each(fields, function(dbField, field) {
+
+        _.each(fields, (dbField, field) => {
             if (options[field]) {
                 queryContent.push(dbField + ':(*' + options[field] + '*)');
             }
@@ -178,7 +184,8 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         // process search
         if (options.search) {
             var queryContentAny = [];
-            _.each(_.values(fields), function(dbField) {
+
+            _.each(_.values(fields), (dbField) => {
                 queryContentAny.push(dbField + ':(*' + options.search + '*)');
             });
             query.source.query.filtered.query = {
@@ -191,7 +198,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         }
 
         var addSlugs = function(list, words) {
-            words.forEach(w => {
+            words.forEach((w) => {
                 if (w) {
                     list.push('slugline:(' + w + ')');
                 }
@@ -203,6 +210,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             var queryRelatedItem = [];
             var sanitizedKeyword = options.keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
             var queryWords = sanitizedKeyword.split(' ');
+
             options.sluglineMatch = options.sluglineMatch || '';
 
             switch (options.sluglineMatch) {
@@ -244,7 +252,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 
         // process saved search
         if (options.savedSearch && options.savedSearch._links) {
-            return api.get(options.savedSearch._links.self.href).then(function(savedSearch) {
+            return api.get(options.savedSearch._links.self.href).then((savedSearch) => {
                 var criteria = search.query(savedSearch.filter.query).getCriteria();
 
                 query.source.query.filtered.filter.and = query.source.query.filtered.filter.and.concat(
@@ -261,10 +269,9 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 
     this.fetch = function(options) {
         let opt = _.extend({}, DEFAULT_OPTIONS, options);
-        return $q.when(getQuery(opt)).then(function(query) {
-            return api(opt.endpoint, opt.endpointParam || undefined)
-                .query(query);
-        });
+
+        return $q.when(getQuery(opt)).then((query) => api(opt.endpoint, opt.endpointParam || undefined)
+                .query(query));
     };
 }])
 .provider('ItemList', function() {
@@ -287,9 +294,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         };
 
         ItemList.prototype.removeListener = function(listener) {
-            _.remove(this.listeners, function(i) {
-                return i === listener;
-            });
+            _.remove(this.listeners, (i) => i === listener);
             return this;
         };
 
@@ -297,10 +302,10 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             var self = this;
 
             return itemListService.fetch(this.options)
-            .then(function(result) {
+            .then((result) => {
                 self.result = result;
                 self.maxPage = Math.ceil(result._meta.total / self.options.pageSize) || 0;
-                _.each(self.listeners, function(listener) {
+                _.each(self.listeners, (listener) => {
                     listener(result);
                 });
                 return result;
@@ -320,22 +325,22 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             var self = this;
 
             return preferencesService.get(PREF_KEY)
-            .then(function(result) {
-                self.items = result;
-            }).then(function() {
-                self.updateListeners();
-            });
+                .then((result) => {
+                    self.items = result;
+                })
+                .then(() => {
+                    self.updateListeners();
+                });
         },
         save: function() {
             var self = this;
 
-            this.items = _.uniq(this.items, function(item) {
-                return item._id;
-            });
+            this.items = _.uniq(this.items, (item) => item._id);
             var update = {};
+
             update[PREF_KEY] = this.items;
             return preferencesService.update(update, PREF_KEY)
-            .then(function() {
+            .then(() => {
                 self.updateListeners();
             });
         },
@@ -347,11 +352,11 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 
             item._type = type;
             this.load()
-            .then(function() {
+            .then(() => {
                 self.items.push(item);
                 return self.save();
             })
-            .then(function() {
+            .then(() => {
                 self.updateListeners();
             });
         },
@@ -359,11 +364,11 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             var self = this;
 
             this.load()
-            .then(function() {
+            .then(() => {
                 _.remove(self.items, {_id: item._id});
                 return self.save();
             })
-            .then(function() {
+            .then(() => {
                 self.updateListeners();
             });
         },
@@ -375,20 +380,19 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             listener(this.get(type));
         },
         removeListener: function(type, listener) {
-            _.remove(this.listeners[type], function(i) {
-                return i === listener;
-            });
+            _.remove(this.listeners[type], (i) => i === listener);
         },
         updateListeners: function() {
             var self = this;
 
-            _.each(this.listeners, function(listeners, type) {
-                _.each(listeners, function(listener) {
+            _.each(this.listeners, (listeners, type) => {
+                _.each(listeners, (listener) => {
                     listener(self.get(type));
                 });
             });
         }
     };
+
     itemPinService.load();
 
     return itemPinService;
@@ -417,19 +421,19 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 
                 function refresh() {
                     $timeout.cancel(timeout);
-                    timeout = $timeout(function() {
+                    timeout = $timeout(() => {
                         itemList.fetch();
                     }, 300, false);
                 }
 
                 extendScope(scope, itemList, itemPinService);
 
-                scope.$watch('itemListOptions', function() {
+                scope.$watch('itemListOptions', () => {
                     itemList.setOptions(scope.itemListOptions);
                     refresh();
                 }, true);
 
-                scope.$watch('options.similar', function() {
+                scope.$watch('options.similar', () => {
                     if (scope.options.similar && scope.options.item) {
                         if (!scope.options.item.slugline) {
                             notify.error(gettext('Error: Slugline required.'));
@@ -476,13 +480,13 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 
                 extendScope(scope, itemList, itemPinService);
 
-                scope.$watch('itemListOptions', function() {
+                scope.$watch('itemListOptions', () => {
                     itemList.setOptions(scope.itemListOptions);
                     itemList.setOptions({related: scope.options.related});
                     refresh();
                 }, true);
 
-                scope.$watch('options.related', function() {
+                scope.$watch('options.related', () => {
                     if (scope.options.related && scope.options.item) {
                         if (!scope.options.item.slugline) {
                             notify.error(gettext('Error: Slugline required.'));

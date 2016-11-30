@@ -52,11 +52,13 @@ export default angular.module('superdesk.core.directives.typeahead', [])
 
                 this.activateNextItem = function() {
                     var index = $scope.items.indexOf($scope.active);
+
                     this.activate($scope.items[(index + 1) % $scope.items.length]);
                 };
 
                 this.activatePreviousItem = function() {
                     var index = $scope.items.indexOf($scope.active);
+
                     this.activate($scope.items[index === 0 ? $scope.items.length - 1 : index - 1]);
                 };
 
@@ -97,14 +99,14 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                 var $input = element.find('.input-term > input');
                 var $list = element.find('.item-list');
 
-                $input.on('focus', function() {
-                    scope.$apply(function() {
+                $input.on('focus', () => {
+                    scope.$apply(() => {
                         scope.focused = true;
                     });
                 });
 
-                $input.on('blur', function() {
-                    scope.$apply(function() {
+                $input.on('blur', () => {
+                    scope.$apply(() => {
                         scope.focused = false;
                         if (typeof scope.blur === 'function' && !scope.hide) {
                             scope.blur({item: scope.active});
@@ -112,28 +114,28 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                     });
                 });
 
-                $list.on('mouseover', function() {
-                    scope.$apply(function() {
+                $list.on('mouseover', () => {
+                    scope.$apply(() => {
                         scope.mousedOver = true;
                     });
                 });
 
-                $list.on('mouseleave', function() {
-                    scope.$apply(function() {
+                $list.on('mouseleave', () => {
+                    scope.$apply(() => {
                         scope.mousedOver = false;
                     });
                 });
 
-                $input.on('keydown', function(e) {
+                $input.on('keydown', (e) => {
                     if (e.keyCode === Keys.enter) {
-                        scope.$apply(function() {
+                        scope.$apply(() => {
                             controller.selectActive();
                         });
                         e.preventDefault();
                     }
 
                     if (e.keyCode === Keys.escape) {
-                        scope.$apply(function() {
+                        scope.$apply(() => {
                             scope.hide = true;
                         });
                     }
@@ -145,7 +147,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                         e.preventDefault();
                         e.stopPropagation();
                         if (list && list.children.length) {
-                            scope.$apply(function() {
+                            scope.$apply(() => {
                                 controller.activateNextItem();
                                 scrollToActive(list, active);
                             });
@@ -156,7 +158,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                         e.preventDefault();
                         e.stopPropagation();
                         if (list && list.children.length) {
-                            scope.$apply(function() {
+                            scope.$apply(() => {
                                 controller.activatePreviousItem();
                                 scrollToActive(list, active);
                             });
@@ -164,22 +166,22 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                     }
                 });
 
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', () => {
                     $input.off();
                     $list.off();
                 });
 
                 function scrollToActive(list, active) {
-                    $timeout(function() {
+                    $timeout(() => {
                         if (list && active) {
                             list.scrollTop = Math.max(0, active.offsetTop - 2 * active.clientHeight);
                         }
                     }, 10, false); // requires a timeout to scroll once the active item gets its class
                 }
 
-                scope.$watch('focused', function(focused) {
+                scope.$watch('focused', (focused) => {
                     if (focused) {
-                        $timeout(function() {
+                        $timeout(() => {
                             $input.focus();
                         }, 0, false);
                     } else {
@@ -187,7 +189,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                     }
                 });
 
-                scope.$watch('isVisible()', function(visible) {
+                scope.$watch('isVisible()', (visible) => {
                     if (visible || scope.alwaysVisible) {
                         scope.hide = false;
                     } else {
@@ -197,37 +199,33 @@ export default angular.module('superdesk.core.directives.typeahead', [])
             }
         };
     }])
-    .directive('typeaheadItem', function() {
-        return {
-            require: '^sdTypeahead',
-            link: function(scope, element, attrs, controller) {
-                var item = scope.$eval(attrs.typeaheadItem);
+    .directive('typeaheadItem', () => ({
+        require: '^sdTypeahead',
+        link: function(scope, element, attrs, controller) {
+            var item = scope.$eval(attrs.typeaheadItem);
 
-                scope.$watch(function() {
-                    return controller.isActive(item);
-                }, function(active) {
-                    if (active) {
-                        element.addClass('active');
-                    } else {
-                        element.removeClass('active');
-                    }
-                });
+            scope.$watch(() => controller.isActive(item), (active) => {
+                if (active) {
+                    element.addClass('active');
+                } else {
+                    element.removeClass('active');
+                }
+            });
 
-                element.on('mouseenter', function(e) {
-                    scope.$apply(function() {
-                        controller.activate(item);
-                    });
+            element.on('mouseenter', (e) => {
+                scope.$apply(() => {
+                    controller.activate(item);
                 });
+            });
 
-                element.on('click', function(e) {
-                    scope.$apply(function() {
-                        controller.select(item);
-                    });
+            element.on('click', (e) => {
+                scope.$apply(() => {
+                    controller.select(item);
                 });
+            });
 
-                scope.$on('$destroy', function() {
-                    element.off();
-                });
-            }
-        };
-    });
+            scope.$on('$destroy', () => {
+                element.off();
+            });
+        }
+    }));

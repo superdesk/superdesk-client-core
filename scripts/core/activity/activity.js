@@ -91,9 +91,7 @@ function SuperdeskProvider($routeProvider, _) {
             }
         }, activityData);
 
-        var actionless = _.find(activity.filters, function(filter) {
-            return !filter.action;
-        });
+        var actionless = _.find(activity.filters, (filter) => !filter.action);
 
         if (actionless) {
             console.error('Missing filters action for activity', activity);
@@ -146,8 +144,8 @@ function SuperdeskProvider($routeProvider, _) {
             /**
              * Render main menu depending on registered acitivites
              */
-            betaService.isBeta().then(function(beta) {
-                _.forEach(activities, function(activity, id) {
+            betaService.isBeta().then((beta) => {
+                _.forEach(activities, (activity, id) => {
                     if (activity.beta === true && !beta || !isAllowed(activity, beta)) {
                         $routeProvider.when(activity.when, {redirectTo: '/workspace'});
                     }
@@ -163,7 +161,8 @@ function SuperdeskProvider($routeProvider, _) {
 
             function checkFeatures(activity) {
                 var isMatch = true;
-                angular.forEach(activity.features, function(val, key) {
+
+                angular.forEach(activity.features, (val, key) => {
                     isMatch = isMatch && features[key] && val;
                 });
                 return isMatch;
@@ -211,6 +210,7 @@ function SuperdeskProvider($routeProvider, _) {
                  */
                 resolve: function(intent) {
                     var activities = this.findActivities(intent);
+
                     switch (activities.length) {
                     case 0:
                         return $q.reject();
@@ -232,6 +232,7 @@ function SuperdeskProvider($routeProvider, _) {
                  */
                 findActivities: function(intent, item) {
                     var criteria = {};
+
                     if (intent.action) {
                         criteria.action = intent.action;
                     }
@@ -239,7 +240,7 @@ function SuperdeskProvider($routeProvider, _) {
                         criteria.type = intent.type;
                     }
 
-                    return _.sortBy(_.filter(this.activities, function(activity) {
+                    return _.sortBy(_.filter(this.activities, (activity) => {
                         return _.find(activity.filters, criteria) && isAllowed(activity) &&
                             activity.condition(item) && testAdditionalCondition();
 
@@ -277,9 +278,7 @@ function SuperdeskProvider($routeProvider, _) {
 
                     var self = this;
 
-                    return this.resolve(intent).then(function(activity) {
-                        return self.start(activity, intent);
-                    }, function() {
+                    return this.resolve(intent).then((activity) => self.start(activity, intent), () => {
                         $rootScope.$broadcast([
                             'intent',
                             intent.action || '*',
@@ -329,9 +328,10 @@ function SuperdeskProvider($routeProvider, _) {
                  * Get activities based on menu category
                  */
                 getMenu: function getMenu(category) {
-                    return privileges.loaded.then(function() {
+                    return privileges.loaded.then(() => {
                         var menu = [];
-                        angular.forEach(activities, function(activity) {
+
+                        angular.forEach(activities, (activity) => {
                             if (activity.category === category && isAllowed(activity) &&
                                 (activity.beta === false || $rootScope.beta)) {
                                 menu.push(activity);
@@ -387,6 +387,7 @@ angular.module('superdesk.core.activity', [
 .service('activityService', ['$location', '$injector', '$q', '$timeout', 'gettext', 'modal', 'lodash',
     function($location, $injector, $q, $timeout, gettext, modal, _) {
         var activityStack = [];
+
         this.activityStack = activityStack;
 
     /**
@@ -399,7 +400,7 @@ angular.module('superdesk.core.activity', [
         function getPath(activity, locals) {
             if (activity.href[0] === '/') { // trigger route
                 var matchAll = true,
-                    path = activity.href.replace(/:([_a-zA-Z0-9]+)/, function(match, key) {
+                    path = activity.href.replace(/:([_a-zA-Z0-9]+)/, (match, key) => {
                         matchAll = matchAll && locals[key];
                         return locals[key] ? locals[key] : match;
                     });
@@ -443,6 +444,7 @@ angular.module('superdesk.core.activity', [
         this.start = function startActivity(activity, locals) {
             function execute(activity, locals) {
                 var path = getPath(activity, locals && locals.data);
+
                 if (path) { // trigger route
                     $location.path(path);
                     return $q.when(locals);
@@ -450,6 +452,7 @@ angular.module('superdesk.core.activity', [
 
                 if (activity.modal) {
                     var defer = $q.defer();
+
                     activityStack.push({
                         defer: defer,
                         activity: activity,
@@ -465,9 +468,7 @@ angular.module('superdesk.core.activity', [
             if (activity.confirm) {
                 return modal.confirm(gettext(activity.confirm)).then(function runConfirmed() {
                     return execute(activity, locals);
-                }, function() {
-                    return $q.reject({confirm: 1});
-                });
+                }, () => $q.reject({confirm: 1}));
             }
 
             return execute(activity, locals);
@@ -478,11 +479,12 @@ angular.module('superdesk.core.activity', [
     $rootScope.superdesk = superdesk; // add superdesk reference so we can use constants in templates
 
     $rootScope.intent = function() {
-        return superdesk.intent.apply(superdesk, arguments);
+        return superdesk.intent(...arguments);
     };
 
     $rootScope.link = function() {
-        var path = superdesk.link.apply(superdesk, arguments);
+        var path = superdesk.link(...arguments);
+
         return path ? '#' + path : null;
     };
 }])
@@ -555,6 +557,7 @@ angular.module('superdesk.core.activity', [
     };
 
     var referrerURL;
+
     this.setReferrerUrl = function(refURL) {
         referrerURL = refURL;
     };
@@ -586,6 +589,7 @@ angular.module('superdesk.core.activity', [
      */
     function prepareUrl(refRoute) {
         var completeUrl;
+
         if (refRoute) {
             completeUrl = refRoute.$$route.href.replace('/:_id', '');
             if (!_.isEqual({}, refRoute.pathParams)) {
@@ -604,14 +608,15 @@ angular.module('superdesk.core.activity', [
 // reject modal on route change
 // todo(petr): what about blocking route change as long as it is opened?
 .run(['$rootScope', 'activityService', 'referrer', function($rootScope, activityService, referrer) {
-    $rootScope.$on('$routeChangeStart', function() {
+    $rootScope.$on('$routeChangeStart', () => {
         if (activityService.activityStack.length) {
             var item = activityService.activityStack.pop();
+
             item.defer.reject();
         }
     });
 
-    $rootScope.$on('$routeChangeSuccess', function(ev, currentRoute, previousRoute) {
+    $rootScope.$on('$routeChangeSuccess', (ev, currentRoute, previousRoute) => {
         referrer.setReferrer(currentRoute, previousRoute);
     });
 }])

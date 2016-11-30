@@ -4,7 +4,7 @@ export function MultiMarkHighlightsDropdown(desks, highlightsService, multi) {
         templateUrl: 'scripts/apps/highlights/views/mark_highlights_dropdown_directive.html',
         link: function(scope) {
             scope.markItem = function(highlight) {
-                angular.forEach(multi.getItems(), function(item) {
+                angular.forEach(multi.getItems(), (item) => {
                     item.multiSelect = true;
                     if (!_.includes(item.highlights, highlight._id)) {
                         highlightsService.markItem(highlight._id, item);
@@ -14,15 +14,15 @@ export function MultiMarkHighlightsDropdown(desks, highlightsService, multi) {
             };
 
             scope.isMarked = function(highlight) {
-                var result = _.find(multi.getItems(), function(item) {
-                    return !item.highlights || item.highlights.indexOf(highlight._id) === -1;
-                });
+                var result = _.find(multi.getItems(),
+                    (item) => !item.highlights || item.highlights.indexOf(highlight._id) === -1);
+
                 return !result;
             };
 
-            highlightsService.get(desks.getCurrentDeskId()).then(function(result) {
+            highlightsService.get(desks.getCurrentDeskId()).then((result) => {
                 scope.highlights = [];
-                result._items.forEach(function(item) {
+                result._items.forEach((item) => {
                     if (!item.desks.length) {
                         scope.highlights.push(item);
                     }

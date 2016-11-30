@@ -22,6 +22,7 @@ export function UserPopupService($compile, $timeout, userList) {
         // do box positioning
         var box = popover.get(true);
         var position = el.offset();
+
         box.css({
             left: position.left + el.outerWidth() - box.outerWidth() / 2,
             top: position.top + el.outerHeight()
@@ -29,9 +30,9 @@ export function UserPopupService($compile, $timeout, userList) {
 
         // get data
         userList.getUser(userId)
-        .then(function(user) {
+        .then((user) => {
             buildTemplate(user, scope);
-        }, function(response) {
+        }, (response) => {
             console.error(response);
         });
 
@@ -41,6 +42,7 @@ export function UserPopupService($compile, $timeout, userList) {
     // Close element
     popover.close = function() {
         var box = popover.get();
+
         if (!box) {
             return;
         }
@@ -49,6 +51,7 @@ export function UserPopupService($compile, $timeout, userList) {
 
     function hide() {
         var box = popover.get();
+
         if (!box) {
             return;
         }
@@ -57,6 +60,7 @@ export function UserPopupService($compile, $timeout, userList) {
 
     function resetContent() {
         var box = popover.get();
+
         if (!box) {
             return;
         }
@@ -73,6 +77,7 @@ export function UserPopupService($compile, $timeout, userList) {
     // build template
     function buildTemplate(user, scope) {
         var box = popover.get();
+
         box.html(
             '<div class="avatar-holder">' +
                 '<figure class="avatar big">' +
@@ -85,6 +90,7 @@ export function UserPopupService($compile, $timeout, userList) {
             '</div>'
         );
         var popupScope = scope.$new(true);
+
         popupScope.user = user;
         $compile(box)(popupScope);
     }

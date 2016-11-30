@@ -57,7 +57,7 @@ export function IngestRoutingFilter() {
 
             init();
 
-            scope.$watch('rule', function() {
+            scope.$watch('rule', () => {
                 init();
             });
 
@@ -74,9 +74,7 @@ export function IngestRoutingFilter() {
 
                 scope.matchingFilters = _.filter(
                     scope.filters,
-                    function(filter) {
-                        return regex.test(filter.name);
-                    }
+                    (filter) => regex.test(filter.name)
                 );
             };
 

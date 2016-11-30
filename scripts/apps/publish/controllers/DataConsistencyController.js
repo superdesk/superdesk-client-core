@@ -4,12 +4,13 @@ export function DataConsistencyController($scope, api) {
 
     function fetchConsistencyRecords() {
         var criteria = criteria || {};
+
         criteria.max_results = 200;
         return api.consistency.query(criteria);
     }
 
     $scope.reload = function() {
-        fetchConsistencyRecords().then(function(data) {
+        fetchConsistencyRecords().then((data) => {
             $scope.consistency_records = data._items;
             $scope.lastRefreshedAt = new Date();
         });

@@ -22,7 +22,8 @@ if (appConfig.features.useTansaProofing) {
 angular.module('superdesk.config').constant('config', appConfig);
 
 let body = angular.element('body');
-body.ready(function() {
+
+body.ready(() => {
     /**
      * @ngdoc module
      * @name superdesk-client

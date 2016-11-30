@@ -19,7 +19,7 @@ function TimeoutInterceptor($timeout, $q, $rootScope, request) {
         xrequest: function(config) {
             if (!IS_VIEW_REGEXP.test(config.url) && !request.isUpload(config)) {
                 config._ttl = config._ttl ? Math.min(TIMEOUT_MAX, config._ttl * 2) : TIMEOUT;
-                config.timeout = $timeout(function() {
+                config.timeout = $timeout(() => {
                     config._isTimeout = true;
                 }, config._ttl);
             }

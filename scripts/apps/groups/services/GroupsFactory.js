@@ -11,9 +11,9 @@ export function GroupsFactory($q, api, storage, userList) {
             var self = this;
 
             return api.groups.query({max_results: 500})
-            .then(function(result) {
+            .then((result) => {
                 self.groups = result;
-                _.each(result._items, function(group) {
+                _.each(result._items, (group) => {
                     self.groupLookup[group._id] = group;
                 });
             });
@@ -22,9 +22,9 @@ export function GroupsFactory($q, api, storage, userList) {
             var self = this;
 
             return userList.get(null, 1, 500)
-            .then(function(result) {
+            .then((result) => {
                 self.users = result;
-                _.each(result._items, function(user) {
+                _.each(result._items, (user) => {
                     self.userLookup[user._id] = user;
                 });
             });
@@ -32,10 +32,11 @@ export function GroupsFactory($q, api, storage, userList) {
         generateGroupMembers: function() {
             var self = this;
 
-            _.each(this.groups._items, function(group) {
+            _.each(this.groups._items, (group) => {
                 self.groupMembers[group._id] = [];
-                _.each(group.members, function(member, index) {
+                _.each(group.members, (member, index) => {
                     var user = _.find(self.users._items, {_id: member.user});
+
                     if (user) {
                         self.groupMembers[group._id].push(user);
                     }
@@ -72,5 +73,6 @@ export function GroupsFactory($q, api, storage, userList) {
             return this.loading;
         }
     };
+
     return groupsService;
 }

@@ -15,9 +15,7 @@ export function ContentFiltersService(api, $filter) {
 
     this.getFilterConditionParameters = function() {
         return api.query('filter_conditions/parameters')
-            .then(angular.bind(this, function(params) {
-                return params._items;
-            }));
+            .then(angular.bind(this, (params) => params._items));
     };
 
     this.saveFilterCondition = function(orig, diff) {
@@ -35,9 +33,7 @@ export function ContentFiltersService(api, $filter) {
     this.getFilterSearchResults = function(inputParams) {
         // call api to get search results
         return api.query('subscribers', {filter_condition: inputParams})
-            .then(angular.bind(this, function(resultSet) {
-                return resultSet._items;
-            }));
+            .then(angular.bind(this, (resultSet) => resultSet._items));
     };
 
     this.getAllContentFilters = function(page, items) {
@@ -53,15 +49,14 @@ export function ContentFiltersService(api, $filter) {
     };
 
     this.getGlobalContentFilters = function() {
-        return api.query('content_filters', {is_global: true}).then(function(response) {
-            return $filter('sortByName')(response._items);
-        });
+        return api.query('content_filters', {is_global: true})
+            .then((response) => $filter('sortByName')(response._items));
     };
 
     var _getAll = function(endPoint, page = 1, items = []) {
         return api(endPoint)
             .query({max_results: 200, page: page})
-            .then(function(result) {
+            .then((result) => {
                 let extended = items.concat(result._items);
                 let pg = page;
 

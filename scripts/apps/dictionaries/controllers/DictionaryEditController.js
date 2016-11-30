@@ -28,8 +28,8 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     }
 
     // listen for the file selected event
-    $scope.$on('fileSelected', function(event, args) {
-        $scope.$apply(function() {
+    $scope.$on('fileSelected', (event, args) => {
+        $scope.$apply(() => {
             $scope.file = args.file;
         });
     });
@@ -39,7 +39,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
         $scope.progress = {width: 1};
         if ($scope.file) {
             dictionaries.upload($scope.origDictionary, $scope.dictionary, $scope.file,
-                onSuccess, onError, function(update) {
+                onSuccess, onError, (update) => {
                     $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
                 }
             );
@@ -84,6 +84,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
         }
 
         var key = search[0].toLowerCase();
+
         if (!wordsTrie[key]) {
             return;
         }
@@ -92,6 +93,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
             length = searchWords.length,
             words = [],
             word;
+
         for (var i = 0; i < length; i++) {
             word = searchWords[i];
             if ($scope.dictionary.content[word] > 0 && isPrefix(search, word)) {
@@ -106,12 +108,14 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     };
 
     var wordsTrie = {};
+
     $scope.wordsCount = 0;
     generateTrie();
     $scope.stopLoading();
 
     function addWordToTrie(word) {
         var key = word[0].toLowerCase();
+
         if (wordsTrie.hasOwnProperty(key)) {
             wordsTrie[key].push(word);
         } else {
@@ -122,6 +126,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     function generateTrie() {
         var content = $scope.origDictionary.content || $scope.dictionary.content;
         var words = Object.keys(content || {});
+
         $scope.wordsCount = words.length;
         for (var i = 0; i < $scope.wordsCount; i++) {
             addWordToTrie(words[i]);
@@ -138,7 +143,7 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
 
     $scope.removeAbbreviation = function(abbreviation) {
         modal.confirm(gettext('Do you want to remove Abbreviation?'))
-            .then(function() {
+            .then(() => {
                 delete $scope.dictionary.content[abbreviation];
                 init();
             });
@@ -147,18 +152,14 @@ export function DictionaryEditController($scope, dictionaries, upload, gettext, 
     function confirmAdd() {
         if ($scope.dictionary.content[$scope.abbreviation.key]) {
             return modal.confirm(gettext('Abbreviation already exists. Do you want to overwrite it?'))
-                .then(function() {
-                    return true;
-                }, function() {
-                    return false;
-                });
+                .then(() => true, () => false);
         }
 
         return $q.when(true);
     }
 
     $scope.addAbbreviation = function() {
-        confirmAdd().then(function(result) {
+        confirmAdd().then((result) => {
             if (result) {
                 $scope.dictionary.content[$scope.abbreviation.key] = $scope.abbreviation.phrase;
                 init();

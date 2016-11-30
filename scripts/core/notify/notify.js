@@ -32,7 +32,7 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
                 }
 
                 if (ttl) {
-                    $timeout(function() {
+                    $timeout(() => {
                         self.pop();
                     }, ttl);
                 }
@@ -40,6 +40,7 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
 
             angular.forEach(messageTypes, function(type) {
                 var self = this;
+
                 this[type] = function(text, ttl) {
                     self.addMessage(type, text, ttl);
                 };

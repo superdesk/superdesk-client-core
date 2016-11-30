@@ -15,6 +15,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         },
         link: function(scope, elem) {
             var containerElem = elem.find('.content-list');
+
             containerElem.on('scroll', handleContainerScroll);
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
@@ -39,9 +40,10 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             };
 
             var updateTimeout;
+
             function handleContainerScroll($event) {
                 if ($rootScope.itemToogle) {
-                    scope.$applyAsync(function() {
+                    scope.$applyAsync(() => {
                         $rootScope.itemToogle(false);
                         $rootScope.itemToogle = null;
                     });
@@ -50,7 +52,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
                 // If scroll bar leaves top position update scope.scrollTop
                 // which is used to display refresh button on list item updates
                 if ($event.currentTarget.scrollTop >= 0 && $event.currentTarget.scrollTop < 100) {
-                    scope.$applyAsync(function() {
+                    scope.$applyAsync(() => {
                         scope.scrollTop = scope.monitoring.scrollTop = $event.currentTarget.scrollTop;
 
                         // force refresh the group or list, if scroll bar hits the top of list.
@@ -84,9 +86,9 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
              */
             function scheduleFetchNext() {
                 if (!fetchNextTimeout) {
-                    fetchNextTimeout = $timeout(function() {
+                    fetchNextTimeout = $timeout(() => {
                         scope.$broadcast('render:next');
-                        scope.$applyAsync(function() {
+                        scope.$applyAsync(() => {
                             fetchNextTimeout = null;
                         });
                     }, 1000, false);
@@ -99,13 +101,11 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
                 scope.$broadcast('refresh:list', group);
             };
 
-            scope.$on('$destroy', function() {
+            scope.$on('$destroy', () => {
                 containerElem.off('scroll');
             });
 
-            scope.$watch(function() {
-                return authoringWorkspace.item;
-            }, function(item) {
+            scope.$watch(() => authoringWorkspace.item, (item) => {
                 if (item) {
                     scope.monitoring.closePreview();
                 }

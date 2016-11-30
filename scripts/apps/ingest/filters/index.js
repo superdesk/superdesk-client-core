@@ -1,6 +1,7 @@
 export function InsertFilter() {
     return function(input, location, addition = '') {
         let loc = location || input.length;
+
         return input.substr(0, loc) + addition + input.substr(loc);
     };
 }
@@ -8,6 +9,7 @@ export function InsertFilter() {
 export function ScheduleFilter() {
     return function(input) {
         var schedule = '';
+
         if (_.isPlainObject(input)) {
             schedule += input.minutes && input.minutes > 0 ?
                 input.minutes + (input.minutes > 1 ? ' minutes' : ' minute') : '';

@@ -8,6 +8,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;
+
     this.loading = true;
     this.selected = null;
     this.groups = [];
@@ -26,7 +27,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     this.searchQuery = null;
 
     if (config.features && config.features.noTakes) {
-        this.fileTypes = this.fileTypes.filter(type => type !== 'takesPackage');
+        this.fileTypes = this.fileTypes.filter((type) => type !== 'takesPackage');
     }
 
     this.isOutputType = desks.isOutputType;
@@ -36,8 +37,8 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
         this.desks = desks.desks._items;
         this.deskLookup = desks.deskLookup;
         this.deskStages = desks.deskStages;
-        _.each(this.desks, function(desk) {
-            _.each(self.deskStages[desk._id], function(stage) {
+        _.each(this.desks, (desk) => {
+            _.each(self.deskStages[desk._id], (stage) => {
                 self.stageLookup[stage._id] = stage;
             });
         });
@@ -45,7 +46,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     .then(angular.bind(this, function() {
         return savedSearch.getAllSavedSearches().then(angular.bind(this, function(searchesList) {
             this.searches = searchesList;
-            _.each(this.searches, function(item) {
+            _.each(this.searches, (item) => {
                 self.searchLookup[item._id] = item;
             });
         }));
@@ -84,7 +85,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             return widgetMonitoringConfig(self.widget);
         }
 
-        return workspaces.getActiveId().then(function(activeWorkspace) {
+        return workspaces.getActiveId().then((activeWorkspace) => {
             if (!_.isNil(self.settings) && self.settings.desk) {
                 // when viewing in desk's monitoring settings
                 return deskSettingsMonitoringConfig(self.settings.desk);
@@ -118,7 +119,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      **/
     function deskWorkspaceMonitoringConfig(activeWorkspace) {
         // Read available groups from user preferences first
-        return preferencesService.get(PREFERENCES_KEY).then(function(preference) {
+        return preferencesService.get(PREFERENCES_KEY).then((preference) => {
             let groups = [];
             let desk = self.deskLookup[activeWorkspace.id];
             let monitoringSettings = desk ? desk.monitoring_settings || [] : [];
@@ -137,9 +138,8 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                         groups = monitoringSettings;
                     } else {
                         // update groups in preferences with any changes in desk's monitoring settings groups.
-                        activePrefGroups.forEach(function(group) {
-                            return angular.extend(group, monitoringSettings.find(grp => grp._id === group._id));
-                        });
+                        activePrefGroups.forEach((group) =>
+                            angular.extend(group, monitoringSettings.find((grp) => grp._id === group._id)));
 
                         groups = activePrefGroups;
                     }
@@ -161,8 +161,9 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      * @return {Object} {type: {String}, groups: {Array}}
      **/
     function customWorkspaceMonitoringConfig(activeWorkspace) {
-        return preferencesService.get(PREFERENCES_KEY).then(function(preference) {
+        return preferencesService.get(PREFERENCES_KEY).then((preference) => {
             let groups = [];
+
             if (preference && preference[activeWorkspace.id] && preference[activeWorkspace.id].groups) {
                 groups = preference[activeWorkspace.id].groups;
             }
@@ -176,10 +177,11 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      * @return {Object} {type: {String}, groups: {Array}}
      **/
     function widgetMonitoringConfig(objWidget) {
-        return workspaces.readActive().then(function(workspace) {
+        return workspaces.readActive().then((workspace) => {
             let groups = [];
+
             self.widget.configuration = objWidget.configuration || {groups: [], label: ''};
-            _.each(workspace.widgets, function(widget) {
+            _.each(workspace.widgets, (widget) => {
                 if (widget.configuration && self.widget._id === widget._id
                     && self.widget.multiple_id === widget.multiple_id) {
                     groups = widget.configuration.groups || groups;
@@ -198,6 +200,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     function deskSettingsMonitoringConfig(objDesk) {
         let groups = [];
         let desk = self.deskLookup[objDesk._id];
+
         if (desk && desk.monitoring_settings) {
             groups = desk.monitoring_settings;
         }
@@ -214,7 +217,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             self.groups.length = 0;
         }
         if (settings && settings.groups.length > 0) {
-            _.each(settings.groups, function(item) {
+            _.each(settings.groups, (item) => {
                 if (item.type === 'stage' && !self.stageLookup[item._id]) {
                     return;
                 }
@@ -224,13 +227,14 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 self.groups.push(item);
             });
         } else if (settings && settings.groups.length === 0 && settings.type === 'desk' && _.isNil(settings.desk)) {
-            _.each(self.stageLookup, function(item) {
+            _.each(self.stageLookup, (item) => {
                 if (item.desk === desks.getCurrentDeskId()) {
                     self.groups.push({_id: item._id, type: 'stage', header: item.name});
                 }
             });
 
             var currentDesk = desks.getCurrentDesk();
+
             if (currentDesk) {
                 self.groups.push({_id: currentDesk._id + ':output', type: 'deskOutput', header: currentDesk.name});
                 if (config.monitoring && config.monitoring.scheduled) {
@@ -242,13 +246,14 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 }
             }
         } else if (settings && settings.groups.length === 0 && !_.isNil(settings.desk)) {
-            _.each(self.stageLookup, function(item) {
+            _.each(self.stageLookup, (item) => {
                 if (item.desk === settings.desk._id) {
                     self.groups.push({_id: item._id, type: 'stage', header: item.name});
                 }
             });
 
             var editingDesk = settings.desk;
+
             if (editingDesk) {
                 self.groups.push({_id: editingDesk._id + ':output', type: 'deskOutput', header: editingDesk.name});
             }
@@ -267,12 +272,14 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      */
     function initSpikeGroups(isDesk) {
         var spikeDesks = {};
+
         if (self.spikeGroups.length > 0) {
             self.spikeGroups.length = 0;
         }
 
         if (isDesk) {
             var desk = desks.getCurrentDesk();
+
             if (desk) {
                 self.spikeGroups = [{_id: desk._id, type: 'spike'}];
             }
@@ -283,16 +290,17 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             return;
         }
 
-        _.each(self.groups, function(item, index) {
+        _.each(self.groups, (item, index) => {
             if (item.type === 'stage') {
                 var stage = self.stageLookup[item._id];
+
                 spikeDesks[stage.desk] = self.deskLookup[stage.desk];
             } else if (item.type === 'personal') {
                 spikeDesks.personal = {_id: 'personal', name: 'personal'};
             }
         });
 
-        _.each(spikeDesks, function(item) {
+        _.each(spikeDesks, (item) => {
             if (item._id === 'personal') {
                 self.spikeGroups.push({_id: item._id, type: 'spike-personal', header: item.name});
             } else {
@@ -309,7 +317,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             return null;
         }
         return self.readSettings()
-            .then(function(settings) {
+            .then((settings) => {
                 initGroups(settings);
                 setupCards();
                 self.settings = settings;
@@ -322,9 +330,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      * Read the settings when the current workspace
      * selection is changed
      */
-    $scope.$watch(function() {
-        return workspaces.active;
-    }, refresh);
+    $scope.$watch(() => workspaces.active, refresh);
 
     /**
      * Return true if the 'fileType' filter is selected
@@ -352,10 +358,10 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     function updateFileTypeCriteria() {
         var value = self.selectedFileType.length === 0 ? null : JSON.stringify(self.selectedFileType);
 
-        _.each(self.groups, function(item) {
+        _.each(self.groups, (item) => {
             item.fileType = value;
         });
-        _.each(self.spikeGroups, function(item) {
+        _.each(self.spikeGroups, (item) => {
             item.fileType = value;
         });
     }
@@ -370,6 +376,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             this.selectedFileType = [];
         } else {
             var index = this.selectedFileType.indexOf(fileType);
+
             if (index > -1) {
                 this.selectedFileType.splice(index, 1);
             } else {
@@ -387,6 +394,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      */
     function setupCards() {
         var cards = self.groups;
+
         angular.forEach(cards, setupCard);
         self.cards = cards;
 
@@ -397,11 +405,13 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             if (card.type === 'stage') {
                 var stage = self.stageLookup[card._id];
                 var desk = self.deskLookup[stage.desk];
+
                 card.deskId = stage.desk;
                 card.header = desk.name;
                 card.subheader = stage.name;
             } else if (desks.isOutputType(card.type)) {
                 var deskId = card._id.substring(0, card._id.indexOf(':'));
+
                 card.header = self.deskLookup[deskId].name;
             } else if (card.type === 'search') {
                 card.search = self.searchLookup[card._id];
@@ -422,8 +432,9 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
     this.edit = function(currentStep, displayOnlyCurrentStep) {
         this.editGroups = {};
         var _groups = this.groups;
-        this.refreshGroups().then(function() {
-            _.each(_groups, function(item, index) {
+
+        this.refreshGroups().then(() => {
+            _.each(_groups, (item, index) => {
                 self.editGroups[item._id] = {
                     _id: item._id,
                     selected: true,
@@ -433,6 +444,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                 };
                 if (item.type === 'stage') {
                     var stage = self.stageLookup[item._id];
+
                     self.editGroups[stage.desk] = {
                         _id: stage._id,
                         selected: true,
@@ -441,6 +453,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
                     };
                 } else if (desks.isOutputType(item.type)) {
                     var deskId = item._id.substring(0, item._id.indexOf(':'));
+
                     self.editGroups[deskId] = {
                         _id: item._id,
                         selected: true,
@@ -459,6 +472,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
 
     this.searchOnEnter = function($event, query) {
         var ENTER = 13;
+
         if ($event.keyCode === ENTER) {
             this.search(query);
             $event.stopPropagation();
@@ -470,10 +484,10 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      */
     this.search = function(query) {
         this.searchQuery = query;
-        _.each(this.groups, function(item) {
+        _.each(this.groups, (item) => {
             item.query = query;
         });
-        _.each(this.spikeGroups, function(item) {
+        _.each(this.spikeGroups, (item) => {
             item.query = query;
         });
     };
@@ -497,14 +511,15 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
 
     this.getMaxHeightStyle = function(maxItems) {
         var maxHeight = 32 * (maxItems || defaultMaxItems);
+
         return {'max-height': maxHeight.toString() + 'px'};
     };
 
-    $scope.$on('open:archived_kill', function(evt, item) {
+    $scope.$on('open:archived_kill', (evt, item) => {
         $scope.archived_kill = item;
     });
 
-    $scope.$on('open:resend', function(evt, item) {
+    $scope.$on('open:resend', (evt, item) => {
         $scope.resend = item;
     });
 }

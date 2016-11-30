@@ -39,14 +39,15 @@ export default angular.module('superdesk.core.directives.permissions', [])
                 scope.model = false;
                 if (permissions[scope.permission]) {
                     var requiredPermissions = permissions[scope.permission].permissions;
+
                     if (scope.role) {
                         scope.model = permissionsService.isRoleAllowed(requiredPermissions, scope.role);
                     } else if (scope.user) {
-                        permissionsService.isUserAllowed(requiredPermissions, scope.user).then(function(result) {
+                        permissionsService.isUserAllowed(requiredPermissions, scope.user).then((result) => {
                             scope.model = result;
                         });
                     } else {
-                        permissionsService.isUserAllowed(requiredPermissions).then(function(result) {
+                        permissionsService.isUserAllowed(requiredPermissions).then((result) => {
                             scope.model = result;
                         });
                     }

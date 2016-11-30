@@ -18,13 +18,13 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     scope.isLoading = true;
                     scope.loginError = null;
                     auth.login(scope.username || '', scope.password || '')
-                    .then(function() {
+                    .then(() => {
                         scope.isLoading = false;
                         scope.password = null;
                         if ($route.current && $route.current.redirectTo) {
                             $route.reload();
                         }
-                    }, function(rejection) {
+                    }, (rejection) => {
                         scope.isLoading = false;
                         scope.loginError = rejection.status;
                         if (scope.loginError === 401) {
@@ -44,6 +44,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     if (!triggerLogin[0] && triggerLogin[1] === true) {
                         scope.active = true;
                         var focusElem = scope.username ? 'password' : 'username';
+
                         element.find('#login-' + focusElem).focus();
                     } else {
                         scope.active = false;

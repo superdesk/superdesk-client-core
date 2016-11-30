@@ -1,7 +1,8 @@
+/* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 var openUrl = require('./utils').open;
+
 module.exports = new PublishQueue();
 
 function PublishQueue() {
@@ -15,27 +16,32 @@ function PublishQueue() {
 
     this.getHeadline = function(rowNo) {
         var row = this.getRow(rowNo);
+
         return row.all(by.className('ng-binding')).get(2);
     };
 
     this.getUniqueName = function(rowNo) {
         var row = this.getRow(rowNo);
+
         return row.all(by.className('ng-binding')).get(1);
     };
 
     this.getDestination = function(rowNo) {
         var row = this.getRow(rowNo);
+
         return row.all(by.className('ng-binding')).get(7);
     };
 
     this.previewAction = function(rowNo) {
         var row = this.getRow(rowNo);
+
         row.click();
     };
 
     this.openCompositeItem = function(group) {
         var _list = element(by.css('[data-title="' + group.toLowerCase() + '"]'))
         .all(by.repeater('child in item.childData'));
+
         _list.all(by.css('[ng-click="open(data)"]')).get(0).click();
     };
 

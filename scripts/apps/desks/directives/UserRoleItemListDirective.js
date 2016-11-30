@@ -14,7 +14,7 @@ export function UserRoleItemListDirective(desks, usersService) {
             scope.total = 0;
             scope.items = [];
             scope.user = null;
-            _.each(scope.users, function(user, index) {
+            _.each(scope.users, (user, index) => {
                 if (scope.role === user.role) {
                     scope.items.push(user);
                     scope.total = scope.total + 1;

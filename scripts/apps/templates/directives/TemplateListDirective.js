@@ -1,5 +1,6 @@
 export function TemplateListDirective() {
     var ENTER = 13;
+
     return {
         scope: {templates: '=', select: '&'},
         templateUrl: 'scripts/apps/templates/views/template-list.html',

@@ -32,7 +32,7 @@ export function TemplateSelectDirective(api, desks, session, templates, notify, 
 
                 templates.fetchTemplatesByUserDesk(session.identity._id, desks.getCurrentDeskId(),
                     scope.options.page, PAGE_SIZE, 'create', scope.options.templateName)
-                .then(function(result) {
+                .then((result) => {
                     scope.loading = false;
                     if (result._items.length === 0) {
                         notify.error(gettext('No Templates found.'));
@@ -40,7 +40,7 @@ export function TemplateSelectDirective(api, desks, session, templates, notify, 
                         scope.open = true;
                         scope.publicTemplates = [];
                         scope.privateTemplates = [];
-                        result._items.forEach(function(template) {
+                        result._items.forEach((template) => {
                             if (template.is_public !== false) {
                                 scope.publicTemplates.push(template);
                             } else {

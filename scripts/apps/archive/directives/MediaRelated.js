@@ -9,20 +9,20 @@ export function MediaRelated(familyService, superdesk) {
         link: function(scope, elem) {
             scope.$on('item:duplicate', fetchRelatedItems);
 
-            scope.$watch('item', function(newVal, oldVal) {
+            scope.$watch('item', (newVal, oldVal) => {
                 if (newVal !== oldVal) {
                     fetchRelatedItems();
                 }
             });
             scope.open = function(item) {
-                superdesk.intent('view', 'item', item).then(null, function() {
+                superdesk.intent('view', 'item', item).then(null, () => {
                     superdesk.intent('edit', 'item', item);
                 });
             };
 
             function fetchRelatedItems() {
                 familyService.fetchItems(scope.item.family_id || scope.item._id, scope.item)
-                .then(function(items) {
+                .then((items) => {
                     scope.relatedItems = items;
                 });
             }

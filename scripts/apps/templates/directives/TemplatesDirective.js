@@ -16,19 +16,19 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
 
             function fetchTemplates() {
                 templates.fetchAllTemplates(1, 200).then(
-                    function(result) {
+                    (result) => {
                         result._items = $filter('sortByName')(result._items, 'template_name');
                         $scope.content_templates = result;
                     }
                 );
             }
 
-            desks.initialize().then(function() {
+            desks.initialize().then(() => {
                 $scope.desks = desks.desks;
                 selectDesk(null);
             });
 
-            content.getTypes().then(function() {
+            content.getTypes().then(() => {
                 $scope.content_types = content.types;
             });
 
@@ -82,9 +82,8 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                     $scope.template.template_desks = [desk._id];
                     return;
                 }
-                var deskIndex = _.findIndex($scope.template.template_desks, function(val) {
-                    return val === desk._id;
-                });
+                var deskIndex = _.findIndex($scope.template.template_desks, (val) => val === desk._id);
+
                 if (desk.selected && deskIndex === -1) {
                     $scope.template.template_desks.push(desk._id);
                 }
@@ -98,7 +97,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              */
             function selectDesk(deskId) {
                 $scope.template_desk = deskId;
-                _.forEach($scope.desks._items, function(desk) {
+                _.forEach($scope.desks._items, (desk) => {
                     desk.selected = desk._id === deskId;
                 });
             }
@@ -108,10 +107,9 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              */
             function selectDesks(desksIds) {
                 if (desksIds instanceof Array) {
-                    _.forEach($scope.desks._items, function(desk) {
-                        var deskIndex = _.findIndex(desksIds, function(deskId) {
-                            return deskId === desk._id;
-                        });
+                    _.forEach($scope.desks._items, (desk) => {
+                        var deskIndex = _.findIndex(desksIds, (deskId) => deskId === desk._id);
+
                         desk.selected = deskIndex !== -1;
                     });
                 }
@@ -158,8 +156,10 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
              */
             $scope.getTemplateDesks = function(template) {
                 var templateDesks = [];
-                _.forEach(template.template_desks, function(deskId) {
+
+                _.forEach(template.template_desks, (deskId) => {
                     var desk = _.find($scope.desks._items, {_id: deskId});
+
                     if (desk) {
                         templateDesks.splice(-1, 0, desk.name);
                     }
@@ -204,14 +204,15 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                 if (validate($scope.origTemplate, $scope.template)) {
                     templates.save($scope.origTemplate, $scope.template)
                     .then(
-                        function() {
+                        () => {
                             notify.success(gettext('Template saved.'));
                             $scope.cancel();
                         },
-                        function(response) {
+                        (response) => {
                             notifySaveError(response, notify);
                         }
-                    ).then(fetchTemplates);
+                    )
+                    .then(fetchTemplates);
                 }
             };
 
@@ -241,7 +242,7 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
                 selectDesks($scope.template.template_desks);
             };
 
-            $scope.$watch('item.profile', function(profile) {
+            $scope.$watch('item.profile', (profile) => {
                 if (profile) {
                     content.getType(profile).then(setupContentType);
                 } else {
@@ -256,12 +257,10 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
 
             $scope.remove = function(template) {
                 modal.confirm(gettext('Are you sure you want to delete the template?'))
-                    .then(function() {
-                        return api.remove(template);
-                    })
-                    .then(function(result) {
+                    .then(() => api.remove(template))
+                    .then((result) => {
                         _.remove($scope.templates, template);
-                    }, function(response) {
+                    }, (response) => {
                         if (angular.isDefined(response.data._message)) {
                             notify.error(gettext('Error: ' + response.data._message));
                         } else {
@@ -305,11 +304,9 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
 
             // fetch all desks for the current user and add them to
             // the list of filters.
-            desks.fetchDesks().then(function(desks) {
+            desks.fetchDesks().then((desks) => {
                 $scope.filters = $scope.filters.concat(
-                    desks._items.map(function(d) {
-                        return {label: d.name, value: d._id};
-                    })
+                    desks._items.map((d) => ({label: d.name, value: d._id}))
                 );
             });
 

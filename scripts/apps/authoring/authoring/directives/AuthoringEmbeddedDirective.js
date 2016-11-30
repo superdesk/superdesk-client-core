@@ -17,13 +17,13 @@ export function AuthoringEmbeddedDirective(api, notify, gettext, $filter, config
                     template_name: 'kill', item: _.pick(scope.item, fields)
                 };
 
-                api.save('content_templates_apply', {}, item, {}).then(function(result) {
+                api.save('content_templates_apply', {}, item, {}).then((result) => {
                     item = _.pick(result, _.keys(helpers.CONTENT_FIELDS_DEFAULTS));
                     scope.origItem = angular.extend({}, scope.item);
-                    _.each(item, function(value, key) {
+                    _.each(item, (value, key) => {
                         scope.origItem[key] = value;
                     });
-                }, function(err) {
+                }, (err) => {
                     notify.error(gettext('Failed to apply kill template to the item.'));
                 });
             } else {

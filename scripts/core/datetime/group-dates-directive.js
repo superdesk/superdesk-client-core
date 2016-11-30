@@ -15,14 +15,17 @@ angular.module('superdesk.core.datetime.groupdates', []).directive('sdGroupDates
     var DISPLAY_CDATE_FORMAT = 'D. MMMM';
     var DISPLAY_DAY_FORMAT = 'dddd, ';
     var DISPLAY_TODAY_FORMAT = '[Today], ';
+
     return {
         require: 'ngModel',
         link: function(scope, element, attrs, ngModel) {
             ngModel.$render = function() {
                 var date = moment.utc(ngModel.$viewValue[attrs.sdGroupDates]);
+
                 if (scope.$first || lastDate.format(COMPARE_FORMAT) !== date.format(COMPARE_FORMAT)) {
                     var fdate;
                     var fday;
+
                     if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)) {
                         fday = date.format(DISPLAY_TODAY_FORMAT);
                     } else {

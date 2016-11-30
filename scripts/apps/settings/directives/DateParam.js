@@ -5,15 +5,16 @@ export function DateParam($location) {
         scope: true,
         link: function(scope, elem, attrs) {
             var search = $location.search();
+
             if (search[attrs.location]) {
                 scope.date = search[attrs.location];
             }
 
-            scope.$watch('date', function(date) {
+            scope.$watch('date', (date) => {
                 $location.search(attrs.location, date);
             });
 
-            scope.$on('$routeUpdate', function(event, route) {
+            scope.$on('$routeUpdate', (event, route) => {
                 scope.date = route.params[attrs.location];
             });
         }

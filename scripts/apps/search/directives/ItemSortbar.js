@@ -29,6 +29,7 @@ export function ItemSortbar(search, asset, $location) {
 
             scope.canSort = function() {
                 var criteria = search.query($location.search()).getCriteria(true);
+
                 return !(angular.isDefined(criteria.repo) && repos[criteria.repo]);
             };
 

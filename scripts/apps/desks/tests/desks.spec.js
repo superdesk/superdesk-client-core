@@ -1,21 +1,21 @@
 
-'use strict';
 
-describe('desks service', function() {
+describe('desks service', () => {
     var USER_URL = 'users/1';
 
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
 
     it('can fetch current user desks',
-    inject(function(desks, session, api, preferencesService, $rootScope, $q) {
+    inject((desks, session, api, preferencesService, $rootScope, $q) => {
         spyOn(session, 'getIdentity').and.returnValue($q.when({_links: {self: {href: USER_URL}}}));
         spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([{name: 'sport'}, {name: 'news'}]));
         spyOn(preferencesService, 'get').and.returnValue($q.when([]));
         spyOn(preferencesService, 'update');
 
         var userDesks;
-        desks.fetchCurrentUserDesks().then(function(_userDesks) {
+
+        desks.fetchCurrentUserDesks().then((_userDesks) => {
             userDesks = _userDesks;
         });
 
@@ -25,7 +25,7 @@ describe('desks service', function() {
     }));
 
     it('can pick personal desk if user has no current desk selected',
-        inject(function(desks, session, api, preferencesService, $q, $rootScope) {
+        inject((desks, session, api, preferencesService, $q, $rootScope) => {
             spyOn(preferencesService, 'get').and.returnValue($q.when('missing'));
             spyOn(preferencesService, 'update');
             spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([]));
@@ -37,7 +37,7 @@ describe('desks service', function() {
     );
 
     it('can checks if current desk is part of user desks, personal will be selected',
-        inject(function(desks, session, api, preferencesService, $q, $rootScope) {
+        inject((desks, session, api, preferencesService, $q, $rootScope) => {
             spyOn(preferencesService, 'get').and.returnValue($q.when('missing'));
             spyOn(preferencesService, 'update');
             spyOn(desks, 'fetchUserDesks').and.returnValue($q.when({_items: []}));
@@ -48,19 +48,19 @@ describe('desks service', function() {
         })
     );
 
-    it('can save desk changes', inject(function(desks, api, $q) {
+    it('can save desk changes', inject((desks, api, $q) => {
         spyOn(api, 'save').and.returnValue($q.when({}));
         desks.save({}, {});
         expect(api.save).toHaveBeenCalledWith('desks', {}, {});
     }));
 
-    it('can remove a desk', inject(function(desks, api, $q) {
+    it('can remove a desk', inject((desks, api, $q) => {
         spyOn(api, 'remove').and.returnValue($q.when({}));
         desks.remove({});
         expect(api.remove).toHaveBeenCalledWith({});
     }));
 
-    it('can change both desk and stage at same time', inject(function(desks, preferencesService, $q) {
+    it('can change both desk and stage at same time', inject((desks, preferencesService, $q) => {
         spyOn(preferencesService, 'update').and.returnValue($q.when({}));
         desks.setWorkspace(null);
         expect(preferencesService.update.calls.count()).toBe(0);
@@ -76,8 +76,9 @@ describe('desks service', function() {
         expect(preferencesService.update.calls.count()).toBe(3);
     }));
 
-    it('has active property with desk&stage', inject(function(desks, preferencesService) {
+    it('has active property with desk&stage', inject((desks, preferencesService) => {
         var active = desks.active;
+
         spyOn(preferencesService, 'update');
 
         // change desk
@@ -101,14 +102,15 @@ describe('desks service', function() {
         expect(active).toBe(desks.active);
     }));
 
-    it('can get stages for given desk', inject(function(desks, api, $q, $rootScope) {
+    it('can get stages for given desk', inject((desks, api, $q, $rootScope) => {
         spyOn(api, 'query').and.returnValue($q.when({
             _items: [{desk: 'foo'}, {desk: 'bar'}],
             _links: {}
         }));
 
         var stages;
-        desks.fetchDeskStages('foo').then(function(_stages) {
+
+        desks.fetchDeskStages('foo').then((_stages) => {
             stages = _stages;
         });
 
@@ -116,14 +118,14 @@ describe('desks service', function() {
         expect(stages.length).toBe(1);
     }));
 
-    describe('getCurrentDeskId() method', function() {
+    describe('getCurrentDeskId() method', () => {
         var desks;
 
-        beforeEach(inject(function(_desks_) {
+        beforeEach(inject((_desks_) => {
             desks = _desks_;
         }));
 
-        it('returns null if user desks list is empty', function() {
+        it('returns null if user desks list is empty', () => {
             var result;
 
             desks.userDesks = [];

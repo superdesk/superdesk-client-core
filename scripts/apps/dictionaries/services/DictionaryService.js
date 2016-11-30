@@ -15,17 +15,15 @@ export function DictionaryService(api, urls, session, Upload, $q) {
     }
 
     this.fetch = function(success, error) {
-        return session.getIdentity().then(function(identity) {
-            return api.query('dictionaries', {
-                projection: {content: 0},
-                where: {
-                    $or: [
+        return session.getIdentity().then((identity) => api.query('dictionaries', {
+            projection: {content: 0},
+            where: {
+                $or: [
                         {user: {$exists: false}},
                         {user: identity._id}
-                    ]}
-            })
-            .then(success, error);
-        });
+                ]}
+        })
+            .then(success, error));
     };
 
     this.open = function(dictionary, success, error) {
@@ -39,7 +37,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
         var sendData = {};
 
         // pick own properties
-        angular.forEach(data, function(val, key) {
+        angular.forEach(data, (val, key) => {
             if (key !== 'content' && key[0] !== '_') {
                 sendData[key] = val === null ? val : val.toString();
             }
@@ -52,7 +50,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
             sendData.content_list = angular.toJson(data.content);
         }
 
-        urls.resource('dictionaries').then(function(uploadURL) {
+        urls.resource('dictionaries').then((uploadURL) => {
             let url = uploadURL;
 
             if (hasId) {
@@ -71,7 +69,8 @@ export function DictionaryService(api, urls, session, Upload, $q) {
 
     this.update = function(dictionary, data, success, error) {
         var sendData = {};
-        angular.forEach(data, function(val, key) {
+
+        angular.forEach(data, (val, key) => {
             if (key[0] !== '_') {
                 sendData[key] = key === 'is_active' ? val.toString() : val;
             }
@@ -95,8 +94,9 @@ export function DictionaryService(api, urls, session, Upload, $q) {
      * @param {string} lang
      */
     function getUserAbbreviations(lang, baseLang) {
-        return session.getIdentity().then(function(identity) {
+        return session.getIdentity().then((identity) => {
             var languageIds = [{language_id: lang}];
+
             if (baseLang) {
                 languageIds.push({language_id: baseLang});
             }
@@ -107,9 +107,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                     {is_active: 'true'},
                     {type: 'abbreviations'},
                     {user: identity._id}]
-                }}).then(function(items) {
-                    return items._items;
-                });
+                }}).then((items) => items._items);
         });
     }
 
@@ -119,8 +117,9 @@ export function DictionaryService(api, urls, session, Upload, $q) {
      * @param {string} lang
      */
     function getActive(lang, baseLang) {
-        return session.getIdentity().then(function(identity) {
+        return session.getIdentity().then((identity) => {
             var languageIds = [{language_id: lang}];
+
             if (baseLang) {
                 languageIds.push({language_id: baseLang});
             }
@@ -132,9 +131,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                     {is_active: {$in: ['true', null]}},
                     {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
                     {$or: [{user: identity._id}, {user: {$exists: false}}]}]
-                }}).then(function(items) {
-                    return $q.all(items._items.map(fetchItem));
-                });
+                }}).then((items) => $q.all(items._items.map(fetchItem)));
         });
 
         function fetchItem(item) {
@@ -148,7 +145,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
      * @param {string} lang
      */
     function getUserDictionary(lang) {
-        return session.getIdentity().then(function(identity) {
+        return session.getIdentity().then((identity) => {
             var where = {
                 where: {
                     $and: [
@@ -157,14 +154,13 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                     ]
                 }
             };
+
             return api.query('dictionaries', where)
-                .then(function(response) {
-                    return response._items.length ? response._items[0] : {
-                        name: identity._id + ':' + lang,
-                        content: {},
-                        language_id: lang,
-                        user: identity._id
-                    };
+                .then((response) => response._items.length ? response._items[0] : {
+                    name: identity._id + ':' + lang,
+                    content: {},
+                    language_id: lang,
+                    user: identity._id
                 });
         });
     }
@@ -176,8 +172,9 @@ export function DictionaryService(api, urls, session, Upload, $q) {
      * @param {string} lang
      */
     function addWordToUserDictionary(word, lang) {
-        return getUserDictionary(lang).then(function(userDict) {
+        return getUserDictionary(lang).then((userDict) => {
             var words = userDict.content || {};
+
             words[word] = words[word] ? words[word] + 1 : 1;
             userDict.content = words;
             return api.save('dictionaries', userDict);

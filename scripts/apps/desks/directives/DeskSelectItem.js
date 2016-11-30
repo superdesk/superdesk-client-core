@@ -4,7 +4,7 @@ export function DeskSelectItem() {
         require: '^sdDeskSelect',
         link: function(scope, elem, attrs, ctrl) {
             // set focus on element when it gets active
-            scope.$watch('ctrl.active._id', activeId => {
+            scope.$watch('ctrl.active._id', (activeId) => {
                 if (activeId && activeId === scope.desk._id) {
                     elem.focus();
                 }
