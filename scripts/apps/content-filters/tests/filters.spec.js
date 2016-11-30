@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('content filters', () => {
     var $scope;

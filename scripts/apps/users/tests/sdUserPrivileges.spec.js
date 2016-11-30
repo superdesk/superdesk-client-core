@@ -5,8 +5,6 @@
 * @module sdUserPrivileges directive tests
 */
 describe('sdUserPrivileges directive', () => {
-    'use strict';
-
     var queryDeferred,
         getByIdDeferred,
         fakeEndpoints,

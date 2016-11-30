@@ -1,6 +1,4 @@
 describe('monitoring', () => {
-    'use strict';
-
     beforeEach(window.module('superdesk.apps.monitoring'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.vocabularies'));

@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-'use strict';
+
 var openUrl = require('./helpers/utils').open,
     ingestDashboard = require('./helpers/pages').ingestDashboard;
 

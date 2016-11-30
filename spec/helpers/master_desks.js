@@ -1,6 +1,5 @@
 /* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 module.exports = new MasterDesks();
 

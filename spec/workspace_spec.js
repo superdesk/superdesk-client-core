@@ -1,5 +1,4 @@
 
-'use strict';
 
 var dashboard = require('./helpers/dashboard'),
     altKey = require('./helpers/utils').altKey;

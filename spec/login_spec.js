@@ -3,8 +3,6 @@ var waitForSuperdesk = require('./helpers/utils').waitForSuperdesk;
 var Login = require('./helpers/pages').login;
 
 describe('login', () => {
-    'use strict';
-
     var modal;
 
     beforeEach(() => {

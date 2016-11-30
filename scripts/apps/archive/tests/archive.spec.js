@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('content', () => {
     var item = {_id: 1};

@@ -5,8 +5,6 @@
 * @module sdDeskeditMacros directive tests
 */
 describe('sdDeskeditMacros directive', () => {
-    'use strict';
-
     var macros,
         scope,
         getMacrosDeferred,

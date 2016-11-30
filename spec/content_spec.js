@@ -1,6 +1,5 @@
 /* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 var workspace = require('./helpers/pages').workspace,
     content = require('./helpers/content'),

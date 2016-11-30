@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('superdesk.core.features module', () => {
     beforeEach(window.module('superdesk.core.features'));

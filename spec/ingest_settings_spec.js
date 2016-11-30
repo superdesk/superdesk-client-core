@@ -1,4 +1,4 @@
-'use strict';
+
 var openUrl = require('./helpers/utils').open,
     ingestSettings = require('./helpers/pages').ingestSettings,
     utils = require('./helpers/utils');

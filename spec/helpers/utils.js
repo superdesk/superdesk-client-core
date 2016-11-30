@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports.route = route;
 module.exports.login = login;

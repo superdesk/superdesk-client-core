@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('Tag Service', () => {
     var deskList = {

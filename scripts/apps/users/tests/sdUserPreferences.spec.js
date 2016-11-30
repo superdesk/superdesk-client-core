@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('sdUserPreferences directive', () => {
     var fetchedPreferences,

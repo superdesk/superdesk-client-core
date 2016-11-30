@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('text editor', () => {
     beforeEach(window.module(($provide) => {

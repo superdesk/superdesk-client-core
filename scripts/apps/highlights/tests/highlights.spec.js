@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('highlights', () => {
     beforeEach(window.module('superdesk.apps.highlights'));

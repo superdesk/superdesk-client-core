@@ -1,4 +1,4 @@
-'use strict';
+
 
 var openUrl = require('./helpers/utils').open,
     globalSearch = require('./helpers/search'),

@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('elastic query builder', () => {
     beforeEach(window.module('superdesk.core.elastic'));

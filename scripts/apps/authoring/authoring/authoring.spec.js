@@ -1,6 +1,4 @@
 describe('authoring', () => {
-    'use strict';
-
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.authoring'));

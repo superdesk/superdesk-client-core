@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('workspace', () => {
     var DESK = 1;

@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('user import', () => {
     beforeEach(window.module('superdesk.apps.users.import'));

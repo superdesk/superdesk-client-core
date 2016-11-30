@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-'use strict';
+
 var openUrl = require('./helpers/utils').open,
     masterDesks = require('./helpers/master_desks'),
     authoring = require('./helpers/authoring');

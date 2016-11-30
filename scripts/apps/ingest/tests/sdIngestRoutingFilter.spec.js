@@ -5,8 +5,6 @@
 * @module sdIngestRoutingFilter directive tests
 */
 describe('sdIngestRoutingFilter directive', () => {
-    'use strict';
-
     var scope,  // the directive's own isolate scope
         $compile,
         $rootScope;

@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('item comments', () => {
     beforeEach(window.module(($provide) => {

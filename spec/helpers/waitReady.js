@@ -8,7 +8,7 @@
  * @example
  * expect($('.some-html-class').waitReady()).toBeTruthy();
  */
-'use strict';
+
 
 var ElementFinder = $('').constructor;
 

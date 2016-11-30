@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('ContentFiltersConfigCtrl', () => {
     var ctrl;

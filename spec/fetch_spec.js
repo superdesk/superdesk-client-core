@@ -1,5 +1,4 @@
 
-'use strict';
 
 var workspace = require('./helpers/pages').workspace,
     content = require('./helpers/pages').content,

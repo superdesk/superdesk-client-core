@@ -1,4 +1,4 @@
-'use strict';
+
 module.exports = [
     ['EMBED_PROVIDERS', function(EMBED_PROVIDERS) {
         return {

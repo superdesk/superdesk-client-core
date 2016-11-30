@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('related item widget', () => {
     beforeEach(window.module('superdesk.apps.dashboard.widgets.relatedItem'));

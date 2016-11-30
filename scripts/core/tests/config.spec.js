@@ -1,7 +1,5 @@
 
 describe('superdesk.config', () => {
-    'use strict';
-
     angular.module('test.config', ['superdesk.config'])
         .config((defaultConfigProvider) => {
             defaultConfigProvider.set('foo', 'bar');

@@ -3,8 +3,6 @@ var openUrl = require('./helpers/utils').open,
     dictionaries = require('./helpers/dictionaries');
 
 describe('dictionaries', () => {
-    'use strict';
-
     describe('add dictionary', () => {
         beforeEach(() => {
             openUrl('/#/settings/dictionaries');

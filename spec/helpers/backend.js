@@ -1,4 +1,4 @@
-'use strict';
+
 
 var request = require('request');
 var bt = require('btoa');

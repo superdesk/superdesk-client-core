@@ -5,8 +5,6 @@
 * @module WorldClockConfigController tests
 */
 describe('WorldClockConfigController', () => {
-    'use strict';
-
     var getTzdataDeferred,
         fakeTzdata,
         scope;

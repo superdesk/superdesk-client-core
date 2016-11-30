@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('Image Crop', () => {
     beforeEach(window.module('superdesk.core.upload'));

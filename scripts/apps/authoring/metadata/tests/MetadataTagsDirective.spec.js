@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('MetadataTags directive', () => {
     var scope, element, apiEndpoint, apiData;

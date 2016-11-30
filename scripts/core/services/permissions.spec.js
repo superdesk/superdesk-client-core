@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('PermissionsService', () => {
     beforeEach(window.module('superdesk.core.services.entity'));

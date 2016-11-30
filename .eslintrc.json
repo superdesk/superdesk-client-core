@@ -107,6 +107,8 @@
         "radix": 2,
         "yoda": 2,
 
+        "strict": [2, "never"],
+
         "no-shadow-restricted-names": 2,
         "no-unused-vars": [2, {"vars": "all", "args": "none"}],
         "no-undef": 2,
@@ -166,6 +168,9 @@
         "no-var": 0,
         "object-shorthand": [2, "consistent"],
         "prefer-arrow-callback": [2, {"allowNamedFunctions": true}],
-        "prefer-spread": 2
+        "prefer-spread": 2,
+        "rest-spread-spacing": 2,
+        "template-curly-spacing": 2,
+        "yield-star-spacing": 2
     }
 }

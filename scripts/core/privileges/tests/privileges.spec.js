@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('privileges', () => {
     beforeEach(window.module('superdesk.core.api'));

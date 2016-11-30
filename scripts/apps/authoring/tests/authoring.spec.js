@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('authoring', () => {
     var GUID = 'urn:tag:superdesk-1';

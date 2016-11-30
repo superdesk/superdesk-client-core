@@ -1,4 +1,4 @@
-'use strict';
+
 
 var monitoring = require('./helpers/monitoring'),
     authoring = require('./helpers/authoring'),

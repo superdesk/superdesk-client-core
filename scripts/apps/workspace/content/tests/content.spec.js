@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.mocks'));

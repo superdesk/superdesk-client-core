@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('macros', () => {
     beforeEach(window.module('superdesk.apps.desks'));

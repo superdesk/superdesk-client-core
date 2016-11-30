@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('superdesk ui', () => {
     beforeEach(window.module(($provide) => {

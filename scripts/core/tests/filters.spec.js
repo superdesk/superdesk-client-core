@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('superdesk filters', () => {
     beforeEach(window.module('superdesk.core.filters'));

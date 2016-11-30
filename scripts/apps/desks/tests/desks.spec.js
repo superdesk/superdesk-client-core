@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('desks service', () => {
     var USER_URL = 'users/1';

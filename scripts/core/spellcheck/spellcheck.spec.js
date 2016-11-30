@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('spellcheck', () => {
     var DICT = {

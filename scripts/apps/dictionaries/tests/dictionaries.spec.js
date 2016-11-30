@@ -1,7 +1,5 @@
 
 describe('dictionaries', () => {
-    'use strict';
-
     var USER_ID = 'foo',
         LANG = 'en';
 

@@ -8,8 +8,6 @@ var route = require('./helpers/utils').route,
     desks = require('./helpers/desks');
 
 describe('highlights', () => {
-    'use strict';
-
     describe('add highlights configuration:', () => {
         beforeEach(route('/settings/highlights'));
 

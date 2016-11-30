@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('Upload controller', () => {
     var files = [{type: 'text/plain'}],

@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('Preferences Service', () => {
     beforeEach(window.module('superdesk.core.preferences'));

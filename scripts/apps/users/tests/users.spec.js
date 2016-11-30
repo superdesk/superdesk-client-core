@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('users api', () => {
     beforeEach(window.module('superdesk.apps.users'));

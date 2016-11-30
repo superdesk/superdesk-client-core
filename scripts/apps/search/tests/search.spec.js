@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('search service', () => {
     beforeEach(window.module('superdesk.templates-cache'));

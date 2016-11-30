@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-'use strict';
+
 var openUrl = require('./helpers/utils').open,
     searchProvider = require('./helpers/pages').searchProvider,
     globalSearch = require('./helpers/search');

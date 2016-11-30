@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('MetadataWidgetCtrl controller', () => {
     var metadata,  // the metadata service

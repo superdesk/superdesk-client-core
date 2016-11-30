@@ -1,7 +1,5 @@
 
 describe('tasks', () => {
-    'use strict';
-
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.core.ui'));

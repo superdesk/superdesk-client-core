@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('workqueue', () => {
     var USER_ID = 'u1';

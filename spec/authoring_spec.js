@@ -1,6 +1,5 @@
 /* eslint-disable newline-per-chained-call */
 
-'use strict';
 
 var monitoring = require('./helpers/monitoring'),
     authoring = require('./helpers/authoring'),

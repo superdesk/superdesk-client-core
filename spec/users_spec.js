@@ -8,8 +8,6 @@ var authoring = require('./helpers/authoring'),
     workspace = require('./helpers/workspace');
 
 describe('users', () => {
-    'use strict';
-
     beforeEach((done) => {
         post({
             uri: '/users',

@@ -1,5 +1,4 @@
 
-'use strict';
 
 var desks = require('./helpers/desks');
 

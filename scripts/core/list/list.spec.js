@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('superdesk.core.list module', () => {
     beforeEach(window.module('superdesk.templates-cache'));

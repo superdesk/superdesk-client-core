@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('sdPasswordStrength', () => {
     var $compile, $rootScope, compileDirective;

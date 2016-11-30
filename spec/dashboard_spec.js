@@ -1,5 +1,4 @@
 
-'use strict';
 
 var dashboard = require('./helpers/dashboard'),
     workspace = require('./helpers/workspace'),

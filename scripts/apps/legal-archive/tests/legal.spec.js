@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('legal archive service', () => {
     beforeEach(window.module('superdesk.core.api'));

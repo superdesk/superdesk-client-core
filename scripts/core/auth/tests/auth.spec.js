@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('auth', () => {
     beforeEach(window.module('superdesk.templates-cache'));

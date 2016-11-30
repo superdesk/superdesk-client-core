@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('user notifications', () => {
     var notifications = {_items: [

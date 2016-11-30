@@ -5,8 +5,6 @@
 * @module sdIngestSourcesContent directive tests
 */
 describe('sdIngestSourcesContent directive', () => {
-    'use strict';
-
     var scope;
 
     beforeEach(window.module('superdesk.apps.ingest'));

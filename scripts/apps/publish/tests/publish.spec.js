@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('publish queue', () => {
     var subscribers = {_items: [

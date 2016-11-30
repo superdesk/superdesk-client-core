@@ -1,4 +1,4 @@
-'use strict';
+
 
 var backendRequest = require('./backend').backendRequest;
 var backendRequestAuth = require('./backend').backendRequestAuth;

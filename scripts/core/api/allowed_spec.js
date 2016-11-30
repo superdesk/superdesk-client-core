@@ -1,7 +1,5 @@
 
 describe('superdesk.core.api.allowed', () => {
-    'use strict';
-
     beforeEach(window.module('superdesk.core.api'));
 
     beforeEach(inject((api, $q) => {

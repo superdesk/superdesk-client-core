@@ -2,8 +2,6 @@ var openUrl = require('./helpers/utils').open,
     subscribers = require('./helpers/subscribers');
 
 describe('subscribers', () => {
-    'use strict';
-
     describe('list subscriber', () => {
         beforeEach(() => {
             openUrl('/#/settings/publish');

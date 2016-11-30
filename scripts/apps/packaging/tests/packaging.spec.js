@@ -1,5 +1,4 @@
 
-'use strict';
 
 describe('packaging', () => {
     beforeEach(window.module('superdesk.apps.packaging'));

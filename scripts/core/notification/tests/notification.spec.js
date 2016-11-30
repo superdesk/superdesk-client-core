@@ -1,4 +1,4 @@
-'use strict';
+
 describe('Reload Service', () => {
     beforeEach(window.module('superdesk.apps.notification'));
     beforeEach(window.module('superdesk.templates-cache'));

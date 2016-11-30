@@ -3,8 +3,6 @@ var search = require('./helpers/search'),
     monitoring = require('./helpers/monitoring');
 
 describe('package', () => {
-    'use strict';
-
     beforeEach(() => {
         monitoring.openMonitoring();
     });

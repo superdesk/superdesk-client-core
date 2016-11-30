@@ -1,6 +1,4 @@
 describe('templates', () => {
-    'use strict';
-
     beforeEach(window.module('superdesk.apps.aggregate'));
 
     describe('aggregate widget controller', () => {

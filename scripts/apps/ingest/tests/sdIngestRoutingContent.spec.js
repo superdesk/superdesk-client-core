@@ -5,8 +5,6 @@
 * @module sdIngestRoutingContent directive tests
 */
 describe('sdIngestRoutingContent directive', () => {
-    'use strict';
-
     var contentFilters,
         fakeGetFilters,
         fakeTzData,

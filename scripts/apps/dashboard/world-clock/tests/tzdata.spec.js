@@ -5,8 +5,6 @@
 * @module tzdata factory tests
 */
 describe('tzdata factory', () => {
-    'use strict';
-
     var tzdata,
         $httpBackend,
         $rootScope;

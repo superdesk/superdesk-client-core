@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('itemListService', () => {
     beforeEach(window.module('superdesk.mocks'));

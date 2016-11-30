@@ -1,7 +1,5 @@
 
 describe('ingest', () => {
-    'use strict';
-
     describe('send service', () => {
         beforeEach(window.module('superdesk.apps.ingest.send'));
         beforeEach(window.module('superdesk.templates-cache'));

@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('list directives', () => {
     beforeEach(window.module('superdesk.core.list'));

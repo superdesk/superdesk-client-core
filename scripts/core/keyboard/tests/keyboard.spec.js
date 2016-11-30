@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('keyboardManager', () => {
     beforeEach(window.module('superdesk.core.keyboard'));

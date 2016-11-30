@@ -1,4 +1,4 @@
-'use strict';
+
 
 var path = require('path');
 var rootDir = path.dirname(path.dirname(__dirname));

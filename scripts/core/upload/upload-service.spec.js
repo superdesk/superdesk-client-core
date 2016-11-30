@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('upload service', () => {
     beforeEach(window.module('superdesk.core.upload'));

@@ -1,6 +1,4 @@
 describe('multiedit', () => {
-    'use strict';
-
     beforeEach(() => {
         localStorage.clear();
     });
