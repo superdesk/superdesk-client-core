@@ -1,6 +1,6 @@
 <button class="btn btn--light btn--pull-left"
     ng-repeat="day in weekdayList"
     ng-click="toggleDay(day)"
-    ng-class="{active: isDayChecked(day)}">
+    ng-class="{'btn--active': isDayChecked(day)}">
     {{ weekdays[day] | translate }}
 </button>
