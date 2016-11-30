@@ -1,14 +1,21 @@
 # Superdesk Client Changelog
 
+## [1.4.2] 2016-11-30
+
+### Fixed
+
+- Make tansa min urgency configurable.
+- Unordered list is not shown with bullets points.
+
 ## [1.4.1] 2016-11-29
 
 ### Added
 
-- Add support for graphic type
+- Add support for graphic type.
 
 ### Fixed
 
-- Fix translation issue for publish
+- Fix translation issue for publish.
 
 ## [1.4] 2016-11-15
 
