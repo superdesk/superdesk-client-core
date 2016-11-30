@@ -449,12 +449,14 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             }
 
+            let minTansaUrgency = $rootScope.config.tansa && $rootScope.config.tansa.urgency || 5;
+
             /**
              * Depending on the item state one of the publish, correct, kill actions will be executed on the item
              * in $scope.
              */
             $scope.publish = function(continueOnPublish) {
-                if ($scope.useTansaProofing() && $scope.item.urgency > 3 && !isCheckedByTansa) {
+                if ($scope.useTansaProofing() && $scope.item.urgency >= minTansaUrgency && !isCheckedByTansa) {
                     var act = 'publish';
                     if ($scope.origItem && $scope.origItem.state === 'published') {
                         act = 'correct';
