@@ -272,10 +272,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         item.embargo_date, item.embargo_time, item.embargo,
                         item.schedule_settings ? item.schedule_settings.time_zone : null,
                         gettext('Embargo'));
-                    if (errorMessage) {
-                        notify.error(errorMessage);
-                        return false;
-                    }
                 }
 
                 if (item.publish_schedule_date || item.publish_schedule_time) {
@@ -287,10 +283,12 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         item.publish_schedule_date, item.publish_schedule_time,
                         item.publish_schedule, item.schedule_settings ? item.schedule_settings.time_zone : null,
                         gettext('Publish Schedule'));
-                    if (errorMessage) {
-                        notify.error(errorMessage);
-                        return false;
-                    }
+                }
+
+
+                if (errorMessage) {
+                    notify.error(errorMessage);
+                    return false;
                 }
 
                 return true;

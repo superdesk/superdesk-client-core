@@ -926,10 +926,9 @@ angular.module('superdesk.apps.editor2', [
             }
 
             function setEditorFormatOptions(editorConfig, editorFormat, scope) {
-                _.each(editorFormat, (format) => {
-                    switch (format) {
-                    case 'h1':
-                        editorConfig.toolbar.buttons.push({
+                function addButton(format) {
+                    editorConfig.toolbar.buttons.push({
+                        h1: {
                             name: 'h1',
                             action: 'append-h2',
                             aria: gettextCatalog.getString('header type 1'),
@@ -939,10 +938,9 @@ angular.module('superdesk.apps.editor2', [
                             attrs: {
                                 'data-custom-attr': 'attr-value-h1'
                             }
-                        });
-                        break;
-                    case 'h2':
-                        editorConfig.toolbar.buttons.push({
+                        },
+
+                        h2: {
                             name: 'h2',
                             action: 'append-h3',
                             aria: gettextCatalog.getString('header type 2'),
@@ -952,64 +950,46 @@ angular.module('superdesk.apps.editor2', [
                             attrs: {
                                 'data-custom-attr': 'attr-value-h2'
                             }
-                        });
-                        break;
-                    case 'bold':
-                        editorConfig.toolbar.buttons.push({
+                        },
+
+                        bold: {
                             name: 'bold',
                             action: 'bold',
                             aria: gettextCatalog.getString('bold'),
                             tagNames: ['b'],
                             contentDefault: '<b>' + gettextCatalog.getString('B') + '</b>'
-                        });
-                        break;
-                    case 'underline':
-                        editorConfig.toolbar.buttons.push({
+                        },
+
+                        underline: {
                             name: 'underline',
                             action: 'underline',
                             aria: gettextCatalog.getString('underline'),
                             tagNames: ['u']
-                        });
-                        break;
-                    case 'italic':
-                        editorConfig.toolbar.buttons.push({
+                        },
+
+                        italic: {
                             name: 'italic',
                             action: 'italic',
                             aria: gettextCatalog.getString('italic'),
                             tagNames: ['i'],
                             contentDefault: '<b>' + gettextCatalog.getString('I') + '</b>'
-                        });
-                        break;
-                    case 'anchor':
-                        editorConfig.toolbar.buttons.push({
-                            name: 'anchor',
-                            action: 'createLink',
-                            aria: gettextCatalog.getString('link')
-                        });
-                        break;
-                    case 'quote':
-                        editorConfig.toolbar.buttons.push({
+                        },
+
+                        quote: {
                             name: 'quote',
                             action: 'append-blockquote',
                             aria: gettextCatalog.getString('quote')
-                        });
-                        break;
-                    case 'removeFormat':
-                        editorConfig.toolbar.buttons.push({
+                        },
+
+                        removeFormat: {
                             name: 'removeFormat',
                             action: 'removeFormat',
                             aria: gettextCatalog.getString('remove formatting')
-                        });
-                        break;
-                    case 'table':
-                        if (scope.config.multiBlockEdition) {
-                            editorConfig.toolbar.buttons.push(format);
                         }
-                        break;
-                    default:
-                        editorConfig.toolbar.buttons.push(format);
-                    }
-                });
+                    }[format] || format);
+                }
+
+                _.each(editorFormat, addButton);
             }
 
             return {

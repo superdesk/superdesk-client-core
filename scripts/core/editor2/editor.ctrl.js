@@ -65,6 +65,15 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
                 block = undefined;
             }
         }
+
+        function handleParagraph(element) {
+            commitBlock();
+            if (angular.isDefined(element.innerHTML) && element.textContent !== ''
+                && element.textContent !== '\n') {
+                blocks.push(new Block({body: element.outerHTML.trim()}));
+            }
+        }
+
         $('<div>' + bodyHtml + '</div>')
         .contents()
         .toArray()
@@ -72,11 +81,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, $element, editor, 
             // if we get a <p>, we push the current block and create a new one
             // for the paragraph content
             if (element.nodeName === 'P') {
-                commitBlock();
-                if (angular.isDefined(element.innerHTML) && element.textContent !== ''
-                    && element.textContent !== '\n') {
-                    blocks.push(new Block({body: element.outerHTML.trim()}));
-                }
+                handleParagraph(element);
                 // detect if it's an embed
             } else if (element.nodeName === '#comment') {
                 if (element.nodeValue.indexOf('EMBED START') > -1) {
