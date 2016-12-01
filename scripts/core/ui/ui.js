@@ -679,7 +679,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             ctrl.$render = function() {
                 element.val(ctrl.$viewValue.viewdate);  // set the view
-                scope.date = ctrl.$viewValue.dpdate;    // set datepicker model
+                scope.date = ctrl.$viewValue.dpdate || moment().tz(config.defaultTimezone);    // set datepicker model
             };
 
             // handle model changes
