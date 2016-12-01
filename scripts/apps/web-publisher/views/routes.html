@@ -28,7 +28,7 @@
 <div class="paneLayout paneLayout--twoHeadersMargin">
     <div class="paneLayout__content">
         <div class="contentPadding">
-            <ul class="treeList" ng-repeat="route in routes | filter: {type: webPublisher.routeType} | orderBy: 'type' track by route.id">
+            <ul class="treeList" ng-repeat="route in routes | filter: {type: webPublisher.routeType} | orderBy: ['type', 'name'] track by route.id">
                 <li>
                     <div ng-include="'scripts/apps/web-publisher/views/treeList__element.html'"></div>
                 </li>
