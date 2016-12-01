@@ -13,18 +13,38 @@ module.exports = function makeConfig(grunt) {
         appConfigPath = path.join(process.cwd(), grunt.option('config'));
     }
 
-    var sdConfig = lodash.defaultsDeep(require(appConfigPath)(grunt), getDefaults(grunt));
+    const sdConfig = lodash.defaultsDeep(require(appConfigPath)(grunt), getDefaults(grunt));
+
+    // shouldExclude returns true if the path p should be excluded from loaders
+    // such as 'babel' or 'eslint'. This is to avoid including node_modules into
+    // these loaders, but not node modules that are superdesk apps.
+    const shouldExclude = function(p) {
+        // don't exclude anything outside node_modules
+        if (p.indexOf('node_modules') === -1) {
+            return false;
+        }
+        // include only 'superdesk-core' and valid modules inside node_modules
+        let validModules = ['superdesk-core'].concat(sdConfig.apps);
+        return !validModules.some(app => p.indexOf(app) > -1);
+    };
+
+    // isEmbedded will be true when the app is embedded into the main repo as a
+    // node module.
+    const isEmbedded = require('fs').existsSync('./node_modules/superdesk-core');
 
     return {
         cache: true,
+
         entry: {
             app: ['scripts/index.js']
         },
+
         output: {
             path: path.join(process.cwd(), 'dist'),
             filename: '[name].bundle.js',
             chunkFilename: '[id].bundle.js'
         },
+
         plugins: [
             new webpack.ProvidePlugin({
                 '$': 'jquery',
@@ -40,6 +60,7 @@ module.exports = function makeConfig(grunt) {
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig)
             })
         ],
+
         resolve: {
             root: [
                 __dirname,
@@ -58,19 +79,25 @@ module.exports = function makeConfig(grunt) {
             },
             extensions: ['', '.js', '.jsx']
         },
+
+        eslint: {
+            configFile: isEmbedded ? './node_modules/superdesk-core/.eslintrc.json' : null,
+            ignorePath: isEmbedded ? './node_modules/superdesk-core/.eslintignore' : null
+        },
+
         module: {
+            preLoaders: [
+                {
+                    test: /\.jsx?$/,
+                    loader: 'eslint-loader',
+                    exclude: shouldExclude
+                }
+            ],
+
             loaders: [
                 {
                     test: /\.jsx?$/,
-                    exclude: function(p) {
-                        // don't exclude anything outside node_modules
-                        if (p.indexOf('node_modules') === -1) {
-                            return false;
-                        }
-                        // include only 'superdesk-core' and valid modules inside node_modules
-                        let validModules = ['superdesk-core'].concat(sdConfig.apps);
-                        return !validModules.some(app => p.indexOf(app) > -1);
-                    },
+                    exclude: shouldExclude,
                     loader: 'babel',
                     query: {
                         cacheDirectory: true,
