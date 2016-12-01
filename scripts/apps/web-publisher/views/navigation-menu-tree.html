@@ -1,0 +1,65 @@
+<div class="subnav paneLayout">
+    <h3 class="page-nav-title"><span translate=""><span class="ng-scope">{{menu.label}}</span></span></h3>
+    <div class="subnav__button-stack--square-buttons dropdown open">
+        <button class="navbtn sd-create-btn" ng-click="paneOpen = !paneOpen">
+            <i class="svg-icon-plus"></i><span class="circle"></span>
+        </button>
+    </div>
+</div>
+<div class="paneLayout paneLayout--headerMargin">
+    <div class="paneLayout__content">
+        <div class="contentPadding">
+            <ul class="treeList">
+                <li ng-repeat="data in menu.children" ng-include="webPublisher.TEMPLATES_DIR + '/navigation-tree-renderer.html'"></li>
+            </ul>
+        </div>
+    </div>
+    <div class="paneLayout__pane" ng-class="{'paneLayout__pane--open': paneOpen}">
+        <div class="modal-header">
+            <h3 class="pull-left" translate>Add Menu Item</h3>
+            <div class="pull-right">
+                <button class="btn" ng-click="paneOpen = !paneOpen" translate>Cancel</button>
+                <button class="btn btn--primary" 
+                    ng-disabled="webPublisher.menuForm.$invalid || !webPublisher.menuForm.$dirty" 
+                    ng-click="webPublisher.saveMenu()" translate>Save</button>
+            </div>
+        </div>
+        <div class="contentPadding">
+            <form name="webPublisher.menuForm" class="flat">
+                <fieldset class="label-light">
+                    <input type="hidden" name="id" ng-model="menuObj.id">
+                    <div class="item">
+                        <label for="menuName" translate>name</label>
+                        <input type="text" class="line-input" id="menuName" ng-model="menuObj.name" required>
+                    </div>
+
+                    <div class="item">
+                        <label for="menuLabel" translate>label</label>
+                        <input type="text" class="line-input" id="menuLabel" ng-model="menuObj.label" required>
+                    </div>
+
+                    <div class="item">
+                        <label for="menuParent" translate>parent</label>
+                        <select id="menuParent" class="dropdown__toggle line-input" ng-model="menuObj.parent" 
+                            ng-options="parent.id as parent.label for parent in menusInTree" required>
+                            <option value="">
+                        </select>
+                    </div>
+
+                    <div class="item">
+                        <label for="menuRoute" translate>route</label>
+                        <select id="menuRoute" class="dropdown__toggle line-input" ng-model="menuObj.route" 
+                            ng-options="route.id as route.name for route in routes" required>
+                            <option value="">
+                        </select>
+                    </div>
+
+                    <div class="item">
+                        <label for="menuUri" translate>uri</label>
+                        <input type="text" class="line-input" id="menuUri" ng-model="menuObj.uri">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
