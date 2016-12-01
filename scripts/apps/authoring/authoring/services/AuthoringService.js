@@ -365,7 +365,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     * @param {Object} item : item
     */
     this.itemActions = function(item) {
-        var currentItem = item && item.archive_item && item.archive_item.state ? item.archive_item : item;
+        var currentItem = this._getCurrentItem(item);
         var userPrivileges = privileges.privileges;
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
         var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
@@ -380,32 +380,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             return action;
         }
 
-        var digitalPackage = angular.isDefined(currentItem.package_type) &&
-                            currentItem.package_type === 'takes';
-        var isReadOnlyState = _.includes(['spiked', 'scheduled', 'killed'], currentItem.state) ||
-                                digitalPackage;
-
         var lockedByMe = !lock.isLocked(currentItem);
 
         action.view = !lockedByMe;
-
-        var isBroadcast = currentItem.genre && currentItem.genre.length > 0 &&
-                          _.includes(['text', 'preformatted'], currentItem.type) &&
-                          currentItem.genre.some(nameIsBroadcast);
-
-        function nameIsBroadcast(genre) {
-            return genre.name === 'Broadcast Script';
-        }
-
-        // new take should be on the text item that are closed or last take but not killed and doesn't have embargo.
-        var newTake = !isReadOnlyState && currentItem.type === 'text' &&
-            !currentItem.embargo && currentItem._current_version > 0 &&
-            (this.isPublished(currentItem) || !currentItem.publish_schedule) &&
-            (angular.isUndefined(currentItem.takes) || currentItem.takes.last_take === currentItem._id) &&
-            !isBroadcast &&
-            !currentItem.rewritten_by;
-
-        action.new_take = newTake;
+        action.new_take = this._isNewTake(currentItem);
 
         // item is published state - corrected, published, scheduled, killed
         if (self.isPublished(currentItem)) {
@@ -415,42 +393,94 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 return angular.extend({}, helpers.DEFAULT_ACTIONS);
             }
 
-            action.view = true;
-            if (currentItem.state === 'scheduled' && !digitalPackage) {
-                action.deschedule = true;
-            } else if (currentItem.state === 'published' || currentItem.state === 'corrected') {
-                action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
-                action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState;
-            }
+            this._updatePublished(currentItem, action);
         } else {
-            // production states i.e in_progress, routed, fetched, submitted.
-
-            // if spiked
             if (currentItem.state === 'spiked') {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 action.unspike = true;
                 return action;
             }
 
-            action.save = currentItem.state !== 'spiked';
-            action.publish = (!currentItem.flags || !currentItem.flags.marked_for_not_publication) &&
-                    currentItem.task && currentItem.task.desk &&
-                    (!currentItem.highlight || currentItem.type !== 'composite') &&
-                    userPrivileges.publish && currentItem.state !== 'draft';
-
-            action.edit = !(currentItem.type === 'composite' && currentItem.package_type === 'takes') &&
-                            currentItem.state !== 'spiked' && lockedByMe;
-            action.unspike = currentItem.state === 'spiked' && userPrivileges.unspike;
-            action.spike = currentItem.state !== 'spiked' && userPrivileges.spike &&
-                (angular.isUndefined(currentItem.takes) || currentItem.takes.last_take === currentItem._id);
-            action.send = currentItem._current_version > 0 && userPrivileges.move;
+            this._updateUnpublished(currentItem, action);
         }
+
+        this._updateGeneralActions(currentItem, action);
+
+        return this._updateDeskActions(currentItem, action);
+    };
+
+    this._isBroadcastItem = function(item) {
+        return item.genre && item.genre.length > 0 &&
+            _.includes(['text', 'preformatted'], item.type) &&
+            item.genre.some((genre) => genre.name === 'Broadcast Script');
+    };
+
+    // new take should be on the text item that are closed or last take but not killed and doesn't have embargo.
+    this._isNewTake = function(item) {
+        return !this._isReadOnly(item) && item.type === 'text' &&
+            !item.embargo && item._current_version > 0 &&
+            (this.isPublished(item) || !item.publish_schedule) &&
+            (angular.isUndefined(item.takes) || item.takes.last_take === item._id) &&
+            !this._isBroadcastItem(item) &&
+            !item.rewritten_by;
+    };
+
+    this._isDigitalPackage = function(item) {
+        return angular.isDefined(item.package_type) && item.package_type === 'takes';
+    };
+
+    this._isReadOnly = function(item) {
+        return _.includes(['spiked', 'scheduled', 'killed'], item.state) || this._isDigitalPackage(item);
+    };
+
+    this._updatePublished = function(currentItem, action) {
+        let userPrivileges = privileges.privileges;
+        let lockedByMe = !lock.isLocked(currentItem);
+        let isReadOnlyState = this._isReadOnly(currentItem);
+        let isPublishedOrCorrected = currentItem.state === 'published' || currentItem.state === 'corrected';
+
+        action.view = true;
+
+        if (currentItem.state === 'scheduled' && !this._isDigitalPackage(currentItem)) {
+            action.deschedule = true;
+        } else if (isPublishedOrCorrected) {
+            action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
+            action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState;
+        }
+    };
+
+    this._updateUnpublished = function(currentItem, action) {
+        let userPrivileges = privileges.privileges;
+        var lockedByMe = !lock.isLocked(currentItem);
+
+        action.save = currentItem.state !== 'spiked';
+
+        action.publish = (!currentItem.flags || !currentItem.flags.marked_for_not_publication) &&
+                currentItem.task && currentItem.task.desk &&
+                (!currentItem.highlight || currentItem.type !== 'composite') &&
+                userPrivileges.publish && currentItem.state !== 'draft';
+
+        action.edit = !(currentItem.type === 'composite' && currentItem.package_type === 'takes') &&
+            currentItem.state !== 'spiked' && lockedByMe;
+
+        action.spike = currentItem.state !== 'spiked' && userPrivileges.spike &&
+            (angular.isUndefined(currentItem.takes) || currentItem.takes.last_take === currentItem._id);
+
+        action.send = currentItem._current_version > 0 && userPrivileges.move;
+    };
+
+    this._getCurrentItem = function(item) {
+        return item && item.archive_item && item.archive_item.state ? item.archive_item : item;
+    };
+
+    this._updateGeneralActions = function(currentItem, action) {
+        let isReadOnlyState = this._isReadOnly(currentItem);
+        let userPrivileges = privileges.privileges;
 
         action.re_write = !isReadOnlyState && _.includes(['text'], currentItem.type) &&
             !currentItem.embargo && !currentItem.rewritten_by && action.new_take &&
             (!currentItem.broadcast || !currentItem.broadcast.master_id) &&
             (!currentItem.rewrite_of || currentItem.rewrite_of && this.isPublished(currentItem));
-        var reWrite = action.re_write;
 
         action.resend = _.includes(['text'], currentItem.type) &&
             _.includes(['published', 'corrected', 'killed'], currentItem.state);
@@ -467,11 +497,18 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.create_broadcast = _.includes(['published', 'corrected'], currentItem.state) &&
             _.includes(['text', 'preformatted'], currentItem.type) &&
-            !isBroadcast && userPrivileges.archive_broadcast;
+            !this._isBroadcastItem(currentItem) && userPrivileges.archive_broadcast;
 
         action.multi_edit = !isReadOnlyState;
+    };
 
-        // check for desk membership for edit rights.
+    // check for desk membership for edit rights and returns updated
+    // actions accordingly
+    this._updateDeskActions = function(currentItem, oldAction) {
+        let action = oldAction;
+        let reWrite = action.re_write;
+        let userPrivileges = privileges.privileges;
+
         if (currentItem.task && currentItem.task.desk) {
             // in production
 
@@ -487,7 +524,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 // user can action `update` even if the user is not a member.
                 action.re_write = reWrite;
-                action.new_take = newTake;
+                action.new_take = this._isNewTake(currentItem);
             }
         } else {
             // personal
