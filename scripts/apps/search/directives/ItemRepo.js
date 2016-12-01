@@ -130,6 +130,7 @@ export function ItemRepo(
             };
 
             scope.toggleRepo = function(repoName) {
+                $location.search('');
                 setDefaultValues();
                 scope.repo[repoName] = !scope.repo[repoName];
                 $location.search('repo', getActiveRepos());
