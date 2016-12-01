@@ -11,6 +11,10 @@ WebPublisherManagerController.$inject = ['$scope', 'publisher', 'modal'];
 export function WebPublisherManagerController($scope, publisher, modal) {
     var self = this;
 
+    $scope.routes = [];
+    $scope.menu = undefined;
+    $scope.menus = [];
+    $scope.menuObj = {};
     self.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
 
     /**
@@ -40,9 +44,20 @@ export function WebPublisherManagerController($scope, publisher, modal) {
      * @description Opens modal window for creating new site
      */
     self.toogleCreateSite = () => {
+        self.openSiteModal = !self.openSiteModal;
+        if (!self.openSiteModal && self.selectedSite.subdomain) {
+            /**
+             * @ngdoc event
+             * @name WebPublisherManagerController#refreshRoutes
+             * @eventType broadcast on $scope
+             * @param {String} subdomain - subdomain for which to refresh routes
+             * @description event is thrown when modal window is closed and saved site is selected
+             */
+            $scope.$broadcast('refreshRoutes', self.selectedSite.subdomain);
+        }
+
         self.selectedSite = {};
         $scope.newSite = {};
-        self.openSiteModal = !self.openSiteModal;
         publisher.setTenant('default');
     };
 
@@ -133,6 +148,125 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         modal.confirm(gettext('Please confirm you want to delete route.')).then(
             () => publisher.removeRoute(id).then(refreshRoutes));
     };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#newMenu
+     * @description Creates a new unsaved menu card in the UI.
+     */
+    self.newMenu = () => {
+        $scope.menus.push({
+            label: undefined
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#createMenu
+     * @param {Object} menu - object containing properties to save
+     * @description Creates menu object and updates menu card UI.
+     */
+    self.createMenu = (menu) => {
+        let index = $scope.menus.indexOf(menu);
+
+        publisher.saveMenu({
+            name: menu.label,
+            label: menu.label
+        }).then((data) => {
+            $scope.menus[index] = data;
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#saveMenu
+     * @description Saving menu object and resetting form state.
+     */
+    self.saveMenu = () => {
+        publisher.saveMenu($scope.menuObj).then((data) => {
+            self.menuForm.$setUntouched();
+            refreshCurrentMenu();
+
+            $scope.menuObj = {
+                parent: data.id
+            };
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#editMenuTree
+     * @param {Object} menu - root menu object for the tree
+     * @description Opens the menu tree edit page.
+     */
+    self.editMenuTree = (menu) => {
+        $scope.menu = menu;
+        $scope.menusInTree = flattenTree(menu);
+
+        $scope.menuObj = {
+            parent: menu.id
+        };
+
+        publisher.queryRoutes().then(routes => $scope.routes = routes);
+        self.changeTab('navigation-menu');
+    };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#editMenu
+     * @param {Object} menu - menu object for form
+     * @description Opens the menu object in the menu form for editing.
+     */
+    self.editMenu = (menu) => {
+        $scope.menuObj = {
+            id: menu.id,
+            parent: menu.parent && menu.parent.id,
+            name: menu.name,
+            label: menu.label,
+            route: menu.route && menu.route.id,
+            uri: menu.uri
+        };
+
+        $scope.paneOpen = true;
+    };
+
+    /**
+     * @ngdoc method
+     * @name WebPublisherManagerController#removeMenu
+     * @param {Object} menu - menu object to remove
+     * @description Removes this menu from the site.
+     */
+    self.removeMenu = (menu) => {
+        let index = $scope.menus.indexOf(menu);
+
+        if (menu.id) {
+            publisher.removeMenu(menu.id);
+        }
+
+        refreshCurrentMenu();
+        $scope.menus.splice(index, 1);
+    };
+
+    //assumes root object with array of similar children objects in a 'children' attribute.
+    function flattenTree(tree, flattened=[]) {
+        flattened.push(tree);
+
+        if (tree.children.length) {
+            for (let node of tree.children) {
+                flattenTree(node, flattened);
+            }
+        }
+
+        return flattened;
+    }
+
+    function refreshCurrentMenu() {
+        let index = $scope.menus.indexOf($scope.menu);
+        publisher.getMenu($scope.menu.id).then((menu) => {
+            $scope.menu = menu;
+            $scope.menus[index] = menu;
+        });
+    }
 
     // compares 2 objects and returns keys of fields that are updated
     function updatedKeys(a, b) {
