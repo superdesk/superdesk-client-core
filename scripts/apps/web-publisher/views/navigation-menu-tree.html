@@ -1,4 +1,5 @@
 <div class="subnav paneLayout">
+<<<<<<< 74e0478b76f5eb0aa430c205da2123848c6b8305
     <div class="flat-searchbar monitoring-backlink">
         <div class="search-handler">
             <button class="backlink" ng-click="webPublisher.changeTab('navigation')"></button>
@@ -7,6 +8,11 @@
     <h3 class="page-nav-title">{{menu.label}}</h3>
     <div class="subnav__button-stack--square-buttons dropdown open">
         <button class="navbtn sd-create-btn" ng-click="webPublisher.toogleCreateMenu()">
+=======
+    <h3 class="page-nav-title"><span translate=""><span class="ng-scope">{{menu.label}}</span></span></h3>
+    <div class="subnav__button-stack--square-buttons dropdown open">
+        <button class="navbtn sd-create-btn" ng-click="paneOpen = !paneOpen">
+>>>>>>> Added listing routes on web site management
             <i class="svg-icon-plus"></i><span class="circle"></span>
         </button>
     </div>
@@ -19,6 +25,7 @@
             </ul>
         </div>
     </div>
+<<<<<<< 74e0478b76f5eb0aa430c205da2123848c6b8305
     <div class="paneLayout__pane" ng-class="{'paneLayout__pane--open': webPublisher.menuPaneOpen}">
         <div class="modal-header">
             <h3 class="pull-left" translate>Add Menu Item</h3>
@@ -27,40 +34,77 @@
                 <button class="btn btn--primary" 
                     ng-disabled="webPublisher.menuForm.$invalid || !webPublisher.menuForm.$dirty" 
                     ng-click="webPublisher.saveMenu(webPublisher._refreshCurrentMenu)" translate>Save</button>
+=======
+    <div class="paneLayout__pane" ng-class="{'paneLayout__pane--open': paneOpen}">
+        <div class="modal-header">
+            <h3 class="pull-left" translate>Add Menu Item</h3>
+            <div class="pull-right">
+                <button class="btn" ng-click="paneOpen = !paneOpen" translate>Cancel</button>
+                <button class="btn btn--primary" 
+                    ng-disabled="webPublisher.menuForm.$invalid || !webPublisher.menuForm.$dirty" 
+                    ng-click="webPublisher.saveMenu()" translate>Save</button>
+>>>>>>> Added listing routes on web site management
             </div>
         </div>
         <div class="contentPadding">
             <form name="webPublisher.menuForm" class="flat">
                 <fieldset class="label-light">
+<<<<<<< 74e0478b76f5eb0aa430c205da2123848c6b8305
                     <div class="item">
                         <label for="menuName" translate>name</label>
                         <input type="text" class="line-input" id="menuName" ng-model="newMenu.name" required>
+=======
+                    <input type="hidden" name="id" ng-model="menuObj.id">
+                    <div class="item">
+                        <label for="menuName" translate>name</label>
+                        <input type="text" class="line-input" id="menuName" ng-model="menuObj.name" required>
+>>>>>>> Added listing routes on web site management
                     </div>
 
                     <div class="item">
                         <label for="menuLabel" translate>label</label>
+<<<<<<< 74e0478b76f5eb0aa430c205da2123848c6b8305
                         <input type="text" class="line-input" id="menuLabel" ng-model="newMenu.label" required>
+=======
+                        <input type="text" class="line-input" id="menuLabel" ng-model="menuObj.label" required>
+>>>>>>> Added listing routes on web site management
                     </div>
 
                     <div class="item">
                         <label for="menuParent" translate>parent</label>
+<<<<<<< 74e0478b76f5eb0aa430c205da2123848c6b8305
                         <select id="menuParent" class="dropdown__toggle line-input" ng-model="newMenu.parent"
                             ng-options="parent.id as parent.label for parent in menusInTree | filter: {id: (newMenu.id ? '!' + newMenu.id : '')}" required>
                             <option value=""></option>
+=======
+                        <select id="menuParent" class="dropdown__toggle line-input" ng-model="menuObj.parent" 
+                            ng-options="parent.id as parent.label for parent in menusInTree" required>
+                            <option value="">
+>>>>>>> Added listing routes on web site management
                         </select>
                     </div>
 
                     <div class="item">
                         <label for="menuRoute" translate>route</label>
+<<<<<<< 74e0478b76f5eb0aa430c205da2123848c6b8305
                         <select id="menuRoute" class="dropdown__toggle line-input" ng-model="newMenu.route"
                             ng-options="route.id as route.name for route in routes" required>
                             <option value=""></option>
+=======
+                        <select id="menuRoute" class="dropdown__toggle line-input" ng-model="menuObj.route" 
+                            ng-options="route.id as route.name for route in routes" required>
+                            <option value="">
+>>>>>>> Added listing routes on web site management
                         </select>
                     </div>
 
                     <div class="item">
                         <label for="menuUri" translate>uri</label>
+<<<<<<< 74e0478b76f5eb0aa430c205da2123848c6b8305
                         <input type="text" class="line-input" id="menuUri" ng-model="newMenu.uri">
+=======
+                        <input type="text" class="line-input" id="menuUri" ng-model="menuObj.uri">
+>>>>>>> Added listing routes on web site management
                     </div>
                 </fieldset>
             </form>
