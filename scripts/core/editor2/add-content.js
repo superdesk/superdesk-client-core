@@ -40,26 +40,26 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
     var elementHolder = element.find('div:first-child').first();
     var self = this;
 
+    /** Return true if the event come from this directive's element */
+    function elementContainsEventTarget(event) {
+        if (!angular.isDefined(event)) {
+            return false;
+        }
+        return $.contains(element.get(0), event.target);
+    }
+
     angular.extend(self, {
         expanded: false,
         config: angular.extend({embeds: true}, config.editor || {}), // should be on by default
         // update the (+) vertical position on the left and his visibility (hidden/shown)
         updateState: function(event, editorElem) {
-            /** Return true if the event come from this directive's element */
-            function elementContainsEventTarget(elm) {
-                if (!angular.isDefined(event)) {
-                    return false;
-                }
-                return $.contains(elm || element.get(0), event.target);
-            }
-            // hide if medium is not defined yett (can happen at initialization)
-            if (!angular.isDefined(scope.medium)) {
-                return self.hide();
-            }
+            // hide if medium is not defined yett (can happen at initialization) or
             // hide if the text input is not selected and if it was not a click on the (+) button
-            if (!angular.element(editorElem).is(':focus') && !elementContainsEventTarget()) {
+            if (!angular.isDefined(scope.medium)
+                || !angular.element(editorElem).is(':focus') && !elementContainsEventTarget(event)) {
                 return self.hide();
             }
+
             var currentParagraph;
 
             try {
@@ -75,28 +75,15 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
             if (event && event.type === 'resize') {
                 return;
             }
-            // handle focus changes: show (+) if current element has been focused
-            if (event && event.type === 'focus') {
-                if (elementContainsEventTarget() && currentParagraph.text() === '') {
-                    return self.show();
-                }
 
-                return self.hide();
-            }
-            // handle click: show (+) if editor is focused
-            if (event && event.type === 'click') {
-                if (editorElem.is(':focus') && currentParagraph.text() === '') {
-                    return self.show();
-                }
+            let isFocusEvent = event && event.type === 'focus';
+            let isClickEvent = event && event.type === 'click';
+            let containsTarget = elementContainsEventTarget(event) && currentParagraph.text() === '';
+            let isFocused = editorElem.is(':focus') && currentParagraph.text() === '';
+            let isEmptyLine = currentParagraph.text() === '';
+            let shouldShow = isFocusEvent && containsTarget || isClickEvent && isFocused || isEmptyLine;
 
-                return self.hide();
-            }
-            // default rules, show (+) if line is empty
-            if (currentParagraph.text() === '') {
-                return self.show();
-            }
-
-            return self.hide();
+            return shouldShow ? self.show() : self.hide();
         },
         hide: function() {
             $timeout(() => {
