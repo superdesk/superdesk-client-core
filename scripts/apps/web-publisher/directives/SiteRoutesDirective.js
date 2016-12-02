@@ -16,7 +16,7 @@ export function SiteRoutesDirective(publisher) {
         }
 
         link(scope) {
-            scope.$on('refreshRoutes', function(e, data) {
+            scope.$on('refreshRoutes', (e, data) => {
                 if (data === scope.site.subdomain) {
                     this._queryItems(scope);
                 }
