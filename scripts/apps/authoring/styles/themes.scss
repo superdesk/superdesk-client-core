@@ -503,6 +503,26 @@ body, html {
         ul {
             list-style-type: disc;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            resize: both;
+            table-layout: fixed;
+            border: 1px solid #dadada;
+            margin: 16px 0;
+            td, th {
+                border: 1px solid #dadada;
+                padding: 5px 8px;
+                font-size: 14px;
+                font-weight: 400;
+            }
+            th {
+                font-weight: 500;
+                text-align: left;
+                background-color:rgba(195, 195, 195, 0.2);
+            }
+
+        }
     }
     #body_footer {
         .text-editor {
