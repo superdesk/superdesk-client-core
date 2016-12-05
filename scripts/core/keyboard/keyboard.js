@@ -166,8 +166,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             elt = document.getElementById(options.target);
         }
 
-        fct = function keyboardHandler(e = $window.event) {
-            // Disable event handler when focus input and textarea
+        const inputDisabled = function(e) {
             if (options.inputDisabled) {
                 var elt;
 
@@ -179,20 +178,13 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                 if (elt.nodeType === 3) {
                     elt = elt.parentNode;
                 }
-                if (elt.tagName === 'INPUT' || elt.tagName === 'TEXTAREA' ||
-                        elt.className.indexOf('editor-type-html') !== -1) {
-                    return;
-                }
+                return elt.tagName === 'INPUT' || elt.tagName === 'TEXTAREA' ||
+                    elt.className.indexOf('editor-type-html') !== -1;
             }
+        };
 
-            // Find out which key is pressed
-            if (e.keyCode) {
-                code = e.keyCode;
-            } else if (e.which) {
-                code = e.which;
-            }
-
-            var character = String.fromCharCode(code).toLowerCase();
+        const getCharacter = function(code) {
+            let character = String.fromCharCode(code).toLowerCase();
 
             if (code === 188) {
                 character = ',';
@@ -200,6 +192,20 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             if (code === 190) {
                 character = '.';
             } // If the user presses , when the type is onkeydown
+
+            return character;
+        };
+
+        fct = function keyboardHandler(e = $window.event) {
+            // Disable event handler when focus input and textarea
+            if (inputDisabled(e)) {
+                return;
+            }
+
+            // Find out which key is pressed
+            code = e.keyCode || e.which;
+
+            let character = getCharacter(code);
 
             var keys = lbl.split('+');
             // Key Pressed - counts the number of valid keypresses
@@ -224,40 +230,36 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
                     pressed: !!e.metaKey
                 }
             };
-            // Foreach keys in label (split on +)
 
-            for (var i = 0, l = keys.length; k = keys[i], i < l; i++) {
-                switch (k) {
-                case 'ctrl':
-                case 'control':
-                    kp++;
-                    modifiers.ctrl.wanted = true;
-                    break;
-                case 'shift':
-                case 'alt':
-                case 'meta':
-                    kp++;
-                    modifiers[k].wanted = true;
-                    break;
-                }
+            let computeKeys = () => {
+                let isCtrl = (k) => k === 'ctrl' || k === 'control';
+                let isMeta = (k) => k === 'alt' || k === 'shift' || k === 'meta';
 
-                if (k.length > 1) { // If it is a special key
-                    if (specialKeys[k] === code) {
+                // Foreach keys in label (split on +)
+                for (var i = 0, l = keys.length; k = keys[i], i < l; i++) {
+                    if (isCtrl(k)) {
                         kp++;
+                        modifiers.ctrl.wanted = true;
+                    } else if (isMeta(k)) {
+                        kp++;
+                        modifiers[k].wanted = true;
                     }
-                } else if (options.keyCode) { // If a specific key is set into the config
-                    if (options.keyCode === code) {
+
+                    let shouldIncrease = k.length > 1 && specialKeys[k] === code
+                        || options.keyCode && options.keyCode === code || character === k;
+
+                    if (shouldIncrease) {
                         kp++;
-                    }
-                } else if (character === k) { // The special keys did not match
-                    kp++;
-                } else if (shiftNums[character] && e.shiftKey) { // Stupid Shift key bug created by using lowercase
-                    character = shiftNums[character];
-                    if (character === k) {
-                        kp++;
+                    } else if (shiftNums[character] && e.shiftKey) { // Stupid Shift key bug created by using lowercase
+                        character = shiftNums[character];
+                        if (character === k) {
+                            kp++;
+                        }
                     }
                 }
-            }
+            };
+
+            computeKeys();
 
             if (kp === keys.length &&
                 modifiers.ctrl.pressed === modifiers.ctrl.wanted &&
