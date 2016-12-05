@@ -338,6 +338,14 @@
                     background-color:rgba(195, 195, 195, 0.2);
                 }
             }
+            blockquote {
+                font-size: 14px;
+                line-height: 140%;
+                margin: 16px 0;
+                border-left: 3px solid rgba(160, 160, 160, 0.5);
+                padding: 4px 0 4px 14px;
+                font-style: italic;
+            }
         }
     }
 
