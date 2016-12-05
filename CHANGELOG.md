@@ -1,5 +1,15 @@
 # Superdesk Client Changelog
 
+## [1.4.3] 2016-12-05
+
+### Changed
+
+- Improve look of html tables in the editor.
+
+### Fixed
+
+- Fixed issue when switching between search providers and superdesk.
+
 ## [1.4.2] 2016-11-30
 
 ### Fixed
