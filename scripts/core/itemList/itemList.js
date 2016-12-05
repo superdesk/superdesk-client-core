@@ -75,6 +75,74 @@ function extendScope(scope, itemList, itemPinService) {
 
 angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 .service('itemListService', ['api', '$q', 'search', function(api, $q, search) {
+    // process state
+    const processState = function(options, query) {
+        if (options.states) {
+            var stateQuery = [];
+
+            _.each(options.states, (state) => {
+                stateQuery.push({term: {state: state}});
+            });
+            query.source.query.filtered.filter.and.push({or: stateQuery});
+        }
+    };
+
+    const processRelatedItemsQuery = function(options, query) {
+        if (options.related !== true || !options.keyword) {
+            return;
+        }
+
+        var queryRelatedItem = [];
+        var sanitizedKeyword = options.keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
+        var queryWords = sanitizedKeyword.split(' ');
+
+        const addSlugs = function(list, words) {
+            words.forEach((w) => {
+                if (w) {
+                    list.push('slugline:(' + w + ')');
+                }
+            });
+        };
+
+        options.sluglineMatch = options.sluglineMatch || '';
+
+        switch (options.sluglineMatch) {
+        case 'ANY': // any words in the slugline
+            if (options.keyword.indexOf(' ') >= 0) {
+                queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
+            }
+
+            addSlugs(queryRelatedItem, queryWords);
+
+            if (queryRelatedItem.length) {
+                query.source.query.filtered.query = {
+                    query_string: {
+                        query: queryRelatedItem.join(' '),
+                        lenient: false,
+                        default_operator: 'OR'
+                    }
+                };
+            }
+
+            break;
+        case 'PREFIX': // phrase prefix
+            query.source.query.filtered.query = {
+                match_phrase_prefix: {
+                    'slugline.phrase': sanitizedKeyword
+                }
+            };
+            break;
+        default:
+                // exact match on slugline
+            query.source.query.filtered.query = {
+                query_string: {
+                    query: 'slugline.phrase:("' + sanitizedKeyword + '")',
+                    lenient: false
+                }
+            };
+        }
+    };
+
     function getQuery(options) {
         var query = {source: {query: {filtered: {}}}};
         // process filter aliases and shortcuts
@@ -88,9 +156,10 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
         if (options.repo) {
             options.repos = [options.repo];
         }
+
         // add shared query structure
-        if (
-            options.types ||
+        // eslint-disable-next-line complexity
+        let sharesQuery = (options) => options.types ||
             options.notStates ||
             options.states ||
             options.creationDateBefore ||
@@ -100,8 +169,9 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             options.provider ||
             options.source ||
             options.urgency ||
-            options.savedSearch
-        ) {
+            options.savedSearch;
+
+        if (sharesQuery(options)) {
             query.source.query.filtered.filter = {and: []};
         }
         // process page and pageSize
@@ -123,15 +193,9 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                 query.source.query.filtered.filter.and.push({not: {term: {state: notState}}});
             });
         }
-        // process state
-        if (options.states) {
-            var stateQuery = [];
 
-            _.each(options.states, (state) => {
-                stateQuery.push({term: {state: state}});
-            });
-            query.source.query.filtered.filter.and.push({or: stateQuery});
-        }
+        processState(options, query);
+
         // process creation date
         var dateKeys = {creationDate: '_created', modificationDate: 'versioncreated'};
         var dateQuery = null;
@@ -197,58 +261,8 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
             };
         }
 
-        var addSlugs = function(list, words) {
-            words.forEach((w) => {
-                if (w) {
-                    list.push('slugline:(' + w + ')');
-                }
-            });
-        };
-
         // Process related items only search
-        if (options.related === true && options.keyword) {
-            var queryRelatedItem = [];
-            var sanitizedKeyword = options.keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
-            var queryWords = sanitizedKeyword.split(' ');
-
-            options.sluglineMatch = options.sluglineMatch || '';
-
-            switch (options.sluglineMatch) {
-            case 'ANY': // any words in the slugline
-                if (options.keyword.indexOf(' ') >= 0) {
-                    queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
-                }
-
-                addSlugs(queryRelatedItem, queryWords);
-
-                if (queryRelatedItem.length) {
-                    query.source.query.filtered.query = {
-                        query_string: {
-                            query: queryRelatedItem.join(' '),
-                            lenient: false,
-                            default_operator: 'OR'
-                        }
-                    };
-                }
-
-                break;
-            case 'PREFIX': // phrase prefix
-                query.source.query.filtered.query = {
-                    match_phrase_prefix: {
-                        'slugline.phrase': sanitizedKeyword
-                    }
-                };
-                break;
-            default:
-                    // exact match on slugline
-                query.source.query.filtered.query = {
-                    query_string: {
-                        query: 'slugline.phrase:("' + sanitizedKeyword + '")',
-                        lenient: false
-                    }
-                };
-            }
-        }
+        processRelatedItemsQuery(options, query);
 
         // process saved search
         if (options.savedSearch && options.savedSearch._links) {
