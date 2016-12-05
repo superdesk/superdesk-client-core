@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.4.4] 2016-12-05
+
+### Added
+
+- Add desk language picker.
+
 ## [1.4.3] 2016-12-05
 
 ### Changed
