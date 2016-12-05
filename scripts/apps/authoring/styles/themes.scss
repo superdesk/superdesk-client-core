@@ -529,7 +529,7 @@ body, html {
             width: 100%;
             border-collapse: collapse;
             resize: both;
-            table-layout: fixed;
+            table-layout: auto;
             border: 1px solid #dadada;
             margin: 16px 0;
             td, th {
