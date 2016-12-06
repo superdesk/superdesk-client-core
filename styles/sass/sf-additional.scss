@@ -1358,6 +1358,10 @@ header .sortbar {
             white-space: nowrap;
             text-overflow: ellipsis;
         }
+        small {
+            display: block;
+            clear: left;
+        }
         .label-group {
           display: inline-block;
           &.label-group--right {

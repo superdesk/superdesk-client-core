@@ -31,6 +31,7 @@ export default angular.module('superdesk.apps.publish', ['superdesk.apps.users',
     .directive('sdDestination', directive.DestinationDirective)
 
     .controller('publishQueueCtrl', ctrl.PublishQueueController)
+    .controller('SubscriberTokenCtrl', ctrl.SubscriberTokenController)
 
     .config(['superdeskProvider', function(superdesk) {
         superdesk
