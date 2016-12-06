@@ -99,27 +99,37 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
 
                     initAggregations();
 
-                    if (angular.isDefined(scope.items._aggregations.type)) {
-                        _.forEach(scope.items._aggregations.type.buckets, (type) => {
-                            scope.aggregations.type[type.key] = type.doc_count;
-                        });
-                    }
+                    const collectType = () => {
+                        if (angular.isDefined(scope.items._aggregations.type)) {
+                            _.forEach(scope.items._aggregations.type.buckets, (type) => {
+                                scope.aggregations.type[type.key] = type.doc_count;
+                            });
+                        }
+                    };
 
-                    if (angular.isDefined(scope.items._aggregations.category)) {
-                        _.forEach(scope.items._aggregations.category.buckets, (cat) => {
-                            if (cat.key !== '') {
-                                scope.aggregations.category[cat.key] = cat.doc_count;
-                            }
-                        });
-                    }
+                    const collectCategory = () => {
+                        if (angular.isDefined(scope.items._aggregations.category)) {
+                            _.forEach(scope.items._aggregations.category.buckets, (cat) => {
+                                if (cat.key !== '') {
+                                    scope.aggregations.category[cat.key] = cat.doc_count;
+                                }
+                            });
+                        }
+                    };
 
-                    if (angular.isDefined(scope.items._aggregations.genre)) {
-                        _.forEach(scope.items._aggregations.genre.buckets, (g) => {
-                            if (g.key !== '') {
-                                scope.aggregations.genre[g.key] = g.doc_count;
-                            }
-                        });
-                    }
+                    const collectGenre = () => {
+                        if (angular.isDefined(scope.items._aggregations.genre)) {
+                            _.forEach(scope.items._aggregations.genre.buckets, (g) => {
+                                if (g.key !== '') {
+                                    scope.aggregations.genre[g.key] = g.doc_count;
+                                }
+                            });
+                        }
+                    };
+
+                    collectType();
+                    collectCategory();
+                    collectGenre();
 
                     if (angular.isDefined(scope.items._aggregations.urgency)) {
                         _.forEach(scope.items._aggregations.urgency.buckets, (urgency) => {
