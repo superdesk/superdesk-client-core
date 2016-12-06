@@ -130,6 +130,25 @@ export function DeskSelect(Keys, _, preferencesService) {
             // regexp for characters including unicode
             let charRegexp = /^[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]$/;
 
+            const handleEnter = (e) => {
+                e.stopPropagation();
+
+                if (!scope.isOpen) {
+                    return;
+                }
+
+                // on enter select active or first
+                if (scope.ctrl.active || scope.desks.length) {
+                    scope.$apply(() => {
+                        var desk = scope.ctrl.active || scope.desks[0];
+
+                        scope.onChange({desk: desk});
+                    });
+                } else {
+                    return false;
+                }
+            };
+
             elem.on('keydown', (e) => {
                 if (e.ctrlKey || e.metaKey || e.altKey) { // ignore when ctrl/alt/meta is used
                     return;
@@ -137,19 +156,7 @@ export function DeskSelect(Keys, _, preferencesService) {
 
                 switch (e.which) {
                 case Keys.enter:
-                    e.stopPropagation();
-                    if (scope.isOpen) {
-                            // on enter select active or first
-                        if (scope.ctrl.active || scope.desks.length) {
-                            scope.$apply(() => {
-                                var desk = scope.ctrl.active || scope.desks[0];
-
-                                scope.onChange({desk: desk});
-                            });
-                        } else {
-                            return false;
-                        }
-                    }
+                    handleEnter(e);
                     break;
 
                 case Keys.backspace:
