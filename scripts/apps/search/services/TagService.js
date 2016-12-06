@@ -148,16 +148,16 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                     });
                 };
 
-                for (var i = 0; i < cvs.length; i++) {
-                    var cv = cvs[i];
-
-                    if (cv.field === key) {
-                        var codeList = metadata.values[cv.list];
-
-                        selecteditems = JSON.parse(params[key]);
-                        processSelectedItems(selecteditems, codeList);
+                cvs.forEach((cv) => {
+                    if (cv.field !== key) {
+                        return;
                     }
-                }
+
+                    var codeList = metadata.values[cv.list];
+
+                    selecteditems = JSON.parse(params[key]);
+                    processSelectedItems(selecteditems, codeList);
+                });
                 break;
             case 'spike':
                 if (params[key]) {
@@ -277,63 +277,56 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             initExcludedFacets(tags.currentSearch);
 
             _.forEach(tags.currentSearch, (type, key) => {
-                if (key !== 'q' && !EXCLUDE_FACETS[key]) {
-                    tags.selectedFacets[key] = [];
+                if (key === 'q' || EXCLUDE_FACETS[key]) {
+                    return;
+                }
 
-                    switch (key) {
-                    case 'desk':
-                        var selectedDesks = JSON.parse(type);
+                tags.selectedFacets[key] = [];
 
-                        _.forEach(selectedDesks, (selectedDesk) => {
-                            tags.selectedFacets[key].push({
-                                label: desks.deskLookup[selectedDesk].name,
-                                value: selectedDesk});
-                        });
-                        break;
+                switch (key) {
+                case 'desk':
+                    var selectedDesks = JSON.parse(type);
 
-                    case 'after':
-                        if (type === 'now-24H') {
-                            tags.selectedFacets.date = ['Last Day'];
-                        } else if (type === 'now-1w') {
-                            tags.selectedFacets.date = ['Last Week'];
-                        } else if (type === 'now-1M') {
-                            tags.selectedFacets.date = ['Last Month'];
-                        }
-                        break;
+                    _.forEach(selectedDesks, (selectedDesk) => {
+                        tags.selectedFacets[key].push({
+                            label: desks.deskLookup[selectedDesk].name,
+                            value: selectedDesk});
+                    });
+                    break;
 
-                    case 'scheduled_after':
-                        if (type === 'now-8H') {
-                            tags.selectedFacets.date = ['Scheduled in the Last 8 Hours'];
-                        } else {
-                            tags.selectedFacets.date = ['Scheduled in the Last Day'];
-                        }
-                        break;
+                case 'after':
+                    var dateForType = {
+                        'now-24H': 'Last Day',
+                        'now-1w': 'Last Week',
+                        'now-1M': 'Last Month'
+                    };
 
-                    case 'afterfirstcreated':
-                        $location.search('after', null);
-                        tags.selectedFacets.date = ['Created after ' + type];
-                        break;
+                    tags.selectedFacets.date = [dateForType[type]];
+                    break;
 
-                    case 'beforefirstcreated':
-                        $location.search('after', null);
-                        tags.selectedFacets.date = ['Created before ' + type];
-                        break;
+                case 'scheduled_after':
+                    tags.selectedFacets.date = ['Scheduled in the Last Day'];
 
-                    case 'afterversioncreated':
-                        $location.search('after', null);
-                        tags.selectedFacets.date = ['Modified before ' + type];
-                        break;
-
-                    case 'beforeversioncreated':
-                        $location.search('after', null);
-                        tags.selectedFacets.date = ['Modified before ' + type];
-                        break;
-
-                    default:
-                        if (FacetKeys[key]) {
-                            tags.selectedFacets[key] = JSON.parse(type);
-                        }
+                    if (type === 'now-8H') {
+                        tags.selectedFacets.date = ['Scheduled in the Last 8 Hours'];
                     }
+                    break;
+                }
+
+                const prefixForType = {
+                    afterfirstcreated: 'Created after',
+                    beforefirstcreated: 'Created before',
+                    afterversioncreated: 'Modified before',
+                    beforeversioncreated: 'Modified before'
+                };
+
+                const createdOrModified = (t) => Object.keys(prefixForType).indexOf(t) !== -1;
+
+                if (createdOrModified(type)) {
+                    $location.search('after', null);
+                    tags.selectedFacets.date = [`${prefixForType[type]} ${type}`];
+                } else if (FacetKeys[key]) {
+                    tags.selectedFacets[key] = JSON.parse(type);
                 }
             });
 
