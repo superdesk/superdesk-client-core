@@ -39,7 +39,11 @@ export function SaveSearch($location, asset, api, session, notify, gettext, $roo
             scope.clear = function() {
                 scope.editingSearch = false;
                 scope.edit = null;
-                $location.url($location.path());
+                _.each($location.search(), (item, key) => {
+                    if (key !== 'repo') {
+                        $location.search(key, null);
+                    }
+                });
             };
 
             scope.search = function() {

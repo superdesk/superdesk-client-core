@@ -171,6 +171,8 @@ describe('search', () => {
 
         // can do a boolean search in the raw panel
         globalSearch.clickClearFilters();
+        globalSearch.archiveRepo.click();
+        globalSearch.archivedRepo.click();
         globalSearch.openRawSearchTab();
         var rawTextbox = element(by.id('raw-query'));
 
