@@ -284,22 +284,25 @@ function DropdownPositionDirective($document) {
                     element.removeClass('dropdown--dropup');
                 }
 
-                var isCloseToLeft = closeToLeft(),
-                    isCloseToRight = closeToRight();
-
-                if (isCloseToLeft) {
+                if (closeToLeft()) {
                     menu.removeClass('pull-right');
                 } else {
                     menu.addClass('pull-right');
                 }
 
-                if (isRightOriented) {
-                    if (isCloseToRight) {
-                        menu.addClass('pull-right');
-                    } else {
-                        menu.removeClass('pull-right');
-                    }
-                }
+                checkRightOrientation();
+                checkInlineOrientation();
+            });
+
+            function checkOrientation() {
+                menu = element.children('.dropdown__menu');
+                isRightOriented = menu.hasClass('pull-right');
+                isInlineOriented = element.hasClass('dropdown--dropright') || element.hasClass('dropdown--dropleft');
+            }
+
+            const checkInlineOrientation = () => {
+                var isCloseToLeft = closeToLeft(),
+                    isCloseToRight = closeToRight();
 
                 if (isInlineOriented) {
                     if (isCloseToLeft && !isCloseToRight) {
@@ -310,13 +313,19 @@ function DropdownPositionDirective($document) {
                         element.removeClass('dropdown--dropright dropdown--dropleft').addClass('dropdown--noarrow');
                     }
                 }
-            });
+            };
 
-            function checkOrientation() {
-                menu = element.children('.dropdown__menu');
-                isRightOriented = menu.hasClass('pull-right');
-                isInlineOriented = element.hasClass('dropdown--dropright') || element.hasClass('dropdown--dropleft');
-            }
+            const checkRightOrientation = () => {
+                let isCloseToRight = closeToRight();
+
+                if (isRightOriented) {
+                    if (isCloseToRight) {
+                        menu.addClass('pull-right');
+                    } else {
+                        menu.removeClass('pull-right');
+                    }
+                }
+            };
 
             // In authoring or modal, make dropdown's relative to theirs edge
             function checkWorkspace() {
