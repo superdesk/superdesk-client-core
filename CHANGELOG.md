@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.4.5] 2016-12-06
+
+### Fixed
+
+- Style fixes for the editor.
+
 ## [1.4.4] 2016-12-05
 
 ### Added
