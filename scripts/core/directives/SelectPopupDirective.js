@@ -1,5 +1,5 @@
 export default angular.module('superdesk.core.directives.selectPopup', ['superdesk.core.services.asset'])
-    .directive('sdSelectPopup', ['$document', 'asset', function($document, asset) {
+    .directive('sdSelectPopup', ['asset', function(asset) {
         return {
             restrict: 'A',
             scope: false,

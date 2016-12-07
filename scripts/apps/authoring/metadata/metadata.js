@@ -1,12 +1,12 @@
 import _ from 'lodash';
 
 MetadataCtrl.$inject = [
-    '$scope', 'desks', 'metadata', '$filter', 'privileges', 'datetimeHelper',
-    'preferencesService', 'archiveService', 'config', 'moment', 'content'
+    '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper',
+    'preferencesService', 'config', 'moment', 'content'
 ];
 function MetadataCtrl(
-    $scope, desks, metadata, $filter, privileges, datetimeHelper,
-    preferencesService, archiveService, config, moment, content) {
+    $scope, desks, metadata, privileges, datetimeHelper,
+    preferencesService, config, moment, content) {
     desks.initialize()
     .then(() => {
         $scope.deskLookup = desks.deskLookup;
@@ -311,8 +311,8 @@ function MetadropdownFocusDirective(keyboardManager) {
     };
 }
 
-MetaDropdownDirective.$inject = ['$filter', 'keyboardManager'];
-function MetaDropdownDirective($filter, keyboardManager) {
+MetaDropdownDirective.$inject = ['$filter'];
+function MetaDropdownDirective($filter) {
     return {
         scope: {
             list: '=',
@@ -925,8 +925,8 @@ function MetaLocatorsDirective() {
     };
 }
 
-MetadataService.$inject = ['api', '$q', 'subscribersService', 'config', 'vocabularies'];
-function MetadataService(api, $q, subscribersService, config, vocabularies) {
+MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies'];
+function MetadataService(api, subscribersService, config, vocabularies) {
     var service = {
         values: {},
         cvs: [],

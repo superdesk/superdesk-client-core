@@ -1086,8 +1086,8 @@ function WeekdayPickerDirective(weekdays) {
  * resize monitoring and authoring screen
  *
  */
-splitterWidget.$inject = ['superdesk', 'superdeskFlags', '$timeout'];
-function splitterWidget(superdesk, superdeskFlags, $timeout) {
+splitterWidget.$inject = ['superdesk', '$timeout'];
+function splitterWidget(superdesk, $timeout) {
     return {
         link: function(scope, element) {
             var workspace = element,
@@ -1304,8 +1304,8 @@ function focusElement() {
  * Usage:
  * <input type='text' sd-validation-error='error.field' ng-required='schema.field.required' />
  */
-validationDirective.$inject = ['gettext', 'gettextCatalog'];
-function validationDirective(gettext, gettextCatalog) {
+validationDirective.$inject = ['gettextCatalog'];
+function validationDirective(gettextCatalog) {
     return {
         restrict: 'A',
         link: function(scope, elem, attrs, ctrl) {

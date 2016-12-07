@@ -689,8 +689,8 @@ angular.module('superdesk.apps.editor2', [
             }
         };
     }])
-    .directive('sdTextEditorDropZone', ['editor',
-        function(editor) {
+    .directive('sdTextEditorDropZone',
+        () => {
             var dragOverClass = 'medium-editor-dragover';
 
             return {
@@ -739,7 +739,7 @@ angular.module('superdesk.apps.editor2', [
                 });
                 }
             };
-        }])
+        })
     .directive('sdTextEditor', ['$timeout', 'lodash', function($timeout, _) {
         return {
             scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?'},
@@ -780,18 +780,18 @@ angular.module('superdesk.apps.editor2', [
             }
         };
     }])
-    .directive('sdTextEditorBlockEmbed', ['$timeout', function($timeout) {
-        return {
+    .directive('sdTextEditorBlockEmbed', () =>
+        ({
             scope: {type: '=', config: '=', language: '=', model: '=sdTextEditorBlockEmbed', onBlockChange: '&'},
             templateUrl: 'scripts/core/editor2/views/block-embed.html',
             controllerAs: 'vm',
             bindToController: true,
             controller: SdTextEditorBlockEmbedController
-        };
-    }])
-    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout', 'superdesk',
+        })
+    )
+    .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout',
         '$q', 'gettextCatalog', 'config', '$rootScope',
-        function(editor, spellcheck, $timeout, superdesk, $q, gettextCatalog, config, $rootScope) {
+        function(editor, spellcheck, $timeout, $q, gettextCatalog, config, $rootScope) {
             var TOP_OFFSET = 134; // header height
 
             var EDITOR_CONFIG = {

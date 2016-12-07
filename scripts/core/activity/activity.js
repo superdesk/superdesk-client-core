@@ -378,14 +378,13 @@ angular.module('superdesk.core.activity', [
  * @requires $location
  * @requires $injector
  * @requires $q
- * @requires $timeout
  * @requires gettext
  * @requires modal
  * @requires lodash
  * @description The service allows choosing activities to perform.
  */
-.service('activityService', ['$location', '$injector', '$q', '$timeout', 'gettext', 'modal', 'lodash',
-    function($location, $injector, $q, $timeout, gettext, modal, _) {
+.service('activityService', ['$location', '$injector', '$q', 'gettext', 'modal', 'lodash',
+    function($location, $injector, $q, gettext, modal, _) {
         var activityStack = [];
 
         this.activityStack = activityStack;

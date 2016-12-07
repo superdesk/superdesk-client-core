@@ -57,7 +57,7 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
 
         return new NotifyService();
     }])
-    .directive('sdNotify', ['notify', '$rootScope', function(notify, $rootScope) {
+    .directive('sdNotify', ['notify', function(notify) {
         return {
             scope: true,
             templateUrl: 'scripts/core/notify/views/notify.html',

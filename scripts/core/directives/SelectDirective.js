@@ -28,7 +28,6 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
  * @name sdSelect
  *
  * @requires https://docs.angularjs.org/api/ng/service/$parse $parse
- * @requires https://docs.angularjs.org/api/ng/service/$document $document
  * @requires https://docs.angularjs.org/api/ng/service/$compile $compile
  * @requires optionParser
  *
@@ -39,9 +38,9 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
  * <sd-select multiple="true" ng-model="model" options="c.name for c in collection" change="action()"></sd-multiselect>
  * ```
  */
-.directive('sdSelect', ['$parse', '$document', '$compile', 'optionParser',
+.directive('sdSelect', ['$parse', '$compile', 'optionParser',
 
-    function($parse, $document, $compile, optionParser) {
+    function($parse, $compile, optionParser) {
         return {
             restrict: 'A',
             require: 'ngModel',

@@ -307,7 +307,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
             });
         }
     }))
-    .directive('sdImagePoint', ['$window', 'lodash', '$timeout', function($window, _, $timeout) {
+    .directive('sdImagePoint', ['$window', 'lodash', function($window, _) {
         return {
             scope: {
                 src: '=',

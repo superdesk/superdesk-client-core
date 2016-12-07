@@ -3,9 +3,9 @@ var embedCodeHandlers = require('./embedCodeHandlers.js');
 angular.module('superdesk.apps.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
 SdAddEmbedController.$inject = ['embedService', '$element', '$timeout', '$q', 'lodash',
-    'EMBED_PROVIDERS', '$scope', 'editor', 'config', '$injector', 'api'];
+    'EMBED_PROVIDERS', '$scope', 'editor', '$injector'];
 function SdAddEmbedController(embedService, $element, $timeout, $q, _,
-EMBED_PROVIDERS, $scope, editor, config, $injector, api) {
+EMBED_PROVIDERS, $scope, editor, $injector) {
     var self = this;
 
     angular.extend(self, {

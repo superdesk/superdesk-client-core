@@ -1,4 +1,4 @@
-angular.module('superdesk.core.upload.upload', []).service('upload', ['$q', 'Upload', function($q, Upload) {
+angular.module('superdesk.core.upload.upload', []).service('upload', ['Upload', function(Upload) {
     /**
      * Start upload
      *

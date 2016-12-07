@@ -1,5 +1,5 @@
-angular.module('superdesk.core.auth.auth', []).service('auth', ['$q', 'api', 'session', 'authAdapter',
-    function($q, api, session, authAdapter) {
+angular.module('superdesk.core.auth.auth', []).service('auth', ['api', 'session', 'authAdapter',
+    function(api, session, authAdapter) {
     /**
      * Login using given credentials
      *
