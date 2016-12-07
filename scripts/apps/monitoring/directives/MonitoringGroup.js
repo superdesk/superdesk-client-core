@@ -336,6 +336,11 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             function preview(item) {
                 if (item) {
+                    if (item._type === 'externalsource') {
+                        select(item);
+                        return;
+                    }
+
                     scope.loading = true;
                     criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                     let previewCriteria = search.getSingleItemCriteria(item, criteria);

@@ -14,7 +14,22 @@ SearchResults.$inject = [
 ];
 
 /**
- * Item list with sidebar preview
+ * @ngdoc directive
+ * @module superdesk.apps.search
+ * @name sdSearchResults
+ *
+ * @requires $location
+ * @requires preferencesService
+ * @requires packages
+ * @requires asset
+ * @requires $timeout
+ * @requires api
+ * @requires search
+ * @requires session
+ * @requires $rootScope
+ * @requires config
+ *
+ * @description Item list with sidebar preview
  */
 export function SearchResults(
         $location,
@@ -361,20 +376,18 @@ export function SearchResults(
                 }
 
                 if (item) {
+                    if (item._type === 'externalsource') {
+                        processPreview(item);
+                        return;
+                    }
+
                     scope.loading = true;
                     let previewCriteria = search.getSingleItemCriteria(item);
 
                     api.query(getProvider(previewCriteria), previewCriteria).then((completeItems) => {
                         let completeItem = search.mergeHighlightFields(completeItems._items[0]);
 
-                        scope.selected.preview = completeItem;
-                        scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
-
-                        if (!_.isNil(scope.selected.preview)) {
-                            scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
-                        }
-
-                        $location.search('_id', item ? item._id : null);
+                        processPreview(completeItem);
                     })
                     .finally(() => {
                         scope.loading = false;
@@ -383,6 +396,24 @@ export function SearchResults(
                     delete scope.selected.preview;
                 }
             };
+
+            /**
+             * @ngdoc method
+             * @name sdSearchResults#processPreview
+             * @private
+             * @param {Object} item
+             * @description Sets the preview item
+             */
+            function processPreview(item) {
+                scope.selected.preview = item;
+                scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
+
+                if (!_.isNil(scope.selected.preview)) {
+                    scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
+                }
+
+                $location.search('_id', item ? item._id : null);
+            }
 
             scope.openLightbox = function openLightbox() {
                 scope.selected.view = scope.selected.preview;
