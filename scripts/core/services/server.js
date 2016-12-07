@@ -85,6 +85,9 @@ export default angular.module('superdesk.core.services.server', [])
                     options.data = this._cleanData(data);
                 }
 
+                // TODO: For some reason switching success/error to then/catch
+                // here is failing the unit tests.
+                // eslint-disable-next-line angular/no-http-callback
                 $http(options)
                 .success((responseData) => {
                     if (method === 'POST') {

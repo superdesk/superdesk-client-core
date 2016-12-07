@@ -1,5 +1,8 @@
 {
-    "plugins": ["react", "angular"],
+    "plugins": [
+        "react",
+        "angular"
+    ],
 
     "env": {
         "browser": true,
@@ -37,6 +40,9 @@
 
     "rules": {
         "angular/di-unused": 2,
+        "angular/empty-controller": 2,
+        "angular/no-cookiestore": 2,
+        "angular/no-http-callback": 2,
 
         "react/jsx-uses-vars": 2,
         "react/jsx-uses-react": 2,
