@@ -301,8 +301,8 @@ export function SearchService($location, gettext, config, session) {
             }
 
             // used by aap multimedia datalayer
-            if (params.credit && params.creditqcode) {
-                query.post_filter({terms: {credit: JSON.parse(params.creditqcode)}});
+            if (params.creditqcode) {
+                query.post_filter({terms: {credit: _.map(JSON.parse(params.creditqcode), 'value')}});
             }
 
             if (params.category) {
