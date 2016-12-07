@@ -1,22 +1,18 @@
-<div class="schedule-tab">
+<div class="field">
+    <label translate>Days</label>
+    <div class="day-filter-box clearfix" sd-weekday-picker data-model="rule.schedule.day_of_week"></div>
+</div>
 
-    <div class="field">
-        <label translate>Days</label>
-        <div class="day-filter-box clearfix" sd-weekday-picker data-model="rule.schedule.day_of_week"></div>
-    </div>
+<div class="field">
+    <label translate>Start Time (inclusive)</label>
+    <span sd-timepicker ng-model="rule.schedule.hour_of_day_from"></span>
+</div>
 
-    <div class="field">
-        <label translate>Start Time (inclusive)</label>
-        <span sd-timepicker ng-model="rule.schedule.hour_of_day_from"></span>
-    </div>
+<div class="field">
+    <label translate>End Time (exclusive)</label>
+    <span sd-timepicker ng-model="rule.schedule.hour_of_day_to"></span>
+</div>
 
-    <div class="field">
-        <label translate>End Time (exclusive)</label>
-        <span sd-timepicker ng-model="rule.schedule.hour_of_day_to"></span>
-    </div>
-
-    <div class="field">
-        <div sd-timezone data-timezone="rule.schedule.time_zone"></div>
-    </div>
-
+<div class="field">
+    <div sd-timezone data-timezone="rule.schedule.time_zone"></div>
 </div>
