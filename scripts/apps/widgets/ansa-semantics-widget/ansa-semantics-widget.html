@@ -1,0 +1,27 @@
+<div ng-controller="AnsaSemanticsCtrl as semantics" class="widget">
+    <fieldset>
+        <button class="btn" ng-click="semantics.refresh()" translate>Refresh</button>
+    </fieldset>
+
+    <dl ng-if="semantics.data">
+        <dt translate>News Domains</dt>
+        <dd ng-repeat="domain in semantics.data.newsDomains">{{ domain }}</dd>
+
+        <dt translate>Place</dt>
+        <dd ng-repeat="place in semantics.data.places">{{ place }}</dd>
+
+        <dt translate>Organizations</dt>
+        <dd ng-repeat="org in semantics.data.organizations">{{ org }}</dd>
+
+        <dt translate>Main Groups</dt>
+        <dd ng-repeat="group in semantics.data.mainGroups">{{ group }}</dd>
+
+        <dt translate>Main Lemmas</dt>
+        <dd ng-repeat="lemma in semantics.data.mainLemmas">{{ lemma }}</dd>
+
+        <dt translate>Main sentence</dt>
+        <dd><p>{{ semantics.data.mainSenteces[0] }}</p></dd>
+        <dd><p>{{ semantics.data.mainSenteces[1] }}</p></dd>
+        <dd><p>{{ semantics.data.mainSenteces[2] }}</p></dd>
+    </dl>
+</div>
