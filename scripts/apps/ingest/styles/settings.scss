@@ -153,91 +153,57 @@
 }
 
 /* Scheme create/edit modal */
-
 .add-scheme-modal {
     .modal-body {
         flex: 1 1 auto !important;
-        .split-content {
-            > .header {
-                padding: 10px;
-                height: 78px;
-            }
-            > .content {
-                top: 78px;
-            }
-        }
-        flex: 1 1 auto !important;
     }
-    .col-left {
-        position: absolute;
-        left:0; top: 0; bottom: 0; width: 250px;
-        border-right: 1px solid #e0e0e0;
-        padding: 10px;
-        @include border-box();
-        overflow: auto;
+    .split-view {
+        margin-top: 20px;
+        border-top: 1px solid #e0e0e0;
     }
-    .col-right {
-        position: absolute;
-        left:250px; top: 0; bottom: 0; right: 0;
-        @include border-box();
-        .content {
-            position: absolute;
-            top: 48px; left: 0;
-            right: 0; bottom: 0;
-            overflow: auto;
-            padding: 20px;
-        }
-    }
-    .half-input {
-        width: 60%;
-    }
-
-    .general-tab {
-        .summary {
-            .field {
-                background-color: $sd-background;
-                padding: 5px;
-                font-size: 12px;
-                .title {
-                    @include text-bold();
-                }
-            }
-        }
+    .content {
+        margin: 50px 0 0
     }
     .pills-list {
-        margin-top: 10px;
-        max-width: 100%;
         li {
-            margin: 0 0 5px 0;
-            .actions {
-                margin-right: -30px;
-            }
+            cursor: pointer;
             &.highlight {
-                background-color: #5e5e5e;
-                h6 {
-                    color: white;
-                }
+                background-color: rgba(94, 169, 200, 0.1);
             }
+        }
+        &.with-action li {
+            padding-right: 35px;
         }
     }
-    .filter-tab {
-        .type-filter-box {
-            .btn {
-                padding: 0;
-                margin-right: 10px;
-            }
-        }
-        .field > label {
-            display: block;
+    .field {
+        clear: both;
+    }
+    .summary {
+        margin-top: 20px;
+        > label {
             margin-bottom: 10px;
+        }
+        .list-item {
+            display: block;
+        }
+        .title {
+            font-size: 11px;
+            text-transform: none;
+            color: $sd-text;
+            min-width: 0;
+            @include text-bold();
+        }
+        .field {
+            font-size: 11px;
         }
     }
     .action-tab {
-        .pills-list {
-            li {
-                padding-right: 35px;
-            }
-        }
+        .field { margin-bottom: 10px; }
+        label { min-width: 90px; }
+        .sd-toggle { vertical-align: middle; }
+    }
+    .btn-group {
+        .btn { margin-right: 5px; }
     }
     .add {
         position: absolute;
@@ -247,10 +213,9 @@
         width: 22px;
         @include border-radius(50%);
         line-height: 20px;
-        i {
-            margin: 0;
-        }
+        i { margin: 0; }
     }
+
     .term-editor {
         width: 400px;
         .main-list {
@@ -258,6 +223,7 @@
         }
     }
 }
+
 .shadow-list-holder > .pills-list {
     margin: 8px 0 0 5px;
 }

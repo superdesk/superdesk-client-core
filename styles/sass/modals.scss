@@ -143,30 +143,30 @@ body:not(:-moz-handler-blocked) .modal{
     }
 }
 .modal--about {
-  h4 {
-    font-size: 16px;
-  }
-  .date-released {
-    color: #767676;
-    margin-bottom: 24px;
-  }
+    h4 {
+        font-size: 16px;
+    }
+    .date-released {
+        color: #767676;
+        margin-bottom: 24px;
+    }
 }
 
 .modal-header--about {
-  background-color: $superdesk-green;
-  padding: 15px 15px 20px 20px;
-  i {
-    color: white;
-  }
-  .modal-header__sd-logo {
-    background: url(~images/superdesk-logo_white.svg) no-repeat 0 0;
-    width: 154px;
-    height: 48px;
-    text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    float: left;
-  }
+    background-color: $superdesk-green;
+    padding: 15px 15px 20px 20px;
+    i {
+        color: white;
+    }
+    .modal-header__sd-logo {
+        background: url(~images/superdesk-logo_white.svg) no-repeat 0 0;
+        width: 154px;
+        height: 48px;
+        text-indent: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        float: left;
+    }
 }
 
 // Body (where all modal content resises)
@@ -324,175 +324,175 @@ body:not(:-moz-handler-blocked) .modal{
         }
     }
 
-        // Preview article dialog
-        &.modal--fullscreen {
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            .modal-dialog {
-                width: 100%;
-                height: 100%;
-                .modal-content {
-                    flex: 0 0 100%;
-                    margin: 0;
+    // Preview article dialog
+    &.modal--fullscreen {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        .modal-dialog {
+            width: 100%;
+            height: 100%;
+            .modal-content {
+                flex: 0 0 100%;
+                margin: 0;
+                @include border-radius(0);
+                .scroll-shadow {
+                    position: absolute;
+                    top: 47px;
+                    width: 100vw;
+                }
+                .modal-header {
                     @include border-radius(0);
-                    .scroll-shadow {
-                        position: absolute;
-                        top: 47px;
-                        width: 100vw;
-                    }
-                    .modal-header {
-                        @include border-radius(0);
-                        .btn-group {
-                            button {
-                                cursor: pointer;
-                                background: 0 0;
-                                border: 0;
-                                margin-top: 2px;
-                                -webkit-appearance: none;
-                                [class^="icon-"], [class*=" icon-"] {
-                                    width: 24px;
-                                    height: 24px;
-                                    font-size: 24px;
-                                    line-height: 24px;
-                                    color: #bfbfbf;
-                                    &:hover {
-                                        color: $gray;
-                                    }
+                    .btn-group {
+                        button {
+                            cursor: pointer;
+                            background: 0 0;
+                            border: 0;
+                            margin-top: 2px;
+                            -webkit-appearance: none;
+                            [class^="icon-"], [class*=" icon-"] {
+                                width: 24px;
+                                height: 24px;
+                                font-size: 24px;
+                                line-height: 24px;
+                                color: #bfbfbf;
+                                &:hover {
+                                    color: $gray;
                                 }
                             }
-                            label {
-                                line-height: 18px;
-                            }
                         }
-                        .btn {
-                            margin-right: 12px;
-                        }
-                        &--no-border {
-                            border: 0;
+                        label {
+                            line-height: 18px;
                         }
                     }
-                    .modal-body {
-                        max-height: none;
-                        flex: 1 1 auto;
-                        // styles for preview content
-                        .preview-content {
-                            width: 100%;
-                            max-width: 540px;
-                            margin: 0 auto;
+                    .btn {
+                        margin-right: 12px;
+                    }
+                    &--no-border {
+                        border: 0;
+                    }
+                }
+                .modal-body {
+                    max-height: none;
+                    flex: 1 1 auto;
+                    // styles for preview content
+                    .preview-content {
+                        width: 100%;
+                        max-width: 540px;
+                        margin: 0 auto;
+                        display: flex;
+                        flex-direction: column;
+                        .metadata {
+                            margin: 30px 0 40px;
                             display: flex;
                             flex-direction: column;
-                            .metadata {
-                                margin: 30px 0 40px;
-                                display: flex;
-                                flex-direction: column;
-                                > div {
-                                    min-height: 24px;
-                                    overflow: hidden;
-                                    margin-bottom: 10px;
-                                }
-                                .preview-label {
-                                    float: left;
-                                    min-width: 100px;
-                                    vertical-align: top;
-                                }
-                                .preview-data {
-                                    float: left;
-                                    max-width: 440px;
-                                    span {
-                                        font-size: 12px;
-                                        color: #000;
-                                        background-color: #f5f5f5;
-                                        margin-right: 3px;
-                                        margin-bottom: 3px;
-                                        padding: 3px 6px;
-                                        border-radius: 2px;
-                                        display: inline-block;
-                                    }
+                            > div {
+                                min-height: 24px;
+                                overflow: hidden;
+                                margin-bottom: 10px;
+                            }
+                            .preview-label {
+                                float: left;
+                                min-width: 100px;
+                                vertical-align: top;
+                            }
+                            .preview-data {
+                                float: left;
+                                max-width: 440px;
+                                span {
+                                    font-size: 12px;
+                                    color: #000;
+                                    background-color: #f5f5f5;
+                                    margin-right: 3px;
+                                    margin-bottom: 3px;
+                                    padding: 3px 6px;
+                                    border-radius: 2px;
+                                    display: inline-block;
                                 }
                             }
-                            .headline {
-                                min-height: 33px;
-                                font-size: 28px;
-                                line-height: 120%;
-                                font-weight: 500;
-                                padding: 0;
-                                margin: 0 0 30px;
-                            }
-                            .byline {
-                                font-size: 16px;
-                                font-weight: 500;
-                                margin: 0 0 30px;
-                            }
-                            .association {
-                                margin-bottom: 40px;
-                                p {
-                                    font-style: italic;
-                                }
-                            }
-                            .body {
-                                margin-bottom: 30px;
-                            }
+                        }
+                        .headline {
+                            min-height: 33px;
+                            font-size: 28px;
+                            line-height: 120%;
+                            font-weight: 500;
+                            padding: 0;
+                            margin: 0 0 30px;
+                        }
+                        .byline {
+                            font-size: 16px;
+                            font-weight: 500;
+                            margin: 0 0 30px;
+                        }
+                        .association {
+                            margin-bottom: 40px;
                             p {
-                                font-size: 16px;
-                                line-height: 150%;
-                                font-weight: 300;
-                                margin: 0 0 16px;
+                                font-style: italic;
+                            }
+                        }
+                        .body {
+                            margin-bottom: 30px;
+                        }
+                        p {
+                            font-size: 16px;
+                            line-height: 150%;
+                            font-weight: 300;
+                            margin: 0 0 16px;
+                        }
+                        figure {
+                            margin-bottom: 20px;
+                        }
+                        figcaption {
+                            color: $grayLight;
+                            padding: 4px 0;
+                        }
+                        img {
+                            max-width: 100%;
+                        }
+                        &.hide-images {
+                            .association {
+                                p {
+                                    padding: 10px;
+                                    border: 1px solid black;
+                                }
+                                i {
+                                    vertical-align: middle;
+                                    margin-right: 10px;
+                                }
                             }
                             figure {
-                                margin-bottom: 20px;
-                            }
-                            figcaption {
-                                color: $grayLight;
-                                padding: 4px 0;
-                            }
-                            img {
-                                max-width: 100%;
-                            }
-                            &.hide-images {
-                                .association {
-                                    p {
-                                        padding: 10px;
-                                        border: 1px solid black;
-                                    }
-                                    i {
-                                        vertical-align: middle;
-                                        margin-right: 10px;
-                                    }
-                                }
-                                figure {
-                                    display: none !important;
-                                }
+                                display: none !important;
                             }
                         }
-                        &--white {
-                            background: white;
-                        }
                     }
-                    .modal-footer {
-                        @include border-radius(0);
+                    &--white {
+                        background: white;
                     }
+                }
+                .modal-footer {
+                    @include border-radius(0);
                 }
             }
         }
-        label {
-            display: inline-block;
-            min-width: 75px;
-            font-size: 11px;
-            line-height: 26px;
-            margin: 0;
-            color: #747474;
-            text-transform: uppercase;
-            font-weight: 500;
-            margin-right: 5px;
+    }
+    label {
+        display: inline-block;
+        min-width: 75px;
+        font-size: 11px;
+        line-height: 26px;
+        margin: 0;
+        color: #747474;
+        text-transform: uppercase;
+        font-weight: 500;
+        margin-right: 5px;
 
-            .sd-checkbox { margin-top: 4px; }
-        }
-        .field-info {
-            margin-left: 20px;
-            color: #c0c0c0;
-        }
+        .sd-checkbox { margin-top: 4px; }
+    }
+    .field-info {
+        margin-left: 20px;
+        color: #c0c0c0;
+    }
 
 }
 
@@ -575,9 +575,50 @@ $split-modal-sidebar : 230px;
 
 // Custom animation
 .animate-zoom__from-bottom-left {
-  animation: appearFromBottomLeft 0.4s ease-out 1;
+    animation: appearFromBottomLeft 0.4s ease-out 1;
 }
 //
 .animate-slide-in__from-right {
-  animation: appearFromRight2 0.6s ease-out 0s 1;
+    animation: appearFromRight2 0.6s ease-out 0s 1;
+}
+
+// Split view for modals
+// > used in routing schemes
+.split-view {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 70px;
+    bottom: 0px;
+
+    .sidebar, .main {
+        position: absolute;
+        @include border-box();
+        top: 0; bottom: 10px;
+        left: 0; right: 50%;
+        padding: 10px 20px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .sidebar {
+        right: 70%;
+        & + .main {
+            left: 30%; right: 0;
+            border-left: 1px solid #e0e0e0;
+        }
+    }
+
+    .main + .main {
+        left: 50%; right: 0;
+        border-left: 1px solid #e0e0e0;
+
+    }
+}
+
+.action-panel {
+    margin: 5px 0 15px 0;
+    overflow: hidden;
+    padding: 12px;
+    @include shadow-box;
 }
