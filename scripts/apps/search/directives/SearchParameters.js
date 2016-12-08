@@ -192,8 +192,13 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
             }
 
             scope.$on('$locationChangeSuccess', () => {
-                if (scope.query !== $location.search().q ||
-                    scope.fields.from_desk !== $location.search().from_desk ||
+                if (scope.query !== $location.search().q || isFieldDifferentThanSearch) {
+                    init();
+                }
+            });
+
+            function isFieldDifferentThanSearch() {
+                return scope.fields.from_desk !== $location.search().from_desk ||
                     scope.fields.to_desk !== $location.search().to_desk ||
                     scope.fields.unique_name !== $location.search().unique_name ||
                     scope.fields.original_creator !== $location.search().original_creator ||
@@ -201,10 +206,8 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     scope.fields.company_codes !== $location.search().company_codes ||
                     scope.fields.marked_desks !== $location.search().marked_desks ||
                     scope.fields.spike !== $location.search().spike ||
-                    scope.fields.ingest_provider !== $location.search().ingest_provider) {
-                    init();
-                }
-            });
+                    scope.fields.ingest_provider !== $location.search().ingest_provider;
+            }
 
             function getFirstKey(data) {
                 for (var prop in data) {

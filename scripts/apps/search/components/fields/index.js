@@ -2,6 +2,7 @@ export {headline} from './headline';
 export {slugline} from './slugline';
 export {wordcount} from './wordcount';
 export {highlights} from './highlights';
+export {markedDesks} from './markedDesks';
 export {versioncreated} from './versioncreated';
 export {versioncreator} from './versioncreator';
 export {profile} from './profile';

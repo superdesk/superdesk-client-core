@@ -70,7 +70,6 @@ export const DEFAULT_LIST_CONFIG = {
 export const CORE_PROJECTED_FIELDS = {
     fields: [
         'highlights',
-        'marked_desks',
         '_created',
         '_updated',
         '_etag',
@@ -115,5 +114,6 @@ export const UI_PROJECTED_FIELD_MAPPINGS = {
     provider: 'ingest_provider',
     category: 'anpa_category',
     versioncreator: 'version_creator',
-    versioncreated: 'versioncreated'
+    versioncreated: 'versioncreated',
+    markedDesks: 'marked_desks'
 };

@@ -13,6 +13,8 @@ export {ListTypeIcon} from './ListTypeIcon';
 export {ListPriority} from './ListPriority';
 export {HighlightsInfo} from './HighlightsInfo';
 export {HighlightsList} from './HighlightsList';
+export {MarkedDesksInfo} from './MarkedDesksInfo';
+export {MarkedDesksList} from './MarkedDesksList';
 export {ActionsMenu} from './actions-menu';
 export {ProgressBar} from './ProgressBar';
 export {ErrorBox} from './ErrorBox';

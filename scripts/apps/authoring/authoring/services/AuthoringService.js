@@ -499,7 +499,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         // mark item for desks
         action.mark_item_for_desks = currentItem.task && currentItem.task.desk &&
             !isReadOnlyState && currentItem.package_type !== 'takes' &&
-            userPrivileges.marked_for_desks;
+            userPrivileges.mark_for_desks;
 
         // allow all stories to be packaged if it doesn't have Embargo
         action.package_item = !_.includes(['spiked', 'scheduled', 'killed'], currentItem.state) &&

@@ -1,5 +1,25 @@
-DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify', 'session', '$filter', 'privileges', '$rootScope'];
-export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter, privileges, $rootScope) {
+/**
+ * @ngdoc service
+ * @module superdesk.apps.desks
+ * @name desks
+ *
+ * @requires $q
+ * @requires api
+ * @requires preferencesService
+ * @requires userList
+ * @requires notify
+ * @requires session
+ * @requires $filter
+ * @requires privileges
+ *
+ * @description Desks Service is responsible for managing desks and stages
+ */
+DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify',
+    'session', '$filter', 'privileges', '$rootScope'];
+export function DesksFactory($q, api, preferencesService, userList, notify,
+    session, $filter, privileges, $rootScope) {
+    let _cache = {};
+
     var _fetchAll = function(endpoint, parent, page = 1, items = []) {
         let key;
 
@@ -307,11 +327,28 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
         isReadOnlyStage: function(stageId) {
             return this.stageLookup[stageId] ? this.stageLookup[stageId].local_readonly : false;
         },
-        markItem: function(desk, markedItem) {
-            return api.save('marked_for_desks', {marked_desk: desk, marked_item: markedItem._id});
+        /**
+         * @ngdoc method
+         * @name desks#markItem
+         * @public
+         * @description Toggles the marking for the given story
+         * @param {string} deskId
+         * @param {Object} markedItem
+         * @returns {Object}
+         */
+        markItem: function(deskId, markedItem) {
+            return api.save('marked_for_desks', {marked_desk: deskId, marked_item: markedItem._id});
         },
+        /**
+         * @ngdoc method
+         * @name desks#hasMarkItemPrivilege
+         * @public
+         * @description Checks if the current user has the privilege
+         * for marking stories for desks
+         * @returns {boolean}
+         */
         hasMarkItemPrivilege: function() {
-            return !!privileges.privileges.marked_for_desks;
+            return !!privileges.privileges.mark_for_desks;
         }
     };
 
