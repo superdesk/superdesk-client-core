@@ -2,8 +2,8 @@ function AuthoringWidgetsProvider() {
     var widgets = [];
 
     this.widget = function(id, config) {
-        widgets.push(angular.extend({ // make a new instance for every widget
-        }, config, {_id: id}));
+        widgets = widgets.filter((widget) => widget._id !== id);
+        widgets.push(angular.extend({}, config, {_id: id})); // make a new instance for every widget
     };
 
     this.$get = function() {

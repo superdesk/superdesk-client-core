@@ -744,6 +744,7 @@ angular.module('superdesk.apps.editor2', [
                     if (scope.sdTextEditorDropZone === 'false') {
                         return;
                     }
+
                     var MEDIA_TYPES = [
                         'application/superdesk.item.picture',
                         'application/superdesk.item.graphic',
@@ -752,11 +753,16 @@ angular.module('superdesk.apps.editor2', [
                         'text/html',
                     ];
 
+                    let getType = (event) => MEDIA_TYPES.find(
+                        (_type) => event.originalEvent.dataTransfer.types.indexOf(_type) >= 0
+                    );
+
                     element.on('drop dragdrop', (event) => {
                         event.preventDefault();
                         event.stopPropagation();
-                        const mediaType = event.originalEvent.dataTransfer.types[0];
+                        const mediaType = getType(event);
                         const paragraph = angular.element(event.target);
+
                         let item = event.originalEvent.dataTransfer.getData(mediaType);
 
                         // we want to ensure that the field is empty before inserting something
@@ -776,7 +782,7 @@ angular.module('superdesk.apps.editor2', [
                             $q.when((() => {
                                 // if it's a link (<a>...</a>), create an embed by using iframely
                                 // if not, create an embed based on the item content
-                                const urlMatch = /^<a href="(.+?)".+<\/a>$/.exec(item);
+                                const urlMatch = /<a href="(.+?)".+<\/a>/.exec(item);
 
                                 if (urlMatch) {
                                     return embedService.get(urlMatch[1]).then((data) => ({
@@ -806,7 +812,9 @@ angular.module('superdesk.apps.editor2', [
                         .on('dragover', (event) => {
                             const paragraph = angular.element(event.target);
 
-                            if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
+                            let matching = getType(event);
+
+                            if (matching) {
                             // allow to overwite the drop binder (see above)
                                 event.preventDefault();
                                 event.stopPropagation();

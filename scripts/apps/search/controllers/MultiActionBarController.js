@@ -23,13 +23,13 @@ import _ from 'lodash';
  */
 
 MultiActionBarController.$inject = [
-    '$rootScope', 'multi', 'multiEdit', 'send', 'remove', 'modal', '$q',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', '$location', 'config'
+    '$rootScope', 'multi', 'multiEdit', 'send', 'remove', 'modal', '$q', 'gettext',
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config'
 ];
 
 export function MultiActionBarController(
-    $rootScope, multi, multiEdit, send, remove, modal, $q,
-    packages, superdesk, notify, spike, authoring, $location, config
+    $rootScope, multi, multiEdit, send, remove, modal, $q, gettext,
+    packages, superdesk, notify, spike, authoring, privileges, $location, config
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -129,5 +129,22 @@ export function MultiActionBarController(
      */
     this.canHighlightItems = function() {
         return multi.getItems().every((item) => authoring.itemActions(item).mark_item_for_highlight);
+    };
+
+    /**
+     * Publish all items
+     */
+    this.publish = () => {
+        $q.all(multi.getItems().map((item) => authoring.publish(item, item)))
+            .then((responses) => {
+                const withErrors = responses.some((response) => response.status >= 400);
+
+                if (withErrors) {
+                    notify.error(gettext('Some items could not be published.'));
+                } else {
+                    notify.success(gettext('All items were published successfully.'));
+                    multi.reset();
+                }
+            });
     };
 }

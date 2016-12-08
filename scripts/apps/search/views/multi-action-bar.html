@@ -40,6 +40,9 @@
         <button id="send-to-btn" class="navbtn strict" title="{{ :: 'Send to' | translate }}" ng-if="activity['edit.item']" ng-click="action.sendAs()">
             <i class="big-icon--send-to"></i>
         </button>
+        <button id="publish-btn" class="navbtn strict" title="{{ :: 'Publish' | translate }}" ng-if="activity['edit.item']" ng-click="action.publish()">
+            <i class="svg-icon-ok"></i>
+        </button>
     </div>
 
     <div class="pull-right" ng-if="type === 'ingest' && (!elementState || elementState === 'comfort')">

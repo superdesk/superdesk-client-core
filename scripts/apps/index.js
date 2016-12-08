@@ -56,5 +56,5 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.internal-destinations',
     'superdesk.apps.content-api',
     'superdesk.apps.extension-points',
-    'superdesk.apps.contacts'
+    'superdesk.apps.contacts',
 ]);

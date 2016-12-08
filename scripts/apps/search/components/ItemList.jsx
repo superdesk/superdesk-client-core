@@ -175,7 +175,7 @@ export class ItemList extends React.Component {
         const {superdesk, $timeout, authoringWorkspace} = this.props.svc;
         const {scope} = this.props;
 
-        var activities = superdesk.findActivities({action: 'list', type: 'archive'}, item);
+        var activities = superdesk.findActivities({action: 'list', type: item._type}, item);
         var canEdit = _.reduce(activities, (result, value) => result || value._id === 'edit.item', false);
 
         this.setSelectedItem(item);
@@ -185,7 +185,15 @@ export class ItemList extends React.Component {
             return;
         }
 
-        if (canEdit && scope.edit) {
+        if (item._type === 'externalsource') {
+            superdesk.intent('list', 'externalsource', {item: item})
+                .then((archiveItem) => {
+                    archiveItem.guid = archiveItem._id; // fix item guid to match new item _id
+                    scope.$applyAsync(() => {
+                        scope.edit ? scope.edit(archiveItem) : authoringWorkspace.open(archiveItem);
+                    });
+                });
+        } else if (canEdit && scope.edit) {
             scope.$apply(() => {
                 scope.edit(item);
             });

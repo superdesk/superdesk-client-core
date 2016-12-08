@@ -13,14 +13,21 @@ function PackagesCtrl($scope, superdesk, api, search) {
         });
 
         query.size(25).filter({terms: {guid: filter}});
-        api.archive.query(query.getCriteria(true))
+        var criteria = query.getCriteria(true);
+
+        criteria.repo = 'archive,published';
+        api.query('search', criteria)
             .then((result) => {
-                $scope.contentItems = result._items;
+                $scope.contentItems = _.uniqBy(result._items, '_id');
             });
     }
 
     $scope.openPackage = function(packageItem) {
-        superdesk.intent('edit', 'item', packageItem);
+        if (packageItem._type === 'published') {
+            superdesk.intent('view', 'item', packageItem);
+        } else {
+            superdesk.intent('edit', 'item', packageItem);
+        }
     };
 
     if ($scope.item && $scope.item.linked_in_packages && $scope.item.linked_in_packages.length > 0) {

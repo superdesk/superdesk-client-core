@@ -44,6 +44,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     archive_description: null,
     extra: {},
     attachments: null,
+    semantics: null,
 });
 
 export const DEFAULT_ACTIONS = Object.freeze({
