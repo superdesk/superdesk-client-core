@@ -35,4 +35,5 @@ gettext('Provider {{name}} has gone strangely quiet. Last activity was on {{last
 gettext('updated Ingest Channel {{name}}');gettext('{{status}} Ingest Channel {{name}}');gettext('Deleted Ingest Channel {{name}}');
 gettext('role {{role}} is granted new privileges: Please re-login.');gettext('user {{user}} is granted new privileges: Please re-login.');
 gettext('user {{user}} is updated to administrator: Please re-login.');gettext('created user {{user}}');
-gettext('replaced item {{ type }} about {{ subject }}');gettext('\'URGENCY is a required field\'');gettext('\'PRIORITY is a required field\'');
+gettext('replaced item {{ type }} about {{ subject }}');
+gettext('\'URGENCY is a required field\'');gettext('\'PRIORITY is a required field\'');

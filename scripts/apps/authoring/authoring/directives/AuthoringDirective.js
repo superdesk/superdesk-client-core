@@ -449,7 +449,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             }
 
-            let minTansaUrgency = $rootScope.config.tansa && $rootScope.config.tansa.urgency || 5;
+            let minTansaUrgency = $rootScope.config && $rootScope.config.tansa && $rootScope.config.tansa.urgency || 5;
 
             /**
              * Depending on the item state one of the publish, correct, kill actions will be executed on the item
