@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         publisher: {
             protocol: 'http',
             tenant: 'default',
-            domain: 'ljuba.s-lab.sourcefabric.org',
+            domain: 'master.s-lab.sourcefabric.org',
             base: 'api/v1'
         }
     };

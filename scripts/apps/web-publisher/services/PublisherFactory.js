@@ -49,7 +49,7 @@ export function PublisherFactory(pubapi) {
          * @ngdoc method
          * @name publisher#querySites
          * @returns {Promise}
-         * @description Query sites
+         * @description List all sites in publisher
          */
         querySites() {
             return pubapi.query('tenants');
@@ -81,21 +81,54 @@ export function PublisherFactory(pubapi) {
         /**
          * @ngdoc method
          * @name publisher#queryRoutes
+         * @param {Object} type - which routes to query (collection or content)
          * @returns {Promise}
-         * @description Query routes
+         * @description List all routes for defined type
          */
-        queryRoutes() {
-            return pubapi.query('content/routes');
+        queryRoutes(type) {
+            return pubapi.query('content/routes', type);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#getMenu
+         * @returns {Promise}
+         * @description Get a single menu by id
+         */
+        getMenu(id) {
+            return pubapi.get('menus', id);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#saveMenu
+         * @returns {Promise}
+         * @description Create or update a menu in the system.
+         */
+        saveMenu(menu) {
+            let id = menu.id;
+            delete menu.id;
+            return pubapi.save('menus', {menu: menu}, id);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#removeMenu
+         * @returns {Promise}
+         * @description Remove a menu in the system.
+         */
+        removeMenu(id) {
+            return pubapi.remove('menus', id);
         }
 
         /**
          * @ngdoc method
          * @name publisher#queryMenus
          * @returns {Promise}
-         * @description Query menus
+         * @description List all menus
          */
         queryMenus() {
-            return pubapi.query('menus');
+            return pubapi.query('menus', {'limit': 100});
         }
     }
 
