@@ -2,39 +2,40 @@ import React from 'react';
 
 AddToPackageDropdown.$inject = ['item', 'className', 'authoringWorkspace', 'packages', 'api', '$rootScope'];
 export function AddToPackageDropdown(item, className, authoringWorkspace, packages, api, $rootScope) {
-    var PackageGroup = React.createClass({
-        propTypes: {
-            group: React.PropTypes.object
-        },
-        select: function() {
+    class PackageGroup extends React.Component {
+        constructor(props) {
+            super(props);
+            this.select = this.select.bind(this);
+        }
+
+        select() {
             packages.addPackageGroupItem(this.props.group, item);
-        },
-        render: function() {
+        }
+
+        render() {
             var group = this.props.group;
 
-            return React.createElement(
-                'li',
-                {},
-                React.createElement(
-                    'button',
-                    {dataOption: group, onClick: this.select},
-                    React.createElement('i', {className: 'icon-plus'}),
-                    group
-                )
+            return (
+                <li>
+                    <button data-option={group} onClick={this.select}>
+                        <i className="icon-plus" />{group}
+                    </button>
+                </li>
             );
         }
-    });
+    }
 
-    var PackageGroupList = React.createClass({
-        propTypes: {
-            package: React.PropTypes.object
-        },
+    PackageGroup.propTypes = {
+        group: React.PropTypes.string
+    };
 
-        getInitialState: function() {
-            return {groups: []};
-        },
+    class PackageGroupList extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {groups: []};
+        }
 
-        componentDidMount: function() {
+        componentDidMount() {
             var pkg = this.props.package;
 
             if (pkg.highlight) {
@@ -46,9 +47,9 @@ export function AddToPackageDropdown(item, className, authoringWorkspace, packag
                 // set it here to avoid flickering
                 this.setState({groups: packages.groupList});
             }
-        },
+        }
 
-        render: function() {
+        render() {
             var createGroup = function(group) {
                 return React.createElement(PackageGroup, {group: group, key: 'group-' + group});
             };
@@ -59,7 +60,11 @@ export function AddToPackageDropdown(item, className, authoringWorkspace, packag
                 this.state.groups.length ? this.state.groups.map(createGroup) : null
             );
         }
-    });
+    }
+
+    PackageGroupList.propTypes = {
+        package: React.PropTypes.object
+    };
 
     return React.createElement(PackageGroupList, {item: item, package: authoringWorkspace.getItem()});
 }

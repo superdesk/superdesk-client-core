@@ -24,16 +24,18 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
      * Creates specific highlight button in list
      * @return {React} Language button
      */
-    var HighlightBtn = React.createClass({
-        propTypes: {
-            highlight: React.PropTypes.object,
-            item: React.PropTypes.object
-        },
-        markHighlight: function(event) {
+    class HighlightBtn extends React.Component {
+        constructor(props) {
+            super(props);
+            this.markHighlight = this.markHighlight.bind(this);
+        }
+
+        markHighlight(event) {
             event.stopPropagation();
             highlightsService.markItem(this.props.highlight._id, this.props.item);
-        },
-        render: function() {
+        }
+
+        render() {
             var item = this.props.item;
             var highlight = this.props.highlight;
             var isMarked = item.highlights && item.highlights.indexOf(highlight._id) >= 0;
@@ -45,7 +47,12 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
                 highlight.label
             );
         }
-    });
+    }
+
+    HighlightBtn.propTypes = {
+        highlight: React.PropTypes.object,
+        item: React.PropTypes.object
+    };
 
     /*
      * Creates list element for specific highlight

@@ -157,7 +157,6 @@ Editor3.propTypes = {
     readOnly: React.PropTypes.bool,
     showToolbar: React.PropTypes.bool,
     value: React.PropTypes.string,
-    language: React.PropTypes.string,
     onChange: React.PropTypes.func
 };
 
@@ -241,7 +240,7 @@ const BlockStyleControls = (props) => {
 
 BlockStyleControls.propTypes = {
     editorState: React.PropTypes.object,
-    options: React.PropTypes.object,
+    options: React.PropTypes.array,
     onToggle: React.PropTypes.func
 };
 
@@ -274,6 +273,6 @@ const InlineStyleControls = (props) => {
 
 InlineStyleControls.propTypes = {
     editorState: React.PropTypes.object,
-    options: React.PropTypes.object,
+    options: React.PropTypes.array,
     onToggle: React.PropTypes.func
 };
