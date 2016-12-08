@@ -1,0 +1,17 @@
+<div class="widget" ng-controller="AnsaRelatedCtrl as related">
+    <ul class="ingest-list list-view related-item-list" sd-loading="!related.items">
+        <li ng-repeat="item in related.items track by $index"
+            class="list-item-view">
+            <div class="basic item-block" ng-click="view(item)">
+                <i sd-filetype-icon data-item="item" style=""></i>
+                <span class="keyword">{{ item.headline }}</span>
+                <div class="content">
+                    <span class="headline"><time sd-datetime data-date="item.versioncreated"></time></span>
+                    <p><i>{{ item.abstract }}</i></p>
+                </div>
+            </div>
+        </li>
+        <li ng-if="related.items.length === 0">
+            <p translate>There are no related items.</p>
+        </li>
+    </ul>
