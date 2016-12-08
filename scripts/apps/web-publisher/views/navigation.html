@@ -1,38 +1,54 @@
-<div class="subnav">
-    <h3 class="page-nav-title"><span translate>Navigation</span></h3>
+<div class="subnav paneLayout">
+    <h3 class="page-nav-title"><span translate=""><span class="ng-scope">Navigation</span></span></h3>
     <div class="subnav__button-stack--square-buttons">
-        <button class="navbtn sd-create-btn" ng-click=""><i class="svg-icon-plus"></i><span class="circle"></span></button>
+        <button class="navbtn sd-create-btn" ng-click="webPublisher.newMenu()">
+            <i class="svg-icon-plus"></i><span class="circle"></span>
+        </button>
     </div>
 </div>
 
-<div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
+<div class="paneLayout paneLayout--headerMargin">
+    <div class="paneLayout__content">
+        <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
 
-    <div class="flex-item card-box" ng-repeat="menu in menus track by menu.id">
-        <div class="card-box__header">
-            <div class="dropdown" dropdown>
-                <button class="dropdown__toggle" dropdown__toggle>
-                    <i class="icon-dots-vertical"></i>
-                </button>
-                <ul class="dropdown__menu more-activity-menu pull-right">
-                    <li><div class="menu-label" translate>Actions</div></li>
-                    <li class="divider"></li>
-                    <li>
-                        <button ng-click="" title="{{:: 'Edit menu'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button>
-                    </li>
-                    <li>
-                        <button ng-click="" title="{{:: 'Remove menu'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button>
-                    </li>
-                </ul>
+            <div class="flex-item card-box" ng-repeat="menu in menus track by menu.id">
+                <div class="card-box__header">
+                    <div ng-if="menu.id" class="dropdown" dropdown>
+                        <button class="dropdown__toggle" dropdown__toggle>
+                            <i class="icon-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown__menu more-activity-menu pull-right">
+                            <li><div class="menu-label" translate>Actions</div></li>
+                            <li class="divider"></li>
+                            <li>
+                                <button ng-click="webPublisher.editMenuTree(menu)" title="{{:: 'Edit menu'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button>
+                            </li>
+                            <li>
+                                <button ng-click="webPublisher.removeMenu(menu)" title="{{:: 'Remove menu'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div ng-if="!menu.id" class="dropdown" dropdown>
+                        <span ng-click="webPublisher.removeMenu(menu)">
+                            <i class="icon-trash"></i>
+                        </span>
+                        <span ng-click="webPublisher.createMenu(menu)">
+                            <i class="icon-pencil"></i>
+                        </span>
+                    </div>
+                    <div ng-if="menu.id" class="card-box__heading">{{ menu.label }}</div>
+                    <div ng-if="!menu.id" class="card-box__heading">
+                        <input type="text" name="" ng-model="menu.label" required ng-trim="true">
+                    </div>
+                </div>
+                <div class="card-box__content">
+                    <ul class="card-box__content-list">
+                        <li ng-repeat="child in menu.children track by child.id">
+                            <h4>{{ child.label }}<span class="label">{{ child.children.length }}</span></h4>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="card-box__heading">{{ menu.label }}</div>
-        </div>
-        <div class="card-box__content">
-            <ul class="card-box__content-list">
-                <li ng-repeat="child in menu.children track by child.id">
-                    <h4>{{ child.label }}<span class="label">{{ child.children.length }}</span></h4>
-                </li>
-            </ul>
         </div>
     </div>
-
 </div>

@@ -18,8 +18,8 @@ export function PubAPIFactory(config, $http, $q) {
             let pubConfig = config.publisher || {};
             this._base = pubConfig.base || '';
             this._protocol = pubConfig.protocol || 'http';
-            this._tenant = pubConfig.tenant || 'default';
             this._domain = pubConfig.domain || '';
+            this.setTenant(pubConfig.tenant || 'default');
         }
 
         /**
@@ -30,6 +30,18 @@ export function PubAPIFactory(config, $http, $q) {
          */
         setTenant(tenant) {
             this._tenant = tenant;
+            this._server = this.buildServerURL();
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#buildServerURL
+         * @returns {String}
+         * @description Builds base server URL of the site.
+         */
+        buildServerURL() {
+            let subdomain = this._tenant === 'default' ? '' : `${this._tenant}.`;
+            return `${this._protocol}://${subdomain}${this._domain}`;
         }
 
         /**
@@ -47,6 +59,21 @@ export function PubAPIFactory(config, $http, $q) {
                 params: params
             }).then(response => {
                 return response._embedded._items;
+            });
+        }
+
+        /**
+         * @ngdoc method
+         * @name pubapi#get
+         * @param {String} resource
+         * @param {Number} id
+         * @returns {Promise}
+         * @description GET a given resource by id.
+         */
+        get(resource, id) {
+            return this.req({
+                url: this.resourceURL(resource, id),
+                method: 'GET'
             });
         }
 
@@ -89,12 +116,12 @@ export function PubAPIFactory(config, $http, $q) {
          * @ngdoc method
          * @name pubapi#resourceURL
          * @param {String} resource
-         * @param {String} code - code of site
+         * @param {String} id
          * @returns {String}
          * @description Get resource url
          */
-        resourceURL(resource, code = '') {
-            return `${this._protocol}://${this._tenant}.${this._domain}/${this._base}/${resource}/${code}`;
+        resourceURL(resource, id = '') {
+            return `${this._server}/${this._base}/${resource}/${id}`;
         }
 
         /**
