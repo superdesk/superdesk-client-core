@@ -29,13 +29,15 @@
                 <li ng-class="{active: webPublisher.activeTab === 'contentLists'}">
                     <button ng-click="webPublisher.changeTab('contentLists')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
+
                         translate>Content Lists</button>
                 </li>
             </ul>
         </div>
         <div class="sidebarLayout__content" ng-switch="webPublisher.activeTab">
+
             <form name="webPublisher.siteForm">
-                <fieldset ng-switch-when="general" class="mainContentPadding">
+                <fieldset ng-switch-when="general" class="contentPadding">
                     <div class="field">
                         <label for="name" translate>Web Site Name:</label>
                         <input type="text" name="name" ng-model="newSite.name" required/>
@@ -52,6 +54,7 @@
             <div ng-switch-when="navigation">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation.html'"></div>
             </div>
+
             <div ng-switch-when="navigation-menu">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation-menu-tree.html'"></div>
             </div>

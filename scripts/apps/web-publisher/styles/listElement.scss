@@ -7,6 +7,11 @@
     position: relative;
     display: flex;
     align-items: center;
+
+    &--noLeftBorder{
+        border-left: 1px solid $tableBorder;
+    }
+
     &__icon {
         flex: 0 0 auto;
         display: inline-block;
@@ -36,6 +41,8 @@
 
     &__content {
         width: 100%;
+        color: $gray;
+
     }
 
     &__right{
