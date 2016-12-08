@@ -1,4 +1,4 @@
-var Raven = window.Raven;
+var Raven = require('raven-js');
 
 ErrorHttpInterceptorFactory.$inject = ['$q'];
 function ErrorHttpInterceptorFactory($q) {
@@ -38,7 +38,6 @@ angular.module('superdesk.core.error', [])
 
         $provide.factory('$exceptionHandler', () => function errorCatcherHandler(exception, cause) {
             Raven.captureException(exception, {tags: {component: 'ui'}, extra: exception});
-            throw exception;
         });
     }
 }]);
