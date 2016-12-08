@@ -44,7 +44,7 @@ function AnsaSemanticsCtrl($scope, api) {
 AnsaRelatedCtrl.$inject = ['$scope', 'api'];
 function AnsaRelatedCtrl($scope, api) {
     let init = () => {
-        if (!$scope.item.semantics || !$scope.items.semantics.iptcDomains) {
+        if (!$scope.item.semantics || !$scope.item.semantics.iptcDomains) {
             return;
         }
 
