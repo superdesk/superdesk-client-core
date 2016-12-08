@@ -3,6 +3,9 @@ import React from 'react';
 AddToPackageDropdown.$inject = ['item', 'className', 'authoringWorkspace', 'packages', 'api', '$rootScope'];
 export function AddToPackageDropdown(item, className, authoringWorkspace, packages, api, $rootScope) {
     var PackageGroup = React.createClass({
+        propTypes: {
+            group: React.PropTypes.object
+        },
         select: function() {
             packages.addPackageGroupItem(this.props.group, item);
         },
@@ -23,6 +26,10 @@ export function AddToPackageDropdown(item, className, authoringWorkspace, packag
     });
 
     var PackageGroupList = React.createClass({
+        propTypes: {
+            package: React.PropTypes.object
+        },
+
         getInitialState: function() {
             return {groups: []};
         },

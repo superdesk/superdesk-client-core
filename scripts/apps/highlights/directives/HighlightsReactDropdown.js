@@ -25,6 +25,10 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
      * @return {React} Language button
      */
     var HighlightBtn = React.createClass({
+        propTypes: {
+            highlight: React.PropTypes.object,
+            item: React.PropTypes.object
+        },
         markHighlight: function(event) {
             event.stopPropagation();
             highlightsService.markItem(this.props.highlight._id, this.props.item);

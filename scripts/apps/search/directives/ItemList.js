@@ -1,3 +1,7 @@
+/* eslint-disable react/prop-types */
+
+// TODO(*): refactor this to use JSX and multiple files
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';

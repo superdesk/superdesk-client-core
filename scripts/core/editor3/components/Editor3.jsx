@@ -195,6 +195,13 @@ class StyleButton extends React.Component {
     }
 }
 
+StyleButton.propTypes = {
+    onToggle: React.PropTypes.func,
+    style: React.PropTypes.string,
+    active: React.PropTypes.bool,
+    label: React.PropTypes.string
+};
+
 /** The list of supported block types style */
 const BLOCK_TYPES_STYLE = {
     h1: 'header-one',
@@ -232,6 +239,12 @@ const BlockStyleControls = (props) => {
     );
 };
 
+BlockStyleControls.propTypes = {
+    editorState: React.PropTypes.object,
+    options: React.PropTypes.object,
+    onToggle: React.PropTypes.func
+};
+
 /** The list of supported inline styles */
 var INLINE_STYLES = {
     bold: 'BOLD',
@@ -257,4 +270,10 @@ const InlineStyleControls = (props) => {
             )}
         </span>
     );
+};
+
+InlineStyleControls.propTypes = {
+    editorState: React.PropTypes.object,
+    options: React.PropTypes.object,
+    onToggle: React.PropTypes.func
 };

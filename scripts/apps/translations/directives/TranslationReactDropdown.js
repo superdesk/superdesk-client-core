@@ -24,6 +24,10 @@ export function TranslationReactDropdown(item, className, TranslationService, no
      * @return {React} Language button
      */
     var TranslateBtn = React.createClass({
+        propTypes: {
+            item: React.PropTypes.object,
+            language: React.PropTypes.object
+        },
         markTranslate: function(event) {
             event.stopPropagation();
             TranslationService.set(this.props.item, this.props.language);
