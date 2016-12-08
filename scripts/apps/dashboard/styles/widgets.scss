@@ -426,3 +426,26 @@
         }
     }
 }
+
+.badge-header {
+    clear: both;
+    padding: 8px 0 3px;
+}
+
+.badge {
+    float: left;
+    clear: left;
+    position: relative;
+    padding: 5px 20px 5px 5px;
+
+    button {
+        position: absolute;
+        bottom: 8px;
+        right: 5px;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        border: none;
+        background: transparent;
+    }
+}

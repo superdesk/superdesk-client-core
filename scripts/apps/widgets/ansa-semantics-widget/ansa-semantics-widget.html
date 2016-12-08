@@ -1,25 +1,40 @@
 <div ng-controller="AnsaSemanticsCtrl as semantics" class="widget">
-    <fieldset>
+    <fieldset sd-loading="!semantics.data">
         <button class="btn" ng-click="semantics.refresh()" translate>Refresh</button>
     </fieldset>
 
     <dl ng-if="semantics.data">
-        <dt translate>News Domains</dt>
-        <dd ng-repeat="domain in semantics.data.newsDomains">{{ domain }}</dd>
+        <dt class="badge-header" translate>News Domains</dt>
+        <dd ng-repeat="domain in semantics.data.newsDomains" class="badge">
+            {{ domain }}
+            <button ng-click="semantics.remove(domain, 'newsDomains')"><i class="icon-close-small"></i></button>
+        </dd>
 
-        <dt translate>Place</dt>
-        <dd ng-repeat="place in semantics.data.places">{{ place }}</dd>
+        <dt class="badge-header" translate>Place</dt>
+        <dd ng-repeat="place in semantics.data.places" class="badge">
+            {{ place }}
+            <button ng-click="semantics.remove(place, 'places')"><i class="icon-close-small"></i></button>
+        </dd>
 
-        <dt translate>Organizations</dt>
-        <dd ng-repeat="org in semantics.data.organizations">{{ org }}</dd>
+        <dt class="badge-header" translate>Organizations</dt>
+        <dd ng-repeat="org in semantics.data.organizations" class="badge">
+            {{ org }}
+            <button ng-click="semantics.remove(org, 'organizations')"><i class="icon-close-small"></i></button>
+        </dd>
 
-        <dt translate>Main Groups</dt>
-        <dd ng-repeat="group in semantics.data.mainGroups">{{ group }}</dd>
+        <dt class="badge-header" translate>Main Groups</dt>
+        <dd ng-repeat="group in semantics.data.mainGroups" class="badge">
+            {{ group }}
+            <button ng-click="semantics.remove(group, 'mainGroups')"><i class="icon-close-small"></i></button>
+        </dd>
 
-        <dt translate>Main Lemmas</dt>
-        <dd ng-repeat="lemma in semantics.data.mainLemmas">{{ lemma }}</dd>
+        <dt class="badge-header" translate>Main Lemmas</dt>
+        <dd ng-repeat="lemma in semantics.data.mainLemmas" class="badge">
+            {{ lemma }}
+            <button ng-click="semantics.remove(lemma, 'mainLemmas')"><i class="icon-close-small"></i></button>
+        </dd>
 
-        <dt translate>Main sentence</dt>
+        <dt class="badge-header" translate>Main sentence</dt>
         <dd><p>{{ semantics.data.mainSenteces[0] }}</p></dd>
         <dd><p>{{ semantics.data.mainSenteces[1] }}</p></dd>
         <dd><p>{{ semantics.data.mainSenteces[2] }}</p></dd>
