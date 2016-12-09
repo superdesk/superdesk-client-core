@@ -1,5 +1,12 @@
 # Superdesk Client Changelog
 
+## [1.4.6] 2016-12-09
+
+### Fixed
+
+- Fix raven lib version.
+- Fix angular lib version.
+
 ## [1.4.5] 2016-12-06
 
 ### Fixed
