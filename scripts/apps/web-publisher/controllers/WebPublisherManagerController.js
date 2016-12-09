@@ -9,9 +9,7 @@
  */
 WebPublisherManagerController.$inject = ['$scope', 'publisher', 'modal'];
 export function WebPublisherManagerController($scope, publisher, modal) {
-
     class WebPublisherManager {
-
         constructor() {
             this.TEMPLATES_DIR = 'scripts/apps/web-publisher/views';
             this._refreshSites();
@@ -26,7 +24,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         changeTab(newTabName) {
             this.activeTab = newTabName;
             this._loadLists(newTabName);
-        };
+        }
 
         /**
          * @ngdoc method
@@ -36,7 +34,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          */
         changeRouteFilter(type) {
             this.routeType = type;
-        };
+        }
 
         /**
          * @ngdoc method
@@ -59,7 +57,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedSite = {};
             $scope.newSite = {};
             publisher.setTenant('default');
-        };
+        }
 
         /**
          * @ngdoc method
@@ -72,7 +70,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             $scope.newSite = angular.extend({}, site);
             this.openSiteModal = true;
             publisher.setTenant(site.subdomain);
-        };
+        }
 
         /**
          * @ngdoc method
@@ -80,14 +78,16 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Saving site
          */
         saveSite() {
-            publisher.manageSite({tenant: _.pick($scope.newSite, this._updatedKeys($scope.newSite, this.selectedSite))}, this.selectedSite.code)
-                .then(site => {
+            let updatedKeys = this._updatedKeys($scope.newSite, this.selectedSite);
+
+            publisher.manageSite({tenant: _.pick($scope.newSite, updatedKeys)}, this.selectedSite.code)
+                .then((site) => {
                     this.siteForm.$setPristine();
                     this.selectedSite = site;
                     publisher.setTenant(site.subdomain);
                     this.changeTab('routes');
                 });
-        };
+        }
 
         /**
          * @ngdoc method
@@ -99,7 +99,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             modal.confirm(gettext('Please confirm you want to delete website.')).then(
                 () => publisher.removeSite(code).then(this._refreshSites)
             );
-        };
+        }
 
         /**
          * @ngdoc method
@@ -110,7 +110,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedRoute = {};
             $scope.newRoute = {};
             this.routePaneOpen = !this.routePaneOpen;
-        };
+        }
 
         /**
          * @ngdoc method
@@ -123,7 +123,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedRoute = route;
             $scope.newRoute = angular.extend({}, route);
             this.routePaneOpen = true;
-        };
+        }
 
         /**
          * @ngdoc method
@@ -131,12 +131,14 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Saving route
          */
         saveRoute() {
-            publisher.manageRoute({route: _.pick($scope.newRoute, this._updatedKeys($scope.newRoute, this.selectedRoute))}, this.selectedRoute.id)
-                .then(route => {
+            let updatedKeys = this._updatedKeys($scope.newRoute, this.selectedRoute);
+
+            publisher.manageRoute({route: _.pick($scope.newRoute, updatedKeys)}, this.selectedRoute.id)
+                .then((route) => {
                     this.routePaneOpen = false;
                     this._refreshRoutes();
                 });
-        };
+        }
 
         /**
          * @ngdoc method
@@ -147,7 +149,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         deleteRoute(id) {
             modal.confirm(gettext('Please confirm you want to delete route.')).then(
                 () => publisher.removeRoute(id).then(this._refreshRoutes));
-        };
+        }
 
         /**
          * @ngdoc method
@@ -159,7 +161,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             $scope.newMenu = {};
             $scope.menus.push($scope.newMenu);
             this.menuAdd = true;
-        };
+        }
 
         /**
          * @ngdoc method
@@ -171,7 +173,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedMenu = menu;
             $scope.newMenu = angular.extend({}, menu);
             this.menuAdd = true;
-        };
+        }
 
         /**
          * @ngdoc method
@@ -180,9 +182,11 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Creates menu in navigation or in menu tree
          */
         saveMenu(refreshList) {
-            publisher.manageMenu({menu: _.pick($scope.newMenu, this._updatedKeys($scope.newMenu, this.selectedMenu))}, this.selectedMenu.id)
+            let updatedKeys = this._updatedKeys($scope.newMenu, this.selectedMenu);
+
+            publisher.manageMenu({menu: _.pick($scope.newMenu, updatedKeys)}, this.selectedMenu.id)
                 .then(refreshList.bind(this));
-        };
+        }
 
         /**
          * @ngdoc method
@@ -193,14 +197,14 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         deleteMenu(id) {
             modal.confirm(gettext('Please confirm you want to delete menu.'))
                 .then(() => {
-                    if (id){
+                    if (id) {
                         publisher.removeMenu(id).then(this._refreshMenus.bind(this));
                     } else {
                         this.menuAdd = false;
                         $scope.menus.pop();
                     }
                 });
-        };
+        }
 
         /**
          * @ngdoc method
@@ -211,9 +215,11 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         editMenuTree(menu) {
             $scope.menu = menu;
             $scope.menusInTree = this._flattenTree(menu);
-            publisher.queryRoutes().then(routes => $scope.routes = routes);
+            publisher.queryRoutes().then((routes) => {
+                $scope.routes = routes;
+            });
             this.changeTab('navigation-menu');
-        };
+        }
 
         /**
          * @ngdoc method
@@ -224,7 +230,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedMenu = {};
             $scope.newMenu = {};
             this.menuPaneOpen = !this.menuPaneOpen;
-        };
+        }
 
         /**
          * @ngdoc method
@@ -237,7 +243,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedMenu = menu;
             $scope.newMenu = angular.extend({}, menu);
             this.menuPaneOpen = true;
-        };
+        }
 
         /**
          * @ngdoc method
@@ -250,7 +256,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
                 .then(() => {
                     publisher.removeMenu(menu.id).then(this._refreshCurrentMenu.bind(this));
                 });
-        };
+        }
 
         /**
          * @ngdoc method
@@ -261,8 +267,8 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Checking if menu card is in edit mode
          */
         _editMode(menu) {
-            return !menu.id || (this.selectedMenu && menu.id == this.selectedMenu.id && this.menuAdd);
-        };
+            return !menu.id || this.selectedMenu && menu.id === this.selectedMenu.id && this.menuAdd;
+        }
 
         /**
          * @ngdoc method
@@ -274,10 +280,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Compares 2 objects and returns keys of fields that are updated
          */
         _updatedKeys(a, b) {
-            return _.reduce(a, (result, value, key) => {
-                return _.isEqual(value, b[key]) ?
-                    result : result.concat(key);
-            }, []);
+            return _.reduce(a, (result, value, key) => _.isEqual(value, b[key]) ? result : result.concat(key), []);
         }
 
         /**
@@ -288,7 +291,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @returns {Array}
          * @description Returns all children objects from tree
          */
-        _flattenTree(tree, flattened=[]) {
+        _flattenTree(tree, flattened = []) {
             flattened.push(tree);
 
             if (tree.children.length) {
@@ -309,13 +312,13 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          */
         _loadLists(tabName) {
             switch (tabName) {
-                case 'routes':
-                    this.changeRouteFilter('');
-                    this._refreshRoutes();
-                    break;
-                case 'navigation':
-                    this._refreshMenus();
-                    break;
+            case 'routes':
+                this.changeRouteFilter('');
+                this._refreshRoutes();
+                break;
+            case 'navigation':
+                this._refreshMenus();
+                break;
             }
         }
 
@@ -326,7 +329,9 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Loads list of sites
          */
         _refreshSites() {
-            publisher.querySites().then(sites => $scope.sites = sites);
+            publisher.querySites().then((sites) => {
+                $scope.sites = sites;
+            });
         }
 
         /**
@@ -336,7 +341,9 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Loads list of routes
          */
         _refreshRoutes() {
-            publisher.queryRoutes().then(routes => $scope.routes = routes);
+            publisher.queryRoutes().then((routes) => {
+                $scope.routes = routes;
+            });
         }
 
         /**
@@ -347,7 +354,9 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          */
         _refreshCurrentMenu() {
             this.menuPaneOpen = false;
-            publisher.getMenu($scope.menu.id).then(menu => $scope.menu = menu);
+            publisher.getMenu($scope.menu.id).then((menu) => {
+                $scope.menu = menu;
+            });
         }
 
         /**
@@ -359,7 +368,9 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         _refreshMenus() {
             this.menuAdd = false;
             this.menuPaneOpen = false;
-            publisher.queryMenus().then(menus => $scope.menus = menus);
+            publisher.queryMenus().then((menus) => {
+                $scope.menus = menus;
+            });
         }
     }
 

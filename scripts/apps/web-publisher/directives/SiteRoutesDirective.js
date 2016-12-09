@@ -7,9 +7,7 @@
  */
 SiteRoutesDirective.$inject = ['publisher'];
 export function SiteRoutesDirective(publisher) {
-
     class SiteRoutes {
-
         constructor() {
             this.scope = {site: '=site'};
             this.templateUrl = 'scripts/apps/web-publisher/views/site-routes.html';
@@ -35,7 +33,7 @@ export function SiteRoutesDirective(publisher) {
         _queryItems(scope) {
             scope.loading = true;
             publisher.setTenant(scope.site.subdomain);
-            publisher.queryRoutes({type: 'collection'}).then(routes => {
+            publisher.queryRoutes({type: 'collection'}).then((routes) => {
                 scope.loading = false;
                 scope.routes = routes;
             });

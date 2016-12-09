@@ -724,7 +724,8 @@ export function ItemList(
                                         )
                                 ));
 
-                    var elem = React.createElement('div',
+                    var elem = React.createElement(
+                        'div',
                         {
                             className: 'dropdown__menu more-activity-menu',
                             onMouseOver: this.toggle,
