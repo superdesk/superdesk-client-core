@@ -1,4 +1,5 @@
 import React from 'react';
+import HighlightBtn from '../components/HighlightBtn';
 
 /**
  * @ngdoc directive
@@ -20,74 +21,25 @@ HighlightsReactDropdown.$inject = ['item', 'className', 'highlightsService', 'de
 export function HighlightsReactDropdown(item, className, highlightsService, desks, noHighlightsLabel) {
     var highlights = highlightsService.getSync(desks.getCurrentDeskId()) || {_items: []};
 
-    /*
-     * Creates specific highlight button in list
-     * @return {React} Language button
-     */
-    class HighlightBtn extends React.Component {
-        constructor(props) {
-            super(props);
-            this.markHighlight = this.markHighlight.bind(this);
-        }
-
-        markHighlight(event) {
-            event.stopPropagation();
-            highlightsService.markItem(this.props.highlight._id, this.props.item);
-        }
-
-        render() {
-            var item = this.props.item;
-            var highlight = this.props.highlight;
-            var isMarked = item.highlights && item.highlights.indexOf(highlight._id) >= 0;
-
-            return React.createElement(
-                'button',
-                {disabled: isMarked, onClick: this.markHighlight},
-                React.createElement('i', {className: 'icon-star'}),
-                highlight.label
-            );
-        }
-    }
-
-    HighlightBtn.propTypes = {
-        highlight: React.PropTypes.object,
-        item: React.PropTypes.object
-    };
-
-    /*
-     * Creates list element for specific highlight
-     * @return {React} Single list element
-     */
-    var createHighlightItem = function(highlight) {
-        return React.createElement(
-            'li',
-            {key: 'highlight-' + highlight._id},
-            React.createElement(HighlightBtn, {item: item, highlight: highlight})
-        );
-    };
-
-    /*
-     * If there are no highlights, print none-highlights message
-     * @return {React} List element
-     */
-    var noHighlights = function() {
-        return React.createElement(
-            'li',
-            {},
-            React.createElement(
-                'button',
-                {disabled: true},
-                noHighlightsLabel)
-        );
-    };
+    const noHighlights =
+        <li>
+            <button disabled={true}>{noHighlightsLabel}</button>
+        </li>;
 
     /*
      * Creates list with highlights
      * @return {React} List element
      */
-    return React.createElement(
-        'ul',
-        {className: className},
-        highlights._items.length ? highlights._items.map(createHighlightItem) : React.createElement(noHighlights)
+    return (
+        <ul className={className}>
+            {highlights._items.length ? highlights._items.map((h) =>
+                <li key={`highlight-${h._id}`}>
+                    <HighlightBtn
+                        item={item}
+                        highlight={h}
+                        service={highlightsService} />
+                </li>
+            ) : noHighlights}
+        </ul>
     );
 }

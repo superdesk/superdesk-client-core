@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-render-return-value */
 /* eslint-disable react/prefer-es6-class */
+/* eslint-disable react/no-multi-comp */
 
 // TODO(*): refactor this to use JSX and multiple files
 

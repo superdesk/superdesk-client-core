@@ -43,7 +43,7 @@
         "react/no-children-prop": 2,
         "react/no-did-update-set-state": 2,
         "react/no-direct-mutation-state": 2,
-        "react/no-multi-comp": 0,
+        "react/no-multi-comp": 2,
         "react/no-render-return-value": 2,
         "react/no-unknown-property": 1,
         "react/no-unused-prop-types": 2,
