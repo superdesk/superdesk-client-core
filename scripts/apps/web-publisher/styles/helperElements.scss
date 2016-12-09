@@ -2,19 +2,6 @@
     padding: 20px;
 }
 
-.contentScrollable{
-    position: relative;
-
-    &__scrollable{
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        overflow-y: scroll;
-    }
-}
-
 .headerMargin {
     margin-top: 48px;
 
@@ -27,7 +14,7 @@
     padding-right: 20px;
 }
 
-.leftSpace{
+.leftSpace {
     margin-left: .5em;
 }
 
@@ -49,28 +36,35 @@
     padding: 0;
 }
 
-.text{
-    &--light{
+.text {
+    &--light {
         color: $gray;
     }
 
-    &--lighter{
+    &--lighter {
         color: $grayLight;
     }
 
-    &--italic{
+    &--italic {
         font-style: italic;
     }
 
-    &--bold{
+    &--bold {
         font-weight: 500;
     }
 
-    &--uppercase{
+    &--uppercase {
         text-transform: uppercase;
     }
 
-    &--small{
+    &--small {
         font-size: .9em;
+    }
+
+    &--smallHeading {
+        font-size: 12px;
+        line-height: 1em;
+        margin-bottom: .8em;
+        color: $gray;
     }
 }
