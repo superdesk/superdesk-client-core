@@ -4,6 +4,12 @@
     </fieldset>
 
     <dl ng-if="semantics.data">
+        <dt class="badge-header" translate>IPTC Domains</dt>
+        <dd ng-repeat="domain in semantics.data.iptcDomains" class="badge">
+            {{ domain }}
+            <button ng-click="semantics.remove(domain, 'iptcDomains')"><i class="icon-close-small"></i></button>
+        </dd>
+
         <dt class="badge-header" translate>News Domains</dt>
         <dd ng-repeat="domain in semantics.data.newsDomains" class="badge">
             {{ domain }}
