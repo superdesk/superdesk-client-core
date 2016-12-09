@@ -21,7 +21,7 @@
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
                         translate>Routes</button>
                 </li>
-                <li ng-class="{active: webPublisher.activeTab === 'navigation'}">
+                <li ng-class="{active: webPublisher.activeTab === 'navigation' || webPublisher.activeTab === 'navigation-menu'}">
                     <button ng-click="webPublisher.changeTab('navigation')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
                         translate>Navigation</button>
@@ -35,7 +35,7 @@
         </div>
         <div class="sidebarLayout__content" ng-switch="webPublisher.activeTab">
             <form name="webPublisher.siteForm">
-                <fieldset ng-switch-when="general" class="mainContentPadding">
+                <fieldset ng-switch-when="general" class="paneContent__main">
                     <div class="field">
                         <label for="name" translate>Web Site Name:</label>
                         <input type="text" name="name" ng-model="newSite.name" required/>
