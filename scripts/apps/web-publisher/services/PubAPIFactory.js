@@ -11,11 +11,10 @@
  */
 PubAPIFactory.$inject = ['config', '$http', '$q'];
 export function PubAPIFactory(config, $http, $q) {
-
     class PubAPI {
-
         constructor() {
             let pubConfig = config.publisher || {};
+
             this._base = pubConfig.base || '';
             this._protocol = pubConfig.protocol || 'http';
             this._domain = pubConfig.domain || '';
@@ -41,6 +40,7 @@ export function PubAPIFactory(config, $http, $q) {
          */
         buildServerURL() {
             let subdomain = this._tenant === 'default' ? '' : `${this._tenant}.`;
+
             return `${this._protocol}://${subdomain}${this._domain}`;
         }
 
@@ -57,9 +57,7 @@ export function PubAPIFactory(config, $http, $q) {
                 url: this.resourceURL(resource),
                 method: 'GET',
                 params: params
-            }).then(response => {
-                return response._embedded._items;
-            });
+            }).then((response) => response._embedded._items);
         }
 
         /**
@@ -91,7 +89,7 @@ export function PubAPIFactory(config, $http, $q) {
                 url: this.resourceURL(resource, id),
                 method: id ? 'PATCH' : 'POST',
                 data: item
-            }).then(response => {
+            }).then((response) => {
                 angular.extend(item, response);
                 return response;
             });
@@ -132,13 +130,13 @@ export function PubAPIFactory(config, $http, $q) {
         * @description API Request - Adds basic error reporting, eventually authentication
         */
         req(config) {
-            return $http(config).then(response => {
+            return $http(config).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.data;
-                } else {
-                    console.error('publisher api error', response);
-                    return $q.reject(response);
                 }
+
+                console.error('publisher api error', response);
+                return $q.reject(response);
             });
         }
     }

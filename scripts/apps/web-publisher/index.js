@@ -1,6 +1,6 @@
 import './styles/web-publisher.scss';
 
-import { WebPublisherManagerController } from './controllers';
+import {WebPublisherManagerController} from './controllers';
 import * as services from './services';
 import * as directive from './directives';
 
@@ -12,15 +12,14 @@ import * as directive from './directives';
  * @description Superdesk web publisher module.
  */
 export default angular.module('superdesk.apps.web_publisher', [
-    'superdesk.core.activity',
-    'superdesk.config'
+    'superdesk.core.activity'
 ])
 
     .directive('sdSiteRoutes', directive.SiteRoutesDirective)
     .factory('publisher', services.PublisherFactory)
     .factory('pubapi', services.PubAPIFactory)
 
-    .config(['superdeskProvider', 'config', function(superdesk, config) {
+    .config(['superdeskProvider', function(superdesk) {
         superdesk
             .activity('/web_publisher/monitoring', {
                 label: gettext('Web Publisher'),

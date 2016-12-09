@@ -1,1 +1,1 @@
-export { SiteRoutesDirective } from './SiteRoutesDirective';
+export {SiteRoutesDirective} from './SiteRoutesDirective';
