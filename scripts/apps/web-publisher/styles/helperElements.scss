@@ -2,22 +2,6 @@
     padding: 20px;
 }
 
-<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
-=======
-.contentScrollable{
-    position: relative;
-
-    &__scrollable{
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        overflow-y: scroll;
-    }
-}
-
->>>>>>> Added routes management
 .headerMargin {
     margin-top: 48px;
 
@@ -30,11 +14,7 @@
     padding-right: 20px;
 }
 
-<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
 .leftSpace {
-=======
-.leftSpace{
->>>>>>> Added routes management
     margin-left: .5em;
 }
 
@@ -56,7 +36,6 @@
     padding: 0;
 }
 
-<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
 .text {
     &--light {
         color: $gray;
@@ -88,30 +67,18 @@
         margin-bottom: .8em;
         color: $gray;
     }
-=======
-.text{
-    &--light{
-        color: $gray;
-    }
+}
 
-    &--lighter{
-        color: $grayLight;
-    }
+.static{
+    position: static;
+}
 
-    &--italic{
-        font-style: italic;
-    }
+.publisherBoxShadow{
+    max-height: 570px;
+    overflow-y: scroll;
+    box-shadow: 0px 1px 4px 0 rgba(0, 0, 0, 0.2);
+}
 
-    &--bold{
-        font-weight: 500;
-    }
-
-    &--uppercase{
-        text-transform: uppercase;
-    }
-
-    &--small{
-        font-size: .9em;
-    }
->>>>>>> Added routes management
+.flex-pull-right{
+    margin-left: auto;
 }
