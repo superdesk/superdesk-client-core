@@ -7,14 +7,12 @@
  */
 PublisherFactory.$inject = ['pubapi'];
 export function PublisherFactory(pubapi) {
-
     class Publisher {
-
         /**
          * @ngdoc method
          * @name publisher#setTenant
          * @param {String} tenant
-         * @returns Object
+         * @returns {Object}
          * @description Change the tenant we are using the api for
          */
         setTenant(tenant) {
@@ -101,14 +99,12 @@ export function PublisherFactory(pubapi) {
 
         /**
          * @ngdoc method
-         * @name publisher#saveMenu
+         * @name publisher#manageMenu
          * @returns {Promise}
          * @description Create or update a menu in the system.
          */
-        saveMenu(menu) {
-            let id = menu.id;
-            delete menu.id;
-            return pubapi.save('menus', {menu: menu}, id);
+        manageMenu(menu, id) {
+            return pubapi.save('menus', menu, id);
         }
 
         /**
@@ -128,7 +124,7 @@ export function PublisherFactory(pubapi) {
          * @description List all menus
          */
         queryMenus() {
-            return pubapi.query('menus', {'limit': 100});
+            return pubapi.query('menus', {limit: 100});
         }
     }
 
