@@ -64,35 +64,43 @@ export function SearchService($location, gettext, config, session) {
      * Set filters for parameters
      */
     function setParameters(filters, params) {
+        const addFromDeskFilter = function(key) {
+            let desk = params[key].split('-');
+
+            if (desk.length === 2) {
+                if (desk[1] === 'authoring') {
+                    filters.push({term: {'task.last_authoring_desk': desk[0]}});
+                } else {
+                    filters.push({term: {'task.last_production_desk': desk[0]}});
+                }
+            }
+        };
+
+        const addToDeskFilter = function(key) {
+            let desk = params[key].split('-');
+
+            if (desk.length === 2) {
+                filters.push({term: {'task.desk': desk[0]}});
+                if (!params.from_desk) {
+                    var field = desk[1] === 'authoring' ? 'task.last_production_desk' : 'task.last_authoring_desk';
+
+                    filters.push({exists: {field: field}});
+                }
+            }
+        };
+
         // set the filters for parameters defined in the parameters panel.
         _.each(PARAMETERS, (value, key) => {
             if (!params[key]) {
                 return;
             }
 
-            var desk;
-
             switch (key) {
             case 'from_desk':
-                desk = params[key].split('-');
-                if (desk.length === 2) {
-                    if (desk[1] === 'authoring') {
-                        filters.push({term: {'task.last_authoring_desk': desk[0]}});
-                    } else {
-                        filters.push({term: {'task.last_production_desk': desk[0]}});
-                    }
-                }
+                addFromDeskFilter(key);
                 break;
             case 'to_desk':
-                desk = params[key].split('-');
-                if (desk.length === 2) {
-                    filters.push({term: {'task.desk': desk[0]}});
-                    if (!params.from_desk) {
-                        var field = desk[1] === 'authoring' ? 'task.last_production_desk' : 'task.last_authoring_desk';
-
-                        filters.push({exists: {field: field}});
-                    }
-                }
+                addToDeskFilter(key);
                 break;
             case 'spike':
                     // Will get set in the base filters
@@ -116,34 +124,24 @@ export function SearchService($location, gettext, config, session) {
             if (!params[key]) {
                 return;
             }
-            switch (key) {
-            case 'nottype':
-                filters.push({not: {terms: {type: JSON.parse(params[key])}}});
-                break;
-            case 'notdesk':
-                filters.push({not: {terms: {'task.desk': JSON.parse(params[key])}}});
-                break;
-            case 'notgenre':
-                filters.push({not: {terms: {'genre.name': JSON.parse(params[key])}}});
-                break;
-            case 'notcategory':
-                filters.push({not: {terms: {'anpa_category.name': JSON.parse(params[key])}}});
-                break;
-            case 'noturgency':
-                filters.push({not: {terms: {urgency: JSON.parse(params[key])}}});
-                break;
-            case 'notpriority':
-                filters.push({not: {terms: {priority: JSON.parse(params[key])}}});
-                break;
-            case 'notsource':
-                filters.push({not: {terms: {source: JSON.parse(params[key])}}});
-                break;
-            case 'notlegal':
-                filters.push({not: {terms: {'flags.marked_for_legal': JSON.parse(params[key])}}});
-                break;
-            case 'notsms':
-                filters.push({not: {terms: {'flags.marked_for_sms': JSON.parse(params[key])}}});
-                break;
+
+            const termKey = {
+                nottype: 'type',
+                notdesk: 'task.desk',
+                notgenre: 'genre.name',
+                notcategory: 'anpa_category_name',
+                noturgency: 'urgency',
+                notpriority: 'priority',
+                notsource: 'source',
+                notlegal: 'flags.marked_for_legal',
+                notsms: 'flags.marked_for_sms'
+            }[key];
+
+            if (termKey) {
+                let f = {not: {terms: {}}};
+
+                f.not.terms[termKey] = JSON.parse(params[key]);
+                filters.push(f);
             }
         });
     }
@@ -259,58 +257,37 @@ export function SearchService($location, gettext, config, session) {
             });
         }
 
-        /**
-          * Builds Post Filter search query used when the filtering done via facets/aggregates.
-          * @param {String} params - search parameters
-          * @param {Object} query - Query object
-          */
-        function buildFilters(params, query) {
+        function buildRangeFilter(params, query) {
             // created & modified date filters
-            if (params.beforefirstcreated || params.afterfirstcreated ||
-                params.beforeversioncreated || params.afterversioncreated) {
-                var range = {firstcreated: {}, versioncreated: {}};
+            let hasParams = params.beforefirstcreated || params.afterfirstcreated ||
+                params.beforeversioncreated || params.afterversioncreated;
 
-                if (params.beforefirstcreated) {
-                    range.firstcreated.lte = formatDate(params.beforefirstcreated, midnightSuffix);
-                }
-
-                if (params.afterfirstcreated) {
-                    range.firstcreated.gte = formatDate(params.afterfirstcreated, zeroHourSuffix);
-                }
-
-                if (params.beforeversioncreated) {
-                    range.versioncreated.lte = formatDate(params.beforeversioncreated, midnightSuffix);
-                }
-
-                if (params.afterversioncreated) {
-                    range.versioncreated.gte = formatDate(params.afterversioncreated, zeroHourSuffix);
-                }
-
-                query.post_filter({range: range});
+            if (!hasParams) {
+                return;
             }
 
-            if (params.after) {
-                var facetrange = {firstcreated: {}};
+            var range = {firstcreated: {}, versioncreated: {}};
 
-                facetrange.firstcreated.gte = params.after;
-                query.post_filter({range: facetrange});
+            if (params.beforefirstcreated) {
+                range.firstcreated.lte = formatDate(params.beforefirstcreated, midnightSuffix);
             }
 
-            if (params.scheduled_after) {
-                var schedulerange = {utc_publish_schedule: {}};
-
-                schedulerange.utc_publish_schedule.gte = params.scheduled_after;
-                query.post_filter({range: schedulerange});
+            if (params.afterfirstcreated) {
+                range.firstcreated.gte = formatDate(params.afterfirstcreated, zeroHourSuffix);
             }
 
-            if (params.type) {
-                var type = {
-                    type: JSON.parse(params.type)
-                };
-
-                query.post_filter({terms: type});
+            if (params.beforeversioncreated) {
+                range.versioncreated.lte = formatDate(params.beforeversioncreated, midnightSuffix);
             }
 
+            if (params.afterversioncreated) {
+                range.versioncreated.gte = formatDate(params.afterversioncreated, zeroHourSuffix);
+            }
+
+            query.post_filter({range: range});
+        }
+
+        function buildGeneralFilters(params, query) {
             if (params.urgency) {
                 query.post_filter({terms: {urgency: JSON.parse(params.urgency)}});
             }
@@ -347,6 +324,39 @@ export function SearchService($location, gettext, config, session) {
             if (params.sms) {
                 query.post_filter({terms: {'flags.marked_for_sms': JSON.parse(params.sms)}});
             }
+        }
+
+        /**
+          * Builds Post Filter search query used when the filtering done via facets/aggregates.
+          * @param {String} params - search parameters
+          * @param {Object} query - Query object
+          */
+        function buildFilters(params, query) {
+            buildRangeFilter(params, query);
+
+            if (params.after) {
+                var facetrange = {firstcreated: {}};
+
+                facetrange.firstcreated.gte = params.after;
+                query.post_filter({range: facetrange});
+            }
+
+            if (params.scheduled_after) {
+                var schedulerange = {utc_publish_schedule: {}};
+
+                schedulerange.utc_publish_schedule.gte = params.scheduled_after;
+                query.post_filter({range: schedulerange});
+            }
+
+            if (params.type) {
+                var type = {
+                    type: JSON.parse(params.type)
+                };
+
+                query.post_filter({terms: type});
+            }
+
+            buildGeneralFilters(params, query);
 
             if (config.features && config.features.noTakes) {
                 query.post_filter({bool: {must_not: {term: {package_type: 'takes'}}}});

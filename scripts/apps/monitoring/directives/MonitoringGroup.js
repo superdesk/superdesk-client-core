@@ -389,11 +389,9 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 var originalQuery;
 
                 // when forced refresh or query then keep query size default as set 25 above.
-                if (!(data && data.force)) {
-                    // To compare current scope of items, consider fetching same number of items.
-                    if (scope.items && scope.items._items.length > 25) {
-                        criteria.source.size = scope.items._items.length;
-                    }
+                // To compare current scope of items, consider fetching same number of items.
+                if (!(data && data.force) && scope.items && scope.items._items.length > 25) {
+                    criteria.source.size = scope.items._items.length;
                 }
 
                 if (desks.changeDesk) {

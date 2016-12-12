@@ -1428,6 +1428,9 @@ export function ItemList(
                         contents.push(React.createElement(ProgressBar, {completed: item._progress}));
                     }
 
+                    const getActionsMenu = () =>
+                        this.state.hover && !item.gone ? React.createElement(ActionsMenu, {item: item}) : null;
+
                     if (this.props.view === 'mgrid') {
                         contents.push(
                             item.archiveError ? React.createElement(ErrorBox) : null,
@@ -1442,7 +1445,7 @@ export function ItemList(
                             item.priority ? React.createElement(ItemPriority, item) : null,
                             item.urgency ? React.createElement(ItemUrgency, item) : null,
                             fields.broadcast({item: item}),
-                            this.state.hover && !item.gone ? React.createElement(ActionsMenu, {item: item}) : null
+                            getActionsMenu()
                         );
                     } else {
                         contents.push(
@@ -1464,7 +1467,7 @@ export function ItemList(
                                 swimlane: this.props.swimlane,
                                 versioncreator: this.props.versioncreator
                             }),
-                            this.state.hover && !item.gone ? React.createElement(ActionsMenu, {item: item}) : null
+                            getActionsMenu()
                         );
                     }
 
@@ -1696,15 +1699,20 @@ export function ItemList(
                         }
                     };
 
-                    if (!_.isNil(diff)) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        if (this.state.selected) {
-                            highlightSelected();
-                        } else {
-                            this.select(this.state.itemsById[this.state.itemsList[0]]);
+                    const checkRemaining = () => {
+                        if (!_.isNil(diff)) {
+                            event.preventDefault();
+                            event.stopPropagation();
+
+                            if (this.state.selected) {
+                                highlightSelected();
+                            } else {
+                                this.select(this.state.itemsById[this.state.itemsList[0]]);
+                            }
                         }
-                    }
+                    };
+
+                    checkRemaining();
                 },
 
                 closeActionsMenu: closeActionsMenu,

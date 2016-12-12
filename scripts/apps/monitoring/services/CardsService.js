@@ -5,18 +5,8 @@ export function CardsService(api, search, session, desks, config) {
     this.criteria = getCriteria;
     this.shouldUpdate = shouldUpdate;
 
-    /**
-     * Get items criteria for given card
-     *
-     * Card can be stage/personal/saved search.
-     * There can be also extra string search query
-     *
-     * @param {Object} card
-     * @param {string} queryString
-     */
-    function getCriteria(card, queryString, queryParam) {
-        var params = {};
-        var criteria = {};
+    function getCriteriaParams(card) {
+        let params = {};
 
         if (card.type === 'search' && card.search && card.search.filter.query) {
             angular.copy(card.search.filter.query, params);
@@ -31,12 +21,15 @@ export function CardsService(api, search, session, desks, config) {
             params.q = card.query;
         }
 
-        criteria.es_highlight = card.query ? search.getElasticHighlight() : 0;
-
         params.spike = card.type === 'spike' || card.type === 'spike-personal' ||
             card.type === 'search' && params.spike === true;
 
-        var query = search.query(search.setFilters(params));
+        return params;
+    }
+
+
+    function filterQueryByCardType(query, queryParam, card) {
+        let deskId;
 
         switch (card.type) {
         case 'search':
@@ -61,33 +54,12 @@ export function CardsService(api, search, session, desks, config) {
             break;
 
         case 'deskOutput':
-            var deskId = card._id.substring(0, card._id.indexOf(':'));
-            var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
-            var states = ['scheduled', 'published', 'corrected', 'killed'];
-
-            if (config.monitoring && config.monitoring.scheduled) {
-                states = ['published', 'corrected', 'killed'];
-            }
-            if (desk) {
-                if (desk.desk_type === 'authoring') {
-                    query.filter({or: [
-                        {term: {'task.last_authoring_desk': deskId}},
-                        {and: [
-                            {term: {'task.desk': deskId}},
-                            {terms: {state: states}}
-                        ]}
-                    ]});
-                } else if (desk.desk_type === 'production') {
-                    query.filter({and: [
-                        {term: {'task.desk': deskId}},
-                        {terms: {state: states}}
-                    ]});
-                }
-            }
+            filterQueryByDeskType(query, card);
             break;
 
         case 'scheduledDeskOutput':
             deskId = card._id.substring(0, card._id.indexOf(':'));
+
             query.filter({and: [
                 {term: {'task.desk': deskId}},
                 {term: {state: 'scheduled'}}
@@ -102,7 +74,38 @@ export function CardsService(api, search, session, desks, config) {
             }
             break;
         }
+    }
 
+    function filterQueryByDeskType(query, card) {
+        var deskId = card._id.substring(0, card._id.indexOf(':'));
+        var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
+        var states = ['scheduled', 'published', 'corrected', 'killed'];
+
+        if (config.monitoring && config.monitoring.scheduled) {
+            states = ['published', 'corrected', 'killed'];
+        }
+
+        if (!desk) {
+            return;
+        }
+
+        if (desk.desk_type === 'authoring') {
+            query.filter({or: [
+                {term: {'task.last_authoring_desk': deskId}},
+                {and: [
+                    {term: {'task.desk': deskId}},
+                    {terms: {state: states}}
+                ]}
+            ]});
+        } else if (desk.desk_type === 'production') {
+            query.filter({and: [
+                {term: {'task.desk': deskId}},
+                {terms: {state: states}}
+            ]});
+        }
+    }
+
+    function filterQueryByCardFileType(query, card) {
         if (card.fileType) {
             var termsHighlightsPackage = {and: [
                 {bool: {must: {exists: {field: 'highlight'}}}},
@@ -146,6 +149,24 @@ export function CardsService(api, search, session, desks, config) {
                 query.filter(termsFileType);
             }
         }
+    }
+
+    /**
+     * Get items criteria for given card
+     *
+     * Card can be stage/personal/saved search.
+     * There can be also extra string search query
+     *
+     * @param {Object} card
+     * @param {string} queryString
+     */
+    function getCriteria(card, queryString, queryParam) {
+        var params = getCriteriaParams(card);
+        var query = search.query(search.setFilters(params));
+        var criteria = {es_highlight: card.query ? search.getElasticHighlight() : 0};
+
+        filterQueryByCardType(query, queryParam, card);
+        filterQueryByCardFileType(query, card);
 
         if (queryString) {
             query.filter({query: {query_string: {query: queryString, lenient: false}}});

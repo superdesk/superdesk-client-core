@@ -183,29 +183,24 @@ function ReloadService($window, $rootScope, session, desks, gettext, superdeskFl
             message: null
         };
 
-        if (_.has(userEvents, msg.event)) {
-            if (!_.isNil(msg.extra.user_id)) {
-                if (msg.extra.user_id.indexOf(session.identity._id) !== -1) {
-                    result.message = userEvents[msg.event];
-                    result.reload = true;
-                }
-            }
+        if (_.has(userEvents, msg.event) && !_.isNil(msg.extra.user_id) &&
+            msg.extra.user_id.indexOf(session.identity._id) !== -1) {
+            result.message = userEvents[msg.event];
+            result.reload = true;
         }
 
-        if (_.has(roleEvents, msg.event)) {
-            if (msg.extra.role_id.indexOf(session.identity.role) !== -1) {
-                result.message = roleEvents[msg.event];
-                result.reload = true;
-            }
+        if (_.has(roleEvents, msg.event) &&
+            msg.extra.role_id.indexOf(session.identity.role) !== -1) {
+            result.message = roleEvents[msg.event];
+            result.reload = true;
         }
-        if (_.has(deskEvents, msg.event)) {
-            if (!_.isNil(msg.extra.desk_id) && !_.isNil(msg.extra.user_ids)) {
-                if (!_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
-                    msg.extra.user_ids.indexOf(session.identity._id) !== -1) {
-                    result.message = deskEvents[msg.event];
-                    result.reload = true;
-                }
-            }
+
+        if (_.has(deskEvents, msg.event) &&
+            !_.isNil(msg.extra.desk_id) && !_.isNil(msg.extra.user_ids) &&
+            !_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
+            msg.extra.user_ids.indexOf(session.identity._id) !== -1) {
+            result.message = deskEvents[msg.event];
+            result.reload = true;
         }
 
         if (_.has(stageEvents, msg.event) && !_.isNil(msg.extra.desk_id)) {
