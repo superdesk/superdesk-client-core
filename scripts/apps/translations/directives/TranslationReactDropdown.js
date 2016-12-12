@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react';
 
 /**
@@ -23,12 +24,18 @@ export function TranslationReactDropdown(item, className, TranslationService, no
      * Creates specific language button in list
      * @return {React} Language button
      */
-    var TranslateBtn = React.createClass({
-        markTranslate: function(event) {
+    class TranslateBtn extends React.Component {
+        constructor(props) {
+            super(props);
+            this.markTranslate = this.markTranslate.bind(this);
+        }
+
+        markTranslate(event) {
             event.stopPropagation();
             TranslationService.set(this.props.item, this.props.language);
-        },
-        render: function() {
+        }
+
+        render() {
             var item = this.props.item;
             var language = this.props.language;
             var isCurrentLang = item.language === language.language;
@@ -45,7 +52,12 @@ export function TranslationReactDropdown(item, className, TranslationService, no
                     language.label
                     );
         }
-    });
+    }
+
+    TranslateBtn.propTypes = {
+        item: React.PropTypes.object,
+        language: React.PropTypes.object
+    };
 
     /*
      * Creates list element for specific language

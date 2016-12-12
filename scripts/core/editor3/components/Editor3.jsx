@@ -1,3 +1,10 @@
+import React from 'react';
+import {Editor, EditorState, RichUtils} from 'draft-js';
+import {stateToHTML} from 'draft-js-export-html';
+import {stateFromHTML} from 'draft-js-import-html';
+import BlockStyleControls from './BlockStyleControls';
+import InlineStyleControls from './InlineStyleControls';
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -12,11 +19,6 @@
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting (shortly more features will come ...)
  */
-import React from 'react';
-import {Editor, EditorState, RichUtils} from 'draft-js';
-import {stateToHTML} from 'draft-js-export-html';
-import {stateFromHTML} from 'draft-js-import-html';
-
 export class Editor3 extends React.Component {
     constructor(props) {
         super(props);
@@ -157,7 +159,6 @@ Editor3.propTypes = {
     readOnly: React.PropTypes.bool,
     showToolbar: React.PropTypes.bool,
     value: React.PropTypes.string,
-    language: React.PropTypes.string,
     onChange: React.PropTypes.func
 };
 
@@ -168,93 +169,4 @@ Editor3.defaultProps = {
     showToolbar: true,
     value: '',
     language: 'en'
-};
-
-/** Toolbar button component */
-class StyleButton extends React.Component {
-    constructor() {
-        super();
-        this.onToggle = (e) => {
-            e.preventDefault();
-            this.props.onToggle(this.props.style);
-        };
-    }
-
-    render() {
-        let className = 'Editor3-styleButton';
-
-        if (this.props.active) {
-            className += ' Editor3-activeButton';
-        }
-
-        return (
-            <span className={className} onMouseDown={this.onToggle}>
-                {this.props.label}
-            </span>
-        );
-    }
-}
-
-/** The list of supported block types style */
-const BLOCK_TYPES_STYLE = {
-    h1: 'header-one',
-    h2: 'header-two',
-    h3: 'header-three',
-    h4: 'header-four',
-    h5: 'header-five',
-    h6: 'header-six',
-    quote: 'blockquote',
-    ul: 'unordered-list-item',
-    ol: 'ordered-list-item'
-};
-
-/** Block style functional component, will manage the block related toolbar buttons */
-const BlockStyleControls = (props) => {
-    const {editorState, options} = props;
-    const selection = editorState.getSelection();
-    const blockType = editorState
-        .getCurrentContent()
-        .getBlockForKey(selection.getStartKey())
-        .getType();
-
-    return (
-        <span>
-            {options.filter((type) => type in BLOCK_TYPES_STYLE).map((type) =>
-                <StyleButton
-                    key={type}
-                    active={BLOCK_TYPES_STYLE[type] === blockType}
-                    label={type}
-                    onToggle={props.onToggle}
-                    style={BLOCK_TYPES_STYLE[type]}
-                />
-            )}
-        </span>
-    );
-};
-
-/** The list of supported inline styles */
-var INLINE_STYLES = {
-    bold: 'BOLD',
-    italic: 'ITALIC',
-    underline: 'UNDERLINE'
-};
-
-/** Inline style functional component, will manage the inline style related toolbar buttons */
-const InlineStyleControls = (props) => {
-    var currentStyle = props.editorState.getCurrentInlineStyle();
-    const {options} = props;
-
-    return (
-        <span>
-            {options.filter((type) => type in INLINE_STYLES).map((type) =>
-                <StyleButton
-                    key={type}
-                    active={currentStyle.has(INLINE_STYLES[type])}
-                    label={type}
-                    onToggle={props.onToggle}
-                    style={INLINE_STYLES[type]}
-                />
-            )}
-        </span>
-    );
 };
