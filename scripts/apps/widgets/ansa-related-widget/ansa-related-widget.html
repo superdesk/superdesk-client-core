@@ -8,6 +8,11 @@
                 <div class="content">
                     <span class="headline"><time sd-datetime data-date="item.versioncreated"></time></span>
                     <p><i>{{ item.abstract }}</i></p>
+                    <p ng-if="!item.abstract && item.body_html">{{ item.body_html }}</p>
+
+                    <div ng-if="item.type === 'picture'">
+                        <div sd-item-rendition data-item="item" data-rendition="thumbnail"></div>
+                    </div>
                 </div>
             </div>
         </li>

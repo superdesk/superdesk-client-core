@@ -19,14 +19,18 @@ function AnsaSemanticsCtrl($scope, api) {
         try {
             return angular.element(val).text();
         } catch (err) {
-            return val;
+            return val || '';
         }
     };
 
     this.refresh = () => api.save('analysis', {
         lang: 'ITA',
-        title: $scope.item.headline,
-        text: text($scope.item.abstract) + '\n' + text($scope.item.body_html),
+        title: $scope.item.headline || '',
+        text: [
+            text($scope.item.abstract),
+            text($scope.item.body_html),
+            $scope.item.description_text || ''
+        ].join('\n'),
         abstract: ''
     }).then((result) => {
         this.data = result.semantics;
