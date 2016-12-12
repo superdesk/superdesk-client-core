@@ -32,7 +32,8 @@ ItemList.$inject = [
     'config',
     '$interpolate',
     'metadata',
-    'storage'
+    'storage',
+    'superdeskFlags'
 ];
 
 export function ItemList(
@@ -61,7 +62,8 @@ export function ItemList(
     config,
     $interpolate,
     metadata,
-    storage
+    storage,
+    superdeskFlags
 ) {
     // contains all the injected services to be passed down to child
     // components via props
@@ -91,7 +93,8 @@ export function ItemList(
         config: config,
         $interpolate: $interpolate,
         metadata: metadata,
-        storage: storage
+        storage: storage,
+        superdeskFlags: superdeskFlags
     };
 
     return {
@@ -303,6 +306,7 @@ export function ItemList(
                     }
                 });
 
+                scope.$on('item:previewed', listComponent.setNarrowView);
                 scope.$on('item:unselect', listComponent.deselectAll);
 
                 var updateTimeout;

@@ -40,6 +40,7 @@ export class Item extends React.Component {
         return nextProps.swimlane !== this.props.swimlane || nextProps.item !== this.props.item ||
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
+            nextProps.narrow !== this.props.narrow ||
             nextState !== this.state;
     }
 
@@ -160,6 +161,7 @@ export class Item extends React.Component {
                     profilesById: this.props.profilesById,
                     swimlane: this.props.swimlane,
                     versioncreator: this.props.versioncreator,
+                    narrow: this.props.narrow,
                     svc: this.props.svc,
                     scope: this.props.scope
                 }),
@@ -205,4 +207,5 @@ Item.propTypes = {
     onDbClick: React.PropTypes.any,
     onEdit: React.PropTypes.any,
     onSelect: React.PropTypes.any,
+    narrow: React.PropTypes.any
 };
