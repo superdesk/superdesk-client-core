@@ -1,8 +1,8 @@
 /**
  * Expire session on 401 server response
  */
-AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', '$rootScope', 'config', 'lodash'];
-function AuthExpiredInterceptor(session, $q, $injector, $rootScope, config, _) {
+AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', 'config', 'lodash'];
+function AuthExpiredInterceptor(session, $q, $injector, config, _) {
     function handleAuthExpired(response) {
         session.expire();
         return session.getIdentity().then(() => {

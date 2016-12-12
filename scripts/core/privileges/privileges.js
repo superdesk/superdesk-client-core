@@ -1,5 +1,5 @@
-PrivilegesService.$inject = ['$rootScope', '$q', 'preferencesService'];
-function PrivilegesService($rootScope, $q, preferencesService) {
+PrivilegesService.$inject = ['$rootScope', 'preferencesService'];
+function PrivilegesService($rootScope, preferencesService) {
     var _privileges = {};
 
     this.privileges = _privileges;

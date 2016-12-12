@@ -23,8 +23,8 @@ function CommentsService(api) {
     };
 }
 
-CommentsCtrl.$inject = ['$scope', '$routeParams', 'commentsService', 'api', '$q'];
-function CommentsCtrl($scope, $routeParams, commentsService, api, $q) {
+CommentsCtrl.$inject = ['$scope', '$routeParams', 'commentsService'];
+function CommentsCtrl($scope, $routeParams, commentsService) {
     $scope.text = null;
     $scope.saveEnterFlag = false;
     $scope.$watch('item._id', reload);

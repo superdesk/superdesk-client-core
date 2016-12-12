@@ -1,5 +1,5 @@
-MacrosService.$inject = ['api', 'notify', '$filter'];
-function MacrosService(api, notify, $filter) {
+MacrosService.$inject = ['api', 'notify'];
+function MacrosService(api, notify) {
     /**
      * Recursively returns all macros
      *
@@ -112,8 +112,8 @@ function MacrosController($scope, macros, desks, autosave, $rootScope) {
     };
 }
 
-MacrosReplaceDirective.$inject = ['macros', 'editor'];
-function MacrosReplaceDirective(macros, editor) {
+MacrosReplaceDirective.$inject = ['editor'];
+function MacrosReplaceDirective(editor) {
     return {
         scope: true,
         templateUrl: 'scripts/apps/authoring/macros/views/macros-replace.html',

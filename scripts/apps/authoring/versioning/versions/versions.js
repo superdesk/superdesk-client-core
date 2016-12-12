@@ -1,5 +1,5 @@
-VersioningController.$inject = ['$scope', 'authoring', 'api', 'notify', 'lock', 'desks', 'archiveService'];
-function VersioningController($scope, authoring, api, notify, lock, desks, archiveService) {
+VersioningController.$inject = ['$scope', 'authoring', 'desks', 'archiveService'];
+function VersioningController($scope, authoring, desks, archiveService) {
     $scope.last = null;
     $scope.versions = null;
     $scope.selected = null;

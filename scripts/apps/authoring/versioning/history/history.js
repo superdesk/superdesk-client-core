@@ -1,5 +1,5 @@
-HistoryController.$inject = ['$scope', 'authoring', 'api', 'notify', 'desks', 'archiveService'];
-function HistoryController($scope, authoring, api, notify, desks, archiveService) {
+HistoryController.$inject = ['$scope', 'authoring', 'desks', 'archiveService'];
+function HistoryController($scope, authoring, desks, archiveService) {
     $scope.last = null;
     $scope.versions = null;
     $scope.selected = null;

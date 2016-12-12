@@ -325,8 +325,8 @@ function AssigneeViewDirective(desks) {
 }
 
 // todo(petr): move to desks module
-StagesCtrlFactory.$inject = ['api', 'desks'];
-function StagesCtrlFactory(api, desks) {
+StagesCtrlFactory.$inject = ['desks'];
+function StagesCtrlFactory(desks) {
     var promise = desks.initialize();
 
     return function StagesCtrl($scope) {

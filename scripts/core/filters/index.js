@@ -103,8 +103,8 @@ export default angular.module('superdesk.core.filters', [])
             }
         };
     }])
-    .filter('queueStatus', ['$filter', function($filter) {
-        return function(input) {
+    .filter('queueStatus', () =>
+        function(input) {
             if (input === 'pending') {
                 return 'warning';
             } else if (input === 'success') {
@@ -112,8 +112,8 @@ export default angular.module('superdesk.core.filters', [])
             } else if (input === 'error') {
                 return 'danger';
             }
-        };
-    }])
+        }
+    )
     .filter('mergeTargets', () => function(array) {
         var merged = [];
 

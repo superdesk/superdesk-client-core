@@ -1,5 +1,5 @@
-PackagesCtrl.$inject = ['$scope', '$location', 'superdesk', 'api', 'search'];
-function PackagesCtrl($scope, $location, superdesk, api, search) {
+PackagesCtrl.$inject = ['$scope', 'superdesk', 'api', 'search'];
+function PackagesCtrl($scope, superdesk, api, search) {
     $scope.contentItems = [];
 
     function fetchPackages() {

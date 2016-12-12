@@ -21,8 +21,8 @@ function DateTimeDirective(datetime, moment) {
     };
 }
 
-DateTimeService.$inject = ['moment', 'weekdays', 'config'];
-function DateTimeService(moment, weekdays, config) {
+DateTimeService.$inject = ['moment', 'config'];
+function DateTimeService(moment, config) {
     var ISO_DATE_FORMAT = 'YYYY-MM-DD';
     var ISO_WEEK_FORMAT = 'YYYY-W';
 

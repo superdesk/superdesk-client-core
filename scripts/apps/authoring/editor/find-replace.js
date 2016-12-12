@@ -7,11 +7,11 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/apps/license
  */
-FindReplaceDirective.$inject = ['$timeout', '$rootScope', 'editor', 'macros'];
+FindReplaceDirective.$inject = ['editor', 'macros'];
 /**
  * using directive here so that it can return focus
  */
-function FindReplaceDirective($timeout, $rootScope, editor, macros) {
+function FindReplaceDirective(editor, macros) {
     return {
         link: function(scope, elem) {
             scope.to = '';
