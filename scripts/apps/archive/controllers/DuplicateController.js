@@ -7,7 +7,7 @@ export function DuplicateController(api, notify, $rootScope, data, desks, $locat
     } else {
         currentDeskId = desks.getCurrentDeskId();
     }
-    api.save('duplicate', {}, {desk: currentDeskId}, data.item)
+    api.save('duplicate', {}, {desk: currentDeskId, type: data.item._type, item_id: data.item.item_id}, data.item)
         .then(() => {
             $rootScope.$broadcast('item:duplicate');
             notify.success(gettext('Item Duplicated'));

@@ -96,6 +96,10 @@
             <dt translate>Expiry</dt>
             <dd sd-reldate-complex ng-model="item.expiry"></dd>
         </dl>
+        <dl ng-if="item.original_id">
+            <dt translate>Original ID</dt>
+            <dd>{{ item.original_id }}</dd>
+        </dl>
         <dl ng-if="originalCreator">
             <dt translate>Original creator</dt>
             <dd>{{ originalCreator }}</dd>

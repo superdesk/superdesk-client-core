@@ -134,7 +134,10 @@ angular.module('superdesk.apps.archive', [
                 icon: 'copy',
                 monitor: true,
                 controller: ctrl.DuplicateController,
-                filters: [{action: 'list', type: 'archive'}],
+                filters: [
+                    {action: 'list', type: 'archive'},
+                    {action: 'list', type: 'archived'}
+                ],
                 keyboardShortcut: 'ctrl+d',
                 privileges: {duplicate: 1},
                 condition: function(item) {
