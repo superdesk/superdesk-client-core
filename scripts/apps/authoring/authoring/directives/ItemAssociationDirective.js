@@ -47,6 +47,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             function getItem(event, dataType) {
                 let item = angular.fromJson(event.originalEvent.dataTransfer.getData(dataType));
 
+
                 if (item._type !== 'externalsource') {
                     return api.find('archive', item._id)
                         .then((result) => result);
@@ -54,9 +55,20 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                 return $q.when(item);
             }
 
+            /**
+             * Get superdesk type for data transfer if any
+             *
+             * @param {Event} event
+             * @return {string}
+             */
+            function getSuperdeskType(event) {
+                return event.originalEvent.dataTransfer.types.find(name => name.indexOf('application/superdesk') === 0);
+            }
+
             // it should prevent default as long as this is valid image
             elem.on('dragover', (event) => {
-                if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
+                let superdeskType = getSuperdeskType(event);
+                if (MEDIA_TYPES.indexOf(superdeskType) > -1) {
                     event.preventDefault();
                     event.stopPropagation();
                 }
@@ -66,7 +78,7 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
             elem.on('drop dragdrop', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                getItem(event, event.originalEvent.dataTransfer.types[0])
+                getItem(event, getSuperdeskType(event));
                     .then((item) => {
                         if (!scope.editable) {
                             return;

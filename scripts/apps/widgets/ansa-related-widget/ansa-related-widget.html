@@ -1,7 +1,7 @@
 <div class="widget" ng-controller="AnsaRelatedCtrl as related">
     <ul class="ingest-list list-view related-item-list" sd-loading="!related.items">
         <li ng-repeat="item in related.items track by $index"
-            class="list-item-view">
+            class="list-item-view" sd-draggable-item>
             <div class="basic item-block" ng-click="view(item)">
                 <i sd-filetype-icon data-item="item" style=""></i>
                 <span class="keyword">{{ item.headline }}</span>
