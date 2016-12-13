@@ -375,8 +375,14 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         if (angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges) ||
             currentItem.state === 'killed' ||
             itemOnReadOnlyStage ||
-            angular.isDefined(currentItem.takes) && currentItem.takes.state === 'killed' ||
+            angular.isDefined(currentItem.takes) && currentItem.takes.state === 'killed') {
+            return action;
+        }
+
+        // Archived items can be duplicated
+        if (userPrivileges && !itemOnReadOnlyStage && currentItem &&
             currentItem._type && currentItem._type === 'archived') {
+            action.duplicate = true;
             return action;
         }
 
