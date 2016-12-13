@@ -31,6 +31,7 @@ To configure the build, the `superdesk.config.js` file must export a function th
 ##### Features
 
 - `features.preview`: `false` - enables print preview in authoring
+- `features.hideLiveSuggestions`: `true` - disables live suggestions panel in authoring
 - `features.alchemy`: `false` - allow alchemy widget for keywords
 - `features.elasticHighlight`: `false` - allow highlighting of search terms by elasticsearch
 - `features.noTakes`: `false` - disable takes related functionality
