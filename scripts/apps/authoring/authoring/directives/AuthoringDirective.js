@@ -421,6 +421,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return true;
             }
 
+            $scope.hideLiveSuggestions = function() {
+                return $rootScope.config.features && $rootScope.config.features.hideLiveSuggestions;
+            };
+
             $scope.useTansaProofing = function() {
                 return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
             };
