@@ -63,6 +63,7 @@ export class ArchiveListController extends BaseListController {
             $scope.loading = true;
             criteria.aggregations = 1;
             criteria.es_highlight = search.getElasticHighlight();
+            criteria.source.size = 50;
             resource.query(criteria).then((items) => {
                 $scope.loading = false;
                 $scope.items = search.mergeItems(items, $scope.items, next);
