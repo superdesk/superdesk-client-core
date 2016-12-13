@@ -259,7 +259,7 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                     $location.search(type, JSON.stringify(currentKeys));
                 } else if (type === 'credit') {
                     $location.search('creditqcode',
-                            JSON.stringify([scope.aggregations.credit[key].qcode]));
+                            JSON.stringify([{label: key, value: scope.aggregations.credit[key].qcode}]));
                 } else {
                     $location.search(type, JSON.stringify([key]));
                 }
@@ -310,14 +310,25 @@ export function SearchPanel($location, desks, privileges, tags, asset, metadata,
                 return date ? moment(date).format('YYYY-MM-DD') : null; // jshint ignore:line
             };
 
+            /**
+             * @ngdoc method
+             * @name sdSearchPanel#hasFilter
+             * @public
+             * @description Check if the Facet/Aggregate is selected or not
+             * @param {string} type
+             * @param {string} key
+             * @return {boolean}
+             */
             scope.hasFilter = function(type, key) {
-                if (type === 'desk') {
-                    return scope.tags.selectedFacets[type] &&
-                        _.find(scope.tags.selectedFacets[type], (facet) => facet.value === key);
+                if (!scope.tags || !scope.tags.selectedFacets[type]) {
+                    return false;
                 }
 
-                return scope.tags && scope.tags.selectedFacets[type] &&
-                    scope.tags.selectedFacets[type].indexOf(key) >= 0;
+                const facet = scope.tags.selectedFacets[type];
+                const isDesk = type === 'desk' && _.find(facet, (f) => f.value === key);
+                const isCredit = type === 'credit' && _.find(facet, (f) => f.label === key);
+
+                return isDesk || isCredit || facet.indexOf(key) >= 0;
             };
 
             /*

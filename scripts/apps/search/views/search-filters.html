@@ -9,6 +9,7 @@
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
                       title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('type', key, $event)"></span>
             </li>
         </ul>
@@ -21,6 +22,7 @@
                 <span>{{ key | translate}} <i>{{ value.count }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
                       title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('desk', value.id, $event)"></span>
             </li>
         </ul>
@@ -33,6 +35,7 @@
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
                       title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('source', key, $event)"></span>
             </li>
         </ul>
@@ -41,7 +44,7 @@
     <div sd-toggle-box data-title="{{:: 'Credits' | translate }}" ng-hide="isEmpty('credit')" data-open="true">
         <ul class="filter-box">
             <li ng-repeat="(key,value) in aggregations.credit" ng-click="toggleFilter('credit', key)">
-                <span class="sd-checkbox" ng-checked="hasFilter('credit',key)"></span>
+                <span class="sd-checkbox" ng-checked="hasFilter('credit', key)"></span>
                 <span>{{ key | translate}} <i>{{ value.count }}</i></span>
             </li>
         </ul>
@@ -54,6 +57,7 @@
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
                       title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('category', key, $event)"></span>
             </li>
         </ul>
@@ -67,6 +71,7 @@
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
                       title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('genre', key, $event)"></span>
             </li>
         </ul>
@@ -79,6 +84,7 @@
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
                       title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('urgency', key, $event)"></span>
             </li>
         </ul>
@@ -91,6 +97,7 @@
                 <span>{{ key | translate}} <i>{{ value }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
                       title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('priority', key, $event)"></span>
             </li>
         </ul>
@@ -103,6 +110,7 @@
                 <span>{{:: 'Legal' | translate}} <i>{{ aggregations.legal.count }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
                       title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('legal', 'true', $event)"></span>
             </li>
             <li ng-click="toggleFilter('sms', 'true')" ng-hide="isEmpty('sms')">
@@ -110,6 +118,7 @@
                 <span>{{:: 'Sms' | translate}} <i>{{ aggregations.sms.count }}</i></span>
                 <span class="icon-close-small pull-right remove-aggregate"
                       title="{{ :: 'Remove' | translate }}"
+                      ng-if="repo.search === 'local'"
                       ng-click="excludeFacet('sms', 'true', $event)"></span>
             </li>
         </ul>

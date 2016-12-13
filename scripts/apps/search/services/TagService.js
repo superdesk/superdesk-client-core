@@ -220,11 +220,11 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                 } else {
                     $location.search(type, null);
                 }
+            }
 
-                // Used by aap multimedia datalayer.
-                if (type === 'credit') {
-                    $location.search('creditqcode', null);
-                }
+            // Used by aap multimedia datalayer.
+            if (type === 'credit') {
+                $location.search('creditqcode', null);
             }
         }
     }
@@ -311,22 +311,26 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                         tags.selectedFacets.date = ['Scheduled in the Last 8 Hours'];
                     }
                     break;
+                case 'creditqcode':
+                    tags.selectedFacets.credit = JSON.parse(type);
+                    break;
+                default: {
+                    const prefixForType = {
+                        afterfirstcreated: 'Created after',
+                        beforefirstcreated: 'Created before',
+                        afterversioncreated: 'Modified before',
+                        beforeversioncreated: 'Modified before'
+                    };
+
+                    const createdOrModified = (t) => Object.keys(prefixForType).indexOf(t) !== -1;
+
+                    if (createdOrModified(type)) {
+                        $location.search('after', null);
+                        tags.selectedFacets.date = [`${prefixForType[type]} ${type}`];
+                    } else if (FacetKeys[key]) {
+                        tags.selectedFacets[key] = JSON.parse(type);
+                    }
                 }
-
-                const prefixForType = {
-                    afterfirstcreated: 'Created after',
-                    beforefirstcreated: 'Created before',
-                    afterversioncreated: 'Modified before',
-                    beforeversioncreated: 'Modified before'
-                };
-
-                const createdOrModified = (t) => Object.keys(prefixForType).indexOf(t) !== -1;
-
-                if (createdOrModified(type)) {
-                    $location.search('after', null);
-                    tags.selectedFacets.date = [`${prefixForType[type]} ${type}`];
-                } else if (FacetKeys[key]) {
-                    tags.selectedFacets[key] = JSON.parse(type);
                 }
             });
 
