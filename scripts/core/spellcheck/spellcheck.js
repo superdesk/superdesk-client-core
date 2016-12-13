@@ -9,6 +9,8 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         abbreviationList = [],
         self;
 
+    let _activeCache = {};
+
     self = this;
     self.abbreviationsDict = null;
     /**
@@ -82,7 +84,11 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
      * @returns {Object} List of dictionaries
      */
     this.getDictionary = function(lang) {
-        return dictionaries.getActive(lang, getBaseLanguage(lang)).then((items) => items);
+        if (!_activeCache[lang]) {
+            _activeCache[lang] = dictionaries.getActive(lang, getBaseLanguage(lang));
+        }
+
+        return _activeCache[lang];
     };
 
     /**
@@ -130,6 +136,26 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
     $rootScope.$on('abbreviations:updated', angular.bind(self, (evt, data) => {
         updateAbbreviations(data);
     }));
+
+    /**
+     * Reset active dictionary cache
+     *
+     * When it gets langauge info, only reset it for given langauge,
+     * otherwise reset it for all languages.
+     *
+     * @param {Event} event
+     * @param {Object} data
+     */
+    let _resetActiveCache = (event, data) => {
+        if (data.language) {
+            _activeCache[data.language] = null;
+        } else {
+            _activeCache = {};
+        }
+    };
+
+    $rootScope.$on('dictionary:created', _resetActiveCache);
+    $rootScope.$on('dictionary:updated', _resetActiveCache);
 
     /**
      * Add dictionary content to spellcheck
