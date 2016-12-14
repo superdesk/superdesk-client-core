@@ -22,6 +22,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         if (lang !== _lang) {
             lang = _lang;
             dict = null;
+            getDict();
         }
     };
 
@@ -401,6 +402,33 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         ignored[item] = ignored[item] || {};
         return ignored[item];
     }
+
+    /**
+     * Add word to regular or ignored dictionary
+     *
+     * @param {String} word
+     * @param {String} isIgnored
+     */
+    this.addWord = function addWord(word, isIgnored) {
+        if (isIgnored) {
+            this.ignoreWord(word);
+        } else {
+            this.addWordToUserDictionary(word);
+        }
+    };
+
+    /**
+     * Check if the current word is correct
+     *
+     * @param {String} text
+     */
+    this.isCorrectWord = function isCorrectWord(word) {
+        // TODO: calculate isSentenceWord
+        var isSentenceWord = false;
+
+        return !isNaN(word) || !dict.content || isIgnored(word) || !isSpellingMistake(word, isSentenceWord);
+    };
+
 
     // reset ignore list for an item if it was unlocked
     $rootScope.$on('item:unlock', (event, data) => {
