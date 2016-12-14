@@ -35,17 +35,17 @@
             </ul>
         </div>
     </div>
-    <div class="paneLayout__pane" ng-class="{'paneLayout__pane--open': webPublisher.routePaneOpen}">
-        <div class="modal-header">
+    <div class="paneLayout__pane paneContent" ng-class="{'paneLayout__pane--open': webPublisher.routePaneOpen}">
+        <div class="paneContent__header">
             <h3 class="pull-left" translate>Add Route</h3>
             <div class="pull-right">
                 <button class="btn" ng-click="webPublisher.toogleCreateRoute()" translate>Cancel</button>
-                <button class="btn btn--primary" 
-                	ng-disabled="webPublisher.routeForm.$invalid || !webPublisher.routeForm.$dirty" 
-                	ng-click="webPublisher.saveRoute()" translate>Save</button>
+                <button class="btn btn--primary"
+                    ng-disabled="webPublisher.routeForm.$invalid || !webPublisher.routeForm.$dirty"
+                    ng-click="webPublisher.saveRoute()" translate>Save</button>
             </div>
         </div>
-        <div class="contentPadding">
+        <div class="paneContent__content contentPadding">
             <form name="webPublisher.routeForm" class="flat">
                 <fieldset class="label-light">
                 	<div class="item">
@@ -63,7 +63,7 @@
 
                     <div class="item">
                         <label for="routeParent" translate>parent</label>
-                        <select id="routeParent" class="dropdown__toggle line-input" ng-model="newRoute.parent" 
+                        <select id="routeParent" class="dropdown__toggle line-input" ng-model="newRoute.parent"
                             ng-options="route.id as route.name for route in routes | filter: {type: 'collection', id: '!' + newRoute.id} track by route.id">
                             <option value="">
                         </select>

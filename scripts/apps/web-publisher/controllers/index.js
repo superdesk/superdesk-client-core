@@ -1,1 +1,1 @@
-export { WebPublisherManagerController } from './WebPublisherManagerController';
+export {WebPublisherManagerController} from './WebPublisherManagerController';
