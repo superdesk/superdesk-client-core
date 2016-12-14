@@ -86,8 +86,8 @@
                             <img ng-src="{{ :: dashboard.selectedWidget.thumbnail }}">
                         </div>
                         <div class="content-box">
-                            <div class="title">{{ :: dashboard.selectedWidget.label }}</div>
-                            <div class="description">{{ :: dashboard.selectedWidget.description }}</div>
+                            <div class="title">{{ :: dashboard.selectedWidget.label | translate }}</div>
+                            <div class="description">{{ :: dashboard.selectedWidget.description | translate }}</div>
                             <button class="btn btn--primary btn--large"
                                 ng-click="dashboard.addWidget(dashboard.selectedWidget)"
                                 ng-disabled="!dashboard.selectedWidget"
