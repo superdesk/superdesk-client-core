@@ -2,7 +2,7 @@
     <div class="content-container">
 
         <div class="composite-nav" ng-if="item.type === 'composite'">
-          <i class="filetype-icon-large-composite"></i> <span>{{ 'Package preview' | translate }}</span>
+            <i class="filetype-icon-large-composite"></i> <span>{{ 'Package preview' | translate }}</span>
         </div>
         <div class="preview-state__row">
             <span sd-item-state data-state=item.state data-embargo=item.embargo></span>
@@ -15,11 +15,11 @@
         <p class="title" ng-if="item.headline" sd-html-preview="item.headline"></p>
 
         <div class="core-content">
-                <p ng-if="item.is_spiked" class="alert alert-warning expires">
-              <span translate>expires</span>
-              <time sd-datetime data-date="item.expiry"></time>
-                </p>
-            <div ng-if="item.type == 'picture' || item.type == 'graphic'" class="picture-preview">
+            <p ng-if="item.is_spiked" class="alert alert-warning expires">
+                <span translate>expires</span>
+                <time sd-datetime data-date="item.expiry"></time>
+            </p>
+            <div ng-if="item.type === 'picture' || item.type === 'graphic'" class="picture-preview">
                 <div>
                     <span translate>Original</span>
                     <div sd-item-rendition data-item="item" data-rendition="viewImage"></div>
@@ -27,12 +27,17 @@
                 <div sd-item-crops data-item="item"></div>
             </div>
 
-            <div ng-if="item.type == 'audio'">
+            <div ng-if="item.type === 'audio'">
                 <audio controls="controls" sd-sources data-renditions="item.renditions"></audio>
             </div>
 
-            <div ng-if="item.type == 'video'">
+            <div ng-if="item.type === 'video'">
                 <video controls="controls" sd-sources data-renditions="item.renditions"></video>
+            </div>
+
+            <div ng-if="item.associations.featuremedia" class="picture-preview">
+                <div sd-item-rendition data-item="item.associations.featuremedia" data-rendition="viewImage"></div>
+                <p class="nav-space description-text">{{item.associations.featuremedia.description_text}}</p>
             </div>
 
             <div class="text abstract" ng-show="item.abstract" sd-html-preview="item.abstract"></div>
