@@ -39,6 +39,13 @@
                     top: auto;
                     bottom: -10px;
                 }
+                &.pull-right {
+                    left: auto;
+                    right: 0;
+                }
+            }
+            &.dropdown--dropup > .dropdown__menu {
+                top: auto;
             }
             &:hover {
                 > .dropdown__menu {
