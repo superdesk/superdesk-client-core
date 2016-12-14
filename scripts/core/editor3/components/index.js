@@ -1,1 +1,1 @@
-export {Editor3} from './Editor3';
+export {Editor3, getInitialState} from './Editor3';
