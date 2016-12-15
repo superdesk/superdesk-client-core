@@ -265,11 +265,7 @@ function DropdownPositionDirective($document) {
                 isInlineOriented = null,
                 menu = null, workspace = null;
 
-            element.bind('click', () => {
-                if (!element.hasClass('open')) {
-                    return false;
-                }
-
+            element.bind('click mouseover', () => {
                 if (menu === null) {
                     checkOrientation();
                 }
