@@ -22,9 +22,8 @@
              ng-if="showSendButtonAndDestination()"
              data-title="{{ :: 'Destination' | translate }}"
              data-open="true" data-style="dark">
-
             <div sd-desk-select
-                data-desks="desks._items"
+                data-desks="desks"
                 data-selected-desk="selectedDesk"
                 on-change="selectDesk(desk)"></div>
 
