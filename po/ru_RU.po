@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2016-11-18 11:25+0000\n"
-"Last-Translator: Maciek Bernatt <maciekbernattreszczynski@gmail.com>\n"
+"PO-Revision-Date: 2016-11-26 10:11+0000\n"
+"Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/sourcefabric/superdesk/language/ru_RU/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "--- Not selected ---"
 msgstr "--- Не выбрано ---"
 
-#: scripts/apps/desks/views/desk-config-modal.html:120
+#: scripts/apps/desks/views/desk-config-modal.html:131
 msgid ": OFF"
 msgstr "Выключить"
 
-#: scripts/apps/desks/views/desk-config-modal.html:123
+#: scripts/apps/desks/views/desk-config-modal.html:134
 msgid ": ON"
 msgstr "Включить"
 
@@ -70,6 +70,10 @@ msgstr "'должно быть типом списка'\""
 msgid "'PLACE is a required field'"
 msgstr "'МЕСТО - необходимо заполнить'"
 
+#: scripts/core/lang/missing-translations-strings.js:38
+msgid "'PRIORITY is a required field'"
+msgstr ""
+
 #: scripts/core/lang/missing-translations-strings.js:19
 msgid "'SLUGLINE is a required field'"
 msgstr "СЛАГЛАЙН обязательное поле "
@@ -77,6 +81,10 @@ msgstr "СЛАГЛАЙН обязательное поле "
 #: scripts/core/lang/missing-translations-strings.js:18
 msgid "'SUBJECT is a required field'"
 msgstr "ТЕМА обязательное поле"
+
+#: scripts/core/lang/missing-translations-strings.js:38
+msgid "'URGENCY is a required field'"
+msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:31
 msgid "\" sent at:"
@@ -102,19 +110,19 @@ msgstr "[Общее]"
 msgid "[none]"
 msgstr "[пусто]"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:249
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:251
 msgid "{{ field }} cannot be earlier than now!"
 msgstr "{{ field }} измените время на более позднее!"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:237
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:239
 msgid "{{ field }} date is required!"
 msgstr "{{ field }} впишите дату!"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:245
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:247
 msgid "{{ field }} is not a valid date!"
 msgstr "{{ field }} неверная дата!"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:241
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:243
 msgid "{{ field }} time is required!"
 msgstr "{{ field }} необходимо указать время!"
 
@@ -146,11 +154,11 @@ msgstr[3] "{{ $count }} слов"
 msgid "{{error.email}}"
 msgstr "{{error.email}}"
 
-#: scripts/apps/desks/views/desk-config-modal.html:170
+#: scripts/apps/desks/views/desk-config-modal.html:181
 msgid "{{selected.is_visible ? 'ON' : 'OFF'}}"
 msgstr "{{selected.is_visible ? 'ON' : 'OFF'}}"
 
-#: scripts/apps/desks/views/desk-config-modal.html:174
+#: scripts/apps/desks/views/desk-config-modal.html:185
 msgid "{{selected.local_readonly ? 'ON' : 'OFF'}}"
 msgstr "{{selected.is_visible ? 'ON' : 'OFF'}}"
 
@@ -290,11 +298,12 @@ msgstr "Ключевое слово для изображения AAP "
 msgid "Abbreviation"
 msgstr "Аббревиатура"
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:141
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:145
 msgid "Abbreviation already exists. Do you want to overwrite it?"
 msgstr "Аббревиатура уже существует. Хотите заменить ее?"
 
-#: scripts/apps/authoring/views/article-edit.html:63
+#: scripts/apps/authoring/views/article-edit.html:76
+#: scripts/apps/authoring/views/article-edit.html:96
 #: scripts/apps/packaging/views/sd-package-edit.html:19
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:17
 msgid "Abstract"
@@ -312,7 +321,7 @@ msgstr "Действие "
 
 #: scripts/apps/desks/views/settings.html:22
 #: scripts/apps/monitoring/views/item-actions-menu.html:14
-#: scripts/apps/search/directives/ItemList.js:1104
+#: scripts/apps/search/directives/ItemList.js:1108
 #: scripts/apps/templates/views/templates.html:32
 #: scripts/apps/workspace/content/views/profile-settings.html:23
 msgid "Actions"
@@ -495,7 +504,7 @@ msgstr "Добавить этот виджет "
 msgid "Add title"
 msgstr "Добавить заголовок "
 
-#: scripts/apps/packaging/index.js:69
+#: scripts/apps/packaging/index.js:70
 msgid "Add to current"
 msgstr "Добавить к текущему "
 
@@ -543,13 +552,12 @@ msgstr "Расширенный поиск "
 msgid "Age Range"
 msgstr "Возрастная категория   "
 
-#: scripts/apps/monitoring/views/monitoring-view.html:77
-#: scripts/apps/monitoring/views/monitoring-view.html:98
+#: scripts/apps/monitoring/views/monitoring-view.html:72
 #: scripts/apps/users/views/user-preferences.html:60
 msgid "all"
 msgstr "все"
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:289
+#: scripts/apps/templates/directives/TemplatesDirective.js:293
 #: scripts/apps/users/controllers/UserListController.js:146
 msgid "All"
 msgstr "Все"
@@ -570,7 +578,7 @@ msgstr "все фото "
 msgid "Allow Remove Ingested Items"
 msgstr "Разрешить удаление входящих файлов "
 
-#: scripts/apps/desks/views/desk-config-modal.html:154
+#: scripts/apps/desks/views/desk-config-modal.html:165
 #: scripts/apps/groups/views/groups-config-modal.html:27
 #: scripts/apps/highlights/views/highlights_config_modal.html:16
 msgid "already exists"
@@ -584,12 +592,12 @@ msgstr "Альт. текст"
 msgid "Alt Text"
 msgstr "Альт. текст"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:260
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:262
 msgid "An Item can't have both Embargo and Publish Schedule."
 msgstr "Элемент не может иметь статус \"эмбарго\" и \"запланированная публикация\" "
 
 #: scripts/apps/content-filters/views/production-test-view.html:23
-#: scripts/apps/search/services/SearchService.js:9
+#: scripts/apps/search/services/SearchService.js:29
 msgid "ANPA Category"
 msgstr "Категория ANPA "
 
@@ -609,7 +617,7 @@ msgstr "Апертура"
 msgid "Applied Global Block Filters"
 msgstr "Применен глобальный блок фильтров"
 
-#: scripts/apps/authoring/views/article-edit.html:179
+#: scripts/apps/authoring/views/article-edit.html:223
 msgid "APPLY CROPS"
 msgstr " ОБРЕЗАЙ ФОТО"
 
@@ -621,7 +629,7 @@ msgstr "архивировать "
 msgid "Archive"
 msgstr "Архив"
 
-#: scripts/apps/search/directives/ItemList.js:364
+#: scripts/apps/search/directives/ItemList.js:339
 msgid "archived"
 msgstr "Архивировано"
 
@@ -637,7 +645,7 @@ msgstr "Блок архивирован"
 msgid "Archived Management"
 msgstr "Архивированное управление"
 
-#: scripts/apps/highlights/controllers/HighlightsConfig.js:61
+#: scripts/apps/highlights/controllers/HighlightsConfig.js:64
 msgid "Are you sure you want to delete configuration?"
 msgstr "Вы уверены, что хотите удалить конфигурацию?"
 
@@ -645,11 +653,11 @@ msgstr "Вы уверены, что хотите удалить конфигур
 msgid "Are you sure you want to delete content filter?"
 msgstr "Уверены, что хотите удалить фильтр контента?"
 
-#: scripts/apps/dashboard/controllers/DashboardController.js:113
+#: scripts/apps/dashboard/controllers/DashboardController.js:118
 msgid "Are you sure you want to delete current workspace?"
 msgstr "Уверены, что хотите удалить текущий рабочий стол? "
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:74
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:75
 msgid "Are you sure you want to delete filter condition?"
 msgstr "Уверены, что хотите удалить фильтр параметров?"
 
@@ -657,7 +665,7 @@ msgstr "Уверены, что хотите удалить фильтр пара
 msgid "Are you sure you want to delete group?"
 msgstr "Уверены, что хотите удалить  группу?"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:88
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:90
 msgid "Are you sure you want to delete Ingest Source?"
 msgstr "Уверены, что хотите удалить фильтр входящий источник?"
 
@@ -669,7 +677,7 @@ msgstr "Уверены, что хотите удалить продукт?"
 msgid "Are you sure you want to delete rule set?"
 msgstr "Уверены, что хотите удалить правила?"
 
-#: scripts/apps/search/directives/SavedSearches.js:77
+#: scripts/apps/search/directives/SavedSearches.js:78
 msgid "Are you sure you want to delete saved search?"
 msgstr "Уверены, что хотите удалить сохраненный поиск?"
 
@@ -677,7 +685,7 @@ msgstr "Уверены, что хотите удалить сохраненны�
 msgid "Are you sure you want to delete Search Provider?"
 msgstr "Уверены, что хотите удалить источник/// поиска?"
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:254
+#: scripts/apps/templates/directives/TemplatesDirective.js:258
 msgid "Are you sure you want to delete the template?"
 msgstr "Уверены, что хотите удалить шаблон?"
 
@@ -689,7 +697,7 @@ msgstr "Уверены, что хотите удалить схему прави
 msgid "Are you sure you want to delete this scheme?"
 msgstr "Уверены, что хотите удалить эту схему?"
 
-#: scripts/apps/users/directives/UserRolesDirective.js:84
+#: scripts/apps/users/directives/UserRolesDirective.js:82
 msgid "Are you sure you want to delete user role?"
 msgstr "Уверены, что хотите удалить эту роль?"
 
@@ -745,6 +753,10 @@ msgstr "аудио"
 msgid "Authentication Info"
 msgstr "Информация об авторизации "
 
+#: scripts/apps/publish/views/subscribers.html:147
+msgid "Authentication Token"
+msgstr ""
+
 #: scripts/apps/ingest/views/settings/reutersConfig.html:7
 msgid "authentication url"
 msgstr "Авторизация - ссылка "
@@ -774,9 +786,9 @@ msgstr "Автоматически вставить контент из"
 msgid "Available clock"
 msgstr "Доступные часы "
 
-#: scripts/core/editor2/editor.js:915
+#: scripts/core/editor2/editor.js:924
 msgid "B"
-msgstr "Б"
+msgstr "B"
 
 #: scripts/apps/dashboard/views/workspace.html:82
 #: scripts/apps/monitoring/aggregate-widget/aggregate-widget.html:58
@@ -805,7 +817,7 @@ msgstr "Базовый "
 msgid "Be the first..."
 msgstr "Будь первым"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:37
+#: scripts/core/directives/PasswordStrengthDirective.js:40
 msgid "Better"
 msgstr "Лучше "
 
@@ -822,7 +834,8 @@ msgstr "Получен пустой заголовок  "
 msgid "Blocking"
 msgstr "Блокирование  "
 
-#: scripts/apps/authoring/views/article-edit.html:152
+#: scripts/apps/authoring/views/article-edit.html:182
+#: scripts/apps/authoring/views/article-edit.html:201
 #: scripts/apps/packaging/views/sd-package-edit.html:31
 msgid "Body"
 msgstr "Основное поле "
@@ -836,7 +849,7 @@ msgstr "Футер основного поля"
 msgid "Body HTML"
 msgstr "Основной HTML"
 
-#: scripts/core/editor2/editor.js:913
+#: scripts/core/editor2/editor.js:922
 msgid "bold"
 msgstr "жирный "
 
@@ -864,7 +877,7 @@ msgstr "написано"
 msgid "By"
 msgstr "Написано"
 
-#: scripts/apps/authoring/authoring/directives/ArticleEditDirective.js:92
+#: scripts/apps/authoring/authoring/directives/ArticleEditDirective.js:94
 msgid "By {{ display_name }}"
 msgstr "Написано {{ display_name }}"
 
@@ -879,12 +892,18 @@ msgid ""
 "with any of its existing categories)."
 msgstr "Когда вы выбрали интересующие вас категории, в меню настройки категорий контента система будет отображать только их (наряду с любыми из существующих категорий)."
 
+#: scripts/apps/users/views/user-preferences.html:92
+msgid ""
+"By selecting the desks as your preferred desks, they appear first in the "
+"order when sending or publishing items."
+msgstr ""
+
 #: scripts/apps/users/views/edit-form.html:79
 msgid "byline"
 msgstr "подпись"
 
 #: scripts/apps/archive/views/metadata-view.html:73
-#: scripts/apps/authoring/views/article-edit.html:83
+#: scripts/apps/authoring/views/article-edit.html:113
 #: scripts/apps/search/views/search-parameters.html:37
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:21
 msgid "Byline"
@@ -893,10 +912,10 @@ msgstr "Подпись "
 #: scripts/apps/archive/views/archived-kill.html:13
 #: scripts/apps/archive/views/resend-configuration.html:28
 #: scripts/apps/archive/views/upload.html:98
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:31
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:44
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:57
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:70
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:33
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:46
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:60
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:74
 #: scripts/apps/authoring/comments/views/comments-widget.html:28
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:15
 #: scripts/apps/authoring/views/change-image.html:5
@@ -905,8 +924,8 @@ msgstr "Подпись "
 #: scripts/apps/content-filters/views/manage-filters.html:121
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:12
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:86
-#: scripts/apps/desks/views/desk-config-modal.html:113
-#: scripts/apps/desks/views/desk-config-modal.html:144
+#: scripts/apps/desks/views/desk-config-modal.html:124
+#: scripts/apps/desks/views/desk-config-modal.html:155
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:122
 #: scripts/apps/highlights/views/highlights_config_modal.html:52
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:20
@@ -918,7 +937,7 @@ msgstr "Подпись "
 #: scripts/apps/products/views/products-config-modal.html:57
 #: scripts/apps/publish/views/publish-queue.html:122
 #: scripts/apps/publish/views/publish-queue.html:78
-#: scripts/apps/publish/views/subscribers.html:150
+#: scripts/apps/publish/views/subscribers.html:156
 #: scripts/apps/search-providers/views/search-provider-config.html:79
 #: scripts/apps/search/views/item-globalsearch.html:20
 #: scripts/apps/search/views/save-search.html:28
@@ -936,7 +955,7 @@ msgstr "Подпись "
 #: scripts/apps/workspace/views/edit-workspace-modal.html:19
 #: scripts/core/activity/views/activity-chooser.html:9
 #: scripts/core/editor2/views/block-embed.html:3
-#: scripts/core/services/modalService.js:6
+#: scripts/core/services/modalService.js:7
 #: scripts/core/ui/views/datepicker-wrapper.html:15
 #: scripts/core/ui/views/sd-timepicker-popup.html:27
 msgid "Cancel"
@@ -976,7 +995,7 @@ msgstr "Изменить фото"
 msgid "Channel has gone strangely quiet."
 msgstr "Канал подозрительно затих"
 
-#: scripts/apps/desks/views/desk-config-modal.html:81
+#: scripts/apps/desks/views/desk-config-modal.html:92
 msgid "Character limit exceeded, desk can not be created/updated."
 msgstr "Превышен лимит количества знаков, стол не может быть создан/обновлен"
 
@@ -992,7 +1011,7 @@ msgstr "Превышен лимит количества знаков, груп�
 msgid "Character limit exceeded, highlight can not be created/updated."
 msgstr "Превышен лимит количества знаков, выделение не может быть создано/обновлено"
 
-#: scripts/apps/desks/views/desk-config-modal.html:155
+#: scripts/apps/desks/views/desk-config-modal.html:166
 msgid "Character limit exceeded, stage can not be created/updated."
 msgstr "Превышен лимит количества знаков, папка не может быть создана/обновлена"
 
@@ -1075,7 +1094,7 @@ msgstr "закрыто"
 msgid "Closed"
 msgstr "Закрыто"
 
-#: scripts/apps/authoring/authoring/index.js:200
+#: scripts/apps/authoring/authoring/index.js:204
 msgid "Closes current item"
 msgstr "Закрыть текущие статьи"
 
@@ -1083,7 +1102,7 @@ msgstr "Закрыть текущие статьи"
 msgid "Color"
 msgstr "Цвет"
 
-#: scripts/apps/packaging/index.js:86
+#: scripts/apps/packaging/index.js:88
 msgid "Combine with current"
 msgstr "Сочетать с текущим"
 
@@ -1109,7 +1128,7 @@ msgstr "Коды компаний"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "composite"
-msgstr "составить"
+msgstr "пекедж"
 
 #: scripts/apps/legal-archive/index.js:35
 msgid "Confidential data"
@@ -1119,11 +1138,11 @@ msgstr "Конфиденциальные данные"
 msgid "Configuration"
 msgstr "Конфигурация "
 
-#: scripts/apps/highlights/controllers/HighlightsConfig.js:65
+#: scripts/apps/highlights/controllers/HighlightsConfig.js:68
 msgid "Configuration deleted."
 msgstr "Конфигурация удалена"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:77
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:81
 msgid ""
 "Configuration has changed. {{ message }} Would you like to save the story to"
 " your workspace?"
@@ -1137,7 +1156,7 @@ msgstr "Имя конфигурации"
 msgid "confirm"
 msgstr "подтвердить"
 
-#: scripts/core/services/modalService.js:4
+#: scripts/core/services/modalService.js:5
 #: scripts/core/ui/views/datepicker-wrapper.html:14
 #: scripts/core/ui/views/sd-timepicker-popup.html:26
 msgid "Confirm"
@@ -1169,7 +1188,11 @@ msgstr "контент // содержание "
 msgid "Content"
 msgstr "Контент"
 
-#: scripts/apps/desks/views/desk-config-modal.html:224
+#: scripts/apps/publish/views/subscribers.html:146
+msgid "Content API Token"
+msgstr ""
+
+#: scripts/apps/desks/views/desk-config-modal.html:235
 msgid "Content expiry"
 msgstr "Срок действия контента истекает"
 
@@ -1177,7 +1200,7 @@ msgstr "Срок действия контента истекает"
 msgid "Content Expiry"
 msgstr "Срок действия контента истекает"
 
-#: scripts/apps/desks/views/desk-config-modal.html:181
+#: scripts/apps/desks/views/desk-config-modal.html:192
 msgid "Content expiry:"
 msgstr "Срок действия контента истекает:"
 
@@ -1214,7 +1237,7 @@ msgstr "Фильтры контента "
 msgid "Content Profile"
 msgstr "Профиль контента "
 
-#: scripts/apps/desks/views/desk-config-modal.html:62
+#: scripts/apps/desks/views/desk-config-modal.html:73
 #: scripts/apps/workspace/content/index.js:24
 #: scripts/apps/workspace/content/views/profile-settings.html:4
 #: scripts/core/lang/missing-translations-strings.js:26
@@ -1233,7 +1256,7 @@ msgstr "Виды контента"
 msgid "Content Types"
 msgstr "Виды контента"
 
-#: scripts/apps/desks/views/desk-config-modal.html:260
+#: scripts/apps/desks/views/desk-config-modal.html:271
 msgid "Continue"
 msgstr "Продолжить "
 
@@ -1261,7 +1284,7 @@ msgstr "Обладатель копирайта"
 msgid "Copyright notice"
 msgstr "Уведомление о копирайте "
 
-#: scripts/apps/authoring/authoring/index.js:129
+#: scripts/apps/authoring/authoring/index.js:133
 msgid "Correct item"
 msgstr "Править статью"
 
@@ -1277,12 +1300,12 @@ msgstr "Правка"
 msgid "Correction issued by"
 msgstr "Правка внесена "
 
-#: scripts/apps/search/directives/ItemList.js:921
+#: scripts/apps/search/directives/ItemList.js:918
 msgid "correction sequence"
 msgstr "последовательность правки"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:28
-#: scripts/apps/search/directives/ItemList.js:1107
+#: scripts/apps/search/directives/ItemList.js:1111
 msgid "Corrections"
 msgstr "Правки"
 
@@ -1292,7 +1315,7 @@ msgstr "создать "
 
 #: scripts/apps/archive/views/list.html:9
 #: scripts/apps/highlights/views/create_highlights_button_directive.html:2
-#: scripts/apps/monitoring/views/monitoring-view.html:64
+#: scripts/apps/monitoring/views/monitoring-view.html:59
 #: scripts/apps/templates/services/TemplatesService.js:56
 msgid "Create"
 msgstr "Создать "
@@ -1343,7 +1366,7 @@ msgstr "Создать Пакет"
 #: scripts/apps/authoring/suggest/SuggestView.html:69
 #: scripts/apps/authoring/views/authoring.html:7
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:8
-#: scripts/apps/search/services/SearchService.js:7
+#: scripts/apps/search/services/SearchService.js:27
 #: scripts/apps/users/views/list.html:32
 msgid "Created"
 msgstr "Создано"
@@ -1411,7 +1434,7 @@ msgstr "Авторство"
 msgid "Critical Errors"
 msgstr "Критические Ошибки"
 
-#: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:89
+#: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:91
 msgid "Crop changes have been recorded"
 msgstr "Вырезанные изменения записаны"
 
@@ -1458,7 +1481,7 @@ msgid "Date"
 msgstr "Дата"
 
 #: scripts/apps/archive/views/metadata-view.html:69
-#: scripts/apps/authoring/views/article-edit.html:102
+#: scripts/apps/authoring/views/article-edit.html:132
 #: scripts/apps/users/views/user-preferences.html:28
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:22
 msgid "Dateline"
@@ -1492,7 +1515,7 @@ msgstr "по умолчанию"
 msgid "Default"
 msgstr "Дефолт"
 
-#: scripts/apps/desks/views/desk-config-modal.html:70
+#: scripts/apps/desks/views/desk-config-modal.html:81
 msgid "Default Content Profile"
 msgstr "Контент Профайл по Умолчанию"
 
@@ -1535,7 +1558,8 @@ msgstr "Отмена планирования"
 
 #: scripts/apps/archive/views/upload.html:46
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:146
-#: scripts/apps/authoring/views/article-edit.html:194
+#: scripts/apps/authoring/views/article-edit.html:238
+#: scripts/apps/authoring/views/article-edit.html:253
 #: scripts/apps/authoring/views/change-image.html:76
 #: scripts/apps/search/views/save-search-dialog.html:7
 #: scripts/apps/search/views/search-parameters.html:142
@@ -1567,9 +1591,13 @@ msgstr "Удаленный рабочий стол"
 msgid "Desk description"
 msgstr "Описание рабочего стола"
 
-#: scripts/apps/desks/services/DesksFactory.js:308
+#: scripts/apps/desks/services/DesksFactory.js:299
 msgid "Desk has been modified elsewhere. Please reload the desks."
 msgstr "Рабочий стол был изменен в другом месте. Пожалуйста, перезагрузите его"
+
+#: scripts/apps/desks/views/desk-config-modal.html:51
+msgid "Desk language"
+msgstr ""
 
 #: scripts/apps/desks/views/settings.html:5
 msgid "Desk management"
@@ -1614,12 +1642,12 @@ msgstr "Шаблоны рабочего стола"
 msgid "Desk Type"
 msgstr "Вид рабочего стола"
 
-#: scripts/apps/desks/directives/DeskeditBasic.js:69
+#: scripts/apps/desks/directives/DeskeditBasic.js:70
 msgid "Desk with name  already exists."
 msgstr "Рабочий стол с таким именем уже существует"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:10
-#: scripts/apps/search/directives/ItemList.js:355
+#: scripts/apps/search/directives/ItemList.js:332
 msgid "desk:"
 msgstr "рабочий стол"
 
@@ -1679,7 +1707,7 @@ msgstr "Управление словарем"
 msgid "Dictionary name"
 msgstr "Имя словаря"
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:10
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:12
 msgid "Dictionary saved successfully"
 msgstr "Словарь успешно сохранен"
 
@@ -1721,7 +1749,7 @@ msgstr "Показать похожие"
 msgid "Displaying similar items"
 msgstr "Показать похожие элементы"
 
-#: scripts/core/keyboard/keyboard.js:383 scripts/core/keyboard/keyboard.js:387
+#: scripts/core/keyboard/keyboard.js:391 scripts/core/keyboard/keyboard.js:399
 msgid "Displays active keyboard shortcuts"
 msgstr "Показывает активные шорткаты "
 
@@ -1737,7 +1765,7 @@ msgstr "Удалить элемент навсегда? "
 msgid "Do you want to delete these items permanently?"
 msgstr "Удалить элементы навсегда? "
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:132
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:136
 msgid "Do you want to remove Abbreviation?"
 msgstr "Удалить аббревиатуру? "
 
@@ -1756,10 +1784,10 @@ msgstr "готово"
 #: scripts/apps/authoring/editor/views/find-replace.html:35
 #: scripts/apps/dashboard/views/workspace.html:100
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:9
-#: scripts/apps/desks/views/desk-config-modal.html:261
-#: scripts/apps/desks/views/desk-config-modal.html:289
-#: scripts/apps/desks/views/desk-config-modal.html:309
-#: scripts/apps/desks/views/desk-config-modal.html:90
+#: scripts/apps/desks/views/desk-config-modal.html:101
+#: scripts/apps/desks/views/desk-config-modal.html:272
+#: scripts/apps/desks/views/desk-config-modal.html:300
+#: scripts/apps/desks/views/desk-config-modal.html:320
 #: scripts/apps/groups/views/groups-config-modal.html:57
 #: scripts/apps/monitoring/views/aggregate-settings.html:138
 #: scripts/apps/users/views/change-avatar.html:73
@@ -1819,7 +1847,7 @@ msgstr "Ред. замечание"
 msgid "ED. NOTE"
 msgstr "РЕД. ЗАМЕТКА"
 
-#: scripts/apps/authoring/authoring/index.js:91
+#: scripts/apps/authoring/authoring/index.js:93
 #: scripts/apps/authoring/views/authoring-topbar.html:60
 #: scripts/apps/desks/views/settings.html:24
 #: scripts/apps/desks/views/stage-item-list.html:24
@@ -1870,11 +1898,11 @@ msgstr "Редактировать фильтр контента"
 msgid "Edit Content Profile"
 msgstr "Редактировать профиль контента"
 
-#: scripts/apps/authoring/authoring/index.js:161
+#: scripts/apps/authoring/authoring/index.js:165
 msgid "Edit Crop"
 msgstr "Редактировать обрезание фото"
 
-#: scripts/apps/authoring/views/article-edit.html:180
+#: scripts/apps/authoring/views/article-edit.html:224
 msgid "EDIT CROPS"
 msgstr "РЕДАКТИРОВАТЬ ОБРЕЗАНИЯ ФОТО"
 
@@ -2034,12 +2062,12 @@ msgid "Email User"
 msgstr "Пользователь Email"
 
 #: scripts/apps/archive/views/item-state.html:2
-#: scripts/apps/search/directives/ItemList.js:911
-#: scripts/apps/search/directives/ItemList.js:912
+#: scripts/apps/search/directives/ItemList.js:905
+#: scripts/apps/search/directives/ItemList.js:906
 msgid "embargo"
 msgstr "Эмбарго"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:269
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:271
 #: scripts/apps/authoring/views/send-item.html:44
 msgid "Embargo"
 msgstr "Эмбарго"
@@ -2094,8 +2122,8 @@ msgstr "ошибка"
 msgid "Error"
 msgstr "Ошибка"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:185
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:195
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:187
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:197
 msgid "Error creating highlight."
 msgstr "Ошибка при выделении"
 
@@ -2103,12 +2131,12 @@ msgstr "Ошибка при выделении"
 msgid "Error sending as"
 msgstr "Ошибка при отправлении"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:139
-#: scripts/apps/authoring/macros/macros.js:75
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:60
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:62
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:65
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:82
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:141
+#: scripts/apps/authoring/macros/macros.js:74
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:61
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:63
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:66
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:83
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:125
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:127
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:47
@@ -2116,12 +2144,12 @@ msgstr "Ошибка при отправлении"
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:52
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:55
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:74
-#: scripts/apps/content-filters/controllers/ProductionTestController.js:115
-#: scripts/apps/content-filters/controllers/ProductionTestController.js:117
+#: scripts/apps/content-filters/controllers/ProductionTestController.js:111
+#: scripts/apps/content-filters/controllers/ProductionTestController.js:113
 #: scripts/apps/desks/controllers/DeskConfigController.js:46
 #: scripts/apps/desks/directives/DeskeditPeople.js:57
-#: scripts/apps/desks/directives/DeskeditStages.js:186
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:18
+#: scripts/apps/desks/directives/DeskeditStages.js:185
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:20
 #: scripts/apps/ingest/directives/IngestRoutingContent.js:99
 #: scripts/apps/ingest/directives/IngestRulesContent.js:47
 #: scripts/apps/products/controllers/ProductsConfigController.js:123
@@ -2129,18 +2157,18 @@ msgstr "Ошибка при отправлении"
 #: scripts/apps/products/controllers/ProductsConfigController.js:74
 #: scripts/apps/products/controllers/ProductsConfigController.js:76
 #: scripts/apps/products/controllers/ProductsConfigController.js:89
-#: scripts/apps/publish/controllers/PublishQueueController.js:150
+#: scripts/apps/publish/controllers/PublishQueueController.js:158
 #: scripts/apps/publish/directives/SubscribersDirective.js:142
 #: scripts/apps/search-providers/directive.js:39
-#: scripts/apps/templates/directives/TemplatesDirective.js:262
+#: scripts/apps/templates/directives/TemplatesDirective.js:266
 #: scripts/apps/templates/helpers.js:4 scripts/apps/templates/helpers.js:8
 #: scripts/apps/users/controllers/UserDeleteCommand.js:19
 #: scripts/apps/users/controllers/UserDeleteCommand.js:21
 #: scripts/apps/users/controllers/UserEnableCommand.js:15
 #: scripts/apps/users/controllers/UserEnableCommand.js:17
-#: scripts/apps/users/directives/UserEditDirective.js:113
-#: scripts/apps/users/directives/UserRolesDirective.js:60
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:33
+#: scripts/apps/users/directives/UserEditDirective.js:116
+#: scripts/apps/users/directives/UserRolesDirective.js:58
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:35
 msgid "Error:"
 msgstr "Ошибка:"
 
@@ -2152,11 +2180,11 @@ msgstr "Ошибка: провайдер поиска с таким именем
 msgid "Error: Failed to delete product."
 msgstr "Ошибка: не удалось удалить продукт"
 
-#: scripts/apps/content-filters/controllers/ProductionTestController.js:119
+#: scripts/apps/content-filters/controllers/ProductionTestController.js:115
 msgid "Error: Failed to fetch production test results."
 msgstr "Ошибка: не удалось получить результаты теста"
 
-#: scripts/apps/publish/controllers/PublishQueueController.js:153
+#: scripts/apps/publish/controllers/PublishQueueController.js:161
 msgid "Error: Failed to re-schedule"
 msgstr "Ошибка: не удалось изменить дату отложенной публикации"
 
@@ -2164,7 +2192,7 @@ msgstr "Ошибка: не удалось изменить дату отложе
 msgid "Error: Failed to save content filter."
 msgstr "Ошибка: не удалось сохранить фильтр контента"
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:67
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:68
 msgid "Error: Failed to save filter condition."
 msgstr "Ошибка: не удалось сохранить состояние фильтра "
 
@@ -2188,14 +2216,14 @@ msgstr "Ошибка: не удалось проверить фильтр кон
 msgid "Error: Internal error in Filter testing"
 msgstr "Ошибка: внутренняя ошибка при тестировании фильтра"
 
-#: scripts/apps/publish/directives/SubscribersDirective.js:223
+#: scripts/apps/publish/directives/SubscribersDirective.js:225
 msgid ""
 "Error: Please re-assign new format for each destination as the changed "
 "subscriber type has formats which are not supported by existing "
 "destination(s)."
 msgstr "Ошибка: припишите новый формат каждому направлению, у измененного типа подписчика использован неподдерживаемый формат направления (направлений) "
 
-#: scripts/core/itemList/itemList.js:430 scripts/core/itemList/itemList.js:483
+#: scripts/core/itemList/itemList.js:432 scripts/core/itemList/itemList.js:485
 msgid "Error: Slugline required."
 msgstr "Необходимо указать слаглайн"
 
@@ -2207,11 +2235,11 @@ msgstr "Ошибка: подписчик должен указать хотя б
 msgid "Error: Subscriber with Name  already exists."
 msgstr "Ошибка: подписчик с таким именем уже существует"
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:20
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:22
 msgid "Error: The dictionary already exists."
 msgstr "Ошибка: словарь уже существует"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:99
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:101
 msgid "Error: Unable to delete Ingest Source"
 msgstr "Ошибка: невозможно удалить  источник инджеста"
 
@@ -2219,23 +2247,23 @@ msgstr "Ошибка: невозможно удалить  источник ин
 msgid "Error: Unable to delete Search Provider."
 msgstr "Ошибка: невозможно удалить провайдер поиска"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:137
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:139
 msgid "Error: Unique Name is not unique."
 msgstr "Ошибка: уникальное имя не является уникальным"
 
-#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:24
+#: scripts/apps/dictionaries/controllers/DictionaryEditController.js:26
 msgid "Error. Dictionary not saved."
 msgstr "Ошибка: словарь не сохранен"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:491
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:494
 msgid "Error. Item not published."
 msgstr "Ошибка: элемент не опубликован"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:144
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:146
 msgid "Error. Item not updated."
 msgstr "Ошибка: элемент не обновлен"
 
-#: scripts/apps/search/directives/SavedSearches.js:84
+#: scripts/apps/search/directives/SavedSearches.js:85
 msgid "Error. Saved search not deleted."
 msgstr "Ошибка: сохраненный поиск не удален"
 
@@ -2255,7 +2283,7 @@ msgstr "Ошибка: профиль пользователя не может б
 msgid "Error. User Profile cannot be enabled."
 msgstr "Ошибка. Профиль пользователя не может быть включен"
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:36
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:38
 msgid "Error. Vocabulary not saved."
 msgstr "Ошибка: словарь не сохранен "
 
@@ -2270,8 +2298,8 @@ msgstr "Выход"
 
 #: scripts/apps/archive/views/item-preview.html:19
 #: scripts/apps/archive/views/preview.html:86
-#: scripts/apps/search/directives/ItemList.js:1040
-#: scripts/apps/search/directives/ItemList.js:403
+#: scripts/apps/search/directives/ItemList.js:1044
+#: scripts/apps/search/directives/ItemList.js:378
 msgid "expires"
 msgstr "истекает"
 
@@ -2309,7 +2337,7 @@ msgstr "Не удалось привязать как версю:"
 msgid "Failed to generate new take."
 msgstr "Не удалось создать новую версю"
 
-#: scripts/apps/authoring/authoring/services/AuthoringService.js:82
+#: scripts/apps/authoring/authoring/services/AuthoringService.js:80
 msgid "Failed to generate update:"
 msgstr "Не удалось создать обновление:"
 
@@ -2317,15 +2345,15 @@ msgstr "Не удалось создать обновление:"
 msgid "Failed to get a lock on the item!"
 msgstr "Не удалось заблокировать элемент!"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:520
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:523
 msgid "Failed to publish and continue."
 msgstr "Не удалось опубликовать и продолжить"
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:470
+#: scripts/apps/authoring/authoring/directives/SendItem.js:472
 msgid "Failed to send and continue."
 msgstr "Не удалось послать и продолжить"
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:438
+#: scripts/apps/authoring/authoring/directives/SendItem.js:440
 msgid "Failed to send and publish."
 msgstr "Не удалось послать и опубликовать"
 
@@ -2349,11 +2377,11 @@ msgstr "Фичер превью"
 msgid "Featured"
 msgstr "Фичер"
 
-#: scripts/apps/authoring/views/article-edit.html:43
+#: scripts/apps/authoring/views/article-edit.html:56
 msgid "Featured Image"
 msgstr "Основное изображение"
 
-#: scripts/apps/authoring/views/article-edit.html:53
+#: scripts/apps/authoring/views/article-edit.html:66
 msgid "Featured Media"
 msgstr "Основные media"
 
@@ -2373,7 +2401,7 @@ msgstr "Feed веб-адрес"
 msgid "Feeding Service"
 msgstr "Feed услугa"
 
-#: scripts/apps/ingest/index.js:108
+#: scripts/apps/ingest/index.js:109
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:5
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:28
 #: scripts/apps/search/views/multi-action-bar.html:42
@@ -2393,7 +2421,7 @@ msgid "Fetch to"
 msgstr "Отправить на "
 
 #: scripts/apps/authoring/views/send-item.html:13
-#: scripts/apps/ingest/index.js:98
+#: scripts/apps/ingest/index.js:99
 msgid "Fetch To"
 msgstr "Отправить на "
 
@@ -2406,7 +2434,7 @@ msgid "Fetched as"
 msgstr "Получено, как"
 
 #: scripts/apps/archive/views/fetched-desks.html:2
-#: scripts/apps/search/directives/ItemList.js:782
+#: scripts/apps/search/directives/ItemList.js:775
 msgid "fetched in"
 msgstr "Получено в"
 
@@ -2428,6 +2456,10 @@ msgstr "Расширение им. файла "
 msgid "File name/line"
 msgstr "Имя файла/строки"
 
+#: scripts/apps/monitoring/views/monitoring-view.html:94
+msgid "File types"
+msgstr ""
+
 #: scripts/apps/ingest/views/settings/emailConfig.html:36
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:72
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:15
@@ -2435,7 +2467,7 @@ msgstr "Имя файла/строки"
 msgid "Filter"
 msgstr "Фильтр"
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:54
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:55
 msgid "Filter condition saved."
 msgstr "Сохранено состояния фильтра "
 
@@ -2513,10 +2545,11 @@ msgstr "Срочная новость"
 msgid "Focal length"
 msgstr "Фокальная длина"
 
-#: scripts/apps/authoring/views/article-edit.html:234
+#: scripts/apps/authoring/views/article-edit.html:289
+#: scripts/apps/authoring/views/article-edit.html:312
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:27
 msgid "Footer"
-msgstr "Футер"
+msgstr "ССЫЛКА"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:3
 msgid "for \"{{settings.desk.name}}\" Desk"
@@ -2591,13 +2624,13 @@ msgstr "Функция "
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:37
 #: scripts/apps/publish/views/subscribers.html:33
 #: scripts/apps/users/views/edit-form.html:29
-#: scripts/core/keyboard/keyboard.js:383 scripts/core/keyboard/keyboard.js:387
+#: scripts/core/keyboard/keyboard.js:391 scripts/core/keyboard/keyboard.js:398
 msgid "General"
 msgstr "Общий"
 
 #: scripts/apps/archive/views/metadata-view.html:57
 #: scripts/apps/authoring/views/full-preview.html:54
-#: scripts/apps/search/services/SearchService.js:12
+#: scripts/apps/search/services/SearchService.js:32
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:9
 msgid "Genre"
 msgstr "Жанр"
@@ -2610,7 +2643,7 @@ msgstr "ЖАНР"
 msgid "Genres"
 msgstr "Жанры"
 
-#: scripts/apps/ingest/index.js:124
+#: scripts/apps/ingest/index.js:125
 msgid "Get from external source"
 msgstr "Взять из внешнего источника"
 
@@ -2622,12 +2655,12 @@ msgstr "Получить одноразовый пароль"
 msgid "Global Block"
 msgstr "Глобальный блок"
 
-#: scripts/apps/desks/views/desk-config-modal.html:120
-#: scripts/apps/desks/views/desk-config-modal.html:200
+#: scripts/apps/desks/views/desk-config-modal.html:131
+#: scripts/apps/desks/views/desk-config-modal.html:211
 msgid "Global Read"
 msgstr "Глобальные сохраненные результаты поиска"
 
-#: scripts/apps/desks/views/desk-config-modal.html:169
+#: scripts/apps/desks/views/desk-config-modal.html:180
 msgid "Global Read:"
 msgstr "Полный доступ"
 
@@ -2678,11 +2711,11 @@ msgstr "Управление группами"
 msgid "GUID"
 msgstr "GUID"
 
-#: scripts/core/editor2/editor.js:889
+#: scripts/core/editor2/editor.js:898
 msgid "H1"
 msgstr "H1"
 
-#: scripts/core/editor2/editor.js:902
+#: scripts/core/editor2/editor.js:911
 msgid "H2"
 msgstr "H2"
 
@@ -2694,14 +2727,15 @@ msgstr "Половина"
 msgid "Have password? Sign in."
 msgstr "Есть пароль? Войдиите"
 
-#: scripts/core/editor2/editor.js:887
+#: scripts/core/editor2/editor.js:896
 msgid "header type 1"
 msgstr "тип заголовка"
 
-#: scripts/core/editor2/editor.js:900
+#: scripts/core/editor2/editor.js:909
 msgid "header type 2"
 msgstr "тип заголовка 2"
 
+#: scripts/apps/authoring/views/article-edit.html:18
 #: scripts/apps/authoring/views/article-edit.html:2
 #: scripts/apps/content-filters/views/production-test-view.html:20
 #: scripts/apps/legal-archive/views/legal_archive.html:42
@@ -2716,7 +2750,7 @@ msgstr "Заголовок"
 msgid "Help us translate Superdesk"
 msgstr "Помогите нам перевести Superdesk"
 
-#: scripts/apps/authoring/views/article-edit.html:214
+#: scripts/apps/authoring/views/article-edit.html:269
 msgid "Helplines/Contact Information"
 msgstr "Помощь/контактная информация"
 
@@ -2732,8 +2766,8 @@ msgstr "Спрятать отосланные/находящиеся в очер
 msgid "high"
 msgstr "высокий"
 
-#: scripts/apps/monitoring/views/monitoring-view.html:103
-#: scripts/apps/monitoring/views/monitoring-view.html:80
+#: scripts/apps/monitoring/views/monitoring-view.html:105
+#: scripts/apps/monitoring/views/monitoring-view.html:75
 msgid "Highlight Package"
 msgstr "Пакет выделений"
 
@@ -2748,7 +2782,7 @@ msgstr "выделения"
 #: scripts/apps/authoring/views/authoring-topbar.html:163
 #: scripts/apps/highlights/index.js:61
 #: scripts/apps/monitoring/views/item-actions-menu.html:24
-#: scripts/apps/search/directives/ItemList.js:1106
+#: scripts/apps/search/directives/ItemList.js:1110
 #: scripts/apps/templates/services/TemplatesService.js:57
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:17
 msgid "Highlights"
@@ -2793,15 +2827,15 @@ msgstr "час"
 msgid "hrs"
 msgstr "час"
 
-#: scripts/core/editor2/editor.js:932
+#: scripts/core/editor2/editor.js:941
 msgid "I"
-msgstr "Я"
+msgstr "I"
 
 #: scripts/apps/users/directives/UserRolesDirective.js:38
 msgid "I'm sorry but a role with that name already exists."
 msgstr "Роль, названная этим именем, уже существует "
 
-#: scripts/apps/users/directives/UserRolesDirective.js:43
+#: scripts/apps/users/directives/UserRolesDirective.js:42
 msgid "I'm sorry but there was an error when saving the role."
 msgstr "Произошла ошибка при сохранении"
 
@@ -2817,8 +2851,8 @@ msgstr "Произошла ошибка при сохранении"
 msgid "If not set, the UTC+0 time zone is assumed."
 msgstr "Если не установлено время, то используется часовой пояс UTC+0 "
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:30
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:43
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:32
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:45
 msgid "Ignore"
 msgstr "Игнорировать"
 
@@ -2826,7 +2860,7 @@ msgstr "Игнорировать"
 msgid "Ignore word"
 msgstr "Игнорировать слово"
 
-#: scripts/core/upload/crop-directive.js:38
+#: scripts/core/upload/crop-directive.js:39
 msgid ""
 "Image is bigger than {{ maxFileSize }}MB, upload file size may be limited!"
 msgstr "Изображение больше {{ maxFileSize }}MB, загружаемый файл может быть сокращен "
@@ -2835,7 +2869,7 @@ msgstr "Изображение больше {{ maxFileSize }}MB, загружа�
 msgid "Import"
 msgstr "Импортировать"
 
-#: scripts/apps/users/import/import.js:48
+#: scripts/apps/users/import/import.js:49
 msgid "Import user"
 msgstr "Импортировать пользователя"
 
@@ -2889,16 +2923,16 @@ msgstr "неактивный"
 msgid "Inactive"
 msgstr "Неактивный"
 
-#: scripts/apps/desks/views/desk-config-modal.html:230
+#: scripts/apps/desks/views/desk-config-modal.html:241
 msgid "Incoming Rule"
 msgstr "Входящее правило ??"
 
-#: scripts/apps/desks/views/desk-config-modal.html:185
+#: scripts/apps/desks/views/desk-config-modal.html:196
 msgid "Incoming Rule:"
 msgstr "Входящее правило"
 
-#: scripts/apps/desks/views/desk-config-modal.html:166
-#: scripts/apps/desks/views/desk-config-modal.html:212
+#: scripts/apps/desks/views/desk-config-modal.html:177
+#: scripts/apps/desks/views/desk-config-modal.html:223
 msgid "Incoming Stage"
 msgstr "Входящая папка"
 
@@ -2907,20 +2941,20 @@ msgstr "Входящая папка"
 msgid "Indefinite Usage"
 msgstr "Неопределенное пользование"
 
-#: scripts/apps/authoring/metadata/metadata.js:1079
+#: scripts/apps/authoring/metadata/metadata.js:1090
 msgid "Info"
 msgstr "Информация"
 
-#: scripts/apps/ingest/index.js:67 scripts/apps/search/views/item-repo.html:7
+#: scripts/apps/ingest/index.js:68 scripts/apps/search/views/item-repo.html:7
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:75
 msgid "Ingest"
-msgstr "инджест"
+msgstr "Инджест"
 
 #: scripts/core/lang/missing-translations-strings.js:13
 msgid "Ingest Channels"
 msgstr "Каналы инджеста"
 
-#: scripts/apps/ingest/index.js:75
+#: scripts/apps/ingest/index.js:76
 #: scripts/apps/ingest/views/dashboard/dashboard.html:2
 msgid "Ingest Dashboard"
 msgstr "Панель инджеста"
@@ -2951,7 +2985,7 @@ msgstr "Схема доставки инджеста"
 msgid "Ingest Rule sets"
 msgstr "Редактировать правила инджеста"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:93
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:95
 msgid "Ingest Source deleted."
 msgstr "Источник инджеста удален"
 
@@ -2967,7 +3001,7 @@ msgstr "Ingest статистика"
 msgid "ingested"
 msgstr "Ingested"
 
-#: scripts/core/editor2/editor.js:999
+#: scripts/core/editor2/editor.js:1009
 msgid "insert table"
 msgstr "вставить таблицу"
 
@@ -2995,7 +3029,7 @@ msgstr "Будет создан новый шаблон"
 msgid "It will update existing template."
 msgstr "Будет обновлен существующий шаблон"
 
-#: scripts/core/editor2/editor.js:930
+#: scripts/core/editor2/editor.js:939
 msgid "italic"
 msgstr "италик"
 
@@ -3019,7 +3053,7 @@ msgstr "Элемент уничтожен"
 msgid "Item has been resent."
 msgstr "Элемент отправлен"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:387
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:389
 msgid ""
 "Item has changed since it was opened. Please close and reopen the item to "
 "continue. Regrettably, your changes cannot be saved."
@@ -3039,7 +3073,7 @@ msgstr "Элемент уже в пакете"
 msgid "item is associated as a take."
 msgstr "предмет ассоциирован, как верся"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:119
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:124
 msgid "Item locked"
 msgstr "Элемент закрыт для редактирования"
 
@@ -3051,12 +3085,12 @@ msgstr "мета-данные предмета ассоциированы"
 msgid "Item not found..."
 msgstr "Элемент не найден..."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:323
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:325
 msgid "Item published."
 msgstr "Элемент опубликован"
 
-#: scripts/apps/dashboard/workspace-tasks/tasks.js:196
-#: scripts/apps/dashboard/workspace-tasks/tasks.js:260
+#: scripts/apps/dashboard/workspace-tasks/tasks.js:192
+#: scripts/apps/dashboard/workspace-tasks/tasks.js:256
 msgid "Item saved."
 msgstr "Элемент сохранен"
 
@@ -3064,7 +3098,7 @@ msgstr "Элемент сохранен"
 msgid "Item sent to Subscriber"
 msgstr "Элемент отправлен подписчику"
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:525
+#: scripts/apps/authoring/authoring/directives/SendItem.js:527
 #: scripts/apps/authoring/authoring/directives/SendItem.js:605
 msgid "Item sent."
 msgstr "Элемент отправлен"
@@ -3077,11 +3111,11 @@ msgstr "Элемент переведен"
 msgid "Item type stats"
 msgstr "Статиска типа предмета"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:107
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:112
 msgid "Item Unlocked"
 msgstr "Элемент открыт для редактирования"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:130
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:132
 msgid "Item updated."
 msgstr "Элемент обновлен"
 
@@ -3109,7 +3143,7 @@ msgstr "Ключевые слова"
 msgid "Kill"
 msgstr "Удалить"
 
-#: scripts/apps/authoring/authoring/index.js:107
+#: scripts/apps/authoring/authoring/index.js:109
 msgid "Kill item"
 msgstr "Удалить элемент"
 
@@ -3128,6 +3162,7 @@ msgstr "Ярлык:"
 
 #: scripts/apps/archive/views/metadata-view.html:112
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:47
+#: scripts/apps/desks/views/settings.html:53
 #: scripts/apps/templates/views/template-editor-modal.html:100
 #: scripts/apps/users/views/edit-form.html:113
 msgid "Language"
@@ -3210,9 +3245,9 @@ msgstr "На прошлой неделе"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:29
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:76
 #: scripts/apps/authoring/views/authoring-header.html:39
-#: scripts/apps/search/directives/ItemList.js:427
-#: scripts/apps/search/directives/ItemList.js:982
+#: scripts/apps/search/directives/ItemList.js:402
 #: scripts/apps/search/directives/ItemList.js:984
+#: scripts/apps/search/directives/ItemList.js:986
 #: scripts/apps/search/views/search-filters.html:103
 #: scripts/core/itemList/views/item-list-widget.html:73
 #: scripts/core/itemList/views/item-list-widget.html:90
@@ -3232,7 +3267,7 @@ msgstr "Длина"
 msgid "Line: {{ cursor.line }}, Column: {{ cursor.column }}"
 msgstr "Строка: {{ cursor.line }}, абзац: {{ cursor.column }}"
 
-#: scripts/core/editor2/editor.js:939
+#: scripts/core/editor2/editor.js:948
 msgid "link"
 msgstr "ссылка"
 
@@ -3259,7 +3294,7 @@ msgid "loading"
 msgstr "загрузка"
 
 #: scripts/apps/desks/directives/DeskeditPeople.js:10
-#: scripts/apps/desks/directives/DeskeditStages.js:33
+#: scripts/apps/desks/directives/DeskeditStages.js:34
 msgid "loading..."
 msgstr "загрузка..."
 
@@ -3278,15 +3313,15 @@ msgstr "Загрузка..."
 msgid "Local Path"
 msgstr "Локальный путь"
 
-#: scripts/apps/desks/views/desk-config-modal.html:204
+#: scripts/apps/desks/views/desk-config-modal.html:215
 msgid "Local Read Only"
 msgstr "Локальный read only"
 
-#: scripts/apps/desks/views/desk-config-modal.html:173
+#: scripts/apps/desks/views/desk-config-modal.html:184
 msgid "Local Read Only:"
 msgstr "Локальный read only"
 
-#: scripts/apps/desks/views/desk-config-modal.html:123
+#: scripts/apps/desks/views/desk-config-modal.html:134
 msgid "Local Readonly"
 msgstr "Локальный Readonly"
 
@@ -3296,7 +3331,7 @@ msgstr "Локальный Readonly"
 msgid "Located"
 msgstr "Располагается"
 
-#: scripts/apps/search/directives/ItemList.js:359
+#: scripts/apps/search/directives/ItemList.js:335
 msgid "location:"
 msgstr "местонахождение"
 
@@ -3326,8 +3361,8 @@ msgstr "низкий"
 msgid "Macro"
 msgstr "Макро"
 
-#: scripts/apps/authoring/macros/macros.js:190
-#: scripts/apps/desks/views/desk-config-modal.html:297
+#: scripts/apps/authoring/macros/macros.js:189
+#: scripts/apps/desks/views/desk-config-modal.html:308
 msgid "Macros"
 msgstr "Макра"
 
@@ -3384,7 +3419,7 @@ msgid "Mark items for Highlights/Summary Lists"
 msgstr "Пометить элементы/списки "
 
 #: scripts/apps/highlights/views/highlights_title_directive.html:14
-#: scripts/apps/search/directives/ItemList.js:555
+#: scripts/apps/search/directives/ItemList.js:543
 msgid "Marked For"
 msgstr "Помечено для"
 
@@ -3476,7 +3511,7 @@ msgstr "Минимализировать"
 msgid "Minimum"
 msgstr "Минимум"
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:52
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:56
 msgid "Minimum height and width should be greater than or equal to 200"
 msgstr "Минимальная высота и ширина должна равняться или быть больше 200"
 
@@ -3545,11 +3580,11 @@ msgstr "Subservice мониторинга"
 msgid "Move Content to another desk"
 msgstr "Переместить на другой рабочий стол"
 
-#: scripts/apps/desks/views/desk-config-modal.html:239
+#: scripts/apps/desks/views/desk-config-modal.html:250
 msgid "Moved onto stage Rule"
 msgstr "Правило перемещеня в другую папку"
 
-#: scripts/apps/desks/views/desk-config-modal.html:189
+#: scripts/apps/desks/views/desk-config-modal.html:200
 msgid "Moved onto stage Rule:"
 msgstr "Правило перемещеня в другую папку"
 
@@ -3564,7 +3599,7 @@ msgstr "Перемещено"
 msgid "Multiedit"
 msgstr "Мультиэдит"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:44
+#: scripts/core/directives/PasswordStrengthDirective.js:47
 msgid ""
 "Must be {{ MIN_LENGTH }} characters long and contain {{ MIN_STRENGTH }} out "
 "of 4 of the following:<ul><li>a lower case letter (a-z)</li><li>an upper "
@@ -3595,7 +3630,7 @@ msgstr "Мои шаблоны"
 msgid "Name"
 msgstr "Имя"
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:60
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:61
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:50
 #: scripts/apps/products/controllers/ProductsConfigController.js:74
 msgid "Name needs to be unique"
@@ -3622,7 +3657,7 @@ msgid "New Take"
 msgstr "Новая версия"
 
 #: scripts/apps/archive/index.js:220
-#: scripts/apps/authoring/authoring/directives/SendItem.js:465
+#: scripts/apps/authoring/authoring/directives/SendItem.js:467
 msgid "New take created."
 msgstr "Новая версия создана"
 
@@ -3642,7 +3677,7 @@ msgstr "Следующий пользователь"
 
 #: scripts/apps/highlights/views/mark_highlights_dropdown_directive.html:8
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:13
-#: scripts/apps/search/directives/ItemList.js:1281
+#: scripts/apps/search/directives/ItemList.js:1295
 msgid "No available highlights"
 msgstr "Выделения невозможны"
 
@@ -3650,7 +3685,7 @@ msgstr "Выделения невозможны"
 msgid "No available languages"
 msgstr "Нет доступных языков"
 
-#: scripts/apps/search/directives/ItemList.js:1282
+#: scripts/apps/search/directives/ItemList.js:1296
 msgid "No available translations"
 msgstr "Нет доступных переводов"
 
@@ -3662,7 +3697,7 @@ msgstr "Нет часов! "
 msgid "No comments so far."
 msgstr "Пока нет комментариев."
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:291
+#: scripts/apps/templates/directives/TemplatesDirective.js:295
 msgid "No Desk"
 msgstr "Нет рабочего стола"
 
@@ -3674,7 +3709,7 @@ msgstr "Не указано псевдонимов полей"
 msgid "No Filter"
 msgstr "Нет фильтра"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:738
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:741
 msgid "No formatters found for"
 msgstr "Formatters не были найдены"
 
@@ -3710,7 +3745,7 @@ msgstr "Число звонков"
 msgid "No recent templates."
 msgstr "Нет недавних шаблонов"
 
-#: scripts/apps/content-filters/controllers/FilterSearchController.js:109
+#: scripts/apps/content-filters/controllers/FilterSearchController.js:112
 msgid "no results found"
 msgstr "Результатов не найдено "
 
@@ -3786,8 +3821,8 @@ msgstr "Не былo переданo любому абоненту"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:18
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:75
 #: scripts/apps/authoring/views/authoring-header.html:41
-#: scripts/apps/search/directives/ItemList.js:974
 #: scripts/apps/search/directives/ItemList.js:976
+#: scripts/apps/search/directives/ItemList.js:978
 #: scripts/apps/templates/views/template-editor-modal.html:88
 msgid "Not For Publication"
 msgstr "Не для публикации"
@@ -3849,12 +3884,12 @@ msgstr "ОТКЛ"
 msgid "Ok"
 msgstr "Ок"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:107
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:119
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:112
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:124
 #: scripts/apps/authoring/macros/views/macros-replace.html:3
-#: scripts/core/auth/auth.js:160
-#: scripts/core/directives/PasswordStrengthDirective.js:38
-#: scripts/core/services/modalService.js:5
+#: scripts/core/auth/auth.js:161
+#: scripts/core/directives/PasswordStrengthDirective.js:41
+#: scripts/core/services/modalService.js:6
 msgid "OK"
 msgstr "ОК"
 
@@ -3886,7 +3921,7 @@ msgstr "Oops! Неверное имя пользователя или парол
 msgid "Oops! There are no items."
 msgstr "Таких элементов нет"
 
-#: scripts/apps/authoring/authoring/index.js:143
+#: scripts/apps/authoring/authoring/index.js:147
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:142
 msgid "Open"
 msgstr "Открыть"
@@ -3895,15 +3930,8 @@ msgstr "Открыть"
 #: scripts/apps/desks/views/desk-tasks.html:3
 #: scripts/apps/desks/views/desk.html:3
 #: scripts/apps/desks/views/slugline.html:3
-#: scripts/apps/monitoring/views/monitoring-group-header.html:29
-#: scripts/apps/monitoring/views/monitoring-group-header.html:41
-#: scripts/apps/monitoring/views/monitoring-group-header.html:45
 msgid "Open desk content"
 msgstr "Открыть контент рабочего стола"
-
-#: scripts/apps/monitoring/views/monitoring-group-header.html:33
-msgid "Open stage content"
-msgstr "Открыть контент папки"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:18
 msgid "Opened"
@@ -3956,11 +3984,11 @@ msgstr "или Выбрать из компьютера"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:27
 msgid "Order"
-msgstr "Заказать"
+msgstr "Порядок"
 
 #: scripts/apps/archive/views/item-preview.html:24
 #: scripts/apps/archive/views/preview.html:92
-#: scripts/apps/authoring/views/article-edit.html:174
+#: scripts/apps/authoring/views/article-edit.html:218
 #: scripts/apps/authoring/views/change-image.html:116
 #: scripts/apps/authoring/views/change-image.html:23
 msgid "Original"
@@ -3978,11 +4006,11 @@ msgstr "Оригинальный источник"
 msgid "Original Source"
 msgstr "Оригинальный Источник"
 
-#: scripts/apps/desks/views/desk-config-modal.html:248
+#: scripts/apps/desks/views/desk-config-modal.html:259
 msgid "Outgoing Rule"
 msgstr "Правило исходящего"
 
-#: scripts/apps/desks/views/desk-config-modal.html:193
+#: scripts/apps/desks/views/desk-config-modal.html:204
 msgid "Outgoing Rule:"
 msgstr "Правило исходящего"
 
@@ -4028,7 +4056,7 @@ msgid "Packages"
 msgstr "Пекеджы"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:20
-#: scripts/apps/search/directives/ItemList.js:1105
+#: scripts/apps/search/directives/ItemList.js:1109
 msgid "Packaging"
 msgstr "Изготовление пекеджа"
 
@@ -4074,7 +4102,7 @@ msgstr "пароль"
 msgid "Password"
 msgstr "Пароль"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:71
+#: scripts/core/directives/PasswordStrengthDirective.js:74
 msgid "Password is too weak."
 msgstr "Слишком слабый пароль"
 
@@ -4090,7 +4118,7 @@ msgstr "пароль должен быть одинаковым"
 msgid "paste a block"
 msgstr "вставить блок"
 
-#: scripts/core/editor2/editor.js:776
+#: scripts/core/editor2/editor.js:779
 msgid "Paste or type a full link"
 msgstr "Вставить или ввести полную ссылку"
 
@@ -4111,7 +4139,7 @@ msgstr "ожидание"
 msgid "Pending"
 msgstr "Ожидание"
 
-#: scripts/apps/desks/views/desk-config-modal.html:266
+#: scripts/apps/desks/views/desk-config-modal.html:277
 #: scripts/apps/desks/views/settings.html:38
 #: scripts/apps/groups/views/groups-config-modal.html:38
 msgid "People"
@@ -4123,11 +4151,11 @@ msgstr "Разрешение"
 
 #: scripts/apps/dictionaries/views/settings.html:26
 #: scripts/apps/monitoring/config.js:32
-#: scripts/apps/monitoring/controllers/AggregateCtrl.js:403
+#: scripts/apps/monitoring/controllers/AggregateCtrl.js:410
 #: scripts/apps/monitoring/views/aggregate-settings.html:102
 #: scripts/apps/monitoring/views/aggregate-settings.html:126
 #: scripts/apps/monitoring/views/aggregate-settings.html:37
-#: scripts/apps/templates/directives/TemplatesDirective.js:290
+#: scripts/apps/templates/directives/TemplatesDirective.js:294
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:46
 msgid "Personal"
 msgstr "Личное"
@@ -4151,7 +4179,7 @@ msgstr "номер телефона"
 msgid "Phrase"
 msgstr "Фраза"
 
-#: scripts/apps/dashboard/workspace-tasks/tasks.js:388
+#: scripts/apps/dashboard/workspace-tasks/tasks.js:384
 msgid "Pick task"
 msgstr "Выбрать задачу"
 
@@ -4295,9 +4323,9 @@ msgstr "Печать"
 #: scripts/apps/archive/directives/ItemPriority.js:18
 #: scripts/apps/archive/views/metadata-view.html:13
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:12
-#: scripts/apps/search/directives/ItemList.js:123
-#: scripts/apps/search/directives/ItemList.js:132
-#: scripts/apps/search/services/SearchService.js:11
+#: scripts/apps/search/directives/ItemList.js:102
+#: scripts/apps/search/directives/ItemList.js:93
+#: scripts/apps/search/services/SearchService.js:31
 #: scripts/apps/search/views/search-filters.html:87
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:12
 msgid "Priority"
@@ -4305,7 +4333,7 @@ msgstr "Приоритет"
 
 #: scripts/apps/authoring/views/authoring-header.html:139
 msgid "PRIORITY"
-msgstr "ПРИОРИТЕТ"
+msgstr "РЕКОМЕНДАЦИЯ"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:65
 msgid "Private saved searches"
@@ -4320,7 +4348,7 @@ msgstr "Привилегии"
 msgid "Privileges not found."
 msgstr "Привилегий не обнаружено"
 
-#: scripts/apps/users/directives/RolesPrivilegesDirective.js:31
+#: scripts/apps/users/directives/RolesPrivilegesDirective.js:30
 #: scripts/apps/users/directives/UserPrivilegesDirective.js:73
 msgid "Privileges updated."
 msgstr "Привилегии обновлены"
@@ -4416,7 +4444,7 @@ msgstr "Подозрительная тишина от провайдера  {{n
 msgid "Provider Name"
 msgstr "Имя провайдера"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:253
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:256
 msgid "Provider saved!"
 msgstr "Провайдер сохранен"
 
@@ -4455,7 +4483,7 @@ msgid "Publish Queue"
 msgstr "Очередь на публикацию"
 
 #: scripts/apps/archive/views/metadata-view.html:131
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:284
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:286
 #: scripts/apps/authoring/views/send-item.html:56
 msgid "Publish Schedule"
 msgstr "Расписание публикаций"
@@ -4513,7 +4541,7 @@ msgstr "Текст запроса"
 msgid "Queued at"
 msgstr "В очереди с"
 
-#: scripts/core/editor2/editor.js:946
+#: scripts/core/editor2/editor.js:955
 msgid "quote"
 msgstr "цитата"
 
@@ -4521,11 +4549,7 @@ msgstr "цитата"
 msgid "Raw"
 msgstr "Сырье"
 
-#: scripts/apps/monitoring/views/monitoring-view.html:83
-msgid "Re-Arrange Groups"
-msgstr "Переставить Группы"
-
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:29
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:31
 msgid "Re-Open"
 msgstr "Открыть еще раз"
 
@@ -4545,9 +4569,9 @@ msgstr "Тип читателя"
 msgid "Real Life Subservice"
 msgstr "Real life subservice"
 
-#: scripts/apps/monitoring/views/monitoring-view.html:85
-msgid "Rearrange groups"
-msgstr "Переорганизовать группы"
+#: scripts/apps/monitoring/views/monitoring-view.html:118
+msgid "Rearrange Groups"
+msgstr ""
 
 #: scripts/apps/dashboard/views/workspace.html:6
 msgid "Rearrange widgets"
@@ -4562,7 +4586,9 @@ msgstr "Недавно добавленное"
 msgid "Recipients"
 msgstr "Получатели"
 
-#: scripts/apps/monitoring/views/monitoring-group-header.html:54
+#: scripts/apps/monitoring/views/monitoring-group-header.html:24
+#: scripts/apps/monitoring/views/monitoring-group-header.html:45
+#: scripts/apps/monitoring/views/monitoring-group-header.html:60
 #: scripts/apps/monitoring/views/monitoring-view.html:48
 #: scripts/apps/profiling/views/profiling.html:23
 #: scripts/apps/publish/views/publish-queue.html:64
@@ -4592,7 +4618,7 @@ msgstr "Похожие элементы"
 
 #: scripts/apps/desks/views/settings.html:26
 #: scripts/apps/highlights/views/highlights_title_directive.html:21
-#: scripts/apps/ingest/index.js:85
+#: scripts/apps/ingest/index.js:86
 #: scripts/apps/ingest/views/settings/rssConfig.html:75
 #: scripts/apps/search/views/multi-action-bar.html:48
 #: scripts/apps/search/views/search-filters.html:105
@@ -4609,7 +4635,7 @@ msgstr "Похожие элементы"
 msgid "Remove"
 msgstr "Убрать"
 
-#: scripts/apps/search/directives/ItemList.js:542
+#: scripts/apps/search/directives/ItemList.js:530
 msgid "REMOVE"
 msgstr "УДАЛИТЬ"
 
@@ -4641,7 +4667,7 @@ msgstr "Удалить фильтр"
 msgid "Remove Filter Condition"
 msgstr "Удалить состояние фильтра"
 
-#: scripts/core/editor2/editor.js:953
+#: scripts/core/editor2/editor.js:962
 msgid "remove formatting"
 msgstr "Удалить форматирование"
 
@@ -4730,11 +4756,11 @@ msgid "replaced item {{ type }} about {{ subject }}"
 msgstr "заменен элемент {{ type }} на тему {{ subject }} "
 
 #: scripts/apps/workspace/content/views/schema-editor.html:23
-#: scripts/core/ui/ui.js:1312
+#: scripts/core/ui/ui.js:1308
 msgid "Required"
 msgstr "Обязательно"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:400
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:402
 msgid "Required field {{ key }} is missing. ..."
 msgstr "Обязательное поле {{ key }} отсутствует"
 
@@ -4881,7 +4907,7 @@ msgid "Saturday"
 msgstr "Суббота"
 
 #: scripts/apps/archive/views/upload.html:97
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:42
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:44
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-article.html:3
 #: scripts/apps/authoring/views/authoring-topbar.html:93
 #: scripts/apps/authoring/views/change-image.html:10
@@ -4892,15 +4918,15 @@ msgstr "Суббота"
 #: scripts/apps/dashboard/views/workspace.html:10
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:11
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:87
-#: scripts/apps/desks/views/desk-config-modal.html:114
-#: scripts/apps/desks/views/desk-config-modal.html:147
+#: scripts/apps/desks/views/desk-config-modal.html:125
+#: scripts/apps/desks/views/desk-config-modal.html:158
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:119
 #: scripts/apps/highlights/views/highlights_config_modal.html:53
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:99
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:67
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:174
 #: scripts/apps/products/views/products-config-modal.html:58
-#: scripts/apps/publish/views/subscribers.html:151
+#: scripts/apps/publish/views/subscribers.html:157
 #: scripts/apps/search-providers/views/search-provider-config.html:80
 #: scripts/apps/templates/views/create-template.html:44
 #: scripts/apps/templates/views/template-editor-modal.html:189
@@ -4915,8 +4941,8 @@ msgstr "Суббота"
 msgid "Save"
 msgstr "Сохранить"
 
-#: scripts/apps/desks/views/desk-config-modal.html:288
-#: scripts/apps/desks/views/desk-config-modal.html:89
+#: scripts/apps/desks/views/desk-config-modal.html:100
+#: scripts/apps/desks/views/desk-config-modal.html:299
 msgid "Save & Continue"
 msgstr "Сохранить и продолжить"
 
@@ -4924,11 +4950,11 @@ msgstr "Сохранить и продолжить"
 msgid "Save &amp; Continue"
 msgstr "Сохранить &amp; Продолжить"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:56
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:59
 msgid "Save and publish"
 msgstr "Сохранить и опубликовать"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:69
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:73
 msgid "Save and send"
 msgstr "Сохранить и отправить"
 
@@ -4946,10 +4972,10 @@ msgstr "Сохранить как шаблон"
 msgid "Save Changes"
 msgstr "Сохранить изменения"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:28
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:41
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:55
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:68
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:30
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:43
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:58
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:72
 msgid "Save changes?"
 msgstr "Сохранить изменения?"
 
@@ -4969,7 +4995,7 @@ msgstr "Сохранить поиск"
 msgid "Saved"
 msgstr "Сохранено"
 
-#: scripts/apps/search/directives/SavedSearches.js:81
+#: scripts/apps/search/directives/SavedSearches.js:82
 msgid "Saved search removed"
 msgstr "Сохраненный поиск удален"
 
@@ -4977,16 +5003,16 @@ msgstr "Сохраненный поиск удален"
 msgid "Saved Searches"
 msgstr "Сохраненные поиски"
 
-#: scripts/apps/authoring/authoring/index.js:201
+#: scripts/apps/authoring/authoring/index.js:205
 msgid "Saves current item"
 msgstr "Сохраняет текущий элемент "
 
-#: scripts/apps/desks/directives/DeskeditBasic.js:38
+#: scripts/apps/desks/directives/DeskeditBasic.js:39
 #: scripts/apps/desks/directives/DeskeditPeople.js:40
-#: scripts/apps/desks/directives/DeskeditStages.js:100
-#: scripts/apps/groups/directives/GroupeditBasicDirective.js:24
-#: scripts/apps/users/directives/UserEditDirective.js:84
-#: scripts/core/notify/notify.js:54
+#: scripts/apps/desks/directives/DeskeditStages.js:99
+#: scripts/apps/groups/directives/GroupeditBasicDirective.js:26
+#: scripts/apps/users/directives/UserEditDirective.js:87
+#: scripts/core/notify/notify.js:50
 msgid "Saving..."
 msgstr "Идет сохранение..."
 
@@ -5227,7 +5253,7 @@ msgstr "Папка Сервера"
 msgid "Service"
 msgstr "Сервис"
 
-#: scripts/apps/desks/views/desk-config-modal.html:51
+#: scripts/apps/desks/views/desk-config-modal.html:62
 msgid "SERVICE"
 msgstr "СЕРВИС"
 
@@ -5248,7 +5274,7 @@ msgstr "Установить максимальное количество эл�
 msgid "Settings"
 msgstr "Настройки"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:35
+#: scripts/core/directives/PasswordStrengthDirective.js:38
 msgid "Short"
 msgstr "Короткий"
 
@@ -5302,10 +5328,10 @@ msgid "SIGN OUT"
 msgstr "ВЫЙТИ"
 
 #: scripts/apps/archive/views/metadata-view.html:77
-#: scripts/apps/authoring/views/article-edit.html:257
+#: scripts/apps/authoring/views/article-edit.html:328
 #: scripts/apps/users/views/edit-form.html:68
 msgid "Sign-Off"
-msgstr "Выйти"
+msgstr "Подпись"
 
 #: scripts/apps/archive/views/metadata-view.html:45
 msgid "Signal"
@@ -5320,13 +5346,13 @@ msgstr "с"
 msgid "Single Usage"
 msgstr "Единоличное пользовани"
 
-#: scripts/apps/content-filters/controllers/FilterSearchController.js:27
+#: scripts/apps/content-filters/controllers/FilterSearchController.js:30
 msgid "single value is required"
 msgstr "требуется одно значение"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:8
 msgid "Slug"
-msgstr "Слаг"
+msgstr "Tэги"
 
 #: scripts/core/lang/missing-translations-strings.js:27
 msgid "slugline"
@@ -5336,7 +5362,7 @@ msgstr "слаг"
 #: scripts/apps/authoring/views/full-preview.html:25
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:11
 #: scripts/apps/legal-archive/views/legal_archive.html:49
-#: scripts/apps/search/services/SearchService.js:10
+#: scripts/apps/search/services/SearchService.js:30
 #: scripts/apps/search/views/search-parameters.html:134
 #: scripts/apps/search/views/search-parameters.html:6
 msgid "Slugline"
@@ -5359,7 +5385,7 @@ msgstr "Слаг"
 #: scripts/apps/archive/views/preview.html:41
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:77
 #: scripts/apps/authoring/views/authoring-header.html:40
-#: scripts/apps/search/directives/ItemList.js:991
+#: scripts/apps/search/directives/ItemList.js:993
 #: scripts/apps/search/views/search-filters.html:110
 #: scripts/core/itemList/views/item-list-widget.html:74
 #: scripts/core/itemList/views/item-list-widget.html:91
@@ -5367,12 +5393,12 @@ msgstr "Слаг"
 msgid "Sms"
 msgstr "Смс"
 
-#: scripts/apps/authoring/views/article-edit.html:18
+#: scripts/apps/authoring/views/article-edit.html:31
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:25
 msgid "SMS"
 msgstr "СМС"
 
-#: scripts/apps/authoring/views/article-edit.html:25
+#: scripts/apps/authoring/views/article-edit.html:38
 msgid "SMS Message"
 msgstr "СМС сообщение"
 
@@ -5380,7 +5406,7 @@ msgstr "СМС сообщение"
 msgid "sorry, a user with this email already exists"
 msgstr "извините, но юзер с таким мейлом уже существует"
 
-#: scripts/core/upload/crop-directive.js:51
+#: scripts/core/upload/crop-directive.js:52
 msgid "Sorry, but avatar must be at least 200x200 pixels big."
 msgstr "Извините, но аватар должен быть минимум 200x200 пикселей."
 
@@ -5390,7 +5416,7 @@ msgstr "Извините, но аватар должен быть минимум
 msgid "Sorry, but can't reach the server now.<br>Please try again later."
 msgstr "Извините, не можем соединить с сервером на данный момент.<br> Попробуйте позже."
 
-#: scripts/core/upload/image-crop-directive.js:259
+#: scripts/core/upload/image-crop-directive.js:260
 msgid ""
 "Sorry, but image must be at least {{ r.width }}x{{ r.height }}, (it is {{ "
 "img.width }}x{{ img.height }})."
@@ -5426,7 +5452,11 @@ msgstr "извините, этот юзернейм уже занят."
 msgid "Sort:"
 msgstr "Сортировать:"
 
-#: scripts/apps/search/directives/ItemList.js:392
+#: scripts/apps/monitoring/views/monitoring-view.html:110
+msgid "Sorting"
+msgstr ""
+
+#: scripts/apps/search/directives/ItemList.js:367
 #: scripts/core/itemList/views/item-list-widget.html:87
 msgid "source"
 msgstr "источник"
@@ -5511,23 +5541,23 @@ msgstr "папка"
 msgid "Stage"
 msgstr "Папка"
 
-#: scripts/apps/desks/views/desk-config-modal.html:218
+#: scripts/apps/desks/views/desk-config-modal.html:229
 msgid "Stage description"
 msgstr "Описание папки"
 
-#: scripts/apps/desks/views/desk-config-modal.html:177
+#: scripts/apps/desks/views/desk-config-modal.html:188
 msgid "Stage description:"
 msgstr "Описание папки:"
 
-#: scripts/apps/desks/views/desk-config-modal.html:161
+#: scripts/apps/desks/views/desk-config-modal.html:172
 msgid "Stage Details"
 msgstr "Детали Стадии"
 
-#: scripts/apps/desks/directives/DeskeditStages.js:138
+#: scripts/apps/desks/directives/DeskeditStages.js:137
 msgid "Stage has been modified elsewhere. Please reload the desks"
 msgstr "Стадия была изменена кем то другим. Перезагрузите рабочие столы"
 
-#: scripts/apps/desks/views/desk-config-modal.html:154
+#: scripts/apps/desks/views/desk-config-modal.html:165
 msgid "Stage with name"
 msgstr "Стадия с именем"
 
@@ -5535,7 +5565,7 @@ msgstr "Стадия с именем"
 msgid "stage:"
 msgstr "стадия:"
 
-#: scripts/apps/desks/views/desk-config-modal.html:99
+#: scripts/apps/desks/views/desk-config-modal.html:110
 #: scripts/apps/desks/views/settings.html:34
 msgid "Stages"
 msgstr "Стадии"
@@ -5586,11 +5616,11 @@ msgstr "История прикреплена как обновление."
 msgid "Story Text"
 msgstr "Текст Истории"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:61
+#: scripts/core/directives/PasswordStrengthDirective.js:64
 msgid "Strength"
 msgstr "Сила"
 
-#: scripts/core/directives/PasswordStrengthDirective.js:39
+#: scripts/core/directives/PasswordStrengthDirective.js:42
 msgid "Strong"
 msgstr "Сильный"
 
@@ -5601,7 +5631,7 @@ msgstr "Сюжет"
 
 #: scripts/apps/authoring/views/authoring-header.html:204
 msgid "SUBJECT"
-msgstr "СЮЖЕТ"
+msgstr "ТЕМА"
 
 #: scripts/core/lang/missing-translations-strings.js:7
 msgid "Subjects"
@@ -5619,7 +5649,7 @@ msgstr "Подписчик"
 msgid "Subscriber codes"
 msgstr "Коды подписчика"
 
-#: scripts/apps/publish/directives/SubscribersDirective.js:198
+#: scripts/apps/publish/directives/SubscribersDirective.js:200
 msgid "Subscriber could not be initialized!"
 msgstr "Невозможно \tинициализировать подписчика!"
 
@@ -5715,25 +5745,25 @@ msgstr "Ключ Дубликата"
 msgid "TAKEKEY"
 msgstr "НО.ВЕРСИИ"
 
-#: scripts/apps/search/directives/ItemList.js:1014
+#: scripts/apps/search/directives/ItemList.js:1017
 #: scripts/core/itemList/views/relatedItem-list-widget.html:40
 msgid "Takes"
 msgstr "Дубликаты"
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:336
+#: scripts/apps/authoring/authoring/directives/SendItem.js:338
 msgid "Takes cannot be scheduled."
 msgstr "Дубликаты не могут быть запланированы."
 
-#: scripts/apps/authoring/authoring/directives/SendItem.js:341
+#: scripts/apps/authoring/authoring/directives/SendItem.js:343
 msgid "Takes cannot have Embargo."
 msgstr "Дубликаты не могут иметь эмбарго."
 
-#: scripts/apps/monitoring/views/monitoring-view.html:101
-#: scripts/apps/monitoring/views/monitoring-view.html:79
+#: scripts/apps/monitoring/views/monitoring-view.html:103
+#: scripts/apps/monitoring/views/monitoring-view.html:74
 msgid "Takes Package"
 msgstr "Пакет Дубликатов"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:430
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:432
 msgid ""
 "Tansa is not responding. You can continue editing or publish the story."
 msgstr "Танза не отвечает. Вы можете продолжить редактуру или публикацию истории."
@@ -5793,7 +5823,7 @@ msgstr "Имя шаблона"
 msgid "Template Name"
 msgstr "Имя Шаблона"
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:204
+#: scripts/apps/templates/directives/TemplatesDirective.js:208
 msgid "Template saved."
 msgstr "Шаблон сохранён."
 
@@ -5805,7 +5835,7 @@ msgstr "Тип шаблонов"
 msgid "Template Type"
 msgstr "Типы Шаблонов"
 
-#: scripts/apps/templates/index.js:32
+#: scripts/apps/templates/index.js:36
 #: scripts/apps/templates/views/templates.html:3
 msgid "Templates"
 msgstr "Шаблоны"
@@ -5846,7 +5876,7 @@ msgstr "Пароль изменён."
 msgid "The password has been reset."
 msgstr "Пароль изменён."
 
-#: scripts/apps/search/directives/ItemList.js:1708
+#: scripts/apps/search/directives/ItemList.js:1733
 msgid "There are currently no items"
 msgstr "Элементов нет"
 
@@ -5854,28 +5884,28 @@ msgstr "Элементов нет"
 msgid "There are failed uploads."
 msgstr "Некоторые загрузки провалились."
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:191
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:193
 msgid "There are items locked or not published. Do you want to continue?"
 msgstr "Некоторые элементы заблокированы и не опубликованы. Хотите продолжить?"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:53
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:55
 msgid ""
 "There are some unsaved changes, do you want to save and publish it now?"
 msgstr "Остались несохраненные изменения. Хотите сохранить и опубликовать их сейчас?"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:66
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:69
 msgid "There are some unsaved changes, do you want to save and send it now?"
 msgstr "Остались несохраненные изменения. Хотите сохранить и отправить их сейчас?"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:40
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:42
 msgid "There are some unsaved changes, do you want to save it now?"
 msgstr "Остались несохраненные изменения. Хотите сохранить их сейчас?"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:27
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:29
 msgid "There are some unsaved changes, re-open the article to save changes?"
 msgstr "Остались несохраненные изменения. Открыть статью заново чтобы их сохранить?"
 
-#: scripts/core/auth/auth.js:159
+#: scripts/core/auth/auth.js:160
 msgid "There are some unsaved changes. Please save them before signing out."
 msgstr "Остались несохраненные изменения. Сохраните их прежде чем выйти."
 
@@ -5892,7 +5922,7 @@ msgstr "Ошибка. Не получилось сделать апдейт."
 msgid "There is an error. Failed to associated as take."
 msgstr "Ошибка. Не получилось прикрепить копию."
 
-#: scripts/apps/highlights/controllers/HighlightsConfig.js:54
+#: scripts/apps/highlights/controllers/HighlightsConfig.js:57
 msgid "There was a problem while saving highlights configuration"
 msgstr "Возникла проблема при сохранении конфигурации выделения"
 
@@ -5901,7 +5931,7 @@ msgstr "Возникла проблема при сохранении конфи
 msgid "There was a problem with your upload"
 msgstr "Ошибка при загрузке файла."
 
-#: scripts/apps/desks/directives/DeskeditBasic.js:65
+#: scripts/apps/desks/directives/DeskeditBasic.js:66
 msgid "There was a problem, desk not created/updated."
 msgstr "Ошибка, рабочий стол не создан/обновлён."
 
@@ -5926,19 +5956,19 @@ msgstr "Ошибка, члены не сохранены."
 msgid "There was a problem, members not saved. Refresh Desks."
 msgstr "Ошибка, член не сохранён. Обновите папки. "
 
-#: scripts/apps/desks/views/desk-config-modal.html:156
+#: scripts/apps/desks/views/desk-config-modal.html:167
 msgid "There was a problem, stage not created/updated."
 msgstr "Ошибка, папка не создана/обновлена."
 
-#: scripts/apps/desks/directives/DeskeditStages.js:188
+#: scripts/apps/desks/directives/DeskeditStages.js:187
 msgid "There was a problem, stage was not deleted."
 msgstr "Ошибка, папка не удалена."
 
-#: scripts/apps/search/directives/ItemList.js:1308
+#: scripts/apps/search/directives/ItemList.js:1329
 msgid "There was an error archiving this item"
 msgstr "Произошла ошибка при архивировании элемента."
 
-#: scripts/apps/users/directives/UserEditDirective.js:109
+#: scripts/apps/users/directives/UserEditDirective.js:112
 msgid "There was an error when saving the user account."
 msgstr "Произошла ошибка при сохранении пользовательского аккаунта."
 
@@ -5946,15 +5976,15 @@ msgstr "Произошла ошибка при сохранении пользо
 msgid "There was an error. Content filter cannot be deleted."
 msgstr "Ошибка. Фильтр контента не может быть удалён."
 
-#: scripts/apps/authoring/authoring/services/AuthoringService.js:84
+#: scripts/apps/authoring/authoring/services/AuthoringService.js:82
 msgid "There was an error. Failed to generate update."
 msgstr "Ошибка. Не получилось обновить."
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.js:84
+#: scripts/apps/content-filters/controllers/FilterConditionsController.js:85
 msgid "There was an error. Filter condition cannot be deleted."
 msgstr "Ошибка. Вид фильтра не может быть удалён."
 
-#: scripts/apps/users/directives/UserRolesDirective.js:62
+#: scripts/apps/users/directives/UserRolesDirective.js:60
 msgid "There was an error. Role cannot be deleted."
 msgstr "Ошибка. Роль не может быть удалена."
 
@@ -5966,11 +5996,11 @@ msgstr "Ошибка. Схема маршрутизации не может бы
 msgid "There was an error. Rule set cannot be deleted."
 msgstr "Произошла ошибка. Набор правил невозможно удалить. "
 
-#: scripts/apps/templates/directives/TemplatesDirective.js:264
+#: scripts/apps/templates/directives/TemplatesDirective.js:268
 msgid "There was an error. Template cannot be deleted."
 msgstr "Произошла ошибка. Шаблон невозможно удалить. "
 
-#: scripts/core/ui/ui.js:1292
+#: scripts/core/ui/ui.js:1287
 msgid "This field is required"
 msgstr "Обязательное поле не заполнено"
 
@@ -5978,7 +6008,7 @@ msgstr "Обязательное поле не заполнено"
 msgid "This is a corrected repeat."
 msgstr "Это исправленное повторение. "
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:118
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:123
 msgid "This item was locked by <b></b>."
 msgstr "Этот элемент заблокирован <b></b>"
 
@@ -6034,7 +6064,7 @@ msgstr "Нужно сделать "
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:19
 #: scripts/apps/highlights/views/highlights_config_modal.html:40
-#: scripts/core/datetime/absdate-directive.js:15
+#: scripts/core/datetime/absdate-directive.js:16
 #: scripts/core/ui/views/datepicker-wrapper.html:6
 msgid "Today"
 msgstr "Сегодня"
@@ -6047,7 +6077,7 @@ msgstr "Переключить тему"
 msgid "Toggles search view"
 msgstr "Переключить окно поиска"
 
-#: scripts/apps/authoring/widgets/widgets.js:174
+#: scripts/apps/authoring/widgets/widgets.js:177
 msgid "Toggles widget #"
 msgstr "Переключить виджет #"
 
@@ -6130,7 +6160,7 @@ msgstr "Не приписанный к категории"
 msgid "Uncheck all"
 msgstr "Cнять выделение со всех"
 
-#: scripts/core/editor2/editor.js:922
+#: scripts/core/editor2/editor.js:931
 msgid "underline"
 msgstr "подчеркнуть"
 
@@ -6158,7 +6188,7 @@ msgstr "Неизвестная ошибка: не могу убить элеме
 msgid "Unknown Error: Cannot resend the item"
 msgstr "Неизвестная ошибка: не удалось выслать элемент заново"
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:330
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:332
 msgid "Unknown Error: Item not published."
 msgstr "Неизвестная ошибка: Элемент не опубликован."
 
@@ -6176,7 +6206,7 @@ msgstr "Разблокировать"
 msgid "Unlock content"
 msgstr "Разблокировать контент "
 
-#: scripts/apps/authoring/authoring/index.js:199
+#: scripts/apps/authoring/authoring/index.js:203
 msgid "Unlocks current item"
 msgstr "Разблокировать текущий элемент"
 
@@ -6223,11 +6253,11 @@ msgstr "Обновить"
 msgid "UPDATE"
 msgstr "ОБНОВЛЕНИЕ"
 
-#: scripts/apps/search/directives/ItemList.js:922
+#: scripts/apps/search/directives/ItemList.js:921
 msgid "Update {{ seq }}"
 msgstr "Обновление {{ seq }}"
 
-#: scripts/apps/authoring/authoring/services/AuthoringService.js:78
+#: scripts/apps/authoring/authoring/services/AuthoringService.js:76
 msgid "Update Created."
 msgstr "Обновление Создано. "
 
@@ -6239,7 +6269,7 @@ msgstr "Цикл Обновлений:"
 msgid "Update every"
 msgstr "Обновлять каждые"
 
-#: scripts/apps/search/directives/ItemList.js:398
+#: scripts/apps/search/directives/ItemList.js:373
 msgid "updated"
 msgstr "обновлено"
 
@@ -6249,8 +6279,8 @@ msgstr "обновлено"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:78
 #: scripts/apps/authoring/views/authoring-header.html:42
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:7
-#: scripts/apps/search/directives/ItemList.js:938
-#: scripts/apps/search/services/SearchService.js:6
+#: scripts/apps/search/directives/ItemList.js:940
+#: scripts/apps/search/services/SearchService.js:26
 #: scripts/apps/workspace/content/views/profile-settings.html:40
 #: scripts/core/itemList/views/item-list-widget.html:92
 #: scripts/core/itemList/views/relatedItem-list-widget.html:43
@@ -6289,9 +6319,9 @@ msgstr "загруженный медиа-файл {{ name }}"
 #: scripts/apps/archive/views/metadata-view.html:9
 #: scripts/apps/authoring/views/authoring-header.html:168
 #: scripts/apps/legal-archive/services/LegalArchiveService.js:9
-#: scripts/apps/search/directives/ItemList.js:146
-#: scripts/apps/search/directives/ItemList.js:156
-#: scripts/apps/search/services/SearchService.js:8
+#: scripts/apps/search/directives/ItemList.js:116
+#: scripts/apps/search/directives/ItemList.js:128
+#: scripts/apps/search/services/SearchService.js:28
 #: scripts/apps/search/views/search-filters.html:75
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:13
 msgid "Urgency"
@@ -6349,7 +6379,7 @@ msgid "User not found."
 msgstr "Пользователь не найден."
 
 #: scripts/apps/users/directives/UserPreferencesDirective.js:70
-#: scripts/core/services/preferencesService.js:184
+#: scripts/core/services/preferencesService.js:221
 msgid "User preferences could not be saved..."
 msgstr "Настройки пользователя не удалось сохранить... "
 
@@ -6382,7 +6412,7 @@ msgstr "Роль пользователя обновлена."
 msgid "User Roles"
 msgstr "Роли пользователей"
 
-#: scripts/apps/users/directives/UserEditDirective.js:90
+#: scripts/apps/users/directives/UserEditDirective.js:93
 msgid "user saved."
 msgstr "пользователь сохранен."
 
@@ -6394,7 +6424,7 @@ msgstr "Настройки пользователя. "
 msgid "User was not found, sorry."
 msgstr "Извините, пользователь не найден. "
 
-#: scripts/apps/users/directives/UserEditDirective.js:107
+#: scripts/apps/users/directives/UserEditDirective.js:110
 msgid "User was not found. The account might have been deleted."
 msgstr "Пользователь не найден. Профиль мог быть удален."
 
@@ -6499,19 +6529,19 @@ msgid ""
 "values"
 msgstr "словарь обновлён. Перелогиньтесь, чтобы увидеть обновлённый словарь"
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:25
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.js:27
 msgid "Vocabulary saved successfully"
 msgstr "Словарь успешно сохранен"
 
-#: scripts/core/auth/auth.js:160
+#: scripts/core/auth/auth.js:161
 msgid "Warning"
 msgstr "Внимание"
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:106
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:111
 msgid "was unlocked by <b></b>."
 msgstr "был разблокирован <b></b>."
 
-#: scripts/core/directives/PasswordStrengthDirective.js:36
+#: scripts/core/directives/PasswordStrengthDirective.js:39
 msgid "Weak"
 msgstr "Неделя"
 
@@ -6542,27 +6572,27 @@ msgstr[3] "СЛОВА"
 msgid "Word Count"
 msgstr "Количество слов"
 
-#: scripts/apps/authoring/authoring/directives/WordCount.js:10
+#: scripts/apps/authoring/authoring/directives/WordCount.js:11
 msgid "words"
 msgstr "слова"
 
-#: scripts/apps/desks/views/desk-config-modal.html:104
+#: scripts/apps/desks/views/desk-config-modal.html:115
 msgid "Work stages"
 msgstr "Рабочие папки"
 
-#: scripts/apps/desks/views/desk-config-modal.html:164
-#: scripts/apps/desks/views/desk-config-modal.html:208
+#: scripts/apps/desks/views/desk-config-modal.html:175
+#: scripts/apps/desks/views/desk-config-modal.html:219
 msgid "Working Stage"
 msgstr "Рабочая Папка"
 
-#: scripts/apps/search/directives/ItemList.js:360
+#: scripts/apps/search/directives/ItemList.js:336
 msgid "workspace"
 msgstr "рабочее пространство"
 
 #: scripts/apps/archive/index.js:70 scripts/apps/dashboard/index.js:41
 #: scripts/apps/dashboard/views/workspace.html:22
-#: scripts/apps/dashboard/workspace-tasks/tasks.js:379
-#: scripts/apps/ingest/index.js:56 scripts/apps/stream/index.js:15
+#: scripts/apps/dashboard/workspace-tasks/tasks.js:375
+#: scripts/apps/ingest/index.js:57 scripts/apps/stream/index.js:15
 msgid "Workspace"
 msgstr "Рабочее пространство"
 
@@ -6590,8 +6620,8 @@ msgstr "Виджет мирового времени"
 msgid "You don't have the privileges to perform any action"
 msgstr "У вас нет прав на выполнение этих действий"
 
-#: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:95
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:165
+#: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:97
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:167
 msgid "You have unsaved changes, do you want to continue?"
 msgstr "Ваши изменения не сохранены, продолжить? "
 
