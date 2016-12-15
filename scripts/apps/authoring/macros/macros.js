@@ -6,7 +6,7 @@ function MacrosService(api, notify) {
      * @return {*}
      */
     var _getAllMacros = function(criteria = {}, page = 1, macros = []) {
-        return api.query('macros', _.extend({max_results: 200, page: page}, criteria))
+        return api.query('macros', _.extend({max_results: 200, page: page}, criteria), null, true)
             .then((result) => {
                 let all = macros.concat(result._items);
                 let pg = page;
