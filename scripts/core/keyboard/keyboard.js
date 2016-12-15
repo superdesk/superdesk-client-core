@@ -64,7 +64,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
     var stack = [],
         defaultOpt = {
             type: 'keydown',
-            propagate: false,
+            propagate: true,
             inputDisabled: false,
             target: $window.document,
             keyCode: false,
