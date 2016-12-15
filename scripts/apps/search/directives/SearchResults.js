@@ -13,6 +13,12 @@ SearchResults.$inject = [
     'config'
 ];
 
+const HEX_REG_EXP = /[a-f0-9]{24}/;
+
+function isObjectId(value) {
+    return value.length === 24 && HEX_REG_EXP.test(value);
+}
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.search
@@ -301,6 +307,12 @@ export function SearchResults(
                 if (scope.repo.search && scope.repo.search !== 'local') {
                     provider = scope.repo.search;
                 }
+
+                if (isObjectId(provider)) {
+                    criteria.repo = provider;
+                    provider = 'search_providers_proxy';
+                }
+
                 return provider;
             }
 

@@ -1,13 +1,8 @@
 export default function SearchProviderService(providerTypes, $filter, api, allowed) {
     return {
-        getAllowedProviderTypes: function() {
-            return allowed.filterKeys(providerTypes, 'search_providers', 'search_provider');
-        },
-        getSearchProviders: function() {
-            return api.search_providers.query({}).then(
-                (result) => $filter('sortByName')(result._items, 'search_provider')
-            );
-        }
+        getAllowedProviderTypes: () => api.get('search_providers_allowed').then((allowedTypes) => allowedTypes._items),
+        getSearchProviders: () => api.search_providers.query({})
+            .then((result) => $filter('sortByName')(result._items, 'search_provider')),
     };
 }
 
