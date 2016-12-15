@@ -1,7 +1,7 @@
 import * as constant from '../constants';
 
-ContentProfileSchemaEditor.$inject = ['gettext', 'metadata', 'content'];
-export function ContentProfileSchemaEditor(gettext, metadata, content) {
+ContentProfileSchemaEditor.$inject = ['gettext', 'metadata', 'content', 'config'];
+export function ContentProfileSchemaEditor(gettext, metadata, content, config) {
     // labelMap maps schema entry keys to their display names.
     var labelMap = {
         headline: gettext('Headline'),
@@ -51,10 +51,15 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
             model: '=ngModel'
         },
         link: function(scope, elem, attr, form) {
+            // schema & editor active settings
             scope.model.schema = scope.model.schema || {};
             scope.model.editor = scope.model.editor || {};
+
+            // schema & editor fields
             scope.schema = angular.extend({}, content.contentProfileSchema);
             scope.editor = angular.extend({}, content.contentProfileEditor);
+
+            scope.withEditor3 = config.features.editor3;
 
             metadata.initialize().then(() => {
                 scope.options = {subject: metadata.values.subjectcodes};

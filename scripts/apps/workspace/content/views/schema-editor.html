@@ -19,6 +19,10 @@
             <div class="body" ng-if="model.schema[id]">
                 <form>
                     <fieldset class="fieldset-flex">
+                        <div class="field" ng-if="id == 'body_html' && withEditor3">
+                            <label translate>Editor3</label>
+                            <div sd-check ng-model="model.editor[id].editor3"></div>
+                        </div>
                         <div class="field">
                             <label translate>Required</label>
                             <div sd-check ng-model="model.schema[id].required"></div>
