@@ -1,6 +1,21 @@
-SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', 'send', '$q'];
+/**
+ * @ngdoc service
+ * @module superdesk.apps.archive
+ * @name spike
+ *
+ * @requires $location
+ * @requires api
+ * @requires notify
+ * @requires gettext
+ * @requires send
+ * @requires $q
+ * @requires authoringWorkspace
+ *
+ * @description Spike Service is responsible for proving item (single and multiple) spike/un-spike functionality
+ */
 
-export function SpikeService($location, api, notify, gettext, send, $q) {
+SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', 'send', '$q', 'authoringWorkspace'];
+export function SpikeService($location, api, notify, gettext, send, $q, authoringWorkspace) {
     var SPIKE_RESOURCE = 'archive_spike',
         UNSPIKE_RESOURCE = 'archive_unspike';
 
@@ -79,5 +94,19 @@ export function SpikeService($location, api, notify, gettext, send, $q) {
                 unspike(item, config);
             });
         });
+    };
+
+    /**
+     * @ngdoc method
+     * @name spike#canSpike
+     * @public
+     * @description Validates that an item being spiked and an item being authored are NOT the same
+     * @param {Object} item
+     * @returns {Object}
+     */
+    this.canSpike = function(item) {
+        let authoringItem = authoringWorkspace.getItem();
+
+        return !authoringItem || item._id === authoringItem._id;
     };
 }

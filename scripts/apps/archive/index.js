@@ -95,6 +95,10 @@ angular.module('superdesk.apps.archive', [
                 monitor: true,
                 controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q',
                     function spikeActivity(spike, data, $rootScope, modal, $location, $q) {
+                        if (!data.item || !spike.canSpike(data.item)) {
+                            return;
+                        }
+
                         var txt = gettext('Do you want to delete the item permanently?');
                         var isPersonal = $location.path() === '/workspace/personal';
 
@@ -106,11 +110,11 @@ angular.module('superdesk.apps.archive', [
                     }],
                 filters: [{action: 'list', type: 'archive'}],
                 action: 'spike',
-                condition: function(item) {
-                    return item.lock_user === null || angular.isUndefined(item.lock_user);
-                },
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).spike;
+                keyboardShortcut: 'ctrl+k',
+                additionalCondition: ['session', 'authoring', 'item', function(session, authoring, item) {
+                    return authoring.itemActions(item).spike &&
+                        (item.lock_user === null || angular.isUndefined(item.lock_user) ||
+                        item.lock_user === session.identity._id);
                 }]
             })
             .activity('unspike', {
