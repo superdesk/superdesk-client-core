@@ -217,6 +217,22 @@ describe('spellcheck', () => {
         expect(spy).toHaveBeenCalled();
     }));
 
+    it('can cache active dictionaries for a language', inject((spellcheck, dictionaries, $rootScope) => {
+        spellcheck.getDictionary('en');
+        spellcheck.getDictionary('en');
+        expect(dictionaries.getActive.calls.count()).toBe(1);
+        spellcheck.getDictionary('cs');
+        expect(dictionaries.getActive.calls.count()).toBe(2);
+        $rootScope.$broadcast('dictionary:updated', {language: 'en'});
+        spellcheck.getDictionary('en');
+        expect(dictionaries.getActive.calls.count()).toBe(3);
+        spellcheck.getDictionary('cs');
+        expect(dictionaries.getActive.calls.count()).toBe(3);
+        $rootScope.$broadcast('dictionary:created', {language: 'cs'});
+        spellcheck.getDictionary('cs');
+        expect(dictionaries.getActive.calls.count()).toBe(4);
+    }));
+
     function assignErrors(_errors) {
         errors.splice(0, errors.length);
         errors.push(..._errors);
