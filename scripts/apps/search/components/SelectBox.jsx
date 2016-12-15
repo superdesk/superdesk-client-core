@@ -8,6 +8,10 @@ export class SelectBox extends React.Component {
     }
 
     toggle(event) {
+        if (event && (event.ctrlKey || event.shiftKey)) {
+            return false;
+        }
+
         event.stopPropagation();
         if (isCheckAllowed(this.props.item)) {
             var selected = !this.props.item.selected;
