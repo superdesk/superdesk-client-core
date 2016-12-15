@@ -1,5 +1,5 @@
-MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk'];
-export function MultiActionBar(asset, multi, authoringWorkspace, superdesk) {
+MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager'];
+export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager) {
     return {
         controller: 'MultiActionBar',
         controllerAs: 'action',
@@ -61,6 +61,12 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk) {
                 scope.state = typesList.length === 1 ? states[0] : null;
                 scope.activity = activities;
             }
+
+            keyboardManager.bind('ctrl+k', () => {
+                if (scope.activity.spike > 0) {
+                    scope.action.spikeItems();
+                }
+            });
         }
     };
 }

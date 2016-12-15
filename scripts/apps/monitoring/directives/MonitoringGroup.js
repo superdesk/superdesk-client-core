@@ -2,9 +2,9 @@ import _ from 'lodash';
 
 MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
     'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
-    'archiveService', '$rootScope', 'config'];
+    'archiveService', '$rootScope', 'config', 'superdeskFlags'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, config) {
+        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, config, superdeskFlags) {
     var ITEM_HEIGHT = 57;
 
     return {
@@ -90,6 +90,9 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             scope.$on('item:highlight', scheduleQuery);
             scope.$on('content:update', scheduleIfShouldUpdate);
+            scope.$on('item:unselect', () => {
+                scope.selected = null;
+            });
 
             if (scope.group.type === 'search' && search.doesSearchAgainstRepo(scope.group.search, 'ingest')) {
                 scope.$on('ingest:update', (event, data) => {
