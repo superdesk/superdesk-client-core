@@ -43,6 +43,7 @@ export const DEFAULT_LIST_CONFIG = {
         'slugline',
         'highlights',
         'markedDesks',
+        'associations',
         'headline',
         'versioncreated'
     ],
@@ -96,7 +97,8 @@ export const CORE_PROJECTED_FIELDS = {
         'genre',
         'source',
         'last_published_version',
-        'archived'
+        'archived',
+        'associations'
     ]
 };
 

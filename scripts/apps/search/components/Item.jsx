@@ -28,12 +28,12 @@ export class Item extends React.Component {
 
         this.select = this.select.bind(this);
         this.selectTakesPackage = this.selectTakesPackage.bind(this);
-        this.selectUpdate = this.selectUpdate.bind(this);
         this.edit = this.edit.bind(this);
         this.dbClick = this.dbClick.bind(this);
         this.setHoverState = this.setHoverState.bind(this);
         this.unsetHoverState = this.unsetHoverState.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
+        this.openAuthoringView = this.openAuthoringView.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -54,10 +54,14 @@ export class Item extends React.Component {
         this.props.onSelect(this.props.item.takes || this.props.item.archive_item.takes);
     }
 
-    selectUpdate() {
+    /**
+     * Opens the item in authoring in view mode
+     * @param {string} itemId Id of the document
+     */
+    openAuthoringView(itemId) {
         const {authoringWorkspace} = this.props.svc;
 
-        authoringWorkspace.edit({_id: this.props.item.rewritten_by}, 'view');
+        authoringWorkspace.edit({_id: itemId}, 'view');
     }
 
     edit(event) {
@@ -154,7 +158,7 @@ export class Item extends React.Component {
                 React.createElement(ListItemInfo, {
                     item: item,
                     selectTakesPackage: this.selectTakesPackage,
-                    selectUpdate: this.selectUpdate,
+                    openAuthoringView: this.openAuthoringView,
                     desk: this.props.desk,
                     ingestProvider: this.props.ingestProvider,
                     highlightsById: this.props.highlightsById,

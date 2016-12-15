@@ -1,5 +1,21 @@
-ConfirmDirtyService.$inject = ['$window', '$q', '$filter', 'api', 'modal', 'gettextCatalog', '$interpolate'];
-export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCatalog, $interpolate) {
+/**
+ * @ngdoc service
+ * @module superdesk.apps.authoring
+ * @name confirm
+ *
+ * @requires $window
+ * @requires $q
+ * @requires $filter
+ * @requires api
+ * @requires modal
+ * @requires $interpolate
+ * @requires $modal
+ *
+ * @description Confirm Service is responsible for displaying user prompts for content authoring.
+ */
+ConfirmDirtyService.$inject = ['$window', '$q', '$filter', 'api', 'modal', 'gettextCatalog',
+    '$interpolate', '$modal'];
+export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCatalog, $interpolate, $modal) {
     /**
      * Will ask for user confirmation for user confirmation if there are some changes which are not saved.
      * - Detecting changes via $scope.dirty - it's up to the controller to set it.
@@ -126,5 +142,42 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
 
             return modal.confirm(msg, gettextCatalog.getString('Item locked'), gettext('OK'), false);
         });
+    };
+
+    /**
+     * @ngdoc method
+     * @name confirm#confirmFeatureMedia
+     * @public
+     * @returns {promise}
+     * @description Prompts the user to add the associated media to the Update.
+     * @param {Object} item
+     */
+    this.confirmFeatureMedia = function(item) {
+        let defered = $q.defer();
+
+        $modal.open({
+            templateUrl: 'scripts/apps/authoring/views/confirm-media-associated.html',
+            controller: ['$scope', '$modalInstance', function($scope, $modalInstance) {
+                $scope.item = item;
+
+                $scope.useMedia = function() {
+                    defered.resolve($scope.item);
+                    $modalInstance.close();
+                };
+
+                $scope.cancel = function() {
+                    defered.reject(false);
+                    $modalInstance.dismiss();
+                };
+
+                $scope.publishWithoutMedia = function() {
+                    defered.resolve({});
+                    $modalInstance.dismiss();
+                };
+            }]
+        });
+
+
+        return defered.promise;
     };
 }
