@@ -653,7 +653,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
                 return desks.initialize()
                     .then(() => {
                         // get all desks
-                        scope.allDesks = desks.desks;
+                        scope.allDesks = desks.desks._items;
                         // get user desks
                         return desks.fetchCurrentUserDesks();
                     })
