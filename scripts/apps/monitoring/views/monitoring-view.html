@@ -69,10 +69,10 @@
 
             <div class="button-list button-list--padded" ng-if="!elementState || elementState === 'comfort'">
                 <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{fileType | translate}}">
-                    <span ng-if="fileType=='all'" class="toggle-button__text toggle-button__text--all">{{:: 'all' | translate}}</span>
-                    <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="toggle-button__icon filetype-icon-{{fileType}}"></i>
-                    <i ng-if="fileType=='takesPackage'" class="toggle-button__icon filetype-icon-takes-pack" title="{{ :: 'Takes Package' | translate }}"></i>
-                    <i ng-if="fileType=='highlightsPackage'" class="toggle-button__icon filetype-icon-highlight-pack" title="{{ :: 'Highlight Package' | translate }}"></i>
+                    <span ng-if="fileType === 'all'" class="toggle-button__text toggle-button__text--all">{{:: 'all' | translate}}</span>
+                    <i ng-if="fileType !== 'all' && fileType !== 'takesPackage' && fileType !== 'highlightsPackage'" class="toggle-button__icon filetype-icon-{{fileType}}"></i>
+                    <i ng-if="fileType === 'takesPackage'" class="toggle-button__icon filetype-icon-takes-pack" title="{{ :: 'Takes Package' | translate }}"></i>
+                    <i ng-if="fileType === 'highlightsPackage'" class="toggle-button__icon filetype-icon-highlight-pack" title="{{ :: 'Highlight Package' | translate }}"></i>
                 </a>
             </div>
 
@@ -87,7 +87,7 @@
                 <i class="icon-th-list"></i>
             </button>
 
-            <div class="button-stack right-stack">
+            <div class="button-stack right-stack" ng-if="(type !== 'spike' && type !== 'highlights' ) || elementState === 'compact'">
                 <div class="dropdown navbtn strict" dropdown>
                     <button class="dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                     <ul class="dropdown__menu pull-right">
@@ -97,11 +97,11 @@
                             ng-class="{'menu-item--active': aggregate.hasFileType(fileType)}"
                             ng-if="elementState === 'compact'" title="{{fileType | translate}}">
                             <button>
-                                <span ng-if="fileType=='all'"></span>
-                                <i ng-if="fileType!='all' && fileType!='takesPackage' && fileType!='highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
-                                <i ng-if="fileType=='takesPackage'" class="filetype-icon-takes-pack"
+                                <span ng-if="fileType === 'all'"></span>
+                                <i ng-if="fileType !== 'all' && fileType !== 'takesPackage' && fileType !== 'highlightsPackage'" class="filetype-icon-{{fileType}}"></i>
+                                <i ng-if="fileType === 'takesPackage'" class="filetype-icon-takes-pack"
                                 title="{{ :: 'Takes Package' | translate }}"></i>
-                                <i ng-if="fileType=='highlightsPackage'" class="filetype-icon-highlight-pack"
+                                <i ng-if="fileType === 'highlightsPackage'" class="filetype-icon-highlight-pack"
                                 title="{{ :: 'Highlight Package' | translate }}"></i>
                                 &nbsp;<span>{{fileType}}</span>
                             </button>
@@ -111,8 +111,8 @@
                         <li ng-if="elementState === 'compact'">
                             <span sd-item-sortbar></span>
                         </li>
-                        <li ng-if="elementState === 'compact'" class="divider"></li>
-                        <li>
+                        <li ng-if="elementState === 'compact' && type !== 'spike'" class="divider"></li>
+                        <li ng-if="type !== 'spike' && type !== 'highlights'">
                             <button ng-click="aggregate.edit('reorder', true)">
                                 <i class="icon-switches"></i>
                                  &nbsp;<span>{{:: 'Rearrange Groups' | translate}}</span>
