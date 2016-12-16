@@ -1,3 +1,5 @@
+@import '~mixins.scss';
+
 .Editor3-root {
 	background: #fff;
 	border: 1px solid #ddd;
@@ -58,8 +60,26 @@
 }
 
 .Editor3-styleButton {
-	&.inactive {
+	.inactive {
 		color: #ccc;
+	}
+
+	.link-button + .link-editor {
+		a {
+			margin-right: 5px;
+		}
+
+		.icon {
+			font-size: 12px;
+			color: #666;
+		}
+
+		position: fixed;
+		padding: 2px 3px 2px 5px;
+		border: 1px solid #ddd;
+		background: #fafafa;
+		color: #000;
+		font-size: 12px;
 	}
 
 	color: #999;

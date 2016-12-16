@@ -1,5 +1,5 @@
 import React from 'react';
-import {Editor, EditorState, RichUtils} from 'draft-js';
+import {Editor, EditorState, RichUtils, CompositeDecorator} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 import {stateFromHTML} from 'draft-js-import-html';
 import Toolbar from './toolbar';
@@ -24,7 +24,12 @@ export class Editor3 extends React.Component {
 
         const initialContentState = stateFromHTML(props.value);
 
-        this.state = {editorState: EditorState.createWithContent(initialContentState)};
+        this.state = {
+            editorState: EditorState.createWithContent(
+                initialContentState,
+                this.getDecorators()
+            )
+        };
 
         this.readOnly = props.readOnly || false;
         this.showToolbar = props.showToolbar || false;
@@ -36,8 +41,20 @@ export class Editor3 extends React.Component {
 
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.onTab = this.onTab.bind(this);
+        this.getDecorators = this.getDecorators.bind(this);
     }
 
+    /**
+     * @ngdoc method
+     * @name Editor3#getDecorators
+     * @returns {Object} CompositeDecorator
+     * @description Returns the CompositeDecorator that contains the editor's decorators.
+     * It should return an array containing all of the decorators used by sub-components
+     * such as the toolbar, spellcheckers, etc.
+     */
+    getDecorators() {
+        return new CompositeDecorator(Toolbar.getDecorators());
+    }
 
     /** Handle the editor get focus event */
     focus() {

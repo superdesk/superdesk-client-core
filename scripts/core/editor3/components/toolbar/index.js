@@ -3,7 +3,31 @@ import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
 import LinkControl from './LinkControl';
 
+/**
+ * @ngdoc React
+ * @module superdesk.core.editor3
+ * @name Toolbar
+ * @param {Object} editorState the state of the editor
+ * @param {Function} onChange on change function to be called when the editor
+ * state changes
+ * @param {Array} editorFormat options and settings for formatting
+ * @description Holds the editor's toolbar.
+ */
 export default class Toolbar extends Component {
+    /**
+     * @ngdoc method
+     * @name Toolbar#getDecorators
+     * @returns {Array} Array containing the decorators of the toolbar's components.
+     * @static
+     * @description Returns an array of decorators that need to be added to
+     * the editor and are required by the toolbar.
+     */
+    static getDecorators() {
+        return [
+            LinkControl.getDecorator()
+        ];
+    }
+
     render() {
         const {editorState, editorFormat, onChange} = this.props;
 
