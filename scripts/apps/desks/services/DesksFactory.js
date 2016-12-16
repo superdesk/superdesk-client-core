@@ -1,7 +1,17 @@
-DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify', 'session', '$filter'];
-export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter) {
+DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify', 'session', '$filter', '$rootScope'];
+export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter, $rootScope) {
+    let _cache = {};
     var _fetchAll = function(endpoint, parent, page = 1, items = []) {
-        return api.query(endpoint, {max_results: 200, page: page}, parent)
+        let key;
+
+        if (page === 1) {
+            key = angular.toJson({resource: endpoint, parent: parent});
+            if (_cache[key]) {
+                return _cache[key];
+            }
+        }
+
+        let promise = api.query(endpoint, {max_results: 200, page: page}, parent)
             .then((result) => {
                 let pg = page;
                 let extended = items.concat(result._items);
@@ -12,6 +22,12 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
                 }
                 return extended;
             });
+
+        if (page === 1) {
+            _cache[key] = promise;
+        }
+
+        return promise;
     };
 
     /**
@@ -294,10 +310,14 @@ export function DesksFactory($q, api, preferencesService, userList, notify, sess
         }
     };
 
+    $rootScope.$on('desk', reset);
+    $rootScope.$on('stage', reset);
+
     return desksService;
 
     function reset(res) {
         desksService.loading = null;
+        _cache = {};
         return res;
     }
 

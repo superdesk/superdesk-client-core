@@ -342,9 +342,11 @@ function APIProvider() {
          *
          * @param {string} resource
          * @param {Object} query
+         * @param {Object} parent
+         * @param {boolean} cache
          */
-        api.query = function apiQuery(resource, query, parent) {
-            return api(resource, parent).query(query);
+        api.query = function apiQuery(resource, query, parent, cache) {
+            return api(resource, parent).query(query, cache);
         };
 
         function getResourceUrl(resource, item, id) {
