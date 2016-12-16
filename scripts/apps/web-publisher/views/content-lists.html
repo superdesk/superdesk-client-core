@@ -1,6 +1,5 @@
 <div class="split-content">
     <div class="header">
-<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
         <div class="modal-header modal-header--padding-20">
             <h3 class="pull-left" translate>Content Lists</h3>
         </div>
@@ -14,28 +13,11 @@
                 </li>
                 <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.listType === 'manual'}">
                     <a ng-click="webPublisher.changeListFilter('manual')" class="filter-type__link--blue" translate>manual</a>
-=======
-        <div class="modal-header">
-            <h3 class="pull-left" translate>Content Lists</h3>
-        </div>
-
-        <div class="subnav">
-            <ul class="filter-type filter-type--padded rightPadding">
-                <li title="all" class="filter-type__item filter-type__item--active">
-                    <a href="" translate>all</a>
-                </li>
-                <li title="collection" class="filter-type__item">
-                    <a href="" translate>automatic</a>
-                </li>
-                <li title="content" class="filter-type__item">
-                    <a href="" translate>manual</a>
->>>>>>> Added routes management
                 </li>
             </ul>
 
             <div class="subnav__stretch-bar"></div>
 
-<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
             <div class="dropdown navbtn strict" title="{{ :: 'Create' | translate }}" dropdown>
                 <button class="dropdown__toggle sd-create-btn" dropdown__toggle ng-disabled="webPublisher.listAdd"></button>
 
@@ -52,48 +34,20 @@
                             <i class="icon-plus-small icon-round icon-white"></i>{{:: 'Manual list'| translate}}
                         </button>
                     </li>-->
-=======
-            <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
-                <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
-
-                <ul class="dropdown__menu dropdown__menu--scrollable pull-right">
-                    <li><div class="dropdown__menu-label" translate=""><span>Create new item</span></div></li>
-                    <li>
-                        <button ng-click="" >
-                            <i class="icon-plus-small icon-round icon-white"></i> Automatic list
-                        </button>
-                    </li>
-                    <li>
-                        <button ng-click="" >
-                            <i class="icon-plus-small icon-round icon-white"></i> Manual list
-                        </button>
-                    </li>
->>>>>>> Added routes management
                 </ul>
             </div>
         </div>
     </div>
     <div class="content headerMargin">
-<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
         <div class="flex-grid box wrap-items small-1 medium-2 large-3 xlarge-4">
             <div class="flex-item card-box" ng-if="list.type !== 'bucket'" ng-repeat="list in lists | filter: {type: webPublisher.listType} | orderBy: 'id' track by list.id"
                 ng-class="{'active': list.type === 'manual'}">
                 <div class="card-box__header">
                     <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="dropdown" dropdown>
-=======
-
-
-        <div class="flex-grid box wrap-items small-1 medium-2 large-3 xlarge-4">
-
-            <div class="flex-item card-box" ng-repeat="i in [1,2,3]" ng-class="$even ? 'active' : ''">
-                <div class="card-box__header">
-                    <div class="dropdown" dropdown>
->>>>>>> Added routes management
                         <button class="dropdown__toggle" dropdown__toggle>
                             <i class="icon-dots-vertical"></i>
                         </button>
                         <ul class="dropdown__menu more-activity-menu pull-right">
-<<<<<<< 39de28a84078db2675c8374bf6ccddf93d8b71b0
                             <li>
                                 <button ng-click="webPublisher.openListCriteria(list)" title="{{:: 'Edit list'| translate }}">
                                     <i class="icon-pencil"></i>{{:: 'Edit'| translate}}
@@ -168,44 +122,5 @@
     <div class="modal-footer">
           <button class="btn" ng-click="webPublisher.cancelListCardSettings()" translate>Cancel</button>
           <button class="btn btn--primary" ng-click="webPublisher.saveList()" ng-disabled="!settingsForm.$valid" translate>Save</button>
-=======
-                            <li><div class="menu-label" translate>Actions</div></li>
-                            <li class="divider"></li>
-                            <li>
-                                <button ng-click="" title="{{:: 'Edit menu'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button>
-                            </li>
-                            <li>
-                                <button ng-click="" title="{{:: 'Remove menu'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-box__heading" contentEditable>List {{i}} <span ng-show="$even">- manual</span> <span ng-show="$odd">- automatic</span></div>
-                </div>
-
-                <!-- todo: ng-show if listOfItems.length -->
-                <div class="card-box__content" ng-show="i!=3">
-                    <ul class="card-box__content-list card-box__content-list--scrollable">
-                        <li ng-repeat="i in [1,2,3,4,5,6,7,8,9]">
-                            <h4>Article {{i}}</h4>
-                        </li>
-                    </ul>
-                </div>
-                <!-- todo: ng-show if listOfItems.length -->
-                <div class="card-box__footer" ng-show="i!=3">
-                        <span class="text--lighter text--small text--uppercase">Last Modified:</span>
-                        <span class="leftSpace text--small">2 days ago</span>
-                        <span class="pull-right state-label state-published">active</span>
-
-                </div>
-
-                <!-- todo: ng-hide if listOfItems.length -->
-                <div class="card-box__placeholder card-box__placeholder--cursorPointer" ng-hide="i!=3">
-                   Click to add items.
-                </div>
-
-            </div>
-
-        </div>
->>>>>>> Added routes management
     </div>
 </div>
