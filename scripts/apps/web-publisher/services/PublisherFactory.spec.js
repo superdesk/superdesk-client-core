@@ -67,36 +67,6 @@ describe('publisher service', () => {
         spyOn(pubapi, 'query').and.returnValue($q.when([]));
         publisher.queryMenus();
         $rootScope.$digest();
-        expect(pubapi.query).toHaveBeenCalledWith('menus', {limit: 100});
-    }));
-
-    it('can get menu 123', inject((publisher, pubapi, $q, $rootScope) => {
-        spyOn(pubapi, 'get').and.returnValue($q.when({}));
-        publisher.getMenu(123);
-        $rootScope.$digest();
-        expect(pubapi.get).toHaveBeenCalledWith('menus', 123);
-    }));
-
-    it('can create menu', inject((publisher, pubapi, $q, $rootScope) => {
-        let data = {name: 'foo', label: 'bar'};
-
-        spyOn(pubapi, 'save').and.returnValue($q.when({}));
-        publisher.manageMenu(data);
-        $rootScope.$digest();
-        expect(pubapi.save).toHaveBeenCalledWith('menus', data, undefined);
-    }));
-
-    it('can remove menu 123', inject((publisher, pubapi, $q, $rootScope) => {
-        spyOn(pubapi, 'remove').and.returnValue($q.when({}));
-        publisher.removeMenu(123);
-        $rootScope.$digest();
-        expect(pubapi.remove).toHaveBeenCalledWith('menus', 123);
-    }));
-
-    it('can list menus', inject((publisher, pubapi, $q, $rootScope) => {
-        spyOn(pubapi, 'query').and.returnValue($q.when([]));
-        publisher.queryMenus();
-        $rootScope.$digest();
         expect(pubapi.query).toHaveBeenCalledWith('menus');
     }));
 

@@ -7,12 +7,12 @@
         <i ng-class="{'icon-align-justify': route.type == 'collection', 'icon-text': route.type == 'content'}"></i>
     </div>
     <div class="listElement__content">
-        <span ng-class="{'listElement--bold': route.type == 'collection'}">{{route.name}}</span>
+        <strong>{{route.name}}</strong>
     </div>
     <div class="listElement__right">
         <span class="countLabel">123</span>
         <div class="dropdown pull-right" dropdown>
-            <button class="dropdown__toggle dropdown__toggle--with-opacity" dropdown__toggle>
+            <button class="dropdown__toggle" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
             <ul class="dropdown__menu more-activity-menu pull-right">
@@ -23,5 +23,5 @@
     </div>
 </div>
 <ul ng-show="route.children.length && !route.closed">
-    <li ng-repeat="route in route.children | filter: {type: webPublisher.routeType}" ng-include="webPublisher.TEMPLATES_DIR + '/routes-tree.html'"></li>
+    <li ng-repeat="route in route.children" ng-include="webPublisher.TEMPLATES_DIR + '/routes-tree.html'"></li>
 </ul>
