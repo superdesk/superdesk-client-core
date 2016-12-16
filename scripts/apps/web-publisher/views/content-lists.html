@@ -3,17 +3,16 @@
         <div class="modal-header">
             <h3 class="pull-left" translate>Content Lists</h3>
         </div>
-
         <div class="subnav">
             <ul class="filter-type filter-type--padded rightPadding">
-                <li title="all" class="filter-type__item filter-type__item--active">
-                    <a href="" translate>all</a>
+                <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.listType === ''}">
+                    <a ng-click="webPublisher.changeListFilter('')" translate>all</a>
                 </li>
-                <li title="collection" class="filter-type__item">
-                    <a href="" translate>automatic</a>
+                <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.listType === 'automatic'}">
+                    <a ng-click="webPublisher.changeListFilter('automatic')" translate>automatic</a>
                 </li>
-                <li title="content" class="filter-type__item">
-                    <a href="" translate>manual</a>
+                <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.listType === 'manual'}">
+                    <a ng-click="webPublisher.changeListFilter('manual')" translate>manual</a>
                 </li>
             </ul>
 
@@ -23,44 +22,64 @@
                 <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
 
                 <ul class="dropdown__menu dropdown__menu--scrollable pull-right">
-                    <li><div class="dropdown__menu-label" translate=""><span>Create new item</span></div></li>
+                    <li><div class="dropdown__menu-label" translate>Create new item</div></li>
                     <li>
-                        <button ng-click="" >
-                            <i class="icon-plus-small icon-round icon-white"></i> Automatic list
+                        <button ng-disabled="webPublisher.listAdd" ng-click="webPublisher.toogleCreateListCard('automatic')">
+                            <i class="icon-plus-small icon-round icon-white"></i>{{:: 'Automatic list'| translate}}
                         </button>
                     </li>
+                    <!--will be included later
                     <li>
-                        <button ng-click="" >
-                            <i class="icon-plus-small icon-round icon-white"></i> Manual list
+                        <button ng-disabled="webPublisher.listAdd" ng-click="webPublisher.toogleCreateListCard('manual')">
+                            <i class="icon-plus-small icon-round icon-white"></i>{{:: 'Manual list'| translate}}
                         </button>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
         </div>
     </div>
     <div class="content headerMargin">
-
-
         <div class="flex-grid box wrap-items small-1 medium-2 large-3 xlarge-4">
-
-            <div class="flex-item card-box" ng-repeat="i in [1,2,3]" ng-class="$even ? 'active' : ''">
+            <div class="flex-item card-box" ng-repeat="list in lists | filter: {type: webPublisher.listType} | orderBy: 'id' track by list.id"
+                ng-class="{'active': list.type === 'manual'}">
                 <div class="card-box__header">
-                    <div class="dropdown" dropdown>
+                    <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="dropdown" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle>
                             <i class="icon-dots-vertical"></i>
                         </button>
                         <ul class="dropdown__menu more-activity-menu pull-right">
-                            <li><div class="menu-label" translate>Actions</div></li>
-                            <li class="divider"></li>
                             <li>
-                                <button ng-click="" title="{{:: 'Edit menu'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button>
+                                <button ng-click="webPublisher.editList(list)" title="{{:: 'Edit list'| translate }}">
+                                    <i class="icon-pencil"></i>{{:: 'Edit'| translate}}
+                                </button>
                             </li>
                             <li>
-                                <button ng-click="" title="{{:: 'Remove menu'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button>
+                                <button ng-click="webPublisher.editListCardSettings(list)" title="{{:: 'Settings'| translate }}">
+                                    <i class="icon-settings"></i>{{:: 'Settings'| translate}}
+                                </button>
+                            </li>
+                            <li>
+                                <button ng-click="webPublisher.deleteList(list.id)" title="{{:: 'Remove list'| translate }}">
+                                    <i class="icon-trash"></i>{{:: 'Remove'| translate}}
+                                </button>
                             </li>
                         </ul>
                     </div>
-                    <div class="card-box__heading" contentEditable>List {{i}} <span ng-show="$even">- manual</span> <span ng-show="$odd">- automatic</span></div>
+                    <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="dropdown" dropdown>
+                        <button ng-click="webPublisher.deleteList(list.id)">
+                            <i class="icon-close-small"></i>
+                        </button>
+                        <button ng-click="webPublisher.saveList()">
+                            <i class="icon-ok"></i>
+                        </button>
+                    </div>
+                    <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)"
+                        ng-click="webPublisher.editListCard(list)"
+                        class="card-box__heading">{{ list.name }}
+                    </div>
+                    <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="card-box__heading">
+                        <input type="text" ng-model="newList.name" required>
+                    </div>
                 </div>
 
                 <!-- todo: ng-show if listOfItems.length -->
@@ -78,14 +97,36 @@
                         <span class="pull-right state-label state-published">active</span>
 
                 </div>
-
                 <!-- todo: ng-hide if listOfItems.length -->
                 <div class="card-box__placeholder card-box__placeholder--cursorPointer" ng-hide="i!=3">
                    Click to add items.
                 </div>
-
             </div>
-
         </div>
+    </div>
+</div>
+
+<div sd-modal data-model="webPublisher.settingsModal" class="responsive-popup">
+    <div class="modal-header">
+        <a href="" class="close" ng-click="webPublisher.cancelListCardSettings()"><i class="icon-close-small"></i></a>
+        <h3 translate>Settings</h3>
+    </div>
+    <div class="modal-body">
+        <form name="settingsForm">
+            <fieldset>
+                <div class="field">
+                    <label for="listLimit" translate>number of articles limit</label>
+                    <input type="number" id="listLimit" class="line-input" ng-model="newList.limit" min="0">
+                </div>
+                <div class="field">
+                    <label for="listCacheLifeTime" translate>cache lifetime</label>
+                    <input type="number" id="listCacheLifeTime" class="line-input" ng-model="newList.cacheLifeTime" min="0" required>   
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal-footer">
+          <button class="btn" ng-click="webPublisher.cancelListCardSettings()" translate>Cancel</button>
+          <button class="btn btn--primary" ng-click="webPublisher.saveList()" ng-disabled="!settingsForm.$valid" translate>Save</button>
     </div>
 </div>
