@@ -240,16 +240,37 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
                 var nextNode = nodes.item((i + 1) % nodes.length);
 
                 nextNode.classList.add(ACTIVE_CLASS);
-                angular.element('.page-content-container').scrollTop(nextNode.offsetTop);
+                scrollHighlightedNodeToTop();
                 return node;
             }
         }
 
         if (nodes.length) {
             nodes.item(0).classList.add(ACTIVE_CLASS);
-            angular.element('.page-content-container').scrollTop(nodes.item(0).offsetTop);
+            scrollHighlightedNodeToTop();
         }
     };
+
+    function scrollHighlightedNodeToTop() {
+        let containerElem = angular.element('.page-content-container');
+
+        if (containerElem.offset()) {
+            // This offset is to make visible what the top section of the document will hide when scrolled
+            let baseOffset = angular.element('.subnav__button-stack').prop('clientHeight') +
+                angular.element('.authoring-sticky').prop('clientHeight') +
+                angular.element('#top-menu').prop('clientHeight');
+
+            let classList = '.' + FINDREPLACE_CLASS + '.' + ACTIVE_CLASS + '.' + HILITE_CLASS;
+
+            let nodeElem = angular.element(classList);
+
+            if (nodeElem.length > 0) {
+                // All set, scroll to the highlighted element
+                containerElem.scrollTop(nodeElem.offset().top - containerElem.offset().top +
+                    containerElem.scrollTop() - baseOffset);
+            }
+        }
+    }
 
     /**
      * Set previous highlighted node active.
@@ -263,6 +284,7 @@ function EditorService(spellcheck, $q, _, renditionsService, utils) {
             if (node.classList.contains(ACTIVE_CLASS)) {
                 node.classList.remove(ACTIVE_CLASS);
                 nodes.item(i === 0 ? nodes.length - 1 : i - 1).classList.add(ACTIVE_CLASS);
+                scrollHighlightedNodeToTop();
                 return;
             }
         }
