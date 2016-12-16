@@ -143,9 +143,40 @@
                         </div>
                     </tab>
 
-                    <tab heading="{{ :: 'Content API Token' | translate }}" class="TabContent">
-                        <h3 translate>Authentication Token</h3>
-                        <p><small><code>{{ subscriber.content_api_token }}</code></small></p>
+                    <tab heading="{{ :: 'Content API Tokens' | translate }}" class="TabContent">
+                        <div ng-controller="SubscriberTokenCtrl as tokens">
+                            <h3 translate>Authentication Token</h3>
+                            <ul class="pills-list">
+                                <li ng-repeat="token in tokens.tokens track by token._id" class="field">
+                                    <div class="header">
+                                        <h6><code contenteditable="true" spellcheck="false">{{ :: token._id }}</code></h6>
+                                        <small class="badge">{{ :: 'expires:' | translate }} <time sd-datetime data-date="token.expiry"></time></small>
+                                    </div>
+                                    <div class="actions">
+                                        <button ng-click="tokens.revoke(token)" title="{{ :: 'Revoke' | translate }}">
+                                            <i class="icon-trash"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li ng-show="tokens.tokens.length === 0">
+                                    <div class="header">
+                                        <h6 translate>There is no token for subscriber.</h6>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <fieldset ng-show="tokens.tokens.length === 0">
+                                <select class="input-small" ng-model="tokens.ttl" title="{{ :: 'Token expiry' | translate }}">
+                                    <option value="7" translate>1 week</option>
+                                    <option value="14" translate>2 weeks</option>
+                                    <option value="30" translate>1 month</option>
+                                    <option value="180" translate>6 months</option>
+                                    <option value="365" translate>1 year</option>
+                                </select>
+                                <button class="btn" ng-click="tokens.generate(tokens.ttl)"
+                                    translate>Generate token</button>
+                            </fieldset>
+                        </div>
                     </tab>
 
                 </tabset>
