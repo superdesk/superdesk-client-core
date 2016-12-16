@@ -90,6 +90,7 @@ export function PublisherFactory(pubapi) {
         /**
          * @ngdoc method
          * @name publisher#getMenu
+         * @param {String} id - id of menu to get
          * @returns {Promise}
          * @description Get a single menu by id
          */
@@ -100,8 +101,10 @@ export function PublisherFactory(pubapi) {
         /**
          * @ngdoc method
          * @name publisher#manageMenu
+         * @param {Object} menu - menu which is edited
+         * @param {String} id - id of menu which is edited
          * @returns {Promise}
-         * @description Create or update a menu in the system.
+         * @description Create or update a menu
          */
         manageMenu(menu, id) {
             return pubapi.save('menus', menu, id);
@@ -110,6 +113,7 @@ export function PublisherFactory(pubapi) {
         /**
          * @ngdoc method
          * @name publisher#removeMenu
+         * @param {String} id - id of menu which is deleted
          * @returns {Promise}
          * @description Remove a menu in the system.
          */
@@ -124,7 +128,40 @@ export function PublisherFactory(pubapi) {
          * @description List all menus
          */
         queryMenus() {
-            return pubapi.query('menus', {limit: 100});
+            return pubapi.query('menus');
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#manageList
+         * @param {Object} list - list which is edited
+         * @param {String} id - id of list which is edited
+         * @returns {Promise}
+         * @description Create or update a content list
+         */
+        manageList(list, id) {
+            return pubapi.save('content/lists', list, id);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#removeList
+         * @param {String} id - id of list which is deleted
+         * @returns {Promise}
+         * @description Remove a content list
+         */
+        removeList(id) {
+            return pubapi.remove('content/lists', id);
+        }
+
+        /**
+         * @ngdoc method
+         * @name publisher#queryLists
+         * @returns {Promise}
+         * @description List all content lists
+         */
+        queryLists() {
+            return pubapi.query('content/lists');
         }
     }
 

@@ -26,8 +26,8 @@
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
                         translate>Navigation</button>
                 </li>
-                <li ng-class="{active: webPublisher.activeTab === 'contentLists'}">
-                    <button ng-click="webPublisher.changeTab('contentLists')"
+                <li ng-class="{active: webPublisher.activeTab === 'content-lists' || webPublisher.activeTab === 'content-list-automatic'}">
+                    <button ng-click="webPublisher.changeTab('content-lists')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
                         translate>Content Lists</button>
                 </li>
@@ -55,8 +55,11 @@
             <div ng-switch-when="navigation-menu">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/navigation-menu-tree.html'"></div>
             </div>
-            <div ng-switch-when="contentLists">
+            <div ng-switch-when="content-lists">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/content-lists.html'"></div>
+            </div>
+            <div ng-switch-when="content-list-automatic">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/content-list-automatic.html'"></div>
             </div>
         </div>
     </div>
