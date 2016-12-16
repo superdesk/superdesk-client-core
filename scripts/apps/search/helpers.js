@@ -108,6 +108,12 @@ export function renderArea(area, itemProps, props) {
     const listConfig = __SUPERDESK_CONFIG__.list || DEFAULT_LIST_CONFIG;
 
     var specs = listConfig[area] || [];
+
+    // If narrowView configuration is available and also thinRows are active
+    if (listConfig.thinRows && area === 'firstLine' && itemProps.narrow && listConfig.narrowView) {
+        specs = listConfig.narrowView;
+    }
+
     var contents = specs.map((field) => {
         if (fields[field]) {
             return fields[field](itemProps);

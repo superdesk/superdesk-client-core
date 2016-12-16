@@ -51,6 +51,7 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
     function preview(item) {
         self.previewItem = item;
         self.state['with-preview'] = !!item;
+        let sendPreviewEvent = config.list && config.list.thinRows && config.list.narrowView;
 
         if (!_.isNil(self.previewItem)) {
             self.showHistoryTab = self.previewItem.state !== 'ingested';
@@ -58,6 +59,10 @@ export function MonitoringController($rootScope, $location, desks, storage, conf
 
         if (!item) {
             self.selectedGroup = null;
+        }
+
+        if (self.state['with-preview'] && sendPreviewEvent) {
+            $rootScope.$broadcast('item:previewed');
         }
     }
 

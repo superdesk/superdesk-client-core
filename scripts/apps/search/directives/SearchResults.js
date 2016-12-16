@@ -387,9 +387,11 @@ export function SearchResults(
                     }
                 }
 
+                let sendPreviewEvent = config.list && config.list.thinRows && config.list.narrowView;
+
                 if (item) {
                     if (item._type === 'externalsource') {
-                        processPreview(item);
+                        processPreview(item, sendPreviewEvent);
                         return;
                     }
 
@@ -399,13 +401,16 @@ export function SearchResults(
                     api.query(getProvider(previewCriteria), previewCriteria).then((completeItems) => {
                         let completeItem = search.mergeHighlightFields(completeItems._items[0]);
 
-                        processPreview(completeItem);
+                        processPreview(completeItem, sendPreviewEvent);
                     })
                     .finally(() => {
                         scope.loading = false;
                     });
                 } else {
                     delete scope.selected.preview;
+                    if (sendPreviewEvent) {
+                        $rootScope.$broadcast('item:unselect');
+                    }
                 }
             };
 
@@ -416,12 +421,15 @@ export function SearchResults(
              * @param {Object} item
              * @description Sets the preview item
              */
-            function processPreview(item) {
+            function processPreview(item, sendPreviewEvent) {
                 scope.selected.preview = item;
                 scope.shouldRefresh = false; // prevents $routeUpdate to refresh, just on preview changes.
 
                 if (!_.isNil(scope.selected.preview)) {
                     scope.showHistoryTab = scope.selected.preview.state !== 'ingested';
+                    if (sendPreviewEvent) {
+                        $rootScope.$broadcast('item:previewed');
+                    }
                 }
 
                 $location.search('_id', item ? item._id : null);

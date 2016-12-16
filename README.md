@@ -96,6 +96,8 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 
 - `thinRows` - optional configuration flag to have thinner rows for each line in the list.
 
+- `narrowView` - optional narrow view of 'firstLine' when authoring and preview panes are both open. This is active when the thinRows configuration is also active.
+
 ##### Miscellaneous
 
 - `defaultRoute` - sets the route that the app will go to upon logging in (home route).
