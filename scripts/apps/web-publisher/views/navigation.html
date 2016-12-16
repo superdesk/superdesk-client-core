@@ -12,7 +12,7 @@
         <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
             <div class="flex-item card-box" ng-repeat="menu in menus | orderBy: 'id' track by menu.id">
                 <div class="card-box__header">
-                    <div ng-if="!webPublisher._editMode(menu)" class="dropdown" dropdown>
+                    <div ng-if="!webPublisher._editMode(menu, webPublisher.selectedMenu, webPublisher.menuAdd)" class="dropdown" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle>
                             <i class="icon-dots-vertical"></i>
                         </button>
@@ -29,19 +29,19 @@
                             </li>
                         </ul>
                     </div>
-                    <div ng-if="webPublisher._editMode(menu)" class="dropdown" dropdown>
+                    <div ng-if="webPublisher._editMode(menu, webPublisher.selectedMenu, webPublisher.menuAdd)" class="dropdown" dropdown>
                         <span ng-click="webPublisher.deleteMenu(menu.id)">
-                            <i class="icon-trash"></i>
+                            <i class="icon-close-small"></i>
                         </span>
                         <span ng-click="webPublisher.saveMenu(webPublisher._refreshMenus)">
                             <i class="icon-pencil"></i>
                         </span>
                     </div>
-                    <div ng-if="!webPublisher._editMode(menu)"
+                    <div ng-if="!webPublisher._editMode(menu, webPublisher.selectedMenu, webPublisher.menuAdd)"
                         ng-click="webPublisher.editMenuCard(menu)"
                         class="card-box__heading">{{ menu.name }}
                     </div>
-                    <div ng-if="webPublisher._editMode(menu)" class="card-box__heading">
+                    <div ng-if="webPublisher._editMode(menu, webPublisher.selectedMenu, webPublisher.menuAdd)" class="card-box__heading">
                         <input type="text" ng-model="newMenu.name" required>
                     </div>
                 </div>
