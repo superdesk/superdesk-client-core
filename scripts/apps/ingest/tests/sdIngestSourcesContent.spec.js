@@ -7,6 +7,7 @@
 describe('sdIngestSourcesContent directive', () => {
     var scope;
 
+    beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.ingest'));
 
     beforeEach(inject(($compile, $rootScope, $templateCache) => {
@@ -28,7 +29,7 @@ describe('sdIngestSourcesContent directive', () => {
         scope.$digest();
     }));
 
-    it('initializes the list of available field names in scope', () => {
+    fit('initializes the list of available field names in scope', () => {
         expect(scope.contentFields).toEqual([
             'body_text', 'guid', 'published_parsed',
             'summary', 'title', 'updated_parsed'
