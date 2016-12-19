@@ -38,6 +38,16 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
+         * @name WebPublisherManagerController#changeListFilter
+         * @param {String} type - type of content lists
+         * @description Sets type for content lists
+         */
+        changeListFilter(type) {
+            this.listType = type;
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherManagerController#toogleCreateSite
          * @description Opens modal window for creating new site
          */
@@ -86,6 +96,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
                     this.selectedSite = site;
                     publisher.setTenant(site.subdomain);
                     this.changeTab('routes');
+                    this._refreshSites();
                 });
         }
 
@@ -133,6 +144,10 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         saveRoute() {
             let updatedKeys = this._updatedKeys($scope.newRoute, this.selectedRoute);
 
+            // only for updating, parent is received as object but for update id is needed
+            if ($scope.newRoute.parent && $scope.newRoute.parent.id) {
+                $scope.newRoute.parent = $scope.newRoute.parent.id;
+            }
             publisher.manageRoute({route: _.pick($scope.newRoute, updatedKeys)}, this.selectedRoute.id)
                 .then((route) => {
                     this.routePaneOpen = false;
@@ -260,14 +275,105 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
+         * @name WebPublisherManagerController#toogleCreateListCard
+         * @param {String} listType - type of content list
+         * @description Creates a new unsaved content list card
+         */
+        toogleCreateListCard(listType) {
+            this.selectedList = {};
+            $scope.newList = {type: listType, cacheLifeTime: 0};
+            $scope.lists.push($scope.newList);
+            this.listAdd = true;
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#editListCard
+         * @param {Object} list - content list card which is edited
+         * @description Edit content list card
+         */
+        editListCard(list) {
+            this.selectedList = list;
+            $scope.newList = angular.extend({}, list);
+            this.listAdd = true;
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#editListCardSettings
+         * @param {Object} list - list for editing
+         * @description Opens modal window for editing settings
+         */
+        editListCardSettings(list) {
+            this.selectedList = list;
+            $scope.newList = angular.extend({}, list);
+            this.settingsModal = true;
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#cancelListCardSettings
+         * @description Cancels editing settings for list
+         */
+        cancelListCardSettings() {
+            this.selectedList = {};
+            $scope.newList = {};
+            this.settingsModal = false;
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#saveList
+         * @description Creates content list
+         */
+        saveList() {
+            let updatedKeys = this._updatedKeys($scope.newList, this.selectedList);
+
+            publisher.manageList({content_list: _.pick($scope.newList, updatedKeys)}, this.selectedList.id)
+                .then(this._refreshLists.bind(this));
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#deleteList
+         * @param {String} id - id of content list which is deleted
+         * @description Deleting content list
+         */
+        deleteList(id) {
+            modal.confirm(gettext('Please confirm you want to delete list.'))
+                .then(() => {
+                    if (id) {
+                        publisher.removeList(id).then(this._refreshLists.bind(this));
+                    } else {
+                        this.listAdd = false;
+                        $scope.lists.pop();
+                    }
+                });
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#editList
+         * @param {Object} list - list for editing
+         * @description Opens list criteria page
+         */
+        editList(list) {
+            $scope.list = list;
+            this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : '');
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherManagerController#_editMode
          * @private
-         * @param {Object} menu - menu for which to check mode
+         * @param {Object} card - card for which to check mode
+         * @param {Object} selected - selected card(for edit)
+         * @param {Boolean} addFlag - is card added
          * @returns {Boolean}
-         * @description Checking if menu card is in edit mode
+         * @description Checking if card is in edit mode
          */
-        _editMode(menu) {
-            return !menu.id || this.selectedMenu && menu.id === this.selectedMenu.id && this.menuAdd;
+        _editMode(card, selected, addFlag) {
+            return !card.id || selected && card.id === selected.id && addFlag;
         }
 
         /**
@@ -318,6 +424,10 @@ export function WebPublisherManagerController($scope, publisher, modal) {
                 break;
             case 'navigation':
                 this._refreshMenus();
+                break;
+            case 'content-lists':
+                this.changeListFilter('');
+                this._refreshLists();
                 break;
             }
         }
@@ -370,6 +480,21 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.menuPaneOpen = false;
             publisher.queryMenus().then((menus) => {
                 $scope.menus = menus;
+            });
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#_refreshLists
+         * @private
+         * @description Loads list of content lists
+         */
+        _refreshLists() {
+            this.listAdd = false;
+            this.listPaneOpen = false;
+            this.settingsModal = false;
+            publisher.queryLists().then((lists) => {
+                $scope.lists = lists;
             });
         }
     }
