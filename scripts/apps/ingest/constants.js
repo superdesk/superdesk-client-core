@@ -1,12 +1,12 @@
 /**
- * TODO: this can eventually be replaced with a service function to 
+ * TODO: this can eventually be replaced with a service function to
  * dynamically lookup allowed services:
  *
  * see: IngestProvidersService.fetchAllFeedingServicesAllowed()
- * However, we should to decide how to deal with the templateUrl 
+ * However, we should to decide how to deal with the templateUrl
  * and config definitions dynamically before doing this, as I do
  * not think keeping those values in the superdesk-core is
- * appropriate.  
+ * appropriate.
  */
 export const feedingServices = [
     {

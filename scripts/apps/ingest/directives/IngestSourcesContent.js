@@ -77,9 +77,9 @@ export function IngestSourcesContent(ingestSources, feedingServices, gettext, no
                     $scope.routingScheme = $filter('sortByName')(result._items);
                 });
 
-            ingestSources.fetchAllFeedParsersAllowed().then(function(result) {
+            ingestSources.fetchAllFeedParsersAllowed().then((result) => {
                 $scope.feedParsers = result;
-            }); 
+            });
 
             $scope.fetchSourceErrors = function() {
                 if ($scope.provider && $scope.provider.feeding_service) {

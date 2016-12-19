@@ -18,9 +18,10 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
 
     var _getAllFeedParsersAllowed = function(criteria = {}, page = 1, parsers = []) {
         return api.query('feed_parsers_allowed', _.extend({max_results: 200, page: page}, criteria))
-            .then(function(result) {
+            .then((result) => {
                 let pg = page;
                 let merged = parsers.concat(result._items);
+
                 if (result._links.next) {
                     pg++;
                     return _getAllFeedParsersAllowed(criteria, pg, merged);
@@ -33,9 +34,10 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
     // templateUrl and config are available.
     var _getAllFeedingServicesAllowed = function(criteria = {}, page = 1, parsers = []) {
         return api.query('feeding_services_allowed', _.extend({max_results: 200, page: page}, criteria))
-            .then(function(result) {
+            .then((result) => {
                 let pg = page;
                 let merged = parsers.concat(result._items);
+
                 if (result._links.next) {
                     pg++;
                     return _getAllFeedingServicesAllowed(criteria, pg, merged);
