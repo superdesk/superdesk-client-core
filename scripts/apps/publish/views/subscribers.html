@@ -150,7 +150,7 @@
                                 <li ng-repeat="token in tokens.tokens track by token._id" class="field">
                                     <div class="header">
                                         <h6><code contenteditable="true" spellcheck="false">{{ :: token._id }}</code></h6>
-                                        <small class="badge">{{ :: 'expires:' | translate }} <time sd-datetime data-date="token.expiry"></time></small>
+                                        <small class="badge">{{ :: 'expires:' | translate }} <time sd-datetime data-date="token.expiry" data-from-now="true"></time></small>
                                     </div>
                                     <div class="actions">
                                         <button ng-click="tokens.revoke(token)" title="{{ :: 'Revoke' | translate }}">
@@ -165,7 +165,7 @@
                                 </li>
                             </ul>
 
-                            <fieldset ng-show="tokens.tokens.length === 0">
+                            <fieldset ng-show="tokens.tokens.length < 5">
                                 <select class="input-small" ng-model="tokens.ttl" title="{{ :: 'Token expiry' | translate }}">
                                     <option value="7" translate>1 week</option>
                                     <option value="14" translate>2 weeks</option>
