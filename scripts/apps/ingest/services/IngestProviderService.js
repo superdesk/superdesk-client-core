@@ -30,8 +30,6 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
             });
     };
 
-    // TODO: not implemented yet.  should be used when dynamic services with custom
-    // templateUrl and config are available.
     var _getAllFeedingServicesAllowed = function(criteria = {}, page = 1, parsers = []) {
         return api.query('feeding_services_allowed', _.extend({max_results: 200, page: page}, criteria))
             .then((result) => {
