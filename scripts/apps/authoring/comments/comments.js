@@ -90,12 +90,12 @@ function CommentTextDirective($compile) {
 
             var html;
 
-            //replace new lines with paragraphs
+            // replace new lines with paragraphs
             html  = attrs.text.replace(/(?:\r\n|\r|\n)/g, '</p><p>');
 
-            //map user mentions
-            var mentioned_users = html.match(/\@([a-zA-Z0-9-_.]\w+)/g);
-            _.each(mentioned_users, function(token) {
+            // map user mentions
+            var mentionedUsers = html.match(/\@([a-zA-Z0-9-_.\w]+)/g);
+            _.each(mentionedUsers, function(token) {
                 var username = token.substring(1, token.length);
                 if (scope.comment.mentioned_users && scope.comment.mentioned_users[username]) {
                     html = html.replace(token,
