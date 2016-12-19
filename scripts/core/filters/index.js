@@ -198,8 +198,26 @@ export default angular.module('superdesk.core.filters', [])
             _entry[propertyName].toLowerCase()
             : _entry.name.toLowerCase());
     })
+    .filter('sortByLabel', function() {
+        return function(_collection, propertyName = 'label') {
+            return _.sortBy(_collection, function(_entry) {
+                return _entry[propertyName] ? _entry[propertyName].toLowerCase() : _entry.name.toLowerCase();
+            });
+        };
+    })
     .filter('formatFilterCondition', () => function(filterCondition, valueLookup) {
         var labels = [];
+
+            if (filterCondition.field === 'anpa_category' || filterCondition.field === 'subject') {
+                var values = filterCondition.value.split(',');
+                _.each(values, function(value) {
+                    var v = _.find(valueLookup, function(val) {
+                        return val.qcode.toString() === value;
+                    });
+
+                    labels.push(v.name);
+                });
+            }
 
         if (filterCondition.field === 'anpa_category' || filterCondition.field === 'subject') {
             var values = filterCondition.value.split(',');

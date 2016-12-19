@@ -1,18 +1,18 @@
 import * as constant from 'apps/ingest/constants';
 import _ from 'lodash';
 
-IngestSourcesContent.$inject = ['feedingServices', 'feedParsers', 'gettext', 'notify', 'api', '$location',
+IngestSourcesContent.$inject = ['ingestSources', 'feedingServices', 'gettext', 'notify', 'api', '$location',
     'modal', '$filter', 'config'];
-export function IngestSourcesContent(feedingServices, feedParsers, gettext, notify, api, $location,
+export function IngestSourcesContent(ingestSources, feedingServices, gettext, notify, api, $location,
     modal, $filter, config) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
         link: function($scope) {
             $scope.provider = null;
             $scope.origProvider = null;
+            $scope.feedParsers = [];
 
             $scope.feedingServices = $filter('sortByName')(feedingServices, 'label');
-            $scope.feedParsers = $filter('sortByName')(_.concat(feedParsers, config.feedParsers || []));
             $scope.fileTypes = ['text', 'picture', 'graphic', 'composite', 'video', 'audio'];
             $scope.minutes = [0, 1, 2, 3, 4, 5, 8, 10, 15, 30, 45];
             $scope.seconds = [0, 5, 10, 15, 30, 45];
@@ -76,6 +76,10 @@ export function IngestSourcesContent(feedingServices, feedParsers, gettext, noti
                 .then((result) => {
                     $scope.routingScheme = $filter('sortByName')(result._items);
                 });
+
+            ingestSources.fetchAllFeedParsersAllowed().then(function(result) {
+                $scope.feedParsers = result;
+            }); 
 
             $scope.fetchSourceErrors = function() {
                 if ($scope.provider && $scope.provider.feeding_service) {
