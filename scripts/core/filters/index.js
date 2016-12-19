@@ -208,17 +208,6 @@ export default angular.module('superdesk.core.filters', [])
     .filter('formatFilterCondition', () => function(filterCondition, valueLookup) {
         var labels = [];
 
-            if (filterCondition.field === 'anpa_category' || filterCondition.field === 'subject') {
-                var values = filterCondition.value.split(',');
-                _.each(values, function(value) {
-                    var v = _.find(valueLookup, function(val) {
-                        return val.qcode.toString() === value;
-                    });
-
-                    labels.push(v.name);
-                });
-            }
-
         if (filterCondition.field === 'anpa_category' || filterCondition.field === 'subject') {
             var values = filterCondition.value.split(',');
 
