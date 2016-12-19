@@ -1,9 +1,8 @@
 import React from 'react';
-import {Editor, EditorState, RichUtils} from 'draft-js';
+import {Editor, EditorState, RichUtils, CompositeDecorator} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 import {stateFromHTML} from 'draft-js-import-html';
-import BlockStyleControls from './BlockStyleControls';
-import InlineStyleControls from './InlineStyleControls';
+import Toolbar from './toolbar';
 
 /**
  * @ngdoc React
@@ -25,7 +24,12 @@ export class Editor3 extends React.Component {
 
         const initialContentState = stateFromHTML(props.value);
 
-        this.state = {editorState: EditorState.createWithContent(initialContentState)};
+        this.state = {
+            editorState: EditorState.createWithContent(
+                initialContentState,
+                this.getDecorators()
+            )
+        };
 
         this.readOnly = props.readOnly || false;
         this.showToolbar = props.showToolbar || false;
@@ -37,10 +41,20 @@ export class Editor3 extends React.Component {
 
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.onTab = this.onTab.bind(this);
-        this.toggleBlockType = this.toggleBlockType.bind(this);
-        this.toggleInlineStyle = this.toggleInlineStyle.bind(this);
+        this.getDecorators = this.getDecorators.bind(this);
     }
 
+    /**
+     * @ngdoc method
+     * @name Editor3#getDecorators
+     * @returns {Object} CompositeDecorator
+     * @description Returns the CompositeDecorator that contains the editor's decorators.
+     * It should return an array containing all of the decorators used by sub-components
+     * such as the toolbar, spellcheckers, etc.
+     */
+    getDecorators() {
+        return new CompositeDecorator(Toolbar.getDecorators());
+    }
 
     /** Handle the editor get focus event */
     focus() {
@@ -72,26 +86,6 @@ export class Editor3 extends React.Component {
         this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
     }
 
-    /** Handle the toolbar button pressed event */
-    toggleBlockType(blockType) {
-        this.onChange(
-            RichUtils.toggleBlockType(
-                this.state.editorState,
-                blockType
-            )
-        );
-    }
-
-    /** Handle the toolbar button pressed event */
-    toggleInlineStyle(inlineStyle) {
-        this.onChange(
-            RichUtils.toggleInlineStyle(
-                this.state.editorState,
-                inlineStyle
-            )
-        );
-    }
-
     /** Render the editor based on current state */
     render() {
         const {editorState} = this.state;
@@ -109,45 +103,33 @@ export class Editor3 extends React.Component {
             }
         }
 
+        const editor = () =>
+            <Editor
+                editorState={editorState}
+                handleKeyCommand={this.handleKeyCommand}
+                onChange={this.onChange}
+                onTab={this.onTab}
+                readOnly={this.readOnly}
+                ref="editor"
+            />;
+
         if (this.showToolbar) {
             return (
                 <div className="Editor3-root">
-                    <div className="Editor3-controls">
-                        <BlockStyleControls
-                            editorState={editorState}
-                            options={this.editorFormat}
-                            onToggle={this.toggleBlockType}
-                        />
-                        <InlineStyleControls
-                            editorState={editorState}
-                            options={this.editorFormat}
-                            onToggle={this.toggleInlineStyle}
-                        />
-                    </div>
-                    <div className={className} onClick={this.focus}>
-                        <Editor
-                            editorState={editorState}
-                            handleKeyCommand={this.handleKeyCommand}
-                            onChange={this.onChange}
-                            onTab={this.onTab}
-                            readOnly={this.readOnly}
-                            ref="editor"
-                        />
-                    </div>
+                    <Toolbar
+                        editorState={editorState}
+                        editorFormat={this.editorFormat}
+                        onChange={this.onChange}
+                    />
+
+                    <div className={className} onClick={this.focus}>{editor()}</div>
                 </div>
             );
         }
 
         return (
             <div onClick={this.focus} className="Editor3-editor-single-line">
-                <Editor
-                    editorState={editorState}
-                    handleKeyCommand={this.handleKeyCommand}
-                    onChange={this.onChange}
-                    onTab={this.onTab}
-                    readOnly={this.readOnly}
-                    ref="editor"
-                />
+                {editor()}
             </div>
         );
     }
