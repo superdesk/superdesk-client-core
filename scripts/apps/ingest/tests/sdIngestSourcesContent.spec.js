@@ -29,7 +29,7 @@ describe('sdIngestSourcesContent directive', () => {
         scope.$digest();
     }));
 
-    fit('initializes the list of available field names in scope', () => {
+    it('initializes the list of available field names in scope', () => {
         expect(scope.contentFields).toEqual([
             'body_text', 'guid', 'published_parsed',
             'summary', 'title', 'updated_parsed'

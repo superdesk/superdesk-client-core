@@ -26,7 +26,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
                     pg++;
                     return _getAllFeedParsersAllowed(criteria, pg, merged);
                 }
-                return $filter('sortByLabel')(merged);
+                return $filter('sortByName')(merged, 'label');
             });
     };
 
@@ -40,7 +40,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
                     pg++;
                     return _getAllFeedingServicesAllowed(criteria, pg, merged);
                 }
-                return $filter('sortByLabel')(merged);
+                return $filter('sortByName')(merged, 'label');
             });
     };
 

@@ -198,11 +198,6 @@ export default angular.module('superdesk.core.filters', [])
             _entry[propertyName].toLowerCase()
             : _entry.name.toLowerCase());
     })
-    .filter('sortByLabel', () => function(_collection, propertyName = 'label') {
-        return _.sortBy(_collection, (_entry) => _entry[propertyName] ?
-            _entry[propertyName].toLowerCase()
-            : _entry.name.toLowerCase());
-    })
     .filter('formatFilterCondition', () => function(filterCondition, valueLookup) {
         var labels = [];
 
