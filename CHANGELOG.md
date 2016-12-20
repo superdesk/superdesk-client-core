@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.4.7] 2016-12-20
+
+### Fixed
+
+- Fix user profile link to mentioned users for users with `.` in username.
+
 ## [1.4.6] 2016-12-09
 
 ### Fixed
