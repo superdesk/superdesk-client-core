@@ -160,6 +160,18 @@ msgstr ""
 msgid "*comma separated values"
 msgstr ""
 
+#: scripts/apps/publish/views/subscribers.html:172
+msgid "1 month"
+msgstr ""
+
+#: scripts/apps/publish/views/subscribers.html:170
+msgid "1 week"
+msgstr ""
+
+#: scripts/apps/publish/views/subscribers.html:174
+msgid "1 year"
+msgstr ""
+
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "10th update"
 msgstr ""
@@ -208,6 +220,10 @@ msgstr ""
 msgid "2 character limit"
 msgstr ""
 
+#: scripts/apps/publish/views/subscribers.html:171
+msgid "2 weeks"
+msgstr ""
+
 #: scripts/core/lang/missing-translations-strings.js:25
 msgid "20th update"
 msgstr ""
@@ -242,6 +258,10 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:17
 msgid "6 Hours"
+msgstr ""
+
+#: scripts/apps/publish/views/subscribers.html:173
+msgid "6 months"
 msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:23
@@ -314,7 +334,12 @@ msgid "Active"
 msgstr ""
 
 #: scripts/apps/users/views/activity-feed.html:4
+#: scripts/core/lang/missing-translations-strings.js:39
 msgid "Activity Stream"
+msgstr ""
+
+#: scripts/core/lang/missing-translations-strings.js:39
+msgid "Activity stream widget"
 msgstr ""
 
 #: scripts/apps/authoring/metadata/views/metadata-target-publishing.html:6
@@ -642,7 +667,7 @@ msgstr ""
 msgid "Are you sure you want to delete group?"
 msgstr ""
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:90
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:95
 msgid "Are you sure you want to delete Ingest Source?"
 msgstr ""
 
@@ -658,7 +683,7 @@ msgstr ""
 msgid "Are you sure you want to delete saved search?"
 msgstr ""
 
-#: scripts/apps/search-providers/directive.js:66
+#: scripts/apps/search-providers/directive.js:71
 msgid "Are you sure you want to delete Search Provider?"
 msgstr ""
 
@@ -730,7 +755,7 @@ msgstr ""
 msgid "Authentication Info"
 msgstr ""
 
-#: scripts/apps/publish/views/subscribers.html:147
+#: scripts/apps/publish/views/subscribers.html:148
 msgid "Authentication Token"
 msgstr ""
 
@@ -763,7 +788,7 @@ msgstr ""
 msgid "Available clock"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:924
+#: scripts/core/editor2/editor.js:982
 msgid "B"
 msgstr ""
 
@@ -826,7 +851,7 @@ msgstr ""
 msgid "Body HTML"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:922
+#: scripts/core/editor2/editor.js:980
 msgid "bold"
 msgstr ""
 
@@ -909,8 +934,8 @@ msgstr ""
 #: scripts/apps/products/views/products-config-modal.html:57
 #: scripts/apps/publish/views/publish-queue.html:122
 #: scripts/apps/publish/views/publish-queue.html:78
-#: scripts/apps/publish/views/subscribers.html:156
-#: scripts/apps/search-providers/views/search-provider-config.html:79
+#: scripts/apps/publish/views/subscribers.html:187
+#: scripts/apps/search-providers/views/search-provider-config.html:80
 #: scripts/apps/search/views/item-globalsearch.html:20
 #: scripts/apps/search/views/save-search.html:28
 #: scripts/apps/templates/views/create-template.html:41
@@ -1159,7 +1184,7 @@ msgid "Content"
 msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:146
-msgid "Content API Token"
+msgid "Content API Tokens"
 msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:235
@@ -1234,7 +1259,7 @@ msgstr ""
 msgid "Copied to"
 msgstr ""
 
-#: scripts/apps/archive/index.js:172
+#: scripts/apps/archive/index.js:177
 msgid "Copy"
 msgstr ""
 
@@ -1290,7 +1315,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: scripts/apps/archive/index.js:150
+#: scripts/apps/archive/index.js:155
 msgid "Create Broadcast"
 msgstr ""
 
@@ -1480,7 +1505,7 @@ msgid "default"
 msgstr ""
 
 #: scripts/apps/users/views/settings-roles.html:43
-#: scripts/apps/workspace/content/views/schema-editor.html:28
+#: scripts/apps/workspace/content/views/schema-editor.html:32
 msgid "Default"
 msgstr ""
 
@@ -1496,7 +1521,7 @@ msgstr ""
 msgid "default template"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:46
+#: scripts/apps/workspace/content/views/schema-editor.html:50
 msgid "Default value"
 msgstr ""
 
@@ -1560,7 +1585,7 @@ msgstr ""
 msgid "Desk description"
 msgstr ""
 
-#: scripts/apps/desks/services/DesksFactory.js:299
+#: scripts/apps/desks/services/DesksFactory.js:326
 msgid "Desk has been modified elsewhere. Please reload the desks."
 msgstr ""
 
@@ -1580,7 +1605,7 @@ msgstr ""
 msgid "Desk name"
 msgstr ""
 
-#: scripts/apps/archive/index.js:213
+#: scripts/apps/archive/index.js:219
 msgid "Desk not specified. Please select Desk or configure a default desk."
 msgstr ""
 
@@ -1714,6 +1739,10 @@ msgstr ""
 msgid "Display similar"
 msgstr ""
 
+#: scripts/core/lang/missing-translations-strings.js:40
+msgid "Displaying news ingest statistics. You have ability to switch color themes or graph sources."
+msgstr ""
+
 #: scripts/core/itemList/views/item-list-widget.html:16
 msgid "Displaying similar items"
 msgstr ""
@@ -1727,7 +1756,7 @@ msgstr ""
 msgid "Do some admin chores"
 msgstr ""
 
-#: scripts/apps/archive/index.js:98
+#: scripts/apps/archive/index.js:102
 msgid "Do you want to delete the item permanently?"
 msgstr ""
 
@@ -1793,7 +1822,7 @@ msgstr ""
 msgid "Due time"
 msgstr ""
 
-#: scripts/apps/archive/index.js:135
+#: scripts/apps/archive/index.js:137
 msgid "Duplicate"
 msgstr ""
 
@@ -1990,6 +2019,10 @@ msgstr ""
 msgid "Editor's Choice"
 msgstr ""
 
+#: scripts/apps/workspace/content/views/schema-editor.html:23
+msgid "Editor3"
+msgstr ""
+
 #: scripts/apps/archive/views/metadata-view.html:65
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:16
 msgid "Editorial Note"
@@ -2036,8 +2069,8 @@ msgstr ""
 msgid "embargo"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:271
-#: scripts/apps/authoring/views/send-item.html:44
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:274
+#: scripts/apps/authoring/views/send-item.html:43
 msgid "Embargo"
 msgstr ""
 
@@ -2125,11 +2158,11 @@ msgstr ""
 #: scripts/apps/products/controllers/ProductsConfigController.js:71
 #: scripts/apps/products/controllers/ProductsConfigController.js:74
 #: scripts/apps/products/controllers/ProductsConfigController.js:76
-#: scripts/apps/products/controllers/ProductsConfigController.js:89
-#: scripts/apps/publish/controllers/PublishQueueController.js:158
-#: scripts/apps/publish/directives/SubscribersDirective.js:142
-#: scripts/apps/search-providers/directive.js:39
-#: scripts/apps/templates/directives/TemplatesDirective.js:266
+#: scripts/apps/products/controllers/ProductsConfigController.js:90
+#: scripts/apps/publish/controllers/PublishQueueController.js:163
+#: scripts/apps/publish/directives/SubscribersDirective.js:140
+#: scripts/apps/search-providers/directive.js:43
+#: scripts/apps/templates/directives/TemplatesDirective.js:265
 #: scripts/apps/templates/helpers.js:4
 #: scripts/apps/templates/helpers.js:8
 #: scripts/apps/users/controllers/UserDeleteCommand.js:19
@@ -2142,7 +2175,7 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
-#: scripts/apps/search-providers/directive.js:42
+#: scripts/apps/search-providers/directive.js:46
 msgid "Error: A Search Provider with type  already exists."
 msgstr ""
 
@@ -2166,7 +2199,7 @@ msgstr ""
 msgid "Error: Failed to save filter condition."
 msgstr ""
 
-#: scripts/apps/search-providers/directive.js:46
+#: scripts/apps/search-providers/directive.js:50
 msgid "Error: Failed to save Search Provider."
 msgstr ""
 
@@ -2207,11 +2240,11 @@ msgstr ""
 msgid "Error: The dictionary already exists."
 msgstr ""
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:101
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:106
 msgid "Error: Unable to delete Ingest Source"
 msgstr ""
 
-#: scripts/apps/search-providers/directive.js:77
+#: scripts/apps/search-providers/directive.js:82
 msgid "Error: Unable to delete Search Provider."
 msgstr ""
 
@@ -2271,6 +2304,10 @@ msgstr ""
 msgid "expires"
 msgstr ""
 
+#: scripts/apps/publish/views/subscribers.html:153
+msgid "expires:"
+msgstr ""
+
 #: scripts/apps/archive/views/metadata-view.html:96
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:92
 msgid "Expiry"
@@ -2301,7 +2338,7 @@ msgstr ""
 msgid "Failed to associated as take:"
 msgstr ""
 
-#: scripts/apps/archive/index.js:225
+#: scripts/apps/archive/index.js:231
 msgid "Failed to generate new take."
 msgstr ""
 
@@ -2369,14 +2406,14 @@ msgstr ""
 msgid "Feeding Service"
 msgstr ""
 
-#: scripts/apps/ingest/index.js:109
-#: scripts/apps/ingest/views/settings/ingest-routing-action.html:5
-#: scripts/apps/ingest/views/settings/ingest-routing-general.html:28
+#: scripts/apps/ingest/index.js:108
+#: scripts/apps/ingest/views/settings/ingest-routing-action.html:2
+#: scripts/apps/ingest/views/settings/ingest-routing-general.html:23
 #: scripts/apps/search/views/multi-action-bar.html:42
 msgid "Fetch"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:84
+#: scripts/apps/authoring/views/send-item.html:83
 msgid "fetch and open"
 msgstr ""
 
@@ -2389,7 +2426,7 @@ msgid "Fetch to"
 msgstr ""
 
 #: scripts/apps/authoring/views/send-item.html:13
-#: scripts/apps/ingest/index.js:99
+#: scripts/apps/ingest/index.js:98
 msgid "Fetch To"
 msgstr ""
 
@@ -2536,7 +2573,7 @@ msgstr ""
 msgid "Format"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:89
+#: scripts/apps/workspace/content/views/schema-editor.html:93
 msgid "Format options"
 msgstr ""
 
@@ -2570,7 +2607,7 @@ msgstr ""
 msgid "FTP Server URL"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:83
+#: scripts/apps/workspace/content/views/schema-editor.html:87
 msgid "Full"
 msgstr ""
 
@@ -2597,6 +2634,10 @@ msgstr ""
 msgid "General"
 msgstr ""
 
+#: scripts/apps/publish/views/subscribers.html:176
+msgid "Generate token"
+msgstr ""
+
 #: scripts/apps/archive/views/metadata-view.html:57
 #: scripts/apps/authoring/views/full-preview.html:54
 #: scripts/apps/search/services/SearchService.js:32
@@ -2612,7 +2653,7 @@ msgstr ""
 msgid "Genres"
 msgstr ""
 
-#: scripts/apps/ingest/index.js:125
+#: scripts/apps/ingest/index.js:124
 msgid "Get from external source"
 msgstr ""
 
@@ -2680,15 +2721,15 @@ msgstr ""
 msgid "GUID"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:898
+#: scripts/core/editor2/editor.js:958
 msgid "H1"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:911
+#: scripts/core/editor2/editor.js:970
 msgid "H2"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:84
+#: scripts/apps/workspace/content/views/schema-editor.html:88
 msgid "Half"
 msgstr ""
 
@@ -2696,11 +2737,11 @@ msgstr ""
 msgid "Have password? Sign in."
 msgstr ""
 
-#: scripts/core/editor2/editor.js:896
+#: scripts/core/editor2/editor.js:956
 msgid "header type 1"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:909
+#: scripts/core/editor2/editor.js:968
 msgid "header type 2"
 msgstr ""
 
@@ -2796,7 +2837,7 @@ msgstr ""
 msgid "hrs"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:941
+#: scripts/core/editor2/editor.js:997
 msgid "I"
 msgstr ""
 
@@ -2913,7 +2954,7 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
-#: scripts/apps/ingest/index.js:68
+#: scripts/apps/ingest/index.js:67
 #: scripts/apps/search/views/item-repo.html:7
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:75
 msgid "Ingest"
@@ -2923,7 +2964,7 @@ msgstr ""
 msgid "Ingest Channels"
 msgstr ""
 
-#: scripts/apps/ingest/index.js:76
+#: scripts/apps/ingest/index.js:75
 #: scripts/apps/ingest/views/dashboard/dashboard.html:2
 msgid "Ingest Dashboard"
 msgstr ""
@@ -2954,7 +2995,7 @@ msgstr ""
 msgid "Ingest Rule sets"
 msgstr ""
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:95
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:100
 msgid "Ingest Source deleted."
 msgstr ""
 
@@ -2963,6 +3004,7 @@ msgid "Ingest sources"
 msgstr ""
 
 #: scripts/apps/ingest/ingest-stats-widget/stats.js:7
+#: scripts/core/lang/missing-translations-strings.js:39
 msgid "Ingest Stats"
 msgstr ""
 
@@ -2970,7 +3012,7 @@ msgstr ""
 msgid "ingested"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:1009
+#: scripts/core/editor2/editor.js:1053
 msgid "insert table"
 msgstr ""
 
@@ -2998,7 +3040,7 @@ msgstr ""
 msgid "It will update existing template."
 msgstr ""
 
-#: scripts/core/editor2/editor.js:939
+#: scripts/core/editor2/editor.js:995
 msgid "italic"
 msgstr ""
 
@@ -3226,7 +3268,7 @@ msgstr ""
 msgid "Legal Archive"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:31
+#: scripts/apps/workspace/content/views/schema-editor.html:35
 msgid "Length"
 msgstr ""
 
@@ -3406,11 +3448,11 @@ msgstr ""
 msgid "Match Prefix"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:35
+#: scripts/apps/workspace/content/views/schema-editor.html:39
 msgid "max"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:40
+#: scripts/apps/workspace/content/views/schema-editor.html:44
 msgid "Max length should be bigger than 0 or empty."
 msgstr ""
 
@@ -3462,11 +3504,11 @@ msgstr ""
 #: scripts/apps/desks/views/content-expiry.html:5
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:81
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:97
-#: scripts/apps/workspace/content/views/schema-editor.html:33
+#: scripts/apps/workspace/content/views/schema-editor.html:37
 msgid "min"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:37
+#: scripts/apps/workspace/content/views/schema-editor.html:41
 msgid "Min length shouldn't be bigger than max length."
 msgstr ""
 
@@ -3518,6 +3560,7 @@ msgstr ""
 #: scripts/apps/monitoring/config.js:5
 #: scripts/apps/monitoring/views/monitoring-view.html:20
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:10
+#: scripts/core/lang/missing-translations-strings.js:39
 msgid "Monitoring"
 msgstr ""
 
@@ -3613,12 +3656,12 @@ msgstr ""
 msgid "New size"
 msgstr ""
 
-#: scripts/apps/archive/index.js:198
+#: scripts/apps/archive/index.js:203
 msgid "New Take"
 msgstr ""
 
-#: scripts/apps/archive/index.js:220
-#: scripts/apps/authoring/authoring/directives/SendItem.js:467
+#: scripts/apps/archive/index.js:226
+#: scripts/apps/authoring/authoring/directives/SendItem.js:473
 msgid "New take created."
 msgstr ""
 
@@ -3742,7 +3785,7 @@ msgstr ""
 
 #: scripts/apps/profiling/views/profiling.html:10
 #: scripts/apps/users/views/user-preferences.html:64
-#: scripts/apps/workspace/content/views/schema-editor.html:56
+#: scripts/apps/workspace/content/views/schema-editor.html:60
 msgid "none"
 msgstr ""
 
@@ -3788,10 +3831,10 @@ msgstr ""
 msgid "Not For Publication"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:34
-#: scripts/apps/workspace/content/views/schema-editor.html:36
-#: scripts/apps/workspace/content/views/schema-editor.html:50
-#: scripts/apps/workspace/content/views/schema-editor.html:77
+#: scripts/apps/workspace/content/views/schema-editor.html:38
+#: scripts/apps/workspace/content/views/schema-editor.html:40
+#: scripts/apps/workspace/content/views/schema-editor.html:54
+#: scripts/apps/workspace/content/views/schema-editor.html:81
 msgid "Not set"
 msgstr ""
 
@@ -3943,7 +3986,7 @@ msgstr ""
 msgid "or Select from computer"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:27
+#: scripts/apps/workspace/content/views/schema-editor.html:31
 msgid "Order"
 msgstr ""
 
@@ -4059,7 +4102,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/searchConfig.html:6
 #: scripts/apps/publish/views/ftp-config.html:10
 #: scripts/apps/publish/views/ftp-config.html:11
-#: scripts/apps/search-providers/views/search-provider-config.html:72
+#: scripts/apps/search-providers/views/search-provider-config.html:73
 msgid "Password"
 msgstr ""
 
@@ -4079,7 +4122,7 @@ msgstr ""
 msgid "paste a block"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:779
+#: scripts/core/editor2/editor.js:834
 msgid "Paste or type a full link"
 msgstr ""
 
@@ -4398,7 +4441,7 @@ msgstr ""
 msgid "Provider Name"
 msgstr ""
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:256
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:261
 msgid "Provider saved!"
 msgstr ""
 
@@ -4417,9 +4460,9 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-topbar.html:47
 #: scripts/apps/authoring/views/authoring-topbar.html:48
 #: scripts/apps/authoring/views/send-item.html:8
-#: scripts/apps/ingest/views/settings/ingest-routing-action.html:25
-#: scripts/apps/ingest/views/settings/ingest-routing-general.html:36
-#: scripts/apps/publish/index.js:38
+#: scripts/apps/ingest/views/settings/ingest-routing-action.html:26
+#: scripts/apps/ingest/views/settings/ingest-routing-general.html:29
+#: scripts/apps/publish/index.js:39
 msgid "Publish"
 msgstr ""
 
@@ -4428,17 +4471,17 @@ msgstr ""
 msgid "Publish and Continue"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:105
+#: scripts/apps/authoring/views/send-item.html:104
 msgid "publish from"
 msgstr ""
 
-#: scripts/apps/publish/index.js:47
+#: scripts/apps/publish/index.js:48
 msgid "Publish Queue"
 msgstr ""
 
-#: scripts/apps/archive/views/metadata-view.html:131
-#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:286
-#: scripts/apps/authoring/views/send-item.html:56
+#: scripts/apps/archive/views/metadata-view.html:135
+#: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:285
+#: scripts/apps/authoring/views/send-item.html:55
 msgid "Publish Schedule"
 msgstr ""
 
@@ -4467,7 +4510,7 @@ msgstr ""
 msgid "Publishing Action"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:55
+#: scripts/apps/authoring/views/send-item.html:54
 msgid "Publishing Schedule"
 msgstr ""
 
@@ -4483,7 +4526,7 @@ msgstr ""
 msgid "QCode"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:85
+#: scripts/apps/workspace/content/views/schema-editor.html:89
 msgid "Quarter"
 msgstr ""
 
@@ -4495,7 +4538,7 @@ msgstr ""
 msgid "Queued at"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:955
+#: scripts/core/editor2/editor.js:1003
 msgid "quote"
 msgstr ""
 
@@ -4572,7 +4615,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/settings.html:26
 #: scripts/apps/highlights/views/highlights_title_directive.html:21
-#: scripts/apps/ingest/index.js:86
+#: scripts/apps/ingest/index.js:85
 #: scripts/apps/ingest/views/settings/rssConfig.html:75
 #: scripts/apps/search/views/multi-action-bar.html:48
 #: scripts/apps/search/views/search-filters.html:105
@@ -4621,7 +4664,7 @@ msgstr ""
 msgid "Remove Filter Condition"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:962
+#: scripts/core/editor2/editor.js:1009
 msgid "remove formatting"
 msgstr ""
 
@@ -4709,8 +4752,8 @@ msgstr ""
 msgid "replaced item {{ type }} about {{ subject }}"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:23
-#: scripts/core/ui/ui.js:1308
+#: scripts/apps/workspace/content/views/schema-editor.html:27
+#: scripts/core/ui/ui.js:1339
 msgid "Required"
 msgstr ""
 
@@ -4732,7 +4775,7 @@ msgstr ""
 msgid "Resend"
 msgstr ""
 
-#: scripts/apps/archive/index.js:230
+#: scripts/apps/archive/index.js:236
 msgid "Resend item"
 msgstr ""
 
@@ -4772,6 +4815,10 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:16
 msgid "revert"
+msgstr ""
+
+#: scripts/apps/publish/views/subscribers.html:156
+msgid "Revoke"
 msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:124
@@ -4880,8 +4927,8 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:67
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:174
 #: scripts/apps/products/views/products-config-modal.html:58
-#: scripts/apps/publish/views/subscribers.html:157
-#: scripts/apps/search-providers/views/search-provider-config.html:80
+#: scripts/apps/publish/views/subscribers.html:188
+#: scripts/apps/search-providers/views/search-provider-config.html:81
 #: scripts/apps/templates/views/create-template.html:44
 #: scripts/apps/templates/views/template-editor-modal.html:189
 #: scripts/apps/users/views/edit-form.html:3
@@ -5050,19 +5097,19 @@ msgstr ""
 msgid "Search for clock"
 msgstr ""
 
-#: scripts/apps/search-providers/directive.js:71
+#: scripts/apps/search-providers/directive.js:76
 msgid "Search Provider deleted."
 msgstr ""
 
-#: scripts/apps/search-providers/views/search-provider-config.html:73
+#: scripts/apps/search-providers/views/search-provider-config.html:74
 msgid "search provider password"
 msgstr ""
 
-#: scripts/apps/search-providers/directive.js:33
+#: scripts/apps/search-providers/directive.js:37
 msgid "Search Provider saved."
 msgstr ""
 
-#: scripts/apps/search-providers/views/search-provider-config.html:68
+#: scripts/apps/search-providers/views/search-provider-config.html:69
 msgid "search provider username"
 msgstr ""
 
@@ -5165,7 +5212,7 @@ msgstr ""
 msgid "send"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:76
+#: scripts/apps/authoring/views/send-item.html:75
 msgid "send and continue"
 msgstr ""
 
@@ -5415,7 +5462,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/metadata-view.html:36
 #: scripts/apps/content-filters/views/production-test-view.html:22
-#: scripts/apps/search-providers/views/search-provider-config.html:58
+#: scripts/apps/search-providers/views/search-provider-config.html:59
 msgid "Source"
 msgstr ""
 
@@ -5431,7 +5478,7 @@ msgstr ""
 msgid "Source Name"
 msgstr ""
 
-#: scripts/apps/search-providers/views/search-provider-config.html:59
+#: scripts/apps/search-providers/views/search-provider-config.html:60
 msgid "source of the search provider"
 msgstr ""
 
@@ -5871,6 +5918,10 @@ msgstr ""
 msgid "There is an error. Failed to associated as take."
 msgstr ""
 
+#: scripts/apps/publish/views/subscribers.html:163
+msgid "There is no token for subscriber."
+msgstr ""
+
 #: scripts/apps/highlights/controllers/HighlightsConfig.js:57
 msgid "There was a problem while saving highlights configuration"
 msgstr ""
@@ -5969,7 +6020,11 @@ msgstr ""
 msgid "This week"
 msgstr ""
 
-#: scripts/core/datetime/datetime.js:198
+#: scripts/core/lang/missing-translations-strings.js:41
+msgid "This widget allows you to create literally any content view you may need in Superdesk, be it production or ingest. All you need is to select a desk, its stages or a saved search. Name your view once you are done. Enjoy!"
+msgstr ""
+
+#: scripts/core/datetime/datetime.js:202
 msgid "Thursday"
 msgstr ""
 
@@ -6028,6 +6083,10 @@ msgstr ""
 
 #: scripts/apps/authoring/widgets/widgets.js:177
 msgid "Toggles widget #"
+msgstr ""
+
+#: scripts/apps/publish/views/subscribers.html:169
+msgid "Token expiry"
 msgstr ""
 
 #: scripts/core/ui/views/datepicker-wrapper.html:7
@@ -6109,7 +6168,7 @@ msgstr ""
 msgid "Uncheck all"
 msgstr ""
 
-#: scripts/core/editor2/editor.js:931
+#: scripts/core/editor2/editor.js:988
 msgid "underline"
 msgstr ""
 
@@ -6167,7 +6226,7 @@ msgstr ""
 msgid "Unspike"
 msgstr ""
 
-#: scripts/apps/archive/index.js:119
+#: scripts/apps/archive/index.js:121
 msgid "Unspike Item"
 msgstr ""
 
@@ -6192,7 +6251,7 @@ msgstr ""
 msgid "update"
 msgstr ""
 
-#: scripts/apps/archive/index.js:244
+#: scripts/apps/archive/index.js:250
 #: scripts/apps/authoring/views/authoring-topbar.html:70
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:130
 msgid "Update"
@@ -6393,7 +6452,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/searchConfig.html:2
 #: scripts/apps/publish/views/ftp-config.html:6
 #: scripts/apps/publish/views/ftp-config.html:7
-#: scripts/apps/search-providers/views/search-provider-config.html:67
+#: scripts/apps/search-providers/views/search-provider-config.html:68
 #: scripts/apps/users/views/list.html:29
 msgid "Username"
 msgstr ""
@@ -6501,7 +6560,7 @@ msgstr ""
 msgid "When creating a highlights package"
 msgstr ""
 
-#: scripts/apps/workspace/content/views/schema-editor.html:81
+#: scripts/apps/workspace/content/views/schema-editor.html:85
 msgid "Width"
 msgstr ""
 
@@ -6538,8 +6597,8 @@ msgstr ""
 #: scripts/apps/archive/index.js:70
 #: scripts/apps/dashboard/index.js:41
 #: scripts/apps/dashboard/views/workspace.html:22
-#: scripts/apps/dashboard/workspace-tasks/tasks.js:375
-#: scripts/apps/ingest/index.js:57
+#: scripts/apps/dashboard/workspace-tasks/tasks.js:379
+#: scripts/apps/ingest/index.js:56
 #: scripts/apps/stream/index.js:15
 msgid "Workspace"
 msgstr ""
@@ -6548,7 +6607,8 @@ msgstr ""
 msgid "Workspace name"
 msgstr ""
 
-#: scripts/apps/dashboard/world-clock/world-clock.js:193
+#: scripts/apps/dashboard/world-clock/world-clock.js:203
+#: scripts/core/lang/missing-translations-strings.js:39
 msgid "World Clock"
 msgstr ""
 
@@ -6560,7 +6620,8 @@ msgstr ""
 msgid "World clock removed:"
 msgstr ""
 
-#: scripts/apps/dashboard/world-clock/world-clock.js:204
+#: scripts/apps/dashboard/world-clock/world-clock.js:214
+#: scripts/core/lang/missing-translations-strings.js:40
 msgid "World clock widget"
 msgstr ""
 
