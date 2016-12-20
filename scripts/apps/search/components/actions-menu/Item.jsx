@@ -108,6 +108,7 @@ export default class Item extends React.Component {
                         item: this.props.item,
                         className: 'dropdown__menu upward ' + this.state.position,
                         noHighlightsLabel: gettextCatalog.getString('No available highlights'),
+                        noDesksLabel: gettextCatalog.getString('No available desks'),
                         noLanguagesLabel: gettextCatalog.getString('No available translations')
                     }) : null
                 )

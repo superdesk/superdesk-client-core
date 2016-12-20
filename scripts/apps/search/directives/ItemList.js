@@ -270,22 +270,29 @@ export function ItemList(
                     }
                 });
 
-                scope.$on('item:highlight', (_e, data) => {
+                scope.$on('item:highlights', (_e, data) => updateMarkedItems('highlights', data));
+                scope.$on('item:marked_desks', (_e, data) => updateMarkedItems('marked_desks', data));
+
+                function updateMarkedItems(field, data) {
                     var item = listComponent.findItemByPrefix(data.item_id);
+
+                    function filterMark(mark) {
+                        return mark !== data.mark_id;
+                    }
 
                     if (item) {
                         var itemId = search.generateTrackByIdentifier(item);
-                        var highlights = item.highlights || [];
+                        var markedItems = item[field] || [];
 
                         if (data.marked) {
-                            highlights = highlights.concat([data.highlight_id]);
+                            markedItems = markedItems.concat([data.mark_id]);
                         } else {
-                            highlights = highlights.filter((highlight) => highlight !== data.highlight_id);
+                            markedItems = markedItems.filter(filterMark);
                         }
 
-                        listComponent.updateItem(itemId, {highlights: highlights});
+                        listComponent.updateItem(itemId, {[field]: markedItems});
                     }
-                });
+                }
 
                 scope.$on('multi:reset', (e, data) => {
                     var ids = data.ids || [];

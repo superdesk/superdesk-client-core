@@ -10,6 +10,7 @@ export const PARAMETERS = Object.freeze({
     spike: 'In Spiked',
     subject: 'Subject',
     company_codes: 'Company Codes',
+    marked_desks: 'Marked Desks',
     ingest_provider: 'Provider'
 });
 
@@ -113,5 +114,6 @@ export const UI_PROJECTED_FIELD_MAPPINGS = {
     provider: 'ingest_provider',
     category: 'anpa_category',
     versioncreator: 'version_creator',
-    versioncreated: 'versioncreated'
+    versioncreated: 'versioncreated',
+    markedDesks: 'marked_desks'
 };

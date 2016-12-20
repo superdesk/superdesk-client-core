@@ -111,63 +111,79 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         }
     }
 
+    function processFromToDesk(index, value) {
+        tags.selectedParameters.push(tag(value + ':' +
+            desks.deskLookup[index.split('-')[0]].name));
+    }
+
+    function processMetadataFields(index, value, key) {
+        var processSelectedItems = (selectedItems, codeList) => {
+            _.forEach(selectedItems, (selecteditem) => {
+                var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
+
+                if (name) {
+                    tags.selectedParameters.push(tag(value + ':(' + name + ')'));
+                }
+            });
+        };
+
+        cvs.forEach((cv) => {
+            if (cv.field !== key) {
+                return;
+            }
+
+            var codeList = metadata.values[cv.list];
+            var selecteditems = JSON.parse(index);
+
+            processSelectedItems(selecteditems, codeList);
+        });
+    }
+
+    /**
+     * @ngdoc object
+     * @name tags#fieldProcessors
+     * @private
+     * @description field:action mapper for parsing fields used in parameters
+     */
+    var fieldProcessors = {
+        original_creator: (index, value) => {
+            userList.getUser(index).then((user) => {
+                tags.selectedParameters.push(tag(value + ':' + user.display_name));
+            }, (error) => {
+                tags.selectedParameters.push(tag(value + ':Unknown'));
+            });
+        },
+        from_desk: processFromToDesk,
+        to_desk: processFromToDesk,
+        marked_desks: (index, value) => {
+            JSON.parse(index).forEach((id) => {
+                tags.selectedParameters.push(tag(value + ':' + desks.deskLookup[id].name));
+            });
+        },
+        company_codes: processMetadataFields,
+        subject: processMetadataFields,
+        spike: (index, value) => {
+            if (index) {
+                tags.selectedParameters.push(tag(value));
+            }
+        },
+        ingest_provider: (index, value) => tags.selectedParameters.push(tag(value + ':' +
+            ingestSources.providersLookup[index].name))
+    };
+
     /**
      * Parse $location.search and initialise tags for fields defined in the PARAMETERS.
      * @param {object} params - $location.search
      */
     function initParameters(params) {
-        var selecteditems = [];
-
         _.each(PARAMETERS, (value, key) => {
             if (!angular.isDefined(params[key])) {
                 return;
             }
 
-            switch (key) {
-            case 'original_creator':
-                userList.getUser(params[key]).then((user) => {
-                    tags.selectedParameters.push(tag(value + ':' + user.display_name));
-                }, (error) => {
-                    tags.selectedParameters.push(tag(value + ':Unknown'));
-                });
-                break;
-            case 'from_desk':
-            case 'to_desk':
-                tags.selectedParameters.push(tag(value + ':' +
-                        desks.deskLookup[params[key].split('-')[0]].name));
-                break;
-            case 'company_codes':
-            case 'subject':
-                var processSelectedItems = function(selectedItems, codeList) {
-                    _.forEach(selecteditems, (selecteditem) => {
-                        var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
-
-                        if (name) {
-                            tags.selectedParameters.push(tag(value + ':(' + name + ')'));
-                        }
-                    });
-                };
-
-                cvs.forEach((cv) => {
-                    if (cv.field !== key) {
-                        return;
-                    }
-
-                    var codeList = metadata.values[cv.list];
-
-                    selecteditems = JSON.parse(params[key]);
-                    processSelectedItems(selecteditems, codeList);
-                });
-                break;
-            case 'spike':
-                if (params[key]) {
-                    tags.selectedParameters.push(tag(value));
-                }
-                break;
-            case 'ingest_provider':
-                tags.selectedParameters.push(tag(value + ':' + ingestSources.providersLookup[params[key]].name));
-                break;
-            default:
+            if (key in fieldProcessors) {
+                fieldProcessors[key](params[key], value, key);
+            } else {
                 tags.selectedParameters.push(tag(value + ':' + params[key]));
             }
         });

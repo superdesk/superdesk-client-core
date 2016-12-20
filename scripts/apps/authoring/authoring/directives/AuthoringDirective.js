@@ -765,17 +765,20 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             });
 
-            $scope.$on('item:highlight', (e, data) => {
+            $scope.$on('item:highlights', (e, data) => refreshMarkedItems('highlights', data));
+            $scope.$on('item:marked_desks', (e, data) => refreshMarkedItems('marked_desks', data));
+
+            function refreshMarkedItems(field, data) {
                 if ($scope.item._id === data.item_id) {
-                    if (!$scope.item.highlights) {
-                        $scope.item.highlights = [data.highlight_id];
-                    } else if ($scope.item.highlights.indexOf(data.highlight_id) === -1) {
-                        $scope.item.highlights = [data.highlight_id].concat($scope.item.highlights);
+                    if (!$scope.item[field]) {
+                        $scope.item[field] = [data.mark_id];
+                    } else if ($scope.item[field].indexOf(data.mark_id) === -1) {
+                        $scope.item[field] = [data.mark_id].concat($scope.item[field]);
                     } else if (!$scope.item.multiSelect) {
-                        $scope.item.highlights = _.without($scope.item.highlights, data.highlight_id);
+                        $scope.item[field] = _.without($scope.item[field], data.mark_id);
                     }
                 }
-            });
+            }
 
             $scope.$on('$destroy', deregisterTansa);
 
