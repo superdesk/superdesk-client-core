@@ -1,3 +1,13 @@
+/**
+ * TODO: this can eventually be replaced with a service function to
+ * dynamically lookup allowed services:
+ *
+ * see: IngestProvidersService.fetchAllFeedingServicesAllowed()
+ * However, we should to decide how to deal with the templateUrl
+ * and config definitions dynamically before doing this, as I do
+ * not think keeping those values in the superdesk-core is
+ * appropriate.
+ */
 export const feedingServices = [
     {
         value: 'file',
@@ -29,21 +39,6 @@ export const feedingServices = [
         label: 'Email',
         templateUrl: 'scripts/apps/ingest/views/settings/emailConfig.html'
     }
-];
-
-export const feedParsers = [
-    {value: 'email_rfc822', name: 'EMail RFC822 Parser'},
-    {value: 'nitf', name: 'NITF Parser'},
-    {value: 'newsml12', name: 'News ML 1.2 Parser'},
-    {value: 'afpnewsml12', name: 'AFP News ML 1.2 Parser'},
-    {value: 'newsml2', name: 'News ML-G2 Parser'},
-    {value: 'scoop_newsml2', name: 'Scoop Media News ML-G2 Parser'},
-    {value: 'wenn', name: 'WENN Parser'},
-    {value: 'anpa1312', name: 'ANPA Parser'},
-    {value: 'iptc7901', name: 'IPTC 7901 Parser'},
-    {value: 'dpa_iptc7901', name: 'DPA IPTC 7901 Parser'},
-    {value: 'ap_anpa1312', name: 'AP ANPA parser'},
-    {value: 'pa_nitf', name: 'PA NITF'}
 ];
 
 export const PROVIDER_DASHBOARD_DEFAULTS = {

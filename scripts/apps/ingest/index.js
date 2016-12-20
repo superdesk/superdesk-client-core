@@ -29,7 +29,6 @@ angular.module('superdesk.apps.ingest', [
     'superdesk.config'
 ])
     .value('feedingServices', constant.feedingServices)
-    .value('feedParsers', constant.feedParsers)
 
     .service('ingestSources', svc.IngestProviderService)
     .service('remove', svc.RemoveIngestedService)

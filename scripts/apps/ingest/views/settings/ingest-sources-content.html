@@ -59,7 +59,7 @@
 
                         <div class="field">
                             <label for="provider-feed-parser" translate>Feed Parser</label>
-                            <select id="provider-feed-parser" ng-model="provider.feed_parser" ng-options="fp.value as fp.name for fp in feedParsers">
+                            <select id="provider-feed-parser" ng-model="provider.feed_parser" ng-options="fp.feed_parser as fp.label for fp in feedParsers">
                                 <option value=""></option>
                             </select>
                         </div>

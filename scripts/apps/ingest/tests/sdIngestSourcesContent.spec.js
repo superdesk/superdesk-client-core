@@ -7,6 +7,7 @@
 describe('sdIngestSourcesContent directive', () => {
     var scope;
 
+    beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.ingest'));
 
     beforeEach(inject(($compile, $rootScope, $templateCache) => {
