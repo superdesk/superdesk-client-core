@@ -33,7 +33,8 @@ ItemList.$inject = [
     '$interpolate',
     'metadata',
     'storage',
-    'superdeskFlags'
+    'superdeskFlags',
+    'keyboardManager'
 ];
 
 export function ItemList(
@@ -63,7 +64,8 @@ export function ItemList(
     $interpolate,
     metadata,
     storage,
-    superdeskFlags
+    superdeskFlags,
+    keyboardManager
 ) {
     // contains all the injected services to be passed down to child
     // components via props
@@ -94,7 +96,8 @@ export function ItemList(
         $interpolate: $interpolate,
         metadata: metadata,
         storage: storage,
-        superdeskFlags: superdeskFlags
+        superdeskFlags: superdeskFlags,
+        keyboardManager: keyboardManager
     };
 
     return {
@@ -214,7 +217,8 @@ export function ItemList(
                         view: scope.view
                     }, () => {
                         // updates scroll position to top, such as when forced refresh
-                        if (scope.scrollTop === 0) {
+                        // but not when an item is selected in the list and is view
+                        if (scope.scrollTop === 0 && scope.selected === null) {
                             elem[0].scrollTop = scope.scrollTop;
                         }
                         scope.rendering = scope.loading = false;

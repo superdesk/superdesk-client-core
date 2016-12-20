@@ -169,6 +169,14 @@ export class Item extends React.Component {
             );
         }
 
+        let multiSelected = this.props.item.selected;
+
+        // If an item is both multi-selected and is active selection in the list
+        // remove the 'selected' styling class to distinguish it as the active item
+        if (this.props.item.selected && this.props.flags.selected) {
+            multiSelected = !multiSelected;
+        }
+
         return React.createElement(
             'li', {
                 id: item._id,
@@ -176,7 +184,7 @@ export class Item extends React.Component {
                 className: classNames(
                     'list-item-view',
                     {active: this.props.flags.selected},
-                    {selected: this.props.item.selected}
+                    {selected: multiSelected}
                 ),
                 onMouseEnter: this.setHoverState,
                 onMouseLeave: this.unsetHoverState,

@@ -10,6 +10,8 @@ export class ItemList extends React.Component {
     constructor(props) {
         super(props);
 
+        const {keyboardManager} = this.props.svc;
+
         this.state = {itemsList: [], itemsById: {}, selected: null, view: 'mgrid', narrow: false};
 
         this.multiSelect = this.multiSelect.bind(this);
@@ -29,6 +31,9 @@ export class ItemList extends React.Component {
         this.setSelectedComponent = this.setSelectedComponent.bind(this);
         this.modifiedUserName = this.modifiedUserName.bind(this);
         this.setNarrowView = this.setNarrowView.bind(this);
+        this.multiSelectCurrentItem = this.multiSelectCurrentItem.bind(this);
+
+        keyboardManager.bind('x', this.multiSelectCurrentItem);
     }
 
     multiSelect(items, selected) {
@@ -47,6 +52,15 @@ export class ItemList extends React.Component {
         });
 
         this.setState({itemsById: itemsById});
+    }
+
+    // Method to check the selectBox of the selected item
+    multiSelectCurrentItem() {
+        let selectedItem = this.getSelectedItem();
+
+        if (selectedItem) {
+            this.multiSelect([selectedItem], !selectedItem.selected);
+        }
     }
 
     // Function to make narrowView active: when both preview and authoring panes are open.
@@ -258,19 +272,42 @@ export class ItemList extends React.Component {
         };
 
         const checkRemaining = () => {
-            if (!_.isNil(diff)) {
-                event.preventDefault();
-                event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
 
-                if (this.state.selected) {
-                    highlightSelected();
-                } else {
-                    this.select(this.state.itemsById[this.state.itemsList[0]]);
+            if (this.state.selected) {
+                highlightSelected();
+            } else {
+                this.select(this.state.itemsById[this.state.itemsList[0]]);
+            }
+        };
+
+        // This function is to bring the selected item (by key press) into view if it is out of container boundary.
+        var scrollSelectedItemIfRequired = () => {
+            let container = $(event.currentTarget);
+
+            let selectedItemElem = $(event.currentTarget.firstChild).children('.list-item-view.active');
+
+            if (selectedItemElem.length > 0) {
+                // The following line translated to: top_Of_Selected_Item (minus) top_Of_Scrollable_Div
+
+                let distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
+                $(container[0]).offset().top - $(document).scrollTop();
+
+                // If the selected item goes below 95% or above 0.15% of the scrollable height, only then, do something
+                // to make room for out-of-boundary items
+                if (distanceOfSelItemFromVisibleTop >= container[0].clientHeight * 0.95 ||
+                distanceOfSelItemFromVisibleTop <= container[0].clientHeight * 0.15) {
+                    container.scrollTop(container.scrollTop() + distanceOfSelItemFromVisibleTop -
+                    container[0].offsetHeight * 0.5);
                 }
             }
         };
 
-        checkRemaining();
+        if (!_.isNil(diff)) {
+            checkRemaining();
+            scrollSelectedItemIfRequired(event, scope);
+        }
     }
 
     componentWillUnmount() {
