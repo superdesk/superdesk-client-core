@@ -56,7 +56,7 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata,
                         var targets = [];
 
                         _.forEach(action.target_types, (targetType) => {
-                            targets.push((!targetType.deny ? gettext('Not ') : '') + targetType.name);
+                            targets.push((!targetType.allow ? gettext('Not ') : '') + targetType.name);
                         });
                         actionValues.push(targets.join(','));
                     }
