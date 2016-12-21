@@ -1,10 +1,32 @@
 import _ from 'lodash';
-
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.monitoring
+ * @name sdMonitoringGroup
+ *
+ * @requires cards
+ * @requires api
+ * @requires authoringWorkspace
+ * @requires $timeout
+ * @requires superdesk
+ * @requires session
+ * @requires activityService
+ * @requires workflowService
+ * @requires keyboardManager
+ * @requires desks
+ * @requires search
+ * @requires multi
+ * @requires archiveService
+ * @requires $rootScope
+ *
+ * @description
+ *   A directive that generates group/section on stages of a desk or saved search.
+ */
 MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
     'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
-    'archiveService', '$rootScope', 'config', 'superdeskFlags'];
+    'archiveService', '$rootScope'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, config, superdeskFlags) {
+        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope) {
     var ITEM_HEIGHT = 57;
 
     return {
@@ -340,6 +362,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             function preview(item) {
                 if (item) {
+                    // for items from external source or if type is undefined.
                     if (item._type === 'externalsource') {
                         select(item);
                         return;
