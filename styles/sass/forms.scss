@@ -985,31 +985,6 @@ form.flat, .form-flat {
     }
 }
 
-
-
-
-
-input, textarea, .dropdown__toggle {
-    &.line-input {
-        width: 100%;
-        border-radius: 0 !important;
-        border: 0 !important;
-        border-bottom: 1px solid rgba(0,0,0,0.15)!important;
-        background-color: transparent;
-        padding: 0;
-        height:22px;
-        &:hover {
-            border-color: rgba(0,0,0,0.3) !important;
-            background-color: transparent !important;
-        }
-        &:focus {
-            box-shadow: 0 1px 0 0 $sd-blue !important;
-            border-color: $sd-blue !important;
-            background-color: transparent !important;
-        }
-    }
-}
-
 input, textarea, .dropdown__toggle {
     &.line-input {
         width: 100%;
@@ -1027,6 +1002,20 @@ input, textarea, .dropdown__toggle {
             box-shadow: 0 1px 0 0 $sd-blue !important;
             border-color: $sd-blue !important;
             background-color: transparent !important;
+        }
+
+        /* alt is line input for dark background */
+        &.line-input--alt {
+          color: $white;
+          border-bottom: 1px solid rgba(255,255,255,0.2)!important;
+          &:hover {
+            border-color: rgba(255,255,255,0.5) !important;
+          }
+          &:focus {
+            box-shadow: 0 1px 0 0 rgba(255,255,255,0.7) !important;
+            border-color: rgba(255,255,255,0.7) !important;
+            background-color: transparent !important;
+          }
         }
     }
 }

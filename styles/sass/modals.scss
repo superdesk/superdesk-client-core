@@ -141,6 +141,9 @@ body:not(:-moz-handler-blocked) .modal{
         margin: 5px 0 0;
         padding: 5px;
     }
+    &--padding-20 {
+        padding: 10px 20px;
+    }
 }
 .modal--about {
     h4 {
@@ -493,7 +496,13 @@ body:not(:-moz-handler-blocked) .modal{
         margin-left: 20px;
         color: #c0c0c0;
     }
-
+    // fix for calling a modal from another modal
+    &.modal--double {
+        z-index: 1060;
+        &+.modal-backdrop {
+            z-index: 1055;
+        }
+    }
 }
 
 

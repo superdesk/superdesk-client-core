@@ -39,11 +39,10 @@
     opacity: 0.4;
 }
 
-.dropdown__more-actions .dropdown__toggle > i {
+.dropdown__toggle--with-opacity > i {
    opacity: 0.3;
 }
-.dropdown__more-actions .dropdown__toggle:hover > i,
-.dropdown__more-actions.open .dropdown__toggle > i {
+.dropdown__toggle--with-opacity:hover > i {
    opacity: 1;
 }
 
