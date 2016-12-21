@@ -682,15 +682,13 @@ export function SearchService($location, gettext, config, session) {
         itemCriteria.source.size = 1;
         itemCriteria.es_highlight = this.getElasticHighlight();
 
-        let itemId = {};
+        let itemId = item._type !== 'published' ? item._id : item.item_id;
 
-        if (item._type !== 'published') {
-            itemId[item._id] = 1;
-        } else {
-            itemId[item.item_id] = 1;
-        }
-
-        itemCriteria.source.query.filtered.filter = this.getItemQuery(itemId).filtered.filter;
+        itemCriteria.source.query.filtered.filter = {
+            or: [
+                {term: {_id: itemId}}, {term: {item_id: itemId}}
+            ]
+        };
         return itemCriteria;
     };
 
