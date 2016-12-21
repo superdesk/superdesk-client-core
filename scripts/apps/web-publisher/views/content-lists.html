@@ -1,6 +1,6 @@
 <div class="split-content">
     <div class="header">
-        <div class="modal-header">
+        <div class="modal-header modal-header--padding-20">
             <h3 class="pull-left" translate>Content Lists</h3>
         </div>
         <div class="subnav">
@@ -9,10 +9,10 @@
                     <a ng-click="webPublisher.changeListFilter('')" translate>all</a>
                 </li>
                 <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.listType === 'automatic'}">
-                    <a ng-click="webPublisher.changeListFilter('automatic')" translate>automatic</a>
+                    <a ng-click="webPublisher.changeListFilter('automatic')" class="filter-type__link--dark-blue" translate>automatic</a>
                 </li>
                 <li class="filter-type__item" ng-class="{'filter-type__item--active': webPublisher.listType === 'manual'}">
-                    <a ng-click="webPublisher.changeListFilter('manual')" translate>manual</a>
+                    <a ng-click="webPublisher.changeListFilter('manual')" class="filter-type__link--blue" translate>manual</a>
                 </li>
             </ul>
 
@@ -65,28 +65,29 @@
                             </li>
                         </ul>
                     </div>
-                    <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="dropdown" dropdown>
-                        <button ng-click="webPublisher.deleteList(list.id)">
+                    <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="card-box__btn-group card-box__btn-group--right">
+                        <button ng-click="webPublisher.deleteList(list.id)" class="btn">
                             <i class="icon-close-small"></i>
                         </button>
-                        <button ng-click="webPublisher.saveList()">
+                        <button ng-click="webPublisher.saveList()" class="btn">
                             <i class="icon-ok"></i>
                         </button>
                     </div>
                     <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)"
                         ng-click="webPublisher.editListCard(list)"
-                        class="card-box__heading">{{ list.name }}
+                        class="card-box__heading card-box__heading--editable">
+                         <div>{{ list.name }}</div>
                     </div>
-                    <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="card-box__heading">
-                        <input type="text" ng-model="newList.name" required>
+                    <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="card-box__heading card-box__heading--editable">
+                        <input type="text" ng-model="newList.name" class="line-input line-input--alt" required autofocus>
                     </div>
                 </div>
 
                 <!-- todo: ng-show if listOfItems.length -->
-                <div class="card-box__content" ng-show="i!=3">
-                    <ul class="card-box__content-list card-box__content-list--scrollable">
-                        <li ng-repeat="i in [1,2,3,4,5,6,7,8,9]">
-                            <h4>Article {{i}}</h4>
+                <div class="card-box__content card-box__content--scrollable" ng-show="i!=3">
+                    <ul class="card-box__content-list">
+                        <li ng-repeat="i in [1,2,3,4,5,6,7,8,9]" class="card-box__content-list-item--small card-box__content-list-item--border-bottom">
+                            <h4 class="card-box__h4--normal-case">Article {{i}}</h4>
                         </li>
                     </ul>
                 </div>
@@ -106,7 +107,7 @@
     </div>
 </div>
 
-<div sd-modal data-model="webPublisher.settingsModal" class="responsive-popup">
+<div sd-modal data-model="webPublisher.settingsModal" class="modal--double">
     <div class="modal-header">
         <a href="" class="close" ng-click="webPublisher.cancelListCardSettings()"><i class="icon-close-small"></i></a>
         <h3 translate>Settings</h3>
