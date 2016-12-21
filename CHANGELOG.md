@@ -1,5 +1,67 @@
 # Superdesk Client Changelog
 
+## [1.5] 2016-12-21
+
+### Fixed
+
+- Fix takes link on monitoring and preview.
+- Fix translations in widgets list.
+- Scroll to highlighted and active text when using macro prev/next.
+- Fix desk dropdown in send to panel.
+- Cache spellchecking dictionaries.
+- Fix UI in routing schema modal.
+- Keep selected repositories when clearing search filters.
+- Serve duplicate server requests from cache.
+- Fix weekday picker active state style.
+- Add error notification for duplicate unique name when publishing.
+- Target type of routing scheme rule is always negative.
+- Fix UI for swimlane view.
+- Cache vocabularies to reduce api calls.
+- Prevent monitoring widgets to grow in size.
+- Add support for HTML in confirmation headline and body.
+- Do not limit to 25 when fetching users desks.
+- Add version to app.bundle on build.
+- Fix filter UI when switching between presets and dates.
+- Scroll to active text position when in find and replace.
+- Turn off automatic spellchecking if there is no dictionary.
+
+### Changed
+
+- Use projections in search results.
+- Use prefered desk in send to panel.
+
+### Added
+
+- Add `ctrl+k` shortcut for spike action.
+- Add duplicate action to text archive items.
+- Add live suggestions modal.
+- Add styles for `blockquote` in editor.
+
+## [1.4.7] 2016-12-20
+
+### Fixed
+
+- Fix user profile link to mentioned users for users with `.` in username.
+
+## [1.4.6] 2016-12-09
+
+### Fixed
+
+- Fix raven lib version.
+- Fix angular lib version.
+
+## [1.4.5] 2016-12-06
+
+### Fixed
+
+- Style fixes for the editor.
+
+## [1.4.4] 2016-12-05
+
+### Added
+
+- Add desk language picker.
+
 ## [1.4.3] 2016-12-05
 
 ### Changed
