@@ -320,6 +320,10 @@
             .content-item-preview {
                 .content-container {
                     top: 36px;
+                    img {
+                        max-width: 100%;
+                        height: auto;
+                    }
                 }
             }
             &.wrap {
