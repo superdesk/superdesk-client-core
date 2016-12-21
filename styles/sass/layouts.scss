@@ -950,6 +950,7 @@ $main-item-color-inactive: #aaa;
             min-height: 20vh;
             max-height: 30vh;
             overflow-y: auto;
+<<<<<<< 9cafb25004625e6198dd802e1e0adb0758ade0f5
         }
     }
     .card-box__placeholder {
@@ -966,8 +967,9 @@ $main-item-color-inactive: #aaa;
 
         &--cursorPointer {
             cursor: pointer;
+=======
+>>>>>>> Publisher UI
         }
-
     }
     .card-box__placeholder {
         padding: 16px;
@@ -991,6 +993,7 @@ $main-item-color-inactive: #aaa;
         padding: 0;
         list-style: none;
 
+<<<<<<< 9cafb25004625e6198dd802e1e0adb0758ade0f5
 <<<<<<< dd78cdbbe649284ee62a0946a8e42ed524625982
 =======
         &--scrollable {
@@ -999,6 +1002,8 @@ $main-item-color-inactive: #aaa;
         }
 
 >>>>>>> Added content lists
+=======
+>>>>>>> Publisher UI
         li, .card-box__content-list-item {
             padding: 16px;
             border-bottom: 1px solid #ebebeb;
