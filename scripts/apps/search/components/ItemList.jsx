@@ -102,7 +102,10 @@ export class ItemList extends React.Component {
             positionStart = _.indexOf(this.state.itemsList, this.state.selected);
         }
 
-        for (var i = positionStart; i <= positionEnd; i++) {
+        var start = Math.min(positionStart, positionEnd),
+            end = Math.max(positionStart, positionEnd);
+
+        for (var i = start; i <= end; i++) {
             var item = this.state.itemsById[this.state.itemsList[i]];
 
             if (isCheckAllowed(item)) {
