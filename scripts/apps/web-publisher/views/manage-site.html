@@ -34,15 +34,18 @@
             </ul>
         </div>
         <div class="sidebarLayout__content" ng-switch="webPublisher.activeTab">
+            <div ng-if="webPublisher.activeTab === 'general'" class="modal-header modal-header--padding-20 ng-scope">
+                <h3 class="pull-left" translate="">General</h3>
+            </div>
             <form name="webPublisher.siteForm">
                 <fieldset ng-switch-when="general" class="paneContent__main">
                     <div class="field">
                         <label for="name" translate>Web Site Name:</label>
-                        <input type="text" name="name" ng-model="newSite.name" required/>
+                        <input type="text" name="name" ng-model="newSite.name" class="line-input" required/>
                     </div>
                     <div class="field">
                         <label for="subdomain" translate>Subdomain Name:</label>
-                        <input type="text" name="subdomain" ng-model="newSite.subdomain" required/>
+                        <input type="text" name="subdomain" ng-model="newSite.subdomain" class="line-input" required/>
                     </div>
                 </fieldset>
             </form>
