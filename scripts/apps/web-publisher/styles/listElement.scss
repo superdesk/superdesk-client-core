@@ -2,7 +2,7 @@
     border: 1px solid $tableBorder;
     border-left: 3px solid #4d646f;
     border-top: 0;
-    padding: .7em 15px;
+    padding: 12px 5px 12px 15px;
     background-color: #fff;
     position: relative;
     display: flex;
@@ -11,12 +11,16 @@
     &--noLeftBorder {
         border-left: 1px solid $tableBorder;
     }
+    &--bold {
+        font-weight: 700;
+    }
 
     &__icon {
         flex: 0 0 auto;
         display: inline-block;
         margin-right: 10px;
         line-height: 1em;
+        margin-top: 2px;
         align-items: center;
 
         i {
@@ -47,5 +51,8 @@
     &__right {
         flex: 0 0 auto;
         align-items: center;
+    }
+    .countLabel {
+        margin-right: 10px;
     }
 }
