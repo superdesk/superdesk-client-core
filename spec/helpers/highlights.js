@@ -164,6 +164,10 @@ function Highlights() {
         elem.all(by.repeater('h in highlights')).all(by.partialButtonText(name)).click();
     };
 
+    this.selectDesk = function(elem, name) {
+        elem.all(by.className('right-submenu')).all(by.partialButtonText(name)).click();
+    };
+
     this.createHighlightsPackage = function(highlight) {
         element(by.className('big-icon-marked-star')).click();
         this.selectHighlight(element(by.id('highlightPackage')), highlight);

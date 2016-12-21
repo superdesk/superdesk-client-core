@@ -18,7 +18,7 @@ describe('<MarkDesksDropdown />', () => {
         expect(wrapper.find('MarkBtn').length).toBe(2);
     });
 
-    it('check default values for dropdownss', () => {
+    it('check default values for dropdowns', () => {
         const wrapper = mount(<MarkedDeskItem desks={allDesks} desk={desk1} item={item}/>);
 
         expect(wrapper.find('MarkBtn').length).toBe(1);

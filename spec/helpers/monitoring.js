@@ -588,6 +588,23 @@ function Monitoring() {
     };
 
     /**
+     * Check if on monitoring view an item from group is marked for desk
+     * @param {string} desk
+     * @param {number} group
+     * @param {number} item
+     */
+    this.checkMarkedForDesk = function(desk, group, item) {
+        var crtItem = this.getItem(group, item);
+
+        crtItem.element(by.className('icon-bell')).click();
+        var deskList = element(by.className('highlights-list-menu'));
+
+        waitFor(deskList);
+        expect(deskList.getText()).toContain(desk);
+    };
+
+
+    /**
      * Check if on monitoring view an item from group is marked for highlight
      * @param {string} highlight
      * @param {number} group
@@ -619,6 +636,22 @@ function Monitoring() {
         waitFor(highlightList);
         highlightList.all(by.className('btn--mini')).first().click();
     };
+
+    /**
+     * Remove from the first desk in the list
+     * @param {number} group
+     * @param {number} item
+     */
+    this.removeFromFirstDesk = function(group, item) {
+        var crtItem = this.getItem(group, item);
+
+        crtItem.element(by.className('icon-bell')).click();
+        var deskList = element(by.className('highlights-list-menu'));
+
+        waitFor(deskList);
+        deskList.all(by.className('btn--mini')).first().click();
+    };
+
 
     /**
      * Open a workspace of given name, can be both desk or custom

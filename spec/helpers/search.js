@@ -1,7 +1,8 @@
 /* eslint-disable newline-per-chained-call */
 
 
-var openUrl = require('./utils').open;
+var openUrl = require('./utils').open,
+    waitFor = require('./utils').wait;
 
 module.exports = new GlobalSearch();
 
@@ -135,6 +136,26 @@ function GlobalSearch() {
     };
 
     /**
+     * Perform the 'action' operation in submenu items
+     *
+     * @param {string} action
+     * @param {string} submenu
+     * @param {number} index
+     */
+    this.actionOnSubmenuItem = function(action, submenu, index) {
+        var menu = this.openItemMenu(index);
+        var header = menu.element(by.partialLinkText(action));
+        var btn = menu.element(by.partialButtonText(submenu));
+
+        browser.actions()
+            .mouseMove(header, {x: -50, y: -50})
+            .mouseMove(header)
+            .perform();
+        waitFor(btn, 1000);
+        btn.click();
+    };
+
+    /**
      * Perform the toggle operation on toggle-box of
      * given 'title'
      *
@@ -221,6 +242,19 @@ function GlobalSearch() {
     };
 
     /**
+     * Check if on search view an item is marked for desk
+     *
+     * @param {string} deskName
+     * @param {number} item
+     */
+    this.checkMarkedForDesk = function(deskName, item) {
+        var crtItem = this.getItem(item);
+
+        expect(crtItem.element(by.className('icon-bell')).isDisplayed()).toBeTruthy();
+    };
+
+
+    /**
      * Show custom search right panel
      */
     this.showCustomSearch = function() {
@@ -283,6 +317,17 @@ function GlobalSearch() {
      */
     this.selectDesk = function(selectId, deskName) {
         element(by.id(selectId)).element(by.css('option[label="' + deskName + '"]')).click();
+    };
+
+     /**
+     * Open the search Parameters marked desk field
+     * @param {int} selectId - Index of the desk
+     */
+    this.selectMarkedDesk = function(index) {
+        var markedDesks = element(by.id('marked-desks'));
+
+        markedDesks.element(by.className('dropdown-toggle')).click();
+        markedDesks.all(by.repeater('term in $vs_collection track by term[uniqueField]')).get(index).click();
     };
 
     /**
