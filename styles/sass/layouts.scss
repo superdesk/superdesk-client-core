@@ -849,6 +849,20 @@ $main-item-color-inactive: #aaa;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+        color: $white;
+        &--editable {
+            padding: 10px 16px 10px;
+            text-transform: initial;
+            &:hover {
+                cursor: text;
+            }
+            > div {
+                padding: 9px 0 3px 0;
+            }
+            > input {
+                margin-top: 6px;
+            }
+        }
     }
     .card-box__sub-heading {
         background-color: #9daeb7;
@@ -859,6 +873,26 @@ $main-item-color-inactive: #aaa;
         padding: 4px 16px;
         &.success {
             background-color: #8bc34a;
+        }
+    }
+    .card-box__btn-group {
+        margin: 14px 6px 0 0;
+        &--right {
+            float: right;
+        }
+        .btn {
+            background: transparent;
+            padding: 10px 2px;
+            color: $white;
+            opacity: 0.4;
+            &:focus, &:hover {
+                @include box-shadow(none);
+                opacity: 1;
+            }
+            [class^="icon-"], 
+            [class*=" icon-"] {
+                color: $white;
+            }
         }
     }
     .card-box__thumbnail {
@@ -907,8 +941,16 @@ $main-item-color-inactive: #aaa;
                 text-transform: none;
                 letter-spacing: 0em;
             }
+            &.card-box__h4--normal-case {
+                font-size: 12px;
+                text-transform: initial;
+            }
         }
-
+        &--scrollable {
+            min-height: 20vh;
+            max-height: 30vh;
+            overflow-y: auto;
+        }
     }
     .card-box__placeholder {
         padding: 16px;
@@ -932,11 +974,6 @@ $main-item-color-inactive: #aaa;
         padding: 0;
         list-style: none;
 
-        &--scrollable {
-            height: 35vh;
-            overflow-y: scroll;
-        }
-
         li, .card-box__content-list-item {
             padding: 16px;
             border-bottom: 1px solid #ebebeb;
@@ -950,6 +987,17 @@ $main-item-color-inactive: #aaa;
             }
             &:last-child {
                 border: none;
+            }
+            &--border-bottom {
+                &:last-child {
+                    border-bottom: 1px solid #ebebeb;
+                }
+            }
+            &--small {
+                padding: 7px 16px;
+                h4 {
+                    margin: 0;
+                }
             }
         }
         .creation-time {
@@ -989,7 +1037,7 @@ $main-item-color-inactive: #aaa;
     }
     .card-box__footer {
         padding: 14px 16px;
-        border-top: 1px solid #eee;
+        border-top: 1px solid #ccc;
         background-color: #f8f8f8;
         @include border-radius (0 0 2px 2px);
         &--light {
