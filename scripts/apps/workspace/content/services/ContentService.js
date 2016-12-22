@@ -1,5 +1,22 @@
 import * as constant from '../constants';
 
+/**
+ * @ngdoc service
+ * @module superdesk.apps.content
+ * @name content
+ *
+ * @requires api
+ * @requires superdesk
+ * @requires templates
+ * @requires desks
+ * @requires packages
+ * @requires archiveService
+ * @requires $filter
+ *
+ * @description Content Service is responsible for creating packages or content items based
+ * on templates or content types.
+ * Also it is responsable for managing content types.
+ */
 ContentService.$inject = ['api', 'superdesk', 'templates', 'desks', 'packages', 'archiveService', '$filter'];
 export function ContentService(api, superdesk, templates, desks, packages, archiveService, $filter) {
 
@@ -176,6 +193,16 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.getType = function(id) {
         return api.find('content_types', id);
+    };
+
+    /**
+     * Get content type with metadata by id
+     *
+     * @param {string} id
+     * @return {Promise}
+     */
+    this.getTypeMetadata = function(id) {
+        return api.find('content_types', id, {edit: true});
     };
 
     /**
