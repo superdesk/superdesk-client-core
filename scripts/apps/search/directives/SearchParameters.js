@@ -49,6 +49,10 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     scope.fields.spike = true;
                 }
 
+                if ($location.search().featuremedia) {
+                    scope.fields.featuremedia = true;
+                }
+
                 if (loadData) {
                     fetchMetadata();
                     fetchUsers();
@@ -206,6 +210,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     scope.fields.company_codes !== $location.search().company_codes ||
                     scope.fields.marked_desks !== $location.search().marked_desks ||
                     scope.fields.spike !== $location.search().spike ||
+                    scope.fields.featuremedia !== $location.search().featuremedia ||
                     scope.fields.ingest_provider !== $location.search().ingest_provider;
             }
 
@@ -275,6 +280,8 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                         $location.search(key, JSON.stringify(_.map(val, 'qcode')));
                     } else if (key === 'marked_desks') {
                         $location.search(key, JSON.stringify(_.map(val, '_id')));
+                    } else if (key === 'featuremedia') {
+                        $location.search(key, val ? true : null);
                     } else {
                         $location.search(key, val);
                     }

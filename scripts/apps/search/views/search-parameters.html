@@ -130,6 +130,13 @@
             </div>
         </div>
 
+        <div class="field" ng-if="search_config.featuremedia">
+            <label for="search-featuremedia">
+            {{:: 'Feature Media' | translate}}
+            </label>
+            <span sd-switch ng-model="fields.featuremedia"></span>
+        </div>
+
         <div class="multiple" ng-if="search_config.ingest_provider">
             <div class="field">
                 <label for="search-ingest-provider">

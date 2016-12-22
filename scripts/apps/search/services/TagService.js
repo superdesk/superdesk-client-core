@@ -162,14 +162,25 @@ export function TagService($location, desks, userList, metadata, search, ingestS
         },
         company_codes: processMetadataFields,
         subject: processMetadataFields,
-        spike: (index, value) => {
-            if (index) {
-                tags.selectedParameters.push(tag(value));
-            }
-        },
+        spike: processBooleanTags,
+        featuremedia: processBooleanTags,
         ingest_provider: (index, value) => tags.selectedParameters.push(tag(value + ':' +
             ingestSources.providersLookup[index].name))
     };
+
+    /**
+     * @ngdoc method
+     * @name tags#processBooleanTags
+     * @private
+     * @param: {boolean} value
+     * @param: {string} label Value to be displayed for the tag
+     * @description Add boolean tags to selected parameters.
+     */
+    function processBooleanTags(value, label) {
+        if (value) {
+            tags.selectedParameters.push(tag(label));
+        }
+    }
 
     /**
      * Parse $location.search and initialise tags for fields defined in the PARAMETERS.
