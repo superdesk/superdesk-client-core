@@ -77,16 +77,32 @@ module.exports = function(grunt) {
     ]);
 
     // Production build
-    grunt.registerTask('build', [
-        'clean',
-        'copy:index',
-        'copy:assets',
-        'ngtemplates:gen-importer',
-        'ngtemplates:core',
-        'webpack:build',
-        'filerev',
-        'usemin'
-    ]);
+    grunt.registerTask('build', '', () => {
+        grunt.task.run([
+            'clean',
+            'copy:index',
+            'copy:assets',
+            'ngtemplates:gen-importer',
+            'ngtemplates:core'
+        ]);
+
+        // if we have "*.po" files in "superdesk/client"
+        // use them to generate "lang.generated.js"
+        // to support client based translations
+        var pkgName = grunt.file.readJSON('package.json').name;
+        if (grunt.file.expand("po/*.po").length && pkgName != 'superdesk-core') {
+            grunt.task.run([
+                'nggettext_extract',
+                'nggettext_compile'
+            ]);
+        }
+
+        grunt.task.run([
+            'webpack:build',
+            'filerev',
+            'usemin'
+        ]);
+    });
 
     grunt.registerTask('package', ['ci', 'build']);
     grunt.registerTask('default', ['server']);
