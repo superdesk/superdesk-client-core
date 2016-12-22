@@ -247,12 +247,7 @@ describe('superdesk.apps.workspace.content', () => {
 
         it('render correctly all fields', inject((content) => {
             var el = compile({
-                model: {
-                    schema: {
-                        headline: {},
-                        slugline: null
-                    }
-                }
+                model: {}
             });
 
             el.scope().$digest();
@@ -262,21 +257,12 @@ describe('superdesk.apps.workspace.content', () => {
             expect(fields.length).toBe(Object.keys(content.contentProfileSchema).length);
             expect($(fields[0]).find('span.sd-toggle')
                 .hasClass('checked'))
-                .toBeFalsy();
-
-            expect($(fields[11]).find('span.sd-toggle')
-                .hasClass('checked'))
                 .toBeTruthy();
         }));
 
         it('should dirty parent form when toggling fields', () => {
             var el = compile({
-                model: {
-                    schema: {
-                        headline: {},
-                        slugline: null
-                    }
-                }
+                model: {}
             });
 
             el.scope().$digest();
@@ -285,7 +271,7 @@ describe('superdesk.apps.workspace.content', () => {
             var form = el.controller('form');
 
             expect(form.$dirty).toBeFalsy();
-            $(fields[1])
+            $(fields[0])
                 .find('span.sd-toggle')
                 .click();
             expect(form.$dirty).toBeTruthy();

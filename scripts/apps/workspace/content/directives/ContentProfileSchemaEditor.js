@@ -15,32 +15,19 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
         subject: gettext('Subject'),
         ednote: gettext('Editorial Note'),
         abstract: gettext('Abstract'),
-        age_range: gettext('Age Range'),
-        assets: gettext('Assets'),
         body_html: gettext('Body HTML'),
         byline: gettext('Byline'),
         dateline: gettext('Dateline'),
-        located: gettext('Located'),
         sign_off: gettext('Sign Off'),
         sms: gettext('SMS'),
         body_footer: gettext('Body footer'),
         footer: gettext('Footer'),
         media: gettext('Media'),
         media_description: gettext('Media Description'),
-        credit_level: gettext('Credit Level'),
-        desired_response: gettext('Desired Response'),
         feature_image: gettext('Feature Image'),
-        featured: gettext('Featured'),
-        reader_type: gettext('Reader Type'),
+        feature_media: gettext('Feature Media'),
         relatedItems: gettext('Related Items'),
-        subservice_motoring: gettext('Motoring Subservice'),
-        subservice_real_life: gettext('Real Life Subservice'),
-        subservice_sport: gettext('Sport Subservice'),
-        territory: gettext('Territory'),
-        topic_news: gettext('Topic (News)'),
-        topic_sport: gettext('Topic (Sport)'),
-        company_codes: gettext('Company Codes'),
-        feature_media: gettext('Feature Media')
+        company_codes: gettext('Company Codes')
     };
 
     return {
@@ -51,10 +38,13 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
             model: '=ngModel'
         },
         link: function(scope, elem, attr, form) {
-            scope.model.schema = scope.model.schema || {};
-            scope.model.editor = scope.model.editor || {};
-            scope.schema = angular.extend({}, content.contentProfileSchema);
-            scope.editor = angular.extend({}, content.contentProfileEditor);
+            scope.model.schema = angular.extend({}, content.contentProfileSchema);
+            scope.model.editor = angular.extend({}, content.contentProfileEditor);
+
+            content.getTypeMetadata(scope.model._id).then((typeMetadata) => {
+                scope.model.schema = angular.extend({}, typeMetadata.schema);
+                scope.model.editor = angular.extend({}, typeMetadata.editor);
+            });
 
             metadata.initialize().then(() => {
                 scope.options = {subject: metadata.values.subjectcodes};
@@ -62,10 +52,11 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
                     subject: metadata.values.subjectcodes,
                     anpa_category: metadata.values.categories
                 };
-                metadata.cvs.forEach((cv) => {
-                    var cvId = constant.CV_ALIAS[cv._id] || cv._id;
 
-                    if (scope.schema[cvId]) {
+                metadata.cvs.forEach((cv) => {
+                    var cvId = cv.schema_field || constant.CV_ALIAS[cv._id] || cv._id;
+
+                    if (scope.model.editor[cvId]) {
                         scope.options[cvId] = cv.items;
                     }
                 });
@@ -91,7 +82,7 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
                     '(apps/workspace/content/content/directives/ContentProfileSchemaEditor).' +
                     'ContentProfileSchemaEditor/labelMap');
 
-                return id;
+                return id.charAt(0).toUpperCase() + id.substr(1).toLowerCase();
             };
 
             /**
@@ -99,10 +90,8 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
              * @param {String} id the key of the field to toggle.
              */
             scope.toggle = function(id) {
-                scope.model.schema[id] = scope.model.schema[id] ?
-                    null : angular.extend({}, content.contentProfileSchema[id]);
-                scope.model.editor[id] = !scope.model.schema[id] ?
-                    null : angular.extend({}, content.contentProfileEditor[id]);
+                scope.model.editor[id].enabled = !scope.model.editor[id].enabled;
+                scope.model.schema[id].enabled = !scope.model.schema[id].enabled;
                 form.$dirty = true;
             };
 
