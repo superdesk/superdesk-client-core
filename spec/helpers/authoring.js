@@ -447,6 +447,11 @@ function Authoring() {
         browser.actions().mouseMove(element(by.css('.highlights-toggle .dropdown__toggle'))).perform();
     };
 
+    this.markForDesks = function() {
+        openAuthoringDropdown();
+        browser.actions().mouseMove(element(by.css('.marks-toggle .dropdown__toggle'))).perform();
+    };
+
     this.toggleAutoSpellCheck = function() {
         openAuthoringDropdown();
         element(by.model('spellcheckMenu.isAuto')).click();

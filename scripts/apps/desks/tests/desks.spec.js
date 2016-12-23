@@ -60,6 +60,12 @@ describe('desks service', () => {
         expect(api.remove).toHaveBeenCalledWith({});
     }));
 
+    it('can mark item', inject((desks, api, $q) => {
+        spyOn(api, 'save').and.returnValue($q.when({}));
+        desks.markItem(1, {_id: 2});
+        expect(api.save).toHaveBeenCalledWith('marked_for_desks', {marked_desk: 1, marked_item: 2});
+    }));
+
     it('can change both desk and stage at same time', inject((desks, preferencesService, $q) => {
         spyOn(preferencesService, 'update').and.returnValue($q.when({}));
         desks.setWorkspace(null);

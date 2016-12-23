@@ -41,6 +41,7 @@ export const DEFAULT_LIST_CONFIG = {
         'wordcount',
         'slugline',
         'highlights',
+        'markedDesks',
         'headline',
         'versioncreated'
     ],
