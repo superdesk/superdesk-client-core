@@ -84,6 +84,16 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
+         * @name WebPublisherManagerController#cancelEditSite
+         * @description Canceles changes to site
+         */
+        cancelEditSite() {
+            $scope.newSite = angular.extend({}, this.selectedSite);
+            this.siteForm.$setPristine();
+        }
+
+        /**
+         * @ngdoc method
          * @name WebPublisherManagerController#saveSite
          * @description Saving site
          */
@@ -168,10 +178,10 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
-         * @name WebPublisherManagerController#toogleCreateMenuCard
+         * @name WebPublisherManagerController#createMenuCard
          * @description Creates a new unsaved menu card in navigation.
          */
-        toogleCreateMenuCard() {
+        createMenuCard() {
             this.selectedMenu = {};
             $scope.newMenu = {};
             $scope.menus.push($scope.newMenu);
@@ -188,6 +198,19 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedMenu = menu;
             $scope.newMenu = angular.extend({}, menu);
             this.menuAdd = true;
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#cancelEditMenuCard
+         * @description Canceling update of menu card
+         */
+        cancelEditMenuCard() {
+            $scope.newMenu = angular.extend({}, this.selectedMenu);
+            this.menuAdd = false;
+            if (!this.selectedMenu.id) {
+                $scope.menus.pop();
+            }
         }
 
         /**
@@ -212,12 +235,7 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         deleteMenu(id) {
             modal.confirm(gettext('Please confirm you want to delete menu.'))
                 .then(() => {
-                    if (id) {
-                        publisher.removeMenu(id).then(this._refreshMenus.bind(this));
-                    } else {
-                        this.menuAdd = false;
-                        $scope.menus.pop();
-                    }
+                    publisher.removeMenu(id).then(this._refreshMenus.bind(this));
                 });
         }
 
@@ -275,11 +293,11 @@ export function WebPublisherManagerController($scope, publisher, modal) {
 
         /**
          * @ngdoc method
-         * @name WebPublisherManagerController#toogleCreateListCard
+         * @name WebPublisherManagerController#createListCard
          * @param {String} listType - type of content list
          * @description Creates a new unsaved content list card
          */
-        toogleCreateListCard(listType) {
+        createListCard(listType) {
             this.selectedList = {};
             $scope.newList = {type: listType, cacheLifeTime: 0};
             $scope.lists.push($scope.newList);
@@ -296,6 +314,19 @@ export function WebPublisherManagerController($scope, publisher, modal) {
             this.selectedList = list;
             $scope.newList = angular.extend({}, list);
             this.listAdd = true;
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#cancelEditListCard
+         * @description Canceling update of content list card
+         */
+        cancelEditListCard() {
+            $scope.newList = angular.extend({}, this.selectedList);
+            this.listAdd = false;
+            if (!this.selectedList.id) {
+                $scope.lists.pop();
+            }
         }
 
         /**
@@ -342,22 +373,17 @@ export function WebPublisherManagerController($scope, publisher, modal) {
         deleteList(id) {
             modal.confirm(gettext('Please confirm you want to delete list.'))
                 .then(() => {
-                    if (id) {
-                        publisher.removeList(id).then(this._refreshLists.bind(this));
-                    } else {
-                        this.listAdd = false;
-                        $scope.lists.pop();
-                    }
+                    publisher.removeList(id).then(this._refreshLists.bind(this));
                 });
         }
 
         /**
          * @ngdoc method
-         * @name WebPublisherManagerController#editList
+         * @name WebPublisherManagerController#openListCriteria
          * @param {Object} list - list for editing
          * @description Opens list criteria page
          */
-        editList(list) {
+        openListCriteria(list) {
             $scope.list = list;
             this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : '');
         }
@@ -427,6 +453,9 @@ export function WebPublisherManagerController($scope, publisher, modal) {
                 break;
             case 'content-lists':
                 this.changeListFilter('');
+                this._refreshLists();
+                break;
+            case 'content-bucket':
                 this._refreshLists();
                 break;
             }

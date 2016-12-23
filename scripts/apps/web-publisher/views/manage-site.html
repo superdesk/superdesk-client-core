@@ -4,8 +4,15 @@
         <div class="pull-right">
             <button class="btn" ng-click="webPublisher.toogleCreateSite()" translate>Close</button>
             <button
+                class="btn"
+                ng-disabled="webPublisher.siteForm.$invalid || !webPublisher.siteForm.$dirty"
+                ng-show="webPublisher.activeTab === 'general'"
+                ng-click="webPublisher.cancelEditSite()"
+                translate>Cancel</button>
+            <button
                 class="btn btn--primary"
                 ng-disabled="webPublisher.siteForm.$invalid || !webPublisher.siteForm.$dirty"
+                ng-show="webPublisher.activeTab === 'general'"
                 ng-click="webPublisher.saveSite()"
                 translate>Save</button>
         </div>
@@ -14,22 +21,28 @@
         <div class="sidebarLayout__sidebar">
             <ul class="nav nav--stackedPublisher">
                 <li ng-class="{active: webPublisher.activeTab === 'general'}">
-                    <button ng-click="webPublisher.changeTab('general')" translate>General</button>
+                    <a ng-click="webPublisher.changeTab('general')">{{:: 'General'| translate}}</a>
                 </li>
                 <li ng-class="{active: webPublisher.activeTab === 'routes'}">
-                    <button ng-click="webPublisher.changeTab('routes')"
+                    <a ng-click="webPublisher.changeTab('routes')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
-                        translate>Routes</button>
+                        translate>Routes</a>
                 </li>
                 <li ng-class="{active: webPublisher.activeTab === 'navigation' || webPublisher.activeTab === 'navigation-menu'}">
-                    <button ng-click="webPublisher.changeTab('navigation')"
+                    <a ng-click="webPublisher.changeTab('navigation')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
-                        translate>Navigation</button>
+                        translate>Navigation</a>
                 </li>
                 <li ng-class="{active: webPublisher.activeTab === 'content-lists' || webPublisher.activeTab === 'content-list-automatic'}">
-                    <button ng-click="webPublisher.changeTab('content-lists')"
+                    <a ng-click="webPublisher.changeTab('content-lists')"
                         ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
-                        translate>Content Lists</button>
+                        translate>Content Lists</a>
+                </li>
+                <li class="group-header" translate>advanced</li>
+                <li ng-class="{active: webPublisher.activeTab === 'content-bucket' || webPublisher.activeTab === 'content-list-bucket'}">
+                    <a ng-click="webPublisher.changeTab('content-bucket')"
+                        ng-disabled="!webPublisher.selectedSite.code || webPublisher.siteForm.$dirty"
+                        translate>Content Buckets</a>
                 </li>
             </ul>
         </div>
@@ -63,6 +76,12 @@
             </div>
             <div ng-switch-when="content-list-automatic">
                 <div ng-include="webPublisher.TEMPLATES_DIR + '/content-list-automatic.html'"></div>
+            </div>
+            <div ng-switch-when="content-bucket">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/content-bucket.html'"></div>
+            </div>
+            <div ng-switch-when="content-list-bucket">
+                <div ng-include="webPublisher.TEMPLATES_DIR + '/content-list-bucket.html'"></div>
             </div>
         </div>
     </div>
