@@ -11,7 +11,8 @@ export const PARAMETERS = Object.freeze({
     subject: 'Subject',
     company_codes: 'Company Codes',
     marked_desks: 'Marked Desks',
-    ingest_provider: 'Provider'
+    ingest_provider: 'Provider',
+    featuremedia: 'Associated Feature Media'
 });
 
 /**

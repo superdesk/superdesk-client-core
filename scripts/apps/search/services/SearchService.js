@@ -105,6 +105,9 @@ export function SearchService($location, gettext, config, session) {
             case 'spike':
                     // Will get set in the base filters
                 break;
+            case 'featuremedia':
+                filters.push({exists: {field: 'associations.featuremedia'}});
+                break;
             case 'subject':
                 filters.push({terms: {'subject.qcode': JSON.parse(params[key])}});
                 break;
