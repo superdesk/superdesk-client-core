@@ -287,7 +287,7 @@
     &__item {
         display: inline-block;
         vertical-align: middle;
-        margin: 4px 2px;
+        margin: 3px 2px;
         cursor: pointer;
         i {
             height: auto;
@@ -304,17 +304,25 @@
             font-family: $baseFontFamily;
             line-height: 21px;
             text-decoration: none;
-            padding: 0 10px;
+            padding: 4px 10px;
             border-radius: 2px;
-            border: 1px solid #d7d7d7;
+            border: 1px solid $grayLight;
             box-sizing: border-box;
             text-transform: uppercase;
             background: #fff !important;
-            opacity: 0.5;
+            color: $grayDark;
+            opacity: 0.7;
             &:hover {
-                color: $grayDark;
-                opacity: 0.8;
-                border-color: #aaa;
+                color: $black;
+                opacity: 1;
+            }
+            &.filter-type__link--blue {
+                border-color: $sd-blue;
+                color: $sd-blue;
+            }
+            &.filter-type__link--dark-blue {
+                border-color: $sd-keyword;
+                color: $sd-keyword;
             }
         }
         &:hover {
@@ -337,8 +345,7 @@
             a {
                 opacity: 1;
                 background: #505050 !important;
-                border-color: #505050 !important;
-                border-top: 0 !important;
+                border-color: #373737 #505050 #505050 !important;
                 color: #fff !important;
                 @include box-shadow(inset 0 2px 0px darken(#505050, 10%) !important);
             }
@@ -1357,10 +1364,6 @@ header .sortbar {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-        }
-        small {
-            display: block;
-            clear: left;
         }
         .label-group {
           display: inline-block;
