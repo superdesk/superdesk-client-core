@@ -29,7 +29,7 @@
     <div class="paneLayout__content">
         <div class="contentPadding">
             <ul class="treeList">
-                <li ng-repeat="route in routes | filter: {type: webPublisher.routeType, level:0} | orderBy: ['type', 'name'] track by route.id"
+                <li ng-repeat="route in routes | filter: {type: webPublisher.routeType, level: webPublisher.routeType === 'content' ? '' : 0} | orderBy: ['type', 'name'] track by route.id"
                     ng-include="webPublisher.TEMPLATES_DIR + '/routes-tree.html'">
                 </li>
             </ul>
@@ -62,7 +62,7 @@
                     <div class="item">
                         <label for="routeParent" translate>parent</label>
                         <select id="routeParent" class="dropdown__toggle line-input" ng-model="newRoute.parent"
-                            ng-options="route.id as route.name for route in routes | filter: {type: 'collection', id: (newRoute.id ? '!' + newRoute.id : '')} track by route.id">
+                            ng-options="route.id as route.name for route in routes | filter: {type: 'collection', id: newRoute.id ? '!' + newRoute.id : ''} track by route.id">
                             <option value=""></option>
                         </select>
                     </div>
