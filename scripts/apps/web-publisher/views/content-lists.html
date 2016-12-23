@@ -18,19 +18,19 @@
 
             <div class="subnav__stretch-bar"></div>
 
-            <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
-                <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
+            <div class="dropdown navbtn strict" title="{{ :: 'Create' | translate }}" dropdown>
+                <button class="dropdown__toggle sd-create-btn" dropdown__toggle ng-disabled="webPublisher.listAdd"></button>
 
                 <ul class="dropdown__menu dropdown__menu--scrollable pull-right">
                     <li><div class="dropdown__menu-label" translate>Create new item</div></li>
                     <li>
-                        <button ng-disabled="webPublisher.listAdd" ng-click="webPublisher.toogleCreateListCard('automatic')">
+                        <button ng-click="webPublisher.createListCard('automatic')">
                             <i class="icon-plus-small icon-round icon-white"></i>{{:: 'Automatic list'| translate}}
                         </button>
                     </li>
                     <!--will be included later
                     <li>
-                        <button ng-disabled="webPublisher.listAdd" ng-click="webPublisher.toogleCreateListCard('manual')">
+                        <button ng-click="webPublisher.createListCard('manual')">
                             <i class="icon-plus-small icon-round icon-white"></i>{{:: 'Manual list'| translate}}
                         </button>
                     </li>-->
@@ -40,7 +40,7 @@
     </div>
     <div class="content headerMargin">
         <div class="flex-grid box wrap-items small-1 medium-2 large-3 xlarge-4">
-            <div class="flex-item card-box" ng-repeat="list in lists | filter: {type: webPublisher.listType} | orderBy: 'id' track by list.id"
+            <div class="flex-item card-box" ng-if="list.type !== 'bucket'" ng-repeat="list in lists | filter: {type: webPublisher.listType} | orderBy: 'id' track by list.id"
                 ng-class="{'active': list.type === 'manual'}">
                 <div class="card-box__header">
                     <div ng-if="!webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="dropdown" dropdown>
@@ -49,7 +49,7 @@
                         </button>
                         <ul class="dropdown__menu more-activity-menu pull-right">
                             <li>
-                                <button ng-click="webPublisher.editList(list)" title="{{:: 'Edit list'| translate }}">
+                                <button ng-click="webPublisher.openListCriteria(list)" title="{{:: 'Edit list'| translate }}">
                                     <i class="icon-pencil"></i>{{:: 'Edit'| translate}}
                                 </button>
                             </li>
@@ -66,7 +66,7 @@
                         </ul>
                     </div>
                     <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="card-box__btn-group card-box__btn-group--right">
-                        <button ng-click="webPublisher.deleteList(list.id)" class="btn">
+                        <button ng-click="webPublisher.cancelEditListCard()" class="btn">
                             <i class="icon-close-small"></i>
                         </button>
                         <button ng-click="webPublisher.saveList()" class="btn">
@@ -79,7 +79,7 @@
                          <div>{{ list.name }}</div>
                     </div>
                     <div ng-if="webPublisher._editMode(list, webPublisher.selectedList, webPublisher.listAdd)" class="card-box__heading card-box__heading--editable">
-                        <input type="text" ng-model="newList.name" class="line-input line-input--alt" required autofocus>
+                        <input type="text" ng-model="newList.name" class="line-input line-input--alt" required sd-card-input-focus>
                     </div>
                 </div>
 

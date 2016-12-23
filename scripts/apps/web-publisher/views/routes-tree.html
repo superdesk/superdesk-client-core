@@ -23,5 +23,5 @@
     </div>
 </div>
 <ul ng-show="route.children.length && !route.closed">
-    <li ng-repeat="route in route.children" ng-include="webPublisher.TEMPLATES_DIR + '/routes-tree.html'"></li>
+    <li ng-repeat="route in route.children | filter: {type: webPublisher.routeType}" ng-include="webPublisher.TEMPLATES_DIR + '/routes-tree.html'"></li>
 </ul>

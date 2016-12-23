@@ -1,22 +1,31 @@
 .nav--stackedPublisher {
     li {
         border-left: 7px solid transparent;
-        padding: 12px 0 12px 24px;
-        font-size: 1.05em;
 
         &.active {
             border-color: $sd-blue;
         }
 
         &.active, &:hover {
-            button {
+            a {
                 color: $sd-blue;
             }
         }
 
-        button {
+        &.group-header {
+            text-transform: uppercase;
+            padding-left: 12px;
+            padding-top: 24px;
+            opacity: 0.5;
+            font-size: 0.9em;
+        }
+
+        a {
+            cursor: pointer;
             background: transparent;
-            border: none;
+            padding: 12px 0 12px 24px;
+            font-size: 1.05em;
+            color:#333;
         }
     }
 }
