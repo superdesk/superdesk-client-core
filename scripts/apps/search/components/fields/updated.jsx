@@ -3,15 +3,15 @@ import React from 'react';
 export function updated(props) {
     const {gettextCatalog} = props.svc;
 
-    var selectUpdate = function(event) {
+    var openItem = function(event) {
         event.stopPropagation();
-        props.selectUpdate();
+        props.openAuthoringView(props.item.rewritten_by);
     };
 
     if (props.item.rewritten_by) {
         return React.createElement(
             'div',
-            {className: 'state-label updated', key: 'updated', onClick: selectUpdate},
+            {className: 'state-label updated', key: 'updated', onClick: openItem},
             gettextCatalog.getString('Updated')
         );
     }
@@ -20,5 +20,5 @@ export function updated(props) {
 updated.propTypes = {
     svc: React.PropTypes.any.isRequired,
     item: React.PropTypes.any,
-    selectUpdate: React.PropTypes.func,
+    openAuthoringView: React.PropTypes.func
 };

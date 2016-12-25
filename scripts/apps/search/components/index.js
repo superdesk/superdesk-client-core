@@ -21,3 +21,4 @@ export {ErrorBox} from './ErrorBox';
 export {ListItemInfo} from './ListItemInfo';
 export {Item} from './Item';
 export {ItemList} from './ItemList';
+export {Associations} from './Associations';

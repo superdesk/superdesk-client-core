@@ -1,6 +1,42 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
 
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.authoring
+ * @name sdAuthoring
+ *
+ * @requires superdesk
+ * @requires superdeskFlags
+ * @requires authoringWorkspace
+ * @requires notify
+ * @requires gettext
+ * @requires desks
+ * @requires authoring
+ * @requires api
+ * @requires session
+ * @requires lock
+ * @requires privileges
+ * @requires content
+ * @requires $location
+ * @requires referrer
+ * @requires macros
+ * @requires $timeout
+ * @requires $q
+ * @requires modal
+ * @requires archiveService
+ * @requires confirm
+ * @requires reloadService
+ * @requires $rootScope
+ * @requires $interpolate
+ * @requires metadata
+ * @requires suggest
+ * @requires config
+ *
+ * @description
+ *   This directive is responsible for generating superdesk content authoring form.
+ */
+
 AuthoringDirective.$inject = [
     'superdesk',
     'superdeskFlags',
@@ -26,12 +62,13 @@ AuthoringDirective.$inject = [
     '$rootScope',
     '$interpolate',
     'metadata',
-    'suggest'
+    'suggest',
+    'config'
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
-    $rootScope, $interpolate, metadata, suggest) {
+    $rootScope, $interpolate, metadata, suggest, config) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -294,57 +331,96 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return true;
             }
 
+            /**
+             * Checks if associations is with rewrite_of item then open then modal to add associations.
+             * The user has options to add associated media to the current item and review the media change
+             * or publish the current item without media.
+             */
+            function checkMediaAssociatedToUpdate() {
+                let rewriteOf = $scope.item.rewrite_of;
+
+                if (!config.features.editFeaturedImage ||
+                    $scope.action === 'kill' || !rewriteOf ||
+                    $scope.item.associations && $scope.item.associations.featuremedia) {
+                    return $q.when(true);
+                }
+
+                return api.find('archive', rewriteOf)
+                    .then((rewriteOfItem) => {
+                        if (rewriteOfItem && rewriteOfItem.associations &&
+                            rewriteOfItem.associations.featuremedia) {
+                            return confirm.confirmFeatureMedia(rewriteOfItem);
+                        }
+                        return true;
+                    })
+                    .then((result) => {
+                        if (result && result.associations) {
+                            $scope.item.associations = result.associations;
+                            $scope.autosave($scope.item);
+                            return false;
+                        }
+
+                        return true;
+                    });
+            }
+
             function publishItem(orig, item) {
                 var action = $scope.action === 'edit' ? 'publish' : $scope.action;
 
                 validate(orig, item);
 
-                return authoring.publish(orig, item, action)
-                .then((response) => {
-                    if (!response) {
-                        notify.error(gettext('Unknown Error: Item not published.'));
-                        return false;
-                    }
+                return checkMediaAssociatedToUpdate()
+                    .then((result) => {
+                        if (result) {
+                            return authoring.publish(orig, item, action);
+                        }
+                        return $q.reject(false);
+                    })
+                    .then((response) => {
+                        if (!response) {
+                            notify.error(gettext('Unknown Error: Item not published.'));
+                            return $q.reject(false);
+                        }
 
-                    if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
-                        let issues = response.data._issues;
+                        if (angular.isDefined(response.data) && angular.isDefined(response.data._issues)) {
+                            let issues = response.data._issues;
 
-                        if (angular.isDefined(issues['validator exception'])) {
-                            var errors = issues['validator exception'];
-                            var modifiedErrors = errors.replace(/\[/g, '')
-                                .replace(/\]/g, '')
-                                .split(',');
+                            if (angular.isDefined(issues['validator exception'])) {
+                                var errors = issues['validator exception'];
+                                var modifiedErrors = errors.replace(/\[/g, '')
+                                    .replace(/\]/g, '')
+                                    .split(',');
 
-                            for (var i = 0; i < modifiedErrors.length; i++) {
-                                notify.error(_.trim(modifiedErrors[i]));
+                                for (var i = 0; i < modifiedErrors.length; i++) {
+                                    notify.error(_.trim(modifiedErrors[i]));
+                                }
+
+                                if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
+                                    authoring.open(item._id, true).then((res) => {
+                                        $scope.origItem = res;
+                                        $scope.dirty = false;
+                                        $scope.item = _.create($scope.origItem);
+                                    });
+                                }
+
+                                return false;
                             }
 
-                            if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
-                                authoring.open(item._id, true).then((res) => {
-                                    $scope.origItem = res;
-                                    $scope.dirty = false;
-                                    $scope.item = _.create($scope.origItem);
-                                });
+                            if (issues.unique_name && issues.unique_name.unique) {
+                                notify.error(UNIQUE_NAME_ERROR);
+                                return false;
                             }
-
+                        } else if (response.status === 412) {
+                            notifyPreconditionFailed();
                             return false;
                         }
 
-                        if (issues.unique_name && issues.unique_name.unique) {
-                            notify.error(UNIQUE_NAME_ERROR);
-                            return false;
-                        }
-                    } else if (response.status === 412) {
-                        notifyPreconditionFailed();
-                        return false;
-                    }
-
-                    notify.success(gettext('Item published.'));
-                    $scope.item = response;
-                    $scope.dirty = false;
-                    authoringWorkspace.close(true);
-                    return true;
-                });
+                        notify.success(gettext('Item published.'));
+                        $scope.item = response;
+                        $scope.dirty = false;
+                        authoringWorkspace.close(true);
+                        return true;
+                    });
             }
 
             function validate(orig, item) {

@@ -172,6 +172,117 @@ describe('authoring', () => {
         expect(scope.item.slugline).toBe('');
     }));
 
+    it('confirm the associated media not called if not rewrite_of',
+    inject((api, $q, $rootScope, config, confirm) => {
+        let item = {
+            _id: 'test',
+            headline: 'headline'
+        };
+
+        let rewriteOf = {
+            _id: 'rewriteOf',
+            headline: 'rewrite',
+            associations: {
+                featuremedia: {
+
+                }
+            }
+        };
+
+        let defered = $q.defer();
+
+        config.features = {
+            editFeaturedImage: 1
+        };
+
+        spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
+        spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
+        let scope = startAuthoring(item, 'edit');
+
+        scope.publish();
+        $rootScope.$digest();
+        expect(confirm.confirmFeatureMedia).not.toHaveBeenCalled();
+        expect(api.find).not.toHaveBeenCalledWith('archive', 'rewriteOf');
+    }));
+
+    it('confirm the associated media called if rewrite_of but no associated media on edited item',
+    inject((api, $q, $rootScope, config, confirm, authoring) => {
+        let item = {
+            _id: 'test',
+            headline: 'headline',
+            rewrite_of: 'rewriteOf'
+        };
+
+        let rewriteOf = {
+            _id: 'rewriteOf',
+            headline: 'rewrite',
+            associations: {
+                featuremedia: {
+
+                }
+            }
+        };
+
+        let defered = $q.defer();
+
+        config.features = {
+            editFeaturedImage: 1
+        };
+
+        spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
+        spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
+        spyOn(authoring, 'autosave').and.returnValue(item);
+        spyOn(authoring, 'publish').and.returnValue(item);
+        let scope = startAuthoring(item, 'edit');
+
+        scope.publish();
+        $rootScope.$digest();
+        expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+        expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+        defered.resolve(rewriteOf);
+        $rootScope.$digest();
+        expect(authoring.autosave).toHaveBeenCalled();
+        expect(authoring.publish).not.toHaveBeenCalled();
+    }));
+
+    it('confirm the associated media but do not use the associated media',
+    inject((api, $q, $rootScope, config, confirm, authoring) => {
+        let item = {
+            _id: 'test',
+            rewrite_of: 'rewriteOf'
+        };
+
+        let rewriteOf = {
+            _id: 'rewriteOf',
+            associations: {
+                featuremedia: {
+                    test: 'test'
+                }
+            }
+        };
+
+        let defered = $q.defer();
+
+        config.features = {
+            editFeaturedImage: 1
+        };
+
+        spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
+        spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
+        spyOn(authoring, 'autosave').and.returnValue({});
+        spyOn(authoring, 'publish').and.returnValue({});
+        let scope = startAuthoring(item, 'edit');
+
+        scope.publish();
+        $rootScope.$digest();
+        expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+        expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+        defered.resolve({});
+        $rootScope.$digest();
+        expect(authoring.publish).toHaveBeenCalled();
+        expect(authoring.autosave).not.toHaveBeenCalled();
+    }));
+
     /**
      * Start authoring ctrl for given item.
      *
@@ -203,6 +314,7 @@ describe('authoring', () => {
             spyOn(confirm, 'confirm').and.returnValue(confirmDefer.promise);
             spyOn(confirm, 'confirmPublish').and.returnValue(confirmDefer.promise);
             spyOn(confirm, 'confirmSaveWork').and.returnValue(confirmDefer.promise);
+            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(confirmDefer.promise);
             spyOn(lock, 'unlock').and.returnValue($q.when());
         }));
 
