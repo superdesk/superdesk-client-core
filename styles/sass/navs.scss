@@ -367,9 +367,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   @include text-normal();
+  &--text-light {
+      @include text-light();
+  }
 }
 .subnav__desk-stage {
     flex-grow: 1;
+}
+.subnav--white-background {
+    background-color: $white;
 }
 
 .subnav.level2 {
