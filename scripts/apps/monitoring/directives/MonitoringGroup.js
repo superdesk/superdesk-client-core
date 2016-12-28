@@ -24,10 +24,10 @@ import _ from 'lodash';
  */
 MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
     'activityService', 'workflowService', 'keyboardManager', 'desks', 'search', 'multi',
-    'archiveService', '$rootScope'];
+    'archiveService', '$rootScope', 'config'];
 export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope) {
-    var ITEM_HEIGHT = 57;
+        workflowService, keyboardManager, desks, search, multi, archiveService, $rootScope, config) {
+    var ITEM_HEIGHT = config.list && config.list.thinRows ? 29 : 57;
 
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-group.html',
