@@ -319,7 +319,7 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
              * for the selected feeding service.
              * @returns {string}
              */
-            $scope.getConfigTemplateSrc = function() {
+            $scope.getConfigTemplateUrl = function() {
                 var feedingService = getCurrentService();
 
                 return feedingService ? feedingService.templateUrl : '';
