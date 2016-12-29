@@ -49,7 +49,6 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
                     pg++;
                     return _getAllFeedingServicesAllowed(criteria, pg, merged, servicesMap);
                 }
-console.log('MERGED', merged);
                 return $filter('sortByName')(merged, 'label');
             });
     };
