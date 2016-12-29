@@ -1,7 +1,7 @@
-import * as constant from 'apps/ingest/constants';
 
-IngestDashboardController.$inject = ['$scope', 'api', 'ingestSources', 'preferencesService', 'notify', 'gettext'];
-export function IngestDashboardController($scope, $api, ingestSources, preferencesService, notify, gettext) {
+IngestDashboardController.$inject = ['$scope', 'api', 'ingestSources', 'preferencesService',
+    'notify', 'gettext', 'config'];
+export function IngestDashboardController($scope, $api, ingestSources, preferencesService, notify, gettext, config) {
     $scope.items = [];
     $scope.dashboard_items = [];
 
@@ -18,7 +18,7 @@ export function IngestDashboardController($scope, $api, ingestSources, preferenc
 
         _.forEach(_.filter($scope.items, {dashboard_enabled: true}),
             (item) => {
-                preferences.push(_.pick(item, _.union(['_id'], _.keys(constant.PROVIDER_DASHBOARD_DEFAULTS))));
+                preferences.push(_.pick(item, _.union(['_id'], _.keys(config.ingest.PROVIDER_DASHBOARD_DEFAULTS))));
             }
         );
 
