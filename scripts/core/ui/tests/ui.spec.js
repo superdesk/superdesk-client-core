@@ -18,6 +18,7 @@ describe('superdesk ui', () => {
 
     beforeEach(window.module('superdesk.core.ui'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     var datetimeHelper;
 

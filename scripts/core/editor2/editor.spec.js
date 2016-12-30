@@ -10,6 +10,7 @@ describe('text editor', () => {
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(() => {
         // remove all elements from body

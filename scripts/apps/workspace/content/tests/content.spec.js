@@ -6,6 +6,7 @@ describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.workspace.content'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     describe('content service', () => {
         var done;

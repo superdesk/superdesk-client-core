@@ -3,6 +3,7 @@ describe('vocabularies', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     it('can fetch vocabularies', inject((api, vocabularies, $q, $rootScope) => {
         var fixture = {foo: 'bar'};

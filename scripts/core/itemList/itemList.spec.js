@@ -1,9 +1,9 @@
 
-
 describe('itemListService', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.itemList'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module(($provide) => {
         $provide.service('api', ($q) => function ApiService(endpoint, endpointParam) {
             return {

@@ -2,6 +2,7 @@ describe('templates', () => {
     beforeEach(window.module('superdesk.core.auth.session'));
     beforeEach(window.module('superdesk.apps.templates'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     describe('templates widget', () => {
         var existingTemplate = {template_name: 'template1', template_desks: ['sports']};

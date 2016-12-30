@@ -4,6 +4,7 @@ describe('Reload Service', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.core.preferences'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     var USER_URL = '/users/1';
     var USER = {
@@ -77,6 +78,7 @@ describe('Reload Service', () => {
 describe('Notify Connection Service', () => {
     beforeEach(window.module('superdesk.apps.notification'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     var rootScope, msg;
 

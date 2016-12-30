@@ -20,6 +20,7 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject(($window) => {
         $window.onbeforeunload = angular.noop;
@@ -534,6 +535,7 @@ describe('cropImage', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     it('can change button label for apply/edit crop',
     inject(($rootScope, $compile, $q, metadata) => {
@@ -583,6 +585,7 @@ describe('autosave', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     it('can fetch an autosave for item locked by user and is editable',
         inject((autosave, api, $q, $rootScope) => {
@@ -648,6 +651,7 @@ describe('lock service', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     var user = {_id: 'user'};
     var sess = {_id: 'sess'};
@@ -725,6 +729,7 @@ describe('authoring actions', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject((desks, $q) => {
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));
@@ -1906,6 +1911,7 @@ describe('authoring workspace', () => {
     });
 
     beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject(($q, authoring) => {
         spyOn(authoring, 'open').and.returnValue($q.when(lockedItem));
@@ -2003,6 +2009,7 @@ describe('authoring workspace', () => {
 describe('authoring container directive', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject(($templateCache) => {
         // avoid loading of authoring
@@ -2102,6 +2109,7 @@ describe('authoring container directive', () => {
 describe('authoring themes', () => {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject(($q, preferencesService) => {
         spyOn(preferencesService, 'get').and.returnValue($q.when({'editor:theme': ['theme:proofreadTheme']}));
@@ -2162,6 +2170,7 @@ describe('send item directive', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject(($templateCache) => {
         $templateCache.put('scripts/apps/authoring/views/send-item.html', '');

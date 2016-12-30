@@ -12,6 +12,7 @@ describe('MetadataWidgetCtrl controller', () => {
     beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {

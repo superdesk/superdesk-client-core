@@ -14,6 +14,7 @@ describe('sdUserPreferences directive', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject((
         $rootScope, $compile, $q, metadata, preferencesService, session, userList, desks

@@ -16,6 +16,7 @@ describe('familyService', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.archive.directives'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(window.module(($provide) => {
         $provide.service('api', ($q) => function() {

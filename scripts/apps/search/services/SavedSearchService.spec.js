@@ -1,5 +1,6 @@
 describe('saved search service', () => {
     beforeEach(window.module('superdesk.apps.search'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     it('can reset searches on event', inject((savedSearch, $rootScope, $q, api) => {
         spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo', name: 'Foo'}], _links: {}}));

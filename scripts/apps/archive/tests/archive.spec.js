@@ -8,6 +8,7 @@ describe('content', () => {
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {

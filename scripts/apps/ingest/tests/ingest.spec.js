@@ -3,6 +3,7 @@ describe('ingest', () => {
     describe('send service', () => {
         beforeEach(window.module('superdesk.apps.ingest.send'));
         beforeEach(window.module('superdesk.templates-cache'));
+        beforeEach(window.module('superdesk.apps.searchProviders'));
 
         it('can send an item', inject((send, api, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({_created: 'now'}));
@@ -66,6 +67,7 @@ describe('ingest', () => {
 
     describe('registering activities in superdesk.apps.ingest module', () => {
         beforeEach(window.module('superdesk.apps.ingest'));
+        beforeEach(window.module('superdesk.apps.searchProviders'));
 
         describe('the "archive" activity', () => {
             var activity;
