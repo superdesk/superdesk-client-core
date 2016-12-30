@@ -90,6 +90,33 @@ function ResetPassworController($scope, $location, api, notify, gettext) {
     }
 }
 
+/**
+ * @ngdoc controller
+ * @module superdesk.core.auth
+ * @name SecureLoginController
+ * @description this controller handles XMPP auth (aka secure login), it create
+ * transaction ID (which will be sent to XMPP client) and redirect page on success.
+ */
+SecureLoginController.$inject = ['$scope', 'auth', '$route', '$window'];
+function SecureLoginController(scope, auth, $route, $window) {
+    var random = Math.floor(Math.random() * 10000 + 1);
+
+    scope.transactionId = random.toString();
+
+    scope.authenticateXMPP = function() {
+        scope.isLoading = true;
+        scope.loginError = null;
+        auth.loginXMPP(scope.jid || '', scope.transactionId || '')
+        .then(() => {
+            scope.isLoading = false;
+            $window.location.replace('/'); // reset page for new user
+        }, (rejection) => {
+            scope.isLoading = false;
+            scope.loginError = rejection.status;
+        });
+    };
+}
+
 angular.module('superdesk.core.auth.session', [])
     .constant('SESSION_EVENTS', {
         LOGIN: 'login',
@@ -122,6 +149,12 @@ export default angular.module('superdesk.core.auth', [
             .activity('/reset-password/', {
                 controller: ResetPassworController,
                 templateUrl: asset.templateUrl('core/auth/reset-password.html'),
+                auth: false
+            });
+        superdesk
+            .activity('/secure-login/', {
+                controller: SecureLoginController,
+                templateUrl: asset.templateUrl('core/auth/secure-login.html'),
                 auth: false
             });
     }])
