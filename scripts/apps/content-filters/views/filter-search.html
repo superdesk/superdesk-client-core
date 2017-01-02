@@ -5,7 +5,7 @@
             <div class="field">
                 <label translate>Field</label>
                 <select class="input" ng-change="resetValues()" required ng-model="filterCondition.field">
-                    <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters track by $index">{{:: parameter.field | translate}}</option>
+                    <option value="{{parameter.field}}" ng-selected="parameter.field === filterCondition.field" ng-repeat="parameter in filterConditionParameters | orderBy: 'field' track by $index">{{:: parameter.field}}</option>
                 </select>
             </div>
             <div class="field">
