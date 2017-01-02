@@ -1,5 +1,12 @@
 # Superdesk Client Changelog
 
+## [1.4.8] 2017-01-02
+
+### Added
+
+- Make widgets label and description translatable and add translations.
+- Show featured image in item preview and monitoring widget.
+
 ## [1.4.7] 2016-12-20
 
 ### Fixed
