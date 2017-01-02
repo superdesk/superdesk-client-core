@@ -1,7 +1,12 @@
 ActivityReportView.$inject = ['$location', 'asset'];
 
 /**
- * A directive that displays the generated activity report
+ * @ngdoc directive
+ * @module superdesk.apps.analytics
+ * @name sdActivityReportView
+ * @requires $location
+ * @requires asset
+ * @description A directive that displays the generated activity report
  */
 export function ActivityReportView($location, asset) {
     return {
@@ -18,8 +23,9 @@ export function ActivityReportView($location, asset) {
             });
 
             /**
-             * Initialises the activity report object
-             *
+             * @ngdoc method
+             * @name sdActivityReportView#initActivityReport
+             * @description Initialises the activity report object
              */
             function initActivityReport() {
                 if (scope.activityReport.group_by instanceof Array && scope.activityReport.group_by[0] === 'desk') {

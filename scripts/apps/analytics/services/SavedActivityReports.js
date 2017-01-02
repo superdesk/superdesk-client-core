@@ -1,6 +1,22 @@
-
 SavedActivityReports.$inject = ['api', '$filter', '$q', '$rootScope'];
+
+/**
+ * @ngdoc service
+ * @module superdesk.apps.analytics
+ * @name SavedActivityReports
+ * @requires api, $filter, $q, $rootScope
+ * @description A service that handles the retrieval of the saved activity reports
+ */
 export function SavedActivityReports(api, $filter, $q, $rootScope) {
+    /**
+     * @ngdoc method
+     * @name SavedActivityReports#_getAll
+     * @param {Integer} page
+     * @param {Integer} items - items per page
+     * @param {Array} params - query params
+     * @returns {Object} promise
+     * @description Return saved activity reports starting with page, having 'items' per page
+     */
     var _getAll = function(page, items, params) {
         var endPoint = 'saved_activity_reports';
 
@@ -24,6 +40,14 @@ export function SavedActivityReports(api, $filter, $q, $rootScope) {
     this.savedActivityReports = null;
     this.savedActivityReportsLookup = null;
 
+    /**
+     * @ngdoc method
+     * @name SavedActivityReports#getAllSavedActivityReports
+     * @param {Integer} page
+     * @param {Integer} items - items per page
+     * @returns {Array} List of activity reports
+     * @description Return saved activity reports starting with page, having 'items' per page
+     */
     this.getAllSavedActivityReports = function(page, items) {
         var self = this;
 
@@ -42,6 +66,11 @@ export function SavedActivityReports(api, $filter, $q, $rootScope) {
         });
     };
 
+    /*
+     * @ngdoc method
+     * @name SavedActivityReports#resetSavedActivityReports
+     * @description Reset activity reports lists
+     */
     this.resetSavedActivityReports = function() {
         this.savedActivityReports = null;
         this.savedActivityReportsLookup = null;

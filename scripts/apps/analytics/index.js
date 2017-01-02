@@ -13,6 +13,13 @@ import './styles/analytics.scss';
 import * as svc from './services';
 import * as directive from './directives';
 
+/**
+ * @ngdoc module
+ * @module superdesk.apps.analytics
+ * @name superdesk.apps.analytics
+ * @packageName superdesk.apps
+ * @description Superdesk analytics specific application.
+ */
 angular.module('superdesk.apps.analytics', [])
     .service('savedActivityReports', svc.SavedActivityReports)
 

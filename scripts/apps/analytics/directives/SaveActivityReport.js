@@ -1,14 +1,27 @@
 SaveActivityReport.$inject = ['$location', 'asset', 'api', 'session', 'notify', 'config', '$rootScope', 'lodash'];
 
 /**
- * A directive that generates the activity report save dialog
+ * @ngdoc directive
+ * @module superdesk.apps.analytics
+ * @name sdSaveActivityReport
+ * @requires $location
+ * @requires asset
+ * @requires api
+ * @requires session
+ * @requires notify
+ * @requires config
+ * @requires $rootScope, _
+ * @description A directive that generates the activity report save dialog
  */
 export function SaveActivityReport($location, asset, api, session, notify, config, $rootScope, _) {
     return {
         templateUrl: asset.templateUrl('apps/analytics/views/save-activity-report.html'),
         link: function(scope, element, attrs, controller) {
             /**
-             * Patches or posts the given activity report
+             * @ngdoc method
+             * @name sdSaveActivityReport#save
+             * @param {Object} activityReport
+             * @description Patches or posts the given activity report
              */
             scope.save = function(activityReport) {
                 function onSuccess() {
@@ -40,8 +53,9 @@ export function SaveActivityReport($location, asset, api, session, notify, confi
             };
 
             /**
-             * Clears the activity report form
-             *
+             * @ngdoc method
+             * @name sdSaveActivityReport#formatDate
+             * @description Clears the activity report form
              */
             scope.clear = function() {
                 scope.initActivityReport();
@@ -49,8 +63,11 @@ export function SaveActivityReport($location, asset, api, session, notify, confi
             };
 
             /**
-             * Format given date for save
-             *
+             * @ngdoc method
+             * @name sdSaveActivityReport#formatDate
+             * @param {String} date
+             * @returns {String}
+             * @description Format given date for save
              */
             function formatDate(date) {
                 return date ? moment(date, config.model.dateformat).format('YYYY-MM-DD') : null; // jshint ignore:line

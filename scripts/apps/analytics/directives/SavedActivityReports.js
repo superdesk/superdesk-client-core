@@ -2,6 +2,25 @@ SavedActivityReports.$inject = [
     '$rootScope', 'api', 'session', 'modal', 'notify', 'gettext', 'asset',
     '$location', 'desks', 'privileges', 'config', 'savedActivityReports'
 ];
+
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.analytics
+ * @name sdSavedActivityReports
+ * @requires $rootScope
+ * @requires api
+ * @requires session
+ * @requires modal
+ * @requires notify
+ * @requires gettext
+ * @requires asset
+ * @requires $location
+ * @requires desks,
+ * @requires privileges
+ * @requires config
+ * @requires savedActivityReports
+ * @description A directive that renders the activity reports lists
+ */
 export function SavedActivityReports($rootScope, api, session, modal, notify, gettext, asset,
     $location, desks, privileges, config, savedActivityReports) {
     return {
@@ -21,6 +40,11 @@ export function SavedActivityReports($rootScope, api, session, modal, notify, ge
                 scope.userLookup = desks.userLookup;
             });
 
+            /**
+             * @ngdoc method
+             * @name sdSavedActivityReports#initSavedActivityReports
+             * @description Initialises the saved activity reports directive
+             */
             function initSavedActivityReports() {
                 savedActivityReports.resetSavedActivityReports();
                 savedActivityReports.getAllSavedActivityReports().then((activityReports) => {
@@ -44,16 +68,19 @@ export function SavedActivityReports($rootScope, api, session, modal, notify, ge
             initSavedActivityReports();
 
             /**
-             * Broadcasts the edit:activity_report event
-             *
+             * @ngdoc method
+             * @name sdSavedActivityReports#edit
+             * @param {Object} activityReport
+             * @description Broadcasts the edit:activity_report event
              */
             scope.edit = function(activityReport) {
                 $rootScope.$broadcast('edit:activity_report', activityReport);
             };
 
             /**
-             * Filters the content of global and user activity reports lists
-             *
+             * @ngdoc method
+             * @name sdSavedActivityReports#filter
+             * @description Filters the content of global and user activity reports lists
              */
             scope.filter = function() {
                 scope.userSavedActivityReports = _.clone(originalUserActivityReports);
@@ -69,8 +96,10 @@ export function SavedActivityReports($rootScope, api, session, modal, notify, ge
             };
 
             /**
-             * Removed the given activity report
-             *
+             * @ngdoc method
+             * @name sdSavedActivityReports#remove
+             * @param {Object} activityReport
+             * @description Removed the given activity report
              */
             scope.remove = function(activityReport) {
                 modal.confirm(
@@ -86,8 +115,11 @@ export function SavedActivityReports($rootScope, api, session, modal, notify, ge
             };
 
             /**
-             * Format given date for save
-             *
+             * @ngdoc method
+             * @name sdSavedActivityReports#formatDate
+             * @param {String} date
+             * @returns {String}
+             * @description Format given date for save
              */
             function formatDate(date) {
                 return date ? moment(date).format(config.model.dateformat) : null; // jshint ignore:line

@@ -3,14 +3,25 @@ ActivityReportPanel.$inject = [
 ];
 
 /**
- * A directive that generates the sidebar containing activity report parameters
+ * @ngdoc directive
+ * @module superdesk.apps.analytics
+ * @name sdActivityReportPanel
+ * @requires $location
+ * @requires desks
+ * @requires asset
+ * @requires config
+ * @requires metadata
+ * @requires api
+ * @requires session
+ * @requires notify
+ * @requires $rootScope
+ * @description A directive that generates the sidebar containing activity report parameters
  */
 export function ActivityReportPanel($location, desks, asset, config, metadata, api, session, notify, $rootScope) {
     return {
         templateUrl: asset.templateUrl('apps/analytics/views/activity-report-panel.html'),
         scope: {},
         link: function(scope, element, attrs, controller) {
-            // scope.flags = controller.flags;
             scope.panelTab = 'editingActivityReport';
             scope.innerTab = 'parameters';
             scope.showActivityReport = false;
@@ -44,8 +55,9 @@ export function ActivityReportPanel($location, desks, asset, config, metadata, a
             });
 
             /**
-             * Initialises the activity report object
-             *
+             * @ngdoc method
+             * @name sdActivityReportPanel#initActivityReport
+             * @description Initialises the activity report object
              */
             scope.initActivityReport = function() {
                 scope.activityReport = {operation: 'publish', desk: desks.activeDeskId};
@@ -53,42 +65,49 @@ export function ActivityReportPanel($location, desks, asset, config, metadata, a
             };
 
             /**
-             * Returns true if the report editing tab was selected
-             *
+             * @ngdoc method
+             * @name sdActivityReportPanel#editReportSelected
+             * @returns {Boolean}
+             * @description Returns true if the report editing tab was selected
              */
             scope.editReportSelected = function() {
                 return scope.panelTab === 'editingActivityReport';
             };
 
             /**
-             * Returns true if the saved reports tab was selected
-             *
+             * @ngdoc method
+             * @name sdActivityReportPanel#savedReportsSelected
+             * @returns {Boolean}
+             * @description Returns true if the saved reports tab was selected
              */
             scope.savedReportsSelected = function() {
                 return scope.panelTab !== 'editingActivityReport';
             };
 
             /**
-             * Changes the tab to the given one
+             * @ngdoc method
+             * @name sdActivityReportPanel#savedReportsSelected
              * @param {String} tabName - valid values are 'editingActivityReport' and 'savedReports'
-             *
+             * @description Changes the tab to the given one
              */
             scope.changeTab = function(tabName) {
                 scope.panelTab = tabName;
             };
 
             /**
-             * Changes the inner tab to the given one
+             * @ngdoc method
+             * @name sdActivityReportPanel#savedReportsSelected
              * @param {String} tabName - valid values are 'parameters' and 'grouping'
-             *
+             * @description Changes the inner tab to the given one
              */
             scope.display = function(tabName) {
                 scope.innerTab = tabName;
             };
 
             /**
-             * Generate the report
-             *
+             * @ngdoc method
+             * @name sdActivityReportPanel#savedReportsSelected
+             * @description Generate the report
              */
             scope.generate = function() {
                 function onSuccess(activityReport) {
@@ -117,8 +136,10 @@ export function ActivityReportPanel($location, desks, asset, config, metadata, a
             };
 
             /**
-             * Format given date for generate
-             *
+             * @ngdoc method
+             * @name sdActivityReportPanel#formatDate
+             * @param {String} date
+             * @description Format given date for generate
              */
             function formatDate(date) {
                 return date ? moment(date, config.model.dateformat).format('YYYY-MM-DD') : null; // jshint ignore:line

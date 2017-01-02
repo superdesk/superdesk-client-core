@@ -1,7 +1,13 @@
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.analytics
+ * @name sdActivityReportContainer
+ * @description Container directive
+ */
 export function ActivityReportContainer() {
     return {
-        controller: ['$scope', '$location', 'gettext', 'pageTitle',
-            function ActivityReportContainerController($scope, $location, gettext, pageTitle) {
+        controller: ['gettext', 'pageTitle',
+            function ActivityReportContainerController(gettext, pageTitle) {
                 pageTitle.setUrl(gettext('Activity Report'));
             }
         ]
