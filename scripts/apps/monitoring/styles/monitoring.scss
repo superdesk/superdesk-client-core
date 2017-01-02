@@ -66,6 +66,7 @@
             .sd-columns {
                 display: table;
                 width: 100%;
+                height: 100vh;
                 table-layout: fixed;
                 @media only screen and (max-width : 1430px) {
                     right: $sidepreview-width - 40;
