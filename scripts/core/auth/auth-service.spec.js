@@ -6,6 +6,7 @@ describe('auth service', () => {
         window.module('superdesk.core.auth.session');
         window.module('superdesk.core.menu');
         window.module('superdesk.apps.authoring');
+        window.module('superdesk.apps.searchProviders');
         window.module(($provide) => {
             $provide.service('api', function($q) {
                 this.users = {

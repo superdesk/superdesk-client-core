@@ -1,5 +1,6 @@
 describe('templates', () => {
     beforeEach(window.module('superdesk.apps.aggregate'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     describe('aggregate widget controller', () => {
         var scope, ctrl;

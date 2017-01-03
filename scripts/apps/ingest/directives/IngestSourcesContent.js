@@ -1,9 +1,8 @@
-import * as constant from 'apps/ingest/constants';
 import _ from 'lodash';
 
-IngestSourcesContent.$inject = ['ingestSources', 'feedingServices', 'gettext', 'notify', 'api', '$location',
+IngestSourcesContent.$inject = ['ingestSources', 'gettext', 'notify', 'api', '$location',
     'modal', '$filter', 'config'];
-export function IngestSourcesContent(ingestSources, feedingServices, gettext, notify, api, $location,
+export function IngestSourcesContent(ingestSources, gettext, notify, api, $location,
     modal, $filter, config) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
@@ -11,8 +10,8 @@ export function IngestSourcesContent(ingestSources, feedingServices, gettext, no
             $scope.provider = null;
             $scope.origProvider = null;
             $scope.feedParsers = [];
+            $scope.feedingServices = [];
 
-            $scope.feedingServices = $filter('sortByName')(feedingServices, 'label');
             $scope.fileTypes = ['text', 'picture', 'graphic', 'composite', 'video', 'audio'];
             $scope.minutes = [0, 1, 2, 3, 4, 5, 8, 10, 15, 30, 45];
             $scope.seconds = [0, 5, 10, 15, 30, 45];
@@ -77,6 +76,10 @@ export function IngestSourcesContent(ingestSources, feedingServices, gettext, no
                     $scope.routingScheme = $filter('sortByName')(result._items);
                 });
 
+            ingestSources.fetchAllFeedingServicesAllowed().then((result) => {
+                $scope.feedingServices = result;
+            });
+
             ingestSources.fetchAllFeedParsersAllowed().then((result) => {
                 $scope.feedParsers = result;
             });
@@ -117,8 +120,8 @@ export function IngestSourcesContent(ingestSources, feedingServices, gettext, no
 
                 $scope.origProvider = provider || {};
                 $scope.provider = _.create($scope.origProvider);
-                $scope.provider.update_schedule = $scope.origProvider.update_schedule || constant.DEFAULT_SCHEDULE;
-                $scope.provider.idle_time = $scope.origProvider.idle_time || constant.DEFAULT_IDLE_TIME;
+                $scope.provider.update_schedule = $scope.origProvider.update_schedule || config.ingest.DEFAULT_SCHEDULE;
+                $scope.provider.idle_time = $scope.origProvider.idle_time || config.ingest.DEFAULT_IDLE_TIME;
                 $scope.provider.notifications = $scope.origProvider.notifications;
                 $scope.provider.config = $scope.origProvider.config;
                 $scope.provider.critical_errors = $scope.origProvider.critical_errors;
@@ -312,17 +315,18 @@ export function IngestSourcesContent(ingestSources, feedingServices, gettext, no
             };
 
             /**
-             * Returns the templateURL for the selected feeding service.
+             * Returns the HTML src from the templateURL (defined in superdesk-config.js
+             * for the selected feeding service.
              * @returns {string}
              */
-            $scope.getConfigTemplateURL = function() {
+            $scope.getConfigTemplateUrl = function() {
                 var feedingService = getCurrentService();
 
                 return feedingService ? feedingService.templateUrl : '';
             };
 
             function getCurrentService() {
-                return _.find($scope.feedingServices, {value: $scope.provider.feeding_service});
+                return _.find($scope.feedingServices, {feeding_service: $scope.provider.feeding_service});
             }
         }
     };

@@ -3,7 +3,6 @@ import './styles/settings.scss';
 
 import './ingest-stats-widget/stats';
 
-import * as constant from './constants';
 import * as ctrl from './controllers';
 import * as svc from './services';
 import * as directive from './directives';
@@ -28,8 +27,6 @@ angular.module('superdesk.apps.ingest', [
     'superdesk.apps.ingest.send',
     'superdesk.config'
 ])
-    .value('feedingServices', constant.feedingServices)
-
     .service('ingestSources', svc.IngestProviderService)
     .service('remove', svc.RemoveIngestedService)
     .factory('subjectService', svc.SubjectService)
@@ -154,4 +151,33 @@ angular.module('superdesk.apps.ingest', [
 
     .run(['remove', (remove) => {
         remove.fetchProviders();
+    }])
+
+    .run(['ingestSources', 'asset', (ingestSources, asset) => {
+        // Map Ingest Feeding Services to config and form templates
+        ingestSources.registerFeedingService('file', {
+            label: 'File Feed',
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/fileConfig.html')
+        });
+        ingestSources.registerFeedingService('reuters_http', {
+            label: 'Reuters Feed API',
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/reutersConfig.html'),
+            config: {
+                url: 'http://rmb.reuters.com/rmd/rest/xml',
+                auth_url: 'https://commerce.reuters.com/rmd/rest/xml/login'
+            }
+        });
+        ingestSources.registerFeedingService('rss', {
+            label: 'RSS',
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/rssConfig.html')
+        });
+        ingestSources.registerFeedingService('ftp', {
+            label: 'FTP',
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/ftp-config.html'),
+            config: {passive: true}
+        });
+        ingestSources.registerFeedingService('email', {
+            label: 'Email',
+            templateUrl: asset.templateUrl('apps/ingest/views/settings/emailConfig.html')
+        });
     }]);

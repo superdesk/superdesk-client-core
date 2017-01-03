@@ -8,6 +8,7 @@ describe('Embed Code Handlers', () => {
 
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject(($controller, $rootScope) => {
         var element = angular.element('<div></div>');

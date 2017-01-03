@@ -10,6 +10,32 @@ describe('sdIngestSourcesContent directive', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.ingest'));
 
+    beforeEach(window.module(($provide) => {
+        $provide.constant('config', {
+            model: {
+                timeformat: 'HH:mm:ss',
+                dateformat: 'DD/MM/YYYY'
+            },
+            view: {
+                timeformat: 'HH:mm',
+                dateformat: 'MM/DD/YYYY'
+            },
+            defaultTimezone: 'Europe/London',
+            server: {url: undefined},
+            ingest: {
+                PROVIDER_DASHBOARD_DEFAULTS: {
+                    show_log_messages: true,
+                    show_ingest_count: true,
+                    show_time: true,
+                    log_messages: 'error',
+                    show_status: true
+                },
+                DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
+                DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
+            }
+        });
+    }));
+
     beforeEach(inject(($compile, $rootScope, $templateCache) => {
         var html,
             templateUrl;

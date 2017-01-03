@@ -1,7 +1,6 @@
-import {PROVIDER_DASHBOARD_DEFAULTS} from 'apps/ingest/constants';
 
-IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter', 'searchProviderService'];
-export function IngestProviderService(api, $q, preferencesService, $filter, searchProviderService) {
+IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter', 'searchProviderService', 'config'];
+export function IngestProviderService(api, $q, preferencesService, $filter, searchProviderService, config) {
     var _getAllIngestProviders = function(criteria = {}, page = 1, providers = []) {
         return api.query('ingest_providers', _.extend({max_results: 200, page: page}, criteria))
             .then((result) => {
@@ -30,21 +29,42 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
             });
     };
 
-    var _getAllFeedingServicesAllowed = function(criteria = {}, page = 1, parsers = []) {
+    var _getAllFeedingServicesAllowed = function(criteria = {}, page = 1, services = [], servicesMap = []) {
         return api.query('feeding_services_allowed', _.extend({max_results: 200, page: page}, criteria))
             .then((result) => {
                 let pg = page;
-                let merged = parsers.concat(result._items);
+                // if we have a registered service map for the service return that instead
+                // of default result from api
+                let merged = services.concat(
+                    _.map(result._items, (item) => {
+                        let mappedService = _.find(servicesMap, {
+                            feeding_service: item.feeding_service
+                        });
+
+                        return mappedService ? mappedService : item;
+                    })
+                );
 
                 if (result._links.next) {
                     pg++;
-                    return _getAllFeedingServicesAllowed(criteria, pg, merged);
+                    return _getAllFeedingServicesAllowed(criteria, pg, merged, servicesMap);
                 }
                 return $filter('sortByName')(merged, 'label');
             });
     };
 
+    var _forcedExtend = function(dest, src) {
+        _.each(config.ingest.PROVIDER_DASHBOARD_DEFAULTS, (value, key) => {
+            if (_.has(src, key)) {
+                dest[key] = src[key];
+            } else {
+                dest[key] = config.ingest.PROVIDER_DASHBOARD_DEFAULTS[key];
+            }
+        });
+    };
+
     var service = {
+        feedingServicesMap: [],
         providers: null,
         providersLookup: {},
         fetched: null,
@@ -75,14 +95,26 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
 
             return this.fetched;
         },
+        registerFeedingService: function(name, props) {
+            var self = this;
+
+            self.feedingServicesMap.push({
+                feeding_service: name,
+                label: props.label ? props.label : name,
+                templateUrl: props.templateUrl ? props.templateUrl : '',
+                config: props.config ? props.config : null
+            });
+        },
+        fetchAllFeedingServicesAllowed: function(criteria) {
+            var self = this;
+
+            return _getAllFeedingServicesAllowed(criteria, 1, [], self.feedingServicesMap);
+        },
         fetchAllIngestProviders: function(criteria) {
             return _getAllIngestProviders(criteria);
         },
         fetchAllFeedParsersAllowed: function(criteria) {
             return _getAllFeedParsersAllowed(criteria);
-        },
-        fetchAllFeedingServicesAllowed: function(criteria) {
-            return _getAllFeedingServicesAllowed(criteria);
         },
         fetchDashboardProviders: function() {
             var deferred = $q.defer();
@@ -98,7 +130,8 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
                         );
 
                         provider.dashboard_enabled = !!userProvider;
-                        forcedExtend(provider, userProvider ? userProvider : PROVIDER_DASHBOARD_DEFAULTS);
+                        _forcedExtend(provider,
+                            userProvider ? userProvider : config.ingest.PROVIDER_DASHBOARD_DEFAULTS);
                     });
 
                     deferred.resolve(ingestProviders);
@@ -116,12 +149,3 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
     return service;
 }
 
-function forcedExtend(dest, src) {
-    _.each(PROVIDER_DASHBOARD_DEFAULTS, (value, key) => {
-        if (_.has(src, key)) {
-            dest[key] = src[key];
-        } else {
-            dest[key] = PROVIDER_DASHBOARD_DEFAULTS[key];
-        }
-    });
-}

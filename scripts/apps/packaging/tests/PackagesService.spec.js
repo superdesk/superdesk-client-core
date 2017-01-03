@@ -1,5 +1,6 @@
 describe('packages service', () => {
     beforeEach(window.module('superdesk.apps.packaging'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     it('can get reference for an item', inject((packages) => {
         var item = {headline: 'foo', type: 'text', _id: 'foo:1'};

@@ -1,6 +1,7 @@
 
 
 describe('related item widget', () => {
+    beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.dashboard.widgets.relatedItem'));
 
     it('can open item', inject(($rootScope, $controller, superdesk) => {

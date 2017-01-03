@@ -4,6 +4,7 @@ describe('search service', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.search'));
     beforeEach(window.module('superdesk.core.services.pageTitle'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     it('can create base query', inject((search, session) => {
         session.identity = {_id: 'foo'};
@@ -256,7 +257,8 @@ describe('sdSearchPanel directive', () => {
         'superdesk.apps.searchProviders',
         'superdesk.apps.search',
         'superdesk.core.services.pageTitle',
-        'superdesk.templates-cache'
+        'superdesk.templates-cache',
+        'superdesk.apps.searchProviders'
     ));
 
     /**

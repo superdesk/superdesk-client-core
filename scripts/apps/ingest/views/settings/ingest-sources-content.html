@@ -54,7 +54,7 @@
 
                         <div class="field">
                             <label for="provider-feeding-service" translate>Feeding Service</label>
-                            <select id="provider-feeding-service" ng-change="initProviderConfig()" required ng-model="provider.feeding_service" ng-options="fs.value as fs.label for fs in feedingServices"></select>
+                            <select id="provider-feeding-service" ng-change="initProviderConfig()" required ng-model="provider.feeding_service" ng-options="fs.feeding_service as fs.label for fs in feedingServices"></select>
                         </div>
 
                         <div class="field">
@@ -107,7 +107,7 @@
                         </div>
 
                         <div class="field credentials">
-                            <div ng-include="getConfigTemplateURL()"></div>
+                            <div ng-include="getConfigTemplateUrl()"></div>
                         </div>
 
                         <div class="field">

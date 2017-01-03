@@ -3,6 +3,7 @@
 describe('users api', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     it('can create user', inject((usersService, api, $q, $rootScope) => {
         var user = {},
@@ -49,6 +50,7 @@ describe('users api', () => {
 describe('userlist service', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(window.module(($provide) => {
         $provide.service('api', ($q) => function(resource) {
@@ -114,6 +116,7 @@ describe('mentio directive', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     var deskList = {
         desk1: {title: 'desk1'},
@@ -172,6 +175,7 @@ describe('user edit form', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(window.module(($provide) => {
         $provide.service('session', ($q) => ({
