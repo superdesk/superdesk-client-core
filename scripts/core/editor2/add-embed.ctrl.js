@@ -15,28 +15,6 @@ EMBED_PROVIDERS, $scope, editor, $injector) {
             // use parameter or toggle
             self.extended = angular.isDefined(close) ? !close : !self.extended;
         },
-        /**
-         * Return html code to represent an embedded link
-         *
-         * @param {string} url
-         * @param {string} title
-         * @param {string} description
-         * @param {string} illustration
-         * @return {string} html
-         */
-        linkToHtml: function(url, title, description, illustration) {
-            var html = [
-                '<div class="embed--link">',
-                angular.isDefined(illustration) ?
-                '  <img src="' + illustration + '" class="embed--link__illustration"/>' : '',
-                '  <div class="embed--link__title">',
-                '      <a href="' + url + '" target="_blank">' + title + '</a>',
-                '  </div>',
-                '  <div class="embed--link__description">' + description + '</div>',
-                '</div>'];
-
-            return html.join('\n');
-        },
         retrieveEmbed: function() {
             function retrieveEmbedFromUrl() {
                 return embedService.get(self.input).then((data) => {
@@ -44,7 +22,12 @@ EMBED_PROVIDERS, $scope, editor, $injector) {
 
                     if (!angular.isDefined(embed)) {
                         if (data.type === 'link') {
-                            embed = self.linkToHtml(data.url, data.title, data.description, data.thumbnail_url);
+                            embed = editor.generateLinkTag({
+                                url: data.url,
+                                title: data.meta.title,
+                                description: data.meta.description,
+                                illustration: data.thumbnail_url,
+                            });
                         } else {
                             embed = editor.generateMediaTag({url: data.url, altText: data.description});
                         }
