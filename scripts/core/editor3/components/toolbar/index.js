@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
-import LinkControl from './LinkControl';
+import LinkControl from './link-button/LinkControl';
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
  * @name Toolbar
- * @param {Object} editorState the state of the editor
- * @param {Function} onChange on change function to be called when the editor
- * state changes
+ * @param {Object} editorState The state of the editor.
+ * @param {Object} editorOffset Position of editor on the screen (top, left).
+ * @param {Function} onChange On change function to be called when the editor
+ * state changes.
  * @param {Array} editorFormat options and settings for formatting
  * @description Holds the editor's toolbar.
  */
@@ -29,7 +30,7 @@ export default class Toolbar extends Component {
     }
 
     render() {
-        const {editorState, editorFormat, onChange} = this.props;
+        const {editorState, editorOffset, editorFormat, onChange} = this.props;
 
         return (
             <div className="Editor3-controls">
@@ -47,6 +48,7 @@ export default class Toolbar extends Component {
 
                 <LinkControl
                     editorState={editorState}
+                    editorOffset={editorOffset}
                     onChange={onChange}
                 />
             </div>
@@ -56,6 +58,7 @@ export default class Toolbar extends Component {
 
 Toolbar.propTypes = {
     editorState: React.PropTypes.object.isRequired,
+    editorOffset: React.PropTypes.object.isRequired,
     editorFormat: React.PropTypes.array.isRequired,
     onChange: React.PropTypes.func.isRequired
 };
