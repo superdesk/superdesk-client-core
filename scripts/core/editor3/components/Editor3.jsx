@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import $ from 'jquery';
 import {Editor, EditorState, RichUtils, CompositeDecorator} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 import {stateFromHTML} from 'draft-js-import-html';
@@ -31,14 +33,10 @@ export class Editor3 extends React.Component {
             )
         };
 
-        this.readOnly = props.readOnly || false;
-        this.showToolbar = props.showToolbar || false;
-        this.editorFormat = props.editorFormat || [];
-        this.parentOnChange = props.onChange;
+        this.offset = {top: 0, left: 0}; // editor absolute position on screen
 
         this.focus = this.focus.bind(this);
         this.onChange = this.onChange.bind(this);
-
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.onTab = this.onTab.bind(this);
         this.getDecorators = this.getDecorators.bind(this);
@@ -62,9 +60,14 @@ export class Editor3 extends React.Component {
     }
 
     /** Handle the editor state has been changed event*/
-    onChange(editorState) {
-        this.setState({editorState});
-        this.parentOnChange(stateToHTML(editorState.getCurrentContent()));
+    onChange(editorState, focus = false) {
+        this.setState({editorState}, () => {
+            if (focus) {
+                this.focus();
+            }
+        });
+
+        this.props.onChange(stateToHTML(editorState.getCurrentContent()));
     }
 
     /** Handle the editor key pressed event */
@@ -86,9 +89,16 @@ export class Editor3 extends React.Component {
         this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
     }
 
+    componentWillUpdate() {
+        const node = ReactDOM.findDOMNode(this);
+
+        this.offset = $(node).offset();
+    }
+
     /** Render the editor based on current state */
     render() {
         const {editorState} = this.state;
+        const {showToolbar, readOnly, editorFormat} = this.props;
 
         // If the user changes block type before entering any text, we can
         // either style the placeholder or hide it. Let's just hide it now.
@@ -109,16 +119,17 @@ export class Editor3 extends React.Component {
                 handleKeyCommand={this.handleKeyCommand}
                 onChange={this.onChange}
                 onTab={this.onTab}
-                readOnly={this.readOnly}
+                readOnly={readOnly}
                 ref="editor"
             />;
 
-        if (this.showToolbar) {
+        if (showToolbar) {
             return (
                 <div className="Editor3-root">
                     <Toolbar
                         editorState={editorState}
-                        editorFormat={this.editorFormat}
+                        editorFormat={editorFormat}
+                        editorOffset={this.offset}
                         onChange={this.onChange}
                     />
 

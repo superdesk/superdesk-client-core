@@ -6,6 +6,7 @@
 	font-family: 'Georgia', serif;
 	font-size: 14px;
 	padding: 15px;
+	position: relative;
 }
 
 .Editor3-editor {
@@ -57,6 +58,41 @@
 	font-size: 14px;
 	margin-bottom: 5px;
 	user-select: none;
+	position: relative;
+
+	.link-input {
+		display: block;
+		background: #fff;
+		width: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+
+		input[type="url"] {
+			height: 33px;
+			padding: 8px 47px 8px 8px;
+		}
+
+		&__controls {
+			position: absolute;
+			top: 0;
+			right: 0;
+			margin: 8px;
+			
+			i {
+				&.icon-close-small {
+					width: 16px;
+					height: 16px;
+				}
+
+				&.svg-icon-ok {
+					width: 15px;
+					height: 15px;
+					margin-right: 2px;
+				}
+			}
+		}
+	}
 }
 
 .Editor3-styleButton {
@@ -74,7 +110,7 @@
 			color: #666;
 		}
 
-		position: fixed;
+		position: absolute;
 		padding: 2px 3px 2px 5px;
 		border: 1px solid #ddd;
 		background: #fafafa;
