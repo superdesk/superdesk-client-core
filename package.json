@@ -106,7 +106,7 @@
     "webpack-dev-server": "1.14.1"
   },
   "devDependencies": {
-    "dgeni-alive": "gbbr/dgeni-alive",
+    "dgeni-alive": "gbbr/dgeni-alive#superdesk",
     "dgeni-packages": "^0.16.0",
     "enzyme": "^2.4.1",
     "grunt-karma": "0.12.0",
