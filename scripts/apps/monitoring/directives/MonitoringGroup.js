@@ -379,6 +379,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     })
                     .finally(() => {
                         scope.loading = false;
+
+                        // Reset to get bulk query items
+                        criteria = cards.criteria(scope.group, null, monitoring.queryParam);
+                        criteria.source.size = 25;
                     });
                 } else {
                     select(item);
