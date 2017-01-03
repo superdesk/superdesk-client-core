@@ -1,5 +1,19 @@
 # Superdesk Client Changelog
 
+## [1.5.1] 2017-01-03
+
+Includes changes from 1.4.8 plus:
+
+### Fixed
+
+- Make scrollbar always visible in swimline view.
+- Pull actions menu for related items to the right.
+
+### Changed
+
+- Use po files for translations from customer repo if any.
+- Update russian translation.
+
 ## [1.5] 2016-12-21
 
 ### Fixed
