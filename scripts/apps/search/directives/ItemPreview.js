@@ -47,7 +47,13 @@ export function ItemPreview(asset, storage) {
                 scope.selected = {preview: item || null};
             });
 
-            var closePreviewEvents = ['item:deleted', 'item:spike', 'item:unspike', 'item:move', 'content:update'];
+            var closePreviewEvents = [
+                'item:deleted',
+                'item:unlink',
+                'item:spike',
+                'item:unspike',
+                'item:move',
+                'content:update'];
 
             angular.forEach(closePreviewEvents, function(event) {
                 scope.$on(event, shouldClosePreview.bind(this, scope));

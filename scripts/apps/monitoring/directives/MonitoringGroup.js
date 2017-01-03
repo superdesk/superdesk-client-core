@@ -84,6 +84,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('task:stage', scheduleQuery);
             scope.$on('item:spike', scheduleIfShouldUpdate);
             scope.$on('item:copy', scheduleQuery);
+            scope.$on('item:unlink', scheduleQuery);
             scope.$on('item:duplicate', scheduleQuery);
             scope.$on('item:translate', scheduleQuery);
             scope.$on('broadcast:created', (event, args) => {

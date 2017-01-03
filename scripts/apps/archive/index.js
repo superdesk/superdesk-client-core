@@ -261,6 +261,38 @@ angular.module('superdesk.apps.archive', [
                 controller: ['data', 'authoring', function(data, authoring) {
                     authoring.rewrite(data.item);
                 }]
+            })
+            .activity('unlinkTake', {
+                label: gettext('Unlink take'),
+                icon: 'remove-sign',
+                filters: [{action: 'list', type: 'archive'}],
+                group: 'corrections',
+                privileges: {rewrite: 1},
+                condition: function(item) {
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
+                },
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).unlinkTake;
+                }],
+                controller: ['data', 'authoring', function(data, authoring) {
+                    authoring.unlink(data.item);
+                }]
+            })
+            .activity('unlinkRewrite', {
+                label: gettext('Unlink update'),
+                icon: 'remove-sign',
+                filters: [{action: 'list', type: 'archive'}],
+                group: 'corrections',
+                privileges: {rewrite: 1},
+                condition: function(item) {
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
+                },
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).unlinkUpdate;
+                }],
+                controller: ['data', 'authoring', function(data, authoring) {
+                    authoring.unlink(data.item);
+                }]
             });
     }])
 

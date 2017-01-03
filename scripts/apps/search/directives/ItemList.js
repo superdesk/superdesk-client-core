@@ -274,6 +274,14 @@ export function ItemList(
                     }
                 });
 
+                scope.$on('item:unlink', (_e, data) => {
+                    listComponent.updateAllItems(data.item, {
+                        sequence: null,
+                        anpa_take_key: null,
+                        takes: undefined
+                    });
+                });
+
                 scope.$on('item:highlights', (_e, data) => updateMarkedItems('highlights', data));
                 scope.$on('item:marked_desks', (_e, data) => updateMarkedItems('marked_desks', data));
 

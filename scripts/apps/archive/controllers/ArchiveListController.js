@@ -125,6 +125,7 @@ export class ArchiveListController extends BaseListController {
         $scope.$on('content:update', refreshItems);
         $scope.$on('item:deleted', refreshItems);
         $scope.$on('item:highlights', refreshItems);
+        $scope.$on('item:unlink', refreshItems);
         $scope.$on('item:marked_desks', refreshItems);
         $scope.$on('item:spike', reset);
         $scope.$on('item:unspike', reset);
