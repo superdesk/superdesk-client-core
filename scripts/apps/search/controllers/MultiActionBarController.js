@@ -117,11 +117,6 @@ export function MultiActionBarController(
      * @returns {Boolean}
      */
     this.canHighlightItems = function() {
-        var canHighlight = true;
-
-        multi.getItems().forEach((item) => {
-            canHighlight = canHighlight && authoring.itemActions(item).mark_item_for_highlight;
-        });
-        return canHighlight;
+        return multi.getItems().every((item) => authoring.itemActions(item).mark_item_for_highlight);
     };
 }
