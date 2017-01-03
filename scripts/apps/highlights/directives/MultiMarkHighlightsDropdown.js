@@ -20,14 +20,15 @@ export function MultiMarkHighlightsDropdown(desks, highlightsService, multi) {
                 return !result;
             };
 
-            highlightsService.get(desks.getCurrentDeskId()).then((result) => {
-                scope.highlights = [];
-                result._items.forEach((item) => {
-                    if (!item.desks.length) {
+            // If the user has no desks assigned - this user should not view ANY highlights (including global)
+            if (desks.userDesks.length > 0) {
+                highlightsService.get(desks.getCurrentDeskId()).then((result) => {
+                    scope.highlights = [];
+                    result._items.forEach((item) => {
                         scope.highlights.push(item);
-                    }
+                    });
                 });
-            });
+            }
         }
     };
 }
