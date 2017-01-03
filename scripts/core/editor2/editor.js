@@ -743,11 +743,12 @@ angular.module('superdesk.apps.editor2', [
                     if (scope.sdTextEditorDropZone === 'false') {
                         return;
                     }
+
                     var MEDIA_TYPES = [
                         'application/superdesk.item.picture',
                         'application/superdesk.item.graphic',
                         'application/superdesk.item.video',
-                        'text/html',
+                        'text/html'
                     ];
 
                     element.on('drop dragdrop', (event) => {

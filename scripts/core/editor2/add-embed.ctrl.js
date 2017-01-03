@@ -26,7 +26,7 @@ EMBED_PROVIDERS, $scope, editor, $injector) {
                                 url: data.url,
                                 title: data.meta.title,
                                 description: data.meta.description,
-                                illustration: data.thumbnail_url,
+                                illustration: data.thumbnail_url
                             });
                         } else {
                             embed = editor.generateMediaTag({url: data.url, altText: data.description});
