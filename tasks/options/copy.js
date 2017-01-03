@@ -27,6 +27,18 @@ module.exports = {
             }
         ]
     },
+    locales: {
+        files: [
+            {
+                expand: true,
+                cwd: process.cwd(),
+                src: ['node_modules/angular-i18n/angular-locale_*.js'],
+                dest: '<%= distDir %>/locales/',
+                flatten: true,
+                filter: 'isFile'
+            }
+        ]
+    },
     'assets-ui-guide': {
         files: [
             {

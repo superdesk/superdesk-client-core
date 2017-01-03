@@ -48,29 +48,6 @@ module.exports = {
         options: {bootstrap: () => ''}
     },
 
-    // gen-locale generates a file that imports the locale set by the
-    // 'i18n' property in the config file.
-    'gen-locale': {
-        cwd: '<%= coreDir %>',
-        dest: 'dist/locale.generated.js',
-        src: __filename, // hack to make ngtemplate work
-        options: {
-            bootstrap: function() {
-                var locale = getConfig().i18n || '';
-
-                if (locale === '') {
-                    return 'export default [];\r\n';
-                }
-                var f = path.join(
-                    'angular-i18n',
-                    'angular-locale_' + locale + '.js'
-                );
-
-                return `require('${f}');\r\n`;
-            }
-        }
-    },
-
     // gen-apps generates a file that imports all of the external node
     // modules defined in superdesk.config.js and returns an array of their
     // exports.

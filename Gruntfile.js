@@ -48,13 +48,6 @@ module.exports = function(grunt) {
     grunt.registerTask('ci:travis', ['ngtemplates:dev', 'karma:travis', 'hint']);
     grunt.registerTask('bamboo', ['karma:bamboo']);
 
-    // The gen-importer tasks generates files that import dynamic paths read from
-    // superdesk.config.js
-    grunt.registerTask('ngtemplates:gen-importer', [
-        'ngtemplates:gen-apps',
-        'ngtemplates:gen-locale'
-    ]);
-
     // UI styling documentation
     grunt.registerTask('ui-guide', [
         'clean',
@@ -71,7 +64,9 @@ module.exports = function(grunt) {
     grunt.registerTask('server', [
         'clean',
         'copy:index',
-        'ngtemplates:gen-importer',
+        'copy:locales',
+
+        'ngtemplates:gen-apps',
         'ngtemplates:dev',
         'webpack-dev-server:start'
     ]);
@@ -82,7 +77,8 @@ module.exports = function(grunt) {
             'clean',
             'copy:index',
             'copy:assets',
-            'ngtemplates:gen-importer',
+            'copy:locales',
+            'ngtemplates:gen-apps',
             'ngtemplates:core'
         ]);
 
