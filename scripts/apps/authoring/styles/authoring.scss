@@ -1112,6 +1112,12 @@
         }
     }
 
+    .not-editable {
+       &:hover {
+         cursor: auto;
+       }
+    }
+
     .close-overlay {
         z-index:10000;
         position: absolute;
@@ -1212,5 +1218,22 @@ feature-image {
   color: $white !important;
   span {
     border-bottom: 2px solid #3299b7;
+  }
+}
+
+.media-item {
+  &--loading {
+        background-color: fade(#f7f7f7, 40%);
+        border-color: fade(#cfcfcf, 40%);
+        &:before {
+            @include spinner-big();
+            content: '';
+            top: 50%;
+            transform: translateY(-50%);
+            position: absolute;
+        }
+        img {
+            opacity: .2;
+        }
   }
 }

@@ -16,7 +16,7 @@ ExternalSourceController.$inject = ['api', 'data', 'desks', 'notify', 'gettext']
 export function ExternalSourceController(api, data, desks, notify, gettext) {
     return desks.fetchCurrentDeskId()
         .then((deskid) => {
-            api(data.item.fetch_endpoint).save({
+            let fetch = api(data.item.fetch_endpoint).save({
                 guid: data.item.guid,
                 desk: deskid
             }, null, {repo: data.item.ingest_provider})
@@ -30,5 +30,7 @@ export function ExternalSourceController(api, data, desks, notify, gettext) {
                     notify.error(gettext('Failed to get item.'));
                     return data.item;
                 });
+
+            return fetch;
         });
 }

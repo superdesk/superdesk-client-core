@@ -1,3 +1,22 @@
+/**
+ * @ngdoc controller
+ * @module superdesk.apps.authoring
+ * @name ChangeImageController
+ *
+ * @requires $scope
+ * @requires gettext
+ * @requires notify
+ * @requires modal
+ * @requires $q
+ * @requires lodash
+ * @requires api
+ * @requires $rootScope
+ * @requires config
+ * @requires authoringWorkspace
+ * @requires archiveService
+ *
+ * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
+ */
 ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', '$q', 'lodash', 'api', '$rootScope',
     'config', 'authoringWorkspace', 'archiveService'];
 export function ChangeImageController($scope, gettext, notify, modal, $q, _, api, $rootScope, config,
@@ -5,10 +24,10 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.data.requiredFields = config.requiredMediaMetadata;
-    var sizes = {};
+    let sizes = {};
 
     $scope.data.renditions.forEach((rendition) => {
-        var original = $scope.data.item.renditions.original;
+        let original = $scope.data.item.renditions.original;
         // only extend the item renditions if the original image can fit the rendition dimensions
         // otherwise we will get an error saving
 
@@ -17,7 +36,6 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
             $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
         }
     });
-    var poiOrig = angular.extend({}, $scope.data.poi);
 
     $scope.data.isDirty = false;
     $scope.isNew = $scope.data.isNew === true;
@@ -34,19 +52,29 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         }
     };
 
+    /**
+     * @ngdoc method
+     * @name ChangeImageController#saveIsEnabled
+     * @public
+     * @description if dirty or is new picture item.
+     * @returns {Boolean}
+     */
     $scope.saveIsEnabled = function() {
         return $scope.data.isDirty || $scope.isNew;
     };
 
-    /*
-    * Records the coordinates for each crop sizes available and
-    * notify the user and then resolve the activity.
+   /**
+    * @ngdoc method
+    * @name ChangeImageController#done
+    * @public
+    * @description Validate new crop-coordinates and resolve the promise and return
+    * modified crop information, point of interest and metadata changes.
     */
     $scope.done = function() {
         /* Throw an exception if PoI is outisde of a crop */
         function poiIsInsideEachCrop() {
-            var originalImage = $scope.data.metadata.renditions.original;
-            var originalPoi = {x: originalImage.width * $scope.data.poi.x, y: originalImage.height * $scope.data.poi.y};
+            let originalImage = $scope.data.metadata.renditions.original;
+            let originalPoi = {x: originalImage.width * $scope.data.poi.x, y: originalImage.height * $scope.data.poi.y};
 
             _.forEach($scope.data.cropData, (cropData, cropName) => {
                 if (originalPoi.y < cropData.CropTop ||
@@ -60,8 +88,8 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         /* Throw an exception if a required metadata field is missing */
         function validateMediaFields() {
             _.each($scope.data.requiredFields, (key) => {
-                var value = $scope.data.metadata[key];
-                var regex = new RegExp('^\<*br\/*\>*$', 'i');
+                let value = $scope.data.metadata[key];
+                let regex = new RegExp('^\<*br\/*\>*$', 'i');
 
                 if (!value || value.match(regex)) {
                     throw gettext('Required field(s) missing');
@@ -83,26 +111,28 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         // update crop and poi data in `item`
         angular.extend($scope.data.item, $scope.data.metadata);
         $scope.data.item.poi = $scope.data.poi;
-        $scope.resolve({cropData: $scope.data.cropData, poi: $scope.data.poi});
-
-        // update item
-        archiveService.addTaskToArticle($scope.data.metadata);
-        var item = authoringWorkspace.getItem();
-        var meta = _.pick($scope.data.item, [
-            'title', 'description', 'alt_text', 'credit', 'copyrightnotice', 'copyrightholder'
-        ]);
-
-        api.archive.update(item, meta).then(() => {
-            notify.success(gettext('Crop changes have been recorded'));
+        $scope.resolve({
+            cropData: $scope.data.cropData,
+            metadata: _.pick($scope.data.item, [
+                'title', 'description_text', 'alt_text', 'credit', 'copyrightnotice', 'copyrightholder', 'poi'
+            ])
         });
     };
 
+   /**
+    * @ngdoc method
+    * @name ChangeImageController#close
+    * @public
+    * @description Close the Change Image form.
+    */
     $scope.close = function() {
         if ($scope.data.isDirty) {
             modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
-            .then(() => { // Ok = continue w/o saving
-                angular.extend($scope.data.poi, poiOrig);
-                return $scope.reject();
+            .then(() => {
+                // Ok = continue w/o saving
+                let promise = $scope.reject();
+
+                return promise;
             });
         } else {
             $scope.reject();
@@ -111,6 +141,13 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
 
     // Area of Interest
     $scope.data.showAoISelectionButton = $scope.data.showAoISelectionButton === true;
+
+   /**
+    * @ngdoc method
+    * @name ChangeImageController#showAreaOfInterestView
+    * @public
+    * @description Open the area for interest view.
+    */
     $scope.showAreaOfInterestView = function(show) {
         angular.extend($scope, {
             isAoISelectionModeEnabled: show === undefined || show,
@@ -118,6 +155,31 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
             loaderForAoI: false
         });
     };
+
+   /**
+    * @ngdoc method
+    * @name ChangeImageController#enableSaveAreaOfInterest
+    * @public
+    * @description Enable/Disable the Save button for Area of Interest
+    * @returns {Boolean}
+    */
+    $scope.enableSaveAreaOfInterest = function() {
+        if ($scope.areaOfInterestData && angular.isDefined($scope.areaOfInterestData.CropLeft)) {
+            let {width, height} = $scope.data.item.renditions.original;
+
+            return width !== $scope.areaOfInterestData.CropRight - $scope.areaOfInterestData.CropLeft ||
+                    height !== $scope.areaOfInterestData.CropBottom - $scope.areaOfInterestData.CropTop;
+        }
+
+        return false;
+    };
+
+   /**
+    * @ngdoc method
+    * @name ChangeImageController#saveAreaOfInterest
+    * @public
+    * @description Based on the new Area of Interest save the original image and crops.
+    */
     $scope.saveAreaOfInterest = function(croppingData) {
         $scope.loaderForAoI = true;
         api.save('picture_crop', {item: $scope.data.item, crop: croppingData})
@@ -141,6 +203,12 @@ export function ChangeImageController($scope, gettext, notify, modal, $q, _, api
         });
     };
 
+   /**
+    * @ngdoc method
+    * @name ChangeImageController#onChange
+    * @public
+    * @description Based on the new Area of Interest save the original image and crops.
+    */
     $scope.onChange = function(renditionName, cropData) {
         $scope.$applyAsync(() => {
             if (angular.isDefined(renditionName)) {

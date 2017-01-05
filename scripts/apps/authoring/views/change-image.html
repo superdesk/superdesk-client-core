@@ -48,7 +48,10 @@
                 </div>
                 <div ng-if="isAoISelectionModeEnabled && !loaderForAoI">
                     <button class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</button>
-                    <button class="btn btn--primary" ng-click="saveAreaOfInterest(areaOfInterestData)" translate>Save</button>
+                    <button class="btn btn--primary"
+                            ng-click="saveAreaOfInterest(areaOfInterestData)"
+                            ng-disabled="!enableSaveAreaOfInterest()"
+                            translate>Save</button>
                 </div>
                 <button class="btn"
                         ng-click="showAreaOfInterestView()"

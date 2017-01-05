@@ -35,7 +35,10 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     sms_message: null,
     poi: {},
     profile: null,
-    format: 'HTML'
+    format: 'HTML',
+    alt_text: null,
+    copyrightnotice: null,
+    copyrightholder: null
 });
 
 export const DEFAULT_ACTIONS = Object.freeze({
