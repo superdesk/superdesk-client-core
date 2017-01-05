@@ -5,6 +5,7 @@ import {Editor, EditorState, RichUtils, CompositeDecorator} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 import {stateFromHTML} from 'draft-js-import-html';
 import Toolbar from './toolbar';
+import EditorEvents from '../services/EditorEvents';
 
 /**
  * @ngdoc React
@@ -40,6 +41,21 @@ export class Editor3 extends React.Component {
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.onTab = this.onTab.bind(this);
         this.getDecorators = this.getDecorators.bind(this);
+        this.onContextMenu = this.onContextMenu.bind(this);
+    }
+
+    /**
+     * @ngdoc method
+     * @name Editor3#onContextMenu
+     * @description Called when the editor receives the onContextMenu event. It
+     * triggers all listeners in EditorEvents.
+     */
+    onContextMenu(e) {
+        EditorEvents.triggerRightClick({
+            event: e,
+            editorState: this.state.editorState,
+            onChange: this.onChange
+        });
     }
 
     /**
@@ -114,14 +130,16 @@ export class Editor3 extends React.Component {
         }
 
         const editor = () =>
-            <Editor
-                editorState={editorState}
-                handleKeyCommand={this.handleKeyCommand}
-                onChange={this.onChange}
-                onTab={this.onTab}
-                readOnly={readOnly}
-                ref="editor"
-            />;
+            <div onContextMenu={this.onContextMenu}>
+                <Editor
+                    editorState={editorState}
+                    handleKeyCommand={this.handleKeyCommand}
+                    onChange={this.onChange}
+                    onTab={this.onTab}
+                    readOnly={readOnly}
+                    ref="editor"
+                />
+            </div>;
 
         if (showToolbar) {
             return (
