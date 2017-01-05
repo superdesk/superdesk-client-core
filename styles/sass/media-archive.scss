@@ -935,7 +935,7 @@ $rightfield-width:60px;
             background: linear-gradient(to right, rgba(239,247,250,0) 0%,rgba(239,247,250,0) 0%,rgba(239,247,250,1) 40%) !important;
         }
         .media-box {
-            background-color: #eff7fa !important;
+            background-color: darken(#eff7fa, 10%) !important;
             border-right: 2px solid rgba(94,169,200,0.75) !important;
             &:hover {
                 .more-activity-toggle {
@@ -959,9 +959,9 @@ $rightfield-width:60px;
     }
     .selected {
         .media-box {
-            background-color: rgba(94, 169, 200, 0.25);
+            background-color: darken(rgba(239,247,250,1), 3%);
             &:hover {
-                background-color: rgba(94, 169, 200, 0.25) !important;
+                background-color: rgba(239,247,250,0.60) !important;
             }
         }
     }
