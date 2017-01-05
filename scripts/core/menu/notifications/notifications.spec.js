@@ -16,7 +16,7 @@ describe('user notifications', () => {
     }));
 
     beforeEach(inject((session, $q) => {
-        spyOn(session, 'getIdentity').and.returnValue($q.reject());
+        spyOn(session, 'getIdentity').and.returnValue($q.when());
     }));
 
     it('can fetch user notifications', inject((userNotifications, session, api, $rootScope) => {
@@ -52,6 +52,26 @@ describe('user notifications', () => {
 
         expect(query.user).toBeUndefined();
         expect(query.item).toBeUndefined();
+    }));
+
+    it('can refresh when user is mentioned in comment',
+    inject((userNotifications, session, $rootScope, $timeout) => {
+        spyOn(userNotifications, 'reload');
+        $rootScope.$digest();
+        expect(userNotifications.reload).not.toHaveBeenCalled();
+
+        session.identity = {_id: 'foo'};
+
+        $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'bar'}]});
+        $rootScope.$digest();
+
+        expect(userNotifications.reload).not.toHaveBeenCalled();
+
+        $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'foo'}]});
+        $rootScope.$digest();
+        $timeout.flush(1000);
+
+        expect(userNotifications.reload).toHaveBeenCalled();
     }));
 });
 

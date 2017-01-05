@@ -73,7 +73,7 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
 
     // Returns the filtered recipients for given user id
     function getFilteredRecipients(activity, userId) {
-        return _.find(activity, {user_id: session.identity._id});
+        return _.find(activity, {user_id: userId});
     }
 
     // Checks if the current message is read
@@ -92,7 +92,7 @@ function UserNotificationsService($rootScope, $timeout, api, session, SESSION_EV
 
     this.reload();
     session.getIdentity().then(() => {
-        $rootScope.$on('user:mention', function(_e, extras) {
+        $rootScope.$on('user:mention', (_e, extras) => {
             if (isCurrentUser(extras)) {
                 $timeout(this.reload, UPDATE_TIMEOUT, false);
             }
