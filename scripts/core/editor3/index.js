@@ -19,7 +19,7 @@ import * as ctrl from './controllers';
  * @param {String} language the current language used for spellchecker
  * @description sdEditor3 integrates react Editor3 component with superdesk app.
  */
-export default angular.module('superdesk.core.editor3', [])
+export default angular.module('superdesk.core.editor3', ['superdesk.apps.spellcheck'])
     .directive('sdEditor3',
         () => ({
             scope: {},

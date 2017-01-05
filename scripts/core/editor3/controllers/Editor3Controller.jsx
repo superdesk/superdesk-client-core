@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Editor3} from '../components/Editor3';
+import {Editor3} from '../components';
 
 /**
  * @ngdoc controller
@@ -11,13 +11,15 @@ import {Editor3} from '../components/Editor3';
  * @see sdEditor3
  */
 
-Editor3Controller.$inject = ['$element'];
-export function Editor3Controller($element) {
-    var showToolbar = true;
+Editor3Controller.$inject = ['$element', 'spellcheck'];
+export function Editor3Controller($element, spellcheck) {
+    let showToolbar = true;
 
     if (!this.editorFormat || this.readOnly) {
         showToolbar = false;
     }
+
+    spellcheck.setLanguage('en');
 
     /**
       * @ngdoc method
@@ -38,10 +40,12 @@ export function Editor3Controller($element) {
     ReactDOM.render(
         <Editor3
             readOnly={this.readOnly}
-            onChange={this.parentOnChange}
             showToolbar={showToolbar}
             editorFormat={this.editorFormat}
-            value={this.value} />,
+            onChange={this.parentOnChange}
+            value={this.value}
+            spellchecker={spellcheck}
+        />,
         $element.get(0)
     );
 }

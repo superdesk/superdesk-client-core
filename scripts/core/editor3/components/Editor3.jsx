@@ -1,8 +1,10 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {Editor, EditorState, RichUtils, CompositeDecorator} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 import {stateFromHTML} from 'draft-js-import-html';
 import Toolbar from './toolbar';
+import {Spellchecker} from './spellchecker';
 
 /**
  * @ngdoc React
@@ -18,11 +20,22 @@ import Toolbar from './toolbar';
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting (shortly more features will come ...)
  */
+
 export class Editor3 extends React.Component {
     constructor(props) {
         super(props);
 
         const initialContentState = stateFromHTML(props.value);
+
+        this.focus = this.focus.bind(this);
+        this.onChange = this.onChange.bind(this);
+
+        this.handleKeyCommand = this.handleKeyCommand.bind(this);
+        this.onTab = this.onTab.bind(this);
+
+        this.getDecorators = this.getDecorators.bind(this);
+        this.getEditorState = this.getEditorState.bind(this);
+        this.setEditorState = this.setEditorState.bind(this);
 
         this.state = {
             editorState: EditorState.createWithContent(
@@ -30,18 +43,28 @@ export class Editor3 extends React.Component {
                 this.getDecorators()
             )
         };
+    }
 
-        this.readOnly = props.readOnly || false;
-        this.showToolbar = props.showToolbar || false;
-        this.editorFormat = props.editorFormat || [];
-        this.parentOnChange = props.onChange;
+    /**
+     * @ngdoc method
+     * @name Editor3#getEditorState
+     * @returns {Object}
+     * @description Returns the current state of the editor
+     */
+    getEditorState() {
+        return this.state;
+    }
 
-        this.focus = this.focus.bind(this);
-        this.onChange = this.onChange.bind(this);
-
-        this.handleKeyCommand = this.handleKeyCommand.bind(this);
-        this.onTab = this.onTab.bind(this);
-        this.getDecorators = this.getDecorators.bind(this);
+    /**
+     * @ngdoc method
+     * @name Editor3#setEditorState
+     * @param {Object} state
+     * @description Set a new state for editor
+     */
+    setEditorState(state) {
+        setTimeout(() => {
+            this.setState(state);
+        }, 0);
     }
 
     /**
@@ -53,21 +76,50 @@ export class Editor3 extends React.Component {
      * such as the toolbar, spellcheckers, etc.
      */
     getDecorators() {
-        return new CompositeDecorator(Toolbar.getDecorators());
+        var decorators = Spellchecker.getDecorators(
+            this.getEditorState, this.setEditorState, this.props.spellchecker);
+
+        return new CompositeDecorator(decorators.concat(Toolbar.getDecorators()));
     }
 
-    /** Handle the editor get focus event */
+    /**
+     * @ngdoc method
+     * @name Editor3#onChange
+     * @param {Object} editorState
+     * @description Handle the editor state has been changed event
+     */
+    onChange(editorState) {
+        this.setState({editorState});
+        this.props.onChange(stateToHTML(editorState.getCurrentContent()));
+    }
+
+    /**
+     * @ngdoc method
+     * @name Editor3#focus
+     * @description Handle the editor get focus event
+     */
     focus() {
         this.refs.editor.focus();
     }
 
-    /** Handle the editor state has been changed event*/
-    onChange(editorState) {
-        this.setState({editorState});
-        this.parentOnChange(stateToHTML(editorState.getCurrentContent()));
+    /**
+     * @ngdoc method
+     * @name Editor3#onTab
+     * @param {Object} event
+     * @description Handle the editor tab key pressed event
+     */
+    onTab(e) {
+        const maxDepth = 4;
+
+        this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
     }
 
-    /** Handle the editor key pressed event */
+    /**
+     * @ngdoc method
+     * @name Editor3#handleKeyCommand
+     * @param {String} command
+     * @description Handle the editor key pressed event
+     */
     handleKeyCommand(command) {
         const {editorState} = this.state;
         const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -79,20 +131,25 @@ export class Editor3 extends React.Component {
         return false;
     }
 
-    /** Handle the editor tab key pressed event */
-    onTab(e) {
-        const maxDepth = 4;
-
-        this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
+    /**
+     * @ngdoc method
+     * @name Editor3#componentWillUpdate
+     * @description Called before update, init the current editor rectangle
+     */
+    componentWillUpdate() {
+        this.editorRect = ReactDOM.findDOMNode(this.refs.editor).getBoundingClientRect();
     }
 
-    /** Render the editor based on current state */
+    /**
+     * @ngdoc method
+     * @name Editor3#render
+     * @param {String} command
+     * @description Render the editor based on current state
+     */
     render() {
         const {editorState} = this.state;
 
-        // If the user changes block type before entering any text, we can
-        // either style the placeholder or hide it. Let's just hide it now.
-        let className = 'Editor3-editor';
+        let className = 'Editor3-editor dropdown';
         var contentState = editorState.getCurrentContent();
 
         if (!contentState.hasText()) {
@@ -109,27 +166,34 @@ export class Editor3 extends React.Component {
                 handleKeyCommand={this.handleKeyCommand}
                 onChange={this.onChange}
                 onTab={this.onTab}
-                readOnly={this.readOnly}
+                readOnly={this.props.readOnly}
                 ref="editor"
             />;
 
-        if (this.showToolbar) {
+        const spellchecker = () =>
+            <Spellchecker
+                getEditorState={this.getEditorState}
+                setEditorState={this.setEditorState}
+                spellchecker={this.props.spellchecker}
+                editorRect={this.editorRect}
+            />;
+
+        if (this.props.showToolbar) {
             return (
                 <div className="Editor3-root">
                     <Toolbar
                         editorState={editorState}
-                        editorFormat={this.editorFormat}
+                        editorFormat={this.props.editorFormat}
                         onChange={this.onChange}
                     />
-
-                    <div className={className} onClick={this.focus}>{editor()}</div>
+                    <div className={className} onClick={this.focus}>{spellchecker()}{editor()}</div>
                 </div>
             );
         }
 
         return (
             <div onClick={this.focus} className="Editor3-editor-single-line">
-                {editor()}
+                {spellchecker()}{editor()}
             </div>
         );
     }
@@ -137,18 +201,19 @@ export class Editor3 extends React.Component {
 
 /** Set the types of props for the editor */
 Editor3.propTypes = {
-    editorFormat: React.PropTypes.array,
     readOnly: React.PropTypes.bool,
     showToolbar: React.PropTypes.bool,
+    editorFormat: React.PropTypes.array,
+    onChange: React.PropTypes.func,
     value: React.PropTypes.string,
-    onChange: React.PropTypes.func
+    spellchecker: React.PropTypes.object
 };
 
 /** Set the default values of props for the editor */
 Editor3.defaultProps = {
-    editorFormat: [],
     readOnly: false,
     showToolbar: true,
-    value: '',
-    language: 'en'
+    editorFormat: [],
+    onChange: (text) => text,
+    value: ''
 };
