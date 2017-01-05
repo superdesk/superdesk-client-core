@@ -1,5 +1,27 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 
+/**
+ * @ngdoc service
+ * @module superdesk.apps.authoring
+ * @name authoring
+ *
+ * @requires $q
+ * @requires $location
+ * @requires api
+ * @requires lock
+ * @requires autosave
+ * @requires confirm
+ * @requires privileges
+ * @requires desks
+ * @requires superdeskFlags
+ * @requires notify
+ * @requires session
+ * @requires $injector
+ * @requires moment
+ * @requires config
+ *
+ * @description Authoring Service is responsible for management of the actions on a story
+ */
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
     'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
@@ -84,6 +106,24 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 }
             });
     };
+
+    /**
+     * @ngdoc method
+     * @name authoring#unlink
+     * @public
+     * @description Removes the take or update link of a given story
+     * @param {Object} item
+     */
+    this.unlink = (item) => session.getIdentity()
+        .then((user) => api.remove(item, {}, 'archive_link'))
+        .then((data) => notify.success(gettext('Link has been removed')),
+            (response) => {
+                if (angular.isDefined(response.data._message)) {
+                    notify.error(gettext('Failed to remove link: ' + response.data._message));
+                } else {
+                    notify.error(gettext('There was an error. Failed to remove link.'));
+                }
+            });
 
     /**
      * Close an item
@@ -390,6 +430,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.view = !lockedByMe;
         action.new_take = this._isNewTake(currentItem);
+        action.unlinkTake = this._canUnlinkTake(currentItem);
+        action.unlinkUpdate = this._canUnlinkUpdate(currentItem);
 
         // item is published state - corrected, published, scheduled, killed
         if (self.isPublished(currentItem)) {
@@ -430,6 +472,29 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             !this._isBroadcastItem(item) &&
             !item.rewritten_by;
     };
+
+    /**
+     * @ngdoc method
+     * @name authoring#_canUnlinkTake
+     * @private
+     * @description Checks if the given item can be unlinked as a take
+     * @param {Object} item
+     * @returns {boolean}
+     */
+    this._canUnlinkTake = (item) => !this._isReadOnly(item) && item.type === 'text' &&
+        !this.isPublished(item) &&
+        (!_.isNil(item.takes) && item.takes.last_take === item._id && item.takes.sequence > 1);
+
+    /**
+     * @ngdoc method
+     * @name authoring#_canUnlinkUpdate
+     * @private
+     * @description Checks if the given item can be unlinked as an update
+     * @param {Object} item
+     * @returns {boolean}
+     */
+    this._canUnlinkUpdate = (item) => !this._isReadOnly(item) && item.type === 'text' &&
+        !this.isPublished(item) && !_.isNil(item.rewrite_of) && _.isNil(item.rewritten_by);
 
     this._isDigitalPackage = function(item) {
         return angular.isDefined(item.package_type) && item.package_type === 'takes';

@@ -101,6 +101,7 @@ export function SearchResults(
             scope.$on('item:fetch', queryItems);
             scope.$on('item:update', updateItem);
             scope.$on('item:deleted', scheduleIfShouldUpdate);
+            scope.$on('item:unlink', queryItems);
             scope.$on('item:spike', scheduleIfShouldUpdate);
             scope.$on('item:unspike', scheduleIfShouldUpdate);
             scope.$on('item:duplicate', queryItems);
