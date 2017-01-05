@@ -12,17 +12,20 @@ export function MarkHighlightsDropdown(desks, highlightsService, $timeout) {
                 return scope.item && scope.item.highlights && scope.item.highlights.indexOf(highlight._id) >= 0;
             };
 
-            highlightsService.get(desks.getCurrentDeskId()).then((result) => {
-                scope.highlights = result._items;
-                $timeout(() => {
-                    var highlightDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
-                    var buttons = highlightDropdown.find('button:not([disabled])');
+            // If the user has no desks assigned - this user should not view ANY highlights (including global)
+            if (desks.userDesks.length > 0) {
+                highlightsService.get(desks.getCurrentDeskId()).then((result) => {
+                    scope.highlights = result._items;
+                    $timeout(() => {
+                        var highlightDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
+                        var buttons = highlightDropdown.find('button:not([disabled])');
 
-                    if (buttons.length > 0) {
-                        buttons[0].focus();
-                    }
+                        if (buttons.length > 0) {
+                            buttons[0].focus();
+                        }
+                    });
                 });
-            });
+            }
         }
     };
 }

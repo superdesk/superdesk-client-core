@@ -6,10 +6,14 @@ export function PackageHighlightsDropdown(desks, highlightsService, $location, $
         link: function(scope) {
             scope.$watch(() => desks.active, (active) => {
                 scope.selected = active;
-                highlightsService.get(desks.getCurrentDeskId()).then((result) => {
-                    scope.highlights = result._items;
-                    scope.hasHighlights = _.size(scope.highlights) > 0;
-                });
+
+                // If the user has no desks assigned - this user should not view ANY highlights (including global)
+                if (desks.userDesks.length > 0) {
+                    highlightsService.get(desks.getCurrentDeskId()).then((result) => {
+                        scope.highlights = result._items;
+                        scope.hasHighlights = _.size(scope.highlights) > 0;
+                    });
+                }
             });
 
             scope.listHighlight = function(highlight) {

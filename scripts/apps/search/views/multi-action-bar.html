@@ -14,7 +14,7 @@
             <i class="big-icon-package-add"></i>
         </button>
 
-        <div class="dropdown strict highlights-dropdown pull-right" title="{{ :: 'Mark item' | translate }}" dropdown>
+        <div class="dropdown strict highlights-dropdown pull-right" ng-if="action.canHighlightItems()" title="{{ :: 'Mark item' | translate }}" dropdown>
              <button class="dropdown__toggle navbtn" dropdown__toggle>
                 <i class="big-icon-marked-star"></i>
              </button>

@@ -1,3 +1,25 @@
+/**
+ * @ngdoc controller
+ * @module superdesk.apps.search
+ * @name MultiActionBarController
+ * @requires $rootScope
+ * @requires multi
+ * @requires multiEdit
+ * @requires send
+ * @requires remove
+ * @requires modal
+ * @requires $q
+ * @requires packages
+ * @requires superdesk
+ * @requires notify
+ * @requires spike
+ * @requires authoring
+ * @requires privileges
+ * @requires $location
+ * @description MultiActionBarController holds a set of convenience functions which
+ * are used by the Multi-Action bar wwhen an item is click-selected.
+ */
+
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'send', 'remove', 'modal', '$q',
     'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location'
@@ -86,5 +108,15 @@ export function MultiActionBarController(
                 !_.includes(['ingested', 'spiked', 'killed', 'draft'], item.state);
         });
         return canPackage;
+    };
+
+    /**
+     * @ngdoc method
+     * @name MultiActionBarController#canHighlightItems
+     * @description Checks if all items multi-selected are eligible to be highlighted
+     * @returns {Boolean}
+     */
+    this.canHighlightItems = function() {
+        return multi.getItems().every((item) => authoring.itemActions(item).mark_item_for_highlight);
     };
 }
