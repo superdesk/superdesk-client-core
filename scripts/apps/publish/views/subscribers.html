@@ -32,6 +32,7 @@
                 <tabset>
                     <tab heading="{{ 'General' | translate }}" class="TabContent">
                         <div class="field">
+                            <i class="field-info pull-right" translate>* mandatory fields</i>
                             <label class="left">
                                 {{:: 'Status' | translate }}
                                 <span title="{{ subscriber.is_active ? 'Deactivate' : 'Activate'  | translate }}">
@@ -42,11 +43,13 @@
 
                         <div class="field">
                             <label for="subscriber-name" translate>Name</label>
+                            <i class="field-info pull-right">*</i>
                             <input type="text" id="subscriber-name" required ng-model="subscriber.name">
                         </div>
 
                         <div class="field">
                             <label for="subscriber-email" translate>E-Mail to broadcast Kill Events</label>
+                            <i class="field-info pull-right">*</i>
                             <input type="text"
                                    id="subscriber-email"
                                    ng-model="subscriber.email"
@@ -55,6 +58,7 @@
 
                         <div class="field">
                             <label for="subType" translate>Target Type</label>
+                            <i class="field-info pull-right">*</i>
                             <select id="subType" ng-model="subscriber.subscriber_type" ng-options="s.qcode as s.name for s in subTypes" ng-change="changeFormats(subscriber.subscriber_type)" required>
                                 <option value=""></option>
                             </select>
@@ -98,6 +102,7 @@
 
                         <div class="field">
                             <label translate>Sequence Number Settings</label>
+                            <i class="field-info pull-right">*</i>
                             <div>
                                 <span translate>Minimum</span>
                                 <input type="number" class="input-mini" ng-model="subscriber.sequence_num_settings.min" min ="1" id="subscriber-seq_num_settings.min" required>
@@ -113,6 +118,7 @@
                             <div sd-destination ng-if="newDestination"
                                 data-destination="newDestination"
                                 data-actions="[{label: 'Save', fn: saveNewDestination}, {label: 'Cancel', fn: cancelNewDestination}]"></div>
+                            <i class="field-info pull-right">*</i>
                             <button type="button" class="btn btn--primary" ng-click="addNewDestination()" ng-show="newDestination === null">
                                 <i class="icon-plus-sign icon-white"></i> <span translate>Add New Destination</span>
                             </button>
