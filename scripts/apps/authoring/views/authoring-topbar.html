@@ -147,6 +147,18 @@
                   </li>
                 </ul>
 
+                <ul id="compare-versions" ng-if="item.task.desk">
+                    <li>
+                    <div class="dropdown compare-versions-toggle" dropdown>
+                      <button class="dropdown__toggle" dropdown__toggle>
+                        {{ :: 'Compare versions' | translate }}
+                        <i class="icon-chevron-right-thin dropdown__submenu-icon"></i>
+                      </button>
+                      <ul class="dropdown__menu right-submenu" sd-compare-versions-dropdown></ul>
+                    </div>
+                  </li>
+                </ul>
+
                 <ul id="multiedit" ng-if="item.task.desk && itemActions.multi_edit && !isLocked()" ng-show="action !== 'kill'">
                     <li>
                     <div class="dropdown multiedit-toggle" dropdown>

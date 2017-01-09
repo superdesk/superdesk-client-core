@@ -1,0 +1,13 @@
+<article class="main-article" tabindex="0" ng-class="{locked: isLocked}">
+    <div class="editbar clearfix">
+        <button class="btn btn--light btn--pull-right"
+            type="button"
+            ng-click="remove(item)"
+            translate>Remove Item</button>
+    </div>
+    <div>
+        <em>{{ :: 'version' | translate }}: {{ item._current_version }}</em>
+        <div class="state-label state-{{item.state}}">{{item.state}}</div>
+        <fieldset ng-disabled="true" sd-article-edit></fieldset>
+    </div>
+</article>

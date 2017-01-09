@@ -26,6 +26,11 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     var self = this;
 
     /**
+     * Initiate authoring workspace
+     */
+    this.init = init;
+
+    /**
      * Open item for editing
      *
      * @param {Object} item

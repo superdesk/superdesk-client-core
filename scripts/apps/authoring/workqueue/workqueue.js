@@ -260,7 +260,8 @@ function ArticleDashboardDirective() {
 angular.module('superdesk.apps.authoring.workqueue', [
     'superdesk.core.activity',
     'superdesk.apps.notification',
-    'superdesk.apps.authoring.multiedit'
+    'superdesk.apps.authoring.multiedit',
+    'superdesk.apps.authoring.compare_versions'
 ])
     .service('workqueue', WorkqueueService)
     .controller('Workqueue', WorkqueueCtrl)

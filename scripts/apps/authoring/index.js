@@ -22,4 +22,5 @@ import './workqueue/workqueue';
 import './packages/packages';
 import './editor/find-replace';
 import './multiedit/multiedit';
+import './compare-versions/index';
 import './macros/macros';
