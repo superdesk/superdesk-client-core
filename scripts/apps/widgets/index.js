@@ -60,19 +60,12 @@ function AnsaRelatedCtrl($scope, api) {
         let namespace = (key) => 'semantics.' + key;
 
         keys.forEach((key) => {
-            var used = {};
-
             if (semantics[key] && semantics[key].length) {
                 semantics[key].forEach((val) => {
-                    lower(val).split(' ').forEach((token) => {
-                        let f = {};
+                    let f = {};
 
-                        if (!used[token]) {
-                            used[token] = true;
-                            f[namespace(key)] = token;
-                            filters.push({term: f});
-                        }
-                    });
+                    f[namespace(key)] = val;
+                    filters.push({term: f});
                 });
             }
         });
