@@ -381,7 +381,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         // Archived items can be duplicated
         if (userPrivileges && !itemOnReadOnlyStage && currentItem &&
-            currentItem._type && currentItem._type === 'archived') {
+            currentItem._type && currentItem._type === 'archived' && currentItem.type === 'text') {
             action.duplicate = true;
             return action;
         }
