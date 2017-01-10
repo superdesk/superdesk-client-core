@@ -24,7 +24,7 @@ function AnsaSemanticsCtrl($scope, api) {
     };
 
     this.refresh = () => api.save('analysis', {
-        lang: 'ITA',
+        lang: $scope.item.language === 'en' ? 'ENG' : 'ITA',
         title: $scope.item.headline || '',
         text: [
             text($scope.item.abstract),
@@ -48,36 +48,48 @@ function AnsaSemanticsCtrl($scope, api) {
 AnsaRelatedCtrl.$inject = ['$scope', 'api'];
 function AnsaRelatedCtrl($scope, api) {
     let init = () => {
-        if (!$scope.item.semantics || !$scope.item.semantics.iptcDomains) {
+        if (!$scope.item.semantics || !$scope.item.semantics.iptcCodes) {
+            this.items = [];
             return;
         }
 
         let filters = [];
         let semantics = $scope.item.semantics;
-        let keys = ['newsDomains', 'places', 'organizations', 'mainGroups', 'mainLemmas'];
+        let keys = ['persons', 'organizations'];
         let lower = (val) => val.toLowerCase();
-
         let namespace = (key) => 'semantics.' + key;
 
         keys.forEach((key) => {
-            if (semantics[key] && semantics[key].length) {
-                let f = {};
+            var used = {};
 
-                f[namespace(key)] = semantics[key].map(lower);
-                filters.push({terms: f});
+            if (semantics[key] && semantics[key].length) {
+                semantics[key].forEach((val) => {
+                    lower(val).split(' ').forEach((token) => {
+                        let f = {};
+
+                        if (!used[token]) {
+                            used[token] = true;
+                            f[namespace(key)] = token;
+                            filters.push({term: f});
+                        }
+                    });
+                });
             }
         });
 
         let query = {
             bool: {
-                must: {terms: {'semantics.iptcDomains': semantics.iptcDomains.map(lower)}},
+                must: {terms: {'semantics.iptcCodes': semantics.iptcCodes.map(lower)}},
                 must_not: {term: {_id: $scope.item.guid}},
-                should: filters
+                should: filters,
+                minimum_should_match: Math.max(1, Math.floor(filters.length / 2))
             }
         };
 
-        api.query('archive', {source: {query: query}}).then((response) => {
+        api.query('archive', {source: {query: query, sort: ['_score']}}).then((response) => {
             this.items = response._items;
+        }, (reason) => {
+            this.items = [];
         });
     };
 

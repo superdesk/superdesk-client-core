@@ -46,6 +46,12 @@
             <button ng-click="semantics.remove(lemma, 'mainLemmas')"><i class="icon-close-small"></i></button>
         </dd>
 
+        <dt class="badge-header" translate>IPTC Codes</dt>
+        <dd ng-repeat="code in semantics.data.iptcCodes" class="badge">
+            {{ code }}
+            <button ng-click="semantics.remove(code, 'iptcCodes')"><i class="icon-close-small"></i></button>
+        </dd>
+
         <dt class="badge-header" translate>Main sentence</dt>
         <dd><p>{{ semantics.data.mainSenteces[0] }}</p></dd>
         <dd><p>{{ semantics.data.mainSenteces[1] }}</p></dd>
