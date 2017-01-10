@@ -43,7 +43,8 @@ export const feedParsers = [
     {value: 'iptc7901', name: 'IPTC 7901 Parser'},
     {value: 'dpa_iptc7901', name: 'DPA IPTC 7901 Parser'},
     {value: 'ap_anpa1312', name: 'AP ANPA parser'},
-    {value: 'pa_nitf', name: 'PA NITF'}
+    {value: 'pa_nitf', name: 'PA NITF'},
+    {value: 'efe_nitf', name: 'EFE NITF'}
 ];
 
 export const PROVIDER_DASHBOARD_DEFAULTS = {
