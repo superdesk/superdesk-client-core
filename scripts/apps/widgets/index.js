@@ -57,19 +57,21 @@ function AnsaRelatedCtrl($scope, api) {
         let keys = ['newsDomains', 'places', 'organizations', 'mainGroups', 'mainLemmas'];
         let lower = (val) => val.toLowerCase();
 
+        let namespace = (key) => 'semantics.' + key;
+
         keys.forEach((key) => {
             if (semantics[key] && semantics[key].length) {
                 let f = {};
 
-                f[key] = semantics[key].map(lower);
+                f[namespace(key)] = semantics[key].map(lower);
                 filters.push({terms: f});
             }
         });
 
         let query = {
             bool: {
-                must: {terms: {iptcDomains: semantics.iptcDomains.map(lower)}},
-                must_not: {term: {guid: $scope.item.guid}},
+                must: {terms: {'semantics.iptcDomains': semantics.iptcDomains.map(lower)}},
+                must_not: {term: {_id: $scope.item.guid}},
                 should: filters
             }
         };
