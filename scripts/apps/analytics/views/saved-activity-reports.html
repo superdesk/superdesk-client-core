@@ -1,0 +1,33 @@
+<div class="report-filters">
+    <input id="search_saved_activity_reports" ng-model="searchText" ng-keyup="filter()" type="text" placeholder="{{:: 'Search saved activity reports' | translate}}">
+</div>
+
+<div class="list saved-reports">
+    <div class="saved-reports__group-title" translate>My Saved Activity Reports</div>
+    <ul>
+        <li ng-repeat="activityReport in userSavedActivityReports | orderBy:'name' " ng-click="select(activityReport)" ng-class="{active: activityReport == selected}">
+            <div class="activity-report-item">
+                <div class="activity-report-name">{{:: activityReport.name }} <i ng-if="activityReport.is_global" translate>[Global]</i></div>
+                <div class="activity-report-description">{{:: activityReport.description }}</div>
+            </div>
+            <div class="activity-report-button">
+                <button class="delete" ng-click="edit(activityReport)" title="{{:: 'Edit activity report' | translate }}"><i class="icon-pencil"></i></button>
+                <button class="delete" ng-click="remove(activityReport); $event.stopPropagation();" title="{{:: 'Delete activity report' | translate }}"><i class="icon-trash"></i></button>
+            </div>
+        </li>
+    </ul>
+    <div class="saved-reports__group-title" translate>Global Saved Activity Reports</div>
+    <ul>
+        <li ng-repeat="activityReport in globalSavedActivityReports | orderBy:'name' " ng-click="select(activityReport)" ng-class="{active: activityReport == selected}">
+            <div class="activity-report-item">
+                <div class="activity-report-name">{{:: activityReport.name }} <i>by {{:: userLookup[activityReport.owner].display_name }}</i></div>
+                <div class="activity-report-description">{{:: activityReport.description }}</div>
+            </div>
+            <div class="activity-report-button">
+                <button class="delete" ng-click="edit(activityReport)" title="{{:: 'Edit activity report' | translate }}" ng-if="privileges.global_saved_searches"><i class="icon-pencil"></i></button>
+                <button class="delete" ng-click="remove(activityReport); $event.stopPropagation();" title="{{:: 'Delete activity report' | translate }}" ng-if="privileges.global_saved_activity_reports"><i class="icon-trash"></i></button>
+            </div>
+        </li>
+    </ul>
+</div>
+

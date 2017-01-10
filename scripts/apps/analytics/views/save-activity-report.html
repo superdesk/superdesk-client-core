@@ -1,0 +1,13 @@
+<div class="save-activity-report">
+    <div class="save-activity-report__title" translate>Save activity report</div>
+    <div class="activity-report-content">
+        <form name="saveReportForm">
+            <div ng-include="'scripts/apps/analytics/views/save-activity-report-dialog.html'"></div>
+        </form>
+    </div>
+    <div class="pull-right">
+        <button class="btn" ng-click="cancel()" translate>Cancel</button>
+        <button id="activity_report_save" class="btn btn--primary"
+            ng-click="save(activityReport)" ng-disabled="!saveReportForm.$valid || !editReportForm.$valid" translate>Save</button>
+    </div>
+</div>
