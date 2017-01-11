@@ -80,6 +80,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                         // triggers closing of dropdown when adding item on search by pressing enter
                         if (item) {
                             $document.triggerHandler('click');
+                            $scope.term = null;
                         }
                     }
                 };
