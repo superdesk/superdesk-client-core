@@ -296,6 +296,10 @@ export function ItemList(
                         var itemId = search.generateTrackByIdentifier(item);
                         var markedItems = item[field] || [];
 
+                        if (field === 'marked_desks' && item[field]) {
+                            markedItems = _.isString(markedItems[0]) ? markedItems : _.map(markedItems, 'desk_id');
+                        }
+
                         if (data.marked) {
                             markedItems = markedItems.concat([data.mark_id]);
                         } else {

@@ -9,16 +9,16 @@
         <i class="{{className}} icon-open"></i>
     </button>
 
-    <ul class="dropdown dropdown-menu highlights-list-menu" ng-class="{open: open}" ng-click="$event.stopPropagation()">
+    <ul class="dropdown dropdown__menu highlights-list-menu" ng-class="{open: open}" ng-click="$event.stopPropagation()">
         <li>
-            <div class="menu-label" translate>Marked For</div>
-            <button class="close-button" dropdown-toggle>
+            <div class="dropdown__menu-label" translate>Marked For</div>
+            <button class="dropdown__menu-close" dropdown-toggle>
                 <i class="icon-close-small icon-white"></i>
             </button>
         </li>
         <li ng-repeat="mark in markObjects track by mark._id" title="{{ :: mark.name }}">
             {{ :: mark.name }}
-            <button class="btn btn-mini uppercase" ng-if="hasMarkItemPrivilege" ng-click="unmark(mark._id)" translate>Remove</button>
+            <button class="btn btn--mini uppercase" ng-if="hasMarkItemPrivilege" ng-click="unmark(mark._id)" translate>Remove</button>
         </li>
         <li class="none" ng-show="marks.length === 0" translate>None</li>
     </ul>

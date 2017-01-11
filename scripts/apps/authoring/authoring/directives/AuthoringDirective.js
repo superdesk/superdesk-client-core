@@ -846,12 +846,18 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             function refreshMarkedItems(field, data) {
                 if ($scope.item._id === data.item_id) {
+                    let mark = data.mark_id;
+
+                    if (field === 'marked_desks') {
+                        mark = {desk_id: data.mark_id};
+                    }
+
                     if (!$scope.item[field]) {
-                        $scope.item[field] = [data.mark_id];
-                    } else if ($scope.item[field].indexOf(data.mark_id) === -1) {
-                        $scope.item[field] = [data.mark_id].concat($scope.item[field]);
+                        $scope.item[field] = [mark];
+                    } else if (data.marked) {
+                        $scope.item[field] = [mark].concat($scope.item[field]);
                     } else if (!$scope.item.multiSelect) {
-                        $scope.item[field] = _.without($scope.item[field], data.mark_id);
+                        _.remove($scope.item[field], _.filter($scope.item[field], mark)[0]);
                     }
                 }
             }
