@@ -48,6 +48,7 @@
         <i class="big-icon-chevron-left helper-icon"></i>
     </a>
 </li>
+
 <li ng-class="{active: currentRoute.href === '/search'}">
    <div class="dropdown dropdown--dropright dropdown--hover highlights-dropdown" dropdown>
       <a href="#/search" class="dropdown__toggle"
@@ -65,6 +66,11 @@
         </li>
       </ul>
     </div>
+</li>
+<li ng-class="{active: currentRoute.href === '/workspace/metasearch'}">
+    <a href="#/workspace/metasearch" class="big-icon-facebook" title="Metasearch">
+      <i class="big-icon-search main-icon"></i>
+    </a>
 </li>
 
 <hr ng-if="workspaceConfig.analytics">

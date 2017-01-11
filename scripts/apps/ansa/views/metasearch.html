@@ -1,0 +1,41 @@
+<div class="metasearch" ng-controller="MetasearchCtrl as metasearch">
+    <div class="subnav">
+        <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: metasearch.openSearch}">
+            <div class="search-handler">
+                <label for="search-input" class="trigger-icon"
+                    ng-click="metasearch.toggle()"><i class="icon-search"></i></label>
+                <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}"
+                    sd-autofocus
+                    ng-model="metasearch.query"
+                    ng-model-options="{debounce: 500}"
+                    ng-change="metasearch.search()">
+                <button class="search-close"
+                    ng-click="metasearch.reset()"
+                    ng-class="{visible: metasearch.query}"><i class="icon-remove-sign"></i></button>
+            </div>
+        </div>
+        <h3 class="subnav__page-title">
+            <span>Metasearch</span>
+        </h3>
+    </div>
+    <section class="main-section" sd-loading="metasearch.loading">
+        <div class="content-list">
+            <div class="stage">
+                <ul ng-if="metasearch.items.length" class="pills-list">
+                    <li ng-repeat="item in metasearch.items track by item.url" ansa-draggable>
+                        <small class="engine">{{ :: item.engine }}</small>
+                        <h3 ng-if="!item.thumbnail_src">{{ :: item.title }}</h3>
+                        <figure ng-if="item.thumbnail_src">
+                            <img ng-if="item.thumbnail_src" ng-src="{{ :: item.thumbnail_src }}" />
+                            <p>{{ :: item.title }}</p>
+                        </figure>
+                        <p>{{ :: item.content }}</p>
+                        <div class="clearfix">
+                            <a ng-href="{{ :: item.url }}" target="_blank">{{ :: item.pretty_url }}</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>

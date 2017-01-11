@@ -25,6 +25,8 @@ import 'apps/search-providers';
 import 'apps/analytics';
 import 'apps/widgets';
 
+import 'apps/ansa';
+
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
     'superdesk.apps.dashboard',
@@ -54,5 +56,6 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.monitoring',
     'superdesk.apps.profiling',
     'superdesk.apps.analytics',
-    'superdesk.apps.widgets'
+    'superdesk.apps.widgets',
+    'ansa.superdesk'
 ]);

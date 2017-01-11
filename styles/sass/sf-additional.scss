@@ -1779,3 +1779,28 @@ header .sortbar {
     vertical-align: middle;
     text-align: center;
 }
+
+
+// metasearch
+.metasearch .main-section {
+    overflow-y: scroll;
+
+    .stage {
+        padding: 8px 18px 3px;
+    }
+
+    .engine {
+        opacity: .8;
+    }
+
+    figure {
+        margin: 3px 0;
+        overflow: hidden;
+        height: 1%;
+
+        img {
+            float: left;
+            padding-right: 8px;
+        }
+    }
+}
