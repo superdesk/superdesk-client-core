@@ -751,11 +751,14 @@ angular.module('superdesk.apps.editor2', [
                         'text/html'
                     ];
 
+                    let getType = (event) => event.originalEvent.dataTransfer.types.find((_type) => MEDIA_TYPES.indexOf(_type) >= 0);
+
                     element.on('drop dragdrop', (event) => {
                         event.preventDefault();
                         event.stopPropagation();
-                        const mediaType = event.originalEvent.dataTransfer.types[0];
+                        const mediaType = getType(event);
                         const paragraph = angular.element(event.target);
+
                         let item = event.originalEvent.dataTransfer.getData(mediaType);
 
                         // we want to ensure that the field is empty before inserting something
@@ -805,7 +808,9 @@ angular.module('superdesk.apps.editor2', [
                     .on('dragover', (event) => {
                         const paragraph = angular.element(event.target);
 
-                        if (MEDIA_TYPES.indexOf(event.originalEvent.dataTransfer.types[0]) > -1) {
+                        let matching = getType(event);
+
+                        if (matching) {
                             // allow to overwite the drop binder (see above)
                             event.preventDefault();
                             event.stopPropagation();

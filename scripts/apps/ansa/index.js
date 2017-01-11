@@ -38,7 +38,8 @@ class MetasearchController {
 
 MetasearchController.$inject = ['$http', '$location', 'config'];
 
-function AnsaDraggableDirective() {
+function AnsaMetasearchItem(config, $http, $sce) {
+    var first = true;
     return {
         link: (scope, elem) => {
             elem.attr('draggable', true);
@@ -55,13 +56,25 @@ function AnsaDraggableDirective() {
             scope.$on('$destroy', () => {
                 elem.off('dragstart');
             });
+
+            if (scope.item.url.indexOf('https://twitter.com') === 0 && scope.item.url.indexOf('status') > 0) {
+                scope.embed = true;
+                $http.get(config.server.url.replace('api', 'twitter/'), {params: {url: scope.item.url}, omit_script: first})
+                    .then((response) => {
+                        scope.html = $sce.trustAsHtml(response.data.html);
+                    });
+
+                first = false;
+            }
         }
     };
 }
 
+AnsaMetasearchItem.$inject = ['config', '$http', '$sce'];
+
 angular.module('ansa.superdesk', [])
     .controller('MetasearchCtrl', MetasearchController)
-    .directive('ansaDraggable', AnsaDraggableDirective)
+    .directive('ansaMetasearchItem', AnsaMetasearchItem)
     .config(['superdeskProvider', (superdeskProvider) => {
         superdeskProvider.activity('/workspace/metasearch', {
             label: gettext('Metasearch'),
