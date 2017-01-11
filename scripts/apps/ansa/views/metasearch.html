@@ -24,7 +24,13 @@
                 <ul ng-if="metasearch.items.length" class="pills-list">
                     <li ng-repeat="item in metasearch.items track by item.url" ansa-metasearch-item>
                         <small class="engine">{{ :: item.engine }}</small>
-                        <div class="embed" ng-bind-html="html"></div>
+                        <div class="embed html">
+                            <div ng-bind-html="html"></div>
+                        </div>
+                        <div class="embed iframe" ng-if="iframe">
+                            <iframe src="{{ iframe }}" type="text/html" width="{{ width }}" height="{{ height }}" frameborder="0"></iframe>
+                            <p>{{ :: item.content }}</p>
+                        </div>
                         <div class="inline" ng-if="!embed">
                             <h3 ng-if="!item.thumbnail_src">{{ :: item.title }}</h3>
                             <figure ng-if="item.thumbnail_src">

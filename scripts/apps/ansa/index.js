@@ -39,7 +39,12 @@ class MetasearchController {
 MetasearchController.$inject = ['$http', '$location', 'config'];
 
 function AnsaMetasearchItem(config, $http, $sce) {
-    var first = true;
+    var firstTwitter = true;
+
+    function getEmbedWidth(elem) {
+        return Math.min(550, Math.floor(elem[0].getBoundingClientRect().width) - 50);
+    }
+
     return {
         link: (scope, elem) => {
             elem.attr('draggable', true);
@@ -59,12 +64,19 @@ function AnsaMetasearchItem(config, $http, $sce) {
 
             if (scope.item.url.indexOf('https://twitter.com') === 0 && scope.item.url.indexOf('status') > 0) {
                 scope.embed = true;
-                $http.get(config.server.url.replace('api', 'twitter/'), {params: {url: scope.item.url}, omit_script: first})
+                $http.get(config.server.url.replace('api', 'twitter/'), {params: {url: scope.item.url}, omit_script: !firstTwitter})
                     .then((response) => {
                         scope.html = $sce.trustAsHtml(response.data.html);
                     });
 
-                first = false;
+                firstTwitter = false;
+            }
+
+            if (scope.item.url.indexOf('https://www.youtube.com/watch?v=') === 0) {
+                scope.embed = true;
+                scope.iframe = $sce.trustAsResourceUrl(scope.item.url.replace('watch?v=', 'embed/').replace('www.', ''));
+                scope.width = getEmbedWidth(elem);
+                scope.height = Math.floor(scope.width / 3 * 2);
             }
         }
     };
