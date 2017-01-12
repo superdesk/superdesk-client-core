@@ -1,6 +1,6 @@
 /* jshint maxlen:false */
 var SERVER_URL = 'http://localhost/resource',
-    LOGIN_URL = SERVER_URL + '/auth',
+    LOGIN_URL = SERVER_URL + '/auth_db',
     username = 'admin',
     password = 'admin',
     session = 'xyz';
@@ -36,7 +36,7 @@ describe('basic auth adapter', () => {
 
         $httpBackend.flush();
 
-        expect(urls.resource).toHaveBeenCalledWith('auth');
+        expect(urls.resource).toHaveBeenCalledWith('auth_db');
         expect(identity.token).toBe('Basic ' + btoa(session + ':'));
     }));
 

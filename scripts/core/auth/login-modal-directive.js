@@ -6,13 +6,20 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     'auth',
     'features',
     'asset',
+    'api',
     '$route',
-    function(session, auth, features, asset, $route) {
+    function(session, auth, features, asset, api, $route) {
         return {
             replace: true,
             templateUrl: asset.templateUrl('core/auth/login-modal.html'),
             link: function(scope, element, attrs) {
                 scope.features = features;
+                scope.secureActivated = false;
+
+                api.query('auth_xmpp_activated', {}).then(
+                    (activatedData) => {
+                        scope.secureActivated = activatedData.activated;
+                    });
 
                 scope.authenticate = function() {
                     scope.isLoading = true;

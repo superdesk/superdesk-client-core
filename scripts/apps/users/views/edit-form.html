@@ -136,6 +136,11 @@
                   <input type="text" name="phone" id="phone" ng-model="user.phone">
                 </div>
 
+                <div sd-info-item>
+                  <label for="jid">JID</label>
+                  <input type="text" name="jid" id="jid" ng-model="user.jid">
+                </div>
+
                 <div sd-info-item ng-show="user._id">
                   <label for="created" translate>member since</label>
                   <span id="created" class="info-value" sd-reldate ng-model="user._created"></span>

@@ -69,7 +69,7 @@ function withToken(callback) {
     } else {
         request.post({
             rejectUnauthorized: false,
-            url: getBackendUrl('/auth'),
+            url: getBackendUrl('/auth_db'),
             json: {
                 username: browser.params.username,
                 password: browser.params.password
