@@ -778,7 +778,8 @@ angular.module('superdesk.apps.editor2', [
                             $q.when((() => {
                                 // if it's a link (<a>...</a>), create an embed by using iframely
                                 // if not, create an embed based on the item content
-                                const urlMatch = /^<a href="(.+?)".+<\/a>$/.exec(item);
+                                const urlMatch = /<a href="(.+?)".+<\/a>/.exec(item);
+                                console.log('match', urlMatch, item);
 
                                 if (urlMatch) {
                                     console.log('embed url', urlMatch[1]);
