@@ -1,12 +1,23 @@
+require('angular-dynamic-locale');
+
 /**
  * Translate module
  *
  * This module provides localization support.
  * It's using angular-gettext.
  */
-export default angular.module('superdesk.core.translate', ['gettext', 'superdesk.core.auth.session'])
-    .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS',
-        function(gettextCatalog, $location, $rootScope, SESSION_EVENTS) {
+export default angular.module('superdesk.core.translate', [
+    'gettext',
+    'superdesk.core.auth.session',
+    'tmh.dynamicLocale',
+    'ngLocale'
+])
+    .config(['tmhDynamicLocaleProvider', (tmhDynamicLocaleProvider) => {
+        tmhDynamicLocaleProvider.localeLocationPattern('locales/angular-locale_{{locale}}.js');
+    }])
+
+    .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
+        function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
                 if ($rootScope.$root.currentUser
                     && gettextCatalog.strings.hasOwnProperty($rootScope.$root.currentUser.language)) {
@@ -21,6 +32,8 @@ export default angular.module('superdesk.core.translate', ['gettext', 'superdesk
                 }
                 // set locale for date/time management
                 moment.locale(gettextCatalog.currentLanguage);
+                // set locale for angular-i18n
+                tmhDynamicLocale.set(gettextCatalog.currentLanguage.replace('_', '-').toLowerCase());
             });
 
             var params = $location.search();

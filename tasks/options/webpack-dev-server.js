@@ -69,7 +69,8 @@ function getProxy() {
 
     var proxy = isEmbedded ? {
         '/scripts/*': prepend('node_modules/superdesk-core'),
-        '/images/*': prepend('node_modules/superdesk-core')
+        '/images/*': prepend('node_modules/superdesk-core'),
+        '/locales/*': prepend('dist')
     } : {};
 
     // on the dev server the bundle is in the dist folder
