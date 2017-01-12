@@ -7,8 +7,7 @@
                 <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}"
                     sd-autofocus
                     ng-model="metasearch.query"
-                    ng-model-options="{debounce: 2000}"
-                    ng-change="metasearch.search()">
+                    ng-keyup="metasearch.search($event)">
                 <button class="search-close"
                     ng-click="metasearch.reset()"
                     ng-class="{visible: metasearch.query}"><i class="icon-remove-sign"></i></button>
@@ -32,7 +31,7 @@
                             <p>{{ :: item.content }}</p>
                         </div>
                         <div class="inline" ng-if="!embed">
-                            <h3 ng-if="!item.thumbnail_src">{{ :: item.title }}</h3>
+                            <h3 ng-if="!item.thumbnail_src"><a ng-href="{{ :: item.url }}" target="_blank">{{ :: item.title }}</a></h3>
                             <figure ng-if="item.thumbnail_src">
                                 <img ng-if="item.thumbnail_src" ng-src="{{ :: item.thumbnail_src }}" />
                                 <p>{{ :: item.title }}</p>

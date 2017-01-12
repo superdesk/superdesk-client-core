@@ -1,12 +1,13 @@
 
 class MetasearchController {
 
-    constructor($http, $location, config) {
+    constructor($http, $location, config, Keys) {
         this.query = $location.search().query || '';
         this.openSearch = true; // active on start
         this.url = config.server.url.replace('api', 'metasearch') + '/';
         this.http = $http;
         this.location = $location;
+        this.Keys = Keys;
 
         // init
         this.search();
@@ -22,7 +23,11 @@ class MetasearchController {
         this.location.search('query', null);
     }
 
-    search() {
+    search(event) {
+        if (event && event.which !== this.Keys.enter) {
+            return;
+        }
+
         this.location.search('query', this.query || null);
         if (this.query) {
             this.items = null;
@@ -36,7 +41,7 @@ class MetasearchController {
     }
 }
 
-MetasearchController.$inject = ['$http', '$location', 'config'];
+MetasearchController.$inject = ['$http', '$location', 'config', 'Keys'];
 
 function AnsaMetasearchItem(config, $http, $sce) {
     var firstTwitter = true;
