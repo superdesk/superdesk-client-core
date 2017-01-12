@@ -781,6 +781,7 @@ angular.module('superdesk.apps.editor2', [
                                 const urlMatch = /^<a href="(.+?)".+<\/a>$/.exec(item);
 
                                 if (urlMatch) {
+                                    console.log('embed url', urlMatch[1]);
                                     return embedService.get(urlMatch[1]).then((data) => ({
                                         blockType: 'embed',
                                         embedType: data.provider_name || EMBED_PROVIDERS.custom,
@@ -792,6 +793,7 @@ angular.module('superdesk.apps.editor2', [
                                         }),
                                     }));
                                 }
+                                console.log('embed html', item);
                                 return {
                                     blockType: 'embed',
                                     embedType: EMBED_PROVIDERS.custom,
@@ -803,6 +805,8 @@ angular.module('superdesk.apps.editor2', [
                                 ctrl.sdEditorCtrl.splitAndInsert(ctrl, block)
                                 .then(() => $timeout(ctrl.sdEditorCtrl.commitChanges));
                             });
+                        } else {
+                            console.log('ignore', mediaType, item);
                         }
                     })
                     .on('dragover', (event) => {

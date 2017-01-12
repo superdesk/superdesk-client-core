@@ -32,9 +32,9 @@ class MetasearchController {
         if (this.query) {
             this.items = null;
             this.loading = true;
-            this.http.get(this.url, {params: {q: this.query, format: 'json', pageno: 1}})
+            this.http.get(this.url, {params: {q: this.query, format: 'json', pageno: 1, categories: 'superdesk'}})
                 .then((response) => {
-                    this.items = response.data.results || [];
+                    this.items = response.data.results.slice(0, 25) || [];
                     this.loading = false;
                 });
         }
