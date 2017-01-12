@@ -75,6 +75,7 @@ function getProxy() {
 
     // on the dev server the bundle is in the dist folder
     proxy['/app.bundle.js'] = prepend('dist');
+    proxy['/config.js'] = prepend('dist');
 
     return proxy;
 }
