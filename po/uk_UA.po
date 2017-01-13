@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:34+0000\n"
+"PO-Revision-Date: 2017-01-13 13:35+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -237,7 +237,7 @@ msgstr "не більше 2 символів"
 
 #: scripts/apps/publish/views/subscribers.html:171
 msgid "2 weeks"
-msgstr "2 тижня"
+msgstr "2 тижні"
 
 #: scripts/core/lang/missing-translations-strings.js:25
 msgid "20th update"
@@ -257,7 +257,7 @@ msgstr "3-е оновлення"
 
 #: scripts/core/lang/missing-translations-strings.js:20
 msgid "412: Can't publish as item state is draft"
-msgstr "412: Не вдається оприлюднити, бо стан елементу - чорновик"
+msgstr "412: Не вдається випустити, бо статус - чорновик"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:21
 msgid "48 Hours"
