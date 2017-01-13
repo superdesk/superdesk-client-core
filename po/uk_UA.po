@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:32+0000\n"
+"PO-Revision-Date: 2017-01-13 14:33+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5869,7 +5869,7 @@ msgstr "Токен активації недійсний.<br>"
 
 #: scripts/apps/users/views/change-avatar.html:31
 msgid "The minimum image resolution is 200x200 pixels."
-msgstr "Мінімальна роздільна якість фото 200x200 пікселів."
+msgstr "Мінімальна роздільна здатність фото 200x200 пкс"
 
 #: scripts/apps/users/directives/ChangePasswordDirective.js:19
 msgid "The password has been changed."
