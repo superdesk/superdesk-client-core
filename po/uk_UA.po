@@ -4374,7 +4374,7 @@ msgstr "Продукт видалено."
 
 #: scripts/apps/products/views/products-config-modal.html:18
 msgid "Product description"
-msgstr "Опис продукта"
+msgstr "Опис продукту"
 
 #: scripts/apps/products/controllers/ProductsConfigController.js:67
 msgid "Product is saved."
