@@ -1025,11 +1025,11 @@ msgstr "Перевищений ліміт символів, група не мо
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
 msgid "Character limit exceeded, highlight can not be created/updated."
-msgstr "Обмеження на кількість символів перевищено, вибране не може бути створено/оновлено."
+msgstr "Перевищений ліміт символів, вибране не може бути створено/оновлено."
 
 #: scripts/apps/desks/views/desk-config-modal.html:166
 msgid "Character limit exceeded, stage can not be created/updated."
-msgstr "Обмеження на кількість символів перевищено, Етап не може бути створений/оновлений."
+msgstr "Перевищений ліміт символів, Етап не може бути створений/оновлений."
 
 #: scripts/apps/authoring/authoring/directives/CharacterCount.js:12
 msgid "characters"
