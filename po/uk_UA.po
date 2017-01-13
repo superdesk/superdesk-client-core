@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:44+0000\n"
+"PO-Revision-Date: 2017-01-13 13:45+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1058,7 +1058,7 @@ msgstr "Виберіть звичайний стиль"
 
 #: scripts/apps/authoring/views/theme-select.html:27
 msgid "Choose Proofread Theme"
-msgstr "Виберіть стиль написання повідомлень"
+msgstr "Виберіть стиль повідомлень"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:38
 #: scripts/apps/legal-archive/views/legal_archive.html:73
