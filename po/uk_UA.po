@@ -3,13 +3,13 @@
 # Grisha Kostyuk <naspeh@ya.ru>, 2016
 # Iryna Cherednychenko <cia@ukrinform.com>, 2016
 # Olga Budnik <olga.budnik.lo@gmail.com>, 2016
-# Serg Yakovlev <smy@industrialinnovationgroup.com>, 2016
+# Serg Yakovlev <smy@industrialinnovationgroup.com>, 2016-2017
 # Юрий <hrabovetskyy@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2016-12-21 19:25+0000\n"
-"Last-Translator: Grisha Kostyuk <naspeh@ya.ru>\n"
+"PO-Revision-Date: 2017-01-12 16:15+0000\n"
+"Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,23 +19,23 @@ msgstr ""
 #: scripts/apps/archive/views/upload.html:64
 #: scripts/apps/authoring/views/change-image.html:94
 msgid "--- Not selected ---"
-msgstr "--Не обрано--"
+msgstr "-- Не обрано --"
 
 #: scripts/apps/desks/views/desk-config-modal.html:131
 msgid ": OFF"
-msgstr "ВИКЛЮЧИТИ"
+msgstr "ВИКЛ"
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid ": ON"
-msgstr "включити"
+msgstr "ВКЛ"
 
 #: scripts/core/lang/missing-translations-strings.js:18
 msgid "'ABSTRACT is a required field'"
-msgstr "'ВИПИСКА - обов'язкове поле' "
+msgstr "'ЛІД - обов'язкове поле' "
 
 #: scripts/core/lang/missing-translations-strings.js:19
 msgid "'ANPA_CATEGORY is a required field'"
-msgstr "'ANPA_Категорія - обов'язкове поле'"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.js:18
 msgid "'BYLINE is a required field'"
@@ -47,7 +47,7 @@ msgstr "'КАТЕГОРІЯ - обов'язкове поле' "
 
 #: scripts/core/lang/missing-translations-strings.js:27
 msgid "'DATELINE is a required field'"
-msgstr "'Дата та місце - обов'язкове поле' "
+msgstr "'Дата-місце - обов'язкове поле' "
 
 #: scripts/core/lang/missing-translations-strings.js:17
 msgid "'GENRE is a required field'"
@@ -75,7 +75,7 @@ msgstr "'ПРІОРИТЕТ - обов'язкове поле'"
 
 #: scripts/core/lang/missing-translations-strings.js:19
 msgid "'SLUGLINE is a required field'"
-msgstr "'КОМЕНТАР обов'язкове поле'"
+msgstr "'Слаглайн обов'язкове поле'"
 
 #: scripts/core/lang/missing-translations-strings.js:18
 msgid "'SUBJECT is a required field'"
@@ -95,7 +95,7 @@ msgstr "\"ЖАНР 'нульове значення не допускаєтьс�
 
 #: scripts/apps/highlights/services/HighlightsService.js:58
 msgid "(Global)"
-msgstr "(Глобальне/загальне)"
+msgstr "(Глобальне)"
 
 #: scripts/core/ui/views/sd-timezone.html:12
 msgid "(no matches)"
@@ -103,7 +103,7 @@ msgstr "(немає співпадінь)"
 
 #: scripts/apps/search/views/saved-searches.html:10
 msgid "[Global]"
-msgstr "[Глобальне/загальне]"
+msgstr "[Глобальне]"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:16
 msgid "[none]"
@@ -115,7 +115,7 @@ msgstr "{{ field }} не може бути раніше за нинішній ч
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:241
 msgid "{{ field }} date is required!"
-msgstr "{{ field }} дата потрібна! "
+msgstr "{{ field }} вкажить дату! "
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:249
 msgid "{{ field }} is not a valid date!"
@@ -123,28 +123,28 @@ msgstr "{{ field }} дата не дійсна!"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:245
 msgid "{{ field }} time is required!"
-msgstr "{{ field }} потрібно вказати час!"
+msgstr "{{ field }} вкажить час!"
 
 #: scripts/apps/search/views/multi-action-bar.html:4
 msgid "{{ multi.count }} Item selected"
 msgid_plural "{{ multi.count }} Items selected"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{{ multi.count }} елемент обрано"
+msgstr[1] "{{ multi.count }} елементів обрано"
+msgstr[2] "{{ multi.count }} елементів обрано"
 
 #: scripts/apps/publish/views/publish-queue.html:71
 msgid "{{ multiSelectCount}} Item selected"
 msgid_plural "{{ multiSelectCount }} Items selected"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{{ multiSelectCount}} елемент обрано"
+msgstr[1] "{{ multiSelectCount}} елементів обрано"
+msgstr[2] "{{ multiSelectCount}} елементів обрано"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:52
 msgid "{{ wordsCount }} word"
 msgid_plural "{{ $count }} words"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{{ $count }} слово"
+msgstr[1] "{{ $count }} слів"
+msgstr[2] "{{ $count }} слів"
 
 #: scripts/apps/users/views/edit-form.html:107
 msgid "{{error.email}}"
@@ -152,11 +152,11 @@ msgstr "{{error.email}}"
 
 #: scripts/apps/desks/views/desk-config-modal.html:181
 msgid "{{selected.is_visible ? 'ON' : 'OFF'}}"
-msgstr ""
+msgstr "{{selected.is_visible ? 'ВКЛ' : 'ВИКЛ'}}"
 
 #: scripts/apps/desks/views/desk-config-modal.html:185
 msgid "{{selected.local_readonly ? 'ON' : 'OFF'}}"
-msgstr ""
+msgstr "{{selected.local_readonly ? 'ВКЛ' : 'ВИКЛ'}}"
 
 #: scripts/core/lang/missing-translations-strings.js:35
 msgid "{{status}} Ingest Channel {{name}}"
@@ -164,7 +164,7 @@ msgstr "{{status}} Канал Завантаження {{name}}"
 
 #: scripts/apps/archive/views/upload.html:96
 msgid "* fields are required"
-msgstr "Обов'язкове поле"
+msgstr "* Обов'язкові поля"
 
 #: scripts/apps/users/views/edit-form.html:29
 msgid "* mandatory fields"
@@ -173,7 +173,19 @@ msgstr "* обов'язкові поля"
 #: scripts/apps/products/views/products-config-modal.html:22
 #: scripts/apps/publish/views/subscribers.html:73
 msgid "*comma separated values"
-msgstr "* значення, розділені комами"
+msgstr "*значення, розділені комами"
+
+#: scripts/apps/publish/views/subscribers.html:172
+msgid "1 month"
+msgstr "1 місяць"
+
+#: scripts/apps/publish/views/subscribers.html:170
+msgid "1 week"
+msgstr "1 тиждень"
+
+#: scripts/apps/publish/views/subscribers.html:174
+msgid "1 year"
+msgstr "1 рік"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "10th update"
@@ -223,6 +235,10 @@ msgstr "19-е оновлення"
 msgid "2 character limit"
 msgstr "обмеження 2 символи"
 
+#: scripts/apps/publish/views/subscribers.html:171
+msgid "2 weeks"
+msgstr "2 тижня"
+
 #: scripts/core/lang/missing-translations-strings.js:25
 msgid "20th update"
 msgstr "20-е оновлення"
@@ -241,7 +257,7 @@ msgstr "3-е оновлення"
 
 #: scripts/core/lang/missing-translations-strings.js:20
 msgid "412: Can't publish as item state is draft"
-msgstr "412: Не вдається опублікувати, бо стан елементу - чорновик"
+msgstr "412: Не вдається оприлюднити, бо стан елементу - чорновик"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:21
 msgid "48 Hours"
@@ -258,6 +274,10 @@ msgstr "5-е оновлення"
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:17
 msgid "6 Hours"
 msgstr "6 годин"
+
+#: scripts/apps/publish/views/subscribers.html:173
+msgid "6 months"
+msgstr "6 місяців"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "6th update"
@@ -277,17 +297,17 @@ msgstr "9-е оновлення"
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.js:56
 msgid "A content profile with this name already exists."
-msgstr "Контент-профіль з таким ім'ям вже існує."
+msgstr "Профіль Контенту з такою назвою вже існує."
 
 #: scripts/core/auth/reset-password.html:43
 msgid ""
 "A link was sent to the specified email address. Please use it to reset your "
 "password. It is valid a limited amount of time."
-msgstr "Посилання було відправлене на вказану адресу електронної пошти. Будь ласка, використайте його, щоб встановити свій пароль. Посилання діє обмежену кількість часу."
+msgstr "Посилання було відправлене на вказану адресу email. Використайте його, щоб встановити свій пароль. Посилання діє обмежену кількість часу."
 
 #: scripts/apps/search/views/search-parameters.html:150
 msgid "AAP Image Keyword"
-msgstr ""
+msgstr "Ключове слово зображення ААР"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:82
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:97
@@ -303,7 +323,7 @@ msgstr "Абревіатура вже існує. Ви хочете її зам�
 #: scripts/apps/packaging/views/sd-package-edit.html:19
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:17
 msgid "Abstract"
-msgstr "Виписка"
+msgstr "Лід"
 
 #: scripts/apps/monitoring/views/desk-notifications.html:19
 msgid "Acknowledge"
@@ -330,8 +350,13 @@ msgid "Active"
 msgstr "Активний"
 
 #: scripts/apps/users/views/activity-feed.html:4
+#: scripts/core/lang/missing-translations-strings.js:39
 msgid "Activity Stream"
-msgstr "Активний потік???"
+msgstr "Потік активності"
+
+#: scripts/core/lang/missing-translations-strings.js:39
+msgid "Activity stream widget"
+msgstr "Віджет потоку активності"
 
 #: scripts/apps/authoring/metadata/views/metadata-target-publishing.html:6
 #: scripts/apps/content-filters/views/manage-filters.html:75
@@ -364,7 +389,7 @@ msgstr "Додати зміст тут"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:54
 msgid "Add content slugline"
-msgstr "Додати зміст коментаря"
+msgstr "Додати слаглайн"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:58
 msgid "Add description"
@@ -372,7 +397,7 @@ msgstr "Додати опис"
 
 #: scripts/apps/content-filters/views/manage-filters.html:120
 msgid "Add Filter Statement"
-msgstr "Додати інструкцію фільтра"
+msgstr "Додати запис фільтру"
 
 #: scripts/apps/ingest/views/dashboard/ingest-sources-list.html:1
 msgid "Add Ingest Sources"
@@ -390,7 +415,7 @@ msgstr "Додати більше файлів"
 msgid ""
 "Add New {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} "
 "Dictionary"
-msgstr "Додати Новий {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Словник"
+msgstr "Додати новий {{(isAbbreviations() ? 'Абревіатури' : '') | translate}} словник"
 
 #: scripts/apps/dictionaries/views/settings.html:14
 msgid "Add New Abbreviations Dictionary"
@@ -404,12 +429,12 @@ msgstr "Додати новий фільтр контенту"
 #: scripts/apps/workspace/content/views/profile-settings.html:53
 #: scripts/apps/workspace/content/views/profile-settings.html:7
 msgid "Add New Content Profile"
-msgstr "Додати новий контент-профіль"
+msgstr "Додати новий профіль контенту"
 
 #: scripts/apps/desks/views/desk-config-modal.html:5
 #: scripts/apps/desks/views/settings.html:7
 msgid "Add New Desk"
-msgstr "Додати новий робочий стіл"
+msgstr "Додати новий Стіл"
 
 #: scripts/apps/publish/views/subscribers.html:117
 msgid "Add New Destination"
@@ -493,7 +518,7 @@ msgstr "Додати опис завдання"
 
 #: scripts/apps/dashboard/views/workspace.html:91
 msgid "Add This Widget"
-msgstr "Додайте цей віджет"
+msgstr "Додати цей віджет"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:56
 msgid "Add title"
@@ -563,7 +588,7 @@ msgstr "Все добре до сих пір."
 
 #: scripts/apps/authoring/views/opened-articles.html:3
 msgid "All opened items"
-msgstr "Всі відкриті елементи"
+msgstr "Всі елементи відкриті"
 
 #: scripts/apps/search/directives/ItemRepo.js:44
 msgid "all photos"
@@ -581,11 +606,11 @@ msgstr "вже існує"
 
 #: scripts/apps/archive/views/upload.html:50
 msgid "Alt text"
-msgstr "Alt текст"
+msgstr ""
 
 #: scripts/apps/authoring/views/change-image.html:80
 msgid "Alt Text"
-msgstr "Alt Текст"
+msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:264
 msgid "An Item can't have both Embargo and Publish Schedule."
@@ -594,7 +619,7 @@ msgstr "Елемент не може бути одночасно під емба
 #: scripts/apps/content-filters/views/production-test-view.html:23
 #: scripts/apps/search/services/SearchService.js:29
 msgid "ANPA Category"
-msgstr "ANPA Категорія"
+msgstr "Категорія ANPA"
 
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "ANPA Take Key"
@@ -606,7 +631,7 @@ msgstr "Будь-який"
 
 #: scripts/apps/archive/views/metadata-view.html:160
 msgid "Aperture"
-msgstr ""
+msgstr "Апертура"
 
 #: scripts/apps/publish/views/subscribers.html:131
 msgid "Applied Global Block Filters"
@@ -614,7 +639,7 @@ msgstr "Застосовано глобальний блок фільтрів"
 
 #: scripts/apps/authoring/views/article-edit.html:223
 msgid "APPLY CROPS"
-msgstr ""
+msgstr "Застосувати CROPS"
 
 #: scripts/core/lang/missing-translations-strings.js:8
 msgid "archive"
@@ -626,7 +651,7 @@ msgstr "Архів"
 
 #: scripts/apps/search/views/item-repo.html:10
 msgid "Archived"
-msgstr "Заархівовано"
+msgstr "Архівований"
 
 #: scripts/apps/content-filters/views/manage-filters.html:50
 msgid "Archived Block"
@@ -634,7 +659,7 @@ msgstr "Архівований блок"
 
 #: scripts/core/lang/missing-translations-strings.js:10
 msgid "Archived Management"
-msgstr ""
+msgstr "Керування архівуванням"
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.js:63
 msgid "Are you sure you want to delete configuration?"
@@ -656,7 +681,7 @@ msgstr "Ви впевнені, що хочете видалити умову ф�
 msgid "Are you sure you want to delete group?"
 msgstr "Ви впевнені, що хочете видалити групу?"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:91
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:95
 msgid "Are you sure you want to delete Ingest Source?"
 msgstr "Ви впевнені, що хочете видалити джерело завантаження?"
 
@@ -672,7 +697,7 @@ msgstr "Ви впевнені, що хочете видалити набір п�
 msgid "Are you sure you want to delete saved search?"
 msgstr "Ви впевнені, що хочете видалити збережений пошук?"
 
-#: scripts/apps/search-providers/directive.js:67
+#: scripts/apps/search-providers/directive.js:71
 msgid "Are you sure you want to delete Search Provider?"
 msgstr "Ви впевнені, що хочете видалити Пошук постачальника?"
 
@@ -703,7 +728,7 @@ msgstr "Тип статті"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:68
 msgid "Article Type(s)"
-msgstr "Тип(-и) статей"
+msgstr "Тип(и) статей"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:19
 msgid "Assets"
@@ -712,7 +737,7 @@ msgstr "Активи"
 #: scripts/apps/publish/views/http-push-config.html:12
 #: scripts/apps/publish/views/http-push-config.html:13
 msgid "Assets URL"
-msgstr "Активи URL"
+msgstr "URL Активів"
 
 #: scripts/apps/archive/views/upload.html:62
 #: scripts/apps/authoring/views/change-image.html:92
@@ -721,7 +746,7 @@ msgstr "Призначення прав"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:27
 msgid "Assigned desks"
-msgstr "Призначено робочі столи"
+msgstr "Призначено Столи"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:162
 msgid "Assignee"
@@ -730,11 +755,11 @@ msgstr "Правонаступник"
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:17
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:22
 msgid "at"
-msgstr ""
+msgstr "в"
 
 #: scripts/apps/templates/views/template-editor-modal.html:150
 msgid "At"
-msgstr ""
+msgstr "В"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "audio"
@@ -742,24 +767,24 @@ msgstr "аудіо"
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:18
 msgid "Authentication Info"
-msgstr "Аутентифікація Info"
+msgstr "Інформація аутентифікації"
 
-#: scripts/apps/publish/views/subscribers.html:147
+#: scripts/apps/publish/views/subscribers.html:148
 msgid "Authentication Token"
-msgstr "аутентифікація Token"
+msgstr "Токен аутентифікації"
 
 #: scripts/apps/ingest/views/settings/reutersConfig.html:7
 msgid "authentication url"
-msgstr "Аутентифікація Url"
+msgstr "Url аутентифікації"
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "authoring"
-msgstr "створення елемента контенту"
+msgstr "створення"
 
 #: scripts/apps/authoring/authoring/index.js:76
 #: scripts/apps/authoring/multiedit/multiedit.js:300
 msgid "Authoring"
-msgstr "Створення елемента контенту"
+msgstr "Створення"
 
 #: scripts/apps/templates/views/templates.html:55
 msgid "Automated item creation"
@@ -777,9 +802,9 @@ msgstr "Автоматично вставити елементи з"
 msgid "Available clock"
 msgstr "Доступний годинник"
 
-#: scripts/core/editor2/editor.js:960
+#: scripts/core/editor2/editor.js:982
 msgid "B"
-msgstr "Б ???"
+msgstr "Назад"
 
 #: scripts/apps/dashboard/views/workspace.html:82
 #: scripts/apps/monitoring/aggregate-widget/aggregate-widget.html:58
@@ -833,16 +858,16 @@ msgstr "Тіло"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:26
 msgid "Body footer"
-msgstr ""
+msgstr "Нижній футер"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:20
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "Body HTML"
 msgstr "Тіло HTML"
 
-#: scripts/core/editor2/editor.js:958
+#: scripts/core/editor2/editor.js:980
 msgid "bold"
-msgstr "жирний шрифт"
+msgstr "жирний"
 
 #: scripts/apps/publish/views/subscribers.html:68
 msgid "Both"
@@ -862,19 +887,19 @@ msgstr "Транслювати"
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 #: scripts/core/itemList/views/item-list-widget.html:86
 msgid "by"
-msgstr ""
+msgstr "згідно з"
 
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "By"
-msgstr ""
+msgstr "Згідно з"
 
 #: scripts/apps/authoring/authoring/directives/ArticleEditDirective.js:96
 msgid "By {{ display_name }}"
-msgstr ""
+msgstr "Згідно з {{ display_name }}"
 
 #: scripts/apps/packaging/views/sd-package-item-preview.html:25
 msgid "by <b>{{userLookup[data.original_creator].display_name}}</b>"
-msgstr ""
+msgstr "згідно з <b>{{userLookup[data.original_creator].display_name}}</b>"
 
 #: scripts/apps/users/views/user-preferences.html:55
 msgid ""
@@ -887,7 +912,7 @@ msgstr "При виборі категорій, які вас цікавлять
 msgid ""
 "By selecting the desks as your preferred desks, they appear first in the "
 "order when sending or publishing items."
-msgstr "При виборі робочих столів в якості основних, вони з'являються першими в тому порядку, в якому були відправлені чи опубліковані елементи."
+msgstr "При виборі Столів в якості основних, вони з'являються першими в тому порядку, в якому були відправлені чи опубліковані елементи."
 
 #: scripts/apps/users/views/edit-form.html:79
 msgid "byline"
@@ -928,8 +953,8 @@ msgstr "Підпис автора"
 #: scripts/apps/products/views/products-config-modal.html:57
 #: scripts/apps/publish/views/publish-queue.html:122
 #: scripts/apps/publish/views/publish-queue.html:78
-#: scripts/apps/publish/views/subscribers.html:156
-#: scripts/apps/search-providers/views/search-provider-config.html:79
+#: scripts/apps/publish/views/subscribers.html:187
+#: scripts/apps/search-providers/views/search-provider-config.html:80
 #: scripts/apps/search/views/item-globalsearch.html:20
 #: scripts/apps/search/views/save-search.html:28
 #: scripts/apps/templates/views/create-template.html:41
@@ -950,15 +975,15 @@ msgstr "Підпис автора"
 #: scripts/core/ui/views/datepicker-wrapper.html:15
 #: scripts/core/ui/views/sd-timepicker-popup.html:27
 msgid "Cancel"
-msgstr "Знищити"
+msgstr "Скасувати"
 
 #: scripts/apps/publish/views/publish-queue.html:70
 msgid "Cancel Selection"
-msgstr "Знищити Виділене"
+msgstr "Скасувати Видбір"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:17
 msgid "Case Sensitive"
-msgstr ""
+msgstr " Чутливість до регістру"
 
 #: scripts/core/lang/missing-translations-strings.js:9
 msgid "categories"
@@ -984,11 +1009,11 @@ msgstr "Змінити фото"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:38
 msgid "Channel has gone strangely quiet."
-msgstr ""
+msgstr "Канал непомітно вимкнувся. "
 
 #: scripts/apps/desks/views/desk-config-modal.html:92
 msgid "Character limit exceeded, desk can not be created/updated."
-msgstr "Обмеження на кількість символів перевищено, робочий стіл не може бути створений/оновлений."
+msgstr "Обмеження на кількість символів перевищено, Стіл не може бути створений/оновлений."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:46
 msgid "Character limit exceeded, dictionary can not be created/updated."
@@ -1000,11 +1025,11 @@ msgstr "Обмеження на кількість символів переви
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
 msgid "Character limit exceeded, highlight can not be created/updated."
-msgstr "Обмеження на кількість символів перевищено, акцент не може бути створений/оновлений."
+msgstr "Обмеження на кількість символів перевищено, вибране не може бути створено/оновлено."
 
 #: scripts/apps/desks/views/desk-config-modal.html:166
 msgid "Character limit exceeded, stage can not be created/updated."
-msgstr "Обмеження на кількість символів перевищено, майданчик не може бути створений/оновлений."
+msgstr "Обмеження на кількість символів перевищено, Етап не може бути створений/оновлений."
 
 #: scripts/apps/authoring/authoring/directives/CharacterCount.js:12
 msgid "characters"
@@ -1017,23 +1042,23 @@ msgstr "Перевірити всі"
 #: scripts/apps/authoring/views/authoring-topbar.html:209
 #: scripts/apps/authoring/views/authoring-topbar.html:217
 msgid "Check spelling"
-msgstr "Перевірте написання"
+msgstr "Перевірити написання"
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:26
 msgid "Choose entire category"
-msgstr ""
+msgstr "Вибрати всю категорію"
 
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:7
 msgid "Choose highlight list"
-msgstr ""
+msgstr "Виберіть список вибраного"
 
 #: scripts/apps/authoring/views/theme-select.html:9
 msgid "Choose Normal Theme"
-msgstr ""
+msgstr "Виберіть звичайний стиль"
 
 #: scripts/apps/authoring/views/theme-select.html:27
 msgid "Choose Proofread Theme"
-msgstr ""
+msgstr "Виберіть стиль написання повідомлень"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:38
 #: scripts/apps/legal-archive/views/legal_archive.html:73
@@ -1047,7 +1072,7 @@ msgstr "Очистити всі обрані"
 
 #: scripts/apps/search/views/search-parameters.html:183
 msgid "Clear Edge"
-msgstr ""
+msgstr "Очистити край"
 
 #: scripts/apps/search/views/save-search.html:9
 msgid "Clear filters"
@@ -1060,7 +1085,7 @@ msgstr "Очистити сесії"
 #: scripts/apps/users/views/change-avatar.html:36
 msgid ""
 "Click to capture using camera. Be sure that you allow camera accessibility."
-msgstr ""
+msgstr "Натисніть, щоб зпіймати за допомогою камери. Переконайтеся, що ви дозволяєте доступ до камери."
 
 #: scripts/apps/dashboard/world-clock/configuration.html:9
 msgid "Clock type"
@@ -1099,7 +1124,7 @@ msgstr "Поєднати з поточним"
 
 #: scripts/core/menu/notifications/views/notifications.html:26
 msgid "commented on"
-msgstr ""
+msgstr "прокоментовано з приводу"
 
 #: scripts/apps/authoring/comments/comments.js:135
 msgid "Comments"
@@ -1119,7 +1144,7 @@ msgstr "Коди компанії"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "composite"
-msgstr ""
+msgstr "складений"
 
 #: scripts/apps/legal-archive/index.js:35
 msgid "Confidential data"
@@ -1159,12 +1184,12 @@ msgstr "Підтвердити новий пароль"
 
 #: scripts/core/notification/notification.js:109
 msgid "Connected to Notification Server!"
-msgstr ""
+msgstr "Підключено до серверу повідомлень"
 
 #: scripts/apps/publish/views/odbc-config.html:2
 #: scripts/apps/publish/views/odbc-config.html:3
 msgid "Connection string"
-msgstr ""
+msgstr "Рядок з'єднання"
 
 #: scripts/core/lang/missing-translations-strings.js:5
 msgid "content"
@@ -1180,8 +1205,8 @@ msgid "Content"
 msgstr "Контент"
 
 #: scripts/apps/publish/views/subscribers.html:146
-msgid "Content API Token"
-msgstr "Контент API Token"
+msgid "Content API Tokens"
+msgstr "API токени контенту"
 
 #: scripts/apps/desks/views/desk-config-modal.html:235
 msgid "Content expiry"
@@ -1197,7 +1222,7 @@ msgstr "Термін дії контенту:"
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:39
 msgid "Content Field Aliases"
-msgstr ""
+msgstr "Псевдонім поля контенту"
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:47
 msgid "Content Field Name"
@@ -1210,7 +1235,7 @@ msgstr "Фільтр контенту"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:41
 msgid "Content filter saved."
-msgstr "Фільтр контенту збережений."
+msgstr "Фільтр контенту збережено."
 
 #: scripts/apps/products/views/products-config-modal.html:33
 msgid "Content Filter Type"
@@ -1226,14 +1251,14 @@ msgstr "Фільтри контенту"
 #: scripts/apps/templates/views/template-editor-modal.html:20
 #: scripts/apps/templates/views/template-editor-modal.html:25
 msgid "Content Profile"
-msgstr "Контент-профіль"
+msgstr "Профіль Контенту"
 
 #: scripts/apps/desks/views/desk-config-modal.html:73
 #: scripts/apps/workspace/content/index.js:24
 #: scripts/apps/workspace/content/views/profile-settings.html:4
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "Content Profiles"
-msgstr "Контент-профілі"
+msgstr "Профілі Контенту"
 
 #: scripts/apps/publish/views/publish-queue.html:90
 msgid "Content Type"
@@ -1255,7 +1280,7 @@ msgstr "Продовжити"
 msgid "Copied to"
 msgstr "Скопійовано до"
 
-#: scripts/apps/archive/index.js:173
+#: scripts/apps/archive/index.js:177
 msgid "Copy"
 msgstr "Копіювати"
 
@@ -1289,7 +1314,7 @@ msgstr "Виправлення"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:51
 msgid "Correction issued by"
-msgstr "Виправлення внесені (ким)"
+msgstr "Виправлення внесені"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:28
 msgid "Corrections"
@@ -1297,7 +1322,7 @@ msgstr "Виправлення"
 
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "create"
-msgstr "создать"
+msgstr "створити"
 
 #: scripts/apps/archive/views/list.html:9
 #: scripts/apps/highlights/views/create_highlights_button_directive.html:2
@@ -1306,7 +1331,7 @@ msgstr "создать"
 msgid "Create"
 msgstr "Створити"
 
-#: scripts/apps/archive/index.js:151
+#: scripts/apps/archive/index.js:155
 msgid "Create Broadcast"
 msgstr "Створити трансляцію"
 
@@ -1316,11 +1341,11 @@ msgstr "Створити конфігурацію"
 
 #: scripts/apps/highlights/views/create_highlights_button_directive.html:2
 msgid "Create highlight"
-msgstr "Створити акцент"
+msgstr "Створити вибране"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:5
 msgid "Create highlight configuration"
-msgstr "Створити конфігурацію акценту"
+msgstr "Створити конфігурацію вибраного"
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:2
 msgid "Create new item"
@@ -1355,7 +1380,7 @@ msgstr "Створити Пакет"
 #: scripts/apps/search/services/SearchService.js:27
 #: scripts/apps/users/views/list.html:32
 msgid "Created"
-msgstr "Створити"
+msgstr "Створено"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:11
 msgid "Created by"
@@ -1368,7 +1393,7 @@ msgstr "Створено від"
 
 #: scripts/core/lang/missing-translations-strings.js:34
 msgid "Created Ingest Channel {{name}}"
-msgstr "Створено Канал Завантаження {{ім'я}}"
+msgstr "Створено Канал Завантаження {{назва}}"
 
 #: scripts/core/lang/missing-translations-strings.js:31
 msgid ""
@@ -1405,15 +1430,15 @@ msgstr "Автор"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:68
 #: scripts/apps/authoring/views/change-image.html:84
 msgid "Credit"
-msgstr ""
+msgstr "Довіра"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:30
 msgid "Credit Level"
-msgstr ""
+msgstr "Рівень довіри"
 
 #: scripts/apps/search/views/search-filters.html:44
 msgid "Credits"
-msgstr ""
+msgstr "Кредити"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:154
 #: scripts/apps/publish/views/subscribers.html:122
@@ -1422,7 +1447,7 @@ msgstr "Критичні помилки"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:96
 msgid "Crop changes have been recorded"
-msgstr ""
+msgstr "Зміни на полях були зареєстровані"
 
 #: scripts/apps/profiling/views/profiling.html:35
 msgid "Cumulative time"
@@ -1434,7 +1459,7 @@ msgstr "Сукупний час за виклик"
 
 #: scripts/apps/users/views/edit-form.html:178
 msgid "current"
-msgstr "текущий"
+msgstr "поточний"
 
 #: scripts/apps/authoring/views/dashboard-articles.html:3
 msgid "Currently working on"
@@ -1446,7 +1471,7 @@ msgstr "Зараз працює над:"
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:21
 msgid "CUSTOM WORKSPACES"
-msgstr ""
+msgstr "РОБОЧІ ПРОСТОРИ ЗАМОВНИКА"
 
 #: scripts/apps/dashboard/index.js:42
 msgid "Customize your widgets and views"
@@ -1456,11 +1481,11 @@ msgstr "Налаштувати віджети і види"
 #: scripts/apps/dashboard/views/workspace.html:2
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:3
 msgid "Dashboard"
-msgstr "Панель управління"
+msgstr "Панель керування"
 
 #: scripts/apps/dashboard/views/workspace.html:52
 msgid "Dashboard is empty."
-msgstr "Панель управління порожня"
+msgstr "Панель керування порожня"
 
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "Date"
@@ -1471,7 +1496,7 @@ msgstr "Дата"
 #: scripts/apps/users/views/user-preferences.html:28
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:22
 msgid "Dateline"
-msgstr "Дата та місце статті"
+msgstr "Дата-місце"
 
 #: scripts/apps/search/views/search-filters.html:127
 msgid "Dates"
@@ -1497,7 +1522,7 @@ msgid "default"
 msgstr "за замовчуванням"
 
 #: scripts/apps/users/views/settings-roles.html:43
-#: scripts/apps/workspace/content/views/schema-editor.html:28
+#: scripts/apps/workspace/content/views/schema-editor.html:32
 msgid "Default"
 msgstr "За замовчуванням"
 
@@ -1507,32 +1532,32 @@ msgstr "Профіль контенту за замовчуванням"
 
 #: scripts/apps/users/views/edit-form.html:130
 msgid "Default Desk"
-msgstr "Робочий стіл за замовчуванням"
+msgstr "Cтіл за замовчуванням"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:21
 msgid "default template"
 msgstr "Шаблон за замовчуванням"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:46
+#: scripts/apps/workspace/content/views/schema-editor.html:50
 msgid "Default value"
 msgstr "Значення за замовчуванням"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:64
 msgid "Delete Rule"
-msgstr "Знищити правило"
+msgstr "Видалити правило"
 
 #: scripts/apps/search/views/saved-searches.html:15
 #: scripts/apps/search/views/saved-searches.html:28
 msgid "Delete search"
-msgstr "Знищити пошук"
+msgstr "Видалити пошук"
 
 #: scripts/apps/dashboard/views/workspace.html:33
 msgid "Delete workspace"
-msgstr "Знищити робочий простір"
+msgstr "Видалити робочий простір"
 
 #: scripts/core/lang/missing-translations-strings.js:35
 msgid "Deleted Ingest Channel {{name}}"
-msgstr "Видалено канал завантаженняч {{name}}"
+msgstr "Видалений канал завантаженняч {{name}}"
 
 #: scripts/apps/publish/views/destination.html:17
 msgid "Delivery type"
@@ -1540,7 +1565,7 @@ msgstr "Тип доставки"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:65
 msgid "Deschedule"
-msgstr ""
+msgstr "Зміна розкладу"
 
 #: scripts/apps/archive/views/upload.html:46
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:146
@@ -1560,96 +1585,96 @@ msgstr "Опис:"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:31
 msgid "Desired Response"
-msgstr ""
+msgstr "Бажана відповідь"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:158
 #: scripts/apps/desks/views/actionpicker.html:4
 #: scripts/apps/templates/views/create-template.html:31
 #: scripts/apps/templates/views/template-editor-modal.html:63
 msgid "Desk"
-msgstr "Робочий стіл"
+msgstr "Стіл"
 
 #: scripts/apps/desks/controllers/DeskConfigController.js:40
 msgid "Desk deleted."
-msgstr "Робочий стіл видалений."
+msgstr "Стіл видалено."
 
 #: scripts/apps/desks/views/desk-config-modal.html:24
 msgid "Desk description"
-msgstr "Опис робочого столу"
+msgstr "Опис Столу"
 
-#: scripts/apps/desks/services/DesksFactory.js:306
+#: scripts/apps/desks/services/DesksFactory.js:326
 msgid "Desk has been modified elsewhere. Please reload the desks."
-msgstr "Робочий стіл було змінено в іншому місці. Будь ласка, перезавантажте робочі столи."
+msgstr "Стіл було змінено в іншому місці. Перезавантажте Столи."
 
 #: scripts/apps/desks/views/desk-config-modal.html:51
 msgid "Desk language"
-msgstr "Мова робочого столу"
+msgstr "Мова Столу"
 
 #: scripts/apps/desks/views/settings.html:5
 msgid "Desk management"
-msgstr "Керування робочим столом"
+msgstr "Керування Столом"
 
 #: scripts/core/lang/missing-translations-strings.js:11
 msgid "Desk Management"
-msgstr "Керування робочим столом"
+msgstr "Керування Столом"
 
 #: scripts/apps/desks/views/desk-config-modal.html:18
 msgid "Desk name"
-msgstr "Ім'я робочого столу"
+msgstr "Ім'я Столу"
 
-#: scripts/apps/archive/index.js:215
+#: scripts/apps/archive/index.js:219
 msgid "Desk not specified. Please select Desk or configure a default desk."
-msgstr "Робочий стіл не визначено. Виберіть Робочий стіл або налагодження столу за замовчуванням"
+msgstr "Стіл не визначено. Виберіть Стіл або налагодження Столу за замовчуванням"
 
 #: scripts/core/lang/missing-translations-strings.js:21
 msgid "desk Output"
-msgstr "робочий стіл випуску"
+msgstr "Стіл Випуску"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:121
 #: scripts/apps/monitoring/views/aggregate-settings.html:97
 msgid "Desk Output"
-msgstr "Робочий стіл Випуску"
+msgstr "Стіл Випуску"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:118
 #: scripts/apps/monitoring/views/aggregate-settings.html:94
 msgid "Desk Scheduled Output"
-msgstr "Робочий стіл планового випуску"
+msgstr "Стіл планового випуску"
 
 #: scripts/apps/templates/views/create-template.html:22
 msgid "Desk template"
-msgstr "Шаблон робочого столу"
+msgstr "Шаблон Столу"
 
 #: scripts/apps/templates/views/sd-template-select.html:17
 msgid "Desk Templates"
-msgstr "Шаблони робочого столу"
+msgstr "Шаблони Столу"
 
 #: scripts/apps/desks/views/desk-config-modal.html:41
 #: scripts/apps/desks/views/settings.html:49
 msgid "Desk Type"
-msgstr "Тип робочого столу"
+msgstr "Тип Столу"
 
 #: scripts/apps/desks/directives/DeskeditBasic.js:72
 msgid "Desk with name  already exists."
-msgstr "Робочий стіл с таким ім'ям вже існує"
+msgstr "Стіл с таким ім'ям вже існує"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:10
 msgid "desk:"
-msgstr "робочий стіл:"
+msgstr "Стіл:"
 
 #: scripts/apps/templates/views/templates.html:46
 msgid "Desk(s)"
-msgstr "Робочий стіл (-ли)"
+msgstr "Стіл(и)"
 
 #: scripts/apps/desks/index.js:66
 #: scripts/apps/monitoring/views/aggregate-settings.html:8
 #: scripts/apps/search/views/search-filters.html:18
 #: scripts/apps/templates/views/template-editor-modal.html:64
 msgid "Desks"
-msgstr "Робочі столи"
+msgstr "Столи"
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:10
 msgid "DESKS"
-msgstr "РОБОЧІ СТОЛИ"
+msgstr "СТОЛИ"
 
 #: scripts/apps/authoring/views/send-item.html:23
 #: scripts/apps/publish/views/publish-queue.html:94
@@ -1662,7 +1687,7 @@ msgstr "Призначення"
 
 #: scripts/core/itemList/views/item-list-widget.html:4
 msgid "Detailed"
-msgstr "Деталізовано"
+msgstr "Деталізований"
 
 #: scripts/apps/archive/views/media-view.html:58
 msgid "Details"
@@ -1674,7 +1699,7 @@ msgstr "Словники"
 
 #: scripts/core/lang/missing-translations-strings.js:11
 msgid "Dictionaries List Management"
-msgstr "Управління переліком словників"
+msgstr "Керування переліком словників"
 
 #: scripts/apps/dictionaries/controllers/DictionaryConfigController.js:84
 msgid "Dictionary deleted."
@@ -1694,7 +1719,7 @@ msgstr "Назва словника"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.js:11
 msgid "Dictionary saved successfully"
-msgstr "Словник успішно збережений"
+msgstr "Словник успішно збережено"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:44
 msgid "Dictionary with name \"{{ dictionary.name }}\" already exists."
@@ -1720,7 +1745,7 @@ msgstr "Відключено"
 
 #: scripts/core/lang/missing-translations-strings.js:31
 msgid "disabled user {{user}}"
-msgstr "відключено користувача {{user}}"
+msgstr "відключений користувач {{user}}"
 
 #: scripts/core/notification/notification.js:102
 msgid "Disconnected from Notification Server!"
@@ -1728,21 +1753,27 @@ msgstr "Відключено від серверу повідомлень"
 
 #: scripts/core/itemList/views/item-list-widget.html:24
 msgid "Display similar"
-msgstr ""
+msgstr "Відображати подібне"
+
+#: scripts/core/lang/missing-translations-strings.js:40
+msgid ""
+"Displaying news ingest statistics. You have ability to switch color themes "
+"or graph sources."
+msgstr "Відображення статистики завантаження новин. У вас є можливість перемикати кольори теми або діаграми джерел."
 
 #: scripts/core/itemList/views/item-list-widget.html:16
 msgid "Displaying similar items"
-msgstr ""
+msgstr "Відображення подібних елементів"
 
 #: scripts/core/keyboard/keyboard.js:399 scripts/core/keyboard/keyboard.js:407
 msgid "Displays active keyboard shortcuts"
-msgstr ""
+msgstr "Відображає активні поєднання клавіш"
 
 #: scripts/apps/settings/index.js:17
 msgid "Do some admin chores"
-msgstr ""
+msgstr "Виконайте роботу адміністратора"
 
-#: scripts/apps/archive/index.js:98
+#: scripts/apps/archive/index.js:102
 msgid "Do you want to delete the item permanently?"
 msgstr "Видалити елемент назавжди?"
 
@@ -1756,11 +1787,11 @@ msgstr "Ви хочете видалити абревіатуру?"
 
 #: scripts/apps/users/views/edit-form.html:160
 msgid "Do you want to reset the password for user {{ user.full_name }} ?"
-msgstr "Змінити пароль користувача{{ user.full_name }} ?"
+msgstr "Змінити пароль користувача {{ user.full_name }}?"
 
 #: scripts/core/auth/reset-password.html:71
 msgid "Don't have token? Get it."
-msgstr "Відсутний маркер? Візьміть."
+msgstr "Відсутний токен? Отримайте його."
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:9
 msgid "done"
@@ -1797,7 +1828,7 @@ msgstr "Залиште тут"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:74
 msgid "Due"
-msgstr ""
+msgstr "Належний"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:154
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:34
@@ -1808,13 +1839,13 @@ msgstr "Належна дата"
 msgid "Due time"
 msgstr "Належний час"
 
-#: scripts/apps/archive/index.js:133
+#: scripts/apps/archive/index.js:137
 msgid "Duplicate"
 msgstr "Дублювати"
 
 #: scripts/core/lang/missing-translations-strings.js:11
 msgid "Duplicate Content within a Desk"
-msgstr "Дубльований контент робочого столу"
+msgstr "Дубльований контент Столу"
 
 #: scripts/apps/search/views/item-preview.html:14
 msgid "Duplicates"
@@ -1822,15 +1853,15 @@ msgstr "Дублікати"
 
 #: scripts/apps/publish/views/subscribers.html:49
 msgid "E-Mail to broadcast Kill Events"
-msgstr ""
+msgstr "E-Mail повідомляє про знищення подій"
 
 #: scripts/apps/authoring/views/full-preview.html:95
 msgid "Ed. Note"
-msgstr ""
+msgstr "Зробити примітку"
 
 #: scripts/apps/authoring/views/authoring-header.html:274
 msgid "ED. NOTE"
-msgstr ""
+msgstr "ЗРОБИТИ ПРИМІТКУ"
 
 #: scripts/apps/authoring/authoring/index.js:93
 #: scripts/apps/authoring/views/authoring-topbar.html:60
@@ -1843,24 +1874,24 @@ msgstr "Редагувати"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:6
 msgid "Edit \"{{configEdit.name}}\" highlight"
-msgstr ""
+msgstr "Редагувати \"{{configEdit.name}}\" вибране"
 
 #: scripts/apps/desks/views/desk-config-modal.html:6
 msgid "Edit \"{{desk.edit.name}}\" Desk"
-msgstr ""
+msgstr "Редагувати \"{{desk.edit.name}}\" Стіл"
 
 #: scripts/apps/groups/views/groups-config-modal.html:6
 msgid "Edit \"{{group.edit.name}}\" Group"
-msgstr ""
+msgstr "Редагувати \"{{group.edit.name}}\" Групу "
 
 #: scripts/apps/products/views/products-config-modal.html:5
 msgid "Edit \"{{product.edit.name}}\" Product"
-msgstr ""
+msgstr "Редагувати \"{{product.edit.name}}\" Продукт"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:6
 msgid ""
 "Edit {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary"
-msgstr ""
+msgstr "Редагувати {{(isAbbreviations() ? 'Абревіатури' : '') | translate}} Словник"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:75
 msgid "Edit and Correct"
@@ -1885,11 +1916,11 @@ msgstr "Зміна профілю контенту"
 
 #: scripts/apps/authoring/authoring/index.js:165
 msgid "Edit Crop"
-msgstr ""
+msgstr "Редагувати кадрування"
 
 #: scripts/apps/authoring/views/article-edit.html:224
 msgid "EDIT CROPS"
-msgstr ""
+msgstr "РЕДАГУВАТИ CROPS"
 
 #: scripts/apps/desks/views/desk_users.html:8
 #: scripts/apps/desks/views/desk-tasks.html:8
@@ -1897,7 +1928,7 @@ msgstr ""
 #: scripts/apps/desks/views/settings.html:24
 #: scripts/apps/desks/views/slugline.html:8
 msgid "Edit desk"
-msgstr "Зміна робочого столу"
+msgstr "Редагувати Cтіл"
 
 #: scripts/apps/dictionaries/views/settings.html:32
 msgid "Edit dictionary"
@@ -1922,7 +1953,7 @@ msgstr "Зміна джерел завантаження"
 
 #: scripts/apps/archive/views/media-view.html:51
 msgid "Edit metadata"
-msgstr "Зміна метаданих"
+msgstr "Редагувати метадані"
 
 #: scripts/apps/products/views/product-test.html:26
 #: scripts/apps/products/views/products.html:14
@@ -1961,7 +1992,7 @@ msgstr "Редагувати пошук"
 #: scripts/apps/search-providers/views/search-provider-config.html:16
 #: scripts/apps/search-providers/views/search-provider-config.html:27
 msgid "Edit Search Provider"
-msgstr "Редагування Пошук Провайдера"
+msgstr "Редагувати Пошук Постачальника"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:19
 msgid "Edit source"
@@ -1992,11 +2023,11 @@ msgstr "Редагувати користувача"
 
 #: scripts/apps/vocabularies/views/vocabulary-config.html:11
 msgid "Edit vocabulary"
-msgstr "Редагувати словник"
+msgstr "Редагувати довідник"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:6
 msgid "Edit Vocabulary"
-msgstr "Редагувати словник"
+msgstr "Редагувати Довідник"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:78
 msgid "Editing"
@@ -2006,6 +2037,10 @@ msgstr "Редагування"
 msgid "Editor's Choice"
 msgstr "Вибір редактора"
 
+#: scripts/apps/workspace/content/views/schema-editor.html:23
+msgid "Editor3"
+msgstr "Редактор3"
+
 #: scripts/apps/archive/views/metadata-view.html:65
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:16
 msgid "Editorial Note"
@@ -2013,20 +2048,20 @@ msgstr "Редакційна примітка"
 
 #: scripts/apps/users/views/edit-form.html:94
 msgid "email"
-msgstr "електронна пошта"
+msgstr "email"
 
 #: scripts/apps/users/views/list.html:31
 #: scripts/core/auth/reset-password.html:13
 msgid "Email"
-msgstr "Електронна пошта"
+msgstr "Email"
 
 #: scripts/apps/ingest/views/settings/emailConfig.html:37
 msgid "Email Filter"
-msgstr "Фільтр електронної пошти"
+msgstr "Фільтр email"
 
 #: scripts/apps/ingest/views/settings/emailConfig.html:27
 msgid "Email mailbox"
-msgstr "Ящик електронної пошти"
+msgstr "Ящик email"
 
 #: scripts/apps/ingest/views/settings/emailConfig.html:21
 msgid "Email Password"
@@ -2044,24 +2079,24 @@ msgstr "Порт поштового сервера"
 
 #: scripts/apps/ingest/views/settings/emailConfig.html:15
 msgid "Email User"
-msgstr "Користувач електронної пошти"
+msgstr "Користувач email"
 
 #: scripts/apps/archive/views/item-state.html:2
 msgid "embargo"
 msgstr "заборона"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:274
-#: scripts/apps/authoring/views/send-item.html:44
+#: scripts/apps/authoring/views/send-item.html:43
 msgid "Embargo"
 msgstr "Заборона"
 
 #: scripts/apps/archive/views/metadata-view.html:130
 msgid "Embargo Timestamp"
-msgstr ""
+msgstr "Часова мітка для ембарго"
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:22
 msgid "Empty Package"
-msgstr ""
+msgstr "Порожній пакет"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:31
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:45
@@ -2070,11 +2105,11 @@ msgstr "Дозволити / Заборонити"
 
 #: scripts/core/lang/missing-translations-strings.js:9
 msgid "Enable Feature Preview"
-msgstr ""
+msgstr "Включити функцію попереднього перегляду"
 
 #: scripts/apps/users/config.js:105
 msgid "Enable user"
-msgstr "Дозволити користувача"
+msgstr "Включити користувача"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:54
 msgid "End time"
@@ -2082,7 +2117,7 @@ msgstr "Час закінчення"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:12
 msgid "End Time (exclusive)"
-msgstr "Час закінчення (недостпний/несумісний) ???"
+msgstr "Час закінчення (винятково)"
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:67
 msgid "Enter field alias"
@@ -2094,7 +2129,7 @@ msgstr "Введіть новий пароль"
 
 #: scripts/apps/users/views/change-avatar.html:41
 msgid "Enter web url"
-msgstr ""
+msgstr "Введіть url web"
 
 #: scripts/core/lang/missing-translations-strings.js:5
 msgid "error"
@@ -2108,7 +2143,7 @@ msgstr "Помилка"
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:189
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:199
 msgid "Error creating highlight."
-msgstr "Помилка при створенні акценту."
+msgstr "Помилка при створенні вибраного."
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:21
 msgid "Error sending as"
@@ -2142,7 +2177,7 @@ msgstr "Помилка відправлення"
 #: scripts/apps/products/controllers/ProductsConfigController.js:90
 #: scripts/apps/publish/controllers/PublishQueueController.js:163
 #: scripts/apps/publish/directives/SubscribersDirective.js:140
-#: scripts/apps/search-providers/directive.js:39
+#: scripts/apps/search-providers/directive.js:43
 #: scripts/apps/templates/directives/TemplatesDirective.js:265
 #: scripts/apps/templates/helpers.js:4 scripts/apps/templates/helpers.js:7
 #: scripts/apps/users/controllers/UserDeleteCommand.js:18
@@ -2155,9 +2190,9 @@ msgstr "Помилка відправлення"
 msgid "Error:"
 msgstr "Помилка:"
 
-#: scripts/apps/search-providers/directive.js:42
+#: scripts/apps/search-providers/directive.js:46
 msgid "Error: A Search Provider with type  already exists."
-msgstr "Помилка: Пошук Провайдера с таким типом вже існує"
+msgstr "Помилка: Пошук Постачальника с таким типом вже існує"
 
 #: scripts/apps/products/controllers/ProductsConfigController.js:92
 msgid "Error: Failed to delete product."
@@ -2165,11 +2200,11 @@ msgstr "Помилка: Не вдалося видалити продукт"
 
 #: scripts/apps/content-filters/controllers/ProductionTestController.js:116
 msgid "Error: Failed to fetch production test results."
-msgstr ""
+msgstr "Помилка: Не вдалося отримати результати випробувань виробництва"
 
 #: scripts/apps/publish/controllers/PublishQueueController.js:166
 msgid "Error: Failed to re-schedule"
-msgstr ""
+msgstr "Помилка: Неможливо змінити розклад"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:127
 msgid "Error: Failed to save content filter."
@@ -2179,13 +2214,13 @@ msgstr "Помилка: Не вдалося зберегти фільтр кон
 msgid "Error: Failed to save filter condition."
 msgstr "Помилка: Не вдалося зберегти умови фільтру"
 
-#: scripts/apps/search-providers/directive.js:46
+#: scripts/apps/search-providers/directive.js:50
 msgid "Error: Failed to save Search Provider."
-msgstr "Помилка: Не вдалося зберегти Пошук Провайдера"
+msgstr "Помилка: Не вдалося зберегти Пошук Постачальника"
 
 #: scripts/apps/publish/directives/SubscribersDirective.js:149
 msgid "Error: Failed to save Subscriber."
-msgstr "Помилка: Не вдалося зберегти Абонента"
+msgstr "Помилка: Не вдалося зберегти передплатника"
 
 #: scripts/apps/templates/helpers.js:11
 msgid "Error: Failed to save template."
@@ -2204,31 +2239,31 @@ msgid ""
 "Error: Please re-assign new format for each destination as the changed "
 "subscriber type has formats which are not supported by existing "
 "destination(s)."
-msgstr ""
+msgstr "Помилка: Визначте новий формат для кожного пункту призначення як зміненого типу передплатника, що має формати, які не підтримуються існуючими призначенням(и)."
 
 #: scripts/core/itemList/itemList.js:453 scripts/core/itemList/itemList.js:506
 msgid "Error: Slugline required."
-msgstr "Помилка: Коментар потрібний"
+msgstr "Помилка: Слаглайн потрібний"
 
 #: scripts/apps/publish/directives/SubscribersDirective.js:146
 msgid "Error: Subscriber must have at least one destination."
-msgstr "Помилка: Абонент повинен мати принаймні один пункт призначення"
+msgstr "Помилка: Передплатник повинен мати принаймні один пункт призначення"
 
 #: scripts/apps/publish/directives/SubscribersDirective.js:143
 msgid "Error: Subscriber with Name  already exists."
-msgstr "Помилка: Абонент з таким Ім’ям вже існує"
+msgstr "Помилка: Передплатник з таким Ім’ям вже існує"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.js:21
 msgid "Error: The dictionary already exists."
 msgstr "Помилка: Словник вже існує"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:102
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:106
 msgid "Error: Unable to delete Ingest Source"
 msgstr "Помилка:Не можливо видалити Джерело Завантаження"
 
-#: scripts/apps/search-providers/directive.js:78
+#: scripts/apps/search-providers/directive.js:82
 msgid "Error: Unable to delete Search Provider."
-msgstr "Помилка: Не можливо видалити Пошук Провайдера"
+msgstr "Помилка: Не можливо видалити Пошук Постачальника"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:43
 msgid "Error: Unique Name is not unique."
@@ -2236,11 +2271,11 @@ msgstr "Помилка: Унікальне Ім’я не є унікальни�
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.js:25
 msgid "Error. Dictionary not saved."
-msgstr "Помилка. Словник не збережений."
+msgstr "Помилка. Словник не збережено."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:516
 msgid "Error. Item not published."
-msgstr "Помилка. Елемент не опублікований."
+msgstr "Помилка. Елемент не оприлюднено."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:148
 msgid "Error. Item not updated."
@@ -2264,7 +2299,7 @@ msgstr "Помилка. Профіль користувача не може бу
 
 #: scripts/apps/users/controllers/UserEnableCommand.js:19
 msgid "Error. User Profile cannot be enabled."
-msgstr "Помилка: Профіль користувача не може бути включений"
+msgstr "Помилка: Профіль користувача не може бути включено"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.js:37
 msgid "Error. Vocabulary not saved."
@@ -2282,7 +2317,11 @@ msgstr "Вихід"
 #: scripts/apps/archive/views/item-preview.html:19
 #: scripts/apps/archive/views/preview.html:86
 msgid "expires"
-msgstr ""
+msgstr "закінчується"
+
+#: scripts/apps/publish/views/subscribers.html:153
+msgid "expires:"
+msgstr "закінчується:"
 
 #: scripts/apps/archive/views/metadata-view.html:96
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:92
@@ -2299,142 +2338,142 @@ msgstr "Час впливу"
 
 #: scripts/core/lang/missing-translations-strings.js:6
 msgid "failed"
-msgstr "не вдалося"
+msgstr "невдалий"
 
 #: scripts/apps/archive/directives/ArchivedItemKill.js:28
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:27
 msgid "Failed to apply kill template to the item."
-msgstr ""
+msgstr "Не вдалося застосувати шаблон до елементу."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:151
 msgid "Failed to associate update:"
-msgstr ""
+msgstr "Не вдалося узгодити оновлення:"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:122
 msgid "Failed to associated as take:"
-msgstr ""
+msgstr "Не вдалося пов'язати як фрагмент:"
 
-#: scripts/apps/archive/index.js:227
+#: scripts/apps/archive/index.js:231
 msgid "Failed to generate new take."
-msgstr ""
+msgstr "Не вдалося створити новий фрагмент."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.js:81
 msgid "Failed to generate update:"
-msgstr ""
+msgstr "Не вдалося створити оновлення:"
 
 #: scripts/apps/authoring/authoring/services/LockService.js:15
 msgid "Failed to get a lock on the item!"
-msgstr ""
+msgstr "Не вдалося заблокувати цей елемент!"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:545
 msgid "Failed to publish and continue."
-msgstr ""
+msgstr "Не вдалося оприлюднити і продовжити."
 
 #: scripts/apps/authoring/authoring/directives/SendItem.js:478
 msgid "Failed to send and continue."
-msgstr ""
+msgstr "Не вдалося відправити і продовжити."
 
 #: scripts/apps/authoring/authoring/directives/SendItem.js:445
 msgid "Failed to send and publish."
-msgstr ""
+msgstr "Не вдалося відправити й оприлюднити."
 
 #: scripts/core/lang/missing-translations-strings.js:9
 msgid "feature"
-msgstr ""
+msgstr "властивість"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:32
 msgid "Feature Image"
-msgstr ""
+msgstr "Ознака зображення"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:43
 msgid "Feature Media"
-msgstr ""
+msgstr "Ознака медіа"
 
 #: scripts/core/lang/missing-translations-strings.js:12
 msgid "Feature Preview"
-msgstr ""
+msgstr "Ознака передперегляду"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:33
 msgid "Featured"
-msgstr ""
+msgstr "Відомий"
 
 #: scripts/apps/authoring/views/article-edit.html:56
 msgid "Featured Image"
-msgstr ""
+msgstr "Рекомендоване зображення"
 
 #: scripts/apps/authoring/views/article-edit.html:66
 msgid "Featured Media"
-msgstr ""
+msgstr "Рекомендоване медіа"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:61
 msgid "Feed Parser"
-msgstr ""
+msgstr "Граматичний розбір введеного"
 
 #: scripts/apps/ingest/views/settings/reutersConfig.html:3
 msgid "feed url"
-msgstr ""
+msgstr "відправити url"
 
 #: scripts/apps/ingest/views/settings/reutersConfig.html:2
 msgid "Feed URL"
-msgstr ""
+msgstr "Відправити URL"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:56
 msgid "Feeding Service"
-msgstr ""
+msgstr "Сервіс відправки"
 
-#: scripts/apps/ingest/index.js:109
+#: scripts/apps/ingest/index.js:108
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:2
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:23
 #: scripts/apps/search/views/multi-action-bar.html:42
 msgid "Fetch"
-msgstr ""
+msgstr "Піймати"
 
-#: scripts/apps/authoring/views/send-item.html:84
+#: scripts/apps/authoring/views/send-item.html:83
 msgid "fetch and open"
-msgstr ""
+msgstr "піймати та відкрити"
 
 #: scripts/core/lang/missing-translations-strings.js:12
 msgid "Fetch Content To a Desk"
-msgstr ""
+msgstr "Піймати контент на Стіл"
 
 #: scripts/apps/search/views/multi-action-bar.html:45
 msgid "Fetch to"
-msgstr ""
+msgstr "Піймати до"
 
 #: scripts/apps/authoring/views/send-item.html:13
-#: scripts/apps/ingest/index.js:99
+#: scripts/apps/ingest/index.js:98
 msgid "Fetch To"
-msgstr ""
+msgstr "Піймати до"
 
 #: scripts/core/lang/missing-translations-strings.js:6
 msgid "fetched"
-msgstr ""
+msgstr "піймано"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:41
 msgid "Fetched as"
-msgstr ""
+msgstr "Піймано як"
 
 #: scripts/apps/archive/views/fetched-desks.html:2
 msgid "fetched in"
-msgstr ""
+msgstr "піймано в"
 
 #: scripts/apps/content-filters/views/filter-search.html:6
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:43
 msgid "Field"
-msgstr ""
+msgstr "Поле"
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:50
 msgid "Field Alias"
-msgstr ""
+msgstr "Псевдоніма Поля "
 
 #: scripts/apps/publish/views/file-config.html:8
 #: scripts/apps/publish/views/file-config.html:9
 msgid "File Extension"
-msgstr ""
+msgstr "Розширення файла"
 
 #: scripts/apps/profiling/views/profiling.html:37
 msgid "File name/line"
-msgstr ""
+msgstr "І'мя файла/рядок"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:94
 msgid "File types"
@@ -2449,18 +2488,18 @@ msgstr "Фільтр"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.js:53
 msgid "Filter condition saved."
-msgstr ""
+msgstr "Умови фільтру збережено."
 
 #: scripts/apps/content-filters/views/filter-search-result.html:7
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:4
 #: scripts/apps/content-filters/views/manage-filters.html:70
 #: scripts/apps/content-filters/views/settings.html:12
 msgid "Filter Conditions"
-msgstr "Умови фільтра"
+msgstr "Умови фільтру"
 
 #: scripts/apps/content-filters/views/manage-filters.html:108
 msgid "Filter Preview"
-msgstr ""
+msgstr "Передперегляд фільтру"
 
 #: scripts/apps/content-filters/views/settings.html:19
 msgid "Filter Search"
@@ -2468,15 +2507,15 @@ msgstr "Фільтр пошуку"
 
 #: scripts/apps/content-filters/views/manage-filters.html:63
 msgid "Filter Statement"
-msgstr ""
+msgstr "Запис фільтру"
 
 #: scripts/apps/content-filters/views/manage-filters.html:112
 msgid "Filter Test"
-msgstr "Тест фільтра"
+msgstr "Тест фільтру"
 
 #: scripts/apps/content-filters/views/production-test.html:4
 msgid "Filter Test Results"
-msgstr ""
+msgstr "Результати тестування фільтру"
 
 #: scripts/apps/templates/views/templates.html:6
 msgid "Filter:"
@@ -2484,7 +2523,7 @@ msgstr "Фільтр:"
 
 #: scripts/apps/desks/views/desk-select.html:8
 msgid "filter: \"{{ filter }}\""
-msgstr ""
+msgstr "фільтр: \"{{ filter }}\""
 
 #: scripts/apps/archive/views/list.html:17
 #: scripts/apps/content-filters/views/settings.html:6
@@ -2499,15 +2538,15 @@ msgstr "Знайти"
 
 #: scripts/apps/authoring/editor/find-replace.js:90
 msgid "Find and Replace"
-msgstr "Знайти і перемістити"
+msgstr "Знайти і замінити"
 
 #: scripts/apps/search/index.js:58
 msgid "Find live and archived content"
-msgstr ""
+msgstr "Знайти актуальний та архівований контент"
 
 #: scripts/apps/users/config.js:37
 msgid "Find your colleagues"
-msgstr "Знайдіть своїх колег"
+msgstr "Знайти своїх колег"
 
 #: scripts/apps/users/views/edit-form.html:37
 msgid "first name"
@@ -2515,29 +2554,29 @@ msgstr "ім'я"
 
 #: scripts/apps/search/views/search-filters.html:106
 msgid "Flags"
-msgstr ""
+msgstr "Маркування"
 
 #: scripts/apps/archive/views/metadata-view.html:164
 msgid "Flash"
-msgstr ""
+msgstr "Флеш"
 
 #: scripts/apps/archive/views/metadata-view.html:162
 msgid "Focal length"
-msgstr ""
+msgstr "Фокусна відстань"
 
 #: scripts/apps/authoring/views/article-edit.html:289
 #: scripts/apps/authoring/views/article-edit.html:312
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:27
 msgid "Footer"
-msgstr ""
+msgstr "Футер"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:3
 msgid "for \"{{settings.desk.name}}\" Desk"
-msgstr ""
+msgstr "для \"{{settings.desk.name}}\" Столу"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:19
 msgid "For Publication"
-msgstr ""
+msgstr "Для оприлюднення"
 
 #: scripts/core/auth/login-modal.html:47
 msgid "Forgot password?"
@@ -2548,17 +2587,17 @@ msgstr "Забули пароль?"
 msgid "Format"
 msgstr "Формат"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:89
+#: scripts/apps/workspace/content/views/schema-editor.html:93
 msgid "Format options"
-msgstr ""
+msgstr "Опції формату"
 
 #: scripts/apps/ingest/views/settings/emailConfig.html:32
 msgid "Formatted Email Parser"
-msgstr ""
+msgstr "Форматований граматичний розбір Email "
 
 #: scripts/apps/authoring/views/preview-formatted.html:11
 msgid "Formatters"
-msgstr ""
+msgstr "Форматування"
 
 #: scripts/core/datetime/datetime.js:203
 msgid "Friday"
@@ -2566,25 +2605,25 @@ msgstr "П'ятниця"
 
 #: scripts/apps/search/views/search-parameters.html:75
 msgid "From Desk"
-msgstr ""
+msgstr "Зі Столу"
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:36
 msgid "From template"
-msgstr ""
+msgstr "З шаблону"
 
 #: scripts/apps/ingest/views/settings/ftp-config.html:15
 #: scripts/apps/publish/views/ftp-config.html:19
 msgid "FTP Server Path"
-msgstr ""
+msgstr "Шлях до файлів FTP сервера"
 
 #: scripts/apps/ingest/views/settings/ftp-config.html:3
 #: scripts/apps/publish/views/ftp-config.html:3
 msgid "FTP Server URL"
-msgstr ""
+msgstr "URL FTP серверу"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:83
+#: scripts/apps/workspace/content/views/schema-editor.html:87
 msgid "Full"
-msgstr ""
+msgstr "Повне"
 
 #: scripts/apps/users/views/edit-form.html:32
 msgid "full name"
@@ -2608,6 +2647,10 @@ msgstr "Функція"
 msgid "General"
 msgstr "Загальний"
 
+#: scripts/apps/publish/views/subscribers.html:176
+msgid "Generate token"
+msgstr "Генерувати токен"
+
 #: scripts/apps/archive/views/metadata-view.html:57
 #: scripts/apps/authoring/views/full-preview.html:54
 #: scripts/apps/search/services/SearchService.js:32
@@ -2623,22 +2666,22 @@ msgstr "ЖАНР"
 msgid "Genres"
 msgstr "Жанри"
 
-#: scripts/apps/ingest/index.js:125
+#: scripts/apps/ingest/index.js:124
 msgid "Get from external source"
-msgstr ""
+msgstr "Отримати із зовнішнього джерела"
 
 #: scripts/core/auth/reset-password.html:17
 msgid "Get token"
-msgstr ""
+msgstr "Отримати токен"
 
 #: scripts/apps/content-filters/views/manage-filters.html:44
 msgid "Global Block"
-msgstr ""
+msgstr "Глобальне блокування"
 
 #: scripts/apps/desks/views/desk-config-modal.html:131
 #: scripts/apps/desks/views/desk-config-modal.html:211
 msgid "Global Read"
-msgstr ""
+msgstr "Глобальне читання"
 
 #: scripts/apps/desks/views/desk-config-modal.html:180
 msgid "Global Read:"
@@ -2646,7 +2689,7 @@ msgstr "Глобальне читання:"
 
 #: scripts/apps/search/views/saved-searches.html:19
 msgid "Global Saved Searches"
-msgstr ""
+msgstr "Глобальні збережені пошуки"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:72
 #: scripts/apps/search/views/item-globalsearch.html:19
@@ -2663,11 +2706,11 @@ msgstr "Групу видалено."
 
 #: scripts/apps/groups/views/groups-config-modal.html:22
 msgid "Group description"
-msgstr ""
+msgstr "Опис групи"
 
 #: scripts/apps/groups/views/settings.html:5
 msgid "Group management"
-msgstr ""
+msgstr "Керування групою"
 
 #: scripts/apps/groups/views/groups-config-modal.html:18
 msgid "Group name"
@@ -2689,17 +2732,17 @@ msgstr "Керування групами"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:96
 #: scripts/apps/legal-archive/views/legal_archive.html:30
 msgid "GUID"
-msgstr ""
+msgstr "GUID"
 
-#: scripts/core/editor2/editor.js:936
+#: scripts/core/editor2/editor.js:958
 msgid "H1"
-msgstr ""
+msgstr "H1"
 
-#: scripts/core/editor2/editor.js:948
+#: scripts/core/editor2/editor.js:970
 msgid "H2"
-msgstr ""
+msgstr "H2"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:84
+#: scripts/apps/workspace/content/views/schema-editor.html:88
 msgid "Half"
 msgstr "Половина"
 
@@ -2707,11 +2750,11 @@ msgstr "Половина"
 msgid "Have password? Sign in."
 msgstr "Маєте пароль? Здійсніть вхід."
 
-#: scripts/core/editor2/editor.js:934
+#: scripts/core/editor2/editor.js:956
 msgid "header type 1"
 msgstr "заголовок тип 1"
 
-#: scripts/core/editor2/editor.js:946
+#: scripts/core/editor2/editor.js:968
 msgid "header type 2"
 msgstr "заголовок тип 2"
 
@@ -2732,32 +2775,32 @@ msgstr "Допоможіть нам перекласти Superdesk"
 
 #: scripts/apps/authoring/views/article-edit.html:269
 msgid "Helplines/Contact Information"
-msgstr ""
+msgstr "Консультативна мережа/Контактна інформація"
 
 #: scripts/apps/authoring/views/full-preview.html:5
 msgid "Hide images"
-msgstr "Сховати зображення"
+msgstr "Сховані зображення"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:6
 msgid "Hide sent/queued items"
-msgstr ""
+msgstr "Сховані відправлення/черговий елемент"
 
 #: scripts/core/views/sdSlider.html:3
 msgid "high"
-msgstr ""
+msgstr "високий"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:105
 #: scripts/apps/monitoring/views/monitoring-view.html:75
 msgid "Highlight Package"
-msgstr ""
+msgstr "Пакет вибраного"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:16
 msgid "Highlight with name"
-msgstr "Акцент з назвою"
+msgstr "Ім'я вибраного"
 
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "highlights"
-msgstr "акценти"
+msgstr "вибране"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:163
 #: scripts/apps/highlights/index.js:61
@@ -2765,19 +2808,19 @@ msgstr "акценти"
 #: scripts/apps/templates/services/TemplatesService.js:57
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:17
 msgid "Highlights"
-msgstr "Акценти"
+msgstr "Вибране"
 
 #: scripts/apps/highlights/views/settings.html:6
 msgid "Highlights configurations"
-msgstr "Основні конфігурації"
+msgstr "Конфігурації вибраного"
 
 #: scripts/apps/highlights/index.js:69
 msgid "Highlights View"
-msgstr "Перегляд акцентів"
+msgstr "Перегляд вибраного"
 
 #: scripts/core/lang/missing-translations-strings.js:12
 msgid "Highlights/Summary List Management"
-msgstr ""
+msgstr "Вибране/Спрощенний список керування"
 
 #: scripts/core/lang/missing-translations-strings.js:13
 msgid "Hold"
@@ -2787,7 +2830,7 @@ msgstr "Утримувати"
 #: scripts/apps/ingest/views/settings/rssConfig.html:2
 #: scripts/apps/publish/views/ftp-config.html:2
 msgid "Host"
-msgstr ""
+msgstr "Host"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:44
 msgid "hours"
@@ -2806,29 +2849,29 @@ msgstr "год."
 msgid "hrs"
 msgstr "год."
 
-#: scripts/core/editor2/editor.js:975
+#: scripts/core/editor2/editor.js:997
 msgid "I"
 msgstr "Я"
 
 #: scripts/apps/users/directives/UserRolesDirective.js:40
 msgid "I'm sorry but a role with that name already exists."
-msgstr ""
+msgstr "Роль з такою назвою вже існує. "
 
 #: scripts/apps/users/directives/UserRolesDirective.js:44
 msgid "I'm sorry but there was an error when saving the role."
-msgstr "Помилка при збереженні ролі"
+msgstr "Виникла помилка при збереженні ролі"
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.js:80
 msgid "I'm sorry but there was an error when saving the routing scheme."
-msgstr "Помилка при збереженні схеми маршрутизації"
+msgstr "Виникла помилка при збереженні схеми маршрутизації"
 
 #: scripts/apps/ingest/directives/IngestRulesContent.js:34
 msgid "I'm sorry but there was an error when saving the rule set."
-msgstr " Помилка при збереженні набору правил"
+msgstr " Виникла помилка при збереженні набору правил"
 
 #: scripts/core/ui/views/sd-timezone.html:17
 msgid "If not set, the UTC+0 time zone is assumed."
-msgstr ""
+msgstr "Якщо не встановлено, передбачається часовий пояс UTC + 0"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:32
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:45
@@ -2842,7 +2885,7 @@ msgstr "Ігнорувати слово"
 #: scripts/core/upload/crop-directive.js:39
 msgid ""
 "Image is bigger than {{ maxFileSize }}MB, upload file size may be limited!"
-msgstr ""
+msgstr "Зображення більше ніж {{MaxFileSize}} MB, розмір файлу може бути обмежено!"
 
 #: scripts/apps/users/import/views/import-user.html:44
 msgid "Import"
@@ -2854,7 +2897,7 @@ msgstr "Імпортувати користувача"
 
 #: scripts/core/ui/views/sd-timepicker-popup.html:7
 msgid "in 1 h"
-msgstr "через 1 годину"
+msgstr "через 1 год."
 
 #: scripts/core/ui/views/datepicker-wrapper.html:8
 msgid "In 2 days"
@@ -2862,35 +2905,35 @@ msgstr "через 2 дні"
 
 #: scripts/core/ui/views/sd-timepicker-popup.html:8
 msgid "in 2 h"
-msgstr "через 2 години"
+msgstr "через 2 год."
 
 #: scripts/core/ui/views/sd-timepicker-popup.html:6
 msgid "in 30 min"
-msgstr "через 30 хвилин"
+msgstr "через 30 хв."
 
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:7
 msgid "In Progress"
-msgstr "В процесі"
+msgstr "В роботі"
 
 #: scripts/apps/search/views/search-parameters.html:111
 msgid "In Spiked"
-msgstr ""
+msgstr "В усунених"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:67
 msgid "in the last 24 hours."
-msgstr ""
+msgstr "протягом останніх 24 год."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:31
 msgid "In the story \""
-msgstr ""
+msgstr "У статті \""
 
 #: scripts/core/lang/missing-translations-strings.js:5
 msgid "in_progress"
-msgstr "в_процесі"
+msgstr "в_роботі"
 
 #: scripts/core/lang/missing-translations-strings.js:5
 msgid "in-progress"
-msgstr "в-процесі"
+msgstr "в-роботі"
 
 #: scripts/apps/users/views/edit-form.html:13
 #: scripts/apps/users/views/user-list-item.html:15
@@ -2913,7 +2956,7 @@ msgstr "Вхідне правило:"
 #: scripts/apps/desks/views/desk-config-modal.html:177
 #: scripts/apps/desks/views/desk-config-modal.html:223
 msgid "Incoming Stage"
-msgstr "Вхідний майданчик"
+msgstr "Вхідний Етап"
 
 #: scripts/apps/archive/views/upload.html:67
 #: scripts/apps/authoring/views/change-image.html:97
@@ -2924,37 +2967,37 @@ msgstr "Безстрокове використання"
 msgid "Info"
 msgstr "Інфо"
 
-#: scripts/apps/ingest/index.js:68 scripts/apps/search/views/item-repo.html:7
+#: scripts/apps/ingest/index.js:67 scripts/apps/search/views/item-repo.html:7
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:75
 msgid "Ingest"
-msgstr "Оцифровка ???"
+msgstr "Завантаження"
 
 #: scripts/core/lang/missing-translations-strings.js:13
 msgid "Ingest Channels"
 msgstr "Канали завантаження"
 
-#: scripts/apps/ingest/index.js:76
+#: scripts/apps/ingest/index.js:75
 #: scripts/apps/ingest/views/dashboard/dashboard.html:2
 msgid "Ingest Dashboard"
-msgstr "Панель управління завантаженням"
+msgstr "Панель керування завантаженням"
 
 #: scripts/apps/ingest/controllers/IngestDashboardController.js:31
 msgid "Ingest Dashboard preferences could not be saved."
-msgstr "Неможливо зберегти налаштування панелі управління завантаженням."
+msgstr "Неможливо зберегти налаштування панелі керування завантаженням."
 
 #: scripts/apps/archive/views/metadata-view.html:26
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:83
 #: scripts/apps/publish/views/publish-queue.html:93
 msgid "Ingest Provider"
-msgstr ""
+msgstr "Постачальник завантаження"
 
 #: scripts/apps/archive/views/metadata-view.html:126
 msgid "Ingest provider sequence"
-msgstr ""
+msgstr "Постачальник послідовністі завантажень"
 
 #: scripts/apps/publish/views/publish-queue.html:30
 msgid "Ingest Provider:"
-msgstr ""
+msgstr "Постачальник завантаження:"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:3
 msgid "Ingest Routing Schemes"
@@ -2964,51 +3007,52 @@ msgstr "Схеми каналів завантаження"
 msgid "Ingest Rule sets"
 msgstr "Набір правил завантаження"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:96
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:100
 msgid "Ingest Source deleted."
-msgstr "Джерело завантаження видалене."
+msgstr "Джерело завантаження видалено."
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:3
 msgid "Ingest sources"
 msgstr "Джерела завантаження"
 
 #: scripts/apps/ingest/ingest-stats-widget/stats.js:7
+#: scripts/core/lang/missing-translations-strings.js:39
 msgid "Ingest Stats"
 msgstr "Статистика завантаження"
 
 #: scripts/core/lang/missing-translations-strings.js:6
 msgid "ingested"
-msgstr "оцифровано"
+msgstr "завантажено"
 
-#: scripts/core/editor2/editor.js:1031
+#: scripts/core/editor2/editor.js:1053
 msgid "insert table"
-msgstr ""
+msgstr "вставити таблицю"
 
 #: scripts/apps/search/directives/ItemRepo.js:41
 msgid "inside subscription"
-msgstr ""
+msgstr "в межах передплати"
 
 #: scripts/apps/users/views/edit-form.html:74
 msgid "Invalid format. Only Alphanumerics are allowed."
-msgstr ""
+msgstr "Невірний формат. Дозволені тільки латинські букви і цифри."
 
 #: scripts/apps/search-providers/views/search-provider-config.html:43
 msgid "Is Default"
-msgstr ""
+msgstr "за замовчуванням"
 
 #: scripts/apps/archive/views/metadata-view.html:163
 msgid "Iso"
-msgstr ""
+msgstr "Iso"
 
 #: scripts/apps/templates/views/create-template.html:17
 msgid "It will create a new template."
-msgstr ""
+msgstr "Новий шаблон буде створено."
 
 #: scripts/apps/templates/views/create-template.html:16
 msgid "It will update existing template."
-msgstr ""
+msgstr "Існуючий шаблон буде оновлено."
 
-#: scripts/core/editor2/editor.js:973
+#: scripts/core/editor2/editor.js:995
 msgid "italic"
 msgstr "Курсив"
 
@@ -3022,7 +3066,7 @@ msgstr "Елемент продубльований"
 
 #: scripts/apps/authoring/authoring/directives/SendItem.js:636
 msgid "Item fetched."
-msgstr "Елемент перенесено."
+msgstr "Елемент отримано."
 
 #: scripts/apps/archive/directives/ArchivedItemKill.js:42
 msgid "Item has been killed."
@@ -3036,13 +3080,13 @@ msgstr "Елемент був відправлений повторно."
 msgid ""
 "Item has changed since it was opened. Please close and reopen the item to "
 "continue. Regrettably, your changes cannot be saved."
-msgstr "Елемент був змінений з моменту відкриття. Будь ласка, закрийте і знову відкрийте елемент для продовження. На жаль, ваші зміни не будуть збережені."
+msgstr "Елемент був змінений з моменту відкриття. Закрийте і знову відкрийте елемент для продовження. На жаль, ваші зміни не будуть збережені."
 
 #: scripts/apps/authoring/versioning/views/versioning.html:6
 #: scripts/apps/legal-archive/views/legal_archive.html:98
 #: scripts/apps/search/views/item-preview.html:17
 msgid "Item history"
-msgstr "Елемент історії"
+msgstr "Історія Елементу"
 
 #: scripts/apps/packaging/directives/PackageItemsEdit.js:17
 msgid "Item is already in this package."
@@ -3050,7 +3094,7 @@ msgstr "Елемент вже в цьому пакеті."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:117
 msgid "item is associated as a take."
-msgstr ""
+msgstr "елемент пов'язаний як фрагмент."
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:127
 msgid "Item locked"
@@ -3066,7 +3110,7 @@ msgstr "Елемент не знайдено..."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:342
 msgid "Item published."
-msgstr "Елемент опубліковано."
+msgstr "Елемент оприлюднено."
 
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:192
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:259
@@ -3084,11 +3128,11 @@ msgstr "Елемент відправлено."
 
 #: scripts/apps/translations/services/TranslationService.js:57
 msgid "Item Translated"
-msgstr "Елемент переладено"
+msgstr "Елемент перекладено"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:11
 msgid "Item type stats"
-msgstr ""
+msgstr "статистика типу елемента"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:114
 msgid "Item Unlocked"
@@ -3137,7 +3181,7 @@ msgstr "Знищено"
 #: scripts/apps/workspace/content/views/profile-settings.html:59
 #: scripts/apps/workspace/content/views/profile-settings.html:84
 msgid "Label:"
-msgstr "Ярлик:"
+msgstr "Позначка:"
 
 #: scripts/apps/archive/views/metadata-view.html:116
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:47
@@ -3149,7 +3193,7 @@ msgstr "Мова"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:28
 msgid "Language code"
-msgstr "Мовний код"
+msgstr "Код Мови "
 
 #: scripts/apps/authoring/views/theme-select.html:14
 #: scripts/apps/authoring/views/theme-select.html:32
@@ -3162,11 +3206,11 @@ msgstr "Останній"
 
 #: scripts/apps/search/views/search-filters.html:181
 msgid "Last 24 Hours"
-msgstr "Останні 24 години"
+msgstr "Останні 24 год."
 
 #: scripts/apps/search/views/search-filters.html:183
 msgid "Last 8 Hours"
-msgstr "Останні 8 годин"
+msgstr "Останні 8 год."
 
 #: scripts/apps/search/views/search-filters.html:132
 #: scripts/core/lang/missing-translations-strings.js:15
@@ -3188,7 +3232,7 @@ msgstr "Останній місяць"
 
 #: scripts/apps/users/views/edit-form.html:43
 msgid "last name"
-msgstr "остання назва"
+msgstr "Прізвище"
 
 #: scripts/apps/profiling/views/profiling.html:24
 #: scripts/apps/publish/views/publish-queue.html:63
@@ -3235,17 +3279,17 @@ msgstr "Правовий"
 msgid "Legal Archive"
 msgstr "Правовий архів"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:31
+#: scripts/apps/workspace/content/views/schema-editor.html:35
 msgid "Length"
 msgstr "Довжина"
 
 #: scripts/core/editor2/views/block-text.html:19
 msgid "Line: {{ cursor.line }}, Column: {{ cursor.column }}"
-msgstr ""
+msgstr "Рядок: {{ cursor.line }}, Колонка: {{ cursor.column }}"
 
 #: scripts/core/auth/auth.js:56
 msgid "Link sent. Please check your email inbox."
-msgstr ""
+msgstr "Посилання відправлено. Перевірте свою поштову скриньку."
 
 #: scripts/apps/vocabularies/services/SchemaFactory.js:7
 msgid "List Name"
@@ -3287,26 +3331,26 @@ msgstr "Локальний шлях"
 
 #: scripts/apps/desks/views/desk-config-modal.html:215
 msgid "Local Read Only"
-msgstr ""
+msgstr "Тільки локальне читання"
 
 #: scripts/apps/desks/views/desk-config-modal.html:184
 msgid "Local Read Only:"
-msgstr ""
+msgstr "Тільки локальне читання:"
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid "Local Readonly"
-msgstr ""
+msgstr "Тільки локальне читання"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:23
 #: scripts/core/lang/missing-translations-strings.js:26
 #: scripts/core/lang/missing-translations-strings.js:9
 msgid "Located"
-msgstr ""
+msgstr "Розташований"
 
 #: scripts/apps/archive/views/item-lock.html:4
 #: scripts/apps/authoring/views/authoring-topbar.html:12
 msgid "Locked by"
-msgstr "Заблоковано (ким)"
+msgstr "Заблоковано"
 
 #: scripts/apps/archive/views/item-lock.html:12
 msgid "Locked by you in another browser"
@@ -3319,20 +3363,20 @@ msgstr "Увійти"
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:41
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:82
 msgid "Log Messages"
-msgstr ""
+msgstr "Повідомлення авторизації"
 
 #: scripts/core/views/sdSlider.html:2
 msgid "low"
-msgstr ""
+msgstr "низький"
 
 #: scripts/apps/desks/views/actionpicker.html:24
 msgid "Macro"
-msgstr ""
+msgstr "Макрос"
 
 #: scripts/apps/authoring/macros/macros.js:192
 #: scripts/apps/desks/views/desk-config-modal.html:308
 msgid "Macros"
-msgstr ""
+msgstr "Макроси"
 
 #: scripts/apps/ingest/views/settings/emailConfig.html:26
 msgid "Mailbox"
@@ -3340,7 +3384,7 @@ msgstr "Поштова скринька"
 
 #: scripts/apps/search/views/save-search-dialog.html:11
 msgid "Make global"
-msgstr ""
+msgstr "Зробити глобальним"
 
 #: scripts/apps/templates/views/template-editor-modal.html:49
 msgid "Make Public"
@@ -3348,23 +3392,23 @@ msgstr "Зробити публічним"
 
 #: scripts/apps/users/views/change-avatar.html:47
 msgid "Make sure you're looking the best"
-msgstr ""
+msgstr "Переконайтеся, що шукаєте кращий"
 
 #: scripts/core/lang/missing-translations-strings.js:13
 msgid "Manage Global Saved Searches"
-msgstr ""
+msgstr "Керування глобальними збереженими пошуками"
 
 #: scripts/core/lang/missing-translations-strings.js:13
 msgid "Manage Search Providers"
-msgstr ""
+msgstr "Керування пошуком постачальників"
 
 #: scripts/apps/users/config.js:142
 msgid "Manage user roles"
-msgstr ""
+msgstr "Керування ролями користувача"
 
 #: scripts/apps/users/config.js:132
 msgid "Manage users"
-msgstr ""
+msgstr "Керувати користувачами"
 
 #: scripts/core/views/sdSearchList.html:17
 msgid "many"
@@ -3372,7 +3416,7 @@ msgstr "багато"
 
 #: scripts/apps/highlights/index.js:46
 msgid "Mark for highlight"
-msgstr ""
+msgstr "Відмітити для вибраного"
 
 #: scripts/apps/search/views/multi-action-bar.html:17
 msgid "Mark item"
@@ -3384,7 +3428,7 @@ msgstr "Відмітити елемент для"
 
 #: scripts/core/lang/missing-translations-strings.js:14
 msgid "Mark items for Highlights/Summary Lists"
-msgstr ""
+msgstr "Відмітити елементи для вибраного/підсумкового переліку"
 
 #: scripts/apps/highlights/views/highlights_title_directive.html:14
 msgid "Marked For"
@@ -3396,23 +3440,23 @@ msgstr "ГОЛОВНИЙ"
 
 #: scripts/apps/desks/index.js:53
 msgid "Master Desk"
-msgstr "Головний робочий стіл"
+msgstr "Головний Стіл"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:8
 msgid "Match Any"
-msgstr ""
+msgstr "будь-яке співпадіння"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:9
 msgid "Match Prefix"
-msgstr ""
+msgstr "Співпадіння префіксу"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:35
+#: scripts/apps/workspace/content/views/schema-editor.html:39
 msgid "max"
-msgstr "макс."
+msgstr "максимум"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:40
+#: scripts/apps/workspace/content/views/schema-editor.html:44
 msgid "Max length should be bigger than 0 or empty."
-msgstr ""
+msgstr "Максимальна довжина повинна бути більше 0 або порожньо."
 
 #: scripts/apps/publish/views/subscribers.html:104
 msgid "Maximum"
@@ -3421,11 +3465,11 @@ msgstr "Максимум"
 #: scripts/apps/publish/views/subscribers.html:66
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:28
 msgid "Media"
-msgstr "Медіа / ЗМІ"
+msgstr "ЗМІ"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:29
 msgid "Media Description"
-msgstr ""
+msgstr "Опис медіа"
 
 #: scripts/apps/publish/views/subscribers.html:64
 msgid "Media Type"
@@ -3433,11 +3477,11 @@ msgstr "Тип ЗМІ"
 
 #: scripts/apps/users/views/edit-form.html:140
 msgid "member since"
-msgstr ""
+msgstr "учасник з"
 
 #: scripts/core/menu/notifications/views/notifications.html:30
 msgid "mentioned you"
-msgstr ""
+msgstr "згадав Вас"
 
 #: scripts/apps/publish/views/publish-queue.html:99
 msgid "Message"
@@ -3462,11 +3506,11 @@ msgstr ""
 #: scripts/apps/desks/views/content-expiry.html:5
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:81
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:97
-#: scripts/apps/workspace/content/views/schema-editor.html:33
+#: scripts/apps/workspace/content/views/schema-editor.html:37
 msgid "min"
 msgstr "мін."
 
-#: scripts/apps/workspace/content/views/schema-editor.html:37
+#: scripts/apps/workspace/content/views/schema-editor.html:41
 msgid "Min length shouldn't be bigger than max length."
 msgstr "Мінімальна довжина не повинна бути більшою за максимальну довжину."
 
@@ -3488,11 +3532,11 @@ msgstr "Хвилини"
 
 #: scripts/apps/authoring/views/authoring-header.html:38
 msgid "Missing Link"
-msgstr ""
+msgstr "Втрачене посилання"
 
 #: scripts/core/itemList/views/item-list-widget.html:2
 msgid "Mode:"
-msgstr ""
+msgstr "Режим:"
 
 #: scripts/apps/archive/views/preview.html:9
 #: scripts/apps/authoring/views/authoring.html:10
@@ -3518,18 +3562,19 @@ msgstr "Понеділок"
 #: scripts/apps/monitoring/config.js:5
 #: scripts/apps/monitoring/views/monitoring-view.html:20
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:10
+#: scripts/core/lang/missing-translations-strings.js:39
 msgid "Monitoring"
 msgstr "Моніторинг"
 
 #: scripts/apps/desks/views/settings.html:25
 msgid "Monitoring settings"
-msgstr ""
+msgstr "Налаштування моніторингу"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:3
 msgid ""
 "Monitoring settings <span ng-if=\"settings.desk\" translate=\"\">for "
 "\"{{settings.desk.name}}\" Desk</span>"
-msgstr ""
+msgstr "Налаштування моніторингу <span ng-if=\"settings.desk\" translate=\"\">для \"{{settings.desk.name}}\" Столу </span>"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:129
 msgid "More actions"
@@ -3537,23 +3582,23 @@ msgstr "Більше дій"
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:51
 msgid "More templates..."
-msgstr "Більше шаблонів для статей"
+msgstr "Більше шаблонів..."
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:36
 msgid "Motoring Subservice"
-msgstr ""
+msgstr "Додатковий сервіс моніторингу"
 
 #: scripts/core/lang/missing-translations-strings.js:14
 msgid "Move Content to another desk"
-msgstr ""
+msgstr "Перемістити контент на інший Стіл"
 
 #: scripts/apps/desks/views/desk-config-modal.html:250
 msgid "Moved onto stage Rule"
-msgstr ""
+msgstr "Переміститися на етап правила"
 
 #: scripts/apps/desks/views/desk-config-modal.html:200
 msgid "Moved onto stage Rule:"
-msgstr ""
+msgstr "Переміститися на етап правила:"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:29
 msgid "Moved to"
@@ -3572,11 +3617,11 @@ msgid ""
 "of 4 of the following:<ul><li>a lower case letter (a-z)</li><li>an upper "
 "case letter (A-Z)</li><li>a number (0-9)</li><li>a special character "
 "(!@#$%^&...)</li></ul>"
-msgstr ""
+msgstr "Повинно бути довжиною {{MIN_LENGTH}} символів та містити {{MIN_STRENGTH}} з таких 4-х ознак: <UL> <LI> буква з рядку (a-z) </ li> <li> буква верхнього регістру (AZ) </ li> <li> цифра (0-9) </ li> <li> спеціальний символ (! @ # $% ^ & ...) </ li> </ UL>"
 
 #: scripts/apps/users/index.js:84
 msgid "My Profile"
-msgstr ""
+msgstr "Мій профіль"
 
 #: scripts/apps/search/views/saved-searches.html:6
 msgid "My Saved Searches"
@@ -3584,7 +3629,7 @@ msgstr "Мої збережені пошуки"
 
 #: scripts/apps/templates/views/sd-template-select.html:23
 msgid "My Templates"
-msgstr "Мій шаблон статті"
+msgstr "Мої шаблони"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:38
 #: scripts/apps/content-filters/views/manage-filters.html:38
@@ -3605,7 +3650,7 @@ msgstr "Ім'я має бути унікальним"
 
 #: scripts/apps/desks/index.js:54
 msgid "Navigate through the newsroom"
-msgstr ""
+msgstr "Увійдіть через редакцію"
 
 #: scripts/apps/users/views/edit-form.html:184
 msgid "new"
@@ -3619,14 +3664,14 @@ msgstr "Нова роль"
 msgid "New size"
 msgstr "Новий розмір"
 
-#: scripts/apps/archive/index.js:199
+#: scripts/apps/archive/index.js:203
 msgid "New Take"
-msgstr "Нова трактовка"
+msgstr "Новий фрагмент"
 
-#: scripts/apps/archive/index.js:222
+#: scripts/apps/archive/index.js:226
 #: scripts/apps/authoring/authoring/directives/SendItem.js:473
 msgid "New take created."
-msgstr "Нова трактовка створена."
+msgstr "Новий фрагмент створено."
 
 #: scripts/apps/archive/views/media-view.html:34
 #: scripts/apps/authoring/macros/views/macros-replace.html:8
@@ -3645,7 +3690,7 @@ msgstr "Наступний користувач"
 #: scripts/apps/highlights/views/mark_highlights_dropdown_directive.html:8
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:13
 msgid "No available highlights"
-msgstr "Немає доступних акцентів"
+msgstr "Немає доступного вибраного"
 
 #: scripts/apps/translations/views/TranslationDropdown.html:8
 msgid "No available languages"
@@ -3661,11 +3706,11 @@ msgstr "Коментарів поки немає."
 
 #: scripts/apps/templates/directives/TemplatesDirective.js:294
 msgid "No Desk"
-msgstr "Немає робочого столу"
+msgstr "Немає Столу"
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:42
 msgid "No field aliases defined."
-msgstr ""
+msgstr "Не визначено псевдонім поля"
 
 #: scripts/apps/highlights/views/search_highlights_dropdown_directive.html:6
 msgid "No Filter"
@@ -3673,7 +3718,7 @@ msgstr "Немає фільтру"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:763
 msgid "No formatters found for"
-msgstr ""
+msgstr "Немає знайдених форматувань для"
 
 #: scripts/apps/users/views/change-avatar.html:14
 msgid "No image"
@@ -3681,11 +3726,11 @@ msgstr "Немає зображення"
 
 #: scripts/apps/desks/views/stage-item-list.html:2
 msgid "No items in this stage"
-msgstr "Немає елементів на майданчику"
+msgstr "Немає елементів на цьому етапі"
 
 #: scripts/apps/desks/views/slugline-items.html:4
 msgid "No items published"
-msgstr "Немає опублікованих елементів"
+msgstr "Немає оприлюднених елементів"
 
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-inner-dropdown.html:7
 msgid "No items to add!"
@@ -3693,7 +3738,7 @@ msgstr "Немає елементів, щоб додати!"
 
 #: scripts/apps/desks/views/task-status-items.html:3
 msgid "No items with this status"
-msgstr "Немає елементів з цим статусом"
+msgstr "Немає елементів з таким статусом"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:2
 msgid "No matches found."
@@ -3701,11 +3746,11 @@ msgstr "Співпадінь не знайдено."
 
 #: scripts/apps/profiling/views/profiling.html:32
 msgid "No of calls"
-msgstr ""
+msgstr "Немає дзвінків"
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:47
 msgid "No recent templates."
-msgstr "Немає нових шаблонів статей."
+msgstr "Немає нових шаблонів"
 
 #: scripts/apps/content-filters/controllers/FilterSearchController.js:111
 msgid "no results found"
@@ -3723,7 +3768,7 @@ msgstr "Немає правил визначених в наборі."
 #: scripts/core/auth/reset-password.html:33
 #: scripts/core/auth/reset-password.html:81
 msgid "No server response so far.<br>Let me try again."
-msgstr "Відповіді сервера досі немає. <br> Дозвольте спробувати ще раз."
+msgstr "Відповіді сервера досі немає. <br> Спробуйте ще раз."
 
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:10
 msgid "NO SUGGESTIONS."
@@ -3743,7 +3788,7 @@ msgstr "не-медіа"
 
 #: scripts/apps/profiling/views/profiling.html:10
 #: scripts/apps/users/views/user-preferences.html:64
-#: scripts/apps/workspace/content/views/schema-editor.html:56
+#: scripts/apps/workspace/content/views/schema-editor.html:60
 msgid "none"
 msgstr "жоден"
 
@@ -3787,12 +3832,12 @@ msgstr "Не передано жодному передплатнику"
 msgid "Not For Publication"
 msgstr "Не для оприлюднення"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:34
-#: scripts/apps/workspace/content/views/schema-editor.html:36
-#: scripts/apps/workspace/content/views/schema-editor.html:50
-#: scripts/apps/workspace/content/views/schema-editor.html:77
+#: scripts/apps/workspace/content/views/schema-editor.html:38
+#: scripts/apps/workspace/content/views/schema-editor.html:40
+#: scripts/apps/workspace/content/views/schema-editor.html:54
+#: scripts/apps/workspace/content/views/schema-editor.html:81
 msgid "Not set"
-msgstr "Не набір"
+msgstr "Не встановлено"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:127
 msgid "Notification"
@@ -3817,7 +3862,7 @@ msgstr "Повідомити у випадку бездіяльності про
 
 #: scripts/core/lang/missing-translations-strings.js:28
 msgid "NTB Currency Macro"
-msgstr ""
+msgstr "Вжіваність NTB Maкроса"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:66
 #: scripts/apps/users/activity-widget/configuration.html:6
@@ -3828,15 +3873,15 @@ msgstr "Кількість елементів"
 #: scripts/core/list/views/sdPaginationAlt.html:2
 #: scripts/core/views/sdSearchList.html:15
 msgid "of"
-msgstr ""
+msgstr "з"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:37
 msgid "Off"
-msgstr ""
+msgstr "Викл"
 
 #: scripts/apps/desks/views/content-expiry.html:9
 msgid "OFF"
-msgstr ""
+msgstr "ВИКЛ"
 
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:14
 #: scripts/apps/search/views/save-search.html:29
@@ -3857,12 +3902,12 @@ msgstr "ТАК"
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:22
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:11
 msgid "on"
-msgstr ""
+msgstr "на"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:36
 #: scripts/apps/templates/views/template-editor-modal.html:144
 msgid "On"
-msgstr ""
+msgstr "Вкл"
 
 #: scripts/apps/users/controllers/UserListController.js:143
 msgid "Online"
@@ -3870,16 +3915,16 @@ msgstr "Онлайн"
 
 #: scripts/core/auth/reset-password.html:27
 msgid "Oops! Invalid user Email.<br>Please try again."
-msgstr ""
+msgstr "Недійсний користувач Email. <br>Спробуйте ще раз"
 
 #: scripts/core/auth/login-modal.html:29
 msgid "Oops! Invalid Username or Password.<br>Please try again."
-msgstr ""
+msgstr "Недійсне ім'я або пароль.<br>Спробуйте ще раз"
 
 #: scripts/apps/users/views/user-list-item.html:36
 #: scripts/core/list/views/list-view.html:3
 msgid "Oops! There are no items."
-msgstr "Упс! Елементів немає."
+msgstr "Елементів немає."
 
 #: scripts/apps/authoring/authoring/index.js:147
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:142
@@ -3891,7 +3936,7 @@ msgstr "Відкрити"
 #: scripts/apps/desks/views/desk.html:3
 #: scripts/apps/desks/views/slugline.html:3
 msgid "Open desk content"
-msgstr "Відкрити контент робочого столу"
+msgstr "Відкрити контент Столу"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:18
 msgid "Opened"
@@ -3899,35 +3944,35 @@ msgstr "Відкрито"
 
 #: scripts/apps/monitoring/views/desk-notifications.html:26
 msgid "Opened by"
-msgstr ""
+msgstr "Відкрито"
 
 #: scripts/apps/workspace/index.js:26
 msgid "Opens highlights"
-msgstr ""
+msgstr "Відкриває вибране"
 
 #: scripts/apps/workspace/index.js:25
 msgid "Opens monitoring"
-msgstr ""
+msgstr "Відкриває моніторинг"
 
 #: scripts/apps/workspace/index.js:29
 msgid "Opens personal"
-msgstr ""
+msgstr "Відкриває персональне"
 
 #: scripts/apps/workspace/index.js:30
 msgid "Opens search"
-msgstr ""
+msgstr "Відкриває пошук"
 
 #: scripts/apps/workspace/index.js:28
 msgid "Opens spike"
-msgstr ""
+msgstr "Відкриває усунені"
 
 #: scripts/apps/workspace/index.js:27
 msgid "Opens tasks"
-msgstr ""
+msgstr "Відкриває завдання"
 
 #: scripts/apps/workspace/index.js:24
 msgid "Opens workspace"
-msgstr ""
+msgstr "Відкриває робочий простір"
 
 #: scripts/apps/content-filters/views/filter-search.html:12
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:49
@@ -3940,11 +3985,11 @@ msgstr "чи"
 
 #: scripts/apps/users/views/change-avatar.html:29
 msgid "or Select from computer"
-msgstr ""
+msgstr "чи оберіть з комп'ютера "
 
-#: scripts/apps/workspace/content/views/schema-editor.html:27
+#: scripts/apps/workspace/content/views/schema-editor.html:31
 msgid "Order"
-msgstr ""
+msgstr "Номер за порядком"
 
 #: scripts/apps/archive/views/item-preview.html:24
 #: scripts/apps/archive/views/preview.html:92
@@ -3952,68 +3997,68 @@ msgstr ""
 #: scripts/apps/authoring/views/change-image.html:116
 #: scripts/apps/authoring/views/change-image.html:23
 msgid "Original"
-msgstr ""
+msgstr "Оригінал"
 
 #: scripts/apps/archive/views/metadata-view.html:104
 msgid "Original creator"
-msgstr ""
+msgstr "Документ створив"
 
 #: scripts/apps/archive/views/metadata-view.html:100
 msgid "Original ID"
-msgstr ""
+msgstr "Оригінальний ID"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:60
 msgid "Original source"
-msgstr ""
+msgstr "Першоджерело"
 
 #: scripts/apps/archive/views/metadata-view.html:31
 msgid "Original Source"
-msgstr ""
+msgstr "Першоджерело"
 
 #: scripts/apps/desks/views/desk-config-modal.html:259
 msgid "Outgoing Rule"
-msgstr ""
+msgstr "Вихідне правило"
 
 #: scripts/apps/desks/views/desk-config-modal.html:204
 msgid "Outgoing Rule:"
-msgstr ""
+msgstr "Вихідне правило:"
 
 #: scripts/apps/publish/views/file-config.html:2
 #: scripts/apps/publish/views/file-config.html:3
 msgid "Output file path"
-msgstr ""
+msgstr "Шлях файла випуску"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:32
 msgid "Output/Published"
-msgstr ""
+msgstr "Випуск/Оприлюднено"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:29
 msgid "Output/Scheduled"
-msgstr ""
+msgstr "Випуск/Внесено до розкладу"
 
 #: scripts/apps/users/views/edit.html:18
 msgid "Overview"
-msgstr ""
+msgstr "Перегляд"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:49
 msgid "P"
-msgstr ""
+msgstr "Друк"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:55
 msgid "P & C"
-msgstr ""
+msgstr "P & C"
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:29
 msgid "Package current item"
-msgstr ""
+msgstr "Пакет поточного елементу"
 
 #: scripts/apps/publish/views/http-push-config.html:3
 msgid "Package individual items"
-msgstr ""
+msgstr "Пакет окремих елементів"
 
 #: scripts/apps/archive/views/item-preview.html:5
 msgid "Package preview"
-msgstr ""
+msgstr "Передперегляд пакету"
 
 #: scripts/apps/authoring/packages/packages.js:36
 msgid "Packages"
@@ -4021,7 +4066,7 @@ msgstr "Пакети"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:20
 msgid "Packaging"
-msgstr ""
+msgstr "Пакетування"
 
 #: scripts/core/list/views/sdPaginationAlt.html:2
 msgid "Page"
@@ -4037,11 +4082,11 @@ msgstr "Параметри"
 
 #: scripts/apps/ingest/views/settings/ftp-config.html:22
 msgid "Passive"
-msgstr ""
+msgstr "Пасивний"
 
 #: scripts/apps/publish/views/ftp-config.html:14
 msgid "Passive mode"
-msgstr ""
+msgstr "Пасивний режим"
 
 #: scripts/apps/ingest/views/settings/reutersConfig.html:15
 #: scripts/apps/ingest/views/settings/searchConfig.html:7
@@ -4061,7 +4106,7 @@ msgstr "пароль"
 #: scripts/apps/ingest/views/settings/searchConfig.html:6
 #: scripts/apps/publish/views/ftp-config.html:10
 #: scripts/apps/publish/views/ftp-config.html:11
-#: scripts/apps/search-providers/views/search-provider-config.html:72
+#: scripts/apps/search-providers/views/search-provider-config.html:73
 msgid "Password"
 msgstr "Пароль"
 
@@ -4071,19 +4116,19 @@ msgstr "Пароль занадто ненадійний."
 
 #: scripts/core/auth/auth.js:67
 msgid "Password was changed. You can login using your new password."
-msgstr ""
+msgstr "Пароль було змінено. Ви можете увійти в систему за допомогою нового пароля."
 
 #: scripts/core/auth/reset-password.html:55
 msgid "passwords must be same"
-msgstr ""
+msgstr "паролі повинні бути однаковими"
 
 #: scripts/core/editor2/views/add-content.html:19
 msgid "paste a block"
 msgstr "вставити блок"
 
-#: scripts/core/editor2/editor.js:812
+#: scripts/core/editor2/editor.js:834
 msgid "Paste or type a full link"
-msgstr ""
+msgstr "Вставте або введіть повне посилання"
 
 #: scripts/apps/ingest/views/settings/ftp-config.html:14
 #: scripts/apps/publish/views/ftp-config.html:18
@@ -4110,7 +4155,7 @@ msgstr "Люди"
 
 #: scripts/apps/products/views/products-config-modal.html:34
 msgid "Permitting"
-msgstr ""
+msgstr "Дозволяючий"
 
 #: scripts/apps/dictionaries/views/settings.html:26
 #: scripts/apps/monitoring/config.js:32
@@ -4121,13 +4166,13 @@ msgstr ""
 #: scripts/apps/templates/directives/TemplatesDirective.js:293
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:46
 msgid "Personal"
-msgstr ""
+msgstr "Особистий"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:45
 msgid ""
 "Personal dictionary for language \"{{ dictionary.language_id }}\" already "
 "exists."
-msgstr ""
+msgstr "Особистий словник для мови \"{{dictionary.language_id}}\" вже існує."
 
 #: scripts/apps/monitoring/views/monitoring-view.html:22
 msgid "Personal Items"
@@ -4144,7 +4189,7 @@ msgstr "Фраза"
 
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:388
 msgid "Pick task"
-msgstr ""
+msgstr "Виберіть завдання"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "picture"
@@ -4152,11 +4197,11 @@ msgstr "зображення"
 
 #: scripts/core/itemList/views/item-list-widget.html:57
 msgid "Pin"
-msgstr ""
+msgstr "Прикріпити"
 
 #: scripts/core/itemList/views/item-list-widget.html:54
 msgid "pinned from"
-msgstr ""
+msgstr "прикріпити з"
 
 #: scripts/apps/archive/views/metadata-view.html:61
 #: scripts/apps/authoring/views/full-preview.html:85
@@ -4178,74 +4223,74 @@ msgstr "Простий текст"
 
 #: scripts/core/lang/missing-translations-strings.js:14
 msgid "Planning Management"
-msgstr "Управління плануванням"
+msgstr "Керування плануванням"
 
 #: scripts/apps/users/config.js:92
 msgid "Please confirm that you want to delete all the sessions for this user."
-msgstr ""
+msgstr "Підтвердіть видалення всіх сеансів цього користувача."
 
 #: scripts/apps/users/config.js:75
 msgid "Please confirm that you want to disable a user."
-msgstr ""
+msgstr "Підтвердіть відключення користувача."
 
 #: scripts/apps/desks/controllers/DeskConfigController.js:34
 msgid "Please confirm you want to delete desk."
-msgstr ""
+msgstr "Підтвердіть видалення Столу."
 
 #: scripts/apps/dictionaries/controllers/DictionaryConfigController.js:80
 msgid "Please confirm you want to delete dictionary."
-msgstr ""
+msgstr "Підтвердіть видалення словника."
 
 #: scripts/core/auth/login-modal.html:3
 msgid "Please log in again."
-msgstr "Будь ласка, увійдіть знову."
+msgstr "Увійдіть знову."
 
 #: scripts/apps/users/views/edit-form.html:103
 msgid "please provide a valid email address"
-msgstr ""
+msgstr "Введіть дійсну адресу email"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.js:112
 #: scripts/apps/products/controllers/ProductsConfigController.js:102
 msgid "Please provide an article id"
-msgstr ""
+msgstr "Введить ідентифікатор статті"
 
 #: scripts/apps/users/views/edit-form.html:63
 msgid ""
 "please use only letters (a-z), numbers (0-9), dashes (&mdash;), underscores "
 "(_), apostrophes (') and periods (.)"
-msgstr ""
+msgstr "використовуйте тільки літери (a-z), цифри (0-9), тире (—), підкреслення (_), апостроф (') і крапки (.)"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:40
 msgid "Please use plain text dictionary."
-msgstr ""
+msgstr "Використовуйте простий текст словника"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:56
 msgid "Point of interest outside the crop  limits"
-msgstr ""
+msgstr "Інтерес поза межами СROP-структури"
 
 #: scripts/core/lang/missing-translations-strings.js:28
 msgid "Populate Abstract"
-msgstr ""
+msgstr "Підставити Лід"
 
 #: scripts/apps/authoring/comments/views/comments-widget.html:27
 msgid "Post"
-msgstr ""
+msgstr "Відправляти"
 
 #: scripts/apps/authoring/comments/views/comments-widget.html:26
 msgid "Post on 'Enter'"
-msgstr ""
+msgstr "Відправити натиском 'Enter'"
 
 #: scripts/apps/users/views/edit.html:21
 msgid "Preferences"
-msgstr "Налаштування"
+msgstr "Привілєї"
 
 #: scripts/core/lang/missing-translations-strings.js:10
 msgid "Preferred Categories"
-msgstr ""
+msgstr "Привілейовані категорії"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:74
 msgid "Preserve Desk"
-msgstr ""
+msgstr "Зберегти Стіл"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:7
 msgid "prev"
@@ -4256,15 +4301,15 @@ msgstr "попередній"
 #: scripts/apps/desks/views/stage-item-list.html:23
 #: scripts/apps/users/views/user-preferences.html:35
 msgid "Preview"
-msgstr "Перегляд"
+msgstr "Передперегляд"
 
 #: scripts/apps/authoring/views/preview-formatted.html:5
 msgid "Preview Formatted Story"
-msgstr ""
+msgstr "Передперегляд форматованої статті"
 
 #: scripts/apps/authoring/views/authoring-header.html:46
 msgid "Preview master story"
-msgstr "Переглянути головне повідомлення ???"
+msgstr ""
 
 #: scripts/apps/archive/views/media-view.html:31
 msgid "previous"
@@ -4317,7 +4362,7 @@ msgstr "Привілеї оновлено."
 #: scripts/apps/packaging/views/sd-package-item-preview.html:34
 #: scripts/apps/packaging/views/sd-package-item-preview.html:8
 msgid "Problems occurred while fetching data."
-msgstr "Проблеми виникли при викликанні даних."
+msgstr "Проблеми виникли при вибірці даних."
 
 #: scripts/apps/products/views/products-config-modal.html:22
 msgid "Product codes"
@@ -4325,7 +4370,7 @@ msgstr "Коди продукту"
 
 #: scripts/apps/products/controllers/ProductsConfigController.js:87
 msgid "Product deleted."
-msgstr "Продукт знищено."
+msgstr "Продукт видалено."
 
 #: scripts/apps/products/views/products-config-modal.html:18
 msgid "Product description"
@@ -4337,7 +4382,7 @@ msgstr "Продукт збережено."
 
 #: scripts/apps/products/views/products.html:3
 msgid "Product management"
-msgstr ""
+msgstr "Керування продуктом"
 
 #: scripts/apps/products/views/products-config-modal.html:14
 msgid "Product name"
@@ -4349,11 +4394,11 @@ msgstr "Тест продукту"
 
 #: scripts/core/lang/missing-translations-strings.js:20
 msgid "production"
-msgstr ""
+msgstr "продукція"
 
 #: scripts/apps/search/views/item-repo.html:8
 msgid "Production"
-msgstr ""
+msgstr "Продукція"
 
 #: scripts/apps/products/index.js:18
 #: scripts/apps/products/views/settings.html:5
@@ -4380,129 +4425,129 @@ msgstr "Профіль:"
 
 #: scripts/apps/profiling/index.js:25
 msgid "Profiling Data"
-msgstr ""
+msgstr "Профільні дані"
 
 #: scripts/core/auth/reset-password.html:11
 msgid ""
 "Provide your email in order to get 'Reset Token'. Once you get it, use it to"
 " reset your password."
-msgstr ""
+msgstr "Вкажить свій email для отримання 'Reset Token'. Після отримання відновити пароль"
 
 #: scripts/apps/users/views/change-avatar.html:43
 msgid "Provided image URL is not valid."
-msgstr ""
+msgstr "Вказані зображення URL  недійсні."
 
 #: scripts/apps/search/views/search-parameters.html:120
 msgid "Provider"
-msgstr ""
+msgstr "Постачальник"
 
 #: scripts/core/lang/missing-translations-strings.js:34
 msgid ""
 "Provider {{name}} has gone strangely quiet. Last activity was on {{last}}"
-msgstr ""
+msgstr "Постачальник {{name}} не активний. Остання активність була {{last}}"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:46
 msgid "Provider Name"
-msgstr ""
+msgstr "Ім'я постачальника"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.js:257
+#: scripts/apps/ingest/directives/IngestSourcesContent.js:261
 msgid "Provider saved!"
-msgstr ""
+msgstr "Постачальника збережено!"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:88
 msgid "Provider sequence"
-msgstr ""
+msgstr "Послідовність постачальника"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:51
 msgid "Provider Type"
-msgstr ""
+msgstr "Тип постачальника"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "publish"
-msgstr "опублікувати"
+msgstr "оприлюднити"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:47
 #: scripts/apps/authoring/views/authoring-topbar.html:48
 #: scripts/apps/authoring/views/send-item.html:8
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:26
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:29
-#: scripts/apps/publish/index.js:38
+#: scripts/apps/publish/index.js:39
 msgid "Publish"
-msgstr "Опублікувати"
+msgstr "Оприлюднити"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:53
 #: scripts/apps/authoring/views/authoring-topbar.html:54
 msgid "Publish and Continue"
-msgstr "Опублікувати і продовжити"
+msgstr "Оприлюднити і продовжити"
 
-#: scripts/apps/authoring/views/send-item.html:105
+#: scripts/apps/authoring/views/send-item.html:104
 msgid "publish from"
-msgstr ""
+msgstr "оприлюднити з"
 
-#: scripts/apps/publish/index.js:47
+#: scripts/apps/publish/index.js:48
 msgid "Publish Queue"
-msgstr ""
+msgstr "Черга на Оприлюднення"
 
 #: scripts/apps/archive/views/metadata-view.html:135
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:285
-#: scripts/apps/authoring/views/send-item.html:56
+#: scripts/apps/authoring/views/send-item.html:55
 msgid "Publish Schedule"
-msgstr ""
+msgstr "Розклад оприлюднення"
 
 #: scripts/core/lang/missing-translations-strings.js:7
 msgid "published"
-msgstr "опубліковано"
+msgstr "оприлюднено"
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:22
 #: scripts/apps/search/views/item-repo.html:9
 msgid "Published"
-msgstr "Опубліковано"
+msgstr "Оприлюднено"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:46
 msgid "Published by"
-msgstr "Опубліковано (ким)"
+msgstr "Оприлюднено"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:62
 msgid "Published From"
-msgstr "Опубліковано з"
+msgstr "Оприлюднено з"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:66
 msgid "Published Until"
-msgstr "Опубліковано до"
+msgstr "Оприлюднено до"
 
 #: scripts/apps/publish/views/publish-queue.html:91
 msgid "Publishing Action"
-msgstr ""
+msgstr "Дія оприлюднення"
 
-#: scripts/apps/authoring/views/send-item.html:55
+#: scripts/apps/authoring/views/send-item.html:54
 msgid "Publishing Schedule"
-msgstr ""
+msgstr "Розклад оприлюднення"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:54
 msgid "Pubstatus"
-msgstr ""
+msgstr "Статус оприлюднення"
 
 #: scripts/apps/archive/views/metadata-view.html:121
 msgid "PubStatus"
-msgstr ""
+msgstr "Статус оприлюднення"
 
 #: scripts/apps/vocabularies/services/SchemaFactory.js:5
 msgid "QCode"
-msgstr "Q код"
+msgstr "Q-код"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:85
+#: scripts/apps/workspace/content/views/schema-editor.html:89
 msgid "Quarter"
-msgstr ""
+msgstr "Чверть"
 
 #: scripts/apps/search/views/raw-search.html:3
 msgid "Query Text"
-msgstr ""
+msgstr "Техт запиту"
 
 #: scripts/apps/publish/views/publish-queue.html:95
 msgid "Queued at"
-msgstr ""
+msgstr "Поставлено в чергу"
 
-#: scripts/core/editor2/editor.js:981
+#: scripts/core/editor2/editor.js:1003
 msgid "quote"
 msgstr "цитата"
 
@@ -4528,7 +4573,7 @@ msgstr "Тип читача"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:37
 msgid "Real Life Subservice"
-msgstr ""
+msgstr "Підсервіс Справжнє життя"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:118
 msgid "Rearrange Groups"
@@ -4559,7 +4604,7 @@ msgstr "Оновити"
 
 #: scripts/apps/authoring/metadata/views/metadata-tags.html:9
 msgid "Refresh suggestions"
-msgstr ""
+msgstr "Оновити пропозиції"
 
 #: scripts/apps/authoring/metadata/views/metadata-tags.html:10
 msgid "Refreshing..."
@@ -4579,7 +4624,7 @@ msgstr "Пов'язані елементи"
 
 #: scripts/apps/desks/views/settings.html:26
 #: scripts/apps/highlights/views/highlights_title_directive.html:21
-#: scripts/apps/ingest/index.js:86
+#: scripts/apps/ingest/index.js:85
 #: scripts/apps/ingest/views/settings/rssConfig.html:75
 #: scripts/apps/search/views/multi-action-bar.html:48
 #: scripts/apps/search/views/search-filters.html:11
@@ -4594,87 +4639,87 @@ msgstr "Пов'язані елементи"
 #: scripts/apps/templates/views/templates.html:35
 #: scripts/apps/workspace/content/views/profile-settings.html:26
 msgid "Remove"
-msgstr "Перемістити "
+msgstr "Видалити "
 
 #: scripts/apps/highlights/views/settings.html:21
 msgid "Remove configuration"
-msgstr "Перемістити конфігурацію"
+msgstr "Видалити конфігурацію"
 
 #: scripts/apps/content-filters/views/manage-filters.html:21
 msgid "Remove Content Filter"
-msgstr "Перемістити фільтр контенту"
+msgstr "Видалити фільтр контенту"
 
 #: scripts/apps/desks/views/settings.html:26
 msgid "Remove desk"
-msgstr "Перемістити робочий стіл"
+msgstr "Видалити Стіл"
 
 #: scripts/apps/dictionaries/views/settings.html:33
 msgid "Remove dictionary"
-msgstr "Перемістити словник"
+msgstr "Видалити словник"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:19
 msgid "Remove fetch action"
-msgstr ""
+msgstr "Видалити дію отримання"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-filter.html:19
 msgid "Remove filter"
-msgstr "Перемістити фільтр"
+msgstr "Видалити фільтр"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:21
 msgid "Remove Filter Condition"
-msgstr "Перемістити фільтр умови"
+msgstr "Видалити умови фільтру"
 
-#: scripts/core/editor2/editor.js:987
+#: scripts/core/editor2/editor.js:1009
 msgid "remove formatting"
-msgstr ""
+msgstr "Видалити форматування"
 
 #: scripts/apps/groups/views/settings.html:18
 msgid "Remove group"
-msgstr "Перемістити групу"
+msgstr "Видалити групу"
 
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-article.html:9
 msgid "Remove Item"
-msgstr "Перемістити елемент"
+msgstr "Видалити елемент"
 
 #: scripts/apps/authoring/multiedit/views/multiedit.html:17
 msgid "Remove panel"
-msgstr "Перемістити панель"
+msgstr "Видалити панель"
 
 #: scripts/apps/products/views/products.html:15
 msgid "Remove product"
-msgstr "Перемістити продукт"
+msgstr "Видалити продукт"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:62
 msgid "Remove publish action"
-msgstr ""
+msgstr "Видалити дію оприлюднення"
 
 #: scripts/apps/users/views/settings-roles.html:18
 msgid "Remove role"
-msgstr "Перемістити роль"
+msgstr "Видалити роль"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:18
 msgid "Remove rule set"
-msgstr "Перемістити набір правил"
+msgstr "Видалити набір правил"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:17
 msgid "Remove scheme"
-msgstr "Перемістити схему"
+msgstr "Видалити схему"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:17
 msgid "Remove Search Provider"
-msgstr ""
+msgstr "Видалити Пошук постачальника"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:20
 msgid "Remove source"
-msgstr "Перемістити джерело"
+msgstr "Видалити джерело"
 
 #: scripts/apps/templates/views/templates.html:35
 msgid "Remove Template"
-msgstr "Перемістити шаблон"
+msgstr "Видалити шаблон"
 
 #: scripts/core/lang/missing-translations-strings.js:32
 msgid "removed item {{ type }} about {{ subject }}"
-msgstr ""
+msgstr "Видалений елемент {{ type }} з {{ subject }}"
 
 #: scripts/apps/dashboard/views/workspace.html:27
 msgid "Rename workspace"
@@ -4686,96 +4731,100 @@ msgstr "Перейменувати робочий простір"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:83
 msgid "Reorder Sections"
-msgstr ""
+msgstr "Переномерувати розділи"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:86
 msgid "Reorder stages and saved searches for view"
-msgstr ""
+msgstr "Переномерувати етапи та збережені пошуки для перегляду"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:6
 msgid "replace"
-msgstr "перемістити"
+msgstr "замінити"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:29
 msgid "Replace"
-msgstr "Перемістити"
+msgstr "Замінити"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:30
 msgid "Replace All"
-msgstr "Перемістити всі"
+msgstr "Замінити всі"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:12
 msgid "Replace with"
-msgstr ""
+msgstr "Замінити з"
 
 #: scripts/core/lang/missing-translations-strings.js:38
 msgid "replaced item {{ type }} about {{ subject }}"
-msgstr ""
+msgstr "Замінити елемент {{ type }} з {{ subject }}"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:23
+#: scripts/apps/workspace/content/views/schema-editor.html:27
 #: scripts/core/ui/ui.js:1339
 msgid "Required"
-msgstr ""
+msgstr "Обов'язковий"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:415
 msgid "Required field {{ key }} is missing. ..."
-msgstr ""
+msgstr "Обов'язкове поле {{ key }} втрачено."
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.js:67
 msgid "Required field(s) missing"
-msgstr ""
+msgstr "Обов'язкове поле(я) втрачено."
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:14
 msgid "Requires Authentication"
-msgstr ""
+msgstr "Обов'язкова аутентифікація"
 
 #: scripts/apps/archive/views/resend-configuration.html:25
 #: scripts/apps/publish/views/publish-queue.html:125
 #: scripts/apps/publish/views/publish-queue.html:77
 msgid "Resend"
-msgstr ""
+msgstr "Відправити повторно"
 
-#: scripts/apps/archive/index.js:232
+#: scripts/apps/archive/index.js:236
 msgid "Resend item"
-msgstr ""
+msgstr "Відправити елемент повторно"
 
 #: scripts/apps/archive/views/resend-configuration.html:4
 msgid "Resend To"
-msgstr ""
+msgstr "Відправити до"
 
 #: scripts/apps/profiling/views/profiling.html:22
 msgid "Reset"
-msgstr ""
+msgstr "Скидання"
 
 #: scripts/apps/users/views/edit-form.html:164
 #: scripts/core/auth/reset-password.html:60
 msgid "Reset password"
-msgstr ""
+msgstr "Скинути пароль"
 
 #: scripts/apps/publish/views/http-push-config.html:8
 #: scripts/apps/publish/views/http-push-config.html:9
 msgid "Resource URL"
-msgstr ""
+msgstr "URL Ресурсу"
 
 #: scripts/core/lang/missing-translations-strings.js:15
 msgid "Restore"
-msgstr ""
+msgstr "Відновлено"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:25
 msgid "Restored by"
-msgstr ""
+msgstr "Відновлено"
 
 #: scripts/apps/products/views/product-test.html:8
 msgid "Result Type"
-msgstr ""
+msgstr "Тип результата"
 
 #: scripts/core/lang/missing-translations-strings.js:6
 msgid "retrying"
-msgstr ""
+msgstr "повторна спроба"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:16
 msgid "revert"
-msgstr ""
+msgstr "повернути"
+
+#: scripts/apps/publish/views/subscribers.html:156
+msgid "Revoke"
+msgstr "Відмінити"
 
 #: scripts/apps/users/views/edit-form.html:124
 msgid "role"
@@ -4788,7 +4837,7 @@ msgstr "Роль"
 
 #: scripts/core/lang/missing-translations-strings.js:36
 msgid "role {{role}} is granted new privileges: Please re-login."
-msgstr ""
+msgstr "роль {{role}} отримала нові права: ввійдіть знову."
 
 #: scripts/apps/users/views/settings-roles.html:39
 msgid "Role Description"
@@ -4804,35 +4853,35 @@ msgstr "Ролі"
 
 #: scripts/core/lang/missing-translations-strings.js:15
 msgid "Roles Management"
-msgstr "Управління ролями"
+msgstr "Керування ролями"
 
 #: scripts/apps/users/views/settings-privileges.html:3
 msgid "Roles privileges"
-msgstr ""
+msgstr "Права за ролями"
 
 #: scripts/core/lang/missing-translations-strings.js:6
 msgid "routed"
-msgstr ""
+msgstr "направлено"
 
 #: scripts/apps/ingest/views/settings/settings.html:12
 msgid "Routing"
-msgstr ""
+msgstr "Маршрутизація"
 
 #: scripts/core/lang/missing-translations-strings.js:15
 msgid "Routing Rules Management"
-msgstr ""
+msgstr "Керування правилами маршрутизації"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:121
 msgid "Routing Scheme"
-msgstr ""
+msgstr "Схема маршрутизації"
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.js:77
 msgid "Routing scheme saved."
-msgstr ""
+msgstr "Схему маршрутизації збережено"
 
 #: scripts/apps/ingest/views/settings/rssConfig.html:4
 msgid "RSS Feed URL"
-msgstr ""
+msgstr "URL каналу RSS "
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:2
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:3
@@ -4861,7 +4910,7 @@ msgstr "Запустити автоматично"
 
 #: scripts/core/datetime/datetime.js:204
 msgid "Saturday"
-msgstr "субота"
+msgstr "Субота"
 
 #: scripts/apps/archive/views/upload.html:97
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:44
@@ -4883,8 +4932,8 @@ msgstr "субота"
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:67
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:174
 #: scripts/apps/products/views/products-config-modal.html:58
-#: scripts/apps/publish/views/subscribers.html:157
-#: scripts/apps/search-providers/views/search-provider-config.html:80
+#: scripts/apps/publish/views/subscribers.html:188
+#: scripts/apps/search-providers/views/search-provider-config.html:81
 #: scripts/apps/templates/views/create-template.html:44
 #: scripts/apps/templates/views/template-editor-modal.html:189
 #: scripts/apps/users/views/edit-form.html:3
@@ -4896,28 +4945,28 @@ msgstr "субота"
 #: scripts/apps/workspace/views/edit-workspace-modal.html:20
 #: scripts/core/editor2/views/block-embed.html:4
 msgid "Save"
-msgstr "зберегти"
+msgstr "Зберегти"
 
 #: scripts/apps/desks/views/desk-config-modal.html:100
 #: scripts/apps/desks/views/desk-config-modal.html:299
 msgid "Save & Continue"
-msgstr "зберегти та продовжити"
+msgstr "Зберегти та продовжити"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:70
 msgid "Save &amp; Continue"
-msgstr ""
+msgstr "Зберегти &amp; Продовжити"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:59
 msgid "Save and publish"
-msgstr "Зберегти та опублікувати"
+msgstr "Зберегти та оприлюднити"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:73
 msgid "Save and send"
-msgstr "зберегти та відправити"
+msgstr "Зберегти та відправити"
 
 #: scripts/apps/search/views/save-search.html:14
 msgid "Save As"
-msgstr "зберегти як"
+msgstr "Зберегти як"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:135
 #: scripts/apps/templates/views/create-template.html:4
@@ -4950,7 +4999,7 @@ msgstr "Зберегти Пошук"
 
 #: scripts/apps/search/views/search-panel.html:8
 msgid "Saved"
-msgstr "Збережено"
+msgstr "Збережений"
 
 #: scripts/apps/search/directives/SavedSearches.js:80
 msgid "Saved search removed"
@@ -4975,44 +5024,44 @@ msgstr "Збереження..."
 
 #: scripts/apps/search/views/search-parameters.html:164
 msgid "Scanpix ID(s)"
-msgstr ""
+msgstr "Scanpix ID(s)"
 
 #: scripts/apps/templates/views/templates.html:50
 msgid "Sched. Desk / Stage"
-msgstr ""
+msgstr "Розклад Столу/Етапу"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:74
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:42
 msgid "Schedule"
-msgstr ""
+msgstr "Розклад"
 
 #: scripts/apps/templates/views/template-editor-modal.html:161
 msgid "Schedule Desk"
-msgstr ""
+msgstr "Розклад Столу"
 
 #: scripts/apps/templates/views/template-editor-modal.html:173
 msgid "Schedule Stage"
-msgstr ""
+msgstr "Розклад Етапу"
 
 #: scripts/core/lang/missing-translations-strings.js:7
 msgid "scheduled"
-msgstr ""
+msgstr "внесено до розкладу"
 
 #: scripts/apps/search/views/search-filters.html:177
 msgid "Scheduled"
-msgstr ""
+msgstr "Внесено до розкладу"
 
 #: scripts/apps/publish/views/publish-queue.html:96
 msgid "Scheduled at"
-msgstr ""
+msgstr "Внесено до розкладу"
 
 #: scripts/core/lang/missing-translations-strings.js:21
 msgid "scheduled Desk Output"
-msgstr ""
+msgstr "внесено до розкладу Стола Випуску"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:2
 msgid "Schema Configuration"
-msgstr ""
+msgstr "Схема Конфігурації"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:37
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:38
@@ -5021,7 +5070,7 @@ msgstr "Назва схеми"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:45
 msgid "Scheme rules"
-msgstr ""
+msgstr "Правила схеми"
 
 #: scripts/core/lang/missing-translations-strings.js:20
 msgid "search"
@@ -5053,31 +5102,31 @@ msgstr "Пошук"
 msgid "Search for clock"
 msgstr "Шукати годинник"
 
-#: scripts/apps/search-providers/directive.js:72
+#: scripts/apps/search-providers/directive.js:76
 msgid "Search Provider deleted."
-msgstr ""
+msgstr "Пошук постачальника видалено."
 
-#: scripts/apps/search-providers/views/search-provider-config.html:73
+#: scripts/apps/search-providers/views/search-provider-config.html:74
 msgid "search provider password"
-msgstr ""
+msgstr "пароль пошука постачальника"
 
-#: scripts/apps/search-providers/directive.js:33
+#: scripts/apps/search-providers/directive.js:37
 msgid "Search Provider saved."
-msgstr ""
+msgstr "Пошук постачальника збережено."
 
-#: scripts/apps/search-providers/views/search-provider-config.html:68
+#: scripts/apps/search-providers/views/search-provider-config.html:69
 msgid "search provider username"
-msgstr ""
+msgstr "шукати імя постачальника"
 
 #: scripts/apps/search-providers/index.js:35
 #: scripts/apps/search-providers/views/search-provider-config.html:3
 #: scripts/apps/search-providers/views/settings.html:4
 msgid "Search Providers"
-msgstr ""
+msgstr "Пошук постачальників"
 
 #: scripts/apps/search/views/saved-searches.html:2
 msgid "Search saved searches"
-msgstr ""
+msgstr "Шукати збережені пошуки"
 
 #: scripts/apps/search/directives/SaveSearch.js:58
 msgid "Search was saved successfully"
@@ -5097,7 +5146,7 @@ msgstr "Обрати всі категорії"
 
 #: scripts/apps/authoring/views/change-image.html:3
 msgid "Select Area of Interest"
-msgstr ""
+msgstr "Оберіть, що цікавить"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:17
 msgid "Select color"
@@ -5105,19 +5154,19 @@ msgstr "Обрати колір"
 
 #: scripts/apps/users/views/user-preferences.html:69
 msgid "Select default categories only"
-msgstr ""
+msgstr "Оберіть лише категорії за замовчуванням"
 
 #: scripts/apps/desks/views/desk-select.html:3
 msgid "Select desk"
-msgstr "Обрати робочий стіл"
+msgstr "Оберіть Стіл"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:18
 msgid "Select desks for view"
-msgstr "Оберіть робочі столи для перегляду"
+msgstr "Оберіть Столи для перегляду"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:48
 msgid "Select global saved searches"
-msgstr ""
+msgstr "Оберіть глобальні збережені пошуки"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:79
 msgid "Select saved searches for view"
@@ -5129,7 +5178,7 @@ msgstr "Оберіть збережені пошуки для перегляду
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:6
 msgid "Select source"
-msgstr "Обрати джерело"
+msgstr "Оберіть джерело"
 
 #: scripts/apps/archive/views/resend-configuration.html:10
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:34
@@ -5138,11 +5187,11 @@ msgstr "Оберіть передплатників"
 
 #: scripts/apps/templates/views/sd-template-select.html:3
 msgid "Select template"
-msgstr "Обрати шаблон"
+msgstr "Оберіть шаблон"
 
 #: scripts/apps/authoring/views/change-image.html:53
 msgid "Select the area of interest"
-msgstr ""
+msgstr "Оберіть, що цікавить"
 
 #: scripts/apps/archive/views/upload.html:12
 msgid "Select them from folder"
@@ -5150,11 +5199,11 @@ msgstr "Оберіть їх з папки"
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:4
 msgid "Select Workspace"
-msgstr "Обраний робочий простір"
+msgstr "Оберіть робочий простір"
 
 #: scripts/core/views/sdSearchList.html:5
 msgid "selected"
-msgstr "обрано"
+msgstr "обраний"
 
 #: scripts/core/views/sdSearchList.html:21
 msgid "Selected item"
@@ -5168,13 +5217,13 @@ msgstr "Обрані елементи"
 msgid "send"
 msgstr "відправити"
 
-#: scripts/apps/authoring/views/send-item.html:76
+#: scripts/apps/authoring/views/send-item.html:75
 msgid "send and continue"
 msgstr "відправити і продовжити"
 
 #: scripts/core/lang/missing-translations-strings.js:9
 msgid "Send notifications via email"
-msgstr "Відправити повідомлення електронною поштою"
+msgstr "Відправити повідомлення email"
 
 #: scripts/apps/authoring/views/send-item.html:3
 #: scripts/apps/search/views/multi-action-bar.html:36
@@ -5183,7 +5232,7 @@ msgstr "Відправити до"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:225
 msgid "Send to / Publish"
-msgstr "Відправити до / Опублікувати"
+msgstr "Відправити до / Оприлюднити"
 
 #: scripts/core/lang/missing-translations-strings.js:17
 msgid "Sending"
@@ -5191,19 +5240,19 @@ msgstr "Відправка"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:16
 msgid "Sent/Queued as"
-msgstr ""
+msgstr "Відправлено/В черзі"
 
 #: scripts/apps/publish/views/publish-queue.html:87
 msgid "Sequence No"
-msgstr ""
+msgstr "Номер за порядком"
 
 #: scripts/apps/publish/views/subscribers.html:100
 msgid "Sequence Number Settings"
-msgstr ""
+msgstr "Номер налагодження за порядком"
 
 #: scripts/apps/ingest/views/settings/fileConfig.html:2
 msgid "Server Folder"
-msgstr ""
+msgstr "Папка сервера"
 
 #: scripts/apps/archive/views/metadata-view.html:49
 #: scripts/apps/authoring/views/full-preview.html:33
@@ -5257,19 +5306,19 @@ msgstr "Показувати повідомлення про помилки"
 
 #: scripts/apps/desks/views/main.html:6
 msgid "show only online users"
-msgstr "показувати тільки користувачів онлайн"
+msgstr "показувати тільки онлайн користувачів"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:3
 msgid "Show sent/queued items"
-msgstr ""
+msgstr "Показати елементи відправлені/в черзі"
 
 #: scripts/apps/search/index.js:67
 msgid "Shows search modal"
-msgstr ""
+msgstr "Показує обумовлений пошук"
 
 #: scripts/apps/users/views/change-avatar.html:15
 msgid "shows your initials instead"
-msgstr ""
+msgstr "показує ваші ініціали замість"
 
 #: scripts/core/auth/login-modal.html:46
 msgid "Sign in as a different user."
@@ -5282,38 +5331,38 @@ msgstr "Вийти"
 
 #: scripts/core/menu/notifications/views/notifications.html:12
 msgid "SIGN OUT"
-msgstr ""
+msgstr "Вийти"
 
 #: scripts/apps/archive/views/metadata-view.html:77
 #: scripts/apps/authoring/views/article-edit.html:328
 #: scripts/apps/users/views/edit-form.html:68
 msgid "Sign-Off"
-msgstr ""
+msgstr "Позначка"
 
 #: scripts/apps/archive/views/metadata-view.html:45
 msgid "Signal"
-msgstr ""
+msgstr "Сигнал"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:20
 msgid "since"
-msgstr ""
+msgstr "від"
 
 #: scripts/apps/archive/views/upload.html:65
 #: scripts/apps/authoring/views/change-image.html:95
 msgid "Single Usage"
-msgstr ""
+msgstr "Окремий користувач"
 
 #: scripts/apps/content-filters/controllers/FilterSearchController.js:30
 msgid "single value is required"
-msgstr ""
+msgstr "Потрібно вказати окреме значення"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:8
 msgid "Slug"
-msgstr ""
+msgstr "слаглайн"
 
 #: scripts/core/lang/missing-translations-strings.js:27
 msgid "slugline"
-msgstr "коментар"
+msgstr "слаглайн"
 
 #: scripts/apps/archive/views/metadata-view.html:5
 #: scripts/apps/authoring/views/full-preview.html:25
@@ -5323,19 +5372,19 @@ msgstr "коментар"
 #: scripts/apps/search/views/search-parameters.html:134
 #: scripts/apps/search/views/search-parameters.html:6
 msgid "Slugline"
-msgstr "Коментар"
+msgstr "Слаглайн"
 
 #: scripts/apps/authoring/views/authoring-header.html:59
 msgid "SLUGLINE"
-msgstr "КОМЕНТАР"
+msgstr "Слаглайн"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:4
 msgid "Slugline Match"
-msgstr ""
+msgstr "Співпадіння слаглайну"
 
 #: scripts/core/lang/missing-translations-strings.js:5
 msgid "sluglines"
-msgstr "коментарі"
+msgstr "Слаглайни"
 
 #: scripts/apps/archive/views/item-preview.html:11
 #: scripts/apps/archive/views/metadata-view.html:191
@@ -5347,12 +5396,12 @@ msgstr "коментарі"
 #: scripts/core/itemList/views/item-list-widget.html:91
 #: scripts/core/itemList/views/relatedItem-list-widget.html:42
 msgid "Sms"
-msgstr "смс-повідомлення"
+msgstr "смс"
 
 #: scripts/apps/authoring/views/article-edit.html:31
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:25
 msgid "SMS"
-msgstr "СМС повідомлення"
+msgstr "СМС"
 
 #: scripts/apps/authoring/views/article-edit.html:38
 msgid "SMS Message"
@@ -5360,57 +5409,57 @@ msgstr "СМС повідомлення"
 
 #: scripts/apps/users/views/edit-form.html:109
 msgid "sorry, a user with this email already exists"
-msgstr "вибачте, користувач з цією електронною адресою вже існує"
+msgstr "користувач з такою email вже існує"
 
 #: scripts/core/upload/crop-directive.js:53
 msgid "Sorry, but avatar must be at least 200x200 pixels big."
-msgstr ""
+msgstr "Аватар повинен бути не менше 200x200 пікселів."
 
 #: scripts/core/auth/login-modal.html:31
 #: scripts/core/auth/reset-password.html:29
 #: scripts/core/auth/reset-password.html:77
 msgid "Sorry, but can't reach the server now.<br>Please try again later."
-msgstr "Вибачте, сервер зараз не доступний. <br> Будь ласка, спробуйте ще раз."
+msgstr "Сервер зараз не доступний. <br> Спробуйте ще раз."
 
 #: scripts/core/upload/image-crop-directive.js:265
 msgid ""
 "Sorry, but image must be at least {{ r.width }}x{{ r.height }}, (it is {{ "
 "img.width }}x{{ img.height }})."
-msgstr ""
+msgstr "Зображення повинно бути принаймні {{ r.ширина}}x{{ r.висота}}, (це {{ img.ширина}}x{{ img.висота}})"
 
 #: scripts/apps/templates/views/create-template.html:14
 msgid "Sorry, but template name must be unique."
-msgstr "Вибачте, але назва шаблону не повинна повторюватися."
+msgstr "Назва шаблону не повинна повторюватися."
 
 #: scripts/core/auth/login-modal.html:30
 #: scripts/core/auth/reset-password.html:28
 #: scripts/core/auth/reset-password.html:76
 msgid "Sorry, but your account has been suspended."
-msgstr ""
+msgstr "Ваш обліковий запис було призупинено"
 
 #: scripts/apps/workspace/views/edit-workspace-modal.html:13
 msgid "Sorry, given workspace name is in use"
-msgstr ""
+msgstr "Робочий простір с такою назвою вже існує"
 
 #: scripts/core/editor2/views/block-text.html:24
 msgid "SORRY, NO SUGGESTIONS."
-msgstr "ВИБАЧТЕ, ПРОПОЗИЦІЙ НЕМАЄ ."
+msgstr "ПРОПОЗИЦІЙ НЕМАЄ ."
 
 #: scripts/apps/users/views/settings-roles.html:36
 msgid "sorry, this role name already exists."
-msgstr "вибачте, назва цієї ролі вже існує."
+msgstr "Роль з такою назвою вже існує."
 
 #: scripts/apps/users/views/edit-form.html:60
 msgid "sorry, this username is already taken."
-msgstr ""
+msgstr "Таке ім'я користувача вже використане "
 
 #: scripts/apps/search/views/item-sortbar.html:4
 msgid "Sort:"
-msgstr ""
+msgstr "Сортувати:"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:110
 msgid "Sorting"
-msgstr ""
+msgstr "Сортування"
 
 #: scripts/core/itemList/views/item-list-widget.html:87
 msgid "source"
@@ -5418,7 +5467,7 @@ msgstr "джерело"
 
 #: scripts/apps/archive/views/metadata-view.html:36
 #: scripts/apps/content-filters/views/production-test-view.html:22
-#: scripts/apps/search-providers/views/search-provider-config.html:58
+#: scripts/apps/search-providers/views/search-provider-config.html:59
 msgid "Source"
 msgstr "Джерело"
 
@@ -5428,19 +5477,19 @@ msgstr "ДЖЕРЕЛО"
 
 #: scripts/apps/desks/views/desk-config-modal.html:28
 msgid "Source for User Created Articles"
-msgstr ""
+msgstr "Джерело для створення статті користувача"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:51
 msgid "Source Name"
 msgstr "Назва джерела"
 
-#: scripts/apps/search-providers/views/search-provider-config.html:59
+#: scripts/apps/search-providers/views/search-provider-config.html:60
 msgid "source of the search provider"
-msgstr ""
+msgstr "джерело з пошуку постачальника"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:9
 msgid "Source stats"
-msgstr ""
+msgstr "Статистика джерела"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:3
 msgid "Source Type:"
@@ -5453,77 +5502,77 @@ msgstr "Джерела"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:191
 msgid "Spell Checker"
-msgstr ""
+msgstr "Перевірка орфографії"
 
 #: scripts/apps/search/views/multi-action-bar.html:29
 #: scripts/apps/workspace/views/workspace-sidenav-items.html:31
 msgid "Spike"
-msgstr ""
+msgstr "Усунути"
 
 #: scripts/apps/archive/index.js:93
 msgid "Spike Item"
-msgstr ""
+msgstr "Усунути елемент "
 
 #: scripts/apps/monitoring/config.js:17
 msgid "Spike Monitoring"
-msgstr ""
+msgstr "Моніторинг усунутих"
 
 #: scripts/core/lang/missing-translations-strings.js:7
 msgid "spiked"
-msgstr ""
+msgstr "Усунутий"
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:17
 msgid "Spiked"
-msgstr ""
+msgstr "Усунутий"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:33
 msgid "Spiked from"
-msgstr ""
+msgstr "Усунутий з "
 
 #: scripts/apps/monitoring/views/monitoring-view.html:21
 msgid "Spiked Items"
-msgstr ""
+msgstr "Усунуті елементи"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:38
 msgid "Sport Subservice"
-msgstr ""
+msgstr "Подсервіс Спорт "
 
 #: scripts/core/lang/missing-translations-strings.js:21
 msgid "stage"
-msgstr "майданчик"
+msgstr "етап"
 
 #: scripts/apps/desks/views/actionpicker.html:14
 msgid "Stage"
-msgstr "Майданчик"
+msgstr "Етап"
 
 #: scripts/apps/desks/views/desk-config-modal.html:229
 msgid "Stage description"
-msgstr "Опис майданчика"
+msgstr "Опис Етапу"
 
 #: scripts/apps/desks/views/desk-config-modal.html:188
 msgid "Stage description:"
-msgstr "Опис майданчика:"
+msgstr "Опис Етапу:"
 
 #: scripts/apps/desks/views/desk-config-modal.html:172
 msgid "Stage Details"
-msgstr ""
+msgstr "Подробиці Етапу"
 
 #: scripts/apps/desks/directives/DeskeditStages.js:140
 msgid "Stage has been modified elsewhere. Please reload the desks"
-msgstr ""
+msgstr "Етап змінено в іншому місці. Перезавантажьте Столи"
 
 #: scripts/apps/desks/views/desk-config-modal.html:165
 msgid "Stage with name"
-msgstr "Майданчик під назвою"
+msgstr "Етап під назвою"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:11
 msgid "stage:"
-msgstr "майданчик:"
+msgstr "етап:"
 
 #: scripts/apps/desks/views/desk-config-modal.html:110
 #: scripts/apps/desks/views/settings.html:34
 msgid "Stages"
-msgstr "Майданчики"
+msgstr "Етапи"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:50
 msgid "Start time"
@@ -5531,13 +5580,13 @@ msgstr "Час початку"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:7
 msgid "Start Time (inclusive)"
-msgstr ""
+msgstr "Час початку (включаючи)"
 
 #: scripts/apps/archive/views/metadata-view.html:185
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:72
 #: scripts/apps/content-filters/views/production-test-view.html:18
 msgid "State"
-msgstr ""
+msgstr "Стан"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:150
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:59
@@ -5556,24 +5605,24 @@ msgstr "Статус:"
 #: scripts/apps/publish/views/odbc-config.html:8
 #: scripts/apps/publish/views/odbc-config.html:9
 msgid "Stored Procedure"
-msgstr ""
+msgstr "Збережена процедура"
 
 #: scripts/apps/products/views/product-test.html:4
 msgid "Story GUID"
-msgstr ""
+msgstr "GUID статті"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:147
 msgid "Story is associated as update."
-msgstr ""
+msgstr "Стаття бере участь як оновлена"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:56
 #: scripts/apps/search/views/search-parameters.html:21
 msgid "Story Text"
-msgstr ""
+msgstr "Текст статті"
 
 #: scripts/core/directives/PasswordStrengthDirective.js:64
 msgid "Strength"
-msgstr ""
+msgstr "Чисельність"
 
 #: scripts/core/directives/PasswordStrengthDirective.js:42
 msgid "Strong"
@@ -5594,7 +5643,7 @@ msgstr "Теми"
 
 #: scripts/core/lang/missing-translations-strings.js:6
 msgid "submitted"
-msgstr ""
+msgstr "запропонований"
 
 #: scripts/apps/publish/views/publish-queue.html:92
 msgid "Subscriber"
@@ -5606,11 +5655,11 @@ msgstr "Коди передплатника"
 
 #: scripts/apps/publish/directives/SubscribersDirective.js:199
 msgid "Subscriber could not be initialized!"
-msgstr ""
+msgstr "Передплатник не може бути ініціалізований"
 
 #: scripts/apps/publish/directives/SubscribersDirective.js:134
 msgid "Subscriber saved."
-msgstr "Передплатник збережений."
+msgstr "Передплатника збережено."
 
 #: scripts/apps/publish/views/publish-queue.html:14
 msgid "Subscriber:"
@@ -5644,100 +5693,100 @@ msgstr "Неділя"
 
 #: scripts/core/menu/views/superdesk-view.html:27
 msgid "Superdesk is experiencing network connection issues:/"
-msgstr ""
+msgstr "Superdesk відчуває проблеми з мережею:/"
 
 #: scripts/core/menu/views/menu.html:22
 msgid "Switch to feature preview"
-msgstr ""
+msgstr "Переключить на функцію попереднього перегляду"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:9
 msgid "switch to grid view"
-msgstr ""
+msgstr "переключить на вид сітки"
 
 #: scripts/apps/archive/views/list.html:23
 #: scripts/apps/search/views/search.html:14
 msgid "Switch to grid view"
-msgstr ""
+msgstr "Переключить на вид сітки"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:10
 msgid "switch to list view"
-msgstr ""
+msgstr "Перейти до виду списку"
 
 #: scripts/apps/archive/views/list.html:24
 #: scripts/apps/search/views/search.html:15
 msgid "Switch to list view"
-msgstr ""
+msgstr "Перейти до виду списку"
 
 #: scripts/apps/monitoring/index.js:53
 msgid "Switches between single/grouped desk view"
-msgstr ""
+msgstr "Перемикання між режимами одного/згрупованого Столу"
 
 #: scripts/apps/monitoring/index.js:52
 msgid "Switches between single/grouped stage view"
-msgstr ""
+msgstr "Перемикання між режимами одного/згрупованого етапу перегляду"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:42
 msgid "T D"
-msgstr ""
+msgstr "T D"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:43
 msgid "Tags"
-msgstr ""
+msgstr "Теги"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:5
 msgid "Take a picture"
-msgstr ""
+msgstr "Зробить знимок"
 
 #: scripts/apps/archive/views/metadata-view.html:41
 msgid "Take key"
-msgstr ""
+msgstr "Номер фрагменту"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:10
 msgid "Take Key"
-msgstr ""
+msgstr "Номер фрагменту"
 
 #: scripts/apps/authoring/views/authoring-header.html:101
 msgid "TAKEKEY"
-msgstr ""
+msgstr "Номер фрагменту"
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:40
 msgid "Takes"
-msgstr ""
+msgstr "Фрагменти"
 
 #: scripts/apps/authoring/authoring/directives/SendItem.js:341
 msgid "Takes cannot be scheduled."
-msgstr ""
+msgstr "Фрагменти не можуть бути внесені до розкладу"
 
 #: scripts/apps/authoring/authoring/directives/SendItem.js:346
 msgid "Takes cannot have Embargo."
-msgstr ""
+msgstr "Фрагменти не можуть мати заборони"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:103
 #: scripts/apps/monitoring/views/monitoring-view.html:74
 msgid "Takes Package"
-msgstr ""
+msgstr "Пакет фрагментів"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:449
 msgid ""
 "Tansa is not responding. You can continue editing or publish the story."
-msgstr ""
+msgstr "Tansa не реагує. Продовжуйте редагування або оприлюднення статті."
 
 #: scripts/apps/archive/views/metadata-view.html:149
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:122
 #: scripts/apps/products/views/products-config-modal.html:38
 #: scripts/apps/templates/views/template-editor-modal.html:118
 msgid "Target Regions"
-msgstr ""
+msgstr "Цільові зони"
 
 #: scripts/apps/archive/views/metadata-view.html:154
 msgid "Target Subscriber Types"
-msgstr ""
+msgstr "Типи цільового Передплатника"
 
 #: scripts/apps/archive/views/metadata-view.html:144
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:108
 #: scripts/apps/templates/views/template-editor-modal.html:107
 msgid "Target Subscribers"
-msgstr ""
+msgstr "Цільові Передплатники"
 
 #: scripts/apps/publish/views/subscribers.html:57
 msgid "Target Type"
@@ -5751,7 +5800,7 @@ msgstr "Типи цілей"
 
 #: scripts/apps/publish/views/subscribers.html:79
 msgid "Targetable by users"
-msgstr ""
+msgstr "Позначений користувачами"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:6
 msgid "Task Details"
@@ -5763,7 +5812,7 @@ msgstr "Задачі"
 
 #: scripts/core/lang/missing-translations-strings.js:15
 msgid "Tasks Management"
-msgstr "Управління задачами"
+msgstr "Керування задачами"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:19
 msgid "Template"
@@ -5771,11 +5820,11 @@ msgstr "Шаблон"
 
 #: scripts/apps/templates/views/template-editor-modal.html:16
 msgid "Template name"
-msgstr "Назва шаблона"
+msgstr "Назва шаблону"
 
 #: scripts/apps/templates/views/sd-template-select.html:9
 msgid "Template Name"
-msgstr "Назва шаблона"
+msgstr "Назва шаблону"
 
 #: scripts/apps/templates/directives/TemplatesDirective.js:208
 msgid "Template saved."
@@ -5783,32 +5832,32 @@ msgstr "Шаблон збережено."
 
 #: scripts/apps/templates/views/templates.html:43
 msgid "Template type"
-msgstr "Тип шаблона"
+msgstr "Тип шаблону"
 
 #: scripts/apps/templates/views/template-editor-modal.html:34
 msgid "Template Type"
-msgstr "Тип шаблона"
+msgstr "Тип шаблону"
 
 #: scripts/apps/templates/index.js:36
 #: scripts/apps/templates/views/templates.html:3
 msgid "Templates"
-msgstr "Шаблони статей"
+msgstr "Шаблони"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:39
 msgid "Territory"
-msgstr ""
+msgstr "Территорія"
 
 #: scripts/apps/content-filters/views/manage-filters.html:114
 msgid "Test"
-msgstr ""
+msgstr "Перевірка"
 
 #: scripts/apps/content-filters/views/manage-filters.html:19
 msgid "Test Filter Against Content"
-msgstr ""
+msgstr "Фільтр перевірки відносно контенту"
 
 #: scripts/apps/products/views/product-test.html:14
 msgid "Test Products"
-msgstr ""
+msgstr "Продукти тестування"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "text"
@@ -5816,7 +5865,7 @@ msgstr "текст"
 
 #: scripts/core/auth/reset-password.html:75
 msgid "The activation token is not valid.<br>"
-msgstr ""
+msgstr "Токен активації недійсний.<br>"
 
 #: scripts/apps/users/views/change-avatar.html:31
 msgid "The minimum image resolution is 200x200 pixels."
@@ -5828,20 +5877,20 @@ msgstr "Пароль було змінено."
 
 #: scripts/apps/users/directives/ResetPasswordDirective.js:16
 msgid "The password has been reset."
-msgstr "Пароль був відправлений повторно."
+msgstr "Пароль було відновлено"
 
 #: scripts/apps/archive/views/upload.html:18
 msgid "There are failed uploads."
-msgstr ""
+msgstr "Не вдалося перезавантажити"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:195
 msgid "There are items locked or not published. Do you want to continue?"
-msgstr "Деякі елементи заблоковано або не опубліковано. Хочете продовжити?"
+msgstr "Деякі елементи заблоковано або не оприлюднено. Хочете продовжити?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:55
 msgid ""
 "There are some unsaved changes, do you want to save and publish it now?"
-msgstr "Деякі зміни не збережено, хочете зберегти та опублікувати зараз?"
+msgstr "Деякі зміни не збережено, хочете зберегти та оприлюднити зараз?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:69
 msgid "There are some unsaved changes, do you want to save and send it now?"
@@ -5857,24 +5906,28 @@ msgstr "Деякі зміни не збережено, відкрити стат
 
 #: scripts/core/auth/auth.js:161
 msgid "There are some unsaved changes. Please save them before signing out."
-msgstr "Деякі зміни не збережено. Будь ласка, збережіть їх перед виходом з системи. "
+msgstr "Деякі зміни не збережено. Збережіть їх перед виходом з системи. "
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:10
 msgid ""
 "There are unsaved changes. If you navigate away, your changes will be lost."
-msgstr "Деякі зміни не збережено. У разі виходу з системи ???, зміни будуть втрачені. "
+msgstr "Деякі зміни не збережено. У разі виходу з системи  зміни будуть втрачені. "
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:153
 msgid "There is an error. Failed to associate update."
-msgstr "Помилка. Не вдалося зв'язати ??? оновлення."
+msgstr "Помилка. Не вдалося зв'язати оновлення."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:124
 msgid "There is an error. Failed to associated as take."
-msgstr ""
+msgstr "Помилка. Не вдалося пов'язати з фрагментом."
+
+#: scripts/apps/publish/views/subscribers.html:163
+msgid "There is no token for subscriber."
+msgstr "Це не токен для передплатника"
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.js:57
 msgid "There was a problem while saving highlights configuration"
-msgstr ""
+msgstr "Проблема при збереженні кофігурації вибраного"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:49
 #: scripts/apps/users/controllers/ChangeAvatarController.js:61
@@ -5883,36 +5936,36 @@ msgstr "Виникла проблема із завантаженням"
 
 #: scripts/apps/desks/directives/DeskeditBasic.js:68
 msgid "There was a problem, desk not created/updated."
-msgstr "Виникла проблема, робочий стіл не створено/не завантажено."
+msgstr "Проблема, Стіл не створено/не оновлено."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:47
 msgid "There was a problem, dictionary not created/updated."
-msgstr "Виникла проблема, словник не створено/не оновлено."
+msgstr "Проблема, словник не створено/не оновлено."
 
 #: scripts/apps/groups/views/groups-config-modal.html:29
 msgid "There was a problem, group not created/updated."
-msgstr "Виникла проблема, групу не створено/не оновлено."
+msgstr "Проблема, групу не створено/не оновлено."
 
 #: scripts/apps/search/directives/ItemGlobalSearch.js:56
 #: scripts/apps/search/directives/ItemGlobalSearch.js:88
 msgid "There was a problem, item can not open."
-msgstr "Виникла проблема, елемент??? неможливо відкрити."
+msgstr "Проблема, елемент неможливо відкрити."
 
 #: scripts/apps/groups/directives/GroupeditPeopleDirective.js:46
 msgid "There was a problem, members not saved."
-msgstr "Виникла проблема, учасників??? неможливо зберегти."
+msgstr "Проблема, учасників неможливо зберегти."
 
 #: scripts/apps/desks/directives/DeskeditPeople.js:56
 msgid "There was a problem, members not saved. Refresh Desks."
-msgstr "Проблема, учасників не збережено. Оновіть робочий стіл."
+msgstr "Проблема, учасників не збережено. Оновіть Стіл."
 
 #: scripts/apps/desks/views/desk-config-modal.html:167
 msgid "There was a problem, stage not created/updated."
-msgstr "Проблема, майданчик не створений/оновлений."
+msgstr "Проблема, Етап не створено/оновлено."
 
 #: scripts/apps/desks/directives/DeskeditStages.js:190
 msgid "There was a problem, stage was not deleted."
-msgstr "Проблема, майданчик не був видалений."
+msgstr "Проблема, Етап не був видалений."
 
 #: scripts/apps/users/directives/UserEditDirective.js:128
 msgid "There was an error when saving the user account."
@@ -5966,6 +6019,13 @@ msgstr "Текст було переписано:"
 msgid "This week"
 msgstr "Цього тижня"
 
+#: scripts/core/lang/missing-translations-strings.js:41
+msgid ""
+"This widget allows you to create literally any content view you may need in "
+"Superdesk, be it production or ingest. All you need is to select a desk, its"
+" stages or a saved search. Name your view once you are done. Enjoy!"
+msgstr "Цей віджет дозволяє створювати практично будь-який вид контенту в Superdesk, будь то виробництво або завантаження. Все, що вам потрібно, це вибрати стіл, його етапи або збережений пошук. Оцініть, як тільки ви закінчите."
+
 #: scripts/core/datetime/datetime.js:202
 msgid "Thursday"
 msgstr "Четвер"
@@ -6002,7 +6062,7 @@ msgstr "Назва"
 #: scripts/apps/authoring/views/authoring-topbar.html:41
 #: scripts/apps/search/views/search-parameters.html:86
 msgid "To Desk"
-msgstr "На робочий стіл"
+msgstr "До Столу"
 
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:6
 msgid "To Do"
@@ -6021,11 +6081,15 @@ msgstr "Перемикач теми"
 
 #: scripts/apps/search/index.js:68
 msgid "Toggles search view"
-msgstr ""
+msgstr "Перемикачі перегляду пошуку"
 
 #: scripts/apps/authoring/widgets/widgets.js:175
 msgid "Toggles widget #"
-msgstr ""
+msgstr "Віджет Перемикачів # "
+
+#: scripts/apps/publish/views/subscribers.html:169
+msgid "Token expiry"
+msgstr "Термін дії токену"
 
 #: scripts/core/ui/views/datepicker-wrapper.html:7
 msgid "Tomorrow"
@@ -6053,7 +6117,7 @@ msgstr "Разом:"
 
 #: scripts/core/lang/missing-translations-strings.js:16
 msgid "Transformation Rules Management"
-msgstr ""
+msgstr "Перетворення правил керування"
 
 #: scripts/apps/translations/index.js:32
 msgid "Translate"
@@ -6069,17 +6133,17 @@ msgstr "Переклади"
 
 #: scripts/apps/publish/views/publish-queue.html:97
 msgid "Transmitted at"
-msgstr ""
+msgstr "Передано"
 
 #: scripts/apps/archive/views/upload.html:18
 msgid "Try again"
-msgstr "Спробуйте знову"
+msgstr "Спробуйте ще раз"
 
 #: scripts/core/auth/login-modal.html:40
 #: scripts/core/auth/reset-password.html:38
 #: scripts/core/auth/reset-password.html:86
 msgid "Trying to reconnect...<br>Please wait."
-msgstr "Спроба відновити з'єднання ... <br> Будь ласка, зачекайте."
+msgstr "Спроба відновити з'єднання ... <br> Зачекайте."
 
 #: scripts/core/datetime/datetime.js:200
 msgid "Tuesday"
@@ -6095,18 +6159,18 @@ msgstr "Тип"
 
 #: scripts/core/lang/missing-translations-strings.js:16
 msgid "Un Spike"
-msgstr ""
+msgstr "Відновити"
 
 #: scripts/apps/dashboard/workspace-tasks/views/assignee-view.html:6
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:50
 msgid "Unassigned"
-msgstr ""
+msgstr "Непризначений"
 
 #: scripts/core/views/sdselect.html:14
 msgid "Uncheck all"
 msgstr "Скасувати всі"
 
-#: scripts/core/editor2/editor.js:966
+#: scripts/core/editor2/editor.js:988
 msgid "underline"
 msgstr "підкреслення"
 
@@ -6124,7 +6188,7 @@ msgstr "Унікальна назва"
 
 #: scripts/apps/search/views/item-globalsearch.html:11
 msgid "Unique Name/ID/GUID"
-msgstr ""
+msgstr "Унікальна назва/ID/GUID"
 
 #: scripts/apps/archive/directives/ArchivedItemKill.js:34
 msgid "Unknown Error: Cannot kill the item"
@@ -6136,11 +6200,11 @@ msgstr "Невідома помилка: Не можу повторно відп
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:305
 msgid "Unknown Error: Item not published."
-msgstr "Невідома помилка: Елемент не опублікований."
+msgstr "Невідома помилка: Елемент не оприлюднений."
 
 #: scripts/apps/desks/controllers/DeskConfigController.js:46
 msgid "Unknown Error: There was a problem, desk was not deleted."
-msgstr "Невідома помилка: Виникла проблема, робочий стіл не був видалений."
+msgstr "Невідома помилка: Стіл не був видалений."
 
 #: scripts/apps/archive/views/item-lock.html:13
 #: scripts/apps/archive/views/item-lock.html:5
@@ -6154,7 +6218,7 @@ msgstr "Розблокувати контент"
 
 #: scripts/apps/authoring/authoring/index.js:203
 msgid "Unlocks current item"
-msgstr "Розблокування поточного елемента"
+msgstr "Розблокування поточного елементу"
 
 #: scripts/core/itemList/views/item-list-widget.html:60
 msgid "Unpin"
@@ -6162,15 +6226,15 @@ msgstr "Відкріпити"
 
 #: scripts/apps/search/views/multi-action-bar.html:33
 msgid "Unspike"
-msgstr ""
+msgstr "Відновити"
 
-#: scripts/apps/archive/index.js:117
+#: scripts/apps/archive/index.js:121
 msgid "Unspike Item"
-msgstr ""
+msgstr "Відновити елемент"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:37
 msgid "Unspiked to"
-msgstr ""
+msgstr "Відновлено в"
 
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:6
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-inner-dropdown.html:4
@@ -6183,21 +6247,21 @@ msgstr "Без назви"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:17
 msgid "UPCOMING"
-msgstr ""
+msgstr "КАЛЕНДАР"
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "update"
-msgstr "оновлення"
+msgstr "Оновити"
 
-#: scripts/apps/archive/index.js:246
+#: scripts/apps/archive/index.js:250
 #: scripts/apps/authoring/views/authoring-topbar.html:70
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:130
 msgid "Update"
-msgstr "Оновлення"
+msgstr "Оновити"
 
 #: scripts/apps/authoring/views/authoring-header.html:34
 msgid "UPDATE"
-msgstr "ОНОВЛЕННЯ"
+msgstr "Оновити"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.js:77
 msgid "Update Created."
@@ -6226,15 +6290,15 @@ msgstr "Оновлено"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:21
 msgid "Updated by"
-msgstr "Оновлено..."
+msgstr "Оновлено"
 
 #: scripts/core/lang/missing-translations-strings.js:35
 msgid "updated Ingest Channel {{name}}"
-msgstr ""
+msgstr "Оновлено Канал Завантаження {{name}}"
 
 #: scripts/core/lang/missing-translations-strings.js:33
 msgid "updated task {{ subject }} for item {{ type }}"
-msgstr ""
+msgstr "Оновлено задачу {{ subject }} для елемента {{ type }}"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:4
 msgid "Upload from computer"
@@ -6250,7 +6314,7 @@ msgstr "Завантажити медіа"
 
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "uploaded media {{ name }}"
-msgstr ""
+msgstr "Завантажено медіа {{ name }}"
 
 #: scripts/apps/archive/directives/ItemUrgency.js:19
 #: scripts/apps/archive/views/metadata-view.html:9
@@ -6268,11 +6332,11 @@ msgstr "ТЕРМІНОВІСТЬ"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:10
 msgid "Urgency stats"
-msgstr ""
+msgstr "Статистика терміновості"
 
 #: scripts/apps/ingest/views/settings/reutersConfig.html:6
 msgid "URL for Authentication"
-msgstr ""
+msgstr "URL для аутентифікації"
 
 #: scripts/apps/archive/views/metadata-view.html:179
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:33
@@ -6282,7 +6346,7 @@ msgstr "Умови використання"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:6
 msgid "Use a Web URL"
-msgstr ""
+msgstr "Використовуйте Web URL"
 
 #: scripts/apps/ingest/views/settings/emailConfig.html:14
 #: scripts/apps/users/views/user-privileges.html:16
@@ -6291,27 +6355,27 @@ msgstr "Користувач"
 
 #: scripts/core/lang/missing-translations-strings.js:32
 msgid "user {{user}} has been added to desk {{desk}}: Please re-login."
-msgstr ""
+msgstr "користувача {{user}} було додано до Столу {{desk}}: увійдіть знову."
 
 #: scripts/core/lang/missing-translations-strings.js:36
 msgid "user {{user}} is granted new privileges: Please re-login."
-msgstr ""
+msgstr "користувач {{user}} отримав нові права: увійдіть знову."
 
 #: scripts/core/lang/missing-translations-strings.js:37
 msgid "user {{user}} is updated to administrator: Please re-login."
-msgstr ""
+msgstr "користувач {{user}} оновлений адміністратором: увійдіть знову."
 
 #: scripts/apps/users/config.js:36
 msgid "User management"
-msgstr "Управління користувачами"
+msgstr "Керування користувачами"
 
 #: scripts/core/lang/missing-translations-strings.js:16
 msgid "User Management"
-msgstr "Управління користувачами"
+msgstr "Керування користувачами"
 
 #: scripts/apps/users/directives/UserPrivilegesDirective.js:30
 msgid "User not found."
-msgstr "Користувач не знайдений."
+msgstr "Користувача не знайдено."
 
 #: scripts/apps/users/directives/UserPreferencesDirective.js:69
 #: scripts/core/services/preferencesService.js:217
@@ -6361,7 +6425,7 @@ msgstr "Користувача не знайдено, вибачте."
 
 #: scripts/apps/users/directives/UserEditDirective.js:126
 msgid "User was not found. The account might have been deleted."
-msgstr "Користувача не знайдено. Можливо, акаунт був знищений."
+msgstr "Користувача не знайдено. Можливо акаунт був знищений."
 
 #: scripts/apps/ingest/views/settings/reutersConfig.html:11
 #: scripts/apps/ingest/views/settings/searchConfig.html:3
@@ -6379,7 +6443,7 @@ msgstr "ім'я користувача"
 #: scripts/apps/ingest/views/settings/searchConfig.html:2
 #: scripts/apps/publish/views/ftp-config.html:6
 #: scripts/apps/publish/views/ftp-config.html:7
-#: scripts/apps/search-providers/views/search-provider-config.html:67
+#: scripts/apps/search-providers/views/search-provider-config.html:68
 #: scripts/apps/users/views/list.html:29
 msgid "Username"
 msgstr "Ім'я користувача"
@@ -6394,7 +6458,7 @@ msgstr "Користувачі"
 
 #: scripts/core/lang/missing-translations-strings.js:8
 msgid "Users archive view format"
-msgstr ""
+msgstr "Формат перегляду архіву користувача"
 
 #: scripts/apps/users/config.js:54 scripts/apps/users/views/edit.html:9
 msgid "Users Profile"
@@ -6415,11 +6479,11 @@ msgstr "Версія"
 
 #: scripts/apps/archive/views/metadata-view.html:108
 msgid "Version creator"
-msgstr ""
+msgstr "Автор версії"
 
 #: scripts/apps/authoring/versioning/versioning.js:6
 msgid "Versioning"
-msgstr ""
+msgstr "Створення версій"
 
 #: scripts/apps/authoring/versioning/views/versioning.html:3
 msgid "Versions"
@@ -6432,41 +6496,41 @@ msgstr "відео"
 #: scripts/apps/content-filters/views/production-test-view.html:24
 #: scripts/core/itemList/views/item-list-widget.html:35
 msgid "View"
-msgstr ""
+msgstr "Перегляд"
 
 #: scripts/apps/desks/views/settings.html:44
 msgid "view all"
-msgstr ""
+msgstr "Переглянути все"
 
 #: scripts/apps/users/views/list.html:63
 msgid "View full profile"
-msgstr ""
+msgstr "Дивитися повний профіль"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:14
 msgid "View name"
-msgstr ""
+msgstr "Дивитися назву"
 
 #: scripts/apps/vocabularies/index.js:39
 msgid "Vocabularies"
-msgstr "Налагодження"
+msgstr "Довідники"
 
 #: scripts/apps/vocabularies/views/settings.html:6
 msgid "Vocabularies management"
-msgstr "Управління словниками"
+msgstr "Керування довідниками"
 
 #: scripts/core/lang/missing-translations-strings.js:17
 msgid "Vocabularies Management"
-msgstr "Управління словниками"
+msgstr "Керування довідниками"
 
 #: scripts/core/notification/notification.js:118
 msgid ""
 "vocabulary has been updated. Please re-login to see updated vocabulary "
 "values"
-msgstr "словник був оновлений. Будь ласка, увійдіть повторно, щоб бачити оновлені дані словника"
+msgstr "довідник був оновлений. Увійдіть повторно, щоб бачити оновлені дані довідника"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.js:26
 msgid "Vocabulary saved successfully"
-msgstr "Словник успішно збережено."
+msgstr "Довідник успішно збережено."
 
 #: scripts/core/auth/auth.js:162
 msgid "Warning"
@@ -6474,7 +6538,7 @@ msgstr "Застереження"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:112
 msgid "was unlocked by <b></b>."
-msgstr ""
+msgstr "було розблоковано <b></b>."
 
 #: scripts/core/directives/PasswordStrengthDirective.js:39
 msgid "Weak"
@@ -6486,9 +6550,9 @@ msgstr "Середа"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:37
 msgid "When creating a highlights package"
-msgstr "При створенні пакета акцентів"
+msgstr "При створенні пакета вибраного"
 
-#: scripts/apps/workspace/content/views/schema-editor.html:81
+#: scripts/apps/workspace/content/views/schema-editor.html:85
 msgid "Width"
 msgstr "Ширина"
 
@@ -6498,9 +6562,9 @@ msgstr "Ширина"
 #: scripts/apps/authoring/views/authoring-header.html:17
 msgid "WORD"
 msgid_plural "WORDS"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Слово"
+msgstr[1] "Слів"
+msgstr[2] "Слова"
 
 #: scripts/apps/archive/views/metadata-view.html:17
 msgid "Word Count"
@@ -6512,17 +6576,17 @@ msgstr "слова"
 
 #: scripts/apps/desks/views/desk-config-modal.html:115
 msgid "Work stages"
-msgstr "Робочі майданчики"
+msgstr "Робочі етапи"
 
 #: scripts/apps/desks/views/desk-config-modal.html:175
 #: scripts/apps/desks/views/desk-config-modal.html:219
 msgid "Working Stage"
-msgstr "Робочий майданчик"
+msgstr "Робочий етап"
 
 #: scripts/apps/archive/index.js:70 scripts/apps/dashboard/index.js:41
 #: scripts/apps/dashboard/views/workspace.html:22
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:379
-#: scripts/apps/ingest/index.js:57 scripts/apps/stream/index.js:15
+#: scripts/apps/ingest/index.js:56 scripts/apps/stream/index.js:15
 msgid "Workspace"
 msgstr "Робочий простір"
 
@@ -6531,6 +6595,7 @@ msgid "Workspace name"
 msgstr "Назва робочого простору"
 
 #: scripts/apps/dashboard/world-clock/world-clock.js:203
+#: scripts/core/lang/missing-translations-strings.js:39
 msgid "World Clock"
 msgstr "Світовий час"
 
@@ -6540,9 +6605,10 @@ msgstr "Світовий час додано:"
 
 #: scripts/apps/dashboard/world-clock/world-clock.js:35
 msgid "World clock removed:"
-msgstr "Світовий час переміщено:"
+msgstr "Світовий час видалено:"
 
 #: scripts/apps/dashboard/world-clock/world-clock.js:214
+#: scripts/core/lang/missing-translations-strings.js:40
 msgid "World clock widget"
 msgstr "Віджет світового часу"
 
