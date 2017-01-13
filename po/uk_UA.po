@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:30+0000\n"
+"PO-Revision-Date: 2017-01-13 14:31+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5613,7 +5613,7 @@ msgstr "GUID статті"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.js:147
 msgid "Story is associated as update."
-msgstr "Стаття бере участь як оновлена"
+msgstr "Стаття виступає як оновлена"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:56
 #: scripts/apps/search/views/search-parameters.html:21
