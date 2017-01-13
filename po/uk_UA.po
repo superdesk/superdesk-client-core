@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:04+0000\n"
+"PO-Revision-Date: 2017-01-13 14:06+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2893,7 +2893,7 @@ msgstr "Імпорт"
 
 #: scripts/apps/users/import/import.js:48
 msgid "Import user"
-msgstr "Імпортувати користувача"
+msgstr "Kористувач імпорту "
 
 #: scripts/core/ui/views/sd-timepicker-popup.html:7
 msgid "in 1 h"
@@ -3086,7 +3086,7 @@ msgstr "Елемент був змінений з моменту відкрит�
 #: scripts/apps/legal-archive/views/legal_archive.html:98
 #: scripts/apps/search/views/item-preview.html:17
 msgid "Item history"
-msgstr "Історія Елементу"
+msgstr "Історія Елемента"
 
 #: scripts/apps/packaging/directives/PackageItemsEdit.js:17
 msgid "Item is already in this package."
