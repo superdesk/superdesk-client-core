@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Editor, EditorState, CompositeDecorator} from 'draft-js';
+import {Editor} from 'draft-js';
 import {connect} from 'react-redux';
-import {stateFromHTML} from 'draft-js-import-html';
 import Toolbar from './toolbar';
-import {SpellcheckerContextMenu, getSpellcheckerDecorators} from './spellchecker';
+import {SpellcheckerContextMenu} from './spellchecker';
 import * as actions from '../actions';
 
 /**
@@ -96,64 +95,6 @@ Editor3Component.propTypes = {
     onChange: React.PropTypes.func,
     onTab: React.PropTypes.func,
     handleKeyCommand: React.PropTypes.func
-};
-
-/**
- * @ngdoc method
- * @name Editor3#getInitialState
- * @param {Object} spellcheckerService
- * @param {String} value the initial HTML text for editor
- * @param {Function} onChangeValue callback called when editor text is changed
- * @param {Boolean} readOnly if true the editor is read only
- * @param {Boolean} showToolbar if true the editor will show the toolbar
- * @param {Boolean} singleLine if true the editor will have a single line
- * @param {Array} editorFormat the formating settings available for editor
- * @returns {Object} initial state
- * @description Returns the CompositeDecorator that contains the editor's decorators.
- * It should return an array containing all of the decorators used by sub-components
- * such as the toolbar, spellcheckers, etc.
- */
-
-export const getInitialState = (
-    spellcheckerService,
-    value,
-    onChangeValue,
-    readOnly,
-    showToolbar,
-    singleLine,
-    editorFormat
-) => {
-    const initialContentState = stateFromHTML(value);
-
-    return {
-        editorState: EditorState.createWithContent(
-                initialContentState,
-                getDecorators(spellcheckerService)
-        ),
-        spellcheckerState: {spellcheckerService: spellcheckerService},
-        readOnly: readOnly,
-        showToolbar: showToolbar,
-        singleLine: singleLine,
-        editorFormat: editorFormat,
-        onChangeValue: onChangeValue
-    };
-};
-
-/**
- * @ngdoc method
- * @name Editor3#getDecorators
- * @returns {Object} CompositeDecorator
- * @description Returns the CompositeDecorator that contains the editor's decorators.
- * It should return an array containing all of the decorators used by sub-components
- * such as the toolbar, spellcheckers, etc.
- */
-const getDecorators = (spellcheckerService) => {
-    var decorators = getSpellcheckerDecorators(
-        spellcheckerService.isCorrectWord,
-        spellcheckerService.suggest
-    );
-
-    return new CompositeDecorator(decorators.concat(Toolbar.getDecorators()));
 };
 
 /**

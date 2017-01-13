@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {createStore} from 'redux';
-import {Editor3, getInitialState} from '../components';
-import editorReducers from '../reducers';
+import {Editor3} from '../components';
+import createStore from '../store';
 
 /**
  * @ngdoc controller
@@ -13,51 +12,13 @@ import editorReducers from '../reducers';
  *  Editor3 react component.
  * @see sdEditor3
  */
-
-Editor3Controller.$inject = ['$element', 'spellcheck'];
-export function Editor3Controller($element, spellcheck) {
-    let showToolbar = true;
-    let singleLine = false;
-
-    /**
-      * @ngdoc method
-      * @name Editor3Controller#onChangeValue
-      * @param {String} text The current text value from editor.
-      * @description Process the change editor state and set the 'value' parameter
-      *  for the Editor3 directive.
-      */
-    this.onChangeValue = (text) => {
-        if (this.trim) {
-            this.value = text.trim();
-        } else {
-            this.value = text;
-        }
-        this.onChange();
-    };
-
-    if (!this.editorFormat || this.readOnly) {
-        showToolbar = false;
-        singleLine = true;
-    }
-
-    spellcheck.setLanguage(this.language);
-    spellcheck.getDict();
-    const initialState = getInitialState(
-        spellcheck,
-        this.value,
-        this.onChangeValue,
-        this.readOnly,
-        showToolbar,
-        singleLine,
-        this.editorFormat
-    );
-
-    let store = createStore(editorReducers, initialState);
+Editor3Controller.$inject = ['$element', 'spellcheck', '$injector'];
+export function Editor3Controller($element, spellcheck, $injector) {
+    const store = createStore(this);
 
     ReactDOM.render(
         <Provider store={store}>
             <Editor3 />
-        </Provider>,
-        $element.get(0)
+        </Provider>, $element.get(0)
     );
 }

@@ -26,8 +26,9 @@ const spellchecker = (state = {}, action) => {
  * @description Replace the current word with the new selected one
  */
 const replaceWord = (state, text) => {
-    const {editorState, spellcheckerState} = state;
-    const {word, editorSelection} = spellcheckerState.contextMenuData;
+    const {editorState, spellcheckerMenu} = state;
+    const {word, editorSelection} = spellcheckerMenu;
+
     var textSelection;
     var newContentState;
     var newEditorState;
@@ -42,7 +43,7 @@ const replaceWord = (state, text) => {
 
     return Object.assign({}, state, {
         editorState: newEditorState,
-        spellcheckerState: Object.assign({}, spellcheckerState, {contextMenuData: null})
+        spellcheckerMenu: null
     });
 };
 
@@ -54,12 +55,13 @@ const replaceWord = (state, text) => {
  * @return {Object} returns new state
  * @description Save on store all relevant data for spellchecker context menu
  */
-const showContextMenu = (state, contextMenuData) => {
-    const {editorState, spellcheckerState} = state;
+const showContextMenu = (state, data) => {
+    const {editorState, spellcheckerMenu} = state;
 
-    contextMenuData.editorSelection = editorState.getSelection();
+    data.editorSelection = editorState.getSelection();
+
     return Object.assign({}, state, {
-        spellcheckerState: Object.assign({}, spellcheckerState, {contextMenuData})
+        spellcheckerMenu: Object.assign({}, spellcheckerMenu, data)
     });
 };
 
