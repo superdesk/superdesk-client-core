@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:56+0000\n"
+"PO-Revision-Date: 2017-01-13 13:58+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2239,7 +2239,7 @@ msgid ""
 "Error: Please re-assign new format for each destination as the changed "
 "subscriber type has formats which are not supported by existing "
 "destination(s)."
-msgstr "Помилка: Визначте новий формат для кожного пункту призначення як зміненого типу передплатника, що має формати, які не підтримуються існуючими призначенням(и)."
+msgstr "Помилка: Визначте новий формат для кожного пункту призначення як зміненого типу передплатника, що має формати, які не підтримуються існуючими призначеннями."
 
 #: scripts/core/itemList/itemList.js:453 scripts/core/itemList/itemList.js:506
 msgid "Error: Slugline required."
@@ -2259,7 +2259,7 @@ msgstr "Помилка: Словник вже існує"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.js:106
 msgid "Error: Unable to delete Ingest Source"
-msgstr "Помилка:Не можливо видалити Джерело Завантаження"
+msgstr "Помилка: Не можливо видалити Джерело Завантаження"
 
 #: scripts/apps/search-providers/directive.js:82
 msgid "Error: Unable to delete Search Provider."
