@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:07+0000\n"
+"PO-Revision-Date: 2017-01-13 14:08+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3714,7 +3714,7 @@ msgstr "Не визначено псевдонім поля"
 
 #: scripts/apps/highlights/views/search_highlights_dropdown_directive.html:6
 msgid "No Filter"
-msgstr "Немає фільтру"
+msgstr "Немає фільтра"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:763
 msgid "No formatters found for"
@@ -3858,7 +3858,7 @@ msgstr "Попередження"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:89
 msgid "Notify when idle for more than"
-msgstr "Повідомити у випадку бездіяльності протягом більш ніж"
+msgstr "Повідомити, якщо не діє більш ніж"
 
 #: scripts/core/lang/missing-translations-strings.js:28
 msgid "NTB Currency Macro"
