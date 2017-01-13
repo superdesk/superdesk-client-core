@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:40+0000\n"
+"PO-Revision-Date: 2017-01-13 13:41+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -779,12 +779,12 @@ msgstr "Url аутентифікації"
 
 #: scripts/core/lang/missing-translations-strings.js:22
 msgid "authoring"
-msgstr "створення"
+msgstr "авторинг"
 
 #: scripts/apps/authoring/authoring/index.js:76
 #: scripts/apps/authoring/multiedit/multiedit.js:300
 msgid "Authoring"
-msgstr "Створення"
+msgstr "Авторинг"
 
 #: scripts/apps/templates/views/templates.html:55
 msgid "Automated item creation"
@@ -819,7 +819,7 @@ msgstr "Назад / Відмінити"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:5
 msgid "Back to original view"
-msgstr "Повернутися до початкового вигляду"
+msgstr "Назад до початкового вигляду"
 
 #: scripts/apps/users/views/edit.html:5
 msgid "Back to Users list"
