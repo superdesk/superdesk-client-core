@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:59+0000\n"
+"PO-Revision-Date: 2017-01-13 14:01+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2303,7 +2303,7 @@ msgstr "Помилка. Профіль користувача не може бу
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.js:37
 msgid "Error. Vocabulary not saved."
-msgstr ""
+msgstr "Помилка. Довідник не збережено"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:7
 msgid "Exact"
@@ -2488,7 +2488,7 @@ msgstr "Фільтр"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.js:53
 msgid "Filter condition saved."
-msgstr "Умови фільтру збережено."
+msgstr "Умови фільтра збережено."
 
 #: scripts/apps/content-filters/views/filter-search-result.html:7
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:4
@@ -2554,7 +2554,7 @@ msgstr "ім'я"
 
 #: scripts/apps/search/views/search-filters.html:106
 msgid "Flags"
-msgstr "Маркування"
+msgstr "Позначка"
 
 #: scripts/apps/archive/views/metadata-view.html:164
 msgid "Flash"
