@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:27+0000\n"
+"PO-Revision-Date: 2017-01-13 14:28+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5248,7 +5248,7 @@ msgstr "№ з/п"
 
 #: scripts/apps/publish/views/subscribers.html:100
 msgid "Sequence Number Settings"
-msgstr "Номер налагодження за порядком"
+msgstr "Порядковий номер настройок"
 
 #: scripts/apps/ingest/views/settings/fileConfig.html:2
 msgid "Server Folder"
