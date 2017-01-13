@@ -101,9 +101,9 @@ const isVisibleContextMenu = (state) => {
  */
 const initPosition = (state, ownProps) => {
     const {spellcheckerState} = state;
-    const rect = ownProps.editorRect;
+    const {editorRect} = ownProps;
 
-    if (!spellcheckerState || !spellcheckerState.contextMenuData || !rect) {
+    if (!spellcheckerState || !spellcheckerState.contextMenuData || !editorRect) {
         return null;
     }
 
@@ -111,8 +111,8 @@ const initPosition = (state, ownProps) => {
 
     return Object.assign({}, position, {
         display: 'block',
-        left: position.left - rect.left,
-        top: position.top - rect.top
+        left: position.left - editorRect.left,
+        top: position.top - editorRect.top
     });
 };
 

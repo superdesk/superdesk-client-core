@@ -10,7 +10,7 @@ import LinkControl from './link-button/LinkControl';
  * @module superdesk.core.editor3
  * @name Toolbar
  * @param {Object} editorState The state of the editor.
- * @param {Object} editorOffset Position of editor on the screen (top, left).
+ * @param {Object} editorRect Position of editor on the screen (top, left).
  * @param {Function} onChange On change function to be called when the editor
  * state changes.
  * @param {Array} editorFormat options and settings for formatting
@@ -32,7 +32,7 @@ class ToolbarComponent extends Component {
     }
 
     render() {
-        const {editorState, editorOffset, editorFormat, onChange} = this.props;
+        const {editorState, editorRect, editorFormat, onChange} = this.props;
 
         return (
             <div className="Editor3-controls">
@@ -50,7 +50,7 @@ class ToolbarComponent extends Component {
 
                 <LinkControl
                     editorState={editorState}
-                    editorOffset={editorOffset}
+                    editorRect={editorRect}
                     onChange={onChange}
                 />
             </div>
@@ -60,7 +60,7 @@ class ToolbarComponent extends Component {
 
 ToolbarComponent.propTypes = {
     editorState: React.PropTypes.object.isRequired,
-    editorOffset: React.PropTypes.object.isRequired,
+    editorRect: React.PropTypes.object.isRequired,
     editorFormat: React.PropTypes.array.isRequired,
     onChange: React.PropTypes.func.isRequired
 };
@@ -75,7 +75,7 @@ ToolbarComponent.propTypes = {
  */
 const mapStateToProps = (state, ownProps) => ({
     editorState: state.editorState,
-    editorOffset: ownProps.editorOffset,
+    editorRect: ownProps.editorRect,
     editorFormat: state.editorFormat
 });
 

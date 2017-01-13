@@ -7,7 +7,7 @@ import * as common from '../../common';
  * @module superdesk.core.editor3
  * @name LinkPopover
  * @param {Object} editorState the state of the editor
- * @param {Object} editorOffset Position of editor on the screen (top, left).
+ * @param {Object} editorRect Position of editor on the screen (top, left).
  * @param {Function} onChange on change function to be called when the editor
  * state changes
  * @description This component holds the link editing popover displayed when clicking
@@ -47,9 +47,9 @@ export default class LinkPopover extends Component {
             return;
         }
 
-        const {editorOffset} = this.props;
-        const top = rect.top - editorOffset.top + 2;
-        const left = rect.left - editorOffset.left - 13;
+        const {editorRect} = this.props;
+        const top = rect.top - editorRect.top + 52;
+        const left = rect.left - editorRect.left;
 
         this.position = {top, left};
     }
@@ -71,7 +71,7 @@ export default class LinkPopover extends Component {
 
 LinkPopover.propTypes = {
     editorState: React.PropTypes.object.isRequired,
-    editorOffset: React.PropTypes.object.isRequired,
+    editorRect: React.PropTypes.object.isRequired,
     onEdit: React.PropTypes.func.isRequired,
     onRemove: React.PropTypes.func.isRequired
 };
