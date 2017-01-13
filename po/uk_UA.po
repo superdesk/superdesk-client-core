@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:31+0000\n"
+"PO-Revision-Date: 2017-01-13 14:32+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5697,7 +5697,7 @@ msgstr "Superdesk відчуває проблеми з мережею:/"
 
 #: scripts/core/menu/views/menu.html:22
 msgid "Switch to feature preview"
-msgstr "Переключить на функцію попереднього перегляду"
+msgstr "Переключитися на попередній перегляд"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:9
 msgid "switch to grid view"
@@ -5735,7 +5735,7 @@ msgstr "Теги"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.js:5
 msgid "Take a picture"
-msgstr "Зробить знимок"
+msgstr "Зробити знимок"
 
 #: scripts/apps/archive/views/metadata-view.html:41
 msgid "Take key"
