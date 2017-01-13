@@ -1,5 +1,6 @@
 # 
 # Translators:
+# Andrey Podshivalov, 2017
 # Diana Petriashvili <etot.yashik.xochet.spama@gmail.com>, 2016
 # guga eristavi <Maxim.Eristavi@gmail.com>, 2016
 # Maciej Bernatt-Reszczynski <maciek@bernatt.eu>, 2016
@@ -9,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2016-12-22 10:10+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"PO-Revision-Date: 2017-01-13 13:01+0000\n"
+"Last-Translator: Andrey Podshivalov\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/sourcefabric/superdesk/language/ru_RU/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -181,15 +182,15 @@ msgstr "*значения, разделенные запятыми"
 
 #: scripts/apps/publish/views/subscribers.html:172
 msgid "1 month"
-msgstr ""
+msgstr "1 месяц"
 
 #: scripts/apps/publish/views/subscribers.html:170
 msgid "1 week"
-msgstr ""
+msgstr "1 неделя"
 
 #: scripts/apps/publish/views/subscribers.html:174
 msgid "1 year"
-msgstr ""
+msgstr "1 год"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "10th update"
@@ -241,7 +242,7 @@ msgstr "максимум 2 знака "
 
 #: scripts/apps/publish/views/subscribers.html:171
 msgid "2 weeks"
-msgstr ""
+msgstr "2 недели"
 
 #: scripts/core/lang/missing-translations-strings.js:25
 msgid "20th update"
@@ -281,7 +282,7 @@ msgstr "6 часов "
 
 #: scripts/apps/publish/views/subscribers.html:173
 msgid "6 months"
-msgstr ""
+msgstr "6 месяцев"
 
 #: scripts/core/lang/missing-translations-strings.js:23
 msgid "6th update"
@@ -360,7 +361,7 @@ msgstr " Поток активность"
 
 #: scripts/core/lang/missing-translations-strings.js:39
 msgid "Activity stream widget"
-msgstr ""
+msgstr "Виджет активности"
 
 #: scripts/apps/authoring/metadata/views/metadata-target-publishing.html:6
 #: scripts/apps/content-filters/views/manage-filters.html:75
@@ -775,7 +776,7 @@ msgstr "Информация об авторизации "
 
 #: scripts/apps/publish/views/subscribers.html:148
 msgid "Authentication Token"
-msgstr "Маркер АУТЕНТИФИКАЦИИ"
+msgstr "Ключ аутентификации"
 
 #: scripts/apps/ingest/views/settings/reutersConfig.html:7
 msgid "authentication url"
@@ -1210,7 +1211,7 @@ msgstr "Контент"
 
 #: scripts/apps/publish/views/subscribers.html:146
 msgid "Content API Tokens"
-msgstr ""
+msgstr "Ключи Content API"
 
 #: scripts/apps/desks/views/desk-config-modal.html:235
 msgid "Content expiry"
@@ -1795,7 +1796,7 @@ msgstr "Хотите сбросить пароль пользователя {{ u
 
 #: scripts/core/auth/reset-password.html:71
 msgid "Don't have token? Get it."
-msgstr "Нет одноразового пароля? Получи его"
+msgstr "Нет одноразового ключа? Получить."
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:9
 msgid "done"
@@ -2043,7 +2044,7 @@ msgstr "Выбор редактора"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:23
 msgid "Editor3"
-msgstr ""
+msgstr "Редактор3"
 
 #: scripts/apps/archive/views/metadata-view.html:65
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:16
@@ -2325,7 +2326,7 @@ msgstr "истекает"
 
 #: scripts/apps/publish/views/subscribers.html:153
 msgid "expires:"
-msgstr ""
+msgstr "окончание срока"
 
 #: scripts/apps/archive/views/metadata-view.html:96
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:92
@@ -2653,7 +2654,7 @@ msgstr "Общий"
 
 #: scripts/apps/publish/views/subscribers.html:176
 msgid "Generate token"
-msgstr ""
+msgstr "Создать ключ"
 
 #: scripts/apps/archive/views/metadata-view.html:57
 #: scripts/apps/authoring/views/full-preview.html:54
@@ -2676,7 +2677,7 @@ msgstr "Взять из внешнего источника"
 
 #: scripts/core/auth/reset-password.html:17
 msgid "Get token"
-msgstr "Получить одноразовый пароль"
+msgstr "Получить ключ"
 
 #: scripts/apps/content-filters/views/manage-filters.html:44
 msgid "Global Block"
@@ -4435,7 +4436,7 @@ msgstr "Профилирование данных"
 msgid ""
 "Provide your email in order to get 'Reset Token'. Once you get it, use it to"
 " reset your password."
-msgstr "Дайте свой email для получения кода, который позволит изменить пароль "
+msgstr "Дайте свой email для получения ключа, который позволит изменить пароль "
 
 #: scripts/apps/users/views/change-avatar.html:43
 msgid "Provided image URL is not valid."
@@ -4828,7 +4829,7 @@ msgstr "вернуться"
 
 #: scripts/apps/publish/views/subscribers.html:156
 msgid "Revoke"
-msgstr ""
+msgstr "Отозвать"
 
 #: scripts/apps/users/views/edit-form.html:124
 msgid "role"
@@ -5927,7 +5928,7 @@ msgstr "Ошибка. Не получилось прикрепить копию.
 
 #: scripts/apps/publish/views/subscribers.html:163
 msgid "There is no token for subscriber."
-msgstr ""
+msgstr "Нет ключа для подписчика."
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.js:57
 msgid "There was a problem while saving highlights configuration"
@@ -6093,7 +6094,7 @@ msgstr "Переключить виджет #"
 
 #: scripts/apps/publish/views/subscribers.html:169
 msgid "Token expiry"
-msgstr ""
+msgstr "Окончание срока ключа"
 
 #: scripts/core/ui/views/datepicker-wrapper.html:7
 msgid "Tomorrow"
