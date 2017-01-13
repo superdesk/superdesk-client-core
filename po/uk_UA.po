@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 12:52+0000\n"
-"Last-Translator: Andrey Podshivalov\n"
+"PO-Revision-Date: 2017-01-13 13:31+0000\n"
+"Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -55,7 +55,7 @@ msgstr "'ЖАНР - обов'язкове поле' "
 
 #: scripts/core/lang/missing-translations-strings.js:20
 msgid "'GENRE null value not allowed'"
-msgstr "'ЖАНР нульове значення не допускається'"
+msgstr "'ЖАНР нульове значення неможливе'"
 
 #: scripts/core/lang/missing-translations-strings.js:19
 msgid "'HEADLINE is a required field'"
