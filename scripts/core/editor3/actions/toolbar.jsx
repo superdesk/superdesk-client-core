@@ -1,3 +1,6 @@
+import ng from 'core/services/ng';
+import {Entity} from 'draft-js';
+
 /**
  * @ngdoc method
  * @name toggleBlockStyle
@@ -50,3 +53,47 @@ export function removeLink() {
     return {type: 'TOOLBAR_REMOVE_LINK'};
 }
 
+/**
+ * @ngdoc method
+ * @name insertImages
+ * @return {String} action
+ * @description Displays the external upload dialog and returns the insert images
+ * action.
+ */
+export function insertImages() {
+    const superdesk = ng.get('superdesk');
+
+    return (dispatch) => {
+        superdesk.intent('upload', 'media').then((imgs) => {
+            dispatch({
+                type: 'TOOLBAR_INSERT_IMAGES',
+                payload: imgs
+            });
+        });
+    };
+}
+
+/**
+ * @ngdoc method
+ * @name cropImage
+ * @return {String} action
+ * @description Displays the external crop image dialog and returns the crop image
+ * action.
+ */
+export function cropImage(entityKey) {
+    const renditions = ng.get('renditions');
+    const entity = Entity.get(entityKey);
+    const {img} = entity.getData();
+
+    return (dispatch) => {
+        renditions.crop(img).then((cropped) => {
+            dispatch({
+                type: 'TOOLBAR_UPDATE_IMAGE',
+                payload: {
+                    entityKey: entityKey,
+                    img: cropped
+                }
+            });
+        });
+    };
+}

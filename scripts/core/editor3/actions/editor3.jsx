@@ -51,3 +51,17 @@ export function handleEditorKeyCommand(command) {
         payload: command
     };
 }
+
+/**
+ * @ngdoc method
+ * @name dragDrop
+ * @param {Event} e
+ * @return {String} action
+ * @description Creates the editor drop action.
+ */
+export function dragDrop(e) {
+    return {
+        type: 'EDITOR_DRAG_DROP',
+        payload: e
+    };
+}

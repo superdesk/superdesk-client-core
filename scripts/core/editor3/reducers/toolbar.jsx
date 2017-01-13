@@ -1,4 +1,4 @@
-import {RichUtils, Entity} from 'draft-js';
+import {RichUtils, Entity, AtomicBlockUtils, EditorState} from 'draft-js';
 import * as common from '../common';
 
 /**
@@ -14,6 +14,10 @@ const toolbar = (state = {}, action) => {
         return applyLink(state, action.payload);
     case 'TOOLBAR_REMOVE_LINK':
         return removeLink(state);
+    case 'TOOLBAR_INSERT_IMAGES':
+        return insertImages(state, action.payload);
+    case 'TOOLBAR_UPDATE_IMAGE':
+        return updateImage(state, action.payload);
     default:
         return state;
     }
@@ -102,6 +106,47 @@ const removeLink = (state) => {
     );
 
     return {...state, editorState: stateAfterChange};
+};
+
+/**
+ * @ngdoc method
+ * @name insertImages
+ * @param {Array} imgs List of images to insert into document.
+ * @description Inserts a list of images into the document.
+ */
+const insertImages = (state, imgs = []) => {
+    var {editorState} = state;
+
+    imgs.forEach((img) => {
+        const entityKey = Entity.create('IMAGE', 'IMMUTABLE', {img});
+
+        editorState = AtomicBlockUtils.insertAtomicBlock(
+            editorState,
+            entityKey,
+            ' '
+        );
+    });
+
+    return {...state, editorState};
+};
+
+/**
+ * @ngdoc method
+ * @name updateImage
+ * @param {Object} data Contains the entityKey and the new image data.
+ * @description Updates the given entityKey with the new image data.
+ */
+const updateImage = (state, {entityKey, img}) => {
+    Entity.replaceData(entityKey, {img});
+
+    // focus the editor and softly force a refresh
+    const {editorState} = state;
+    const newState = EditorState.forceSelection(
+        editorState,
+        editorState.getSelection()
+    );
+
+    return {...state, editorState: newState};
 };
 
 export default toolbar;

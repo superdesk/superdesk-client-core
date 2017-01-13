@@ -1,6 +1,5 @@
-import {RichUtils} from 'draft-js';
+import {RichUtils, EditorState, Entity, AtomicBlockUtils} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
-import {EditorState} from 'draft-js';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -15,6 +14,8 @@ const editor3 = (state = {}, action) => {
         return handleKeyCommand(state, action.payload);
     case 'EDITOR_FORCE_UPDATE':
         return forceUpdate(state);
+    case 'EDITOR_DRAG_DROP':
+        return dragDrop(state, action.payload);
     default:
         return state;
     }
@@ -42,7 +43,7 @@ const forceUpdate = (state) => {
 
 /**
  * @ngdoc method
- * @name Editor3#onChange
+ * @name onChange
  * @param {Object} editorState
  * @param {bool} focus
  * @return {Object} returns new state
@@ -57,7 +58,7 @@ const onChange = (state, editorState) => {
 
 /**
  * @ngdoc method
- * @name Editor3 Reducers#onTab
+ * @name onTab
  * @param {Object} event
  * @return {Object} returns new state
  * @description Handle the editor tab key pressed event
@@ -72,7 +73,7 @@ const onTab = (state, e) => {
 
 /**
  * @ngdoc method
- * @name Editor3 Reducers#handleKeyCommand
+ * @name handleKeyCommand
  * @param {String} command
  * @return {Object} returns new state
  * @description Handle the editor key pressed event
@@ -82,6 +83,31 @@ const handleKeyCommand = (state, command) => {
     const newEditorState = RichUtils.handleKeyCommand(editorState, command);
 
     return onChange(state, newEditorState ? newEditorState : editorState);
+};
+
+/**
+ * @ngdoc method
+ * @name dragDrop
+ * @param {Event} e dragdrop event
+ * @return {Object} New state
+ * @description Handles the dragdrop event over the editor.
+ */
+const dragDrop = (state, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const eventData = e.originalEvent.dataTransfer;
+    const mediaType = eventData.types[0];
+    const data = eventData.getData(mediaType);
+    const img = JSON.parse(data);
+    const entityKey = Entity.create('IMAGE', 'IMMUTABLE', {img});
+    const editorState = AtomicBlockUtils.insertAtomicBlock(
+        state.editorState,
+        entityKey,
+        ' '
+    );
+
+    return {...state, editorState};
 };
 
 export default editor3;
