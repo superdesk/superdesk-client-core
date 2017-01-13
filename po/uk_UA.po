@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:01+0000\n"
+"PO-Revision-Date: 2017-01-13 14:02+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2775,7 +2775,7 @@ msgstr "Допоможіть нам перекласти Superdesk"
 
 #: scripts/apps/authoring/views/article-edit.html:269
 msgid "Helplines/Contact Information"
-msgstr "Консультативна мережа/Контактна інформація"
+msgstr "Гаряча лінія/Контактна інформація"
 
 #: scripts/apps/authoring/views/full-preview.html:5
 msgid "Hide images"
