@@ -45,6 +45,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
      *
      * @return {Promise}
      */
+    this.getDict = getDict;
     function getDict() {
         if (!lang) {
             return $q.reject();
@@ -366,19 +367,21 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
      *
      * @param {String} word
      */
-    this.addWordToUserDictionary = function(word) {
+    this.addWordToUserDictionary = addWordToUserDictionary;
+    function addWordToUserDictionary(word) {
         dictionaries.addWordToUserDictionary(word, lang);
         dict.content[word] = dict.content[word] ? dict.content[word] + 1 : 1;
-    };
+    }
 
     /**
      * Ignore word when spellchecking
      *
      * @param {String} word
      */
-    this.ignoreWord = function(word) {
+    this.ignoreWord = ignoreWord;
+    function ignoreWord(word) {
         getItemIgnored()[word] = 1;
-    };
+    }
 
     /**
      * Test if given word is in ingored
@@ -401,6 +404,33 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _) {
         ignored[item] = ignored[item] || {};
         return ignored[item];
     }
+
+    /**
+     * Add word to regular or ignored dictionary
+     *
+     * @param {String} word
+     * @param {String} isIgnored
+     */
+    this.addWord = function addWord(word, isIgnored) {
+        if (isIgnored) {
+            ignoreWord(word);
+        } else {
+            addWordToUserDictionary(word);
+        }
+    };
+
+    /**
+     * Check if the current word is correct
+     *
+     * @param {String} text
+     */
+    this.isCorrectWord = function isCorrectWord(word) {
+        // TODO: calculate isSentenceWord
+        var isSentenceWord = false;
+
+        return !isNaN(word) || !dict.content || isIgnored(word) || !isSpellingMistake(word, isSentenceWord);
+    };
+
 
     // reset ignore list for an item if it was unlocked
     $rootScope.$on('item:unlock', (event, data) => {

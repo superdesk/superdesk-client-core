@@ -173,7 +173,11 @@ export function DictionaryService(api, urls, session, Upload, $q) {
      */
     function addWordToUserDictionary(word, lang) {
         return getUserDictionary(lang).then((userDict) => {
-            var words = userDict.content || {};
+            var words = userDict.content || '{}';
+
+            if (_.isString(words)) {
+                words = JSON.parse(userDict.content || '{}');
+            }
 
             words[word] = words[word] ? words[word] + 1 : 1;
             userDict.content = words;

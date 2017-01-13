@@ -1,165 +1,188 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery';
-import {Editor, EditorState, RichUtils, CompositeDecorator} from 'draft-js';
-import {stateToHTML} from 'draft-js-export-html';
+import {Editor, EditorState, CompositeDecorator} from 'draft-js';
+import {connect} from 'react-redux';
 import {stateFromHTML} from 'draft-js-import-html';
 import Toolbar from './toolbar';
+import {SpellcheckerContextMenu, getSpellcheckerDecorators} from './spellchecker';
+import * as actions from '../actions';
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
  * @name Editor3
- * @param {Array} editorFormat the formating settings available for editor,
-    the allowed values are declared on BLOCK_TYPES_STYLE and INLINE_STYLES
  * @param {Boolean} readOnly if true the editor is read only
  * @param {Boolean} showToolbar if true the editor will show the toolbar
- * @param {String} value the model for editor value
- * @param {String} language the current language used for spellchecker
+ * @param {Boolean} singleLine if true the editor will have a single line
+ * @param {editorState} the current state of draftjs editor
  * @param {Function} onChange the callback executed when the editor value is changed
+ * @param {Function} onTab the callback for onTab event
+ * @param {Function} handleKeyCommand the callback for custom key commands
  * @description Editor3 is a draft.js based editor that support customizable
- *  formatting (shortly more features will come ...)
+ *  formatting, spellchecker and media files.
  */
-export class Editor3 extends React.Component {
+
+export class Editor3Component extends React.Component {
     constructor(props) {
         super(props);
 
-        const initialContentState = stateFromHTML(props.value);
-
-        this.state = {
-            editorState: EditorState.createWithContent(
-                initialContentState,
-                this.getDecorators()
-            )
-        };
-
-        this.offset = {top: 0, left: 0}; // editor absolute position on screen
-
         this.focus = this.focus.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.handleKeyCommand = this.handleKeyCommand.bind(this);
-        this.onTab = this.onTab.bind(this);
-        this.getDecorators = this.getDecorators.bind(this);
     }
 
     /**
      * @ngdoc method
-     * @name Editor3#getDecorators
-     * @returns {Object} CompositeDecorator
-     * @description Returns the CompositeDecorator that contains the editor's decorators.
-     * It should return an array containing all of the decorators used by sub-components
-     * such as the toolbar, spellcheckers, etc.
+     * @name Editor3#focus
+     * @description Handle the editor get focus event
      */
-    getDecorators() {
-        return new CompositeDecorator(Toolbar.getDecorators());
-    }
-
-    /** Handle the editor get focus event */
     focus() {
         this.refs.editor.focus();
     }
 
-    /** Handle the editor state has been changed event*/
-    onChange(editorState, focus = false) {
-        this.setState({editorState}, () => {
-            if (focus) {
-                this.focus();
-            }
-        });
-
-        this.props.onChange(stateToHTML(editorState.getCurrentContent()));
-    }
-
-    /** Handle the editor key pressed event */
-    handleKeyCommand(command) {
-        const {editorState} = this.state;
-        const newState = RichUtils.handleKeyCommand(editorState, command);
-
-        if (newState) {
-            this.onChange(newState);
-            return true;
-        }
-        return false;
-    }
-
-    /** Handle the editor tab key pressed event */
-    onTab(e) {
-        const maxDepth = 4;
-
-        this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
-    }
-
+    /**
+     * @ngdoc method
+     * @name Editor3#componentWillUpdate
+     * @description Called before update, init the current editor rectangle
+     */
     componentWillUpdate() {
-        const node = ReactDOM.findDOMNode(this);
-
-        this.offset = $(node).offset();
+        this.editorRect = ReactDOM.findDOMNode(this.refs.editor).getBoundingClientRect();
     }
 
-    /** Render the editor based on current state */
+    /**
+     * @ngdoc method
+     * @name Editor3#render
+     * @param {String} command
+     * @description Render the editor based on current state
+     */
     render() {
-        const {editorState} = this.state;
-        const {showToolbar, readOnly, editorFormat} = this.props;
+        const {
+            readOnly,
+            showToolbar,
+            singleLine,
+            editorState,
+            onChange,
+            onTab,
+            handleKeyCommand
+        } = this.props;
 
-        // If the user changes block type before entering any text, we can
-        // either style the placeholder or hide it. Let's just hide it now.
-        let className = 'Editor3-editor';
-        var contentState = editorState.getCurrentContent();
-
-        if (!contentState.hasText()) {
-            if (contentState.getBlockMap()
-                .first()
-                .getType() !== 'unstyled') {
-                className += ' Editor3-hidePlaceholder';
-            }
-        }
-
-        const editor = () =>
-            <Editor
-                editorState={editorState}
-                handleKeyCommand={this.handleKeyCommand}
-                onChange={this.onChange}
-                onTab={this.onTab}
-                readOnly={readOnly}
-                ref="editor"
-            />;
-
-        if (showToolbar) {
-            return (
-                <div className="Editor3-root">
-                    <Toolbar
-                        editorState={editorState}
-                        editorFormat={editorFormat}
-                        editorOffset={this.offset}
-                        onChange={this.onChange}
-                    />
-
-                    <div className={className} onClick={this.focus}>{editor()}</div>
-                </div>
-            );
-        }
+        let className = singleLine ? 'Editor3-editor-single-line dropdown' : 'Editor3-editor dropdown';
 
         return (
-            <div onClick={this.focus} className="Editor3-editor-single-line">
-                {editor()}
+            <div className="Editor3-root">
+                {showToolbar ? <Toolbar editorOffset={this.editorRect} /> : null}
+                <div className={className} onClick={this.focus}>
+                    <SpellcheckerContextMenu editorRect={this.editorRect}/>
+                    <Editor
+                        editorState={editorState}
+                        handleKeyCommand={handleKeyCommand}
+                        onChange={onChange}
+                        onTab={onTab}
+                        readOnly={readOnly}
+                        ref="editor"
+                    />
+                </div>
             </div>
         );
     }
 }
 
 /** Set the types of props for the editor */
-Editor3.propTypes = {
-    editorFormat: React.PropTypes.array,
+Editor3Component.propTypes = {
     readOnly: React.PropTypes.bool,
     showToolbar: React.PropTypes.bool,
-    value: React.PropTypes.string,
-    onChange: React.PropTypes.func
+    singleLine: React.PropTypes.bool,
+    editorState: React.PropTypes.object,
+    onChange: React.PropTypes.func,
+    onTab: React.PropTypes.func,
+    handleKeyCommand: React.PropTypes.func
 };
 
-/** Set the default values of props for the editor */
-Editor3.defaultProps = {
-    editorFormat: [],
-    readOnly: false,
-    showToolbar: true,
-    value: '',
-    language: 'en'
+/**
+ * @ngdoc method
+ * @name Editor3#getInitialState
+ * @param {Object} spellcheckerService
+ * @param {String} value the initial HTML text for editor
+ * @param {Function} onChangeValue callback called when editor text is changed
+ * @param {Boolean} readOnly if true the editor is read only
+ * @param {Boolean} showToolbar if true the editor will show the toolbar
+ * @param {Boolean} singleLine if true the editor will have a single line
+ * @param {Array} editorFormat the formating settings available for editor
+ * @returns {Object} initial state
+ * @description Returns the CompositeDecorator that contains the editor's decorators.
+ * It should return an array containing all of the decorators used by sub-components
+ * such as the toolbar, spellcheckers, etc.
+ */
+
+export const getInitialState = (
+    spellcheckerService,
+    value,
+    onChangeValue,
+    readOnly,
+    showToolbar,
+    singleLine,
+    editorFormat
+) => {
+    const initialContentState = stateFromHTML(value);
+
+    return {
+        editorState: EditorState.createWithContent(
+                initialContentState,
+                getDecorators(spellcheckerService)
+        ),
+        spellcheckerState: {spellcheckerService: spellcheckerService},
+        readOnly: readOnly,
+        showToolbar: showToolbar,
+        singleLine: singleLine,
+        editorFormat: editorFormat,
+        onChangeValue: onChangeValue
+    };
 };
+
+/**
+ * @ngdoc method
+ * @name Editor3#getDecorators
+ * @returns {Object} CompositeDecorator
+ * @description Returns the CompositeDecorator that contains the editor's decorators.
+ * It should return an array containing all of the decorators used by sub-components
+ * such as the toolbar, spellcheckers, etc.
+ */
+const getDecorators = (spellcheckerService) => {
+    var decorators = getSpellcheckerDecorators(
+        spellcheckerService.isCorrectWord,
+        spellcheckerService.suggest
+    );
+
+    return new CompositeDecorator(decorators.concat(Toolbar.getDecorators()));
+};
+
+/**
+ * @ngdoc method
+ * @name Editor3#mapStateToProps
+ * @param {Object} state the editor state
+ * @returns {Object} Returns the props values
+ * @description Maps the values from state to the component value type props.
+ */
+const mapStateToProps = (state) => ({
+    readOnly: state.readOnly,
+    showToolbar: state.showToolbar,
+    singleLine: state.singleLine,
+    editorState: state.editorState
+});
+
+/**
+ * @ngdoc method
+ * @name Editor3#mapDispatchToProps
+ * @param {Function} dispatch callback to editor store
+ * @returns {Object} Returns the props values
+ * @description Maps the values from state to the component callback type props.
+ */
+const mapDispatchToProps = (dispatch) => ({
+    onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
+    onTab: (e) => dispatch(actions.handleEditorTab(e)),
+    handleKeyCommand: (command) => {
+        // should return true if 'command' is in the list of custom commands(now no commands supported)
+        dispatch(actions.handleEditorKeyCommand(command));
+        return false;
+    }
+});
+
+export const Editor3 = connect(mapStateToProps, mapDispatchToProps)(Editor3Component);

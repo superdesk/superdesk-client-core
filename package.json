@@ -100,6 +100,8 @@
     "raven-js": "^3.9.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
+    "react-redux": "^4.4.5",
+    "redux": "^3.6.0",
     "request": "2.61.0",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
