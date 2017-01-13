@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:14+0000\n"
+"PO-Revision-Date: 2017-01-13 14:21+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4151,11 +4151,11 @@ msgstr "В очікуванні"
 #: scripts/apps/desks/views/settings.html:38
 #: scripts/apps/groups/views/groups-config-modal.html:38
 msgid "People"
-msgstr "Люди"
+msgstr "Учасники"
 
 #: scripts/apps/products/views/products-config-modal.html:34
 msgid "Permitting"
-msgstr "Дозволяючий"
+msgstr ""
 
 #: scripts/apps/dictionaries/views/settings.html:26
 #: scripts/apps/monitoring/config.js:32
