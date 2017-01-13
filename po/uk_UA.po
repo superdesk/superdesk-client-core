@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:02+0000\n"
+"PO-Revision-Date: 2017-01-13 14:03+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2779,11 +2779,11 @@ msgstr "Гаряча лінія/Контактна інформація"
 
 #: scripts/apps/authoring/views/full-preview.html:5
 msgid "Hide images"
-msgstr "Сховані зображення"
+msgstr "Скриті зображення"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:6
 msgid "Hide sent/queued items"
-msgstr "Сховані відправлення/черговий елемент"
+msgstr "Скриті відправлення/черговий елемент"
 
 #: scripts/core/views/sdSlider.html:3
 msgid "high"
@@ -2830,7 +2830,7 @@ msgstr "Утримувати"
 #: scripts/apps/ingest/views/settings/rssConfig.html:2
 #: scripts/apps/publish/views/ftp-config.html:2
 msgid "Host"
-msgstr "Host"
+msgstr "Хост"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:44
 msgid "hours"
