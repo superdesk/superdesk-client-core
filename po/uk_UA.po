@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:11+0000\n"
+"PO-Revision-Date: 2017-01-13 14:13+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3902,7 +3902,7 @@ msgstr "ТАК"
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:22
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:11
 msgid "on"
-msgstr ""
+msgstr "вкл"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:36
 #: scripts/apps/templates/views/template-editor-modal.html:144
@@ -3985,7 +3985,7 @@ msgstr "чи"
 
 #: scripts/apps/users/views/change-avatar.html:29
 msgid "or Select from computer"
-msgstr "чи оберіть з комп'ютера "
+msgstr "чи виберіть з комп'ютера "
 
 #: scripts/apps/workspace/content/views/schema-editor.html:31
 msgid "Order"
@@ -4050,7 +4050,7 @@ msgstr "P & C"
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:29
 msgid "Package current item"
-msgstr "Пакет поточного елементу"
+msgstr "Пакет поточного елемента"
 
 #: scripts/apps/publish/views/http-push-config.html:3
 msgid "Package individual items"
