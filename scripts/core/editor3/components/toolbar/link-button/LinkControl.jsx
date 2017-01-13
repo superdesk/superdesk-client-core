@@ -10,7 +10,7 @@ import * as common from '../../common';
  * @module superdesk.core.editor3
  * @name LinkControl
  * @param {Object} editorState The editor state object.
- * @param {Object} editorOffset Absolute position in pixels (top, left) of the editor.
+ * @param {Object} editorRect Absolute position in pixels (top, left) of the editor.
  * @param {Function} onChange on change function to be called when the editor
  * state changes
  * @description This component holds the link button for the toolbar and the small
@@ -140,7 +140,7 @@ export default class LinkControl extends Component {
     }
 
     render() {
-        const {editorState, editorOffset} = this.props;
+        const {editorState, editorRect} = this.props;
         const entityType = common.getSelectedEntityType(editorState);
         const isEditing = typeof this.state.showInput === 'string';
 
@@ -156,7 +156,7 @@ export default class LinkControl extends Component {
                 {entityType === 'LINK' ?
                     <LinkPopover
                         editorState={editorState}
-                        editorOffset={editorOffset}
+                        editorRect={editorRect}
                         onEdit={this.showInput}
                         onRemove={this.removeLink} /> : null}
 
@@ -184,6 +184,6 @@ function LinkStrategy(contentBlock, callback) {
 
 LinkControl.propTypes = {
     editorState: React.PropTypes.object.isRequired,
-    editorOffset: React.PropTypes.object.isRequired,
+    editorRect: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func.isRequired
 };

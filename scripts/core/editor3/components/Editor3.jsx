@@ -26,6 +26,8 @@ export class Editor3Component extends React.Component {
     constructor(props) {
         super(props);
 
+        this.editorRect = {top: 0, left: 0};
+
         this.focus = this.focus.bind(this);
     }
 
@@ -64,11 +66,11 @@ export class Editor3Component extends React.Component {
             handleKeyCommand
         } = this.props;
 
-        let className = singleLine ? 'Editor3-editor-single-line dropdown' : 'Editor3-editor dropdown';
+        let className = singleLine ? 'Editor3-editor-single-line' : 'Editor3-editor';
 
         return (
             <div className="Editor3-root">
-                {showToolbar ? <Toolbar editorOffset={this.editorRect} /> : null}
+                {showToolbar ? <Toolbar editorRect={this.editorRect} /> : null}
                 <div className={className} onClick={this.focus}>
                     <SpellcheckerContextMenu editorRect={this.editorRect}/>
                     <Editor
