@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:47+0000\n"
+"PO-Revision-Date: 2017-01-13 13:54+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1184,7 +1184,7 @@ msgstr "Підтвердити новий пароль"
 
 #: scripts/core/notification/notification.js:109
 msgid "Connected to Notification Server!"
-msgstr ""
+msgstr "Підключено до сервера повідомлень"
 
 #: scripts/apps/publish/views/odbc-config.html:2
 #: scripts/apps/publish/views/odbc-config.html:3
@@ -1292,7 +1292,7 @@ msgstr "Авторське право"
 #: scripts/apps/archive/views/upload.html:58
 #: scripts/apps/authoring/views/change-image.html:88
 msgid "Copyright holder"
-msgstr "Власник авторських прав"
+msgstr "Власник авторського права"
 
 #: scripts/apps/archive/views/metadata-view.html:175
 #: scripts/apps/archive/views/upload.html:71
