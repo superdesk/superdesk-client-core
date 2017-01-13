@@ -89,7 +89,8 @@ module.exports = function makeConfig(grunt) {
                 {
                     test: /\.jsx?$/,
                     loader: 'eslint-loader',
-                    exclude: shouldExclude
+                    // superdesk apps handle their own linter
+                    exclude: (p) => p.indexOf('node_modules') !== -1 || (sdConfig.apps && sdConfig.apps.some(app => p.indexOf(app) > -1)),
                 }
             ],
 
@@ -216,7 +217,7 @@ function getDefaults(grunt) {
             // tansa spellchecker
             useTansaProofing: false
         },
-        
+
         // ingest defaults
         ingest: {
             PROVIDER_DASHBOARD_DEFAULTS: {
