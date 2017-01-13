@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:41+0000\n"
+"PO-Revision-Date: 2017-01-13 13:43+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -823,7 +823,7 @@ msgstr "Назад до початкового вигляду"
 
 #: scripts/apps/users/views/edit.html:5
 msgid "Back to Users list"
-msgstr "Повернутися до переліку користувачів"
+msgstr "Назад до переліку користувачів"
 
 #: scripts/core/itemList/views/item-list-widget.html:3
 msgid "Basic"
@@ -1013,7 +1013,7 @@ msgstr "Канал непомітно вимкнувся. "
 
 #: scripts/apps/desks/views/desk-config-modal.html:92
 msgid "Character limit exceeded, desk can not be created/updated."
-msgstr "Обмеження на кількість символів перевищено, Стіл не може бути створений/оновлений."
+msgstr ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:46
 msgid "Character limit exceeded, dictionary can not be created/updated."
