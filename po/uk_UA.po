@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:43+0000\n"
+"PO-Revision-Date: 2017-01-13 13:44+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1013,15 +1013,15 @@ msgstr "Канал непомітно вимкнувся. "
 
 #: scripts/apps/desks/views/desk-config-modal.html:92
 msgid "Character limit exceeded, desk can not be created/updated."
-msgstr ""
+msgstr "Перевищений ліміт символів, стіл не може бути створений/оновлений."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:46
 msgid "Character limit exceeded, dictionary can not be created/updated."
-msgstr "Обмеження на кількість символів перевищено, словник не може бути створений/оновлений."
+msgstr "Перевищений ліміт символів, словник не може бути створений/оновлений."
 
 #: scripts/apps/groups/views/groups-config-modal.html:28
 msgid "Character limit exceeded, group can not be created/updated."
-msgstr "Обмеження на кількість символів перевищено, група не може бути створена/оновлена."
+msgstr "Перевищений ліміт символів, група не може бути створена/оновлена."
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
 msgid "Character limit exceeded, highlight can not be created/updated."
