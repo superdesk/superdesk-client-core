@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:28+0000\n"
+"PO-Revision-Date: 2017-01-13 14:29+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5273,7 +5273,7 @@ msgstr "Сесію очищено"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:111
 msgid "Set maximum items per stages and saved searches for view"
-msgstr "Встановити максимальну кількість елементів на етапах і зберегти пошуки для перегляду"
+msgstr "Встановити максимум елементів на етапах і зберегти пошуки для перегляду"
 
 #: scripts/apps/settings/directives/SettingsView.js:13
 #: scripts/apps/settings/index.js:16
