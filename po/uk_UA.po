@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:35+0000\n"
+"PO-Revision-Date: 2017-01-13 13:36+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -303,7 +303,7 @@ msgstr "Профіль Контенту з такою назвою вже існ
 msgid ""
 "A link was sent to the specified email address. Please use it to reset your "
 "password. It is valid a limited amount of time."
-msgstr "Посилання було відправлене на вказану адресу email. Використайте його, щоб встановити свій пароль. Посилання діє обмежену кількість часу."
+msgstr "Посилання було відправлене на вказану адресу email. Скористайтесь ним, щоб встановити свій пароль. Посилання  обмежене в часі."
 
 #: scripts/apps/search/views/search-parameters.html:150
 msgid "AAP Image Keyword"
