@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:36+0000\n"
+"PO-Revision-Date: 2017-01-13 13:38+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -554,11 +554,11 @@ msgstr "додано нову задачу {{ subject }} з типом {{ type }
 
 #: scripts/apps/users/views/user-list-item.html:9
 msgid "admin"
-msgstr "адміністратор"
+msgstr "адмін"
 
 #: scripts/core/menu/views/menu.html:37
 msgid "Admin tools"
-msgstr "Інструменти адміністратора"
+msgstr "Інструменти адміна"
 
 #: scripts/apps/users/views/edit-form.html:119
 msgid "administrator"
@@ -570,7 +570,7 @@ msgstr "Розширений пошук"
 
 #: scripts/apps/workspace/content/directives/ContentProfileSchemaEditor.js:18
 msgid "Age Range"
-msgstr "Часовий діапазон"
+msgstr "Часова межа"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:72
 #: scripts/apps/users/views/user-preferences.html:60
