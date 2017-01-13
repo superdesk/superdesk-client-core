@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:03+0000\n"
+"PO-Revision-Date: 2017-01-13 14:04+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2871,7 +2871,7 @@ msgstr " Виникла помилка при збереженні набору 
 
 #: scripts/core/ui/views/sd-timezone.html:17
 msgid "If not set, the UTC+0 time zone is assumed."
-msgstr "Якщо не встановлено, передбачається часовий пояс UTC + 0"
+msgstr "Часовий пояс UTC + 0, якщо не встановлено інше"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:32
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.js:45
