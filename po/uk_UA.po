@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:55+0000\n"
+"PO-Revision-Date: 2017-01-13 13:56+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1749,7 +1749,7 @@ msgstr "відключений користувач {{user}}"
 
 #: scripts/core/notification/notification.js:102
 msgid "Disconnected from Notification Server!"
-msgstr "Відключено від серверу повідомлень"
+msgstr "Відключений від сервера повідомлень"
 
 #: scripts/core/itemList/views/item-list-widget.html:24
 msgid "Display similar"
@@ -1759,7 +1759,7 @@ msgstr "Відображати подібне"
 msgid ""
 "Displaying news ingest statistics. You have ability to switch color themes "
 "or graph sources."
-msgstr "Відображення статистики завантаження новин. У вас є можливість перемикати кольори теми або діаграми джерел."
+msgstr "Відображення статистики завантаження новин. Ви можете міняти кольори теми або діаграми джерел."
 
 #: scripts/core/itemList/views/item-list-widget.html:16
 msgid "Displaying similar items"
