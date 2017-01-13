@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:13+0000\n"
+"PO-Revision-Date: 2017-01-13 14:14+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4112,7 +4112,7 @@ msgstr "Пароль"
 
 #: scripts/core/directives/PasswordStrengthDirective.js:74
 msgid "Password is too weak."
-msgstr "Пароль занадто ненадійний."
+msgstr "Пароль надто ненадійний."
 
 #: scripts/core/auth/auth.js:67
 msgid "Password was changed. You can login using your new password."
@@ -4120,7 +4120,7 @@ msgstr "Пароль було змінено. Ви можете увійти в 
 
 #: scripts/core/auth/reset-password.html:55
 msgid "passwords must be same"
-msgstr "паролі повинні бути однаковими"
+msgstr "паролі мають співпадати"
 
 #: scripts/core/editor2/views/add-content.html:19
 msgid "paste a block"
