@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-12 16:15+0000\n"
-"Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
+"PO-Revision-Date: 2017-01-13 12:52+0000\n"
+"Last-Translator: Andrey Podshivalov\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -35,7 +35,7 @@ msgstr "'ЛІД - обов'язкове поле' "
 
 #: scripts/core/lang/missing-translations-strings.js:19
 msgid "'ANPA_CATEGORY is a required field'"
-msgstr ""
+msgstr "'ANPA_Категорія - обов'язкове поле'"
 
 #: scripts/core/lang/missing-translations-strings.js:18
 msgid "'BYLINE is a required field'"
@@ -606,11 +606,11 @@ msgstr "вже існує"
 
 #: scripts/apps/archive/views/upload.html:50
 msgid "Alt text"
-msgstr ""
+msgstr "Alt текст"
 
 #: scripts/apps/authoring/views/change-image.html:80
 msgid "Alt Text"
-msgstr ""
+msgstr "Alt Текст"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:264
 msgid "An Item can't have both Embargo and Publish Schedule."
@@ -623,7 +623,7 @@ msgstr "Категорія ANPA"
 
 #: scripts/core/lang/missing-translations-strings.js:26
 msgid "ANPA Take Key"
-msgstr ""
+msgstr "Візьміть ключ ANPA"
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:6
 msgid "Any"
@@ -3500,7 +3500,7 @@ msgstr "Метадані"
 
 #: scripts/core/lang/missing-translations-strings.js:8
 msgid "mgrid"
-msgstr ""
+msgstr "mgrid"
 
 #: scripts/apps/desks/views/content-expiry.html:24
 #: scripts/apps/desks/views/content-expiry.html:5
@@ -4309,7 +4309,7 @@ msgstr "Передперегляд форматованої статті"
 
 #: scripts/apps/authoring/views/authoring-header.html:46
 msgid "Preview master story"
-msgstr ""
+msgstr "Передперегляд головного повідомлення"
 
 #: scripts/apps/archive/views/media-view.html:31
 msgid "previous"
