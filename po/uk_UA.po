@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:45+0000\n"
+"PO-Revision-Date: 2017-01-13 13:46+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1124,7 +1124,7 @@ msgstr "Поєднати з поточним"
 
 #: scripts/core/menu/notifications/views/notifications.html:26
 msgid "commented on"
-msgstr "прокоментовано з приводу"
+msgstr "прокоментовано"
 
 #: scripts/apps/authoring/comments/comments.js:135
 msgid "Comments"
@@ -1144,7 +1144,7 @@ msgstr "Коди компанії"
 
 #: scripts/core/lang/missing-translations-strings.js:4
 msgid "composite"
-msgstr "складений"
+msgstr "зкомпонований"
 
 #: scripts/apps/legal-archive/index.js:35
 msgid "Confidential data"
