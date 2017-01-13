@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:06+0000\n"
+"PO-Revision-Date: 2017-01-13 14:07+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3512,7 +3512,7 @@ msgstr "мін."
 
 #: scripts/apps/workspace/content/views/schema-editor.html:41
 msgid "Min length shouldn't be bigger than max length."
-msgstr "Мінімальна довжина не повинна бути більшою за максимальну довжину."
+msgstr "Мінімальна довжина не має бути більшою за максимальну"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:121
 msgid "Minimize"
@@ -3524,7 +3524,7 @@ msgstr "Мінімум"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.js:54
 msgid "Minimum height and width should be greater than or equal to 200"
-msgstr "Мінімальна висота і ширина повинні бути більше або дорівнювати 200"
+msgstr "Мінімальна висота і ширина мають бути не менше 200"
 
 #: scripts/core/ui/views/sd-timepicker-popup.html:21
 msgid "Minutes"
