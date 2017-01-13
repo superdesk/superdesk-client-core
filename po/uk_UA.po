@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 13:58+0000\n"
+"PO-Revision-Date: 2017-01-13 13:59+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2299,11 +2299,11 @@ msgstr "Помилка. Профіль користувача не може бу
 
 #: scripts/apps/users/controllers/UserEnableCommand.js:19
 msgid "Error. User Profile cannot be enabled."
-msgstr "Помилка: Профіль користувача не може бути включено"
+msgstr "Помилка. Профіль користувача не може бути включений"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.js:37
 msgid "Error. Vocabulary not saved."
-msgstr "Помилка: Довідник не збережено"
+msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:7
 msgid "Exact"
