@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:25+0000\n"
+"PO-Revision-Date: 2017-01-13 14:26+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5028,7 +5028,7 @@ msgstr "Scanpix ID(s)"
 
 #: scripts/apps/templates/views/templates.html:50
 msgid "Sched. Desk / Stage"
-msgstr "Розклад Столу/Етапу"
+msgstr "Розклад Стола/Етапу"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:74
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:42
@@ -5108,7 +5108,7 @@ msgstr "Пошук постачальника видалено."
 
 #: scripts/apps/search-providers/views/search-provider-config.html:74
 msgid "search provider password"
-msgstr "пароль пошука постачальника"
+msgstr "пароль Пошуку постачальника"
 
 #: scripts/apps/search-providers/directive.js:37
 msgid "Search Provider saved."
