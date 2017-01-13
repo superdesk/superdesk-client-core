@@ -1,3 +1,5 @@
+import ng from 'core/services/ng';
+
 angular.module('superdesk.config', [])
     .provider('defaultConfig', ['config', function(config) {
         /**
@@ -33,6 +35,7 @@ angular.module('superdesk.config', [])
         this.$get = angular.noop;
     }])
 
-    .run(['$rootScope', 'config', function($rootScope, config) {
+    .run(['$rootScope', 'config', '$injector', function($rootScope, config, $injector) {
+        ng.register($injector);
         $rootScope.config = config || {};
     }]);

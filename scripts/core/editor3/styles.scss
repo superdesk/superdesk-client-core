@@ -7,6 +7,12 @@
 	font-size: 14px;
 	padding: 15px;
 	position: relative;
+
+	.word-typo {
+	    border-bottom-width: 1px;
+	    border-bottom-style: dotted;
+	    border-bottom-color: red;
+	}
 }
 
 .Editor3-editor {

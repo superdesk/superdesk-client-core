@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
+import ng from 'core/services/ng';
 
 /**
  * @ngdoc React
@@ -10,17 +11,19 @@ import * as actions from '../../actions';
  * @param {String} word the text the menu is opened for
  * @param {Array} suggestions the list of suggestions for the target word
  * @param {Object} position the editor relative position where the context menu will be showed
- * @param {addWord} addWord callback
  * @param {replaceWord} replaceWord callback
  * @description The context menu for correction spellcheck errors. Contains a list of suggestions
  * and 'Add to dictionary' and 'Ignore word' actions.
  */
 
 export const SpellcheckerContextMenuComponent = ({
-        isVisible, word, suggestions, position, addWord, replaceWord}) => {
+        isVisible, word, suggestions, position, replaceWord}) => {
     if (!isVisible) {
         return null;
     }
+
+    const spellcheck = ng.get('spellcheck');
+
     return (
         <div className={'dropdown open'} style={position}>
             <ul className={'dropdown__menu'}>
@@ -39,7 +42,7 @@ export const SpellcheckerContextMenuComponent = ({
                 <li>
                     <button onClick={
                         () => {
-                            addWord(word, false);
+                            spellcheck.addWord(word, false);
                             replaceWord(word);
                         }
                     }>Add to dictionary</button>
@@ -47,7 +50,7 @@ export const SpellcheckerContextMenuComponent = ({
                 <li>
                     <button onClick={
                         () => {
-                            addWord(word, true);
+                            spellcheck.addWord(word, true);
                             replaceWord(word);
                         }
                     }>Ignore word</button>
@@ -64,26 +67,25 @@ SpellcheckerContextMenuComponent.propTypes = {
     word: React.PropTypes.string,
     suggestions: React.PropTypes.array,
     position: React.PropTypes.object,
-    addWord: React.PropTypes.func,
     replaceWord: React.PropTypes.func
 };
 
 /**
  * @ngdoc method
- * @name SpellcheckerContextMenu#isVisibleContextMenu
+ * @name SpellcheckerContextMenu#isVisible
  * @param {Object} state the store state
  * @returns {Boolean}
  * @description Return true if the context menu is visible.
  */
-const isVisibleContextMenu = (state) => {
-    const {editorState, spellcheckerState} = state;
+const isVisible = (state) => {
+    const {editorState, spellcheckerMenu} = state;
 
-    if (!editorState || !spellcheckerState || !spellcheckerState.contextMenuData) {
+    if (!spellcheckerMenu) {
         return false;
     }
 
     const newSelection = editorState.getSelection();
-    const oldSelection = spellcheckerState.contextMenuData.editorSelection;
+    const oldSelection = spellcheckerMenu.editorSelection;
 
     return oldSelection && newSelection
         && oldSelection.anchorOffset === newSelection.anchorOffset
@@ -100,14 +102,14 @@ const isVisibleContextMenu = (state) => {
  * position of the context menu.
  */
 const initPosition = (state, ownProps) => {
-    const {spellcheckerState} = state;
+    const {spellcheckerMenu} = state;
     const {editorRect} = ownProps;
 
-    if (!spellcheckerState || !spellcheckerState.contextMenuData || !editorRect) {
+    if (!spellcheckerMenu || !editorRect) {
         return null;
     }
 
-    const position = spellcheckerState.contextMenuData.position;
+    const position = spellcheckerMenu.position;
 
     return Object.assign({}, position, {
         display: 'block',
@@ -125,11 +127,11 @@ const initPosition = (state, ownProps) => {
  * list of suggestions for the current word.
  */
 const getSuggestions = (state) => {
-    if (!isVisibleContextMenu(state)) {
+    if (!isVisible(state)) {
         return null;
     }
 
-    return state.spellcheckerState.contextMenuData.suggestions;
+    return state.spellcheckerMenu.suggestions;
 };
 
 /**
@@ -140,26 +142,11 @@ const getSuggestions = (state) => {
  * @description If the context menu is visible extract current word from store.
  */
 const getWord = (state) => {
-    if (!isVisibleContextMenu(state)) {
+    if (!isVisible(state)) {
         return null;
     }
 
-    return state.spellcheckerState.contextMenuData.word.text;
-};
-
-/**
- * @ngdoc method
- * @name SpellcheckerContextMenu#getAddWord
- * @param {Object} state the store state
- * @returns {Function} Returns the addWord callback
- * @description If the context menu is visible extract addWord callback from store.
- */
-const getAddWord = (state) => {
-    if (!isVisibleContextMenu(state)) {
-        return null;
-    }
-
-    return state.spellcheckerState.spellcheckerService.addWord;
+    return state.spellcheckerMenu.word.text;
 };
 
 /**
@@ -170,11 +157,10 @@ const getAddWord = (state) => {
  * @description Maps the values from state to the component value type props.
  */
 const mapStateToProps = (state, ownProps) => ({
-    isVisible: isVisibleContextMenu(state),
+    isVisible: isVisible(state),
     word: getWord(state),
     suggestions: getSuggestions(state),
-    position: initPosition(state, ownProps),
-    addWord: getAddWord(state)
+    position: initPosition(state, ownProps)
 });
 
 /**
