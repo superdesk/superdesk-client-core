@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-13 14:08+0000\n"
+"PO-Revision-Date: 2017-01-13 14:11+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3862,7 +3862,7 @@ msgstr "Повідомити, якщо не діє більш ніж"
 
 #: scripts/core/lang/missing-translations-strings.js:28
 msgid "NTB Currency Macro"
-msgstr "Вжіваність NTB Maкроса"
+msgstr "Задіяний NTB Maкрос"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:66
 #: scripts/apps/users/activity-widget/configuration.html:6
@@ -3902,7 +3902,7 @@ msgstr "ТАК"
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:22
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:11
 msgid "on"
-msgstr "на"
+msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:36
 #: scripts/apps/templates/views/template-editor-modal.html:144
