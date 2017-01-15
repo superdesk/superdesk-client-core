@@ -53,7 +53,10 @@
                 </div>
                 <div class="field">
                     <label translate>Values</label>
-                    <input ng-if="!isListValue()" required ng-model="filterCondition.value">
+                    <input ng-if="!isListValue() && !isComparisonValue()" required ng-model="filterCondition.value">
+                    <select class="input" required ng-model="filterCondition.value" ng-if="isComparisonValue()">
+                        <option value="{{v[valueFieldLookup[filterCondition.field]]}}" ng-selected="v[valueFieldLookup[filterCondition.field]] === filterCondition.value" ng-repeat="v in valueLookup[filterCondition.field] | orderBy: 'name'">{{:: v.name}}</option>
+                    </select>
                     <div ng-if="isListValue()">
                         <div class="term-editor"
                          sd-meta-terms
