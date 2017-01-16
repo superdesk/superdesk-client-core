@@ -5940,7 +5940,7 @@ msgstr "Проблема, Стіл не створено/не оновлено."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:47
 msgid "There was a problem, dictionary not created/updated."
-msgstr ""
+msgstr "Проблема. Словник не створено/не оновлено."
 
 #: scripts/apps/groups/views/groups-config-modal.html:29
 msgid "There was a problem, group not created/updated."
@@ -5957,15 +5957,15 @@ msgstr "Проблема. Учасників неможливо зберегти
 
 #: scripts/apps/desks/directives/DeskeditPeople.js:56
 msgid "There was a problem, members not saved. Refresh Desks."
-msgstr "Проблема, учасників не збережено. Оновіть Стіл."
+msgstr "Проблема. Учасників не збережено. Оновіть Стіл."
 
 #: scripts/apps/desks/views/desk-config-modal.html:167
 msgid "There was a problem, stage not created/updated."
-msgstr "Проблема, Етап не створено/оновлено."
+msgstr "Проблема. Етап не створено/оновлено."
 
 #: scripts/apps/desks/directives/DeskeditStages.js:190
 msgid "There was a problem, stage was not deleted."
-msgstr "Проблема, Етап не був видалений."
+msgstr "Проблема. Етап не був видалений."
 
 #: scripts/apps/users/directives/UserEditDirective.js:128
 msgid "There was an error when saving the user account."
