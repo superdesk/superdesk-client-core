@@ -14,13 +14,18 @@ if (appConfig.features.useTansaProofing) {
     require('apps/tansa');
 }
 
-// non-mock app configuration must live here to allow tests to override
-// since tests do not import this file.
-angular.module('superdesk.config').constant('config', appConfig);
-
 let body = angular.element('body');
 
 body.ready(() => {
+    // update config via config.js
+    if (window.superdeskConfig) {
+        angular.merge(appConfig, window.superdeskConfig);
+    }
+
+    // non-mock app configuration must live here to allow tests to override
+    // since tests do not import this file.
+    angular.module('superdesk.config').constant('config', appConfig);
+
     /**
      * @ngdoc module
      * @name superdesk-client

@@ -16,13 +16,15 @@ export default angular.module('superdesk.core.translate', [
         tmhDynamicLocaleProvider.localeLocationPattern('locales/angular-locale_{{locale}}.js');
     }])
 
-    .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
-        function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
+    .run(['gettextCatalog', 'config', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
+        function(gettextCatalog, config, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
                 if ($rootScope.$root.currentUser
                     && gettextCatalog.strings.hasOwnProperty($rootScope.$root.currentUser.language)) {
                     // if the current logged in user has a saved language preference that is available
                     gettextCatalog.setCurrentLanguage($rootScope.$root.currentUser.language);
+                } else if (config.language) {
+                    gettextCatalog.setCurrentLanguage(config.language);
                 } else if (gettextCatalog.strings.hasOwnProperty(window.navigator.language)) {
                     // no saved preference but browser language is available
                     gettextCatalog.setCurrentLanguage(window.navigator.language);
@@ -30,6 +32,7 @@ export default angular.module('superdesk.core.translate', [
                     // no other options available go with baseLanguage
                     gettextCatalog.setCurrentLanguage(gettextCatalog.baseLanguage);
                 }
+
                 // set locale for date/time management
                 moment.locale(gettextCatalog.currentLanguage);
                 // set locale for angular-i18n

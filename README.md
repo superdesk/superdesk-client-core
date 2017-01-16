@@ -57,6 +57,10 @@ To configure the build, the `superdesk.config.js` file must export a function th
 - `shortDateFormat`: `'MM/DD'` - format for other days in item list
 - `longDateFormat`: `'LLL'` - format with full date and time
 
+##### Language
+
+- `language`: `'en'` - default language
+
 ##### Authoring
 
 - `previewSubjectFilterKey`: `null` - full preview in authoring displays only matching subjects

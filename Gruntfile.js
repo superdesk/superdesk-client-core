@@ -64,8 +64,8 @@ module.exports = function(grunt) {
     grunt.registerTask('server', [
         'clean',
         'copy:index',
+        'copy:config',
         'copy:locales',
-
         'ngtemplates:gen-apps',
         'ngtemplates:dev',
         'webpack-dev-server:start'
@@ -76,6 +76,7 @@ module.exports = function(grunt) {
         grunt.task.run([
             'clean',
             'copy:index',
+            'copy:config',
             'copy:assets',
             'copy:locales',
             'ngtemplates:gen-apps',
