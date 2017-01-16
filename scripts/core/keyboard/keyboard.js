@@ -13,6 +13,28 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
     backspace: 8
 }))
 
+.constant('shiftNums', {
+    '`': '~',
+    1: '!',
+    2: '@',
+    3: '#',
+    4: '$',
+    5: '%',
+    6: '^',
+    7: '&',
+    8: '*',
+    9: '(',
+    0: ')',
+    '-': '_',
+    '=': '+',
+    ';': ':',
+    '\'': '"',
+    ',': '<',
+    '.': '>',
+    '/': '?',
+    '\\': '|'
+})
+
 // unbind all keyboard shortcuts when switching route
 .run(['$rootScope', 'keyboardManager', function($rootScope, kb) {
     $rootScope.$on('$routeChangeStart', () => {
@@ -27,40 +49,46 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
 /**
  * Broadcast key:char events cought on body
  */
-.run(['$rootScope', '$document', 'Keys', function KeyEventBroadcast($rootScope, $document, Keys) {
-    var ignoreNodes = {
-        INPUT: true,
-        TEXTAREA: true,
-        BUTTON: true
-    };
+.run(['$rootScope', '$document', 'Keys', 'shiftNums',
+    function KeyEventBroadcast($rootScope, $document, Keys, shiftNums) {
+        var ignoreNodes = {
+            INPUT: true,
+            TEXTAREA: true,
+            BUTTON: true
+        };
 
-    $document.on('keydown', (e) => {
-        var ctrlKey = e.ctrlKey || e.metaKey,
-            altKey = e.altKey,
-            shiftKey = e.shiftKey,
-            isGlobal = ctrlKey && shiftKey;
+        $document.on('keydown', (e) => {
+            var ctrlKey = e.ctrlKey || e.metaKey,
+                altKey = e.altKey,
+                shiftKey = e.shiftKey,
+                isGlobal = ctrlKey && shiftKey;
 
-        if (isGlobal || !ignoreNodes[e.target.nodeName]) { // $document.body is empty when testing
-            var character = String.fromCharCode(e.which).toLowerCase(),
-                modifier = '';
+            if (isGlobal || !ignoreNodes[e.target.nodeName]) { // $document.body is empty when testing
+                var character = String.fromCharCode(e.which).toLowerCase(),
+                    modifier = '';
 
-            modifier += ctrlKey ? 'ctrl:' : '';
-            modifier += altKey ? 'alt:' : '';
-            modifier += shiftKey ? 'shift:' : '';
+                modifier += ctrlKey ? 'ctrl:' : '';
+                modifier += altKey ? 'alt:' : '';
+                modifier += shiftKey ? 'shift:' : '';
 
-            // also handle arrows, enter/escape, etc.
-            angular.forEach(Object.keys(Keys), (key) => {
-                if (e.which === Keys[key]) {
-                    character = key;
+                // also handle arrows, enter/escape, etc.
+                angular.forEach(Object.keys(Keys), (key) => {
+                    if (e.which === Keys[key]) {
+                        character = key;
+                    }
+                });
+
+                // Emit the corresponding shift character the same way keyboardManager service emits
+                if (shiftKey && shiftNums[character]) {
+                    character = shiftNums[character];
                 }
-            });
 
-            $rootScope.$broadcast('key:' + modifier + character, e);
-        }
-    });
-}])
+                $rootScope.$broadcast('key:' + modifier + character, e);
+            }
+        });
+    }])
 
-.service('keyboardManager', ['$window', '$timeout', function($window, $timeout) {
+.service('keyboardManager', ['$window', '$timeout', 'shiftNums', function($window, $timeout, shiftNums) {
     var stack = [],
         defaultOpt = {
             type: 'keydown',
@@ -69,27 +97,6 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
             target: $window.document,
             keyCode: false,
             global: false
-        },
-        shiftNums = {
-            '`': '~',
-            1: '!',
-            2: '@',
-            3: '#',
-            4: '$',
-            5: '%',
-            6: '^',
-            7: '&',
-            8: '*',
-            9: '(',
-            0: ')',
-            '-': '_',
-            '=': '+',
-            ';': ':',
-            '\'': '"',
-            ',': '<',
-            '.': '>',
-            '/': '?',
-            '\\': '|'
         },
         specialKeys = { // Special Keys - and their codes
             esc: 27,

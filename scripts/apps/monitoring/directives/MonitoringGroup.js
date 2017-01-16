@@ -260,7 +260,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 superdesk.findActivities(intent, item).forEach((activity) => {
                     if (activity.keyboardShortcut && workflowService.isActionAllowed(item, activity.action)) {
                         monitoring.bindedItems.push(
-                            scope.$on('key:' + activity.keyboardShortcut.replace('+', ':'),
+                            scope.$on('key:' + activity.keyboardShortcut.replace(/\+/g, ':'),
                             () => {
                                 if (activity._id === 'mark.item') {
                                     bindMarkItemShortcut();

@@ -51,6 +51,10 @@ angular.module('superdesk.apps.monitoring', [
     .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
         keyboardManager.register('Monitoring', 'ctrl + g', gettext('Switches between single/grouped stage view'));
         keyboardManager.register('Monitoring', 'ctrl + alt + g', gettext('Switches between single/grouped desk view'));
+        keyboardManager.register('Monitoring', 'ctrl + d', gettext('Duplicates an item'));
+        keyboardManager.register('Monitoring', 'ctrl + b', gettext('Creates a broadcast'));
+        keyboardManager.register('Monitoring', 'ctrl + alt + t', gettext('Creates a new take'));
+        keyboardManager.register('Monitoring', 'ctrl + shift + #', gettext('Spikes item(s)'));
     }]);
 
 angular.module('superdesk.apps.aggregate', [
