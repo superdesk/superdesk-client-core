@@ -21,7 +21,6 @@ module.exports = function(grunt) {
 
             src: [
                 'scripts/**/*.js',
-                'scripts/**/*.jsx',
                 'scripts/**/*.ngdoc',
                 '!**/test/**/*spec.js'
             ],
