@@ -1,13 +1,6 @@
 /**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name Editor3 Actions
- * @description Contains the list of editor related actions.
- */
-
-/**
  * @ngdoc method
- * @name Editor3 Actions#changeEditorState
+ * @name changeEditorState
  * @param {Object} editorState
  * @return {String} action
  * @description Creates the change editor action
@@ -21,7 +14,7 @@ export function changeEditorState(editorState) {
 
 /**
  * @ngdoc method
- * @name Editor3 Actions#handleEditorTab
+ * @name handleEditorTab
  * @param {Object} e on tab event
  * @return {String} action
  * @description Creates the change editor action
@@ -35,7 +28,7 @@ export function handleEditorTab(e) {
 
 /**
  * @ngdoc method
- * @name Editor3 Actions#handleEditorKeyCommand
+ * @name handleEditorKeyCommand
  * @param {Object} command the name of the command
  * @return {String} action
  * @description Creates the editor key command action
