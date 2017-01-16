@@ -1,17 +1,13 @@
 import {EditorState, Modifier} from 'draft-js';
 
-/**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name Spellchecker Reducers
- * @description Contains the list of spellchecker related reducers.
- */
 const spellchecker = (state = {}, action) => {
     switch (action.type) {
     case 'SPELLCHECKER_REPLACE_WORD':
         return replaceWord(state, action.payload);
     case 'SPELLCHECKER_SHOW_CONTEXT_MENU':
         return showContextMenu(state, action.payload);
+    case 'SPELLCHECKER_CLOSE_CONTEXT_MENU':
+        return closeContextMenu(state);
     default:
         return state;
     }
@@ -19,7 +15,7 @@ const spellchecker = (state = {}, action) => {
 
 /**
  * @ngdoc method
- * @name Spellchecker Reducers#replaceWord
+ * @name replaceWord
  * @param {Object} state
  * @param {String} word
  * @return {Object} returns new state
@@ -43,13 +39,28 @@ const replaceWord = (state, text) => {
 
     return Object.assign({}, state, {
         editorState: newEditorState,
-        spellcheckerMenu: null
+        spellcheckerMenu: Object.assign({}, spellcheckerMenu, {visible: false})
     });
 };
 
 /**
  * @ngdoc method
- * @name Spellchecker Reducers#showContextMenu
+ * @name closeContextMenu
+ * @param {Object} state
+ * @return {Object} returns new state
+ * @description Save on store all relevant data for spellchecker context menu
+ */
+const closeContextMenu = (state) => {
+    const {spellcheckerMenu} = state;
+
+    return Object.assign({}, state, {
+        spellcheckerMenu: Object.assign({}, spellcheckerMenu, {visible: false})
+    });
+};
+
+/**
+ * @ngdoc method
+ * @name showContextMenu
  * @param {Object} state
  * @param {String} contextMenuData
  * @return {Object} returns new state
@@ -58,6 +69,7 @@ const replaceWord = (state, text) => {
 const showContextMenu = (state, data) => {
     const {editorState, spellcheckerMenu} = state;
 
+    data.visible = true;
     data.editorSelection = editorState.getSelection();
 
     return Object.assign({}, state, {

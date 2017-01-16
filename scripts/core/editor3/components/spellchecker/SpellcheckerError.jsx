@@ -1,7 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
-import ng from 'core/services/ng';
 
 /**
  * @ngdoc React
@@ -14,23 +13,20 @@ import ng from 'core/services/ng';
  */
 
 export const SpellcheckerErrorComponent = ({children, showContextMenu}) => {
-    const spellcheck = ng.get('spellcheck');
-    const text = children[0].props.text;
-    const offset = children[0].props.start;
+    const word = {
+        text: children[0].props.text,
+        offset: children[0].props.start
+    };
 
     const onContextMenu = (e) => {
-        const left = e.clientX - 20;
-        const top = e.clientY + 10;
+        const position = {
+            left: e.clientX - 20,
+            top: e.clientY + 10
+        };
 
         e.preventDefault();
 
-        spellcheck.suggest(text).then((suggestions) => {
-            showContextMenu({
-                suggestions: suggestions,
-                position: {top, left},
-                word: {text, offset}
-            });
-        });
+        showContextMenu({word, position});
     };
 
     return <span className="word-typo" onContextMenu={onContextMenu}>{children}</span>;

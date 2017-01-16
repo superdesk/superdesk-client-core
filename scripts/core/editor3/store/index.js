@@ -1,4 +1,5 @@
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 import {stateFromHTML} from 'draft-js-import-html';
 import reducers from '../reducers';
 import ng from 'core/services/ng';
@@ -28,11 +29,11 @@ export default function createEditorStore(ctrl) {
 
     return createStore(reducers, {
         editorState: EditorState.createWithContent(initialValue, decorators),
-        spellcheckerMenu: null,
+        spellcheckerMenu: {visible: false, word: {}, suggetions: [], position: {}},
         readOnly: ctrl.readOnly,
         showToolbar: showToolbar,
         singleLine: singleLine,
         editorFormat: ctrl.editorFormat,
         onChangeValue: onChange
-    });
+    }, applyMiddleware(thunk));
 }
