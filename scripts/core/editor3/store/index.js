@@ -4,7 +4,7 @@ import {stateFromHTML} from 'draft-js-import-html';
 import reducers from '../reducers';
 import ng from 'core/services/ng';
 
-import {getSpellcheckerDecorators} from '../components/spellchecker';
+import {SpellcheckerErrorComponent} from '../components/spellchecker';
 import Toolbar from '../components/toolbar';
 import {EditorState, CompositeDecorator} from 'draft-js';
 
@@ -24,7 +24,7 @@ export default function createEditorStore(ctrl) {
 
     const initialValue = stateFromHTML(ctrl.value);
     const decorators = new CompositeDecorator(
-        getSpellcheckerDecorators().concat(Toolbar.getDecorators())
+        SpellcheckerErrorComponent.getDecorators().concat(Toolbar.getDecorators())
     );
 
     return createStore(reducers, {

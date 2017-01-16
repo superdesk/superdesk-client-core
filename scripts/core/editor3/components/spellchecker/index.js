@@ -1,2 +1,2 @@
 export {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
-export {getSpellcheckerDecorators} from './SpellcheckerDecorators';
+export {SpellcheckerErrorComponent} from './SpellcheckerError';
