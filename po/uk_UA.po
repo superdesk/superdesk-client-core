@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2017-01-16 16:14+0000\n"
+"PO-Revision-Date: 2017-01-16 16:15+0000\n"
 "Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6631,4 +6631,4 @@ msgstr "Ваші облікові дані"
 
 #: scripts/core/auth/login-modal.html:3
 msgid "Your session has expired."
-msgstr "Час сеансу минув."
+msgstr "Час сеансу сплив."
