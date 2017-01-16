@@ -24,23 +24,23 @@ const spellchecker = (state = {}, action) => {
 const replaceWord = (state, text) => {
     const {editorState, spellcheckerMenu} = state;
     const {word, editorSelection} = spellcheckerMenu;
-
-    var textSelection;
-    var newContentState;
-    var newEditorState;
-
-    textSelection = editorSelection.merge({
+    const sel = editorSelection.merge({
         anchorOffset: word.offset,
         focusOffset: word.offset + word.text.length
     });
 
-    newContentState = Modifier.replaceText(editorState.getCurrentContent(), textSelection, text);
-    newEditorState = EditorState.push(editorState, newContentState, 'spellchecker');
+    var newState = Modifier.replaceText(editorState.getCurrentContent(), sel, text);
 
-    return Object.assign({}, state, {
-        editorState: newEditorState,
-        spellcheckerMenu: Object.assign({}, spellcheckerMenu, {visible: false})
-    });
+    newState = EditorState.push(editorState, newState, 'spellchecker');
+
+    return {
+        ...state,
+        editorState: newState,
+        spellcheckerMenu: {
+            ...spellcheckerMenu,
+            visible: false
+        }
+    };
 };
 
 /**
@@ -53,9 +53,13 @@ const replaceWord = (state, text) => {
 const closeContextMenu = (state) => {
     const {spellcheckerMenu} = state;
 
-    return Object.assign({}, state, {
-        spellcheckerMenu: Object.assign({}, spellcheckerMenu, {visible: false})
-    });
+    return {
+        ...state,
+        spellcheckerMenu: {
+            ...spellcheckerMenu,
+            visible: false
+        }
+    };
 };
 
 /**
@@ -69,12 +73,15 @@ const closeContextMenu = (state) => {
 const showContextMenu = (state, data) => {
     const {editorState, spellcheckerMenu} = state;
 
-    data.visible = true;
-    data.editorSelection = editorState.getSelection();
-
-    return Object.assign({}, state, {
-        spellcheckerMenu: Object.assign({}, spellcheckerMenu, data)
-    });
+    return {
+        ...state,
+        spellcheckerMenu: {
+            ...spellcheckerMenu,
+            ...data,
+            visible: true,
+            editorSelection: editorState.getSelection()
+        }
+    };
 };
 
 export default spellchecker;

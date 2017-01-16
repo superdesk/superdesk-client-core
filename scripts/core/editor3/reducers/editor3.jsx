@@ -32,7 +32,7 @@ const onChange = (state, editorState) => {
     const {onChangeValue} = state;
 
     onChangeValue(stateToHTML(editorState.getCurrentContent()));
-    return Object.assign({}, state, {editorState});
+    return {...state, editorState};
 };
 
 /**

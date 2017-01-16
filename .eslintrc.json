@@ -34,7 +34,8 @@
             "modules": true,
             "globalReturn": false,
             "impliedStrict": true,
-            "jsx": true
+            "jsx": true,
+            "experimentalObjectRestSpread": true
         }
     },
 
