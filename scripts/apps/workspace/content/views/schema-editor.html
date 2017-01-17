@@ -58,16 +58,16 @@
                             <div class="input-medium"
                                  ng-if="specs.type === 'list' && options[id] && !terms[id]"
                                  sd-meta-dropdown
-                                 data-item="model.schema[id]"
-                                 data-field="{{ id}}"
+                                 data-item="readonly(specs, id)"
+                                 data-field="{{ id }}"
                                  data-list="options[id]"
                                  data-change="setdefault(field)">
                             </div>
                             <div class="input-medium"
                                  ng-if="terms[id]"
                                  sd-meta-terms
-                                 data-item="model.schema[id]"
-                                 data-field="{{ id}}"
+                                 data-item="readonly(specs, id)"
+                                 data-field="{{ id }}"
                                  data-list="terms[id]"
                                  data-change="setdefault(field)"
                                  ></div>
