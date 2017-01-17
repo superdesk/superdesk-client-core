@@ -1,9 +1,10 @@
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 import {stateFromHTML} from 'draft-js-import-html';
 import reducers from '../reducers';
 import ng from 'core/services/ng';
 
-import {getSpellcheckerDecorators} from '../components/spellchecker';
+import {SpellcheckerError} from '../components/spellchecker/SpellcheckerError';
 import Toolbar from '../components/toolbar';
 import {EditorState, CompositeDecorator} from 'draft-js';
 
@@ -23,16 +24,15 @@ export default function createEditorStore(ctrl) {
 
     const initialValue = stateFromHTML(ctrl.value);
     const decorators = new CompositeDecorator(
-        getSpellcheckerDecorators().concat(Toolbar.getDecorators())
+        SpellcheckerError.getDecorators().concat(Toolbar.getDecorators())
     );
 
     return createStore(reducers, {
         editorState: EditorState.createWithContent(initialValue, decorators),
-        spellcheckerMenu: null,
         readOnly: ctrl.readOnly,
         showToolbar: showToolbar,
         singleLine: singleLine,
         editorFormat: ctrl.editorFormat,
         onChangeValue: onChange
-    });
+    }, applyMiddleware(thunk));
 }

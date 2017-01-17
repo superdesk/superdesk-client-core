@@ -8,10 +8,19 @@
 	padding: 15px;
 	position: relative;
 
-	.word-typo {
+	.word-typo:not(.ignored) {
 	    border-bottom-width: 1px;
 	    border-bottom-style: dotted;
 	    border-bottom-color: red;
+	    position: relative;
+	    display: inline-block;
+	}
+
+	.suggestions-dropdown {
+		display: block;
+		position: absolute;
+		top: 24px;
+		left: -10px;
 	}
 }
 

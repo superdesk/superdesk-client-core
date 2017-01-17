@@ -1,7 +1,7 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import * as actions from '../../actions';
+import React, {Component} from 'react';
 import ng from 'core/services/ng';
+import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
+import classNames from 'classnames';
 
 /**
  * @ngdoc React
@@ -12,57 +12,97 @@ import ng from 'core/services/ng';
  * @description The words with spellcheck errors are enclosed in this component in order to highlight
  * the error and allow the opening of the contextual spellchecker menu.
  */
+export class SpellcheckerError extends Component {
+    static getDecorators() {
+        return [{
+            strategy: spellcheckStrategy,
+            component: SpellcheckerError
+        }];
+    }
 
-export const SpellcheckerErrorComponent = ({children, showContextMenu}) => {
-    const spellcheck = ng.get('spellcheck');
-    const text = children[0].props.text;
-    const offset = children[0].props.start;
+    constructor(props) {
+        super(props);
 
-    const onContextMenu = (e) => {
-        const left = e.clientX - 20;
-        const top = e.clientY + 10;
+        this.state = {
+            menuShowing: false,
+            suggestions: [],
+            ignored: false
+        };
 
-        e.preventDefault();
+        this.showContextMenu = this.showContextMenu.bind(this);
+        this.closeContextMenu = this.closeContextMenu.bind(this);
+        this.onIgnore = this.onIgnore.bind(this);
+    }
 
-        spellcheck.suggest(text).then((suggestions) => {
-            showContextMenu({
-                suggestions: suggestions,
-                position: {top, left},
-                word: {text, offset}
+    showContextMenu(txt) {
+        const spellcheck = ng.get('spellcheck');
+
+        return (e) => {
+            e.preventDefault();
+
+            spellcheck.suggest(txt).then((suggestions) => {
+                this.setState({menuShowing: true, suggestions: suggestions});
             });
-        });
-    };
+        };
+    }
 
-    return <span className="word-typo" onContextMenu={onContextMenu}>{children}</span>;
-};
+    closeContextMenu() {
+        this.setState({menuShowing: false});
+    }
+
+    onIgnore() {
+        this.setState({ignored: true});
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const {menuShowing} = this.state;
+
+        if (prevState.menuShowing === menuShowing) {
+            return;
+        }
+
+        const fn = menuShowing ? 'on' : 'off';
+
+        $(window)[fn]('click', this.closeContextMenu);
+    }
+
+    render() {
+        const {menuShowing, suggestions, ignored} = this.state;
+        const {children} = this.props;
+        const word = {text: children[0].props.text, offset: children[0].props.start};
+        const cx = classNames({'word-typo': true, ignored: ignored});
+
+        return (
+            <span className={cx} onContextMenu={this.showContextMenu(word.text)}>
+                {menuShowing ?
+                    <SpellcheckerContextMenu suggestions={suggestions} word={word} onIgnore={this.onIgnore} />
+                    : null}
+                {this.props.children}
+            </span>
+        );
+    }
+}
+
+/**
+ * @description For a block check the words that has errors
+ */
+function spellcheckStrategy(contentBlock, callback) {
+    const spellcheck = ng.get('spellcheck');
+    const WORD_REGEXP = /[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]+/g;
+    const text = contentBlock.getText();
+
+    let matchArr, start, regex = WORD_REGEXP;
+
+    while ((matchArr = regex.exec(text)) !== null) {
+        start = matchArr.index;
+        if (!spellcheck.isCorrectWord(matchArr[0])) {
+            callback(start, start + matchArr[0].length);
+        }
+    }
+}
 
 
 /** Set the types of props for the spellchecker error component*/
-SpellcheckerErrorComponent.propTypes = {
-    children: React.PropTypes.array,
-    showContextMenu: React.PropTypes.func
+SpellcheckerError.propTypes = {
+    children: React.PropTypes.array
 };
-
-/**
- * @ngdoc method
- * @name SpellcheckerError#mapStateToProps
- * @param {Object} state the store state
- * @returns {Object} Returns the props values
- * @description Maps the values from state to the component value type props.
- */
-const mapStateToProps = (state, ownProps) => ({
-    children: ownProps.children,
-});
-
-/**
- * @ngdoc method
- * @name SpellcheckerError#mapDispatchToProps
- * @param {Function} dispatch callback to store
- * @returns {Object} Returns the props values
- * @description Maps the values from state to the component callback type props.
- */
-const mapDispatchToProps = (dispatch) => ({
-    showContextMenu: (contextMenuData) => dispatch(actions.showContextMenu(contextMenuData))
-});
-
-export const SpellcheckerError = connect(mapStateToProps, mapDispatchToProps)(SpellcheckerErrorComponent);

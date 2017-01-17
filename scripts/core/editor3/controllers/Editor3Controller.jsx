@@ -12,8 +12,8 @@ import createStore from '../store';
  *  Editor3 react component.
  * @see sdEditor3
  */
-Editor3Controller.$inject = ['$element', 'spellcheck', '$injector'];
-export function Editor3Controller($element, spellcheck, $injector) {
+Editor3Controller.$inject = ['$element'];
+export function Editor3Controller($element) {
     const store = createStore(this);
 
     ReactDOM.render(

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {Editor} from 'draft-js';
 import {connect} from 'react-redux';
 import Toolbar from './toolbar';
-import {SpellcheckerContextMenu} from './spellchecker';
 import * as actions from '../actions';
 
 /**
@@ -71,7 +70,6 @@ export class Editor3Component extends React.Component {
             <div className="Editor3-root">
                 {showToolbar ? <Toolbar editorRect={this.editorRect} /> : null}
                 <div className={className} onClick={this.focus}>
-                    <SpellcheckerContextMenu editorRect={this.editorRect}/>
                     <Editor
                         editorState={editorState}
                         handleKeyCommand={handleKeyCommand}
