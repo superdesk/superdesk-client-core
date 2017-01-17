@@ -14,6 +14,18 @@ export function changeEditorState(editorState) {
 
 /**
  * @ngdoc method
+ * @name forceUpdate
+ * @return {String} action
+ * @description Causes the editor to force update. This is used by the spellchecker
+ * to cause the editor to re-render its decorators based on new information retrieved
+ * in dictionaries. Use of this method should be avoided.
+ */
+export function forceUpdate() {
+    return {type: 'EDITOR_FORCE_UPDATE'};
+}
+
+/**
+ * @ngdoc method
  * @name handleEditorTab
  * @param {Object} e on tab event
  * @return {String} action
