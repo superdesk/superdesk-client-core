@@ -85,6 +85,22 @@ function Analytics() {
     };
 
     /**
+     * Set the category
+     * @param {array} path - list of category names
+     **/
+    this.setCategory = function(path) {
+        var categoryElement = element(by.id('parameters-category'));
+
+        categoryElement.element(by.className('dropdown__toggle')).click();
+        path.forEach((categoryName) => {
+            categoryElement.all(by.tagName('li'))
+                .filter((elem, index) => elem.getText()
+                    .then((text) => text.toUpperCase() === categoryName.toUpperCase()))
+                .first().click();
+        });
+    };
+
+    /**
      * Set the group by desk
      **/
     this.toggleGroupByDesk = function() {
@@ -97,6 +113,47 @@ function Analytics() {
      **/
     this.setReportName = function(name) {
         this.reportName.sendKeys(name);
+    };
+
+    /**
+     * Set the keywords
+     * @param {string} keyword - the report's keywords
+     **/
+    this.setKeywords = function(keywords) {
+        var keywordsElement = element(by.css('[data-field="keywords"]')).all(by.model('term'));
+
+        keywordsElement.sendKeys(keywords);
+        browser.actions().sendKeys(protractor.Key.ENTER).perform();
+    };
+
+    /**
+     * Set the urgency
+     * @param {integer} urgency
+     **/
+    this.setUrgency = function(urgency) {
+        var urgencyElement = element(by.id('parameters-urgency'));
+
+        urgencyElement.click();
+    };
+
+    /**
+     * Set the priority
+     * @param {integer} priority
+     **/
+    this.setPriority = function(priority) {
+        var priorityElement = element(by.id('parameters-priority'));
+
+        priorityElement.click();
+    };
+
+    /**
+     * Set the report subscriber
+     * @param {string} subscriber - the report subscriber
+     **/
+    this.setSubscriber = function(subscriber) {
+        var subscriberElement = element(by.id('parameters-subscriber'));
+
+        subscriberElement.click();
     };
 
     /**
@@ -202,6 +259,24 @@ function Analytics() {
      **/
     this.getReportDescription = function() {
         return this.reportDescription;
+    };
+
+    /**
+     * Return the keyword of the report currently in edit mode
+     **/
+    this.getReportKeywords = function() {
+        return element(by.css('[data-field="keywords"]'))
+            .all(by.repeater('t in item[field] track by t'))
+            .first().getText();
+    };
+
+    /**
+     * Return the desk of the report currently in edit mode
+     **/
+    this.getSubject = function() {
+        return element(by.id('[data-field="parameters-subject"]'))
+            .all(by.repeater('s in item[field] track by s'))
+            .first().getText();
     };
 
     /**

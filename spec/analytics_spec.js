@@ -16,6 +16,11 @@ describe('analytics', () => {
         analytics.setSubject(['education', 'university']);
         analytics.setReportName('report1');
         analytics.setReportDescription('report1 description');
+        analytics.setKeywords(['testkey']);
+        analytics.setCategory(['Australian Weather']);
+        analytics.setUrgency('3');
+        analytics.setPriority('6');
+        analytics.setSubscriber('test1');
         analytics.saveReport();
         browser.sleep(100);
         expect(analytics.userReports.count()).toEqual(1);
@@ -28,6 +33,11 @@ describe('analytics', () => {
         analytics.setSubject(['education', 'university']);
         analytics.setReportName('report2');
         analytics.setReportDescription('report2 description');
+        analytics.setKeywords(['testkey2']);
+        analytics.setCategory(['Australian Weather']);
+        analytics.setUrgency('4');
+        analytics.setPriority('5');
+        analytics.setSubscriber('test2');
         analytics.toggleGlobal();
         analytics.switchToGrouping();
         analytics.toggleGroupByDesk();
@@ -47,6 +57,8 @@ describe('analytics', () => {
         expect(analytics.getReportOperation().getAttribute('value')).toEqual('publish');
         expect(analytics.getReportDesk().getText()).toContain('Sports');
         expect(analytics.getOperationDate().getAttribute('value')).toEqual('13/12/2016');
+        expect(analytics.getReportKeywords()).toBe('TESTKEY');
+
         expect(analytics.getReportGlobal().getAttribute('checked')).toBeFalsy();
         analytics.switchToGrouping();
         expect(analytics.getReportGroupByDesk().getAttribute('checked')).toBeFalsy();
