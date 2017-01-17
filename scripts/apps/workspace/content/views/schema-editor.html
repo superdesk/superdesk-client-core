@@ -90,6 +90,10 @@
                             </select>
                         </div>
                         <div class="field" ng-if="specs.type === 'string'">
+                            <label translate>Clean Pasted HTML</label>
+                            <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
+                        </div>
+                        <div class="field" ng-if="specs.type === 'string'">
                             <label translate>Format options</label>
                             <div class="controls"
                                  sd-multi-select
