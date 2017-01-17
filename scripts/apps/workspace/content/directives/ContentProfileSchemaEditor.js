@@ -96,19 +96,37 @@ export function ContentProfileSchemaEditor(gettext, metadata, content) {
             };
 
             /**
-             * Copy value from `id` key into `default` within schema
+             * Copy value from readonly[id][id] to `default`
              *
-             * it's a workaround for meta-* directives, those have specific logic based on `id`
+             * It is a workaround for meta-* directives, those have specific logic based on `id`
+             * but would set it to schema like `{schema: {genre: {genre: "default value"}}}`.
              *
              * @param {String} id
              */
             scope.setdefault = function(id) {
-                scope.model.schema[id].default = scope.model.schema[id][id];
+                scope.model.schema[id].default = readonly[id][id];
                 form.$dirty = true;
             };
 
             scope.setDirty = function(dirty) {
                 form.$dirty = !!dirty;
+            };
+
+            var readonly = {};
+
+            /**
+             * Create a copy of data where changes won't propagate back
+             *
+             * @param {Object} orig
+             * @param {String} key
+             * @return {Object}
+             */
+            scope.readonly = (orig, key) => {
+                if (!readonly.hasOwnProperty(key)) {
+                    readonly[key] = angular.extend({}, orig);
+                }
+
+                return readonly[key];
             };
         }
     };
