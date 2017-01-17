@@ -1,5 +1,6 @@
 import {RichUtils} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
+import {EditorState} from 'draft-js';
 
 /**
  * @ngdoc React
@@ -15,9 +16,31 @@ const editor3 = (state = {}, action) => {
         return onTab(state, action.payload);
     case 'EDITOR_KEY_COMMAND':
         return handleKeyCommand(state, action.payload);
+    case 'EDITOR_FORCE_UPDATE':
+        return forceUpdate(state);
     default:
         return state;
     }
+};
+
+/**
+ * @ngdoc method
+ * @name forceUpdate
+ * @param {Object} editorState
+ * @return {Object}
+ * @description Forces an update of the editor. This is somewhat of a hack
+ * based on https://github.com/facebook/draft-js/issues/458#issuecomment-225710311
+ * until a better solution is found.
+ */
+const forceUpdate = (state) => {
+    const {editorState} = state;
+    const content = editorState.getCurrentContent();
+    const decorator = editorState.getDecorator();
+
+    return {
+        ...state,
+        editorState: EditorState.createWithContent(content, decorator)
+    };
 };
 
 /**
