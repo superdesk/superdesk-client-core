@@ -63,7 +63,11 @@ export class SpellcheckerError extends Component {
 
         const fn = menuShowing ? 'on' : 'off';
 
-        $(window)[fn]('click', this.closeContextMenu);
+        $(window)[fn]('mousedown', this.closeContextMenu);
+    }
+
+    componentWillUnmount() {
+        $(window).off('mousedown', this.closeContextMenu);
     }
 
     render() {

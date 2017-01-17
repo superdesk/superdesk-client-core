@@ -74,15 +74,15 @@ class SpellcheckerContextMenuComponent extends Component {
                     {suggestions.length === 0 ? <li><button>SORRY, NO SUGGESTIONS.</button></li>
                         : suggestions.map((suggestion, index) =>
                             <li key={index}>
-                                <button onClick={this.replaceWord(suggestion.key)}>
+                                <button onMouseDown={this.replaceWord(suggestion.key)}>
                                     {suggestion.value}
                                 </button>
                             </li>
                         )
                     }
                     <li className="divider"/>
-                    <li><button onClick={this.addWord}>Add to dictionary</button></li>
-                    <li><button onClick={this.ignoreWord}>Ignore word</button></li>
+                    <li><button onMouseDown={this.addWord}>Add to dictionary</button></li>
+                    <li><button onMouseDown={this.ignoreWord}>Ignore word</button></li>
                 </ul>
             </div>
         );
