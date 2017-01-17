@@ -2,6 +2,10 @@
  * @ngdoc controller
  * @module superdesk.apps.content_filters
  * @name FilterConditionsCtrl
+ * @requires contentFilters
+ * @requires notify
+ * @requires modal
+ * @requires filter
  * @description Controller for the Filter Conditions tab, found on the Content Filters
  * settings page.
  */
@@ -36,6 +40,18 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
 
     $scope.isListValue = function() {
         return _.includes(['in', 'nin'], $scope.filterCondition.operator)
+            && $scope.valueLookup[$scope.filterCondition.field];
+    };
+
+    /**
+     * @ngdoc method
+     * @name FilterConditionsCtrl#isComparisonValue
+     * @public
+     * @description Checks if filter condition operator is one of the comparison operators
+     * @returns {Boolean}
+     */
+    $scope.isComparisonValue = function() {
+        return _.includes(['eq', 'ne', 'lt', 'lte', 'gt', 'gte'], $scope.filterCondition.operator)
             && $scope.valueLookup[$scope.filterCondition.field];
     };
 
