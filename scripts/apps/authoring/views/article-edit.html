@@ -3,7 +3,7 @@
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
     <div id="title" class="headline"
         sd-text-editor
-        data-config="{disableToolbar: true, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order}"
+        data-config="{disableToolbar: true, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order, paste: {cleanPastedHTML: editor.headline.cleanPastedHTML}}"
         data-editorformat="editor.headline.formatOptions"
         data-language="item.language"
         ng-model="item.headline"
@@ -68,7 +68,7 @@
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
         sd-text-editor
-        data-config="{disableToolbar: true, imageDragging: false, disableEditing: isPublished(item), tabindex: editor.abstract.order}"
+        data-config="{disableToolbar: true, imageDragging: false, disableEditing: isPublished(item), tabindex: editor.abstract.order, paste: {cleanPastedHTML: editor.abstract.cleanPastedHTML}}"
         data-editorformat="editor.abstract.formatOptions"
         data-language="item.language"
         ng-model="item.abstract"
@@ -81,7 +81,7 @@
 
 <div class="field" ng-if="item._type !== 'archived' && schema.byline" sd-width="{{editor.byline.sdWidth || 'full'}}" order="{{editor.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
   <label translate>Byline</label>
-  <input type="text" 
+  <input type="text"
          sd-remove-tags
          class="byline"
          id="byline"
@@ -154,7 +154,7 @@
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
          sd-text-editor
-         data-config="{disableEditing: isPublished(item), multiBlockEdition: true, tabindex: editor.body_html.order}"
+         data-config="{disableEditing: isPublished(item), multiBlockEdition: true, tabindex: editor.body_html.order, paste: {cleanPastedHTML: editor.body_html.cleanPastedHTML}}"
          data-editorformat="editor.body_html.formatOptions"
          ng-model="item.body_html"
          ng-if="_editable"
@@ -194,7 +194,7 @@
   <label translate>Description</label>
   <div id="title" class="abstract"
         sd-text-editor
-        data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.description_text.order}"
+        data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.description_text.order, paste: {cleanPastedHTML: editor.description_text.cleanPastedHTML}}"
         data-editorformat="editor.description_text.formatOptions"
         data-language="item.language"
         ng-model="item.description_text"
@@ -225,16 +225,16 @@
     </select>
 </div>
 
-<div class="field" 
-    ng-if="schema.body_footer" 
-    order="{{editor.body_footer.order}}" 
+<div class="field"
+    ng-if="schema.body_footer"
+    order="{{editor.body_footer.order}}"
     sd-validation-error="error.body_footer"
     data-required="schema.body_footer.required"
     sd-width="{{editor.body_footer.sdWidth || 'full'}}">
     <label translate>Footer</label>
     <div id="body_footer" class="body"
         sd-text-editor
-        data-config="{disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order}"
+        data-config="{disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order, paste: {cleanPastedHTML: editor.body_footer.cleanPastedHTML}}"
         data-language="item.language"
         ng-model="item.body_footer"
         ng-model-options="{debounce: 100}"
