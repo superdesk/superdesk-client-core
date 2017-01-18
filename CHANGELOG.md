@@ -1,5 +1,23 @@
 # Superdesk Client Changelog
 
+## [1.5.2] 2017-01-18
+
+### Fixed
+
+- Sort content filter `field` drop down.
+- Avoid translation of field names in content filters.
+- Fix editing of content profiles with custom fields.
+
+### Changed
+
+- Update ukranian translation.
+- Reduce item height by half for thinRows config.
+- Only `text` type items in `archived` collection can be duplicated.
+
+### Added
+
+- Add `BCC` config for email subscribers.
+
 ## [1.5.1] 2017-01-03
 
 Includes changes from 1.4.8 plus:
