@@ -60,8 +60,8 @@
                             <div class="input-medium"
                                  ng-if="specs.type === 'list' && options[id]"
                                  sd-meta-dropdown
-                                 data-item="specs"
-                                 data-field="{{ id}}"
+                                 data-item="readonly(specs, id)"
+                                 data-field="{{ id }}"
                                  data-unique="qcode"
                                  data-list="options[id]"
                                  data-change="setdefault(field)">
@@ -69,8 +69,8 @@
                             <div class="input-medium"
                                  ng-if="specs.type === 'list' && terms[id] && !options[id]"
                                  sd-meta-terms
-                                 data-item="specs"
-                                 data-field="{{id}}"
+                                 data-item="readonly(specs, id)"
+                                 data-field="{{ id }}"
                                  data-unique="qcode"
                                  data-list="terms[id]"
                                  data-change="setdefault(field)"
