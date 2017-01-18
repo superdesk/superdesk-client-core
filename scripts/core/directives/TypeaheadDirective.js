@@ -13,6 +13,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
      * @param {Boolen} alwaysVisible List of posible choices always stay visible.
      * @param {Function} search Callback for filtering choice action.
      * @param {Function} select Callback for select item aciton.
+     * @param {Boolean} keepinput if true, the input text after selecting an item-selection will not be deleted/nulled
      *
      * @description Typeahead directive.
      *
@@ -41,7 +42,8 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                 blur: '&',
                 placeholder: '@',
                 tabindex: '=',
-                style: '='
+                style: '=',
+                keepinput: '='
             },
             controller: ['$scope', function($scope) {
                 $scope.hide = true;
@@ -80,7 +82,11 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                         // triggers closing of dropdown when adding item on search by pressing enter
                         if (item) {
                             $document.triggerHandler('click');
-                            $scope.term = null;
+
+                            // Clear text input
+                            if (!$scope.keepinput) {
+                                $scope.term = null;
+                            }
                         }
                     }
                 };
