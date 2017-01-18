@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
-import {RichUtils} from 'draft-js';
+import React from 'react';
 import StyleButton from './StyleButton';
+import * as actions from '../../actions';
+import {connect} from 'react-redux';
 
 /** The list of supported block types style */
 const BLOCK_TYPES_STYLE = {
@@ -19,53 +20,45 @@ const BLOCK_TYPES_STYLE = {
  * @ngdoc React
  * @module superdesk.core.editor3
  * @name BlockStyleControl
- * @description TODO(gbbr)
+ * @description Blocks style controls (h1, h2, h3, ...)
  */
-export default class BlockStyleControls extends Component {
-    constructor(props) {
-        super(props);
+const BlockStyleControlsComponent = ({editorState, options, toggleBlockStyle}) => {
+    const selection = editorState.getSelection();
+    const blockType = editorState
+        .getCurrentContent()
+        .getBlockForKey(selection.getStartKey())
+        .getType();
 
-        this.toggleBlockType = this.toggleBlockType.bind(this);
-    }
-
-    /** Handle the toolbar button pressed event */
-    toggleBlockType(blockType) {
-        const {editorState, onChange} = this.props;
-        const stateAfterChange = RichUtils.toggleBlockType(
-            editorState,
-            blockType
-        );
-
-        onChange(stateAfterChange);
-    }
-
-    render() {
-        const {editorState, options} = this.props;
-        const selection = editorState.getSelection();
-        const blockType = editorState
-            .getCurrentContent()
-            .getBlockForKey(selection.getStartKey())
-            .getType();
-
-
-        return (
-            <span>
-                {options.filter((type) => type in BLOCK_TYPES_STYLE).map((type) =>
-                    <StyleButton
-                        key={type}
-                        active={BLOCK_TYPES_STYLE[type] === blockType}
-                        label={type}
-                        onToggle={this.toggleBlockType}
-                        style={BLOCK_TYPES_STYLE[type]}
-                    />
-                )}
-            </span>
-        );
-    }
-}
-
-BlockStyleControls.propTypes = {
-    editorState: React.PropTypes.object,
-    options: React.PropTypes.array,
-    onChange: React.PropTypes.func.isRequired
+    return (
+        <span>
+            {options.filter((type) => type in BLOCK_TYPES_STYLE).map((type) =>
+                <StyleButton
+                    key={type}
+                    active={BLOCK_TYPES_STYLE[type] === blockType}
+                    label={type}
+                    onToggle={toggleBlockStyle}
+                    style={BLOCK_TYPES_STYLE[type]}
+                />
+            )}
+        </span>
+    );
 };
+
+BlockStyleControlsComponent.propTypes = {
+    editorState: React.PropTypes.object,
+    toggleBlockStyle: React.PropTypes.func,
+    options: React.PropTypes.array
+};
+
+const mapStateToProps = (state, ownProps) => ({
+    editorState: state.editorState,
+    options: state.editorFormat
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    toggleBlockStyle: (blockType) => dispatch(actions.toggleBlockStyle(blockType))
+});
+
+const BlockStyleControls = connect(mapStateToProps, mapDispatchToProps)(BlockStyleControlsComponent);
+
+export default BlockStyleControls;

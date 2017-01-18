@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import * as actions from '../../actions';
 import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
 import LinkControl from './link-button/LinkControl';
@@ -16,7 +14,7 @@ import LinkControl from './link-button/LinkControl';
  * @param {Array} editorFormat options and settings for formatting
  * @description Holds the editor's toolbar.
  */
-class ToolbarComponent extends Component {
+export default class Toolbar extends Component {
     /**
      * @ngdoc method
      * @name Toolbar#getDecorators
@@ -32,64 +30,18 @@ class ToolbarComponent extends Component {
     }
 
     render() {
-        const {editorState, editorRect, editorFormat, onChange} = this.props;
+        const {editorRect} = this.props;
 
         return (
             <div className="Editor3-controls">
-                <BlockStyleControls
-                    editorState={editorState}
-                    options={editorFormat}
-                    onChange={onChange}
-                />
-
-                <InlineStyleControls
-                    editorState={editorState}
-                    options={editorFormat}
-                    onChange={onChange}
-                />
-
-                <LinkControl
-                    editorState={editorState}
-                    editorRect={editorRect}
-                    onChange={onChange}
-                />
+                <BlockStyleControls />
+                <InlineStyleControls />
+                <LinkControl editorRect={editorRect} />
             </div>
         );
     }
 }
 
-ToolbarComponent.propTypes = {
-    editorState: React.PropTypes.object.isRequired,
-    editorRect: React.PropTypes.object.isRequired,
-    editorFormat: React.PropTypes.array.isRequired,
-    onChange: React.PropTypes.func.isRequired
+Toolbar.propTypes = {
+    editorRect: React.PropTypes.object.isRequired
 };
-
-/**
- * @ngdoc method
- * @name Toolbar#mapDispatchToProps
- * @param {Function} dispatch callback to store
- * @param {Object} ownProps the component props
- * @returns {Object} Returns the props values
- * @description Maps the values from state to the component value type props.
- */
-const mapStateToProps = (state, ownProps) => ({
-    editorState: state.editorState,
-    editorRect: ownProps.editorRect,
-    editorFormat: state.editorFormat
-});
-
-/**
- * @ngdoc method
- * @name Toolbar#mapDispatchToProps
- * @param {Function} dispatch callback to store
- * @returns {Object} Returns the props values
- * @description Maps the values from state to the component callback type props.
- */
-const mapDispatchToProps = (dispatch) => ({
-    onChange: (editorState) => dispatch(actions.changeEditorState(editorState))
-});
-
-const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);
-
-export default Toolbar;

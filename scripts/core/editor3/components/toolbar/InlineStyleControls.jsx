@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
-import {RichUtils} from 'draft-js';
+import React from 'react';
 import StyleButton from './StyleButton';
+import * as actions from '../../actions';
+import {connect} from 'react-redux';
 
 /** The list of supported inline styles */
 const INLINE_STYLES = {
@@ -9,47 +10,45 @@ const INLINE_STYLES = {
     underline: 'UNDERLINE'
 };
 
-/** Inline style functional component, will manage the inline style related toolbar buttons */
-export default class InlineStyleControls extends Component {
-    constructor(props) {
-        super(props);
+/**
+ * @ngdoc React
+ * @module superdesk.core.editor3
+ * @name InlineStyleControls
+ * @description Inline style functional component, will manage the inline style related toolbar buttons
+ */
+const InlineStyleControlsComponent = ({options, editorState, toggleInlineStyle}) => {
+    const currentStyle = editorState.getCurrentInlineStyle();
 
-        this.toggleInlineStyle = this.toggleInlineStyle.bind(this);
-    }
+    return (
+        <span>
+            {options.filter((type) => type in INLINE_STYLES).map((type) =>
+                <StyleButton
+                    key={type}
+                    active={currentStyle.has(INLINE_STYLES[type])}
+                    label={type}
+                    onToggle={toggleInlineStyle}
+                    style={INLINE_STYLES[type]}
+                />
+            )}
+        </span>
+    );
+};
 
-    /** Handle the toolbar button pressed event */
-    toggleInlineStyle(inlineStyle) {
-        const {editorState, onChange} = this.props;
-        const stateAfterChange = RichUtils.toggleInlineStyle(
-            editorState,
-            inlineStyle
-        );
-
-        onChange(stateAfterChange);
-    }
-
-    render() {
-        const {options, editorState} = this.props;
-        const currentStyle = editorState.getCurrentInlineStyle();
-
-        return (
-            <span>
-                {options.filter((type) => type in INLINE_STYLES).map((type) =>
-                    <StyleButton
-                        key={type}
-                        active={currentStyle.has(INLINE_STYLES[type])}
-                        label={type}
-                        onToggle={this.toggleInlineStyle}
-                        style={INLINE_STYLES[type]}
-                    />
-                )}
-            </span>
-        );
-    }
-}
-
-InlineStyleControls.propTypes = {
+InlineStyleControlsComponent.propTypes = {
     editorState: React.PropTypes.object,
     options: React.PropTypes.array,
-    onChange: React.PropTypes.func.isRequired
+    toggleInlineStyle: React.PropTypes.func
 };
+
+const mapStateToProps = (state, ownProps) => ({
+    editorState: state.editorState,
+    options: state.editorFormat
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    toggleInlineStyle: (type) => dispatch(actions.toggleInlineStyle(type))
+});
+
+const InlineStyleControls = connect(mapStateToProps, mapDispatchToProps)(InlineStyleControlsComponent);
+
+export default InlineStyleControls;

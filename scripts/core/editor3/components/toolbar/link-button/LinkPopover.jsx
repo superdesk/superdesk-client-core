@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import {getVisibleSelectionRect} from 'draft-js';
-import * as common from '../../common';
 
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
  * @name LinkPopover
- * @param {Object} editorState the state of the editor
  * @param {Object} editorRect Position of editor on the screen (top, left).
  * @param {Function} onChange on change function to be called when the editor
  * state changes
@@ -29,10 +27,7 @@ export default class LinkPopover extends Component {
      * @description Called when the edit action is clicked in the popover.
      */
     onEdit() {
-        const {editorState} = this.props;
-        const url = common.getSelectedEntityData(editorState).url;
-
-        this.props.onEdit(url);
+        this.props.onEdit(this.props.url);
     }
 
     /**
@@ -55,8 +50,7 @@ export default class LinkPopover extends Component {
     }
 
     render() {
-        const {editorState} = this.props;
-        const {url} = common.getSelectedEntityData(editorState);
+        const {url} = this.props;
 
         this.updatePosition();
 
@@ -70,7 +64,7 @@ export default class LinkPopover extends Component {
 }
 
 LinkPopover.propTypes = {
-    editorState: React.PropTypes.object.isRequired,
+    url: React.PropTypes.string.isRequired,
     editorRect: React.PropTypes.object.isRequired,
     onEdit: React.PropTypes.func.isRequired,
     onRemove: React.PropTypes.func.isRequired

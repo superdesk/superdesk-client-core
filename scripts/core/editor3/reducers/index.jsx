@@ -1,11 +1,23 @@
 import spellchecker from './spellchecker';
 import editor3 from './editor3';
+import toolbar from './toolbar';
 
-// custom combine of reducers because the data is needed in all reucers
-const editorReducers = (state, action) => {
-    var newState = spellchecker(state, action);
+// Returns a new reducer which chains the state and action throught the given
+// list of reducers.
+const chainReduce = (...reducers) => (state = {}, action) => {
+    let newState = {...state};
 
-    return editor3(newState, action);
+    reducers.forEach((r) => {
+        newState = r(newState, action);
+    });
+
+    return newState;
 };
+
+const editorReducers = chainReduce(
+    spellchecker,
+    toolbar,
+    editor3
+);
 
 export default editorReducers;
