@@ -1,5 +1,6 @@
 <div class="field">
     <label for="recipients" translate>Recipients</label>
+    <i class="field-info" translate>*at least one visible or hidden recipient needed</i>
     <input type="text" id="recipients" placeholder="{{:: 'Recipients (visible to everybody)'|translate }}"
       ng-model="destination.config.recipients"
       ng-change="$parent.setConfig(provider)"

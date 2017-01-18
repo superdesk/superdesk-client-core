@@ -1,5 +1,6 @@
 <div class="field">
     <label for="ftp_host" translate>Host</label>
+    <i class="field-info pull-right">*</i>
     <input type="text" id="ftp_host" placeholder="{{ :: 'FTP Server URL'|translate }}" ng-model="destination.config.host" required ng-change="$parent.setConfig(destination)">
 </div>
 <div class="field">
@@ -20,5 +21,6 @@
 </div>
 <div class="field">
     <label for="ftp_dest_path" translate>Local Path</label>
+    <i class="field-info pull-right">*</i>
     <input type="text" id="ftp_dest_path" placeholder="{{ :: 'Local Path'|translate }}" ng-model="destination.config.dest_path" required ng-change="$parent.setConfig(destination)">
 </div>
