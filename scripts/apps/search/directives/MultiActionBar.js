@@ -62,7 +62,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                 scope.activity = activities;
             }
 
-            keyboardManager.bind('ctrl+k', () => {
+            keyboardManager.bind('ctrl+shift+#', () => {
                 if (scope.activity.spike > 0) {
                     scope.action.spikeItems();
                 }

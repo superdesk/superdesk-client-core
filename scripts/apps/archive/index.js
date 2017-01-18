@@ -93,9 +93,10 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Spike Item'),
                 icon: 'trash',
                 monitor: true,
-                controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q',
-                    function spikeActivity(spike, data, $rootScope, modal, $location, $q) {
-                        if (!data.item || !spike.canSpike(data.item)) {
+                controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q', 'multi',
+                    function spikeActivity(spike, data, $rootScope, modal, $location, $q, multi) {
+                        // If multibar is open, let its keyboard binding handle this - so, return.
+                        if (!data.item || !spike.canSpike(data.item) || multi.count > 0) {
                             return;
                         }
 
@@ -110,7 +111,7 @@ angular.module('superdesk.apps.archive', [
                     }],
                 filters: [{action: 'list', type: 'archive'}],
                 action: 'spike',
-                keyboardShortcut: 'ctrl+k',
+                keyboardShortcut: 'ctrl+shift+#',
                 additionalCondition: ['session', 'authoring', 'item', function(session, authoring, item) {
                     return authoring.itemActions(item).spike &&
                         (item.lock_user === null || angular.isUndefined(item.lock_user) ||

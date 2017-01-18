@@ -28,4 +28,5 @@ angular.module('superdesk.apps.workspace', ['superdesk.apps.workspace.content'])
         keyboardManager.register('General', 'alt + x', gettext('Opens spike'));
         keyboardManager.register('General', 'alt + p', gettext('Opens personal'));
         keyboardManager.register('General', 'alt + f', gettext('Opens search'));
+        keyboardManager.register('General', 'x', gettext('Multi-selects(or deselects) an item'));
     }]);
