@@ -21,6 +21,10 @@
                             <label translate>Editor3</label>
                             <div sd-check ng-model="model.editor[id].editor3"></div>
                         </div>
+                        <div class="field" ng-if="id == 'dateline'">
+                            <label translate>Hide Date</label>
+                            <div sd-check ng-model="model.editor[id].hideDate"></div>
+                        </div>
                         <div class="field">
                             <label translate>Required</label>
                             <div sd-check ng-model="specs.required"></div>
