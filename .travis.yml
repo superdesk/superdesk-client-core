@@ -1,76 +1,29 @@
-language: python
-
-python: 3.5
+language: node_js
+node_js: "6"
 
 sudo: required
 dist: trusty
 
-services:
-    - mongodb
-    - elasticsearch
-    - redis-server
-
 addons:
   apt:
     sources:
-        - mongodb-3.0-precise
-        - elasticsearch-1.7
         - google-chrome
     packages:
-        - mongodb-org-server
-        - elasticsearch
         - google-chrome-stable
 
 cache:
     directories:
-        - $HOME/.cache/pip
         - $HOME/.npm
 
 before_install:
-    - nvm install node
-    - nvm use node
-    - node --version
     - npm config set loglevel warn
-    - npm install -g npm@latest grunt-cli
+    - npm install -g grunt-cli
     - export DISPLAY=:99.0 && /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x24
     - export CHROME_BIN=`which google-chrome` && $CHROME_BIN --version ;
 
 install:
     - npm install
-    - cd test-server && pip install -r requirements.txt && cd ..
-    - ./node_modules/.bin/webdriver-manager update
-
-# Enable snapshot feature in elasticsearch (uses for prepopulation step)
-#
-# Some other optimizations
-# - disable journal for mongodb storage
-# - in memory indexes for elasticsearch
-before_script: >
-    df -h
-    && sudo sed -i 's\enabled: true\enabled: false\' /etc/mongod.conf
-    && sudo service mongod restart
-    && mkdir /tmp/es-backups
-    && sudo chown elasticsearch:elasticsearch /tmp/es-backups
-    && echo "path.repo: ['/tmp/es-backups']" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
-    && echo "index.store.type: memory" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
-    && sudo service elasticsearch restart
-    && tail -n1 /etc/elasticsearch/elasticsearch.yml
-    && sleep 10
-    && curl -XPUT 'http://localhost:9200/_snapshot/backups' -d '{"type": "fs", "settings": {"location": "/tmp/es-backups"}}'
 
 script:
     - grunt ci:travis
-    - grunt build ;
-      cd dist ;
-      while [ ! -f index.html ]; do sleep .5; done ;
-        (nohup python -m http.server 9000 & );
-      cd .. ;
-    - cd test-server ;
-      nohup python manage.py ;
-      (nohup honcho start & ) ;
-      sleep 5 ;
-      cd ..;
-    - ./node_modules/protractor/bin/protractor protractor.conf.js --stackTrace --verbose
-
-after_script:
-    - killall -9 python
+    - grunt build
