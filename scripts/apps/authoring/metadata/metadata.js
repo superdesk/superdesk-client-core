@@ -828,7 +828,8 @@ function MetaLocatorsDirective() {
             change: '&',
             postprocessing: '&',
             header: '@',
-            tabindex: '='
+            tabindex: '=',
+            keepinput: '='
         },
 
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-locators.html',
