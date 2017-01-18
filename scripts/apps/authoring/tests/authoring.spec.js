@@ -173,7 +173,7 @@ describe('authoring', () => {
         expect(scope.item.slugline).toBe('');
     }));
 
-    it('confirm the associated media not called if not rewrite_of',
+    it('confirm the associated media not called',
     inject((api, $q, $rootScope, config, confirm) => {
         let item = {
             _id: 'test',
@@ -194,6 +194,40 @@ describe('authoring', () => {
 
         config.features = {
             editFeaturedImage: 1
+        };
+
+        spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
+        spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
+        let scope = startAuthoring(item, 'edit');
+
+        scope.publish();
+        $rootScope.$digest();
+        expect(confirm.confirmFeatureMedia).not.toHaveBeenCalled();
+        expect(api.find).not.toHaveBeenCalledWith('archive', 'rewriteOf');
+    }));
+
+    it('confirm the associated media not called if not rewrite_of',
+    inject((api, $q, $rootScope, config, confirm) => {
+        let item = {
+            _id: 'test',
+            headline: 'headline'
+        };
+
+        let rewriteOf = {
+            _id: 'rewriteOf',
+            headline: 'rewrite',
+            associations: {
+                featuremedia: {
+
+                }
+            }
+        };
+
+        let defered = $q.defer();
+
+        config.features = {
+            editFeaturedImage: 1,
+            confirmMediaOnUpdate: 1
         };
 
         spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
@@ -227,7 +261,8 @@ describe('authoring', () => {
         let defered = $q.defer();
 
         config.features = {
-            editFeaturedImage: 1
+            editFeaturedImage: 1,
+            confirmMediaOnUpdate: 1
         };
 
         spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
@@ -265,7 +300,8 @@ describe('authoring', () => {
         let defered = $q.defer();
 
         config.features = {
-            editFeaturedImage: 1
+            editFeaturedImage: 1,
+            confirmMediaOnUpdate: 1
         };
 
         spyOn(api, 'find').and.returnValue($q.when(rewriteOf));

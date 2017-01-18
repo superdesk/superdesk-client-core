@@ -335,12 +335,17 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Checks if associations is with rewrite_of item then open then modal to add associations.
              * The user has options to add associated media to the current item and review the media change
              * or publish the current item without media.
+             * User will be prompted in following scenarios:
+             * 1. Edit feature image and confirm media update is enabled.
+             * 2. Once item is published then no confirmation.
+             * 3. If current item is update and updated story has associations
              */
             function checkMediaAssociatedToUpdate() {
                 let rewriteOf = $scope.item.rewrite_of;
 
-                if (!config.features.editFeaturedImage ||
-                    $scope.action === 'kill' || !rewriteOf ||
+                if (!_.get(config, 'features.confirmMediaOnUpdate') ||
+                    !_.get(config, 'features.editFeaturedImage') ||
+                    !rewriteOf || _.includes(['kill', 'correct'], $scope.action) ||
                     $scope.item.associations && $scope.item.associations.featuremedia) {
                     return $q.when(true);
                 }
