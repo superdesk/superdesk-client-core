@@ -52,7 +52,8 @@ export class MarkedDesksList extends React.Component {
 
     render() {
         const {desks} = this.props.svc;
-        var markedDesks = this.props.item.marked_desks;
+        var markedDesks = _.isString(this.props.item.marked_desks[0]) ?
+            this.props.item.marked_desks : _.map(this.props.item.marked_desks, 'desk_id');
         var markedDesksById = this.props.markedDesksById || {};
 
         return (
@@ -66,10 +67,10 @@ export class MarkedDesksList extends React.Component {
                     </div>
                 </li>
                 {
-                    markedDesks.map((d) => <li key={'item-marked-' + markedDesksById[d.desk_id]._id}>
-                    {markedDesksById[d.desk_id].name}
+                    markedDesks.map((d) => <li key={'item-marked-' + markedDesksById[d]._id}>
+                    {markedDesksById[d].name}
                     {desks.hasMarkItemPrivilege() ? <button className="btn btn--mini"
-                        onClick={this.removeMarkedDesk(markedDesksById[d.desk_id])}>
+                        onClick={this.removeMarkedDesk(markedDesksById[d])}>
                             {gettext('REMOVE')}</button> : null}
                     </li>)
             }
