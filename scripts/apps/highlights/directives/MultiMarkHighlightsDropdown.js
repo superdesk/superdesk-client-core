@@ -25,7 +25,10 @@ export function MultiMarkHighlightsDropdown(desks, highlightsService, multi) {
                 highlightsService.get(desks.getCurrentDeskId()).then((result) => {
                     scope.highlights = [];
                     result._items.forEach((item) => {
-                        scope.highlights.push(item);
+                        // Multi mark highlights should only show global highlights
+                        if (!item.desks.length) {
+                            scope.highlights.push(item);
+                        }
                     });
                 });
             }
