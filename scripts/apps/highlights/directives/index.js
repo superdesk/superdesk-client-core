@@ -1,6 +1,7 @@
 export {MarkHighlightsDropdown} from './MarkHighlightsDropdown';
 export {MultiMarkHighlightsDropdown} from './MultiMarkHighlightsDropdown';
 export {HighlightsInfo} from './HighlightsInfo';
+export {HighlightsTitle} from './HighlightsTitle';
 export {SearchHighlights} from './SearchHighlights';
 export {PackageHighlightsDropdown} from './PackageHighlightsDropdown';
 export {HighlightsLabel} from './HighlightsLabel';

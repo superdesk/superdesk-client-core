@@ -1,0 +1,26 @@
+<div class="highlights-list dropdown"
+     dropdown
+     dropdown-append-to-body
+     ng-if="highlights.length>0"
+     ng-click="toggleClass(open)"
+     sd-dropdown-position-absolute
+     ng-model="highlights">
+
+    <button class="dropdown__toggle" dropdown__toggle>
+        <i ng-class="{'icon-star': highlights.length === 1, 'icon-multi-star': highlights.length > 1, 'red': isActiveHighlights()}" class="icon-star"></i>
+    </button>
+
+    <ul class="dropdown dropdown__menu highlights-list-menu" ng-class="{open: open}" ng-click="$event.stopPropagation()">
+        <li>
+            <div class="dropdown__menu-label" translate>Marked For</div>
+            <button class="dropdown__menu-close" dropdown__toggle>
+                <i class="icon-close-small icon-white"></i>
+            </button>
+        </li>
+        <li ng-repeat="highlight in highlights track by highlight._id" title="{{ :: highlight.name }}">
+            {{ :: highlight.name }}
+            <button class="btn btn--mini uppercase" ng-if="hasMarkItemPrivilege" ng-click="unmarkHighlight(highlight._id)" translate>Remove</button>
+        </li>
+        <li class="none" ng-show="highlights.length === 0" translate>None</li>
+    </ul>
+</div>

@@ -30,7 +30,7 @@
     <div class="subnav__authoring-topbar" ng-class="{'has-highlights': item.highlights}">
         <span class="stage" tooltip="{{deskName}} / {{ stage.name }}" tooltip-placement="bottom" ng-show="stage" ng-if="item._type !== 'legal_archive'"><b>{{deskName}}</b> / {{ stage.name }}</span>
         <span class="stage" tooltip="{{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage" ng-if="item._type === 'legal_archive'"><b>{{deskName}}</b> / {{ stage }}</span>
-        <span ng-if="item.highlights" sd-highlights-title data-item="highlights"></span>
+        <span ng-if="item.highlights" sd-highlights-title data-item="item"></span>
         <span ng-if="item.marked_desks" sd-highlights-title data-item="marked_desks"></span>
     </div>
 
