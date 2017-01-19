@@ -1,3 +1,10 @@
+import './styles.scss';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import {Editor3} from './components';
+import createStore from './store';
+
 /**
  * @ngdoc module
  * @module superdesk.core.editor3
@@ -5,8 +12,6 @@
  * @packageName superdesk.core
  * @description Superdesk core editor version 3.
  */
-import './styles.scss';
-import * as ctrl from './controllers';
 
 /**
  * @ngdoc directive
@@ -33,6 +38,12 @@ export default angular.module('superdesk.core.editor3', ['superdesk.apps.spellch
                 trim: '='
             },
             controllerAs: 'vm',
-            controller: ctrl.Editor3Controller
+            controller: ['$element', function($element) {
+                ReactDOM.render(
+                    <Provider store={createStore(this)}>
+                        <Editor3 />
+                    </Provider>, $element.get(0)
+                );
+            }]
         })
     );
