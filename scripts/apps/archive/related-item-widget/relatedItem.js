@@ -54,7 +54,8 @@ function RelatedItemController(
         notStates: ['spiked'],
         types: ['text', 'composite'],
         page: 1,
-        modificationDateAfter: storage.getItem('modificationDateAfter') || today(),
+        modificationDateAfter: storage.getItem('modificationDateAfter') === 'today' ? today() :
+            storage.getItem('modificationDateAfter') || today(),
         sluglineMatch: storage.getItem('sluglineMatch') || 'EXACT'
     };
     $scope.options = {
