@@ -7,6 +7,11 @@ import {forceUpdate} from '../actions';
 import {Editor3} from '../components/Editor3';
 import {EditorState} from 'draft-js';
 
+/**
+ * @name createEditorStore
+ * @description Returns a new redux store.
+ * @returns {Object} Redux store.
+ */
 export default function createEditorStore(ctrl) {
     const spellcheck = ng.get('spellcheck');
 
