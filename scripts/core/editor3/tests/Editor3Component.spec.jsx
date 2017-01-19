@@ -3,7 +3,6 @@ import {shallow} from 'enzyme';
 import {Editor3Component} from '../components/Editor3';
 import createEditorStore from '../store';
 import {EditorState, ContentState} from 'draft-js';
-import ng from 'core/services/ng';
 import reducer from '../reducers';
 
 describe('Editor3Component', () => {
@@ -16,13 +15,15 @@ describe('Editor3Component', () => {
 });
 
 describe('Editor3.createEditorStore', () => {
-    it('should initialize with correct values', inject(($q) => {
-        const setLanguage = jasmine.createSpy(),
-            getDict = jasmine.createSpy().and.callFake(() => $q.when(null)),
-            isCorrectWord = jasmine.createSpy();
+    beforeEach(window.module(($provide) => {
+        $provide.service('spellcheck', ($q) => ({
+            setLanguage: jasmine.createSpy(),
+            getDict: jasmine.createSpy().and.returnValue($q.when(null)),
+            isCorrectWord: jasmine.createSpy()
+        }));
+    }));
 
-        ng.mock('spellcheck', {setLanguage, getDict, isCorrectWord});
-
+    it('should initialize with correct values', inject((spellcheck) => {
         const store = createEditorStore({
             language: 'en',
             editorFormat: '123',
@@ -34,14 +35,12 @@ describe('Editor3.createEditorStore', () => {
 
         const state = store.getState();
 
-        expect(setLanguage).toHaveBeenCalledWith('en');
-        expect(getDict).toHaveBeenCalled();
+        expect(spellcheck.setLanguage).toHaveBeenCalledWith('en');
+        expect(spellcheck.getDict).toHaveBeenCalled();
         expect(state.readOnly).toBe(false);
         expect(state.showToolbar).toBe(true);
         expect(state.singleLine).toBe(false);
         expect(state.editorFormat).toBe('123');
-
-        ng.unmock('spellcheck');
     }));
 });
 

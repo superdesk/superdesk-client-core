@@ -26,6 +26,8 @@ import 'core/lang';
 import 'core/config';
 import 'core/loading';
 
+import ng from 'core/services/ng';
+
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
 
@@ -81,5 +83,7 @@ core.config(['$routeProvider', ($routeProvider) => {
         redirectTo: appConfig.defaultRoute
     });
 }]);
+
+core.run(['$injector', ng.register]);
 
 export default core;

@@ -4,15 +4,9 @@ import toolbar from './toolbar';
 
 // Returns a new reducer which chains the state and action throught the given
 // list of reducers.
-const chainReduce = (...reducers) => (state = {}, action) => {
-    let newState = {...state};
-
-    reducers.forEach((r) => {
-        newState = r(newState, action);
-    });
-
-    return newState;
-};
+const chainReduce = (...reducers) =>
+    (startState = {}, action) =>
+        reducers.reduce((newState, r) => r(newState, action), startState);
 
 const editorReducers = chainReduce(
     spellchecker,
