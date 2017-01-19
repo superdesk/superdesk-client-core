@@ -39,6 +39,21 @@
               </div>
             </div>
 
+            <div class="field"
+                 sd-validation-error="error.category">
+                <label for="parameters-category">{{:: 'Category' | translate}}</label>
+              <div id="parameters-category"
+                   sd-meta-terms
+                   class="data"
+                   data-item="activityReport"
+                   data-field="category"
+                   data-unique="qcode"
+                   data-list="metadata.categories"
+                   data-header="true"
+                   data-reload-list="true">
+              </div>
+            </div>
+
             <div class="field">
                 <label for="parameters-keywords">{{:: 'Keywords' | translate}}</label>
                 <div id="parameters-keywords"
@@ -48,6 +63,28 @@
                      data-list="metadata.keywords"
                      data-item="activityReport"
                 ></div>
+            </div>
+
+            <div class="field">
+                <label for="parameters-subscriber" translate="">Subscriber</label>
+                <select id="parameters-subscriber" name="subscriber"
+                    ng-options="s._id as s.name for s in metadata.customSubscribers"
+                    ng-model="activityReport.subscriber" selected=none>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="parameters-urgency" translate="">Urgency</label>
+                <select id="parameters-urgency" ng-model="activityReport.urgency"
+                    ng-options="i for i in [1,2,3,4,5]">
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="parameters-priority" translate="">Priority</label>
+                <select id="parameters-priority" ng-model="activityReport.priority"
+                    ng-options="i for i in [1,2,3,4,5,6]">
+                </select>
             </div>
         </div>
     </fieldset>
