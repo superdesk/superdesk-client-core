@@ -13,11 +13,11 @@ import classNames from 'classnames';
  * the error and allow the opening of the contextual spellchecker menu.
  */
 export class SpellcheckerError extends Component {
-    static getDecorators() {
-        return [{
+    static getDecorator() {
+        return {
             strategy: spellcheckStrategy,
             component: SpellcheckerError
-        }];
+        };
     }
 
     constructor(props) {

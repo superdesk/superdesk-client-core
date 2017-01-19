@@ -15,20 +15,6 @@ import LinkControl from './link-button/LinkControl';
  * @description Holds the editor's toolbar.
  */
 export default class Toolbar extends Component {
-    /**
-     * @ngdoc method
-     * @name Toolbar#getDecorators
-     * @returns {Array} Array containing the decorators of the toolbar's components.
-     * @static
-     * @description Returns an array of decorators that need to be added to
-     * the editor and are required by the toolbar.
-     */
-    static getDecorators() {
-        return [
-            LinkControl.getDecorator()
-        ];
-    }
-
     render() {
         const {editorRect} = this.props;
 

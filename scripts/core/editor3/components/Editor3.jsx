@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
 import {SpellcheckerError} from './spellchecker/SpellcheckerError';
+import LinkControl from './toolbar/link-button/LinkControl';
 
 /**
  * @ngdoc React
@@ -23,10 +24,10 @@ import {SpellcheckerError} from './spellchecker/SpellcheckerError';
 
 export class Editor3Component extends React.Component {
     static getDecorator() {
-        return new CompositeDecorator(
-            Toolbar.getDecorators()
-                .concat(SpellcheckerError.getDecorators())
-        );
+        return new CompositeDecorator([
+            LinkControl.getDecorator(),
+            SpellcheckerError.getDecorator()
+        ]);
     }
 
     constructor(props) {
