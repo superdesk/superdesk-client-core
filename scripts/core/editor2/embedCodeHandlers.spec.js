@@ -17,23 +17,19 @@ describe('Embed Code Handlers', () => {
         ctrl = $controller('SdAddEmbedController', {$scope: scope, $element: element});
     }));
 
-    it('match a twitter url', inject(($httpBackend, config) => {
+    it('match a twitter url', inject(($rootScope, $q, config, embedService) => {
         ctrl.input = 'https://twitter.com/letzi83/status/764062125996113921';
-        $httpBackend
-            .expectJSONP('https://iframe.ly/api/iframely?callback=JSON_CALLBACK&api_key=' +
-            config.iframely.key + '&url=' + ctrl.input)
-            .respond({
-                meta: {site: 'Twitter'},
-                html: 'embed'
-            });
+        jasmine.createSpy(embedService, 'get').and.returnValue($q.when({
+            meta: {site: 'Twitter'},
+            html: 'embed'
+        }));
         ctrl.retrieveEmbed().then((d) => {
             expect(d).toEqual({
                 body: 'embed',
                 provider: 'Twitter'
             });
         });
-        $httpBackend.flush();
-        scope.$digest();
+        $rootScope.$digest();
     }));
 
     it('match a twitter embed', () => {

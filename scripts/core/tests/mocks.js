@@ -9,6 +9,7 @@ beforeEach(window.module('superdesk.core.services.storage'));
  * Mock services that call server on init and thus would require mocking all the time
  */
 angular.module('superdesk.mocks', [])
+    .config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections(false)])
     .run(['$injector', ng.register])
     .constant('config', {
         server: {url: null},

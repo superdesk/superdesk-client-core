@@ -83,13 +83,12 @@ export default angular.module('superdesk.core.services.data', [])
                     var query = {resource: resource, criteria: criteria, start: Date.now()};
                     var promise = em.getRepository(resource).matching(criteria);
 
-                    promise.then((data) => {
+                    return promise.then((data) => {
                         self.loading = false;
                         slowQueryLog(query);
                         angular.extend(self, data);
+                        return data;
                     });
-
-                    return promise;
                 };
 
                 /**
