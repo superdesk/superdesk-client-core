@@ -25,13 +25,11 @@ export class SpellcheckerError extends Component {
 
         this.state = {
             menuShowing: false,
-            suggestions: [],
-            ignored: false
+            suggestions: []
         };
 
         this.showContextMenu = this.showContextMenu.bind(this);
         this.closeContextMenu = this.closeContextMenu.bind(this);
-        this.onIgnore = this.onIgnore.bind(this);
     }
 
     showContextMenu(txt) {
@@ -48,10 +46,6 @@ export class SpellcheckerError extends Component {
 
     closeContextMenu() {
         this.setState({menuShowing: false});
-    }
-
-    onIgnore() {
-        this.setState({ignored: true});
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -71,15 +65,15 @@ export class SpellcheckerError extends Component {
     }
 
     render() {
-        const {menuShowing, suggestions, ignored} = this.state;
+        const {menuShowing, suggestions} = this.state;
         const {children} = this.props;
         const word = {text: children[0].props.text, offset: children[0].props.start};
-        const cx = classNames({'word-typo': true, ignored: ignored});
+        const cx = classNames({'word-typo': true});
 
         return (
             <span className={cx} onContextMenu={this.showContextMenu(word.text)}>
                 {menuShowing ?
-                    <SpellcheckerContextMenu suggestions={suggestions} word={word} onIgnore={this.onIgnore} />
+                    <SpellcheckerContextMenu suggestions={suggestions} word={word} />
                     : null}
                 {this.props.children}
             </span>
