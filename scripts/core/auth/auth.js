@@ -1,13 +1,15 @@
 /**
  * Expire session on 401 server response
  */
-AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', 'config', 'lodash'];
-function AuthExpiredInterceptor(session, $q, $injector, config, _) {
+AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', '$browser', 'config', 'lodash'];
+function AuthExpiredInterceptor(session, $q, $injector, $browser, config, _) {
     function handleAuthExpired(response) {
+        $browser.$$completeOutstandingRequest(angular.noop);
         session.expire();
         return session.getIdentity().then(() => {
-            var $http = $injector.get('$http');
+            let $http = $injector.get('$http');
 
+            $browser.$$incOutstandingRequestCount();
             $http.defaults.headers.common.Authorization = session.token;
             response.config.headers.Authorization = session.token;
             return $injector.get('request').resend(response.config);

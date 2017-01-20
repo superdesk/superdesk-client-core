@@ -317,7 +317,7 @@ describe('authoring', () => {
     it('keyboard shortcuts', () => {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.writeText('z');
-        element(by.cssContainingText('span', 'Dateline')).click();
+        element(by.cssContainingText('label', 'Dateline')).click();
         ctrlShiftKey('s');
         browser.wait(() => element(by.buttonText('Save')).getAttribute('disabled'), 500);
         authoring.close();
@@ -326,7 +326,7 @@ describe('authoring', () => {
 
         expect(authoring.getBodyText()).toBe('zitem5 text');
 
-        element(by.cssContainingText('span', 'Headline')).click();
+        element(by.cssContainingText('label', 'Headline')).click();
         ctrlShiftKey('e');
         browser.sleep(300);
 

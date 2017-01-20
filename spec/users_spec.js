@@ -25,6 +25,7 @@ describe('users', () => {
         beforeEach((done) => {
             openUrl('/#/profile').then(done);
         });
+
         it('can render user profile', () => {
             expect(bindingValue('user.username')).toBe('admin');
             expect(modelValue('user.first_name')).toBe('first name');
