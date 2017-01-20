@@ -3,9 +3,6 @@ import {stateToHTML} from 'draft-js-export-html';
 import {EditorState} from 'draft-js';
 
 /**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name Editor3 Reducers
  * @description Contains the list of editor related reducers.
  */
 const editor3 = (state = {}, action) => {

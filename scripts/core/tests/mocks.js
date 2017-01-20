@@ -1,7 +1,6 @@
-beforeEach(window.module(($provide) => {
-    $provide.constant('lodash', window._);
-}));
+import ng from 'core/services/ng';
 
+beforeEach(window.module(($provide) => $provide.constant('lodash', window._)));
 beforeEach(window.module('superdesk.mocks'));
 beforeEach(window.module('superdesk.core.auth.session'));
 beforeEach(window.module('superdesk.core.services.storage'));
@@ -10,6 +9,7 @@ beforeEach(window.module('superdesk.core.services.storage'));
  * Mock services that call server on init and thus would require mocking all the time
  */
 angular.module('superdesk.mocks', [])
+    .run(['$injector', ng.register])
     .constant('config', {
         server: {url: null},
         editor: {},

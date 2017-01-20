@@ -4,11 +4,14 @@ import {stateFromHTML} from 'draft-js-import-html';
 import reducers from '../reducers';
 import ng from 'core/services/ng';
 import {forceUpdate} from '../actions';
+import {Editor3} from '../components/Editor3';
+import {EditorState} from 'draft-js';
 
-import {SpellcheckerError} from '../components/spellchecker/SpellcheckerError';
-import Toolbar from '../components/toolbar';
-import {EditorState, CompositeDecorator} from 'draft-js';
-
+/**
+ * @name createEditorStore
+ * @description Returns a new redux store.
+ * @returns {Object} Redux store.
+ */
 export default function createEditorStore(ctrl) {
     const spellcheck = ng.get('spellcheck');
 
@@ -24,9 +27,7 @@ export default function createEditorStore(ctrl) {
     };
 
     const initialValue = stateFromHTML(ctrl.value);
-    const decorators = new CompositeDecorator(
-        SpellcheckerError.getDecorators().concat(Toolbar.getDecorators())
-    );
+    const decorators = Editor3.getDecorator();
 
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(initialValue, decorators),

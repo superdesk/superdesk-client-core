@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Editor} from 'draft-js';
+import {Editor, CompositeDecorator} from 'draft-js';
 import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
+import {SpellcheckerError} from './spellchecker/SpellcheckerError';
+import LinkControl from './toolbar/link-button/LinkControl';
 
 /**
  * @ngdoc React
@@ -21,6 +23,13 @@ import * as actions from '../actions';
  */
 
 export class Editor3Component extends React.Component {
+    static getDecorator() {
+        return new CompositeDecorator([
+            LinkControl.getDecorator(),
+            SpellcheckerError.getDecorator()
+        ]);
+    }
+
     constructor(props) {
         super(props);
 

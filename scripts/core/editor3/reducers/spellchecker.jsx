@@ -17,9 +17,8 @@ const spellchecker = (state = {}, action) => {
  * @return {Object} returns new state
  * @description Replace the current word with the new selected one
  */
-const replaceWord = (state, data) => {
+const replaceWord = (state, {word, newWord}) => {
     const {editorState} = state;
-    const {word, newWord} = data;
 
     const wordSelection = editorState.getSelection().merge({
         anchorOffset: word.offset,
