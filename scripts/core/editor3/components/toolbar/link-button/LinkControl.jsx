@@ -138,7 +138,7 @@ LinkControlComponent.propTypes = {
     removeLink: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     editorState: state.editorState,
     options: state.editorFormat
 });

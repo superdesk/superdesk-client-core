@@ -40,7 +40,7 @@ InlineStyleControlsComponent.propTypes = {
     toggleInlineStyle: React.PropTypes.func
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     editorState: state.editorState,
     options: state.editorFormat
 });
