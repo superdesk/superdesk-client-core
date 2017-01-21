@@ -411,58 +411,6 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 
     return itemPinService;
 }])
-.directive('sdItemListWidget', ['ItemList', 'notify', 'itemPinService', 'gettext', '$timeout',
-    function(ItemList, notify, itemPinService, gettext, $timeout) {
-        return {
-            scope: {
-                options: '=',
-                itemListOptions: '=',
-                actions: '='
-            },
-            templateUrl: 'scripts/core/itemList/views/item-list-widget.html',
-            link: function(scope, element, attrs) {
-                scope.items = null;
-                scope.processedItems = null;
-                scope.maxPage = 1;
-                scope.pinnedItems = [];
-                scope.selected = null;
-
-                var oldSearch = null;
-
-                var itemList = new ItemList();
-
-                var timeout;
-
-                function refresh() {
-                    $timeout.cancel(timeout);
-                    timeout = $timeout(() => {
-                        itemList.fetch();
-                    }, 300, false);
-                }
-
-                extendScope(scope, itemList, itemPinService);
-
-                scope.$watch('itemListOptions', () => {
-                    itemList.setOptions(scope.itemListOptions);
-                    refresh();
-                }, true);
-
-                scope.$watch('options.similar', () => {
-                    if (scope.options.similar && scope.options.item) {
-                        if (!scope.options.item.slugline) {
-                            notify.error(gettext('Error: Slugline required.'));
-                            scope.options.similar = false;
-                        } else {
-                            oldSearch = scope.itemListOptions.search;
-                            scope.itemListOptions.search = scope.options.item.slugline;
-                        }
-                    } else {
-                        scope.itemListOptions.search = oldSearch || null;
-                    }
-                });
-            }
-        };
-    }])
 .directive('sdRelatedItemListWidget', ['ItemList', 'notify', 'itemPinService', 'gettext',
     function(ItemList, notify, itemPinService, gettext) {
         return {
@@ -478,39 +426,58 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                 scope.maxPage = 1;
                 scope.pinnedItems = [];
                 scope.selected = null;
+                scope.existingItems = false;
 
                 var oldSearch = null;
-
                 var itemList = new ItemList();
-
-                var _refresh = function() {
-                    if (scope.options.related &&
-                    scope.itemListOptions.keyword &&
-                    scope.itemListOptions.keyword.trim().length >= 2) {
-                        itemList.fetch();
-                    }
-                };
-                var refresh = _.debounce(_refresh, 300);
+                var itemListListener = null;
+                var optionsListener = null;
 
                 extendScope(scope, itemList, itemPinService);
 
-                scope.$watch('itemListOptions', () => {
-                    itemList.setOptions(scope.itemListOptions);
-                    itemList.setOptions({related: scope.options.related});
-                    refresh();
-                }, true);
-
-                scope.$watch('options.related', () => {
-                    if (scope.options.related && scope.options.item) {
-                        if (!scope.options.item.slugline) {
-                            notify.error(gettext('Error: Slugline required.'));
-                            scope.options.related = false;
-                        } else {
-                            oldSearch = scope.itemListOptions.keyword;
-                            scope.itemListOptions.keyword = scope.options.item.slugline;
-                        }
+                var setProcessedItems = () => {
+                    if (scope.options.existingRelations) {
+                        scope.processedItems = scope.options.existingRelations;
+                        itemListListener && itemListListener();
+                        optionsListener && optionsListener();
                     } else {
-                        scope.itemListOptions.keyword = oldSearch || null;
+                        var _refresh = function() {
+                            if (scope.options.related &&
+                            scope.itemListOptions.keyword &&
+                            scope.itemListOptions.keyword.trim().length >= 2) {
+                                itemList.fetch();
+                            }
+                        };
+                        var refresh = _.debounce(_refresh, 300);
+
+                        scope.$watch('itemListOptions', () => {
+                            itemList.setOptions(scope.itemListOptions);
+                            itemList.setOptions({related: scope.options.related});
+                            refresh();
+                        }, true);
+
+                        scope.$watch('options.related', () => {
+                            if (scope.options.related && scope.options.item) {
+                                if (!scope.options.item.slugline) {
+                                    notify.error(gettext('Error: Slugline required.'));
+                                    scope.options.related = false;
+                                } else {
+                                    oldSearch = scope.itemListOptions.keyword;
+                                    scope.itemListOptions.keyword = scope.options.item.slugline;
+                                }
+                            } else {
+                                scope.itemListOptions.keyword = oldSearch || null;
+                            }
+                        });
+                    }
+                };
+
+                scope.isPublished = (item) => _.includes(['published', 'killed', 'scheduled', 'corrected'],
+                    item.state);
+
+                scope.$watch('options.existingRelations', (newVal, oldVal) => {
+                    if (newVal !== oldVal) {
+                        setProcessedItems();
                     }
                 });
             }

@@ -1,9 +1,9 @@
 FamilyService.$inject = ['api', 'desks'];
 
 export function FamilyService(api, desks) {
-    this.fetchItems = function(familyId, excludeItem) {
-        var repo = 'archive,published';
+    const repo = 'archive,published';
 
+    this.fetchItems = (familyId, excludeItem) => {
         var filter = [
             {not: {term: {state: 'spiked'}}},
             {term: {family_id: familyId}}
@@ -13,20 +13,38 @@ export function FamilyService(api, desks) {
             filter.push({not: {term: {unique_id: excludeItem.unique_id}}});
         }
 
-        return api('search').query({
+        return query(filter, 'versioncreated', 'desc');
+    };
+
+    const query = (filter, sortField, order) => {
+        let params = {
             repo: repo,
             source: {
                 query: {filtered: {filter: {
                     and: filter
                 }}},
-                sort: [{versioncreated: 'desc'}],
-                size: 100,
+                size: 200,
                 from: 0
             }
-        });
+        };
+
+        params.source.sort = {};
+        params.source.sort[sortField] = order;
+        return api('search').query(params);
     };
-    this.fetchDesks = function(item, excludeSelf) {
-        return this.fetchItems(item.state === 'ingested' ? item._id : item.family_id, excludeSelf ? item : undefined)
+
+    this.fetchRelatedItems = (eventId, familyId) => {
+        var filter = [
+            {not: {term: {state: 'spiked'}}},
+            {term: {event_id: eventId}},
+            {not: {term: {type: 'composite'}}}
+        ];
+
+        return query(filter, 'firstcreated', 'asc');
+    };
+
+    this.fetchDesks = (item, excludeSelf) => this.fetchItems(item.state === 'ingested' ?
+        item._id : item.family_id, excludeSelf ? item : undefined)
         .then((items) => {
             var deskList = [];
             var deskIdList = [];
@@ -52,5 +70,4 @@ export function FamilyService(api, desks) {
             });
             return deskList;
         });
-    };
 }
