@@ -361,15 +361,23 @@ describe('authoring', () => {
     });
 
     it('related item widget', () => {
-        monitoring.actionOnItem('Duplicate', 2, 1); // duplicate item9 text published item
-        monitoring.actionOnItem('Edit', 0, 0);
-        authoring.writeTextToHeadline('Duplicate Item 9');
+        monitoring.actionOnItem('Edit', 2, 1);
+        authoring.writeText('something');
         authoring.save();
         authoring.close();
-        monitoring.actionOnItem('Edit', 2, 1);
-        browser.sleep(50);
-        expect(authoring.missing_link.getText()).toBe('MISSING LINK');
+        authoring.createTextItem();
+        browser.sleep(1000);
+        authoring.writeText('something');
+        authoring.setHeaderSluglineText('item test');
+        authoring.save();
+        authoring.close();
+        authoring.createTextItem();
+        browser.sleep(1000);
+        authoring.writeText('something');
+        authoring.setHeaderSluglineText('item test');
+        authoring.save();
         authoring.openRelatedItem();
+        authoring.searchRelatedItems();
         expect(authoring.getRelatedItems().count()).toBe(1);
         authoring.searchRelatedItems('slugline');
         expect(authoring.getRelatedItems().count()).toBe(0);
@@ -377,8 +385,9 @@ describe('authoring', () => {
         authoring.setRelatedItemConfigurationSlugline('ANY');
         authoring.setRelatedItemConfigurationLastUpdate('now-48h');
         authoring.saveRelatedItemConfiguration();
-        browser.sleep(500);
-        expect(authoring.getRelatedItems().count()).toBe(2);
+        browser.sleep(1000);
+        authoring.searchRelatedItems();
+        expect(authoring.getRelatedItems().count()).toBe(1);
     });
 
     it('related item widget can open published item', () => {
@@ -389,7 +398,7 @@ describe('authoring', () => {
         authoring.publish(); // item9 published
 
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Duplicate', 5, 0); // duplicate item9 text published item
+        monitoring.actionOnItem('Update', 5, 0); // duplicate item9 text published item
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         monitoring.actionOnItem('Edit', 0, 0);
 

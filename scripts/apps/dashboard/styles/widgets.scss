@@ -65,6 +65,11 @@
                 right: 0px;
                 top: 6px;
             }
+            button {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+            }
         }
 
 
@@ -404,7 +409,7 @@
             }
 
             .main-list {
-                top: 48px
+                top: 0px
             }
 
             .existing-items {

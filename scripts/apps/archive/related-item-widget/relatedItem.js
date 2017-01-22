@@ -65,7 +65,6 @@ function RelatedItemController(
     $scope.options = {
         pinEnabled: true,
         modeEnabled: true,
-        searchEnabled: true,
         itemTypeEnabled: true,
         mode: 'basic',
         pinMode: 'archive',
@@ -74,18 +73,23 @@ function RelatedItemController(
         sort: [{versioncreated: 'desc'}]
     };
 
-    familyService.fetchRelatedItems($scope.item.event_id, $scope.item.family_id)
+    $scope.loading = true;
+    familyService.fetchRelatedItems($scope.item)
     .then((items) => {
         if (items && items._items && items._items.length > 1) {
             $scope.options.existingRelations = items._items;
             $scope.widget.configurable = false;
             $scope.options.searchEnabled = false;
+            $scope.widget.label = gettext('Related Items');
         } else {
             $scope.options.existingRelations = false;
             $scope.widget.configurable = true;
             $scope.options.searchEnabled = true;
             $scope.widget.label = gettext('Relate an item');
         }
+    })
+    .finally(() => {
+        $scope.loading = false;
     });
 
     function today() {

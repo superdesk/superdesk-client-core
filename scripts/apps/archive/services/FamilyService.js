@@ -1,10 +1,28 @@
+/**
+ * @ngdoc service
+ * @module superdesk.apps.archive
+ * @name family
+ * @requires api
+ * @requires desks
+ * @description Family Service is responsible for returning related items of a given story
+ */
 FamilyService.$inject = ['api', 'desks'];
 
 export function FamilyService(api, desks) {
     const repo = 'archive,published';
 
+
+    /**
+     * @ngdoc method
+     * @name family#fetchItems
+     * @public
+     * @description Returns duplicates of a given story
+     * @param {string} familyId
+     * @param {Object} excludeItem
+     * @returns {Object}
+     */
     this.fetchItems = (familyId, excludeItem) => {
-        var filter = [
+        let filter = [
             {not: {term: {state: 'spiked'}}},
             {term: {family_id: familyId}}
         ];
@@ -16,7 +34,18 @@ export function FamilyService(api, desks) {
         return query(filter, 'versioncreated', 'desc');
     };
 
-    const query = (filter, sortField, order) => {
+    /**
+     * @ngdoc method
+     * @name family#query
+     * @private
+     * @description Creates the query object and performs the query
+     * @param {Object} filter
+     * @param {string} sortField
+     * @param {string} order
+     * @param {Object} queryString
+     * @returns {Object}
+     */
+    const query = (filter, sortField, order, queryString) => {
         let params = {
             repo: repo,
             source: {
@@ -28,26 +57,128 @@ export function FamilyService(api, desks) {
             }
         };
 
+        if (queryString) {
+            params.source.query.filtered.query = queryString;
+        }
+
         params.source.sort = {};
         params.source.sort[sortField] = order;
-        return api('search').query(params);
+        return api.query('search', params);
     };
 
-    this.fetchRelatedItems = (eventId, familyId) => {
-        var filter = [
+    /**
+     * @ngdoc method
+     * @name family#fetchRelatedItems
+     * @public
+     * @description Returns takes, updates, corrections and kills of a given event_id
+     * @param {Object} item - story to get related items of
+     * @returns {Object}
+     */
+    this.fetchRelatedItems = (item) => {
+        let filter = [
             {not: {term: {state: 'spiked'}}},
-            {term: {event_id: eventId}},
+            {term: {event_id: item.event_id}},
             {not: {term: {type: 'composite'}}}
         ];
 
-        return query(filter, 'firstcreated', 'asc');
+        return query(filter, 'versioncreated', 'asc');
     };
 
+    /**
+     * @ngdoc method
+     * @name family#fetchRelatableItems
+     * @public
+     * @description Returns any story potentially linkable
+     * @param {string} keyword - slugline to be matched
+     * @param {string} sluglineMatch - type of matching rule for slugline
+     * @param {string} eventId - event id to be searched
+     * @param {string} modificationDateAfter - filter for versioncreated
+     * @returns {Object}
+     */
+    this.fetchRelatableItems = (keyword, sluglineMatch, eventId, modificationDateAfter) => {
+        let filter = [
+            {not: {term: {state: 'spiked'}}},
+            {not: {term: {event_id: eventId}}},
+            {not: {term: {type: 'composite'}}},
+            {not: {term: {last_published_version: 'false'}}}
+        ];
+
+        let queryString = null;
+        let queryRelatedItem = [];
+        let sanitizedKeyword = keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
+        let queryWords = sanitizedKeyword.split(' ');
+
+        const addSlugs = function(list, words) {
+            words.forEach((w) => {
+                if (w) {
+                    list.push('slugline:(' + w + ')');
+                }
+            });
+        };
+
+        // process creation date
+        if (modificationDateAfter) {
+            let dateQuery = {};
+
+            dateQuery.versioncreated = {
+                gte: modificationDateAfter
+            };
+            filter.push({range: dateQuery});
+        }
+
+        switch (sluglineMatch) {
+        case 'ANY': // any words in the slugline
+            if (keyword.indexOf(' ') >= 0) {
+                queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
+            }
+
+            addSlugs(queryRelatedItem, queryWords);
+
+            if (queryRelatedItem.length) {
+                queryString = {
+                    query_string: {
+                        query: queryRelatedItem.join(' '),
+                        lenient: false,
+                        default_operator: 'OR'
+                    }
+                };
+            }
+
+            break;
+        case 'PREFIX': // phrase prefix
+            queryString = {
+                match_phrase_prefix: {
+                    'slugline.phrase': sanitizedKeyword
+                }
+            };
+            break;
+        default:
+                // exact match on slugline
+            queryString = {
+                query_string: {
+                    query: 'slugline.phrase:("' + sanitizedKeyword + '")',
+                    lenient: false
+                }
+            };
+        }
+
+        return query(filter, 'firstcreated', 'asc', queryString);
+    };
+
+     /**
+     * @ngdoc method
+     * @name family#fetchDesks
+     * @public
+     * @description Returns the fetched desk list of a given story
+     * @param {Object} item - story
+     * @param {bookean} excludeSelf
+     * @returns {Object}
+     */
     this.fetchDesks = (item, excludeSelf) => this.fetchItems(item.state === 'ingested' ?
         item._id : item.family_id, excludeSelf ? item : undefined)
         .then((items) => {
-            var deskList = [];
-            var deskIdList = [];
+            let deskList = [];
+            let deskIdList = [];
 
             _.each(items._items, (i) => {
                 if (i.task && i.task.desk && desks.deskLookup[i.task.desk]) {
