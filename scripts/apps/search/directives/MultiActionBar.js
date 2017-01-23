@@ -42,7 +42,9 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                     var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
 
                     _activities.forEach((activity) => {
-                        if (!item.lock_user) { // ignore activities if the item is locked
+                        // Ignore activities if the item is locked (except Spike)
+                        // Spike allowed if item is locked by session user (activity.additionalCondition)
+                        if (!item.lock_user || activity._id === 'spike') {
                             activities[activity._id] = activities[activity._id] ? activities[activity._id] + 1 : 1;
                         }
                     });

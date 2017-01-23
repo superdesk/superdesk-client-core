@@ -96,8 +96,9 @@ angular.module('superdesk.apps.archive', [
                 monitor: true,
                 controller: ['spike', 'data', '$rootScope', 'modal', '$location', '$q', 'multi',
                     function spikeActivity(spike, data, $rootScope, modal, $location, $q, multi) {
-                        // If multibar is open, let its keyboard binding handle this - so, return.
-                        if (!data.item || !spike.canSpike(data.item) || multi.count > 0) {
+                        // For the sake of keyboard shortcut to work consitently,
+                        // if the item is multi-selected, let multibar controller handle its spike
+                        if (!data.item || multi.count > 0 && _.includes(multi.getIds(), data.item._id)) {
                             return;
                         }
 

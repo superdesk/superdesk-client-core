@@ -9,13 +9,17 @@
  * @requires gettext
  * @requires send
  * @requires $q
+ * @requires authoring
  * @requires authoringWorkspace
+ * @requires superdeskFlags
  *
  * @description Spike Service is responsible for proving item (single and multiple) spike/un-spike functionality
  */
 
-SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', 'send', '$q', 'authoringWorkspace'];
-export function SpikeService($location, api, notify, gettext, send, $q, authoringWorkspace) {
+SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', 'send', '$q', 'authoring', 'authoringWorkspace',
+    'superdeskFlags'];
+export function SpikeService($location, api, notify, gettext, send, $q, authoring, authoringWorkspace,
+    superdeskFlags) {
     var SPIKE_RESOURCE = 'archive_spike',
         UNSPIKE_RESOURCE = 'archive_unspike';
 
@@ -31,6 +35,7 @@ export function SpikeService($location, api, notify, gettext, send, $q, authorin
                 if ($location.search()._id === item._id) {
                     $location.search('_id', null);
                 }
+                closeAuthoring(item);
                 return item;
             }, (response) => {
                 item.error = response;
@@ -77,6 +82,7 @@ export function SpikeService($location, api, notify, gettext, send, $q, authorin
                 if ($location.search()._id === item._id) {
                     $location.search('_id', null);
                 }
+                closeAuthoring(item);
                 return item;
             }, (response) => {
                 item.error = response;
@@ -98,15 +104,25 @@ export function SpikeService($location, api, notify, gettext, send, $q, authorin
 
     /**
      * @ngdoc method
-     * @name spike#canSpike
-     * @public
-     * @description Validates that an item being spiked and an item being authored are NOT the same
+     * @name spike#closeAuthoring
+     * @private
+     * @description Checks if the item was open by authoring. If yes, unlocks and closes it
      * @param {Object} item
-     * @returns {Object}
      */
-    this.canSpike = function(item) {
-        let authoringItem = authoringWorkspace.getItem();
+    function closeAuthoring(item) {
+        if (superdeskFlags.flags.authoring) {
+            let authoringItem = authoringWorkspace.getItem();
 
-        return !authoringItem || item._id === authoringItem._id;
-    };
+            if (authoringItem._id === item._id) {
+                if (authoringItem.state === 'spiked') {
+                    authoringWorkspace.close();
+                } else {
+                    // Need to unlock the item
+                    authoring.close(authoringItem).then(() => {
+                        authoringWorkspace.close(true);
+                    });
+                }
+            }
+        }
+    }
 }
