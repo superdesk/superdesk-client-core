@@ -1,5 +1,4 @@
 import {RichUtils, EditorState, Entity, AtomicBlockUtils} from 'draft-js';
-import {stateToHTML} from 'draft-js-export-html';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -50,9 +49,8 @@ const forceUpdate = (state) => {
  * @description Handle the editor state has been changed event
  */
 const onChange = (state, editorState) => {
-    const {onChangeValue} = state;
+    state.onChangeValue(editorState.getCurrentContent());
 
-    onChangeValue(stateToHTML(editorState.getCurrentContent()));
     return {...state, editorState};
 };
 

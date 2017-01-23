@@ -2,6 +2,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
     slugline: '',
     body_html: '',
+    editor_state: undefined,
     abstract: '',
     anpa_take_key: null,
     byline: '',
