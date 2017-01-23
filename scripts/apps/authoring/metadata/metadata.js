@@ -270,7 +270,7 @@ function MetadropdownFocusDirective(keyboardManager) {
             scope.$watch(dropdown.isOpen, (isOpen) => {
                 if (isOpen) {
                     _.defer(() => {
-                        var keyboardOptions = {inputDisabled: false};
+                        var keyboardOptions = {inputDisabled: false, propagate: false};
                             // narrow the selection to consider only dropdown list's button items
                         var buttonList = elem.find('.dropdown__menu button');
 
