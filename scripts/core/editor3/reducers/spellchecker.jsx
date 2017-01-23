@@ -4,6 +4,8 @@ const spellchecker = (state = {}, action) => {
     switch (action.type) {
     case 'SPELLCHECKER_REPLACE_WORD':
         return replaceWord(state, action.payload);
+    case 'SPELLCHECKER_REFRESH_WORD':
+        return refreshWord(state, action.payload);
     default:
         return state;
     }
@@ -32,5 +34,16 @@ const replaceWord = (state, {word, newWord}) => {
 
     return {...state, editorState: newState};
 };
+
+/**
+ * @ngdoc method
+ * @name refreshWord
+ * @param {Object} state
+ * @param {String} word
+ * @return {Object} returns new state
+ * @description Refreshes the current word (usually after having being added to the
+ * dictionary).
+ */
+const refreshWord = (state, word) => replaceWord(state, {word: word, newWord: word.text});
 
 export default spellchecker;
