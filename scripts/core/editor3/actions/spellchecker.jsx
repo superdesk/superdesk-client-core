@@ -11,3 +11,18 @@ export function replaceWord(word) {
         payload: word
     };
 }
+
+/**
+ * @ngdoc method
+ * @name refreshWord
+ * @param {String} word
+ * @return {String} action
+ * @description Refreshes the passed word (usually after having being added
+ * to the dictionary).
+ */
+export function refreshWord(word) {
+    return {
+        type: 'SPELLCHECKER_REFRESH_WORD',
+        payload: word
+    };
+}
