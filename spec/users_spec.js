@@ -216,6 +216,7 @@ describe('users', () => {
            'Authoring metadata based on the user\'s preferred categories settings',
             () => {
                 userPrefs.btnCheckNone.click();  // uncheck all categories
+                browser.sleep(100);
 
                 // select the Entertainment and Finance categories
                 userPrefs.categoryCheckboxes.get(3).click();  // Entertainment
