@@ -468,6 +468,7 @@ describe('monitoring', () => {
 
         expect(monitoring.getGroupItems(0).count()).toBe(2);
         monitoring.actionOnItem('Spike', 0, 0);
+        browser.sleep(100);
         expect(monitoring.getGroupItems(0).count()).toBe(1);
     });
 
