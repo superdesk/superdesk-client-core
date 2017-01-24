@@ -34,8 +34,8 @@ export default angular.module('superdesk.core.editor3', ['superdesk.apps.spellch
                 language: '=',
                 onChange: '&',
                 value: '=',
-                readOnly: '=',
-                trim: '='
+                editorState: '=',
+                readOnly: '='
             },
             controllerAs: 'vm',
             controller: ['$element', function($element) {

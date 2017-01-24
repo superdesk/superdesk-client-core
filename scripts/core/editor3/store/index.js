@@ -1,11 +1,12 @@
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import {stateFromHTML} from 'draft-js-import-html';
 import reducers from '../reducers';
 import ng from 'core/services/ng';
 import {forceUpdate} from '../actions';
 import {Editor3} from '../components/Editor3';
-import {EditorState} from 'draft-js';
+import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
+import {stateToHTML} from 'draft-js-export-html';
+import {stateFromHTML} from 'draft-js-import-html';
 
 /**
  * @name createEditorStore
@@ -16,30 +17,60 @@ export default function createEditorStore(ctrl) {
     const spellcheck = ng.get('spellcheck');
 
     spellcheck.setLanguage(ctrl.language);
-    const dict = spellcheck.getDict();
 
+    const dict = spellcheck.getDict();
     const singleLine = !!(!ctrl.editorFormat || ctrl.readOnly);
     const showToolbar = !singleLine;
-
-    const onChange = (text) => {
-        ctrl.value = ctrl.trim ? text.trim() : text;
-        ctrl.onChange();
-    };
-
-    const initialValue = stateFromHTML(ctrl.value);
+    const content = getInitialContent(ctrl);
     const decorators = Editor3.getDecorator();
 
     const store = createStore(reducers, {
-        editorState: EditorState.createWithContent(initialValue, decorators),
+        editorState: EditorState.createWithContent(content, decorators),
         readOnly: ctrl.readOnly,
         showToolbar: showToolbar,
         singleLine: singleLine,
         editorFormat: ctrl.editorFormat,
-        onChangeValue: onChange
+        onChangeValue: onChange.bind(ctrl)
     }, applyMiddleware(thunk));
 
 
+    // after we have the dictionary, force update the editor to highlight typos
     dict.finally(() => store.dispatch(forceUpdate()));
 
     return store;
+}
+
+/**
+ * @name onChange
+ * @params {ContentState} content New editor content state.
+ * @description Triggered whenever the state of the editor changes. It takes the
+ * current content states and updates the values of the host controller. This function
+ * is bound to the controller, so 'this' points to controller attributes.
+ */
+function onChange(content) {
+    this.editorState = convertToRaw(content);
+    this.value = stateToHTML(content);
+    this.onChange();
+}
+
+/**
+ * @name getInitialContent
+ * @params {Object} ctrl Controller hosting the editor
+ * @returns {ContentState} DraftJS ContentState object.
+ * @description Gets the initial content state of the editor based on available information.
+ * If an editor state is available as saved in the DB, we use that, otherwise we attempt to
+ * use available HTML. If none are available, an empty ContentState is created.
+ */
+function getInitialContent(ctrl) {
+    // we have an editor state stored in the DB
+    if (typeof ctrl.editorState === 'object') {
+        return convertFromRaw(ctrl.editorState);
+    }
+
+    // we have only HTML (possibly legacy editor2 or ingested item)
+    if (ctrl.value) {
+        return stateFromHTML(ctrl.value);
+    }
+
+    return ContentState.createFromText('');
 }

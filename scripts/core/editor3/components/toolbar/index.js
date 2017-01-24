@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import BlockStyleControls from './BlockStyleControls';
 import InlineStyleControls from './InlineStyleControls';
-import LinkControl from './link-button/LinkControl';
+import LinkControl from './links/LinkControl';
+import ImageControl from './images/ImageControl';
 
 /**
  * @ngdoc React
@@ -23,6 +24,7 @@ export default class Toolbar extends Component {
                 <BlockStyleControls />
                 <InlineStyleControls />
                 <LinkControl editorRect={editorRect} />
+                <ImageControl />
             </div>
         );
     }

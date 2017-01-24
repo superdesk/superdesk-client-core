@@ -5,7 +5,8 @@ import {connect} from 'react-redux';
 import Toolbar from './toolbar';
 import * as actions from '../actions';
 import {SpellcheckerError} from './spellchecker/SpellcheckerError';
-import LinkControl from './toolbar/link-button/LinkControl';
+import LinkControl from './toolbar/links/LinkControl';
+import {blockRenderer} from './blockRenderer';
 
 /**
  * @ngdoc React
@@ -21,7 +22,6 @@ import LinkControl from './toolbar/link-button/LinkControl';
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-
 export class Editor3Component extends React.Component {
     static getDecorator() {
         return new CompositeDecorator([
@@ -36,6 +36,7 @@ export class Editor3Component extends React.Component {
         this.editorRect = {top: 0, left: 0};
 
         this.focus = this.focus.bind(this);
+        this.onDragOver = this.onDragOver.bind(this);
     }
 
     /**
@@ -49,11 +50,35 @@ export class Editor3Component extends React.Component {
 
     /**
      * @ngdoc method
+     * @name Editor3#onDragOver
+     * @returns {Boolean} Returns true if the item is permitted.
+     * @description Checks if the dragged over item is allowed.
+     */
+    onDragOver(e) {
+        const mediaType = e.originalEvent.dataTransfer.types[0] || '';
+
+        return [
+            'application/superdesk.item.picture',
+            'application/superdesk.item.graphic',
+            'application/superdesk.item.video',
+            'text/html',
+        ].indexOf(mediaType) === -1;
+    }
+
+    /**
+     * @ngdoc method
      * @name Editor3#componentWillUpdate
      * @description Called before update, init the current editor rectangle
      */
     componentWillUpdate() {
         this.editorRect = ReactDOM.findDOMNode(this.refs.editor).getBoundingClientRect();
+    }
+
+    componentDidMount() {
+        const $node = $(ReactDOM.findDOMNode(this));
+
+        $node.on('dragover', this.onDragOver);
+        $node.on('drop dragdrop', this.props.dragDrop);
     }
 
     /**
@@ -82,6 +107,7 @@ export class Editor3Component extends React.Component {
                     <Editor
                         editorState={editorState}
                         handleKeyCommand={handleKeyCommand}
+                        blockRendererFn={blockRenderer}
                         onChange={onChange}
                         onTab={onTab}
                         readOnly={readOnly}
@@ -101,6 +127,7 @@ Editor3Component.propTypes = {
     editorState: React.PropTypes.object,
     onChange: React.PropTypes.func,
     onTab: React.PropTypes.func,
+    dragDrop: React.PropTypes.func,
     handleKeyCommand: React.PropTypes.func
 };
 
@@ -128,6 +155,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
+    dragDrop: (e) => dispatch(actions.dragDrop(e)),
     handleKeyCommand: (command) => {
         // should return true if 'command' is in the list of custom commands(now no commands supported)
         dispatch(actions.handleEditorKeyCommand(command));

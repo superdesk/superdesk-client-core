@@ -23,8 +23,7 @@
         data-language="item.language"
         data-value="item.headline"
         data-on-change="autosave(item)"
-        data-read-only="!_editable"
-        data-trim="false"></div>
+        data-read-only="!_editable"></div>
 </div>
 
 <div class="field" ng-if="schema.sms && item._type !== 'archived'" sd-width="{{editor.sms.sdWidth || 'full'}}" order="{{editor.sms.order}}">
@@ -105,8 +104,7 @@
         data-language="item.language"
         data-value="item.abstract"
         data-on-change="autosave(item)"
-        data-read-only="!_editable"
-        data-trim="false"></div>
+        data-read-only="!_editable"></div>
 </div>
 
 <div class="field" ng-if="item._type !== 'archived' && schema.byline" sd-width="{{editor.byline.sdWidth || 'full'}}" order="{{editor.byline.order}}" sd-validation-error="error.byline" data-required="schema.byline.required">
@@ -205,6 +203,7 @@
     <div id="bodyhtml"
          sd-editor3
          data-editor-format="editor.body_html.formatOptions"
+         data-editor-state="item.editor_state"
          data-value="item.body_html"
          data-read-only="!_editable"
          data-on-change="autosave(item)"
