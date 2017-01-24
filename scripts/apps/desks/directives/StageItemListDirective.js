@@ -82,6 +82,10 @@ export function StageItemListDirective(search, api, superdesk, desks, cards, $ti
                 scope.loading = true;
                 scope.items = scope.total = null;
 
+                if (scope.page > 0 && criteria.source) {
+                    criteria.source.from = (scope.page - 1) * criteria.source.size;
+                }
+
                 api(getProvider(criteria)).query(criteria).then(function(items) {
                     scope.items = items._items;
                     scope.total = items._meta.total;
