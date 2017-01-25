@@ -1,21 +1,17 @@
-<div class="main-list" ng-class="{wrap: selected}">
+<div class="main-list" ng-class="{wrap: selected, 'existing-items': !options.searchEnabled}" sd-loading="loading">
 
     <div class="search-box" ng-class="{blank: related}" ng-show="options.searchEnabled">
-
-        <input type="text" placeholder="{{ :: 'Search' | translate }}"
-            ng-model="itemListOptions.keyword"
-            ng-model-options="{debounce: 1000}">
-
+        <input type="text" placeholder="{{ :: 'Search' | translate }}" ng-keypress="($event.which === 13)?refresh():null"
+            ng-model="itemListOptions.keyword">
+        <button id="search-related-items" type="button" class="btn" ng-click="refresh()" translate>Search</button>
     </div>
-
-    <div class="pagination-box" ng-class="{'mode-detailed': options.mode === 'detailed'}" sd-pagination-alt data-page="itemListOptions.page" data-max-page="maxPage" ></div>
 
     <div class="ingest-list-holder" ng-class="{'mode-detailed': options.mode === 'detailed'}">
         <div sd-shadow>
             <ul class="ingest-list list-view related-item-list">
-                <li ng-repeat="item in processedItems track by $index"
-                    class="list-item-view" ng-if="options.item._id !== item._id">
-                    <div class="dropdown more-actions pull-right" dropdown>
+                <li ng-repeat="item in processedItems track by $index" class="list-item-view" ng-class="{'active': item._id === options.item._id}" ng-if="canDisplayItem(item)">
+                    
+                    <div class="dropdown more-actions pull-right" ng-if="options.searchEnabled" dropdown>
                         <button class="dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                         <div class="dropdown__menu pull-right">
                             <ul>
@@ -25,23 +21,28 @@
                             </ul>
                         </div>
                     </div>
+                    
                     <div class="basic item-block" ng-click="view(item)">
                         <i sd-filetype-icon data-item="item"></i>
                         <div class="content">
                             <span class="keyword" ng-if="item.slugline">
-                                <span class="relate-item-label" ng-if="actions.update && actions.update.condition(item)"
+                                <span class="relate-item-label" ng-if="options.searchEnabled && actions.update && actions.update.condition(item)"
                                       ng-class="{'update-item': actions.update && actions.update.condition(item)}">U</span>
-                                <span class="relate-item-label" ng-if="actions.addTake && actions.addTake.condition(item)"
+                                <span class="relate-item-label" ng-if="options.searchEnabled && actions.addTake && actions.addTake.condition(item)"
                                       ng-class="{'take-item': actions.addTake && actions.addTake.condition(item)}">T</span>
                                 {{ item.slugline }}</span>
                             <span class="headline">{{item.headline || item.type}}</span>
                             <span class="takekey">{{item.anpa_take_key}}</span>
                             <time sd-datetime data-date="item.versioncreated"></time>
-                            <span ng-if="item.package_type" class="state-label takes" translate>Takes</span>
+                            <span ng-if="item.takes && item.takes.sequence > 1" class="state-label takes" translate>Takes</span>
+                            <span ng-if="isPublished(item)" class="state-label state-{{item.state}}" translate>{{item.state}}</span>
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                             <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                             <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
                         </div>
+
+                        <div sd-item-actions-menu data-item="item" data-active="item" ng-if="!options.searchEnabled"></div>
+
                     </div>
                 </li>
             </ul>

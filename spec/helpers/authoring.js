@@ -596,16 +596,22 @@ function Authoring() {
     };
 
     this.openRelatedItem = function() {
-        element(by.css('button[id="Related Item"]')).click();
+        element(by.css('button[id="Related Items"]')).click();
         browser.sleep(1000);
     };
 
     this.searchRelatedItems = function(searchText) {
-        var elm = element(by.model('itemListOptions.keyword'));
+        if (searchText) {
+            let elm = element(by.model('itemListOptions.keyword'));
 
-        elm.clear();
-        elm.sendKeys(searchText);
-        browser.sleep(2000);
+            elm.clear();
+            elm.sendKeys(searchText);
+            browser.sleep(2000);
+        }
+
+        let btn = element(by.id('search-related-items'));
+
+        btn.click();
     };
 
     this.getRelatedItems = function() {
@@ -640,10 +646,12 @@ function Authoring() {
     };
 
     this.actionOpenRelatedItem = function(item) {
-        var relItem = element.all(by.repeater('item in processedItems')).get(item);
+        let relItem = element.all(by.repeater('item in processedItems')).get(item);
 
         relItem.element(by.className('icon-dots-vertical')).click();
-        relItem.element(by.id('Open')).click();
+        let menu = element(by.css('.dropdown__menu.open'));
+
+        menu.element(by.partialLinkText('Open')).click();
     };
 
     this.actionRelatedItem = function(item, actionId) {

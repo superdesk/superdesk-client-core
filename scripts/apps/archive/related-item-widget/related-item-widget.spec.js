@@ -7,6 +7,7 @@ describe('related item widget', () => {
     it('can open item', inject(($rootScope, $controller, superdesk) => {
         var scope = $rootScope.$new();
 
+        scope.item = {event_id: 1};
         $controller('relatedItemController', {$scope: scope});
         scope.$digest();
 
@@ -20,6 +21,7 @@ describe('related item widget', () => {
     it('can associate item', inject(($rootScope, api, $q, $controller, superdesk) => {
         var scope = $rootScope.$new();
 
+        scope.item = {event_id: 1};
         scope.options = {};
         $controller('relatedItemController', {$scope: scope});
         scope.$digest();

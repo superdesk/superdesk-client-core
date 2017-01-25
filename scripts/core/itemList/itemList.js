@@ -1,518 +1,117 @@
-var DEFAULT_OPTIONS = {
-    endpoint: 'search',
-    pageSize: 25,
-    page: 1,
-    sort: [{_updated: 'desc'}]
-};
-
-/**
- * Common part for sdItemListWidget and sdRelatedItemListWidget directives.
- *
- * Params:
- * @param {Object} scope
- * @param {Object} itemList
- * @param {Object} itemPinService
- */
-function extendScope(scope, itemList, itemPinService) {
-    scope.view = function(item) {
-        scope.selected = item;
-    };
-
-    scope.toggleItemType = function(itemType) {
-        if (scope.itemListOptions.types.indexOf(itemType) > -1) {
-            scope.itemListOptions.types = _.without(scope.itemListOptions.types, itemType);
-        } else {
-            scope.itemListOptions.types.push(itemType);
-        }
-    };
-
-    scope.isItemTypeEnabled = function(itemType) {
-        return scope.itemListOptions.types.indexOf(itemType) > -1;
-    };
-
-    scope.pin = function(item) {
-        itemPinService.add(scope.options.pinMode, _.clone(item));
-    };
-
-    scope.unpin = function(item) {
-        itemPinService.remove(item);
-    };
-
-    scope.isPinned = function(item) {
-        return itemPinService.isPinned(scope.options.pinMode, item);
-    };
-
-    var processItems = function() {
-        if (scope.items) {
-            if (scope.options.pinEnabled) {
-                scope.processedItems = scope.pinnedItems.concat(scope.items._items);
-            } else {
-                scope.processedItems = scope.items._items;
-            }
-        }
-    };
-
-    var itemListListener = function() {
-        scope.maxPage = itemList.maxPage;
-        scope.items = itemList.result;
-        processItems();
-    };
-    var pinListener = function(pinnedItems) {
-        scope.pinnedItems = pinnedItems;
-        _.each(scope.pinnedItems, (item) => {
-            item.pinnedInstance = true;
-        });
-        processItems();
-    };
-
-    itemList.addListener(itemListListener);
-    itemPinService.addListener(scope.options.pinMode, pinListener);
-    scope.$on('$destroy', () => {
-        itemList.removeListener(itemListListener);
-        itemPinService.removeListener(pinListener);
-    });
-}
 
 angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
-.service('itemListService', ['api', '$q', 'search', function(api, $q, search) {
-    // process state
-    const processState = function(options, query) {
-        if (options.states) {
-            var stateQuery = [];
-
-            _.each(options.states, (state) => {
-                stateQuery.push({term: {state: state}});
-            });
-            query.source.query.filtered.filter.and.push({or: stateQuery});
-        }
-    };
-
-    const processRelatedItemsQuery = function(options, query) {
-        if (options.related !== true || !options.keyword) {
-            return;
-        }
-
-        var queryRelatedItem = [];
-        var sanitizedKeyword = options.keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
-        var queryWords = sanitizedKeyword.split(' ');
-
-        const addSlugs = function(list, words) {
-            words.forEach((w) => {
-                if (w) {
-                    list.push('slugline:(' + w + ')');
-                }
-            });
-        };
-
-        options.sluglineMatch = options.sluglineMatch || '';
-
-        switch (options.sluglineMatch) {
-        case 'ANY': // any words in the slugline
-            if (options.keyword.indexOf(' ') >= 0) {
-                queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
-            }
-
-            addSlugs(queryRelatedItem, queryWords);
-
-            if (queryRelatedItem.length) {
-                query.source.query.filtered.query = {
-                    query_string: {
-                        query: queryRelatedItem.join(' '),
-                        lenient: false,
-                        default_operator: 'OR'
-                    }
-                };
-            }
-
-            break;
-        case 'PREFIX': // phrase prefix
-            query.source.query.filtered.query = {
-                match_phrase_prefix: {
-                    'slugline.phrase': sanitizedKeyword
-                }
-            };
-            break;
-        default:
-                // exact match on slugline
-            query.source.query.filtered.query = {
-                query_string: {
-                    query: 'slugline.phrase:("' + sanitizedKeyword + '")',
-                    lenient: false
-                }
-            };
-        }
-    };
-
-    function getQuery(options) {
-        var query = {source: {query: {filtered: {}}}};
-        // process filter aliases and shortcuts
-
-        if (options.sortField && options.sortDirection) {
-            var sort = {};
-
-            sort[options.sortField] = options.sortDirection;
-            options.sort = [sort];
-        }
-        if (options.repo) {
-            options.repos = [options.repo];
-        }
-
-        // add shared query structure
-        // eslint-disable-next-line complexity
-        let sharesQuery = (options) => options.types ||
-            options.notStates ||
-            options.states ||
-            options.creationDateBefore ||
-            options.creationDateAfter ||
-            options.modificationDateBefore ||
-            options.modificationDateAfter ||
-            options.provider ||
-            options.source ||
-            options.urgency ||
-            options.savedSearch;
-
-        if (sharesQuery(options)) {
-            query.source.query.filtered.filter = {and: []};
-        }
-        // process page and pageSize
-        query.source.size = options.pageSize;
-        query.source.from = (options.page - 1) * options.pageSize;
-        // process sorting
-        query.source.sort = options.sort;
-        // process repo
-        if (options.repos) {
-            query.repo = options.repos.join(',');
-        }
-        // process types
-        if (options.types) {
-            query.source.query.filtered.filter.and.push({terms: {type: options.types}});
-        }
-        // process notState
-        if (options.notStates) {
-            _.each(options.notStates, (notState) => {
-                query.source.query.filtered.filter.and.push({not: {term: {state: notState}}});
-            });
-        }
-
-        processState(options, query);
-
-        // process creation date
-        var dateKeys = {creationDate: '_created', modificationDate: 'versioncreated'};
-        var dateQuery = null;
-
-        _.each(dateKeys, (key, field) => {
-            if (options[field + 'Before'] || options[field + 'After']) {
-                dateQuery = {};
-                dateQuery[key] = {
-                    lte: options[field + 'Before'] || undefined,
-                    gte: options[field + 'After'] || undefined
-                };
-                query.source.query.filtered.filter.and.push({range: dateQuery});
-            }
-        });
-        // process provider, source, urgency
-        _.each(['provider', 'source', 'urgency'], (field) => {
-            if (options[field]) {
-                var directQuery = {};
-
-                directQuery[field] = options[field];
-                query.source.query.filtered.filter.and.push({term: directQuery});
-            }
-        });
-
-        // process search
-        var fields = {
-            headline: 'headline',
-            subject: 'subject.name',
-            keyword: 'slugline',
-            uniqueName: 'unique_name',
-            body: 'body_html'
-        };
-        var queryContent = [];
-
-        _.each(fields, (dbField, field) => {
-            if (options[field]) {
-                queryContent.push(dbField + ':(*' + options[field] + '*)');
-            }
-        });
-        if (queryContent.length) {
-            query.source.query.filtered.query = {
-                query_string: {
-                    query: queryContent.join(' '),
-                    lenient: false,
-                    default_operator: 'AND'
-                }
-            };
-        }
-
-        // process search
-        if (options.search) {
-            var queryContentAny = [];
-
-            _.each(_.values(fields), (dbField) => {
-                queryContentAny.push(dbField + ':(*' + options.search + '*)');
-            });
-            query.source.query.filtered.query = {
-                query_string: {
-                    query: queryContentAny.join(' '),
-                    lenient: false,
-                    default_operator: 'OR'
-                }
-            };
-        }
-
-        // Process related items only search
-        processRelatedItemsQuery(options, query);
-
-        // process saved search
-        if (options.savedSearch && options.savedSearch._links) {
-            return api.get(options.savedSearch._links.self.href).then((savedSearch) => {
-                var criteria = search.query(savedSearch.filter.query).getCriteria();
-
-                query.source.query.filtered.filter.and = query.source.query.filtered.filter.and.concat(
-                    criteria.query.filtered.filter.and
-                );
-
-                query.source.post_filter = criteria.post_filter;
-
-                return query;
-            });
-        }
-        return query;
-    }
-
-    this.fetch = function(options) {
-        let opt = _.extend({}, DEFAULT_OPTIONS, options);
-
-        return $q.when(getQuery(opt)).then((query) => api(opt.endpoint, opt.endpointParam || undefined)
-                .query(query));
-    };
-}])
-.provider('ItemList', function() {
-    this.$get = ['itemListService', function(itemListService) {
-        var ItemList = function() {
-            this.listeners = [];
-            this.options = _.clone(DEFAULT_OPTIONS);
-            this.result = {};
-            this.maxPage = 0;
-        };
-
-        ItemList.prototype.setOptions = function(options) {
-            this.options = _.extend(this.options, options);
-            return this;
-        };
-
-        ItemList.prototype.addListener = function(listener) {
-            this.listeners.push(listener);
-            return this;
-        };
-
-        ItemList.prototype.removeListener = function(listener) {
-            _.remove(this.listeners, (i) => i === listener);
-            return this;
-        };
-
-        ItemList.prototype.fetch = function() {
-            var self = this;
-
-            return itemListService.fetch(this.options)
-            .then((result) => {
-                self.result = result;
-                self.maxPage = Math.ceil(result._meta.total / self.options.pageSize) || 0;
-                _.each(self.listeners, (listener) => {
-                    listener(result);
-                });
-                return result;
-            });
-        };
-
-        return ItemList;
-    }];
-})
-.factory('itemPinService', ['preferencesService', function(preferencesService) {
-    var PREF_KEY = 'pinned:items';
-
-    var itemPinService = {
-        items: null,
-        listeners: {ingest: [], archive: []},
-        load: function() {
-            var self = this;
-
-            return preferencesService.get(PREF_KEY)
-                .then((result) => {
-                    self.items = result;
-                })
-                .then(() => {
-                    self.updateListeners();
-                });
-        },
-        save: function() {
-            var self = this;
-
-            this.items = _.uniq(this.items, (item) => item._id);
-            var update = {};
-
-            update[PREF_KEY] = this.items;
-            return preferencesService.update(update, PREF_KEY)
-            .then(() => {
-                self.updateListeners();
-            });
-        },
-        get: function(type) {
-            return _.filter(this.items, {_type: type});
-        },
-        add: function(type, item) {
-            var self = this;
-
-            item._type = type;
-            this.load()
-            .then(() => {
-                self.items.push(item);
-                return self.save();
-            })
-            .then(() => {
-                self.updateListeners();
-            });
-        },
-        remove: function(item) {
-            var self = this;
-
-            this.load()
-            .then(() => {
-                _.remove(self.items, {_id: item._id});
-                return self.save();
-            })
-            .then(() => {
-                self.updateListeners();
-            });
-        },
-        isPinned: function(type, item) {
-            return !!_.find(this.items, {_type: type, _id: item._id});
-        },
-        addListener: function(type, listener) {
-            this.listeners[type].push(listener);
-            listener(this.get(type));
-        },
-        removeListener: function(type, listener) {
-            _.remove(this.listeners[type], (i) => i === listener);
-        },
-        updateListeners: function() {
-            var self = this;
-
-            _.each(this.listeners, (listeners, type) => {
-                _.each(listeners, (listener) => {
-                    listener(self.get(type));
-                });
-            });
-        }
-    };
-
-    itemPinService.load();
-
-    return itemPinService;
-}])
-.directive('sdItemListWidget', ['ItemList', 'notify', 'itemPinService', 'gettext', '$timeout',
-    function(ItemList, notify, itemPinService, gettext, $timeout) {
+/**
+ * @ngdoc directive
+ * @module superdesk.core.itemList
+ * @name sdRelatedItemListWidget
+ * @param {object} options
+ * @param {object} itemListOptions
+ * @param {object} actions
+ * @param {object} loading
+ * @description Creates a list of stories to appear in related items widget.
+ */
+.directive('sdRelatedItemListWidget', ['notify', 'gettext', 'familyService',
+    function(notify, gettext, familyService) {
         return {
             scope: {
                 options: '=',
                 itemListOptions: '=',
-                actions: '='
-            },
-            templateUrl: 'scripts/core/itemList/views/item-list-widget.html',
-            link: function(scope, element, attrs) {
-                scope.items = null;
-                scope.processedItems = null;
-                scope.maxPage = 1;
-                scope.pinnedItems = [];
-                scope.selected = null;
-
-                var oldSearch = null;
-
-                var itemList = new ItemList();
-
-                var timeout;
-
-                function refresh() {
-                    $timeout.cancel(timeout);
-                    timeout = $timeout(() => {
-                        itemList.fetch();
-                    }, 300, false);
-                }
-
-                extendScope(scope, itemList, itemPinService);
-
-                scope.$watch('itemListOptions', () => {
-                    itemList.setOptions(scope.itemListOptions);
-                    refresh();
-                }, true);
-
-                scope.$watch('options.similar', () => {
-                    if (scope.options.similar && scope.options.item) {
-                        if (!scope.options.item.slugline) {
-                            notify.error(gettext('Error: Slugline required.'));
-                            scope.options.similar = false;
-                        } else {
-                            oldSearch = scope.itemListOptions.search;
-                            scope.itemListOptions.search = scope.options.item.slugline;
-                        }
-                    } else {
-                        scope.itemListOptions.search = oldSearch || null;
-                    }
-                });
-            }
-        };
-    }])
-.directive('sdRelatedItemListWidget', ['ItemList', 'notify', 'itemPinService', 'gettext',
-    function(ItemList, notify, itemPinService, gettext) {
-        return {
-            scope: {
-                options: '=',
-                itemListOptions: '=',
-                actions: '='
+                actions: '=',
+                loading: '='
             },
             templateUrl: 'scripts/core/itemList/views/relatedItem-list-widget.html',
             link: function(scope, element, attrs) {
                 scope.items = null;
                 scope.processedItems = null;
-                scope.maxPage = 1;
-                scope.pinnedItems = [];
                 scope.selected = null;
-
                 var oldSearch = null;
+                var itemListListener = null;
+                var optionsListener = null;
 
-                var itemList = new ItemList();
-
-                var _refresh = function() {
+                /**
+                 * @ngdoc method
+                 * @name sdRelatedItemListWidget#refresh
+                 * @description Fetches and assigns relatable items
+                 */
+                scope.refresh = () => {
                     if (scope.options.related &&
                     scope.itemListOptions.keyword &&
                     scope.itemListOptions.keyword.trim().length >= 2) {
-                        itemList.fetch();
+                        scope.loading = true;
+                        familyService.fetchRelatableItems(scope.itemListOptions.keyword,
+                            scope.itemListOptions.sluglineMatch,
+                            scope.options.item.event_id,
+                            scope.itemListOptions.modificationDateAfter).then((items) => {
+                                scope.processedItems = items._items;
+                            })
+                            .finally(() => {
+                                scope.loading = false;
+                            });
                     }
                 };
-                var refresh = _.debounce(_refresh, 300);
 
-                extendScope(scope, itemList, itemPinService);
+                /**
+                 * @ngdoc method
+                 * @name sdRelatedItemListWidget#canDisplayItem
+                 * @returns {Boolean}
+                 * @param {object} item
+                 * @description Checks if an item should be displayed in the list
+                 */
+                scope.canDisplayItem = (item) => {
+                    if (!scope.options.searchEnabled) {
+                        return true;
+                    }
 
-                scope.$watch('itemListOptions', () => {
-                    itemList.setOptions(scope.itemListOptions);
-                    itemList.setOptions({related: scope.options.related});
-                    refresh();
-                }, true);
+                    return scope.actions.update && scope.actions.update.condition(item) ||
+                    scope.actions.addTake && scope.actions.addTake.condition(item);
+                };
 
-                scope.$watch('options.related', () => {
-                    if (scope.options.related && scope.options.item) {
-                        if (!scope.options.item.slugline) {
-                            notify.error(gettext('Error: Slugline required.'));
-                            scope.options.related = false;
-                        } else {
-                            oldSearch = scope.itemListOptions.keyword;
-                            scope.itemListOptions.keyword = scope.options.item.slugline;
-                        }
+                /**
+                 * @ngdoc method
+                 * @name sdRelatedItemListWidget#setProcessedItems
+                 * @description Creates or removes listeners
+                 */
+                var setProcessedItems = () => {
+                    if (scope.options.existingRelations) {
+                        scope.processedItems = scope.options.existingRelations;
+                        itemListListener && itemListListener();
+                        optionsListener && optionsListener();
                     } else {
-                        scope.itemListOptions.keyword = oldSearch || null;
+                        optionsListener = scope.$watch('options.related', () => {
+                            if (scope.options.related && scope.options.item) {
+                                if (!scope.options.item.slugline) {
+                                    notify.error(gettext('Error: Slugline required.'));
+                                    scope.options.related = false;
+                                } else {
+                                    oldSearch = scope.itemListOptions.keyword;
+                                    scope.itemListOptions.keyword = scope.options.item.slugline;
+                                }
+                            } else {
+                                scope.itemListOptions.keyword = oldSearch || null;
+                            }
+                        });
+                    }
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name sdRelatedItemListWidget#isPublished
+                 * @returns {Boolean}
+                 * @param {object} item
+                 * @description Checks if an item is in published state
+                 */
+                scope.isPublished = (item) => _.includes(['published', 'killed', 'scheduled', 'corrected'],
+                    item.state);
+
+                scope.$watch('options.existingRelations', (newVal, oldVal) => {
+                    if (newVal !== oldVal) {
+                        setProcessedItems();
                     }
                 });
+
+                scope.view = (item) => {
+                    scope.selected = item;
+                };
             }
         };
     }]);

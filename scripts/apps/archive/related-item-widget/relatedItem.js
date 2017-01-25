@@ -5,14 +5,14 @@ angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
     .controller('relatedItemController', RelatedItemController)
     .config(['authoringWidgetsProvider', function(authoringWidgets) {
         authoringWidgets.widget('related-item', {
-            label: gettext('Related Item'),
+            label: gettext('Related Items'),
             icon: 'related',
             template: 'scripts/apps/archive/related-item-widget/widget-relatedItem.html',
             order: 7,
             side: 'right',
             display: {authoring: true, packages: false, killedItem: true, legalArchive: false, archived: false},
             configurationTemplate: 'scripts/apps/archive/related-item-widget/relatedItem-configuration.html',
-            configurable: true,
+            configurable: false,
             configuration: {
                 sluglineMatch: 'EXACT',
                 modificationDateAfter: 'today'
@@ -31,7 +31,9 @@ RelatedItemController.$inject = [
     'authoring',
     'privileges',
     'config',
-    'storage'
+    'storage',
+    'familyService',
+    'gettext'
 ];
 
 function RelatedItemController(
@@ -45,7 +47,9 @@ function RelatedItemController(
     authoring,
     privileges,
     config,
-    storage
+    storage,
+    familyService,
+    gettext
 ) {
     $scope.type = 'archiveWidget';
     $scope.itemListOptions = {
@@ -61,7 +65,6 @@ function RelatedItemController(
     $scope.options = {
         pinEnabled: true,
         modeEnabled: true,
-        searchEnabled: true,
         itemTypeEnabled: true,
         mode: 'basic',
         pinMode: 'archive',
@@ -69,6 +72,25 @@ function RelatedItemController(
         itemTypes: ['text', 'composite'],
         sort: [{versioncreated: 'desc'}]
     };
+
+    $scope.loading = true;
+    familyService.fetchRelatedItems($scope.item)
+    .then((items) => {
+        if (items && items._items && items._items.length > 1) {
+            $scope.options.existingRelations = items._items;
+            $scope.widget.configurable = false;
+            $scope.options.searchEnabled = false;
+            $scope.widget.label = gettext('Related Items');
+        } else {
+            $scope.options.existingRelations = false;
+            $scope.widget.configurable = true;
+            $scope.options.searchEnabled = true;
+            $scope.widget.label = gettext('Relate an item');
+        }
+    })
+    .finally(() => {
+        $scope.loading = false;
+    });
 
     function today() {
         if (config.search && config.search.useDefaultTimezone) {
@@ -212,6 +234,7 @@ function RelatedItemController(
             $scope.widget.configuration.sluglineMatch = storage.getItem('sluglineMatch') || 'EXACT';
         }
     }
+
 
     if ($scope.widget) {
         $scope.widget.save = function() {
