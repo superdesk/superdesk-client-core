@@ -1,9 +1,8 @@
-<div class="subnav">
-
-    <div class="button-stack" ng-if="privileges.users">
-        <a class="navbtn navbtn-info navbtn-hover navbtn--with-text" href="" ng-click="intent('list', 'user')">
-            <i class="svg-icon-left inverse"></i> <span class="title" translate>Back to Users list</span>
-        </a>
+<div class="subnav subnav--absolute">
+    <div class="flat-searchbar monitoring-backlink" ng-if="privileges.users">
+        <div class="search-handler">
+            <button sd-tooltip="{{ :: 'Back to users list' | translate }}" flow="right" class="backlink" ng-click="intent('list', 'user')"></button>            
+        </div>
     </div>
 
     <h3 class="page-nav-title"><span translate>Users Profile</span>: <b>{{ user | username }}</b></h3>

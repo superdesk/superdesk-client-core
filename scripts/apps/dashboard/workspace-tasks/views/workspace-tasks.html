@@ -1,5 +1,6 @@
 <div class="subnav">
-    <div class="button-stack right-stack">
+    <h3 class="page-nav-title" translate>Tasks</h3>
+    <div class="subnav__button-stack--square-buttons">        
         <button class="navbtn sd-create-btn" ng-click="create()"></button>
     </div>
 </div>
@@ -38,13 +39,13 @@
     </div>
 </section>
 
-<div sd-modal data-model="newTask" data-close="close()" class="create-task-popup modal-static modal-body-grey">
+<div sd-modal data-model="newTask" data-close="close()">
 
-    <div class="modal-header"> <button class="close" ng-click="close()"><i class="icon-close-small"></i></button>
-        <h3 translate>Create New Task</h3>
+    <div class="modal__header"> <button class="modal__close pull-right" ng-click="close()"><i class="icon-close-small"></i></button>
+        <h3 class="modal__heading" translate>Create New Task</h3>
     </div>
 
-    <div class="modal-body" ng-if="newTask">
+    <div class="modal__body" ng-if="newTask">
         <form>
             <fieldset class="full">
                 <textarea
@@ -82,7 +83,7 @@
         </form>
     </div>
 
-    <div class="modal-footer">
+    <div class="modal__footer">
         <button class="btn" ng-click="close()" translate>Cancel</button>
         <button class="btn btn--primary" ng-disabled="!newTask.task.desk || !newTask.slugline" ng-click="save()" translate>Save</button>
     </div>

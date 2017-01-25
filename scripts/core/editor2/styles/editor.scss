@@ -117,6 +117,9 @@
         }
         .add-content__actions span {
             transform: scale(1);
+            &:hover {
+                z-index: 1; // for sd-tooltip
+            }
         }
     }
     &__plus-btn {
@@ -173,7 +176,7 @@
     }
     &__input {
         // leave place for action buttons on the sides
-        margin-right: 80px;
+        margin-right: 100px;
     }
     // action buttons
     &__actions {

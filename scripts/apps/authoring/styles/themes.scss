@@ -278,48 +278,51 @@ body, html {
         .full-preview {
             display: inline-block;
         }
-      .dateline {
-          display: flex;
-      input {
-        text-transform: uppercase;
-      }
-          input, select, option {
-              color: #333 !important;
-        font-size: 14px;
-        font-weight: 400 !important;
+        .dateline {
+            display: flex;
+            input {
+                text-transform: uppercase;
+            }
+            input, select, option {
+                color: #333 !important;
+                font-size: 14px;
+                font-weight: 400 !important;
                 padding: 0;
             }
-      select {
-        width: 20%;
-      }
-      .dateline-city {
-        display: flex;
-        font-size: 14px;
-        line-height: 27px;
-        padding-right: 20px;
-      }
-          .dateline-date {
-        width: 100%;
+            select {
+                width: 20%;
             }
+            .dateline-city {
+                display: flex;
+                font-size: 14px;
+                line-height: 27px;
+                padding-right: 20px;
+            }
+            .dateline-date {
+                width: 100%;
+            }
+        }
+        .dropdown {
+            display: block;
         }
     }
     //labels
     .field {
         label {
-        @include text-normal();
-        background: rgba(0, 0, 0, 0.4);
-        @include border-radius(2px);
-        color: #fff;
-        display: inline-block;
-        padding: 1px 8px 0;
-        font-size: 11px;
-        line-height: 16px;
-        height: 15px;
-        @include transition(all ease 0.2s);
-        opacity: 0.4;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.1em;
+            @include text-normal();
+            background: rgba(0, 0, 0, 0.4);
+            @include border-radius(2px);
+            color: #fff;
+            display: inline-block;
+            padding: 1px 8px 0;
+            font-size: 11px;
+            line-height: 16px;
+            height: 15px;
+            @include transition(all ease 0.2s);
+            opacity: 0.4;
+            text-transform: uppercase;
+            font-style: normal;
+            letter-spacing: 0.1em;
         }
         &.active {
             label {
@@ -357,7 +360,7 @@ body, html {
         -webkit-appearance: menulist-button;
     }
     .text-editor:focus, .headline:focus, .abstract:focus, input:focus, select:focus, .sms-switch:focus {
-    //.box-shadow(none) !important;
+        //.box-shadow(none) !important;
         border-width: 1px !important;
         border-color: rgba(94, 169, 200, 0.3) !important;
         border-bottom-color: rgba(94, 169, 200, 1) !important;
@@ -365,7 +368,7 @@ body, html {
     }
     &.preview {
         .text-editor {
-        border-color: #fff !important;
+            border-color: #fff !important;
         }
     }
     // character and word counting
@@ -435,15 +438,15 @@ body, html {
             min-height: 24px;
         }
         &::-webkit-input-placeholder {
-        color: #ccc;
+            color: #ccc;
         }
         &::-moz-placeholder {
-        color: #ccc;
-        opacity: 1;
+            color: #ccc;
+            opacity: 1;
         }
         &:focus {
-        &::-webkit-input-placeholder { color:transparent; }
-        &::-moz-placeholder { color:transparent; }
+            &::-webkit-input-placeholder { color:transparent; }
+            &::-moz-placeholder { color:transparent; }
         }
     }
     .image-caption {
@@ -451,15 +454,15 @@ body, html {
         text-transform: none;
         line-height: 140%;
         &::-webkit-input-placeholder {
-        color: #ccc;
+            color: #ccc;
         }
         &::-moz-placeholder {
-        color: #ccc;
-        opacity: 1;
+            color: #ccc;
+            opacity: 1;
         }
         &:focus {
-        &::-webkit-input-placeholder { color:transparent; }
-        &::-moz-placeholder { color:transparent; }
+            &::-webkit-input-placeholder { color:transparent; }
+            &::-moz-placeholder { color:transparent; }
         }
     }
     #body_footer {
@@ -476,8 +479,8 @@ body, html {
         line-height: 120% !important;
         @include text-semibold();
         .text-editor {
-                min-height: 33px;
-                padding: 6px 0;
+            min-height: 33px;
+            padding: 6px 0;
         }
     }
     .abstract, .abstract p, .abstract div {
@@ -490,7 +493,7 @@ body, html {
         }
     }
     .body {
-      clear: left;
+        clear: left;
     }
 }
 
@@ -583,10 +586,10 @@ body, html {
         }
         .headline {
             font-size:28px;
-        .text-editor {
-            font-size:28px;
+            .text-editor {
+                font-size:28px;
+            }
         }
-    }
     }
 }
 
@@ -698,7 +701,7 @@ body, html {
         }
     }
 
-   .sderror {
+    .sderror {
         color: $dark-khaki-theme-bg !important;
     }
 }
@@ -716,7 +719,7 @@ body, html {
         }
     }
 
-   .sderror {
+    .sderror {
         color: $dark-turquoise-theme-bg !important;
     }
 }
@@ -734,7 +737,7 @@ body, html {
         }
     }
 
-   .sderror {
+    .sderror {
         color: $pale-yellow-theme-bg !important;
     }
 }

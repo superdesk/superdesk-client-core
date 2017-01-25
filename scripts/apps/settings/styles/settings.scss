@@ -17,12 +17,15 @@
         > .nav-stacked {
             width: 180px;
             position: absolute;
+            padding: 0;
             bottom: 0; top:0;
             left:0;
             margin: 0;
+            flex-direction: column;
             background: $sd-background;
             border-right: 1px solid #ddd;
             @include box-shadow(inset -3px 0 8px -3px rgba(0,0,0,0.1));
+            overflow-y: auto;
             > li {
                 >a {
                     border: 1px solid #eee;
@@ -146,27 +149,6 @@
             width: 49%;
             &.first {
                 margin-right: 2%;
-            }
-        }
-    }
-}
-
-.ingestsource-modal {
-    .modal-body {
-        .popup-subnav {
-            padding-left: 10px;
-            label {
-                color: #989898;
-            }
-            .TabContent {
-                margin-bottom: 20px;
-            }
-            .field {
-                padding-left: 10px;
-                float:left;
-                .field {
-                    padding-left: 0 !important;
-                }
             }
         }
     }

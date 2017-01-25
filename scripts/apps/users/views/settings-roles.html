@@ -2,14 +2,14 @@
 
     <div class="header">
             <h2 translate>User Roles</h2>
-            <button class="btn btn--primary btn--pull-right" ng-click="edit({})">
-                <i class="icon-plus-sign icon-white"></i> {{:: 'Add New Role' | translate}}
+            <button class="btn btn--primary pull-right" ng-click="edit({})">
+                <i class="icon-plus-sign icon--white"></i> {{:: 'Add New Role' | translate}}
             </button>
     </div>
     <div class="content user-roles-settings">
 
         <ul class="pills-list">
-            <li ng-repeat="role in roles">
+            <li ng-repeat="role in roles" class="clearfix">
                 <div class="header">
                     <h6>{{role.name}}<span class="label default" ng-if="role.is_default" translate>default</span></h6>
 
@@ -22,36 +22,42 @@
             <div ng-show="!roles.length" class="alert alert-info" translate>No roles created yet.</div>
         </ul>
 
-        <div class="new-role-modal mini-modal inline" ng-if="editRole">
-            <div class="title" ng-show="editRole._id" translate>Edit Role</div>
-            <div class="title" ng-show="!editRole._id" translate>New Role</div>
-            <div class="close" ng-click="cancel()">
-                <i class="icon-close-small"></i>
+        <div class="modal" ng-if="editRole" data-backdrop="static" style="display: block;">
+            <div class="modal__dialog">
+                <div class="modal__content">
+                    <div class="modal__header">
+                        <button class="modal__close pull-right" ng-click="cancel()"><i class="icon-close-small"></i></button>
+                        <h3 class="modal__heading" ng-show="editRole._id" translate>Edit Role</h3>
+                        <h3 class="modal__heading" ng-show="!editRole._id" translate>New Role</h3>                        
+                    </div>
+                    <div class="modal__body">
+                        <form name="roleForm">
+                            <fieldset>
+                                <div class="field">
+                                    <input type="text" class="fullwidth-input" placeholder="{{ 'Role Name'|translate }}" ng-model="editRole.name" required sd-role-unique>
+                                    <div ng-show="roleForm.$error.unique" sd-valid-error translate>sorry, this role name already exists.</div>
+                                </div>
+                                <div class="field">
+                                    <textarea sd-auto-height class="fullwidth-input" placeholder="{{ 'Role Description'|translate }}" ng-model="editRole.description"></textarea>
+                                </div>
+                                <div class="field">
+                                    <label for="is_default">
+                                        {{:: 'Default' | translate }}
+                                        <input type="checkbox" ng-disabled="defaultRole" name="is_default" id="is_default" ng-model="editRole.is_default">
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="modal__footer">
+                        <button class="btn" ng-click="cancel()" translate>Cancel</button>
+                        <button class="btn btn--primary" ng-click="save(editRole)" ng-disabled="!roleForm.$valid" translate>Ok</button>
+                    </div>
+                </div>
             </div>
-            <div class="content">
-                <form name="roleForm">
-                    <fieldset>
-                        <div class="field">
-                            <input type="text" class="fullwidth-input" placeholder="{{ 'Role Name'|translate }}" ng-model="editRole.name" required sd-role-unique>
-                            <div ng-show="roleForm.$error.unique" sd-valid-error translate>sorry, this role name already exists.</div>
-                        </div>
-                        <div class="field">
-                            <textarea sd-auto-height class="fullwidth-input" placeholder="{{ 'Role Description'|translate }}" ng-model="editRole.description"></textarea>
-                        </div>
-                        <div class="field">
-                            <label for="is_default">
-                                {{:: 'Default' | translate }}
-                                <input type="checkbox" ng-disabled="defaultRole" name="is_default" id="is_default" ng-model="editRole.is_default">
-                            </label>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div class="footer">
-                <button class="btn" ng-click="cancel()" translate>Cancel</button>
-                <button class="btn btn--primary" ng-click="save(editRole)" ng-disabled="!roleForm.$valid" translate>Ok</button>
-            </div>
+
         </div>
+        <div class="modal__backdrop fade in" ng-if="editRole"></div>
 
     </div>
 </div>

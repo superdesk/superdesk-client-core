@@ -435,11 +435,11 @@ Add new widget modal
 .widget-list {
     list-style-type: none;
     margin: 0;
-    padding: 0px 30px;
+    padding: 0px;
     display: flex;
     flex-flow: row wrap;
     li {
-        width: 197px;
+        width: calc(#{50%} - #{40px});
         margin: 20px;
         padding: 0;
         @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.2));
@@ -544,7 +544,8 @@ Add new widget modal
     display: flex;
     .thumbnail-box {
         position: relative;
-        width: 400px;
+        // width: 350px;
+        width: calc(#{60%} - #{30px});
         margin-right: 30px;
         @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.2));
         @include border-radius (2px);
@@ -584,7 +585,8 @@ Add new widget modal
         display: flex;
         flex-flow: row wrap;
         align-items: flex-start;
-        width: 330px;
+        // width: 220px;
+        width: calc(#{40%});
         .title {
             font-size: 30px;
             line-height: 110%;
@@ -595,6 +597,7 @@ Add new widget modal
         .description {
             font-size: 14px;
             width: 100%;
+            margin-bottom: 20px;
         }
         button {
             align-self: flex-end;

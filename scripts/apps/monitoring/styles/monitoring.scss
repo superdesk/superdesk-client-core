@@ -28,7 +28,7 @@
             height: auto;
             margin: 0;
             padding: 0;
-            text-align: center;
+            text-align: left;
             border-left: 0;
         }
 
@@ -162,7 +162,6 @@
         height: 37px;
         margin: 0 3px;
         border-bottom: 4px solid #4d4d4d;
-        @include text-overflow();
         .stage-header__name {
             flex-grow: 1;
             box-sizing: border-box;
@@ -316,18 +315,17 @@
 }
 .monitoring-dropdown {
     .dropdown__menu {
-        .dropdown__menu-label {
-            text-align: left;
-            line-height: 16px;
-            padding: 0 16px;
-            margin-bottom: 5px;
-        }
-        min-width: 300px;
-        position: fixed;
+        margin-top: 5px;
+        max-width: 220px !important;        
     }
 
     a {
-        padding-left: 0px;
+        padding: 0px !important;
+        white-space: inherit !important;
+        display: inline !important;
+        .headline {
+            color: $sd-blue !important;
+        }
     }
 
     .buttons {
@@ -353,11 +351,9 @@
 
     li {
         display: block;
-        padding: 10px 15px 10px 20px;
+        padding: 5px 15px 5px 20px;
         border-bottom: 1px solid #ddd;
-        float: left;
-        width: 88%;
-
+        
         .slugline {
             font-weight: 500;
             color: #216278;
@@ -373,6 +369,7 @@
 
         .location {
             border-top: 1px solid #ebebeb;
+            margin-top: 10px;
         }
 
         .sender {

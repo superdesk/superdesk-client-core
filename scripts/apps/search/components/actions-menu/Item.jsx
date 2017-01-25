@@ -59,9 +59,9 @@ export default class Item extends React.Component {
         var BUFFER = 250;
 
         if (targetRect.left < LEFT_BAR_WIDTH + BUFFER) {
-            this.setState({position: 'left-submenu'});
+            this.setState({position: 'dropdown__menu--submenu-right'});
         } else {
-            this.setState({position: 'right-submenu'});
+            this.setState({position: 'dropdown__menu--submenu-left'});
         }
     }
 
@@ -119,10 +119,7 @@ export default class Item extends React.Component {
                         activity.icon ? React.createElement('i', {
                             className: 'icon-' + activity.icon
                         }, '') : null,
-                        gettextCatalog.getString(activity.label),
-                        React.createElement('i', {
-                            className: 'icon-chevron-right-thin dropdown__submenu-icon'
-                        })
+                        gettextCatalog.getString(activity.label)
                     ),
                     this.state.open ? $injector.invoke(activity.dropdown, activity, {
                         item: this.props.item,

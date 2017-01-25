@@ -49,7 +49,7 @@ describe('master_desk', () => {
         masterDesks.switchToTab('content');
         masterDesks.editDesk(0);
         browser.sleep(200);
-        expect(element(by.className('modal-content')).isDisplayed()).toBe(true);
+        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
     });
 
     xit('show tasks view', () => {
@@ -74,7 +74,7 @@ describe('master_desk', () => {
         masterDesks.switchToTab('tasks');
         masterDesks.editDesk(0);
         browser.sleep(200);
-        expect(element(by.className('modal-content')).isDisplayed()).toBe(true);
+        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
     });
 
     it('show user role view all users', () => {
@@ -115,13 +115,13 @@ describe('master_desk', () => {
         masterDesks.switchToTab('users');
         masterDesks.editDesk(0);
         browser.sleep(200);
-        expect(element(by.className('modal-content')).isDisplayed()).toBe(true);
+        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
     });
 
     it('user role view - edit user', () => {
         masterDesks.switchToTab('users');
         masterDesks.editUser(0, 1, 0);
         browser.sleep(200);
-        expect(element(by.className('modal-content')).isDisplayed()).toBe(true);
+        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
     });
 });

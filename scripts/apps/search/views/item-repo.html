@@ -1,18 +1,14 @@
 <fieldset ng-if="context">
-    <label class="sd-radio">
-        <input type="radio" value="local" ng-model="repo.search" ng-change="toggleRepo('local')">
-        In Superdesk<span class="check"></span>
-    </label>
-    <div class="superdeskRepos" ng-show="repo.search == 'local'">
+    <sd-check type="radio" ng-model="repo.search" ng-value="local" ng-change="toggleRepo('local')">In Superdesk</sd-check>
+    <div class="superdeskRepos" ng-show="repo.search === 'local'">
         <button type="button" id="ingest-collection" class="toggle-button" ng-click="toggleRepo('ingest')" ng-class="{'toggle-button--active': repo.ingest}">{{:: 'Ingest' | translate}}</button>
         <button type="button" id="archive-collection" class="toggle-button" ng-click="toggleRepo('archive')" ng-class="{'toggle-button--active': repo.archive}">{{:: 'Production' | translate}}</button>
         <button type="button" id="published-collection" class="toggle-button" ng-click="toggleRepo('published')" ng-class="{'toggle-button--active': repo.published}">{{:: 'Published' | translate}}</button>
         <button type="button" id="archived-collection" class="toggle-button" ng-click="toggleRepo('archived')" ng-class="{'toggle-button--active': repo.archived}">{{:: 'Archived' | translate}}</button>
     </div>
     <div ng-repeat="provider in providers track by provider._id">
-        <label class="sd-radio">
-            <input type="radio" ng-value="provider.search_provider" ng-model="repo.search" ng-checked="isDefault(provider)" ng-change="toggleRepo(provider.search_provider)">
+        <sd-check type="radio" ng-value="provider.search_provider" ng-model="repo.search" ng-checked="isDefault(provider)" ng-change="toggleRepo(provider.search_provider)">
             {{:: providerLabels[provider.source]}}<span class="check"></span>
-        </label>
+        </sd-check>
     </div>
 </fieldset>

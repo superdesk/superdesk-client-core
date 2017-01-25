@@ -1,8 +1,8 @@
-<div sd-modal data-model="open" data-close="close()" class="output-channel-modal">
-    <div class="modal-header"> <a href="" class="close" ng-click="close()"><i class="icon-close-small"></i></a>
-        <h3 translate>Select template</h3>
+<div sd-modal data-model="open" data-close="close()">
+    <div class="modal__header"> <a href="" class="modal__close pull-right" ng-click="close()"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading" translate>Select template</h3>
     </div>
-    <div class="modal-body">
+    <div class="modal__body">
         <form>
             <fieldset>
                 <div class="field">
@@ -28,5 +28,8 @@
                 </div>
             </fieldset>
         </form>
+    </div>
+    <div class="modal__footer">
+        <button class="btn" ng-click="close()">Close</button>
     </div>
 </div>

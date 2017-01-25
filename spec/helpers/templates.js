@@ -64,7 +64,7 @@ function Templates() {
      * @returns {ElementFinder} desk selection element
      **/
     this.getDeskElement = function(deskName) {
-        return element.all(by.css('[ng-click="toggleDesk(desk)"]'))
+        return element.all(by.css('[ng-click="onDeskToggle(desk)"]'))
             .filter((elem, index) => elem.getText().then((text) => text.toUpperCase() === deskName.toUpperCase()))
             .first()
             .element(by.xpath('..'))

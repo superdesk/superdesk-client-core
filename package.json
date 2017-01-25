@@ -30,7 +30,6 @@
   "dependencies": {
     "angular": "1.6.3",
     "angular-animate": "1.6.3",
-    "angular-bootstrap-npm": "jusopi/angular-bootstrap-npm#0.13.1",
     "angular-contenteditable": "0.0.2",
     "angular-dynamic-locale": "0.1.32",
     "angular-embed": "superdesk/angular-embed#b2b4a69",
@@ -106,7 +105,8 @@
     "sass-loader": "4.1.1",
     "style-loader": "0.13.2",
     "webpack": "1.14.0",
-    "webpack-dev-server": "1.14.1"
+    "webpack-dev-server": "1.14.1",
+    "superdesk-ui-framework": "superdesk/superdesk-ui-framework"
   },
   "devDependencies": {
     "dgeni-alive": "gbbr/dgeni-alive#superdesk",

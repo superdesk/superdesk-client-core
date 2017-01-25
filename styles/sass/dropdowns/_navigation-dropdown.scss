@@ -1,7 +1,7 @@
 //navigation big dropdown
 .dropdown.dropdown--big, 
 .navbtn.dropdown {
-    .dropdown__toggle {
+    & > .dropdown__toggle {
         padding: 0 15px;
         display: block;
         color:$sd-text;
@@ -20,7 +20,7 @@
         }
     }
     &.open {
-        .dropdown__toggle {
+        & > .dropdown__toggle {
             background: #fff;
             color:$sd-text;
             box-shadow:-3px 0px 1px -2px #999,3px 0px 1px -2px #999;

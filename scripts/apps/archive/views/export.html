@@ -1,10 +1,10 @@
 <div sd-modal data-model="export" data-close="closeExport()">
-    <div class="modal-header">
-        <a href="" class="close" sd-hotkey="esc" ng-click="closeExport()"><i class="icon-close-small"></i></a>
-        <h3 translate>Export</h3>
+    <div class="modal__header">
+        <a href="" class="modal__close pull-right" sd-hotkey="esc" ng-click="closeExport()"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading" translate>Export</h3>
     </div>
 
-    <div class="export-modal modal-body" ng-loading="loading">
+    <div class="export-modal modal__body" ng-loading="loading">
         <div class="formatters">
             <label>{{ :: 'Formatters' | translate }}</label>
             <select selected="selectedFormatter" ng-model="selectedFormatter">
@@ -16,12 +16,12 @@
             <span class="validator" sd-switch ng-model="validate">{{ 'Validate' | translate }}</span>
         </div>
         <div ng-if="failures">
-            <span class="error">{{ :: failures + ' items failed.' | translate }}<span>
+            <span class="error">{{ :: failures + ' items failed.' | translate }}</span>
         </div>
         <div ng-if="error"><span class="error">{{ :: err_msg | translate }}</span></div>
         <a id='exportDownloadLink' href="" ng-show="!error"></a>
     </div>
-    <div class="modal-footer">
+    <div class="modal__footer">
         <button class="btn btn--primary btn--pull-right" ng-disabled="!exportFormatters.length > 0" ng-click="exportFile(selectedFormatter, validate)" translate>Export</button>
         <button class="btn" ng-click="cancel()" translate>Cancel</button>
     </div>

@@ -375,6 +375,75 @@
     .filter-type {
         padding: 0 10px;
     }
+    // compare-versions dropdown
+    // -------------------------------------------------
+
+    &--compare-versions {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        li {
+            margin-bottom: 2px;
+            line-height: 14px !important;
+            .dropdown.open li .dropdown .dropdown__toggle:hover {
+                display: none;
+            }
+            button {
+                width: 300px;
+                padding-right: 30px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                position: relative;
+                border-radius: 0;
+                line-height: 14px !important;
+                box-shadow: 0px 1px 1px 0 rgba(0, 0, 0, 0.15);
+                i {
+                    position: absolute;
+                    right: -5px;
+                    top: 9px;
+                }
+                &.disabled, &.disabled:hover {
+                    background: #f0f0f0;
+                    i {
+                        @include opacity(20);
+                    }
+                }
+                .headline {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    font-size: 11px;
+                    font-weight: 500;
+                    width: 240px;
+                    display: inline-block;
+                }
+                .desk-details {
+                    display: block;
+                    font-size: 10px;
+                }
+                em {
+                    font-size: 10px;
+                    font-weight: 500;
+                    color: #888;
+                    float: left;
+                    padding-right: 10px;
+                }
+            }
+            .msg {
+                padding: 0 20px;
+            }
+        }
+    }
+    .fieldset {
+        button {
+            text-align: center;
+            width: auto;
+            min-width: 50px;
+            clear: none;
+            margin-right: 10px;
+            float: right;
+        }
+    }
 }
 
 .online-users {
@@ -391,99 +460,6 @@
     }
 }
 
-// Checkox custom
-// ---------------------------------------------
-$checkButtonTextColor: #5a5a5a;
-$checkButtonBorderColor: #c6c6c6;
-
-
-.sd-checkbox {
-    width: 17px;
-    height: 15px;
-    display: inline-block;
-    background: url("~images/sf-checkbox.png") no-repeat 0 0;
-    vertical-align: top;
-    margin-right: 5px;
-    @include transition(all 0.2s ease-out);
-    &:hover {
-        background-position: 0 -15px;
-        cursor: pointer;
-    }
-    &.checked, &[checked="checked"] {
-        background-position: 0 -30px !important;
-        &:hover {
-            background-position: 0 -30px !important;
-        }
-    }
-    &--button-style {
-        width: auto;
-        box-sizing: border-box;
-        height: 26px;
-        padding: 4px 12px;
-        background: transparent;
-        color: $checkButtonTextColor;
-        border: 1px solid $checkButtonBorderColor;
-        transition: color 0.3s, background 0.3s;
-        border-radius: 2px;
-        @include transition(all 0.2s ease-out);
-        &:hover {
-            color: darken($checkButtonTextColor, 30%);
-            border-color: darken($checkButtonBorderColor, 30%);
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.20));
-        }
-      &.checked, &[checked="checked"] {
-        background-color: darken($sd-blue, 11%);
-        border-color: darken($sd-blue, 11%);
-        border-top-color: darken($sd-blue, 30%);
-        @include box-shadow(inset 0 2px 0 rgba(0,0,0,0.20));
-        color: $white;
-        &:hover {
-            color: $white;
-            border-color: darken($sd-blue, 16%);
-            background-color: darken($sd-blue, 16%);
-            @include box-shadow(inset 0 2px 0 rgba(0,0,0,0.20));
-        }
-      }
-    }
-}
-
-
-
-// Toggle input
-// ---------------------------------------------
-
-.sd-toggle {
-    display:inline-block;
-    width:40px;
-    height:18px;
-    background: #e0e0e0;
-    position:relative;
-    cursor:pointer;
-    margin-right: 5px;
-    @include border-radius(9px);
-    overflow: hidden;
-    @include box-shadow(inset 0 1px 0 0 rgba(0,0,0,0.15));
-    .inner {
-        position:absolute;
-        left:2px;
-        width:14px;
-        top:2px;
-        height:14px;
-        background:$white;
-        @include border-radius(8px);
-        @include box-shadow(0 1px 0 0 rgba(0,0,0,0.2));
-        @include transition( all 0.3s ease);
-    }
-    &.checked {
-        background: $sd-blue;
-        .inner {
-            left:24px;
-        }
-    }
-    input[type="checkbox"] {
-        display:none;
-    }
-}
 
 // Datepicker - wrapper for angular ui datepicker
 // ---------------------------------------------
@@ -565,6 +541,22 @@ $checkButtonBorderColor: #c6c6c6;
         &:hover {
             @include box-shadow(none);
         }
+        height: 28px;
+    }
+    .btn--mini {
+        padding: 4px 6px;
+        font-size: 11px;
+        line-height: 11px!important;
+        height: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 0;
+        td, th {
+            padding: 1px;
+            border: 0;
+        }
     }
     .datepicker-additional {
         margin-bottom: 5px;
@@ -624,7 +616,7 @@ $checkButtonBorderColor: #c6c6c6;
                     padding-top: 5px;
                 }
                 td {
-                    padding: 0 2px;
+                        padding: 0 2px;
                     .btn {
                         width: 100% !important;
                         min-width: 28px !important;
@@ -673,9 +665,21 @@ $checkButtonBorderColor: #c6c6c6;
         margin-bottom: 5px;
         table {
             width: 100%;
+            border-collapse: collapse;
+            border: 0;
+            td, th {
+                padding: 1px;
+            }
         }
         .btn {
             width: 100%;
+            letter-spacing: 0;
+        }
+        .btn--mini {
+            padding: 4px 6px;
+            font-size: 11px;
+            line-height: 11px!important;
+            height: 20px;
         }
     }
     .timepicker-core {
@@ -1092,6 +1096,11 @@ $checkButtonBorderColor: #c6c6c6;
         background: none;
         border: 0;
         @include opacity(60);
+        &.btn {
+            &:hover {
+                box-shadow: none;
+            }
+        }
     }
 }
 header .sortbar {
@@ -1721,15 +1730,33 @@ header .sortbar {
 // ---------------------------------------------
 .draggable-list {
     > li {
-        background: #fff url(~images/draggable-bg.png) repeat-y left 3px top 3px;
-        padding: 12px 14px 12px 25px;
+        background-color: #fff;
+        padding: 18px 14px 19px 25px;
         margin-bottom: 10px;
         cursor: move;
         @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.2));
+        position: relative;
         &.placeholder {
             background: none;
             @include box-shadow(none);
             border: 2px dashed #ebebeb;
+        }
+        &:after {
+            content: "";
+            width: 10px;
+            top: 0;
+            bottom: 0;
+            left: 2px;
+            background: transparent url(~images/draggable-bg.png) repeat-y left 3px top 3px;
+            opacity: 0.2;
+            position: absolute;
+            display: block;
+        }
+        &:hover {
+            @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.4));
+            &:after {
+                opacity: 0.8;
+            }
         }
     }
 
@@ -1740,7 +1767,7 @@ header .sortbar {
     margin-left: 5px;
     > li {
         word-spacing: 2px;
-        line-height: 10px;
+        line-height: 0px;
     }
     .sort-item {
         &.active {

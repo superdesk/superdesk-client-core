@@ -2,7 +2,7 @@
     <div class="subnav">
         <div class="flat-searchbar monitoring-backlink" ng-if="monitoring.singleGroup">
             <div class="search-handler">
-                <button tooltip="{{ :: 'Back to original view' | translate }}" tooltip-placement="right" class="backlink" ng-click="monitoring.viewMonitoringHome()"></button>
+                <button sd-tooltip="{{ :: 'Back to original view' | translate }}" flow="right" class="backlink" ng-click="monitoring.viewMonitoringHome()"></button>
             </div>
         </div>
         <div class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
@@ -17,8 +17,8 @@
             </div>
         </div>
 
-        <div class="dropdown navbtn strict large" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
-            <button class="dropdown__toggle" dropdown-toggle>{{ :: 'Monitoring' | translate }} <span class="caret"></span></button>
+        <div class="dropdown navbtn--text-only" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
+            <button class="dropdown__toggle" dropdown-toggle>{{ :: 'Monitoring' | translate }} <span class="dropdown__caret"></span></button>
             <ul class="dropdown__menu scrollable">
                 <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li> 
                 <li ng-repeat="card in aggregate.cards">
@@ -56,7 +56,7 @@
                 <button ng-if="monitoring.showRefresh &&
                     (monitoring.singleGroup || type === 'spike' || type === 'highlights')"
                 ng-click="refreshGroup(monitoring.singleGroup)"
-                    tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+                    sd-tooltip="{{:: 'Refresh' | translate}}" flow="left">
                     <i class="icon-repeat blue"></i>
                 </button>
             </div>
@@ -67,8 +67,8 @@
 
             
 
-            <div class="dropdown navbtn strict" ng-if="!state.opened" title="{{ :: 'Create' | translate }}" dropdown>
-                <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
+            <div class="dropdown dropdown--align-right strict" ng-if="!state.opened" sd-tooltip="{{ :: 'Create new item' | translate }}" flow="left" dropdown>
+                <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
                 <ul class="dropdown__menu dropdown__menu--scrollable pull-right" sd-content-create></ul>
             </div>
         </div>
@@ -93,19 +93,19 @@
 
             <button id="switch-view-btn" ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView"
              class="swimlane-switch" ng-click="displayColumn()" ng-class="{'swimlane-switch--on': viewColumn}"
-                 tooltip="{{ viewColumn ? 'Switch to List View' : 'Switch to Swimlane View'  | translate }}"
-                 tooltip-placement="left">
+                 sd-tooltip="{{ viewColumn ? 'Switch to List View' : 'Switch to Swimlane View'  | translate }}"
+                 flow="left">
                 <i class="icon-th-list"></i>
             </button>
 
             <div class="button-stack right-stack" ng-if="(type !== 'spike' && type !== 'highlights' ) || elementState === 'compact'">
-                <div class="dropdown navbtn strict" dropdown>
-                    <button class="dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
-                    <ul class="dropdown__menu pull-right">
+                <div class="dropdown dropdown--align-right" dropdown>
+                    <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
+                    <ul class="dropdown__menu">
                         <li ng-if="elementState === 'compact'"><span class="dropdown__menu-label">{{:: 'File types' | translate}}</span></li>
                         <li ng-repeat="fileType in aggregate.fileTypes" 
                             ng-click="aggregate.setFileType(fileType)" 
-                            ng-class="{'menu-item--active': aggregate.hasFileType(fileType)}"
+                            ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType)}"
                             ng-if="elementState === 'compact'" title="{{fileType | translate}}">
                             <button>
                                 <span ng-if="fileType === 'all'"></span>
@@ -117,12 +117,12 @@
                                 &nbsp;<span>{{fileType}}</span>
                             </button>
                         </li>
-                        <li ng-if="elementState === 'compact'" class="divider"></li>
+                        <li ng-if="elementState === 'compact'" class="dropdown__menu-divider"></li>
                         <li ng-if="elementState === 'compact'"><span class="dropdown__menu-label">{{:: 'Sorting' | translate}}</span></li>
                         <li ng-if="elementState === 'compact'">
                             <span sd-item-sortbar></span>
                         </li>
-                        <li ng-if="elementState === 'compact' && type !== 'spike'" class="divider"></li>
+                        <li ng-if="elementState === 'compact' && type !== 'spike'" class="dropdown__menu-divider"></li>
                         <li ng-if="type !== 'spike' && type !== 'highlights'">
                             <button ng-click="aggregate.edit('reorder', true)">
                                 <i class="icon-switches"></i>

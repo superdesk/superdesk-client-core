@@ -1,22 +1,22 @@
 <ul>
     <li ng-repeat="(type,keys) in tags.selectedFacets">
         <div ng-repeat="key in keys">
-            <span>{{type| translate}}:</span>{{key.label || key}}<button ng-click="removeFilter(type, key.value || key)"><i class="icon-close-small icon-white"></i></button>
+            <span>{{type| translate}}:</span>{{key.label || key}}<button ng-click="removeFilter(type, key.value || key)"><i class="icon-close-small icon--white"></i></button>
         </div>
     </li>
     <li ng-repeat="(type,keys) in tags.removedFacets">
         <div ng-repeat="key in keys">
-            <span>{{key.label | translate}}:</span>{{key.displayValue}}<button ng-click="removeFilter(type, key.value)"><i class="icon-close-small icon-white"></i></button>
+            <span>{{key.label | translate}}:</span>{{key.displayValue}}<button ng-click="removeFilter(type, key.value)"><i class="icon-close-small icon--white"></i></button>
         </div>
     </li>
     <li ng-repeat="parameter in tags.selectedParameters">
         <div>
-            <span>{{parameter.label}}</span><button ng-click="removeParameter(parameter.value)"><i class="icon-close-small icon-white"></i></button>
+            <span>{{parameter.label}}</span><button ng-click="removeParameter(parameter.value)"><i class="icon-close-small icon--white"></i></button>
         </div>
     </li>
     <li ng-repeat="parameter in tags.selectedKeywords">
         <div>
-            <span>{{parameter}}</span><button ng-click="removeParameter(parameter)"><i class="icon-close-small icon-white"></i></button>
+            <span>{{parameter}}</span><button ng-click="removeParameter(parameter)"><i class="icon-close-small icon--white"></i></button>
         </div>
     </li>
 </ul>

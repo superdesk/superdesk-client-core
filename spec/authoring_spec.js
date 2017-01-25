@@ -257,7 +257,7 @@ describe('authoring', () => {
 
         expect(transmissionDetails.count()).toBe(1);
         transmissionDetails.get(0).click();
-        expect(element(by.className('modal-body')).getText()).toMatch(/Kids Helpline*/);
+        expect(element(by.className('modal__body')).getText()).toMatch(/Kids Helpline*/);
         element(by.css('[ng-click="hideFormattedItem()"]')).click();
         monitoring.filterAction('takesPackage');
         authoring.close();

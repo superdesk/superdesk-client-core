@@ -2,9 +2,9 @@
     <div class="action-bar clearfix" ng-class="{
         show: userPrivileges.$dirty
         }">
-        <button class="btn btn--primary btn--pull-right" ng-disabled="!userPrivileges.$dirty" ng-click="save()" translate>Save</button>
+        <button class="btn btn--primary pull-right" ng-disabled="!userPrivileges.$dirty" ng-click="save()" translate>Save</button>
         <button
-            class="btn btn--pull-right"
+            class="btn pull-right"
             ng-click="cancel()"
             ng-disabled="!userPrivileges.$dirty" translate>Cancel</button>
     </div>

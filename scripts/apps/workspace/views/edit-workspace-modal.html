@@ -1,10 +1,10 @@
 <div sd-modal data-model="workspace" data-close="cancel()">
-    <div class="modal-header">
-        <h3 ng-hide="workspace._id" translate>Create new Workspace</h3>
-        <h3 ng-show="workspace._id" translate>Rename Workspace</h3>
+    <div class="modal__header">
+        <h3 class="modal__heading" ng-hide="workspace._id" translate>Create new Workspace</h3>
+        <h3 class="modal__heading" ng-show="workspace._id" translate>Rename Workspace</h3>
     </div>
 
-    <div class="modal-body">
+    <div class="modal__body">
         <fieldset>
             <div class="field">
                 <label translate>Workspace name</label>
@@ -15,7 +15,7 @@
         </fieldset>
     </div>
 
-    <div class="modal-footer">
+    <div class="modal__footer">
         <button class="btn" ng-click="cancel()" translate>Cancel</button>
         <button class="btn btn--primary"
             ng-disabled="!workspace.name"

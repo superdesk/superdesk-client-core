@@ -35,7 +35,7 @@ describe('send', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
-        expect(element(by.className('modal-content')).isDisplayed()).toBe(true);
+        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
     });
 
     it('can submit item to a desk although there are spelling mistakes', () => {
@@ -58,7 +58,7 @@ describe('send', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
-        element(by.className('modal-content')).all(by.css('[ng-click="cancel()"]')).click();
+        element(by.className('modal__content')).all(by.css('[ng-click="cancel()"]')).click();
         expect(element(by.className('authoring-embedded')).isDisplayed()).toBe(true);
     });
 

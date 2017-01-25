@@ -4,15 +4,15 @@
 
         <div class="header">
             <h2 translate>Highlights configurations</h2>
-            <button class="btn btn--primary btn--pull-right" ng-click="edit({})">
-                <i class="icon-plus-sign icon-white"></i> {{ 'Create configuration' | translate }}
+            <button class="btn btn--primary pull-right" ng-click="edit({})">
+                <i class="icon-plus-sign icon--white"></i> {{ 'Create configuration' | translate }}
             </button>
         </div>
 
         <div class="content desk-settings">
             <div sd-shadow>
                 <ul class="pills-list">
-                    <li ng-repeat="config in configurations._items">
+                    <li ng-repeat="config in configurations._items" class="clearfix">
 
                         <h6 class="pull-left" title="{{ config.name }}">{{ config.name }}</h6>
 

@@ -22,7 +22,7 @@
             class="panel-header {{currentUserAction === vm.userActions.externalsource_to ? 'panel-header-active' : ''}}"
             ng-show="!canSendItem() && !canPublishItem() && currentUserAction === vm.userActions.externalsource_to"
             translate>Fetch To</h3>
-        <div class="close" ng-click="close()"><i class="icon-close-small icon-white"></i></div>
+        <div class="close" ng-click="close()"><i class="icon-close-small icon--white"></i></div>
     </div>
 
     <div class="slide-pane__content">
@@ -50,7 +50,7 @@
 
         <div sd-toggle-box id="embargoTimestamp" ng-if="mode === 'authoring' && showEmbargo()" data-title="Embargo" data-open="true" data-style="dark">
             <label class="label--lite">{{ :: 'Embargo' | translate }}
-                <button type="button" class="btn btn--mini btn--pull-right" ng-click="item.embargo_date=null; item.embargo_time=null;" title="{{ :: 'Clear Embargo' | translate }}" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon-white"></i></button>
+                <button type="button" class="btn btn--mini btn--pull-right" ng-click="item.embargo_date=null; item.embargo_time=null;" title="{{ :: 'Clear Embargo' | translate }}" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon--white"></i></button>
             </label>
             <ul class="btn-list">
                 <li class="datepicker-input--dark">
@@ -64,7 +64,7 @@
 
         <div sd-toggle-box id="publishScheduleTimestamp" ng-if="mode === 'authoring' && showPublishSchedule()" data-title="{{ 'Publishing Schedule' | translate }}" data-open="true" data-style="dark">
             <label class="label--lite">{{ :: 'Publish Schedule' | translate }}
-                <button type="button" class="btn btn--mini btn--pull-right" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" title="{{ :: 'Clear Publish Schedule' | translate }}" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon-white"></i></button>
+                <button type="button" class="btn btn--mini btn--pull-right" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" title="{{ :: 'Clear Publish Schedule' | translate }}" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon--white"></i></button>
             </label>
             <ul class="btn-list">
                 <li class="datepicker-input--dark">
@@ -85,7 +85,7 @@
         <ul class="btn-list">
             <li class="full-width"
                 ng-if="mode === 'authoring' && canSendAndContinue() && itemActions.send && itemActions.new_take">
-                <button class="btn btn--light-gray"
+                <button class="btn btn--large btn--primary btn--hollow btn--expanded"
                         ng-click="sendAndContinue()"
                         ng-disabled="item.embargo || disableSendButton()"
                         translate>
@@ -93,7 +93,7 @@
                 </button>
             </li>
             <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
-                <button class="btn btn--light-gray"
+                <button class="btn btn--large btn--primary btn--hollow btn--expanded"
                         ng-click="send(true)"
                         ng-disabled="disableFetchAndOpenButton()"
                         translate>
@@ -101,7 +101,7 @@
                 </button>
             </li>
             <li class="full-width" ng-if="showSendButtonAndDestination()">
-                <button class="btn btn--primary"
+                <button class="btn btn--large btn--primary btn--expanded"
                         ng-click="send()"
                         ng-disabled="disableSendButton()"
                         >
@@ -114,7 +114,7 @@
     <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.duplicate_to">
         <ul class="btn-list">
             <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
-                <button id="duplicate-open-btn" class="btn btn--light-gray"
+                <button id="duplicate-open-btn" class="btn btn--large btn--hollow btn--expanded btn--ui-dark"
                         ng-click="send(true)"
                         ng-disabled="disableFetchAndOpenButton()"
                         translate>
@@ -122,7 +122,7 @@
                 </button>
             </li>
             <li class="full-width" ng-if="showSendButtonAndDestination()">
-                <button id="duplicate-btn" class="btn btn--primary"
+                <button id="duplicate-btn" class="btn btn--large btn--primary btn--expanded"
                         ng-click="send()"
                         ng-disabled="disableSendButton()"
                         translate>
@@ -135,7 +135,7 @@
     <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.externalsource_to">
         <ul class="btn-list">
             <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
-                <button id="externalsource-open-btn" class="btn btn--light-gray"
+                <button id="externalsource-open-btn" class="btn btn--large btn--primary btn--hollow btn--expanded"
                         ng-click="send(true)"
                         ng-disabled="disableFetchAndOpenButton()"
                         translate>
@@ -143,7 +143,7 @@
                 </button>
             </li>
             <li class="full-width" ng-if="showSendButtonAndDestination()">
-                <button id="externalsource-btn" class="btn btn--primary"
+                <button id="externalsource-btn" class="btn btn--large btn--primary btn--expanded"
                         ng-click="send()"
                         ng-disabled="disableSendButton()"
                         translate>
@@ -157,7 +157,7 @@
         <ul class="btn-list">
             <li class="full-width" ng-if="isSendEnabled() && showSendButtonAndDestination()">
                 <button type="submit"
-                        class="btn btn--light-gray"
+                        class="btn btn--large btn--primary btn--hollow btn--expanded"
                         ng-show="_editable"
                         ng-click="sendAndPublish()"
                         ng-disabled="!canSendAndPublish()"
@@ -167,7 +167,7 @@
             </li>
             <li class="full-width" ng-if="canSendItem() && canPublishItem()">
                 <button type="submit"
-                        class="btn btn--publish-plus"
+                        class="btn btn--large btn--highlight btn--expanded"
                         ng-show="_editable"
                         ng-click="publish()"
                         ng-disabled="canSendAndPublish()"

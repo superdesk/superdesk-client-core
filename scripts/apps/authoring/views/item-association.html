@@ -2,7 +2,7 @@
         ng-class="{'item-association--preview': related, 'item-association--loading': loading}"
         ng-click="editable && isMediaEditable() && !related && upload()">
     <div ng-if="related && editable" class="close-overlay">
-        <button class="btn btn--mini btn--light btn--pull-right" ng-click="remove(related); $event.stopPropagation()">
+        <button class="btn btn--mini btn--light pull-right" ng-click="remove(related); $event.stopPropagation()">
             <i class="icon-close-small"></i>
         </button>
     </div>

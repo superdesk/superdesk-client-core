@@ -751,6 +751,7 @@ $rightfield-width:60px;
                 display: flex;
                 white-space: nowrap;
                 overflow: hidden;
+                flex-shrink: 0;
             }
             .state-label, .profile-label {
                 margin-top: 2px;

@@ -17,7 +17,7 @@ function Dashboard() {
      * Open the dashboard setting. The dashboard page should be already opened.
      */
     this.showDashboardSettings = function() {
-        element.all(by.className('svg-icon-plus')).first().click();
+        element.all(by.className('icon-plus-large')).first().click();
     };
 
     /**

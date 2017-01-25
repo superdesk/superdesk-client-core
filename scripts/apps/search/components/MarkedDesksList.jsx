@@ -62,7 +62,7 @@ export class MarkedDesksList extends React.Component {
                 <li key="item-marked-label">
                     <div className="dropdown__menu-label">{gettext('Marked For')}
                         <button className="dropdown__menu-close" onClick={closeActionsMenu}>
-                            <i className="icon-close-small icon-white" />
+                            <i className="icon-close-small icon--white" />
                         </button>
                     </div>
                 </li>

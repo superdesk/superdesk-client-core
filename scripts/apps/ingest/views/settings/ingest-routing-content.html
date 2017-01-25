@@ -1,8 +1,8 @@
 <div class="split-content">
     <div class="header">
         <h2 translate>Ingest Routing Schemes</h2>
-        <button class="btn btn--primary btn--pull-right" ng-click="edit({})">
-            <i class="icon-plus-sign icon-white"></i> <span translate>Add New Routing Scheme</span>
+        <button class="btn btn--primary pull-right" ng-click="edit({})">
+            <i class="icon-plus-sign icon--white"></i> <span translate>Add New Routing Scheme</span>
         </button>
     </div>
 
@@ -22,72 +22,73 @@
     </div>
 </div>
 
-<div sd-modal data-model="editScheme" data-close="cancel()" class="add-scheme-modal modal-strech modal-big">
-    <div class="modal-header">
+<div sd-modal data-model="editScheme" class="add-scheme-modal modal--tabs">
+    <div class="modal__header">
         <a href="" class="close" ng-click="cancel()">
             <i class="icon-close-small"></i>
         </a>
-        <h3 translate ng-show="editScheme._id" translate>Edit Scheme</h3>
-        <h3 translate ng-hide="editScheme._id" translate>Add New Scheme</h3>
+        <h3 class="modal__heading" translate ng-show="editScheme._id" translate>Edit Scheme</h3>
+        <h3 class="modal__heading" translate ng-hide="editScheme._id" translate>Add New Scheme</h3>
     </div>
 
-    <form name="schemeForm" class="modal-body">
-        <div class="header clearfix">
-            <div class="field">
-                <label translate>Scheme name</label>
-                <input type="text" class="line-input input" placeholder="{{ 'Scheme name'|translate }}" ng-model="editScheme.name" required>
-            </div>
-        </div>
-        <div class="split-view">
-
-            <div class="sidebar">
+    <div class="modal__body">    
+        <form name="schemeForm">
+            <div class="modal__body-header modal__body-header--add-padding">
                 <div class="field">
-                    <label translate>Scheme rules</label>
+                    <label translate>Scheme name</label>
+                    <input type="text" class="line-input input" placeholder="{{ 'Scheme name'|translate }}" ng-model="editScheme.name" required>
                 </div>
-                <ul sd-sortrules class="pills-list rule-list">
-                    <li ng-repeat="schemeRule in editScheme.rules"
-                        class="clearfix"
-                        ng-class="{highlight: schemeRule === rule}"
-                        ng-click="editRule(schemeRule)">
-                        <div class="header">
-                            <h6>{{schemeRule.name}}</h6>
+            </div>
+            <div class="modal__body-content">
+                <div class="split-view">
+
+                    <div class="sidebar">
+                        <div class="field">
+                            <label translate>Scheme rules</label>
                         </div>
-                    </li>
-                </ul>
-                <button class="btn btn--primary btn--full" ng-click="addRule()" ng-disabled="!editScheme.name">
-                    <i class="icon-plus-sign icon-white"></i> <span translate>Add New Rule</span>
-                </button>
-            </div>
+                        <ul sd-sortrules class="pills-list rule-list">
+                            <li ng-repeat="schemeRule in editScheme.rules"
+                                class="clearfix"
+                                ng-class="{highlight: schemeRule === rule}"
+                                ng-click="editRule(schemeRule)">
+                                <div class="header">
+                                    <h6>{{schemeRule.name}}</h6>
+                                </div>
+                            </li>
+                        </ul>
+                        <button class="btn btn--primary btn--expanded" ng-click="addRule()" ng-disabled="!editScheme.name">
+                            <i class="icon-plus-sign icon--white"></i> <span translate>Add New Rule</span>
+                        </button>
+                    </div>
 
-            <div class="main" ng-if="rule">
-                <ul class="nav nav-tabs" ng-init="tab = 'general'">
-                    <li ng-class="{active: tab === 'general'}">
-                        <button ng-click="tab = 'general'" translate>General</button>
-                    </li>
-                    <li ng-class="{active: tab === 'filter'}">
-                        <button ng-click="tab = 'filter'" translate>Filter</button>
-                    </li>
-                    <li ng-class="{active: tab === 'action'}">
-                        <button ng-click="tab = 'action'" translate>Action</button>
-                    </li>
-                    <li ng-class="{active: tab === 'schedule'}">
-                        <button ng-click="tab = 'schedule'" translate>Schedule</button>
-                    </li>
-                </ul>
-                <div class="content">
-                    <div sd-ingest-routing-general ng-if="tab === 'general'" data-rule="rule" data-remove-action="removeRule"></div>
-                    <div sd-ingest-routing-filter ng-if="tab === 'filter'" data-rule="rule" data-content-filters="contentFilters"></div>
-                    <div sd-ingest-routing-action ng-if="tab === 'action'" data-rule="rule" class="action-tab"></div>
-                    <div sd-ingest-routing-schedule ng-if="tab === 'schedule'" data-rule="rule"></div>
+                    <div class="main" ng-if="rule">
+                        <ul class="nav nav-tabs" ng-init="tab = 'general'">
+                            <li ng-class="{active: tab === 'general'}">
+                                <button ng-click="tab = 'general'" translate>General</button>
+                            </li>
+                            <li ng-class="{active: tab === 'filter'}">
+                                <button ng-click="tab = 'filter'" translate>Filter</button>
+                            </li>
+                            <li ng-class="{active: tab === 'action'}">
+                                <button ng-click="tab = 'action'" translate>Action</button>
+                            </li>
+                            <li ng-class="{active: tab === 'schedule'}">
+                                <button ng-click="tab = 'schedule'" translate>Schedule</button>
+                            </li>
+                        </ul>
+                        <div class="content">
+                            <div sd-ingest-routing-general ng-if="tab === 'general'" data-rule="rule" data-remove-action="removeRule"></div>
+                            <div sd-ingest-routing-filter ng-if="tab === 'filter'" data-rule="rule" data-content-filters="contentFilters"></div>
+                            <div sd-ingest-routing-action ng-if="tab === 'action'" data-rule="rule" class="action-tab"></div>
+                            <div sd-ingest-routing-schedule ng-if="tab === 'schedule'" data-rule="rule"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-        </div>
-    </form>
-
-    <div class="modal-footer">
-        <button class="btn" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="save()" ng-disabled="disableSchemeForm()" translate>Save</button>
+            <div class="modal__body-footer">
+                <button class="btn" ng-click="cancel()" translate>Cancel</button>
+                <button class="btn btn--primary" ng-click="save()" ng-disabled="disableSchemeForm()" translate>Save</button>
+            </div>
+        </form>
     </div>
-
 </div>

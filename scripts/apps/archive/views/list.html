@@ -1,12 +1,12 @@
 <div class="subnav" ng-if="type !== 'ingest'">
 
-    <div class="subnav__desk-stage desk-stages">
+    <div class="subnav__desk-stage desk-stages subnav--padded">
         <div class="toggle-list" sd-desk-stages></div>
     </div>
 
     <div class="subnav__button-stack--square-buttons">
-        <div class="navbtn dropdown strict" dropdown ng-if="type === 'archive'">
-            <button tooltip="{{ :: 'Create' | translate }}" tooltip-placement="left" class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
+        <div class="dropdown dropdown--align-right strict" dropdown ng-if="type === 'archive'">
+            <button tooltip="{{ :: 'Create' | translate }}" tooltip-placement="left" class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
             <ul class="dropdown__menu dropdown__menu--scrollable pull-right" sd-content-create></ul>
         </div>
     </div>
@@ -14,16 +14,16 @@
 </div>
 <div class="subnav subnav--plain" ng-class="{'subnav--archive': type === 'archive'}">
     <header class="search-page-header">
-            <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
+        <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
 
-            <div sd-item-searchbar data-repo="repo" data-context="context" class="searchbar-flex-handler"></div>
-            <div sd-item-sortbar data-total="total"></div>
+        <div sd-item-searchbar data-repo="repo" data-context="context" class="searchbar-flex-handler"></div>
+        <div sd-item-sortbar data-total="total"></div>
 
-            <div class="view-select">
-                    <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-th"></i></button>
-                    <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-th-list"></i></button>
-            </div>
-            <div sd-multi-action-bar></div>
+        <div class="view-select">
+            <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'mgrid'" ng-click="setview('mgrid')"><i class="icon-th"></i></button>
+            <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-th-list"></i></button>
+        </div>
+        <div sd-multi-action-bar></div>
     </header>
 </div>
 

@@ -122,7 +122,7 @@
     }
     .dropdown__menu {
         padding: 10px;
-        top: -19px;
+        top: 0px;
         text-align: center;
         .avatar {
             display: inline-block;
@@ -576,10 +576,6 @@
     height: 13px;
     color: $grayLight;
   }
-  .dropdown__toggle {
-    line-height: 13px;
-    height: auto;
-  }
   .update-info {
     padding-left: 0;
   }
@@ -603,12 +599,10 @@
   textarea.ed-note {
     color: #d25932;
   }
-
-.dropdown {
+  .dropdown {
     width: 100%;
     line-height: 0;
     .dropdown__toggle {
-      @include box-sizing(border-box);
       @include transition(all .3s);
       padding: 0;
       .dropdown__caret {
@@ -634,8 +628,7 @@
         border-color: $sd-blue;
       }
     }
-    .dropdown__menu {
-      width: 100%;
+    .dropdown__menu {     
       .place-dropdown {
         padding-left: 16px;
         @include text-semibold();
@@ -928,7 +921,7 @@
             }
             button {
                 flex-grow: 1;
-                min-width: 0;
+                min-width: 0 !important;
                 font-weight: 500;
                 text-overflow: ellipsis;
                 overflow: hidden;

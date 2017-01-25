@@ -207,6 +207,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
             max_sizey: 1,
             sizex: 1,
             sizey: 1,
+            classes: 'tabs modal--nested-fix',
             thumbnail: 'scripts/apps/dashboard/world-clock/thumbnail.svg',
             template: 'scripts/apps/dashboard/world-clock/widget-worldclock.html',
             configurationTemplate: 'scripts/apps/dashboard/world-clock/configuration.html',

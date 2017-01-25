@@ -1,9 +1,9 @@
-<div class="subnav">
+<div class="subnav subnav--absolute">
     <h3 class="page-nav-title" translate>Ingest Dashboard</h3>
 
     <div class="button-stack right-stack">
-        <div id="ingest-dashboard-dropdown" class="navbtn dropdown strict" dropdown>
-            <button class="dropdown__toggle sd-create-btn" dropdown__toggle></button>
+        <div id="ingest-dashboard-dropdown" class="dropdown strict" dropdown sd-tooltip="{{ :: 'Add Sources' | translate }}" flow="left">
+            <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
             <ul class="dropdown__menu dropdown__menu--scrollable pull-right source-list" sd-user-ingest-dashboard-drop-down
                 data-items="items" data-set-user-preferences="setUserPreferences(true)"></ul>
         </div>

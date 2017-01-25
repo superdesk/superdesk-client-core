@@ -5,7 +5,7 @@ export function TemplateEditorModal() {
             _.defer(() => {
                 const ENTER = 13;
 
-                let modalBodyContainer = angular.element('.modal-body');
+                let modalBodyContainer = angular.element('.modal__body');
 
                 function handleKeyDown(event) {
                     if (event.keyCode === ENTER && event.target.tagName === 'INPUT') {

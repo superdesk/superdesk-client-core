@@ -1,9 +1,9 @@
-<div class="modal-header">
-    <a href="" class="close" sd-hotkey="esc" ng-click="cancel()"><i class="icon-close-small"></i></a>
-    <h3 translate>Monitoring settings <span ng-if="settings.desk" translate>for "{{settings.desk.name}}" Desk</span></h3>
+<div class="modal__header">
+    <a href="" class="modal__close pull-right" sd-hotkey="esc" ng-click="cancel()"><i class="icon-close-small"></i></a>
+    <h3 class="modal__heading" translate>Monitoring settings <span ng-if="settings.desk" translate>for "{{settings.desk.name}}" Desk</span></h3>
 </div>
 
-<div class="modal-body aggregate-settings" sd-wizard data-name="aggregatesettings"
+<div class="modal__body aggregate-settings" sd-wizard data-name="aggregatesettings"
      data-current-step="step.current" ng-init="setCurrentStep()" data-finish="cancel()">
     <div sd-wizard-step data-title="{{ :: 'Desks' | translate }}" data-code="desks"
          data-hide="shouldHideStep('desks')">
@@ -85,7 +85,7 @@
         <div class="content">
             <div class="legend" translate>Reorder stages and saved searches for view</div>
             <ul class="groups draggable-list serial-decimal" sd-sort-groups>
-                <li class="sort-item clearfix" ng-class="{'active': item.order < columnsLimit}"
+                <li class="sort-item" ng-class="{'active': item.order < columnsLimit}"
                  ng-repeat="item in getValues() track by item.order">
                     <div class="group-title" ng-if="item.type === 'stage'">
                         {{deskLookup[stageLookup[item._id].desk].name}} : <span>{{stageLookup[item._id].name}}</span>
@@ -111,19 +111,19 @@
             <div class="legend" translate>Set maximum items per stages and saved searches for view</div>
             <div class="groups">
                 <div ng-repeat="max in getValues()" class="clearfix">
-                    <div class="desk-title pull-left" ng-if="max.type === 'stage'">
+                    <div class="desk-title desk-title--80 pull-left" ng-if="max.type === 'stage'">
                         {{deskLookup[stageLookup[max._id].desk].name}} : <span>{{stageLookup[max._id].name}}</span>
                     </div>
-                    <div class="desk-title pull-left" ng-if="max.type === 'scheduledDeskOutput'">
+                    <div class="desk-title desk-title--80 pull-left" ng-if="max.type === 'scheduledDeskOutput'">
                         {{max.name}} : <span translate>Desk Scheduled Output</span>
                     </div>
-                    <div class="desk-title pull-left" ng-if="max.type === 'deskOutput'">
+                    <div class="desk-title desk-title--80 pull-left" ng-if="max.type === 'deskOutput'">
                         {{max.name}} : <span translate>Desk Output</span>
                     </div>
-                    <div class="desk-title pull-left" ng-if="max.type === 'search'">
+                    <div class="desk-title desk-title--80 pull-left" ng-if="max.type === 'search'">
                         {{searchLookup[max._id].name}}
                     </div>
-                    <div class="desk-title pull-left" ng-if="max.type === 'personal'" translate>Personal</div>
+                    <div class="desk-title desk-title--80 pull-left" ng-if="max.type === 'personal'" translate>Personal</div>
                     <div class="box-items-count pull-right"><input type="number" id="maxItems" ng-model="max.max_items" min="1" max="25" required></div>
                 </div>
             </div>
@@ -132,8 +132,8 @@
 
 </div>
 
-<div class="modal-footer">
-    <button id="previousBtn" class="btn btn--pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate>Previous</button>
+<div class="modal__footer">
+    <button id="previousBtn" class="btn pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate>Previous</button>
     <button class="btn" ng-click="cancel()" translate>Cancel</button>
     <button id="nextBtn" class="btn" ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep" ng-click="next()" translate>Next</button>
     <button class="btn btn--primary" ng-click="save()" translate>Done</button>

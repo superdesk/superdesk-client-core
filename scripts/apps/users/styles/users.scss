@@ -440,6 +440,7 @@
             left: 0;
             right: 0;
             height:30px;
+            letter-spacing: normal;
         }
         &:hover {
             .change-photo {
@@ -506,8 +507,9 @@
 
 // USER PROFILE PAGE IN MODAL
 .modal.user-profile-page {
-    .modal-body {
+    .modal__body {
         height: calc(100vh - 180px);
+        @include border-radius(0 0 4px 4px);
     }
     .user-details-pane {
         position: static;
@@ -525,6 +527,7 @@
         top: auto !important;
         bottom: 0;
         border-top: 1px solid #e4e4e4;
+        border-bottom: 0;
     }
 }
 

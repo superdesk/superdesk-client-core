@@ -6,18 +6,18 @@
     </button>
     <div class="add-content__actions" ng-show="vm.expanded">
         <span ng-click="vm.triggerAction('addEmbed')"
-              tooltip="{{ :: 'add an embed' | translate }}"
-              tooltip-placement="top">
+              sd-tooltip="{{ :: 'add an embed' | translate }}"
+              flow="right">
             <i class="icon-code"></i>
         </span>
         <span ng-click="vm.triggerAction('addPicture')"
-              tooltip="{{ :: 'add a picture' | translate }}"
-              tooltip-placement="top">
+              sd-tooltip="{{ :: 'add a picture' | translate }}"
+              flow="right">
             <i class="icon-photo"></i>
         </span>
         <span ng-click="vm.triggerAction('pasteBlock')"
-              tooltip="{{ :: 'paste a block' | translate }}"
-              tooltip-placement="bottom"
+              sd-tooltip="{{ :: 'paste a block' | translate }}"
+              flow="right"
               ng-if="vm.isSomethingInClipboard()">
             <i class="icon-paste"></i>
         </span>

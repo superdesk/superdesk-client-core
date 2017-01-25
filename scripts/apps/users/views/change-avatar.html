@@ -1,9 +1,9 @@
-<div class="modal-header">
-    <h3 class="pull-left">{{ activity.label|translate }}</h3>
-    <button type="button" class="close" ng-click="reject()"><i class="icon-close-small"></i></button>
+<div class="modal__header">
+    <button type="button" class="modal__close pull-right" ng-click="reject()"><i class="icon-close-small"></i></button>
+    <h3 class="modal__heading">{{ activity.label|translate }}</h3>    
 </div>
 
-<div class="modal-body split-popup">
+<div class="modal__body split-popup no-padding">
     <aside class="sidebar">
         <ul>
             <li ng-repeat="method in methods" ng-click="activate(method)" ng-class="{active: active === method}">
@@ -69,6 +69,6 @@
     </section>
 </div>
 
-<div class="modal-footer">
+<div class="modal__footer">
     <button type="button" class="btn submit" ng-click="upload(preview)" ng-disabled="!preview.cords || progress.width" translate>Done</button>
 </div>

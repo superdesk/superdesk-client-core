@@ -16,8 +16,8 @@
         <div class="stage-header__stretch-bar"></div>
         <!-- desk notification section -->
         <div class="stage-header__notification" ng-if="!viewColumn">
-            <div ng-if="group.type === 'stage'" class="dropdown dropdown--dropright dropdown--hover dropdown--noarrow monitoring-dropdown"
-                dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
+            <div ng-if="group.type === 'stage'"
+                sd-desk-notifications data-stage="group._id">
             </div>
         </div>
         <!-- refresh button -->
@@ -38,8 +38,8 @@
         </div>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
         <div class="stage-header__notification">
-            <div ng-if="group.type === 'stage'" class="dropdown dropdown--dropright dropdown--hover dropdown--noarrow monitoring-dropdown"
-                dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
+            <div ng-if="group.type === 'stage'" class=""
+                sd-desk-notifications data-stage="group._id">
             </div>
         </div>
         <button ng-if="showRefresh" class="btn btn--light btn--circle stage-header__refresh" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
@@ -53,8 +53,8 @@
         </div>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
         <div class="stage-header__notification">
-            <div ng-if="group.type === 'stage'" class="dropdown dropdown--dropright dropdown--hover dropdown--noarrow monitoring-dropdown"
-                dropdown-append-to-body dropdown sd-desk-notifications data-stage="group._id">
+            <div ng-if="group.type === 'stage'" class=""
+                sd-desk-notifications data-stage="group._id">
             </div>
         </div>
         <button ng-if="showRefresh" class="btn btn--light btn--circle stage-header__refresh" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">

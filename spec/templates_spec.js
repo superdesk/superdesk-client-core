@@ -58,8 +58,10 @@ describe('templates', () => {
         templates.edit('New Template');
         expect(templates.getTemplateNameElement().getAttribute('value')).toEqual('new template');
         expect(templates.getTemplateType().getAttribute('value')).toEqual('string:create');
-        expect(templates.getDeskElement('Politic Desk').getAttribute('checked')).toEqual('true');
-        expect(templates.getDeskElement('Sports Desk').getAttribute('checked')).toEqual('true');
+        expect(templates.getDeskElement('Politic Desk').element(by.className('sd-checkbox'))
+                .getAttribute('checked')).toEqual('true');
+        expect(templates.getDeskElement('Sports Desk').element(by.className('sd-checkbox'))
+                .getAttribute('checked')).toEqual('true');
         expect(templates.getAutomaticItemCreationElement().getAttribute('checked')).toEqual('true');
         expect(templates.getWeekDayElement('Tuesday').getAttribute('class')).toContain('active');
         expect(templates.getTimeElement().getAttribute('value')).toEqual('10:30');

@@ -2,19 +2,20 @@
     <div class="split-content">
         <div class="header">
             <h2 translate>Internal Destinations</h2>
-            <button class="btn btn--primary btn--pull-right" ng-click="dest.create()">
-                <i class="icon-plus-sign icon-white"></i> {{ :: 'Add New Destination' | translate }}
+            <button class="btn btn--primary pull-right" ng-click="dest.create()">
+                <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New Destination' | translate }}
             </button>
         </div>
         <div class="content split-content">
-            <div class="header">
-                <span sd-check class="sd-checkbox--button-style" ng-model="active_only">{{:: 'Show active only'| translate}}</span>
+            <div class="header">                
+                <sd-check ng-model="active_only" label-position="inside">{{:: 'Show active only'| translate}}</sd-check> 
             </div>
             <div class="content">
                 <ul class="pills-list">
                     <li ng-repeat="destination in dest.destinations track by destination._id"
-                        ng-class="{inactive: !destination.is_active}" ng-show="!active_only || (active_only && destination.is_active)">
-                        <h6>{{ destination.name }}</h6>
+                        ng-class="{inactive: !destination.is_active}" ng-show="!active_only || (active_only && destination.is_active)"
+                        class="clearfix">
+                        <h6>{{ destination.name}}</h6>
                         <div class="actions">
                             <button ng-click="dest.edit(destination)" title="{{:: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
                             <button ng-click="dest.remove(destination)" title="{{:: 'Remove' | translate }}"><i class="icon-trash"></i></button>
@@ -26,13 +27,13 @@
         </div>
     </div>
 </div>
-<div sd-modal data-model="dest.active" class="modal-large modal-static">
-    <div class="modal-header">
-        <a href="" class="close" ng-click="dest.closeEdit()"><i class="icon-close-small"></i></a>
-        <h3 ng-show="!dest.active._id" translate>Add New Destination</h3>
-        <h3 ng-show="dest.active._id" translate>Edit Destination</h3>
+<div sd-modal data-model="dest.active" class="modal--large">
+    <div class="modal__header">
+        <a href="" class="modal__close pull-right" ng-click="dest.closeEdit()"><i class="icon-close-small"></i></a>
+        <h3 class="modal__heading" ng-show="!dest.active._id" translate>Add New Destination</h3>
+        <h3 class="modal__heading" ng-show="dest.active._id" translate>Edit Destination</h3>
     </div>
-    <div class="modal-body">
+    <div class="modal__body">
         <form name="editForm">
             <fieldset>
                 <div class="field">
@@ -47,16 +48,16 @@
                 </div>
 
                 <div class="field" sd-content-filter-select data-model="dest.active.filter"></div>
-                
+
                 <div sd-action-picker
-                    data-desk="dest.active.desk"
-                    data-stage="dest.active.stage"
-                    data-macro="dest.active.macro"
-                    class="split"></div>
+                     data-desk="dest.active.desk"
+                     data-stage="dest.active.stage"
+                     data-macro="dest.active.macro"
+                     class="split"></div>
             </fieldset>
         </form>
     </div>
-    <div class="modal-footer">
+    <div class="modal__footer">
         <button class="btn" ng-click="dest.stopEdit()" translate>Cancel</button>
         <button class="btn btn--primary" ng-click="dest.save(dest.active)" ng-disabled="editForm.$invalid" translate>Save</button>
     </div>

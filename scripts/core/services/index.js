@@ -30,7 +30,6 @@ angular.module('superdesk.core.services', [
     'superdesk.core.services.entity',
     'superdesk.core.services.permissions',
     'superdesk.core.services.storage',
-    'superdesk.core.services.pageTitle',
+    'superdesk.core.services.pageTitle'
 ])
-    .service('serverConfig', ServerConfigService)
-    ;
+        .service('serverConfig', ServerConfigService);

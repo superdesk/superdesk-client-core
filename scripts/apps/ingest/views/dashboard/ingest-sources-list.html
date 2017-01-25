@@ -1,6 +1,6 @@
 <li class="dropdown__menu-label" translate>Add Ingest Sources</li>
-<li ng-repeat="item in items">
+<li ng-repeat="item in items" class="dropdown__menu-item--no-link">
     <span>{{item.name}} <span class="pull-right" sd-switch ng-model="item.dashboard_enabled" ng-click="setUserPreferences()"></span>  </span>
 </li>
-<li class="divider"></li>
+<li class="dropdown__menu-divider"></li>
 <li ng-if="showIngest"><a ng-href="#/settings/ingest" class="uppercase"><i class="icon-pencil"></i><span translate>Edit Ingest Sources</span></a></li>

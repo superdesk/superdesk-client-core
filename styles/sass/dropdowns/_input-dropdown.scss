@@ -1,23 +1,23 @@
 // Dropdown integrated in input field
 // -------------------------------------------------
-.dropdown.dropdown--input-addon {
-    position: absolute;
-    right: 12px;
-    margin-top: -1px;
-    > .dropdown__toggle {
-        height: 22px;
-        line-height: 0;
-        padding: 2px 6px;
-        box-shadow: none;
-        margin-bottom: 2px;
-        background-color: transparent;
-        @include box-shadow(none !important);
-        .dropdown__caret {
-            padding: 0px;
-            margin-left: 0;
-        }
-    }
-    &.open > .dropdown__toggle {
-        background-color: transparent;
-    }
-}
+// .dropdown.dropdown--input-addon {
+//     position: absolute;
+//     right: 12px;
+//     margin-top: -1px;
+//     > .dropdown__toggle {
+//         height: 22px;
+//         line-height: 0;
+//         padding: 2px 6px;
+//         box-shadow: none;
+//         margin-bottom: 2px;
+//         background-color: transparent;
+//         @include box-shadow(none !important);
+//         .dropdown__caret {
+//             padding: 0px;
+//             margin-left: 0;
+//         }
+//     }
+//     &.open > .dropdown__toggle {
+//         background-color: transparent;
+//     }
+// }

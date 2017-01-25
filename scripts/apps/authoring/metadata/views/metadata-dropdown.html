@@ -1,4 +1,4 @@
-<div class="dropdown" ng-class="{'dropdown--dropright': icon, 'dropdown--noarrow': !icon}" dropdown sd-metadropdown-focus sd-dropdown-position is-open="status.isOpen">
+<div class="dropdown dropdown--noarrow dropdown--dropright" dropdown sd-metadropdown-focus>
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="listFields.indexOf(field) === -1 && !icon">
         {{ item[field].name || item[field] ? item[field].name || item[field] : "none" | translate }}
         <b class="dropdown__caret"></b>
@@ -12,7 +12,7 @@
             ng-style="{backgroundColor: values[item[field]].color}">{{ values[item[field]].short || item[field] || 0 }}</span>
         {{ values[item[field]].name }} <b class="dropdown__caret"></b>
     </button>
-    <ul class="dropdown__menu" ng-if="status.isOpen">
+    <ul class="dropdown__menu">
         <li ng-if="label"><div class="dropdown__menu-label">{{ label }}</div></li>
         <li ng-click="select()"><button ng-disabled="disabled" translate>None</button></li>
 
