@@ -163,6 +163,17 @@ export function PublisherFactory(pubapi) {
         queryLists() {
             return pubapi.query('content/lists');
         }
+
+        /**
+         * @ngdoc method
+         * @name publisher#queryLists
+         * @param {String} id - id of content list
+         * @returns {Promise}
+         * @description List all articles for selected content list
+         */
+        queryArticles(id) {
+            return pubapi.query('content/lists/' + id + '/items');
+        }
     }
 
     return new Publisher();

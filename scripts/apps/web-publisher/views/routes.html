@@ -62,13 +62,17 @@
                     <div class="item">
                         <label for="routeParent" translate>parent</label>
                         <select id="routeParent" class="dropdown__toggle line-input" ng-model="newRoute.parent"
-                            ng-options="route.id as route.name for route in routes | filter: {type: 'collection', id: newRoute.id ? '!' + newRoute.id : ''} track by route.id">
+                            ng-options="route.id as route.name for route in routes | filter: {type: 'collection', id: newRoute.id ? '!' + newRoute.id : ''}">
                             <option value=""></option>
                         </select>
                     </div>
-					<div class="item">
+                    <div class="item">
 	                    <label for="routeTemplate" translate>template name</label>
 	                    <input type="text" class="line-input" id="routeTemplate" ng-model="newRoute.templateName">
+                    </div>
+                    <div class="item">
+                        <label for="articleTemplate" translate>article template name</label>
+                        <input type="text" class="line-input" id="articleTemplate" ng-model="newRoute.articlesTemplateName">
                     </div>
                 </fieldset>
             </form>

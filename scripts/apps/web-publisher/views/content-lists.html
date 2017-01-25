@@ -83,24 +83,17 @@
                     </div>
                 </div>
 
-                <!-- todo: ng-show if listOfItems.length -->
-                <div class="card-box__content card-box__content--scrollable" ng-show="i!=3">
+                <div class="card-box__content card-box__content--scrollable">
                     <ul class="card-box__content-list">
-                        <li ng-repeat="i in [1,2,3,4,5,6,7,8,9]" class="card-box__content-list-item--small card-box__content-list-item--border-bottom">
-                            <h4 class="card-box__h4--normal-case">Article {{i}}</h4>
-                        </li>
+                        <div sd-list-articles data-list="list" data-type="card"></div>
                     </ul>
                 </div>
-                <!-- todo: ng-show if listOfItems.length -->
-                <div class="card-box__footer" ng-show="i!=3">
-                        <span class="text--lighter text--small text--uppercase">Last Modified:</span>
-                        <span class="leftSpace text--small">2 days ago</span>
-                        <span class="pull-right state-label state-published">active</span>
 
-                </div>
-                <!-- todo: ng-hide if listOfItems.length -->
-                <div class="card-box__placeholder card-box__placeholder--cursorPointer" ng-hide="i!=3">
-                   Click to add items.
+                <div class="card-box__footer">
+                    <span class="text--lighter text--small text--uppercase">Last Modified:</span>
+                    <span class="leftSpace text--small">{{ list.updatedAt | reldate}}</span>
+                    <span class="pull-right state-label state-published" ng-show="list.enabled" translate>active</span>
+                    <span class="pull-right state-label state-killed" ng-hide="list.enabled" translate>inactive</span>
                 </div>
             </div>
         </div>
