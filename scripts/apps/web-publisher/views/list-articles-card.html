@@ -1,0 +1,9 @@
+<div ng-if="loading" class="card-box__placeholder card-box__content--scrollable">
+    <div class="item-group__loading"></div>
+</div>
+<div ng-if="!loading && !articles.length" class="card-box__placeholder card-box__content--scrollable">
+    <span translate>No articles in this list</span>
+</div>
+<li ng-if="articles.length" ng-repeat="article in articles" class="card-box__content-list-item--small card-box__content-list-item--border-bottom">
+    <h4 class="card-box__h4--normal-case">{{ :: article.content.title}}</h4>
+</li>

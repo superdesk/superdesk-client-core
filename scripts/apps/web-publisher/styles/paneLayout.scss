@@ -7,6 +7,19 @@
     top: 0;
     overflow-x: hidden;
 
+    .close-filter{
+        position: absolute;
+        top: 16px;
+        right: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
+        @include opacity(40);
+        &:hover {
+            cursor: pointer;
+            @include opacity(100);
+        }
+    }
+
     &--headerMargin {
         top: 48px;
     }
