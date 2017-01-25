@@ -59,7 +59,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             };
 
             function activateConfig(config, oldConfig) {
-                if (config !== oldConfig) {
+                if (scope.mode !== 'authoring' && config !== oldConfig) {
                     scope.isActive = !!config;
                     scope.item = scope.isActive ? {} : null;
                     scope.multiItems = multi.count ? multi.getItems() : null;
@@ -178,7 +178,7 @@ export function SendItem($q, api, desks, notify, authoringWorkspace,
             scope.disableSendButton = function() {
                 if (scope.item && scope.item.task) {
                     return !scope.selectedDesk ||
-                           scope.mode !== 'ingest' && scope.selectedStage &&
+                           scope.mode !== 'ingest' && scope.selectedStage && scope.mode !== 'spike' &&
                            scope.selectedStage._id === scope.item.task.stage;
                 }
             };
