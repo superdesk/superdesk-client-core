@@ -7,60 +7,44 @@
     <div class="filter-trigger" title="Filters" ng-click="filterOpen = !filterOpen" ng-class="{'filter-trigger--active': filterOpen}">
         <i class="icon-filter-large"></i>
     </div>
-    <h3 class="page-nav-title">{{list.name}}</h3>
+    <h3 class="page-nav-title">{{newList.name}}</h3>
 </div>
 <div class="paneLayout paneLayout--headerMargin">
     <div class="paneLayout__leftPane paneContent" ng-class="{'paneLayout__leftPane--open': filterOpen}">
         <div class="paneContent__header paneContent__header--dark">
             <h3 class="pull-left" translate>Automatic List Criteria</h3>
-            <div ng-click="close()" class="close-preview">
+            <div ng-click="filterOpen = !filterOpen" class="close-filter">
                 <i class="icon-close-small"></i>
             </div>
         </div>
         <div class="paneContent__content paneContent__content--hasFooter contentPadding">
             <form name="" class="flat">
                 <fieldset class="label-light">
-                    <div sd-info-item>
-                        <label for="name" translate>name</label>
-                        <input type="text" name="name" id="name" ng-model="something.name" required>
+                    <div class="item">
+                        <label for="publishedAt" translate>publish date</label>
+                        <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAt" id="publishedAt" ng-model="newList.filters.publishedAt"></div>
                     </div>
-
-                    <div sd-info-item>
-                        <label for="template" translate>template name</label>
-                        <input type="text" name="template" id="template" ng-model="something.template">
+                    <div class="item">
+                        <label for="publishedBefore" translate>published before</label>
+                        <div sd-datepicker data-format="YYYY-MM-DD" name="publishedBefore" id="publishedBefore" ng-model="newList.filters.publishedBefore"></div>
+                    </div>
+                    <div class="item">
+                        <label for="publishedAfter" translate>published after</label>
+                        <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAfter" id="publishedAfter" ng-model="newList.filters.publishedAfter"></div>
                     </div>
                 </fieldset>
             </form>
         </div>
         <div class="paneContent__footer">
-            <button class="btn btn--primary btn--full" ng-click="" translate="">
-                <span>Update Criteria</span>
-            </button>
+            <button class="btn btn--primary btn--full" ng-click="webPublisher.saveListCriteria()" translate>Update Criteria</button>
         </div>
     </div>
 
     <div class="paneLayout__content">
         <div class="contentPadding">
-            <h3 class="text--uppercase text--bold text--smallHeading">Content List Articles</h3>
+            <h3 class="text--uppercase text--bold text--smallHeading" translate>Content List Articles</h3>
 
-            <div class="alert alert-info alert-block">
-                <h4>The list is empty</h4>
-                <p>Please update filter criteria to add articles to the list.</p>
-            </div>
-
-            <ul class="flatList">
-                <li ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]">
-                    <div class="listElement listElement--noLeftBorder">
-                        <div class="listElement__icon">
-                            <i class="icon-composite" ng-show="$even"></i>
-                            <i class="icon-text" ng-show="$odd"></i>
-                        </div>
-                        <div class="listElement__content">
-                            Lorem Lipsum Dolor Sit Amet Article {{i}}
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            <div sd-list-articles data-list="newList" data-type="detail"></div>
         </div>
     </div>
 

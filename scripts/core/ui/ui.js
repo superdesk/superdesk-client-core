@@ -594,7 +594,8 @@ function DatepickerDirective($document) {
     return {
         scope: {
             dt: '=ngModel',
-            disabled: '=ngDisabled'
+            disabled: '=ngDisabled',
+            format: '@'
         },
         templateUrl: 'scripts/core/ui/views/sd-datepicker.html',
         link: function(scope, element) {
@@ -637,11 +638,12 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
     return {
         require: 'ngModel',
         scope: {
-            open: '=opened'
+            open: '=opened',
+            dtFormat: '=format'
         },
         link: function(scope, element, attrs, ctrl) {
             var VIEW_DATE_FORMAT = config.view.dateformat;
-            var MODEL_DATE_FORMAT = config.model.dateformat;
+            var MODEL_DATE_FORMAT = scope.dtFormat || config.model.dateformat;
             var ESC = 27;
             var DOWN_ARROW = 40;
             var popup = angular.element(popupTpl);
