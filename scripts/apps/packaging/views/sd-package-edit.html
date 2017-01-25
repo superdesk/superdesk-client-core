@@ -28,7 +28,14 @@
 </div>
 
 <div class="field body" ng-if="item.package_type==='takes' && _isInPublishedStates">
-        <label translate>Body</label>
+    <label translate>Body</label>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div class="text-editor" sd-html-preview="item.body_html"></div>
+</div>
+
+<div class="field" ng-if="item.package_type==='takes' && item.associations.featuremedia">
+    <label translate>Featured Media</label>
+    <div sd-item-rendition data-item="item.associations.featuremedia" data-rendition="viewImage"></div>
+    <p class="nav-space description-text">{{item.associations.featuremedia.description_text}}</p>
+    <div sd-item-crops ng-if="item.associations && item.associations.featuremedia" data-item="item.associations.featuremedia"></div>
 </div>

@@ -1,7 +1,28 @@
+/**
+ * @ngdoc service
+ * @module superdesk.apps.authoring
+ * @name renditions
+ *
+ * @requires metadata
+ * @requires $q
+ * @requires api
+ * @requires superdesk
+ * @requires lodash
+ *
+ * @description Renditions Service allows the user to generate different crops.
+ */
 RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash'];
 export function RenditionsService(metadata, $q, api, superdesk, _) {
     var self = this;
 
+    /**
+     *  ngdoc method
+     *  @name renditions#ingest
+     *  @public
+     *  @description Ingest the picture from external source.
+     *
+     *  @return {promise}
+     */
     this.ingest = function(item) {
         var performRenditions = $q.when(item);
         // ingest picture if it comes from an external source (create renditions)
@@ -12,52 +33,87 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
         }
         return performRenditions;
     };
+
+    /**
+     *  ngdoc method
+     *  @name renditions#get
+     *  @public
+     *  @description Get the crop sizes.
+     *
+     *  @return {promise} picture crops
+     */
     this.get = function() {
         return metadata.initialize().then(() => {
             self.renditions = metadata.values.crop_sizes;
             return self.renditions;
         });
     };
-    this.crop = function(picture) {
-        var poi = {x: 0.5, y: 0.5};
+
+    /**
+     *  ngdoc method
+     *  @name renditions#crop
+     *  @public
+     *  @description Crop the images.
+     *
+     *  @param {Object} picture Picture item
+     *  @param {boolean} isNew to indicate if picture is new or not
+     *  @return {promise} returns the modified picture item
+     */
+    this.crop = function(picture, isNew = true) {
+        let poi = picture.poi ? _.extend({}, picture.poi) : {x: 0.5, y: 0.5};
 
         return self.get().then((renditions) => {
             // we want to crop only renditions that change the ratio
             let withRatio = _.filter(renditions, (rendition) => angular.isDefined(rendition.ratio));
 
+            if (!withRatio.length) {
+                withRatio = self.renditions;
+            }
+
             return superdesk.intent('edit', 'crop', {
-                item: picture,
+                item: _.extend({}, picture),
                 renditions: withRatio,
-                poi: picture.poi || poi,
-                showAoISelectionButton: true,
+                poi: poi,
+                showAoISelectionButton: angular.isUndefined(picture.ingest_provider),
                 showMetadataEditor: true,
-                isNew: true
+                isNew: isNew
             })
             .then((result) => {
-                var renditionNames = [];
-                var savingImagePromises = [];
+                let renditionNames = [];
+                let savingImagePromises = [];
 
+                // applying metadata changes
                 angular.forEach(result.cropData, (croppingData, renditionName) => {
-                    // if croppingData are defined
-                    if (angular.isDefined(croppingData.CropLeft) && !isNaN(croppingData.CropLeft)) {
+                    // if there a change in the crop co-ordinates
+                    const keys = ['CropLeft', 'CropTop', 'CropBottom', 'CropRight'];
+
+                    let canAdd = !keys.every((key) => {
+                        let sameCoords = angular.isDefined(picture.renditions[renditionName]) &&
+                            picture.renditions[renditionName][key] === croppingData[key];
+
+                        return sameCoords;
+                    });
+
+                    if (canAdd) {
                         renditionNames.push(renditionName);
                     }
                 });
+
                 // perform the request to make the cropped images
-                angular.forEach(renditionNames, (renditionName) => {
-                    savingImagePromises.push(
-                        api.save('picture_crop', {item: picture, crop: result.cropData[renditionName]})
-                    );
+                renditionNames.forEach((renditionName) => {
+                    if (picture.renditions[renditionName] !== result.cropData[renditionName]) {
+                        savingImagePromises.push(
+                            api.save('picture_crop', {item: picture, crop: result.cropData[renditionName]})
+                        );
+                    }
                 });
                 return $q.all(savingImagePromises)
                 // return the cropped images
                 .then((croppedImages) => {
                     // save created images in "association" property
                     croppedImages.forEach((image, index) => {
-                        var url = image.href;
-                        // update association
+                        let url = image.href;
 
-                        picture.poi = result.poi;
                         // update association renditions
                         picture.renditions[renditionNames[index]] = angular.extend(
                             image.crop,
@@ -70,6 +126,9 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                             }
                         );
                     });
+
+                    // apply the metadata changes
+                    angular.extend(picture, result.metadata);
                     return picture;
                 });
             });

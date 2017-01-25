@@ -57,7 +57,8 @@
     data-item="item"
     data-rel="'featureimage'"
     data-editable="_editable"
-    data-onchange="autosave(item)"></div>
+    data-onchange="autosave(item)"
+    data-save="save()"></div>
 </div>
 
 <div ng-if="schema.feature_media" sd-width="{{editor.feature_image.sdWidth || 'full'}}" sd-validation-error="error.feature_media" order="{{editor.feature_media.order}}"
@@ -68,7 +69,9 @@
     data-item="item"
     data-rel="'featuremedia'"
     data-editable="_editable"
-    data-onchange="autosave(item)"></div>
+    data-onchange="autosave(item)"
+    data-save="save()"></div>
+    <div sd-item-crops ng-if="item.associations && item.associations.featuremedia" data-item="item.associations.featuremedia"></div>
 </div>
 
 <div class="field abstract" sd-width="{{editor.abstract.sdWidth || 'full'}}" ng-class="{'limit-error': item.abstract.length > schema.abstract.maxlength}" ng-if="schema.abstract && !editor.abstract.editor3" order="{{editor.abstract.order}}" sd-validation-error="error.abstract" data-required="schema.abstract.required">
@@ -211,7 +214,11 @@
     </div>
 </div>
 
-<div class="field" ng-if="isMediaType" order="{{editor.media.order}}" sd-width="{{editor.media.sdWidth || 'full'}}">
+<div class="field media-item"
+     ng-if="isMediaType"
+     ng-class="{'media-item--loading': mediaLoading}"
+     order="{{editor.media.order}}"
+     sd-width="{{editor.media.sdWidth || 'full'}}">
 
   <div ng-if="item.type == 'picture' || item.type == 'graphic'" class="full-preview" sd-ratio-calc>
       <div>
@@ -234,7 +241,11 @@
   </div>
 </div>
 
-<div ng-if="isMediaType && !editor.description_text.editor3" class="field abstract" order="{{editor.media_description.order}}" sd-validation-error="error.description_text" sd-width="{{editor.media_description.sdWidth || 'full'}}" data-required="schema.media_description.required">
+<div ng-if="isMediaType && !editor.description_text.editor3"
+     class="field abstract"
+     order="{{editor.media_description.order}}"
+     sd-validation-error="error.description_text"
+     sd-width="{{editor.media_description.sdWidth || 'full'}}" data-required="schema.media_description.required">
   <label translate>Description</label>
   <div id="title" class="abstract"
         sd-text-editor

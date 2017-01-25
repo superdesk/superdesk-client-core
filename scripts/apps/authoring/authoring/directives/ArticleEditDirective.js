@@ -1,3 +1,27 @@
+/**
+ * @ngdoc directive
+ * @module superdesk.apps.authoring
+ * @name sdArticleEdit
+ *
+ * @requires autosave
+ * @requires authoring
+ * @requires metadata
+ * @requires $filter
+ * @requires superdesk
+ * @requires content
+ * @requires config
+ * @requires session
+ * @requires gettext
+ * @requires history
+ * @requires $interpolate
+ * @requires suggest
+ * @requires renditions
+ *
+ * @description
+ *   This directive is responsible for generating handles editing of the main text fields of the item in authoring.
+ *   It is also used in the Template Editor and for Archived Kill item.
+ */
+
 ArticleEditDirective.$inject = [
     'autosave',
     'authoring',
@@ -5,13 +29,13 @@ ArticleEditDirective.$inject = [
     '$filter',
     'superdesk',
     'content',
-    'renditions',
     'config',
     'session',
     'gettext',
     'history',
     '$interpolate',
-    'suggest'
+    'suggest',
+    'renditions'
 ];
 export function ArticleEditDirective(
     autosave,
@@ -20,13 +44,13 @@ export function ArticleEditDirective(
     $filter,
     superdesk,
     content,
-    renditions,
     config,
     session,
     gettext,
     history,
     $interpolate,
-    suggest
+    suggest,
+    renditions
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/article-edit.html',
@@ -36,6 +60,7 @@ export function ArticleEditDirective(
             scope.contentType = null;
             scope.canListEditSignOff = config.user && config.user.sign_off_mapping;
             scope.editSignOff = false;
+            scope.mediaLoading = false;
 
             var mainEditScope = scope.$parent.$parent;
             var autopopulateByline = config.features && config.features.autopopulateByline;
@@ -226,31 +251,29 @@ export function ArticleEditDirective(
                 }
             };
 
+            /**
+             * @ngdoc method
+             * @name sdArticleEdit#applycrop
+             *
+             * @description Opens the Change Image Controller to modify the image metadata and crops.
+             */
             scope.applyCrop = function() {
-                var poi = {x: 0.5, y: 0.5};
+                scope.mediaLoading = true;
+                return renditions.crop(scope.item, false)
+                    .then((picture) => {
+                        if (authoring.isPublished(scope.item)) {
+                            mainEditScope.dirty = true;
 
-                superdesk.intent('edit', 'crop', {
-                    item: scope.item,
-                    renditions: scope.metadata.crop_sizes,
-                    poi: scope.item.poi || poi,
-                    showMetadataEditor: true,
-                    isNew: false
-                })
-                    .then((result) => {
-                        var renditions = _.create(scope.item.renditions || {});
-                        // always mark dirty as poi could have changed with no
-                        // cropData changes
-
-                        mainEditScope.dirty = true;
-                        // mark dirty in multiedit mode
-                        if (scope.articleEdit) {
-                            scope.articleEdit.$setDirty();
+                            // mark dirty in multiedit mode.
+                            if (scope.articleEdit) {
+                                scope.articleEdit.$setDirty();
+                            }
+                        } else {
+                            scope.save();
                         }
-                        angular.forEach(result.cropData, (crop, rendition) => {
-                            renditions[rendition] = angular.extend({}, renditions[rendition] || {}, crop);
-                        });
-
-                        scope.item.renditions = renditions;
+                    })
+                    .finally(() => {
+                        scope.mediaLoading = false;
                     });
             };
 
