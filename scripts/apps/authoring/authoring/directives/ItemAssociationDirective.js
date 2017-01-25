@@ -7,14 +7,13 @@
  * @requires renditions
  * @requires config
  * @requires authoring
- * @requires $q
  *
  * @description
  *   This directive is responsible for rendering media associated with the item.
  */
 
-ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring', '$q'];
-export function ItemAssociationDirective(superdesk, renditions, config, authoring, $q) {
+ItemAssociationDirective.$inject = ['superdesk', 'renditions', 'config', 'authoring'];
+export function ItemAssociationDirective(superdesk, renditions, config, authoring) {
     return {
         scope: {
             rel: '=',
@@ -65,10 +64,6 @@ export function ItemAssociationDirective(superdesk, renditions, config, authorin
                     .then(scope.edit)
                     .finally(() => {
                         scope.loading = false;
-                    });
-                } else {
-                    scope.$apply(() => {
-                        updateItemAssociation(item);
                     });
                 }
             });
