@@ -155,6 +155,16 @@ export function IngestRoutingContent(api, gettext, notify, modal, contentFilters
             scope.reorder = function(start, end) {
                 scope.editScheme.rules.splice(end, 0, scope.editScheme.rules.splice(start, 1)[0]);
             };
+
+            /**
+             * @ngdoc method
+             * @name sdIngestRoutingContent#disableSchemeForm
+             * @description Checks if the schemeForm is invalid
+             * @returns {Boolean} True if schemeForm is invalid. False if valid
+             */
+            scope.disableSchemeForm = function() {
+                return !scope.editScheme.name || scope.editScheme.rules.filter((rule) => !rule.name).length > 0;
+            };
         }
     };
 }

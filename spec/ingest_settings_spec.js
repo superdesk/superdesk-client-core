@@ -108,17 +108,17 @@ describe('ingest_settings', () => {
         utils.assertToastMsg('success', 'Routing scheme saved');
     });
 
-    it('cannot add blank rule', () => {
+    it('cannot save a routing scheme with blank rule', () => {
         ingestSettings.tabs.routingTab.click();
         ingestSettings.newSchemeBtn.click();
         ingestSettings.writeTextToSchemeName('Test Scheme');
         ingestSettings.newRoutingRuleBtn.click();
 
         expect(ingestSettings.getTextfromRuleName()).toBe('');
-        expect(ingestSettings.newRoutingRuleBtn.getAttribute('disabled')).toBeTruthy();
+        expect(ingestSettings.saveBtn.getAttribute('disabled')).toBeTruthy();
 
         ingestSettings.writeTextToRuleName('Test Rule');
         expect(ingestSettings.getTextfromRuleName()).toBe('Test Rule');
-        expect(ingestSettings.newRoutingRuleBtn.getAttribute('disabled')).toBeFalsy();
+        expect(ingestSettings.saveBtn.getAttribute('disabled')).toBeFalsy();
     });
 });
