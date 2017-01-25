@@ -31,7 +31,7 @@ class ImageBlockComponent extends Component {
         const entity = Entity.get(entityKey);
         const {img} = entity.getData();
 
-        return img.renditions.viewImage.href;
+        return img.renditions.original.href;
     }
 
     /**
