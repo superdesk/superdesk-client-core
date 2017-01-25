@@ -58,7 +58,7 @@ export function ListArticlesDirective(publisher) {
          */
         _queryItems(scope) {
             scope.loading = true;
-            publisher.queryArticles(scope.list.id).then((articles) => {
+            publisher.queryListArticles(scope.list.id).then((articles) => {
                 scope.loading = false;
                 scope.articles = articles;
             });

@@ -44,4 +44,3 @@ export default angular.module('superdesk.apps.web_publisher', [
             sideTemplateUrl: 'scripts/apps/web-publisher/views/sidenav-items.html'
         });
 }]);
-
