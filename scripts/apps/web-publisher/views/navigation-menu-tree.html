@@ -45,16 +45,16 @@
                     <div class="item">
                         <label for="menuParent" translate>parent</label>
                         <select id="menuParent" class="dropdown__toggle line-input" ng-model="newMenu.parent"
-                            ng-options="parent.id as parent.label for parent in menusInTree | filter: {id: (newMenu.id ? '!' + newMenu.id : '')} track by parent.id" required>
-                            <option value="">
+                            ng-options="parent.id as parent.label for parent in menusInTree | filter: {id: (newMenu.id ? '!' + newMenu.id : '')}" required>
+                            <option value=""></option>
                         </select>
                     </div>
 
                     <div class="item">
                         <label for="menuRoute" translate>route</label>
                         <select id="menuRoute" class="dropdown__toggle line-input" ng-model="newMenu.route"
-                            ng-options="route.id as route.name for route in routes track by route.id" required>
-                            <option value="">
+                            ng-options="route.id as route.name for route in routes" required>
+                            <option value=""></option>
                         </select>
                     </div>
 

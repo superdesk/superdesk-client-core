@@ -384,8 +384,28 @@ export function WebPublisherManagerController($scope, publisher, modal) {
          * @description Opens list criteria page
          */
         openListCriteria(list) {
-            $scope.list = list;
+            this.selectedList = list;
+            $scope.newList = angular.extend({}, list);
             this.changeTab(list.type === 'automatic' ? 'content-list-automatic' : '');
+        }
+
+        /**
+         * @ngdoc method
+         * @name WebPublisherManagerController#saveListCriteria
+         * @description Update criteria for content list
+         */
+        saveListCriteria() {
+            var updatedFilters = _.pickBy($scope.newList.filters, _.identity);
+
+            /**
+             * @ngdoc event
+             * @name WebPublisherManagerController#refreshArticles
+             * @eventType broadcast on $scope
+             * @param {Object} $scope.newList - list which will refresf articles
+             * @description event is thrown when criteria is updated
+             */
+            publisher.manageList({content_list: {filters: updatedFilters}}, this.selectedList.id)
+                .then(() => $scope.$broadcast('refreshArticles', $scope.newList));
         }
 
         /**
