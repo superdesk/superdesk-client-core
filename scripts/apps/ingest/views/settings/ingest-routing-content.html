@@ -54,7 +54,7 @@
                         </div>
                     </li>
                 </ul>
-                <button class="btn btn--primary btn--full" ng-click="addRule()" ng-disabled="!schemeForm.$valid">
+                <button class="btn btn--primary btn--full" ng-click="addRule()" ng-disabled="!editScheme.name">
                     <i class="icon-plus-sign icon-white"></i> <span translate>Add New Rule</span>
                 </button>
             </div>
@@ -87,7 +87,7 @@
 
     <div class="modal-footer">
         <button class="btn" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="save()" ng-disabled="!schemeForm.$valid || !(editScheme.rules.length || rule)" translate>Save</button>
+        <button class="btn btn--primary" ng-click="save()" ng-disabled="disableSchemeForm()" translate>Save</button>
     </div>
 
 </div>
