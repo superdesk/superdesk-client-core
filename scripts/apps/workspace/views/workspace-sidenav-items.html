@@ -67,8 +67,8 @@
     </div>
 </li>
 
-<hr>
-<li ng-class="{active: currentRoute.href === '/analytics'}">
+<hr ng-if="workspaceConfig.analytics">
+<li ng-if="workspaceConfig.analytics" ng-class="{active: currentRoute.href === '/analytics'}">
     <a href="#/analytics" title="{{ :: 'Analytics' | translate }}">
       <i class="big-icon-analytics main-icon"></i>
       <i class="big-icon-chevron-left helper-icon"></i>
