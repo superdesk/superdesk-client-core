@@ -13,6 +13,8 @@ angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
             display: {authoring: true, packages: false, killedItem: true, legalArchive: false, archived: false},
             configurationTemplate: 'scripts/apps/archive/related-item-widget/relatedItem-configuration.html',
             configurable: false,
+            needEditable: true,
+            needUnlock: true,
             configuration: {
                 sluglineMatch: 'EXACT',
                 modificationDateAfter: 'today'

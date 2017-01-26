@@ -125,7 +125,7 @@
         </button>
 
         <div id="authoring-extra-dropdown"
-             ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight"
+             ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight && item.state !== 'spiked'"
              class="navbtn dropdown pull-left strict" dropdown>
             <button id="more-actions" class="dropdown__toggle" title="{{ :: 'More actions' | translate }}" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
