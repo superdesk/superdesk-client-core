@@ -224,7 +224,7 @@ function getDefaults(grunt) {
             ingest: false,
             content: false,
             tasks: false,
-            analytics: true 
+            analytics: false
         },
 
         // ingest defaults
