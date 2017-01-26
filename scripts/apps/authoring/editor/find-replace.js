@@ -7,13 +7,17 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/apps/license
  */
-FindReplaceDirective.$inject = ['editor', 'macros'];
+FindReplaceDirective.$inject = ['editor', 'editor3', 'macros', 'authoring'];
 /**
  * using directive here so that it can return focus
  */
-function FindReplaceDirective(editor, macros) {
+function FindReplaceDirective(editor2, editor3, macros, authoring) {
     return {
         link: function(scope, elem) {
+            // use the editor service of editor3, if it's active
+            const isEditor3 = authoring.editor.body_html.editor3;
+            const editor = isEditor3 ? editor3 : editor2;
+
             scope.to = '';
             scope.from = '';
             scope.caseSensitive = true;
