@@ -219,6 +219,14 @@ function getDefaults(grunt) {
             useTansaProofing: false
         },
 
+        // workspace defaults
+        workspace: {
+            ingest: false,
+            content: false,
+            tasks: false,
+            analytics: true 
+        },
+
         // ingest defaults
         ingest: {
             PROVIDER_DASHBOARD_DEFAULTS: {
