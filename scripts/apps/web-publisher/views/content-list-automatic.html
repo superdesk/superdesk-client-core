@@ -21,6 +21,10 @@
             <form name="" class="flat">
                 <fieldset class="label-light">
                     <div class="item">
+	                    <label for="authorName" translate>author</label>
+	                    <input type="text" class="line-input" id="authorName" ng-model="newList.filters.author[0]">
+					</div>
+                    <div class="item">
                         <label for="publishedAt" translate>publish date</label>
                         <div sd-datepicker data-format="YYYY-MM-DD" name="publishedAt" id="publishedAt" ng-model="newList.filters.publishedAt"></div>
                     </div>
