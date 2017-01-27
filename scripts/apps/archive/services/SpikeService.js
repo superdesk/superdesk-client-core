@@ -17,9 +17,8 @@
  */
 
 SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', 'send', '$q', 'authoring', 'authoringWorkspace',
-    'superdeskFlags'];
-export function SpikeService($location, api, notify, gettext, send, $q, authoring, authoringWorkspace,
-    superdeskFlags) {
+    'lock'];
+export function SpikeService($location, api, notify, gettext, send, $q, authoring, authoringWorkspace, lock) {
     var SPIKE_RESOURCE = 'archive_spike',
         UNSPIKE_RESOURCE = 'archive_unspike';
 
@@ -106,22 +105,23 @@ export function SpikeService($location, api, notify, gettext, send, $q, authorin
      * @ngdoc method
      * @name spike#closeAuthoring
      * @private
-     * @description Checks if the item was open by authoring. If yes, unlocks and closes it
+     * @description Checks if the item is locked (and open by authoring). If yes, unlocks (and closes) it
      * @param {Object} item
      */
     function closeAuthoring(item) {
-        if (superdeskFlags.flags.authoring) {
-            let authoringItem = authoringWorkspace.getItem();
+        let authoringItem = authoringWorkspace.getItem();
+        let closeWorkSpace;
 
-            if (authoringItem._id === item._id) {
-                if (authoringItem.state === 'spiked') {
-                    authoringWorkspace.close();
-                } else {
-                    // Need to unlock the item
-                    authoring.close(authoringItem).then(() => {
-                        authoringWorkspace.close(true);
-                    });
-                }
+        if (authoringItem && authoringItem._id === item._id) {
+            closeWorkSpace = true;
+        }
+
+        if (item.state === 'spiked' && closeWorkSpace) { // Unspiked item opened in authoring
+            authoringWorkspace.close();
+        } else if (item.lock_user) { // lock is held by session user (verified at activity.additionalCondition)
+            lock.unlock(item);
+            if (closeWorkSpace) {
+                authoringWorkspace.close(true);
             }
         }
     }
